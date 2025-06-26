@@ -67,18 +67,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                     Children = new Drawable[]
                     {
                         LeaderboardManager,
-                        new Toolbar
-                        {
-                            State = { Value = Visibility.Visible },
-                        },
+                        new Toolbar { State = { Value = Visibility.Visible } },
                         Footer = new ScreenFooter
                         {
                             BackButtonPressed = () => Stack.CurrentScreen.Exit(),
                         },
-                        logo = new OsuLogo
-                        {
-                            Alpha = 0f,
-                        },
+                        logo = new OsuLogo { Alpha = 0f },
                         volume = new VolumeOverlay(),
                     },
                 },
@@ -87,7 +81,9 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             Stack.Padding = new MarginPadding { Top = Toolbar.HEIGHT };
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
@@ -95,9 +91,28 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             // At a point we have isolated interactive test runs enough, this can likely be removed.
             dependencies.Cache(Rulesets = new RealmRulesetStore(Realm));
             dependencies.Cache(Realm);
-            dependencies.Cache(Beatmaps = new BeatmapManager(LocalStorage, Realm, null, Dependencies.Get<AudioManager>(), Resources, Dependencies.Get<GameHost>(), Beatmap.Default));
+            dependencies.Cache(
+                Beatmaps = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    Dependencies.Get<AudioManager>(),
+                    Resources,
+                    Dependencies.Get<GameHost>(),
+                    Beatmap.Default
+                )
+            );
             dependencies.Cache(Config = new OsuConfigManager(LocalStorage));
-            dependencies.Cache(ScoreManager = new ScoreManager(Rulesets, () => Beatmaps, LocalStorage, Realm, API, Config));
+            dependencies.Cache(
+                ScoreManager = new ScoreManager(
+                    Rulesets,
+                    () => Beatmaps,
+                    LocalStorage,
+                    Realm,
+                    API,
+                    Config
+                )
+            );
 
             dependencies.CacheAs<BeatmapStore>(beatmapStore = new RealmDetachedBeatmapStore());
 
@@ -122,18 +137,21 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             base.SetUpSteps();
 
-            AddStep("reset defaults", () =>
-            {
-                Ruleset.Value = Rulesets.AvailableRulesets.First();
+            AddStep(
+                "reset defaults",
+                () =>
+                {
+                    Ruleset.Value = Rulesets.AvailableRulesets.First();
 
-                Beatmap.SetDefault();
-                SelectedMods.SetDefault();
+                    Beatmap.SetDefault();
+                    SelectedMods.SetDefault();
 
-                Config.SetValue(OsuSetting.SongSelectSortingMode, SortMode.Title);
-                Config.SetValue(OsuSetting.SongSelectGroupMode, GroupMode.None);
+                    Config.SetValue(OsuSetting.SongSelectSortingMode, SortMode.Title);
+                    Config.SetValue(OsuSetting.SongSelectGroupMode, GroupMode.None);
 
-                SongSelect = null!;
-            });
+                    SongSelect = null!;
+                }
+            );
 
             AddStep("delete all beatmaps", () => Beatmaps.Delete());
         }
@@ -141,7 +159,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         protected virtual void LoadSongSelect()
         {
             AddStep("load screen", () => Stack.Push(SongSelect = new SoloSongSelect()));
-            AddUntilStep("wait for load", () => Stack.CurrentScreen == SongSelect && SongSelect.IsLoaded);
+            AddUntilStep(
+                "wait for load",
+                () => Stack.CurrentScreen == SongSelect && SongSelect.IsLoaded
+            );
             AddUntilStep("wait for filtering", () => !Carousel.IsFiltering);
         }
 
@@ -149,22 +170,50 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             int beatmapsCount = 0;
 
-            AddStep($"import test map for ruleset {rulesetId}", () =>
-            {
-                beatmapsCount = SongSelect.IsNull() ? 0 : Carousel.Filters.OfType<BeatmapCarouselFilterGrouping>().Single().SetItems.Count;
-                Beatmaps.Import(TestResources.CreateTestBeatmapSetInfo(3, Rulesets.AvailableRulesets.Where(r => r.OnlineID == rulesetId).ToArray()));
-            });
+            AddStep(
+                $"import test map for ruleset {rulesetId}",
+                () =>
+                {
+                    beatmapsCount = SongSelect.IsNull()
+                        ? 0
+                        : Carousel
+                            .Filters.OfType<BeatmapCarouselFilterGrouping>()
+                            .Single()
+                            .SetItems.Count;
+                    Beatmaps.Import(
+                        TestResources.CreateTestBeatmapSetInfo(
+                            3,
+                            Rulesets.AvailableRulesets.Where(r => r.OnlineID == rulesetId).ToArray()
+                        )
+                    );
+                }
+            );
 
             // This is specifically for cases where the add is happening post song select load.
             // For cases where song select is null, the assertions are provided by the load checks.
-            AddUntilStep("wait for imported to arrive in carousel", () => SongSelect.IsNull() || Carousel.Filters.OfType<BeatmapCarouselFilterGrouping>().Single().SetItems.Count > beatmapsCount);
+            AddUntilStep(
+                "wait for imported to arrive in carousel",
+                () =>
+                    SongSelect.IsNull()
+                    || Carousel
+                        .Filters.OfType<BeatmapCarouselFilterGrouping>()
+                        .Single()
+                        .SetItems.Count > beatmapsCount
+            );
         }
 
-        protected void ChangeMods(params Mod[] mods) => AddStep($"change mods to {string.Join(", ", mods.Select(m => m.Acronym))}", () => SelectedMods.Value = mods);
+        protected void ChangeMods(params Mod[] mods) =>
+            AddStep(
+                $"change mods to {string.Join(", ", mods.Select(m => m.Acronym))}",
+                () => SelectedMods.Value = mods
+            );
 
         protected void ChangeRuleset(int rulesetId)
         {
-            AddStep($"change ruleset to {rulesetId}", () => Ruleset.Value = Rulesets.AvailableRulesets.First(r => r.OnlineID == rulesetId));
+            AddStep(
+                $"change ruleset to {rulesetId}",
+                () => Ruleset.Value = Rulesets.AvailableRulesets.First(r => r.OnlineID == rulesetId)
+            );
         }
 
         /// <summary>
@@ -176,16 +225,27 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         /// </param>
         protected void AddManyTestMaps(int? difficultyCountPerSet = null)
         {
-            AddStep("import test maps", () =>
-            {
-                var usableRulesets = Rulesets.AvailableRulesets.Where(r => r.OnlineID != 2).ToArray();
+            AddStep(
+                "import test maps",
+                () =>
+                {
+                    var usableRulesets = Rulesets
+                        .AvailableRulesets.Where(r => r.OnlineID != 2)
+                        .ToArray();
 
-                for (int i = 0; i < 10; i++)
-                    Beatmaps.Import(TestResources.CreateTestBeatmapSetInfo(difficultyCountPerSet, usableRulesets));
-            });
+                    for (int i = 0; i < 10; i++)
+                        Beatmaps.Import(
+                            TestResources.CreateTestBeatmapSetInfo(
+                                difficultyCountPerSet,
+                                usableRulesets
+                            )
+                        );
+                }
+            );
         }
 
-        protected void WaitForSuspension() => AddUntilStep("wait for not current", () => !SongSelect.AsNonNull().IsCurrentScreen());
+        protected void WaitForSuspension() =>
+            AddUntilStep("wait for not current", () => !SongSelect.AsNonNull().IsCurrentScreen());
 
         private void updateFooter(IScreen? _, IScreen? newScreen)
         {

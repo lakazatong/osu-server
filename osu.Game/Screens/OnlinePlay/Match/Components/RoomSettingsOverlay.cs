@@ -16,7 +16,9 @@ using osuTK;
 
 namespace osu.Game.Screens.OnlinePlay.Match.Components
 {
-    public abstract partial class RoomSettingsOverlay : FocusedOverlayContainer, IKeyBindingHandler<GlobalAction>
+    public abstract partial class RoomSettingsOverlay
+        : FocusedOverlayContainer,
+            IKeyBindingHandler<GlobalAction>
     {
         protected const float TRANSITION_DURATION = 350;
         protected const float FIELD_PADDING = 25;
@@ -88,9 +90,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         /// <remarks>
         /// <see cref="ReverseChildIDFillFlowContainer{T}"/> is used to ensure that if the nested <see cref="Section"/>s
@@ -137,7 +137,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
                         {
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
-                            Direction = FillDirection.Vertical
+                            Direction = FillDirection.Vertical,
                         },
                     },
                 };

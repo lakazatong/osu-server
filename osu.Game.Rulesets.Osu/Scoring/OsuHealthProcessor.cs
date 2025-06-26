@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Osu.Scoring
         private ComboResult currentComboResult = ComboResult.Perfect;
 
         public OsuHealthProcessor(double drainStartTime, double drainLenience = 0)
-            : base(drainStartTime, drainLenience)
-        {
-        }
+            : base(drainStartTime, drainLenience) { }
 
         protected override double GetHealthIncreaseFor(JudgementResult result)
         {
@@ -65,7 +63,9 @@ namespace osu.Game.Rulesets.Osu.Scoring
 
             return getHealthIncreaseFor(result);
 
-            void setComboResult(ComboResult comboResult) => currentComboResult = (ComboResult)Math.Min((int)currentComboResult, (int)comboResult);
+            void setComboResult(ComboResult comboResult) =>
+                currentComboResult = (ComboResult)
+                    Math.Min((int)currentComboResult, (int)comboResult);
         }
 
         protected override void Reset(bool storeResults)
@@ -79,13 +79,28 @@ namespace osu.Game.Rulesets.Osu.Scoring
             switch (result.Type)
             {
                 case HitResult.SmallTickMiss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.02, -0.075, -0.14);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.02,
+                        -0.075,
+                        -0.14
+                    );
 
                 case HitResult.LargeTickMiss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.02, -0.075, -0.14);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.02,
+                        -0.075,
+                        -0.14
+                    );
 
                 case HitResult.Miss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.03, -0.125, -0.2);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.03,
+                        -0.125,
+                        -0.2
+                    );
 
                 case HitResult.SmallTickHit:
                     // When classic slider mechanics are enabled, this result comes from the tail.

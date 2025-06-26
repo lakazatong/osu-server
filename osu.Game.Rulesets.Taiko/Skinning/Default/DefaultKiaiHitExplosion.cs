@@ -35,8 +35,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                 {
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0,
-                    AlwaysPresent = true
-                }
+                    AlwaysPresent = true,
+                },
             };
         }
 

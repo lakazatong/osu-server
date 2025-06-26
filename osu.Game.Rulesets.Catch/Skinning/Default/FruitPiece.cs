@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
         /// </summary>
         public const float RADIUS_ADJUST = 1.1f;
 
-        public readonly Bindable<FruitVisualRepresentation> VisualRepresentation = new Bindable<FruitVisualRepresentation>();
+        public readonly Bindable<FruitVisualRepresentation> VisualRepresentation =
+            new Bindable<FruitVisualRepresentation>();
 
         protected override Drawable BorderPiece { get; }
         protected override Drawable HyperBorderPiece { get; }
@@ -28,10 +29,10 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
                 new FruitPulpFormation
                 {
                     AccentColour = { BindTarget = AccentColour },
-                    VisualRepresentation = { BindTarget = VisualRepresentation }
+                    VisualRepresentation = { BindTarget = VisualRepresentation },
                 },
                 BorderPiece = new BorderPiece(),
-                HyperBorderPiece = new HyperBorderPiece()
+                HyperBorderPiece = new HyperBorderPiece(),
             };
         }
 
@@ -39,10 +40,13 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
         {
             base.LoadComplete();
 
-            IndexInBeatmap.BindValueChanged(index =>
-            {
-                VisualRepresentation.Value = Fruit.GetVisualRepresentation(index.NewValue);
-            }, true);
+            IndexInBeatmap.BindValueChanged(
+                index =>
+                {
+                    VisualRepresentation.Value = Fruit.GetVisualRepresentation(index.NewValue);
+                },
+                true
+            );
         }
     }
 }

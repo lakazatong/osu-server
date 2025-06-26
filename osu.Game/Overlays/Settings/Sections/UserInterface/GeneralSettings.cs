@@ -22,18 +22,18 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
                 new SettingsCheckbox
                 {
                     LabelText = UserInterfaceStrings.CursorRotation,
-                    Current = config.GetBindable<bool>(OsuSetting.CursorRotation)
+                    Current = config.GetBindable<bool>(OsuSetting.CursorRotation),
                 },
                 new SettingsSlider<float, SizeSlider<float>>
                 {
                     LabelText = UserInterfaceStrings.MenuCursorSize,
                     Current = config.GetBindable<float>(OsuSetting.MenuCursorSize),
-                    KeyboardStep = 0.01f
+                    KeyboardStep = 0.01f,
                 },
                 new SettingsCheckbox
                 {
                     LabelText = UserInterfaceStrings.Parallax,
-                    Current = config.GetBindable<bool>(OsuSetting.MenuParallax)
+                    Current = config.GetBindable<bool>(OsuSetting.MenuParallax),
                 },
                 new SettingsSlider<double, TimeSlider>
                 {
@@ -41,7 +41,7 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
                     LabelText = UserInterfaceStrings.HoldToConfirmActivationTime,
                     Current = config.GetBindable<double>(OsuSetting.UIHoldActivationDelay),
                     Keywords = new[] { @"delay" },
-                    KeyboardStep = 50
+                    KeyboardStep = 50,
                 },
             };
         }

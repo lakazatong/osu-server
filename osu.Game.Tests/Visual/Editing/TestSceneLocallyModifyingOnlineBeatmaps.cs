@@ -16,7 +16,9 @@ namespace osu.Game.Tests.Visual.Editing
         {
             CreateInitialBeatmap = () =>
             {
-                var importedSet = Game.BeatmapManager.Import(new ImportTask(TestResources.GetTestBeatmapForImport())).GetResultSafely();
+                var importedSet = Game
+                    .BeatmapManager.Import(new ImportTask(TestResources.GetTestBeatmapForImport()))
+                    .GetResultSafely();
                 return Game.BeatmapManager.GetWorkingBeatmap(importedSet!.Value.Beatmaps.First());
             };
 
@@ -27,15 +29,27 @@ namespace osu.Game.Tests.Visual.Editing
         public void TestLocallyModifyingOnlineBeatmap()
         {
             string initialHash = string.Empty;
-            AddAssert("editor beatmap has online ID", () => EditorBeatmap.BeatmapInfo.OnlineID, () => Is.GreaterThan(0));
+            AddAssert(
+                "editor beatmap has online ID",
+                () => EditorBeatmap.BeatmapInfo.OnlineID,
+                () => Is.GreaterThan(0)
+            );
             AddStep("store hash for later", () => initialHash = EditorBeatmap.BeatmapInfo.MD5Hash);
 
             AddStep("delete first hitobject", () => EditorBeatmap.RemoveAt(0));
             SaveEditor();
 
             ReloadEditorToSameBeatmap();
-            AddAssert("beatmap marked as locally modified", () => EditorBeatmap.BeatmapInfo.Status, () => Is.EqualTo(BeatmapOnlineStatus.LocallyModified));
-            AddAssert("beatmap hash changed", () => EditorBeatmap.BeatmapInfo.MD5Hash, () => Is.Not.EqualTo(initialHash));
+            AddAssert(
+                "beatmap marked as locally modified",
+                () => EditorBeatmap.BeatmapInfo.Status,
+                () => Is.EqualTo(BeatmapOnlineStatus.LocallyModified)
+            );
+            AddAssert(
+                "beatmap hash changed",
+                () => EditorBeatmap.BeatmapInfo.MD5Hash,
+                () => Is.Not.EqualTo(initialHash)
+            );
         }
     }
 }

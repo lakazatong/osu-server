@@ -17,7 +17,8 @@ namespace osu.Game.Rulesets
     {
         private const string ruleset_library_prefix = @"osu.Game.Rulesets";
 
-        protected readonly Dictionary<Assembly, Type> LoadedAssemblies = new Dictionary<Assembly, Type>();
+        protected readonly Dictionary<Assembly, Type> LoadedAssemblies =
+            new Dictionary<Assembly, Type>();
         protected readonly HashSet<Assembly> UserRulesetAssemblies = new HashSet<Assembly>();
         protected readonly Storage? RulesetStorage;
 
@@ -53,14 +54,16 @@ namespace osu.Game.Rulesets
         /// </summary>
         /// <param name="id">The ruleset's internal ID.</param>
         /// <returns>A ruleset, if available, else null.</returns>
-        public RulesetInfo? GetRuleset(int id) => AvailableRulesets.FirstOrDefault(r => r.OnlineID == id);
+        public RulesetInfo? GetRuleset(int id) =>
+            AvailableRulesets.FirstOrDefault(r => r.OnlineID == id);
 
         /// <summary>
         /// Retrieve a ruleset using a known short name.
         /// </summary>
         /// <param name="shortName">The ruleset's short name.</param>
         /// <returns>A ruleset, if available, else null.</returns>
-        public RulesetInfo? GetRuleset(string shortName) => AvailableRulesets.FirstOrDefault(r => r.ShortName == shortName);
+        public RulesetInfo? GetRuleset(string shortName) =>
+            AvailableRulesets.FirstOrDefault(r => r.ShortName == shortName);
 
         private Assembly? resolveRulesetDependencyAssembly(object? sender, ResolveEventArgs args)
         {
@@ -69,16 +72,18 @@ namespace osu.Game.Rulesets
             // the requesting assembly may be located out of the executable's base directory, thus requiring manual resolving of its dependencies.
             // this attempts resolving the ruleset dependencies on game core and framework assemblies by returning assemblies with the same assembly name
             // already loaded in the AppDomain.
-            var domainAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                                          // Given name is always going to be equally-or-more qualified than the assembly name.
-                                          .Where(a =>
-                                          {
-                                              string? name = a.GetName().Name;
-                                              if (name == null)
-                                                  return false;
+            var domainAssembly = AppDomain
+                .CurrentDomain.GetAssemblies()
+                // Given name is always going to be equally-or-more qualified than the assembly name.
+                .Where(a =>
+                {
+                    string? name = a.GetName().Name;
+                    if (name == null)
+                        return false;
 
-                                              return args.Name.Contains(name, StringComparison.Ordinal);
-                                          }).MaxBy(a => a.GetName().Version);
+                    return args.Name.Contains(name, StringComparison.Ordinal);
+                })
+                .MaxBy(a => a.GetName().Version);
 
             if (domainAssembly != null)
                 return domainAssembly;
@@ -95,7 +100,12 @@ namespace osu.Game.Rulesets
                 if (rulesetName == null)
                     continue;
 
-                if (!rulesetName.StartsWith(ruleset_library_prefix, StringComparison.InvariantCultureIgnoreCase) || rulesetName.Contains(@"Tests"))
+                if (
+                    !rulesetName.StartsWith(
+                        ruleset_library_prefix,
+                        StringComparison.InvariantCultureIgnoreCase
+                    ) || rulesetName.Contains(@"Tests")
+                )
                     continue;
 
                 addRuleset(ruleset);
@@ -121,14 +131,21 @@ namespace osu.Game.Rulesets
                 // On net6-android (Debug), StartupDirectory can be different from where assemblies are placed.
                 // Search sub-directories too.
 
-                string[] files = Directory.GetFiles(RuntimeInfo.StartupDirectory, @$"{ruleset_library_prefix}.*.dll", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(
+                    RuntimeInfo.StartupDirectory,
+                    @$"{ruleset_library_prefix}.*.dll",
+                    SearchOption.AllDirectories
+                );
 
                 foreach (string file in files.Where(f => !Path.GetFileName(f).Contains("Tests")))
                     loadRulesetFromFile(file);
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Could not load rulesets from directory {RuntimeInfo.StartupDirectory}");
+                Logger.Error(
+                    e,
+                    $"Could not load rulesets from directory {RuntimeInfo.StartupDirectory}"
+                );
             }
         }
 
@@ -136,7 +153,11 @@ namespace osu.Game.Rulesets
         {
             string filename = Path.GetFileNameWithoutExtension(file);
 
-            if (LoadedAssemblies.Values.Any(t => Path.GetFileNameWithoutExtension(t.Assembly.Location) == filename))
+            if (
+                LoadedAssemblies.Values.Any(t =>
+                    Path.GetFileNameWithoutExtension(t.Assembly.Location) == filename
+                )
+            )
                 return null;
 
             try
@@ -165,7 +186,9 @@ namespace osu.Game.Rulesets
 
             try
             {
-                LoadedAssemblies[assembly] = assembly.GetTypes().First(t => t.IsPublic && t.IsSubclassOf(typeof(Ruleset)));
+                LoadedAssemblies[assembly] = assembly
+                    .GetTypes()
+                    .First(t => t.IsPublic && t.IsSubclassOf(typeof(Ruleset)));
             }
             catch (Exception e)
             {
@@ -186,14 +209,19 @@ namespace osu.Game.Rulesets
 
         protected void LogFailedLoad(string name, Exception exception)
         {
-            Logger.Log($"Could not load ruleset \"{name}\". Please check for an update from the developer.", level: LogLevel.Error);
+            Logger.Log(
+                $"Could not load ruleset \"{name}\". Please check for an update from the developer.",
+                level: LogLevel.Error
+            );
             Logger.Log($"Ruleset load failed: {exception}");
         }
 
         #region Implementation of IRulesetStore
 
         IRulesetInfo? IRulesetStore.GetRuleset(int id) => GetRuleset(id);
+
         IRulesetInfo? IRulesetStore.GetRuleset(string shortName) => GetRuleset(shortName);
+
         IEnumerable<IRulesetInfo> IRulesetStore.AvailableRulesets => AvailableRulesets;
 
         #endregion

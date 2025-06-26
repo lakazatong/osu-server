@@ -30,7 +30,11 @@ namespace osu.Game.Tests.Visual.Gameplay
 {
     public partial class TestSceneSpectator : ScreenTestScene
     {
-        private readonly APIUser streamingUser = new APIUser { Id = MultiplayerTestScene.PLAYER_1_ID, Username = "Test user" };
+        private readonly APIUser streamingUser = new APIUser
+        {
+            Id = MultiplayerTestScene.PLAYER_1_ID,
+            Username = "Test user",
+        };
 
         [Cached(typeof(UserLookupCache))]
         private UserLookupCache lookupCache = new TestUserLookupCache();
@@ -51,25 +55,35 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetupSteps()
         {
-            AddStep("load dependencies", () =>
-            {
-                LoadScreen(dependenciesScreen = new DependenciesScreen());
-
-                // The dependencies screen gets suspended so it stops receiving updates. So its children are manually added to the test scene instead.
-                Children = new Drawable[]
+            AddStep(
+                "load dependencies",
+                () =>
                 {
-                    dependenciesScreen.UserLookupCache,
-                    dependenciesScreen.SpectatorClient,
-                };
-            });
+                    LoadScreen(dependenciesScreen = new DependenciesScreen());
+
+                    // The dependencies screen gets suspended so it stops receiving updates. So its children are manually added to the test scene instead.
+                    Children = new Drawable[]
+                    {
+                        dependenciesScreen.UserLookupCache,
+                        dependenciesScreen.SpectatorClient,
+                    };
+                }
+            );
 
             AddUntilStep("wait for dependencies to load", () => dependenciesScreen.IsLoaded);
 
-            AddStep("import beatmap", () =>
-            {
-                importedBeatmap = BeatmapImportHelper.LoadOszIntoOsu(game, virtualTrack: true).GetResultSafely();
-                importedBeatmapId = importedBeatmap.Beatmaps.First(b => b.Ruleset.OnlineID == 0).OnlineID;
-            });
+            AddStep(
+                "import beatmap",
+                () =>
+                {
+                    importedBeatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(game, virtualTrack: true)
+                        .GetResultSafely();
+                    importedBeatmapId = importedBeatmap
+                        .Beatmaps.First(b => b.Ruleset.OnlineID == 0)
+                        .OnlineID;
+                }
+            );
         }
 
         [Test]
@@ -85,7 +99,11 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             sendFrames(startTime: gameplay_start);
 
-            AddAssert("time is greater than seek target", () => currentFrameStableTime, () => Is.GreaterThan(gameplay_start));
+            AddAssert(
+                "time is greater than seek target",
+                () => currentFrameStableTime,
+                () => Is.GreaterThan(gameplay_start)
+            );
         }
 
         /// <summary>
@@ -100,25 +118,42 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             start();
 
-            AddUntilStep("wait for player loader", () => this.ChildrenOfType<PlayerLoader>().SingleOrDefault()?.IsLoaded == true);
+            AddUntilStep(
+                "wait for player loader",
+                () => this.ChildrenOfType<PlayerLoader>().SingleOrDefault()?.IsLoaded == true
+            );
 
-            AddUntilStep("queue send frames on player load", () =>
-            {
-                var loadingPlayer = this.ChildrenOfType<PlayerLoader>().SingleOrDefault()?.CurrentPlayer;
+            AddUntilStep(
+                "queue send frames on player load",
+                () =>
+                {
+                    var loadingPlayer = this.ChildrenOfType<PlayerLoader>()
+                        .SingleOrDefault()
+                        ?.CurrentPlayer;
 
-                if (loadingPlayer == null)
-                    return false;
+                    if (loadingPlayer == null)
+                        return false;
 
-                loadingPlayer.OnLoadComplete += _ =>
-                    spectatorClient.SendFramesFromUser(streamingUser.Id, 10, gameplay_start);
+                    loadingPlayer.OnLoadComplete += _ =>
+                        spectatorClient.SendFramesFromUser(streamingUser.Id, 10, gameplay_start);
 
-                return true;
-            });
+                    return true;
+                }
+            );
 
             waitForPlayerCurrent();
 
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
-            AddAssert("time is greater than seek target", () => currentFrameStableTime, () => Is.GreaterThan(gameplay_start));
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
+            AddAssert(
+                "time is greater than seek target",
+                () => currentFrameStableTime,
+                () => Is.GreaterThan(gameplay_start)
+            );
         }
 
         [Test]
@@ -146,7 +181,11 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddUntilStep("wait for frame starvation", () => replayHandler.WaitingForFrame);
             checkPaused(true);
 
-            AddAssert("time advanced", () => currentFrameStableTime, () => Is.GreaterThan(pausedTime));
+            AddAssert(
+                "time advanced",
+                () => currentFrameStableTime,
+                () => Is.GreaterThan(pausedTime)
+            );
         }
 
         [Test]
@@ -175,9 +214,20 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             sendFrames(300, initialResultCount: 100);
 
-            AddUntilStep("playing from correct point in time", () => player.ChildrenOfType<DrawableRuleset>().First().FrameStableClock.CurrentTime, () => Is.GreaterThan(30000));
-            AddAssert("check judgement counts are correct", () => player.ChildrenOfType<JudgementCountController>().Single().Counters.Sum(c => c.ResultCount.Value),
-                () => Is.GreaterThanOrEqualTo(100));
+            AddUntilStep(
+                "playing from correct point in time",
+                () => player.ChildrenOfType<DrawableRuleset>().First().FrameStableClock.CurrentTime,
+                () => Is.GreaterThan(30000)
+            );
+            AddAssert(
+                "check judgement counts are correct",
+                () =>
+                    player
+                        .ChildrenOfType<JudgementCountController>()
+                        .Single()
+                        .Counters.Sum(c => c.ResultCount.Value),
+                () => Is.GreaterThanOrEqualTo(100)
+            );
         }
 
         [Test]
@@ -217,9 +267,20 @@ namespace osu.Game.Tests.Visual.Gameplay
             checkPaused(true); // And eventually stop after running out of frames and fail.
             // Todo: Should check for + display a failed message.
 
-            AddAssert("fail overlay present", () => player.ChildrenOfType<FailOverlay>().Single().IsPresent);
-            AddAssert("overlay can only quit", () => player.ChildrenOfType<FailOverlay>().Single().Buttons.Single().Text == GameplayMenuOverlayStrings.Quit);
-            AddStep("press quit button", () => player.ChildrenOfType<FailOverlay>().Single().Buttons.Single().TriggerClick());
+            AddAssert(
+                "fail overlay present",
+                () => player.ChildrenOfType<FailOverlay>().Single().IsPresent
+            );
+            AddAssert(
+                "overlay can only quit",
+                () =>
+                    player.ChildrenOfType<FailOverlay>().Single().Buttons.Single().Text
+                    == GameplayMenuOverlayStrings.Quit
+            );
+            AddStep(
+                "press quit button",
+                () => player.ChildrenOfType<FailOverlay>().Single().Buttons.Single().TriggerClick()
+            );
             AddAssert("player exited", () => Stack.CurrentScreen is SoloSpectatorScreen);
         }
 
@@ -267,19 +328,33 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestFinalFramesPurgedBeforeEndingPlay()
         {
-            AddStep("begin playing", () => spectatorClient.BeginPlaying(0, TestGameplayState.Create(new OsuRuleset()), new Score()));
+            AddStep(
+                "begin playing",
+                () =>
+                    spectatorClient.BeginPlaying(
+                        0,
+                        TestGameplayState.Create(new OsuRuleset()),
+                        new Score()
+                    )
+            );
 
-            AddStep("send frames and finish play", () =>
-            {
-                spectatorClient.HandleFrame(new OsuReplayFrame(1000, Vector2.Zero));
+            AddStep(
+                "send frames and finish play",
+                () =>
+                {
+                    spectatorClient.HandleFrame(new OsuReplayFrame(1000, Vector2.Zero));
 
-                var completedGameplayState = TestGameplayState.Create(new OsuRuleset());
-                completedGameplayState.HasPassed = true;
-                spectatorClient.EndPlaying(completedGameplayState);
-            });
+                    var completedGameplayState = TestGameplayState.Create(new OsuRuleset());
+                    completedGameplayState.HasPassed = true;
+                    spectatorClient.EndPlaying(completedGameplayState);
+                }
+            );
 
             // We can't access API because we're an "online" test.
-            AddAssert("last received frame has time = 1000", () => spectatorClient.LastReceivedUserFrames.First().Value.Time == 1000);
+            AddAssert(
+                "last received frame has time = 1000",
+                () => spectatorClient.LastReceivedUserFrames.First().Value.Time == 1000
+            );
         }
 
         [Test]
@@ -287,14 +362,20 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             FrameDataBundle? lastBundle = null;
 
-            AddStep("bind to client", () => spectatorClient.OnNewFrames += (_, bundle) => lastBundle = bundle);
+            AddStep(
+                "bind to client",
+                () => spectatorClient.OnNewFrames += (_, bundle) => lastBundle = bundle
+            );
 
             start(-1234);
             sendFrames();
             finish();
 
             AddUntilStep("bundle received", () => lastBundle != null);
-            AddAssert("first frame does not have header", () => lastBundle?.Frames[0].Header == null);
+            AddAssert(
+                "first frame does not have header",
+                () => lastBundle?.Frames[0].Header == null
+            );
             AddAssert("last frame has header", () => lastBundle?.Frames[^1].Header != null);
         }
 
@@ -306,7 +387,12 @@ namespace osu.Game.Tests.Visual.Gameplay
             start();
             sendFrames();
             waitForPlayerCurrent();
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
         }
 
         [Test]
@@ -318,13 +404,26 @@ namespace osu.Game.Tests.Visual.Gameplay
             sendFrames();
             waitForPlayerCurrent();
 
-            AddStep("send passed", () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Passed));
-            AddUntilStep("state is passed", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Passed);
+            AddStep(
+                "send passed",
+                () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Passed)
+            );
+            AddUntilStep(
+                "state is passed",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Passed
+            );
 
             start();
             sendFrames();
             waitForPlayerCurrent();
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
         }
 
         [Test]
@@ -337,14 +436,24 @@ namespace osu.Game.Tests.Visual.Gameplay
             waitForPlayerCurrent();
 
             AddStep("send quit", () => spectatorClient.SendEndPlay(streamingUser.Id));
-            AddUntilStep("state is quit", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Quit);
+            AddUntilStep(
+                "state is quit",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Quit
+            );
 
             AddAssert("wait for player exit", () => Stack.CurrentScreen is SoloSpectatorScreen);
 
             start();
             sendFrames();
             waitForPlayerCurrent();
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
         }
 
         [Test]
@@ -357,15 +466,28 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             waitForPlayerCurrent();
 
-            AddStep("send failed", () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Failed));
-            AddUntilStep("state is failed", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Failed);
+            AddStep(
+                "send failed",
+                () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Failed)
+            );
+            AddUntilStep(
+                "state is failed",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Failed
+            );
 
             AddUntilStep("wait for player to fail", () => player.GameplayState.HasFailed);
 
             start();
             sendFrames();
             waitForPlayerCurrent();
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
         }
 
         [Test]
@@ -378,45 +500,92 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             waitForPlayerLoader();
 
-            AddStep("send failed", () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Failed));
-            AddUntilStep("state is failed", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Failed);
+            AddStep(
+                "send failed",
+                () => spectatorClient.SendEndPlay(streamingUser.Id, SpectatedUserState.Failed)
+            );
+            AddUntilStep(
+                "state is failed",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Failed
+            );
 
             AddAssert("wait for player exit", () => Stack.CurrentScreen is SoloSpectatorScreen);
 
             start();
             sendFrames();
             waitForPlayerCurrent();
-            AddUntilStep("state is playing", () => spectatorClient.WatchedUserStates[streamingUser.Id].State == SpectatedUserState.Playing);
+            AddUntilStep(
+                "state is playing",
+                () =>
+                    spectatorClient.WatchedUserStates[streamingUser.Id].State
+                    == SpectatedUserState.Playing
+            );
         }
 
         private OsuFramedReplayInputHandler replayHandler =>
-            (OsuFramedReplayInputHandler)Stack.ChildrenOfType<OsuInputManager>().First().ReplayInputHandler!;
+            (OsuFramedReplayInputHandler)
+                Stack.ChildrenOfType<OsuInputManager>().First().ReplayInputHandler!;
 
         private Player player => this.ChildrenOfType<Player>().Single();
 
-        private double currentFrameStableTime
-            => player.ChildrenOfType<FrameStabilityContainer>().First().CurrentTime;
+        private double currentFrameStableTime =>
+            player.ChildrenOfType<FrameStabilityContainer>().First().CurrentTime;
 
-        private void waitForPlayerLoader() => AddUntilStep("wait for loading", () => this.ChildrenOfType<SpectatorPlayerLoader>().SingleOrDefault()?.IsLoaded == true);
+        private void waitForPlayerLoader() =>
+            AddUntilStep(
+                "wait for loading",
+                () =>
+                    this.ChildrenOfType<SpectatorPlayerLoader>().SingleOrDefault()?.IsLoaded == true
+            );
 
-        private void waitForPlayerCurrent() => AddUntilStep("wait for player current", () => this.ChildrenOfType<Player>().SingleOrDefault()?.IsCurrentScreen() == true);
+        private void waitForPlayerCurrent() =>
+            AddUntilStep(
+                "wait for player current",
+                () => this.ChildrenOfType<Player>().SingleOrDefault()?.IsCurrentScreen() == true
+            );
 
-        private void start(int? beatmapId = null) => AddStep("start play", () => spectatorClient.SendStartPlay(streamingUser.Id, beatmapId ?? importedBeatmapId));
+        private void start(int? beatmapId = null) =>
+            AddStep(
+                "start play",
+                () =>
+                    spectatorClient.SendStartPlay(streamingUser.Id, beatmapId ?? importedBeatmapId)
+            );
 
-        private void finish(SpectatedUserState state = SpectatedUserState.Quit) => AddStep("end play", () => spectatorClient.SendEndPlay(streamingUser.Id, state));
+        private void finish(SpectatedUserState state = SpectatedUserState.Quit) =>
+            AddStep("end play", () => spectatorClient.SendEndPlay(streamingUser.Id, state));
 
         private void checkPaused(bool state) =>
-            AddUntilStep($"game is {(state ? "paused" : "playing")}", () => player.ChildrenOfType<DrawableRuleset>().First().IsPaused.Value == state);
+            AddUntilStep(
+                $"game is {(state ? "paused" : "playing")}",
+                () => player.ChildrenOfType<DrawableRuleset>().First().IsPaused.Value == state
+            );
 
         private void sendFrames(int count = 10, double startTime = 0, int initialResultCount = 0)
         {
-            AddStep("send frames", () => spectatorClient.SendFramesFromUser(streamingUser.Id, count, startTime, initialResultCount));
+            AddStep(
+                "send frames",
+                () =>
+                    spectatorClient.SendFramesFromUser(
+                        streamingUser.Id,
+                        count,
+                        startTime,
+                        initialResultCount
+                    )
+            );
         }
 
         private void loadSpectatingScreen()
         {
-            AddStep("load spectator", () => LoadScreen(spectatorScreen = new SoloSpectatorScreen(streamingUser)));
-            AddUntilStep("wait for screen load", () => spectatorScreen.LoadState == LoadState.Loaded);
+            AddStep(
+                "load spectator",
+                () => LoadScreen(spectatorScreen = new SoloSpectatorScreen(streamingUser))
+            );
+            AddUntilStep(
+                "wait for screen load",
+                () => spectatorScreen.LoadState == LoadState.Loaded
+            );
         }
 
         /// <summary>

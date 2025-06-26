@@ -51,22 +51,24 @@ namespace osu.Game.Screens.Play
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
-            AddRange(new Drawable[]
-            {
-                new OsuSpriteText
+            AddRange(
+                new Drawable[]
                 {
-                    RelativePositionAxes = Axes.Both,
-                    Y = 0.4f,
-                    Text = Message,
-                    Font = OsuFont.GetFont(size: 30),
-                    Spacing = new Vector2(5, 0),
-                    Origin = Anchor.TopCentre,
-                    Anchor = Anchor.TopCentre,
-                    Colour = colours.Yellow,
-                    Shadow = true,
-                    ShadowColour = new Color4(0, 0, 0, 0.25f)
+                    new OsuSpriteText
+                    {
+                        RelativePositionAxes = Axes.Both,
+                        Y = 0.4f,
+                        Text = Message,
+                        Font = OsuFont.GetFont(size: 30),
+                        Spacing = new Vector2(5, 0),
+                        Origin = Anchor.TopCentre,
+                        Anchor = Anchor.TopCentre,
+                        Colour = colours.Yellow,
+                        Shadow = true,
+                        ShadowColour = new Color4(0, 0, 0, 0.25f),
+                    },
                 }
-            });
+            );
         }
 
         protected override void PopIn() => this.FadeIn(TRANSITION_TIME, Easing.OutQuint);

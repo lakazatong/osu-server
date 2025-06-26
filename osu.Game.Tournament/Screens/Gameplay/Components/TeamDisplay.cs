@@ -35,7 +35,12 @@ namespace osu.Game.Tournament.Screens.Gameplay.Components
             }
         }
 
-        public TeamDisplay(TournamentTeam? team, TeamColour colour, Bindable<int?> currentTeamScore, int pointsToWin)
+        public TeamDisplay(
+            TournamentTeam? team,
+            TeamColour colour,
+            Bindable<int?> currentTeamScore,
+            int pointsToWin
+        )
             : base(team)
         {
             AutoSizeAxes = Axes.Both;
@@ -88,12 +93,16 @@ namespace osu.Game.Tournament.Screens.Gameplay.Components
                                                 Origin = anchor,
                                                 Anchor = anchor,
                                             },
-                                            score = new TeamScore(currentTeamScore, colour, pointsToWin)
+                                            score = new TeamScore(
+                                                currentTeamScore,
+                                                colour,
+                                                pointsToWin
+                                            )
                                             {
                                                 Origin = anchor,
                                                 Anchor = anchor,
-                                            }
-                                        }
+                                            },
+                                        },
                                     },
                                     teamNameText = new TournamentSpriteTextWithBackground
                                     {
@@ -107,11 +116,11 @@ namespace osu.Game.Tournament.Screens.Gameplay.Components
                                         Origin = anchor,
                                         Anchor = anchor,
                                     },
-                                }
+                                },
                             },
-                        }
+                        },
                     },
-                }
+                },
             };
         }
 

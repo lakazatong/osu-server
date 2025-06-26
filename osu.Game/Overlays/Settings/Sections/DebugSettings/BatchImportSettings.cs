@@ -22,45 +22,63 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
             if (legacyImportManager?.SupportsImportFromStable != true)
                 return;
 
-            AddRange(new[]
-            {
-                importBeatmapsButton = new SettingsButton
+            AddRange(
+                new[]
                 {
-                    Text = @"Import beatmaps from stable",
-                    Action = () =>
+                    importBeatmapsButton = new SettingsButton
                     {
-                        importBeatmapsButton.Enabled.Value = false;
-                        legacyImportManager.ImportFromStableAsync(StableContent.Beatmaps).ContinueWith(_ => Schedule(() => importBeatmapsButton.Enabled.Value = true));
-                    }
-                },
-                importSkinsButton = new SettingsButton
-                {
-                    Text = @"Import skins from stable",
-                    Action = () =>
+                        Text = @"Import beatmaps from stable",
+                        Action = () =>
+                        {
+                            importBeatmapsButton.Enabled.Value = false;
+                            legacyImportManager
+                                .ImportFromStableAsync(StableContent.Beatmaps)
+                                .ContinueWith(_ =>
+                                    Schedule(() => importBeatmapsButton.Enabled.Value = true)
+                                );
+                        },
+                    },
+                    importSkinsButton = new SettingsButton
                     {
-                        importSkinsButton.Enabled.Value = false;
-                        legacyImportManager.ImportFromStableAsync(StableContent.Skins).ContinueWith(_ => Schedule(() => importSkinsButton.Enabled.Value = true));
-                    }
-                },
-                importCollectionsButton = new SettingsButton
-                {
-                    Text = @"Import collections from stable",
-                    Action = () =>
+                        Text = @"Import skins from stable",
+                        Action = () =>
+                        {
+                            importSkinsButton.Enabled.Value = false;
+                            legacyImportManager
+                                .ImportFromStableAsync(StableContent.Skins)
+                                .ContinueWith(_ =>
+                                    Schedule(() => importSkinsButton.Enabled.Value = true)
+                                );
+                        },
+                    },
+                    importCollectionsButton = new SettingsButton
                     {
-                        importCollectionsButton.Enabled.Value = false;
-                        legacyImportManager.ImportFromStableAsync(StableContent.Collections).ContinueWith(_ => Schedule(() => importCollectionsButton.Enabled.Value = true));
-                    }
-                },
-                importScoresButton = new SettingsButton
-                {
-                    Text = @"Import scores from stable",
-                    Action = () =>
+                        Text = @"Import collections from stable",
+                        Action = () =>
+                        {
+                            importCollectionsButton.Enabled.Value = false;
+                            legacyImportManager
+                                .ImportFromStableAsync(StableContent.Collections)
+                                .ContinueWith(_ =>
+                                    Schedule(() => importCollectionsButton.Enabled.Value = true)
+                                );
+                        },
+                    },
+                    importScoresButton = new SettingsButton
                     {
-                        importScoresButton.Enabled.Value = false;
-                        legacyImportManager.ImportFromStableAsync(StableContent.Scores).ContinueWith(_ => Schedule(() => importScoresButton.Enabled.Value = true));
-                    }
-                },
-            });
+                        Text = @"Import scores from stable",
+                        Action = () =>
+                        {
+                            importScoresButton.Enabled.Value = false;
+                            legacyImportManager
+                                .ImportFromStableAsync(StableContent.Scores)
+                                .ContinueWith(_ =>
+                                    Schedule(() => importScoresButton.Enabled.Value = true)
+                                );
+                        },
+                    },
+                }
+            );
         }
     }
 }

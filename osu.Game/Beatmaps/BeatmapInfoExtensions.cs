@@ -15,7 +15,10 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// Given an <see cref="IBeatmap"/>, update length, BPM and object counts.
         /// </summary>
-        public static void UpdateStatisticsFromBeatmap(this BeatmapInfo beatmapInfo, IBeatmap beatmap)
+        public static void UpdateStatisticsFromBeatmap(
+            this BeatmapInfo beatmapInfo,
+            IBeatmap beatmap
+        )
         {
             beatmapInfo.Length = beatmap.CalculatePlayableLength();
             beatmapInfo.BPM = 60000 / beatmap.GetMostCommonBeatLength();
@@ -26,25 +29,39 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// A user-presentable display title representing this beatmap.
         /// </summary>
-        public static string GetDisplayTitle(this IBeatmapInfo beatmapInfo) => $"{beatmapInfo.Metadata.GetDisplayTitle()} {getVersionString(beatmapInfo)}".Trim();
+        public static string GetDisplayTitle(this IBeatmapInfo beatmapInfo) =>
+            $"{beatmapInfo.Metadata.GetDisplayTitle()} {getVersionString(beatmapInfo)}".Trim();
 
         /// <summary>
         /// A user-presentable display title representing this beatmap, with localisation handling for potentially romanisable fields.
         /// </summary>
-        public static RomanisableString GetDisplayTitleRomanisable(this IBeatmapInfo beatmapInfo, bool includeDifficultyName = true, bool includeCreator = true)
+        public static RomanisableString GetDisplayTitleRomanisable(
+            this IBeatmapInfo beatmapInfo,
+            bool includeDifficultyName = true,
+            bool includeCreator = true
+        )
         {
             var metadata = beatmapInfo.Metadata.GetDisplayTitleRomanisable(includeCreator);
 
             if (includeDifficultyName)
             {
                 string versionString = getVersionString(beatmapInfo);
-                return new RomanisableString($"{metadata.GetPreferred(true)} {versionString}".Trim(), $"{metadata.GetPreferred(false)} {versionString}".Trim());
+                return new RomanisableString(
+                    $"{metadata.GetPreferred(true)} {versionString}".Trim(),
+                    $"{metadata.GetPreferred(false)} {versionString}".Trim()
+                );
             }
 
-            return new RomanisableString($"{metadata.GetPreferred(true)}".Trim(), $"{metadata.GetPreferred(false)}".Trim());
+            return new RomanisableString(
+                $"{metadata.GetPreferred(true)}".Trim(),
+                $"{metadata.GetPreferred(false)}".Trim()
+            );
         }
 
-        public static bool Match(this IBeatmapInfo beatmapInfo, params FilterCriteria.OptionalTextFilter[] filters)
+        public static bool Match(
+            this IBeatmapInfo beatmapInfo,
+            params FilterCriteria.OptionalTextFilter[] filters
+        )
         {
             foreach (var filter in filters)
             {
@@ -62,12 +79,19 @@ namespace osu.Game.Beatmaps
             return true;
         }
 
-        private static string getVersionString(IBeatmapInfo beatmapInfo) => string.IsNullOrEmpty(beatmapInfo.DifficultyName) ? string.Empty : $"[{beatmapInfo.DifficultyName}]";
+        private static string getVersionString(IBeatmapInfo beatmapInfo) =>
+            string.IsNullOrEmpty(beatmapInfo.DifficultyName)
+                ? string.Empty
+                : $"[{beatmapInfo.DifficultyName}]";
 
         /// <summary>
         /// Whether gameplay is allowed for this beatmap with the provided ruleset (via conversion or direct compatibility).
         /// </summary>
-        public static bool AllowGameplayWithRuleset(this IBeatmapInfo beatmap, RulesetInfo ruleset, bool allowConversion)
+        public static bool AllowGameplayWithRuleset(
+            this IBeatmapInfo beatmap,
+            RulesetInfo ruleset,
+            bool allowConversion
+        )
         {
             if (beatmap.Ruleset.ShortName == ruleset.ShortName)
                 return true;
@@ -81,7 +105,11 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// Get the beatmap info page URL, or <c>null</c> if unavailable.
         /// </summary>
-        public static string? GetOnlineURL(this IBeatmapInfo beatmapInfo, IAPIProvider api, IRulesetInfo? ruleset = null)
+        public static string? GetOnlineURL(
+            this IBeatmapInfo beatmapInfo,
+            IAPIProvider api,
+            IRulesetInfo? ruleset = null
+        )
         {
             if (beatmapInfo.OnlineID <= 0 || beatmapInfo.BeatmapSet == null)
                 return null;

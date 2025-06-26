@@ -3,20 +3,20 @@
 
 #nullable disable
 
+using System;
+using System.Collections.Generic;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Lists;
 using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
-using System;
-using osu.Framework.Graphics.Shaders;
-using osu.Framework.Graphics.Textures;
-using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Allocation;
-using System.Collections.Generic;
-using osu.Framework.Graphics.Rendering;
-using osu.Framework.Lists;
-using osu.Framework.Bindables;
 
 namespace osu.Game.Graphics.Backgrounds
 {
@@ -37,7 +37,8 @@ namespace osu.Game.Graphics.Backgrounds
             get => colourLight;
             set
             {
-                if (colourLight == value) return;
+                if (colourLight == value)
+                    return;
 
                 colourLight = value;
                 updateColours();
@@ -51,7 +52,8 @@ namespace osu.Game.Graphics.Backgrounds
             get => colourDark;
             set
             {
-                if (colourDark == value) return;
+                if (colourDark == value)
+                    return;
 
                 colourDark = value;
                 updateColours();
@@ -94,7 +96,9 @@ namespace osu.Game.Graphics.Backgrounds
         /// </summary>
         public float Velocity = 1;
 
-        private readonly SortedList<TriangleParticle> parts = new SortedList<TriangleParticle>(Comparer<TriangleParticle>.Default);
+        private readonly SortedList<TriangleParticle> parts = new SortedList<TriangleParticle>(
+            Comparer<TriangleParticle>.Default
+        );
 
         private Random stableRandom;
         private IShader shader;
@@ -143,7 +147,8 @@ namespace osu.Game.Graphics.Backgrounds
             // Since position is relative, the velocity needs to scale inversely with DrawHeight.
             // Since we will later multiply by the scale of individual triangles we normalize by
             // dividing by triangleScale.
-            float movedDistance = -elapsedSeconds * Velocity * base_velocity / (DrawHeight * TriangleScale);
+            float movedDistance =
+                -elapsedSeconds * Velocity * base_velocity / (DrawHeight * TriangleScale);
 
             for (int i = 0; i < parts.Count; i++)
             {
@@ -155,7 +160,9 @@ namespace osu.Game.Graphics.Backgrounds
 
                 parts[i] = newParticle;
 
-                float bottomPos = parts[i].Position.Y + triangle_size * parts[i].Scale * equilateral_triangle_ratio / DrawHeight;
+                float bottomPos =
+                    parts[i].Position.Y
+                    + triangle_size * parts[i].Scale * equilateral_triangle_ratio / DrawHeight;
                 if (bottomPos < 0)
                     parts.RemoveAt(i);
             }
@@ -183,7 +190,11 @@ namespace osu.Game.Graphics.Backgrounds
             // Limited by the maximum size of QuadVertexBuffer for safety.
             const int max_triangles = ushort.MaxValue / (IRenderer.VERTICES_PER_QUAD + 2);
 
-            AimCount = (int)Math.Min(max_triangles, DrawWidth * DrawHeight * 0.002f / (TriangleScale * TriangleScale) * SpawnRatio);
+            AimCount = (int)
+                Math.Min(
+                    max_triangles,
+                    DrawWidth * DrawHeight * 0.002f / (TriangleScale * TriangleScale) * SpawnRatio
+                );
 
             int currentCount = parts.Count;
 
@@ -232,7 +243,9 @@ namespace osu.Game.Graphics.Backgrounds
 
             float u1 = 1 - nextRandom(); //uniform(0,1] random floats
             float u2 = 1 - nextRandom();
-            float randStdNormal = (float)(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)); // random normal(0,1)
+            float randStdNormal = (float)(
+                Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)
+            ); // random normal(0,1)
             float scale = Math.Max(TriangleScale * (mean + std_dev * randStdNormal), 0.1f); // random normal(mean,stdDev^2)
 
             return new TriangleParticle { Scale = scale };
@@ -242,7 +255,8 @@ namespace osu.Game.Graphics.Backgrounds
         /// Creates a shade of colour for the triangles.
         /// </summary>
         /// <returns>The colour.</returns>
-        protected virtual Color4 CreateTriangleShade(float shade) => Interpolation.ValueAt(shade, colourDark, colourLight, 0, 1);
+        protected virtual Color4 CreateTriangleShade(float shade) =>
+            Interpolation.ValueAt(shade, colourDark, colourLight, 0, 1);
 
         private void updateColours()
         {
@@ -269,14 +283,13 @@ namespace osu.Game.Graphics.Backgrounds
             private Axes clampAxes;
 
             private readonly List<TriangleParticle> parts = new List<TriangleParticle>();
-            private readonly Vector2 triangleSize = new Vector2(1f, equilateral_triangle_ratio) * triangle_size;
+            private readonly Vector2 triangleSize =
+                new Vector2(1f, equilateral_triangle_ratio) * triangle_size;
 
             private Vector2 size;
 
             public TrianglesDrawNode(Triangles source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -303,7 +316,7 @@ namespace osu.Game.Graphics.Backgrounds
                     Thickness = fill,
                     // Due to triangles having various sizes we would need to set a different "TexelSize" value for each of them, which is insanely expensive, thus we should use one single value.
                     // TexelSize computed for an average triangle (size 100) will result in big triangles becoming blurry, so we may just use 0 for all of them.
-                    TexelSize = 0
+                    TexelSize = 0,
                 };
 
                 shader.Bind();
@@ -320,21 +333,34 @@ namespace osu.Game.Graphics.Backgrounds
                     var drawQuad = new Quad(
                         Vector2Extensions.Transform(triangleQuad.TopLeft * size, DrawInfo.Matrix),
                         Vector2Extensions.Transform(triangleQuad.TopRight * size, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(triangleQuad.BottomLeft * size, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(triangleQuad.BottomRight * size, DrawInfo.Matrix)
+                        Vector2Extensions.Transform(
+                            triangleQuad.BottomLeft * size,
+                            DrawInfo.Matrix
+                        ),
+                        Vector2Extensions.Transform(
+                            triangleQuad.BottomRight * size,
+                            DrawInfo.Matrix
+                        )
                     );
 
                     ColourInfo colourInfo = DrawColourInfo.Colour;
                     colourInfo.ApplyChild(particle.Colour);
 
-                    RectangleF textureCoords = new RectangleF(
-                        triangleQuad.TopLeft.X - topLeft.X,
-                        triangleQuad.TopLeft.Y - topLeft.Y,
-                        triangleQuad.Width,
-                        triangleQuad.Height
-                    ) / relativeSize;
+                    RectangleF textureCoords =
+                        new RectangleF(
+                            triangleQuad.TopLeft.X - topLeft.X,
+                            triangleQuad.TopLeft.Y - topLeft.Y,
+                            triangleQuad.Width,
+                            triangleQuad.Height
+                        ) / relativeSize;
 
-                    renderer.DrawQuad(texture, drawQuad, colourInfo, new RectangleF(0, 0, 1, 1), textureCoords: textureCoords);
+                    renderer.DrawQuad(
+                        texture,
+                        drawQuad,
+                        colourInfo,
+                        new RectangleF(0, 0, 1, 1),
+                        textureCoords: textureCoords
+                    );
                 }
 
                 shader.Unbind();

@@ -6,17 +6,17 @@
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics;
 using osu.Framework.Graphics.Sprites;
-using osuTK;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Overlays.Comments
 {
@@ -32,33 +32,35 @@ namespace osu.Game.Overlays.Comments
             RelativeSizeAxes = Axes.X;
             Height = 40;
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING },
-                    Children = new Drawable[]
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    new Container
                     {
-                        new OverlaySortTabControl<CommentsSortCriteria>
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding
                         {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Current = Sort
+                            Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
                         },
-                        new ShowDeletedButton
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                            Checked = { BindTarget = ShowDeleted }
-                        }
-                    }
+                            new OverlaySortTabControl<CommentsSortCriteria>
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Current = Sort,
+                            },
+                            new ShowDeletedButton
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Checked = { BindTarget = ShowDeleted },
+                            },
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -77,28 +79,30 @@ namespace osu.Game.Overlays.Comments
 
             public ShowDeletedButton()
             {
-                Add(new FillFlowContainer
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(5, 0),
-                    Children = new Drawable[]
+                Add(
+                    new FillFlowContainer
                     {
-                        checkboxIcon = new SpriteIcon
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(5, 0),
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Size = new Vector2(10),
+                            checkboxIcon = new SpriteIcon
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Size = new Vector2(10),
+                            },
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                                Text = CommonStrings.ButtonsShowDeleted,
+                            },
                         },
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                            Text = CommonStrings.ButtonsShowDeleted
-                        }
-                    },
-                });
+                    }
+                );
             }
 
             [BackgroundDependencyLoader]
@@ -110,7 +114,13 @@ namespace osu.Game.Overlays.Comments
 
             protected override void LoadComplete()
             {
-                Checked.BindValueChanged(isChecked => checkboxIcon.Icon = isChecked.NewValue ? FontAwesome.Solid.CheckSquare : FontAwesome.Regular.Square, true);
+                Checked.BindValueChanged(
+                    isChecked =>
+                        checkboxIcon.Icon = isChecked.NewValue
+                            ? FontAwesome.Solid.CheckSquare
+                            : FontAwesome.Regular.Square,
+                    true
+                );
                 base.LoadComplete();
             }
 
@@ -137,6 +147,6 @@ namespace osu.Game.Overlays.Comments
         Old,
 
         [LocalisableDescription(typeof(SortStrings), nameof(SortStrings.Top))]
-        Top
+        Top,
     }
 }

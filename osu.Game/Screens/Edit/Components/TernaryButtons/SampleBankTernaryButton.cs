@@ -18,8 +18,10 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
         public string BankName { get; }
         public Func<Drawable>? CreateIcon { get; init; }
 
-        public readonly BindableWithCurrent<TernaryState> NormalState = new BindableWithCurrent<TernaryState>();
-        public readonly BindableWithCurrent<TernaryState> AdditionsState = new BindableWithCurrent<TernaryState>();
+        public readonly BindableWithCurrent<TernaryState> NormalState =
+            new BindableWithCurrent<TernaryState>();
+        public readonly BindableWithCurrent<TernaryState> AdditionsState =
+            new BindableWithCurrent<TernaryState>();
 
         public DrawableTernaryButton NormalButton { get; private set; } = null!;
         public DrawableTernaryButton AdditionsButton { get; private set; } = null!;
@@ -45,12 +47,13 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                     AutoSizeAxes = Axes.Y,
                     Width = 0.5f,
                     Padding = new MarginPadding { Right = 1 },
-                    Child = NormalButton = new InlineDrawableTernaryButton
-                    {
-                        Current = NormalState,
-                        Description = BankName.Titleize(),
-                        CreateIcon = CreateIcon,
-                    },
+                    Child = NormalButton =
+                        new InlineDrawableTernaryButton
+                        {
+                            Current = NormalState,
+                            Description = BankName.Titleize(),
+                            CreateIcon = CreateIcon,
+                        },
                 },
                 new Container
                 {
@@ -60,12 +63,13 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                     AutoSizeAxes = Axes.Y,
                     Width = 0.5f,
                     Padding = new MarginPadding { Left = 1 },
-                    Child = AdditionsButton = new InlineDrawableTernaryButton
-                    {
-                        Current = AdditionsState,
-                        Description = BankName.Titleize(),
-                        CreateIcon = CreateIcon,
-                    },
+                    Child = AdditionsButton =
+                        new InlineDrawableTernaryButton
+                        {
+                            Current = AdditionsState,
+                            Description = BankName.Titleize(),
+                            CreateIcon = CreateIcon,
+                        },
                 },
             };
         }
@@ -80,13 +84,14 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                 Icon.X = 4.5f;
             }
 
-            protected override SpriteText CreateText() => new ExpandableSpriteText
-            {
-                Depth = -1,
-                Origin = Anchor.CentreLeft,
-                Anchor = Anchor.CentreLeft,
-                X = 31f
-            };
+            protected override SpriteText CreateText() =>
+                new ExpandableSpriteText
+                {
+                    Depth = -1,
+                    Origin = Anchor.CentreLeft,
+                    Anchor = Anchor.CentreLeft,
+                    X = 31f,
+                };
         }
     }
 }

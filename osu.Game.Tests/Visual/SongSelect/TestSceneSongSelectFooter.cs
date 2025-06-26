@@ -21,34 +21,38 @@ namespace osu.Game.Tests.Visual.SongSelect
         private bool previousRandomCalled;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            nextRandomCalled = false;
-            previousRandomCalled = false;
-
-            Footer footer;
-
-            Child = footer = new Footer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
+                nextRandomCalled = false;
+                previousRandomCalled = false;
 
-            footer.AddButton(new FooterButtonMods(), null);
-            footer.AddButton(randomButton = new FooterButtonRandom
-            {
-                NextRandom = () => nextRandomCalled = true,
-                PreviousRandom = () => previousRandomCalled = true,
-            }, null);
-            footer.AddButton(new FooterButtonOptions(), null);
+                Footer footer;
 
-            InputManager.MoveMouseTo(Vector2.Zero);
-        });
+                Child = footer = new Footer { Anchor = Anchor.Centre, Origin = Anchor.Centre };
+
+                footer.AddButton(new FooterButtonMods(), null);
+                footer.AddButton(
+                    randomButton = new FooterButtonRandom
+                    {
+                        NextRandom = () => nextRandomCalled = true,
+                        PreviousRandom = () => previousRandomCalled = true,
+                    },
+                    null
+                );
+                footer.AddButton(new FooterButtonOptions(), null);
+
+                InputManager.MoveMouseTo(Vector2.Zero);
+            });
 
         [Test]
         public void TestState()
         {
-            AddRepeatStep("toggle options state", () => this.ChildrenOfType<FooterButton>().Last().Enabled.Toggle(), 20);
+            AddRepeatStep(
+                "toggle options state",
+                () => this.ChildrenOfType<FooterButton>().Last().Enabled.Toggle(),
+                20
+            );
         }
 
         [Test]
@@ -61,48 +65,60 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestFooterRandomViaMouse()
         {
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(randomButton);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(randomButton);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("next random invoked", () => nextRandomCalled && !previousRandomCalled);
         }
 
         [Test]
         public void TestFooterRewind()
         {
-            AddStep("press Shift+F2", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.PressKey(Key.F2);
-                InputManager.ReleaseKey(Key.F2);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "press Shift+F2",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.PressKey(Key.F2);
+                    InputManager.ReleaseKey(Key.F2);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             AddAssert("previous random invoked", () => previousRandomCalled && !nextRandomCalled);
         }
 
         [Test]
         public void TestFooterRewindViaShiftMouseLeft()
         {
-            AddStep("shift + click button", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.MoveMouseTo(randomButton);
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "shift + click button",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.MoveMouseTo(randomButton);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             AddAssert("previous random invoked", () => previousRandomCalled && !nextRandomCalled);
         }
 
         [Test]
         public void TestFooterRewindViaMouseRight()
         {
-            AddStep("right click button", () =>
-            {
-                InputManager.MoveMouseTo(randomButton);
-                InputManager.Click(MouseButton.Right);
-            });
+            AddStep(
+                "right click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(randomButton);
+                    InputManager.Click(MouseButton.Right);
+                }
+            );
             AddAssert("previous random invoked", () => previousRandomCalled && !nextRandomCalled);
         }
     }

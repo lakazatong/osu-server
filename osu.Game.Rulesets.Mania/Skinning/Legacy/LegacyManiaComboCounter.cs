@@ -70,7 +70,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                             BypassAutoSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Colour = skin.GetManiaSkinConfig<Color4>(LegacyManiaSkinConfigurationLookups.ComboBreakColour)?.Value ?? Color4.Red,
+                            Colour =
+                                skin.GetManiaSkinConfig<Color4>(
+                                    LegacyManiaSkinConfigurationLookups.ComboBreakColour
+                                )?.Value ?? Color4.Red,
                         },
                         displayedCountText = new LegacySpriteText(LegacyFont.Combo)
                         {
@@ -80,8 +83,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                         },
-                    }
-                }
+                    },
+                },
             };
 
             Current.BindTo(scoreProcessor.Combo);
@@ -96,7 +99,9 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         {
             base.LoadComplete();
 
-            displayedCountText.Text = popOutCountText.Text = Current.Value.ToString(CultureInfo.InvariantCulture);
+            displayedCountText.Text = popOutCountText.Text = Current.Value.ToString(
+                CultureInfo.InvariantCulture
+            );
 
             Current.BindValueChanged(combo => updateCount(combo.NewValue == 0), true);
 
@@ -150,9 +155,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             popOutCountText.Hide();
 
             DisplayedCount = Current.Value;
-            displayedCountText.ScaleTo(new Vector2(1f, 1.4f))
-                              .ScaleTo(new Vector2(1f), 300, Easing.Out)
-                              .FadeIn(120);
+            displayedCountText
+                .ScaleTo(new Vector2(1f, 1.4f))
+                .ScaleTo(new Vector2(1f), 300, Easing.Out)
+                .FadeIn(120);
         }
 
         private void onCountChange()
@@ -172,8 +178,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             if (DisplayedCount > 0)
             {
                 popOutCountText.Text = DisplayedCount.ToString(CultureInfo.InvariantCulture);
-                popOutCountText.FadeTo(0.8f).FadeOut(200)
-                               .ScaleTo(1f).ScaleTo(4f, 200);
+                popOutCountText.FadeTo(0.8f).FadeOut(200).ScaleTo(1f).ScaleTo(4f, 200);
 
                 displayedCountText.FadeTo(0.5f, 300);
             }
@@ -182,12 +187,17 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             if (DisplayedCount == 0 && Current.Value == 0)
                 displayedCountText.FadeOut(fade_out_duration);
 
-            this.TransformTo(nameof(DisplayedCount), Current.Value, getProportionalDuration(DisplayedCount, Current.Value));
+            this.TransformTo(
+                nameof(DisplayedCount),
+                Current.Value,
+                getProportionalDuration(DisplayedCount, Current.Value)
+            );
         }
 
         private double getProportionalDuration(int currentValue, int newValue)
         {
-            double difference = currentValue > newValue ? currentValue - newValue : newValue - currentValue;
+            double difference =
+                currentValue > newValue ? currentValue - newValue : newValue - currentValue;
             return difference * rolling_duration;
         }
     }

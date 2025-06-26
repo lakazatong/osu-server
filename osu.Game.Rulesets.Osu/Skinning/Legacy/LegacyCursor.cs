@@ -31,8 +31,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load()
         {
-            bool centre = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorCentre)?.Value ?? true;
-            spin = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorRotate)?.Value ?? true;
+            bool centre =
+                skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorCentre)?.Value
+                ?? true;
+            spin =
+                skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorRotate)?.Value
+                ?? true;
 
             InternalChildren = new[]
             {
@@ -59,8 +63,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
         public override void Expand()
         {
-            ExpandTarget?.ScaleTo(released_scale)
-                        .ScaleTo(pressed_scale, 100, Easing.Out);
+            ExpandTarget?.ScaleTo(released_scale).ScaleTo(pressed_scale, 100, Easing.Out);
         }
 
         public override void Contract()

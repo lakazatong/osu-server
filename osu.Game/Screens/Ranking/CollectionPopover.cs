@@ -36,11 +36,7 @@ namespace osu.Game.Screens.Ranking
         {
             Children = new[]
             {
-                new OsuMenu(Direction.Vertical, true)
-                {
-                    Items = items,
-                    MaxHeight = 375,
-                },
+                new OsuMenu(Direction.Vertical, true) { Items = items, MaxHeight = 375 },
             };
         }
 
@@ -54,12 +50,21 @@ namespace osu.Game.Screens.Ranking
         {
             get
             {
-                var collectionItems = realm.Realm.All<BeatmapCollection>()
-                                           .OrderBy(c => c.Name)
-                                           .AsEnumerable()
-                                           .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmapInfo)).Cast<OsuMenuItem>().ToList();
+                var collectionItems = realm
+                    .Realm.All<BeatmapCollection>()
+                    .OrderBy(c => c.Name)
+                    .AsEnumerable()
+                    .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmapInfo))
+                    .Cast<OsuMenuItem>()
+                    .ToList();
 
-                collectionItems.Add(new OsuMenuItem("Manage...", MenuItemType.Standard, () => manageCollectionsDialog?.Show()));
+                collectionItems.Add(
+                    new OsuMenuItem(
+                        "Manage...",
+                        MenuItemType.Standard,
+                        () => manageCollectionsDialog?.Show()
+                    )
+                );
 
                 return collectionItems.ToArray();
             }

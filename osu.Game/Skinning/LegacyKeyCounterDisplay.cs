@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Screens.Play.HUD;
-using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Screens.Play.HUD;
 using osuTK;
 using osuTK.Graphics;
 
@@ -26,26 +26,28 @@ namespace osu.Game.Skinning
         {
             AutoSizeAxes = Axes.Both;
 
-            AddRange(new Drawable[]
-            {
-                backgroundSprite = new Sprite
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopLeft,
-                    Scale = new Vector2(1.05f, 1),
-                    Rotation = 90,
-                },
-                KeyFlow = new FillFlowContainer<KeyCounter>
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    X = -1.5f,
-                    Y = 7,
-                    Spacing = new Vector2(1.8f),
-                    Direction = FillDirection.Vertical,
-                    AutoSizeAxes = Axes.Both,
-                },
-            });
+                    backgroundSprite = new Sprite
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopLeft,
+                        Scale = new Vector2(1.05f, 1),
+                        Rotation = 90,
+                    },
+                    KeyFlow = new FillFlowContainer<KeyCounter>
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        X = -1.5f,
+                        Y = 7,
+                        Spacing = new Vector2(1.8f),
+                        Direction = FillDirection.Vertical,
+                        AutoSizeAxes = Axes.Both,
+                    },
+                }
+            );
         }
 
         [Resolved]
@@ -55,7 +57,12 @@ namespace osu.Game.Skinning
         {
             base.LoadComplete();
 
-            KeyTextColor = source.GetConfig<SkinCustomColourLookup, Color4>(new SkinCustomColourLookup(SkinConfiguration.LegacySetting.InputOverlayText))?.Value ?? Color4.Black;
+            KeyTextColor =
+                source
+                    .GetConfig<SkinCustomColourLookup, Color4>(
+                        new SkinCustomColourLookup(SkinConfiguration.LegacySetting.InputOverlayText)
+                    )
+                    ?.Value ?? Color4.Black;
 
             Texture? backgroundTexture = source.GetTexture(@"inputoverlay-background");
 
@@ -64,14 +71,13 @@ namespace osu.Game.Skinning
 
             for (int i = 0; i < KeyFlow.Count; ++i)
             {
-                ((LegacyKeyCounter)KeyFlow[i]).ActiveColour = i < 2 ? active_colour_top : active_colour_bottom;
+                ((LegacyKeyCounter)KeyFlow[i]).ActiveColour =
+                    i < 2 ? active_colour_top : active_colour_bottom;
             }
         }
 
-        protected override KeyCounter CreateCounter(InputTrigger trigger) => new LegacyKeyCounter(trigger)
-        {
-            TextColour = keyTextColor,
-        };
+        protected override KeyCounter CreateCounter(InputTrigger trigger) =>
+            new LegacyKeyCounter(trigger) { TextColour = keyTextColor };
 
         private Colour4 keyTextColor = Colour4.White;
 

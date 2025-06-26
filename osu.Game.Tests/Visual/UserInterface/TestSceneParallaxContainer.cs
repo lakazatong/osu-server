@@ -14,18 +14,29 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             ParallaxContainer parallax;
 
-            Add(parallax = new ParallaxContainer
-            {
-                Child = new ScreenStack(new BackgroundScreenDefault { Alpha = 0.8f })
+            Add(
+                parallax = new ParallaxContainer
                 {
-                    RelativeSizeAxes = Axes.Both,
+                    Child = new ScreenStack(new BackgroundScreenDefault { Alpha = 0.8f })
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
                 }
-            });
+            );
 
-            AddStep("default parallax", () => parallax.ParallaxAmount = ParallaxContainer.DEFAULT_PARALLAX_AMOUNT);
-            AddStep("high parallax", () => parallax.ParallaxAmount = ParallaxContainer.DEFAULT_PARALLAX_AMOUNT * 10);
+            AddStep(
+                "default parallax",
+                () => parallax.ParallaxAmount = ParallaxContainer.DEFAULT_PARALLAX_AMOUNT
+            );
+            AddStep(
+                "high parallax",
+                () => parallax.ParallaxAmount = ParallaxContainer.DEFAULT_PARALLAX_AMOUNT * 10
+            );
             AddStep("no parallax", () => parallax.ParallaxAmount = 0);
-            AddStep("negative parallax", () => parallax.ParallaxAmount = -ParallaxContainer.DEFAULT_PARALLAX_AMOUNT);
+            AddStep(
+                "negative parallax",
+                () => parallax.ParallaxAmount = -ParallaxContainer.DEFAULT_PARALLAX_AMOUNT
+            );
         }
     }
 }

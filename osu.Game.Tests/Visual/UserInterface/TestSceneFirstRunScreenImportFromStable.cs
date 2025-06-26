@@ -18,31 +18,38 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneFirstRunScreenImportFromStable : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
-        private readonly Mock<LegacyImportManager> legacyImportManager = new Mock<LegacyImportManager>();
+        private readonly Mock<LegacyImportManager> legacyImportManager =
+            new Mock<LegacyImportManager>();
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            legacyImportManager.Setup(m => m.GetImportCount(It.IsAny<StableContent>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(RNG.Next(0, 256)));
+            legacyImportManager
+                .Setup(m =>
+                    m.GetImportCount(It.IsAny<StableContent>(), It.IsAny<CancellationToken>())
+                )
+                .Returns(() => Task.FromResult(RNG.Next(0, 256)));
 
             Dependencies.CacheAs(legacyImportManager.Object);
         }
 
         public TestSceneFirstRunScreenImportFromStable()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "load screen",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = new PopoverContainer
                     {
-                        new ScreenStack(new ScreenImportFromStable())
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[] { new ScreenStack(new ScreenImportFromStable()) },
+                    };
+                }
+            );
         }
     }
 }

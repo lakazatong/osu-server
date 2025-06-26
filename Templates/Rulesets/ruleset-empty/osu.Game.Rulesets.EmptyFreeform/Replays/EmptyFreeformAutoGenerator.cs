@@ -9,12 +9,11 @@ namespace osu.Game.Rulesets.EmptyFreeform.Replays
 {
     public class EmptyFreeformAutoGenerator : AutoGenerator<EmptyFreeformReplayFrame>
     {
-        public new Beatmap<EmptyFreeformHitObject> Beatmap => (Beatmap<EmptyFreeformHitObject>)base.Beatmap;
+        public new Beatmap<EmptyFreeformHitObject> Beatmap =>
+            (Beatmap<EmptyFreeformHitObject>)base.Beatmap;
 
         public EmptyFreeformAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
@@ -22,12 +21,14 @@ namespace osu.Game.Rulesets.EmptyFreeform.Replays
 
             foreach (EmptyFreeformHitObject hitObject in Beatmap.HitObjects)
             {
-                Frames.Add(new EmptyFreeformReplayFrame
-                {
-                    Time = hitObject.StartTime,
-                    Position = hitObject.Position,
-                    // todo: add required inputs and extra frames.
-                });
+                Frames.Add(
+                    new EmptyFreeformReplayFrame
+                    {
+                        Time = hitObject.StartTime,
+                        Position = hitObject.Position,
+                        // todo: add required inputs and extra frames.
+                    }
+                );
             }
         }
     }

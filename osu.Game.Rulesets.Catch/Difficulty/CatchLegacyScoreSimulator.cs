@@ -27,7 +27,10 @@ namespace osu.Game.Rulesets.Catch.Difficulty
 
         private double scoreMultiplier;
 
-        public LegacyScoreAttributes Simulate(IWorkingBeatmap workingBeatmap, IBeatmap playableBeatmap)
+        public LegacyScoreAttributes Simulate(
+            IWorkingBeatmap workingBeatmap,
+            IBeatmap playableBeatmap
+        )
         {
             IBeatmap baseBeatmap = workingBeatmap.Beatmap;
 
@@ -59,18 +62,30 @@ namespace osu.Game.Rulesets.Catch.Difficulty
 
             if (baseBeatmap.HitObjects.Count > 0)
             {
-                int breakLength = baseBeatmap.Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime)).Sum();
-                drainLength = ((int)Math.Round(baseBeatmap.HitObjects[^1].StartTime) - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime) - breakLength) / 1000;
+                int breakLength = baseBeatmap
+                    .Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime))
+                    .Sum();
+                drainLength =
+                    (
+                        (int)Math.Round(baseBeatmap.HitObjects[^1].StartTime)
+                        - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime)
+                        - breakLength
+                    ) / 1000;
             }
 
-            scoreMultiplier = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(baseBeatmap.Difficulty, objectCount, drainLength);
+            scoreMultiplier = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(
+                baseBeatmap.Difficulty,
+                objectCount,
+                drainLength
+            );
 
             LegacyScoreAttributes attributes = new LegacyScoreAttributes();
 
             foreach (var obj in playableBeatmap.HitObjects)
                 simulateHit(obj, ref attributes);
 
-            attributes.BonusScoreRatio = legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
+            attributes.BonusScoreRatio =
+                legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
             attributes.BonusScore = legacyBonusScore;
             attributes.MaxCombo = combo;
 
@@ -125,7 +140,9 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             if (addScoreComboMultiplier)
             {
                 // ReSharper disable once PossibleLossOfFraction (intentional to match osu-stable...)
-                attributes.ComboScore += (int)(Math.Max(0, combo - 1) * (scoreIncrease / 25 * scoreMultiplier));
+                attributes.ComboScore += (int)(
+                    Math.Max(0, combo - 1) * (scoreIncrease / 25 * scoreMultiplier)
+                );
             }
 
             if (isBonus)
@@ -140,7 +157,10 @@ namespace osu.Game.Rulesets.Catch.Difficulty
                 combo++;
         }
 
-        public double GetLegacyScoreMultiplier(IReadOnlyList<Mod> mods, LegacyBeatmapConversionDifficultyInfo difficulty)
+        public double GetLegacyScoreMultiplier(
+            IReadOnlyList<Mod> mods,
+            LegacyBeatmapConversionDifficultyInfo difficulty
+        )
         {
             bool scoreV2 = mods.Any(m => m is ModScoreV2);
 

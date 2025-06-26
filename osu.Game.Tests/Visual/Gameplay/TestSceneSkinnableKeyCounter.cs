@@ -19,17 +19,20 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public override void SetUpSteps()
         {
-            AddStep("create dependencies", () =>
-            {
-                Add(controller);
-                controller.Add(new KeyCounterKeyboardTrigger(Key.Z));
-                controller.Add(new KeyCounterKeyboardTrigger(Key.X));
-                controller.Add(new KeyCounterKeyboardTrigger(Key.C));
-                controller.Add(new KeyCounterKeyboardTrigger(Key.V));
+            AddStep(
+                "create dependencies",
+                () =>
+                {
+                    Add(controller);
+                    controller.Add(new KeyCounterKeyboardTrigger(Key.Z));
+                    controller.Add(new KeyCounterKeyboardTrigger(Key.X));
+                    controller.Add(new KeyCounterKeyboardTrigger(Key.C));
+                    controller.Add(new KeyCounterKeyboardTrigger(Key.V));
 
-                foreach (var trigger in controller.Triggers)
-                    Add(trigger);
-            });
+                    foreach (var trigger in controller.Triggers)
+                        Add(trigger);
+                }
+            );
             base.SetUpSteps();
         }
 

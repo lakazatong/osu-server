@@ -14,8 +14,11 @@ namespace osu.Game.Graphics.Sprites
     {
         // Inflate draw quad to prevent glow from trimming at the edges.
         // Padding won't suffice since it will affect drawable position in cases when it's not centered.
-        protected override Quad ComputeScreenSpaceDrawQuad()
-            => base.ComputeScreenSpaceDrawQuad().AABBFloat.Inflate(new Vector2(Blur.KernelSize(BlurSigma.X), Blur.KernelSize(BlurSigma.Y)));
+        protected override Quad ComputeScreenSpaceDrawQuad() =>
+            base.ComputeScreenSpaceDrawQuad()
+                .AABBFloat.Inflate(
+                    new Vector2(Blur.KernelSize(BlurSigma.X), Blur.KernelSize(BlurSigma.Y))
+                );
 
         public ColourInfo GlowColour
         {

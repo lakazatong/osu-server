@@ -10,16 +10,16 @@ using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shaders;
-using osu.Framework.Utils;
-using osu.Game.Screens.Menu;
 using osu.Framework.Screens;
 using osu.Framework.Threading;
+using osu.Framework.Utils;
+using osu.Game.BellaFiora;
 using osu.Game.Configuration;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Screens.Menu;
+using osu.Game.Screens.Select;
 using osu.Game.Seasonal;
 using IntroSequence = osu.Game.Configuration.IntroSequence;
-using osu.Game.BellaFiora;
-using osu.Game.Screens.Select;
 
 namespace osu.Game.Screens
 {
@@ -37,7 +37,8 @@ namespace osu.Game.Screens
         private LoadingSpinner spinner;
         private ScheduledDelegate spinnerShow;
 
-        protected virtual OsuScreen CreateLoadableScreen() => Globals.SKIP_MAIN_MENU ? new PlaySongSelect() : getIntroSequence();
+        protected virtual OsuScreen CreateLoadableScreen() =>
+            Globals.SKIP_MAIN_MENU ? new PlaySongSelect() : getIntroSequence();
 
         private IntroScreen getIntroSequence()
         {
@@ -74,16 +75,19 @@ namespace osu.Game.Screens
 
             LoadComponentAsync(loadableScreen = CreateLoadableScreen());
 
-            LoadComponentAsync(spinner = new LoadingSpinner(true, true)
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                Margin = new MarginPadding(40),
-            }, _ =>
-            {
-                AddInternal(spinner);
-                spinnerShow = Scheduler.AddDelayed(spinner.Show, 200);
-            });
+            LoadComponentAsync(
+                spinner = new LoadingSpinner(true, true)
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Margin = new MarginPadding(40),
+                },
+                _ =>
+                {
+                    AddInternal(spinner);
+                    spinnerShow = Scheduler.AddDelayed(spinner.Show, 200);
+                }
+            );
 
             checkIfLoaded();
         }
@@ -101,7 +105,10 @@ namespace osu.Game.Screens
             if (spinner.State.Value == Visibility.Visible)
             {
                 spinner.Hide();
-                Scheduler.AddDelayed(() => this.Push(loadableScreen), LoadingSpinner.TRANSITION_DURATION);
+                Scheduler.AddDelayed(
+                    () => this.Push(loadableScreen),
+                    LoadingSpinner.TRANSITION_DURATION
+                );
             }
             else
                 this.Push(loadableScreen);
@@ -125,17 +132,31 @@ namespace osu.Game.Screens
             [BackgroundDependencyLoader]
             private void load(ShaderManager manager)
             {
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.BLUR));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_3, FragmentShaderDescriptor.TEXTURE));
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE)
+                );
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.BLUR)
+                );
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_3, FragmentShaderDescriptor.TEXTURE)
+                );
 
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"TriangleBorder"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"FastCircle"));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"CircularProgress"));
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, @"CircularProgress")
+                );
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"ArgonBarPath"));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"ArgonBarPathBackground"));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"SaturationSelectorBackground"));
-                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"HueSelectorBackground"));
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, @"ArgonBarPathBackground")
+                );
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, @"SaturationSelectorBackground")
+                );
+                loadTargets.Add(
+                    manager.Load(VertexShaderDescriptor.TEXTURE_2, @"HueSelectorBackground")
+                );
                 loadTargets.Add(manager.Load(@"LogoAnimation", @"LogoAnimation"));
 
                 // Ruleset local shader usage (should probably move somewhere else).

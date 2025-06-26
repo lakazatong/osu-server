@@ -21,8 +21,6 @@ namespace osu.Game.Rulesets.Osu.Judgements
         public Vector2? CursorPositionAtHit;
 
         public OsuHitCircleJudgementResult(HitObject hitObject, Judgement judgement)
-            : base(hitObject, judgement)
-        {
-        }
+            : base(hitObject, judgement) { }
     }
 }

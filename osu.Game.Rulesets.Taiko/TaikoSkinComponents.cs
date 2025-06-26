@@ -22,6 +22,6 @@ namespace osu.Game.Rulesets.Taiko
         Scroller,
         Mascot,
         KiaiGlow,
-        DrumSamplePlayer
+        DrumSamplePlayer,
     }
 }

@@ -36,7 +36,12 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             isForCurrentRuleset = beatmap.BeatmapInfo.Ruleset.MatchesOnlineID(ruleset);
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(
+            IBeatmap beatmap,
+            Mod[] mods,
+            Skill[] skills,
+            double clockRate
+        )
         {
             if (beatmap.HitObjects.Count == 0)
                 return new ManiaDifficultyAttributes { Mods = mods };
@@ -46,7 +51,8 @@ namespace osu.Game.Rulesets.Mania.Difficulty
 
             ManiaDifficultyAttributes attributes = new ManiaDifficultyAttributes
             {
-                StarRating = skills.OfType<Strain>().Single().DifficultyValue() * difficulty_multiplier,
+                StarRating =
+                    skills.OfType<Strain>().Single().DifficultyValue() * difficulty_multiplier,
                 Mods = mods,
                 MaxCombo = beatmap.HitObjects.Sum(maxComboForObject),
             };
@@ -62,27 +68,43 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             return 1;
         }
 
-        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(
+            IBeatmap beatmap,
+            double clockRate
+        )
         {
             var sortedObjects = beatmap.HitObjects.ToArray();
 
-            LegacySortHelper<HitObject>.Sort(sortedObjects, Comparer<HitObject>.Create((a, b) => (int)Math.Round(a.StartTime) - (int)Math.Round(b.StartTime)));
+            LegacySortHelper<HitObject>.Sort(
+                sortedObjects,
+                Comparer<HitObject>.Create(
+                    (a, b) => (int)Math.Round(a.StartTime) - (int)Math.Round(b.StartTime)
+                )
+            );
 
             List<DifficultyHitObject> objects = new List<DifficultyHitObject>();
 
             for (int i = 1; i < sortedObjects.Length; i++)
-                objects.Add(new ManiaDifficultyHitObject(sortedObjects[i], sortedObjects[i - 1], clockRate, objects, objects.Count));
+                objects.Add(
+                    new ManiaDifficultyHitObject(
+                        sortedObjects[i],
+                        sortedObjects[i - 1],
+                        clockRate,
+                        objects,
+                        objects.Count
+                    )
+                );
 
             return objects;
         }
 
         // Sorting is done in CreateDifficultyHitObjects, since the full list of hitobjects is required.
-        protected override IEnumerable<DifficultyHitObject> SortObjects(IEnumerable<DifficultyHitObject> input) => input;
+        protected override IEnumerable<DifficultyHitObject> SortObjects(
+            IEnumerable<DifficultyHitObject> input
+        ) => input;
 
-        protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
-        {
-            new Strain(mods, ((ManiaBeatmap)Beatmap).TotalColumns)
-        };
+        protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) =>
+            new Skill[] { new Strain(mods, ((ManiaBeatmap)Beatmap).TotalColumns) };
 
         protected override Mod[] DifficultyAdjustmentMods
         {
@@ -100,23 +122,26 @@ namespace osu.Game.Rulesets.Mania.Difficulty
                     return mods;
 
                 // if we are a convert, we can be played in any key mod.
-                return mods.Concat(new Mod[]
-                {
-                    new ManiaModKey1(),
-                    new ManiaModKey2(),
-                    new ManiaModKey3(),
-                    new ManiaModKey4(),
-                    new ManiaModKey5(),
-                    new MultiMod(new ManiaModKey5(), new ManiaModDualStages()),
-                    new ManiaModKey6(),
-                    new MultiMod(new ManiaModKey6(), new ManiaModDualStages()),
-                    new ManiaModKey7(),
-                    new MultiMod(new ManiaModKey7(), new ManiaModDualStages()),
-                    new ManiaModKey8(),
-                    new MultiMod(new ManiaModKey8(), new ManiaModDualStages()),
-                    new ManiaModKey9(),
-                    new MultiMod(new ManiaModKey9(), new ManiaModDualStages()),
-                }).ToArray();
+                return mods.Concat(
+                        new Mod[]
+                        {
+                            new ManiaModKey1(),
+                            new ManiaModKey2(),
+                            new ManiaModKey3(),
+                            new ManiaModKey4(),
+                            new ManiaModKey5(),
+                            new MultiMod(new ManiaModKey5(), new ManiaModDualStages()),
+                            new ManiaModKey6(),
+                            new MultiMod(new ManiaModKey6(), new ManiaModDualStages()),
+                            new ManiaModKey7(),
+                            new MultiMod(new ManiaModKey7(), new ManiaModDualStages()),
+                            new ManiaModKey8(),
+                            new MultiMod(new ManiaModKey8(), new ManiaModDualStages()),
+                            new ManiaModKey9(),
+                            new MultiMod(new ManiaModKey9(), new ManiaModDualStages()),
+                        }
+                    )
+                    .ToArray();
             }
         }
     }

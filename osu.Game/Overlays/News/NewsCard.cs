@@ -48,76 +48,78 @@ namespace osu.Game.Overlays.News
                 Action = () => game?.OpenUrlExternally(@"/home/news/" + post.Slug);
             }
 
-            AddRange(new Drawable[]
-            {
-                background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both
-                },
-                new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    new FillFlowContainer
                     {
-                        new Container
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 160,
-                            Masking = true,
-                            CornerRadius = 6,
-                            Children = new Drawable[]
-                            {
-                                new DelayedLoadUnloadWrapper(() => new NewsPostBackground(post.FirstImage)
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    FillMode = FillMode.Fill,
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Alpha = 0
-                                }, timeBeforeUnload: 5000)
-                                {
-                                    RelativeSizeAxes = Axes.Both
-                                },
-                                new DateContainer(post.PublishedAt)
-                                {
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    Margin = new MarginPadding
-                                    {
-                                        Top = 10,
-                                        Right = 15
-                                    }
-                                }
-                            }
-                        },
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding
-                            {
-                                Horizontal = 15,
-                                Vertical = 10
-                            },
-                            Child = main = new TextFlowContainer
+                            new Container
                             {
                                 RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y
-                            }
-                        }
-                    }
+                                Height = 160,
+                                Masking = true,
+                                CornerRadius = 6,
+                                Children = new Drawable[]
+                                {
+                                    new DelayedLoadUnloadWrapper(
+                                        () =>
+                                            new NewsPostBackground(post.FirstImage)
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                FillMode = FillMode.Fill,
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                                Alpha = 0,
+                                            },
+                                        timeBeforeUnload: 5000
+                                    )
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                    new DateContainer(post.PublishedAt)
+                                    {
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.TopRight,
+                                        Margin = new MarginPadding { Top = 10, Right = 15 },
+                                    },
+                                },
+                            },
+                            new Container
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding { Horizontal = 15, Vertical = 10 },
+                                Child = main =
+                                    new TextFlowContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                    },
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             IdleColour = colourProvider.Background4;
             HoverColour = colourProvider.Background3;
 
-            main.AddParagraph(post.Title, t => t.Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold));
+            main.AddParagraph(
+                post.Title,
+                t => t.Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold)
+            );
             main.AddParagraph(post.Preview, t => t.Font = OsuFont.GetFont(size: 12)); // Should use sans-serif font
             main.AddParagraph("by ", t => t.Font = OsuFont.GetFont(size: 12));
-            main.AddText(post.Author, t => t.Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold));
+            main.AddText(
+                post.Author,
+                t => t.Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold)
+            );
         }
 
         private partial class DateContainer : CircularContainer, IHasCustomTooltip<DateTimeOffset>
@@ -139,24 +141,21 @@ namespace osu.Game.Overlays.News
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background6.Opacity(0.5f)
+                        Colour = colourProvider.Background6.Opacity(0.5f),
                     },
                     new OsuSpriteText
                     {
                         Text = date.ToLocalisableString(@"d MMM yyyy").ToUpper(),
                         Font = OsuFont.GetFont(size: 10, weight: FontWeight.SemiBold),
-                        Margin = new MarginPadding
-                        {
-                            Horizontal = 20,
-                            Vertical = 5
-                        }
-                    }
+                        Margin = new MarginPadding { Horizontal = 20, Vertical = 5 },
+                    },
                 };
             }
 
             protected override bool OnClick(ClickEvent e) => true; // Protects the NewsCard from clicks while hovering DateContainer
 
-            ITooltip<DateTimeOffset> IHasCustomTooltip<DateTimeOffset>.GetCustomTooltip() => new DateTooltip();
+            ITooltip<DateTimeOffset> IHasCustomTooltip<DateTimeOffset>.GetCustomTooltip() =>
+                new DateTooltip();
 
             DateTimeOffset IHasCustomTooltip<DateTimeOffset>.TooltipContent => date;
         }

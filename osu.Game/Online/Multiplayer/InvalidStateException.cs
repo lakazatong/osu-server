@@ -10,8 +10,6 @@ namespace osu.Game.Online.Multiplayer
     public class InvalidStateException : HubException
     {
         public InvalidStateException(string message)
-            : base(message)
-        {
-        }
+            : base(message) { }
     }
 }

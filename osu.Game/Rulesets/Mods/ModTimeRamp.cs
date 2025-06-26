@@ -14,7 +14,11 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModTimeRamp : Mod, IUpdatableByPlayfield, IApplicableToBeatmap, IApplicableToRate
+    public abstract class ModTimeRamp
+        : Mod,
+            IUpdatableByPlayfield,
+            IApplicableToBeatmap,
+            IApplicableToRate
     {
         /// <summary>
         /// The point in the beatmap at which the final ramping rate should be reached.
@@ -23,10 +27,18 @@ namespace osu.Game.Rulesets.Mods
 
         public override double ScoreMultiplier => 0.5;
 
-        [SettingSource("Initial rate", "The starting speed of the track", SettingControlType = typeof(MultiplierSettingsSlider))]
+        [SettingSource(
+            "Initial rate",
+            "The starting speed of the track",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
         public abstract BindableNumber<double> InitialRate { get; }
 
-        [SettingSource("Final rate", "The final speed to ramp to", SettingControlType = typeof(MultiplierSettingsSlider))]
+        [SettingSource(
+            "Final rate",
+            "The final speed to ramp to",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
         public abstract BindableNumber<double> FinalRate { get; }
 
         [SettingSource("Adjust pitch", "Should pitch be adjusted with speed")]
@@ -35,9 +47,13 @@ namespace osu.Game.Rulesets.Mods
         public sealed override bool ValidForFreestyleAsRequiredMod => true;
         public sealed override bool ValidForMultiplayerAsFreeMod => false;
 
-        public override Type[] IncompatibleMods => new[] { typeof(ModRateAdjust), typeof(ModAdaptiveSpeed) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModRateAdjust), typeof(ModAdaptiveSpeed) };
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -51,10 +67,8 @@ namespace osu.Game.Rulesets.Mods
         private double finalRateTime;
         private double beginRampTime;
 
-        public BindableNumber<double> SpeedChange { get; } = new BindableDouble(1)
-        {
-            Precision = 0.01,
-        };
+        public BindableNumber<double> SpeedChange { get; } =
+            new BindableDouble(1) { Precision = 0.01 };
 
         private readonly RateAdjustModHelper rateAdjustHelper;
 
@@ -86,13 +100,16 @@ namespace osu.Game.Rulesets.Mods
             double lastObjectEnd = beatmap.HitObjects.Any() ? beatmap.GetLastObjectTime() : 0;
 
             beginRampTime = firstObjectStart;
-            finalRateTime = firstObjectStart + FINAL_RATE_PROGRESS * (lastObjectEnd - firstObjectStart);
+            finalRateTime =
+                firstObjectStart + FINAL_RATE_PROGRESS * (lastObjectEnd - firstObjectStart);
         }
 
         public double ApplyToRate(double time, double rate = 1)
         {
             double amount = (time - beginRampTime) / Math.Max(1, finalRateTime - beginRampTime);
-            double ramp = InitialRate.Value + (FinalRate.Value - InitialRate.Value) * Math.Clamp(amount, 0, 1);
+            double ramp =
+                InitialRate.Value
+                + (FinalRate.Value - InitialRate.Value) * Math.Clamp(amount, 0, 1);
 
             // round the end result to match the bindable SpeedChange's precision, in case this is called externally.
             return rate * Math.Round(ramp, 2);

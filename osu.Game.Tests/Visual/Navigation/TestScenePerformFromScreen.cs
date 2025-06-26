@@ -37,7 +37,10 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestPerformAtMenu()
         {
-            AddStep("perform immediately", () => Game.PerformFromScreen(_ => actionPerformed = true));
+            AddStep(
+                "perform immediately",
+                () => Game.PerformFromScreen(_ => actionPerformed = true)
+            );
             AddAssert("did perform", () => actionPerformed);
         }
 
@@ -46,9 +49,19 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             PushAndConfirm(() => new TestPlaySongSelect());
 
-            AddStep("perform immediately", () => Game.PerformFromScreen(_ => actionPerformed = true, new[] { typeof(TestPlaySongSelect) }));
+            AddStep(
+                "perform immediately",
+                () =>
+                    Game.PerformFromScreen(
+                        _ => actionPerformed = true,
+                        new[] { typeof(TestPlaySongSelect) }
+                    )
+            );
             AddAssert("did perform", () => actionPerformed);
-            AddAssert("screen didn't change", () => Game.ScreenStack.CurrentScreen is TestPlaySongSelect);
+            AddAssert(
+                "screen didn't change",
+                () => Game.ScreenStack.CurrentScreen is TestPlaySongSelect
+            );
         }
 
         [Test]
@@ -67,10 +80,23 @@ namespace osu.Game.Tests.Visual.Navigation
             importAndWaitForSongSelect();
 
             AddStep("Press enter", () => InputManager.Key(Key.Enter));
-            AddUntilStep("Wait for new screen", () => Game.ScreenStack.CurrentScreen is PlayerLoader);
+            AddUntilStep(
+                "Wait for new screen",
+                () => Game.ScreenStack.CurrentScreen is PlayerLoader
+            );
 
-            AddStep("try to perform", () => Game.PerformFromScreen(_ => actionPerformed = true, new[] { typeof(TestPlaySongSelect) }));
-            AddUntilStep("returned to song select", () => Game.ScreenStack.CurrentScreen is TestPlaySongSelect);
+            AddStep(
+                "try to perform",
+                () =>
+                    Game.PerformFromScreen(
+                        _ => actionPerformed = true,
+                        new[] { typeof(TestPlaySongSelect) }
+                    )
+            );
+            AddUntilStep(
+                "returned to song select",
+                () => Game.ScreenStack.CurrentScreen is TestPlaySongSelect
+            );
             AddAssert("did perform", () => actionPerformed);
         }
 
@@ -80,10 +106,16 @@ namespace osu.Game.Tests.Visual.Navigation
             importAndWaitForSongSelect();
 
             AddStep("Press enter", () => InputManager.Key(Key.Enter));
-            AddUntilStep("Wait for new screen", () => Game.ScreenStack.CurrentScreen is PlayerLoader);
+            AddUntilStep(
+                "Wait for new screen",
+                () => Game.ScreenStack.CurrentScreen is PlayerLoader
+            );
 
             AddStep("try to perform", () => Game.PerformFromScreen(_ => actionPerformed = true));
-            AddUntilStep("returned to song select", () => Game.ScreenStack.CurrentScreen is MainMenu);
+            AddUntilStep(
+                "returned to song select",
+                () => Game.ScreenStack.CurrentScreen is MainMenu
+            );
             AddAssert("did perform", () => actionPerformed);
         }
 
@@ -92,22 +124,34 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             importAndWaitForSongSelect();
 
-            AddStep("press ctrl+enter", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Key(Key.Enter);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
+            AddStep(
+                "press ctrl+enter",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Key(Key.Enter);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
 
-            AddUntilStep("Wait for new screen", () => Game.ScreenStack.CurrentScreen is PlayerLoader);
+            AddUntilStep(
+                "Wait for new screen",
+                () => Game.ScreenStack.CurrentScreen is PlayerLoader
+            );
 
-            AddAssert("Mods include autoplay", () => Game.SelectedMods.Value.Any(m => m is ModAutoplay));
+            AddAssert(
+                "Mods include autoplay",
+                () => Game.SelectedMods.Value.Any(m => m is ModAutoplay)
+            );
 
             AddStep("try to perform", () => Game.PerformFromScreen(_ => actionPerformed = true));
             AddUntilStep("returned to main menu", () => Game.ScreenStack.CurrentScreen is MainMenu);
             AddAssert("did perform", () => actionPerformed);
 
-            AddAssert("Mods don't include autoplay", () => !Game.SelectedMods.Value.Any(m => m is ModAutoplay));
+            AddAssert(
+                "Mods don't include autoplay",
+                () => !Game.SelectedMods.Value.Any(m => m is ModAutoplay)
+            );
         }
 
         [Test]
@@ -115,8 +159,18 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             TestLoadBlockingScreen screen = null;
 
-            AddStep("push blocking screen", () => Game.ScreenStack.Push(screen = new TestLoadBlockingScreen()));
-            AddStep("perform", () => Game.PerformFromScreen(_ => actionPerformed = true, new[] { typeof(TestLoadBlockingScreen) }));
+            AddStep(
+                "push blocking screen",
+                () => Game.ScreenStack.Push(screen = new TestLoadBlockingScreen())
+            );
+            AddStep(
+                "perform",
+                () =>
+                    Game.PerformFromScreen(
+                        _ => actionPerformed = true,
+                        new[] { typeof(TestLoadBlockingScreen) }
+                    )
+            );
             AddAssert("action not performed", () => !actionPerformed);
 
             AddStep("allow load", () => screen.LoadEvent.Set());
@@ -128,7 +182,10 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             ChatOverlay chat = null;
             AddUntilStep("is at menu", () => Game.ScreenStack.CurrentScreen is MainMenu);
-            AddUntilStep("wait for chat load", () => (chat = Game.ChildrenOfType<ChatOverlay>().SingleOrDefault()) != null);
+            AddUntilStep(
+                "wait for chat load",
+                () => (chat = Game.ChildrenOfType<ChatOverlay>().SingleOrDefault()) != null
+            );
 
             AddStep("show chat", () => InputManager.Key(Key.F8));
 
@@ -150,7 +207,10 @@ namespace osu.Game.Tests.Visual.Navigation
 
             AddWaitStep("wait a bit", 10);
 
-            AddAssert("screen didn't change", () => Game.ScreenStack.CurrentScreen is DialogBlockingScreen);
+            AddAssert(
+                "screen didn't change",
+                () => Game.ScreenStack.CurrentScreen is DialogBlockingScreen
+            );
             AddAssert("did not perform", () => !actionPerformed);
             AddAssert("only one exit attempt", () => blocker.ExitAttempts == 1);
 
@@ -159,13 +219,19 @@ namespace osu.Game.Tests.Visual.Navigation
             if (confirmed)
             {
                 AddStep("accept dialog", () => InputManager.Key(Key.Number1));
-                AddUntilStep("wait for dialog dismissed", () => Game.Dependencies.Get<IDialogOverlay>().CurrentDialog == null);
+                AddUntilStep(
+                    "wait for dialog dismissed",
+                    () => Game.Dependencies.Get<IDialogOverlay>().CurrentDialog == null
+                );
                 AddUntilStep("did perform", () => actionPerformed);
             }
             else
             {
                 AddStep("cancel dialog", () => InputManager.Key(Key.Number2));
-                AddAssert("screen didn't change", () => Game.ScreenStack.CurrentScreen is DialogBlockingScreen);
+                AddAssert(
+                    "screen didn't change",
+                    () => Game.ScreenStack.CurrentScreen is DialogBlockingScreen
+                );
                 AddAssert("did not perform", () => !actionPerformed);
             }
         }
@@ -220,7 +286,12 @@ namespace osu.Game.Tests.Visual.Navigation
 
             PushAndConfirm(() => screenWithNestedStack = new TestScreenWithNestedStack());
 
-            AddAssert("wait for nested screen", () => screenWithNestedStack.SubScreenStack.CurrentScreen == screenWithNestedStack.Blocker);
+            AddAssert(
+                "wait for nested screen",
+                () =>
+                    screenWithNestedStack.SubScreenStack.CurrentScreen
+                    == screenWithNestedStack.Blocker
+            );
 
             AddStep("try to perform", () => Game.PerformFromScreen(_ => actionPerformed = true));
 
@@ -230,35 +301,69 @@ namespace osu.Game.Tests.Visual.Navigation
 
             waitForDialogOverlayLoad();
 
-            AddAssert("screen didn't change", () => Game.ScreenStack.CurrentScreen == screenWithNestedStack);
-            AddAssert("nested screen didn't change", () => screenWithNestedStack.SubScreenStack.CurrentScreen == screenWithNestedStack.Blocker);
+            AddAssert(
+                "screen didn't change",
+                () => Game.ScreenStack.CurrentScreen == screenWithNestedStack
+            );
+            AddAssert(
+                "nested screen didn't change",
+                () =>
+                    screenWithNestedStack.SubScreenStack.CurrentScreen
+                    == screenWithNestedStack.Blocker
+            );
 
             AddAssert("did not perform", () => !actionPerformed);
 
-            AddAssert("only one exit attempt", () => screenWithNestedStack.Blocker.ExitAttempts == 1);
+            AddAssert(
+                "only one exit attempt",
+                () => screenWithNestedStack.Blocker.ExitAttempts == 1
+            );
 
             if (confirm)
             {
                 AddStep("accept dialog", () => InputManager.Key(Key.Number1));
-                AddAssert("nested screen changed", () => screenWithNestedStack.SubScreenStack.CurrentScreen != screenWithNestedStack.Blocker);
+                AddAssert(
+                    "nested screen changed",
+                    () =>
+                        screenWithNestedStack.SubScreenStack.CurrentScreen
+                        != screenWithNestedStack.Blocker
+                );
                 AddUntilStep("did perform", () => actionPerformed);
             }
             else
             {
                 AddStep("cancel dialog", () => InputManager.Key(Key.Number2));
-                AddAssert("screen didn't change", () => Game.ScreenStack.CurrentScreen == screenWithNestedStack);
-                AddAssert("nested screen didn't change", () => screenWithNestedStack.SubScreenStack.CurrentScreen == screenWithNestedStack.Blocker);
+                AddAssert(
+                    "screen didn't change",
+                    () => Game.ScreenStack.CurrentScreen == screenWithNestedStack
+                );
+                AddAssert(
+                    "nested screen didn't change",
+                    () =>
+                        screenWithNestedStack.SubScreenStack.CurrentScreen
+                        == screenWithNestedStack.Blocker
+                );
                 AddAssert("did not perform", () => !actionPerformed);
             }
         }
 
-        private void waitForDialogOverlayLoad() => AddUntilStep("wait for dialog overlay loaded", () => ((Drawable)Game.Dependencies.Get<IDialogOverlay>()).IsLoaded);
+        private void waitForDialogOverlayLoad() =>
+            AddUntilStep(
+                "wait for dialog overlay loaded",
+                () => ((Drawable)Game.Dependencies.Get<IDialogOverlay>()).IsLoaded
+            );
 
         private void importAndWaitForSongSelect()
         {
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadQuickOszIntoOsu(Game).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadQuickOszIntoOsu(Game).WaitSafely()
+            );
             PushAndConfirm(() => new TestPlaySongSelect());
-            AddUntilStep("beatmap updated", () => Game.Beatmap.Value.BeatmapSetInfo.OnlineID == 241526);
+            AddUntilStep(
+                "beatmap updated",
+                () => Game.Beatmap.Value.BeatmapSetInfo.OnlineID == 241526
+            );
         }
 
         public partial class DialogBlockingScreen : OsuScreen

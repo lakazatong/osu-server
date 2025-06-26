@@ -14,11 +14,11 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Overlays.Settings;
 using osu.Game.Resources.Localisation.Web;
 using osuTK;
-using osu.Game.Localisation;
 
 namespace osu.Game.Overlays.Login
 {
@@ -64,11 +64,14 @@ namespace osu.Game.Overlays.Login
                         },
                         username = new OsuTextBox
                         {
-                            InputProperties = new TextInputProperties(TextInputType.Username, false),
+                            InputProperties = new TextInputProperties(
+                                TextInputType.Username,
+                                false
+                            ),
                             PlaceholderText = UsersStrings.LoginUsername.ToLower(),
                             RelativeSizeAxes = Axes.X,
                             Text = api.ProvidedUsername,
-                            TabbableContentContainer = this
+                            TabbableContentContainer = this,
                         },
                         password = new OsuPasswordTextBox
                         {
@@ -113,10 +116,10 @@ namespace osu.Game.Overlays.Login
                             Child = new SettingsButton
                             {
                                 Text = UsersStrings.LoginButton,
-                                Action = performLogin
+                                Action = performLogin,
                             },
-                        }
-                    }
+                        },
+                    },
                 },
                 new SettingsButton
                 {
@@ -125,11 +128,14 @@ namespace osu.Game.Overlays.Login
                     {
                         RequestHide?.Invoke();
                         accountCreation.Show();
-                    }
-                }
+                    },
+                },
             };
 
-            forgottenPasswordLink.AddLink(LayoutStrings.PopupLoginLoginForgot, $"{api.Endpoints.WebsiteUrl}/home/password-reset");
+            forgottenPasswordLink.AddLink(
+                LayoutStrings.PopupLoginLoginForgot,
+                $"{api.Endpoints.WebsiteUrl}/home/password-reset"
+            );
 
             password.OnCommit += (_, _) => performLogin();
 
@@ -152,7 +158,11 @@ namespace osu.Game.Overlays.Login
 
         protected override void OnFocus(FocusEvent e)
         {
-            Schedule(() => { GetContainingFocusManager()!.ChangeFocus(string.IsNullOrEmpty(username.Text) ? username : password); });
+            Schedule(() =>
+            {
+                GetContainingFocusManager()!
+                    .ChangeFocus(string.IsNullOrEmpty(username.Text) ? username : password);
+            });
         }
     }
 }

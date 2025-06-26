@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Timing
         /// <summary>
         /// The aggregate multiplier which this <see cref="MultiplierControlPoint"/> provides.
         /// </summary>
-        public double Multiplier => Velocity * EffectPoint.ScrollSpeed * BaseBeatLength / TimingPoint.BeatLength;
+        public double Multiplier =>
+            Velocity * EffectPoint.ScrollSpeed * BaseBeatLength / TimingPoint.BeatLength;
 
         /// <summary>
         /// The base beat length to scale the <see cref="TimingPoint"/> provided multiplier relative to.
@@ -47,9 +48,7 @@ namespace osu.Game.Rulesets.Timing
         /// <summary>
         /// Creates a <see cref="MultiplierControlPoint"/>. This is required for JSON serialization
         /// </summary>
-        public MultiplierControlPoint()
-        {
-        }
+        public MultiplierControlPoint() { }
 
         /// <summary>
         /// Creates a <see cref="MultiplierControlPoint"/>.

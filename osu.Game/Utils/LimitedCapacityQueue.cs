@@ -27,7 +27,8 @@ namespace osu.Game.Utils
         private readonly int capacity;
 
         // Markers tracking the queue's first and last element.
-        private int start, end;
+        private int start,
+            end;
 
         /// <summary>
         /// Constructs a new <see cref="LimitedCapacityQueue{T}"/>

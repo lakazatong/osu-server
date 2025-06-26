@@ -38,7 +38,9 @@ namespace osu.Game.Tests.Visual.Online
         private readonly DialogOverlay dialogOverlay = new DialogOverlay();
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         private CommentsContainer commentsContainer = null!;
 
@@ -47,18 +49,17 @@ namespace osu.Game.Tests.Visual.Online
         [BackgroundDependencyLoader]
         private void load()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                new PopoverContainer
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = content = new OsuScrollContainer
+                    new PopoverContainer
                     {
-                        RelativeSizeAxes = Axes.Both
-                    }
-                },
-                dialogOverlay
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Child = content = new OsuScrollContainer { RelativeSizeAxes = Axes.Both },
+                    },
+                    dialogOverlay,
+                }
+            );
         }
 
         [SetUpSteps]
@@ -77,19 +78,26 @@ namespace osu.Game.Tests.Visual.Online
         {
             addTestComments();
 
-            AddUntilStep("First comment has button", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                var ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
-                return ourComment != null && ourComment.ChildrenOfType<OsuSpriteText>().Any(x => x.Text == "delete");
-            });
+            AddUntilStep(
+                "First comment has button",
+                () =>
+                {
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    var ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
+                    return ourComment != null
+                        && ourComment.ChildrenOfType<OsuSpriteText>().Any(x => x.Text == "delete");
+                }
+            );
 
-            AddAssert("Second doesn't", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                var ourComment = comments.Single(x => x.Comment.Id == 2);
-                return ourComment.ChildrenOfType<OsuSpriteText>().All(x => x.Text != "delete");
-            });
+            AddAssert(
+                "Second doesn't",
+                () =>
+                {
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    var ourComment = comments.Single(x => x.Comment.Id == 2);
+                    return ourComment.ChildrenOfType<OsuSpriteText>().All(x => x.Text != "delete");
+                }
+            );
         }
 
         [Test]
@@ -98,70 +106,91 @@ namespace osu.Game.Tests.Visual.Online
             DrawableComment? ourComment = null;
 
             addTestComments();
-            AddUntilStep("Comment exists", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
-                return ourComment != null;
-            });
-            AddStep("It has delete button", () =>
-            {
-                var btn = ourComment.ChildrenOfType<OsuSpriteText>().Single(x => x.Text == "delete");
-                InputManager.MoveMouseTo(btn);
-            });
-            AddStep("Click delete button", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("Setup request handling", () =>
-            {
-                requestLock.Reset();
-
-                dummyAPI.HandleRequest = request =>
+            AddUntilStep(
+                "Comment exists",
+                () =>
                 {
-                    if (!(request is CommentDeleteRequest req))
-                        return false;
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
+                    return ourComment != null;
+                }
+            );
+            AddStep(
+                "It has delete button",
+                () =>
+                {
+                    var btn = ourComment
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Single(x => x.Text == "delete");
+                    InputManager.MoveMouseTo(btn);
+                }
+            );
+            AddStep(
+                "Click delete button",
+                () =>
+                {
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "Setup request handling",
+                () =>
+                {
+                    requestLock.Reset();
 
-                    if (req.CommentId != 1)
-                        return false;
-
-                    CommentBundle cb = new CommentBundle
+                    dummyAPI.HandleRequest = request =>
                     {
-                        Comments = new List<Comment>
+                        if (!(request is CommentDeleteRequest req))
+                            return false;
+
+                        if (req.CommentId != 1)
+                            return false;
+
+                        CommentBundle cb = new CommentBundle
                         {
-                            new Comment
+                            Comments = new List<Comment>
                             {
-                                Id = 2,
-                                Message = "This is a comment by another user",
-                                UserId = API.LocalUser.Value.Id + 1,
-                                CreatedAt = DateTimeOffset.Now,
-                                User = new APIUser
+                                new Comment
                                 {
-                                    Id = API.LocalUser.Value.Id + 1,
-                                    Username = "Another user"
-                                }
+                                    Id = 2,
+                                    Message = "This is a comment by another user",
+                                    UserId = API.LocalUser.Value.Id + 1,
+                                    CreatedAt = DateTimeOffset.Now,
+                                    User = new APIUser
+                                    {
+                                        Id = API.LocalUser.Value.Id + 1,
+                                        Username = "Another user",
+                                    },
+                                },
                             },
-                        },
-                        IncludedComments = new List<Comment>(),
-                        PinnedComments = new List<Comment>(),
+                            IncludedComments = new List<Comment>(),
+                            PinnedComments = new List<Comment>(),
+                        };
+
+                        Task.Run(() =>
+                        {
+                            requestLock.Wait(10000);
+                            req.TriggerSuccess(cb);
+                        });
+
+                        return true;
                     };
-
-                    Task.Run(() =>
-                    {
-                        requestLock.Wait(10000);
-                        req.TriggerSuccess(cb);
-                    });
-
-                    return true;
-                };
-            });
+                }
+            );
             AddStep("Confirm dialog", () => InputManager.Key(Key.Number1));
 
-            AddAssert("Loading spinner shown", () => commentsContainer.ChildrenOfType<LoadingSpinner>().Any(d => d.IsPresent));
+            AddAssert(
+                "Loading spinner shown",
+                () => commentsContainer.ChildrenOfType<LoadingSpinner>().Any(d => d.IsPresent)
+            );
 
             AddStep("Complete request", () => requestLock.Set());
 
-            AddUntilStep("Comment is deleted locally", () => this.ChildrenOfType<DrawableComment>().Single(x => x.Comment.Id == 1).WasDeleted);
+            AddUntilStep(
+                "Comment is deleted locally",
+                () =>
+                    this.ChildrenOfType<DrawableComment>().Single(x => x.Comment.Id == 1).WasDeleted
+            );
         }
 
         [Test]
@@ -171,47 +200,75 @@ namespace osu.Game.Tests.Visual.Online
             bool delete = false;
 
             addTestComments();
-            AddUntilStep("Comment exists", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
-                return ourComment != null;
-            });
-            AddStep("It has delete button", () =>
-            {
-                var btn = ourComment.ChildrenOfType<OsuSpriteText>().Single(x => x.Text == "delete");
-                InputManager.MoveMouseTo(btn);
-            });
-            AddStep("Click delete button", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("Setup request handling", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+            AddUntilStep(
+                "Comment exists",
+                () =>
                 {
-                    if (request is not CommentDeleteRequest req)
-                        return false;
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    ourComment = comments.SingleOrDefault(x => x.Comment.Id == 1);
+                    return ourComment != null;
+                }
+            );
+            AddStep(
+                "It has delete button",
+                () =>
+                {
+                    var btn = ourComment
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Single(x => x.Text == "delete");
+                    InputManager.MoveMouseTo(btn);
+                }
+            );
+            AddStep(
+                "Click delete button",
+                () =>
+                {
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "Setup request handling",
+                () =>
+                {
+                    dummyAPI.HandleRequest = request =>
+                    {
+                        if (request is not CommentDeleteRequest req)
+                            return false;
 
-                    req.TriggerFailure(new InvalidOperationException());
-                    delete = true;
-                    return false;
-                };
-            });
+                        req.TriggerFailure(new InvalidOperationException());
+                        delete = true;
+                        return false;
+                    };
+                }
+            );
             AddStep("Confirm dialog", () => InputManager.Key(Key.Number1));
             AddUntilStep("Deletion requested", () => delete);
-            AddUntilStep("Comment is available", () =>
-            {
-                return !this.ChildrenOfType<DrawableComment>().Single(x => x.Comment.Id == 1).WasDeleted;
-            });
-            AddAssert("Loading spinner hidden", () =>
-            {
-                return ourComment.ChildrenOfType<LoadingSpinner>().All(d => !d.IsPresent);
-            });
-            AddAssert("Actions available", () =>
-            {
-                return ourComment.ChildrenOfType<LinkFlowContainer>().Single(x => x.Name == @"Actions buttons").IsPresent;
-            });
+            AddUntilStep(
+                "Comment is available",
+                () =>
+                {
+                    return !this.ChildrenOfType<DrawableComment>()
+                        .Single(x => x.Comment.Id == 1)
+                        .WasDeleted;
+                }
+            );
+            AddAssert(
+                "Loading spinner hidden",
+                () =>
+                {
+                    return ourComment.ChildrenOfType<LoadingSpinner>().All(d => !d.IsPresent);
+                }
+            );
+            AddAssert(
+                "Actions available",
+                () =>
+                {
+                    return ourComment
+                        .ChildrenOfType<LinkFlowContainer>()
+                        .Single(x => x.Name == @"Actions buttons")
+                        .IsPresent;
+                }
+            );
         }
 
         [Test]
@@ -222,64 +279,104 @@ namespace osu.Game.Tests.Visual.Online
             CommentReportRequest? request = null;
 
             addTestComments();
-            AddUntilStep("Comment exists", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                targetComment = comments.SingleOrDefault(x => x.Comment.Id == 2);
-                return targetComment != null;
-            });
-            AddStep("Setup request handling", () =>
-            {
-                requestLock.Reset();
-
-                dummyAPI.HandleRequest = r =>
+            AddUntilStep(
+                "Comment exists",
+                () =>
                 {
-                    if (!(r is CommentReportRequest req))
-                        return false;
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    targetComment = comments.SingleOrDefault(x => x.Comment.Id == 2);
+                    return targetComment != null;
+                }
+            );
+            AddStep(
+                "Setup request handling",
+                () =>
+                {
+                    requestLock.Reset();
 
-                    Task.Run(() =>
+                    dummyAPI.HandleRequest = r =>
                     {
-                        request = req;
-                        requestLock.Wait(10000);
-                        req.TriggerSuccess();
-                    });
+                        if (!(r is CommentReportRequest req))
+                            return false;
 
-                    return true;
-                };
-            });
-            AddStep("Click the button", () =>
-            {
-                var btn = targetComment.ChildrenOfType<OsuSpriteText>().Single(x => x.Text == "report");
-                InputManager.MoveMouseTo(btn);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("Try to report", () =>
-            {
-                var btn = this.ChildrenOfType<ReportCommentPopover>().Single().ChildrenOfType<RoundedButton>().Single();
-                InputManager.MoveMouseTo(btn);
-                InputManager.Click(MouseButton.Left);
-            });
+                        Task.Run(() =>
+                        {
+                            request = req;
+                            requestLock.Wait(10000);
+                            req.TriggerSuccess();
+                        });
+
+                        return true;
+                    };
+                }
+            );
+            AddStep(
+                "Click the button",
+                () =>
+                {
+                    var btn = targetComment
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Single(x => x.Text == "report");
+                    InputManager.MoveMouseTo(btn);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "Try to report",
+                () =>
+                {
+                    var btn = this.ChildrenOfType<ReportCommentPopover>()
+                        .Single()
+                        .ChildrenOfType<RoundedButton>()
+                        .Single();
+                    InputManager.MoveMouseTo(btn);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddWaitStep("Wait", 3);
             AddAssert("Nothing happened", () => this.ChildrenOfType<ReportCommentPopover>().Any());
-            AddStep("Set report data", () =>
-            {
-                var field = this.ChildrenOfType<ReportCommentPopover>().Single().ChildrenOfType<OsuTextBox>().First();
-                field.Current.Value = report_text;
-                var reason = this.ChildrenOfType<OsuEnumDropdown<CommentReportReason>>().Single();
-                reason.Current.Value = CommentReportReason.Other;
-            });
-            AddStep("Try to report", () =>
-            {
-                var btn = this.ChildrenOfType<ReportCommentPopover>().Single().ChildrenOfType<RoundedButton>().Single();
-                InputManager.MoveMouseTo(btn);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "Set report data",
+                () =>
+                {
+                    var field = this.ChildrenOfType<ReportCommentPopover>()
+                        .Single()
+                        .ChildrenOfType<OsuTextBox>()
+                        .First();
+                    field.Current.Value = report_text;
+                    var reason = this.ChildrenOfType<OsuEnumDropdown<CommentReportReason>>()
+                        .Single();
+                    reason.Current.Value = CommentReportReason.Other;
+                }
+            );
+            AddStep(
+                "Try to report",
+                () =>
+                {
+                    var btn = this.ChildrenOfType<ReportCommentPopover>()
+                        .Single()
+                        .ChildrenOfType<RoundedButton>()
+                        .Single();
+                    InputManager.MoveMouseTo(btn);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddWaitStep("Wait", 3);
             AddAssert("Overlay closed", () => !this.ChildrenOfType<ReportCommentPopover>().Any());
-            AddAssert("Loading spinner shown", () => targetComment.ChildrenOfType<LoadingSpinner>().Any(d => d.IsPresent));
+            AddAssert(
+                "Loading spinner shown",
+                () => targetComment.ChildrenOfType<LoadingSpinner>().Any(d => d.IsPresent)
+            );
             AddStep("Complete request", () => requestLock.Set());
             AddUntilStep("Request sent", () => request != null);
-            AddAssert("Request is correct", () => request != null && request.CommentID == 2 && request.Comment == report_text && request.Reason == CommentReportReason.Other);
+            AddAssert(
+                "Request is correct",
+                () =>
+                    request != null
+                    && request.CommentID == 2
+                    && request.Comment == report_text
+                    && request.Reason == CommentReportReason.Other
+            );
         }
 
         [Test]
@@ -287,124 +384,175 @@ namespace osu.Game.Tests.Visual.Online
         {
             addTestComments();
             DrawableComment? targetComment = null;
-            AddUntilStep("Comment exists", () =>
-            {
-                var comments = this.ChildrenOfType<DrawableComment>();
-                targetComment = comments.SingleOrDefault(x => x.Comment.Id == 2);
-                return targetComment != null;
-            });
-            AddStep("Setup request handling", () =>
-            {
-                requestLock.Reset();
-
-                dummyAPI.HandleRequest = r =>
+            AddUntilStep(
+                "Comment exists",
+                () =>
                 {
-                    if (!(r is CommentPostRequest req))
-                        return false;
+                    var comments = this.ChildrenOfType<DrawableComment>();
+                    targetComment = comments.SingleOrDefault(x => x.Comment.Id == 2);
+                    return targetComment != null;
+                }
+            );
+            AddStep(
+                "Setup request handling",
+                () =>
+                {
+                    requestLock.Reset();
 
-                    if (req.ParentCommentId != 2)
-                        throw new ArgumentException("Wrong parent ID in request!");
-
-                    if (req.CommentableId != 123 || req.Commentable != CommentableType.Beatmapset)
-                        throw new ArgumentException("Wrong commentable data in request!");
-
-                    Task.Run(() =>
+                    dummyAPI.HandleRequest = r =>
                     {
-                        requestLock.Wait(10000);
-                        req.TriggerSuccess(new CommentBundle
-                        {
-                            Comments = new List<Comment>
-                            {
-                                new Comment
-                                {
-                                    Id = 98,
-                                    Message = req.Message,
-                                    LegacyName = "FirstUser",
-                                    CreatedAt = DateTimeOffset.Now,
-                                    VotesCount = 98,
-                                    ParentId = req.ParentCommentId,
-                                }
-                            }
-                        });
-                    });
+                        if (!(r is CommentPostRequest req))
+                            return false;
 
-                    return true;
-                };
-            });
-            AddStep("Click reply button", () =>
-            {
-                var btn = targetComment.ChildrenOfType<LinkFlowContainer>().Skip(1).First();
-                var texts = btn.ChildrenOfType<SpriteText>();
-                InputManager.MoveMouseTo(texts.Skip(1).First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("There is 0 replies", () =>
-            {
-                var replLabel = targetComment.ChildrenOfType<ShowRepliesButton>().First().ChildrenOfType<SpriteText>().First();
-                return replLabel.Text.ToString().Contains('0') && targetComment!.Comment.RepliesCount == 0;
-            });
-            AddStep("Focus field", () =>
-            {
-                InputManager.MoveMouseTo(targetComment.ChildrenOfType<TextBox>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("Enter text", () =>
-            {
-                targetComment.ChildrenOfType<TextBox>().First().Current.Value = "random reply";
-            });
-            AddStep("Submit", () =>
-            {
-                InputManager.Key(Key.Enter);
-            });
+                        if (req.ParentCommentId != 2)
+                            throw new ArgumentException("Wrong parent ID in request!");
+
+                        if (
+                            req.CommentableId != 123
+                            || req.Commentable != CommentableType.Beatmapset
+                        )
+                            throw new ArgumentException("Wrong commentable data in request!");
+
+                        Task.Run(() =>
+                        {
+                            requestLock.Wait(10000);
+                            req.TriggerSuccess(
+                                new CommentBundle
+                                {
+                                    Comments = new List<Comment>
+                                    {
+                                        new Comment
+                                        {
+                                            Id = 98,
+                                            Message = req.Message,
+                                            LegacyName = "FirstUser",
+                                            CreatedAt = DateTimeOffset.Now,
+                                            VotesCount = 98,
+                                            ParentId = req.ParentCommentId,
+                                        },
+                                    },
+                                }
+                            );
+                        });
+
+                        return true;
+                    };
+                }
+            );
+            AddStep(
+                "Click reply button",
+                () =>
+                {
+                    var btn = targetComment.ChildrenOfType<LinkFlowContainer>().Skip(1).First();
+                    var texts = btn.ChildrenOfType<SpriteText>();
+                    InputManager.MoveMouseTo(texts.Skip(1).First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "There is 0 replies",
+                () =>
+                {
+                    var replLabel = targetComment
+                        .ChildrenOfType<ShowRepliesButton>()
+                        .First()
+                        .ChildrenOfType<SpriteText>()
+                        .First();
+                    return replLabel.Text.ToString().Contains('0')
+                        && targetComment!.Comment.RepliesCount == 0;
+                }
+            );
+            AddStep(
+                "Focus field",
+                () =>
+                {
+                    InputManager.MoveMouseTo(targetComment.ChildrenOfType<TextBox>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "Enter text",
+                () =>
+                {
+                    targetComment.ChildrenOfType<TextBox>().First().Current.Value = "random reply";
+                }
+            );
+            AddStep(
+                "Submit",
+                () =>
+                {
+                    InputManager.Key(Key.Enter);
+                }
+            );
             AddStep("Complete request", () => requestLock.Set());
-            AddUntilStep("There is 1 reply", () =>
-            {
-                var replLabel = targetComment.ChildrenOfType<ShowRepliesButton>().First().ChildrenOfType<SpriteText>().First();
-                return replLabel.Text.ToString().Contains('1') && targetComment!.Comment.RepliesCount == 1;
-            });
-            AddUntilStep("Submitted comment shown", () =>
-            {
-                var r = targetComment.ChildrenOfType<DrawableComment>().Skip(1).FirstOrDefault();
-                return r != null && r.Comment.Message == "random reply";
-            });
+            AddUntilStep(
+                "There is 1 reply",
+                () =>
+                {
+                    var replLabel = targetComment
+                        .ChildrenOfType<ShowRepliesButton>()
+                        .First()
+                        .ChildrenOfType<SpriteText>()
+                        .First();
+                    return replLabel.Text.ToString().Contains('1')
+                        && targetComment!.Comment.RepliesCount == 1;
+                }
+            );
+            AddUntilStep(
+                "Submitted comment shown",
+                () =>
+                {
+                    var r = targetComment
+                        .ChildrenOfType<DrawableComment>()
+                        .Skip(1)
+                        .FirstOrDefault();
+                    return r != null && r.Comment.Message == "random reply";
+                }
+            );
         }
 
         private void addTestComments()
         {
-            AddStep("set up response", () =>
-            {
-                CommentBundle cb = new CommentBundle
+            AddStep(
+                "set up response",
+                () =>
                 {
-                    Comments = new List<Comment>
+                    CommentBundle cb = new CommentBundle
                     {
-                        new Comment
+                        Comments = new List<Comment>
                         {
-                            Id = 1,
-                            Message = "This is our comment",
-                            UserId = API.LocalUser.Value.Id,
-                            CreatedAt = DateTimeOffset.Now,
-                            User = API.LocalUser.Value,
-                        },
-                        new Comment
-                        {
-                            Id = 2,
-                            Message = "This is a comment by another user",
-                            UserId = API.LocalUser.Value.Id + 1,
-                            CreatedAt = DateTimeOffset.Now,
-                            User = new APIUser
+                            new Comment
                             {
-                                Id = API.LocalUser.Value.Id + 1,
-                                Username = "Another user"
-                            }
+                                Id = 1,
+                                Message = "This is our comment",
+                                UserId = API.LocalUser.Value.Id,
+                                CreatedAt = DateTimeOffset.Now,
+                                User = API.LocalUser.Value,
+                            },
+                            new Comment
+                            {
+                                Id = 2,
+                                Message = "This is a comment by another user",
+                                UserId = API.LocalUser.Value.Id + 1,
+                                CreatedAt = DateTimeOffset.Now,
+                                User = new APIUser
+                                {
+                                    Id = API.LocalUser.Value.Id + 1,
+                                    Username = "Another user",
+                                },
+                            },
                         },
-                    },
-                    IncludedComments = new List<Comment>(),
-                    PinnedComments = new List<Comment>(),
-                };
-                setUpCommentsResponse(cb);
-            });
+                        IncludedComments = new List<Comment>(),
+                        PinnedComments = new List<Comment>(),
+                    };
+                    setUpCommentsResponse(cb);
+                }
+            );
 
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
         }
 
         private void setUpCommentsResponse(CommentBundle commentBundle)

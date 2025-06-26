@@ -28,7 +28,8 @@ namespace osu.Game.IO.Legacy
         public override string ReadString()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            if (ReadByte() == 0) return null;
+            if (ReadByte() == 0)
+                return null;
 
             return base.ReadString();
         }
@@ -37,8 +38,10 @@ namespace osu.Game.IO.Legacy
         public byte[] ReadByteArray()
         {
             int len = ReadInt32();
-            if (len > 0) return ReadBytes(len);
-            if (len < 0) return null;
+            if (len > 0)
+                return ReadBytes(len);
+            if (len < 0)
+                return null;
 
             return Array.Empty<byte>();
         }
@@ -47,8 +50,10 @@ namespace osu.Game.IO.Legacy
         public char[] ReadCharArray()
         {
             int len = ReadInt32();
-            if (len > 0) return ReadChars(len);
-            if (len < 0) return null;
+            if (len > 0)
+                return ReadChars(len);
+            if (len < 0)
+                return null;
 
             return Array.Empty<char>();
         }
@@ -57,16 +62,19 @@ namespace osu.Game.IO.Legacy
         public DateTime ReadDateTime()
         {
             long ticks = ReadInt64();
-            if (ticks < 0) throw new IOException("Bad ticks count read!");
+            if (ticks < 0)
+                throw new IOException("Bad ticks count read!");
 
             return new DateTime(ticks, DateTimeKind.Utc);
         }
 
         /// <summary> Reads a generic list from the buffer. </summary>
-        public IList<T> ReadBList<T>(bool skipErrors = false) where T : ILegacySerializable, new()
+        public IList<T> ReadBList<T>(bool skipErrors = false)
+            where T : ILegacySerializable, new()
         {
             int count = ReadInt32();
-            if (count < 0) return null;
+            if (count < 0)
+                return null;
 
             IList<T> d = new List<T>(count);
 
@@ -98,10 +106,12 @@ namespace osu.Game.IO.Legacy
         public IList<T> ReadList<T>()
         {
             int count = ReadInt32();
-            if (count < 0) return null;
+            if (count < 0)
+                return null;
 
             IList<T> d = new List<T>(count);
-            for (int i = 0; i < count; i++) d.Add((T)ReadObject());
+            for (int i = 0; i < count; i++)
+                d.Add((T)ReadObject());
             return d;
         }
 
@@ -109,10 +119,12 @@ namespace osu.Game.IO.Legacy
         public IDictionary<TKey, TValue> ReadDictionary<TKey, TValue>()
         {
             int count = ReadInt32();
-            if (count < 0) return null;
+            if (count < 0)
+                return null;
 
             IDictionary<TKey, TValue> d = new Dictionary<TKey, TValue>();
-            for (int i = 0; i < count; i++) d[(TKey)ReadObject()] = (TValue)ReadObject();
+            for (int i = 0; i < count; i++)
+                d[(TKey)ReadObject()] = (TValue)ReadObject();
             return d;
         }
 
@@ -204,6 +216,6 @@ namespace osu.Game.IO.Legacy
         ByteArrayType,
         CharArrayType,
         OtherType,
-        LegacySerializableType
+        LegacySerializableType,
     }
 }

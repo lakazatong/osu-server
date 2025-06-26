@@ -31,7 +31,13 @@ namespace osu.Game.Benchmarks
 
             realm.Run(_ =>
             {
-                realm.Write(c => c.Add(TestResources.CreateTestBeatmapSetInfo(rulesets: new[] { new OsuRuleset().RulesetInfo })));
+                realm.Write(c =>
+                    c.Add(
+                        TestResources.CreateTestBeatmapSetInfo(
+                            rulesets: new[] { new OsuRuleset().RulesetInfo }
+                        )
+                    )
+                );
             });
 
             updateThread = new UpdateThread(() => { }, null);

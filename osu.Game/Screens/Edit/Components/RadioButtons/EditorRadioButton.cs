@@ -52,14 +52,16 @@ namespace osu.Game.Screens.Edit.Components.RadioButtons
             defaultIconColour = defaultBackgroundColour.Darken(0.5f);
             selectedIconColour = selectedBackgroundColour.Lighten(0.5f);
 
-            Add(icon = (Button.CreateIcon?.Invoke() ?? new Circle()).With(b =>
-            {
-                b.Blending = BlendingParameters.Additive;
-                b.Anchor = Anchor.CentreLeft;
-                b.Origin = Anchor.CentreLeft;
-                b.Size = new Vector2(20);
-                b.X = 10;
-            }));
+            Add(
+                icon = (Button.CreateIcon?.Invoke() ?? new Circle()).With(b =>
+                {
+                    b.Blending = BlendingParameters.Additive;
+                    b.Anchor = Anchor.CentreLeft;
+                    b.Origin = Anchor.CentreLeft;
+                    b.Size = new Vector2(20);
+                    b.X = 10;
+                })
+            );
         }
 
         protected override void LoadComplete()
@@ -82,17 +84,20 @@ namespace osu.Game.Screens.Edit.Components.RadioButtons
             if (!IsLoaded)
                 return;
 
-            BackgroundColour = Button.Selected.Value ? selectedBackgroundColour : defaultBackgroundColour;
+            BackgroundColour = Button.Selected.Value
+                ? selectedBackgroundColour
+                : defaultBackgroundColour;
             icon.Colour = Button.Selected.Value ? selectedIconColour : defaultIconColour;
         }
 
-        protected override SpriteText CreateText() => new OsuSpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.CentreLeft,
-            Anchor = Anchor.CentreLeft,
-            X = 40f
-        };
+        protected override SpriteText CreateText() =>
+            new OsuSpriteText
+            {
+                Depth = -1,
+                Origin = Anchor.CentreLeft,
+                Anchor = Anchor.CentreLeft,
+                X = 40f,
+            };
 
         public LocalisableString TooltipText => Button.TooltipText;
     }

@@ -51,6 +51,6 @@ namespace osu.Game.Online.API.Requests.Responses
     {
         Add,
         Fix,
-        Misc
+        Misc,
     }
 }

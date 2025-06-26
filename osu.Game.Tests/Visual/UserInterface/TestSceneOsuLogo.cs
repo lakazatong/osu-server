@@ -19,39 +19,51 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             base.LoadComplete();
 
-            AddSliderStep("scale", 0.1, 2, 1, scale =>
-            {
-                if (logo != null)
-                    Child.Scale = new Vector2(this.scale = (float)scale);
-            });
+            AddSliderStep(
+                "scale",
+                0.1,
+                2,
+                1,
+                scale =>
+                {
+                    if (logo != null)
+                        Child.Scale = new Vector2(this.scale = (float)scale);
+                }
+            );
         }
 
         [Test]
         public void TestBasic()
         {
-            AddStep("Add logo", () =>
-            {
-                Child = logo = new OsuLogo
+            AddStep(
+                "Add logo",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(scale),
-                };
-            });
+                    Child = logo = new OsuLogo
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(scale),
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestChristmas()
         {
-            AddStep("Add logo", () =>
-            {
-                Child = logo = new OsuLogoChristmas
+            AddStep(
+                "Add logo",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(scale),
-                };
-            });
+                    Child = logo = new OsuLogoChristmas
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(scale),
+                    };
+                }
+            );
         }
     }
 }

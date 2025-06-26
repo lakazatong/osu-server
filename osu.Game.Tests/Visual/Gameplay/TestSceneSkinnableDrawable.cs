@@ -31,30 +31,53 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             FillFlowContainer<ExposedSkinnableDrawable> fill = null;
 
-            AddStep("setup layout larger source", () =>
-            {
-                Child = new SkinProvidingContainer(new SizedSource(50))
+            AddStep(
+                "setup layout larger source",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = fill = new FillFlowContainer<ExposedSkinnableDrawable>
+                    Child = new SkinProvidingContainer(new SizedSource(50))
                     {
-                        Size = new Vector2(30),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Spacing = new Vector2(10),
-                        Children = new[]
-                        {
-                            new ExposedSkinnableDrawable("default", _ => new DefaultBox()),
-                            new ExposedSkinnableDrawable("available", _ => new DefaultBox()),
-                            new ExposedSkinnableDrawable("available", _ => new DefaultBox(), ConfineMode.NoScaling)
-                        }
-                    },
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Child = fill =
+                            new FillFlowContainer<ExposedSkinnableDrawable>
+                            {
+                                Size = new Vector2(30),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Spacing = new Vector2(10),
+                                Children = new[]
+                                {
+                                    new ExposedSkinnableDrawable("default", _ => new DefaultBox()),
+                                    new ExposedSkinnableDrawable(
+                                        "available",
+                                        _ => new DefaultBox()
+                                    ),
+                                    new ExposedSkinnableDrawable(
+                                        "available",
+                                        _ => new DefaultBox(),
+                                        ConfineMode.NoScaling
+                                    ),
+                                },
+                            },
+                    };
+                }
+            );
 
-            AddAssert("check sizes", () => fill.Children.Select(c => c.Drawable.DrawWidth).SequenceEqual(new float[] { 30, 30, 50 }));
+            AddAssert(
+                "check sizes",
+                () =>
+                    fill
+                        .Children.Select(c => c.Drawable.DrawWidth)
+                        .SequenceEqual(new float[] { 30, 30, 50 })
+            );
             AddStep("adjust scale", () => fill.Scale = new Vector2(2));
-            AddAssert("check sizes unchanged by scale", () => fill.Children.Select(c => c.Drawable.DrawWidth).SequenceEqual(new float[] { 30, 30, 50 }));
+            AddAssert(
+                "check sizes unchanged by scale",
+                () =>
+                    fill
+                        .Children.Select(c => c.Drawable.DrawWidth)
+                        .SequenceEqual(new float[] { 30, 30, 50 })
+            );
         }
 
         [Test]
@@ -62,30 +85,53 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             FillFlowContainer<ExposedSkinnableDrawable> fill = null;
 
-            AddStep("setup layout larger source", () =>
-            {
-                Child = new SkinProvidingContainer(new SizedSource(30))
+            AddStep(
+                "setup layout larger source",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = fill = new FillFlowContainer<ExposedSkinnableDrawable>
+                    Child = new SkinProvidingContainer(new SizedSource(30))
                     {
-                        Size = new Vector2(50),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Spacing = new Vector2(10),
-                        Children = new[]
-                        {
-                            new ExposedSkinnableDrawable("default", _ => new DefaultBox()),
-                            new ExposedSkinnableDrawable("available", _ => new DefaultBox()),
-                            new ExposedSkinnableDrawable("available", _ => new DefaultBox(), ConfineMode.NoScaling)
-                        }
-                    },
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Child = fill =
+                            new FillFlowContainer<ExposedSkinnableDrawable>
+                            {
+                                Size = new Vector2(50),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Spacing = new Vector2(10),
+                                Children = new[]
+                                {
+                                    new ExposedSkinnableDrawable("default", _ => new DefaultBox()),
+                                    new ExposedSkinnableDrawable(
+                                        "available",
+                                        _ => new DefaultBox()
+                                    ),
+                                    new ExposedSkinnableDrawable(
+                                        "available",
+                                        _ => new DefaultBox(),
+                                        ConfineMode.NoScaling
+                                    ),
+                                },
+                            },
+                    };
+                }
+            );
 
-            AddAssert("check sizes", () => fill.Children.Select(c => c.Drawable.DrawWidth).SequenceEqual(new float[] { 50, 50, 30 }));
+            AddAssert(
+                "check sizes",
+                () =>
+                    fill
+                        .Children.Select(c => c.Drawable.DrawWidth)
+                        .SequenceEqual(new float[] { 50, 50, 30 })
+            );
             AddStep("adjust scale", () => fill.Scale = new Vector2(2));
-            AddAssert("check sizes unchanged by scale", () => fill.Children.Select(c => c.Drawable.DrawWidth).SequenceEqual(new float[] { 50, 50, 30 }));
+            AddAssert(
+                "check sizes unchanged by scale",
+                () =>
+                    fill
+                        .Children.Select(c => c.Drawable.DrawWidth)
+                        .SequenceEqual(new float[] { 50, 50, 30 })
+            );
         }
 
         [Test]
@@ -94,20 +140,30 @@ namespace osu.Game.Tests.Visual.Gameplay
             var secondarySource = new SecondarySource();
             SkinConsumer consumer = null;
 
-            AddStep("setup layout", () =>
-            {
-                Child = new SkinSourceContainer
+            AddStep(
+                "setup layout",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new SkinProvidingContainer(secondarySource)
+                    Child = new SkinSourceContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = consumer = new SkinConsumer("test", _ => new NamedBox("Default Implementation"))
-                    }
-                };
-            });
+                        Child = new SkinProvidingContainer(secondarySource)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Child = consumer =
+                                new SkinConsumer(
+                                    "test",
+                                    _ => new NamedBox("Default Implementation")
+                                ),
+                        },
+                    };
+                }
+            );
 
-            AddAssert("consumer using override source", () => consumer.Drawable is SecondarySourceBox);
+            AddAssert(
+                "consumer using override source",
+                () => consumer.Drawable is SecondarySourceBox
+            );
             AddAssert("skinchanged only called once", () => consumer.SkinChangedCount == 1);
         }
 
@@ -119,20 +175,36 @@ namespace osu.Game.Tests.Visual.Gameplay
             SkinConsumer consumer = null;
             Container target = null;
 
-            AddStep("setup layout", () =>
-            {
-                Child = new SkinSourceContainer
+            AddStep(
+                "setup layout",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = target = new SkinProvidingContainer(secondarySource)
+                    Child = new SkinSourceContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                    }
-                };
-            });
+                        Child = target =
+                            new SkinProvidingContainer(secondarySource)
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                    };
+                }
+            );
 
-            AddStep("add permissive", () => target.Add(consumer = new SkinConsumer("test", _ => new NamedBox("Default Implementation"))));
-            AddAssert("consumer using override source", () => consumer.Drawable is SecondarySourceBox);
+            AddStep(
+                "add permissive",
+                () =>
+                    target.Add(
+                        consumer = new SkinConsumer(
+                            "test",
+                            _ => new NamedBox("Default Implementation")
+                        )
+                    )
+            );
+            AddAssert(
+                "consumer using override source",
+                () => consumer.Drawable is SecondarySourceBox
+            );
             AddAssert("skinchanged only called once", () => consumer.SkinChangedCount == 1);
         }
 
@@ -142,20 +214,36 @@ namespace osu.Game.Tests.Visual.Gameplay
             SkinConsumer consumer = null;
             SwitchableSkinProvidingContainer target = null;
 
-            AddStep("setup layout", () =>
-            {
-                Child = new SkinSourceContainer
+            AddStep(
+                "setup layout",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = target = new SwitchableSkinProvidingContainer(new SecondarySource())
+                    Child = new SkinSourceContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                    }
-                };
-            });
+                        Child = target =
+                            new SwitchableSkinProvidingContainer(new SecondarySource())
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                    };
+                }
+            );
 
-            AddStep("add permissive", () => target.Add(consumer = new SkinConsumer("test", _ => new NamedBox("Default Implementation"))));
-            AddAssert("consumer using override source", () => consumer.Drawable is SecondarySourceBox);
+            AddStep(
+                "add permissive",
+                () =>
+                    target.Add(
+                        consumer = new SkinConsumer(
+                            "test",
+                            _ => new NamedBox("Default Implementation")
+                        )
+                    )
+            );
+            AddAssert(
+                "consumer using override source",
+                () => consumer.Drawable is SecondarySourceBox
+            );
             AddStep("disable", () => target.Disable());
             AddAssert("consumer using base source", () => consumer.Drawable is BaseSourceBox);
         }
@@ -173,19 +261,19 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
 
             public SwitchableSkinProvidingContainer(ISkin skin)
-                : base(skin)
-            {
-            }
+                : base(skin) { }
         }
 
         private partial class ExposedSkinnableDrawable : SkinnableDrawable
         {
             public new Drawable Drawable => base.Drawable;
 
-            public ExposedSkinnableDrawable(string name, Func<ISkinComponentLookup, Drawable> defaultImplementation, ConfineMode confineMode = ConfineMode.ScaleToFit)
-                : base(new TestSkinComponentLookup(name), defaultImplementation, confineMode)
-            {
-            }
+            public ExposedSkinnableDrawable(
+                string name,
+                Func<ISkinComponentLookup, Drawable> defaultImplementation,
+                ConfineMode confineMode = ConfineMode.ScaleToFit
+            )
+                : base(new TestSkinComponentLookup(name), defaultImplementation, confineMode) { }
         }
 
         private partial class DefaultBox : DrawWidthBox
@@ -204,16 +292,8 @@ namespace osu.Game.Tests.Visual.Gameplay
             {
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Gray,
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    text = new OsuSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
+                    new Box { Colour = Color4.Gray, RelativeSizeAxes = Axes.Both },
+                    text = new OsuSpriteText { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 };
             }
 
@@ -230,18 +310,14 @@ namespace osu.Game.Tests.Visual.Gameplay
             {
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Black,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                     new OsuSpriteText
                     {
                         Font = OsuFont.Default.With(size: 40),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = name
-                    }
+                        Text = name,
+                    },
                 };
             }
         }
@@ -251,10 +327,11 @@ namespace osu.Game.Tests.Visual.Gameplay
             public new Drawable Drawable => base.Drawable;
             public int SkinChangedCount { get; private set; }
 
-            public SkinConsumer(string name, Func<ISkinComponentLookup, Drawable> defaultImplementation)
-                : base(new TestSkinComponentLookup(name), defaultImplementation)
-            {
-            }
+            public SkinConsumer(
+                string name,
+                Func<ISkinComponentLookup, Drawable> defaultImplementation
+            )
+                : base(new TestSkinComponentLookup(name), defaultImplementation) { }
 
             protected override void SkinChanged(ISkinSource skin)
             {
@@ -266,17 +343,13 @@ namespace osu.Game.Tests.Visual.Gameplay
         private partial class BaseSourceBox : NamedBox
         {
             public BaseSourceBox()
-                : base("Base Source")
-            {
-            }
+                : base("Base Source") { }
         }
 
         private partial class SecondarySourceBox : NamedBox
         {
             public SecondarySourceBox()
-                : base("Secondary Source")
-            {
-            }
+                : base("Secondary Source") { }
         }
 
         private class SizedSource : ISkin
@@ -290,43 +363,57 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public Drawable GetDrawableComponent(ISkinComponentLookup componentLookupName) =>
                 (componentLookupName as TestSkinComponentLookup)?.LookupName == "available"
-                    ? new DrawWidthBox
-                    {
-                        Colour = Color4.Yellow,
-                        Size = new Vector2(size)
-                    }
+                    ? new DrawWidthBox { Colour = Color4.Yellow, Size = new Vector2(size) }
                     : null;
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => throw new NotImplementedException();
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => throw new NotImplementedException();
 
             public ISample GetSample(ISampleInfo sampleInfo) => throw new NotImplementedException();
 
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new NotImplementedException();
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new NotImplementedException();
         }
 
         private class SecondarySource : ISkin
         {
-            public Drawable GetDrawableComponent(ISkinComponentLookup componentLookupName) => new SecondarySourceBox();
+            public Drawable GetDrawableComponent(ISkinComponentLookup componentLookupName) =>
+                new SecondarySourceBox();
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => throw new NotImplementedException();
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => throw new NotImplementedException();
 
             public ISample GetSample(ISampleInfo sampleInfo) => throw new NotImplementedException();
 
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new NotImplementedException();
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new NotImplementedException();
         }
 
         [Cached(typeof(ISkinSource))]
         private partial class SkinSourceContainer : Container, ISkinSource
         {
-            public Drawable GetDrawableComponent(ISkinComponentLookup componentLookupName) => new BaseSourceBox();
+            public Drawable GetDrawableComponent(ISkinComponentLookup componentLookupName) =>
+                new BaseSourceBox();
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => throw new NotImplementedException();
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => throw new NotImplementedException();
 
             public ISample GetSample(ISampleInfo sampleInfo) => throw new NotImplementedException();
 
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new NotImplementedException();
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new NotImplementedException();
 
-            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) => throw new NotImplementedException();
+            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) =>
+                throw new NotImplementedException();
 
             public IEnumerable<ISkin> AllSources => throw new NotImplementedException();
 

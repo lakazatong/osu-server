@@ -25,7 +25,8 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     [TestFixture]
     public partial class TestSceneOsuComposerSelection : TestSceneOsuEditor
     {
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         [Test]
         public void TestSelectAfterFadedOut()
@@ -39,9 +40,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             AddStep("add slider", () => EditorBeatmap.Add(slider));
 
@@ -53,7 +54,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
             AddStep("seek to visible", () => EditorClock.Seek(650));
             AddStep("left click", () => InputManager.Click(MouseButton.Left));
-            AddUntilStep("slider selected", () => EditorBeatmap.SelectedHitObjects.Single() == slider);
+            AddUntilStep(
+                "slider selected",
+                () => EditorBeatmap.SelectedHitObjects.Single() == slider
+            );
         }
 
         [Test]
@@ -68,19 +72,36 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             AddStep("add slider", () => EditorBeatmap.Add(slider));
 
             moveMouseToObject(() => slider);
             AddStep("left click", () => InputManager.Click(MouseButton.Left));
-            AddUntilStep("slider selected", () => EditorBeatmap.SelectedHitObjects.Single() == slider);
+            AddUntilStep(
+                "slider selected",
+                () => EditorBeatmap.SelectedHitObjects.Single() == slider
+            );
 
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(blueprintContainer.ChildrenOfType<SliderBodyPiece>().Single().ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move mouse to centre",
+                () =>
+                    InputManager.MoveMouseTo(
+                        blueprintContainer
+                            .ChildrenOfType<SliderBodyPiece>()
+                            .Single()
+                            .ScreenSpaceDrawQuad.Centre
+                    )
+            );
             AddStep("right click", () => InputManager.Click(MouseButton.Right));
-            AddUntilStep("context menu is visible", () => contextMenuContainer.ChildrenOfType<OsuContextMenu>().Single().State == MenuState.Open);
+            AddUntilStep(
+                "context menu is visible",
+                () =>
+                    contextMenuContainer.ChildrenOfType<OsuContextMenu>().Single().State
+                    == MenuState.Open
+            );
         }
 
         [Test]
@@ -95,9 +116,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             var secondSlider = new Slider
             {
@@ -108,18 +129,24 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100, -100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100, -100)),
+                    },
+                },
             };
-            var hitCircle = new HitCircle
-            {
-                StartTime = 200,
-                Position = new Vector2(300, 0)
-            };
+            var hitCircle = new HitCircle { StartTime = 200, Position = new Vector2(300, 0) };
 
-            AddStep("add objects", () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider, hitCircle }));
-            AddStep("select last 2 objects", () => EditorBeatmap.SelectedHitObjects.AddRange(new HitObject[] { secondSlider, hitCircle }));
+            AddStep(
+                "add objects",
+                () =>
+                    EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider, hitCircle })
+            );
+            AddStep(
+                "select last 2 objects",
+                () =>
+                    EditorBeatmap.SelectedHitObjects.AddRange(
+                        new HitObject[] { secondSlider, hitCircle }
+                    )
+            );
 
             moveMouseToObject(() => secondSlider);
             AddStep("click left mouse", () => InputManager.Click(MouseButton.Left));
@@ -138,9 +165,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             var secondSlider = new Slider
             {
@@ -151,31 +178,52 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100, -100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100, -100)),
+                    },
+                },
             };
 
-            AddStep("add objects", () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider }));
-            AddStep("select first slider", () => EditorBeatmap.SelectedHitObjects.AddRange(new HitObject[] { secondSlider }));
+            AddStep(
+                "add objects",
+                () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider })
+            );
+            AddStep(
+                "select first slider",
+                () => EditorBeatmap.SelectedHitObjects.AddRange(new HitObject[] { secondSlider })
+            );
 
-            AddStep("move mouse to middle of slider", () =>
-            {
-                var pos = blueprintContainer.SelectionBlueprints
-                                            .First(s => s.Item == secondSlider)
-                                            .ChildrenOfType<SliderBodyPiece>().First()
-                                            .ScreenSpaceDrawQuad.Centre;
+            AddStep(
+                "move mouse to middle of slider",
+                () =>
+                {
+                    var pos = blueprintContainer
+                        .SelectionBlueprints.First(s => s.Item == secondSlider)
+                        .ChildrenOfType<SliderBodyPiece>()
+                        .First()
+                        .ScreenSpaceDrawQuad.Centre;
 
-                InputManager.MoveMouseTo(pos);
-            });
-            AddStep("control-click left mouse", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
-            AddAssert("selection preserved", () => EditorBeatmap.SelectedHitObjects.Count, () => Is.EqualTo(1));
-            AddAssert("slider has 3 anchors", () => secondSlider.Path.ControlPoints.Count, () => Is.EqualTo(3));
+                    InputManager.MoveMouseTo(pos);
+                }
+            );
+            AddStep(
+                "control-click left mouse",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
+            AddAssert(
+                "selection preserved",
+                () => EditorBeatmap.SelectedHitObjects.Count,
+                () => Is.EqualTo(1)
+            );
+            AddAssert(
+                "slider has 3 anchors",
+                () => secondSlider.Path.ControlPoints.Count,
+                () => Is.EqualTo(3)
+            );
         }
 
         [Test]
@@ -190,9 +238,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             var secondSlider = new Slider
             {
@@ -203,34 +251,63 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100, -100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100, -100)),
+                    },
+                },
             };
 
-            AddStep("add objects", () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider }));
-            AddStep("select first slider", () => EditorBeatmap.SelectedHitObjects.AddRange(new HitObject[] { firstSlider, secondSlider }));
+            AddStep(
+                "add objects",
+                () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider })
+            );
+            AddStep(
+                "select first slider",
+                () =>
+                    EditorBeatmap.SelectedHitObjects.AddRange(
+                        new HitObject[] { firstSlider, secondSlider }
+                    )
+            );
 
-            AddStep("move mouse to middle of slider", () =>
-            {
-                var pos = blueprintContainer.SelectionBlueprints
-                                            .First(s => s.Item == secondSlider)
-                                            .ChildrenOfType<SliderBodyPiece>().First()
-                                            .ScreenSpaceDrawQuad.Centre;
+            AddStep(
+                "move mouse to middle of slider",
+                () =>
+                {
+                    var pos = blueprintContainer
+                        .SelectionBlueprints.First(s => s.Item == secondSlider)
+                        .ChildrenOfType<SliderBodyPiece>()
+                        .First()
+                        .ScreenSpaceDrawQuad.Centre;
 
-                InputManager.MoveMouseTo(pos);
-            });
-            AddStep("control-click left mouse", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
-            AddAssert("selection not preserved", () => EditorBeatmap.SelectedHitObjects.Count, () => Is.EqualTo(1));
-            AddAssert("second slider not selected",
-                () => blueprintContainer.SelectionBlueprints.First(s => s.Item == secondSlider).IsSelected,
-                () => Is.False);
-            AddAssert("slider still has 2 anchors", () => secondSlider.Path.ControlPoints.Count, () => Is.EqualTo(2));
+                    InputManager.MoveMouseTo(pos);
+                }
+            );
+            AddStep(
+                "control-click left mouse",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
+            AddAssert(
+                "selection not preserved",
+                () => EditorBeatmap.SelectedHitObjects.Count,
+                () => Is.EqualTo(1)
+            );
+            AddAssert(
+                "second slider not selected",
+                () =>
+                    blueprintContainer
+                        .SelectionBlueprints.First(s => s.Item == secondSlider)
+                        .IsSelected,
+                () => Is.False
+            );
+            AddAssert(
+                "slider still has 2 anchors",
+                () => secondSlider.Path.ControlPoints.Count,
+                () => Is.EqualTo(2)
+            );
         }
 
         [Test]
@@ -245,22 +322,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
 
             AddStep("add object", () => EditorBeatmap.AddRange([firstSlider]));
-            AddStep("select first slider", () => EditorBeatmap.SelectedHitObjects.AddRange([firstSlider]));
+            AddStep(
+                "select first slider",
+                () => EditorBeatmap.SelectedHitObjects.AddRange([firstSlider])
+            );
 
-            AddStep("move mouse to middle of playfield", () => InputManager.MoveMouseTo(blueprintContainer.ScreenSpaceDrawQuad.Centre));
-            AddStep("control-click left mouse", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
-            AddAssert("selection preserved", () => EditorBeatmap.SelectedHitObjects.Count, () => Is.EqualTo(1));
+            AddStep(
+                "move mouse to middle of playfield",
+                () => InputManager.MoveMouseTo(blueprintContainer.ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "control-click left mouse",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
+            AddAssert(
+                "selection preserved",
+                () => EditorBeatmap.SelectedHitObjects.Count,
+                () => Is.EqualTo(1)
+            );
         }
 
         [Test]
@@ -277,32 +367,55 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                         new PathControlPoint { Type = PathType.LINEAR },
                         new PathControlPoint(new Vector2(100, 0)),
                         new PathControlPoint(new Vector2(100)),
-                        new PathControlPoint(new Vector2(0, 100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(0, 100)),
+                    },
+                },
             };
             AddStep("add slider", () => EditorBeatmap.Add(slider));
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
 
-            AddStep("select second node", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("also select third node", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(2));
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
-            AddStep("quick-delete fourth node", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(3));
-                InputManager.Click(MouseButton.Middle);
-            });
-            AddUntilStep("slider not deleted", () => EditorBeatmap.HitObjects.OfType<Slider>().Count(), () => Is.EqualTo(1));
-            AddUntilStep("slider path has 3 nodes", () => EditorBeatmap.HitObjects.OfType<Slider>().Single().Path.ControlPoints.Count, () => Is.EqualTo(3));
+            AddStep(
+                "select second node",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "also select third node",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(2)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
+            AddStep(
+                "quick-delete fourth node",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(3)
+                    );
+                    InputManager.Click(MouseButton.Middle);
+                }
+            );
+            AddUntilStep(
+                "slider not deleted",
+                () => EditorBeatmap.HitObjects.OfType<Slider>().Count(),
+                () => Is.EqualTo(1)
+            );
+            AddUntilStep(
+                "slider path has 3 nodes",
+                () => EditorBeatmap.HitObjects.OfType<Slider>().Single().Path.ControlPoints.Count,
+                () => Is.EqualTo(3)
+            );
         }
 
         [Test]
@@ -319,32 +432,55 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                         new PathControlPoint { Type = PathType.LINEAR },
                         new PathControlPoint(new Vector2(100, 0)),
                         new PathControlPoint(new Vector2(100)),
-                        new PathControlPoint(new Vector2(0, 100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(0, 100)),
+                    },
+                },
             };
             AddStep("add slider", () => EditorBeatmap.Add(slider));
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
 
-            AddStep("select second node", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("also select third node", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(2));
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
-            AddStep("quick-delete second node", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1));
-                InputManager.Click(MouseButton.Middle);
-            });
-            AddUntilStep("slider not deleted", () => EditorBeatmap.HitObjects.OfType<Slider>().Count(), () => Is.EqualTo(1));
-            AddUntilStep("slider path has 2 nodes", () => EditorBeatmap.HitObjects.OfType<Slider>().Single().Path.ControlPoints.Count, () => Is.EqualTo(2));
+            AddStep(
+                "select second node",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "also select third node",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(2)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
+            AddStep(
+                "quick-delete second node",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(1)
+                    );
+                    InputManager.Click(MouseButton.Middle);
+                }
+            );
+            AddUntilStep(
+                "slider not deleted",
+                () => EditorBeatmap.HitObjects.OfType<Slider>().Count(),
+                () => Is.EqualTo(1)
+            );
+            AddUntilStep(
+                "slider path has 2 nodes",
+                () => EditorBeatmap.HitObjects.OfType<Slider>().Single().Path.ControlPoints.Count,
+                () => Is.EqualTo(2)
+            );
         }
 
         [Test]
@@ -362,19 +498,31 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                         new PathControlPoint(new Vector2(50, 100)),
                         new PathControlPoint(new Vector2(145, 100)),
                     },
-                    ExpectedDistance = { Value = 162.62 }
+                    ExpectedDistance = { Value = 162.62 },
                 },
             };
             AddStep("add slider", () => EditorBeatmap.Add(slider));
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
 
-            AddStep("select last node", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<PathControlPointPiece<Slider>>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "select last node",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<PathControlPointPiece<Slider>>().Last()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("right click node", () => InputManager.Click(MouseButton.Right));
-            AddUntilStep("context menu open", () => this.ChildrenOfType<ContextMenuContainer>().Single().ChildrenOfType<Menu>().All(m => m.State == MenuState.Open));
+            AddUntilStep(
+                "context menu open",
+                () =>
+                    this.ChildrenOfType<ContextMenuContainer>()
+                        .Single()
+                        .ChildrenOfType<Menu>()
+                        .All(m => m.State == MenuState.Open)
+            );
         }
 
         [Test]
@@ -389,9 +537,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(100)),
+                    },
+                },
             };
             var secondSlider = new Slider
             {
@@ -402,41 +550,62 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(-100, 100))
-                    }
-                }
+                        new PathControlPoint(new Vector2(-100, 100)),
+                    },
+                },
             };
 
-            AddStep("add objects", () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider }));
-            AddStep("select second slider", () => EditorBeatmap.SelectedHitObjects.Add(secondSlider));
+            AddStep(
+                "add objects",
+                () => EditorBeatmap.AddRange(new HitObject[] { firstSlider, secondSlider })
+            );
+            AddStep(
+                "select second slider",
+                () => EditorBeatmap.SelectedHitObjects.Add(secondSlider)
+            );
 
-            AddStep("move to marker", () =>
-            {
-                var marker = this.ChildrenOfType<SliderEndDragMarker>().First();
-                var position = (marker.ScreenSpaceDrawQuad.TopRight + marker.ScreenSpaceDrawQuad.BottomRight) / 2;
-                InputManager.MoveMouseTo(position);
-            });
+            AddStep(
+                "move to marker",
+                () =>
+                {
+                    var marker = this.ChildrenOfType<SliderEndDragMarker>().First();
+                    var position =
+                        (
+                            marker.ScreenSpaceDrawQuad.TopRight
+                            + marker.ScreenSpaceDrawQuad.BottomRight
+                        ) / 2;
+                    InputManager.MoveMouseTo(position);
+                }
+            );
             AddStep("click", () => InputManager.Click(MouseButton.Left));
-            AddAssert("second slider still selected", () => EditorBeatmap.SelectedHitObjects.Single(), () => Is.EqualTo(secondSlider));
+            AddAssert(
+                "second slider still selected",
+                () => EditorBeatmap.SelectedHitObjects.Single(),
+                () => Is.EqualTo(secondSlider)
+            );
         }
 
-        private ComposeBlueprintContainer blueprintContainer
-            => Editor.ChildrenOfType<ComposeBlueprintContainer>().First();
+        private ComposeBlueprintContainer blueprintContainer =>
+            Editor.ChildrenOfType<ComposeBlueprintContainer>().First();
 
-        private ContextMenuContainer contextMenuContainer
-            => Editor.ChildrenOfType<ContextMenuContainer>().First();
+        private ContextMenuContainer contextMenuContainer =>
+            Editor.ChildrenOfType<ContextMenuContainer>().First();
 
         private void moveMouseToObject(Func<HitObject> targetFunc)
         {
-            AddStep("move mouse to object", () =>
-            {
-                var pos = blueprintContainer.SelectionBlueprints
-                                            .First(s => s.Item == targetFunc())
-                                            .ChildrenOfType<HitCirclePiece>()
-                                            .First().ScreenSpaceDrawQuad.Centre;
+            AddStep(
+                "move mouse to object",
+                () =>
+                {
+                    var pos = blueprintContainer
+                        .SelectionBlueprints.First(s => s.Item == targetFunc())
+                        .ChildrenOfType<HitCirclePiece>()
+                        .First()
+                        .ScreenSpaceDrawQuad.Centre;
 
-                InputManager.MoveMouseTo(pos);
-            });
+                    InputManager.MoveMouseTo(pos);
+                }
+            );
         }
     }
 }

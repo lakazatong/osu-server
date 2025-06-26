@@ -29,7 +29,7 @@ namespace osu.Game.Screens.Ranking.Contracted
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.TopCentre,
                 Y = 6,
-                Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold)
+                Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold),
             };
         }
 
@@ -37,7 +37,10 @@ namespace osu.Game.Screens.Ranking.Contracted
         {
             base.LoadComplete();
 
-            ScorePosition.BindValueChanged(pos => text.Text = pos.NewValue != null ? $"#{pos.NewValue}" : string.Empty, true);
+            ScorePosition.BindValueChanged(
+                pos => text.Text = pos.NewValue != null ? $"#{pos.NewValue}" : string.Empty,
+                true
+            );
         }
     }
 }

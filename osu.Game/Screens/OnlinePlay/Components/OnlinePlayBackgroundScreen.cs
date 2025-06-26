@@ -54,7 +54,11 @@ namespace osu.Game.Screens.OnlinePlay.Components
             if (beatmapId == null)
                 switchBackground(new DefaultBackground());
             else
-                LoadComponentAsync(new OnlineBeatmapBackground(beatmapId.Value), switchBackground, cancellationSource.Token);
+                LoadComponentAsync(
+                    new OnlineBeatmapBackground(beatmapId.Value),
+                    switchBackground,
+                    cancellationSource.Token
+                );
 
             void switchBackground(Background newBackground)
             {
@@ -69,7 +73,10 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 }
 
                 newBackground.Depth = newDepth;
-                newBackground.Colour = ColourInfo.GradientVertical(new Color4(0.1f, 0.1f, 0.1f, 1f), new Color4(0.4f, 0.4f, 0.4f, 1f));
+                newBackground.Colour = ColourInfo.GradientVertical(
+                    new Color4(0.1f, 0.1f, 0.1f, 1f),
+                    new Color4(0.4f, 0.4f, 0.4f, 1f)
+                );
                 newBackground.BlurTo(new Vector2(10));
 
                 AddInternal(lastBackground = newBackground);
@@ -100,19 +107,23 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
 
             [BackgroundDependencyLoader]
-            private void load(BeatmapLookupCache lookupCache, LargeTextureStore textures, CancellationToken cancellationToken)
+            private void load(
+                BeatmapLookupCache lookupCache,
+                LargeTextureStore textures,
+                CancellationToken cancellationToken
+            )
             {
                 try
                 {
-                    APIBeatmap? beatmap = lookupCache.GetBeatmapAsync(beatmapId, cancellationToken).GetResultSafely();
+                    APIBeatmap? beatmap = lookupCache
+                        .GetBeatmapAsync(beatmapId, cancellationToken)
+                        .GetResultSafely();
                     string? coverImage = beatmap?.BeatmapSet?.Covers.Cover;
 
                     if (coverImage != null)
                         Sprite.Texture = textures.Get(coverImage);
                 }
-                catch (OperationCanceledException)
-                {
-                }
+                catch (OperationCanceledException) { }
                 catch (Exception ex)
                 {
                     Logger.Error(ex, $"Failed to retrieve cover image for beatmap {beatmapId}.");

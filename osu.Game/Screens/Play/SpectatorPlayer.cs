@@ -22,7 +22,8 @@ namespace osu.Game.Screens.Play
         // TODO: maybe consider giving this proper scores.
         // `SoloGameplayLeaderboardProvider` doesn't immediately work because there's no guarantee that `LeaderboardManager` global state matches the currently spectated beatmap.
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private readonly EmptyGameplayLeaderboardProvider leaderboardProvider = new EmptyGameplayLeaderboardProvider();
+        private readonly EmptyGameplayLeaderboardProvider leaderboardProvider =
+            new EmptyGameplayLeaderboardProvider();
 
         [Resolved]
         protected SpectatorClient SpectatorClient { get; private set; } = null!;
@@ -48,28 +49,33 @@ namespace osu.Game.Screens.Play
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(new OsuSpriteText
-            {
-                Text = $"Watching {score.ScoreInfo.User.Username} playing live!",
-                Font = OsuFont.Default.With(size: 30),
-                Y = 100,
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-            });
+            AddInternal(
+                new OsuSpriteText
+                {
+                    Text = $"Watching {score.ScoreInfo.User.Username} playing live!",
+                    Font = OsuFont.Default.With(size: 30),
+                    Y = 100,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                }
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            DrawableRuleset.FrameStableClock.WaitingOnFrames.BindValueChanged(waiting =>
-            {
-                if (GameplayClockContainer is MasterGameplayClockContainer master)
+            DrawableRuleset.FrameStableClock.WaitingOnFrames.BindValueChanged(
+                waiting =>
                 {
-                    if (master.UserPlaybackRate.Value > 1 && waiting.NewValue)
-                        master.UserPlaybackRate.Value = 1;
-                }
-            }, true);
+                    if (GameplayClockContainer is MasterGameplayClockContainer master)
+                    {
+                        if (master.UserPlaybackRate.Value > 1 && waiting.NewValue)
+                            master.UserPlaybackRate.Value = 1;
+                    }
+                },
+                true
+            );
         }
 
         /// <summary>
@@ -102,7 +108,8 @@ namespace osu.Game.Screens.Play
 
             foreach (var frame in bundle.Frames)
             {
-                IConvertibleReplayFrame convertibleFrame = GameplayState.Ruleset.CreateConvertibleReplayFrame()!;
+                IConvertibleReplayFrame convertibleFrame =
+                    GameplayState.Ruleset.CreateConvertibleReplayFrame()!;
                 convertibleFrame.FromLegacy(frame, GameplayState.Beatmap);
 
                 var convertedFrame = (ReplayFrame)convertibleFrame;
@@ -118,8 +125,8 @@ namespace osu.Game.Screens.Play
 
         protected override Score CreateScore(IBeatmap beatmap) => score;
 
-        protected override ResultsScreen CreateResults(ScoreInfo score)
-            => new SpectatorResultsScreen(score);
+        protected override ResultsScreen CreateResults(ScoreInfo score) =>
+            new SpectatorResultsScreen(score);
 
         protected override void PrepareReplay()
         {

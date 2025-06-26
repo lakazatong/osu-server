@@ -24,7 +24,9 @@ namespace osu.Game.Tests.Visual.Beatmaps
         private DummyAPIAccess dummyAPI => (DummyAPIAccess)API;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [Test]
         public void TestInitialState([Values] bool favourited)
@@ -32,19 +34,36 @@ namespace osu.Game.Tests.Visual.Beatmaps
             APIBeatmapSet beatmapSetInfo = null;
             FavouriteButton button = null;
 
-            AddStep("create beatmap set", () =>
-            {
-                beatmapSetInfo = CreateAPIBeatmapSet(Ruleset.Value);
-                beatmapSetInfo.HasFavourited = favourited;
-            });
-            AddStep("create button", () => Child = button = new FavouriteButton(beatmapSetInfo)
-            {
-                Size = new Vector2(25f, 50f),
-                Scale = new Vector2(2f),
-            });
+            AddStep(
+                "create beatmap set",
+                () =>
+                {
+                    beatmapSetInfo = CreateAPIBeatmapSet(Ruleset.Value);
+                    beatmapSetInfo.HasFavourited = favourited;
+                }
+            );
+            AddStep(
+                "create button",
+                () =>
+                    Child = button =
+                        new FavouriteButton(beatmapSetInfo)
+                        {
+                            Size = new Vector2(25f, 50f),
+                            Scale = new Vector2(2f),
+                        }
+            );
 
             assertCorrectIcon(favourited);
-            AddAssert("correct tooltip text", () => button.TooltipText == (favourited ? BeatmapsetsStrings.ShowDetailsUnfavourite : BeatmapsetsStrings.ShowDetailsFavourite));
+            AddAssert(
+                "correct tooltip text",
+                () =>
+                    button.TooltipText
+                    == (
+                        favourited
+                            ? BeatmapsetsStrings.ShowDetailsUnfavourite
+                            : BeatmapsetsStrings.ShowDetailsFavourite
+                    )
+            );
         }
 
         [Test]
@@ -54,43 +73,75 @@ namespace osu.Game.Tests.Visual.Beatmaps
             FavouriteButton button = null;
             BeatmapFavouriteAction? lastRequestAction = null;
 
-            AddStep("create beatmap set", () => beatmapSetInfo = CreateAPIBeatmapSet(Ruleset.Value));
-            AddStep("create button", () => Child = button = new FavouriteButton(beatmapSetInfo)
-            {
-                Size = new Vector2(25f, 50f),
-                Scale = new Vector2(2f),
-            });
+            AddStep(
+                "create beatmap set",
+                () => beatmapSetInfo = CreateAPIBeatmapSet(Ruleset.Value)
+            );
+            AddStep(
+                "create button",
+                () =>
+                    Child = button =
+                        new FavouriteButton(beatmapSetInfo)
+                        {
+                            Size = new Vector2(25f, 50f),
+                            Scale = new Vector2(2f),
+                        }
+            );
 
             assertCorrectIcon(false);
 
-            AddStep("register request handling", () => dummyAPI.HandleRequest = request =>
-            {
-                if (!(request is PostBeatmapFavouriteRequest favouriteRequest))
-                    return false;
+            AddStep(
+                "register request handling",
+                () =>
+                    dummyAPI.HandleRequest = request =>
+                    {
+                        if (!(request is PostBeatmapFavouriteRequest favouriteRequest))
+                            return false;
 
-                lastRequestAction = favouriteRequest.Action;
-                request.TriggerSuccess();
-                return true;
-            });
+                        lastRequestAction = favouriteRequest.Action;
+                        request.TriggerSuccess();
+                        return true;
+                    }
+            );
 
-            AddStep("click icon", () =>
-            {
-                InputManager.MoveMouseTo(button);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("favourite request sent", () => lastRequestAction == BeatmapFavouriteAction.Favourite);
+            AddStep(
+                "click icon",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "favourite request sent",
+                () => lastRequestAction == BeatmapFavouriteAction.Favourite
+            );
             assertCorrectIcon(true);
 
-            AddStep("click icon", () =>
-            {
-                InputManager.MoveMouseTo(button);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("unfavourite request sent", () => lastRequestAction == BeatmapFavouriteAction.UnFavourite);
+            AddStep(
+                "click icon",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "unfavourite request sent",
+                () => lastRequestAction == BeatmapFavouriteAction.UnFavourite
+            );
             assertCorrectIcon(false);
         }
 
-        private void assertCorrectIcon(bool favourited) => AddAssert("icon correct",
-            () => this.ChildrenOfType<SpriteIcon>().First().Icon.Equals(favourited ? FontAwesome.Solid.Heart : FontAwesome.Regular.Heart));
+        private void assertCorrectIcon(bool favourited) =>
+            AddAssert(
+                "icon correct",
+                () =>
+                    this.ChildrenOfType<SpriteIcon>()
+                        .First()
+                        .Icon.Equals(
+                            favourited ? FontAwesome.Solid.Heart : FontAwesome.Regular.Heart
+                        )
+            );
     }
 }

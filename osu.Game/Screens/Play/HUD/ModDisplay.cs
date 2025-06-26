@@ -41,7 +41,9 @@ namespace osu.Game.Screens.Play.HUD
             }
         }
 
-        private readonly BindableWithCurrent<IReadOnlyList<Mod>> current = new BindableWithCurrent<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        private readonly BindableWithCurrent<IReadOnlyList<Mod>> current = new BindableWithCurrent<
+            IReadOnlyList<Mod>
+        >(Array.Empty<Mod>());
 
         public Bindable<IReadOnlyList<Mod>> Current
         {
@@ -101,7 +103,12 @@ namespace osu.Game.Screens.Play.HUD
             iconsContainer.Clear();
 
             foreach (Mod mod in mods.NewValue.AsOrdered())
-                iconsContainer.Add(new ModIcon(mod, showExtendedInformation: showExtendedInformation) { Scale = new Vector2(MOD_ICON_SCALE) });
+                iconsContainer.Add(
+                    new ModIcon(mod, showExtendedInformation: showExtendedInformation)
+                    {
+                        Scale = new Vector2(MOD_ICON_SCALE),
+                    }
+                );
         }
 
         private void updateExpansionMode(double duration = 500)
@@ -155,19 +162,28 @@ namespace osu.Game.Screens.Play.HUD
         /// <summary>
         /// The <see cref="ModDisplay"/> will expand only when hovered.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.ExpandOnHover))]
+        [LocalisableDescription(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.ExpandOnHover)
+        )]
         ExpandOnHover,
 
         /// <summary>
         /// The <see cref="ModDisplay"/> will always be expanded.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.AlwaysExpanded))]
+        [LocalisableDescription(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.AlwaysExpanded)
+        )]
         AlwaysExpanded,
 
         /// <summary>
         /// The <see cref="ModDisplay"/> will always be contracted.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.AlwaysContracted))]
+        [LocalisableDescription(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.AlwaysContracted)
+        )]
         AlwaysContracted,
     }
 }

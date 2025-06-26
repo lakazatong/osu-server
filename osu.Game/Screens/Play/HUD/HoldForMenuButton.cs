@@ -30,7 +30,8 @@ namespace osu.Game.Screens.Play.HUD
     {
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
-        public override bool PropagatePositionalInputSubTree => alwaysShow.Value || touchActive.Value;
+        public override bool PropagatePositionalInputSubTree =>
+            alwaysShow.Value || touchActive.Value;
 
         public readonly Bindable<bool> IsPaused = new Bindable<bool>();
 
@@ -62,7 +63,7 @@ namespace osu.Game.Screens.Play.HUD
                 {
                     Font = OsuFont.GetFont(weight: FontWeight.Bold),
                     Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft
+                    Origin = Anchor.CentreLeft,
                 },
                 button = new HoldButton(player?.Configuration.AllowRestart == false)
                 {
@@ -71,7 +72,7 @@ namespace osu.Game.Screens.Play.HUD
                     IsPaused = { BindTarget = IsPaused },
                     ReplayLoaded = { BindTarget = ReplayLoaded },
                     Action = () => Action(),
-                }
+                },
             };
 
             AutoSizeAxes = Axes.Both;
@@ -86,21 +87,20 @@ namespace osu.Game.Screens.Play.HUD
 
         protected override void LoadComplete()
         {
-            button.HoldActivationDelay.BindValueChanged(v =>
-            {
-                text.Text = v.NewValue > 0
-                    ? "hold for menu"
-                    : "press for menu";
-            }, true);
+            button.HoldActivationDelay.BindValueChanged(
+                v =>
+                {
+                    text.Text = v.NewValue > 0 ? "hold for menu" : "press for menu";
+                },
+                true
+            );
 
             touchActive = sessionStatics.GetBindable<bool>(Static.TouchInputActive);
 
             if (touchActive.Value)
             {
                 Alpha = 1f;
-                text.FadeInFromZero(500, Easing.OutQuint)
-                    .Delay(1500)
-                    .FadeOut(500, Easing.OutQuint);
+                text.FadeInFromZero(500, Easing.OutQuint).Delay(1500).FadeOut(500, Easing.OutQuint);
             }
             else
             {
@@ -115,7 +115,11 @@ namespace osu.Game.Screens.Play.HUD
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            positionalAdjust = Vector2.Distance(e.MousePosition, button.ToSpaceOfOtherDrawable(button.DrawRectangle.Centre, Parent!)) / 100;
+            positionalAdjust =
+                Vector2.Distance(
+                    e.MousePosition,
+                    button.ToSpaceOfOtherDrawable(button.DrawRectangle.Centre, Parent!)
+                ) / 100;
             return base.OnMouseMove(e);
         }
 
@@ -136,7 +140,12 @@ namespace osu.Game.Screens.Play.HUD
 
                 Alpha = Interpolation.ValueAt(
                     Math.Clamp(Clock.ElapsedFrameTime, 0, 200),
-                    Alpha, Math.Clamp(1 - positionalAdjust, minAlpha, 1), 0, 200, Easing.OutQuint);
+                    Alpha,
+                    Math.Clamp(1 - positionalAdjust, minAlpha, 1),
+                    0,
+                    200,
+                    Easing.OutQuint
+                );
             }
             else
                 Alpha = 0;
@@ -165,14 +174,14 @@ namespace osu.Game.Screens.Play.HUD
             private Bindable<bool> alwaysRequireHold;
 
             public HoldButton(bool isDangerousAction)
-                : base(isDangerousAction)
-            {
-            }
+                : base(isDangerousAction) { }
 
             [BackgroundDependencyLoader]
             private void load(OsuColour colours, OsuConfigManager config)
             {
-                alwaysRequireHold = config.GetBindable<bool>(OsuSetting.AlwaysRequireHoldingForPause);
+                alwaysRequireHold = config.GetBindable<bool>(
+                    OsuSetting.AlwaysRequireHoldingForPause
+                );
 
                 Size = new Vector2(60);
 
@@ -191,7 +200,7 @@ namespace osu.Game.Screens.Play.HUD
                         circularProgress = new CircularProgress
                         {
                             RelativeSizeAxes = Axes.Both,
-                            InnerRadius = 1
+                            InnerRadius = 1,
                         },
                         overlayCircle = new Circle
                         {
@@ -207,9 +216,9 @@ namespace osu.Game.Screens.Play.HUD
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Size = new Vector2(15),
-                            Icon = FontAwesome.Solid.Times
+                            Icon = FontAwesome.Solid.Times,
                         },
-                    }
+                    },
                 };
 
                 bind();
@@ -229,7 +238,14 @@ namespace osu.Game.Screens.Play.HUD
 
                     if (IsDangerousAction)
                     {
-                        Colour = Interpolation.ValueAt(progress.NewValue, Color4.White, Color4.Red, 0, 1, Easing.OutQuint);
+                        Colour = Interpolation.ValueAt(
+                            progress.NewValue,
+                            Color4.White,
+                            Color4.Red,
+                            0,
+                            1,
+                            Easing.OutQuint
+                        );
 
                         if (progress.NewValue > 0 && progress.NewValue < 1)
                         {
@@ -249,10 +265,13 @@ namespace osu.Game.Screens.Play.HUD
             {
                 const float shake_magnitude = 8;
 
-                Child.MoveTo(new Vector2(
-                    RNG.NextSingle(-1, 1) * (float)Progress.Value * shake_magnitude,
-                    RNG.NextSingle(-1, 1) * (float)Progress.Value * shake_magnitude
-                ), shake_duration);
+                Child.MoveTo(
+                    new Vector2(
+                        RNG.NextSingle(-1, 1) * (float)Progress.Value * shake_magnitude,
+                        RNG.NextSingle(-1, 1) * (float)Progress.Value * shake_magnitude
+                    ),
+                    shake_duration
+                );
             }
 
             protected override void Confirm()
@@ -267,19 +286,25 @@ namespace osu.Game.Screens.Play.HUD
 
                 AbortConfirm();
 
-                overlayCircle.ScaleTo(0, 100)
-                             .Then().FadeOut().ScaleTo(1).FadeIn(500)
-                             .OnComplete(_ =>
-                             {
-                                 icon.ScaleTo(1, 100);
-                                 circularProgress.FadeOut(100).OnComplete(_ =>
-                                 {
-                                     bind();
+                overlayCircle
+                    .ScaleTo(0, 100)
+                    .Then()
+                    .FadeOut()
+                    .ScaleTo(1)
+                    .FadeIn(500)
+                    .OnComplete(_ =>
+                    {
+                        icon.ScaleTo(1, 100);
+                        circularProgress
+                            .FadeOut(100)
+                            .OnComplete(_ =>
+                            {
+                                bind();
 
-                                     circularProgress.FadeIn();
-                                     pendingAnimation = false;
-                                 });
-                             });
+                                circularProgress.FadeIn();
+                                pendingAnimation = false;
+                            });
+                    });
             }
 
             protected override bool OnHover(HoverEvent e)
@@ -314,7 +339,8 @@ namespace osu.Game.Screens.Play.HUD
 
                     case GlobalAction.PauseGameplay:
                         // handled by replay player
-                        if (ReplayLoaded.Value) return false;
+                        if (ReplayLoaded.Value)
+                            return false;
 
                         if (!pendingAnimation)
                         {
@@ -339,7 +365,8 @@ namespace osu.Game.Screens.Play.HUD
                         break;
 
                     case GlobalAction.PauseGameplay:
-                        if (ReplayLoaded.Value) return;
+                        if (ReplayLoaded.Value)
+                            return;
 
                         AbortConfirm();
                         break;

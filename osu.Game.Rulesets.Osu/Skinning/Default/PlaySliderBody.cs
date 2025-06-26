@@ -31,13 +31,19 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             var drawableSlider = (DrawableSlider)drawableObject;
 
             ScaleBindable = drawableSlider.ScaleBindable.GetBoundCopy();
-            ScaleBindable.BindValueChanged(scale => PathRadius = OsuHitObject.OBJECT_RADIUS * scale.NewValue, true);
+            ScaleBindable.BindValueChanged(
+                scale => PathRadius = OsuHitObject.OBJECT_RADIUS * scale.NewValue,
+                true
+            );
 
             pathVersion = drawableSlider.PathVersion.GetBoundCopy();
             pathVersion.BindValueChanged(_ => Scheduler.AddOnce(Refresh));
 
             AccentColourBindable = drawableObject.AccentColour.GetBoundCopy();
-            AccentColourBindable.BindValueChanged(accent => AccentColour = GetBodyAccentColour(skin, accent.NewValue), true);
+            AccentColourBindable.BindValueChanged(
+                accent => AccentColour = GetBodyAccentColour(skin, accent.NewValue),
+                true
+            );
 
             config?.BindWith(OsuRulesetSetting.SnakingInSliders, SnakingIn);
             config?.BindWith(OsuRulesetSetting.SnakingOutSliders, configSnakingOut);
@@ -49,6 +55,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
         protected virtual Color4 GetBorderColour(ISkinSource skin) => Color4.White;
 
-        protected virtual Color4 GetBodyAccentColour(ISkinSource skin, Color4 hitObjectAccentColour) => hitObjectAccentColour;
+        protected virtual Color4 GetBodyAccentColour(
+            ISkinSource skin,
+            Color4 hitObjectAccentColour
+        ) => hitObjectAccentColour;
     }
 }

@@ -38,7 +38,7 @@ namespace osu.Game.Tests.Editing
                     new HitCircle { StartTime = 100_000 },
                     new HitCircle { StartTime = 100_050 },
                     new HitCircle { StartTime = 100_550 },
-                }
+                },
             };
 
             moveTimingPoint(beatmap, 100, -50);
@@ -98,7 +98,7 @@ namespace osu.Game.Tests.Editing
                     new HitCircle { StartTime = 100_000 },
                     new HitCircle { StartTime = 100_050 },
                     new HitCircle { StartTime = 100_550 },
-                }
+                },
             };
 
             adjustBeatLength(beatmap, 100, 50);
@@ -138,7 +138,11 @@ namespace osu.Game.Tests.Editing
             });
         }
 
-        private static void moveTimingPoint(IBeatmap beatmap, double originalTime, double adjustment)
+        private static void moveTimingPoint(
+            IBeatmap beatmap,
+            double originalTime,
+            double adjustment
+        )
         {
             var controlPoints = beatmap.ControlPointInfo;
             var controlPointGroup = controlPoints.GroupAt(originalTime);
@@ -148,7 +152,11 @@ namespace osu.Game.Tests.Editing
             controlPoints.Add(originalTime - adjustment, timingPoint);
         }
 
-        private static void adjustBeatLength(IBeatmap beatmap, double groupTime, double newBeatLength)
+        private static void adjustBeatLength(
+            IBeatmap beatmap,
+            double groupTime,
+            double newBeatLength
+        )
         {
             var controlPoints = beatmap.ControlPointInfo;
             var controlPointGroup = controlPoints.GroupAt(groupTime);

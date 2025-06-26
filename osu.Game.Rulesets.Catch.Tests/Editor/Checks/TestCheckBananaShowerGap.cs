@@ -64,10 +64,25 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor.Checks
             {
                 HitObjects = new List<HitObject>
                 {
-                    new BananaShower { StartTime = 0, EndTime = 100, X = 0 },
-                    new BananaShower { StartTime = 101, EndTime = 200, X = 0 },
-                    new BananaShower { StartTime = 201, EndTime = 300, X = 0 }
-                }
+                    new BananaShower
+                    {
+                        StartTime = 0,
+                        EndTime = 100,
+                        X = 0,
+                    },
+                    new BananaShower
+                    {
+                        StartTime = 101,
+                        EndTime = 200,
+                        X = 0,
+                    },
+                    new BananaShower
+                    {
+                        StartTime = 201,
+                        EndTime = 300,
+                        X = 0,
+                    },
+                },
             };
 
             assertOk(spinnerConsecutiveBeatmap, DifficultyRating.Easy);
@@ -78,41 +93,70 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor.Checks
             assertOk(spinnerConsecutiveBeatmap, DifficultyRating.ExpertPlus);
         }
 
-        private Beatmap<HitObject> mockBeatmap(double bananaShowerStart, double bananaShowerEnd, double nextFruitStart)
+        private Beatmap<HitObject> mockBeatmap(
+            double bananaShowerStart,
+            double bananaShowerEnd,
+            double nextFruitStart
+        )
         {
             return new Beatmap<HitObject>
             {
                 HitObjects = new List<HitObject>
                 {
                     new Fruit { StartTime = 0, X = 0 },
-                    new BananaShower { StartTime = bananaShowerStart, EndTime = bananaShowerEnd, X = 0 },
-                    new Fruit { StartTime = nextFruitStart, X = 0 }
-                }
+                    new BananaShower
+                    {
+                        StartTime = bananaShowerStart,
+                        EndTime = bananaShowerEnd,
+                        X = 0,
+                    },
+                    new Fruit { StartTime = nextFruitStart, X = 0 },
+                },
             };
         }
 
         private void assertOk(IBeatmap beatmap, DifficultyRating difficultyRating)
         {
-            var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap), difficultyRating);
+            var context = new BeatmapVerifierContext(
+                beatmap,
+                new TestWorkingBeatmap(beatmap),
+                difficultyRating
+            );
             Assert.That(check.Run(context), Is.Empty);
         }
 
         private void assertTooShortSpinnerStart(IBeatmap beatmap, DifficultyRating difficultyRating)
         {
-            var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap), difficultyRating);
+            var context = new BeatmapVerifierContext(
+                beatmap,
+                new TestWorkingBeatmap(beatmap),
+                difficultyRating
+            );
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.All(issue => issue.Template is CheckBananaShowerGap.IssueTemplateBananaShowerStartGap));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckBananaShowerGap.IssueTemplateBananaShowerStartGap
+                )
+            );
         }
 
         private void assertTooShortSpinnerEnd(IBeatmap beatmap, DifficultyRating difficultyRating)
         {
-            var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap), difficultyRating);
+            var context = new BeatmapVerifierContext(
+                beatmap,
+                new TestWorkingBeatmap(beatmap),
+                difficultyRating
+            );
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.All(issue => issue.Template is CheckBananaShowerGap.IssueTemplateBananaShowerEndGap));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckBananaShowerGap.IssueTemplateBananaShowerEndGap
+                )
+            );
         }
     }
 }

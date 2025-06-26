@@ -19,52 +19,59 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneWikiHeader : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         [Cached]
-        private readonly Bindable<APIWikiPage> wikiPageData = new Bindable<APIWikiPage>(new APIWikiPage
-        {
-            Title = "Main page",
-            Path = WikiOverlay.INDEX_PATH,
-        });
+        private readonly Bindable<APIWikiPage> wikiPageData = new Bindable<APIWikiPage>(
+            new APIWikiPage { Title = "Main page", Path = WikiOverlay.INDEX_PATH }
+        );
 
         private TestHeader header;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = header = new TestHeader
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                ShowIndexPage = dummyShowIndexPage,
-                ShowParentPage = dummyShowParentPage,
-            };
-            wikiPageData.BindTo(header.WikiPageData);
-        });
+                Child = header = new TestHeader
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    ShowIndexPage = dummyShowIndexPage,
+                    ShowParentPage = dummyShowParentPage,
+                };
+                wikiPageData.BindTo(header.WikiPageData);
+            });
 
         [Test]
         public void TestWikiHeader()
         {
             AddAssert("Current is index", () => checkCurrent(WikiHeader.IndexPageString));
 
-            AddStep("Change wiki page data", () => wikiPageData.Value = new APIWikiPage
-            {
-                Title = "Welcome",
-                Path = "Welcome"
-            });
+            AddStep(
+                "Change wiki page data",
+                () => wikiPageData.Value = new APIWikiPage { Title = "Welcome", Path = "Welcome" }
+            );
             AddAssert("Current is welcome", () => checkCurrent("Welcome"));
             AddAssert("Check breadcrumb", checkBreadcrumb);
 
-            AddStep("Change current to index", () => header.Current.Value = WikiHeader.IndexPageString);
+            AddStep(
+                "Change current to index",
+                () => header.Current.Value = WikiHeader.IndexPageString
+            );
             AddAssert("Current is index", () => checkCurrent(WikiHeader.IndexPageString));
 
-            AddStep("Change wiki page data", () => wikiPageData.Value = new APIWikiPage
-            {
-                Title = "Developers",
-                Path = "People/The_Team/Developers",
-                Subtitle = "The Team",
-            });
+            AddStep(
+                "Change wiki page data",
+                () =>
+                    wikiPageData.Value = new APIWikiPage
+                    {
+                        Title = "Developers",
+                        Path = "People/The_Team/Developers",
+                        Subtitle = "The Team",
+                    }
+            );
             AddAssert("Current is 'Developers'", () => checkCurrent("Developers"));
             AddAssert("Check breadcrumb", checkBreadcrumb);
 
@@ -73,7 +80,8 @@ namespace osu.Game.Tests.Visual.Online
             AddAssert("Check breadcrumb", checkBreadcrumb);
         }
 
-        private bool checkCurrent(LocalisableString expectedCurrent) => header.Current.Value == expectedCurrent;
+        private bool checkCurrent(LocalisableString expectedCurrent) =>
+            header.Current.Value == expectedCurrent;
 
         private bool checkBreadcrumb()
         {
@@ -93,7 +101,7 @@ namespace osu.Game.Tests.Visual.Online
             {
                 Path = "People/The_Team",
                 Title = "The Team",
-                Subtitle = "People"
+                Subtitle = "People",
             };
         }
 

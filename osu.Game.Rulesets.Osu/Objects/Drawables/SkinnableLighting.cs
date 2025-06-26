@@ -14,9 +14,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private JudgementResult? targetResult;
 
         public SkinnableLighting()
-            : base("lighting")
-        {
-        }
+            : base("lighting") { }
 
         protected override void SkinChanged(ISkinSource skin)
         {
@@ -29,7 +27,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// </summary>
         /// <param name="targetJudgement">The <see cref="DrawableHitObject"/> that's been judged.</param>
         /// <param name="targetResult">The <see cref="JudgementResult"/> that <paramref name="targetJudgement"/> was judged with.</param>
-        public void SetColourFrom(DrawableOsuJudgement targetJudgement, JudgementResult? targetResult)
+        public void SetColourFrom(
+            DrawableOsuJudgement targetJudgement,
+            JudgementResult? targetResult
+        )
         {
             this.targetJudgement = targetJudgement;
             this.targetResult = targetResult;

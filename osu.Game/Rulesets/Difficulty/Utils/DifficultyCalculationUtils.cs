@@ -38,7 +38,12 @@ namespace osu.Game.Rulesets.Difficulty.Utils
         /// <param name="multiplier">Growth rate of the function</param>
         /// <param name="midpointOffset">How much the function midpoint is offset from zero <paramref name="x"/></param>
         /// <returns>The output of logistic function of <paramref name="x"/></returns>
-        public static double Logistic(double x, double midpointOffset, double multiplier, double maxValue = 1) => maxValue / (1 + Math.Exp(multiplier * (midpointOffset - x)));
+        public static double Logistic(
+            double x,
+            double midpointOffset,
+            double multiplier,
+            double maxValue = 1
+        ) => maxValue / (1 + Math.Exp(multiplier * (midpointOffset - x)));
 
         /// <summary>
         /// Calculates a S-shaped logistic function (https://en.wikipedia.org/wiki/Logistic_function)
@@ -46,7 +51,8 @@ namespace osu.Game.Rulesets.Difficulty.Utils
         /// <param name="maxValue">Maximum value returnable by the function</param>
         /// <param name="exponent">Exponent</param>
         /// <returns>The output of logistic function</returns>
-        public static double Logistic(double exponent, double maxValue = 1) => maxValue / (1 + Math.Exp(exponent));
+        public static double Logistic(double exponent, double maxValue = 1) =>
+            maxValue / (1 + Math.Exp(exponent));
 
         /// <summary>
         /// Returns the <i>p</i>-norm of an <i>n</i>-dimensional vector (https://en.wikipedia.org/wiki/Norm_(mathematics))
@@ -54,7 +60,8 @@ namespace osu.Game.Rulesets.Difficulty.Utils
         /// <param name="p">The value of <i>p</i> to calculate the norm for.</param>
         /// <param name="values">The coefficients of the vector.</param>
         /// <returns>The <i>p</i>-norm of the vector.</returns>
-        public static double Norm(double p, params double[] values) => Math.Pow(values.Sum(x => Math.Pow(x, p)), 1 / p);
+        public static double Norm(double p, params double[] values) =>
+            Math.Pow(values.Sum(x => Math.Pow(x, p)), 1 / p);
 
         /// <summary>
         /// Calculates a Gaussian-based bell curve function (https://en.wikipedia.org/wiki/Gaussian_function)
@@ -64,7 +71,12 @@ namespace osu.Game.Rulesets.Difficulty.Utils
         /// <param name="width">The width (spread) of the curve</param>
         /// <param name="multiplier">Multiplier to adjust the curve's height</param>
         /// <returns>The output of the bell curve function of <paramref name="x"/></returns>
-        public static double BellCurve(double x, double mean, double width, double multiplier = 1.0) => multiplier * Math.Exp(Math.E * -(Math.Pow(x - mean, 2) / Math.Pow(width, 2)));
+        public static double BellCurve(
+            double x,
+            double mean,
+            double width,
+            double multiplier = 1.0
+        ) => multiplier * Math.Exp(Math.E * -(Math.Pow(x - mean, 2) / Math.Pow(width, 2)));
 
         /// <summary>
         /// Smoothstep function (https://en.wikipedia.org/wiki/Smoothstep)

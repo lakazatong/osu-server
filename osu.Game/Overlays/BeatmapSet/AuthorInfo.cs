@@ -8,15 +8,15 @@ using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Users.Drawables;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Users.Drawables;
+using osuTK;
+using osuTK.Graphics;
 using APIUser = osu.Game.Online.API.Requests.Responses.APIUser;
 
 namespace osu.Game.Overlays.BeatmapSet
@@ -35,7 +35,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapSet;
             set
             {
-                if (value == beatmapSet) return;
+                if (value == beatmapSet)
+                    return;
 
                 beatmapSet = value;
                 Scheduler.AddOnce(updateDisplay);
@@ -55,10 +56,11 @@ namespace osu.Game.Overlays.BeatmapSet
                     AutoSizeAxes = Axes.Both,
                     CornerRadius = 4,
                     Masking = true,
-                    Child = avatar = new UpdateableAvatar(showUserPanelOnHover: true, showGuestOnNull: false)
-                    {
-                        Size = new Vector2(height),
-                    },
+                    Child = avatar =
+                        new UpdateableAvatar(showUserPanelOnHover: true, showGuestOnNull: false)
+                        {
+                            Size = new Vector2(height),
+                        },
                     EdgeEffect = new EdgeEffectParameters
                     {
                         Colour = Color4.Black.Opacity(0.25f),
@@ -88,8 +90,16 @@ namespace osu.Game.Overlays.BeatmapSet
 
             fields.Children = new Drawable[]
             {
-                new Field("mapped by", BeatmapSet.Author, OsuFont.GetFont(weight: FontWeight.Regular, italics: true)),
-                new Field("submitted", BeatmapSet.Submitted, OsuFont.GetFont(weight: FontWeight.Bold))
+                new Field(
+                    "mapped by",
+                    BeatmapSet.Author,
+                    OsuFont.GetFont(weight: FontWeight.Regular, italics: true)
+                ),
+                new Field(
+                    "submitted",
+                    BeatmapSet.Submitted,
+                    OsuFont.GetFont(weight: FontWeight.Bold)
+                )
                 {
                     Margin = new MarginPadding { Top = 5 },
                 },
@@ -97,11 +107,23 @@ namespace osu.Game.Overlays.BeatmapSet
 
             if (BeatmapSet.Ranked.HasValue)
             {
-                fields.Add(new Field(BeatmapSet.Status.ToString().ToLowerInvariant(), BeatmapSet.Ranked.Value, OsuFont.GetFont(weight: FontWeight.Bold)));
+                fields.Add(
+                    new Field(
+                        BeatmapSet.Status.ToString().ToLowerInvariant(),
+                        BeatmapSet.Ranked.Value,
+                        OsuFont.GetFont(weight: FontWeight.Bold)
+                    )
+                );
             }
             else if (BeatmapSet.LastUpdated.HasValue)
             {
-                fields.Add(new Field("last updated", BeatmapSet.LastUpdated.Value, OsuFont.GetFont(weight: FontWeight.Bold)));
+                fields.Add(
+                    new Field(
+                        "last updated",
+                        BeatmapSet.LastUpdated.Value,
+                        OsuFont.GetFont(weight: FontWeight.Bold)
+                    )
+                );
             }
         }
 
@@ -114,16 +136,8 @@ namespace osu.Game.Overlays.BeatmapSet
 
                 Children = new[]
                 {
-                    new OsuSpriteText
-                    {
-                        Text = $"{first} ",
-                        Font = OsuFont.GetFont(size: 11)
-                    },
-                    new OsuSpriteText
-                    {
-                        Text = second,
-                        Font = secondFont.With(size: 11)
-                    },
+                    new OsuSpriteText { Text = $"{first} ", Font = OsuFont.GetFont(size: 11) },
+                    new OsuSpriteText { Text = second, Font = secondFont.With(size: 11) },
                 };
             }
 
@@ -134,15 +148,8 @@ namespace osu.Game.Overlays.BeatmapSet
 
                 Children = new[]
                 {
-                    new OsuSpriteText
-                    {
-                        Text = $"{first} ",
-                        Font = OsuFont.GetFont(size: 13)
-                    },
-                    new DrawableDate(second)
-                    {
-                        Font = secondFont.With(size: 13)
-                    }
+                    new OsuSpriteText { Text = $"{first} ", Font = OsuFont.GetFont(size: 13) },
+                    new DrawableDate(second) { Font = secondFont.With(size: 13) },
                 };
             }
 

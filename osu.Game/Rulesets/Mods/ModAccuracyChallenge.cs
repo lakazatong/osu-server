@@ -10,8 +10,8 @@ using osu.Framework.Localisation;
 using osu.Game.Configuration;
 using osu.Game.Localisation.HUD;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 
 namespace osu.Game.Rulesets.Mods
@@ -28,13 +28,21 @@ namespace osu.Game.Rulesets.Mods
 
         public override double ScoreMultiplier => 1.0;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(ModEasyWithExtraLives), typeof(ModPerfect) }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(
+                    new[] { typeof(ModEasyWithExtraLives), typeof(ModPerfect) }
+                )
+                .ToArray();
 
         public override bool RequiresConfiguration => false;
 
         public override bool Ranked => true;
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -49,15 +57,20 @@ namespace osu.Game.Rulesets.Mods
             }
         }
 
-        [SettingSource("Minimum accuracy", "Trigger a failure if your accuracy goes below this value.", SettingControlType = typeof(SettingsPercentageSlider<double>))]
-        public BindableNumber<double> MinimumAccuracy { get; } = new BindableDouble
-        {
-            MinValue = 0.60,
-            MaxValue = 0.99,
-            Precision = 0.01,
-            Default = 0.9,
-            Value = 0.9,
-        };
+        [SettingSource(
+            "Minimum accuracy",
+            "Trigger a failure if your accuracy goes below this value.",
+            SettingControlType = typeof(SettingsPercentageSlider<double>)
+        )]
+        public BindableNumber<double> MinimumAccuracy { get; } =
+            new BindableDouble
+            {
+                MinValue = 0.60,
+                MaxValue = 0.99,
+                Precision = 0.01,
+                Default = 0.9,
+                Value = 0.9,
+            };
 
         [SettingSource("Accuracy mode", "The mode of accuracy that will trigger failure.")]
         public Bindable<AccuracyMode> AccuracyJudgeMode { get; } = new Bindable<AccuracyMode>();
@@ -88,14 +101,23 @@ namespace osu.Game.Rulesets.Mods
 
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
 
-        protected override bool FailCondition(HealthProcessor healthProcessor, JudgementResult result) => false;
+        protected override bool FailCondition(
+            HealthProcessor healthProcessor,
+            JudgementResult result
+        ) => false;
 
         public enum AccuracyMode
         {
-            [LocalisableDescription(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMax))]
+            [LocalisableDescription(
+                typeof(GameplayAccuracyCounterStrings),
+                nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMax)
+            )]
             MaximumAchievable,
 
-            [LocalisableDescription(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeStandard))]
+            [LocalisableDescription(
+                typeof(GameplayAccuracyCounterStrings),
+                nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeStandard)
+            )]
             Standard,
         }
     }

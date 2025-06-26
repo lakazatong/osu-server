@@ -3,12 +3,12 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Mania.Objects;
@@ -61,11 +61,13 @@ namespace osu.Game.Rulesets.Mania.UI
                 throw new ArgumentException("Can't have zero or fewer stages.");
 
             GridContainer playfieldGrid;
-            AddInternal(playfieldGrid = new GridContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Content = new[] { new Drawable[stageDefinitions.Count] }
-            });
+            AddInternal(
+                playfieldGrid = new GridContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Content = new[] { new Drawable[stageDefinitions.Count] },
+                }
+            );
 
             var columnAction = ManiaAction.Key1;
             int firstColumnIndex = 0;
@@ -84,15 +86,23 @@ namespace osu.Game.Rulesets.Mania.UI
         }
 
         [Pure]
-        protected virtual Stage CreateStage(int firstColumnIndex, StageDefinition stageDefinition, ref ManiaAction columnAction) => new Stage(firstColumnIndex, stageDefinition, ref columnAction);
+        protected virtual Stage CreateStage(
+            int firstColumnIndex,
+            StageDefinition stageDefinition,
+            ref ManiaAction columnAction
+        ) => new Stage(firstColumnIndex, stageDefinition, ref columnAction);
 
-        public override void Add(HitObject hitObject) => getStageByColumn(((ManiaHitObject)hitObject).Column).Add(hitObject);
+        public override void Add(HitObject hitObject) =>
+            getStageByColumn(((ManiaHitObject)hitObject).Column).Add(hitObject);
 
-        public override bool Remove(HitObject hitObject) => getStageByColumn(((ManiaHitObject)hitObject).Column).Remove(hitObject);
+        public override bool Remove(HitObject hitObject) =>
+            getStageByColumn(((ManiaHitObject)hitObject).Column).Remove(hitObject);
 
-        public override void Add(DrawableHitObject h) => getStageByColumn(((ManiaHitObject)h.HitObject).Column).Add(h);
+        public override void Add(DrawableHitObject h) =>
+            getStageByColumn(((ManiaHitObject)h.HitObject).Column).Add(h);
 
-        public override bool Remove(DrawableHitObject h) => getStageByColumn(((ManiaHitObject)h.HitObject).Column).Remove(h);
+        public override bool Remove(DrawableHitObject h) =>
+            getStageByColumn(((ManiaHitObject)h.HitObject).Column).Remove(h);
 
         public void Add(BarLine barLine) => stages.ForEach(s => s.Add(barLine));
 
@@ -109,7 +119,11 @@ namespace osu.Game.Rulesets.Mania.UI
             {
                 foreach (var column in stage.Columns)
                 {
-                    if (column.ReceivePositionalInputAt(new Vector2(screenSpacePosition.X, column.ScreenSpaceDrawQuad.Centre.Y)))
+                    if (
+                        column.ReceivePositionalInputAt(
+                            new Vector2(screenSpacePosition.X, column.ScreenSpaceDrawQuad.Centre.Y)
+                        )
+                    )
                     {
                         found = column;
                         break;

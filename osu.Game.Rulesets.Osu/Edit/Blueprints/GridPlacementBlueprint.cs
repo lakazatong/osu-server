@@ -68,7 +68,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints
                 gridToolboxGroup.StartPosition.Value = gridToolboxGroup.StartPosition.Default;
                 gridToolboxGroup.Spacing.Value = gridToolboxGroup.Spacing.Default;
                 if (!gridToolboxGroup.GridLinesRotation.Disabled)
-                    gridToolboxGroup.GridLinesRotation.Value = gridToolboxGroup.GridLinesRotation.Default;
+                    gridToolboxGroup.GridLinesRotation.Value = gridToolboxGroup
+                        .GridLinesRotation
+                        .Default;
                 EndPlacement(true);
                 return true;
             }
@@ -95,12 +97,17 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints
             base.OnDragEnd(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
             if (State.Value == Visibility.Hidden)
                 return new SnapResult(screenSpacePosition, fallbackTime);
 
-            var result = hitObjectComposer?.TrySnapToNearbyObjects(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var result =
+                hitObjectComposer?.TrySnapToNearbyObjects(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
 
             var pos = ToLocalSpace(result.ScreenSpacePosition);
 

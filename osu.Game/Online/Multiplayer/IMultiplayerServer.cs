@@ -6,7 +6,5 @@ namespace osu.Game.Online.Multiplayer
     /// <summary>
     /// An interface defining the multiplayer server instance.
     /// </summary>
-    public interface IMultiplayerServer : IMultiplayerRoomServer, IMultiplayerLoungeServer
-    {
-    }
+    public interface IMultiplayerServer : IMultiplayerRoomServer, IMultiplayerLoungeServer { }
 }

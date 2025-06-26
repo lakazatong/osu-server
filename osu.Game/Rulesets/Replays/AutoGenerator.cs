@@ -51,9 +51,7 @@ namespace osu.Game.Rulesets.Replays
         protected TFrame? LastFrame => Frames.Count == 0 ? null : Frames[^1];
 
         protected AutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         public sealed override Replay Generate()
         {
@@ -62,7 +60,7 @@ namespace osu.Game.Rulesets.Replays
 
             return new Replay
             {
-                Frames = Frames.OrderBy(frame => frame.Time).Cast<ReplayFrame>().ToList()
+                Frames = Frames.OrderBy(frame => frame.Time).Cast<ReplayFrame>().ToList(),
             };
         }
 

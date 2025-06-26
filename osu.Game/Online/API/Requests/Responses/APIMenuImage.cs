@@ -21,8 +21,8 @@ namespace osu.Game.Online.API.Requests.Responses
         public string Url { get; init; } = string.Empty;
 
         public bool IsCurrent =>
-            (Begins == null || Begins < DateTimeOffset.UtcNow) &&
-            (Expires == null || Expires > DateTimeOffset.UtcNow);
+            (Begins == null || Begins < DateTimeOffset.UtcNow)
+            && (Expires == null || Expires > DateTimeOffset.UtcNow);
 
         /// <summary>
         /// The time at which this item should begin displaying. If <c>null</c>, will display immediately.
@@ -38,13 +38,19 @@ namespace osu.Game.Online.API.Requests.Responses
 
         public bool Equals(APIMenuImage? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return Image == other.Image && Url == other.Url && Begins == other.Begins && Expires == other.Expires;
+            return Image == other.Image
+                && Url == other.Url
+                && Begins == other.Begins
+                && Expires == other.Expires;
         }
 
-        public override bool Equals(object? other) => other is APIMenuImage content && Equals(content);
+        public override bool Equals(object? other) =>
+            other is APIMenuImage content && Equals(content);
 
         public override int GetHashCode()
         {

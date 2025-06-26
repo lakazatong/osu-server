@@ -26,55 +26,68 @@ namespace osu.Game.Tests.Chat
         private List<int> silencedUserIds;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            var container = new ChannelManagerContainer(API);
-            Child = container;
-            channelManager = container.ChannelManager;
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                var container = new ChannelManagerContainer(API);
+                Child = container;
+                channelManager = container.ChannelManager;
+            });
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("register request handling", () =>
-            {
-                currentMessageId = 0;
-                sentMessages = new List<Message>();
-                silencedUserIds = new List<int>();
-
-                ((DummyAPIAccess)API).HandleRequest = req =>
+            AddStep(
+                "register request handling",
+                () =>
                 {
-                    switch (req)
+                    currentMessageId = 0;
+                    sentMessages = new List<Message>();
+                    silencedUserIds = new List<int>();
+
+                    ((DummyAPIAccess)API).HandleRequest = req =>
                     {
-                        case JoinChannelRequest joinChannel:
-                            joinChannel.TriggerSuccess();
-                            return true;
+                        switch (req)
+                        {
+                            case JoinChannelRequest joinChannel:
+                                joinChannel.TriggerSuccess();
+                                return true;
 
-                        case PostMessageRequest postMessage:
-                            handlePostMessageRequest(postMessage);
-                            return true;
+                            case PostMessageRequest postMessage:
+                                handlePostMessageRequest(postMessage);
+                                return true;
 
-                        case MarkChannelAsReadRequest markRead:
-                            handleMarkChannelAsReadRequest(markRead);
-                            return true;
+                            case MarkChannelAsReadRequest markRead:
+                                handleMarkChannelAsReadRequest(markRead);
+                                return true;
 
-                        case ChatAckRequest ack:
-                            ack.TriggerSuccess(new ChatAckResponse { Silences = silencedUserIds.Select(u => new ChatSilence { UserId = u }).ToArray() });
-                            silencedUserIds.Clear();
-                            return true;
+                            case ChatAckRequest ack:
+                                ack.TriggerSuccess(
+                                    new ChatAckResponse
+                                    {
+                                        Silences = silencedUserIds
+                                            .Select(u => new ChatSilence { UserId = u })
+                                            .ToArray(),
+                                    }
+                                );
+                                silencedUserIds.Clear();
+                                return true;
 
-                        case GetUpdatesRequest updatesRequest:
-                            updatesRequest.TriggerSuccess(new GetUpdatesResponse
-                            {
-                                Messages = sentMessages.ToList(),
-                                Presence = new List<Channel>()
-                            });
-                            return true;
-                    }
+                            case GetUpdatesRequest updatesRequest:
+                                updatesRequest.TriggerSuccess(
+                                    new GetUpdatesResponse
+                                    {
+                                        Messages = sentMessages.ToList(),
+                                        Presence = new List<Channel>(),
+                                    }
+                                );
+                                return true;
+                        }
 
-                    return false;
-                };
-            });
+                        return false;
+                    };
+                }
+            );
         }
 
         [Test]
@@ -83,19 +96,34 @@ namespace osu.Game.Tests.Chat
             Channel channel1 = null;
             Channel channel2 = null;
 
-            AddStep("join 2 rooms", () =>
-            {
-                channelManager.JoinChannel(channel1 = createChannel(1, ChannelType.Public));
-                channelManager.JoinChannel(channel2 = createChannel(2, ChannelType.Public));
-            });
+            AddStep(
+                "join 2 rooms",
+                () =>
+                {
+                    channelManager.JoinChannel(channel1 = createChannel(1, ChannelType.Public));
+                    channelManager.JoinChannel(channel2 = createChannel(2, ChannelType.Public));
+                }
+            );
 
             AddStep("select channel 1", () => channelManager.CurrentChannel.Value = channel1);
 
-            AddStep("post /me command to channel 2", () => channelManager.PostCommand("me dances", channel2));
-            AddAssert("/me command received by channel 2", () => channel2.Messages.Last().Content == "dances");
+            AddStep(
+                "post /me command to channel 2",
+                () => channelManager.PostCommand("me dances", channel2)
+            );
+            AddAssert(
+                "/me command received by channel 2",
+                () => channel2.Messages.Last().Content == "dances"
+            );
 
-            AddStep("post /np command to channel 2", () => channelManager.PostCommand("np", channel2));
-            AddAssert("/np command received by channel 2", () => channel2.Messages.Last().Content.Contains("is listening to"));
+            AddStep(
+                "post /np command to channel 2",
+                () => channelManager.PostCommand("np", channel2)
+            );
+            AddAssert(
+                "/np command received by channel 2",
+                () => channel2.Messages.Last().Content.Contains("is listening to")
+            );
         }
 
         [Test]
@@ -103,23 +131,41 @@ namespace osu.Game.Tests.Chat
         {
             Channel channel = null;
 
-            AddStep("join channel and select it", () =>
-            {
-                channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
-                channelManager.CurrentChannel.Value = channel;
-            });
+            AddStep(
+                "join channel and select it",
+                () =>
+                {
+                    channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
+                    channelManager.CurrentChannel.Value = channel;
+                }
+            );
 
             AddStep("post message", () => channelManager.PostMessage("Something interesting"));
             AddUntilStep("message posted", () => !channel.Messages.Any(m => m is LocalMessage));
 
             AddStep("post /help command", () => channelManager.PostCommand("help", channel));
-            AddStep("post /me command with no action", () => channelManager.PostCommand("me", channel));
-            AddStep("post /join command with no channel", () => channelManager.PostCommand("join", channel));
-            AddStep("post /join command with non-existent channel", () => channelManager.PostCommand("join i-dont-exist", channel));
-            AddStep("post non-existent command", () => channelManager.PostCommand("non-existent-cmd arg", channel));
+            AddStep(
+                "post /me command with no action",
+                () => channelManager.PostCommand("me", channel)
+            );
+            AddStep(
+                "post /join command with no channel",
+                () => channelManager.PostCommand("join", channel)
+            );
+            AddStep(
+                "post /join command with non-existent channel",
+                () => channelManager.PostCommand("join i-dont-exist", channel)
+            );
+            AddStep(
+                "post non-existent command",
+                () => channelManager.PostCommand("non-existent-cmd arg", channel)
+            );
 
             AddStep("mark channel as read", () => channelManager.MarkChannelAsRead(channel));
-            AddAssert("channel's last read ID is set to the latest message", () => channel.LastReadId == sentMessages.Last().Id);
+            AddAssert(
+                "channel's last read ID is set to the latest message",
+                () => channel.LastReadId == sentMessages.Last().Id
+            );
         }
 
         [Test]
@@ -127,19 +173,25 @@ namespace osu.Game.Tests.Chat
         {
             Channel channel = null;
 
-            AddStep("join channel and select it", () =>
-            {
-                channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
-                channelManager.CurrentChannel.Value = channel;
-            });
+            AddStep(
+                "join channel and select it",
+                () =>
+                {
+                    channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
+                    channelManager.CurrentChannel.Value = channel;
+                }
+            );
 
             AddStep("post message", () => channelManager.PostMessage("Definitely something bad"));
 
-            AddStep("mark user as silenced and send ack request", () =>
-            {
-                silencedUserIds.Add(API.LocalUser.Value.OnlineID);
-                channelManager.SendAck();
-            });
+            AddStep(
+                "mark user as silenced and send ack request",
+                () =>
+                {
+                    silencedUserIds.Add(API.LocalUser.Value.OnlineID);
+                    channelManager.SendAck();
+                }
+            );
 
             AddAssert("channel has no more messages", () => channel.Messages, () => Is.Empty);
         }
@@ -149,16 +201,25 @@ namespace osu.Game.Tests.Chat
         {
             Channel channel = null;
 
-            AddStep("join channel and select it", () =>
-            {
-                channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
-                channelManager.CurrentChannel.Value = channel;
-            });
+            AddStep(
+                "join channel and select it",
+                () =>
+                {
+                    channelManager.JoinChannel(channel = createChannel(1, ChannelType.Public));
+                    channelManager.CurrentChannel.Value = channel;
+                }
+            );
 
             AddStep("post /me command", () => channelManager.PostCommand("ME DANCES"));
-            AddUntilStep("/me command received", () => channel.Messages.Last().Content.Contains("DANCES"));
+            AddUntilStep(
+                "/me command received",
+                () => channel.Messages.Last().Content.Contains("DANCES")
+            );
             AddStep("post /help command", () => channelManager.PostCommand("HeLp"));
-            AddUntilStep("/help command received", () => channel.Messages.Last().Content.Contains("Supported commands"));
+            AddUntilStep(
+                "/help command received",
+                () => channel.Messages.Last().Content.Contains("Supported commands")
+            );
         }
 
         private void handlePostMessageRequest(PostMessageRequest request)
@@ -171,7 +232,7 @@ namespace osu.Game.Tests.Chat
                 Links = request.Message.Links,
                 Timestamp = request.Message.Timestamp,
                 Sender = request.Message.Sender,
-                Uuid = request.Message.Uuid
+                Uuid = request.Message.Uuid,
             };
 
             sentMessages.Add(message);
@@ -191,14 +252,15 @@ namespace osu.Game.Tests.Chat
             }
         }
 
-        private Channel createChannel(int id, ChannelType type) => new Channel(new APIUser())
-        {
-            Id = id,
-            Name = $"Channel {id}",
-            Topic = $"Topic of channel {id} with type {type}",
-            Type = type,
-            LastMessageId = 0,
-        };
+        private Channel createChannel(int id, ChannelType type) =>
+            new Channel(new APIUser())
+            {
+                Id = id,
+                Name = $"Channel {id}",
+                Topic = $"Topic of channel {id} with type {type}",
+                Type = type,
+                LastMessageId = 0,
+            };
 
         private partial class ChannelManagerContainer : CompositeDrawable
         {

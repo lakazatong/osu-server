@@ -23,8 +23,15 @@ namespace osu.Game.Rulesets.Objects
         /// </summary>
         public const double TAIL_LENIENCY = -36;
 
-        public static IEnumerable<SliderEventDescriptor> Generate(double startTime, double spanDuration, double velocity, double tickDistance, double totalDistance, int spanCount,
-                                                                  CancellationToken cancellationToken = default)
+        public static IEnumerable<SliderEventDescriptor> Generate(
+            double startTime,
+            double spanDuration,
+            double velocity,
+            double tickDistance,
+            double totalDistance,
+            int spanCount,
+            CancellationToken cancellationToken = default
+        )
         {
             // A very lenient maximum length of a slider for ticks to be generated.
             // This exists for edge cases such as /b/1573664 where the beatmap has been edited by the user, and should never be reached in normal usage.
@@ -53,7 +60,16 @@ namespace osu.Game.Rulesets.Objects
 
                 if (tickDistance != 0)
                 {
-                    var ticks = generateTicks(span, spanStartTime, spanDuration, reversed, length, tickDistance, minDistanceFromEnd, cancellationToken);
+                    var ticks = generateTicks(
+                        span,
+                        spanStartTime,
+                        spanDuration,
+                        reversed,
+                        length,
+                        tickDistance,
+                        minDistanceFromEnd,
+                        cancellationToken
+                    );
 
                     if (reversed)
                     {
@@ -99,10 +115,15 @@ namespace osu.Game.Rulesets.Objects
             // `slider.StartTime + max(slider.Duration / 2, slider.Duration - 36)`
             //
             // As a slider gets shorter than 72 ms, the leniency offered falls below the 36 ms `TAIL_LENIENCY` constant.
-            double legacyLastTickTime = Math.Max(startTime + totalDuration / 2, (finalSpanStartTime + spanDuration) + TAIL_LENIENCY);
-            double legacyLastTickProgress = (legacyLastTickTime - finalSpanStartTime) / spanDuration;
+            double legacyLastTickTime = Math.Max(
+                startTime + totalDuration / 2,
+                (finalSpanStartTime + spanDuration) + TAIL_LENIENCY
+            );
+            double legacyLastTickProgress =
+                (legacyLastTickTime - finalSpanStartTime) / spanDuration;
 
-            if (spanCount % 2 == 0) legacyLastTickProgress = 1 - legacyLastTickProgress;
+            if (spanCount % 2 == 0)
+                legacyLastTickProgress = 1 - legacyLastTickProgress;
 
             yield return new SliderEventDescriptor
             {
@@ -135,8 +156,16 @@ namespace osu.Game.Rulesets.Objects
         /// <param name="minDistanceFromEnd">The distance from the end of the path at which ticks are not allowed to be added.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="SliderEventDescriptor"/> for each tick. If <paramref name="reversed"/> is true, the ticks will be returned in reverse-StartTime order.</returns>
-        private static IEnumerable<SliderEventDescriptor> generateTicks(int spanIndex, double spanStartTime, double spanDuration, bool reversed, double length, double tickDistance,
-                                                                        double minDistanceFromEnd, CancellationToken cancellationToken = default)
+        private static IEnumerable<SliderEventDescriptor> generateTicks(
+            int spanIndex,
+            double spanStartTime,
+            double spanDuration,
+            bool reversed,
+            double length,
+            double tickDistance,
+            double minDistanceFromEnd,
+            CancellationToken cancellationToken = default
+        )
         {
             for (double d = tickDistance; d <= length; d += tickDistance)
             {
@@ -204,6 +233,6 @@ namespace osu.Game.Rulesets.Objects
         LegacyLastTick,
         Head,
         Tail,
-        Repeat
+        Repeat,
     }
 }

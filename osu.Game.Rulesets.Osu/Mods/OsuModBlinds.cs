@@ -20,7 +20,10 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public partial class OsuModBlinds : Mod, IApplicableToDrawableRuleset<OsuHitObject>, IApplicableToHealthProcessor
+    public partial class OsuModBlinds
+        : Mod,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IApplicableToHealthProcessor
     {
         public override string Name => "Blinds";
         public override LocalisableString Description => "Play with blinds on your screen.";
@@ -37,12 +40,17 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
         {
-            drawableRuleset.Overlays.Add(blinds = new DrawableOsuBlinds(drawableRuleset.Playfield, drawableRuleset.Beatmap));
+            drawableRuleset.Overlays.Add(
+                blinds = new DrawableOsuBlinds(drawableRuleset.Playfield, drawableRuleset.Beatmap)
+            );
         }
 
         public void ApplyToHealthProcessor(HealthProcessor healthProcessor)
         {
-            healthProcessor.Health.ValueChanged += health => { blinds.AnimateClosedness((float)health.NewValue); };
+            healthProcessor.Health.ValueChanged += health =>
+            {
+                blinds.AnimateClosedness((float)health.NewValue);
+            };
         }
 
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
@@ -55,7 +63,8 @@ namespace osu.Game.Rulesets.Osu.Mods
             /// <summary>
             /// Black background boxes behind blind panel textures.
             /// </summary>
-            private Box blackBoxLeft = null!, blackBoxRight = null!;
+            private Box blackBoxLeft = null!,
+                blackBoxRight = null!;
 
             private Drawable panelLeft = null!;
             private Drawable panelRight = null!;
@@ -123,20 +132,23 @@ namespace osu.Game.Rulesets.Osu.Mods
                         Origin = Anchor.TopRight,
                         Colour = Color4.Gray,
                     },
-                    panelLeft = new ModBlindsPanel { Origin = Anchor.TopRight, },
+                    panelLeft = new ModBlindsPanel { Origin = Anchor.TopRight },
                     bgPanelRight = new ModBlindsPanel { Colour = Color4.Gray },
-                    panelRight = new ModBlindsPanel()
+                    panelRight = new ModBlindsPanel(),
                 };
             }
 
-            private float calculateGap(float value) => Math.Clamp(value, 0, target_clamp) * targetBreakMultiplier;
+            private float calculateGap(float value) =>
+                Math.Clamp(value, 0, target_clamp) * targetBreakMultiplier;
 
             // lagrange polinominal for (0,0) (0.6,0.4) (1,1) should make a good curve
-            private static float applyAdjustmentCurve(float value) => 0.6f * value * value + 0.4f * value;
+            private static float applyAdjustmentCurve(float value) =>
+                0.6f * value * value + 0.4f * value;
 
             protected override void Update()
             {
-                float start, end;
+                float start,
+                    end;
 
                 if (Precision.AlmostEquals(restrictTo.Rotation, 0))
                 {
@@ -145,7 +157,9 @@ namespace osu.Game.Rulesets.Osu.Mods
                 }
                 else
                 {
-                    float center = restrictTo.ToSpaceOfOtherDrawable(restrictTo.OriginPosition, Parent!).X;
+                    float center = restrictTo
+                        .ToSpaceOfOtherDrawable(restrictTo.OriginPosition, Parent!)
+                        .X;
                     float halfDiagonal = (restrictTo.DrawSize / 2).LengthFast;
 
                     start = center - halfDiagonal;
@@ -189,21 +203,28 @@ namespace osu.Game.Rulesets.Osu.Mods
                         using (BeginAbsoluteSequence(breakInfo.StartTime - break_open_early))
                         {
                             enterBreak();
-                            using (BeginDelayedSequence(breakInfo.Duration + break_open_early + break_close_late))
+                            using (
+                                BeginDelayedSequence(
+                                    breakInfo.Duration + break_open_early + break_close_late
+                                )
+                            )
                                 leaveBreak();
                         }
                     }
                 }
             }
 
-            private void enterBreak() => this.TransformTo(nameof(targetBreakMultiplier), 0f, 1000, Easing.OutSine);
+            private void enterBreak() =>
+                this.TransformTo(nameof(targetBreakMultiplier), 0f, 1000, Easing.OutSine);
 
-            private void leaveBreak() => this.TransformTo(nameof(targetBreakMultiplier), 1f, 2500, Easing.OutBounce);
+            private void leaveBreak() =>
+                this.TransformTo(nameof(targetBreakMultiplier), 1f, 2500, Easing.OutBounce);
 
             /// <summary>
             /// 0 is open, 1 is closed.
             /// </summary>
-            public void AnimateClosedness(float value) => this.TransformTo(nameof(easing), value, 200, Easing.OutQuint);
+            public void AnimateClosedness(float value) =>
+                this.TransformTo(nameof(easing), value, 200, Easing.OutQuint);
 
             public partial class ModBlindsPanel : Sprite
             {

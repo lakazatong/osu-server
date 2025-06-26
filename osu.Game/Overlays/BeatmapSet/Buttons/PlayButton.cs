@@ -36,7 +36,8 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
             get => beatmapSet;
             set
             {
-                if (value == beatmapSet) return;
+                if (value == beatmapSet)
+                    return;
 
                 beatmapSet = value;
 
@@ -74,21 +75,20 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
         public PlayButton(APIBeatmapSet setInfo = null)
         {
             BeatmapSet = setInfo;
-            AddRange(new Drawable[]
-            {
-                icon = new SpriteIcon
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    FillMode = FillMode.Fit,
-                    RelativeSizeAxes = Axes.Both,
-                    Icon = FontAwesome.Solid.Play,
-                },
-                loadingSpinner = new LoadingSpinner
-                {
-                    Size = new Vector2(15),
-                },
-            });
+                    icon = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        FillMode = FillMode.Fit,
+                        RelativeSizeAxes = Axes.Both,
+                        Icon = FontAwesome.Solid.Play,
+                    },
+                    loadingSpinner = new LoadingSpinner { Size = new Vector2(15) },
+                }
+            );
 
             playing.ValueChanged += playingStateChanged;
         }
@@ -124,7 +124,11 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
         private void playingStateChanged(ValueChangedEvent<bool> e)
         {
             icon.Icon = e.NewValue ? FontAwesome.Solid.Stop : FontAwesome.Solid.Play;
-            icon.FadeColour(e.NewValue || IsHovered ? hoverColour : Color4.White, 120, Easing.InOutQuint);
+            icon.FadeColour(
+                e.NewValue || IsHovered ? hoverColour : Color4.White,
+                120,
+                Easing.InOutQuint
+            );
 
             if (e.NewValue)
             {
@@ -142,30 +146,33 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
 
                 loading = true;
 
-                LoadComponentAsync(Preview = previewTrackManager.Get(beatmapSet), preview =>
-                {
-                    // Make sure that we schedule to after the next audio frame to fix crashes in single-threaded execution.
-                    // See: https://github.com/ppy/osu-framework/issues/4692
-                    Schedule(() =>
+                LoadComponentAsync(
+                    Preview = previewTrackManager.Get(beatmapSet),
+                    preview =>
                     {
-                        // beatmapset may have changed.
-                        if (Preview != preview)
+                        // Make sure that we schedule to after the next audio frame to fix crashes in single-threaded execution.
+                        // See: https://github.com/ppy/osu-framework/issues/4692
+                        Schedule(() =>
                         {
-                            preview?.Dispose();
-                            return;
-                        }
+                            // beatmapset may have changed.
+                            if (Preview != preview)
+                            {
+                                preview?.Dispose();
+                                return;
+                            }
 
-                        AddInternal(preview);
-                        loading = false;
-                        // make sure that the update of value of Playing (and the ensuing value change callbacks)
-                        // are marshaled back to the update thread.
-                        preview.Stopped += () => Schedule(() => playing.Value = false);
+                            AddInternal(preview);
+                            loading = false;
+                            // make sure that the update of value of Playing (and the ensuing value change callbacks)
+                            // are marshaled back to the update thread.
+                            preview.Stopped += () => Schedule(() => playing.Value = false);
 
-                        // user may have changed their mind.
-                        if (playing.Value)
-                            attemptStart();
-                    });
-                });
+                            // user may have changed their mind.
+                            if (playing.Value)
+                                attemptStart();
+                        });
+                    }
+                );
             }
             else
             {

@@ -40,15 +40,27 @@ namespace osu.Game.Tests.Visual
             NoParallaxTestScreen noParallaxScreen = null;
             TestScreen parallaxScreen = null;
 
-            AddStep("Push no parallax", () => stack.Push(noParallaxScreen = new NoParallaxTestScreen("NO PARALLAX")));
+            AddStep(
+                "Push no parallax",
+                () => stack.Push(noParallaxScreen = new NoParallaxTestScreen("NO PARALLAX"))
+            );
             AddUntilStep("Wait for current", () => noParallaxScreen.IsLoaded);
             AddAssert("Parallax is off", () => stack.ParallaxAmount == 0);
 
-            AddStep("Push parallax", () => noParallaxScreen.Push(parallaxScreen = new TestScreen("PARALLAX")));
+            AddStep(
+                "Push parallax",
+                () => noParallaxScreen.Push(parallaxScreen = new TestScreen("PARALLAX"))
+            );
             AddUntilStep("Wait for current", () => parallaxScreen.IsLoaded);
             AddAssert("Parallax is on", () => stack.ParallaxAmount > 0);
 
-            AddStep("Exit from new screen", () => { noParallaxScreen.MakeCurrent(); });
+            AddStep(
+                "Exit from new screen",
+                () =>
+                {
+                    noParallaxScreen.MakeCurrent();
+                }
+            );
             AddAssert("Parallax is off", () => stack.ParallaxAmount == 0);
         }
 
@@ -102,22 +114,22 @@ namespace osu.Game.Tests.Visual
             [BackgroundDependencyLoader]
             private void load()
             {
-                AddInternal(new OsuSpriteText
-                {
-                    Text = screenText,
-                    Colour = Color4.White,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                AddInternal(
+                    new OsuSpriteText
+                    {
+                        Text = screenText,
+                        Colour = Color4.White,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
         }
 
         private partial class NoParallaxTestScreen : TestScreen
         {
             public NoParallaxTestScreen(string screenText)
-                : base(screenText)
-            {
-            }
+                : base(screenText) { }
 
             public override float BackgroundParallaxAmount => 0.0f;
         }
@@ -137,11 +149,10 @@ namespace osu.Game.Tests.Visual
             public override bool? ApplyModTrackAdjustments => false;
         }
 
-        private partial class InheritScreen : OsuScreen
-        {
-        }
+        private partial class InheritScreen : OsuScreen { }
 
-        private OsuScreen loadNewScreen<T>() where T : OsuScreen, new()
+        private OsuScreen loadNewScreen<T>()
+            where T : OsuScreen, new()
         {
             OsuScreen screen = new T();
             LoadComponent(screen);

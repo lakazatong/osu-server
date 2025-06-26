@@ -35,34 +35,45 @@ namespace osu.Game.Tests.Testing
         [Test]
         public void TestRetrieveTexture()
         {
-            AddAssert("ruleset texture retrieved", () =>
-                Dependencies.Get<TextureStore>().Get(@"test-image") != null);
+            AddAssert(
+                "ruleset texture retrieved",
+                () => Dependencies.Get<TextureStore>().Get(@"test-image") != null
+            );
         }
 
         [Test]
         public void TestRetrieveSample()
         {
-            AddAssert("ruleset sample retrieved", () =>
-                Dependencies.Get<ISampleStore>().Get(@"test-sample") != null);
+            AddAssert(
+                "ruleset sample retrieved",
+                () => Dependencies.Get<ISampleStore>().Get(@"test-sample") != null
+            );
         }
 
         [Test]
         public void TestRetrieveShader()
         {
-            AddStep("ruleset shaders retrieved without error", () =>
-            {
-                Dependencies.Get<ShaderManager>().GetRawData(@"sh_TestVertex.vs");
-                Dependencies.Get<ShaderManager>().GetRawData(@"sh_TestFragment.fs");
-                Dependencies.Get<ShaderManager>().Load(@"TestVertex", @"TestFragment");
-                Dependencies.Get<ShaderManager>().Load(VertexShaderDescriptor.TEXTURE_2, @"TestFragment");
-            });
+            AddStep(
+                "ruleset shaders retrieved without error",
+                () =>
+                {
+                    Dependencies.Get<ShaderManager>().GetRawData(@"sh_TestVertex.vs");
+                    Dependencies.Get<ShaderManager>().GetRawData(@"sh_TestFragment.fs");
+                    Dependencies.Get<ShaderManager>().Load(@"TestVertex", @"TestFragment");
+                    Dependencies
+                        .Get<ShaderManager>()
+                        .Load(VertexShaderDescriptor.TEXTURE_2, @"TestFragment");
+                }
+            );
         }
 
         [Test]
         public void TestResolveConfigManager()
         {
-            AddAssert("ruleset config resolved", () =>
-                Dependencies.Get<TestRulesetConfigManager>() != null);
+            AddAssert(
+                "ruleset config resolved",
+                () => Dependencies.Get<TestRulesetConfigManager>() != null
+            );
         }
 
         public class TestRuleset : Ruleset
@@ -77,32 +88,37 @@ namespace osu.Game.Tests.Testing
                 RulesetInfo.OnlineID = -1;
             }
 
-            public override IResourceStore<byte[]> CreateResourceStore() => new NamespacedResourceStore<byte[]>(TestResources.GetStore(), @"Resources");
-            public override IRulesetConfigManager CreateConfig(SettingsStore? settings) => new TestRulesetConfigManager();
+            public override IResourceStore<byte[]> CreateResourceStore() =>
+                new NamespacedResourceStore<byte[]>(TestResources.GetStore(), @"Resources");
+
+            public override IRulesetConfigManager CreateConfig(SettingsStore? settings) =>
+                new TestRulesetConfigManager();
 
             public override IEnumerable<Mod> GetModsFor(ModType type) => Array.Empty<Mod>();
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => null!;
+
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod>? mods = null
+            ) => null!;
+
             public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => null!;
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => null!;
+
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => null!;
         }
 
         private class TestRulesetConfigManager : IRulesetConfigManager
         {
-            public void Load()
-            {
-            }
+            public void Load() { }
 
             public bool Save() => true;
 
             public TrackedSettings CreateTrackedSettings() => new TrackedSettings();
 
-            public void LoadInto(TrackedSettings settings)
-            {
-            }
+            public void LoadInto(TrackedSettings settings) { }
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
     }
 }

@@ -36,9 +36,7 @@ namespace osu.Game.Rulesets.Mania.Tests
         private FillFlowContainer<ScrollingTestContainer> fill;
 
         public TestSceneStage()
-            : base(columns)
-        {
-        }
+            : base(columns) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -52,8 +50,8 @@ namespace osu.Game.Rulesets.Mania.Tests
                 Children = new[]
                 {
                     createStage(ScrollingDirection.Up, ManiaAction.Key1),
-                    createStage(ScrollingDirection.Down, ManiaAction.Key3)
-                }
+                    createStage(ScrollingDirection.Down, ManiaAction.Key3),
+                },
             };
         }
 
@@ -66,26 +64,55 @@ namespace osu.Game.Rulesets.Mania.Tests
             AddStep("minor bar line", () => createBarLine(false));
             AddStep("major bar line", () => createBarLine(true));
 
-            AddAssert("check note anchors", () => notesInStageAreAnchored(stages[0], Anchor.TopCentre));
-            AddAssert("check note anchors", () => notesInStageAreAnchored(stages[1], Anchor.BottomCentre));
-            AddAssert("check bar anchors", () => barsInStageAreAnchored(stages[0], Anchor.TopCentre));
-            AddAssert("check bar anchors", () => barsInStageAreAnchored(stages[1], Anchor.BottomCentre));
+            AddAssert(
+                "check note anchors",
+                () => notesInStageAreAnchored(stages[0], Anchor.TopCentre)
+            );
+            AddAssert(
+                "check note anchors",
+                () => notesInStageAreAnchored(stages[1], Anchor.BottomCentre)
+            );
+            AddAssert(
+                "check bar anchors",
+                () => barsInStageAreAnchored(stages[0], Anchor.TopCentre)
+            );
+            AddAssert(
+                "check bar anchors",
+                () => barsInStageAreAnchored(stages[1], Anchor.BottomCentre)
+            );
 
-            AddStep("flip direction", () =>
-            {
-                foreach (var c in fill.Children)
-                    c.Flip();
-            });
+            AddStep(
+                "flip direction",
+                () =>
+                {
+                    foreach (var c in fill.Children)
+                        c.Flip();
+                }
+            );
 
-            AddAssert("check note anchors", () => notesInStageAreAnchored(stages[0], Anchor.BottomCentre));
-            AddAssert("check note anchors", () => notesInStageAreAnchored(stages[1], Anchor.TopCentre));
-            AddAssert("check bar anchors", () => barsInStageAreAnchored(stages[0], Anchor.BottomCentre));
-            AddAssert("check bar anchors", () => barsInStageAreAnchored(stages[1], Anchor.TopCentre));
+            AddAssert(
+                "check note anchors",
+                () => notesInStageAreAnchored(stages[0], Anchor.BottomCentre)
+            );
+            AddAssert(
+                "check note anchors",
+                () => notesInStageAreAnchored(stages[1], Anchor.TopCentre)
+            );
+            AddAssert(
+                "check bar anchors",
+                () => barsInStageAreAnchored(stages[0], Anchor.BottomCentre)
+            );
+            AddAssert(
+                "check bar anchors",
+                () => barsInStageAreAnchored(stages[1], Anchor.TopCentre)
+            );
         }
 
-        private bool notesInStageAreAnchored(Stage stage, Anchor anchor) => stage.Columns.SelectMany(c => c.AllHitObjects).All(o => o.Anchor == anchor);
+        private bool notesInStageAreAnchored(Stage stage, Anchor anchor) =>
+            stage.Columns.SelectMany(c => c.AllHitObjects).All(o => o.Anchor == anchor);
 
-        private bool barsInStageAreAnchored(Stage stage, Anchor anchor) => stage.AllHitObjects.Where(obj => obj is DrawableBarLine).All(o => o.Anchor == anchor);
+        private bool barsInStageAreAnchored(Stage stage, Anchor anchor) =>
+            stage.AllHitObjects.Where(obj => obj is DrawableBarLine).All(o => o.Anchor == anchor);
 
         private void createNote()
         {
@@ -107,7 +134,12 @@ namespace osu.Game.Rulesets.Mania.Tests
             {
                 for (int i = 0; i < stage.Columns.Length; i++)
                 {
-                    var obj = new HoldNote { Column = i, StartTime = Time.Current + 2000, Duration = 500 };
+                    var obj = new HoldNote
+                    {
+                        Column = i,
+                        StartTime = Time.Current + 2000,
+                        Duration = 500,
+                    };
                     obj.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
                     stage.Add(new DrawableHoldNote(obj));
@@ -117,11 +149,7 @@ namespace osu.Game.Rulesets.Mania.Tests
 
         private void createBarLine(bool major)
         {
-            var obj = new BarLine
-            {
-                StartTime = Time.Current + 2000,
-                Major = major,
-            };
+            var obj = new BarLine { StartTime = Time.Current + 2000, Major = major };
 
             obj.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
@@ -141,7 +169,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                 RelativeSizeAxes = Axes.Y,
                 AutoSizeAxes = Axes.X,
                 TimeRange = 2000,
-                Child = stage
+                Child = stage,
             };
         }
     }

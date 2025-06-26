@@ -21,12 +21,12 @@ namespace osu.Game.Overlays.Settings.Sections.Online
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.NotifyOnMentioned,
-                    Current = config.GetBindable<bool>(OsuSetting.NotifyOnUsernameMentioned)
+                    Current = config.GetBindable<bool>(OsuSetting.NotifyOnUsernameMentioned),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.NotifyOnPrivateMessage,
-                    Current = config.GetBindable<bool>(OsuSetting.NotifyOnPrivateMessage)
+                    Current = config.GetBindable<bool>(OsuSetting.NotifyOnPrivateMessage),
                 },
                 new SettingsCheckbox
                 {
@@ -37,7 +37,7 @@ namespace osu.Game.Overlays.Settings.Sections.Online
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.HideCountryFlags,
-                    Current = config.GetBindable<bool>(OsuSetting.HideCountryFlags)
+                    Current = config.GetBindable<bool>(OsuSetting.HideCountryFlags),
                 },
             };
         }

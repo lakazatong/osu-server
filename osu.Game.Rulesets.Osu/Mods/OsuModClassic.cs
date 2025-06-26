@@ -18,20 +18,35 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModClassic : ModClassic, IApplicableToHitObject, IApplicableToDrawableHitObject, IApplicableToDrawableRuleset<OsuHitObject>, IApplicableHealthProcessor
+    public class OsuModClassic
+        : ModClassic,
+            IApplicableToHitObject,
+            IApplicableToDrawableHitObject,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IApplicableHealthProcessor
     {
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(OsuModStrictTracking)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(OsuModStrictTracking)).ToArray();
 
-        [SettingSource("No slider head accuracy requirement", "Scores sliders proportionally to the number of ticks hit.")]
+        [SettingSource(
+            "No slider head accuracy requirement",
+            "Scores sliders proportionally to the number of ticks hit."
+        )]
         public Bindable<bool> NoSliderHeadAccuracy { get; } = new BindableBool(true);
 
         [SettingSource("Apply classic note lock", "Applies note lock to the full hit window.")]
         public Bindable<bool> ClassicNoteLock { get; } = new BindableBool(true);
 
-        [SettingSource("Always play a slider's tail sample", "Always plays a slider's tail sample regardless of whether it was hit or not.")]
+        [SettingSource(
+            "Always play a slider's tail sample",
+            "Always plays a slider's tail sample regardless of whether it was hit or not."
+        )]
         public Bindable<bool> AlwaysPlayTailSample { get; } = new BindableBool(true);
 
-        [SettingSource("Fade out hit circles earlier", "Make hit circles fade out into a miss, rather than after it.")]
+        [SettingSource(
+            "Fade out hit circles earlier",
+            "Make hit circles fade out into a miss, rather than after it."
+        )]
         public Bindable<bool> FadeHitCircleEarly { get; } = new Bindable<bool>(true);
 
         [SettingSource("Classic health", "More closely resembles the original HP drain mechanics.")]
@@ -55,11 +70,17 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             if (ClassicNoteLock.Value)
             {
-                double hittableRange = OsuHitWindows.MISS_WINDOW - (drawableRuleset.Mods.OfType<OsuModAutopilot>().Any() ? 200 : 0);
+                double hittableRange =
+                    OsuHitWindows.MISS_WINDOW
+                    - (drawableRuleset.Mods.OfType<OsuModAutopilot>().Any() ? 200 : 0);
                 osuRuleset.Playfield.HitPolicy = new LegacyHitPolicy(hittableRange);
             }
 
-            usingHiddenFading = drawableRuleset.Mods.OfType<OsuModHidden>().SingleOrDefault()?.OnlyFadeApproachCircles.Value == false;
+            usingHiddenFading =
+                drawableRuleset
+                    .Mods.OfType<OsuModHidden>()
+                    .SingleOrDefault()
+                    ?.OnlyFadeApproachCircles.Value == false;
         }
 
         public void ApplyToDrawableHitObject(DrawableHitObject obj)
@@ -107,13 +128,15 @@ namespace osu.Game.Rulesets.Osu.Mods
                     if (state != ArmedState.Hit)
                     {
                         double okWindow = dho.HitObject.HitWindows.WindowFor(HitResult.Ok);
-                        double lateMissFadeTime = dho.HitObject.HitWindows.WindowFor(HitResult.Meh) - okWindow;
+                        double lateMissFadeTime =
+                            dho.HitObject.HitWindows.WindowFor(HitResult.Meh) - okWindow;
                         dho.Delay(okWindow).FadeOut(lateMissFadeTime);
                     }
                 }
             };
         }
 
-        public HealthProcessor? CreateHealthProcessor(double drainStartTime) => ClassicHealth.Value ? new OsuLegacyHealthProcessor(drainStartTime) : null;
+        public HealthProcessor? CreateHealthProcessor(double drainStartTime) =>
+            ClassicHealth.Value ? new OsuLegacyHealthProcessor(drainStartTime) : null;
     }
 }

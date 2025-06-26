@@ -16,10 +16,15 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
         {
             Icon = FontAwesome.Solid.Bullhorn;
             Text = hypeStatus.Current.ToLocalisableString();
-            TooltipText = BeatmapsStrings.HypeRequiredText(hypeStatus.Current.ToLocalisableString(), hypeStatus.Required.ToLocalisableString());
+            TooltipText = BeatmapsStrings.HypeRequiredText(
+                hypeStatus.Current.ToLocalisableString(),
+                hypeStatus.Required.ToLocalisableString()
+            );
         }
 
-        public static HypesStatistic? CreateFor(IBeatmapSetOnlineInfo beatmapSetOnlineInfo)
-            => beatmapSetOnlineInfo.HypeStatus == null ? null : new HypesStatistic(beatmapSetOnlineInfo.HypeStatus);
+        public static HypesStatistic? CreateFor(IBeatmapSetOnlineInfo beatmapSetOnlineInfo) =>
+            beatmapSetOnlineInfo.HypeStatus == null
+                ? null
+                : new HypesStatistic(beatmapSetOnlineInfo.HypeStatus);
     }
 }

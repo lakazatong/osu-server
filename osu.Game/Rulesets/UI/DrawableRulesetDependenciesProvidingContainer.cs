@@ -20,9 +20,14 @@ namespace osu.Game.Rulesets.UI
             RelativeSizeAxes = Axes.Both;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
-            return rulesetDependencies = new DrawableRulesetDependencies(ruleset, base.CreateChildDependencies(parent));
+            return rulesetDependencies = new DrawableRulesetDependencies(
+                ruleset,
+                base.CreateChildDependencies(parent)
+            );
         }
 
         protected override void Dispose(bool isDisposing)

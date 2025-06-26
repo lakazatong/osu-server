@@ -19,7 +19,8 @@ namespace osu.Game.Rulesets.UI
     /// </summary>
     public partial class PlayfieldBorder : CompositeDrawable
     {
-        public Bindable<PlayfieldBorderStyle> PlayfieldBorderStyle { get; } = new Bindable<PlayfieldBorderStyle>();
+        public Bindable<PlayfieldBorderStyle> PlayfieldBorderStyle { get; } =
+            new Bindable<PlayfieldBorderStyle>();
 
         private const int fade_duration = 500;
 
@@ -32,11 +33,7 @@ namespace osu.Game.Rulesets.UI
 
             InternalChildren = new Drawable[]
             {
-                new Line(Direction.Horizontal)
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                },
+                new Line(Direction.Horizontal) { Anchor = Anchor.TopLeft, Origin = Anchor.TopLeft },
                 new Line(Direction.Horizontal)
                 {
                     Anchor = Anchor.TopRight,
@@ -52,16 +49,8 @@ namespace osu.Game.Rulesets.UI
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
                 },
-                new Line(Direction.Vertical)
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                },
-                new Line(Direction.Vertical)
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                },
+                new Line(Direction.Vertical) { Anchor = Anchor.TopLeft, Origin = Anchor.TopLeft },
+                new Line(Direction.Vertical) { Anchor = Anchor.TopRight, Origin = Anchor.TopRight },
                 new Line(Direction.Vertical)
                 {
                     Anchor = Anchor.BottomLeft,

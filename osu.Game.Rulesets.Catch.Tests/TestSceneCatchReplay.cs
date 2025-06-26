@@ -18,33 +18,24 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Test]
         public void TestReplayCatcherPositionIsFramePerfect()
         {
-            AddUntilStep("caught all fruits", () => Player.ScoreProcessor.Combo.Value == object_count);
+            AddUntilStep(
+                "caught all fruits",
+                () => Player.ScoreProcessor.Combo.Value == object_count
+            );
         }
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
-            var beatmap = new Beatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = ruleset,
-                }
-            };
+            var beatmap = new Beatmap { BeatmapInfo = { Ruleset = ruleset } };
 
             beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
 
             for (int i = 0; i < object_count / 2; i++)
             {
-                beatmap.HitObjects.Add(new Fruit
-                {
-                    StartTime = (i + 1) * 1000,
-                    X = 0
-                });
-                beatmap.HitObjects.Add(new Fruit
-                {
-                    StartTime = (i + 1) * 1000 + 1,
-                    X = CatchPlayfield.WIDTH
-                });
+                beatmap.HitObjects.Add(new Fruit { StartTime = (i + 1) * 1000, X = 0 });
+                beatmap.HitObjects.Add(
+                    new Fruit { StartTime = (i + 1) * 1000 + 1, X = CatchPlayfield.WIDTH }
+                );
             }
 
             return beatmap;

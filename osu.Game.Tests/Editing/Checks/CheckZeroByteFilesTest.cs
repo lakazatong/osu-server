@@ -28,12 +28,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files =
-                        {
-                            CheckTestHelpers.CreateMockFile("jpg"),
-                        }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("jpg") },
+                    },
+                },
             };
         }
 
@@ -64,7 +61,9 @@ namespace osu.Game.Tests.Editing.Checks
             mockStream.Setup(s => s.Length).Returns(byteLength);
 
             var mockWorkingBeatmap = new Mock<IWorkingBeatmap>();
-            mockWorkingBeatmap.Setup(w => w.GetStream(It.IsAny<string>())).Returns(mockStream.Object);
+            mockWorkingBeatmap
+                .Setup(w => w.GetStream(It.IsAny<string>()))
+                .Returns(mockStream.Object);
 
             return new BeatmapVerifierContext(beatmap, mockWorkingBeatmap.Object);
         }

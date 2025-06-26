@@ -13,9 +13,7 @@ namespace osu.Game.Graphics.UserInterfaceV2.FileSelection
         protected override IconUsage? Icon => FontAwesome.Solid.Folder;
 
         public OsuDirectorySelectorParentDirectory(DirectoryInfo directory)
-            : base(directory, "..")
-        {
-        }
+            : base(directory, "..") { }
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)

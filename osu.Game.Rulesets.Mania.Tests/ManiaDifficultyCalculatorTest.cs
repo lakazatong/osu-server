@@ -15,14 +15,19 @@ namespace osu.Game.Rulesets.Mania.Tests
         protected override string ResourceAssembly => "osu.Game.Rulesets.Mania.Tests";
 
         [TestCase(2.3493769750220914d, 242, "diffcalc-test")]
-        public void Test(double expectedStarRating, int expectedMaxCombo, string name)
-            => base.Test(expectedStarRating, expectedMaxCombo, name);
+        public void Test(double expectedStarRating, int expectedMaxCombo, string name) =>
+            base.Test(expectedStarRating, expectedMaxCombo, name);
 
         [TestCase(2.797245912537965d, 242, "diffcalc-test")]
-        public void TestClockRateAdjusted(double expectedStarRating, int expectedMaxCombo, string name)
-            => Test(expectedStarRating, expectedMaxCombo, name, new ManiaModDoubleTime());
+        public void TestClockRateAdjusted(
+            double expectedStarRating,
+            int expectedMaxCombo,
+            string name
+        ) => Test(expectedStarRating, expectedMaxCombo, name, new ManiaModDoubleTime());
 
-        protected override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new ManiaDifficultyCalculator(new ManiaRuleset().RulesetInfo, beatmap);
+        protected override DifficultyCalculator CreateDifficultyCalculator(
+            IWorkingBeatmap beatmap
+        ) => new ManiaDifficultyCalculator(new ManiaRuleset().RulesetInfo, beatmap);
 
         protected override Ruleset CreateRuleset() => new ManiaRuleset();
     }

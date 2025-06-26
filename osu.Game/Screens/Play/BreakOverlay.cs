@@ -75,7 +75,7 @@ namespace osu.Game.Screens.Play
                             Type = EdgeEffectType.Shadow,
                             Radius = 260,
                             Colour = OsuColour.Gray(0.2f).Opacity(0.8f),
-                            Roundness = 12
+                            Roundness = 12,
                         },
                         Children = new Drawable[]
                         {
@@ -85,7 +85,7 @@ namespace osu.Game.Screens.Play
                                 AlwaysPresent = true,
                                 RelativeSizeAxes = Axes.Both,
                             },
-                        }
+                        },
                     },
                     remainingTimeAdjustmentBox = new Container
                     {
@@ -94,14 +94,15 @@ namespace osu.Game.Screens.Play
                         AutoSizeAxes = Axes.Y,
                         RelativeSizeAxes = Axes.X,
                         Width = 0,
-                        Child = remainingTimeBox = new Circle
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            Height = 8,
-                            Masking = true,
-                        }
+                        Child = remainingTimeBox =
+                            new Circle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                Height = 8,
+                                Masking = true,
+                            },
                     },
                     remainingTimeCounter = new RemainingTimeCounter
                     {
@@ -119,8 +120,8 @@ namespace osu.Game.Screens.Play
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -136,7 +137,14 @@ namespace osu.Game.Screens.Play
         }
 
         private float remainingTimeForCurrentPeriod =>
-            currentPeriod.Value == null ? 0 : (float)Math.Max(0, (currentPeriod.Value.Value.End - Time.Current - BREAK_FADE_DURATION) / currentPeriod.Value.Value.Duration);
+            currentPeriod.Value == null
+                ? 0
+                : (float)
+                    Math.Max(
+                        0,
+                        (currentPeriod.Value.Value.End - Time.Current - BREAK_FADE_DURATION)
+                            / currentPeriod.Value.Value.Duration
+                    );
 
         protected override void Update()
         {
@@ -152,15 +160,29 @@ namespace osu.Game.Screens.Play
             }
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
             if (currentPeriod.Value == null)
                 return;
 
-            float timeBoxTargetWidth = (float)Math.Max(0, remainingTimeForCurrentPeriod - timingPoint.BeatLength / currentPeriod.Value.Value.Duration);
-            remainingTimeBox.ResizeWidthTo(timeBoxTargetWidth, timingPoint.BeatLength * 3.5, Easing.OutQuint);
+            float timeBoxTargetWidth = (float)
+                Math.Max(
+                    0,
+                    remainingTimeForCurrentPeriod
+                        - timingPoint.BeatLength / currentPeriod.Value.Value.Duration
+                );
+            remainingTimeBox.ResizeWidthTo(
+                timeBoxTargetWidth,
+                timingPoint.BeatLength * 3.5,
+                Easing.OutQuint
+            );
         }
 
         private void updateDisplay(ValueChangedEvent<Period?> period)
@@ -179,7 +201,11 @@ namespace osu.Game.Screens.Play
                 breakArrows.Show(BREAK_FADE_DURATION);
 
                 remainingTimeAdjustmentBox
-                    .ResizeWidthTo(remaining_time_container_max_size, BREAK_FADE_DURATION, Easing.OutQuint)
+                    .ResizeWidthTo(
+                        remaining_time_container_max_size,
+                        BREAK_FADE_DURATION,
+                        Easing.OutQuint
+                    )
                     .Delay(b.Duration - BREAK_FADE_DURATION)
                     .ResizeWidthTo(0);
 
@@ -187,11 +213,9 @@ namespace osu.Game.Screens.Play
 
                 remainingTimeCounter.CountTo(b.Duration).CountTo(0, b.Duration);
 
-                remainingTimeCounter.MoveToX(-50)
-                                    .MoveToX(0, BREAK_FADE_DURATION, Easing.OutQuint);
+                remainingTimeCounter.MoveToX(-50).MoveToX(0, BREAK_FADE_DURATION, Easing.OutQuint);
 
-                info.MoveToX(50)
-                    .MoveToX(0, BREAK_FADE_DURATION, Easing.OutQuint);
+                info.MoveToX(50).MoveToX(0, BREAK_FADE_DURATION, Easing.OutQuint);
 
                 using (BeginDelayedSequence(b.Duration - BREAK_FADE_DURATION))
                 {

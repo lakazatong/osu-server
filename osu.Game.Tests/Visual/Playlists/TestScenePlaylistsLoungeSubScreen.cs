@@ -41,13 +41,19 @@ namespace osu.Game.Tests.Visual.Playlists
 
             createRooms(GenerateRooms(30));
 
-            AddStep("move mouse to third room", () => InputManager.MoveMouseTo(roomListing.DrawableRooms[2]));
+            AddStep(
+                "move mouse to third room",
+                () => InputManager.MoveMouseTo(roomListing.DrawableRooms[2])
+            );
             AddStep("hold down", () => InputManager.PressButton(MouseButton.Left));
             AddStep("drag to top", () => InputManager.MoveMouseTo(roomListing.DrawableRooms[0]));
 
-            AddAssert("first and second room masked", ()
-                => !checkRoomVisible(roomListing.DrawableRooms[0]) &&
-                   !checkRoomVisible(roomListing.DrawableRooms[1]));
+            AddAssert(
+                "first and second room masked",
+                () =>
+                    !checkRoomVisible(roomListing.DrawableRooms[0])
+                    && !checkRoomVisible(roomListing.DrawableRooms[1])
+            );
         }
 
         [Test]
@@ -57,21 +63,32 @@ namespace osu.Game.Tests.Visual.Playlists
 
             AddStep("select last room", () => roomListing.DrawableRooms[^1].TriggerClick());
 
-            AddUntilStep("first room is masked", () => !checkRoomVisible(roomListing.DrawableRooms[0]));
-            AddUntilStep("last room is not masked", () => checkRoomVisible(roomListing.DrawableRooms[^1]));
+            AddUntilStep(
+                "first room is masked",
+                () => !checkRoomVisible(roomListing.DrawableRooms[0])
+            );
+            AddUntilStep(
+                "last room is not masked",
+                () => checkRoomVisible(roomListing.DrawableRooms[^1])
+            );
         }
 
         private bool checkRoomVisible(RoomPanel panel) =>
-            loungeScreen.ChildrenOfType<OsuScrollContainer>().First().ScreenSpaceDrawQuad
-                        .Contains(panel.ScreenSpaceDrawQuad.Centre);
+            loungeScreen
+                .ChildrenOfType<OsuScrollContainer>()
+                .First()
+                .ScreenSpaceDrawQuad.Contains(panel.ScreenSpaceDrawQuad.Centre);
 
         private void createRooms(params Room[] rooms)
         {
-            AddStep("create rooms", () =>
-            {
-                foreach (var room in rooms)
-                    API.Queue(new CreateRoomRequest(room));
-            });
+            AddStep(
+                "create rooms",
+                () =>
+                {
+                    foreach (var room in rooms)
+                        API.Queue(new CreateRoomRequest(room));
+                }
+            );
 
             AddStep("refresh lounge", () => loungeScreen.RefreshRooms());
         }

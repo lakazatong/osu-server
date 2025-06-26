@@ -22,7 +22,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneRankGraph : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         private RankGraph graph = null!;
 
@@ -31,46 +33,52 @@ namespace osu.Game.Tests.Visual.Online
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create graph", () => Child = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(300, 150),
-                Children = new Drawable[]
-                {
-                    new Box
+            AddStep(
+                "create graph",
+                () =>
+                    Child = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = OsuColour.Gray(0.2f)
-                    },
-                    graph = new RankGraph
-                    {
-                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(300, 150),
+                        Children = new Drawable[]
+                        {
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) },
+                            graph = new RankGraph { RelativeSizeAxes = Axes.Both },
+                        },
                     }
-                }
-            });
+            );
         }
 
         [Test]
         public void TestNullUser()
         {
             AddStep("null user", () => graph.Statistics.Value = null);
-            AddAssert("line graph hidden", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 0));
+            AddAssert(
+                "line graph hidden",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 0)
+            );
         }
 
         [Test]
         public void TestRankOnly()
         {
-            AddStep("rank only", () =>
-            {
-                graph.Statistics.Value = new UserStatistics
+            AddStep(
+                "rank only",
+                () =>
                 {
-                    IsRanked = true,
-                    GlobalRank = 123456,
-                    PP = 12345,
-                };
-            });
-            AddAssert("line graph hidden", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 0));
+                    graph.Statistics.Value = new UserStatistics
+                    {
+                        IsRanked = true,
+                        GlobalRank = 123456,
+                        PP = 12345,
+                    };
+                }
+            );
+            AddAssert(
+                "line graph hidden",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 0)
+            );
         }
 
         [Test]
@@ -81,20 +89,23 @@ namespace osu.Game.Tests.Visual.Online
             for (int i = 0; i < history_length; i++)
                 data[i] = (i + 1) * 1000;
 
-            AddStep("with rank history", () =>
-            {
-                graph.Statistics.Value = new UserStatistics
+            AddStep(
+                "with rank history",
+                () =>
                 {
-                    IsRanked = true,
-                    GlobalRank = 89000,
-                    PP = 12345,
-                    RankHistory = new APIRankHistory
+                    graph.Statistics.Value = new UserStatistics
                     {
-                        Data = data
-                    }
-                };
-            });
-            AddAssert("line graph shown", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1));
+                        IsRanked = true,
+                        GlobalRank = 89000,
+                        PP = 12345,
+                        RankHistory = new APIRankHistory { Data = data },
+                    };
+                }
+            );
+            AddAssert(
+                "line graph shown",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1)
+            );
         }
 
         [Test]
@@ -108,20 +119,23 @@ namespace osu.Game.Tests.Visual.Online
                     dataWithZeros[i] = (i + 1) * 1000;
             }
 
-            AddStep("with zero values", () =>
-            {
-                graph.Statistics.Value = new UserStatistics
+            AddStep(
+                "with zero values",
+                () =>
                 {
-                    IsRanked = true,
-                    GlobalRank = 89000,
-                    PP = 12345,
-                    RankHistory = new APIRankHistory
+                    graph.Statistics.Value = new UserStatistics
                     {
-                        Data = dataWithZeros,
-                    }
-                };
-            });
-            AddAssert("line graph shown", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1));
+                        IsRanked = true,
+                        GlobalRank = 89000,
+                        PP = 12345,
+                        RankHistory = new APIRankHistory { Data = dataWithZeros },
+                    };
+                }
+            );
+            AddAssert(
+                "line graph shown",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1)
+            );
         }
 
         [Test]
@@ -132,20 +146,23 @@ namespace osu.Game.Tests.Visual.Online
             for (int i = history_length - 10; i < history_length; i++)
                 smallData[i] = 100000 - i * 1000;
 
-            AddStep("small amount of data", () =>
-            {
-                graph.Statistics.Value = new UserStatistics
+            AddStep(
+                "small amount of data",
+                () =>
                 {
-                    IsRanked = true,
-                    GlobalRank = 12000,
-                    PP = 12345,
-                    RankHistory = new APIRankHistory
+                    graph.Statistics.Value = new UserStatistics
                     {
-                        Data = smallData,
-                    }
-                };
-            });
-            AddAssert("line graph shown", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1));
+                        IsRanked = true,
+                        GlobalRank = 12000,
+                        PP = 12345,
+                        RankHistory = new APIRankHistory { Data = smallData },
+                    };
+                }
+            );
+            AddAssert(
+                "line graph shown",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1)
+            );
         }
 
         [Test]
@@ -161,20 +178,23 @@ namespace osu.Game.Tests.Visual.Online
                 edge = !edge;
             }
 
-            AddStep("graph with edges", () =>
-            {
-                graph.Statistics.Value = new UserStatistics
+            AddStep(
+                "graph with edges",
+                () =>
                 {
-                    IsRanked = true,
-                    GlobalRank = 12000,
-                    PP = 12345,
-                    RankHistory = new APIRankHistory
+                    graph.Statistics.Value = new UserStatistics
                     {
-                        Data = edgyData,
-                    }
-                };
-            });
-            AddAssert("line graph shown", () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1));
+                        IsRanked = true,
+                        GlobalRank = 12000,
+                        PP = 12345,
+                        RankHistory = new APIRankHistory { Data = edgyData },
+                    };
+                }
+            );
+            AddAssert(
+                "line graph shown",
+                () => this.ChildrenOfType<LineGraph>().All(graph => graph.Alpha == 1)
+            );
         }
     }
 }

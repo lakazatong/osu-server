@@ -25,19 +25,28 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Resolved]
         private AudioManager audioManager { get; set; } = null!;
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap
-        {
-            HitObjects =
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap
             {
-                new Fruit { StartTime = 0, },
-                new Fruit { StartTime = 5000, },
-                new Fruit { StartTime = 10000, },
-                new Fruit { StartTime = 15000, }
-            }
-        };
+                HitObjects =
+                {
+                    new Fruit { StartTime = 0 },
+                    new Fruit { StartTime = 5000 },
+                    new Fruit { StartTime = 10000 },
+                    new Fruit { StartTime = 15000 },
+                },
+            };
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null) =>
-            new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audioManager);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audioManager
+            );
 
         [Test]
         public void TestRecording()
@@ -46,30 +55,74 @@ namespace osu.Game.Rulesets.Catch.Tests
             AddStep("start moving left", () => InputManager.PressKey(Key.Left));
             seekTo(5000);
             AddStep("end moving left", () => InputManager.ReleaseKey(Key.Left));
-            AddAssert("catcher max left", () => this.ChildrenOfType<Catcher>().Single().X, () => Is.EqualTo(0));
-            AddAssert("movement to left recorded to replay", () => Player.Score.Replay.Frames.OfType<CatchReplayFrame>().Any(f => f.Actions.SequenceEqual([CatchAction.MoveLeft])));
-            AddAssert("replay reached left edge", () => Player.Score.Replay.Frames.OfType<CatchReplayFrame>().Any(f => Precision.AlmostEquals(f.Position, 0)));
+            AddAssert(
+                "catcher max left",
+                () => this.ChildrenOfType<Catcher>().Single().X,
+                () => Is.EqualTo(0)
+            );
+            AddAssert(
+                "movement to left recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<CatchReplayFrame>()
+                        .Any(f => f.Actions.SequenceEqual([CatchAction.MoveLeft]))
+            );
+            AddAssert(
+                "replay reached left edge",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<CatchReplayFrame>()
+                        .Any(f => Precision.AlmostEquals(f.Position, 0))
+            );
 
-            AddStep("start dashing right", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.PressKey(Key.Right);
-            });
+            AddStep(
+                "start dashing right",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.PressKey(Key.Right);
+                }
+            );
             seekTo(10000);
-            AddStep("end dashing right", () =>
-            {
-                InputManager.ReleaseKey(Key.LShift);
-                InputManager.ReleaseKey(Key.Right);
-            });
-            AddAssert("catcher max right", () => this.ChildrenOfType<Catcher>().Single().X, () => Is.EqualTo(CatchPlayfield.WIDTH));
-            AddAssert("dash to right recorded to replay", () => Player.Score.Replay.Frames.OfType<CatchReplayFrame>().Any(f => f.Actions.SequenceEqual([CatchAction.Dash, CatchAction.MoveRight])));
-            AddAssert("replay reached right edge", () => Player.Score.Replay.Frames.OfType<CatchReplayFrame>().Any(f => Precision.AlmostEquals(f.Position, CatchPlayfield.WIDTH)));
+            AddStep(
+                "end dashing right",
+                () =>
+                {
+                    InputManager.ReleaseKey(Key.LShift);
+                    InputManager.ReleaseKey(Key.Right);
+                }
+            );
+            AddAssert(
+                "catcher max right",
+                () => this.ChildrenOfType<Catcher>().Single().X,
+                () => Is.EqualTo(CatchPlayfield.WIDTH)
+            );
+            AddAssert(
+                "dash to right recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<CatchReplayFrame>()
+                        .Any(f =>
+                            f.Actions.SequenceEqual([CatchAction.Dash, CatchAction.MoveRight])
+                        )
+            );
+            AddAssert(
+                "replay reached right edge",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<CatchReplayFrame>()
+                        .Any(f => Precision.AlmostEquals(f.Position, CatchPlayfield.WIDTH))
+            );
         }
 
         private void seekTo(double time)
         {
             AddStep($"seek to {time}ms", () => Player.GameplayClockContainer.Seek(time));
-            AddUntilStep("wait for seek to finish", () => Player.DrawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(time).Within(500));
+            AddUntilStep(
+                "wait for seek to finish",
+                () => Player.DrawableRuleset.FrameStableClock.CurrentTime,
+                () => Is.EqualTo(time).Within(500)
+            );
         }
     }
 }

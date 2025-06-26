@@ -28,31 +28,37 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
         [Test]
         public void TestHoldNotesSeparateOnSameColumn()
         {
-            assertOk(new List<HitObject>
-            {
-                createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
-                createHoldNote(startTime: 500, endTime: 900.75d, column: 1)
-            });
+            assertOk(
+                new List<HitObject>
+                {
+                    createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
+                    createHoldNote(startTime: 500, endTime: 900.75d, column: 1),
+                }
+            );
         }
 
         [Test]
         public void TestHoldNotesConcurrentOnDifferentColumns()
         {
-            assertOk(new List<HitObject>
-            {
-                createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
-                createHoldNote(startTime: 300, endTime: 700.75d, column: 2)
-            });
+            assertOk(
+                new List<HitObject>
+                {
+                    createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
+                    createHoldNote(startTime: 300, endTime: 700.75d, column: 2),
+                }
+            );
         }
 
         [Test]
         public void TestHoldNotesConcurrentOnSameColumn()
         {
-            assertConcurrentSame(new List<HitObject>
-            {
-                createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
-                createHoldNote(startTime: 300, endTime: 700.75d, column: 1)
-            });
+            assertConcurrentSame(
+                new List<HitObject>
+                {
+                    createHoldNote(startTime: 100, endTime: 400.75d, column: 1),
+                    createHoldNote(startTime: 300, endTime: 700.75d, column: 1),
+                }
+            );
         }
 
         private void assertOk(List<HitObject> hitobjects)
@@ -65,7 +71,11 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(getContext(hitobjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckConcurrentObjects.IssueTemplateConcurrentSame));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckConcurrentObjects.IssueTemplateConcurrentSame
+                )
+            );
         }
 
         private BeatmapVerifierContext getContext(List<HitObject> hitobjects)
@@ -80,7 +90,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Column = column
+                Column = column,
             };
         }
     }

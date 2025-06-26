@@ -26,7 +26,12 @@ namespace osu.Game.Overlays.Settings
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
             Direction = FillDirection.Vertical;
-            Padding = new MarginPadding { Top = 20, Bottom = 30, Horizontal = SettingsPanel.CONTENT_MARGINS };
+            Padding = new MarginPadding
+            {
+                Top = 20,
+                Bottom = 30,
+                Horizontal = SettingsPanel.CONTENT_MARGINS,
+            };
 
             FillFlowContainer modes;
 
@@ -53,7 +58,7 @@ namespace osu.Game.Overlays.Settings
                 {
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                }
+                },
             };
 
             foreach (var ruleset in rulesets.AvailableRulesets)
@@ -73,7 +78,10 @@ namespace osu.Game.Overlays.Settings
                 }
                 catch
                 {
-                    Logger.Log($"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.", level: LogLevel.Error);
+                    Logger.Log(
+                        $"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.",
+                        level: LogLevel.Error
+                    );
                 }
             }
         }
@@ -102,22 +110,29 @@ namespace osu.Game.Overlays.Settings
             {
                 Action = () => changelog?.ShowBuild(version);
 
-                Add(new OsuSpriteText
-                {
-                    Font = OsuFont.GetFont(size: 16),
+                Add(
+                    new OsuSpriteText
+                    {
+                        Font = OsuFont.GetFont(size: 16),
 
-                    Text = version,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Padding = new MarginPadding(5),
-                    Colour = DebugUtils.IsDebugBuild ? colours.Red : Color4.White,
-                });
+                        Text = version,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Padding = new MarginPadding(5),
+                        Colour = DebugUtils.IsDebugBuild ? colours.Red : Color4.White,
+                    }
+                );
             }
 
-            public MenuItem[] ContextMenuItems => new MenuItem[]
-            {
-                new OsuMenuItem("Copy version", MenuItemType.Standard, () => game?.CopyToClipboard(version))
-            };
+            public MenuItem[] ContextMenuItems =>
+                new MenuItem[]
+                {
+                    new OsuMenuItem(
+                        "Copy version",
+                        MenuItemType.Standard,
+                        () => game?.CopyToClipboard(version)
+                    ),
+                };
         }
     }
 }

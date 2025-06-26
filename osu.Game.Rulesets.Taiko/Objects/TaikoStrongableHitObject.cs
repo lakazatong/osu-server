@@ -63,7 +63,8 @@ namespace osu.Game.Rulesets.Taiko.Objects
             }
         }
 
-        private HitSampleInfo[] getStrongSamples() => Samples.Where(s => s.Name == HitSampleInfo.HIT_FINISH).ToArray();
+        private HitSampleInfo[] getStrongSamples() =>
+            Samples.Where(s => s.Name == HitSampleInfo.HIT_FINISH).ToArray();
 
         protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
         {

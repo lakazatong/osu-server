@@ -62,16 +62,8 @@ namespace osu.Game.Rulesets.Mania.Tests
         {
             var objects = new List<ManiaHitObject>
             {
-                new HoldNote
-                {
-                    StartTime = 1000,
-                    EndTime = 1010,
-                },
-                new HoldNote
-                {
-                    StartTime = 1020,
-                    EndTime = 1030
-                }
+                new HoldNote { StartTime = 1000, EndTime = 1010 },
+                new HoldNote { StartTime = 1020, EndTime = 1030 },
             };
 
             performTest(objects, new List<ReplayFrame>());
@@ -85,16 +77,8 @@ namespace osu.Game.Rulesets.Mania.Tests
         {
             var objects = new List<ManiaHitObject>
             {
-                new HoldNote
-                {
-                    StartTime = 1000,
-                    EndTime = 1010,
-                },
-                new HoldNote
-                {
-                    StartTime = 1020,
-                    EndTime = 1030
-                }
+                new HoldNote { StartTime = 1000, EndTime = 1010 },
+                new HoldNote { StartTime = 1020, EndTime = 1030 },
             };
 
             var frames = new List<ReplayFrame>
@@ -102,7 +86,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                 new ManiaReplayFrame(1000, ManiaAction.Key1),
                 new ManiaReplayFrame(1030),
                 new ManiaReplayFrame(1040, ManiaAction.Key1),
-                new ManiaReplayFrame(1050)
+                new ManiaReplayFrame(1050),
             };
 
             performTest(objects, frames);
@@ -118,20 +102,35 @@ namespace osu.Game.Rulesets.Mania.Tests
 
         private void addJudgementAssert(ManiaHitObject hitObject, HitResult result)
         {
-            AddAssert($"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judgement is {result}",
-                () => judgementResults.Single(r => r.HitObject == hitObject).Type == result);
+            AddAssert(
+                $"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judgement is {result}",
+                () => judgementResults.Single(r => r.HitObject == hitObject).Type == result
+            );
         }
 
-        private void addJudgementAssert(string name, Func<ManiaHitObject> hitObject, HitResult result)
+        private void addJudgementAssert(
+            string name,
+            Func<ManiaHitObject> hitObject,
+            HitResult result
+        )
         {
-            AddAssert($"{name} judgement is {result}",
-                () => judgementResults.Single(r => r.HitObject == hitObject()).Type == result);
+            AddAssert(
+                $"{name} judgement is {result}",
+                () => judgementResults.Single(r => r.HitObject == hitObject()).Type == result
+            );
         }
 
         private void addJudgementOffsetAssert(ManiaHitObject hitObject, double offset)
         {
-            AddAssert($"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judged at {offset}",
-                () => Precision.AlmostEquals(judgementResults.Single(r => r.HitObject == hitObject).TimeOffset, offset, 100));
+            AddAssert(
+                $"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judged at {offset}",
+                () =>
+                    Precision.AlmostEquals(
+                        judgementResults.Single(r => r.HitObject == hitObject).TimeOffset,
+                        offset,
+                        100
+                    )
+            );
         }
 
         private ScoreAccessibleReplayPlayer currentPlayer;
@@ -139,36 +138,47 @@ namespace osu.Game.Rulesets.Mania.Tests
 
         private void performTest(List<ManiaHitObject> hitObjects, List<ReplayFrame> frames)
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new ManiaBeatmap(new StageDefinition(4))
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects = hitObjects,
-                    BeatmapInfo =
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new ManiaBeatmap(new StageDefinition(4))
+                        {
+                            HitObjects = hitObjects,
+                            BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
+                        }
+                    );
+
+                    Beatmap.Value.Beatmap.ControlPointInfo.Add(
+                        0,
+                        new EffectControlPoint { ScrollSpeed = 0.1f }
+                    );
+
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
+
+                    p.OnLoadComplete += _ =>
                     {
-                        Ruleset = new ManiaRuleset().RulesetInfo
-                    },
-                });
-
-                Beatmap.Value.Beatmap.ControlPointInfo.Add(0, new EffectControlPoint { ScrollSpeed = 0.1f });
-
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
-
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
-                    {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -178,13 +188,8 @@ namespace osu.Game.Rulesets.Mania.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

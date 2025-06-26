@@ -36,12 +36,14 @@ namespace osu.Game.Rulesets.Taiko.UI
                 leftRimTrigger = CreateTriggerSource(hitObjectContainer, SampleBalance.Left),
                 rightRimTrigger = CreateTriggerSource(hitObjectContainer, SampleBalance.Right),
                 strongCentreTrigger = CreateTriggerSource(hitObjectContainer, SampleBalance.Centre),
-                strongRimTrigger = CreateTriggerSource(hitObjectContainer, SampleBalance.Centre)
+                strongRimTrigger = CreateTriggerSource(hitObjectContainer, SampleBalance.Centre),
             };
         }
 
-        protected virtual DrumSampleTriggerSource CreateTriggerSource(HitObjectContainer hitObjectContainer, SampleBalance balance)
-            => new DrumSampleTriggerSource(hitObjectContainer);
+        protected virtual DrumSampleTriggerSource CreateTriggerSource(
+            HitObjectContainer hitObjectContainer,
+            SampleBalance balance
+        ) => new DrumSampleTriggerSource(hitObjectContainer);
 
         public bool OnPressed(KeyBindingPressEvent<TaikoAction> e)
         {
@@ -102,15 +104,25 @@ namespace osu.Game.Rulesets.Taiko.UI
             return false;
         }
 
-        protected virtual void Play(DrumSampleTriggerSource triggerSource, HitType hitType, bool strong) =>
-            triggerSource.Play(hitType, strong);
+        protected virtual void Play(
+            DrumSampleTriggerSource triggerSource,
+            HitType hitType,
+            bool strong
+        ) => triggerSource.Play(hitType, strong);
 
-        private bool checkStrongValidity(TaikoAction newAction, TaikoAction? lastAction, double timeBetweenActions)
+        private bool checkStrongValidity(
+            TaikoAction newAction,
+            TaikoAction? lastAction,
+            double timeBetweenActions
+        )
         {
             if (lastAction == null)
                 return false;
 
-            if (timeBetweenActions < 0 || timeBetweenActions > DrawableHit.StrongNestedHit.SECOND_HIT_WINDOW)
+            if (
+                timeBetweenActions < 0
+                || timeBetweenActions > DrawableHit.StrongNestedHit.SECOND_HIT_WINDOW
+            )
                 return false;
 
             switch (newAction)
@@ -146,8 +158,6 @@ namespace osu.Game.Rulesets.Taiko.UI
             strongRimTrigger.StopAllPlayback();
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
     }
 }

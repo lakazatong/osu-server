@@ -24,25 +24,27 @@ namespace osu.Game.Overlays
 
             Alpha = 0;
 
-            AddRange(new Drawable[]
-            {
-                new OsuSpriteText
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Font = OsuFont.Numeric.With(weight: FontWeight.Bold, size: 12),
-                    Colour = colours.YellowDark,
-                    Text = @"DEVELOPER BUILD",
-                },
-                new Sprite
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Texture = textures.Get(@"Menu/dev-build-footer"),
-                    Scale = new Vector2(0.4f, 1),
-                    Y = 2,
-                },
-            });
+                    new OsuSpriteText
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Font = OsuFont.Numeric.With(weight: FontWeight.Bold, size: 12),
+                        Colour = colours.YellowDark,
+                        Text = @"DEVELOPER BUILD",
+                    },
+                    new Sprite
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Texture = textures.Get(@"Menu/dev-build-footer"),
+                        Scale = new Vector2(0.4f, 1),
+                        Y = 2,
+                    },
+                }
+            );
         }
 
         protected override void PopIn()

@@ -59,8 +59,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                     RelativeSizeAxes = Axes.Both,
                     InnerRadius = arc_radius,
                     RoundedCaps = true,
-                    GlowColour = new Color4(171, 255, 255, 180)
-                }
+                    GlowColour = new Color4(171, 255, 255, 180),
+                },
             };
         }
 
@@ -70,8 +70,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
 
             background.Alpha = spinner.Progress >= 1 ? 0 : 1;
 
-            fill.Alpha = (float)Interpolation.DampContinuously(fill.Alpha, spinner.Progress > 0 && spinner.Progress < 1 ? 1 : 0, 40f, (float)Math.Abs(Time.Elapsed));
-            fill.Progress = (float)Interpolation.DampContinuously(fill.Progress, spinner.Progress >= 1 ? 0 : arc_fill * spinner.Progress, 40f, (float)Math.Abs(Time.Elapsed));
+            fill.Alpha = (float)
+                Interpolation.DampContinuously(
+                    fill.Alpha,
+                    spinner.Progress > 0 && spinner.Progress < 1 ? 1 : 0,
+                    40f,
+                    (float)Math.Abs(Time.Elapsed)
+                );
+            fill.Progress = (float)
+                Interpolation.DampContinuously(
+                    fill.Progress,
+                    spinner.Progress >= 1 ? 0 : arc_fill * spinner.Progress,
+                    40f,
+                    (float)Math.Abs(Time.Elapsed)
+                );
 
             fill.Rotation = (float)(90 - fill.Progress * 180);
         }
@@ -109,9 +121,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                 protected new ProgressFill Source => (ProgressFill)base.Source;
 
                 public ProgressFillDrawNode(CircularProgress source)
-                    : base(source)
-                {
-                }
+                    : base(source) { }
 
                 private Texture glowTexture = null!;
                 private IShader glowShader = null!;
@@ -157,16 +167,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
 
                 private void bindGlowUniformResources(IShader shader, IRenderer renderer)
                 {
-                    progressGlowParametersBuffer ??= renderer.CreateUniformBuffer<ProgressGlowParameters>();
+                    progressGlowParametersBuffer ??=
+                        renderer.CreateUniformBuffer<ProgressGlowParameters>();
                     progressGlowParametersBuffer.Data = new ProgressGlowParameters
                     {
                         InnerRadius = InnerRadius,
                         Progress = Progress,
                         TexelSize = TexelSize,
-                        GlowSize = relativeGlowSize
+                        GlowSize = relativeGlowSize,
                     };
 
-                    shader.BindUniformBlock("m_ProgressGlowParameters", progressGlowParametersBuffer);
+                    shader.BindUniformBlock(
+                        "m_ProgressGlowParameters",
+                        progressGlowParametersBuffer
+                    );
                 }
 
                 protected override void Dispose(bool isDisposing)

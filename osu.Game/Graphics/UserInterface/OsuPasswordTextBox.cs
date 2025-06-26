@@ -1,9 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
-using osuTK.Input;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -15,16 +12,20 @@ using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Localisation;
+using osuTK;
+using osuTK.Graphics;
+using osuTK.Input;
 
 namespace osu.Game.Graphics.UserInterface
 {
     public partial class OsuPasswordTextBox : OsuTextBox
     {
-        protected override Drawable GetDrawableCharacter(char c) => new FallingDownContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Child = new PasswordMaskChar(FontSize),
-        };
+        protected override Drawable GetDrawableCharacter(char c) =>
+            new FallingDownContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Child = new PasswordMaskChar(FontSize),
+            };
 
         protected override bool AllowUniqueCharacterSamples => false;
 
@@ -37,14 +38,16 @@ namespace osu.Game.Graphics.UserInterface
         {
             InputProperties = new TextInputProperties(TextInputType.Password, false);
 
-            Add(warning = new CapsWarning
-            {
-                Size = new Vector2(20),
-                Origin = Anchor.CentreRight,
-                Anchor = Anchor.CentreRight,
-                Margin = new MarginPadding { Right = 10 },
-                Alpha = 0,
-            });
+            Add(
+                warning = new CapsWarning
+                {
+                    Size = new Vector2(20),
+                    Origin = Anchor.CentreRight,
+                    Anchor = Anchor.CentreRight,
+                    Margin = new MarginPadding { Right = 10 },
+                    Alpha = 0,
+                }
+            );
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -66,7 +69,8 @@ namespace osu.Game.Graphics.UserInterface
             base.OnFocusLost(e);
         }
 
-        private void updateCapsWarning(bool visible) => warning.FadeTo(visible ? 1 : 0, 250, Easing.OutQuint);
+        private void updateCapsWarning(bool visible) =>
+            warning.FadeTo(visible ? 1 : 0, 250, Easing.OutQuint);
 
         public partial class PasswordMaskChar : Container
         {
@@ -87,13 +91,9 @@ namespace osu.Game.Graphics.UserInterface
                         Size = new Vector2(0.8f, 0),
                         Children = new[]
                         {
-                            new Box
-                            {
-                                Colour = Color4.White,
-                                RelativeSizeAxes = Axes.Both,
-                            }
+                            new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                         },
-                    }
+                    },
                 };
             }
 

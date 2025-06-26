@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using osu.Game.Beatmaps;
-using osu.Game.Tests.Resources;
 using osu.Game.Beatmaps.Formats;
 using osu.Game.IO;
 using osu.Game.IO.Archives;
+using osu.Game.Tests.Resources;
 
 namespace osu.Game.Tests.Beatmaps.IO
 {
@@ -34,7 +34,7 @@ namespace osu.Game.Tests.Beatmaps.IO
                     "Soleily - Renatus (Gamu) [Normal].osu",
                     "Soleily - Renatus (MMzz) [Futsuu].osu",
                     "Soleily - Renatus (MMzz) [Muzukashii].osu",
-                    "Soleily - Renatus (MMzz) [Oni].osu"
+                    "Soleily - Renatus (MMzz) [Oni].osu",
                 };
                 string[] maps = reader.Filenames.ToArray();
                 foreach (string map in expected)
@@ -51,7 +51,11 @@ namespace osu.Game.Tests.Beatmaps.IO
 
                 Beatmap beatmap;
 
-                using (var stream = new LineBufferedReader(reader.GetStream("Soleily - Renatus (Deif) [Platter].osu")))
+                using (
+                    var stream = new LineBufferedReader(
+                        reader.GetStream("Soleily - Renatus (Deif) [Platter].osu")
+                    )
+                )
                     beatmap = Decoder.GetDecoder<Beatmap>(stream).Decode(stream);
 
                 var meta = beatmap.Metadata;
@@ -77,7 +81,11 @@ namespace osu.Game.Tests.Beatmaps.IO
             {
                 var reader = new ZipArchiveReader(osz);
 
-                using (var stream = new StreamReader(reader.GetStream("Soleily - Renatus (Deif) [Platter].osu")))
+                using (
+                    var stream = new StreamReader(
+                        reader.GetStream("Soleily - Renatus (Deif) [Platter].osu")
+                    )
+                )
                 {
                     Assert.AreEqual("osu file format v13", stream.ReadLine()?.Trim());
                 }

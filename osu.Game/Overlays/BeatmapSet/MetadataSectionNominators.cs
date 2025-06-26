@@ -11,9 +11,13 @@ using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Overlays.BeatmapSet
 {
-    public partial class MetadataSectionNominators : MetadataSection<(BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers)>
+    public partial class MetadataSectionNominators
+        : MetadataSection<(BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers)>
     {
-        public override (BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers) Metadata
+        public override (
+            BeatmapSetOnlineNomination[] CurrentNominations,
+            APIUser[] RelatedUsers
+        ) Metadata
         {
             set
             {
@@ -27,12 +31,18 @@ namespace osu.Game.Overlays.BeatmapSet
             }
         }
 
-        public MetadataSectionNominators(Action<(BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers)>? searchAction = null)
-            : base(MetadataType.Nominators, searchAction)
-        {
-        }
+        public MetadataSectionNominators(
+            Action<(
+                BeatmapSetOnlineNomination[] CurrentNominations,
+                APIUser[] RelatedUsers
+            )>? searchAction = null
+        )
+            : base(MetadataType.Nominators, searchAction) { }
 
-        protected override void AddMetadata((BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers) metadata, LinkFlowContainer loaded)
+        protected override void AddMetadata(
+            (BeatmapSetOnlineNomination[] CurrentNominations, APIUser[] RelatedUsers) metadata,
+            LinkFlowContainer loaded
+        )
         {
             int[] nominatorIds = metadata.CurrentNominations.Select(n => n.UserId).ToArray();
 
@@ -42,15 +52,12 @@ namespace osu.Game.Overlays.BeatmapSet
             {
                 foreach (var user in metadata.RelatedUsers)
                 {
-                    if (nominatorId != user.OnlineID) continue;
+                    if (nominatorId != user.OnlineID)
+                        continue;
 
                     nominatorsFound++;
 
-                    loaded.AddUserLink(new APIUser
-                    {
-                        Username = user.Username,
-                        Id = nominatorId,
-                    });
+                    loaded.AddUserLink(new APIUser { Username = user.Username, Id = nominatorId });
 
                     if (nominatorsFound < nominatorIds.Length)
                         loaded.AddText(CommonStrings.ArrayAndWordsConnector);

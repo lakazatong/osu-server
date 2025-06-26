@@ -18,11 +18,13 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestUnknownModDoesntEnterGameplay()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new UnknownMod("WNG"),
-                PassCondition = () => Player.IsLoaded && !Player.LoadedBeatmapSuccessfully
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new UnknownMod("WNG"),
+                    PassCondition = () => Player.IsLoaded && !Player.LoadedBeatmapSuccessfully,
+                }
+            );
         }
     }
 }

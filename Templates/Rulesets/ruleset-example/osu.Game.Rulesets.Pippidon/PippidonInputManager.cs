@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.Pippidon
     public partial class PippidonInputManager : RulesetInputManager<PippidonAction>
     {
         public PippidonInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
     }
 
     public enum PippidonAction

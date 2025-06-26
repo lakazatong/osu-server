@@ -10,13 +10,19 @@ namespace osu.Game.Online.Rooms
         private readonly long roomId;
         private readonly long playlistItemId;
 
-        public SubmitRoomScoreRequest(ScoreInfo scoreInfo, long scoreId, long roomId, long playlistItemId)
+        public SubmitRoomScoreRequest(
+            ScoreInfo scoreInfo,
+            long scoreId,
+            long roomId,
+            long playlistItemId
+        )
             : base(scoreInfo, scoreId)
         {
             this.roomId = roomId;
             this.playlistItemId = playlistItemId;
         }
 
-        protected override string Target => $@"rooms/{roomId}/playlist/{playlistItemId}/scores/{ScoreId}";
+        protected override string Target =>
+            $@"rooms/{roomId}/playlist/{playlistItemId}/scores/{ScoreId}";
     }
 }

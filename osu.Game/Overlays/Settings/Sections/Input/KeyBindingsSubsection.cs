@@ -53,34 +53,46 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 Add(row);
             }
 
-            Add(new ResetButton
-            {
-                Action = () =>
+            Add(
+                new ResetButton
                 {
-                    realm.Write(r =>
+                    Action = () =>
                     {
-                        // can't use `RestoreDefaults()` for each key binding row here as it might trigger binding conflicts along the way.
-                        foreach (var row in Children.OfType<KeyBindingRow>())
+                        realm.Write(r =>
                         {
-                            foreach (var (currentBinding, defaultBinding) in row.KeyBindings.Zip(row.Defaults))
-                                r.Find<RealmKeyBinding>(currentBinding.ID)!.KeyCombinationString = defaultBinding.ToString();
-                        }
-                    });
-                    reloadAllBindings();
+                            // can't use `RestoreDefaults()` for each key binding row here as it might trigger binding conflicts along the way.
+                            foreach (var row in Children.OfType<KeyBindingRow>())
+                            {
+                                foreach (
+                                    var (currentBinding, defaultBinding) in row.KeyBindings.Zip(
+                                        row.Defaults
+                                    )
+                                )
+                                    r.Find<RealmKeyBinding>(
+                                        currentBinding.ID
+                                    )!.KeyCombinationString = defaultBinding.ToString();
+                            }
+                        });
+                        reloadAllBindings();
+                    },
                 }
-            });
+            );
         }
 
         protected abstract IEnumerable<RealmKeyBinding> GetKeyBindings(Realm realm);
 
-        private List<RealmKeyBinding> getAllBindings() => realm.Run(r =>
-        {
-            r.Refresh();
-            return GetKeyBindings(r).Detach();
-        });
+        private List<RealmKeyBinding> getAllBindings() =>
+            realm.Run(r =>
+            {
+                r.Refresh();
+                return GetKeyBindings(r).Detach();
+            });
 
-        protected virtual KeyBindingRow CreateKeyBindingRow(object action, IEnumerable<KeyBinding> defaults)
-            => new KeyBindingRow(action)
+        protected virtual KeyBindingRow CreateKeyBindingRow(
+            object action,
+            IEnumerable<KeyBinding> defaults
+        ) =>
+            new KeyBindingRow(action)
             {
                 AllowMainMouseButtons = false,
                 Defaults = defaults.Select(d => d.KeyCombination),
@@ -97,7 +109,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             }
         }
 
-        private void onBindingUpdated(KeyBindingRow sender, KeyBindingRow.KeyBindingUpdatedEventArgs args)
+        private void onBindingUpdated(
+            KeyBindingRow sender,
+            KeyBindingRow.KeyBindingUpdatedEventArgs args
+        )
         {
             if (args.BindingConflictResolved)
                 reloadAllBindings();
@@ -128,6 +143,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         }
 
         // Empty FilterTerms so that the ResetButton is visible only when the whole subsection is visible.
-        public override IEnumerable<LocalisableString> FilterTerms => Enumerable.Empty<LocalisableString>();
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            Enumerable.Empty<LocalisableString>();
     }
 }

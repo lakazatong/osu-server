@@ -23,21 +23,20 @@ namespace osu.Game.Skinning
 {
     public class TrianglesSkin : Skin
     {
-        public static SkinInfo CreateInfo() => new SkinInfo
-        {
-            ID = osu.Game.Skinning.SkinInfo.TRIANGLES_SKIN,
-            Name = "osu! \"triangles\" (2017)",
-            Creator = "team osu!",
-            Protected = true,
-            InstantiationInfo = typeof(TrianglesSkin).GetInvariantInstantiationInfo()
-        };
+        public static SkinInfo CreateInfo() =>
+            new SkinInfo
+            {
+                ID = osu.Game.Skinning.SkinInfo.TRIANGLES_SKIN,
+                Name = "osu! \"triangles\" (2017)",
+                Creator = "team osu!",
+                Protected = true,
+                InstantiationInfo = typeof(TrianglesSkin).GetInvariantInstantiationInfo(),
+            };
 
         private readonly IStorageResourceProvider resources;
 
         public TrianglesSkin(IStorageResourceProvider resources)
-            : this(CreateInfo(), resources)
-        {
-        }
+            : this(CreateInfo(), resources) { }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
         public TrianglesSkin(SkinInfo skin, IStorageResourceProvider resources)
@@ -46,7 +45,11 @@ namespace osu.Game.Skinning
             this.resources = resources;
         }
 
-        public override Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => Textures?.Get(componentName, wrapModeS, wrapModeT);
+        public override Texture? GetTexture(
+            string componentName,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT
+        ) => Textures?.Get(componentName, wrapModeS, wrapModeT);
 
         public override ISample? GetSample(ISampleInfo sampleInfo)
         {
@@ -63,7 +66,8 @@ namespace osu.Game.Skinning
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
             // Temporary until default skin has a valid hit lighting.
-            if ((lookup as SkinnableSprite.SpriteComponentLookup)?.LookupName == @"lighting") return Drawable.Empty();
+            if ((lookup as SkinnableSprite.SpriteComponentLookup)?.LookupName == @"lighting")
+                return Drawable.Empty();
 
             switch (lookup)
             {
@@ -92,8 +96,12 @@ namespace osu.Game.Skinning
                             {
                                 return new DefaultSkinComponentsContainer(container =>
                                 {
-                                    var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
-                                    var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
+                                    var leaderboard = container
+                                        .OfType<DrawableGameplayLeaderboard>()
+                                        .FirstOrDefault();
+                                    var spectatorList = container
+                                        .OfType<SpectatorList>()
+                                        .FirstOrDefault();
 
                                     if (leaderboard != null)
                                         leaderboard.Position = new Vector2(40, 60);
@@ -101,10 +109,14 @@ namespace osu.Game.Skinning
                                     if (spectatorList != null)
                                     {
                                         spectatorList.HeaderFont.Value = Typeface.Venera;
-                                        spectatorList.HeaderColour.Value = new OsuColour().BlueLighter;
+                                        spectatorList.HeaderColour.Value =
+                                            new OsuColour().BlueLighter;
                                         spectatorList.Anchor = Anchor.BottomLeft;
                                         spectatorList.Origin = Anchor.BottomLeft;
-                                        spectatorList.Position = new Vector2(screen_edge_padding, -(song_progress_offset_height + screen_edge_padding));
+                                        spectatorList.Position = new Vector2(
+                                            screen_edge_padding,
+                                            -(song_progress_offset_height + screen_edge_padding)
+                                        );
                                     }
                                 })
                                 {
@@ -117,68 +129,112 @@ namespace osu.Game.Skinning
                                 };
                             }
 
-                            var skinnableTargetWrapper = new DefaultSkinComponentsContainer(container =>
-                            {
-                                var score = container.OfType<DefaultScoreCounter>().FirstOrDefault();
-                                var accuracy = container.OfType<DefaultAccuracyCounter>().FirstOrDefault();
-                                var combo = container.OfType<DefaultComboCounter>().FirstOrDefault();
-                                var ppCounter = container.OfType<PerformancePointsCounter>().FirstOrDefault();
-                                var songProgress = container.OfType<DefaultSongProgress>().FirstOrDefault();
-                                var keyCounter = container.OfType<DefaultKeyCounterDisplay>().FirstOrDefault();
-
-                                if (score != null)
+                            var skinnableTargetWrapper = new DefaultSkinComponentsContainer(
+                                container =>
                                 {
-                                    score.Anchor = Anchor.TopCentre;
-                                    score.Origin = Anchor.TopCentre;
+                                    var score = container
+                                        .OfType<DefaultScoreCounter>()
+                                        .FirstOrDefault();
+                                    var accuracy = container
+                                        .OfType<DefaultAccuracyCounter>()
+                                        .FirstOrDefault();
+                                    var combo = container
+                                        .OfType<DefaultComboCounter>()
+                                        .FirstOrDefault();
+                                    var ppCounter = container
+                                        .OfType<PerformancePointsCounter>()
+                                        .FirstOrDefault();
+                                    var songProgress = container
+                                        .OfType<DefaultSongProgress>()
+                                        .FirstOrDefault();
+                                    var keyCounter = container
+                                        .OfType<DefaultKeyCounterDisplay>()
+                                        .FirstOrDefault();
 
-                                    score.Position = new Vector2(0, score_vertical_offset);
-
-                                    if (ppCounter != null)
+                                    if (score != null)
                                     {
-                                        ppCounter.Y = score.Position.Y + ppCounter.ScreenSpaceDeltaToParentSpace(score.ScreenSpaceDrawQuad.Size).Y - 4;
-                                        ppCounter.Origin = Anchor.TopCentre;
-                                        ppCounter.Anchor = Anchor.TopCentre;
-                                    }
+                                        score.Anchor = Anchor.TopCentre;
+                                        score.Origin = Anchor.TopCentre;
 
-                                    if (accuracy != null)
-                                    {
-                                        accuracy.Position = new Vector2(-accuracy.ScreenSpaceDeltaToParentSpace(score.ScreenSpaceDrawQuad.Size).X / 2 - horizontal_padding, score_vertical_offset + 5);
-                                        accuracy.Origin = Anchor.TopRight;
-                                        accuracy.Anchor = Anchor.TopCentre;
+                                        score.Position = new Vector2(0, score_vertical_offset);
 
-                                        if (combo != null)
+                                        if (ppCounter != null)
                                         {
-                                            combo.Position = new Vector2(accuracy.ScreenSpaceDeltaToParentSpace(score.ScreenSpaceDrawQuad.Size).X / 2 + horizontal_padding, score_vertical_offset + 5);
-                                            combo.Anchor = Anchor.TopCentre;
+                                            ppCounter.Y =
+                                                score.Position.Y
+                                                + ppCounter
+                                                    .ScreenSpaceDeltaToParentSpace(
+                                                        score.ScreenSpaceDrawQuad.Size
+                                                    )
+                                                    .Y
+                                                - 4;
+                                            ppCounter.Origin = Anchor.TopCentre;
+                                            ppCounter.Anchor = Anchor.TopCentre;
+                                        }
+
+                                        if (accuracy != null)
+                                        {
+                                            accuracy.Position = new Vector2(
+                                                -accuracy
+                                                    .ScreenSpaceDeltaToParentSpace(
+                                                        score.ScreenSpaceDrawQuad.Size
+                                                    )
+                                                    .X / 2
+                                                    - horizontal_padding,
+                                                score_vertical_offset + 5
+                                            );
+                                            accuracy.Origin = Anchor.TopRight;
+                                            accuracy.Anchor = Anchor.TopCentre;
+
+                                            if (combo != null)
+                                            {
+                                                combo.Position = new Vector2(
+                                                    accuracy
+                                                        .ScreenSpaceDeltaToParentSpace(
+                                                            score.ScreenSpaceDrawQuad.Size
+                                                        )
+                                                        .X / 2
+                                                        + horizontal_padding,
+                                                    score_vertical_offset + 5
+                                                );
+                                                combo.Anchor = Anchor.TopCentre;
+                                            }
+                                        }
+
+                                        var hitError = container
+                                            .OfType<HitErrorMeter>()
+                                            .FirstOrDefault();
+
+                                        if (hitError != null)
+                                        {
+                                            hitError.Anchor = Anchor.CentreLeft;
+                                            hitError.Origin = Anchor.CentreLeft;
+                                        }
+
+                                        var hitError2 = container
+                                            .OfType<HitErrorMeter>()
+                                            .LastOrDefault();
+
+                                        if (hitError2 != null)
+                                        {
+                                            hitError2.Anchor = Anchor.CentreRight;
+                                            hitError2.Scale = new Vector2(-1, 1);
+                                            // origin flipped to match scale above.
+                                            hitError2.Origin = Anchor.CentreLeft;
                                         }
                                     }
 
-                                    var hitError = container.OfType<HitErrorMeter>().FirstOrDefault();
-
-                                    if (hitError != null)
+                                    if (songProgress != null && keyCounter != null)
                                     {
-                                        hitError.Anchor = Anchor.CentreLeft;
-                                        hitError.Origin = Anchor.CentreLeft;
-                                    }
-
-                                    var hitError2 = container.OfType<HitErrorMeter>().LastOrDefault();
-
-                                    if (hitError2 != null)
-                                    {
-                                        hitError2.Anchor = Anchor.CentreRight;
-                                        hitError2.Scale = new Vector2(-1, 1);
-                                        // origin flipped to match scale above.
-                                        hitError2.Origin = Anchor.CentreLeft;
+                                        keyCounter.Anchor = Anchor.BottomRight;
+                                        keyCounter.Origin = Anchor.BottomRight;
+                                        keyCounter.Position = new Vector2(
+                                            -screen_edge_padding,
+                                            -(song_progress_offset_height + screen_edge_padding)
+                                        );
                                     }
                                 }
-
-                                if (songProgress != null && keyCounter != null)
-                                {
-                                    keyCounter.Anchor = Anchor.BottomRight;
-                                    keyCounter.Origin = Anchor.BottomRight;
-                                    keyCounter.Position = new Vector2(-screen_edge_padding, -(song_progress_offset_height + screen_edge_padding));
-                                }
-                            })
+                            )
                             {
                                 Children = new Drawable[]
                                 {
@@ -191,7 +247,7 @@ namespace osu.Game.Skinning
                                     new BarHitErrorMeter(),
                                     new BarHitErrorMeter(),
                                     new TrianglesPerformancePointsCounter(),
-                                }
+                                },
                             };
 
                             return skinnableTargetWrapper;
@@ -215,7 +271,9 @@ namespace osu.Game.Skinning
                         case GlobalSkinColours.ComboColours:
                         {
                             LogLookupDebug(this, lookup, LookupDebugType.Hit);
-                            return SkinUtils.As<TValue>(new Bindable<IReadOnlyList<Color4>?>(Configuration.ComboColours));
+                            return SkinUtils.As<TValue>(
+                                new Bindable<IReadOnlyList<Color4>?>(Configuration.ComboColours)
+                            );
                         }
                     }
 
@@ -223,14 +281,16 @@ namespace osu.Game.Skinning
 
                 case SkinComboColourLookup comboColour:
                     LogLookupDebug(this, lookup, LookupDebugType.Hit);
-                    return SkinUtils.As<TValue>(new Bindable<Color4>(getComboColour(Configuration, comboColour.ColourIndex)));
+                    return SkinUtils.As<TValue>(
+                        new Bindable<Color4>(getComboColour(Configuration, comboColour.ColourIndex))
+                    );
             }
 
             LogLookupDebug(this, lookup, LookupDebugType.Miss);
             return null;
         }
 
-        private static Color4 getComboColour(IHasComboColours source, int colourIndex)
-            => source.ComboColours![colourIndex % source.ComboColours.Count];
+        private static Color4 getComboColour(IHasComboColours source, int colourIndex) =>
+            source.ComboColours![colourIndex % source.ComboColours.Count];
     }
 }

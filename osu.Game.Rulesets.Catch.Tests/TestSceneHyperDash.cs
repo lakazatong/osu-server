@@ -25,29 +25,35 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Test]
         public void TestHyperDash()
         {
-            AddStep("reset count", () =>
-            {
-                inHyperDash = false;
-                hyperDashCount = 0;
-
-                // this needs to be done within the frame stable context due to how quickly hyperdash state changes occur.
-                Player.DrawableRuleset.FrameStableComponents.OnUpdate += _ =>
+            AddStep(
+                "reset count",
+                () =>
                 {
-                    var catcher = Player.ChildrenOfType<Catcher>().FirstOrDefault();
+                    inHyperDash = false;
+                    hyperDashCount = 0;
 
-                    if (catcher == null)
-                        return;
-
-                    if (catcher.HyperDashing != inHyperDash)
+                    // this needs to be done within the frame stable context due to how quickly hyperdash state changes occur.
+                    Player.DrawableRuleset.FrameStableComponents.OnUpdate += _ =>
                     {
-                        inHyperDash = catcher.HyperDashing;
-                        if (catcher.HyperDashing)
-                            hyperDashCount++;
-                    }
-                };
-            });
+                        var catcher = Player.ChildrenOfType<Catcher>().FirstOrDefault();
 
-            AddAssert("First note is hyperdash", () => Beatmap.Value.Beatmap.HitObjects[0] is Fruit f && f.HyperDash);
+                        if (catcher == null)
+                            return;
+
+                        if (catcher.HyperDashing != inHyperDash)
+                        {
+                            inHyperDash = catcher.HyperDashing;
+                            if (catcher.HyperDashing)
+                                hyperDashCount++;
+                        }
+                    };
+                }
+            );
+
+            AddAssert(
+                "First note is hyperdash",
+                () => Beatmap.Value.Beatmap.HitObjects[0] is Fruit f && f.HyperDash
+            );
 
             for (int i = 0; i < 11; i++)
             {
@@ -63,19 +69,29 @@ namespace osu.Game.Rulesets.Catch.Tests
                 BeatmapInfo =
                 {
                     Ruleset = ruleset,
-                    Difficulty = new BeatmapDifficulty
-                    {
-                        CircleSize = 3.6f,
-                        SliderMultiplier = 1,
-                    },
-                }
+                    Difficulty = new BeatmapDifficulty { CircleSize = 3.6f, SliderMultiplier = 1 },
+                },
             };
 
             beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
 
             // Should produce a hyper-dash (edge case test)
-            beatmap.HitObjects.Add(new Fruit { StartTime = 1816, X = 56, NewCombo = true });
-            beatmap.HitObjects.Add(new Fruit { StartTime = 2008, X = 308, NewCombo = true });
+            beatmap.HitObjects.Add(
+                new Fruit
+                {
+                    StartTime = 1816,
+                    X = 56,
+                    NewCombo = true,
+                }
+            );
+            beatmap.HitObjects.Add(
+                new Fruit
+                {
+                    StartTime = 2008,
+                    X = 308,
+                    NewCombo = true,
+                }
+            );
 
             double startTime = 3000;
 
@@ -90,35 +106,60 @@ namespace osu.Game.Rulesets.Catch.Tests
             createObjects(() => new Fruit { X = right_x });
             createObjects(() => new TestJuiceStream(left_x), 1);
 
-            beatmap.ControlPointInfo.Add(startTime, new TimingControlPoint
-            {
-                BeatLength = 50
-            });
+            beatmap.ControlPointInfo.Add(startTime, new TimingControlPoint { BeatLength = 50 });
 
-            createObjects(() => new TestJuiceStream(left_x)
-            {
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(Vector2.Zero),
-                    new PathControlPoint(new Vector2(512, 0))
-                })
-            }, 1);
+            createObjects(
+                () =>
+                    new TestJuiceStream(left_x)
+                    {
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero),
+                                new PathControlPoint(new Vector2(512, 0)),
+                            }
+                        ),
+                    },
+                1
+            );
 
-            createObjects(() => new Fruit { X = right_x }, count: 2, spacing: 0, spacingAfterGroup: 400);
-            createObjects(() => new TestJuiceStream(left_x)
-            {
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(Vector2.Zero),
-                    new PathControlPoint(new Vector2(0, 300))
-                })
-            }, count: 1, spacingAfterGroup: 150);
-            createObjects(() => new Fruit { X = left_x }, count: 1, spacing: 0, spacingAfterGroup: 400);
+            createObjects(
+                () => new Fruit { X = right_x },
+                count: 2,
+                spacing: 0,
+                spacingAfterGroup: 400
+            );
+            createObjects(
+                () =>
+                    new TestJuiceStream(left_x)
+                    {
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero),
+                                new PathControlPoint(new Vector2(0, 300)),
+                            }
+                        ),
+                    },
+                count: 1,
+                spacingAfterGroup: 150
+            );
+            createObjects(
+                () => new Fruit { X = left_x },
+                count: 1,
+                spacing: 0,
+                spacingAfterGroup: 400
+            );
             createObjects(() => new Fruit { X = right_x }, count: 2, spacing: 0);
 
             return beatmap;
 
-            void createObjects(Func<CatchHitObject> createObject, int count = 3, float spacing = 140, float spacingAfterGroup = 700)
+            void createObjects(
+                Func<CatchHitObject> createObject,
+                int count = 3,
+                float spacing = 140,
+                float spacingAfterGroup = 700
+            )
             {
                 for (int i = 0; i < count; i++)
                 {
@@ -137,11 +178,13 @@ namespace osu.Game.Rulesets.Catch.Tests
             {
                 X = x;
 
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(Vector2.Zero),
-                    new PathControlPoint(new Vector2(30, 0)),
-                });
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(Vector2.Zero),
+                        new PathControlPoint(new Vector2(30, 0)),
+                    }
+                );
             }
         }
     }

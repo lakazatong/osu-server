@@ -62,13 +62,22 @@ namespace osu.Game.Rulesets.Osu.UI
                 : OsuAction.LeftButton;
 
             // Ignore any taps which trigger an action which is already handled. But track them for potential positional input in the future.
-            bool shouldResultInAction = osuInputManager.AllowGameplayInputs && !tapsDisabled.Value && trackedTouches.All(t => t.Action != action);
+            bool shouldResultInAction =
+                osuInputManager.AllowGameplayInputs
+                && !tapsDisabled.Value
+                && trackedTouches.All(t => t.Action != action);
 
             // If we can actually accept as an action, check whether this tap was on a circle's receptor.
             // This case gets special handling to allow for empty-space stream tapping.
-            bool isDirectCircleTouch = osuInputManager.CheckScreenSpaceActionPressJudgeable(e.ScreenSpaceTouchDownPosition);
+            bool isDirectCircleTouch = osuInputManager.CheckScreenSpaceActionPressJudgeable(
+                e.ScreenSpaceTouchDownPosition
+            );
 
-            var newTouch = new TrackedTouch(e.Touch.Source, shouldResultInAction ? action : null, isDirectCircleTouch);
+            var newTouch = new TrackedTouch(
+                e.Touch.Source,
+                shouldResultInAction ? action : null,
+                isDirectCircleTouch
+            );
 
             updatePositionTracking(newTouch);
 
@@ -103,7 +112,11 @@ namespace osu.Game.Rulesets.Osu.UI
             }
 
             // ..or if the current position tracking touch was not a direct touch (and didn't travel across the screen too far).
-            if (!positionTrackingTouch.DirectTouch && positionTrackingTouch.DistanceTravelled < distance_before_position_tracking_lock_in)
+            if (
+                !positionTrackingTouch.DirectTouch
+                && positionTrackingTouch.DistanceTravelled
+                    < distance_before_position_tracking_lock_in
+            )
             {
                 positionTrackingTouch = newTouch;
                 return;
@@ -135,7 +148,10 @@ namespace osu.Game.Rulesets.Osu.UI
             if (!osuInputManager.AllowUserCursorMovement)
                 return;
 
-            new MousePositionAbsoluteInput { Position = touchEvent.ScreenSpaceTouch.Position }.Apply(osuInputManager.CurrentState, osuInputManager);
+            new MousePositionAbsoluteInput
+            {
+                Position = touchEvent.ScreenSpaceTouch.Position,
+            }.Apply(osuInputManager.CurrentState, osuInputManager);
         }
 
         protected override void OnTouchUp(TouchUpEvent e)

@@ -17,51 +17,70 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 {
     public partial class TestSceneSliderStreamConversion : TestSceneOsuEditor
     {
-        private BindableBeatDivisor beatDivisor => (BindableBeatDivisor)Editor.Dependencies.Get(typeof(BindableBeatDivisor));
+        private BindableBeatDivisor beatDivisor =>
+            (BindableBeatDivisor)Editor.Dependencies.Get(typeof(BindableBeatDivisor));
 
         [Test]
         public void TestSimpleConversion()
         {
             Slider slider = null;
 
-            AddStep("select first slider", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
+            AddStep(
+                "select first slider",
+                () =>
+                {
+                    slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
 
             convertToStream();
 
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 0.25, pathPosition: 0.25),
-                (time: 0.5, pathPosition: 0.5),
-                (time: 0.75, pathPosition: 0.75),
-                (time: 1, pathPosition: 1)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 0.25, pathPosition: 0.25),
+                        (time: 0.5, pathPosition: 0.5),
+                        (time: 0.75, pathPosition: 0.75),
+                        (time: 1, pathPosition: 1)
+                    )
+            );
 
             AddStep("undo", () => Editor.Undo());
             AddAssert("slider restored", () => sliderRestored(slider));
 
-            AddStep("select first slider", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
+            AddStep(
+                "select first slider",
+                () =>
+                {
+                    slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
             AddStep("change beat divisor", () => beatDivisor.Value = 8);
 
             convertToStream();
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 0.125, pathPosition: 0.125),
-                (time: 0.25, pathPosition: 0.25),
-                (time: 0.375, pathPosition: 0.375),
-                (time: 0.5, pathPosition: 0.5),
-                (time: 0.625, pathPosition: 0.625),
-                (time: 0.75, pathPosition: 0.75),
-                (time: 0.875, pathPosition: 0.875),
-                (time: 1, pathPosition: 1)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 0.125, pathPosition: 0.125),
+                        (time: 0.25, pathPosition: 0.25),
+                        (time: 0.375, pathPosition: 0.375),
+                        (time: 0.5, pathPosition: 0.5),
+                        (time: 0.625, pathPosition: 0.625),
+                        (time: 0.75, pathPosition: 0.75),
+                        (time: 0.875, pathPosition: 0.875),
+                        (time: 1, pathPosition: 1)
+                    )
+            );
         }
 
         [Test]
@@ -69,23 +88,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("select second slider", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.Where(h => h is Slider).ElementAt(1);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
-            AddStep("change beat divisor", () =>
-            {
-                beatDivisor.ValidDivisors.Value = BeatDivisorPresetCollection.TRIPLETS;
-                beatDivisor.Value = 3;
-            });
+            AddStep(
+                "select second slider",
+                () =>
+                {
+                    slider = (Slider)EditorBeatmap.HitObjects.Where(h => h is Slider).ElementAt(1);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
+            AddStep(
+                "change beat divisor",
+                () =>
+                {
+                    beatDivisor.ValidDivisors.Value = BeatDivisorPresetCollection.TRIPLETS;
+                    beatDivisor.Value = 3;
+                }
+            );
 
             convertToStream();
 
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 2 / 3d, pathPosition: 2 / 3d)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 2 / 3d, pathPosition: 2 / 3d)
+                    )
+            );
         }
 
         [Test]
@@ -93,22 +124,32 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("select first slider with repeats", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider s && s.RepeatCount > 0);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
+            AddStep(
+                "select first slider with repeats",
+                () =>
+                {
+                    slider = (Slider)
+                        EditorBeatmap.HitObjects.First(h => h is Slider s && s.RepeatCount > 0);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
             AddStep("change beat divisor", () => beatDivisor.Value = 2);
 
             convertToStream();
 
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 0.25, pathPosition: 0.5),
-                (time: 0.5, pathPosition: 1),
-                (time: 0.75, pathPosition: 0.5),
-                (time: 1, pathPosition: 0)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 0.25, pathPosition: 0.5),
+                        (time: 0.5, pathPosition: 1),
+                        (time: 0.75, pathPosition: 0.5),
+                        (time: 1, pathPosition: 0)
+                    )
+            );
         }
 
         [Test]
@@ -116,21 +157,33 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("select second new-combo-starting slider", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.Where(h => h is Slider s && s.NewCombo).ElementAt(1);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
+            AddStep(
+                "select second new-combo-starting slider",
+                () =>
+                {
+                    slider = (Slider)
+                        EditorBeatmap
+                            .HitObjects.Where(h => h is Slider s && s.NewCombo)
+                            .ElementAt(1);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
 
             convertToStream();
 
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 0.25, pathPosition: 0.25),
-                (time: 0.5, pathPosition: 0.5),
-                (time: 0.75, pathPosition: 0.75),
-                (time: 1, pathPosition: 1)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 0.25, pathPosition: 0.25),
+                        (time: 0.5, pathPosition: 0.5),
+                        (time: 0.75, pathPosition: 0.75),
+                        (time: 1, pathPosition: 1)
+                    )
+            );
 
             AddStep("undo", () => Editor.Undo());
             AddAssert("slider restored", () => sliderRestored(slider));
@@ -138,14 +191,17 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private void convertToStream()
         {
-            AddStep("convert to stream", () =>
-            {
-                InputManager.PressKey(Key.LControl);
-                InputManager.PressKey(Key.LShift);
-                InputManager.Key(Key.F);
-                InputManager.ReleaseKey(Key.LShift);
-                InputManager.ReleaseKey(Key.LControl);
-            });
+            AddStep(
+                "convert to stream",
+                () =>
+                {
+                    InputManager.PressKey(Key.LControl);
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.Key(Key.F);
+                    InputManager.ReleaseKey(Key.LShift);
+                    InputManager.ReleaseKey(Key.LControl);
+                }
+            );
         }
 
         [Test]
@@ -153,33 +209,50 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("select first slider", () =>
-            {
-                slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
-                EditorClock.Seek(slider.StartTime);
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-            });
+            AddStep(
+                "select first slider",
+                () =>
+                {
+                    slider = (Slider)EditorBeatmap.HitObjects.First(h => h is Slider);
+                    EditorClock.Seek(slider.StartTime);
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                }
+            );
 
-            AddStep("change to these specific circumstances", () =>
-            {
-                EditorBeatmap.Difficulty.SliderMultiplier = 1;
-                var timingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(slider.StartTime);
-                timingPoint.BeatLength = 352.941176470588;
-                slider.Path.ControlPoints[^1].Position = new Vector2(-110, 16);
-                slider.Path.ExpectedDistance.Value = 100;
-            });
+            AddStep(
+                "change to these specific circumstances",
+                () =>
+                {
+                    EditorBeatmap.Difficulty.SliderMultiplier = 1;
+                    var timingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(
+                        slider.StartTime
+                    );
+                    timingPoint.BeatLength = 352.941176470588;
+                    slider.Path.ControlPoints[^1].Position = new Vector2(-110, 16);
+                    slider.Path.ExpectedDistance.Value = 100;
+                }
+            );
 
             convertToStream();
 
-            AddAssert("stream created", () => streamCreatedFor(slider,
-                (time: 0, pathPosition: 0),
-                (time: 0.25, pathPosition: 0.25),
-                (time: 0.5, pathPosition: 0.5),
-                (time: 0.75, pathPosition: 0.75),
-                (time: 1, pathPosition: 1)));
+            AddAssert(
+                "stream created",
+                () =>
+                    streamCreatedFor(
+                        slider,
+                        (time: 0, pathPosition: 0),
+                        (time: 0.25, pathPosition: 0.25),
+                        (time: 0.5, pathPosition: 0.5),
+                        (time: 0.75, pathPosition: 0.75),
+                        (time: 1, pathPosition: 1)
+                    )
+            );
         }
 
-        private bool streamCreatedFor(Slider slider, params (double time, double pathPosition)[] expectedCircles)
+        private bool streamCreatedFor(
+            Slider slider,
+            params (double time, double pathPosition)[] expectedCircles
+        )
         {
             if (EditorBeatmap.HitObjects.Contains(slider))
                 return false;
@@ -189,7 +262,11 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 double time = slider.StartTime + slider.Duration * expectedTime;
                 Vector2 position = slider.Position + slider.Path.PositionAt(expectedPathPosition);
 
-                if (!EditorBeatmap.HitObjects.OfType<HitCircle>().Any(h => matches(h, time, position, slider.NewCombo && expectedTime == 0)))
+                if (
+                    !EditorBeatmap
+                        .HitObjects.OfType<HitCircle>()
+                        .Any(h => matches(h, time, position, slider.NewCombo && expectedTime == 0))
+                )
                     return false;
             }
 
@@ -204,7 +281,11 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private bool sliderRestored(Slider slider)
         {
-            var objects = EditorBeatmap.HitObjects.Where(h => h.StartTime >= slider.StartTime && h.GetEndTime() <= slider.EndTime).ToList();
+            var objects = EditorBeatmap
+                .HitObjects.Where(h =>
+                    h.StartTime >= slider.StartTime && h.GetEndTime() <= slider.EndTime
+                )
+                .ToList();
 
             if (objects.Count > 1)
                 return false;
@@ -214,9 +295,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 return false;
 
             return Precision.AlmostEquals(slider.StartTime, restoredSlider.StartTime)
-                   && Precision.AlmostEquals(slider.GetEndTime(), restoredSlider.GetEndTime())
-                   && Precision.AlmostEquals(slider.Position, restoredSlider.Position, 0.01f)
-                   && Precision.AlmostEquals(slider.EndPosition, restoredSlider.EndPosition, 0.01f);
+                && Precision.AlmostEquals(slider.GetEndTime(), restoredSlider.GetEndTime())
+                && Precision.AlmostEquals(slider.Position, restoredSlider.Position, 0.01f)
+                && Precision.AlmostEquals(slider.EndPosition, restoredSlider.EndPosition, 0.01f);
         }
     }
 }

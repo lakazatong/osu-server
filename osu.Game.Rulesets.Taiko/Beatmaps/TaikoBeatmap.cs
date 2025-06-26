@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Taiko.Beatmaps
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners),
                     Content = swells.ToString(),
                     BarDisplayLength = Math.Min(swells / 10f, 1),
-                }
+                },
             };
         }
     }

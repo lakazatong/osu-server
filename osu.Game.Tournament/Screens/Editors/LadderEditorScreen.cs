@@ -12,9 +12,9 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Input.States;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Overlays;
 using osu.Game.Screens.Edit.Compose.Components;
 using osu.Game.Tournament.Components;
-using osu.Game.Overlays;
 using osu.Game.Tournament.Models;
 using osu.Game.Tournament.Screens.Editors.Components;
 using osu.Game.Tournament.Screens.Ladder;
@@ -44,20 +44,21 @@ namespace osu.Game.Tournament.Screens.Editors
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(new ControlPanel
-            {
-                Child = new LadderEditorSettings(),
-            });
+            AddInternal(new ControlPanel { Child = new LadderEditorSettings() });
 
-            AddInternal(rightClickMessage = new WarningBox("Right click to place and link matches"));
+            AddInternal(
+                rightClickMessage = new WarningBox("Right click to place and link matches")
+            );
 
-            ScrollContent.Add(grid = new RectangularPositionSnapGrid
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                BypassAutoSizeAxes = Axes.Both,
-                Depth = float.MaxValue
-            });
+            ScrollContent.Add(
+                grid = new RectangularPositionSnapGrid
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    BypassAutoSizeAxes = Axes.Both,
+                    Depth = float.MaxValue,
+                }
+            );
 
             grid.Spacing.Value = new Vector2(GRID_SPACING);
 
@@ -77,7 +78,9 @@ namespace osu.Game.Tournament.Screens.Editors
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            lastMatchesContainerMouseDownPosition = MatchesContainer.ToLocalSpace(e.ScreenSpaceMouseDownPosition);
+            lastMatchesContainerMouseDownPosition = MatchesContainer.ToLocalSpace(
+                e.ScreenSpaceMouseDownPosition
+            );
             return base.OnMouseDown(e);
         }
 
@@ -94,24 +97,40 @@ namespace osu.Game.Tournament.Screens.Editors
         public MenuItem[] ContextMenuItems =>
             new MenuItem[]
             {
-                new OsuMenuItem("Create new match", MenuItemType.Highlighted, () =>
-                {
-                    Vector2 pos = MatchesContainer.Count == 0 ? Vector2.Zero : lastMatchesContainerMouseDownPosition;
-
-                    TournamentMatch newMatch = new TournamentMatch { Position = { Value = new Point((int)pos.X, (int)pos.Y) } };
-
-                    LadderInfo.Matches.Add(newMatch);
-
-                    editorInfo.Selected.Value = newMatch;
-                }),
-                new OsuMenuItem("Reset teams", MenuItemType.Destructive, () =>
-                {
-                    dialogOverlay?.Push(new LadderResetTeamsDialog(() =>
+                new OsuMenuItem(
+                    "Create new match",
+                    MenuItemType.Highlighted,
+                    () =>
                     {
-                        foreach (var p in MatchesContainer)
-                            p.Match.Reset();
-                    }));
-                })
+                        Vector2 pos =
+                            MatchesContainer.Count == 0
+                                ? Vector2.Zero
+                                : lastMatchesContainerMouseDownPosition;
+
+                        TournamentMatch newMatch = new TournamentMatch
+                        {
+                            Position = { Value = new Point((int)pos.X, (int)pos.Y) },
+                        };
+
+                        LadderInfo.Matches.Add(newMatch);
+
+                        editorInfo.Selected.Value = newMatch;
+                    }
+                ),
+                new OsuMenuItem(
+                    "Reset teams",
+                    MenuItemType.Destructive,
+                    () =>
+                    {
+                        dialogOverlay?.Push(
+                            new LadderResetTeamsDialog(() =>
+                            {
+                                foreach (var p in MatchesContainer)
+                                    p.Match.Reset();
+                            })
+                        );
+                    }
+                ),
             };
 
         public void Remove(TournamentMatch match)
@@ -128,7 +147,12 @@ namespace osu.Game.Tournament.Screens.Editors
 
             private ProgressionPath? path;
 
-            public JoinVisualiser(Container<DrawableTournamentMatch> matchesContainer, TournamentMatch source, bool losers, Action? complete)
+            public JoinVisualiser(
+                Container<DrawableTournamentMatch> matchesContainer,
+                TournamentMatch source,
+                bool losers,
+                Action? complete
+            )
             {
                 this.matchesContainer = matchesContainer;
                 RelativeSizeAxes = Axes.Both;
@@ -144,7 +168,9 @@ namespace osu.Game.Tournament.Screens.Editors
 
             private DrawableTournamentMatch? findTarget(InputState state)
             {
-                return matchesContainer.FirstOrDefault(d => d.ReceivePositionalInputAt(state.Mouse.Position));
+                return matchesContainer.FirstOrDefault(d =>
+                    d.ReceivePositionalInputAt(state.Mouse.Position)
+                );
             }
 
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
@@ -165,10 +191,15 @@ namespace osu.Game.Tournament.Screens.Editors
                 if (found == null)
                     return false;
 
-                AddInternal(path = new ProgressionPath(matchesContainer.First(c => c.Match == Source), found)
-                {
-                    Colour = Color4.Yellow,
-                });
+                AddInternal(
+                    path = new ProgressionPath(
+                        matchesContainer.First(c => c.Match == Source),
+                        found
+                    )
+                    {
+                        Colour = Color4.Yellow,
+                    }
+                );
 
                 return base.OnMouseMove(e);
             }

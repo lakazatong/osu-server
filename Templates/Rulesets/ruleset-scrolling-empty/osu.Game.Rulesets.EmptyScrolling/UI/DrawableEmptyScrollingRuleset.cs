@@ -7,20 +7,25 @@ using osu.Framework.Input;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
 using osu.Game.Replays;
-using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.EmptyScrolling.Objects;
 using osu.Game.Rulesets.EmptyScrolling.Objects.Drawables;
 using osu.Game.Rulesets.EmptyScrolling.Replays;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.EmptyScrolling.UI
 {
     [Cached]
-    public partial class DrawableEmptyScrollingRuleset : DrawableScrollingRuleset<EmptyScrollingHitObject>
+    public partial class DrawableEmptyScrollingRuleset
+        : DrawableScrollingRuleset<EmptyScrollingHitObject>
     {
-        public DrawableEmptyScrollingRuleset(EmptyScrollingRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
+        public DrawableEmptyScrollingRuleset(
+            EmptyScrollingRuleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        )
             : base(ruleset, beatmap, mods)
         {
             Direction.Value = ScrollingDirection.Left;
@@ -29,10 +34,14 @@ namespace osu.Game.Rulesets.EmptyScrolling.UI
 
         protected override Playfield CreatePlayfield() => new EmptyScrollingPlayfield();
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new EmptyScrollingFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new EmptyScrollingFramedReplayInputHandler(replay);
 
-        public override DrawableHitObject<EmptyScrollingHitObject> CreateDrawableRepresentation(EmptyScrollingHitObject h) => new DrawableEmptyScrollingHitObject(h);
+        public override DrawableHitObject<EmptyScrollingHitObject> CreateDrawableRepresentation(
+            EmptyScrollingHitObject h
+        ) => new DrawableEmptyScrollingHitObject(h);
 
-        protected override PassThroughInputManager CreateInputManager() => new EmptyScrollingInputManager(Ruleset?.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new EmptyScrollingInputManager(Ruleset?.RulesetInfo);
     }
 }

@@ -6,8 +6,6 @@ namespace osu.Game.Graphics.UserInterface
     public class OsuMenuItemSpacer : OsuMenuItem
     {
         public OsuMenuItemSpacer()
-            : base(" ")
-        {
-        }
+            : base(" ") { }
     }
 }

@@ -11,8 +11,6 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
     public partial class CaughtBanana : CaughtObject
     {
         public CaughtBanana()
-            : base(CatchSkinComponents.Banana, _ => new BananaPiece())
-        {
-        }
+            : base(CatchSkinComponents.Banana, _ => new BananaPiece()) { }
     }
 }

@@ -50,7 +50,10 @@ namespace osu.Game.Rulesets.Taiko.Objects
         /// <summary>
         /// Returns an array of any samples which would cause this object to be a "rim" type hit.
         /// </summary>
-        private HitSampleInfo[] getRimSamples() => Samples.Where(s => s.Name == HitSampleInfo.HIT_CLAP || s.Name == HitSampleInfo.HIT_WHISTLE).ToArray();
+        private HitSampleInfo[] getRimSamples() =>
+            Samples
+                .Where(s => s.Name == HitSampleInfo.HIT_CLAP || s.Name == HitSampleInfo.HIT_WHISTLE)
+                .ToArray();
 
         private void updateSamplesFromType()
         {
@@ -70,18 +73,13 @@ namespace osu.Game.Rulesets.Taiko.Objects
             }
         }
 
-        protected override StrongNestedHitObject CreateStrongNestedHit(double startTime) => new StrongNestedHit(this)
-        {
-            StartTime = startTime,
-            Samples = Samples
-        };
+        protected override StrongNestedHitObject CreateStrongNestedHit(double startTime) =>
+            new StrongNestedHit(this) { StartTime = startTime, Samples = Samples };
 
         public class StrongNestedHit : StrongNestedHitObject
         {
             public StrongNestedHit(TaikoHitObject parent)
-                : base(parent)
-            {
-            }
+                : base(parent) { }
         }
     }
 }

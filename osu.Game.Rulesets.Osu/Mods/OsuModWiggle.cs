@@ -23,21 +23,35 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override ModType Type => ModType.Fun;
         public override LocalisableString Description => "They just won't stay still...";
         public override double ScoreMultiplier => 1;
-        public override Type[] IncompatibleMods => new[] { typeof(OsuModTransform), typeof(OsuModMagnetised), typeof(OsuModRepel), typeof(OsuModDepth) };
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(OsuModTransform),
+                typeof(OsuModMagnetised),
+                typeof(OsuModRepel),
+                typeof(OsuModDepth),
+            };
 
         private const int wiggle_duration = 100; // (ms) Higher = fewer wiggles
 
         [SettingSource("Strength", "Multiplier applied to the wiggling strength.")]
-        public BindableDouble Strength { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.1f,
-            MaxValue = 2f,
-            Precision = 0.1f
-        };
+        public BindableDouble Strength { get; } =
+            new BindableDouble(1)
+            {
+                MinValue = 0.1f,
+                MaxValue = 2f,
+                Precision = 0.1f,
+            };
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state) => drawableOnApplyCustomUpdateState(hitObject, state);
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => drawableOnApplyCustomUpdateState(hitObject, state);
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state) => drawableOnApplyCustomUpdateState(hitObject, state);
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => drawableOnApplyCustomUpdateState(hitObject, state);
 
         private void drawableOnApplyCustomUpdateState(DrawableHitObject drawable, ArmedState state)
         {
@@ -58,12 +72,22 @@ namespace osu.Game.Rulesets.Osu.Mods
             {
                 float nextAngle = (float)(objRand.NextDouble() * 2 * Math.PI);
                 float nextDist = (float)(objRand.NextDouble() * Strength.Value * 7);
-                drawable.MoveTo(new Vector2((float)(nextDist * Math.Cos(nextAngle) + origin.X), (float)(nextDist * Math.Sin(nextAngle) + origin.Y)), wiggle_duration);
+                drawable.MoveTo(
+                    new Vector2(
+                        (float)(nextDist * Math.Cos(nextAngle) + origin.X),
+                        (float)(nextDist * Math.Sin(nextAngle) + origin.Y)
+                    ),
+                    wiggle_duration
+                );
             }
 
             for (int i = 0; i < amountWiggles; i++)
             {
-                using (drawable.BeginAbsoluteSequence(osuObject.StartTime - osuObject.TimePreempt + i * wiggle_duration))
+                using (
+                    drawable.BeginAbsoluteSequence(
+                        osuObject.StartTime - osuObject.TimePreempt + i * wiggle_duration
+                    )
+                )
                     wiggle();
             }
 

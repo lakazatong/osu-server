@@ -29,10 +29,10 @@ namespace osu.Game.Tests.Visual.UserInterface
                     new OsuSpriteText
                     {
                         Text = @"No OverlayColourProvider",
-                        Font = OsuFont.Default.With(size: 40)
+                        Font = OsuFont.Default.With(size: 40),
                     },
-                    new RoundedButtonWithPopover()
-                }
+                    new RoundedButtonWithPopover(),
+                },
             };
 
             Cell(0, 1).Child = new ColourProvidingContainer(OverlayColourScheme.Orange)
@@ -46,11 +46,11 @@ namespace osu.Game.Tests.Visual.UserInterface
                         new OsuSpriteText
                         {
                             Text = @"With OverlayColourProvider (orange)",
-                            Font = OsuFont.Default.With(size: 40)
+                            Font = OsuFont.Default.With(size: 40),
                         },
-                        new RoundedButtonWithPopover()
-                    }
-                }
+                        new RoundedButtonWithPopover(),
+                    },
+                },
             };
         }
 
@@ -66,27 +66,21 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Action = this.ShowPopover;
             }
 
-            public Popover GetPopover() => new OsuPopover
-            {
-                Child = new FillFlowContainer
+            public Popover GetPopover() =>
+                new OsuPopover
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(10),
-                    Children = new Drawable[]
+                    Child = new FillFlowContainer
                     {
-                        new OsuSpriteText
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(10),
+                        Children = new Drawable[]
                         {
-                            Text = @"sample text"
+                            new OsuSpriteText { Text = @"sample text" },
+                            new OsuTextBox { Width = 150, Height = 30 },
                         },
-                        new OsuTextBox
-                        {
-                            Width = 150,
-                            Height = 30
-                        }
-                    }
-                }
-            };
+                    },
+                };
         }
 
         private partial class ColourProvidingContainer : Container

@@ -28,7 +28,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
     /// <summary>
     /// A component which outlines items and handles movement of selections.
     /// </summary>
-    public abstract partial class SelectionHandler<T> : CompositeDrawable, IKeyBindingHandler<PlatformAction>, IKeyBindingHandler<GlobalAction>, IHasContextMenu
+    public abstract partial class SelectionHandler<T>
+        : CompositeDrawable,
+            IKeyBindingHandler<PlatformAction>,
+            IKeyBindingHandler<GlobalAction>,
+            IHasContextMenu
     {
         /// <summary>
         /// How much padding around the selection area is added.
@@ -69,7 +73,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
             AlwaysPresent = true;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
             dependencies.CacheAs(RotationHandler = CreateRotationHandler());
@@ -80,18 +86,23 @@ namespace osu.Game.Screens.Edit.Compose.Components
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                RotationHandler,
-                ScaleHandler,
-                SelectionBox = CreateSelectionBox(),
-            });
+            AddRangeInternal(
+                new Drawable[]
+                {
+                    RotationHandler,
+                    ScaleHandler,
+                    SelectionBox = CreateSelectionBox(),
+                }
+            );
 
-            SelectedItems.BindCollectionChanged((_, _) => Scheduler.AddOnce(updateVisibility), true);
+            SelectedItems.BindCollectionChanged(
+                (_, _) => Scheduler.AddOnce(updateVisibility),
+                true
+            );
         }
 
-        public SelectionBox CreateSelectionBox()
-            => new SelectionBox
+        public SelectionBox CreateSelectionBox() =>
+            new SelectionBox
             {
                 OperationStarted = OnOperationBegan,
                 OperationEnded = OnOperationEnded,
@@ -149,7 +160,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// Creates the handler to use for rotation operations.
         /// </summary>
-        public virtual SelectionRotationHandler CreateRotationHandler() => new SelectionRotationHandler();
+        public virtual SelectionRotationHandler CreateRotationHandler() =>
+            new SelectionRotationHandler();
 
         /// <summary>
         /// Creates the handler to use for scale operations.
@@ -197,9 +209,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         public bool OnPressed(KeyBindingPressEvent<PlatformAction> e)
         {
@@ -213,9 +223,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         #endregion
 
@@ -255,7 +263,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
             selectedBlueprints.Remove(blueprint);
         }
 
-        protected virtual bool ShouldQuickDelete(MouseButtonEvent e) => e.Button == MouseButton.Middle || (e.ShiftPressed && e.Button == MouseButton.Right);
+        protected virtual bool ShouldQuickDelete(MouseButtonEvent e) =>
+            e.Button == MouseButton.Middle || (e.ShiftPressed && e.Button == MouseButton.Right);
 
         /// <summary>
         /// Handle a blueprint requesting selection.
@@ -263,7 +272,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <param name="blueprint">The blueprint.</param>
         /// <param name="e">The mouse event responsible for selection.</param>
         /// <returns>Whether an action was performed.</returns>
-        internal virtual bool MouseDownSelectionRequested(SelectionBlueprint<T> blueprint, MouseButtonEvent e)
+        internal virtual bool MouseDownSelectionRequested(
+            SelectionBlueprint<T> blueprint,
+            MouseButtonEvent e
+        )
         {
             if (ShouldQuickDelete(e))
             {
@@ -312,7 +324,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// Given a selection target and a function of truth, retrieve the correct ternary state for display.
         /// </summary>
-        public static TernaryState GetStateFromSelection<TObject>(IEnumerable<TObject> selection, Func<TObject, bool> func)
+        public static TernaryState GetStateFromSelection<TObject>(
+            IEnumerable<TObject> selection,
+            Func<TObject, bool> func
+        )
         {
             if (selection.Any(func))
                 return selection.All(func) ? TernaryState.True : TernaryState.Indeterminate;
@@ -368,9 +383,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// Triggered whenever the set of selected items changes.
         /// Should update the selection box's state to match supported operations.
         /// </summary>
-        protected virtual void OnSelectionChanged()
-        {
-        }
+        protected virtual void OnSelectionChanged() { }
 
         protected override void Update()
         {
@@ -383,7 +396,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
             RectangleF selectionRect = ToLocalSpace(selectedBlueprints[0].SelectionQuad).AABBFloat;
 
             for (int i = 1; i < selectedBlueprints.Count; i++)
-                selectionRect = RectangleF.Union(selectionRect, ToLocalSpace(selectedBlueprints[i].SelectionQuad).AABBFloat);
+                selectionRect = RectangleF.Union(
+                    selectionRect,
+                    ToLocalSpace(selectedBlueprints[i].SelectionQuad).AABBFloat
+                );
 
             selectionRect = selectionRect.Inflate(INFLATE_SIZE);
 
@@ -409,10 +425,24 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 if (SelectedBlueprints.Count == 1)
                     items.AddRange(SelectedBlueprints[0].ContextMenuItems);
 
-                items.Add(new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, DeleteSelected)
-                {
-                    Hotkey = new Hotkey { PlatformAction = PlatformAction.Delete, KeyCombinations = [new KeyCombination(InputKey.Shift, InputKey.MouseRight), new KeyCombination(InputKey.MouseMiddle)] }
-                });
+                items.Add(
+                    new OsuMenuItem(
+                        CommonStrings.ButtonsDelete,
+                        MenuItemType.Destructive,
+                        DeleteSelected
+                    )
+                    {
+                        Hotkey = new Hotkey
+                        {
+                            PlatformAction = PlatformAction.Delete,
+                            KeyCombinations =
+                            [
+                                new KeyCombination(InputKey.Shift, InputKey.MouseRight),
+                                new KeyCombination(InputKey.MouseMiddle),
+                            ],
+                        },
+                    }
+                );
 
                 return items.ToArray();
             }
@@ -423,8 +453,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// </summary>
         /// <param name="selection">The current selection.</param>
         /// <returns>The relevant menu items.</returns>
-        protected virtual IEnumerable<MenuItem> GetContextMenuItemsForSelection(IEnumerable<SelectionBlueprint<T>> selection)
-            => Enumerable.Empty<MenuItem>();
+        protected virtual IEnumerable<MenuItem> GetContextMenuItemsForSelection(
+            IEnumerable<SelectionBlueprint<T>> selection
+        ) => Enumerable.Empty<MenuItem>();
 
         #endregion
     }

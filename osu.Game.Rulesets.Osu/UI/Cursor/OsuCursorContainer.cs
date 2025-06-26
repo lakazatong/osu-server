@@ -23,6 +23,7 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
         public new OsuCursor ActiveCursor => (OsuCursor)base.ActiveCursor;
 
         protected override Drawable CreateCursor() => new OsuCursor();
+
         protected override Container<Drawable> Content => fadeContainer;
 
         private readonly Container<Drawable> fadeContainer;
@@ -40,10 +41,17 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
                 RelativeSizeAxes = Axes.Both,
                 Children = new CompositeDrawable[]
                 {
-                    cursorTrail = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.CursorTrail), _ => new DefaultCursorTrail(), confineMode: ConfineMode.NoScaling),
+                    cursorTrail = new SkinnableDrawable(
+                        new OsuSkinComponentLookup(OsuSkinComponents.CursorTrail),
+                        _ => new DefaultCursorTrail(),
+                        confineMode: ConfineMode.NoScaling
+                    ),
                     rippleVisualiser = new CursorRippleVisualiser(),
-                    new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.CursorParticles), confineMode: ConfineMode.NoScaling),
-                }
+                    new SkinnableDrawable(
+                        new OsuSkinComponentLookup(OsuSkinComponents.CursorParticles),
+                        confineMode: ConfineMode.NoScaling
+                    ),
+                },
             };
         }
 
@@ -59,13 +67,16 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
             showTrail.BindValueChanged(v => cursorTrail.FadeTo(v.NewValue ? 1 : 0, 200), true);
 
-            ActiveCursor.CursorScale.BindValueChanged(e =>
-            {
-                var newScale = new Vector2(e.NewValue);
+            ActiveCursor.CursorScale.BindValueChanged(
+                e =>
+                {
+                    var newScale = new Vector2(e.NewValue);
 
-                rippleVisualiser.CursorScale = newScale;
-                cursorTrail.Scale = newScale;
-            }, true);
+                    rippleVisualiser.CursorScale = newScale;
+                    cursorTrail.Scale = newScale;
+                },
+                true
+            );
         }
 
         private int downCount;

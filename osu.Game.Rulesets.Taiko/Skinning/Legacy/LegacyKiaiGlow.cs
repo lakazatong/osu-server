@@ -50,12 +50,19 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             base.Update();
 
             if (isKiaiActive)
-                sprite.Alpha = (float)Math.Min(1, sprite.Alpha + Math.Abs(Clock.ElapsedFrameTime) / 100f);
+                sprite.Alpha = (float)
+                    Math.Min(1, sprite.Alpha + Math.Abs(Clock.ElapsedFrameTime) / 100f);
             else
-                sprite.Alpha = (float)Math.Max(0, sprite.Alpha - Math.Abs(Clock.ElapsedFrameTime) / 600f);
+                sprite.Alpha = (float)
+                    Math.Max(0, sprite.Alpha - Math.Abs(Clock.ElapsedFrameTime) / 600f);
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             isKiaiActive = effectPoint.KiaiMode;
         }
@@ -65,8 +72,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             if (!result.IsHit || !isKiaiActive)
                 return;
 
-            sprite.ScaleTo(TaikoLegacyHitTarget.SCALE + 0.15f).Then()
-                  .ScaleTo(TaikoLegacyHitTarget.SCALE, 80, Easing.OutQuad);
+            sprite
+                .ScaleTo(TaikoLegacyHitTarget.SCALE + 0.15f)
+                .Then()
+                .ScaleTo(TaikoLegacyHitTarget.SCALE, 80, Easing.OutQuad);
         }
 
         protected override void Dispose(bool isDisposing)

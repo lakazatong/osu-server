@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 
@@ -24,21 +24,19 @@ namespace osu.Game.Overlays.Comments
             Height = 20;
             Masking = true;
             CornerRadius = 3;
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0,
-                },
-                content = new Container
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Margin = new MarginPadding { Horizontal = 10 }
-                },
-            });
+                    background = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0 },
+                    content = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Margin = new MarginPadding { Horizontal = 10 },
+                    },
+                }
+            );
         }
 
         [BackgroundDependencyLoader]

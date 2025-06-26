@@ -12,9 +12,9 @@ using osu.Framework.Utils;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Localisation;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.Menu
 {
@@ -48,7 +48,7 @@ namespace osu.Game.Screens.Menu
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0.4f,
                         },
-                    }
+                    },
                 },
                 textFlow = new LinkFlowContainer
                 {
@@ -56,7 +56,7 @@ namespace osu.Game.Screens.Menu
                     AutoSizeAxes = Axes.Y,
                     TextAnchor = Anchor.TopCentre,
                     Spacing = new Vector2(0, 2),
-                    Margin = new MarginPadding(10)
+                    Margin = new MarginPadding(10),
                 },
             };
         }
@@ -77,8 +77,10 @@ namespace osu.Game.Screens.Menu
                 return;
             }
 
-            static void formatRegular(SpriteText t) => t.Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular);
-            static void formatSemiBold(SpriteText t) => t.Font = OsuFont.GetFont(size: 16, weight: FontWeight.SemiBold);
+            static void formatRegular(SpriteText t) =>
+                t.Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular);
+            static void formatSemiBold(SpriteText t) =>
+                t.Font = OsuFont.GetFont(size: 16, weight: FontWeight.SemiBold);
 
             var tip = getRandomTip();
 
@@ -86,8 +88,7 @@ namespace osu.Game.Screens.Menu
             textFlow.AddParagraph(MenuTipStrings.MenuTipTitle, formatSemiBold);
             textFlow.AddParagraph(tip, formatRegular);
 
-            this
-                .FadeOut()
+            this.FadeOut()
                 .ScaleTo(0.9f)
                 .Delay(600)
                 .FadeInFromZero(800, Easing.OutQuint)
@@ -128,7 +129,7 @@ namespace osu.Game.Screens.Menu
                 MenuTipStrings.ToggleReplaySettingsShortcut,
                 MenuTipStrings.CopyModsFromScore,
                 MenuTipStrings.AutoplayBeatmapShortcut,
-                MenuTipStrings.LazerIsNotAWord
+                MenuTipStrings.LazerIsNotAWord,
             };
 
             return tips[RNG.Next(0, tips.Length)];

@@ -17,9 +17,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         private Drawable proxiedOverlayLayer = null!;
 
         public LegacySliderHeadHitCircle()
-            : base("sliderstartcircle")
-        {
-        }
+            : base("sliderstartcircle") { }
 
         protected override void LoadComplete()
         {
@@ -38,8 +36,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             Debug.Assert(proxiedOverlayLayer.Parent == null);
 
             // see logic in LegacyReverseArrow.
-            (drawableObject as DrawableSliderHead)?.DrawableSlider
-                                                  .OverlayElementContainer.Add(proxiedOverlayLayer.With(d => d.Depth = float.MinValue));
+            (drawableObject as DrawableSliderHead)?.DrawableSlider.OverlayElementContainer.Add(
+                proxiedOverlayLayer.With(d => d.Depth = float.MinValue)
+            );
         }
 
         protected override void Dispose(bool isDisposing)

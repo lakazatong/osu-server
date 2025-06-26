@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Difficulty;
 
 namespace osu.Game.Rulesets.Catch.Difficulty
 {
-    public class CatchPerformanceAttributes : PerformanceAttributes
-    {
-    }
+    public class CatchPerformanceAttributes : PerformanceAttributes { }
 }

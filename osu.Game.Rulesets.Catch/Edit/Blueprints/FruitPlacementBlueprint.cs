@@ -36,21 +36,32 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            if (e.Button != MouseButton.Left) return base.OnMouseDown(e);
+            if (e.Button != MouseButton.Left)
+                return base.OnMouseDown(e);
 
             EndPlacement(true);
             return true;
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
-            var gridSnapResult = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var gridSnapResult =
+                Composer?.FindSnappedPositionAndTime(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
             gridSnapResult.ScreenSpacePosition.X = screenSpacePosition.X;
             var distanceSnapResult = Composer?.TryDistanceSnap(gridSnapResult.ScreenSpacePosition);
 
-            var result = distanceSnapResult != null && Vector2.Distance(gridSnapResult.ScreenSpacePosition, distanceSnapResult.ScreenSpacePosition) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
-                ? distanceSnapResult
-                : gridSnapResult;
+            var result =
+                distanceSnapResult != null
+                && Vector2.Distance(
+                    gridSnapResult.ScreenSpacePosition,
+                    distanceSnapResult.ScreenSpacePosition
+                ) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
+                    ? distanceSnapResult
+                    : gridSnapResult;
 
             base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
 

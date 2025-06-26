@@ -16,23 +16,26 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Sloooow doooown...";
         public override IconUsage? Icon => FontAwesome.Solid.ChevronCircleDown;
 
-        public override BindableNumber<double> InitialRate { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.51,
-            MaxValue = 2,
-            Precision = 0.01,
-        };
+        public override BindableNumber<double> InitialRate { get; } =
+            new BindableDouble(1)
+            {
+                MinValue = 0.51,
+                MaxValue = 2,
+                Precision = 0.01,
+            };
 
-        public override BindableNumber<double> FinalRate { get; } = new BindableDouble(0.75)
-        {
-            MinValue = 0.5,
-            MaxValue = 1.99,
-            Precision = 0.01,
-        };
+        public override BindableNumber<double> FinalRate { get; } =
+            new BindableDouble(0.75)
+            {
+                MinValue = 0.5,
+                MaxValue = 1.99,
+                Precision = 0.01,
+            };
 
         public override BindableBool AdjustPitch { get; } = new BindableBool(true);
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(ModWindUp)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(ModWindUp)).ToArray();
 
         public ModWindDown()
         {

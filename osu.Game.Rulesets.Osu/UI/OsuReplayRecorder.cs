@@ -13,11 +13,12 @@ namespace osu.Game.Rulesets.Osu.UI
     public partial class OsuReplayRecorder : ReplayRecorder<OsuAction>
     {
         public OsuReplayRecorder(Score score)
-            : base(score)
-        {
-        }
+            : base(score) { }
 
-        protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<OsuAction> actions, ReplayFrame previousFrame)
-            => new OsuReplayFrame(Time.Current, mousePosition, actions.ToArray());
+        protected override ReplayFrame HandleFrame(
+            Vector2 mousePosition,
+            List<OsuAction> actions,
+            ReplayFrame previousFrame
+        ) => new OsuReplayFrame(Time.Current, mousePosition, actions.ToArray());
     }
 }

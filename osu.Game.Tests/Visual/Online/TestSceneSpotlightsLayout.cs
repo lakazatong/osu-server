@@ -20,23 +20,24 @@ namespace osu.Game.Tests.Visual.Online
         protected override bool UseOnlineAPI => true;
 
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         public TestSceneSpotlightsLayout()
         {
             var ruleset = new Bindable<RulesetInfo>(new OsuRuleset().RulesetInfo);
 
-            Add(new BasicScrollContainer
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Width = 0.8f,
-                Child = new SpotlightsLayout
+            Add(
+                new BasicScrollContainer
                 {
-                    Ruleset = { BindTarget = ruleset }
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Width = 0.8f,
+                    Child = new SpotlightsLayout { Ruleset = { BindTarget = ruleset } },
                 }
-            });
+            );
 
             AddStep("Osu ruleset", () => ruleset.Value = new OsuRuleset().RulesetInfo);
             AddStep("Mania ruleset", () => ruleset.Value = new ManiaRuleset().RulesetInfo);

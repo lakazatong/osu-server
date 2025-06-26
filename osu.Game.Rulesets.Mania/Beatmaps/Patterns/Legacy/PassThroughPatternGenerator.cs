@@ -16,10 +16,14 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
     /// </summary>
     internal class PassThroughPatternGenerator : LegacyPatternGenerator
     {
-        public PassThroughPatternGenerator(LegacyRandom random, HitObject hitObject, IBeatmap beatmap, int totalColumns, Pattern previousPattern)
-            : base(random, hitObject, beatmap, previousPattern, totalColumns)
-        {
-        }
+        public PassThroughPatternGenerator(
+            LegacyRandom random,
+            HitObject hitObject,
+            IBeatmap beatmap,
+            int totalColumns,
+            Pattern previousPattern
+        )
+            : base(random, hitObject, beatmap, previousPattern, totalColumns) { }
 
         public override IEnumerable<Pattern> Generate()
         {
@@ -30,23 +34,29 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
 
             if (HitObject is IHasDuration endTimeData)
             {
-                pattern.Add(new HoldNote
-                {
-                    StartTime = HitObject.StartTime,
-                    Duration = endTimeData.Duration,
-                    Column = column,
-                    Samples = HitObject.Samples,
-                    NodeSamples = (HitObject as IHasRepeats)?.NodeSamples ?? HoldNote.CreateDefaultNodeSamples(HitObject)
-                });
+                pattern.Add(
+                    new HoldNote
+                    {
+                        StartTime = HitObject.StartTime,
+                        Duration = endTimeData.Duration,
+                        Column = column,
+                        Samples = HitObject.Samples,
+                        NodeSamples =
+                            (HitObject as IHasRepeats)?.NodeSamples
+                            ?? HoldNote.CreateDefaultNodeSamples(HitObject),
+                    }
+                );
             }
             else
             {
-                pattern.Add(new Note
-                {
-                    StartTime = HitObject.StartTime,
-                    Samples = HitObject.Samples,
-                    Column = column
-                });
+                pattern.Add(
+                    new Note
+                    {
+                        StartTime = HitObject.StartTime,
+                        Samples = HitObject.Samples,
+                        Column = column,
+                    }
+                );
             }
 
             yield return pattern;

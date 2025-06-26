@@ -52,7 +52,7 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                 {
                     AutoSizeAxes = Axes.Both,
                     Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(spacing)
+                    Spacing = new Vector2(spacing),
                 },
                 new Container
                 {
@@ -60,20 +60,21 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                     Padding = new MarginPadding(-10),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Child = selectionBox = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                        Masking = true,
-                        BorderColour = Color4.YellowGreen,
-                        BorderThickness = border_thickness,
-                        Child = new Box
+                    Child = selectionBox =
+                        new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            AlwaysPresent = true,
                             Alpha = 0,
-                        }
-                    },
+                            Masking = true,
+                            BorderColour = Color4.YellowGreen,
+                            BorderThickness = border_thickness,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                AlwaysPresent = true,
+                                Alpha = 0,
+                            },
+                        },
                 },
                 new Container
                 {
@@ -81,47 +82,54 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                     Padding = new MarginPadding(-(spacing + border_thickness)),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Child = currentMatchSelectionBox = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                        BorderColour = Color4.White,
-                        BorderThickness = border_thickness,
-                        Masking = true,
-                        Child = new Box
+                    Child = currentMatchSelectionBox =
+                        new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            AlwaysPresent = true,
                             Alpha = 0,
-                        }
-                    },
-                }
+                            BorderColour = Color4.White,
+                            BorderThickness = border_thickness,
+                            Masking = true,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                AlwaysPresent = true,
+                                Alpha = 0,
+                            },
+                        },
+                },
             };
 
             boundReference(match.Team1).BindValueChanged(_ => updateTeams());
             boundReference(match.Team2).BindValueChanged(_ => updateTeams());
             boundReference(match.Team1Score).BindValueChanged(_ => updateWinConditions());
             boundReference(match.Team2Score).BindValueChanged(_ => updateWinConditions());
-            boundReference(match.Round).BindValueChanged(_ =>
-            {
-                updateWinConditions();
-                Changed?.Invoke();
-            });
+            boundReference(match.Round)
+                .BindValueChanged(_ =>
+                {
+                    updateWinConditions();
+                    Changed?.Invoke();
+                });
             boundReference(match.Completed).BindValueChanged(_ => updateProgression());
             boundReference(match.Progression).BindValueChanged(_ => updateProgression());
             boundReference(match.LosersProgression).BindValueChanged(_ => updateProgression());
-            boundReference(match.Losers).BindValueChanged(_ =>
-            {
-                updateTeams();
-                Changed?.Invoke();
-            });
+            boundReference(match.Losers)
+                .BindValueChanged(_ =>
+                {
+                    updateTeams();
+                    Changed?.Invoke();
+                });
             boundReference(match.Current).BindValueChanged(_ => updateCurrentMatch(), true);
-            boundReference(match.Position).BindValueChanged(pos =>
-            {
-                if (!IsDragged)
-                    Position = new Vector2(pos.NewValue.X, pos.NewValue.Y);
-                Changed?.Invoke();
-            }, true);
+            boundReference(match.Position)
+                .BindValueChanged(
+                    pos =>
+                    {
+                        if (!IsDragged)
+                            Position = new Vector2(pos.NewValue.X, pos.NewValue.Y);
+                        Changed?.Invoke();
+                    },
+                    true
+                );
             updateTeams();
         }
 
@@ -160,10 +168,10 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
         public bool Selected
         {
             get => selected;
-
             set
             {
-                if (value == selected) return;
+                if (value == selected)
+                    return;
 
                 selected = value;
 
@@ -186,16 +194,28 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
             {
                 // ensure we clear any of our teams from our progression.
                 // this is not pretty logic but should suffice for now.
-                if (Match.Progression.Value != null && Match.Progression.Value.Team1.Value == Match.Team1.Value)
+                if (
+                    Match.Progression.Value != null
+                    && Match.Progression.Value.Team1.Value == Match.Team1.Value
+                )
                     Match.Progression.Value.Team1.Value = null;
 
-                if (Match.Progression.Value != null && Match.Progression.Value.Team2.Value == Match.Team2.Value)
+                if (
+                    Match.Progression.Value != null
+                    && Match.Progression.Value.Team2.Value == Match.Team2.Value
+                )
                     Match.Progression.Value.Team2.Value = null;
 
-                if (Match.LosersProgression.Value != null && Match.LosersProgression.Value.Team1.Value == Match.Team1.Value)
+                if (
+                    Match.LosersProgression.Value != null
+                    && Match.LosersProgression.Value.Team1.Value == Match.Team1.Value
+                )
                     Match.LosersProgression.Value.Team1.Value = null;
 
-                if (Match.LosersProgression.Value != null && Match.LosersProgression.Value.Team2.Value == Match.Team2.Value)
+                if (
+                    Match.LosersProgression.Value != null
+                    && Match.LosersProgression.Value.Team2.Value == Match.Team2.Value
+                )
                     Match.LosersProgression.Value.Team2.Value = null;
             }
             else
@@ -211,7 +231,8 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
         private void transferProgression(TournamentMatch? destination, TournamentTeam team)
         {
-            if (destination == null) return;
+            if (destination == null)
+                return;
 
             bool progressionAbove = destination.ID < Match.ID;
 
@@ -234,13 +255,19 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
         private void updateWinConditions()
         {
-            if (Match.Round.Value == null) return;
+            if (Match.Round.Value == null)
+                return;
 
             int instantWinAmount = Match.Round.Value.BestOf.Value / 2;
 
-            Match.Completed.Value = Match.Round.Value.BestOf.Value > 0
-                                    && (Match.Team1Score.Value + Match.Team2Score.Value >= Match.Round.Value.BestOf.Value || Match.Team1Score.Value > instantWinAmount
-                                                                                                                          || Match.Team2Score.Value > instantWinAmount);
+            Match.Completed.Value =
+                Match.Round.Value.BestOf.Value > 0
+                && (
+                    Match.Team1Score.Value + Match.Team2Score.Value
+                        >= Match.Round.Value.BestOf.Value
+                    || Match.Team1Score.Value > instantWinAmount
+                    || Match.Team2Score.Value > instantWinAmount
+                );
         }
 
         protected override void LoadComplete()
@@ -269,8 +296,12 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
             {
                 foreach (var conditional in Match.ConditionalMatches)
                 {
-                    bool team1Match = Match.Team1Acronym != null && conditional.Acronyms.Contains(Match.Team1Acronym);
-                    bool team2Match = Match.Team2Acronym != null && conditional.Acronyms.Contains(Match.Team2Acronym);
+                    bool team1Match =
+                        Match.Team1Acronym != null
+                        && conditional.Acronyms.Contains(Match.Team1Acronym);
+                    bool team2Match =
+                        Match.Team2Acronym != null
+                        && conditional.Acronyms.Contains(Match.Team2Acronym);
 
                     if (team1Match && team2Match)
                         Match.Date.Value = conditional.Date.Value;
@@ -280,14 +311,15 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
             Flow.Children = new[]
             {
                 new DrawableMatchTeam(Match.Team1.Value, Match, Match.Losers.Value),
-                new DrawableMatchTeam(Match.Team2.Value, Match, Match.Losers.Value)
+                new DrawableMatchTeam(Match.Team2.Value, Match, Match.Losers.Value),
             };
 
             SchedulerAfterChildren.Add(() => Scheduler.Add(updateProgression));
             updateWinConditions();
         }
 
-        protected override bool OnMouseDown(MouseDownEvent e) => e.Button == MouseButton.Left && editorInfo != null;
+        protected override bool OnMouseDown(MouseDownEvent e) =>
+            e.Button == MouseButton.Left && editorInfo != null;
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
@@ -302,7 +334,11 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
         protected override bool OnClick(ClickEvent e)
         {
-            if (editorInfo == null || Match is ConditionalTournamentMatch || e.Button != MouseButton.Left)
+            if (
+                editorInfo == null
+                || Match is ConditionalTournamentMatch
+                || e.Button != MouseButton.Left
+            )
                 return false;
 
             Selected = true;
@@ -328,7 +364,9 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
             Selected = true;
 
-            this.MoveTo(snapToGrid(positionAtStartOfDrag + (e.MousePosition - e.MouseDownPosition)));
+            this.MoveTo(
+                snapToGrid(positionAtStartOfDrag + (e.MousePosition - e.MouseDownPosition))
+            );
 
             Match.Position.Value = new Point((int)Position.X, (int)Position.Y);
         }

@@ -16,11 +16,14 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestDownloader()
         {
-            AddStep("Create downloader", () =>
-            {
-                downloader?.Expire();
-                Add(downloader = new BundledBeatmapDownloader(false));
-            });
+            AddStep(
+                "Create downloader",
+                () =>
+                {
+                    downloader?.Expire();
+                    Add(downloader = new BundledBeatmapDownloader(false));
+                }
+            );
         }
     }
 }

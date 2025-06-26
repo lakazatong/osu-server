@@ -10,7 +10,10 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Taiko.Mods
 {
-    public class TaikoModClassic : ModClassic, IApplicableToDrawableRuleset<TaikoHitObject>, IApplicableToDrawableHitObject
+    public class TaikoModClassic
+        : ModClassic,
+            IApplicableToDrawableRuleset<TaikoHitObject>,
+            IApplicableToDrawableHitObject
     {
         public void ApplyToDrawableRuleset(DrawableRuleset<TaikoHitObject> drawableRuleset)
         {

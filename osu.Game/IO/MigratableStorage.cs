@@ -32,9 +32,7 @@ namespace osu.Game.IO
         public virtual string[] IgnoreSuffixes => Array.Empty<string>();
 
         protected MigratableStorage(Storage storage, string subPath = null)
-            : base(storage, subPath)
-        {
-        }
+            : base(storage, subPath) { }
 
         /// <summary>
         /// A general purpose migration method to move the storage to a different location.
@@ -51,16 +49,25 @@ namespace osu.Game.IO
             var destinationUri = new Uri(destination.FullName + Path.DirectorySeparatorChar);
 
             if (sourceUri == destinationUri)
-                throw new ArgumentException("Destination provided is already the current location", destination.FullName);
+                throw new ArgumentException(
+                    "Destination provided is already the current location",
+                    destination.FullName
+                );
 
             if (sourceUri.IsBaseOf(destinationUri))
-                throw new ArgumentException("Destination provided is inside the source", destination.FullName);
+                throw new ArgumentException(
+                    "Destination provided is inside the source",
+                    destination.FullName
+                );
 
             // ensure the new location has no files present, else hard abort
             if (destination.Exists)
             {
                 if (destination.GetFiles().Length > 0 || destination.GetDirectories().Length > 0)
-                    throw new ArgumentException("Destination provided already has files or directories present", destination.FullName);
+                    throw new ArgumentException(
+                        "Destination provided already has files or directories present",
+                        destination.FullName
+                    );
             }
 
             CopyRecursive(source, destination);
@@ -78,10 +85,15 @@ namespace osu.Game.IO
                 if (topLevelExcludes && IgnoreFiles.Contains(fi.Name))
                     continue;
 
-                if (IgnoreSuffixes.Any(suffix => fi.Name.EndsWith(suffix, StringComparison.Ordinal)))
+                if (
+                    IgnoreSuffixes.Any(suffix => fi.Name.EndsWith(suffix, StringComparison.Ordinal))
+                )
                     continue;
 
-                allFilesDeleted &= FileUtils.AttemptOperation(() => fi.Delete(), throwOnFailure: false);
+                allFilesDeleted &= FileUtils.AttemptOperation(
+                    () => fi.Delete(),
+                    throwOnFailure: false
+                );
             }
 
             foreach (DirectoryInfo dir in target.GetDirectories())
@@ -89,10 +101,17 @@ namespace osu.Game.IO
                 if (topLevelExcludes && IgnoreDirectories.Contains(dir.Name))
                     continue;
 
-                if (IgnoreSuffixes.Any(suffix => dir.Name.EndsWith(suffix, StringComparison.Ordinal)))
+                if (
+                    IgnoreSuffixes.Any(suffix =>
+                        dir.Name.EndsWith(suffix, StringComparison.Ordinal)
+                    )
+                )
                     continue;
 
-                allFilesDeleted &= FileUtils.AttemptOperation(() => dir.Delete(true), throwOnFailure: false);
+                allFilesDeleted &= FileUtils.AttemptOperation(
+                    () => dir.Delete(true),
+                    throwOnFailure: false
+                );
             }
 
             if (target.GetFiles().Length == 0 && target.GetDirectories().Length == 0)
@@ -101,7 +120,11 @@ namespace osu.Game.IO
             return allFilesDeleted;
         }
 
-        protected void CopyRecursive(DirectoryInfo source, DirectoryInfo destination, bool topLevelExcludes = true)
+        protected void CopyRecursive(
+            DirectoryInfo source,
+            DirectoryInfo destination,
+            bool topLevelExcludes = true
+        )
         {
             // based off example code https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo
             if (!destination.Exists)
@@ -112,7 +135,11 @@ namespace osu.Game.IO
                 if (topLevelExcludes && IgnoreFiles.Contains(fileInfo.Name))
                     continue;
 
-                if (IgnoreSuffixes.Any(suffix => fileInfo.Name.EndsWith(suffix, StringComparison.Ordinal)))
+                if (
+                    IgnoreSuffixes.Any(suffix =>
+                        fileInfo.Name.EndsWith(suffix, StringComparison.Ordinal)
+                    )
+                )
                     continue;
 
                 FileUtils.AttemptOperation(() =>
@@ -133,7 +160,11 @@ namespace osu.Game.IO
                 if (topLevelExcludes && IgnoreDirectories.Contains(dir.Name))
                     continue;
 
-                if (IgnoreSuffixes.Any(suffix => dir.Name.EndsWith(suffix, StringComparison.Ordinal)))
+                if (
+                    IgnoreSuffixes.Any(suffix =>
+                        dir.Name.EndsWith(suffix, StringComparison.Ordinal)
+                    )
+                )
                     continue;
 
                 CopyRecursive(dir, destination.CreateSubdirectory(dir.Name), false);

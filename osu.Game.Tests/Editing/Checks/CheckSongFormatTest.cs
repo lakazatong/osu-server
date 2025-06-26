@@ -33,9 +33,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files = { CheckTestHelpers.CreateMockFile("mp3") }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("mp3") },
+                    },
+                },
             };
 
             // 0 = No output device. This still allows decoding.
@@ -73,7 +73,9 @@ namespace osu.Game.Tests.Editing.Checks
                 beatmap.Metadata.AudioFile = "abc123.mp3";
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckSongFormat.IssueTemplateIncorrectFormat);
+                Assert.That(
+                    issues.Single().Template is CheckSongFormat.IssueTemplateIncorrectFormat
+                );
             }
         }
 
@@ -85,7 +87,9 @@ namespace osu.Game.Tests.Editing.Checks
                 beatmap.Metadata.AudioFile = "abc123.mp3";
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckSongFormat.IssueTemplateFormatUnsupported);
+                Assert.That(
+                    issues.Single().Template is CheckSongFormat.IssueTemplateFormatUnsupported
+                );
             }
         }
 
@@ -97,7 +101,9 @@ namespace osu.Game.Tests.Editing.Checks
                 beatmap.Metadata.AudioFile = "abc123.mp3";
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckSongFormat.IssueTemplateFormatUnsupported);
+                Assert.That(
+                    issues.Single().Template is CheckSongFormat.IssueTemplateFormatUnsupported
+                );
             }
         }
 

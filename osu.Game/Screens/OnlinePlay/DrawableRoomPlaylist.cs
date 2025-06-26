@@ -18,7 +18,9 @@ namespace osu.Game.Screens.OnlinePlay
     /// <summary>
     /// A scrollable list which displays the <see cref="PlaylistItem"/>s in a <see cref="Room"/>.
     /// </summary>
-    public partial class DrawableRoomPlaylist : OsuRearrangeableListContainer<PlaylistItem>, IKeyBindingHandler<GlobalAction>
+    public partial class DrawableRoomPlaylist
+        : OsuRearrangeableListContainer<PlaylistItem>,
+            IKeyBindingHandler<GlobalAction>
     {
         /// <summary>
         /// The currently-selected item. Selection is visually represented with a border.
@@ -147,38 +149,48 @@ namespace osu.Game.Screens.OnlinePlay
             }
         }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => base.CreateScrollContainer().With(d =>
-        {
-            d.ScrollbarVisible = false;
-        });
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            base.CreateScrollContainer()
+                .With(d =>
+                {
+                    d.ScrollbarVisible = false;
+                });
 
-        protected override FillFlowContainer<RearrangeableListItem<PlaylistItem>> CreateListFillFlowContainer() => new FillFlowContainer<RearrangeableListItem<PlaylistItem>>
-        {
-            LayoutDuration = 200,
-            LayoutEasing = Easing.OutQuint,
-            Spacing = new Vector2(0, 2)
-        };
-
-        protected sealed override OsuRearrangeableListItem<PlaylistItem> CreateOsuDrawable(PlaylistItem item) => CreateDrawablePlaylistItem(item).With(d =>
-        {
-            d.SelectedItem.BindTarget = SelectedItem;
-            d.RequestDeletion = i => RequestDeletion?.Invoke(i);
-            d.RequestResults = i =>
+        protected override FillFlowContainer<
+            RearrangeableListItem<PlaylistItem>
+        > CreateListFillFlowContainer() =>
+            new FillFlowContainer<RearrangeableListItem<PlaylistItem>>
             {
-                if (AllowSelection)
-                    SelectedItem.Value = i;
-                RequestResults?.Invoke(i);
+                LayoutDuration = 200,
+                LayoutEasing = Easing.OutQuint,
+                Spacing = new Vector2(0, 2),
             };
-            d.RequestEdit = i => RequestEdit?.Invoke(i);
-            d.AllowReordering = AllowReordering;
-            d.AllowDeletion = AllowDeletion;
-            d.AllowSelection = AllowSelection;
-            d.AllowShowingResults = AllowShowingResults;
-            d.AllowEditing = AllowEditing;
-            d.ShowItemOwner = ShowItemOwners;
-        });
 
-        protected virtual DrawableRoomPlaylistItem CreateDrawablePlaylistItem(PlaylistItem item) => new DrawableRoomPlaylistItem(item);
+        protected sealed override OsuRearrangeableListItem<PlaylistItem> CreateOsuDrawable(
+            PlaylistItem item
+        ) =>
+            CreateDrawablePlaylistItem(item)
+                .With(d =>
+                {
+                    d.SelectedItem.BindTarget = SelectedItem;
+                    d.RequestDeletion = i => RequestDeletion?.Invoke(i);
+                    d.RequestResults = i =>
+                    {
+                        if (AllowSelection)
+                            SelectedItem.Value = i;
+                        RequestResults?.Invoke(i);
+                    };
+                    d.RequestEdit = i => RequestEdit?.Invoke(i);
+                    d.AllowReordering = AllowReordering;
+                    d.AllowDeletion = AllowDeletion;
+                    d.AllowSelection = AllowSelection;
+                    d.AllowShowingResults = AllowShowingResults;
+                    d.AllowEditing = AllowEditing;
+                    d.ShowItemOwner = ShowItemOwners;
+                });
+
+        protected virtual DrawableRoomPlaylistItem CreateDrawablePlaylistItem(PlaylistItem item) =>
+            new DrawableRoomPlaylistItem(item);
 
         protected override void LoadComplete()
         {
@@ -194,7 +206,10 @@ namespace osu.Game.Screens.OnlinePlay
             // SelectedItem and ItemMap/drawable items are managed separately,
             // so if the item can't be unmapped to a drawable, don't try to scroll to it.
             // best effort is made to not drop any updates, by subscribing to both sources.
-            if (SelectedItem.Value == null || !ItemMap.TryGetValue(SelectedItem.Value, out var drawableItem))
+            if (
+                SelectedItem.Value == null
+                || !ItemMap.TryGetValue(SelectedItem.Value, out var drawableItem)
+            )
                 return;
 
             // ScrollIntoView does not handle non-loaded items appropriately, delay scroll until the item finishes loading.
@@ -226,9 +241,7 @@ namespace osu.Game.Screens.OnlinePlay
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void selectNext(int direction)
         {
@@ -243,7 +256,11 @@ namespace osu.Game.Screens.OnlinePlay
                 if (direction < 0)
                     visibleItems = visibleItems.Reverse();
 
-                item = visibleItems.SkipWhile(r => r.Model != SelectedItem.Value).Skip(1).FirstOrDefault()?.Model;
+                item = visibleItems
+                    .SkipWhile(r => r.Model != SelectedItem.Value)
+                    .Skip(1)
+                    .FirstOrDefault()
+                    ?.Model;
             }
 
             // we already have a valid selection only change selection if we still have a room to switch to.

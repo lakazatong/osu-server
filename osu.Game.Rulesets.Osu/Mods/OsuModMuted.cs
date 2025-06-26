@@ -6,7 +6,5 @@ using osu.Game.Rulesets.Osu.Objects;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModMuted : ModMuted<OsuHitObject>
-    {
-    }
+    public class OsuModMuted : ModMuted<OsuHitObject> { }
 }

@@ -31,16 +31,21 @@ namespace osu.Game.Screens.Edit.Timing.RowAttributes
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            Content.AddRange(new[]
-            {
-                text = new AttributeText(Point),
-                omitBarLineBubble = new AttributeText(Point) { Text = "no barline" },
-            });
+            Content.AddRange(
+                new[]
+                {
+                    text = new AttributeText(Point),
+                    omitBarLineBubble = new AttributeText(Point) { Text = "no barline" },
+                }
+            );
 
             Background.Colour = colourProvider.Background4;
 
             timeSignature.BindValueChanged(_ => updateText());
-            omitBarLine.BindValueChanged(enabled => omitBarLineBubble.FadeTo(enabled.NewValue ? 1 : 0), true);
+            omitBarLine.BindValueChanged(
+                enabled => omitBarLineBubble.FadeTo(enabled.NewValue ? 1 : 0),
+                true
+            );
             beatLength.BindValueChanged(_ => updateText(), true);
         }
 

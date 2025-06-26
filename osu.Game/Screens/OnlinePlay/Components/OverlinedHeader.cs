@@ -49,11 +49,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 Direction = FillDirection.Vertical,
                 Children = new Drawable[]
                 {
-                    line = new Circle
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 2,
-                    },
+                    line = new Circle { RelativeSizeAxes = Axes.X, Height = 2 },
                     new FillFlowContainer
                     {
                         AutoSizeAxes = Axes.Both,
@@ -64,15 +60,15 @@ namespace osu.Game.Screens.OnlinePlay.Components
                             new OsuSpriteText
                             {
                                 Text = title,
-                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold)
+                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold),
                             },
                             details = new OsuSpriteText
                             {
-                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold)
+                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold),
                             },
-                        }
+                        },
                     },
-                }
+                },
             };
 
             Details.BindValueChanged(val => details.Text = val.NewValue);

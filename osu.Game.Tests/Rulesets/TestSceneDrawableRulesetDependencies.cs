@@ -39,24 +39,30 @@ namespace osu.Game.Tests.Rulesets
             TestSampleStore sampleStore = null;
             TestShaderManager shaderManager = null;
 
-            AddStep("add dependencies", () =>
-            {
-                Child = drawable = new DrawableWithDependencies();
-                textureStore = drawable.ParentTextureStore;
-                sampleStore = drawable.ParentSampleStore;
-                shaderManager = drawable.ParentShaderManager;
-            });
+            AddStep(
+                "add dependencies",
+                () =>
+                {
+                    Child = drawable = new DrawableWithDependencies();
+                    textureStore = drawable.ParentTextureStore;
+                    sampleStore = drawable.ParentSampleStore;
+                    shaderManager = drawable.ParentShaderManager;
+                }
+            );
 
             AddStep("clear children", Clear);
             AddUntilStep("wait for disposal", () => drawable.IsDisposed);
 
-            AddStep("GC", () =>
-            {
-                drawable = null;
+            AddStep(
+                "GC",
+                () =>
+                {
+                    drawable = null;
 
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            });
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
+            );
 
             AddAssert("parent texture store not disposed", () => !textureStore.IsDisposed);
             AddAssert("parent sample store not disposed", () => !sampleStore.IsDisposed);
@@ -74,13 +80,22 @@ namespace osu.Game.Tests.Rulesets
                 InternalChild = new Box { RelativeSizeAxes = Axes.Both };
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-                dependencies.CacheAs<TextureStore>(ParentTextureStore = new TestTextureStore(parent.Get<GameHost>().Renderer));
+                dependencies.CacheAs<TextureStore>(
+                    ParentTextureStore = new TestTextureStore(parent.Get<GameHost>().Renderer)
+                );
                 dependencies.CacheAs<ISampleStore>(ParentSampleStore = new TestSampleStore());
-                dependencies.CacheAs<ShaderManager>(ParentShaderManager = new TestShaderManager(parent.Get<GameHost>().Renderer, parent.Get<ShaderManager>()));
+                dependencies.CacheAs<ShaderManager>(
+                    ParentShaderManager = new TestShaderManager(
+                        parent.Get<GameHost>().Renderer,
+                        parent.Get<ShaderManager>()
+                    )
+                );
 
                 return new DrawableRulesetDependencies(new OsuRuleset(), dependencies);
             }
@@ -97,11 +112,10 @@ namespace osu.Game.Tests.Rulesets
         private class TestTextureStore : TextureStore
         {
             public TestTextureStore(IRenderer renderer)
-                : base(renderer)
-            {
-            }
+                : base(renderer) { }
 
-            public override Texture Get(string name, WrapMode wrapModeS, WrapMode wrapModeT) => null;
+            public override Texture Get(string name, WrapMode wrapModeS, WrapMode wrapModeT) =>
+                null;
 
             public bool IsDisposed { get; private set; }
 
@@ -123,26 +137,37 @@ namespace osu.Game.Tests.Rulesets
 
             public Sample Get(string name) => null;
 
-            public Task<Sample> GetAsync(string name, CancellationToken cancellationToken = default) => null;
+            public Task<Sample> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) => null;
 
             public Stream GetStream(string name) => null;
 
-            public IEnumerable<string> GetAvailableResources() => throw new NotImplementedException();
+            public IEnumerable<string> GetAvailableResources() =>
+                throw new NotImplementedException();
 
             public BindableNumber<double> Volume => throw new NotImplementedException();
             public BindableNumber<double> Balance => throw new NotImplementedException();
             public BindableNumber<double> Frequency => throw new NotImplementedException();
             public BindableNumber<double> Tempo => throw new NotImplementedException();
 
-            public void BindAdjustments(IAggregateAudioAdjustment component) => throw new NotImplementedException();
+            public void BindAdjustments(IAggregateAudioAdjustment component) =>
+                throw new NotImplementedException();
 
-            public void UnbindAdjustments(IAggregateAudioAdjustment component) => throw new NotImplementedException();
+            public void UnbindAdjustments(IAggregateAudioAdjustment component) =>
+                throw new NotImplementedException();
 
-            public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => throw new NotImplementedException();
+            public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+                throw new NotImplementedException();
 
-            public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => throw new NotImplementedException();
+            public void RemoveAdjustment(
+                AdjustableProperty type,
+                IBindable<double> adjustBindable
+            ) => throw new NotImplementedException();
 
-            public void RemoveAllAdjustments(AdjustableProperty type) => throw new NotImplementedException();
+            public void RemoveAllAdjustments(AdjustableProperty type) =>
+                throw new NotImplementedException();
 
             public IBindable<double> AggregateVolume => throw new NotImplementedException();
             public IBindable<double> AggregateBalance => throw new NotImplementedException();
@@ -164,7 +189,8 @@ namespace osu.Game.Tests.Rulesets
                 this.parentManager = parentManager;
             }
 
-            public override byte[] GetRawData(string fileName) => parentManager.GetRawData(fileName);
+            public override byte[] GetRawData(string fileName) =>
+                parentManager.GetRawData(fileName);
 
             public bool IsDisposed { get; private set; }
 

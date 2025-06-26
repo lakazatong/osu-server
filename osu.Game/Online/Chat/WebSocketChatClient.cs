@@ -27,7 +27,8 @@ namespace osu.Game.Online.Chat
 
         private readonly IAPIProvider api;
         private readonly INotificationsClient client;
-        private readonly ConcurrentDictionary<long, Channel> channelsMap = new ConcurrentDictionary<long, Channel>();
+        private readonly ConcurrentDictionary<long, Channel> channelsMap =
+            new ConcurrentDictionary<long, Channel>();
 
         private CancellationTokenSource? chatStartCancellationSource;
 
@@ -55,23 +56,32 @@ namespace osu.Game.Online.Chat
             chatStartCancellationSource?.Cancel();
             chatStartCancellationSource = new CancellationTokenSource();
 
-            Task.Factory.StartNew(async () =>
-            {
-                while (!chatStartCancellationSource.IsCancellationRequested)
+            Task.Factory.StartNew(
+                async () =>
                 {
-                    try
+                    while (!chatStartCancellationSource.IsCancellationRequested)
                     {
-                        await client.SendAsync(new StartChatRequest()).ConfigureAwait(false);
-                        Logger.Log(@"Now listening to websocket chat messages.", LoggingTarget.Network);
-                        await chatStartCancellationSource.CancelAsync().ConfigureAwait(false);
+                        try
+                        {
+                            await client.SendAsync(new StartChatRequest()).ConfigureAwait(false);
+                            Logger.Log(
+                                @"Now listening to websocket chat messages.",
+                                LoggingTarget.Network
+                            );
+                            await chatStartCancellationSource.CancelAsync().ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(
+                                $@"Could not start listening to websocket chat messages: {ex}",
+                                LoggingTarget.Network
+                            );
+                            await Task.Delay(5000).ConfigureAwait(false);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($@"Could not start listening to websocket chat messages: {ex}", LoggingTarget.Network);
-                        await Task.Delay(5000).ConfigureAwait(false);
-                    }
-                }
-            }, chatStartCancellationSource.Token);
+                },
+                chatStartCancellationSource.Token
+            );
         }
 
         public void RequestPresence()
@@ -101,7 +111,9 @@ namespace osu.Game.Online.Chat
                 case @"chat.channel.join":
                     Debug.Assert(message.Data != null);
 
-                    Channel? joinedChannel = JsonConvert.DeserializeObject<Channel>(message.Data.ToString());
+                    Channel? joinedChannel = JsonConvert.DeserializeObject<Channel>(
+                        message.Data.ToString()
+                    );
                     Debug.Assert(joinedChannel != null);
 
                     joinChannel(joinedChannel);
@@ -110,7 +122,9 @@ namespace osu.Game.Online.Chat
                 case @"chat.channel.part":
                     Debug.Assert(message.Data != null);
 
-                    Channel? partedChannel = JsonConvert.DeserializeObject<Channel>(message.Data.ToString());
+                    Channel? partedChannel = JsonConvert.DeserializeObject<Channel>(
+                        message.Data.ToString()
+                    );
                     Debug.Assert(partedChannel != null);
 
                     partChannel(partedChannel);
@@ -119,7 +133,8 @@ namespace osu.Game.Online.Chat
                 case @"chat.message.new":
                     Debug.Assert(message.Data != null);
 
-                    NewChatMessageData? messageData = JsonConvert.DeserializeObject<NewChatMessageData>(message.Data.ToString());
+                    NewChatMessageData? messageData =
+                        JsonConvert.DeserializeObject<NewChatMessageData>(message.Data.ToString());
                     Debug.Assert(messageData != null);
 
                     foreach (var msg in messageData.Messages)

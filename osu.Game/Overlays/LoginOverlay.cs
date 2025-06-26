@@ -5,12 +5,12 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
 using osu.Game.Overlays.Login;
 using osu.Game.Overlays.Settings;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -23,7 +23,9 @@ namespace osu.Game.Overlays
         protected override double PopInOutSampleBalance => OsuGameBase.SFX_STEREO_STRENGTH * 0.75f;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         public LoginOverlay()
         {
@@ -61,14 +63,18 @@ namespace osu.Game.Overlays
                             Masking = true,
                             AutoSizeDuration = transition_time,
                             AutoSizeEasing = Easing.OutQuint,
-                            Child = panel = new LoginPanel
-                            {
-                                Padding = new MarginPadding { Vertical = SettingsSection.ITEM_SPACING },
-                                RequestHide = Hide,
-                            },
-                        }
-                    }
-                }
+                            Child = panel =
+                                new LoginPanel
+                                {
+                                    Padding = new MarginPadding
+                                    {
+                                        Vertical = SettingsSection.ITEM_SPACING,
+                                    },
+                                    RequestHide = Hide,
+                                },
+                        },
+                    },
+                },
             };
         }
 
@@ -76,7 +82,11 @@ namespace osu.Game.Overlays
         {
             panel.Bounding = true;
             this.FadeIn(transition_time, Easing.OutQuint);
-            FadeEdgeEffectTo(WaveContainer.SHADOW_OPACITY, WaveContainer.APPEAR_DURATION, Easing.Out);
+            FadeEdgeEffectTo(
+                WaveContainer.SHADOW_OPACITY,
+                WaveContainer.APPEAR_DURATION,
+                Easing.Out
+            );
 
             ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(panel));
         }

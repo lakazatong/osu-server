@@ -80,7 +80,8 @@ namespace osu.Game.Screens.Edit.Timing
 
                     if (channel != null)
                     {
-                        double repeatModifier = 0.05f * (Math.Abs(adjustDelay - initial_delay) / minimum_delay);
+                        double repeatModifier =
+                            0.05f * (Math.Abs(adjustDelay - initial_delay) / minimum_delay);
                         channel.Frequency.Value = 1 + repeatModifier + SampleFrequencyModifier;
                         channel.Play();
                     }

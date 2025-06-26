@@ -13,15 +13,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [TestCase(1)]
         public void TestRepel(float strength)
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModRepel
+            CreateModTest(
+                new ModTestData
                 {
-                    RepulsionStrength = { Value = strength },
-                },
-                PassCondition = () => true,
-                Autoplay = false,
-            });
+                    Mod = new OsuModRepel { RepulsionStrength = { Value = strength } },
+                    PassCondition = () => true,
+                    Autoplay = false,
+                }
+            );
         }
     }
 }

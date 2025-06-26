@@ -10,12 +10,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
 {
     public class CheckTooShortSpinners : ICheck
     {
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Spread, "Too short spinners");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Spread, "Too short spinners");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooShort(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateTooShort(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -41,9 +40,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         public class IssueTemplateTooShort : IssueTemplate
         {
             public IssueTemplateTooShort(ICheck check)
-                : base(check, IssueType.Problem, "This spinner is too short. Auto cannot achieve 1000 points on this.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "This spinner is too short. Auto cannot achieve 1000 points on this."
+                ) { }
 
             public Issue Create(Spinner spinner) => new Issue(spinner, this);
         }
@@ -51,9 +52,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         public class IssueTemplateVeryShort : IssueTemplate
         {
             public IssueTemplateVeryShort(ICheck check)
-                : base(check, IssueType.Warning, "This spinner may be too short. Ensure auto can achieve 1000 points on this.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "This spinner may be too short. Ensure auto can achieve 1000 points on this."
+                ) { }
 
             public Issue Create(Spinner spinner) => new Issue(spinner, this);
         }

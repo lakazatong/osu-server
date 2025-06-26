@@ -38,7 +38,12 @@ namespace osu.Game.Overlays
             Direction = FillDirection.Vertical,
             RelativeSizeAxes = Axes.X,
             AutoSizeAxes = Axes.Y,
-            Padding = new MarginPadding { Horizontal = 10, Top = 5, Bottom = 10 },
+            Padding = new MarginPadding
+            {
+                Horizontal = 10,
+                Top = 5,
+                Bottom = 10,
+            },
             Spacing = new Vector2(0, 15),
         };
 
@@ -115,10 +120,10 @@ namespace osu.Game.Overlays
                                     Scale = new Vector2(0.75f),
                                     Action = () => Expanded.Toggle(),
                                 },
-                            }
+                            },
                         },
-                        content
-                    }
+                        content,
+                    },
                 },
             };
         }
@@ -155,7 +160,13 @@ namespace osu.Game.Overlays
 
             // These toolbox grouped may be contracted to only show icons.
             // For now, let's hide the header to avoid text truncation weirdness in such cases.
-            headerText.Alpha = (float)Interpolation.DampContinuously(headerText.Alpha, headerText.DrawWidth < DrawWidth ? 1 : 0, 40, Time.Elapsed);
+            headerText.Alpha = (float)
+                Interpolation.DampContinuously(
+                    headerText.Alpha,
+                    headerText.DrawWidth < DrawWidth ? 1 : 0,
+                    40,
+                    Time.Elapsed
+                );
 
             // Dragged child finished its drag operation.
             if (draggedChild != null && inputManager.DraggedDrawable != draggedChild)
@@ -189,7 +200,11 @@ namespace osu.Game.Overlays
                 content.ResizeHeightTo(0, animate ? transition_duration : 0, Easing.OutQuint);
             }
 
-            headerContent.FadeColour(Expanded.Value ? Color4.White : OsuColour.Gray(0.7f), 200, Easing.OutQuint);
+            headerContent.FadeColour(
+                Expanded.Value ? Color4.White : OsuColour.Gray(0.7f),
+                200,
+                Easing.OutQuint
+            );
         }
 
         private void updateFadeState()

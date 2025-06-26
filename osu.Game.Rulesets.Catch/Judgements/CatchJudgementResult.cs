@@ -20,8 +20,6 @@ namespace osu.Game.Rulesets.Catch.Judgements
         public bool CatcherHyperDash;
 
         public CatchJudgementResult(HitObject hitObject, Judgement judgement)
-            : base(hitObject, judgement)
-        {
-        }
+            : base(hitObject, judgement) { }
     }
 }

@@ -4,20 +4,20 @@
 #nullable disable
 
 using System;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics;
-using osuTK;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Allocation;
-using osu.Framework.Bindables;
-using osu.Framework.Input.Events;
-using osu.Game.Rulesets;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Input.Bindings;
+using osu.Game.Rulesets;
+using osuTK;
 
 namespace osu.Game.Overlays.Toolbar
 {
@@ -39,10 +39,12 @@ namespace osu.Game.Overlays.Toolbar
 
         private const double transition_time = 500;
 
-        protected readonly IBindable<OverlayActivation> OverlayActivationMode = new Bindable<OverlayActivation>(OverlayActivation.All);
+        protected readonly IBindable<OverlayActivation> OverlayActivationMode =
+            new Bindable<OverlayActivation>(OverlayActivation.All);
 
         // Toolbar and its components need keyboard input even when hidden.
-        public override bool PropagateNonPositionalInputSubTree => OverlayActivationMode.Value != OverlayActivation.Disabled;
+        public override bool PropagateNonPositionalInputSubTree =>
+            OverlayActivationMode.Value != OverlayActivation.Disabled;
 
         public Toolbar()
         {
@@ -78,7 +80,7 @@ namespace osu.Game.Overlays.Toolbar
                     {
                         new Dimension(GridSizeMode.AutoSize),
                         new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize)
+                        new Dimension(GridSizeMode.AutoSize),
                     },
                     Content = new[]
                     {
@@ -107,11 +109,11 @@ namespace osu.Game.Overlays.Toolbar
                                             new ToolbarSettingsButton(),
                                             new ToolbarHomeButton
                                             {
-                                                Action = () => OnHome?.Invoke()
+                                                Action = () => OnHome?.Invoke(),
                                             },
                                         },
                                     },
-                                }
+                                },
                             },
                             new Container
                             {
@@ -126,18 +128,21 @@ namespace osu.Game.Overlays.Toolbar
                                         Masking = false,
                                         Children = new Drawable[]
                                         {
-                                            rulesetSelector = new ToolbarRulesetSelector()
-                                        }
+                                            rulesetSelector = new ToolbarRulesetSelector(),
+                                        },
                                     },
                                     new Box
                                     {
-                                        Colour = ColourInfo.GradientHorizontal(OsuColour.Gray(0.1f).Opacity(0), OsuColour.Gray(0.1f)),
+                                        Colour = ColourInfo.GradientHorizontal(
+                                            OsuColour.Gray(0.1f).Opacity(0),
+                                            OsuColour.Gray(0.1f)
+                                        ),
                                         Width = 50,
                                         RelativeSizeAxes = Axes.Y,
                                         Anchor = Anchor.TopRight,
                                         Origin = Anchor.TopRight,
                                     },
-                                }
+                                },
                             },
                             new Container
                             {
@@ -177,17 +182,14 @@ namespace osu.Game.Overlays.Toolbar
                                             userButton = new ToolbarUserButton(),
                                             new ToolbarClock(),
                                             new ToolbarNotificationButton(),
-                                        }
+                                        },
                                     },
-                                }
+                                },
                             },
                         },
-                    }
+                    },
                 },
-                interceptor = new HoverInterceptor
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
+                interceptor = new HoverInterceptor { RelativeSizeAxes = Axes.Both },
             };
 
             ((IBindable<bool>)background.ShowGradient).BindTo(interceptor.ReceivedHover);
@@ -214,11 +216,7 @@ namespace osu.Game.Overlays.Toolbar
                 RelativeSizeAxes = Axes.Both;
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = OsuColour.Gray(0.1f),
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.1f) },
                     gradientBackground = new Box
                     {
                         RelativeSizeAxes = Axes.X,
@@ -226,7 +224,9 @@ namespace osu.Game.Overlays.Toolbar
                         Alpha = 0,
                         Height = 80,
                         Colour = ColourInfo.GradientVertical(
-                            OsuColour.Gray(0f).Opacity(0.7f), OsuColour.Gray(0).Opacity(0)),
+                            OsuColour.Gray(0f).Opacity(0.7f),
+                            OsuColour.Gray(0).Opacity(0)
+                        ),
                     },
                 };
             }
@@ -273,7 +273,8 @@ namespace osu.Game.Overlays.Toolbar
 
         protected override void UpdateState(ValueChangedEvent<Visibility> state)
         {
-            bool blockShow = hiddenByUser || OverlayActivationMode.Value == OverlayActivation.Disabled;
+            bool blockShow =
+                hiddenByUser || OverlayActivationMode.Value == OverlayActivation.Disabled;
 
             if (state.NewValue == Visibility.Visible && blockShow)
             {
@@ -314,8 +315,6 @@ namespace osu.Game.Overlays.Toolbar
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
     }
 }

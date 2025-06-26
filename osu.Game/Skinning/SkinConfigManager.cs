@@ -6,11 +6,10 @@ using osu.Framework.Configuration;
 
 namespace osu.Game.Skinning
 {
-    public class SkinConfigManager<TLookup> : ConfigManager<TLookup> where TLookup : struct, Enum
+    public class SkinConfigManager<TLookup> : ConfigManager<TLookup>
+        where TLookup : struct, Enum
     {
-        protected override void PerformLoad()
-        {
-        }
+        protected override void PerformLoad() { }
 
         protected override bool PerformSave() => false;
     }

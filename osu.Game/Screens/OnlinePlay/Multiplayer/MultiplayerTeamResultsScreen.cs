@@ -29,7 +29,12 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
         private Container winnerBackground = null!;
         private Drawable winnerText = null!;
 
-        public MultiplayerTeamResultsScreen(ScoreInfo score, long roomId, PlaylistItem playlistItem, SortedDictionary<int, BindableLong> teamScores)
+        public MultiplayerTeamResultsScreen(
+            ScoreInfo score,
+            long roomId,
+            PlaylistItem playlistItem,
+            SortedDictionary<int, BindableLong> teamScores
+        )
             : base(score, roomId, playlistItem)
         {
             if (teamScores.Count != 2)
@@ -76,56 +81,65 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 winnerColour = Colour4.White.Opacity(0.5f);
             }
 
-            AddRangeInternal(new Drawable[]
-            {
-                new MatchScoreDisplay
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Team1Score = { BindTarget = redScore },
-                    Team2Score = { BindTarget = blueScore },
-                },
-                winnerBackground = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Alpha = 0,
-                    Children = new[]
+                    new MatchScoreDisplay
                     {
-                        new Box
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Team1Score = { BindTarget = redScore },
+                        Team2Score = { BindTarget = blueScore },
+                    },
+                    winnerBackground = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Alpha = 0,
+                        Children = new[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            Height = winner_background_half_height,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.BottomCentre,
-                            Colour = ColourInfo.GradientVertical(Colour4.Black.Opacity(0), Colour4.Black.Opacity(0.4f))
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Height = winner_background_half_height,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.BottomCentre,
+                                Colour = ColourInfo.GradientVertical(
+                                    Colour4.Black.Opacity(0),
+                                    Colour4.Black.Opacity(0.4f)
+                                ),
+                            },
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Height = winner_background_half_height,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.TopCentre,
+                                Colour = ColourInfo.GradientVertical(
+                                    Colour4.Black.Opacity(0.4f),
+                                    Colour4.Black.Opacity(0)
+                                ),
+                            },
                         },
-                        new Box
+                    },
+                    (
+                        winnerText = new OsuSpriteText
                         {
-                            RelativeSizeAxes = Axes.X,
-                            Height = winner_background_half_height,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.TopCentre,
-                            Colour = ColourInfo.GradientVertical(Colour4.Black.Opacity(0.4f), Colour4.Black.Opacity(0))
+                            Alpha = 0,
+                            Font = OsuFont.Torus.With(size: 80, weight: FontWeight.Bold),
+                            Text = winner,
+                            Blending = BlendingParameters.Additive,
                         }
-                    }
-                },
-                (winnerText = new OsuSpriteText
-                {
-                    Alpha = 0,
-                    Font = OsuFont.Torus.With(size: 80, weight: FontWeight.Bold),
-                    Text = winner,
-                    Blending = BlendingParameters.Additive
-                }).WithEffect(new GlowEffect
-                {
-                    Colour = winnerColour,
-                }).With(e =>
-                {
-                    e.Anchor = Anchor.Centre;
-                    e.Origin = Anchor.Centre;
-                })
-            });
+                    )
+                        .WithEffect(new GlowEffect { Colour = winnerColour })
+                        .With(e =>
+                        {
+                            e.Anchor = Anchor.Centre;
+                            e.Origin = Anchor.Centre;
+                        }),
+                }
+            );
         }
 
         protected override void LoadComplete()

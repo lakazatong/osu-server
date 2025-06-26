@@ -35,7 +35,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             HitObject = hitObject;
             Y = -2.5f;
 
-            speedMultiplier = (hitObject as IHasSliderVelocity)?.SliderVelocityMultiplierBindable.GetBoundCopy();
+            speedMultiplier = (
+                hitObject as IHasSliderVelocity
+            )?.SliderVelocityMultiplierBindable.GetBoundCopy();
         }
 
         protected override Color4 GetRepresentingColour(OsuColour colours) => colours.Lime1;
@@ -44,7 +46,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             base.LoadComplete();
 
-            speedMultiplier.BindValueChanged(multiplier => Label.Text = $"{multiplier.NewValue:n2}x", true);
+            speedMultiplier.BindValueChanged(
+                multiplier => Label.Text = $"{multiplier.NewValue:n2}x",
+                true
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -82,34 +87,50 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                         Spacing = new Vector2(0, 15),
                         Children = new Drawable[]
                         {
-                            sliderVelocitySlider = new IndeterminateSliderWithTextBoxInput<double>("Velocity", new BindableDouble(1)
+                            sliderVelocitySlider = new IndeterminateSliderWithTextBoxInput<double>(
+                                "Velocity",
+                                new BindableDouble(1)
+                                {
+                                    Precision = 0.01,
+                                    MinValue = 0.1,
+                                    MaxValue = 10,
+                                }
+                            )
                             {
-                                Precision = 0.01,
-                                MinValue = 0.1,
-                                MaxValue = 10
-                            })
-                            {
-                                KeyboardStep = 0.1f
+                                KeyboardStep = 0.1f,
                             },
                             new OsuTextFlowContainer
                             {
                                 AutoSizeAxes = Axes.Y,
                                 RelativeSizeAxes = Axes.X,
-                                Text = "Hold shift while dragging the end of an object to adjust velocity while snapping."
+                                Text =
+                                    "Hold shift while dragging the end of an object to adjust velocity while snapping.",
                             },
                             new SliderVelocityInspector(sliderVelocitySlider.Current),
-                        }
-                    }
+                        },
+                    },
                 };
 
                 // if the piece belongs to a currently selected object, assume that the user wants to change all selected objects.
                 // if the piece belongs to an unselected object, operate on that object alone, independently of the selection.
-                var relevantObjects = (beatmap.SelectedHitObjects.Contains(hitObject) ? beatmap.SelectedHitObjects : hitObject.Yield()).Where(o => o is IHasSliderVelocity).ToArray();
+                var relevantObjects = (
+                    beatmap.SelectedHitObjects.Contains(hitObject)
+                        ? beatmap.SelectedHitObjects
+                        : hitObject.Yield()
+                )
+                    .Where(o => o is IHasSliderVelocity)
+                    .ToArray();
 
                 // even if there are multiple objects selected, we can still display a value if they all have the same value.
-                var selectedPointBindable = relevantObjects.Select(point => ((IHasSliderVelocity)point).SliderVelocityMultiplier).Distinct().Count() == 1
-                    ? ((IHasSliderVelocity)relevantObjects.First()).SliderVelocityMultiplierBindable
-                    : null;
+                var selectedPointBindable =
+                    relevantObjects
+                        .Select(point => ((IHasSliderVelocity)point).SliderVelocityMultiplier)
+                        .Distinct()
+                        .Count() == 1
+                        ? (
+                            (IHasSliderVelocity)relevantObjects.First()
+                        ).SliderVelocityMultiplierBindable
+                        : null;
 
                 if (selectedPointBindable != null)
                 {
@@ -139,7 +160,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             protected override void LoadComplete()
             {
                 base.LoadComplete();
-                ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(sliderVelocitySlider));
+                ScheduleAfterChildren(() =>
+                    GetContainingFocusManager()!.ChangeFocus(sliderVelocitySlider)
+                );
             }
         }
     }
@@ -170,7 +193,11 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             InspectorText.Clear();
 
-            double[] sliderVelocities = EditorBeatmap.HitObjects.OfType<IHasSliderVelocity>().Select(sv => sv.SliderVelocityMultiplier).Order().ToArray();
+            double[] sliderVelocities = EditorBeatmap
+                .HitObjects.OfType<IHasSliderVelocity>()
+                .Select(sv => sv.SliderVelocityMultiplier)
+                .Order()
+                .ToArray();
 
             AddHeader("Base velocity (from beatmap setup)");
             AddValue($"{beatmapVelocity:#,0.00}x");
@@ -187,9 +214,11 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             {
                 AddHeader("Beatmap velocity range");
 
-                string range = $"{sliderVelocities.First():#,0.00}x - {sliderVelocities.Last():#,0.00}x";
+                string range =
+                    $"{sliderVelocities.First():#,0.00}x - {sliderVelocities.Last():#,0.00}x";
                 if (beatmapVelocity != 1)
-                    range += $" ({beatmapVelocity * sliderVelocities.First():#,0.00}x - {beatmapVelocity * sliderVelocities.Last():#,0.00}x)";
+                    range +=
+                        $" ({beatmapVelocity * sliderVelocities.First():#,0.00}x - {beatmapVelocity * sliderVelocities.Last():#,0.00}x)";
 
                 AddValue(range);
             }

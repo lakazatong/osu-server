@@ -68,15 +68,15 @@ namespace osu.Game.Beatmaps
                 return false;
 
             return Title == other.Title
-                   && TitleUnicode == other.TitleUnicode
-                   && Artist == other.Artist
-                   && ArtistUnicode == other.ArtistUnicode
-                   && Author.Equals(other.Author)
-                   && Source == other.Source
-                   && Tags == other.Tags
-                   && PreviewTime == other.PreviewTime
-                   && AudioFile == other.AudioFile
-                   && BackgroundFile == other.BackgroundFile;
+                && TitleUnicode == other.TitleUnicode
+                && Artist == other.Artist
+                && ArtistUnicode == other.ArtistUnicode
+                && Author.Equals(other.Author)
+                && Source == other.Source
+                && Tags == other.Tags
+                && PreviewTime == other.PreviewTime
+                && AudioFile == other.AudioFile
+                && BackgroundFile == other.BackgroundFile;
         }
     }
 }

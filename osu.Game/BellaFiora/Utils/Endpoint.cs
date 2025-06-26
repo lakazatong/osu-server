@@ -9,10 +9,12 @@ namespace osu.Game.BellaFiora.Utils
         where T : BaseServer
     {
         protected virtual T Server { get; private set; }
+
         public Endpoint(T server)
         {
             Server = server;
         }
+
         public abstract Func<HttpListenerRequest, bool> Handler { get; }
     }
 }

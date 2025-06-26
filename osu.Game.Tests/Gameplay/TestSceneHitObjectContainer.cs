@@ -19,19 +19,29 @@ namespace osu.Game.Tests.Gameplay
         private HitObjectContainer container;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = container = new HitObjectContainer();
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                Child = container = new HitObjectContainer();
+            });
 
         [Test]
         public void TestLateHitObjectIsAddedEarlierInList()
         {
             DrawableHitObject hitObject = null;
 
-            AddStep("setup", () => container.Add(new TestDrawableHitObject(new HitObject { StartTime = 500 })));
+            AddStep(
+                "setup",
+                () => container.Add(new TestDrawableHitObject(new HitObject { StartTime = 500 }))
+            );
 
-            AddStep("add late hitobject", () => container.Add(hitObject = new TestDrawableHitObject(new HitObject { StartTime = 1000 })));
+            AddStep(
+                "add late hitobject",
+                () =>
+                    container.Add(
+                        hitObject = new TestDrawableHitObject(new HitObject { StartTime = 1000 })
+                    )
+            );
 
             AddAssert("hitobject index is 0", () => container.IndexOf(hitObject) == 0);
         }
@@ -41,9 +51,15 @@ namespace osu.Game.Tests.Gameplay
         {
             DrawableHitObject hitObject = null;
 
-            AddStep("setup", () => container.Add(new TestDrawableHitObject(new HitObject { StartTime = 500 })));
+            AddStep(
+                "setup",
+                () => container.Add(new TestDrawableHitObject(new HitObject { StartTime = 500 }))
+            );
 
-            AddStep("add early hitobject", () => container.Add(hitObject = new TestDrawableHitObject(new HitObject())));
+            AddStep(
+                "add early hitobject",
+                () => container.Add(hitObject = new TestDrawableHitObject(new HitObject()))
+            );
 
             AddAssert("hitobject index is 0", () => container.IndexOf(hitObject) == 1);
         }
@@ -54,11 +70,16 @@ namespace osu.Game.Tests.Gameplay
             DrawableHitObject firstObject = null;
             DrawableHitObject secondObject = null;
 
-            AddStep("setup", () =>
-            {
-                container.Add(firstObject = new TestDrawableHitObject(new HitObject()));
-                container.Add(secondObject = new TestDrawableHitObject(new HitObject { StartTime = 1000 }));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    container.Add(firstObject = new TestDrawableHitObject(new HitObject()));
+                    container.Add(
+                        secondObject = new TestDrawableHitObject(new HitObject { StartTime = 1000 })
+                    );
+                }
+            );
 
             AddStep("move first object after second", () => firstObject.HitObject.StartTime = 2000);
 
@@ -69,9 +90,7 @@ namespace osu.Game.Tests.Gameplay
         private partial class TestDrawableHitObject : DrawableHitObject
         {
             public TestDrawableHitObject([NotNull] HitObject hitObject)
-                : base(hitObject)
-            {
-            }
+                : base(hitObject) { }
         }
     }
 }

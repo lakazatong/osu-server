@@ -10,6 +10,6 @@ namespace osu.Game.Beatmaps.Drawables.Cards
     {
         Nano,
         Normal,
-        Extra
+        Extra,
     }
 }

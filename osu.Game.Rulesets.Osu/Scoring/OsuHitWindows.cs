@@ -11,7 +11,11 @@ namespace osu.Game.Rulesets.Osu.Scoring
     {
         public static readonly DifficultyRange GREAT_WINDOW_RANGE = new DifficultyRange(80, 50, 20);
         public static readonly DifficultyRange OK_WINDOW_RANGE = new DifficultyRange(140, 100, 60);
-        public static readonly DifficultyRange MEH_WINDOW_RANGE = new DifficultyRange(200, 150, 100);
+        public static readonly DifficultyRange MEH_WINDOW_RANGE = new DifficultyRange(
+            200,
+            150,
+            100
+        );
 
         /// <summary>
         /// osu! ruleset has a fixed miss window regardless of difficulty settings.

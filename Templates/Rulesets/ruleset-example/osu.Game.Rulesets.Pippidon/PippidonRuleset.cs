@@ -19,8 +19,10 @@ namespace osu.Game.Rulesets.Pippidon
     {
         public override string Description => "gather the osu!coins";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
-            new DrawablePippidonRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        ) => new DrawablePippidonRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
             new PippidonBeatmapConverter(beatmap, this);
@@ -42,11 +44,12 @@ namespace osu.Game.Rulesets.Pippidon
 
         public override string ShortName => "pippidon";
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
-        {
-            new KeyBinding(InputKey.Z, PippidonAction.Button1),
-            new KeyBinding(InputKey.X, PippidonAction.Button2),
-        };
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            new[]
+            {
+                new KeyBinding(InputKey.Z, PippidonAction.Button1),
+                new KeyBinding(InputKey.X, PippidonAction.Button2),
+            };
 
         public override Drawable CreateIcon() => new PippidonRulesetIcon(this);
 

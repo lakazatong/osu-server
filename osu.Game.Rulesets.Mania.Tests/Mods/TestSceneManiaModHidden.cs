@@ -24,21 +24,25 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestMinCoverageFullWidth()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new ManiaModHidden(),
-                PassCondition = () => checkCoverage(ManiaModHidden.MIN_COVERAGE)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModHidden(),
+                    PassCondition = () => checkCoverage(ManiaModHidden.MIN_COVERAGE),
+                }
+            );
         }
 
         [Test]
         public void TestMinCoverageHalfWidth()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new ManiaModHidden(),
-                PassCondition = () => checkCoverage(ManiaModHidden.MIN_COVERAGE)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModHidden(),
+                    PassCondition = () => checkCoverage(ManiaModHidden.MIN_COVERAGE),
+                }
+            );
 
             AddStep("set playfield width to 0.5", () => Player.Width = 0.5f);
         }
@@ -46,11 +50,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestMaxCoverageFullWidth()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new ManiaModHidden(),
-                PassCondition = () => checkCoverage(ManiaModHidden.MAX_COVERAGE)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModHidden(),
+                    PassCondition = () => checkCoverage(ManiaModHidden.MAX_COVERAGE),
+                }
+            );
 
             AddStep("set combo to 480", () => Player.ScoreProcessor.Combo.Value = 480);
         }
@@ -58,11 +64,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestMaxCoverageHalfWidth()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new ManiaModHidden(),
-                PassCondition = () => checkCoverage(ManiaModHidden.MAX_COVERAGE)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModHidden(),
+                    PassCondition = () => checkCoverage(ManiaModHidden.MAX_COVERAGE),
+                }
+            );
 
             AddStep("set combo to 480", () => Player.ScoreProcessor.Combo.Value = 480);
             AddStep("set playfield width to 0.5", () => Player.Width = 0.5f);
@@ -71,16 +79,22 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestNoCoverageDuringBreak()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new ManiaModHidden(),
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = Enumerable.Range(1, 100).Select(i => (HitObject)new Note { StartTime = 1000 + 200 * i }).ToList(),
-                    Breaks = { new BreakPeriod(2000, 28000) }
-                },
-                PassCondition = () => Player.IsBreakTime.Value && checkCoverage(0)
-            });
+                    Mod = new ManiaModHidden(),
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = Enumerable
+                                .Range(1, 100)
+                                .Select(i => (HitObject)new Note { StartTime = 1000 + 200 * i })
+                                .ToList(),
+                            Breaks = { new BreakPeriod(2000, 28000) },
+                        },
+                    PassCondition = () => Player.IsBreakTime.Value && checkCoverage(0),
+                }
+            );
         }
 
         private bool checkCoverage(float expected)

@@ -25,10 +25,12 @@ namespace osu.Game.IO.Archives
 
         public string GetFullPath(string filename) => Path.Combine(path, filename);
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
-        public override IEnumerable<string> Filenames => Directory.GetFiles(path, "*", SearchOption.AllDirectories).Select(f => f.Replace(path, string.Empty).Trim(Path.DirectorySeparatorChar)).ToArray();
+        public override IEnumerable<string> Filenames =>
+            Directory
+                .GetFiles(path, "*", SearchOption.AllDirectories)
+                .Select(f => f.Replace(path, string.Empty).Trim(Path.DirectorySeparatorChar))
+                .ToArray();
     }
 }

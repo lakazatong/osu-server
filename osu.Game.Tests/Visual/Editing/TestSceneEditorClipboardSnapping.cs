@@ -25,11 +25,11 @@ namespace osu.Game.Tests.Visual.Editing
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
             var controlPointInfo = new ControlPointInfo();
-            controlPointInfo.Add(timing_point_time, new TimingControlPoint { BeatLength = beat_length });
-            return new TestBeatmap(ruleset, false)
-            {
-                ControlPointInfo = controlPointInfo
-            };
+            controlPointInfo.Add(
+                timing_point_time,
+                new TimingControlPoint { BeatLength = beat_length }
+            );
+            return new TestBeatmap(ruleset, false) { ControlPointInfo = controlPointInfo };
         }
 
         [TestCase(1)]
@@ -51,32 +51,53 @@ namespace osu.Game.Tests.Visual.Editing
             };
 
             AddStep("add hitobjects", () => EditorBeatmap.AddRange(addedObjects));
-            AddStep("select added objects", () => EditorBeatmap.SelectedHitObjects.AddRange(addedObjects));
+            AddStep(
+                "select added objects",
+                () => EditorBeatmap.SelectedHitObjects.AddRange(addedObjects)
+            );
             AddStep("copy hitobjects", () => Editor.Copy());
 
-            AddStep($"set beat divisor to 1/{divisor}", () =>
-            {
-                var beatDivisor = (BindableBeatDivisor)Editor.Dependencies.Get(typeof(BindableBeatDivisor));
-                beatDivisor.SetArbitraryDivisor(divisor);
-            });
+            AddStep(
+                $"set beat divisor to 1/{divisor}",
+                () =>
+                {
+                    var beatDivisor = (BindableBeatDivisor)
+                        Editor.Dependencies.Get(typeof(BindableBeatDivisor));
+                    beatDivisor.SetArbitraryDivisor(divisor);
+                }
+            );
 
             AddStep("move forward in time", () => EditorClock.Seek(paste_time));
-            AddAssert("not at snapped time", () => EditorClock.CurrentTime != EditorBeatmap.SnapTime(EditorClock.CurrentTime, null));
+            AddAssert(
+                "not at snapped time",
+                () =>
+                    EditorClock.CurrentTime != EditorBeatmap.SnapTime(EditorClock.CurrentTime, null)
+            );
 
             AddStep("paste hitobjects", () => Editor.Paste());
 
-            AddAssert("first object is snapped", () => Precision.AlmostEquals(
-                EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)!.StartTime,
-                EditorBeatmap.ControlPointInfo.GetClosestSnappedTime(paste_time, divisor)
-            ));
+            AddAssert(
+                "first object is snapped",
+                () =>
+                    Precision.AlmostEquals(
+                        EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)!.StartTime,
+                        EditorBeatmap.ControlPointInfo.GetClosestSnappedTime(paste_time, divisor)
+                    )
+            );
 
-            AddAssert("duration between pasted objects is same", () =>
-            {
-                var firstObject = EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)!;
-                var secondObject = EditorBeatmap.SelectedHitObjects.MaxBy(h => h.StartTime)!;
+            AddAssert(
+                "duration between pasted objects is same",
+                () =>
+                {
+                    var firstObject = EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)!;
+                    var secondObject = EditorBeatmap.SelectedHitObjects.MaxBy(h => h.StartTime)!;
 
-                return Precision.AlmostEquals(secondObject.StartTime - firstObject.StartTime, addedObjects[1].StartTime - addedObjects[0].StartTime);
-            });
+                    return Precision.AlmostEquals(
+                        secondObject.StartTime - firstObject.StartTime,
+                        addedObjects[1].StartTime - addedObjects[0].StartTime
+                    );
+                }
+            );
         }
     }
 }

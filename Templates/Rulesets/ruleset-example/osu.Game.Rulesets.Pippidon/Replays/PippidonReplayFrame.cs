@@ -10,7 +10,9 @@ namespace osu.Game.Rulesets.Pippidon.Replays
     {
         public Vector2 Position;
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is PippidonReplayFrame pippidonFrame && Time == pippidonFrame.Time && Position == pippidonFrame.Position;
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is PippidonReplayFrame pippidonFrame
+            && Time == pippidonFrame.Time
+            && Position == pippidonFrame.Position;
     }
 }

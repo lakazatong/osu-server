@@ -95,13 +95,16 @@ namespace osu.Game.Screens.Select.Carousel
 
         private void attemptSelection()
         {
-            if (DisableSelection) return;
+            if (DisableSelection)
+                return;
 
             // we only perform eager selection if we are a currently selected group.
-            if (State.Value != CarouselItemState.Selected) return;
+            if (State.Value != CarouselItemState.Selected)
+                return;
 
             // we only perform eager selection if none of our items are in a selected state already.
-            if (Items.Any(i => i.State.Value == CarouselItemState.Selected)) return;
+            if (Items.Any(i => i.State.Value == CarouselItemState.Selected))
+                return;
 
             PerformSelection();
         }
@@ -154,6 +157,8 @@ namespace osu.Game.Screens.Select.Carousel
             updateSelectedIndex();
         }
 
-        private void updateSelectedIndex() => lastSelectedIndex = LastSelected == null ? 0 : Math.Max(0, GetIndexOfItem(LastSelected));
+        private void updateSelectedIndex() =>
+            lastSelectedIndex =
+                LastSelected == null ? 0 : Math.Max(0, GetIndexOfItem(LastSelected));
     }
 }

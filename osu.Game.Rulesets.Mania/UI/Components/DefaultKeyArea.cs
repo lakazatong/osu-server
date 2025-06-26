@@ -24,7 +24,8 @@ namespace osu.Game.Rulesets.Mania.UI.Components
         private const float key_icon_size = 10;
         private const float key_icon_corner_radius = 3;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container directionContainer;
         private Container keyIcon;
@@ -53,7 +54,7 @@ namespace osu.Game.Rulesets.Mania.UI.Components
                     {
                         Name = "Key gradient",
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.5f
+                        Alpha = 0.5f,
                     },
                     keyIcon = new Container
                     {
@@ -70,26 +71,29 @@ namespace osu.Game.Rulesets.Mania.UI.Components
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Alpha = 0,
-                                AlwaysPresent = true
-                            }
-                        }
+                                AlwaysPresent = true,
+                            },
+                        },
                     },
-                }
+                },
             };
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);
 
             accentColour = column.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour =>
-            {
-                keyIcon.EdgeEffect = new EdgeEffectParameters
+            accentColour.BindValueChanged(
+                colour =>
                 {
-                    Type = EdgeEffectType.Glow,
-                    Radius = 5,
-                    Colour = colour.NewValue.Opacity(0.5f),
-                };
-            }, true);
+                    keyIcon.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Radius = 5,
+                        Colour = colour.NewValue.Opacity(0.5f),
+                    };
+                },
+                true
+            );
         }
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
@@ -99,21 +103,30 @@ namespace osu.Game.Rulesets.Mania.UI.Components
                 keyIcon.Anchor = Anchor.BottomCentre;
                 keyIcon.Y = -20;
                 directionContainer.Anchor = directionContainer.Origin = Anchor.TopLeft;
-                gradient.Colour = ColourInfo.GradientVertical(Color4.Black, Color4.Black.Opacity(0));
+                gradient.Colour = ColourInfo.GradientVertical(
+                    Color4.Black,
+                    Color4.Black.Opacity(0)
+                );
             }
             else
             {
                 keyIcon.Anchor = Anchor.TopCentre;
                 keyIcon.Y = 20;
                 directionContainer.Anchor = directionContainer.Origin = Anchor.BottomLeft;
-                gradient.Colour = ColourInfo.GradientVertical(Color4.Black.Opacity(0), Color4.Black);
+                gradient.Colour = ColourInfo.GradientVertical(
+                    Color4.Black.Opacity(0),
+                    Color4.Black
+                );
             }
         }
 
         public bool OnPressed(KeyBindingPressEvent<ManiaAction> e)
         {
             if (e.Action == column.Action.Value)
-                keyIcon.ScaleTo(1.4f, 50, Easing.OutQuint).Then().ScaleTo(1.3f, 250, Easing.OutQuint);
+                keyIcon
+                    .ScaleTo(1.4f, 50, Easing.OutQuint)
+                    .Then()
+                    .ScaleTo(1.3f, 250, Easing.OutQuint);
             return false;
         }
 

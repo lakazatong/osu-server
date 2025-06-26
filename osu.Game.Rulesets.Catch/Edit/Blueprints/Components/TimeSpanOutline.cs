@@ -31,11 +31,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             Alpha = opacity_when_empty;
 
             // A box is needed to make the border visible.
-            InternalChild = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = Color4.Transparent
-            };
+            InternalChild = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Transparent };
         }
 
         [BackgroundDependencyLoader]
@@ -44,7 +40,10 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             BorderColour = osuColour.Yellow;
         }
 
-        public void UpdateFrom(ScrollingHitObjectContainer hitObjectContainer, BananaShower hitObject)
+        public void UpdateFrom(
+            ScrollingHitObjectContainer hitObjectContainer,
+            BananaShower hitObject
+        )
         {
             float startY = hitObjectContainer.PositionAtTime(hitObject.StartTime);
             float endY = hitObjectContainer.PositionAtTime(hitObject.EndTime);

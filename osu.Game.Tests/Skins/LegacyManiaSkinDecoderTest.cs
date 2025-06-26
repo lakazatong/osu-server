@@ -24,7 +24,10 @@ namespace osu.Game.Tests.Skins
 
                 Assert.That(configs.Count, Is.EqualTo(1));
                 Assert.That(configs[0].Keys, Is.EqualTo(4));
-                Assert.That(configs[0].ColumnWidth, Is.EquivalentTo(new float[] { 16, 16, 16, 16 }));
+                Assert.That(
+                    configs[0].ColumnWidth,
+                    Is.EquivalentTo(new float[] { 16, 16, 16, 16 })
+                );
                 Assert.That(configs[0].HitPosition, Is.EqualTo(16));
             }
         }
@@ -42,7 +45,10 @@ namespace osu.Game.Tests.Skins
                 Assert.That(configs.Count, Is.EqualTo(2));
 
                 Assert.That(configs[0].Keys, Is.EqualTo(4));
-                Assert.That(configs[0].ColumnWidth, Is.EquivalentTo(new float[] { 16, 16, 16, 16 }));
+                Assert.That(
+                    configs[0].ColumnWidth,
+                    Is.EquivalentTo(new float[] { 16, 16, 16, 16 })
+                );
                 Assert.That(configs[0].HitPosition, Is.EqualTo(16));
 
                 Assert.That(configs[1].Keys, Is.EqualTo(2));
@@ -63,7 +69,10 @@ namespace osu.Game.Tests.Skins
 
                 Assert.That(configs.Count, Is.EqualTo(1));
                 Assert.That(configs[0].Keys, Is.EqualTo(4));
-                Assert.That(configs[0].ColumnWidth, Is.EquivalentTo(new float[] { 16, 16, 16, 16 }));
+                Assert.That(
+                    configs[0].ColumnWidth,
+                    Is.EquivalentTo(new float[] { 16, 16, 16, 16 })
+                );
                 Assert.That(configs[0].HitPosition, Is.EqualTo(16));
             }
         }
@@ -80,7 +89,10 @@ namespace osu.Game.Tests.Skins
 
                 Assert.That(configs.Count, Is.EqualTo(1));
                 Assert.That(configs[0].Keys, Is.EqualTo(4));
-                Assert.That(configs[0].ColumnWidth, Is.EquivalentTo(new float[] { 16, 16, 16, 16 }));
+                Assert.That(
+                    configs[0].ColumnWidth,
+                    Is.EquivalentTo(new float[] { 16, 16, 16, 16 })
+                );
                 Assert.That(configs[0].HitPosition, Is.EqualTo(16));
             }
         }
@@ -96,7 +108,10 @@ namespace osu.Game.Tests.Skins
                 var configs = decoder.Decode(stream);
 
                 Assert.That(configs.Count, Is.EqualTo(1));
-                Assert.That(configs[0].CustomColours, Contains.Key("ColourBarline").And.ContainValue(new Color4(50, 50, 50, 50)));
+                Assert.That(
+                    configs[0].CustomColours,
+                    Contains.Key("ColourBarline").And.ContainValue(new Color4(50, 50, 50, 50))
+                );
             }
         }
 

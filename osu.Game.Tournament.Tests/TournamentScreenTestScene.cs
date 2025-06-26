@@ -31,7 +31,12 @@ namespace osu.Game.Tournament.Tests
             {
                 base.Update();
 
-                Scale = new Vector2(Math.Min(1, Content.DrawWidth / (1920 + TournamentSceneManager.CONTROL_AREA_WIDTH)));
+                Scale = new Vector2(
+                    Math.Min(
+                        1,
+                        Content.DrawWidth / (1920 + TournamentSceneManager.CONTROL_AREA_WIDTH)
+                    )
+                );
             }
         }
     }

@@ -81,33 +81,34 @@ namespace osu.Game.Online.Chat
                     break;
             }
 
-            string[] pieces =
-            {
-                "is",
-                verb,
-                getBeatmapPart(),
-                getRulesetPart(),
-                getModPart(),
-            };
+            string[] pieces = { "is", verb, getBeatmapPart(), getRulesetPart(), getModPart() };
 
-            channelManager.PostMessage(string.Join(' ', pieces.Where(p => !string.IsNullOrEmpty(p))), true, target);
+            channelManager.PostMessage(
+                string.Join(' ', pieces.Where(p => !string.IsNullOrEmpty(p))),
+                true,
+                target
+            );
             Expire();
 
             string getBeatmapPart()
             {
-                return beatmapOnlineID > 0 ? $"[{api.Endpoints.WebsiteUrl}/b/{beatmapOnlineID} {beatmapDisplayTitle}]" : beatmapDisplayTitle;
+                return beatmapOnlineID > 0
+                    ? $"[{api.Endpoints.WebsiteUrl}/b/{beatmapOnlineID} {beatmapDisplayTitle}]"
+                    : beatmapDisplayTitle;
             }
 
             string getRulesetPart()
             {
-                if (userActivity.Value is not UserActivity.InGame) return string.Empty;
+                if (userActivity.Value is not UserActivity.InGame)
+                    return string.Empty;
 
                 return $"<{currentRuleset.Value.Name}>";
             }
 
             string getModPart()
             {
-                if (userActivity.Value is not UserActivity.InGame) return string.Empty;
+                if (userActivity.Value is not UserActivity.InGame)
+                    return string.Empty;
 
                 if (selectedMods.Value.Count == 0)
                 {
@@ -116,12 +117,20 @@ namespace osu.Game.Online.Chat
 
                 StringBuilder modsString = new StringBuilder();
 
-                foreach (var mod in selectedMods.Value.Where(mod => mod.Type == ModType.DifficultyIncrease))
+                foreach (
+                    var mod in selectedMods.Value.Where(mod =>
+                        mod.Type == ModType.DifficultyIncrease
+                    )
+                )
                 {
                     modsString.Append($"+{mod.Acronym} ");
                 }
 
-                foreach (var mod in selectedMods.Value.Where(mod => mod.Type != ModType.DifficultyIncrease))
+                foreach (
+                    var mod in selectedMods.Value.Where(mod =>
+                        mod.Type != ModType.DifficultyIncrease
+                    )
+                )
                 {
                     modsString.Append($"-{mod.Acronym} ");
                 }

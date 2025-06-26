@@ -47,13 +47,15 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         private const double distance_leniency_absolute_problem = 20;
         private const double distance_leniency_percent_problem = 0.3;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Spread, "Object too close or far away from previous");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Spread, "Object too close or far away from previous");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateIrregularSpacingProblem(this),
-            new IssueTemplateIrregularSpacingWarning(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateIrregularSpacingProblem(this),
+                new IssueTemplateIrregularSpacingWarning(this),
+            };
 
         /// <summary>
         /// Represents an observation of the time and distance between two objects.
@@ -95,14 +97,23 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
                     continue;
 
                 // Relying on FastInvSqrt is probably good enough here. We'll be taking the difference between distances later, hence square not being sufficient.
-                float distance = (hitObject.StackedEndPosition - nextHitObject.StackedPosition).LengthFast;
+                float distance = (
+                    hitObject.StackedEndPosition - nextHitObject.StackedPosition
+                ).LengthFast;
 
                 // Ignore stacks and half-stacks, as these are close enough to where they can't be confused for being time-distanced.
                 if (distance < stack_leniency)
                     continue;
 
-                var observedTimeDistance = new ObservedTimeDistance(nextHitObject.StartTime, deltaTime, distance);
-                double expectedDistance = getExpectedDistance(prevObservedTimeDistances, observedTimeDistance);
+                var observedTimeDistance = new ObservedTimeDistance(
+                    nextHitObject.StartTime,
+                    deltaTime,
+                    distance
+                );
+                double expectedDistance = getExpectedDistance(
+                    prevObservedTimeDistances,
+                    observedTimeDistance
+                );
 
                 if (expectedDistance == 0)
                 {
@@ -111,10 +122,28 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
                     continue;
                 }
 
-                if ((Math.Abs(expectedDistance - distance) - distance_leniency_absolute_problem) / distance > distance_leniency_percent_problem)
-                    yield return new IssueTemplateIrregularSpacingProblem(this).Create(expectedDistance, distance, hitObject, nextHitObject);
-                else if ((Math.Abs(expectedDistance - distance) - distance_leniency_absolute_warning) / distance > distance_leniency_percent_warning)
-                    yield return new IssueTemplateIrregularSpacingWarning(this).Create(expectedDistance, distance, hitObject, nextHitObject);
+                if (
+                    (Math.Abs(expectedDistance - distance) - distance_leniency_absolute_problem)
+                        / distance
+                    > distance_leniency_percent_problem
+                )
+                    yield return new IssueTemplateIrregularSpacingProblem(this).Create(
+                        expectedDistance,
+                        distance,
+                        hitObject,
+                        nextHitObject
+                    );
+                else if (
+                    (Math.Abs(expectedDistance - distance) - distance_leniency_absolute_warning)
+                        / distance
+                    > distance_leniency_percent_warning
+                )
+                    yield return new IssueTemplateIrregularSpacingWarning(this).Create(
+                        expectedDistance,
+                        distance,
+                        hitObject,
+                        nextHitObject
+                    );
                 else
                 {
                     // We use `else` here to prevent issues from cascading; an object spaced too far could cause regular spacing to be considered "too short" otherwise.
@@ -123,7 +152,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
             }
         }
 
-        private double getExpectedDistance(IEnumerable<ObservedTimeDistance> prevObservedTimeDistances, ObservedTimeDistance observedTimeDistance)
+        private double getExpectedDistance(
+            IEnumerable<ObservedTimeDistance> prevObservedTimeDistances,
+            ObservedTimeDistance observedTimeDistance
+        )
         {
             int observations = prevObservedTimeDistances.Count();
 
@@ -136,15 +168,23 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
                 var prevObservedTimeDistance = prevObservedTimeDistances.ElementAt(i);
 
                 // Only consider observations within the last few seconds - this allows the map to build spacing up/down over time, but prevents it from being too sudden.
-                if (observedTimeDistance.ObservationTime - prevObservedTimeDistance.ObservationTime > observation_lifetime)
+                if (
+                    observedTimeDistance.ObservationTime - prevObservedTimeDistance.ObservationTime
+                    > observation_lifetime
+                )
                     break;
 
                 // Only consider observations which have a similar time difference - this leniency allows handling of multi-BPM maps which speed up/down slowly.
-                if (Math.Abs(observedTimeDistance.DeltaTime - prevObservedTimeDistance.DeltaTime) > similar_time_leniency)
+                if (
+                    Math.Abs(observedTimeDistance.DeltaTime - prevObservedTimeDistance.DeltaTime)
+                    > similar_time_leniency
+                )
                     break;
 
                 count += 1;
-                sum += prevObservedTimeDistance.Distance / Math.Max(prevObservedTimeDistance.DeltaTime, 1);
+                sum +=
+                    prevObservedTimeDistance.Distance
+                    / Math.Max(prevObservedTimeDistance.DeltaTime, 1);
             }
 
             return sum / Math.Max(count, 1) * observedTimeDistance.DeltaTime;
@@ -153,27 +193,26 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         public abstract class IssueTemplateIrregularSpacing : IssueTemplate
         {
             protected IssueTemplateIrregularSpacing(ICheck check, IssueType issueType)
-                : base(check, issueType, "Expected {0:0} px spacing like previous objects, currently {1:0}.")
-            {
-            }
+                : base(
+                    check,
+                    issueType,
+                    "Expected {0:0} px spacing like previous objects, currently {1:0}."
+                ) { }
 
-            public Issue Create(double expected, double actual, params HitObject[] hitObjects) => new Issue(hitObjects, this, expected, actual);
+            public Issue Create(double expected, double actual, params HitObject[] hitObjects) =>
+                new Issue(hitObjects, this, expected, actual);
         }
 
         public class IssueTemplateIrregularSpacingProblem : IssueTemplateIrregularSpacing
         {
             public IssueTemplateIrregularSpacingProblem(ICheck check)
-                : base(check, IssueType.Problem)
-            {
-            }
+                : base(check, IssueType.Problem) { }
         }
 
         public class IssueTemplateIrregularSpacingWarning : IssueTemplateIrregularSpacing
         {
             public IssueTemplateIrregularSpacingWarning(ICheck check)
-                : base(check, IssueType.Warning)
-            {
-            }
+                : base(check, IssueType.Warning) { }
         }
     }
 }

@@ -18,16 +18,16 @@ namespace osu.Game.Rulesets.Mania.Replays
         public new ManiaBeatmap Beatmap => (ManiaBeatmap)base.Beatmap;
 
         public ManiaAutoGenerator(ManiaBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
             if (Beatmap.HitObjects.Count == 0)
                 return;
 
-            var pointGroups = generateActionPoints().GroupBy(a => a.Time).OrderBy(g => g.First().Time);
+            var pointGroups = generateActionPoints()
+                .GroupBy(a => a.Time)
+                .OrderBy(g => g.First().Time);
 
             var actions = new List<ManiaAction>();
 
@@ -59,7 +59,11 @@ namespace osu.Game.Rulesets.Mania.Replays
                 var nextObjectInColumn = GetNextObject(i); // Get the next object that requires pressing the same button
                 double releaseTime = calculateReleaseTime(currentObject, nextObjectInColumn);
 
-                yield return new HitPoint { Time = currentObject.StartTime, Column = currentObject.Column };
+                yield return new HitPoint
+                {
+                    Time = currentObject.StartTime,
+                    Column = currentObject.Column,
+                };
 
                 yield return new ReleasePoint { Time = releaseTime, Column = currentObject.Column };
             }
@@ -80,10 +84,15 @@ namespace osu.Game.Rulesets.Mania.Replays
                 releaseDelay = 1;
             }
 
-            bool canDelayKeyUpFully = nextObject == null ||
-                                      nextObject.StartTime > endTime + releaseDelay;
+            bool canDelayKeyUpFully =
+                nextObject == null || nextObject.StartTime > endTime + releaseDelay;
 
-            return endTime + (canDelayKeyUpFully ? releaseDelay : (nextObject.AsNonNull().StartTime - endTime) * 0.9);
+            return endTime
+                + (
+                    canDelayKeyUpFully
+                        ? releaseDelay
+                        : (nextObject.AsNonNull().StartTime - endTime) * 0.9
+                );
         }
 
         protected override HitObject? GetNextObject(int currentIndex)

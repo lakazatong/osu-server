@@ -25,21 +25,24 @@ namespace osu.Game.Rulesets.Replays
         /// <summary>
         /// Whether we are waiting for new frames to be received.
         /// </summary>
-        public bool WaitingForFrame => !replay.HasReceivedAllFrames && currentFrameIndex == Frames.Count - 1;
+        public bool WaitingForFrame =>
+            !replay.HasReceivedAllFrames && currentFrameIndex == Frames.Count - 1;
 
         /// <summary>
         /// The current frame of the replay.
         /// The current time is always between the start and the end time of the current frame.
         /// </summary>
         /// <remarks>Returns null if the current time is strictly before the first frame.</remarks>
-        public TFrame? CurrentFrame => currentFrameIndex == -1 ? null : (TFrame)Frames[currentFrameIndex];
+        public TFrame? CurrentFrame =>
+            currentFrameIndex == -1 ? null : (TFrame)Frames[currentFrameIndex];
 
         /// <summary>
         /// The next frame of the replay.
         /// The start time of <see cref="NextFrame"/> is always greater or equal to the start time of <see cref="CurrentFrame"/> regardless of the seeking direction.
         /// </summary>
         /// <remarks>Returns null if the current frame is the last frame.</remarks>
-        public TFrame? NextFrame => currentFrameIndex == Frames.Count - 1 ? null : (TFrame)Frames[currentFrameIndex + 1];
+        public TFrame? NextFrame =>
+            currentFrameIndex == Frames.Count - 1 ? null : (TFrame)Frames[currentFrameIndex + 1];
 
         /// <summary>
         /// The frame for the start value of the interpolation of the replay movement.
@@ -50,7 +53,9 @@ namespace osu.Game.Rulesets.Replays
             get
             {
                 if (!HasFrames)
-                    throw new InvalidOperationException($"Attempted to get {nameof(StartFrame)} of an empty replay");
+                    throw new InvalidOperationException(
+                        $"Attempted to get {nameof(StartFrame)} of an empty replay"
+                    );
 
                 return (TFrame)Frames[Math.Max(0, currentFrameIndex)];
             }
@@ -65,7 +70,9 @@ namespace osu.Game.Rulesets.Replays
             get
             {
                 if (!HasFrames)
-                    throw new InvalidOperationException($"Attempted to get {nameof(EndFrame)} of an empty replay");
+                    throw new InvalidOperationException(
+                        $"Attempted to get {nameof(EndFrame)} of an empty replay"
+                    );
 
                 return (TFrame)Frames[Math.Min(currentFrameIndex + 1, Frames.Count - 1)];
             }
@@ -110,8 +117,9 @@ namespace osu.Game.Rulesets.Replays
                 if (!HasFrames || !FrameAccuratePlayback || currentFrameIndex == -1)
                     return false;
 
-                return IsImportant(StartFrame) && // a button is in a pressed state
-                       Math.Abs(CurrentTime - EndFrame.Time) <= AllowedImportantTimeSpan; // the next frame is within an allowable time span
+                return IsImportant(StartFrame)
+                    && // a button is in a pressed state
+                    Math.Abs(CurrentTime - EndFrame.Time) <= AllowedImportantTimeSpan; // the next frame is within an allowable time span
             }
         }
 
@@ -184,8 +192,6 @@ namespace osu.Game.Rulesets.Replays
                 inputs.Add(new ReplayStatisticsFrameInput { Frame = CurrentFrame });
         }
 
-        protected virtual void CollectReplayInputs(List<IInput> inputs)
-        {
-        }
+        protected virtual void CollectReplayInputs(List<IInput> inputs) { }
     }
 }

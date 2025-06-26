@@ -55,33 +55,37 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
 
             bool isRim = (drawableHitObject.HitObject as Hit)?.Type == HitType.Rim;
 
-            outer.Colour = isRim ? ArgonInputDrum.RIM_HIT_GRADIENT : ArgonInputDrum.CENTRE_HIT_GRADIENT;
+            outer.Colour = isRim
+                ? ArgonInputDrum.RIM_HIT_GRADIENT
+                : ArgonInputDrum.CENTRE_HIT_GRADIENT;
             inner.EdgeEffect = new EdgeEffectParameters
             {
                 Type = EdgeEffectType.Glow,
-                Colour = (isRim ? ArgonInputDrum.RIM_HIT_GLOW : ArgonInputDrum.CENTRE_HIT_GLOW).Opacity(0.5f),
+                Colour = (
+                    isRim ? ArgonInputDrum.RIM_HIT_GLOW : ArgonInputDrum.CENTRE_HIT_GLOW
+                ).Opacity(0.5f),
                 Radius = 45,
             };
 
             switch (component)
             {
                 case TaikoSkinComponents.TaikoExplosionGreat:
-                    this.FadeIn(30, Easing.In)
-                        .Then()
-                        .FadeOut(450, Easing.OutQuint);
+                    this.FadeIn(30, Easing.In).Then().FadeOut(450, Easing.OutQuint);
                     break;
 
                 case TaikoSkinComponents.TaikoExplosionOk:
-                    this.FadeTo(0.2f, 30, Easing.In)
-                        .Then()
-                        .FadeOut(200, Easing.OutQuint);
+                    this.FadeTo(0.2f, 30, Easing.In).Then().FadeOut(200, Easing.OutQuint);
                     break;
             }
         }
 
         public void AnimateSecondHit()
         {
-            outer.ResizeTo(new Vector2(TaikoStrongableHitObject.STRONG_SCALE), 500, Easing.OutQuint);
+            outer.ResizeTo(
+                new Vector2(TaikoStrongableHitObject.STRONG_SCALE),
+                500,
+                Easing.OutQuint
+            );
         }
     }
 }

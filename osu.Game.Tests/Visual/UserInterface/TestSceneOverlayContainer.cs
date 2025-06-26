@@ -20,39 +20,50 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneOverlayContainer : OsuManualInputManagerTestScene
     {
         [SetUp]
-        public void SetUp() => Schedule(() => Child = new TestOverlay
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            RelativeSizeAxes = Axes.Both,
-            Size = new Vector2(0.5f)
-        });
+        public void SetUp() =>
+            Schedule(() =>
+                Child = new TestOverlay
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.5f),
+                }
+            );
 
         [Test]
         public void TestScrollBlocked()
         {
             OsuScrollContainer scroll = null!;
 
-            AddStep("add scroll container", () =>
-            {
-                Add(scroll = new OsuScrollContainer
+            AddStep(
+                "add scroll container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue,
-                    Child = new Box
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = DrawHeight * 10,
-                        Colour = ColourInfo.GradientVertical(Colour4.Black, Colour4.White),
-                    }
-                });
-            });
+                    Add(
+                        scroll = new OsuScrollContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Height = DrawHeight * 10,
+                                Colour = ColourInfo.GradientVertical(Colour4.Black, Colour4.White),
+                            },
+                        }
+                    );
+                }
+            );
 
-            AddStep("perform scroll", () =>
-            {
-                InputManager.MoveMouseTo(Content);
-                InputManager.ScrollVerticalBy(-10);
-            });
+            AddStep(
+                "perform scroll",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Content);
+                    InputManager.ScrollVerticalBy(-10);
+                }
+            );
 
             AddAssert("scroll didn't receive input", () => scroll.Current == 0);
         }
@@ -62,18 +73,27 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             TestGlobalScrollAdjustsVolume volumeAdjust = null!;
 
-            AddStep("add volume control receptor", () => Add(volumeAdjust = new TestGlobalScrollAdjustsVolume
-            {
-                RelativeSizeAxes = Axes.Both,
-                Depth = float.MaxValue,
-            }));
+            AddStep(
+                "add volume control receptor",
+                () =>
+                    Add(
+                        volumeAdjust = new TestGlobalScrollAdjustsVolume
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                        }
+                    )
+            );
 
             AddStep("hold alt", () => InputManager.PressKey(Key.AltLeft));
-            AddStep("perform scroll", () =>
-            {
-                InputManager.MoveMouseTo(Content);
-                InputManager.ScrollVerticalBy(10);
-            });
+            AddStep(
+                "perform scroll",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Content);
+                    InputManager.ScrollVerticalBy(10);
+                }
+            );
 
             AddAssert("receptor received scroll input", () => volumeAdjust.ScrollReceived);
             AddStep("release alt", () => InputManager.ReleaseKey(Key.AltLeft));
@@ -99,10 +119,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both },
                     new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
@@ -113,9 +130,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 };
             }
 
-            protected override void PopIn()
-            {
-            }
+            protected override void PopIn() { }
         }
     }
 }

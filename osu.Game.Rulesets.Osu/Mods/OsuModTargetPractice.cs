@@ -31,27 +31,43 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModTargetPractice : ModWithVisibilityAdjustment, IApplicableToDrawableRuleset<OsuHitObject>,
-                                        IApplicableToHealthProcessor, IApplicableToDifficulty, IApplicableFailOverride, IHasSeed, IHidesApproachCircles
+    public class OsuModTargetPractice
+        : ModWithVisibilityAdjustment,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IApplicableToHealthProcessor,
+            IApplicableToDifficulty,
+            IApplicableFailOverride,
+            IHasSeed,
+            IHidesApproachCircles
     {
         public override string Name => "Target Practice";
         public override string Acronym => "TP";
         public override ModType Type => ModType.Conversion;
         public override IconUsage? Icon => OsuIcon.ModTarget;
-        public override LocalisableString Description => @"Practice keeping up with the beat of the song.";
+        public override LocalisableString Description =>
+            @"Practice keeping up with the beat of the song.";
         public override double ScoreMultiplier => 0.1;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[]
-        {
-            typeof(IRequiresApproachCircles),
-            typeof(OsuModRandom),
-            typeof(OsuModSpunOut),
-            typeof(OsuModStrictTracking),
-            typeof(OsuModSuddenDeath),
-            typeof(OsuModDepth)
-        }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(
+                    new[]
+                    {
+                        typeof(IRequiresApproachCircles),
+                        typeof(OsuModRandom),
+                        typeof(OsuModSpunOut),
+                        typeof(OsuModStrictTracking),
+                        typeof(OsuModSuddenDeath),
+                        typeof(OsuModDepth),
+                    }
+                )
+                .ToArray();
 
-        [SettingSource("Seed", "Use a custom seed instead of a random one", SettingControlType = typeof(SettingsNumberBox))]
+        [SettingSource(
+            "Seed",
+            "Use a custom seed instead of a random one",
+            SettingControlType = typeof(SettingsNumberBox)
+        )]
         public Bindable<int?> Seed { get; } = new Bindable<int?>();
 
         [SettingSource("Metronome ticks", "Whether a metronome beat should play in the background")]
@@ -106,9 +122,8 @@ namespace osu.Game.Rulesets.Osu.Mods
         public void ApplyToHealthProcessor(HealthProcessor healthProcessor)
         {
             // Sudden death
-            healthProcessor.FailConditions += (_, result)
-                => result.Type.AffectsCombo()
-                   && !result.IsHit;
+            healthProcessor.FailConditions += (_, result) =>
+                result.Type.AffectsCombo() && !result.IsHit;
         }
 
         #endregion
@@ -125,13 +140,18 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         #region Circle Transforms (ModWithVisibilityAdjustment)
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject drawable, ArmedState state)
-        {
-        }
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject drawable,
+            ArmedState state
+        ) { }
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject drawable, ArmedState state)
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject drawable,
+            ArmedState state
+        )
         {
-            if (!(drawable is DrawableHitCircle circle)) return;
+            if (!(drawable is DrawableHitCircle circle))
+                return;
 
             double startTime = circle.HitObject.StartTime;
             double preempt = circle.HitObject.TimePreempt;
@@ -139,8 +159,7 @@ namespace osu.Game.Rulesets.Osu.Mods
             using (circle.BeginAbsoluteSequence(startTime - preempt))
             {
                 // initial state
-                circle.ScaleTo(0.5f)
-                      .FadeColour(OsuColour.Gray(0.5f));
+                circle.ScaleTo(0.5f).FadeColour(OsuColour.Gray(0.5f));
 
                 // scale to final size
                 circle.ScaleTo(1f, preempt);
@@ -149,7 +168,13 @@ namespace osu.Game.Rulesets.Osu.Mods
                 circle.ApproachCircle.Hide();
             }
 
-            using (circle.BeginAbsoluteSequence(startTime - controlPointInfo.TimingPointAt(startTime).BeatLength - undim_duration))
+            using (
+                circle.BeginAbsoluteSequence(
+                    startTime
+                        - controlPointInfo.TimingPointAt(startTime).BeatLength
+                        - undim_duration
+                )
+            )
                 circle.FadeColour(Color4.White, undim_duration);
         }
 
@@ -165,19 +190,21 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             var osuBeatmap = (OsuBeatmap)beatmap;
 
-            if (osuBeatmap.HitObjects.Count == 0) return;
+            if (osuBeatmap.HitObjects.Count == 0)
+                return;
 
             controlPointInfo = osuBeatmap.ControlPointInfo;
 
             var originalHitObjects = osuBeatmap.HitObjects.OrderBy(x => x.StartTime).ToList();
             var hitObjects = generateBeats(osuBeatmap, originalHitObjects)
-                             .Select(beat =>
-                             {
-                                 var newCircle = new HitCircle();
-                                 newCircle.ApplyDefaults(controlPointInfo, osuBeatmap.Difficulty);
-                                 newCircle.StartTime = beat;
-                                 return (OsuHitObject)newCircle;
-                             }).ToList();
+                .Select(beat =>
+                {
+                    var newCircle = new HitCircle();
+                    newCircle.ApplyDefaults(controlPointInfo, osuBeatmap.Difficulty);
+                    newCircle.StartTime = beat;
+                    return (OsuHitObject)newCircle;
+                })
+                .ToList();
 
             addHitSamples(hitObjects, originalHitObjects);
 
@@ -190,35 +217,47 @@ namespace osu.Game.Rulesets.Osu.Mods
             base.ApplyToBeatmap(beatmap);
         }
 
-        private IEnumerable<double> generateBeats(IBeatmap beatmap, IReadOnlyCollection<OsuHitObject> originalHitObjects)
+        private IEnumerable<double> generateBeats(
+            IBeatmap beatmap,
+            IReadOnlyCollection<OsuHitObject> originalHitObjects
+        )
         {
             double startTime = beatmap.HitObjects.First().StartTime;
             double endTime = beatmap.GetLastObjectTime();
 
-            var beats = beatmap.ControlPointInfo.TimingPoints
-                               // Ignore timing points after endTime
-                               .Where(timingPoint => !definitelyBigger(timingPoint.Time, endTime))
-                               // Generate the beats
-                               .SelectMany(timingPoint => getBeatsForTimingPoint(timingPoint, endTime))
-                               // Remove beats before startTime
-                               .Where(beat => almostBigger(beat, startTime))
-                               // Remove beats during breaks
-                               .Where(beat => !isInsideBreakPeriod(originalHitObjects, beatmap.Breaks, beat))
-                               .ToList();
+            var beats = beatmap
+                .ControlPointInfo.TimingPoints
+                // Ignore timing points after endTime
+                .Where(timingPoint => !definitelyBigger(timingPoint.Time, endTime))
+                // Generate the beats
+                .SelectMany(timingPoint => getBeatsForTimingPoint(timingPoint, endTime))
+                // Remove beats before startTime
+                .Where(beat => almostBigger(beat, startTime))
+                // Remove beats during breaks
+                .Where(beat => !isInsideBreakPeriod(originalHitObjects, beatmap.Breaks, beat))
+                .ToList();
 
             // Remove beats that are too close to the next one (e.g. due to timing point changes)
             for (int i = beats.Count - 2; i >= 0; i--)
             {
                 double beat = beats[i];
 
-                if (!definitelyBigger(beats[i + 1] - beat, beatmap.ControlPointInfo.TimingPointAt(beat).BeatLength / 2))
+                if (
+                    !definitelyBigger(
+                        beats[i + 1] - beat,
+                        beatmap.ControlPointInfo.TimingPointAt(beat).BeatLength / 2
+                    )
+                )
                     beats.RemoveAt(i);
             }
 
             return beats;
         }
 
-        private void addHitSamples(IEnumerable<OsuHitObject> hitObjects, List<OsuHitObject> originalHitObjects)
+        private void addHitSamples(
+            IEnumerable<OsuHitObject> hitObjects,
+            List<OsuHitObject> originalHitObjects
+        )
         {
             foreach (var obj in hitObjects)
             {
@@ -226,17 +265,26 @@ namespace osu.Game.Rulesets.Osu.Mods
 
                 // If samples aren't available at the exact start time of the object,
                 // use samples (without additions) in the closest original hit object instead
-                obj.Samples = samples ?? getClosestHitObject(originalHitObjects, obj.StartTime).Samples.Where(s => !HitSampleInfo.ALL_ADDITIONS.Contains(s.Name)).ToList();
+                obj.Samples =
+                    samples
+                    ?? getClosestHitObject(originalHitObjects, obj.StartTime)
+                        .Samples.Where(s => !HitSampleInfo.ALL_ADDITIONS.Contains(s.Name))
+                        .ToList();
             }
         }
 
-        private void fixComboInfo(List<OsuHitObject> hitObjects, List<OsuHitObject> originalHitObjects)
+        private void fixComboInfo(
+            List<OsuHitObject> hitObjects,
+            List<OsuHitObject> originalHitObjects
+        )
         {
             // Copy combo indices from an original object at the same time or from the closest preceding object
             // (Objects lying between two combos are assumed to belong to the preceding combo)
             hitObjects.ForEach(newObj =>
             {
-                var closestOrigObj = originalHitObjects.FindLast(y => almostBigger(newObj.StartTime, y.StartTime));
+                var closestOrigObj = originalHitObjects.FindLast(y =>
+                    almostBigger(newObj.StartTime, y.StartTime)
+                );
 
                 // It shouldn't be possible for closestOrigObj to be null
                 // But if it is, obj should be in the first combo
@@ -266,7 +314,8 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         private void randomizeCirclePos(IReadOnlyList<OsuHitObject> hitObjects, Random rng)
         {
-            if (hitObjects.Count == 0) return;
+            if (hitObjects.Count == 0)
+                return;
 
             float nextSingle(float max = 1f) => (float)(rng.NextDouble() * max);
 
@@ -278,15 +327,23 @@ namespace osu.Game.Rulesets.Osu.Mods
             for (int i = 0; i < hitObjects.Count; i++)
             {
                 var obj = hitObjects[i];
-                var lastPos = i == 0
-                    ? Vector2.Divide(OsuPlayfield.BASE_SIZE, 2)
-                    : hitObjects[i - 1].Position;
+                var lastPos =
+                    i == 0 ? Vector2.Divide(OsuPlayfield.BASE_SIZE, 2) : hitObjects[i - 1].Position;
 
-                float distance = maxComboIndex == 0
-                    ? (float)obj.Radius
-                    : mapRange(obj.ComboIndex, 0, maxComboIndex, (float)obj.Radius, max_base_distance);
-                if (obj.NewCombo) distance *= 1.5f;
-                if (obj.Kiai) distance *= 1.2f;
+                float distance =
+                    maxComboIndex == 0
+                        ? (float)obj.Radius
+                        : mapRange(
+                            obj.ComboIndex,
+                            0,
+                            maxComboIndex,
+                            (float)obj.Radius,
+                            max_base_distance
+                        );
+                if (obj.NewCombo)
+                    distance *= 1.5f;
+                if (obj.Kiai)
+                    distance *= 1.2f;
                 distance = Math.Min(distance_cap, distance);
 
                 // Attempt to place the circle at a place that does not overlap with previous ones
@@ -294,18 +351,26 @@ namespace osu.Game.Rulesets.Osu.Mods
                 int tryCount = 0;
 
                 // for checking overlap
-                var precedingObjects = hitObjects.SkipLast(hitObjects.Count - i).TakeLast(overlap_check_count).ToList();
+                var precedingObjects = hitObjects
+                    .SkipLast(hitObjects.Count - i)
+                    .TakeLast(overlap_check_count)
+                    .ToList();
 
                 do
                 {
-                    if (tryCount > 0) direction = two_pi * nextSingle();
+                    if (tryCount > 0)
+                        direction = two_pi * nextSingle();
 
                     var relativePos = new Vector2(
                         distance * MathF.Cos(direction),
                         distance * MathF.Sin(direction)
                     );
                     // Rotate the new circle away from playfield border
-                    relativePos = OsuHitObjectGenerationUtils.RotateAwayFromEdge(lastPos, relativePos, edge_rotation_multiplier);
+                    relativePos = OsuHitObjectGenerationUtils.RotateAwayFromEdge(
+                        lastPos,
+                        relativePos,
+                        edge_rotation_multiplier
+                    );
                     direction = MathF.Atan2(relativePos.Y, relativePos.X);
 
                     var newPosition = Vector2.Add(lastPos, relativePos);
@@ -315,7 +380,8 @@ namespace osu.Game.Rulesets.Osu.Mods
                     clampToPlayfield(obj);
 
                     tryCount++;
-                    if (tryCount % 10 == 0) distance *= 0.9f;
+                    if (tryCount % 10 == 0)
+                        distance *= 0.9f;
                 } while (distance >= obj.Radius * 2 && checkForOverlap(precedingObjects, obj));
 
                 if (obj.LastInCombo)
@@ -332,7 +398,9 @@ namespace osu.Game.Rulesets.Osu.Mods
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
         {
             if (Metronome.Value)
-                drawableRuleset.Overlays.Add(new MetronomeBeat(drawableRuleset.Beatmap.HitObjects.First().StartTime));
+                drawableRuleset.Overlays.Add(
+                    new MetronomeBeat(drawableRuleset.Beatmap.HitObjects.First().StartTime)
+                );
         }
 
         #endregion
@@ -349,26 +417,41 @@ namespace osu.Game.Rulesets.Osu.Mods
         /// <param name="originalHitObjects">Hit objects order by time.</param>
         /// <param name="breaks">The breaks of the beatmap.</param>
         /// <param name="time">The time to be checked.</param>=
-        private bool isInsideBreakPeriod(IReadOnlyCollection<OsuHitObject> originalHitObjects, IEnumerable<BreakPeriod> breaks, double time)
+        private bool isInsideBreakPeriod(
+            IReadOnlyCollection<OsuHitObject> originalHitObjects,
+            IEnumerable<BreakPeriod> breaks,
+            double time
+        )
         {
             return breaks.Any(breakPeriod =>
             {
-                OsuHitObject? firstObjAfterBreak = originalHitObjects.FirstOrDefault(obj => almostBigger(obj.StartTime, breakPeriod.EndTime));
+                OsuHitObject? firstObjAfterBreak = originalHitObjects.FirstOrDefault(obj =>
+                    almostBigger(obj.StartTime, breakPeriod.EndTime)
+                );
 
                 return almostBigger(time, breakPeriod.StartTime)
-                       // There should never really be a break section with no objects after it, but we've seen crashes from users with malformed beatmaps,
-                       // so it's best to guard against this.
-                       && (firstObjAfterBreak == null || definitelyBigger(firstObjAfterBreak.StartTime, time));
+                    // There should never really be a break section with no objects after it, but we've seen crashes from users with malformed beatmaps,
+                    // so it's best to guard against this.
+                    && (
+                        firstObjAfterBreak == null
+                        || definitelyBigger(firstObjAfterBreak.StartTime, time)
+                    );
             });
         }
 
-        private IEnumerable<double> getBeatsForTimingPoint(TimingControlPoint timingPoint, double mapEndTime)
+        private IEnumerable<double> getBeatsForTimingPoint(
+            TimingControlPoint timingPoint,
+            double mapEndTime
+        )
         {
             var beats = new List<double>();
             int i = 0;
             double currentTime = timingPoint.Time;
 
-            while (!definitelyBigger(currentTime, mapEndTime) && ReferenceEquals(controlPointInfo.TimingPointAt(currentTime), timingPoint))
+            while (
+                !definitelyBigger(currentTime, mapEndTime)
+                && ReferenceEquals(controlPointInfo.TimingPointAt(currentTime), timingPoint)
+            )
             {
                 beats.Add(Math.Floor(currentTime));
                 i++;
@@ -382,10 +465,13 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             int precedingIndex = hitObjects.FindLastIndex(h => h.StartTime < time);
 
-            if (precedingIndex == hitObjects.Count - 1) return hitObjects[precedingIndex];
+            if (precedingIndex == hitObjects.Count - 1)
+                return hitObjects[precedingIndex];
 
             // return the closest preceding/succeeding hit object, whoever is closer in time
-            return hitObjects[precedingIndex + 1].StartTime - time < time - hitObjects[precedingIndex].StartTime
+            return
+                hitObjects[precedingIndex + 1].StartTime - time
+                < time - hitObjects[precedingIndex].StartTime
                 ? hitObjects[precedingIndex + 1]
                 : hitObjects[precedingIndex];
         }
@@ -399,7 +485,10 @@ namespace osu.Game.Rulesets.Osu.Mods
         /// <param name="hitObjects">The list of hit objects in a beatmap, ordered by StartTime</param>
         /// <param name="time">The point in time to get samples for</param>
         /// <returns>Hit samples</returns>
-        private IList<HitSampleInfo>? getSamplesAtTime(IEnumerable<OsuHitObject> hitObjects, double time)
+        private IList<HitSampleInfo>? getSamplesAtTime(
+            IEnumerable<OsuHitObject> hitObjects,
+            double time
+        )
         {
             // Get a hit object that
             //   either has StartTime equal to the target time
@@ -413,13 +502,13 @@ namespace osu.Game.Rulesets.Osu.Mods
                     return false;
                 // If time is outside the duration of the IHasRepeats,
                 // then this hitObject isn't the one we want
-                if (!almostBigger(time, hitObject.StartTime)
-                    || !almostBigger(s.EndTime, time))
+                if (!almostBigger(time, hitObject.StartTime) || !almostBigger(s.EndTime, time))
                     return false;
 
                 return nodeIndexFromTime(s, time - hitObject.StartTime) != -1;
             });
-            if (sampleObj == null) return null;
+            if (sampleObj == null)
+                return null;
 
             IList<HitSampleInfo> samples;
 
@@ -450,7 +539,9 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         private bool checkForOverlap(IEnumerable<OsuHitObject> objectsToCheck, OsuHitObject target)
         {
-            return objectsToCheck.Any(h => Vector2.Distance(h.Position, target.Position) < target.Radius * 2);
+            return objectsToCheck.Any(h =>
+                Vector2.Distance(h.Position, target.Position) < target.Radius * 2
+            );
         }
 
         /// <summary>
@@ -484,7 +575,13 @@ namespace osu.Game.Rulesets.Osu.Mods
         /// <param name="toLow">Beginning of the new range.</param>
         /// <param name="toHigh">End of the new range.</param>
         /// <returns>The re-mapped number.</returns>
-        private static float mapRange(float value, float fromLow, float fromHigh, float toLow, float toHigh)
+        private static float mapRange(
+            float value,
+            float fromLow,
+            float fromHigh,
+            float toLow,
+            float toHigh
+        )
         {
             return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }

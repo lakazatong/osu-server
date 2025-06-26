@@ -37,12 +37,14 @@ namespace osu.Game.Skinning
         /// </remarks>
         protected override bool AllowFallingBackToParent => false;
 
-        protected override Container<Drawable> Content { get; } = new Container
-        {
-            RelativeSizeAxes = Axes.Both,
-        };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
-        public RulesetSkinProvidingContainer(Ruleset ruleset, IBeatmap beatmap, [CanBeNull] ISkin beatmapSkin)
+        public RulesetSkinProvidingContainer(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            [CanBeNull] ISkin beatmapSkin
+        )
         {
             Ruleset = ruleset;
             Beatmap = beatmap;
@@ -52,7 +54,10 @@ namespace osu.Game.Skinning
         [BackgroundDependencyLoader]
         private void load(SkinManager skinManager)
         {
-            InternalChild = new BeatmapSkinProvidingContainer(GetRulesetTransformedSkin(beatmapSkin), GetRulesetTransformedSkin(skinManager.DefaultClassicSkin))
+            InternalChild = new BeatmapSkinProvidingContainer(
+                GetRulesetTransformedSkin(beatmapSkin),
+                GetRulesetTransformedSkin(skinManager.DefaultClassicSkin)
+            )
             {
                 Child = Content,
             };
@@ -60,10 +65,16 @@ namespace osu.Game.Skinning
 
         private ResourceStoreBackedSkin rulesetResourcesSkin;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             if (Ruleset.CreateResourceStore() is IResourceStore<byte[]> resources)
-                rulesetResourcesSkin = new ResourceStoreBackedSkin(resources, parent.Get<GameHost>(), parent.Get<AudioManager>());
+                rulesetResourcesSkin = new ResourceStoreBackedSkin(
+                    resources,
+                    parent.Get<GameHost>(),
+                    parent.Get<AudioManager>()
+                );
 
             return base.CreateChildDependencies(parent);
         }
@@ -90,7 +101,9 @@ namespace osu.Game.Skinning
             }
 
             // TODO: check
-            int lastDefaultSkinIndex = sources.IndexOf(sources.OfType<TrianglesSkin>().LastOrDefault());
+            int lastDefaultSkinIndex = sources.IndexOf(
+                sources.OfType<TrianglesSkin>().LastOrDefault()
+            );
 
             // Ruleset resources should be given the ability to override game-wide defaults
             // This is achieved by placing them before the last instance of DefaultSkin.

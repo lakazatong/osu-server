@@ -60,14 +60,16 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                     Break = { BindTarget = Break },
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft,
-                    Action = (time, breakPeriod) => new ManualBreakPeriod(time, breakPeriod.EndTime),
+                    Action = (time, breakPeriod) =>
+                        new ManualBreakPeriod(time, breakPeriod.EndTime),
                 },
                 new DragHandle(isStartHandle: false)
                 {
                     Break = { BindTarget = Break },
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Action = (time, breakPeriod) => new ManualBreakPeriod(breakPeriod.StartTime, time),
+                    Action = (time, breakPeriod) =>
+                        new ManualBreakPeriod(breakPeriod.StartTime, time),
                 },
             };
         }
@@ -76,17 +78,25 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             base.LoadComplete();
 
-            Break.BindValueChanged(_ =>
-            {
-                X = (float)Break.Value.StartTime;
-                Width = (float)Break.Value.Duration;
-            }, true);
+            Break.BindValueChanged(
+                _ =>
+                {
+                    X = (float)Break.Value.StartTime;
+                    Width = (float)Break.Value.Duration;
+                },
+                true
+            );
         }
 
-        public MenuItem[] ContextMenuItems => new MenuItem[]
-        {
-            new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => OnDeleted?.Invoke(Break.Value)),
-        };
+        public MenuItem[] ContextMenuItems =>
+            new MenuItem[]
+            {
+                new OsuMenuItem(
+                    CommonStrings.ButtonsDelete,
+                    MenuItemType.Destructive,
+                    () => OnDeleted?.Invoke(Break.Value)
+                ),
+            };
 
         private partial class DragHandle : FillFlowContainer
         {
@@ -139,11 +149,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                         RelativeSizeAxes = Axes.Y,
                         CornerRadius = 4,
                         Masking = true,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Colour4.White,
-                        },
+                        Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.White },
                     },
                     new OsuSpriteText
                     {
@@ -151,7 +157,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                         Anchor = Anchor,
                         Origin = Anchor,
                         Text = "Break",
-                        Margin = new MarginPadding { Top = 2, },
+                        Margin = new MarginPadding { Top = 2 },
                     },
                 };
             }
@@ -181,8 +187,14 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 changeHandler?.BeginChange();
                 updateState();
 
-                double min = beatmap.HitObjects.LastOrDefault(ho => ho.GetEndTime() <= Break.Value.StartTime)?.GetEndTime() ?? double.NegativeInfinity;
-                double max = beatmap.HitObjects.FirstOrDefault(ho => ho.StartTime >= Break.Value.EndTime)?.StartTime ?? double.PositiveInfinity;
+                double min =
+                    beatmap
+                        .HitObjects.LastOrDefault(ho => ho.GetEndTime() <= Break.Value.StartTime)
+                        ?.GetEndTime() ?? double.NegativeInfinity;
+                double max =
+                    beatmap
+                        .HitObjects.FirstOrDefault(ho => ho.StartTime >= Break.Value.EndTime)
+                        ?.StartTime ?? double.PositiveInfinity;
 
                 if (isStartHandle)
                     max = Math.Min(max, Break.Value.EndTime - BreakPeriod.MIN_BREAK_DURATION);
@@ -200,10 +212,13 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                 Debug.Assert(allowedDragRange != null);
 
-                if (Action != null
-                    && timeline.FindSnappedPositionAndTime(e.ScreenSpaceMousePosition).Time is double time
+                if (
+                    Action != null
+                    && timeline.FindSnappedPositionAndTime(e.ScreenSpaceMousePosition).Time
+                        is double time
                     && time > allowedDragRange.Value.min
-                    && time < allowedDragRange.Value.max)
+                    && time < allowedDragRange.Value.max
+                )
                 {
                     int index = beatmap.Breaks.IndexOf(Break.Value);
                     beatmap.Breaks[index] = Break.Value = Action.Invoke(time, Break.Value);

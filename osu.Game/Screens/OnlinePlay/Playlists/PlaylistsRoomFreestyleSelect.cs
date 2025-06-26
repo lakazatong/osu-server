@@ -15,9 +15,7 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         public new readonly Bindable<RulesetInfo?> Ruleset = new Bindable<RulesetInfo?>();
 
         public PlaylistsRoomFreestyleSelect(Room room, PlaylistItem item)
-            : base(room, item)
-        {
-        }
+            : base(room, item) { }
 
         protected override bool OnStart()
         {

@@ -3,13 +3,13 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Game.Overlays.Toolbar;
-using osu.Framework.Graphics;
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Utils;
+using osu.Game.Overlays.Toolbar;
 using osu.Game.Rulesets;
 
 namespace osu.Game.Tests.Visual.UserInterface
@@ -24,23 +24,34 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             ToolbarRulesetSelector selector = null;
 
-            AddStep("create selector", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create selector",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.X,
-                    Height = Toolbar.HEIGHT,
-                    Child = selector = new ToolbarRulesetSelector()
-                };
-            });
+                    Child = new Container
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.X,
+                        Height = Toolbar.HEIGHT,
+                        Child = selector = new ToolbarRulesetSelector(),
+                    };
+                }
+            );
 
-            AddStep("Select random", () =>
-            {
-                selector.Current.Value = selector.Items.ElementAt(RNG.Next(selector.Items.Count));
-            });
-            AddStep("Toggle disabled state", () => selector.Current.Disabled = !selector.Current.Disabled);
+            AddStep(
+                "Select random",
+                () =>
+                {
+                    selector.Current.Value = selector.Items.ElementAt(
+                        RNG.Next(selector.Items.Count)
+                    );
+                }
+            );
+            AddStep(
+                "Toggle disabled state",
+                () => selector.Current.Disabled = !selector.Current.Disabled
+            );
         }
 
         [Test]
@@ -48,19 +59,22 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             TestSelector selector = null;
 
-            AddStep("create selector", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create selector",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.X,
-                    Height = Toolbar.HEIGHT,
-                    Child = selector = new TestSelector()
-                };
+                    Child = new Container
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.X,
+                        Height = Toolbar.HEIGHT,
+                        Child = selector = new TestSelector(),
+                    };
 
-                selector.Current.Value = rulesets.GetRuleset(2);
-            });
+                    selector.Current.Value = rulesets.GetRuleset(2);
+                }
+            );
 
             AddAssert("mode line has moved", () => selector.ModeButtonLine.DrawPosition.X > 0);
         }

@@ -38,7 +38,10 @@ namespace osu.Game.Tests.Beatmaps
 
         protected void Test(string name, params Type[] mods)
         {
-            var ourResult = convert(name, mods.Select(m => (Mod)Activator.CreateInstance(m)).ToArray());
+            var ourResult = convert(
+                name,
+                mods.Select(m => (Mod)Activator.CreateInstance(m)).ToArray()
+            );
             var expectedResult = read(name);
 
             foreach (var m in ourResult.Mappings)
@@ -53,21 +56,34 @@ namespace osu.Game.Tests.Beatmaps
 
                 while (true)
                 {
-                    if (mappingCounter >= ourResult.Mappings.Count && mappingCounter >= expectedResult.Mappings.Count)
+                    if (
+                        mappingCounter >= ourResult.Mappings.Count
+                        && mappingCounter >= expectedResult.Mappings.Count
+                    )
                         break;
 
                     if (mappingCounter >= ourResult.Mappings.Count)
-                        Assert.Fail($"A conversion did not generate any hitobjects, but should have, for hitobject at time: {expectedResult.Mappings[mappingCounter].StartTime}\n");
+                        Assert.Fail(
+                            $"A conversion did not generate any hitobjects, but should have, for hitobject at time: {expectedResult.Mappings[mappingCounter].StartTime}\n"
+                        );
                     else if (mappingCounter >= expectedResult.Mappings.Count)
-                        Assert.Fail($"A conversion generated hitobjects, but should not have, for hitobject at time: {ourResult.Mappings[mappingCounter].StartTime}\n");
-                    else if (!expectedResult.Mappings[mappingCounter].Equals(ourResult.Mappings[mappingCounter]))
+                        Assert.Fail(
+                            $"A conversion generated hitobjects, but should not have, for hitobject at time: {ourResult.Mappings[mappingCounter].StartTime}\n"
+                        );
+                    else if (
+                        !expectedResult
+                            .Mappings[mappingCounter]
+                            .Equals(ourResult.Mappings[mappingCounter])
+                    )
                     {
                         var expectedMapping = expectedResult.Mappings[mappingCounter];
                         var ourMapping = ourResult.Mappings[mappingCounter];
 
-                        Assert.Fail($"The conversion mapping differed for object at time {expectedMapping.StartTime}:\n"
-                                    + $"Expected {JsonConvert.SerializeObject(expectedMapping)}\n"
-                                    + $"Received: {JsonConvert.SerializeObject(ourMapping)}\n");
+                        Assert.Fail(
+                            $"The conversion mapping differed for object at time {expectedMapping.StartTime}:\n"
+                                + $"Expected {JsonConvert.SerializeObject(expectedMapping)}\n"
+                                + $"Received: {JsonConvert.SerializeObject(ourMapping)}\n"
+                        );
                     }
                     else
                     {
@@ -80,24 +96,37 @@ namespace osu.Game.Tests.Beatmaps
 
                             while (true)
                             {
-                                if (objectCounter >= ourMapping.Objects.Count && objectCounter >= expectedMapping.Objects.Count)
+                                if (
+                                    objectCounter >= ourMapping.Objects.Count
+                                    && objectCounter >= expectedMapping.Objects.Count
+                                )
                                     break;
 
                                 if (objectCounter >= ourMapping.Objects.Count)
                                 {
-                                    Assert.Fail($"The conversion did not generate a hitobject, but should have, for hitobject at time: {expectedMapping.StartTime}:\n"
-                                                + $"Expected: {JsonConvert.SerializeObject(expectedMapping.Objects[objectCounter])}\n");
+                                    Assert.Fail(
+                                        $"The conversion did not generate a hitobject, but should have, for hitobject at time: {expectedMapping.StartTime}:\n"
+                                            + $"Expected: {JsonConvert.SerializeObject(expectedMapping.Objects[objectCounter])}\n"
+                                    );
                                 }
                                 else if (objectCounter >= expectedMapping.Objects.Count)
                                 {
-                                    Assert.Fail($"The conversion generated a hitobject, but should not have, for hitobject at time: {ourMapping.StartTime}:\n"
-                                                + $"Received: {JsonConvert.SerializeObject(ourMapping.Objects[objectCounter])}\n");
+                                    Assert.Fail(
+                                        $"The conversion generated a hitobject, but should not have, for hitobject at time: {ourMapping.StartTime}:\n"
+                                            + $"Received: {JsonConvert.SerializeObject(ourMapping.Objects[objectCounter])}\n"
+                                    );
                                 }
-                                else if (!expectedMapping.Objects[objectCounter].Equals(ourMapping.Objects[objectCounter]))
+                                else if (
+                                    !expectedMapping
+                                        .Objects[objectCounter]
+                                        .Equals(ourMapping.Objects[objectCounter])
+                                )
                                 {
-                                    Assert.Fail($"The conversion generated differing hitobjects for object at time: {expectedMapping.StartTime}:\n"
-                                                + $"Expected: {JsonConvert.SerializeObject(expectedMapping.Objects[objectCounter])}\n"
-                                                + $"Received: {JsonConvert.SerializeObject(ourMapping.Objects[objectCounter])}\n");
+                                    Assert.Fail(
+                                        $"The conversion generated differing hitobjects for object at time: {expectedMapping.StartTime}:\n"
+                                            + $"Expected: {JsonConvert.SerializeObject(expectedMapping.Objects[objectCounter])}\n"
+                                            + $"Received: {JsonConvert.SerializeObject(ourMapping.Objects[objectCounter])}\n"
+                                    );
                                 }
 
                                 objectCounter++;
@@ -112,40 +141,49 @@ namespace osu.Game.Tests.Beatmaps
 
         private ConvertResult convert(string name, Mod[] mods)
         {
-            var conversionTask = Task.Factory.StartNew(() =>
-            {
-                var beatmap = GetBeatmap(name);
-
-                string beforeConversion = beatmap.Serialize();
-
-                var converterResult = new Dictionary<HitObject, IEnumerable<HitObject>>();
-
-                var working = new ConversionWorkingBeatmap(beatmap)
+            var conversionTask = Task.Factory.StartNew(
+                () =>
                 {
-                    ConversionGenerated = (o, r, c) =>
+                    var beatmap = GetBeatmap(name);
+
+                    string beforeConversion = beatmap.Serialize();
+
+                    var converterResult = new Dictionary<HitObject, IEnumerable<HitObject>>();
+
+                    var working = new ConversionWorkingBeatmap(beatmap)
                     {
-                        converterResult[o] = r;
-                        OnConversionGenerated(o, r, c);
-                    }
-                };
+                        ConversionGenerated = (o, r, c) =>
+                        {
+                            converterResult[o] = r;
+                            OnConversionGenerated(o, r, c);
+                        },
+                    };
 
-                working.GetPlayableBeatmap(CreateRuleset().RulesetInfo, mods);
+                    working.GetPlayableBeatmap(CreateRuleset().RulesetInfo, mods);
 
-                string afterConversion = beatmap.Serialize();
+                    string afterConversion = beatmap.Serialize();
 
-                Assert.AreEqual(beforeConversion, afterConversion, "Conversion altered original beatmap");
+                    Assert.AreEqual(
+                        beforeConversion,
+                        afterConversion,
+                        "Conversion altered original beatmap"
+                    );
 
-                return new ConvertResult
-                {
-                    Mappings = converterResult.Select(r =>
+                    return new ConvertResult
                     {
-                        var mapping = CreateConvertMapping(r.Key);
-                        mapping.StartTime = r.Key.StartTime;
-                        mapping.Objects.AddRange(r.Value.SelectMany(CreateConvertValue));
-                        return mapping;
-                    }).ToList()
-                };
-            }, TaskCreationOptions.LongRunning);
+                        Mappings = converterResult
+                            .Select(r =>
+                            {
+                                var mapping = CreateConvertMapping(r.Key);
+                                mapping.StartTime = r.Key.StartTime;
+                                mapping.Objects.AddRange(r.Value.SelectMany(CreateConvertValue));
+                                return mapping;
+                            })
+                            .ToList(),
+                    };
+                },
+                TaskCreationOptions.LongRunning
+            );
 
             if (!conversionTask.Wait(10000))
                 Assert.Fail("Conversion timed out");
@@ -153,13 +191,19 @@ namespace osu.Game.Tests.Beatmaps
             return conversionTask.GetResultSafely();
         }
 
-        protected virtual void OnConversionGenerated(HitObject original, IEnumerable<HitObject> result, IBeatmapConverter beatmapConverter)
-        {
-        }
+        protected virtual void OnConversionGenerated(
+            HitObject original,
+            IEnumerable<HitObject> result,
+            IBeatmapConverter beatmapConverter
+        ) { }
 
         private ConvertResult read(string name)
         {
-            using (var resStream = openResource($"{resource_namespace}.{name}{expected_conversion_suffix}.json"))
+            using (
+                var resStream = openResource(
+                    $"{resource_namespace}.{name}{expected_conversion_suffix}.json"
+                )
+            )
             using (var reader = new StreamReader(resStream))
             {
                 string contents = reader.ReadToEnd();
@@ -177,7 +221,10 @@ namespace osu.Game.Tests.Beatmaps
                 var beatmap = decoder.Decode(stream);
 
                 var rulesetInstance = CreateRuleset();
-                beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.Ruleset.OnlineID == rulesetInstance.RulesetInfo.OnlineID ? rulesetInstance.RulesetInfo : new RulesetInfo();
+                beatmap.BeatmapInfo.Ruleset =
+                    beatmap.BeatmapInfo.Ruleset.OnlineID == rulesetInstance.RulesetInfo.OnlineID
+                        ? rulesetInstance.RulesetInfo
+                        : new RulesetInfo();
 
                 return beatmap;
             }
@@ -185,8 +232,11 @@ namespace osu.Game.Tests.Beatmaps
 
         private Stream openResource(string name)
         {
-            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).AsNonNull();
-            return Assembly.LoadFrom(Path.Combine(localPath, $"{ResourceAssembly}.dll")).GetManifestResourceStream($@"{ResourceAssembly}.Resources.{name}");
+            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                .AsNonNull();
+            return Assembly
+                .LoadFrom(Path.Combine(localPath, $"{ResourceAssembly}.dll"))
+                .GetManifestResourceStream($@"{ResourceAssembly}.Resources.{name}");
         }
 
         /// <summary>
@@ -196,7 +246,8 @@ namespace osu.Game.Tests.Beatmaps
         /// This should be used to validate the integrity of the conversion process after a conversion has occurred.
         /// </para>
         /// </summary>
-        protected virtual TConvertMapping CreateConvertMapping(HitObject source) => new TConvertMapping();
+        protected virtual TConvertMapping CreateConvertMapping(HitObject source) =>
+            new TConvertMapping();
 
         /// <summary>
         /// Creates the conversion value for a <see cref="HitObject"/>. A conversion value stores information about the converted <see cref="HitObject"/>.
@@ -238,21 +289,25 @@ namespace osu.Game.Tests.Beatmaps
 
             protected internal override ISkin GetSkin() => throw new NotImplementedException();
 
-            public override Stream GetStream(string storagePath) => throw new NotImplementedException();
+            public override Stream GetStream(string storagePath) =>
+                throw new NotImplementedException();
 
-            protected override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
+            protected override IBeatmapConverter CreateBeatmapConverter(
+                IBeatmap beatmap,
+                Ruleset ruleset
+            )
             {
                 var converter = base.CreateBeatmapConverter(beatmap, ruleset);
-                converter.ObjectConverted += (orig, converted) => ConversionGenerated?.Invoke(orig, converted, converter);
+                converter.ObjectConverted += (orig, converted) =>
+                    ConversionGenerated?.Invoke(orig, converted, converter);
                 return converter;
             }
         }
     }
 
-    public abstract class BeatmapConversionTest<TConvertValue> : BeatmapConversionTest<ConvertMapping<TConvertValue>, TConvertValue>
-        where TConvertValue : IEquatable<TConvertValue>
-    {
-    }
+    public abstract class BeatmapConversionTest<TConvertValue>
+        : BeatmapConversionTest<ConvertMapping<TConvertValue>, TConvertValue>
+        where TConvertValue : IEquatable<TConvertValue> { }
 
     public class ConvertMapping<TConvertValue> : IEquatable<ConvertMapping<TConvertValue>>
         where TConvertValue : IEquatable<TConvertValue>
@@ -272,10 +327,9 @@ namespace osu.Game.Tests.Beatmaps
         /// <summary>
         /// Invoked after this <see cref="ConvertMapping{TConvertValue}"/> is populated to post-process the contained data.
         /// </summary>
-        public virtual void PostProcess()
-        {
-        }
+        public virtual void PostProcess() { }
 
-        public virtual bool Equals(ConvertMapping<TConvertValue> other) => StartTime == other?.StartTime;
+        public virtual bool Equals(ConvertMapping<TConvertValue> other) =>
+            StartTime == other?.StartTime;
     }
 }

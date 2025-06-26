@@ -12,9 +12,9 @@ using osu.Game.Beatmaps.Drawables;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osuTK;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Overlays.Profile.Sections.Historical
 {
@@ -39,72 +39,81 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new UpdateableOnlineBeatmapSetCover(BeatmapSetCoverType.List)
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Y,
-                    Width = cover_width,
-                    OnlineInfo = mostPlayed.BeatmapSet,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Left = cover_width - corner_radius },
-                    Children = new Drawable[]
+                    new UpdateableOnlineBeatmapSetCover(BeatmapSetCoverType.List)
                     {
-                        new Container
+                        RelativeSizeAxes = Axes.Y,
+                        Width = cover_width,
+                        OnlineInfo = mostPlayed.BeatmapSet,
+                    },
+                    new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding { Left = cover_width - corner_radius },
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Masking = true,
-                            CornerRadius = corner_radius,
-                            Children = new Drawable[]
+                            new Container
                             {
-                                new MostPlayedBeatmapContainer
+                                RelativeSizeAxes = Axes.Both,
+                                Masking = true,
+                                CornerRadius = corner_radius,
+                                Children = new Drawable[]
                                 {
-                                    Child = new Container
+                                    new MostPlayedBeatmapContainer
                                     {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Padding = new MarginPadding(10),
-                                        Children = new Drawable[]
+                                        Child = new Container
                                         {
-                                            new FillFlowContainer
+                                            RelativeSizeAxes = Axes.Both,
+                                            Padding = new MarginPadding(10),
+                                            Children = new Drawable[]
                                             {
-                                                Anchor = Anchor.CentreLeft,
-                                                Origin = Anchor.CentreLeft,
-                                                AutoSizeAxes = Axes.Both,
-                                                Direction = FillDirection.Vertical,
-                                                Children = new Drawable[]
+                                                new FillFlowContainer
                                                 {
-                                                    new MostPlayedBeatmapMetadataContainer(mostPlayed.BeatmapInfo),
-                                                    new LinkFlowContainer(t =>
+                                                    Anchor = Anchor.CentreLeft,
+                                                    Origin = Anchor.CentreLeft,
+                                                    AutoSizeAxes = Axes.Both,
+                                                    Direction = FillDirection.Vertical,
+                                                    Children = new Drawable[]
                                                     {
-                                                        t.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular);
-                                                        t.Colour = colourProvider.Foreground1;
-                                                    })
-                                                    {
-                                                        AutoSizeAxes = Axes.Both,
-                                                        Direction = FillDirection.Horizontal,
-                                                    }.With(d =>
-                                                    {
-                                                        d.AddText("mapped by ");
-                                                        d.AddUserLink(mostPlayed.BeatmapSet.Author);
-                                                    }),
-                                                }
+                                                        new MostPlayedBeatmapMetadataContainer(
+                                                            mostPlayed.BeatmapInfo
+                                                        ),
+                                                        new LinkFlowContainer(t =>
+                                                        {
+                                                            t.Font = OsuFont.GetFont(
+                                                                size: 12,
+                                                                weight: FontWeight.Regular
+                                                            );
+                                                            t.Colour = colourProvider.Foreground1;
+                                                        })
+                                                        {
+                                                            AutoSizeAxes = Axes.Both,
+                                                            Direction = FillDirection.Horizontal,
+                                                        }.With(d =>
+                                                        {
+                                                            d.AddText("mapped by ");
+                                                            d.AddUserLink(
+                                                                mostPlayed.BeatmapSet.Author
+                                                            );
+                                                        }),
+                                                    },
+                                                },
+                                                new PlayCountText(mostPlayed.PlayCount)
+                                                {
+                                                    Anchor = Anchor.CentreRight,
+                                                    Origin = Anchor.CentreRight,
+                                                },
                                             },
-                                            new PlayCountText(mostPlayed.PlayCount)
-                                            {
-                                                Anchor = Anchor.CentreRight,
-                                                Origin = Anchor.CentreRight
-                                            },
-                                        }
+                                        },
                                     },
-                                }
-                            }
-                        }
-                    }
+                                },
+                            },
+                        },
+                    },
                 }
-            });
+            );
         }
 
         private partial class MostPlayedBeatmapContainer : ProfileItemContainer
@@ -120,9 +129,7 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
         private partial class MostPlayedBeatmapMetadataContainer : BeatmapMetadataContainer
         {
             public MostPlayedBeatmapMetadataContainer(IBeatmapInfo beatmapInfo)
-                : base(beatmapInfo)
-            {
-            }
+                : base(beatmapInfo) { }
 
             protected override Drawable[] CreateText(IBeatmapInfo beatmapInfo)
             {
@@ -133,22 +140,22 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
                     new OsuSpriteText
                     {
                         Text = new RomanisableString(metadata.TitleUnicode, metadata.Title),
-                        Font = OsuFont.GetFont(weight: FontWeight.Bold)
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold),
                     },
                     new OsuSpriteText
                     {
                         Text = $" [{beatmapInfo.DifficultyName}]",
-                        Font = OsuFont.GetFont(weight: FontWeight.Bold)
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold),
                     },
                     new OsuSpriteText
                     {
                         Text = " by ",
-                        Font = OsuFont.GetFont(weight: FontWeight.Regular)
+                        Font = OsuFont.GetFont(weight: FontWeight.Regular),
                     },
                     new OsuSpriteText
                     {
                         Text = new RomanisableString(metadata.ArtistUnicode, metadata.Artist),
-                        Font = OsuFont.GetFont(weight: FontWeight.Regular)
+                        Font = OsuFont.GetFont(weight: FontWeight.Regular),
                     },
                 };
             }
@@ -184,7 +191,7 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
                             Text = playCount.ToString(),
                             Font = OsuFont.GetFont(size: 20, weight: FontWeight.Regular),
                         },
-                    }
+                    },
                 };
             }
 

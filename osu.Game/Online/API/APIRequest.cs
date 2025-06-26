@@ -17,7 +17,8 @@ namespace osu.Game.Online.API
     /// An API request with a well-defined response type.
     /// </summary>
     /// <typeparam name="T">Type of the response (used for deserialisation).</typeparam>
-    public abstract class APIRequest<T> : APIRequest where T : class
+    public abstract class APIRequest<T> : APIRequest
+        where T : class
     {
         protected override WebRequest CreateWebRequest() => new OsuJsonWebRequest<T>(Uri);
 
@@ -44,7 +45,10 @@ namespace osu.Game.Online.API
             if (WebRequest != null)
             {
                 Response = ((OsuJsonWebRequest<T>)WebRequest).ResponseObject;
-                Logger.Log($"{GetType().ReadableName()} finished with response size of {WebRequest.ResponseStream.Length:#,0} bytes", LoggingTarget.Network);
+                Logger.Log(
+                    $"{GetType().ReadableName()} finished with response size of {WebRequest.ResponseStream.Length:#,0} bytes",
+                    LoggingTarget.Network
+                );
             }
 
             if (Response == null)
@@ -111,7 +115,9 @@ namespace osu.Game.Online.API
         public void AttachAPI(IAPIProvider apiAccess)
         {
             if (API != null && API != apiAccess)
-                throw new InvalidOperationException("Attached API cannot be changed after initial set.");
+                throw new InvalidOperationException(
+                    "Attached API cannot be changed after initial set."
+                );
 
             API = apiAccess;
         }
@@ -120,25 +126,34 @@ namespace osu.Game.Online.API
         {
             if (API == null)
             {
-                Fail(new NotSupportedException($"A {nameof(APIAccess)} is required to perform requests."));
+                Fail(
+                    new NotSupportedException(
+                        $"A {nameof(APIAccess)} is required to perform requests."
+                    )
+                );
                 return;
             }
 
             User = API.LocalUser.Value;
 
-            if (isFailing) return;
+            if (isFailing)
+                return;
 
             WebRequest = CreateWebRequest();
             WebRequest.Failed += Fail;
             WebRequest.AllowRetryOnTimeout = false;
 
             WebRequest.AddHeader(@"Accept-Language", API.Language.ToCultureCode());
-            WebRequest.AddHeader(@"x-api-version", API.APIVersion.ToString(CultureInfo.InvariantCulture));
+            WebRequest.AddHeader(
+                @"x-api-version",
+                API.APIVersion.ToString(CultureInfo.InvariantCulture)
+            );
 
             if (!string.IsNullOrEmpty(API.AccessToken))
                 WebRequest.AddHeader(@"Authorization", $@"Bearer {API.AccessToken}");
 
-            if (isFailing) return;
+            if (isFailing)
+                return;
 
             try
             {
@@ -151,11 +166,13 @@ namespace osu.Game.Online.API
                 // the last check of `isFailing` above.
             }
 
-            if (isFailing) return;
+            if (isFailing)
+                return;
 
             PostProcess();
 
-            if (isFailing) return;
+            if (isFailing)
+                return;
 
             TriggerSuccess();
         }
@@ -163,9 +180,7 @@ namespace osu.Game.Online.API
         /// <summary>
         /// Perform any post-processing actions after a successful request.
         /// </summary>
-        protected virtual void PostProcess()
-        {
-        }
+        protected virtual void PostProcess() { }
 
         internal void TriggerSuccess()
         {
@@ -214,18 +229,21 @@ namespace osu.Game.Online.API
                     string? responseString = WebRequest?.GetResponseString();
 
                     // naive check whether there's an error in the response to avoid unnecessary JSON deserialisation.
-                    if (!string.IsNullOrEmpty(responseString) && responseString.Contains(@"""error"""))
+                    if (
+                        !string.IsNullOrEmpty(responseString)
+                        && responseString.Contains(@"""error""")
+                    )
                     {
                         try
                         {
                             // attempt to decode a displayable error string.
-                            var error = JsonConvert.DeserializeObject<DisplayableError>(responseString);
+                            var error = JsonConvert.DeserializeObject<DisplayableError>(
+                                responseString
+                            );
                             if (error != null)
                                 e = new APIException(error.ErrorMessage, e);
                         }
-                        catch
-                        {
-                        }
+                        catch { }
                     }
                 }
 

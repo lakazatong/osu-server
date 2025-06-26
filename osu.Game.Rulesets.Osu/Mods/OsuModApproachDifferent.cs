@@ -13,7 +13,10 @@ using osu.Game.Rulesets.Osu.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModApproachDifferent : Mod, IApplicableToDrawableHitObject, IRequiresApproachCircles
+    public class OsuModApproachDifferent
+        : Mod,
+            IApplicableToDrawableHitObject,
+            IRequiresApproachCircles
     {
         public override string Name => "Approach Different";
         public override string Acronym => "AD";
@@ -21,31 +24,45 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override double ScoreMultiplier => 1;
         public override IconUsage? Icon { get; } = FontAwesome.Regular.Circle;
 
-        public override Type[] IncompatibleMods => new[] { typeof(IHidesApproachCircles), typeof(OsuModFreezeFrame) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(IHidesApproachCircles), typeof(OsuModFreezeFrame) };
 
-        [SettingSource("Initial size", "Change the initial size of the approach circle, relative to hit circles.", 0)]
-        public BindableFloat Scale { get; } = new BindableFloat(4)
-        {
-            Precision = 0.1f,
-            MinValue = 1.5f,
-            MaxValue = 10,
-        };
+        [SettingSource(
+            "Initial size",
+            "Change the initial size of the approach circle, relative to hit circles.",
+            0
+        )]
+        public BindableFloat Scale { get; } =
+            new BindableFloat(4)
+            {
+                Precision = 0.1f,
+                MinValue = 1.5f,
+                MaxValue = 10,
+            };
 
         [SettingSource("Style", "Change the animation style of the approach circles.", 1)]
-        public Bindable<AnimationStyle> Style { get; } = new Bindable<AnimationStyle>(AnimationStyle.Gravity);
+        public Bindable<AnimationStyle> Style { get; } =
+            new Bindable<AnimationStyle>(AnimationStyle.Gravity);
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
         {
             drawable.ApplyCustomUpdateState += (drawableObject, _) =>
             {
-                if (!(drawableObject is DrawableHitCircle drawableHitCircle)) return;
+                if (!(drawableObject is DrawableHitCircle drawableHitCircle))
+                    return;
 
                 var hitCircle = drawableHitCircle.HitObject;
 
                 drawableHitCircle.ApproachCircle.ClearTransforms(targetMember: nameof(Scale));
 
-                using (drawableHitCircle.BeginAbsoluteSequence(hitCircle.StartTime - hitCircle.TimePreempt))
-                    drawableHitCircle.ApproachCircle.ScaleTo(Scale.Value).ScaleTo(1f, hitCircle.TimePreempt, getEasing(Style.Value));
+                using (
+                    drawableHitCircle.BeginAbsoluteSequence(
+                        hitCircle.StartTime - hitCircle.TimePreempt
+                    )
+                )
+                    drawableHitCircle
+                        .ApproachCircle.ScaleTo(Scale.Value)
+                        .ScaleTo(1f, hitCircle.TimePreempt, getEasing(Style.Value));
             };
         }
 
@@ -84,7 +101,11 @@ namespace osu.Game.Rulesets.Osu.Mods
                     return Easing.OutQuint;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(style), style, @"Unsupported animation style");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(style),
+                        style,
+                        @"Unsupported animation style"
+                    );
             }
         }
 

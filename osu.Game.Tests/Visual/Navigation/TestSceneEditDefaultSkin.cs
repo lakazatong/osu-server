@@ -19,21 +19,48 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestEditDefaultSkin()
         {
-            AddAssert("is default skin", () => skinManager.CurrentSkinInfo.Value.ID == SkinInfo.ARGON_SKIN);
+            AddAssert(
+                "is default skin",
+                () => skinManager.CurrentSkinInfo.Value.ID == SkinInfo.ARGON_SKIN
+            );
 
-            AddStep("open settings", () => { Game.Settings.Show(); });
+            AddStep(
+                "open settings",
+                () =>
+                {
+                    Game.Settings.Show();
+                }
+            );
 
             // Until step requires as settings has a delayed load.
-            AddUntilStep("export button disabled", () => Game.Settings.ChildrenOfType<SkinSection.ExportSkinButton>().SingleOrDefault()?.Enabled.Value == false);
+            AddUntilStep(
+                "export button disabled",
+                () =>
+                    Game.Settings.ChildrenOfType<SkinSection.ExportSkinButton>()
+                        .SingleOrDefault()
+                        ?.Enabled.Value == false
+            );
 
             // Will create a mutable skin.
             AddStep("open skin editor", () => skinEditor.Show());
 
             // Until step required as the skin editor may take time to load (and an extra scheduled frame for the mutable part).
-            AddUntilStep("is modified default skin", () => skinManager.CurrentSkinInfo.Value.ID != SkinInfo.ARGON_SKIN);
-            AddAssert("is not protected", () => skinManager.CurrentSkinInfo.Value.PerformRead(s => !s.Protected));
+            AddUntilStep(
+                "is modified default skin",
+                () => skinManager.CurrentSkinInfo.Value.ID != SkinInfo.ARGON_SKIN
+            );
+            AddAssert(
+                "is not protected",
+                () => skinManager.CurrentSkinInfo.Value.PerformRead(s => !s.Protected)
+            );
 
-            AddUntilStep("export button enabled", () => Game.Settings.ChildrenOfType<SkinSection.ExportSkinButton>().SingleOrDefault()?.Enabled.Value == true);
+            AddUntilStep(
+                "export button enabled",
+                () =>
+                    Game.Settings.ChildrenOfType<SkinSection.ExportSkinButton>()
+                        .SingleOrDefault()
+                        ?.Enabled.Value == true
+            );
         }
     }
 }

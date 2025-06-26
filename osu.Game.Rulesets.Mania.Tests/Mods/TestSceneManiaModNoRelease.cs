@@ -40,11 +40,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestNoInput()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_before_head),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_before_head),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Miss);
@@ -58,11 +60,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestCorrectInput()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Perfect);
@@ -76,11 +80,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestLateRelease()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Perfect);
@@ -94,11 +100,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressTooEarlyAndReleaseAfterTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_after_tail, ManiaAction.Key1),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_after_tail, ManiaAction.Key1),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Miss);
@@ -111,11 +119,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressTooEarlyAndReleaseAtTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Miss);
@@ -128,13 +138,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressTooEarlyThenPressAtStartAndReleaseAfterTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_before_head + 10),
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_before_head + 10),
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Perfect);
@@ -147,13 +159,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressTooEarlyThenPressAtStartAndReleaseAtTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_before_head + 10),
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_before_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_before_head + 10),
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Perfect);
@@ -166,12 +180,14 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAtStartAndBreak()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + 10),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + 10),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Miss);
@@ -184,13 +200,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAtStartThenReleaseAndImmediatelyRepress()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + 1),
-                new ManiaReplayFrame(time_head + 2, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + 1),
+                    new ManiaReplayFrame(time_head + 2, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertComboAtJudgement(0, 1);
@@ -206,13 +224,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAtStartThenBreakThenRepressAndReleaseAfterTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + 10),
-                new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + 10),
+                    new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Meh);
@@ -225,13 +245,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAtStartThenBreakThenRepressAndReleaseAtTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + 10),
-                new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + 10),
+                    new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Perfect);
             assertTailJudgement(HitResult.Meh);
@@ -244,11 +266,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressDuringNoteAndReleaseAfterTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
-                new ManiaReplayFrame(time_after_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_after_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Meh);
@@ -261,11 +285,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressDuringNoteAndReleaseAtTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_during_hold_1, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Meh);
@@ -290,20 +316,23 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                         StartTime = time_head,
                         Duration = duration,
                         Column = 0,
-                    }
+                    },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head + duration + 60, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + duration + 70),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head + duration + 60, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + duration + 70),
+                },
+                beatmap
+            );
 
             assertHeadJudgement(HitResult.Ok);
             assertTailJudgement(HitResult.Perfect);
@@ -333,24 +362,24 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                     },
                     {
                         // Next note within tail lenience
-                        note = new Note
-                        {
-                            StartTime = time_head + duration + 10
-                        }
-                    }
+                        note = new Note { StartTime = time_head + duration + 10 }
+                    },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_head + duration, ManiaAction.Key1),
-                new ManiaReplayFrame(time_head + duration + 10),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_head + duration, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_head + duration + 10),
+                },
+                beatmap
+            );
 
             assertHeadJudgement(HitResult.Good);
             assertTailJudgement(HitResult.Perfect);
@@ -379,24 +408,24 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                     },
                     {
                         // Next note within tail lenience
-                        note = new Note
-                        {
-                            StartTime = time_tail + 50
-                        }
-                    }
+                        note = new Note { StartTime = time_tail + 50 }
+                    },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_tail - 10, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_tail - 10, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail),
+                },
+                beatmap
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Miss);
@@ -411,11 +440,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAndReleaseJustAfterTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_tail + 20, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail + 30),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_tail + 20, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail + 30),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Meh);
@@ -441,20 +472,23 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                         Duration = time_tail - time_head,
                         Column = 0,
                     },
-                    note
+                    note,
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_tail + 10, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail + 20),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_tail + 10, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail + 20),
+                },
+                beatmap
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Miss);
@@ -469,11 +503,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPressAndReleaseAtTail()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(time_tail, ManiaAction.Key1),
-                new ManiaReplayFrame(time_tail + 10),
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(time_tail, ManiaAction.Key1),
+                    new ManiaReplayFrame(time_tail + 10),
+                }
+            );
 
             assertHeadJudgement(HitResult.Miss);
             assertTailJudgement(HitResult.Meh);
@@ -509,21 +545,34 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                         SliderTickRate = 4,
                         OverallDifficulty = 10,
                     },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(beatmap.HitObjects[1].StartTime, ManiaAction.Key1),
-                new ManiaReplayFrame(beatmap.HitObjects[1].GetEndTime()),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(beatmap.HitObjects[1].StartTime, ManiaAction.Key1),
+                    new ManiaReplayFrame(beatmap.HitObjects[1].GetEndTime()),
+                },
+                beatmap
+            );
 
-            AddAssert("first hold note missed", () => judgementResults.Where(j => beatmap.HitObjects[0].NestedHitObjects.Contains(j.HitObject))
-                                                                      .All(j => !j.Type.IsHit()));
+            AddAssert(
+                "first hold note missed",
+                () =>
+                    judgementResults
+                        .Where(j => beatmap.HitObjects[0].NestedHitObjects.Contains(j.HitObject))
+                        .All(j => !j.Type.IsHit())
+            );
 
-            AddAssert("second hold note hit", () => judgementResults.Where(j => beatmap.HitObjects[1].NestedHitObjects.Contains(j.HitObject))
-                                                                    .All(j => j.Type.IsHit()));
+            AddAssert(
+                "second hold note hit",
+                () =>
+                    judgementResults
+                        .Where(j => beatmap.HitObjects[1].NestedHitObjects.Contains(j.HitObject))
+                        .All(j => j.Type.IsHit())
+            );
         }
 
         [Test]
@@ -543,30 +592,58 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                 BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
             };
 
-            performTest(new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(beatmap.HitObjects[0].StartTime, ManiaAction.Key1),
-                new ManiaReplayFrame(beatmap.HitObjects[0].GetEndTime() + 1),
-            }, beatmap);
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new ManiaReplayFrame(beatmap.HitObjects[0].StartTime, ManiaAction.Key1),
+                    new ManiaReplayFrame(beatmap.HitObjects[0].GetEndTime() + 1),
+                },
+                beatmap
+            );
 
-            AddAssert("hold note hit", () => judgementResults.Where(j => beatmap.HitObjects[0].NestedHitObjects.Contains(j.HitObject))
-                                                             .All(j => j.Type.IsHit()));
+            AddAssert(
+                "hold note hit",
+                () =>
+                    judgementResults
+                        .Where(j => beatmap.HitObjects[0].NestedHitObjects.Contains(j.HitObject))
+                        .All(j => j.Type.IsHit())
+            );
         }
 
-        private void assertHitObjectJudgement(HitObject hitObject, HitResult result)
-            => AddAssert($"object judged as {result}", () => judgementResults.First(j => j.HitObject == hitObject).Type, () => Is.EqualTo(result));
+        private void assertHitObjectJudgement(HitObject hitObject, HitResult result) =>
+            AddAssert(
+                $"object judged as {result}",
+                () => judgementResults.First(j => j.HitObject == hitObject).Type,
+                () => Is.EqualTo(result)
+            );
 
-        private void assertHeadJudgement(HitResult result)
-            => AddAssert($"head judged as {result}", () => judgementResults.First(j => j.HitObject is Note).Type, () => Is.EqualTo(result));
+        private void assertHeadJudgement(HitResult result) =>
+            AddAssert(
+                $"head judged as {result}",
+                () => judgementResults.First(j => j.HitObject is Note).Type,
+                () => Is.EqualTo(result)
+            );
 
-        private void assertTailJudgement(HitResult result)
-            => AddAssert($"tail judged as {result}", () => judgementResults.Single(j => j.HitObject is TailNote).Type, () => Is.EqualTo(result));
+        private void assertTailJudgement(HitResult result) =>
+            AddAssert(
+                $"tail judged as {result}",
+                () => judgementResults.Single(j => j.HitObject is TailNote).Type,
+                () => Is.EqualTo(result)
+            );
 
-        private void assertNoteJudgement(HitResult result)
-            => AddAssert($"hold note judged as {result}", () => judgementResults.Single(j => j.HitObject is HoldNote).Type, () => Is.EqualTo(result));
+        private void assertNoteJudgement(HitResult result) =>
+            AddAssert(
+                $"hold note judged as {result}",
+                () => judgementResults.Single(j => j.HitObject is HoldNote).Type,
+                () => Is.EqualTo(result)
+            );
 
-        private void assertComboAtJudgement(int judgementIndex, int combo)
-            => AddAssert($"combo at judgement {judgementIndex} is {combo}", () => judgementResults.ElementAt(judgementIndex).ComboAfterJudgement, () => Is.EqualTo(combo));
+        private void assertComboAtJudgement(int judgementIndex, int combo) =>
+            AddAssert(
+                $"combo at judgement {judgementIndex} is {combo}",
+                () => judgementResults.ElementAt(judgementIndex).ComboAfterJudgement,
+                () => Is.EqualTo(combo)
+            );
 
         private ScoreAccessibleReplayPlayer currentPlayer = null!;
 
@@ -583,7 +660,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                             StartTime = time_head,
                             Duration = time_tail - time_head,
                             Column = 0,
-                        }
+                        },
                     },
                     BeatmapInfo =
                     {
@@ -595,33 +672,39 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
                 beatmap.ControlPointInfo.Add(0, new EffectControlPoint { ScrollSpeed = 0.1f });
             }
 
-            AddStep("load player", () =>
-            {
-                SelectedMods.Value = new List<Mod>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    new ManiaModNoRelease()
-                };
+                    SelectedMods.Value = new List<Mod> { new ManiaModNoRelease() };
 
-                Beatmap.Value = CreateWorkingBeatmap(beatmap);
+                    Beatmap.Value = CreateWorkingBeatmap(beatmap);
 
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
 
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
+                    p.OnLoadComplete += _ =>
                     {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
 
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -631,13 +714,8 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

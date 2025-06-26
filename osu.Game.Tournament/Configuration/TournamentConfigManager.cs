@@ -13,9 +13,7 @@ namespace osu.Game.Tournament.Configuration
         private const string default_tournament = "default";
 
         public TournamentConfigManager(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
 
         protected override void InitialiseDefaults()
         {

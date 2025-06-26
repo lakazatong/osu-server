@@ -17,13 +17,20 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints
         [Resolved]
         private EditorClock editorClock { get; set; } = null!;
 
-        protected new DrawableOsuHitObject DrawableObject => (DrawableOsuHitObject)base.DrawableObject;
+        protected new DrawableOsuHitObject DrawableObject =>
+            (DrawableOsuHitObject)base.DrawableObject;
 
         protected override bool AlwaysShowWhenSelected => true;
 
-        protected override bool ShouldBeAlive => base.ShouldBeAlive
-                                                 || (DrawableObject is not DrawableSpinner && ShowHitMarkers.Value && editorClock.CurrentTime >= Item.StartTime
-                                                     && editorClock.CurrentTime - Item.GetEndTime() < HitCircleOverlapMarker.FADE_OUT_EXTENSION);
+        protected override bool ShouldBeAlive =>
+            base.ShouldBeAlive
+            || (
+                DrawableObject is not DrawableSpinner
+                && ShowHitMarkers.Value
+                && editorClock.CurrentTime >= Item.StartTime
+                && editorClock.CurrentTime - Item.GetEndTime()
+                    < HitCircleOverlapMarker.FADE_OUT_EXTENSION
+            );
 
         public override bool IsSelectable =>
             // Bypass fade out extension from hit markers for selection purposes.
@@ -31,8 +38,6 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints
             base.ShouldBeAlive;
 
         protected OsuSelectionBlueprint(T hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
     }
 }

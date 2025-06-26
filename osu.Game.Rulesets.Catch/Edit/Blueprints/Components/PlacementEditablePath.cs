@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
         private JuiceStreamPathVertex lastVertex;
 
         public PlacementEditablePath(Func<float, double> positionToTime)
-            : base(positionToTime)
-        {
-        }
+            : base(positionToTime) { }
 
         public void AddNewVertex()
         {

@@ -87,7 +87,7 @@ namespace osu.Game.Overlays.Mods
                         Anchor = Anchor.TopCentre,
                         Depth = float.MinValue,
                         Origin = Anchor.TopCentre,
-                        Close = Hide
+                        Close = Hide,
                     },
                     MainAreaContent = new Container
                     {
@@ -96,9 +96,9 @@ namespace osu.Game.Overlays.Mods
                         {
                             Top = ShearedOverlayHeader.HEIGHT,
                             Bottom = ScreenFooter.HEIGHT + PADDING,
-                        }
+                        },
                     },
-                }
+                },
             };
         }
 
@@ -139,7 +139,10 @@ namespace osu.Game.Overlays.Mods
 
             if (footer != null)
             {
-                activeOverlayRegistration = footer.RegisterActiveOverlayContainer(this, out var footerContent);
+                activeOverlayRegistration = footer.RegisterActiveOverlayContainer(
+                    this,
+                    out var footerContent
+                );
                 DisplayedFooterContent = footerContent;
 
                 if (footer.State.Value == Visibility.Hidden)

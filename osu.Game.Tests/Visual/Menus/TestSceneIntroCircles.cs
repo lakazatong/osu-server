@@ -10,6 +10,7 @@ namespace osu.Game.Tests.Visual.Menus
     public partial class TestSceneIntroCircles : IntroTestScene
     {
         protected override bool IntroReliesOnTrack => false;
+
         protected override IntroScreen CreateScreen() => new IntroCircles();
     }
 }

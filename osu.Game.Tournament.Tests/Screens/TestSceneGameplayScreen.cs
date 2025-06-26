@@ -49,23 +49,28 @@ namespace osu.Game.Tournament.Tests.Screens
 
         private void createScreen()
         {
-            AddStep("setup screen", () =>
-            {
-                Remove(chat, false);
-
-                Children = new Drawable[]
+            AddStep(
+                "setup screen",
+                () =>
                 {
-                    new GameplayScreen(),
-                    chat,
-                };
-            });
+                    Remove(chat, false);
+
+                    Children = new Drawable[] { new GameplayScreen(), chat };
+                }
+            );
         }
 
-        private void checkScoreVisibility(bool visible)
-            => AddUntilStep($"scores {(visible ? "shown" : "hidden")}",
-                () => this.ChildrenOfType<TeamScore>().All(score => score.Alpha == (visible ? 1 : 0)));
+        private void checkScoreVisibility(bool visible) =>
+            AddUntilStep(
+                $"scores {(visible ? "shown" : "hidden")}",
+                () =>
+                    this.ChildrenOfType<TeamScore>().All(score => score.Alpha == (visible ? 1 : 0))
+            );
 
-        private void toggleWarmup()
-            => AddStep("toggle warmup", () => this.ChildrenOfType<TourneyButton>().First().TriggerClick());
+        private void toggleWarmup() =>
+            AddStep(
+                "toggle warmup",
+                () => this.ChildrenOfType<TourneyButton>().First().TriggerClick()
+            );
     }
 }

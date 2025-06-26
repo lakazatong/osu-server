@@ -27,7 +27,8 @@ namespace osu.Game.Screens.SelectV2
             private readonly FillFlowContainer<StatisticDifficulty> statisticsFlow;
             private readonly GridContainer tinyStatisticsGrid;
 
-            private IReadOnlyList<StatisticDifficulty.Data> statistics = Array.Empty<StatisticDifficulty.Data>();
+            private IReadOnlyList<StatisticDifficulty.Data> statistics =
+                Array.Empty<StatisticDifficulty.Data>();
 
             public IReadOnlyList<StatisticDifficulty.Data> Statistics
             {
@@ -95,7 +96,7 @@ namespace osu.Game.Screens.SelectV2
                             new Dimension(GridSizeMode.AutoSize),
                             new Dimension(GridSizeMode.Absolute, 8),
                             new Dimension(GridSizeMode.AutoSize),
-                        }
+                        },
                     },
                 };
 
@@ -136,7 +137,9 @@ namespace osu.Game.Screens.SelectV2
                 if (statisticsFlow.Count == 0)
                     return;
 
-                float flowWidth = statisticsFlow[0].Width * statisticsFlow.Count + statisticsFlow.Spacing.X * (statisticsFlow.Count - 1);
+                float flowWidth =
+                    statisticsFlow[0].Width * statisticsFlow.Count
+                    + statisticsFlow.Spacing.X * (statisticsFlow.Count - 1);
                 bool tiny = !autoSize && DrawWidth < flowWidth - 20;
 
                 if (displayedTinyStatistics != tiny)
@@ -156,57 +159,65 @@ namespace osu.Game.Screens.SelectV2
                 }
             }
 
-            private void updateStatisticsSizing() => SchedulerAfterChildren.AddOnce(() =>
-            {
-                if (statisticsFlow.Count == 0)
-                    return;
+            private void updateStatisticsSizing() =>
+                SchedulerAfterChildren.AddOnce(() =>
+                {
+                    if (statisticsFlow.Count == 0)
+                        return;
 
-                float statisticWidth = Math.Max(65, statisticsFlow.Max(s => s.LabelWidth));
+                    float statisticWidth = Math.Max(65, statisticsFlow.Max(s => s.LabelWidth));
 
-                foreach (var statistic in statisticsFlow)
-                    statistic.Width = statisticWidth;
+                    foreach (var statistic in statisticsFlow)
+                        statistic.Width = statisticWidth;
 
-                drawSizeLayout.Invalidate();
-            });
+                    drawSizeLayout.Invalidate();
+                });
 
             private void updateStatistics()
             {
-                if (statisticsFlow.Select(s => s.Value.Label)
-                                  .SequenceEqual(statistics.Select(s => s.Label)))
+                if (
+                    statisticsFlow
+                        .Select(s => s.Value.Label)
+                        .SequenceEqual(statistics.Select(s => s.Label))
+                )
                 {
                     for (int i = 0; i < statistics.Count; i++)
                         statisticsFlow[i].Value = statistics[i];
                 }
                 else
                 {
-                    statisticsFlow.ChildrenEnumerable = statistics.Select(d => new StatisticDifficulty
-                    {
-                        AccentColour = accentColour,
-                        Value = d
-                    });
+                    statisticsFlow.ChildrenEnumerable = statistics.Select(
+                        d => new StatisticDifficulty { AccentColour = accentColour, Value = d }
+                    );
                     updateStatisticsSizing();
                 }
             }
 
             private void updateTinyStatistics()
             {
-                tinyStatisticsGrid.RowDimensions = statistics.Select(_ => new Dimension(GridSizeMode.AutoSize)).ToArray();
-                tinyStatisticsGrid.Content = statistics.Select(s => new[]
-                {
-                    new OsuSpriteText
-                    {
-                        Text = s.Label,
-                        Font = OsuFont.Style.Caption2.With(weight: FontWeight.SemiBold),
-                        Colour = colourProvider.Content2,
-                    },
-                    Empty(),
-                    new OsuSpriteText
-                    {
-                        Font = OsuFont.Style.Caption2.With(weight: FontWeight.SemiBold),
-                        Text = s.Content ?? s.Value.ToLocalisableString("0.##"),
-                        Colour = colourProvider.Content1,
-                    },
-                }).ToArray();
+                tinyStatisticsGrid.RowDimensions = statistics
+                    .Select(_ => new Dimension(GridSizeMode.AutoSize))
+                    .ToArray();
+                tinyStatisticsGrid.Content = statistics
+                    .Select(s =>
+                        new[]
+                        {
+                            new OsuSpriteText
+                            {
+                                Text = s.Label,
+                                Font = OsuFont.Style.Caption2.With(weight: FontWeight.SemiBold),
+                                Colour = colourProvider.Content2,
+                            },
+                            Empty(),
+                            new OsuSpriteText
+                            {
+                                Font = OsuFont.Style.Caption2.With(weight: FontWeight.SemiBold),
+                                Text = s.Content ?? s.Value.ToLocalisableString("0.##"),
+                                Colour = colourProvider.Content1,
+                            },
+                        }
+                    )
+                    .ToArray();
             }
         }
     }

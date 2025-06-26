@@ -43,15 +43,14 @@ namespace osu.Game.Overlays.BeatmapSet
             };
         }
 
-        protected override Drawable CreateContent() => HeaderContent = new BeatmapSetHeaderContent
-        {
-            BeatmapSet = { BindTarget = BeatmapSet }
-        };
+        protected override Drawable CreateContent() =>
+            HeaderContent = new BeatmapSetHeaderContent
+            {
+                BeatmapSet = { BindTarget = BeatmapSet },
+            };
 
-        protected override Drawable CreateTabControlContent() => RulesetSelector = new BeatmapRulesetSelector
-        {
-            Current = ruleset
-        };
+        protected override Drawable CreateTabControlContent() =>
+            RulesetSelector = new BeatmapRulesetSelector { Current = ruleset };
 
         protected override OverlayTitle CreateTitle() => new BeatmapHeaderTitle();
 

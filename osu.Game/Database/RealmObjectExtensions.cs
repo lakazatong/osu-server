@@ -26,75 +26,93 @@ namespace osu.Game.Database
             c.ShouldMapProperty = pi => pi.SetMethod?.IsPublic == true;
 
             c.CreateMap<BeatmapMetadata, BeatmapMetadata>()
-             .ForMember(s => s.Author, cc => cc.Ignore())
-             .AfterMap((s, d) =>
-             {
-                 copyChangesToRealm(s.Author, d.Author);
-             });
+                .ForMember(s => s.Author, cc => cc.Ignore())
+                .AfterMap(
+                    (s, d) =>
+                    {
+                        copyChangesToRealm(s.Author, d.Author);
+                    }
+                );
             c.CreateMap<BeatmapDifficulty, BeatmapDifficulty>();
             c.CreateMap<RealmUser, RealmUser>();
             c.CreateMap<RealmFile, RealmFile>();
             c.CreateMap<RealmNamedFileUsage, RealmNamedFileUsage>();
             c.CreateMap<BeatmapInfo, BeatmapInfo>()
-             .ForMember(s => s.Ruleset, cc => cc.Ignore())
-             .ForMember(s => s.Metadata, cc => cc.Ignore())
-             .ForMember(s => s.UserSettings, cc => cc.Ignore())
-             .ForMember(s => s.Difficulty, cc => cc.Ignore())
-             .ForMember(s => s.BeatmapSet, cc => cc.Ignore())
-             .AfterMap((s, d) =>
-             {
-                 d.Ruleset = d.Realm!.Find<RulesetInfo>(s.Ruleset.ShortName)!;
-                 copyChangesToRealm(s.Difficulty, d.Difficulty);
-                 copyChangesToRealm(s.Metadata, d.Metadata);
-             });
+                .ForMember(s => s.Ruleset, cc => cc.Ignore())
+                .ForMember(s => s.Metadata, cc => cc.Ignore())
+                .ForMember(s => s.UserSettings, cc => cc.Ignore())
+                .ForMember(s => s.Difficulty, cc => cc.Ignore())
+                .ForMember(s => s.BeatmapSet, cc => cc.Ignore())
+                .AfterMap(
+                    (s, d) =>
+                    {
+                        d.Ruleset = d.Realm!.Find<RulesetInfo>(s.Ruleset.ShortName)!;
+                        copyChangesToRealm(s.Difficulty, d.Difficulty);
+                        copyChangesToRealm(s.Metadata, d.Metadata);
+                    }
+                );
             c.CreateMap<BeatmapSetInfo, BeatmapSetInfo>()
-             .ConstructUsing(_ => new BeatmapSetInfo(null))
-             .ForMember(s => s.Beatmaps, cc => cc.Ignore())
-             .AfterMap((s, d) =>
-             {
-                 foreach (var beatmap in s.Beatmaps)
-                 {
-                     // Importantly, search all of realm for the beatmap (not just the set's beatmaps).
-                     // It may have gotten detached, and if that's the case let's use this opportunity to fix
-                     // things up.
-                     var existingBeatmap = d.Realm!.Find<BeatmapInfo>(beatmap.ID);
+                .ConstructUsing(_ => new BeatmapSetInfo(null))
+                .ForMember(s => s.Beatmaps, cc => cc.Ignore())
+                .AfterMap(
+                    (s, d) =>
+                    {
+                        foreach (var beatmap in s.Beatmaps)
+                        {
+                            // Importantly, search all of realm for the beatmap (not just the set's beatmaps).
+                            // It may have gotten detached, and if that's the case let's use this opportunity to fix
+                            // things up.
+                            var existingBeatmap = d.Realm!.Find<BeatmapInfo>(beatmap.ID);
 
-                     if (existingBeatmap != null)
-                     {
-                         // As above, reattach if it happens to not be in the set's beatmaps.
-                         if (!d.Beatmaps.Contains(existingBeatmap))
-                         {
-                             Debug.Fail("Beatmaps should never become detached under normal circumstances. If this ever triggers, it should be investigated further.");
-                             Logger.Log("WARNING: One of the difficulties in a beatmap was detached from its set. Please save a copy of logs and report this to devs.", LoggingTarget.Database,
-                                 LogLevel.Important);
-                             d.Beatmaps.Add(existingBeatmap);
-                         }
+                            if (existingBeatmap != null)
+                            {
+                                // As above, reattach if it happens to not be in the set's beatmaps.
+                                if (!d.Beatmaps.Contains(existingBeatmap))
+                                {
+                                    Debug.Fail(
+                                        "Beatmaps should never become detached under normal circumstances. If this ever triggers, it should be investigated further."
+                                    );
+                                    Logger.Log(
+                                        "WARNING: One of the difficulties in a beatmap was detached from its set. Please save a copy of logs and report this to devs.",
+                                        LoggingTarget.Database,
+                                        LogLevel.Important
+                                    );
+                                    d.Beatmaps.Add(existingBeatmap);
+                                }
 
-                         copyChangesToRealm(beatmap, existingBeatmap);
-                     }
-                     else
-                     {
-                         var newBeatmap = new BeatmapInfo
-                         {
-                             ID = beatmap.ID,
-                             BeatmapSet = d,
-                             Ruleset = d.Realm.Find<RulesetInfo>(beatmap.Ruleset.ShortName)!
-                         };
+                                copyChangesToRealm(beatmap, existingBeatmap);
+                            }
+                            else
+                            {
+                                var newBeatmap = new BeatmapInfo
+                                {
+                                    ID = beatmap.ID,
+                                    BeatmapSet = d,
+                                    Ruleset = d.Realm.Find<RulesetInfo>(beatmap.Ruleset.ShortName)!,
+                                };
 
-                         d.Beatmaps.Add(newBeatmap);
-                         copyChangesToRealm(beatmap, newBeatmap);
-                     }
-                 }
-             });
+                                d.Beatmaps.Add(newBeatmap);
+                                copyChangesToRealm(beatmap, newBeatmap);
+                            }
+                        }
+                    }
+                );
 
-            c.Internal().ForAllMaps((_, expression) =>
-            {
-                expression.ForAllMembers(m =>
-                {
-                    if (m.DestinationMember.Has<IgnoredAttribute>() || m.DestinationMember.Has<BacklinkAttribute>() || m.DestinationMember.Has<IgnoreDataMemberAttribute>())
-                        m.Ignore();
-                });
-            });
+            c.Internal()
+                .ForAllMaps(
+                    (_, expression) =>
+                    {
+                        expression.ForAllMembers(m =>
+                        {
+                            if (
+                                m.DestinationMember.Has<IgnoredAttribute>()
+                                || m.DestinationMember.Has<BacklinkAttribute>()
+                                || m.DestinationMember.Has<IgnoreDataMemberAttribute>()
+                            )
+                                m.Ignore();
+                        });
+                    }
+                );
         }).CreateMapper();
 
         private static readonly IMapper mapper = new MapperConfiguration(c =>
@@ -102,29 +120,33 @@ namespace osu.Game.Database
             applyCommonConfiguration(c);
 
             c.CreateMap<BeatmapSetInfo, BeatmapSetInfo>()
-             .ConstructUsing(_ => new BeatmapSetInfo(null))
-             .MaxDepth(2)
-             .AfterMap((_, d) =>
-             {
-                 foreach (var beatmap in d.Beatmaps)
-                     beatmap.BeatmapSet = d;
-             });
+                .ConstructUsing(_ => new BeatmapSetInfo(null))
+                .MaxDepth(2)
+                .AfterMap(
+                    (_, d) =>
+                    {
+                        foreach (var beatmap in d.Beatmaps)
+                            beatmap.BeatmapSet = d;
+                    }
+                );
 
             // This can be further optimised to reduce cyclic retrievals, similar to the optimised set mapper below.
             // Only hasn't been done yet as we detach at the point of BeatmapInfo less often.
             c.CreateMap<BeatmapInfo, BeatmapInfo>()
-             .MaxDepth(2)
-             .AfterMap((_, d) =>
-             {
-                 for (int i = 0; i < d.BeatmapSet?.Beatmaps.Count; i++)
-                 {
-                     if (d.BeatmapSet.Beatmaps[i].Equals(d))
-                     {
-                         d.BeatmapSet.Beatmaps[i] = d;
-                         break;
-                     }
-                 }
-             });
+                .MaxDepth(2)
+                .AfterMap(
+                    (_, d) =>
+                    {
+                        for (int i = 0; i < d.BeatmapSet?.Beatmaps.Count; i++)
+                        {
+                            if (d.BeatmapSet.Beatmaps[i].Equals(d))
+                            {
+                                d.BeatmapSet.Beatmaps[i] = d;
+                                break;
+                            }
+                        }
+                    }
+                );
         }).CreateMapper();
 
         /// <summary>
@@ -135,19 +157,21 @@ namespace osu.Game.Database
             applyCommonConfiguration(c);
 
             c.CreateMap<BeatmapSetInfo, BeatmapSetInfo>()
-             .ConstructUsing(_ => new BeatmapSetInfo(null))
-             .MaxDepth(2)
-             .ForMember(b => b.Files, cc => cc.Ignore())
-             .AfterMap((_, d) =>
-             {
-                 foreach (var beatmap in d.Beatmaps)
-                     beatmap.BeatmapSet = d;
-             });
+                .ConstructUsing(_ => new BeatmapSetInfo(null))
+                .MaxDepth(2)
+                .ForMember(b => b.Files, cc => cc.Ignore())
+                .AfterMap(
+                    (_, d) =>
+                    {
+                        foreach (var beatmap in d.Beatmaps)
+                            beatmap.BeatmapSet = d;
+                    }
+                );
 
             c.CreateMap<BeatmapInfo, BeatmapInfo>()
-             .MaxDepth(1)
-             // This is not required as it will be populated in the `AfterMap` call from the `BeatmapInfo`'s parent.
-             .ForMember(b => b.BeatmapSet, cc => cc.Ignore());
+                .MaxDepth(1)
+                // This is not required as it will be populated in the `AfterMap` call from the `BeatmapInfo`'s parent.
+                .ForMember(b => b.BeatmapSet, cc => cc.Ignore());
         }).CreateMapper();
 
         private static void applyCommonConfiguration(IMapperConfigurationExpression c)
@@ -159,14 +183,21 @@ namespace osu.Game.Database
             // Takes a bit of effort to determine whether this is the case though, see https://stackoverflow.com/questions/951536/how-do-i-tell-whether-a-type-implements-ilist
             c.ShouldMapProperty = pi => pi.GetMethod?.IsPublic == true;
 
-            c.Internal().ForAllMaps((_, expression) =>
-            {
-                expression.ForAllMembers(m =>
-                {
-                    if (m.DestinationMember.Has<IgnoredAttribute>() || m.DestinationMember.Has<BacklinkAttribute>() || m.DestinationMember.Has<IgnoreDataMemberAttribute>())
-                        m.Ignore();
-                });
-            });
+            c.Internal()
+                .ForAllMaps(
+                    (_, expression) =>
+                    {
+                        expression.ForAllMembers(m =>
+                        {
+                            if (
+                                m.DestinationMember.Has<IgnoredAttribute>()
+                                || m.DestinationMember.Has<BacklinkAttribute>()
+                                || m.DestinationMember.Has<IgnoreDataMemberAttribute>()
+                            )
+                                m.Ignore();
+                        });
+                    }
+                );
 
             c.CreateMap<RealmKeyBinding, RealmKeyBinding>();
             c.CreateMap<BeatmapMetadata, BeatmapMetadata>();
@@ -188,7 +219,8 @@ namespace osu.Game.Database
         /// <param name="items">A list of managed <see cref="RealmObject"/>s to detach.</param>
         /// <typeparam name="T">The type of object.</typeparam>
         /// <returns>A list containing non-managed copies of provided items.</returns>
-        public static List<T> Detach<T>(this IEnumerable<T> items) where T : RealmObjectBase
+        public static List<T> Detach<T>(this IEnumerable<T> items)
+            where T : RealmObjectBase
         {
             var list = new List<T>();
 
@@ -207,7 +239,8 @@ namespace osu.Game.Database
         /// <param name="item">The managed <see cref="RealmObject"/> to detach.</param>
         /// <typeparam name="T">The type of object.</typeparam>
         /// <returns>A non-managed copy of provided item. Will return the provided item if already detached.</returns>
-        public static T Detach<T>(this T item) where T : RealmObjectBase
+        public static T Detach<T>(this T item)
+            where T : RealmObjectBase
         {
             if (!item.IsManaged)
                 return item;
@@ -224,11 +257,13 @@ namespace osu.Game.Database
         /// </summary>
         /// <param name="source">The detached beatmap to copy from.</param>
         /// <param name="destination">The live beatmap to copy to.</param>
-        public static void CopyChangesToRealm(this BeatmapSetInfo source, BeatmapSetInfo destination)
-            => copyChangesToRealm(source, destination);
+        public static void CopyChangesToRealm(
+            this BeatmapSetInfo source,
+            BeatmapSetInfo destination
+        ) => copyChangesToRealm(source, destination);
 
-        private static void copyChangesToRealm<T>(T source, T destination) where T : RealmObjectBase
-            => write_mapper.Map(source, destination);
+        private static void copyChangesToRealm<T>(T source, T destination)
+            where T : RealmObjectBase => write_mapper.Map(source, destination);
 
         public static List<Live<T>> ToLiveUnmanaged<T>(this IEnumerable<T> realmList)
             where T : RealmObject, IHasGuidPrimaryKey
@@ -288,30 +323,39 @@ namespace osu.Game.Database
         /// <seealso cref="Realms.CollectionExtensions.SubscribeForNotifications{T}(IList{T}, NotificationCallbackDelegate{T},KeyPathsCollection?)" />
         /// <seealso cref="Realms.CollectionExtensions.SubscribeForNotifications{T}(IQueryable{T}, NotificationCallbackDelegate{T},KeyPathsCollection?)" />
 #pragma warning restore RS0030
-        public static IDisposable QueryAsyncWithNotifications<T>(this IRealmCollection<T> collection, NotificationCallbackDelegate<T> callback)
+        public static IDisposable QueryAsyncWithNotifications<T>(
+            this IRealmCollection<T> collection,
+            NotificationCallbackDelegate<T> callback
+        )
             where T : RealmObjectBase
         {
             if (!RealmAccess.CurrentThreadSubscriptionsAllowed)
-                throw new InvalidOperationException($"Make sure to call {nameof(RealmAccess)}.{nameof(RealmAccess.RegisterForNotifications)}");
+                throw new InvalidOperationException(
+                    $"Make sure to call {nameof(RealmAccess)}.{nameof(RealmAccess.RegisterForNotifications)}"
+                );
 
             bool initial = true;
-            return collection.SubscribeForNotifications(((sender, changes) =>
-            {
-                if (initial)
-                {
-                    initial = false;
-
-                    // Realm might coalesce the initial callback, meaning we never receive a `ChangeSet` of `null` marking the first callback.
-                    // Let's decouple it for simplicity in handling.
-                    if (changes != null)
+            return collection.SubscribeForNotifications(
+                (
+                    (sender, changes) =>
                     {
-                        callback(sender, null);
-                        return;
-                    }
-                }
+                        if (initial)
+                        {
+                            initial = false;
 
-                callback(sender, changes);
-            }));
+                            // Realm might coalesce the initial callback, meaning we never receive a `ChangeSet` of `null` marking the first callback.
+                            // Let's decouple it for simplicity in handling.
+                            if (changes != null)
+                            {
+                                callback(sender, null);
+                                return;
+                            }
+                        }
+
+                        callback(sender, changes);
+                    }
+                )
+            );
         }
 
         /// <summary>
@@ -330,7 +374,10 @@ namespace osu.Game.Database
         ///
         /// May be null in the case the provided collection is not managed.
         /// </returns>
-        public static IDisposable? QueryAsyncWithNotifications<T>(this IQueryable<T> list, NotificationCallbackDelegate<T> callback)
+        public static IDisposable? QueryAsyncWithNotifications<T>(
+            this IQueryable<T> list,
+            NotificationCallbackDelegate<T> callback
+        )
             where T : RealmObjectBase
         {
             // Subscribing to non-managed instances doesn't work.
@@ -357,7 +404,10 @@ namespace osu.Game.Database
         ///
         /// May be null in the case the provided collection is not managed.
         /// </returns>
-        public static IDisposable? QueryAsyncWithNotifications<T>(this IList<T> list, NotificationCallbackDelegate<T> callback)
+        public static IDisposable? QueryAsyncWithNotifications<T>(
+            this IList<T> list,
+            NotificationCallbackDelegate<T> callback
+        )
             where T : RealmObjectBase
         {
             // Subscribing to non-managed instances doesn't work.

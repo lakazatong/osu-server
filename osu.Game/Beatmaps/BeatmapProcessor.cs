@@ -29,8 +29,6 @@ namespace osu.Game.Beatmaps
             }
         }
 
-        public virtual void PostProcess()
-        {
-        }
+        public virtual void PostProcess() { }
     }
 }

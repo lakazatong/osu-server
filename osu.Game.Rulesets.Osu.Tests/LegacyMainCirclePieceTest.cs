@@ -33,83 +33,130 @@ namespace osu.Game.Rulesets.Osu.Tests
                 // priority lookup prefix
                 null,
                 // expected circle and overlay
-                @"hitcircle", @"hitcircleoverlay",
+                @"hitcircle",
+                @"hitcircleoverlay",
             },
             // custom priority lookup
             new object?[]
             {
-                new[] { @"hitcircle", @"hitcircleoverlay", @"sliderstartcircle", @"sliderstartcircleoverlay" },
+                new[]
+                {
+                    @"hitcircle",
+                    @"hitcircleoverlay",
+                    @"sliderstartcircle",
+                    @"sliderstartcircleoverlay",
+                },
                 @"sliderstartcircle",
-                @"sliderstartcircle", @"sliderstartcircleoverlay",
+                @"sliderstartcircle",
+                @"sliderstartcircleoverlay",
             },
             // when no sprites are available for the specified prefix, fall back to "hitcircle"/"hitcircleoverlay".
             new object?[]
             {
                 new[] { @"hitcircle", @"hitcircleoverlay" },
                 @"sliderstartcircle",
-                @"hitcircle", @"hitcircleoverlay",
+                @"hitcircle",
+                @"hitcircleoverlay",
             },
             // when a circle is available for the specified prefix but no overlay exists, no overlay is displayed.
             new object?[]
             {
                 new[] { @"hitcircle", @"hitcircleoverlay", @"sliderstartcircle" },
                 @"sliderstartcircle",
-                @"sliderstartcircle", null
+                @"sliderstartcircle",
+                null,
             },
             // when no circle is available for the specified prefix but an overlay exists, the overlay is ignored.
             new object?[]
             {
                 new[] { @"hitcircle", @"hitcircleoverlay", @"sliderstartcircleoverlay" },
                 @"sliderstartcircle",
-                @"hitcircle", @"hitcircleoverlay",
-            }
+                @"hitcircle",
+                @"hitcircleoverlay",
+            },
         };
 
         [TestCaseSource(nameof(texture_priority_cases))]
-        public void TestTexturePriorities(string[] textureFilenames, string priorityLookup, string? expectedCircle, string? expectedOverlay)
+        public void TestTexturePriorities(
+            string[] textureFilenames,
+            string priorityLookup,
+            string? expectedCircle,
+            string? expectedOverlay
+        )
         {
             TestLegacyMainCirclePiece piece = null!;
 
-            AddStep("load circle piece", () =>
-            {
-                var skin = new Mock<ISkinSource>();
-
-                // shouldn't be required as GetTexture(string) calls GetTexture(string, WrapMode, WrapMode) by default,
-                // but moq doesn't handle that well, therefore explicitly requiring to use `CallBase`:
-                // https://github.com/moq/moq4/issues/972
-                skin.Setup(s => s.GetTexture(It.IsAny<string>())).CallBase();
-
-                skin.Setup(s => s.GetTexture(It.IsIn(textureFilenames), It.IsAny<WrapMode>(), It.IsAny<WrapMode>()))
-                    .Returns((string componentName, WrapMode _, WrapMode _) =>
-                    {
-                        var tex = renderer.CreateTexture(1, 1);
-                        tex.AssetName = componentName;
-                        return tex;
-                    });
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "load circle piece",
+                () =>
                 {
-                    CachedDependencies = new (Type, object)[] { (typeof(ISkinSource), skin.Object) },
-                    Child = piece = new TestLegacyMainCirclePiece(priorityLookup),
-                };
+                    var skin = new Mock<ISkinSource>();
 
-                var sprites = this.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).ToArray();
-                Debug.Assert(sprites.Length <= 2);
-            });
+                    // shouldn't be required as GetTexture(string) calls GetTexture(string, WrapMode, WrapMode) by default,
+                    // but moq doesn't handle that well, therefore explicitly requiring to use `CallBase`:
+                    // https://github.com/moq/moq4/issues/972
+                    skin.Setup(s => s.GetTexture(It.IsAny<string>())).CallBase();
 
-            AddAssert("check circle sprite", () => piece.CircleSprite?.Texture?.AssetName == expectedCircle);
-            AddAssert("check overlay sprite", () => piece.OverlaySprite?.Texture?.AssetName == expectedOverlay);
+                    skin.Setup(s =>
+                            s.GetTexture(
+                                It.IsIn(textureFilenames),
+                                It.IsAny<WrapMode>(),
+                                It.IsAny<WrapMode>()
+                            )
+                        )
+                        .Returns(
+                            (string componentName, WrapMode _, WrapMode _) =>
+                            {
+                                var tex = renderer.CreateTexture(1, 1);
+                                tex.AssetName = componentName;
+                                return tex;
+                            }
+                        );
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(ISkinSource), skin.Object),
+                        },
+                        Child = piece = new TestLegacyMainCirclePiece(priorityLookup),
+                    };
+
+                    var sprites = this.ChildrenOfType<Sprite>()
+                        .Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName))
+                        .DistinctBy(s => s.Texture.AssetName)
+                        .ToArray();
+                    Debug.Assert(sprites.Length <= 2);
+                }
+            );
+
+            AddAssert(
+                "check circle sprite",
+                () => piece.CircleSprite?.Texture?.AssetName == expectedCircle
+            );
+            AddAssert(
+                "check overlay sprite",
+                () => piece.OverlaySprite?.Texture?.AssetName == expectedOverlay
+            );
         }
 
         private partial class TestLegacyMainCirclePiece : LegacyMainCirclePiece
         {
-            public new Sprite? CircleSprite => base.CircleSprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
-            public new Sprite? OverlaySprite => base.OverlaySprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
+            public new Sprite? CircleSprite =>
+                base
+                    .CircleSprite.ChildrenOfType<Sprite>()
+                    .Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName))
+                    .DistinctBy(s => s.Texture.AssetName)
+                    .SingleOrDefault();
+            public new Sprite? OverlaySprite =>
+                base
+                    .OverlaySprite.ChildrenOfType<Sprite>()
+                    .Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName))
+                    .DistinctBy(s => s.Texture.AssetName)
+                    .SingleOrDefault();
 
             public TestLegacyMainCirclePiece(string? priorityLookupPrefix)
-                : base(priorityLookupPrefix, false)
-            {
-            }
+                : base(priorityLookupPrefix, false) { }
         }
     }
 }

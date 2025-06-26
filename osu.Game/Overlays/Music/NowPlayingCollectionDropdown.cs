@@ -1,14 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Effects;
 using osu.Game.Collections;
 using osu.Game.Graphics;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays.Music
 {
@@ -19,7 +19,8 @@ namespace osu.Game.Overlays.Music
     {
         protected override bool ShowManageCollectionsItem => false;
 
-        protected override CollectionDropdownHeader CreateCollectionHeader() => new CollectionsHeader();
+        protected override CollectionDropdownHeader CreateCollectionHeader() =>
+            new CollectionsHeader();
 
         protected override CollectionDropdownMenu CreateCollectionMenu() => new CollectionsMenu();
 
@@ -55,7 +56,13 @@ namespace osu.Game.Overlays.Music
                 Height = 30;
                 Chevron.Size = new Vector2(14);
                 Chevron.Margin = new MarginPadding(0);
-                Foreground.Padding = new MarginPadding { Top = 4, Bottom = 4, Left = 10, Right = 10 };
+                Foreground.Padding = new MarginPadding
+                {
+                    Top = 4,
+                    Bottom = 4,
+                    Left = 10,
+                    Right = 10,
+                };
                 EdgeEffect = new EdgeEffectParameters
                 {
                     Type = EdgeEffectType.Shadow,

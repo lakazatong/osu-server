@@ -20,7 +20,9 @@ namespace osu.Game.Tests.Visual.Online
         protected override bool UseOnlineAPI => true;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         [Resolved]
         private IAPIProvider api { get; set; }
@@ -66,19 +68,25 @@ namespace osu.Game.Tests.Visual.Online
         {
             List<APISpotlight> spotlights = null;
 
-            AddStep("retrieve spotlights", () =>
-            {
-                var req = new GetSpotlightsRequest();
-                req.Success += res => spotlights = res.Spotlights;
+            AddStep(
+                "retrieve spotlights",
+                () =>
+                {
+                    var req = new GetSpotlightsRequest();
+                    req.Success += res => spotlights = res.Spotlights;
 
-                api.Perform(req);
-            });
+                    api.Perform(req);
+                }
+            );
 
-            AddStep("set spotlights", () =>
-            {
-                if (spotlights != null)
-                    selector.Spotlights = spotlights;
-            });
+            AddStep(
+                "set spotlights",
+                () =>
+                {
+                    if (spotlights != null)
+                        selector.Spotlights = spotlights;
+                }
+            );
         }
     }
 }

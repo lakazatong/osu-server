@@ -11,9 +11,7 @@ namespace osu.Game.Rulesets.Mania.Edit
     public partial class EditorColumn : Column
     {
         public EditorColumn(int index, bool isSpecial)
-            : base(index, isSpecial)
-        {
-        }
+            : base(index, isSpecial) { }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
         {

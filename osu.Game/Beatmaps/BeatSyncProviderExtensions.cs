@@ -8,6 +8,7 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// Whether the beat sync provider is currently in a kiai section. Should make everything more epic.
         /// </summary>
-        public static bool CheckIsKiaiTime(this IBeatSyncProvider provider) => provider.ControlPoints?.EffectPointAt(provider.Clock.CurrentTime).KiaiMode == true;
+        public static bool CheckIsKiaiTime(this IBeatSyncProvider provider) =>
+            provider.ControlPoints?.EffectPointAt(provider.Clock.CurrentTime).KiaiMode == true;
     }
 }

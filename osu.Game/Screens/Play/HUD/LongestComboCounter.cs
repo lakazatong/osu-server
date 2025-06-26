@@ -48,7 +48,7 @@ namespace osu.Game.Screens.Play.HUD
                         {
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            Font = OsuFont.Numeric.With(size: 20)
+                            Font = OsuFont.Numeric.With(size: 20),
                         },
                         new FillFlowContainer
                         {
@@ -71,11 +71,11 @@ namespace osu.Game.Screens.Play.HUD
                                     Origin = Anchor.TopLeft,
                                     Font = OsuFont.Numeric.With(size: 8),
                                     Text = @"combo",
-                                    Padding = new MarginPadding { Bottom = 3f }
-                                }
-                            }
-                        }
-                    }
+                                    Padding = new MarginPadding { Bottom = 3f },
+                                },
+                            },
+                        },
+                    },
                 };
             }
         }

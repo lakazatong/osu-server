@@ -50,21 +50,14 @@ namespace osu.Game.Collections
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.GreySeaFoamDark,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.GreySeaFoamDark, RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Child = new GridContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        RowDimensions = new[]
-                        {
-                            new Dimension(GridSizeMode.AutoSize),
-                        },
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                         Content = new[]
                         {
                             new Drawable[]
@@ -91,10 +84,10 @@ namespace osu.Game.Collections
                                             Colour = colours.GreySeaFoamDarker,
                                             Scale = new Vector2(0.8f),
                                             X = -10,
-                                            Action = () => State.Value = Visibility.Hidden
-                                        }
-                                    }
-                                }
+                                            Action = () => State.Value = Visibility.Hidden,
+                                        },
+                                    },
+                                },
                             },
                             new Drawable[]
                             {
@@ -106,7 +99,7 @@ namespace osu.Game.Collections
                                         new Box
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Colour = colours.GreySeaFoamDarker
+                                            Colour = colours.GreySeaFoamDarker,
                                         },
                                         new Container
                                         {
@@ -125,20 +118,17 @@ namespace osu.Game.Collections
                                                 },
                                                 list = new DrawableCollectionList
                                                 {
-                                                    Padding = new MarginPadding
-                                                    {
-                                                        Top = 60,
-                                                    },
+                                                    Padding = new MarginPadding { Top = 60 },
                                                     RelativeSizeAxes = Axes.Both,
-                                                }
-                                            }
+                                                },
+                                            },
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -160,12 +150,14 @@ namespace osu.Game.Collections
 
         protected override void PopIn()
         {
-            duckOperation = musicController?.Duck(new DuckParameters
-            {
-                DuckVolumeTo = 1,
-                DuckDuration = 100,
-                RestoreDuration = 100,
-            });
+            duckOperation = musicController?.Duck(
+                new DuckParameters
+                {
+                    DuckVolumeTo = 1,
+                    DuckDuration = 100,
+                    RestoreDuration = 100,
+                }
+            );
 
             this.FadeIn(enter_duration, Easing.OutQuint);
             this.ScaleTo(0.9f).Then().ScaleTo(1f, enter_duration, Easing.OutQuint);

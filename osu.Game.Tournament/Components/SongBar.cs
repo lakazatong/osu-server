@@ -95,7 +95,7 @@ namespace osu.Game.Tournament.Components
                     Direction = FillDirection.Full,
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
-                }
+                },
             };
 
             Expanded = true;
@@ -139,7 +139,8 @@ namespace osu.Game.Tournament.Components
             if ((mods & LegacyMods.DoubleTime) > 0)
             {
                 // temporary local calculation (taken from OsuDifficultyCalculator)
-                double preempt = (int)IBeatmapDifficultyInfo.DifficultyRange(ar, 1800, 1200, 450) / 1.5;
+                double preempt =
+                    (int)IBeatmapDifficultyInfo.DifficultyRange(ar, 1800, 1200, 450) / 1.5;
                 ar = (float)(preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5);
 
                 bpm *= 1.5f;
@@ -165,7 +166,7 @@ namespace osu.Game.Tournament.Components
                     stats = new (string heading, string content)[]
                     {
                         ("OD", $"{beatmap.Difficulty.OverallDifficulty:0.#}{hardRockExtra}"),
-                        ("HP", $"{beatmap.Difficulty.DrainRate:0.#}{hardRockExtra}")
+                        ("HP", $"{beatmap.Difficulty.DrainRate:0.#}{hardRockExtra}"),
                     };
                     break;
 
@@ -208,8 +209,13 @@ namespace osu.Game.Tournament.Components
                                         Children = new Drawable[]
                                         {
                                             new DiffPiece(stats),
-                                            new DiffPiece(("Star Rating", $"{beatmap.StarRating.FormatStarRating()}{srExtra}"))
-                                        }
+                                            new DiffPiece(
+                                                (
+                                                    "Star Rating",
+                                                    $"{beatmap.StarRating.FormatStarRating()}{srExtra}"
+                                                )
+                                            ),
+                                        },
                                     },
                                     new FillFlowContainer
                                     {
@@ -220,9 +226,11 @@ namespace osu.Game.Tournament.Components
                                         Direction = FillDirection.Vertical,
                                         Children = new Drawable[]
                                         {
-                                            new DiffPiece(("Length", length.ToFormattedDuration().ToString())),
+                                            new DiffPiece(
+                                                ("Length", length.ToFormattedDuration().ToString())
+                                            ),
                                             new DiffPiece(("BPM", $"{bpm:0.#}")),
-                                        }
+                                        },
                                     },
                                     new Container
                                     {
@@ -244,12 +252,12 @@ namespace osu.Game.Tournament.Components
                                                 Anchor = Anchor.CentreRight,
                                                 Origin = Anchor.CentreRight,
                                             },
-                                        }
+                                        },
                                     },
                                 },
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
                 new TournamentBeatmapPanel(beatmap)
                 {
@@ -258,7 +266,7 @@ namespace osu.Game.Tournament.Components
                     Height = HEIGHT,
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
-                }
+                },
             };
         }
 
@@ -271,7 +279,10 @@ namespace osu.Game.Tournament.Components
 
                 static void cp(SpriteText s, bool bold)
                 {
-                    s.Font = OsuFont.Torus.With(weight: bold ? FontWeight.Bold : FontWeight.Regular, size: 15);
+                    s.Font = OsuFont.Torus.With(
+                        weight: bold ? FontWeight.Bold : FontWeight.Regular,
+                        size: 15
+                    );
                 }
 
                 for (int i = 0; i < tuples.Length; i++)
@@ -280,11 +291,14 @@ namespace osu.Game.Tournament.Components
 
                     if (i > 0)
                     {
-                        AddText(" / ", s =>
-                        {
-                            cp(s, false);
-                            s.Spacing = new Vector2(-2, 0);
-                        });
+                        AddText(
+                            " / ",
+                            s =>
+                            {
+                                cp(s, false);
+                                s.Spacing = new Vector2(-2, 0);
+                            }
+                        );
                     }
 
                     AddText(new TournamentSpriteText { Text = heading }, s => cp(s, false));

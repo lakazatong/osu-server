@@ -26,14 +26,26 @@ namespace osu.Game.Rulesets.Osu.Tests
             return base.CreateBeatmapForSkinProvider();
         }
 
-        protected override TestDrawableHitCircle CreateDrawableHitCircle(HitCircle circle, bool auto, double hitOffset = 0)
+        protected override TestDrawableHitCircle CreateDrawableHitCircle(
+            HitCircle circle,
+            bool auto,
+            double hitOffset = 0
+        )
         {
             var drawableHitObject = base.CreateDrawableHitCircle(circle, auto, hitOffset);
 
             Debug.Assert(drawableHitObject.HitObject.HitWindows != null);
 
-            double delay = drawableHitObject.HitObject.StartTime - (drawableHitObject.HitObject.HitWindows.WindowFor(HitResult.Miss) + RNG.Next(0, 300)) - Time.Current;
-            scheduledTasks.Add(Scheduler.AddDelayed(() => drawableHitObject.TriggerJudgement(), delay));
+            double delay =
+                drawableHitObject.HitObject.StartTime
+                - (
+                    drawableHitObject.HitObject.HitWindows.WindowFor(HitResult.Miss)
+                    + RNG.Next(0, 300)
+                )
+                - Time.Current;
+            scheduledTasks.Add(
+                Scheduler.AddDelayed(() => drawableHitObject.TriggerJudgement(), delay)
+            );
 
             return drawableHitObject;
         }

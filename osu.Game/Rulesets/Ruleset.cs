@@ -39,7 +39,8 @@ namespace osu.Game.Rulesets
     {
         public RulesetInfo RulesetInfo { get; }
 
-        private static readonly ConcurrentDictionary<string, IMod[]> mod_reference_cache = new ConcurrentDictionary<string, IMod[]>();
+        private static readonly ConcurrentDictionary<string, IMod[]> mod_reference_cache =
+            new ConcurrentDictionary<string, IMod[]>();
 
         /// <summary>
         /// Version history:
@@ -85,15 +86,16 @@ namespace osu.Game.Rulesets
         /// This comes with considerable allocation overhead. If only accessing for reference purposes (ie. not changing bindables / settings)
         /// use <see cref="AllMods"/> instead.
         /// </remarks>
-        public IEnumerable<Mod> CreateAllMods() => Enum.GetValues<ModType>()
-                                                       // Confine all mods of each mod type into a single IEnumerable<Mod>
-                                                       .SelectMany(GetModsFor)
-                                                       // Filter out all null mods
-                                                       // This is to handle old rulesets which were doing mods bad. Can be removed at some point we are sure nulls will not appear here.
-                                                       // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                                                       .Where(mod => mod != null)
-                                                       // Resolve MultiMods as their .Mods property
-                                                       .SelectMany(mod => (mod as MultiMod)?.Mods ?? new[] { mod });
+        public IEnumerable<Mod> CreateAllMods() =>
+            Enum.GetValues<ModType>()
+                // Confine all mods of each mod type into a single IEnumerable<Mod>
+                .SelectMany(GetModsFor)
+                // Filter out all null mods
+                // This is to handle old rulesets which were doing mods bad. Can be removed at some point we are sure nulls will not appear here.
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+                .Where(mod => mod != null)
+                // Resolve MultiMods as their .Mods property
+                .SelectMany(mod => (mod as MultiMod)?.Mods ?? new[] { mod });
 
         /// <summary>
         /// Returns a fresh instance of the mod matching the specified acronym.
@@ -101,7 +103,11 @@ namespace osu.Game.Rulesets
         /// <param name="acronym">The acronym to query for .</param>
         public Mod? CreateModFromAcronym(string acronym)
         {
-            return AllMods.FirstOrDefault(m => string.Equals(m.Acronym, acronym, StringComparison.OrdinalIgnoreCase))?.CreateInstance();
+            return AllMods
+                .FirstOrDefault(m =>
+                    string.Equals(m.Acronym, acronym, StringComparison.OrdinalIgnoreCase)
+                )
+                ?.CreateInstance();
         }
 
         /// <summary>
@@ -128,7 +134,8 @@ namespace osu.Game.Rulesets
         /// </summary>
         /// <param name="mods">The legacy enum which will be converted.</param>
         /// <returns>An enumerable of constructed <see cref="Mod"/>s.</returns>
-        public virtual IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods) => Array.Empty<Mod>();
+        public virtual IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods) =>
+            Array.Empty<Mod>();
 
         /// <summary>
         /// Converts mods to legacy enum values. Do not override if you're not a legacy ruleset.
@@ -234,7 +241,10 @@ namespace osu.Game.Rulesets
         /// <param name="beatmap">The beatmap to create the hit renderer for.</param>
         /// <param name="mods">The <see cref="Mod"/>s to apply.</param>
         /// <exception cref="BeatmapInvalidForRulesetException">Unable to successfully load the beatmap to be usable with this ruleset.</exception>
-        public abstract DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null);
+        public abstract DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        );
 
         /// <summary>
         /// Creates a <see cref="ScoreProcessor"/> for this <see cref="Ruleset"/>.
@@ -246,7 +256,8 @@ namespace osu.Game.Rulesets
         /// Creates a <see cref="HealthProcessor"/> for this <see cref="Ruleset"/>.
         /// </summary>
         /// <returns>The health processor.</returns>
-        public virtual HealthProcessor CreateHealthProcessor(double drainStartTime) => new DrainingHealthProcessor(drainStartTime);
+        public virtual HealthProcessor CreateHealthProcessor(double drainStartTime) =>
+            new DrainingHealthProcessor(drainStartTime);
 
         /// <summary>
         /// Creates a <see cref="IBeatmapConverter"/> to convert a <see cref="IBeatmap"/> to one that is applicable for this <see cref="Ruleset"/>.
@@ -274,9 +285,14 @@ namespace osu.Game.Rulesets
 
         public virtual IBeatmapVerifier? CreateBeatmapVerifier() => null;
 
-        public virtual Drawable CreateIcon() => new SpriteIcon { Icon = FontAwesome.Solid.QuestionCircle };
+        public virtual Drawable CreateIcon() =>
+            new SpriteIcon { Icon = FontAwesome.Solid.QuestionCircle };
 
-        public virtual IResourceStore<byte[]> CreateResourceStore() => new NamespacedResourceStore<byte[]>(new DllResourceStore(GetType().Assembly), @"Resources");
+        public virtual IResourceStore<byte[]> CreateResourceStore() =>
+            new NamespacedResourceStore<byte[]>(
+                new DllResourceStore(GetType().Assembly),
+                @"Resources"
+            );
 
         public abstract string Description { get; }
 
@@ -308,7 +324,8 @@ namespace osu.Game.Rulesets
         /// </summary>
         /// <param name="variant">A variant.</param>
         /// <returns>A list of valid <see cref="KeyBinding"/>s.</returns>
-        public virtual IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => Array.Empty<KeyBinding>();
+        public virtual IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            Array.Empty<KeyBinding>();
 
         /// <summary>
         /// Gets the name for a key binding variant. This is used for display in the settings overlay.
@@ -330,7 +347,10 @@ namespace osu.Game.Rulesets
         /// <param name="score">The <see cref="ScoreInfo"/> to create the statistics for. The score is guaranteed to have <see cref="ScoreInfo.HitEvents"/> populated.</param>
         /// <param name="playableBeatmap">The <see cref="IBeatmap"/>, converted for this <see cref="Ruleset"/> with all relevant <see cref="Mod"/>s applied.</param>
         /// <returns>The <see cref="StatisticItem"/>s to display.</returns>
-        public virtual StatisticItem[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => Array.Empty<StatisticItem>();
+        public virtual StatisticItem[] CreateStatisticsForScore(
+            ScoreInfo score,
+            IBeatmap playableBeatmap
+        ) => Array.Empty<StatisticItem>();
 
         /// <summary>
         /// Get all valid <see cref="HitResult"/>s for this ruleset.
@@ -370,14 +390,16 @@ namespace osu.Game.Rulesets
         /// <remarks>
         /// <see cref="HitResult.Miss"/> is implicitly included. Special types like <see cref="HitResult.IgnoreHit"/> are ignored even when specified.
         /// </remarks>
-        protected virtual IEnumerable<HitResult> GetValidHitResults() => EnumExtensions.GetValuesInOrder<HitResult>();
+        protected virtual IEnumerable<HitResult> GetValidHitResults() =>
+            EnumExtensions.GetValuesInOrder<HitResult>();
 
         /// <summary>
         /// Get a display friendly name for the specified result type.
         /// </summary>
         /// <param name="result">The result type to get the name for.</param>
         /// <returns>The display name.</returns>
-        public virtual LocalisableString GetDisplayNameForHitResult(HitResult result) => result.GetLocalisableDescription();
+        public virtual LocalisableString GetDisplayNameForHitResult(HitResult result) =>
+            result.GetLocalisableDescription();
 
         /// <summary>
         /// Applies changes to difficulty attributes for presenting to a user a rough estimate of how rate adjust mods affect difficulty.
@@ -388,7 +410,10 @@ namespace osu.Game.Rulesets
         /// <param name="difficulty">>The <see cref="IBeatmapDifficultyInfo"/> that will be adjusted.</param>
         /// <param name="rate">The rate adjustment multiplier from mods. For example 1.5 for DT.</param>
         /// <returns>The adjusted difficulty attributes.</returns>
-        public virtual BeatmapDifficulty GetRateAdjustedDisplayDifficulty(IBeatmapDifficultyInfo difficulty, double rate) => new BeatmapDifficulty(difficulty);
+        public virtual BeatmapDifficulty GetRateAdjustedDisplayDifficulty(
+            IBeatmapDifficultyInfo difficulty,
+            double rate
+        ) => new BeatmapDifficulty(difficulty);
 
         /// <summary>
         /// Creates ruleset-specific beatmap filter criteria to be used on the song select screen.
@@ -399,28 +424,22 @@ namespace osu.Game.Rulesets
         /// Can be overridden to add ruleset-specific sections to the editor beatmap setup screen.
         /// </summary>
         public virtual IEnumerable<Drawable> CreateEditorSetupSections() =>
-        [
-            new MetadataSection(),
-            new DifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(25),
-                Children = new Drawable[]
+            [
+                new MetadataSection(),
+                new DifficultySection(),
+                new FillFlowContainer
                 {
-                    new ResourcesSection
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(25),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
+                        new ResourcesSection { RelativeSizeAxes = Axes.X },
+                        new ColoursSection { RelativeSizeAxes = Axes.X },
                     },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
-        ];
+                },
+                new DesignSection(),
+            ];
 
         /// <summary>
         /// Can be overridden to avoid showing scroll speed changes in the editor.

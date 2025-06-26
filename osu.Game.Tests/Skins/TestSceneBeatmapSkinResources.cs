@@ -30,20 +30,35 @@ namespace osu.Game.Tests.Skins
             MemoryStream outStream = null!;
 
             // Ensure importer encoding is correct
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"japanese-filename.osz"));
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null);
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"japanese-filename.osz")
+            );
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null
+            );
 
             // Ensure exporter encoding is correct (round trip)
-            AddStep("export", () =>
-            {
-                outStream = new MemoryStream();
+            AddStep(
+                "export",
+                () =>
+                {
+                    outStream = new MemoryStream();
 
-                new LegacyBeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, outStream, null);
-            });
+                    new LegacyBeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        outStream,
+                        null
+                    );
+                }
+            );
 
             AddStep("import beatmap again", () => beatmap = importBeatmapFromStream(outStream));
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null);
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null
+            );
         }
 
         [Test]
@@ -53,20 +68,35 @@ namespace osu.Game.Tests.Skins
             MemoryStream outStream = null!;
 
             // Ensure importer encoding is correct
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"japanese-filename.osz"));
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null);
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"japanese-filename.osz")
+            );
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null
+            );
 
             // Ensure exporter encoding is correct (round trip)
-            AddStep("export", () =>
-            {
-                outStream = new MemoryStream();
+            AddStep(
+                "export",
+                () =>
+                {
+                    outStream = new MemoryStream();
 
-                new BeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, outStream, null);
-            });
+                    new BeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        outStream,
+                        null
+                    );
+                }
+            );
 
             AddStep("import beatmap again", () => beatmap = importBeatmapFromStream(outStream));
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null);
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"見本")) != null
+            );
         }
 
         [Test]
@@ -74,13 +104,22 @@ namespace osu.Game.Tests.Skins
         {
             IWorkingBeatmap beatmap = null!;
 
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"ogg-beatmap.osz"));
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"sample")) != null);
-            AddAssert("track is non-null", () =>
-            {
-                using (var track = beatmap.LoadTrack())
-                    return track is not TrackVirtual;
-            });
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"ogg-beatmap.osz")
+            );
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"sample")) != null
+            );
+            AddAssert(
+                "track is non-null",
+                () =>
+                {
+                    using (var track = beatmap.LoadTrack())
+                        return track is not TrackVirtual;
+                }
+            );
         }
 
         [Test]
@@ -88,20 +127,32 @@ namespace osu.Game.Tests.Skins
         {
             IWorkingBeatmap beatmap = null!;
 
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"conflicting-filenames-beatmap.osz"));
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"conflicting-filenames-beatmap.osz")
+            );
             AddAssert("texture is non-null", () => beatmap.Skin.GetTexture(@"spinner-osu") != null);
-            AddAssert("sample is non-null", () => beatmap.Skin.GetSample(new SampleInfo(@"spinner-osu")) != null);
+            AddAssert(
+                "sample is non-null",
+                () => beatmap.Skin.GetSample(new SampleInfo(@"spinner-osu")) != null
+            );
         }
 
         private IWorkingBeatmap importBeatmapFromStream(Stream stream)
         {
-            var imported = beatmaps.Import(new ImportTask(stream, "filename.osz")).GetResultSafely();
+            var imported = beatmaps
+                .Import(new ImportTask(stream, "filename.osz"))
+                .GetResultSafely();
             return imported.AsNonNull().PerformRead(s => beatmaps.GetWorkingBeatmap(s.Beatmaps[0]));
         }
 
         private IWorkingBeatmap importBeatmapFromArchives(string filename)
         {
-            var imported = beatmaps.Import(new ImportTask(TestResources.OpenResource($@"Archives/{filename}"), filename)).GetResultSafely();
+            var imported = beatmaps
+                .Import(
+                    new ImportTask(TestResources.OpenResource($@"Archives/{filename}"), filename)
+                )
+                .GetResultSafely();
             return imported.AsNonNull().PerformRead(s => beatmaps.GetWorkingBeatmap(s.Beatmaps[0]));
         }
     }

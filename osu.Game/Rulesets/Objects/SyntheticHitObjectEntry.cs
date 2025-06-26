@@ -12,8 +12,6 @@ namespace osu.Game.Rulesets.Objects
     internal class SyntheticHitObjectEntry : HitObjectLifetimeEntry
     {
         public SyntheticHitObjectEntry(HitObject hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
     }
 }

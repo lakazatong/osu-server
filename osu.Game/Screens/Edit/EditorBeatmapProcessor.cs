@@ -46,7 +46,11 @@ namespace osu.Game.Screens.Edit
 
         private void autoGenerateBreaks()
         {
-            var objectDuration = Beatmap.HitObjects.Select(ho => (ho.StartTime - ((ho as IHasTimePreempt)?.TimePreempt ?? 0), ho.GetEndTime())).ToHashSet();
+            var objectDuration = Beatmap
+                .HitObjects.Select(ho =>
+                    (ho.StartTime - ((ho as IHasTimePreempt)?.TimePreempt ?? 0), ho.GetEndTime())
+                )
+                .ToHashSet();
 
             if (objectDuration.SetEquals(objectDurationCache))
                 return;
@@ -57,9 +61,14 @@ namespace osu.Game.Screens.Edit
 
             foreach (var manualBreak in Beatmap.Breaks.ToList())
             {
-                if (manualBreak.EndTime <= Beatmap.HitObjects.FirstOrDefault()?.StartTime
+                if (
+                    manualBreak.EndTime <= Beatmap.HitObjects.FirstOrDefault()?.StartTime
                     || manualBreak.StartTime >= Beatmap.GetLastObjectTime()
-                    || Beatmap.HitObjects.Any(ho => ho.StartTime <= manualBreak.EndTime && ho.GetEndTime() >= manualBreak.StartTime))
+                    || Beatmap.HitObjects.Any(ho =>
+                        ho.StartTime <= manualBreak.EndTime
+                        && ho.GetEndTime() >= manualBreak.StartTime
+                    )
+                )
                 {
                     Beatmap.Breaks.Remove(manualBreak);
                 }
@@ -88,7 +97,10 @@ namespace osu.Game.Screens.Edit
                 if (nextObject is IHasTimePreempt hasTimePreempt)
                     breakEndTime -= hasTimePreempt.TimePreempt;
                 else
-                    breakEndTime -= Math.Max(BreakPeriod.GAP_AFTER_BREAK, Beatmap.ControlPointInfo.TimingPointAt(nextObject.StartTime).BeatLength * 2);
+                    breakEndTime -= Math.Max(
+                        BreakPeriod.GAP_AFTER_BREAK,
+                        Beatmap.ControlPointInfo.TimingPointAt(nextObject.StartTime).BeatLength * 2
+                    );
 
                 if (breakEndTime - breakStartTime < BreakPeriod.MIN_BREAK_DURATION)
                     continue;
@@ -119,7 +131,10 @@ namespace osu.Game.Screens.Edit
                 if (hitObject is not IHasComboInformation hasCombo)
                     continue;
 
-                if (currentBreak < breakEnds.Count && hitObject.StartTime >= breakEnds[currentBreak])
+                if (
+                    currentBreak < breakEnds.Count
+                    && hitObject.StartTime >= breakEnds[currentBreak]
+                )
                 {
                     if (!hasCombo.NewCombo)
                     {

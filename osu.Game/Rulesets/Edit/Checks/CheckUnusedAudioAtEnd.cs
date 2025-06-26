@@ -12,17 +12,21 @@ namespace osu.Game.Rulesets.Edit.Checks
 {
     public class CheckUnusedAudioAtEnd : ICheck
     {
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Compose, "More than 20% unused audio at the end");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Compose, "More than 20% unused audio at the end");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateUnusedAudioAtEnd(this),
-            new IssueTemplateUnusedAudioAtEndStoryboardOrVideo(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateUnusedAudioAtEnd(this),
+                new IssueTemplateUnusedAudioAtEndStoryboardOrVideo(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
-            double mappedLength = context.Beatmap.HitObjects.Any() ? context.Beatmap.GetLastObjectTime() : 0;
+            double mappedLength = context.Beatmap.HitObjects.Any()
+                ? context.Beatmap.GetLastObjectTime()
+                : 0;
             double trackLength = context.WorkingBeatmap.Track.Length;
 
             double mappedPercentage = Math.Round(mappedLength / trackLength * 100);
@@ -31,11 +35,15 @@ namespace osu.Game.Rulesets.Edit.Checks
             {
                 double percentageLeft = Math.Abs(mappedPercentage - 100);
 
-                bool storyboardIsPresent = isAnyStoryboardElementPresent(context.WorkingBeatmap.Storyboard);
+                bool storyboardIsPresent = isAnyStoryboardElementPresent(
+                    context.WorkingBeatmap.Storyboard
+                );
 
                 if (storyboardIsPresent)
                 {
-                    yield return new IssueTemplateUnusedAudioAtEndStoryboardOrVideo(this).Create(percentageLeft);
+                    yield return new IssueTemplateUnusedAudioAtEndStoryboardOrVideo(this).Create(
+                        percentageLeft
+                    );
                 }
                 else
                 {
@@ -60,9 +68,11 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateUnusedAudioAtEnd : IssueTemplate
         {
             public IssueTemplateUnusedAudioAtEnd(ICheck check)
-                : base(check, IssueType.Warning, "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, otherwise cut the outro.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, otherwise cut the outro."
+                ) { }
 
             public Issue Create(double percentageLeft) => new Issue(this, percentageLeft);
         }
@@ -70,9 +80,11 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateUnusedAudioAtEndStoryboardOrVideo : IssueTemplate
         {
             public IssueTemplateUnusedAudioAtEndStoryboardOrVideo(ICheck check)
-                : base(check, IssueType.Warning, "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, or is being occupied by the video or storyboard, otherwise cut the outro.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, or is being occupied by the video or storyboard, otherwise cut the outro."
+                ) { }
 
             public Issue Create(double percentageLeft) => new Issue(this, percentageLeft);
         }

@@ -33,13 +33,14 @@ namespace osu.Game.Overlays.Dashboard.Home.News
         {
             Child = new HomePanel
             {
-                Child = text = new OsuSpriteText
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Margin = new MarginPadding { Vertical = 20 },
-                    Text = CommonStrings.ButtonsSeeMore
-                }
+                Child = text =
+                    new OsuSpriteText
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Margin = new MarginPadding { Vertical = 20 },
+                        Text = CommonStrings.ButtonsSeeMore,
+                    },
             };
 
             IdleColour = colourProvider.Light1;

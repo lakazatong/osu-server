@@ -23,29 +23,29 @@ namespace osu.Game.Rulesets.Catch.Tests
                 BeatmapInfo = new BeatmapInfo
                 {
                     Difficulty = new BeatmapDifficulty { CircleSize = 6, SliderMultiplier = 3 },
-                    Ruleset = ruleset
-                }
+                    Ruleset = ruleset,
+                },
             };
 
             for (int i = 0; i < 100; i++)
             {
                 float width = (i % 10 + 1) / 20f * CatchPlayfield.WIDTH;
 
-                beatmap.HitObjects.Add(new JuiceStream
-                {
-                    X = CatchPlayfield.CENTER_X - width / 2,
-                    Path = new SliderPath(PathType.LINEAR, new[]
+                beatmap.HitObjects.Add(
+                    new JuiceStream
                     {
-                        Vector2.Zero,
-                        new Vector2(width, 0)
-                    }),
-                    StartTime = i * 2000,
-                    NewCombo = i % 8 == 0,
-                    Samples = new List<HitSampleInfo>(new[]
-                    {
-                        new HitSampleInfo(HitSampleInfo.HIT_NORMAL)
-                    })
-                });
+                        X = CatchPlayfield.CENTER_X - width / 2,
+                        Path = new SliderPath(
+                            PathType.LINEAR,
+                            new[] { Vector2.Zero, new Vector2(width, 0) }
+                        ),
+                        StartTime = i * 2000,
+                        NewCombo = i % 8 == 0,
+                        Samples = new List<HitSampleInfo>(
+                            new[] { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) }
+                        ),
+                    }
+                );
             }
 
             return beatmap;
@@ -53,7 +53,9 @@ namespace osu.Game.Rulesets.Catch.Tests
 
         protected override TestPlayer CreatePlayer(Ruleset ruleset)
         {
-            SelectedMods.Value = SelectedMods.Value.Concat(new[] { ruleset.GetAutoplayMod() }).ToArray();
+            SelectedMods.Value = SelectedMods
+                .Value.Concat(new[] { ruleset.GetAutoplayMod() })
+                .ToArray();
             return base.CreatePlayer(ruleset);
         }
     }

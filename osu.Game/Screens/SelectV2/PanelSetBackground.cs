@@ -87,17 +87,23 @@ namespace osu.Game.Screens.SelectV2
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.5f), Color4.Black.Opacity(0.3f)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                Color4.Black.Opacity(0.5f),
+                                Color4.Black.Opacity(0.3f)
+                            ),
                             Width = 0.2f,
                         },
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.3f), Color4.Black.Opacity(0.2f)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                Color4.Black.Opacity(0.3f),
+                                Color4.Black.Opacity(0.2f)
+                            ),
                             // Slightly more than 1.0 in total to account for shear.
                             Width = 0.45f,
                         },
-                    }
+                    },
                 },
             };
         }
@@ -120,7 +126,11 @@ namespace osu.Game.Screens.SelectV2
                 // - By using a slightly customised formula to decide when to start the load, we can coerce the loading of backgrounds into an order that
                 //   prioritises panels which are closest to the centre of the screen. Basically, we want to load backgrounds "outwards" from the visual
                 //   centre to give the user the best experience possible.
-                float timeUpdatingBeforeLoad = 50 + Math.Abs(containingSsdq.Centre.Y - ScreenSpaceDrawQuad.Centre.Y) / containingSsdq.Height * 100;
+                float timeUpdatingBeforeLoad =
+                    50
+                    + Math.Abs(containingSsdq.Centre.Y - ScreenSpaceDrawQuad.Centre.Y)
+                        / containingSsdq.Height
+                        * 100;
 
                 timeSinceUnpool += Time.Elapsed;
 
@@ -131,19 +141,25 @@ namespace osu.Game.Screens.SelectV2
 
             loadCancellation = new CancellationTokenSource();
 
-            LoadComponentAsync(new PanelBeatmapBackground(working)
-            {
-                Depth = float.MaxValue,
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                FillMode = FillMode.Fill,
-            }, s =>
-            {
-                AddInternal(sprite = s);
-                bool spriteOnScreen = beatmapCarousel?.ScreenSpaceDrawQuad.Intersects(sprite.ScreenSpaceDrawQuad) != false;
-                sprite.FadeInFromZero(spriteOnScreen ? 400 : 0, Easing.OutQuint);
-            }, loadCancellation.Token);
+            LoadComponentAsync(
+                new PanelBeatmapBackground(working)
+                {
+                    Depth = float.MaxValue,
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fill,
+                },
+                s =>
+                {
+                    AddInternal(sprite = s);
+                    bool spriteOnScreen =
+                        beatmapCarousel?.ScreenSpaceDrawQuad.Intersects(sprite.ScreenSpaceDrawQuad)
+                        != false;
+                    sprite.FadeInFromZero(spriteOnScreen ? 400 : 0, Easing.OutQuint);
+                },
+                loadCancellation.Token
+            );
         }
 
         public partial class PanelBeatmapBackground : Sprite

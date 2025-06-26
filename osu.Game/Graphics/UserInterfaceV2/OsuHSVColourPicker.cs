@@ -20,7 +20,9 @@ namespace osu.Game.Graphics.UserInterfaceV2
         private const float control_border_thickness = 3;
 
         protected override HueSelector CreateHueSelector() => new OsuHueSelector();
-        protected override SaturationValueSelector CreateSaturationValueSelector() => new OsuSaturationValueSelector();
+
+        protected override SaturationValueSelector CreateSaturationValueSelector() =>
+            new OsuSaturationValueSelector();
 
         [BackgroundDependencyLoader(true)]
         private void load(OverlayColourProvider? colourProvider, OsuColour osuColour)
@@ -31,13 +33,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
             Content.Spacing = new Vector2(0, spacing);
         }
 
-        private static EdgeEffectParameters createShadowParameters() => new EdgeEffectParameters
-        {
-            Type = EdgeEffectType.Shadow,
-            Offset = new Vector2(0, 1),
-            Radius = 3,
-            Colour = Colour4.Black.Opacity(0.3f)
-        };
+        private static EdgeEffectParameters createShadowParameters() =>
+            new EdgeEffectParameters
+            {
+                Type = EdgeEffectType.Shadow,
+                Offset = new Vector2(0, 1),
+                Radius = 3,
+                Colour = Colour4.Black.Opacity(0.3f),
+            };
 
         private partial class OsuHueSelector : HueSelector
         {
@@ -68,16 +71,16 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         BorderColour = Colour4.White,
                         BorderThickness = control_border_thickness,
                         EdgeEffect = createShadowParameters(),
-                        Child = fill = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = fill = new Box { RelativeSizeAxes = Axes.Both },
                     };
                 }
 
                 protected override void LoadComplete()
                 {
-                    hue.BindValueChanged(h => fill.Colour = Colour4.FromHSV(h.NewValue, 1, 1), true);
+                    hue.BindValueChanged(
+                        h => fill.Colour = Colour4.FromHSV(h.NewValue, 1, 1),
+                        true
+                    );
                 }
             }
         }
@@ -107,10 +110,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         BorderColour = Colour4.White,
                         BorderThickness = control_border_thickness,
                         EdgeEffect = createShadowParameters(),
-                        Child = previewBox = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = previewBox = new Box { RelativeSizeAxes = Axes.Both },
                     };
                 }
 

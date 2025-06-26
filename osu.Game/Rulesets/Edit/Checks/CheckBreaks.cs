@@ -14,19 +14,24 @@ namespace osu.Game.Rulesets.Edit.Checks
         // Breaks may be off by 1 ms.
         private const int leniency_threshold = 1;
 
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Events, "Breaks not achievable using the editor");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Events, "Breaks not achievable using the editor");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateEarlyStart(this),
-            new IssueTemplateLateEnd(this),
-            new IssueTemplateTooShort(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateEarlyStart(this),
+                new IssueTemplateLateEnd(this),
+                new IssueTemplateTooShort(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
             var startTimes = context.Beatmap.HitObjects.Select(ho => ho.StartTime).Order().ToList();
-            var endTimes = context.Beatmap.HitObjects.Select(ho => ho.GetEndTime()).Order().ToList();
+            var endTimes = context
+                .Beatmap.HitObjects.Select(ho => ho.GetEndTime())
+                .Order()
+                .ToList();
 
             foreach (var breakPeriod in context.Beatmap.Breaks)
             {
@@ -34,23 +39,33 @@ namespace osu.Game.Rulesets.Edit.Checks
                     yield return new IssueTemplateTooShort(this).Create(breakPeriod.StartTime);
 
                 int previousObjectEndTimeIndex = endTimes.BinarySearch(breakPeriod.StartTime);
-                if (previousObjectEndTimeIndex < 0) previousObjectEndTimeIndex = ~previousObjectEndTimeIndex - 1;
+                if (previousObjectEndTimeIndex < 0)
+                    previousObjectEndTimeIndex = ~previousObjectEndTimeIndex - 1;
 
                 if (previousObjectEndTimeIndex >= 0)
                 {
-                    double gapBeforeBreak = breakPeriod.StartTime - endTimes[previousObjectEndTimeIndex];
+                    double gapBeforeBreak =
+                        breakPeriod.StartTime - endTimes[previousObjectEndTimeIndex];
                     if (gapBeforeBreak < BreakPeriod.GAP_BEFORE_BREAK - leniency_threshold)
-                        yield return new IssueTemplateEarlyStart(this).Create(breakPeriod.StartTime, BreakPeriod.GAP_BEFORE_BREAK - gapBeforeBreak);
+                        yield return new IssueTemplateEarlyStart(this).Create(
+                            breakPeriod.StartTime,
+                            BreakPeriod.GAP_BEFORE_BREAK - gapBeforeBreak
+                        );
                 }
 
                 int nextObjectStartTimeIndex = startTimes.BinarySearch(breakPeriod.EndTime);
-                if (nextObjectStartTimeIndex < 0) nextObjectStartTimeIndex = ~nextObjectStartTimeIndex;
+                if (nextObjectStartTimeIndex < 0)
+                    nextObjectStartTimeIndex = ~nextObjectStartTimeIndex;
 
                 if (nextObjectStartTimeIndex < startTimes.Count)
                 {
-                    double gapAfterBreak = startTimes[nextObjectStartTimeIndex] - breakPeriod.EndTime;
+                    double gapAfterBreak =
+                        startTimes[nextObjectStartTimeIndex] - breakPeriod.EndTime;
                     if (gapAfterBreak < BreakPeriod.GAP_AFTER_BREAK - leniency_threshold)
-                        yield return new IssueTemplateLateEnd(this).Create(breakPeriod.StartTime, BreakPeriod.GAP_AFTER_BREAK - gapAfterBreak);
+                        yield return new IssueTemplateLateEnd(this).Create(
+                            breakPeriod.StartTime,
+                            BreakPeriod.GAP_AFTER_BREAK - gapAfterBreak
+                        );
                 }
             }
         }
@@ -58,31 +73,32 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateEarlyStart : IssueTemplate
         {
             public IssueTemplateEarlyStart(ICheck check)
-                : base(check, IssueType.Problem, "Break starts {0} ms early.")
-            {
-            }
+                : base(check, IssueType.Problem, "Break starts {0} ms early.") { }
 
-            public Issue Create(double startTime, double diff) => new Issue(startTime, this, (int)diff);
+            public Issue Create(double startTime, double diff) =>
+                new Issue(startTime, this, (int)diff);
         }
 
         public class IssueTemplateLateEnd : IssueTemplate
         {
             public IssueTemplateLateEnd(ICheck check)
-                : base(check, IssueType.Problem, "Break ends {0} ms late.")
-            {
-            }
+                : base(check, IssueType.Problem, "Break ends {0} ms late.") { }
 
-            public Issue Create(double startTime, double diff) => new Issue(startTime, this, (int)diff);
+            public Issue Create(double startTime, double diff) =>
+                new Issue(startTime, this, (int)diff);
         }
 
         public class IssueTemplateTooShort : IssueTemplate
         {
             public IssueTemplateTooShort(ICheck check)
-                : base(check, IssueType.Warning, "Break is non-functional due to being less than {0} ms.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "Break is non-functional due to being less than {0} ms."
+                ) { }
 
-            public Issue Create(double startTime) => new Issue(startTime, this, BreakPeriod.MIN_BREAK_DURATION);
+            public Issue Create(double startTime) =>
+                new Issue(startTime, this, BreakPeriod.MIN_BREAK_DURATION);
         }
     }
 }

@@ -20,30 +20,40 @@ namespace osu.Game.Tests.Visual.UserInterface
         [TestCase(StarRatingDisplaySize.Small)]
         public void TestDisplay(StarRatingDisplaySize size)
         {
-            AddStep("load displays", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "load displays",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Spacing = new Vector2(2f),
-                    Direction = FillDirection.Horizontal,
-                    ChildrenEnumerable = Enumerable.Range(-1, 15).Select(i => new FillFlowContainer
+                    Child = new FillFlowContainer
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         AutoSizeAxes = Axes.Both,
                         Spacing = new Vector2(2f),
-                        Direction = FillDirection.Vertical,
-                        ChildrenEnumerable = Enumerable.Range(0, 10).Select(j => new StarRatingDisplay(new StarDifficulty(i * (i >= 11 ? 25f : 1f) + j * 0.1f, 0), size)
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        }),
-                    })
-                };
-            });
+                        Direction = FillDirection.Horizontal,
+                        ChildrenEnumerable = Enumerable
+                            .Range(-1, 15)
+                            .Select(i => new FillFlowContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                AutoSizeAxes = Axes.Both,
+                                Spacing = new Vector2(2f),
+                                Direction = FillDirection.Vertical,
+                                ChildrenEnumerable = Enumerable
+                                    .Range(0, 10)
+                                    .Select(j => new StarRatingDisplay(
+                                        new StarDifficulty(i * (i >= 11 ? 25f : 1f) + j * 0.1f, 0),
+                                        size
+                                    )
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                    }),
+                            }),
+                    };
+                }
+            );
         }
 
         [Test]
@@ -51,23 +61,38 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             StarRatingDisplay starRating = null;
 
-            AddStep("load display", () => Child = starRating = new StarRatingDisplay(new StarDifficulty(5.55, 1), animated: true)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(3f),
-            });
+            AddStep(
+                "load display",
+                () =>
+                    Child = starRating =
+                        new StarRatingDisplay(new StarDifficulty(5.55, 1), animated: true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Scale = new Vector2(3f),
+                        }
+            );
 
-            AddRepeatStep("set random value", () =>
-            {
-                starRating.Current.Value = new StarDifficulty(RNG.NextDouble(0.0, 11.0), 1);
-            }, 10);
+            AddRepeatStep(
+                "set random value",
+                () =>
+                {
+                    starRating.Current.Value = new StarDifficulty(RNG.NextDouble(0.0, 11.0), 1);
+                },
+                10
+            );
 
-            AddSliderStep("set exact stars", 0.0, 11.0, 5.55, d =>
-            {
-                if (starRating != null)
-                    starRating.Current.Value = new StarDifficulty(d, 1);
-            });
+            AddSliderStep(
+                "set exact stars",
+                0.0,
+                11.0,
+                5.55,
+                d =>
+                {
+                    if (starRating != null)
+                        starRating.Current.Value = new StarDifficulty(d, 1);
+                }
+            );
         }
     }
 }

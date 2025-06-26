@@ -12,7 +12,8 @@ namespace osu.Game.Localisation.HUD
         /// <summary>
         /// "Spectators ({0})"
         /// </summary>
-        public static LocalisableString SpectatorCount(int arg0) => new TranslatableString(getKey(@"spectator_count"), @"Spectators ({0})", arg0);
+        public static LocalisableString SpectatorCount(int arg0) =>
+            new TranslatableString(getKey(@"spectator_count"), @"Spectators ({0})", arg0);
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

@@ -35,9 +35,12 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
         {
             get
             {
-                if (!Enabled.Value) return string.Empty;
+                if (!Enabled.Value)
+                    return string.Empty;
 
-                return favourited.Value ? BeatmapsetsStrings.ShowDetailsUnfavourite : BeatmapsetsStrings.ShowDetailsFavourite;
+                return favourited.Value
+                    ? BeatmapsetsStrings.ShowDetailsUnfavourite
+                    : BeatmapsetsStrings.ShowDetailsFavourite;
             }
         }
 
@@ -46,18 +49,20 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
         {
             SpriteIcon icon;
 
-            AddRange(new Drawable[]
-            {
-                icon = new SpriteIcon
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Icon = FontAwesome.Regular.Heart,
-                    Size = new Vector2(18),
-                    Shadow = false,
-                },
-                loading = new LoadingLayer(true, false),
-            });
+                    icon = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Icon = FontAwesome.Regular.Heart,
+                        Size = new Vector2(18),
+                        Shadow = false,
+                    },
+                    loading = new LoadingLayer(true, false),
+                }
+            );
 
             Action = () =>
             {
@@ -68,7 +73,12 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
 
                 request?.Cancel();
 
-                request = new PostBeatmapFavouriteRequest(BeatmapSet.Value.OnlineID, favourited.Value ? BeatmapFavouriteAction.UnFavourite : BeatmapFavouriteAction.Favourite);
+                request = new PostBeatmapFavouriteRequest(
+                    BeatmapSet.Value.OnlineID,
+                    favourited.Value
+                        ? BeatmapFavouriteAction.UnFavourite
+                        : BeatmapFavouriteAction.Favourite
+                );
 
                 request.Success += () =>
                 {
@@ -78,11 +88,9 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
 
                 request.Failure += e =>
                 {
-                    notifications?.Post(new SimpleNotification
-                    {
-                        Text = e.Message,
-                        Icon = FontAwesome.Solid.Times,
-                    });
+                    notifications?.Post(
+                        new SimpleNotification { Text = e.Message, Icon = FontAwesome.Solid.Times }
+                    );
 
                     loading.Hide();
                 };
@@ -90,20 +98,27 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
                 api.Queue(request);
             };
 
-            favourited.ValueChanged += favourited => icon.Icon = favourited.NewValue ? FontAwesome.Solid.Heart : FontAwesome.Regular.Heart;
+            favourited.ValueChanged += favourited =>
+                icon.Icon = favourited.NewValue
+                    ? FontAwesome.Solid.Heart
+                    : FontAwesome.Regular.Heart;
 
             localUser.BindTo(api.LocalUser);
             localUser.BindValueChanged(_ => updateEnabled());
 
             // must be run after setting the Action to ensure correct enabled state (setting an Action forces a button to be enabled).
-            BeatmapSet.BindValueChanged(setInfo =>
-            {
-                updateEnabled();
-                favourited.Value = setInfo.NewValue?.HasFavourited ?? false;
-            }, true);
+            BeatmapSet.BindValueChanged(
+                setInfo =>
+                {
+                    updateEnabled();
+                    favourited.Value = setInfo.NewValue?.HasFavourited ?? false;
+                },
+                true
+            );
         }
 
-        private void updateEnabled() => Enabled.Value = !(localUser.Value is GuestUser) && BeatmapSet.Value?.OnlineID > 0;
+        private void updateEnabled() =>
+            Enabled.Value = !(localUser.Value is GuestUser) && BeatmapSet.Value?.OnlineID > 0;
 
         protected override void UpdateAfterChildren()
         {

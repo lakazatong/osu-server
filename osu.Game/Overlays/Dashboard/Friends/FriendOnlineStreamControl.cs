@@ -13,7 +13,8 @@ namespace osu.Game.Overlays.Dashboard.Friends
 {
     public partial class FriendOnlineStreamControl : OverlayStreamControl<OnlineStatus>
     {
-        private readonly IBindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        private readonly IBindableDictionary<int, UserPresence> friendPresences =
+            new BindableDictionary<int, UserPresence>();
         private readonly IBindableList<APIRelation> apiFriends = new BindableList<APIRelation>();
         private readonly BindableInt countAll = new BindableInt();
         private readonly BindableInt countOnline = new BindableInt();
@@ -27,12 +28,7 @@ namespace osu.Game.Overlays.Dashboard.Friends
 
         public FriendOnlineStreamControl()
         {
-            Items =
-            [
-                OnlineStatus.All,
-                OnlineStatus.Online,
-                OnlineStatus.Offline
-            ];
+            Items = [OnlineStatus.All, OnlineStatus.Online, OnlineStatus.Offline];
         }
 
         protected override void LoadComplete()
@@ -48,7 +44,10 @@ namespace osu.Game.Overlays.Dashboard.Friends
             updateCounts();
         }
 
-        private void onFriendPresencesChanged(object? sender, NotifyDictionaryChangedEventArgs<int, UserPresence> e)
+        private void onFriendPresencesChanged(
+            object? sender,
+            NotifyDictionaryChangedEventArgs<int, UserPresence> e
+        )
         {
             switch (e.Action)
             {
@@ -79,13 +78,22 @@ namespace osu.Game.Overlays.Dashboard.Friends
             switch (value)
             {
                 case OnlineStatus.All:
-                    return new FriendsOnlineStatusItem(value) { UserCount = { BindTarget = countAll } };
+                    return new FriendsOnlineStatusItem(value)
+                    {
+                        UserCount = { BindTarget = countAll },
+                    };
 
                 case OnlineStatus.Online:
-                    return new FriendsOnlineStatusItem(value) { UserCount = { BindTarget = countOnline } };
+                    return new FriendsOnlineStatusItem(value)
+                    {
+                        UserCount = { BindTarget = countOnline },
+                    };
 
                 case OnlineStatus.Offline:
-                    return new FriendsOnlineStatusItem(value) { UserCount = { BindTarget = countOffline } };
+                    return new FriendsOnlineStatusItem(value)
+                    {
+                        UserCount = { BindTarget = countOffline },
+                    };
 
                 default:
                     throw new ArgumentException(nameof(value));

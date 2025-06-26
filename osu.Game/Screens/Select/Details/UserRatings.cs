@@ -19,7 +19,8 @@ namespace osu.Game.Screens.Select.Details
     {
         private readonly FillFlowContainer header;
         private readonly Bar ratingsBar;
-        private readonly OsuSpriteText negativeRatings, positiveRatings;
+        private readonly OsuSpriteText negativeRatings,
+            positiveRatings;
         private readonly Container graphContainer;
         private readonly BarGraph graph;
 
@@ -30,7 +31,8 @@ namespace osu.Game.Screens.Select.Details
             get => ratings;
             set
             {
-                if (value == ratings) return;
+                if (value == ratings)
+                    return;
 
                 ratings = value;
 
@@ -77,11 +79,7 @@ namespace osu.Game.Screens.Select.Details
                             Font = OsuFont.GetFont(size: 12),
                             Margin = new MarginPadding { Bottom = 5 },
                         },
-                        ratingsBar = new Bar
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 5,
-                        },
+                        ratingsBar = new Bar { RelativeSizeAxes = Axes.X, Height = 5 },
                         new Container
                         {
                             RelativeSizeAxes = Axes.X,
@@ -92,14 +90,14 @@ namespace osu.Game.Screens.Select.Details
                                 negativeRatings = new OsuSpriteText
                                 {
                                     Text = 0.ToLocalisableString(@"N0"),
-                                    Font = OsuFont.GetFont(size: 12)
+                                    Font = OsuFont.GetFont(size: 12),
                                 },
                                 positiveRatings = new OsuSpriteText
                                 {
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Text = 0.ToLocalisableString(@"N0"),
-                                    Font = OsuFont.GetFont(size: 12)
+                                    Font = OsuFont.GetFont(size: 12),
                                 },
                             },
                         },
@@ -118,10 +116,7 @@ namespace osu.Game.Screens.Select.Details
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     RelativeSizeAxes = Axes.Both,
-                    Child = graph = new BarGraph
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = graph = new BarGraph { RelativeSizeAxes = Axes.Both },
                 },
             };
         }

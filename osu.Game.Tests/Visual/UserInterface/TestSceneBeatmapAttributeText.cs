@@ -37,41 +37,44 @@ namespace osu.Game.Tests.Visual.UserInterface
             Child = text = new BeatmapAttributeText
             {
                 Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
+                Origin = Anchor.Centre,
             };
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            SelectedMods.SetDefault();
-            Ruleset.Value = new OsuRuleset().RulesetInfo;
-            Beatmap.Value = CreateWorkingBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
+        public void Setup() =>
+            Schedule(() =>
             {
-                BeatmapInfo =
-                {
-                    BPM = 100,
-                    DifficultyName = "_Difficulty",
-                    Status = BeatmapOnlineStatus.Loved,
-                    Metadata =
+                SelectedMods.SetDefault();
+                Ruleset.Value = new OsuRuleset().RulesetInfo;
+                Beatmap.Value = CreateWorkingBeatmap(
+                    new TestBeatmap(new OsuRuleset().RulesetInfo)
                     {
-                        Title = "_Title",
-                        TitleUnicode = "_Title",
-                        Artist = "_Artist",
-                        ArtistUnicode = "_Artist",
-                        Author = new RealmUser { Username = "_Creator" },
-                        Source = "_Source",
-                    },
-                    Difficulty =
-                    {
-                        CircleSize = 1,
-                        DrainRate = 2,
-                        OverallDifficulty = 3,
-                        ApproachRate = 4,
+                        BeatmapInfo =
+                        {
+                            BPM = 100,
+                            DifficultyName = "_Difficulty",
+                            Status = BeatmapOnlineStatus.Loved,
+                            Metadata =
+                            {
+                                Title = "_Title",
+                                TitleUnicode = "_Title",
+                                Artist = "_Artist",
+                                ArtistUnicode = "_Artist",
+                                Author = new RealmUser { Username = "_Creator" },
+                                Source = "_Source",
+                            },
+                            Difficulty =
+                            {
+                                CircleSize = 1,
+                                DrainRate = 2,
+                                OverallDifficulty = 3,
+                                ApproachRate = 4,
+                            },
+                        },
                     }
-                }
+                );
             });
-        });
 
         [TestCase(BeatmapAttribute.CircleSize, "Circle Size: 1")]
         [TestCase(BeatmapAttribute.HPDrain, "HP Drain: 2")]
@@ -95,16 +98,16 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("set title attribute", () => text.Attribute.Value = BeatmapAttribute.Title);
             AddAssert("check initial title", getText, () => Is.EqualTo("Title: _Title"));
 
-            AddStep("change to beatmap with another title", () => Beatmap.Value = CreateWorkingBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
-            {
-                BeatmapInfo =
-                {
-                    Metadata =
-                    {
-                        Title = "Another"
-                    }
-                }
-            }));
+            AddStep(
+                "change to beatmap with another title",
+                () =>
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new TestBeatmap(new OsuRuleset().RulesetInfo)
+                        {
+                            BeatmapInfo = { Metadata = { Title = "Another" } },
+                        }
+                    )
+            );
 
             AddAssert("check new title", getText, () => Is.EqualTo("Title: Another"));
         }
@@ -112,24 +115,36 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestWithMods()
         {
-            AddStep("set beatmap", () => Beatmap.Value = CreateWorkingBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
-            {
-                BeatmapInfo =
-                {
-                    BPM = 100,
-                    Length = 30000,
-                    Difficulty =
-                    {
-                        ApproachRate = 10,
-                        CircleSize = 9.5f
-                    }
-                }
-            }));
+            AddStep(
+                "set beatmap",
+                () =>
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new TestBeatmap(new OsuRuleset().RulesetInfo)
+                        {
+                            BeatmapInfo =
+                            {
+                                BPM = 100,
+                                Length = 30000,
+                                Difficulty = { ApproachRate = 10, CircleSize = 9.5f },
+                            },
+                        }
+                    )
+            );
 
             test(BeatmapAttribute.BPM, new OsuModDoubleTime(), "BPM: 100", "BPM: 150");
             test(BeatmapAttribute.Length, new OsuModDoubleTime(), "Length: 00:30", "Length: 00:20");
-            test(BeatmapAttribute.ApproachRate, new OsuModDoubleTime(), "Approach Rate: 10", "Approach Rate: 11");
-            test(BeatmapAttribute.CircleSize, new OsuModHardRock(), "Circle Size: 9.5", "Circle Size: 10");
+            test(
+                BeatmapAttribute.ApproachRate,
+                new OsuModDoubleTime(),
+                "Approach Rate: 10",
+                "Approach Rate: 11"
+            );
+            test(
+                BeatmapAttribute.CircleSize,
+                new OsuModHardRock(),
+                "Circle Size: 9.5",
+                "Circle Size: 10"
+            );
 
             void test(BeatmapAttribute attribute, Mod mod, string before, string after)
             {
@@ -146,12 +161,19 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestStarRating()
         {
             AddStep("set test ruleset", () => Ruleset.Value = new TestRuleset().RulesetInfo);
-            AddStep("set star rating attribute", () => text.Attribute.Value = BeatmapAttribute.StarRating);
+            AddStep(
+                "set star rating attribute",
+                () => text.Attribute.Value = BeatmapAttribute.StarRating
+            );
             AddAssert("check star rating is 0", getText, () => Is.EqualTo("Star Rating: 0.00"));
 
             // Adding mod
             TestMod mod = null!;
-            AddStep("add mod with difficulty 1", () => SelectedMods.Value = new[] { mod = new TestMod { Difficulty = { Value = 1 } } });
+            AddStep(
+                "add mod with difficulty 1",
+                () =>
+                    SelectedMods.Value = new[] { mod = new TestMod { Difficulty = { Value = 1 } } }
+            );
             AddUntilStep("check star rating is 1", getText, () => Is.EqualTo("Star Rating: 1.00"));
 
             // Changing mod setting
@@ -168,7 +190,11 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             // Adding mod
             TestMod mod = null!;
-            AddStep("add mod with pp 1", () => SelectedMods.Value = new[] { mod = new TestMod { Performance = { Value = 1 } } });
+            AddStep(
+                "add mod with pp 1",
+                () =>
+                    SelectedMods.Value = new[] { mod = new TestMod { Performance = { Value = 1 } } }
+            );
             AddUntilStep("check max pp is 1", getText, () => Is.EqualTo("Max PP: 1"));
 
             // Changing mod setting
@@ -180,22 +206,22 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private class TestRuleset : Ruleset
         {
-            public override IEnumerable<Mod> GetModsFor(ModType type) => new[]
-            {
-                new TestMod()
-            };
+            public override IEnumerable<Mod> GetModsFor(ModType type) => new[] { new TestMod() };
 
-            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap)
-                => new OsuRuleset().CreateBeatmapConverter(beatmap);
+            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+                new OsuRuleset().CreateBeatmapConverter(beatmap);
 
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap)
-                => new TestDifficultyCalculator(new TestRuleset().RulesetInfo, beatmap);
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => new TestDifficultyCalculator(new TestRuleset().RulesetInfo, beatmap);
 
-            public override PerformanceCalculator CreatePerformanceCalculator()
-                => new TestPerformanceCalculator(new TestRuleset());
+            public override PerformanceCalculator CreatePerformanceCalculator() =>
+                new TestPerformanceCalculator(new TestRuleset());
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
-                => null!;
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod>? mods = null
+            ) => null!;
 
             public override string Description => string.Empty;
             public override string ShortName => string.Empty;
@@ -204,29 +230,44 @@ namespace osu.Game.Tests.Visual.UserInterface
         private class TestDifficultyCalculator : DifficultyCalculator
         {
             public TestDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
-                : base(ruleset, beatmap)
-            {
-            }
+                : base(ruleset, beatmap) { }
 
-            protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
-                => new DifficultyAttributes(mods, mods.OfType<TestMod>().SingleOrDefault()?.Difficulty.Value ?? 0);
+            protected override DifficultyAttributes CreateDifficultyAttributes(
+                IBeatmap beatmap,
+                Mod[] mods,
+                Skill[] skills,
+                double clockRate
+            ) =>
+                new DifficultyAttributes(
+                    mods,
+                    mods.OfType<TestMod>().SingleOrDefault()?.Difficulty.Value ?? 0
+                );
 
-            protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
-                => Array.Empty<DifficultyHitObject>();
+            protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(
+                IBeatmap beatmap,
+                double clockRate
+            ) => Array.Empty<DifficultyHitObject>();
 
-            protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate)
-                => Array.Empty<Skill>();
+            protected override Skill[] CreateSkills(
+                IBeatmap beatmap,
+                Mod[] mods,
+                double clockRate
+            ) => Array.Empty<Skill>();
         }
 
         private class TestPerformanceCalculator : PerformanceCalculator
         {
             public TestPerformanceCalculator(Ruleset ruleset)
-                : base(ruleset)
-            {
-            }
+                : base(ruleset) { }
 
-            protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
-                => new PerformanceAttributes { Total = score.Mods.OfType<TestMod>().SingleOrDefault()?.Performance.Value ?? 0 };
+            protected override PerformanceAttributes CreatePerformanceAttributes(
+                ScoreInfo score,
+                DifficultyAttributes attributes
+            ) =>
+                new PerformanceAttributes
+                {
+                    Total = score.Mods.OfType<TestMod>().SingleOrDefault()?.Performance.Value ?? 0,
+                };
         }
 
         private class TestMod : Mod
@@ -238,9 +279,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             public BindableDouble Performance { get; } = new BindableDouble(0);
 
             [JsonConstructor]
-            public TestMod()
-            {
-            }
+            public TestMod() { }
 
             public override string Name => string.Empty;
             public override LocalisableString Description => string.Empty;

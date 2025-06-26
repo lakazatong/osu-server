@@ -19,7 +19,8 @@ namespace osu.Game.Screens.Ranking.Statistics.User
 {
     public abstract partial class RankingChangeRow<T> : CompositeDrawable
     {
-        public Bindable<ScoreBasedUserStatisticsUpdate?> StatisticsUpdate { get; } = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        public Bindable<ScoreBasedUserStatisticsUpdate?> StatisticsUpdate { get; } =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
 
         private readonly Func<UserStatistics, T> accessor;
 
@@ -30,8 +31,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        protected RankingChangeRow(
-            Func<UserStatistics, T> accessor)
+        protected RankingChangeRow(Func<UserStatistics, T> accessor)
         {
             this.accessor = accessor;
         }
@@ -47,7 +47,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
                 new OsuSpriteText
                 {
                     Text = Label,
-                    Font = OsuFont.Default.With(size: StatisticItem.FONT_SIZE)
+                    Font = OsuFont.Default.With(size: StatisticItem.FONT_SIZE),
                 },
                 new FillFlowContainer
                 {
@@ -77,7 +77,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
                                         new Circle
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Colour = colours.Gray1
+                                            Colour = colours.Gray1,
                                         },
                                         changeIcon = new SpriteIcon
                                         {
@@ -85,24 +85,30 @@ namespace osu.Game.Screens.Ranking.Statistics.User
                                             Origin = Anchor.Centre,
                                             Size = new Vector2(10),
                                         },
-                                    }
+                                    },
                                 },
                                 currentValueText = new OsuSpriteText
                                 {
                                     Anchor = Anchor.CentreRight,
                                     Origin = Anchor.CentreRight,
-                                    Font = OsuFont.Default.With(size: StatisticItem.FONT_SIZE, weight: FontWeight.Bold)
+                                    Font = OsuFont.Default.With(
+                                        size: StatisticItem.FONT_SIZE,
+                                        weight: FontWeight.Bold
+                                    ),
                                 },
-                            }
+                            },
                         },
                         changeText = new OsuSpriteText
                         {
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
-                            Font = OsuFont.Default.With(size: StatisticItem.FONT_SIZE, weight: FontWeight.Bold)
-                        }
-                    }
-                }
+                            Font = OsuFont.Default.With(
+                                size: StatisticItem.FONT_SIZE,
+                                weight: FontWeight.Bold
+                            ),
+                        },
+                    },
+                },
             };
         }
 
@@ -113,7 +119,9 @@ namespace osu.Game.Screens.Ranking.Statistics.User
             StatisticsUpdate.BindValueChanged(onStatisticsUpdate, true);
         }
 
-        private void onStatisticsUpdate(ValueChangedEvent<ScoreBasedUserStatisticsUpdate?> statisticsUpdate)
+        private void onStatisticsUpdate(
+            ValueChangedEvent<ScoreBasedUserStatisticsUpdate?> statisticsUpdate
+        )
         {
             var update = statisticsUpdate.NewValue;
 
@@ -122,7 +130,11 @@ namespace osu.Game.Screens.Ranking.Statistics.User
 
             T previousValue = accessor.Invoke(update.Before);
             T currentValue = accessor.Invoke(update.After);
-            int comparisonResult = CalculateDifference(previousValue, currentValue, out var formattedDifference);
+            int comparisonResult = CalculateDifference(
+                previousValue,
+                currentValue,
+                out var formattedDifference
+            );
 
             Colour4 comparisonColour;
             IconUsage icon;
@@ -155,6 +167,10 @@ namespace osu.Game.Screens.Ranking.Statistics.User
         protected abstract LocalisableString Label { get; }
 
         protected abstract LocalisableString FormatCurrentValue(T current);
-        protected abstract int CalculateDifference(T previous, T current, out LocalisableString formattedDifference);
+        protected abstract int CalculateDifference(
+            T previous,
+            T current,
+            out LocalisableString formattedDifference
+        );
     }
 }

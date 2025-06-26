@@ -39,15 +39,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                 Masking = true,
                 Children = new Drawable[]
                 {
-                    backgroundFill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    foregroundFill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                }
+                    backgroundFill = new Box { RelativeSizeAxes = Axes.Both },
+                    foregroundFill = new Box { RelativeSizeAxes = Axes.Both },
+                },
             };
         }
 
@@ -75,14 +69,22 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                     break;
 
                 case DownloadState.Importing:
-                    foregroundFill.FadeColour(colours.Yellow, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+                    foregroundFill.FadeColour(
+                        colours.Yellow,
+                        BeatmapCard.TRANSITION_DURATION,
+                        Easing.OutQuint
+                    );
                     break;
             }
         }
 
         private void progressChanged()
         {
-            foregroundFill.ResizeWidthTo((float)progress.Value, progress.Value > 0 ? BeatmapCard.TRANSITION_DURATION : 0, Easing.OutQuint);
+            foregroundFill.ResizeWidthTo(
+                (float)progress.Value,
+                progress.Value > 0 ? BeatmapCard.TRANSITION_DURATION : 0,
+                Easing.OutQuint
+            );
         }
     }
 }

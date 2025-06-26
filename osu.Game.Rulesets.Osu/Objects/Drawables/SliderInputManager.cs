@@ -85,7 +85,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             Debug.Assert(screenSpaceMousePosition != null);
 
-            Vector2 mousePositionInSlider = slider.ToLocalSpace(screenSpaceMousePosition.Value) - slider.OriginPosition;
+            Vector2 mousePositionInSlider =
+                slider.ToLocalSpace(screenSpaceMousePosition.Value) - slider.OriginPosition;
 
             // When the head is hit late:
             // - If the cursor has at all times been within range of the expanded follow area, hit all nested objects that have been passed through.
@@ -104,7 +105,12 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                     break;
 
                 float radius = getFollowRadius(true);
-                double objectProgress = Math.Clamp((nested.HitObject.StartTime - slider.HitObject.StartTime) / slider.HitObject.Duration, 0, 1);
+                double objectProgress = Math.Clamp(
+                    (nested.HitObject.StartTime - slider.HitObject.StartTime)
+                        / slider.HitObject.Duration,
+                    0,
+                    1
+                );
                 Vector2 objectPosition = slider.HitObject.CurvePositionAt(objectProgress);
 
                 // When the first nested object that is further outside the follow area is reached,
@@ -158,7 +164,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                     //
                     // This covers the edge case where the lenience may allow the tail to activate before
                     // the last tick, changing ordering of score/combo awarding.
-                    var lastTick = slider.NestedHitObjects.LastOrDefault(o => o.HitObject is SliderTick || o.HitObject is SliderRepeat);
+                    var lastTick = slider.NestedHitObjects.LastOrDefault(o =>
+                        o.HitObject is SliderTick || o.HitObject is SliderRepeat
+                    );
                     if (lastTick?.Judged == false)
                         return;
 
@@ -188,7 +196,11 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             float radius = getFollowRadius(expanded);
 
-            double followProgress = Math.Clamp((Time.Current - slider.HitObject.StartTime) / slider.HitObject.Duration, 0, 1);
+            double followProgress = Math.Clamp(
+                (Time.Current - slider.HitObject.StartTime) / slider.HitObject.Duration,
+                0,
+                1
+            );
             Vector2 followCirclePosition = slider.HitObject.CurvePositionAt(followProgress);
             Vector2 mousePositionInSlider = slider.ToLocalSpace(pos) - slider.OriginPosition;
 
@@ -218,7 +230,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             if (gameplayClock?.IsRewinding == true)
             {
                 var trackingHistory = slider.Result.TrackingHistory;
-                while (trackingHistory.TryPeek(out var historyEntry) && Time.Current < historyEntry.time)
+                while (
+                    trackingHistory.TryPeek(out var historyEntry)
+                    && Time.Current < historyEntry.time
+                )
                     trackingHistory.Pop();
 
                 Debug.Assert(trackingHistory.Count > 0);
@@ -239,7 +254,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             // if the head circle was hit with a specific key, tracking should only occur while that key is pressed.
             if (headCircleHitAction != null && timeToAcceptAnyKeyAfter == null)
             {
-                var otherKey = headCircleHitAction == OsuAction.RightButton ? OsuAction.LeftButton : OsuAction.RightButton;
+                var otherKey =
+                    headCircleHitAction == OsuAction.RightButton
+                        ? OsuAction.LeftButton
+                        : OsuAction.RightButton;
 
                 // we can start accepting any key once all other keys have been released in the previous frame.
                 if (!lastPressedActions.Contains(otherKey))
@@ -283,7 +301,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             OsuAction? hitAction = getInitialHitAction();
 
             // if the head circle was hit, we may not yet be allowed to accept any key, so we must use the initial hit action.
-            if (hitAction.HasValue && (!timeToAcceptAnyKeyAfter.HasValue || Time.Current <= timeToAcceptAnyKeyAfter.Value))
+            if (
+                hitAction.HasValue
+                && (
+                    !timeToAcceptAnyKeyAfter.HasValue
+                    || Time.Current <= timeToAcceptAnyKeyAfter.Value
+                )
+            )
                 return action == hitAction;
 
             return action == OsuAction.LeftButton || action == OsuAction.RightButton;

@@ -17,15 +17,16 @@ using osu.Framework.Threading;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osuTK;
 using osu.Game.Localisation;
 using osu.Game.Online.Chat;
+using osuTK;
 
 namespace osu.Game.Overlays.Settings.Sections.Input
 {
     public partial class TabletSettings : SettingsSubsection
     {
-        public override IEnumerable<LocalisableString> FilterTerms => base.FilterTerms.Concat(new LocalisableString[] { "area" });
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            base.FilterTerms.Concat(new LocalisableString[] { "area" });
 
         public TabletAreaSelection AreaSelection { get; private set; }
 
@@ -37,15 +38,41 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         private readonly Bindable<Vector2> areaSize = new Bindable<Vector2>();
         private readonly IBindable<TabletInfo> tablet = new Bindable<TabletInfo>();
 
-        private readonly BindableNumber<float> offsetX = new BindableNumber<float> { MinValue = 0, Precision = 1 };
-        private readonly BindableNumber<float> offsetY = new BindableNumber<float> { MinValue = 0, Precision = 1 };
+        private readonly BindableNumber<float> offsetX = new BindableNumber<float>
+        {
+            MinValue = 0,
+            Precision = 1,
+        };
+        private readonly BindableNumber<float> offsetY = new BindableNumber<float>
+        {
+            MinValue = 0,
+            Precision = 1,
+        };
 
-        private readonly BindableNumber<float> sizeX = new BindableNumber<float> { MinValue = 10, Precision = 1 };
-        private readonly BindableNumber<float> sizeY = new BindableNumber<float> { MinValue = 10, Precision = 1 };
+        private readonly BindableNumber<float> sizeX = new BindableNumber<float>
+        {
+            MinValue = 10,
+            Precision = 1,
+        };
+        private readonly BindableNumber<float> sizeY = new BindableNumber<float>
+        {
+            MinValue = 10,
+            Precision = 1,
+        };
 
-        private readonly BindableNumber<float> rotation = new BindableNumber<float> { MinValue = 0, MaxValue = 360, Precision = 1 };
+        private readonly BindableNumber<float> rotation = new BindableNumber<float>
+        {
+            MinValue = 0,
+            MaxValue = 360,
+            Precision = 1,
+        };
 
-        private readonly BindableNumber<float> pressureThreshold = new BindableNumber<float> { MinValue = 0.0f, MaxValue = 1.0f, Precision = 0.005f };
+        private readonly BindableNumber<float> pressureThreshold = new BindableNumber<float>
+        {
+            MinValue = 0.0f,
+            MaxValue = 1.0f,
+            Precision = 0.005f,
+        };
 
         [Resolved]
         private GameHost host { get; set; }
@@ -113,17 +140,25 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                             AutoSizeAxes = Axes.Y,
                         }.With(t =>
                         {
-                            if (RuntimeInfo.OS == RuntimeInfo.Platform.Windows || RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
+                            if (
+                                RuntimeInfo.OS == RuntimeInfo.Platform.Windows
+                                || RuntimeInfo.OS == RuntimeInfo.Platform.Linux
+                            )
                             {
                                 t.NewLine();
-                                var formattedSource = MessageFormatter.FormatText(localisation.GetLocalisedString(TabletSettingsStrings.NoTabletDetectedDescription(
-                                    RuntimeInfo.OS == RuntimeInfo.Platform.Windows
-                                        ? @"https://opentabletdriver.net/Wiki/FAQ/Windows"
-                                        : @"https://opentabletdriver.net/Wiki/FAQ/Linux")));
+                                var formattedSource = MessageFormatter.FormatText(
+                                    localisation.GetLocalisedString(
+                                        TabletSettingsStrings.NoTabletDetectedDescription(
+                                            RuntimeInfo.OS == RuntimeInfo.Platform.Windows
+                                                ? @"https://opentabletdriver.net/Wiki/FAQ/Windows"
+                                                : @"https://opentabletdriver.net/Wiki/FAQ/Linux"
+                                        )
+                                    )
+                                );
                                 t.AddLinks(formattedSource.Text, formattedSource.Links);
                             }
                         }),
-                    }
+                    },
                 },
                 mainSettings = new FillFlowContainer
                 {
@@ -149,80 +184,83 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                 areaOffset.SetDefault();
                                 areaSize.SetDefault();
                             },
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsButton
                         {
                             Text = TabletSettingsStrings.ConformToCurrentGameAspectRatio,
                             Action = () =>
                             {
-                                forceAspectRatio((float)host.Window.ClientSize.Width / host.Window.ClientSize.Height);
+                                forceAspectRatio(
+                                    (float)host.Window.ClientSize.Width
+                                        / host.Window.ClientSize.Height
+                                );
                             },
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = TabletSettingsStrings.XOffset,
                             Current = offsetX,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = TabletSettingsStrings.YOffset,
                             Current = offsetY,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = TabletSettingsStrings.Rotation,
                             Current = rotation,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new RotationPresetButtons(tabletHandler)
                         {
                             Padding = new MarginPadding
                             {
-                                Horizontal = SettingsPanel.CONTENT_MARGINS
-                            }
+                                Horizontal = SettingsPanel.CONTENT_MARGINS,
+                            },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = TabletSettingsStrings.AspectRatio,
                             Current = aspectRatio,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsCheckbox
                         {
                             LabelText = TabletSettingsStrings.LockAspectRatio,
                             Current = aspectLock,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = CommonStrings.Width,
                             Current = sizeX,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = CommonStrings.Height,
                             Current = sizeY,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
                         new SettingsPercentageSlider<float>
                         {
                             TransferValueOnCommit = true,
                             LabelText = TabletSettingsStrings.TipPressureForClick,
                             Current = pressureThreshold,
-                            CanBeShown = { BindTarget = enabled }
+                            CanBeShown = { BindTarget = enabled },
                         },
-                    }
+                    },
                 },
             };
         }
@@ -237,21 +275,33 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             rotation.BindTo(tabletHandler.Rotation);
 
             areaOffset.BindTo(tabletHandler.AreaOffset);
-            areaOffset.BindValueChanged(val => Schedule(() =>
-            {
-                offsetX.Value = val.NewValue.X;
-                offsetY.Value = val.NewValue.Y;
-            }), true);
+            areaOffset.BindValueChanged(
+                val =>
+                    Schedule(() =>
+                    {
+                        offsetX.Value = val.NewValue.X;
+                        offsetY.Value = val.NewValue.Y;
+                    }),
+                true
+            );
 
-            offsetX.BindValueChanged(val => areaOffset.Value = new Vector2(val.NewValue, areaOffset.Value.Y));
-            offsetY.BindValueChanged(val => areaOffset.Value = new Vector2(areaOffset.Value.X, val.NewValue));
+            offsetX.BindValueChanged(val =>
+                areaOffset.Value = new Vector2(val.NewValue, areaOffset.Value.Y)
+            );
+            offsetY.BindValueChanged(val =>
+                areaOffset.Value = new Vector2(areaOffset.Value.X, val.NewValue)
+            );
 
             areaSize.BindTo(tabletHandler.AreaSize);
-            areaSize.BindValueChanged(val => Schedule(() =>
-            {
-                sizeX.Value = val.NewValue.X;
-                sizeY.Value = val.NewValue.Y;
-            }), true);
+            areaSize.BindValueChanged(
+                val =>
+                    Schedule(() =>
+                    {
+                        sizeX.Value = val.NewValue.X;
+                        sizeY.Value = val.NewValue.Y;
+                    }),
+                true
+            );
 
             sizeX.BindValueChanged(val =>
             {
@@ -279,27 +329,31 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             pressureThreshold.BindTo(tabletHandler.PressureThreshold);
 
             tablet.BindTo(tabletHandler.Tablet);
-            tablet.BindValueChanged(val => Schedule(() =>
-            {
-                Scheduler.AddOnce(updateVisibility);
+            tablet.BindValueChanged(
+                val =>
+                    Schedule(() =>
+                    {
+                        Scheduler.AddOnce(updateVisibility);
 
-                var tab = val.NewValue;
+                        var tab = val.NewValue;
 
-                bool tabletFound = tab != null;
-                if (!tabletFound)
-                    return;
+                        bool tabletFound = tab != null;
+                        if (!tabletFound)
+                            return;
 
-                offsetX.MaxValue = tab.Size.X;
-                offsetX.Default = tab.Size.X / 2;
-                sizeX.Default = sizeX.MaxValue = tab.Size.X;
+                        offsetX.MaxValue = tab.Size.X;
+                        offsetX.Default = tab.Size.X / 2;
+                        sizeX.Default = sizeX.MaxValue = tab.Size.X;
 
-                offsetY.MaxValue = tab.Size.Y;
-                offsetY.Default = tab.Size.Y / 2;
-                sizeY.Default = sizeY.MaxValue = tab.Size.Y;
+                        offsetY.MaxValue = tab.Size.Y;
+                        offsetY.Default = tab.Size.Y / 2;
+                        sizeY.Default = sizeY.MaxValue = tab.Size.Y;
 
-                areaSize.Default = new Vector2(sizeX.Default, sizeY.Default);
-                areaOffset.Default = new Vector2(offsetX.Default, offsetY.Default);
-            }), true);
+                        areaSize.Default = new Vector2(sizeX.Default, sizeY.Default);
+                        areaOffset.Default = new Vector2(offsetX.Default, offsetY.Default);
+                    }),
+                true
+            );
         }
 
         private void updateVisibility()
@@ -324,7 +378,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 {
                     float proposedAspectRatio = currentAspectRatio;
 
-                    if (proposedAspectRatio >= aspectRatio.MinValue && proposedAspectRatio <= aspectRatio.MaxValue)
+                    if (
+                        proposedAspectRatio >= aspectRatio.MinValue
+                        && proposedAspectRatio <= aspectRatio.MaxValue
+                    )
                     {
                         // aspect ratio was in a valid range.
                         updateAspectRatio();

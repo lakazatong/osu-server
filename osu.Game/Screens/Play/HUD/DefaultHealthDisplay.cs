@@ -7,16 +7,19 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
-using osu.Game.Graphics;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
+using osu.Game.Graphics;
 using osu.Game.Skinning;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play.HUD
 {
-    public partial class DefaultHealthDisplay : HealthDisplay, IHasAccentColour, ISerialisableDrawable
+    public partial class DefaultHealthDisplay
+        : HealthDisplay,
+            IHasAccentColour,
+            ISerialisableDrawable
     {
         /// <summary>
         /// The base opacity of the glow.
@@ -89,31 +92,28 @@ namespace osu.Game.Screens.Play.HUD
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
                     fill = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(0, 1),
                         Masking = true,
-                        Children = new[]
-                        {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            }
-                        }
+                        Children = new[] { new Box { RelativeSizeAxes = Axes.Both } },
                     },
-                }
+                },
             };
         }
 
         protected override void Flash()
         {
-            fill.FadeEdgeEffectTo(Math.Min(1, fill.EdgeEffect.Colour.Linear.A + (1f - base_glow_opacity) / glow_max_hits), 50, Easing.OutQuint)
+            fill.FadeEdgeEffectTo(
+                    Math.Min(
+                        1,
+                        fill.EdgeEffect.Colour.Linear.A + (1f - base_glow_opacity) / glow_max_hits
+                    ),
+                    50,
+                    Easing.OutQuint
+                )
                 .Delay(glow_fade_delay)
                 .FadeEdgeEffectTo(base_glow_opacity, glow_fade_time, Easing.OutQuint);
         }
@@ -131,7 +131,12 @@ namespace osu.Game.Screens.Play.HUD
 
             fill.Width = Interpolation.ValueAt(
                 Math.Clamp(Clock.ElapsedFrameTime, 0, 200),
-                fill.Width, (float)Current.Value, 0, 200, Easing.OutQuint);
+                fill.Width,
+                (float)Current.Value,
+                0,
+                200,
+                Easing.OutQuint
+            );
         }
     }
 }

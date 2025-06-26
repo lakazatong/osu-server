@@ -18,10 +18,12 @@ namespace osu.Game.Graphics.Containers.Markdown
             Padding = new MarginPadding { Left = left_padding };
         }
 
-        protected override SpriteText CreateMarker() => base.CreateMarker().With(t =>
-        {
-            t.X = -left_padding;
-            t.Text = $"{order}.";
-        });
+        protected override SpriteText CreateMarker() =>
+            base.CreateMarker()
+                .With(t =>
+                {
+                    t.X = -left_padding;
+                    t.Text = $"{order}.";
+                });
     }
 }

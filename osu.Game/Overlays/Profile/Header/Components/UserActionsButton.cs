@@ -56,10 +56,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new SpriteIcon
                     {
                         Size = new Vector2(12),
@@ -67,7 +64,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
                         Origin = Anchor.Centre,
                         Icon = FontAwesome.Solid.EllipsisV,
                     },
-                }
+                },
             };
 
             Action = this.ShowPopover;
@@ -77,7 +74,10 @@ namespace osu.Game.Overlays.Profile.Header.Components
         {
             base.LoadComplete();
 
-            User.BindValueChanged(_ => Alpha = User.Value?.User.OnlineID == api.LocalUser.Value.OnlineID ? 0 : 1, true);
+            User.BindValueChanged(
+                _ => Alpha = User.Value?.User.OnlineID == api.LocalUser.Value.OnlineID ? 0 : 1,
+                true
+            );
         }
 
         public Popover GetPopover() => new UserActionPopover(User.Value!.User);
@@ -93,7 +93,11 @@ namespace osu.Game.Overlays.Profile.Header.Components
             }
 
             [BackgroundDependencyLoader]
-            private void load(OverlayColourProvider colourProvider, IAPIProvider api, IDialogOverlay? dialogOverlay)
+            private void load(
+                OverlayColourProvider colourProvider,
+                IAPIProvider api,
+                IDialogOverlay? dialogOverlay
+            )
             {
                 Background.Colour = colourProvider.Background6;
 
@@ -108,15 +112,24 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     Padding = new MarginPadding { Horizontal = 5, Vertical = 10 },
                     Children = new Drawable[]
                     {
-                        new UserAction(FontAwesome.Solid.Ban, userBlocked ? UsersStrings.BlocksButtonUnblock : UsersStrings.BlocksButtonBlock)
+                        new UserAction(
+                            FontAwesome.Solid.Ban,
+                            userBlocked
+                                ? UsersStrings.BlocksButtonUnblock
+                                : UsersStrings.BlocksButtonBlock
+                        )
                         {
                             Action = () =>
                             {
-                                dialogOverlay?.Push(userBlocked ? ConfirmBlockActionDialog.Unblock(user) : ConfirmBlockActionDialog.Block(user));
+                                dialogOverlay?.Push(
+                                    userBlocked
+                                        ? ConfirmBlockActionDialog.Unblock(user)
+                                        : ConfirmBlockActionDialog.Block(user)
+                                );
                                 this.HidePopover();
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
         }
@@ -184,9 +197,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 UseFullGlyphHeight = false,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 

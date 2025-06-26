@@ -21,33 +21,45 @@ namespace osu.Game.Tests.Visual.UserInterface
         private readonly BeatmapListingSortTabControl control;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         public TestSceneBeatmapListingSortTabControl()
         {
             OsuSpriteText current;
             OsuSpriteText direction;
 
-            Add(control = new BeatmapListingSortTabControl
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
-
-            Add(new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(0, 5),
-                Children = new Drawable[]
+            Add(
+                control = new BeatmapListingSortTabControl
                 {
-                    current = new OsuSpriteText(),
-                    direction = new OsuSpriteText()
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                 }
-            });
+            );
 
-            control.SortDirection.BindValueChanged(sortDirection => direction.Text = $"Sort direction: {sortDirection.NewValue}", true);
-            control.Current.BindValueChanged(criteria => current.Text = $"Criteria: {criteria.NewValue}", true);
+            Add(
+                new FillFlowContainer
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(0, 5),
+                    Children = new Drawable[]
+                    {
+                        current = new OsuSpriteText(),
+                        direction = new OsuSpriteText(),
+                    },
+                }
+            );
+
+            control.SortDirection.BindValueChanged(
+                sortDirection => direction.Text = $"Sort direction: {sortDirection.NewValue}",
+                true
+            );
+            control.Current.BindValueChanged(
+                criteria => current.Text = $"Criteria: {criteria.NewValue}",
+                true
+            );
         }
 
         [Test]
@@ -113,42 +125,81 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestSortDirectionOnCriteriaChange()
         {
-            AddStep("set category to leaderboard", () => control.Reset(SearchCategory.Leaderboard, false));
-            AddAssert("sort direction is descending", () => control.SortDirection.Value == SortDirection.Descending);
+            AddStep(
+                "set category to leaderboard",
+                () => control.Reset(SearchCategory.Leaderboard, false)
+            );
+            AddAssert(
+                "sort direction is descending",
+                () => control.SortDirection.Value == SortDirection.Descending
+            );
 
-            AddStep("click ranked sort button", () =>
-            {
-                InputManager.MoveMouseTo(control.TabControl.ChildrenOfType<BeatmapListingSortTabControl.BeatmapTabButton>().Single(s => s.Active.Value));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click ranked sort button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        control
+                            .TabControl.ChildrenOfType<BeatmapListingSortTabControl.BeatmapTabButton>()
+                            .Single(s => s.Active.Value)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("sort direction is ascending", () => control.SortDirection.Value == SortDirection.Ascending);
+            AddAssert(
+                "sort direction is ascending",
+                () => control.SortDirection.Value == SortDirection.Ascending
+            );
 
-            AddStep("click first inactive sort button", () =>
-            {
-                InputManager.MoveMouseTo(control.TabControl.ChildrenOfType<BeatmapListingSortTabControl.BeatmapTabButton>().First(s => !s.Active.Value));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first inactive sort button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        control
+                            .TabControl.ChildrenOfType<BeatmapListingSortTabControl.BeatmapTabButton>()
+                            .First(s => !s.Active.Value)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("sort direction is descending", () => control.SortDirection.Value == SortDirection.Descending);
+            AddAssert(
+                "sort direction is descending",
+                () => control.SortDirection.Value == SortDirection.Descending
+            );
         }
 
-        private void criteriaShowsOnCategory(bool expected, SortCriteria criteria, SearchCategory category)
+        private void criteriaShowsOnCategory(
+            bool expected,
+            SortCriteria criteria,
+            SearchCategory category
+        )
         {
-            AddAssert($"{criteria.ToString().ToLowerInvariant()} {(expected ? "shown" : "not shown")} on {category.ToString().ToLowerInvariant()}", () =>
-            {
-                control.Reset(category, false);
-                return control.ChildrenOfType<TabControl<SortCriteria>>().Single().Items.Contains(criteria) == expected;
-            });
+            AddAssert(
+                $"{criteria.ToString().ToLowerInvariant()} {(expected ? "shown" : "not shown")} on {category.ToString().ToLowerInvariant()}",
+                () =>
+                {
+                    control.Reset(category, false);
+                    return control
+                            .ChildrenOfType<TabControl<SortCriteria>>()
+                            .Single()
+                            .Items.Contains(criteria) == expected;
+                }
+            );
         }
 
         private void resetUsesCriteriaOnCategory(SortCriteria criteria, SearchCategory category)
         {
-            AddAssert($"reset uses {criteria.ToString().ToLowerInvariant()} on {category.ToString().ToLowerInvariant()}", () =>
-            {
-                control.Reset(category, false);
-                return control.Current.Value == criteria;
-            });
+            AddAssert(
+                $"reset uses {criteria.ToString().ToLowerInvariant()} on {category.ToString().ToLowerInvariant()}",
+                () =>
+                {
+                    control.Reset(category, false);
+                    return control.Current.Value == criteria;
+                }
+            );
         }
     }
 }

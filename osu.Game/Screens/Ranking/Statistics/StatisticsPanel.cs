@@ -71,13 +71,13 @@ namespace osu.Game.Screens.Ranking.Statistics
                     Left = ScorePanel.EXPANDED_WIDTH + SIDE_PADDING * 3,
                     Right = SIDE_PADDING,
                     Top = SIDE_PADDING,
-                    Bottom = 50 // Approximate padding to the bottom of the score panel.
+                    Bottom = 50, // Approximate padding to the bottom of the score panel.
                 },
                 Children = new Drawable[]
                 {
                     content = new Container { RelativeSizeAxes = Axes.Both },
-                    spinner = new LoadingSpinner()
-                }
+                    spinner = new LoadingSpinner(),
+                },
             };
         }
 
@@ -112,106 +112,130 @@ namespace osu.Game.Screens.Ranking.Statistics
             var workingBeatmap = beatmapManager.GetWorkingBeatmap(newScore.BeatmapInfo);
 
             // Todo: The placement of this is temporary. Eventually we'll both generate the playable beatmap _and_ run through it in a background task to generate the hit events.
-            Task.Run(() => workingBeatmap.GetPlayableBeatmap(newScore.Ruleset, newScore.Mods), loadCancellation.Token).ContinueWith(task => Schedule(() =>
-            {
-                bool hitEventsAvailable = newScore.HitEvents.Count != 0;
-                Container<Drawable> container;
-
-                var statisticItems = CreateStatisticItems(newScore, task.GetResultSafely()).ToArray();
-
-                if (!hitEventsAvailable && statisticItems.All(c => c.RequiresHitEvents))
-                {
-                    container = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Direction = FillDirection.Vertical,
-                        Children = new Drawable[]
+            Task.Run(
+                    () => workingBeatmap.GetPlayableBeatmap(newScore.Ruleset, newScore.Mods),
+                    loadCancellation.Token
+                )
+                .ContinueWith(
+                    task =>
+                        Schedule(() =>
                         {
-                            new MessagePlaceholder("Extended statistics are only available after watching a replay!"),
-                            new ReplayDownloadButton(newScore)
+                            bool hitEventsAvailable = newScore.HitEvents.Count != 0;
+                            Container<Drawable> container;
+
+                            var statisticItems = CreateStatisticItems(
+                                    newScore,
+                                    task.GetResultSafely()
+                                )
+                                .ToArray();
+
+                            if (!hitEventsAvailable && statisticItems.All(c => c.RequiresHitEvents))
                             {
-                                Scale = new Vector2(1.5f),
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                            },
-                        }
-                    };
-                }
-                else
-                {
-                    FillFlowContainer flow;
-                    container = new OsuScrollContainer(Direction.Vertical)
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Masking = false,
-                        ScrollbarOverlapsContent = false,
-                        Alpha = 0,
-                        Children = new[]
-                        {
-                            flow = new FillFlowContainer
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(30, 15),
-                                Direction = FillDirection.Full,
-                            }
-                        }
-                    };
-
-                    bool anyRequiredHitEvents = false;
-
-                    foreach (var item in statisticItems)
-                    {
-                        if (!hitEventsAvailable && item.RequiresHitEvents)
-                        {
-                            anyRequiredHitEvents = true;
-                            continue;
-                        }
-
-                        flow.Add(new StatisticItemContainer(item)
-                        {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                        });
-                    }
-
-                    if (anyRequiredHitEvents)
-                    {
-                        flow.Add(new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Vertical,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Children = new Drawable[]
-                            {
-                                new MessagePlaceholder("More statistics available after watching a replay!"),
-                                new ReplayDownloadButton(newScore)
+                                container = new FillFlowContainer
                                 {
-                                    Scale = new Vector2(1.5f),
+                                    RelativeSizeAxes = Axes.Both,
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                },
+                                    Direction = FillDirection.Vertical,
+                                    Children = new Drawable[]
+                                    {
+                                        new MessagePlaceholder(
+                                            "Extended statistics are only available after watching a replay!"
+                                        ),
+                                        new ReplayDownloadButton(newScore)
+                                        {
+                                            Scale = new Vector2(1.5f),
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
+                                    },
+                                };
                             }
-                        });
-                    }
-                }
+                            else
+                            {
+                                FillFlowContainer flow;
+                                container = new OsuScrollContainer(Direction.Vertical)
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Masking = false,
+                                    ScrollbarOverlapsContent = false,
+                                    Alpha = 0,
+                                    Children = new[]
+                                    {
+                                        flow = new FillFlowContainer
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Spacing = new Vector2(30, 15),
+                                            Direction = FillDirection.Full,
+                                        },
+                                    },
+                                };
 
-                LoadComponentAsync(container, d =>
-                {
-                    if (Score.Value?.Equals(newScore) != true)
-                        return;
+                                bool anyRequiredHitEvents = false;
 
-                    spinner.Hide();
-                    content.Add(d);
-                    d.FadeIn(250, Easing.OutQuint);
-                }, localCancellationSource.Token);
-            }), localCancellationSource.Token);
+                                foreach (var item in statisticItems)
+                                {
+                                    if (!hitEventsAvailable && item.RequiresHitEvents)
+                                    {
+                                        anyRequiredHitEvents = true;
+                                        continue;
+                                    }
+
+                                    flow.Add(
+                                        new StatisticItemContainer(item)
+                                        {
+                                            Anchor = Anchor.TopCentre,
+                                            Origin = Anchor.TopCentre,
+                                        }
+                                    );
+                                }
+
+                                if (anyRequiredHitEvents)
+                                {
+                                    flow.Add(
+                                        new FillFlowContainer
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Direction = FillDirection.Vertical,
+                                            Anchor = Anchor.TopCentre,
+                                            Origin = Anchor.TopCentre,
+                                            Children = new Drawable[]
+                                            {
+                                                new MessagePlaceholder(
+                                                    "More statistics available after watching a replay!"
+                                                ),
+                                                new ReplayDownloadButton(newScore)
+                                                {
+                                                    Scale = new Vector2(1.5f),
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                },
+                                            },
+                                        }
+                                    );
+                                }
+                            }
+
+                            LoadComponentAsync(
+                                container,
+                                d =>
+                                {
+                                    if (Score.Value?.Equals(newScore) != true)
+                                        return;
+
+                                    spinner.Hide();
+                                    content.Add(d);
+                                    d.FadeIn(250, Easing.OutQuint);
+                                },
+                                localCancellationSource.Token
+                            );
+                        }),
+                    localCancellationSource.Token
+                );
         }
 
         /// <summary>
@@ -219,68 +243,104 @@ namespace osu.Game.Screens.Ranking.Statistics
         /// </summary>
         /// <param name="newScore">The score to create the rows for.</param>
         /// <param name="playableBeatmap">The beatmap on which the score was set.</param>
-        protected virtual IEnumerable<StatisticItem> CreateStatisticItems(ScoreInfo newScore, IBeatmap playableBeatmap)
+        protected virtual IEnumerable<StatisticItem> CreateStatisticItems(
+            ScoreInfo newScore,
+            IBeatmap playableBeatmap
+        )
         {
-            foreach (var statistic in newScore.Ruleset.CreateInstance().CreateStatisticsForScore(newScore, playableBeatmap))
+            foreach (
+                var statistic in newScore
+                    .Ruleset.CreateInstance()
+                    .CreateStatisticsForScore(newScore, playableBeatmap)
+            )
                 yield return statistic;
 
-            if (AchievedScore != null
+            if (
+                AchievedScore != null
                 && newScore.UserID > 1
                 && newScore.UserID == AchievedScore.UserID
                 && newScore.OnlineID > 0
-                && newScore.OnlineID == AchievedScore.OnlineID)
+                && newScore.OnlineID == AchievedScore.OnlineID
+            )
             {
-                yield return new StatisticItem("Overall Ranking", () => new OverallRanking(newScore)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                yield return new StatisticItem(
+                    "Overall Ranking",
+                    () =>
+                        new OverallRanking(newScore)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+                );
             }
 
-            if (newScore.BeatmapInfo!.OnlineID > 0
-                && api.IsLoggedIn)
+            if (newScore.BeatmapInfo!.OnlineID > 0 && api.IsLoggedIn)
             {
                 string? preventTaggingReason = null;
 
                 // We may want to iterate on the following conditions further in the future
 
-                var localUserScore = AchievedScore ?? realm.Run(r =>
-                    r.All<ScoreInfo>()
-                     .Filter($@"{nameof(ScoreInfo.User)}.{nameof(RealmUser.OnlineID)} == $0"
-                             + $@" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $1"
-                             + $@" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
-                             + $@" && {nameof(ScoreInfo.DeletePending)} == false", api.LocalUser.Value.Id, newScore.BeatmapInfo.ID, newScore.BeatmapInfo.Ruleset.ShortName)
-                     .AsEnumerable()
-                     .OrderByDescending(score => score.Ruleset.MatchesOnlineID(newScore.BeatmapInfo.Ruleset))
-                     .ThenByDescending(score => score.Rank)
-                     .FirstOrDefault());
+                var localUserScore =
+                    AchievedScore
+                    ?? realm.Run(r =>
+                        r.All<ScoreInfo>()
+                            .Filter(
+                                $@"{nameof(ScoreInfo.User)}.{nameof(RealmUser.OnlineID)} == $0"
+                                    + $@" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $1"
+                                    + $@" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
+                                    + $@" && {nameof(ScoreInfo.DeletePending)} == false",
+                                api.LocalUser.Value.Id,
+                                newScore.BeatmapInfo.ID,
+                                newScore.BeatmapInfo.Ruleset.ShortName
+                            )
+                            .AsEnumerable()
+                            .OrderByDescending(score =>
+                                score.Ruleset.MatchesOnlineID(newScore.BeatmapInfo.Ruleset)
+                            )
+                            .ThenByDescending(score => score.Rank)
+                            .FirstOrDefault()
+                    );
 
                 if (localUserScore == null)
                     preventTaggingReason = "Play the beatmap to contribute to beatmap tags!";
                 else if (localUserScore.Ruleset.OnlineID != newScore.BeatmapInfo!.Ruleset.OnlineID)
-                    preventTaggingReason = "Play the beatmap in its original ruleset to contribute to beatmap tags!";
+                    preventTaggingReason =
+                        "Play the beatmap in its original ruleset to contribute to beatmap tags!";
                 else if (localUserScore.Rank < ScoreRank.C)
                     preventTaggingReason = "Set a better score to contribute to beatmap tags!";
 
                 if (preventTaggingReason == null)
                 {
-                    yield return new StatisticItem("Tag the beatmap!", () => new UserTagControl(newScore.BeatmapInfo)
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    });
+                    yield return new StatisticItem(
+                        "Tag the beatmap!",
+                        () =>
+                            new UserTagControl(newScore.BeatmapInfo)
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            }
+                    );
                 }
                 else
                 {
-                    yield return new StatisticItem("Tag the beatmap!", () => new OsuTextFlowContainer(cp => cp.Font = OsuFont.GetFont(size: StatisticItem.FONT_SIZE, weight: FontWeight.SemiBold))
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        TextAnchor = Anchor.Centre,
-                        Text = preventTaggingReason,
-                    });
+                    yield return new StatisticItem(
+                        "Tag the beatmap!",
+                        () =>
+                            new OsuTextFlowContainer(cp =>
+                                cp.Font = OsuFont.GetFont(
+                                    size: StatisticItem.FONT_SIZE,
+                                    weight: FontWeight.SemiBold
+                                )
+                            )
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                TextAnchor = Anchor.Centre,
+                                Text = preventTaggingReason,
+                            }
+                    );
                 }
             }
         }

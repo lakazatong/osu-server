@@ -41,9 +41,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
         private IconButton pausePlay = null!;
 
         public PlaybackSettings()
-            : base("playback")
-        {
-        }
+            : base("playback") { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -72,7 +70,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
                                     Origin = Anchor.Centre,
                                     Icon = FontAwesome.Solid.FastBackward,
                                     Action = () => replayPlayer.SeekInDirection(-10),
-                                    TooltipText = PlayerSettingsOverlayStrings.SeekBackwardSeconds(10 * ReplayPlayer.BASE_SEEK_AMOUNT / 1000),
+                                    TooltipText = PlayerSettingsOverlayStrings.SeekBackwardSeconds(
+                                        10 * ReplayPlayer.BASE_SEEK_AMOUNT / 1000
+                                    ),
                                 },
                                 new SeekButton
                                 {
@@ -80,7 +80,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
                                     Origin = Anchor.Centre,
                                     Icon = FontAwesome.Solid.Backward,
                                     Action = () => replayPlayer.SeekInDirection(-1),
-                                    TooltipText = PlayerSettingsOverlayStrings.SeekBackwardSeconds(ReplayPlayer.BASE_SEEK_AMOUNT / 1000),
+                                    TooltipText = PlayerSettingsOverlayStrings.SeekBackwardSeconds(
+                                        ReplayPlayer.BASE_SEEK_AMOUNT / 1000
+                                    ),
                                 },
                                 new SeekButton
                                 {
@@ -118,7 +120,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
                                     Origin = Anchor.Centre,
                                     Icon = FontAwesome.Solid.Forward,
                                     Action = () => replayPlayer.SeekInDirection(1),
-                                    TooltipText = PlayerSettingsOverlayStrings.SeekForwardSeconds(ReplayPlayer.BASE_SEEK_AMOUNT / 1000),
+                                    TooltipText = PlayerSettingsOverlayStrings.SeekForwardSeconds(
+                                        ReplayPlayer.BASE_SEEK_AMOUNT / 1000
+                                    ),
                                 },
                                 new SeekButton
                                 {
@@ -126,7 +130,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
                                     Origin = Anchor.Centre,
                                     Icon = FontAwesome.Solid.FastForward,
                                     Action = () => replayPlayer.SeekInDirection(10),
-                                    TooltipText = PlayerSettingsOverlayStrings.SeekForwardSeconds(10 * ReplayPlayer.BASE_SEEK_AMOUNT / 1000),
+                                    TooltipText = PlayerSettingsOverlayStrings.SeekForwardSeconds(
+                                        10 * ReplayPlayer.BASE_SEEK_AMOUNT / 1000
+                                    ),
                                 },
                             },
                         },
@@ -147,7 +153,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
                                     Origin = Anchor.TopRight,
                                     Font = OsuFont.GetFont(weight: FontWeight.Bold),
                                     Margin = new MarginPadding { Right = 20 },
-                                }
+                                },
                             },
                         },
                     },
@@ -158,22 +164,28 @@ namespace osu.Game.Screens.Play.PlayerSettings
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            rateSlider.Current.BindValueChanged(multiplier => multiplierText.Text = $"{multiplier.NewValue:0.00}x", true);
+            rateSlider.Current.BindValueChanged(
+                multiplier => multiplierText.Text = $"{multiplier.NewValue:0.00}x",
+                true
+            );
 
             isPaused.BindTo(gameplayClock.IsPaused);
-            isPaused.BindValueChanged(paused =>
-            {
-                if (!paused.NewValue)
+            isPaused.BindValueChanged(
+                paused =>
                 {
-                    pausePlay.TooltipText = ToastStrings.PauseTrack;
-                    pausePlay.Icon = FontAwesome.Regular.PauseCircle;
-                }
-                else
-                {
-                    pausePlay.TooltipText = ToastStrings.PlayTrack;
-                    pausePlay.Icon = FontAwesome.Regular.PlayCircle;
-                }
-            }, true);
+                    if (!paused.NewValue)
+                    {
+                        pausePlay.TooltipText = ToastStrings.PauseTrack;
+                        pausePlay.Icon = FontAwesome.Regular.PauseCircle;
+                    }
+                    else
+                    {
+                        pausePlay.TooltipText = ToastStrings.PlayTrack;
+                        pausePlay.Icon = FontAwesome.Regular.PlayCircle;
+                    }
+                },
+                true
+            );
         }
 
         private partial class SeekButton : IconButton

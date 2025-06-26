@@ -12,11 +12,10 @@ namespace osu.Game.Rulesets.Taiko.Tests
     {
         [Test]
         public void TestVolumeAwareHitSampleInfoIsNotEqualToItsUnderlyingSample(
-            [Values(HitSampleInfo.HIT_NORMAL, HitSampleInfo.HIT_CLAP)]
-            string sample,
-            [Values(HitSampleInfo.BANK_NORMAL, HitSampleInfo.BANK_SOFT)]
-            string bank,
-            [Values(30, 70, 100)] int volume)
+            [Values(HitSampleInfo.HIT_NORMAL, HitSampleInfo.HIT_CLAP)] string sample,
+            [Values(HitSampleInfo.BANK_NORMAL, HitSampleInfo.BANK_SOFT)] string bank,
+            [Values(30, 70, 100)] int volume
+        )
         {
             var underlyingSample = new HitSampleInfo(sample, bank, volume: volume);
             var volumeAwareSample = new VolumeAwareHitSampleInfo(underlyingSample);

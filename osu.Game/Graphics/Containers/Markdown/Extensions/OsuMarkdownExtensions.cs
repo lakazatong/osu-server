@@ -12,7 +12,9 @@ namespace osu.Game.Graphics.Containers.Markdown.Extensions
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline.</returns>
-        public static MarkdownPipelineBuilder UseBlockAttributes(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseBlockAttributes(
+            this MarkdownPipelineBuilder pipeline
+        )
         {
             pipeline.Extensions.AddIfNotAlready<BlockAttributeExtension>();
             return pipeline;

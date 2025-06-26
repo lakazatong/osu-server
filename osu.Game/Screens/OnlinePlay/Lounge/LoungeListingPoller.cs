@@ -41,7 +41,9 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
 
             req.Success += result =>
             {
-                RoomsReceived(result.Where(r => r.Category != RoomCategory.DailyChallenge).ToArray());
+                RoomsReceived(
+                    result.Where(r => r.Category != RoomCategory.DailyChallenge).ToArray()
+                );
                 tcs.SetResult(true);
             };
 

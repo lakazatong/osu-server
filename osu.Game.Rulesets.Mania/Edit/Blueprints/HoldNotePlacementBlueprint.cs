@@ -26,12 +26,11 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         [Resolved]
         private IScrollingInfo scrollingInfo { get; set; } = null!;
 
-        protected override bool IsValidForPlacement => Precision.DefinitelyBigger(HitObject.Duration, 0);
+        protected override bool IsValidForPlacement =>
+            Precision.DefinitelyBigger(HitObject.Duration, 0);
 
         public HoldNotePlacementBlueprint()
-            : base(new HoldNote())
-        {
-        }
+            : base(new HoldNote()) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -45,13 +44,13 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
                 {
                     Origin = Anchor.Centre,
                     Colour = colours.Yellow,
-                    Height = 10
+                    Height = 10,
                 },
                 tailPiece = new Circle
                 {
                     Origin = Anchor.Centre,
                     Colour = colours.Yellow,
-                    Height = 10
+                    Height = 10,
                 },
             };
         }
@@ -62,8 +61,12 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
 
             if (Column != null)
             {
-                headPiece.Y = Parent!.ToLocalSpace(Column.ScreenSpacePositionAtTime(HitObject.StartTime)).Y;
-                tailPiece.Y = Parent!.ToLocalSpace(Column.ScreenSpacePositionAtTime(HitObject.EndTime)).Y;
+                headPiece.Y = Parent!
+                    .ToLocalSpace(Column.ScreenSpacePositionAtTime(HitObject.StartTime))
+                    .Y;
+                tailPiece.Y = Parent!
+                    .ToLocalSpace(Column.ScreenSpacePositionAtTime(HitObject.EndTime))
+                    .Y;
 
                 switch (scrollingInfo.Direction.Value)
                 {
@@ -79,8 +82,14 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
                 }
             }
 
-            var topPosition = new Vector2(headPiece.DrawPosition.X, Math.Min(headPiece.DrawPosition.Y, tailPiece.DrawPosition.Y));
-            var bottomPosition = new Vector2(headPiece.DrawPosition.X, Math.Max(headPiece.DrawPosition.Y, tailPiece.DrawPosition.Y));
+            var topPosition = new Vector2(
+                headPiece.DrawPosition.X,
+                Math.Min(headPiece.DrawPosition.Y, tailPiece.DrawPosition.Y)
+            );
+            var bottomPosition = new Vector2(
+                headPiece.DrawPosition.X,
+                Math.Max(headPiece.DrawPosition.Y, tailPiece.DrawPosition.Y)
+            );
 
             bodyPiece.Position = topPosition;
             bodyPiece.Width = headPiece.Width;
@@ -98,7 +107,10 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
 
         private double originalStartTime;
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
             var result = base.UpdateTimeAndPosition(screenSpacePosition, fallbackTime);
 

@@ -13,10 +13,7 @@ namespace osu.Game.Overlays.Settings.Sections
     {
         public override LocalisableString Header => @"Debug";
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Debug
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Debug };
 
         public DebugSection()
         {

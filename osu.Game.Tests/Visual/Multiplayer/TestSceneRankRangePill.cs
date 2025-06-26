@@ -22,42 +22,23 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             Dependencies.CacheAs(multiplayerClient.Object);
 
-            Child = new RankRangePill
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            };
+            Child = new RankRangePill { Anchor = Anchor.Centre, Origin = Anchor.Centre };
         }
 
         [Test]
         public void TestSingleUser()
         {
-            setupRoomWithUsers(new APIUser
-            {
-                Id = 2,
-                Statistics = { GlobalRank = 1234 }
-            });
+            setupRoomWithUsers(new APIUser { Id = 2, Statistics = { GlobalRank = 1234 } });
         }
 
         [Test]
         public void TestMultipleUsers()
         {
             setupRoomWithUsers(
-                new APIUser
-                {
-                    Id = 2,
-                    Statistics = { GlobalRank = 1234 }
-                },
-                new APIUser
-                {
-                    Id = 3,
-                    Statistics = { GlobalRank = 3333 }
-                },
-                new APIUser
-                {
-                    Id = 4,
-                    Statistics = { GlobalRank = 4321 }
-                });
+                new APIUser { Id = 2, Statistics = { GlobalRank = 1234 } },
+                new APIUser { Id = 3, Statistics = { GlobalRank = 3333 } },
+                new APIUser { Id = 4, Statistics = { GlobalRank = 4321 } }
+            );
         }
 
         [TestCase(1, 10)]
@@ -70,29 +51,34 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public void TestRange(int min, int max)
         {
             setupRoomWithUsers(
-                new APIUser
-                {
-                    Id = 2,
-                    Statistics = { GlobalRank = min }
-                },
-                new APIUser
-                {
-                    Id = 3,
-                    Statistics = { GlobalRank = max }
-                });
+                new APIUser { Id = 2, Statistics = { GlobalRank = min } },
+                new APIUser { Id = 3, Statistics = { GlobalRank = max } }
+            );
         }
 
         private void setupRoomWithUsers(params APIUser[] users)
         {
-            AddStep("setup room", () =>
-            {
-                multiplayerClient.SetupGet(m => m.Room).Returns(new MultiplayerRoom(0)
+            AddStep(
+                "setup room",
+                () =>
                 {
-                    Users = new List<MultiplayerRoomUser>(users.Select(apiUser => new MultiplayerRoomUser(apiUser.Id) { User = apiUser }))
-                });
+                    multiplayerClient
+                        .SetupGet(m => m.Room)
+                        .Returns(
+                            new MultiplayerRoom(0)
+                            {
+                                Users = new List<MultiplayerRoomUser>(
+                                    users.Select(apiUser => new MultiplayerRoomUser(apiUser.Id)
+                                    {
+                                        User = apiUser,
+                                    })
+                                ),
+                            }
+                        );
 
-                multiplayerClient.Raise(m => m.RoomUpdated -= null);
-            });
+                    multiplayerClient.Raise(m => m.RoomUpdated -= null);
+                }
+            );
         }
     }
 }

@@ -26,13 +26,14 @@ namespace osu.Game.Rulesets.Osu.UI
         public BindableBool HideSkinCursor { get; } = new BindableBool();
 
         [SettingSource("Display length", SettingControlType = typeof(PlayerSliderBar<int>))]
-        public BindableInt DisplayLength { get; } = new BindableInt
-        {
-            MinValue = 200,
-            MaxValue = 2000,
-            Default = 800,
-            Precision = 200,
-        };
+        public BindableInt DisplayLength { get; } =
+            new BindableInt
+            {
+                MinValue = 200,
+                MaxValue = 2000,
+                Default = 800,
+                Precision = 200,
+            };
 
         public ReplayAnalysisSettings(OsuRulesetConfigManager config)
             : base("Analysis Settings")

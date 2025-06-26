@@ -23,33 +23,132 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private readonly FooterButtonMods footerButtonMods;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         public TestSceneFooterButtonMods()
         {
-            Add(footerButtonMods = new FooterButtonMods(new TestModSelectOverlay())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.CentreLeft,
-                Action = () => { },
-                X = -100,
-            });
+            Add(
+                footerButtonMods = new FooterButtonMods(new TestModSelectOverlay())
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.CentreLeft,
+                    Action = () => { },
+                    X = -100,
+                }
+            );
         }
 
         [Test]
         public void TestDisplay()
         {
             AddStep("one mod", () => changeMods(new List<Mod> { new OsuModHidden() }));
-            AddStep("two mods", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock() }));
-            AddStep("three mods", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime() }));
-            AddStep("four mods", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime(), new OsuModClassic() }));
-            AddStep("five mods", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime(), new OsuModClassic(), new OsuModDifficultyAdjust() }));
+            AddStep(
+                "two mods",
+                () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock() })
+            );
+            AddStep(
+                "three mods",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime(),
+                        }
+                    )
+            );
+            AddStep(
+                "four mods",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime(),
+                            new OsuModClassic(),
+                        }
+                    )
+            );
+            AddStep(
+                "five mods",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime(),
+                            new OsuModClassic(),
+                            new OsuModDifficultyAdjust(),
+                        }
+                    )
+            );
 
-            AddStep("modified", () => changeMods(new List<Mod> { new OsuModDoubleTime { SpeedChange = { Value = 1.2 } } }));
-            AddStep("modified + one", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModDoubleTime { SpeedChange = { Value = 1.2 } } }));
-            AddStep("modified + two", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime { SpeedChange = { Value = 1.2 } } }));
-            AddStep("modified + five", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime { SpeedChange = { Value = 1.2 } }, new OsuModClassic(), new OsuModDifficultyAdjust(), new OsuModRandom() }));
-            AddStep("modified + six", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime { SpeedChange = { Value = 1.2 } }, new OsuModClassic(), new OsuModDifficultyAdjust(), new OsuModRandom(), new OsuModAlternate() }));
+            AddStep(
+                "modified",
+                () =>
+                    changeMods(
+                        new List<Mod> { new OsuModDoubleTime { SpeedChange = { Value = 1.2 } } }
+                    )
+            );
+            AddStep(
+                "modified + one",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModDoubleTime { SpeedChange = { Value = 1.2 } },
+                        }
+                    )
+            );
+            AddStep(
+                "modified + two",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime { SpeedChange = { Value = 1.2 } },
+                        }
+                    )
+            );
+            AddStep(
+                "modified + five",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime { SpeedChange = { Value = 1.2 } },
+                            new OsuModClassic(),
+                            new OsuModDifficultyAdjust(),
+                            new OsuModRandom(),
+                        }
+                    )
+            );
+            AddStep(
+                "modified + six",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime { SpeedChange = { Value = 1.2 } },
+                            new OsuModClassic(),
+                            new OsuModDifficultyAdjust(),
+                            new OsuModRandom(),
+                            new OsuModAlternate(),
+                        }
+                    )
+            );
 
             AddStep("clear mods", () => changeMods(Array.Empty<Mod>()));
             AddWaitStep("wait", 3);
@@ -57,7 +156,20 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             AddStep("clear mods", () => changeMods(Array.Empty<Mod>()));
             AddWaitStep("wait", 3);
-            AddStep("five mods", () => changeMods(new List<Mod> { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime(), new OsuModClassic(), new OsuModDifficultyAdjust() }));
+            AddStep(
+                "five mods",
+                () =>
+                    changeMods(
+                        new List<Mod>
+                        {
+                            new OsuModHidden(),
+                            new OsuModHardRock(),
+                            new OsuModDoubleTime(),
+                            new OsuModClassic(),
+                            new OsuModDifficultyAdjust(),
+                        }
+                    )
+            );
         }
 
         [Test]
@@ -75,7 +187,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             AddStep(@"Add DoubleTime", () => changeMods(doubleTimeMod));
             assertModsMultiplier(doubleTimeMod);
 
-            var multipleIncrementMods = new Mod[] { new OsuModDoubleTime(), new OsuModHidden(), new OsuModHardRock() };
+            var multipleIncrementMods = new Mod[]
+            {
+                new OsuModDoubleTime(),
+                new OsuModHidden(),
+                new OsuModHardRock(),
+            };
             AddStep(@"Add multiple Mods", () => changeMods(multipleIncrementMods));
             assertModsMultiplier(multipleIncrementMods);
         }
@@ -100,19 +217,40 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         public void TestUnrankedBadge()
         {
             AddStep(@"Add unranked mod", () => changeMods(new[] { new OsuModDeflate() }));
-            AddUntilStep("Unranked badge shown", () => footerButtonMods.ChildrenOfType<FooterButtonMods.UnrankedBadge>().Single().Alpha == 1);
+            AddUntilStep(
+                "Unranked badge shown",
+                () =>
+                    footerButtonMods.ChildrenOfType<FooterButtonMods.UnrankedBadge>().Single().Alpha
+                    == 1
+            );
             AddStep(@"Clear selected mod", () => changeMods(Array.Empty<Mod>()));
-            AddUntilStep("Unranked badge not shown", () => footerButtonMods.ChildrenOfType<FooterButtonMods.UnrankedBadge>().Single().Alpha == 0);
+            AddUntilStep(
+                "Unranked badge not shown",
+                () =>
+                    footerButtonMods.ChildrenOfType<FooterButtonMods.UnrankedBadge>().Single().Alpha
+                    == 0
+            );
         }
 
         private void changeMods(IReadOnlyList<Mod> mods) => footerButtonMods.Current.Value = mods;
 
         private void assertModsMultiplier(IEnumerable<Mod> mods)
         {
-            double multiplier = mods.Aggregate(1.0, (current, mod) => current * mod.ScoreMultiplier);
+            double multiplier = mods.Aggregate(
+                1.0,
+                (current, mod) => current * mod.ScoreMultiplier
+            );
             string expectedValue = ModUtils.FormatScoreMultiplier(multiplier).ToString();
 
-            AddAssert($"Displayed multiplier is {expectedValue}", () => footerButtonMods.ChildrenOfType<OsuSpriteText>().First(t => t.Text.ToString().Contains('x')).Text.ToString(), () => Is.EqualTo(expectedValue));
+            AddAssert(
+                $"Displayed multiplier is {expectedValue}",
+                () =>
+                    footerButtonMods
+                        .ChildrenOfType<OsuSpriteText>()
+                        .First(t => t.Text.ToString().Contains('x'))
+                        .Text.ToString(),
+                () => Is.EqualTo(expectedValue)
+            );
         }
 
         private partial class TestModSelectOverlay : UserModSelectOverlay

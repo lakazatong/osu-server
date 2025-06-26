@@ -19,7 +19,14 @@ namespace osu.Game.Updater
     {
         public override ReleaseStream? FixedReleaseStream => externalReleaseStream;
 
-        private static ReleaseStream? externalReleaseStream => Enum.TryParse(Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_STREAM"), true, out ReleaseStream stream) ? stream : null;
+        private static ReleaseStream? externalReleaseStream =>
+            Enum.TryParse(
+                Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_STREAM"),
+                true,
+                out ReleaseStream stream
+            )
+                ? stream
+                : null;
 
         private string version = string.Empty;
 
@@ -36,11 +43,16 @@ namespace osu.Game.Updater
                 ReleaseStream stream = externalReleaseStream ?? ReleaseStream.Value;
                 bool includePrerelease = stream == Configuration.ReleaseStream.Tachyon;
 
-                OsuJsonWebRequest<GitHubRelease[]> releasesRequest = new OsuJsonWebRequest<GitHubRelease[]>("https://api.github.com/repos/ppy/osu/releases?per_page=10&page=1");
+                OsuJsonWebRequest<GitHubRelease[]> releasesRequest =
+                    new OsuJsonWebRequest<GitHubRelease[]>(
+                        "https://api.github.com/repos/ppy/osu/releases?per_page=10&page=1"
+                    );
                 await releasesRequest.PerformAsync(cancellationToken).ConfigureAwait(false);
 
                 GitHubRelease[] releases = releasesRequest.ResponseObject;
-                GitHubRelease? latest = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault(r => includePrerelease || !r.Prerelease);
+                GitHubRelease? latest = releases
+                    .OrderByDescending(r => r.PublishedAt)
+                    .FirstOrDefault(r => includePrerelease || !r.Prerelease);
 
                 if (latest == null)
                     return false;
@@ -49,11 +61,14 @@ namespace osu.Game.Updater
 
                 if (latestTagName != version)
                 {
-                    Notifications.Post(new UpdateAvailableNotification(cancellationToken)
-                    {
-                        Text = $"A newer release of osu! has been found ({version} → {latestTagName}).\n\n"
-                               + "Check with your package manager / provider to bring osu! up-to-date!",
-                    });
+                    Notifications.Post(
+                        new UpdateAvailableNotification(cancellationToken)
+                        {
+                            Text =
+                                $"A newer release of osu! has been found ({version} → {latestTagName}).\n\n"
+                                + "Check with your package manager / provider to bring osu! up-to-date!",
+                        }
+                    );
 
                     return true;
                 }

@@ -10,7 +10,8 @@ namespace osu.Game.Rulesets.Taiko.Edit.Checks
 {
     public class CheckTaikoAbnormalDifficultySettings : CheckAbnormalDifficultySettings
     {
-        public override CheckMetadata Metadata => new CheckMetadata(CheckCategory.Settings, "Checks taiko relevant settings");
+        public override CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Settings, "Checks taiko relevant settings");
 
         public override IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {

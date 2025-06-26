@@ -13,7 +13,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
     /// <summary>
     /// A container for <see cref="SelectionBlueprint{HitObject}"/> ordered by their <see cref="HitObject"/> start times.
     /// </summary>
-    public sealed partial class HitObjectOrderedSelectionContainer : BlueprintContainer<HitObject>.SelectionBlueprintContainer
+    public sealed partial class HitObjectOrderedSelectionContainer
+        : BlueprintContainer<HitObject>.SelectionBlueprintContainer
     {
         [Resolved]
         private EditorBeatmap editorBeatmap { get; set; } = null!;
@@ -46,20 +47,24 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             // Put earlier blueprints towards the end of the list, so they handle input first
             int result = yObj.StartTime.CompareTo(xObj.StartTime);
-            if (result != 0) return result;
+            if (result != 0)
+                return result;
 
             // Fall back to end time if the start time is equal.
             result = yObj.GetEndTime().CompareTo(xObj.GetEndTime());
-            if (result != 0) return result;
+            if (result != 0)
+                return result;
 
             // As a final fallback, use combo information if available.
             if (xObj is IHasComboInformation xHasCombo && yObj is IHasComboInformation yHasCombo)
             {
                 result = yHasCombo.ComboIndex.CompareTo(xHasCombo.ComboIndex);
-                if (result != 0) return result;
+                if (result != 0)
+                    return result;
 
                 result = yHasCombo.IndexInCurrentCombo.CompareTo(xHasCombo.IndexInCurrentCombo);
-                if (result != 0) return result;
+                if (result != 0)
+                    return result;
             }
 
             return CompareReverseChildID(x, y);

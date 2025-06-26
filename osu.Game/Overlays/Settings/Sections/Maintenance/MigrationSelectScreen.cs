@@ -28,7 +28,8 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [Resolved(canBeNull: true)]
         private IDialogOverlay dialogOverlay { get; set; }
 
-        protected override DirectoryInfo InitialPath => new DirectoryInfo(storage.GetFullPath(string.Empty)).Parent;
+        protected override DirectoryInfo InitialPath =>
+            new DirectoryInfo(storage.GetFullPath(string.Empty)).Parent;
 
         public override bool AllowExternalScreenChange => false;
 
@@ -36,7 +37,8 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
 
         public override bool HideOverlaysOnEnter => true;
 
-        public override LocalisableString HeaderText => MaintenanceSettingsStrings.SelectNewLocation;
+        public override LocalisableString HeaderText =>
+            MaintenanceSettingsStrings.SelectNewLocation;
 
         protected override void OnSelection(DirectoryInfo directory)
         {
@@ -52,15 +54,28 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                     // Quick test for whether there's already an osu! install at the target path.
                     if (fileInfos.Any(f => f.Name == OsuGameBase.CLIENT_DATABASE_FILENAME))
                     {
-                        dialogOverlay.Push(new ConfirmDialog(MaintenanceSettingsStrings.TargetDirectoryAlreadyInstalledOsu, () =>
-                            {
-                                dialogOverlay.Push(new ConfirmDialog(MaintenanceSettingsStrings.RestartAndReOpenRequiredForCompletion, () =>
+                        dialogOverlay.Push(
+                            new ConfirmDialog(
+                                MaintenanceSettingsStrings.TargetDirectoryAlreadyInstalledOsu,
+                                () =>
                                 {
-                                    (storage as OsuStorage)?.ChangeDataPath(target.FullName);
-                                    game.Exit();
-                                }, () => { }));
-                            },
-                            () => { }));
+                                    dialogOverlay.Push(
+                                        new ConfirmDialog(
+                                            MaintenanceSettingsStrings.RestartAndReOpenRequiredForCompletion,
+                                            () =>
+                                            {
+                                                (storage as OsuStorage)?.ChangeDataPath(
+                                                    target.FullName
+                                                );
+                                                game.Exit();
+                                            },
+                                            () => { }
+                                        )
+                                    );
+                                },
+                                () => { }
+                            )
+                        );
 
                         return;
                     }
@@ -80,6 +95,7 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
             BeginMigration(target);
         }
 
-        protected virtual void BeginMigration(DirectoryInfo target) => this.Push(new MigrationRunScreen(target));
+        protected virtual void BeginMigration(DirectoryInfo target) =>
+            this.Push(new MigrationRunScreen(target));
     }
 }

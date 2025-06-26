@@ -18,7 +18,11 @@ namespace osu.Game.Overlays.Profile.Sections
 
         private ProfileSubsectionHeader header = null!;
 
-        protected ProfileSubsection(Bindable<UserProfileData?> user, LocalisableString? headerText = null, CounterVisibilityState counterVisibilityState = CounterVisibilityState.AlwaysHidden)
+        protected ProfileSubsection(
+            Bindable<UserProfileData?> user,
+            LocalisableString? headerText = null,
+            CounterVisibilityState counterVisibilityState = CounterVisibilityState.AlwaysHidden
+        )
         {
             this.headerText = headerText ?? string.Empty;
             this.counterVisibilityState = counterVisibilityState;
@@ -36,9 +40,9 @@ namespace osu.Game.Overlays.Profile.Sections
             {
                 header = new ProfileSubsectionHeader(headerText, counterVisibilityState)
                 {
-                    Alpha = string.IsNullOrEmpty(headerText.ToString()) ? 0 : 1
+                    Alpha = string.IsNullOrEmpty(headerText.ToString()) ? 0 : 1,
                 },
-                CreateContent()
+                CreateContent(),
             };
         }
 

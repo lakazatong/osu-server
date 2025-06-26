@@ -21,7 +21,10 @@ namespace osu.Game.Rulesets.Scoring
         /// A non-null <see langword="double"/> value if unstable rate could be calculated,
         /// and <see langword="null"/> if unstable rate cannot be calculated due to <paramref name="hitEvents"/> being empty.
         /// </returns>
-        public static UnstableRateCalculationResult? CalculateUnstableRate(this IReadOnlyList<HitEvent> hitEvents, UnstableRateCalculationResult? result = null)
+        public static UnstableRateCalculationResult? CalculateUnstableRate(
+            this IReadOnlyList<HitEvent> hitEvents,
+            UnstableRateCalculationResult? result = null
+        )
         {
             Debug.Assert(hitEvents.All(ev => ev.GameplayRate != null));
 
@@ -63,7 +66,10 @@ namespace osu.Game.Rulesets.Scoring
         /// </returns>
         public static double? CalculateAverageHitError(this IEnumerable<HitEvent> hitEvents)
         {
-            double[] timeOffsets = hitEvents.Where(AffectsUnstableRate).Select(ev => ev.TimeOffset).ToArray();
+            double[] timeOffsets = hitEvents
+                .Where(AffectsUnstableRate)
+                .Select(ev => ev.TimeOffset)
+                .ToArray();
 
             if (timeOffsets.Length == 0)
                 return null;
@@ -80,7 +86,11 @@ namespace osu.Game.Rulesets.Scoring
         /// </returns>
         public static double? CalculateMedianHitError(this IEnumerable<HitEvent> hitEvents)
         {
-            double[] timeOffsets = hitEvents.Where(AffectsUnstableRate).Select(ev => ev.TimeOffset).OrderBy(x => x).ToArray();
+            double[] timeOffsets = hitEvents
+                .Where(AffectsUnstableRate)
+                .Select(ev => ev.TimeOffset)
+                .OrderBy(x => x)
+                .ToArray();
 
             if (timeOffsets.Length == 0)
                 return null;
@@ -88,11 +98,16 @@ namespace osu.Game.Rulesets.Scoring
             int center = timeOffsets.Length / 2;
 
             // Use average of the 2 central values if length is even
-            return timeOffsets.Length % 2 == 0 ? (timeOffsets[center - 1] + timeOffsets[center]) / 2 : timeOffsets[center];
+            return timeOffsets.Length % 2 == 0
+                ? (timeOffsets[center - 1] + timeOffsets[center]) / 2
+                : timeOffsets[center];
         }
 
-        public static bool AffectsUnstableRate(HitEvent e) => AffectsUnstableRate(e.HitObject, e.Result);
-        public static bool AffectsUnstableRate(HitObject hitObject, HitResult result) => hitObject.HitWindows != HitWindows.Empty && result.IsHit();
+        public static bool AffectsUnstableRate(HitEvent e) =>
+            AffectsUnstableRate(e.HitObject, e.Result);
+
+        public static bool AffectsUnstableRate(HitObject hitObject, HitResult result) =>
+            hitObject.HitWindows != HitWindows.Empty && result.IsHit();
 
         /// <summary>
         /// Data type returned by <see cref="HitEventExtensions.CalculateUnstableRate"/> which allows efficient incremental processing.
@@ -128,7 +143,8 @@ namespace osu.Game.Rulesets.Scoring
             /// <summary>
             /// The unstable rate.
             /// </summary>
-            public double Result => EventCount == 0 ? 0 : 10.0 * Math.Sqrt(SumOfSquares / EventCount);
+            public double Result =>
+                EventCount == 0 ? 0 : 10.0 * Math.Sqrt(SumOfSquares / EventCount);
         }
     }
 }

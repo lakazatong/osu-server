@@ -51,7 +51,10 @@ namespace osu.Game.Screens.Play
         [Resolved]
         private IGameplayClock gameplayClock { get; set; }
 
-        internal bool IsButtonVisible => fadeContainer.State == Visibility.Visible && buttonContainer.State.Value == Visibility.Visible;
+        internal bool IsButtonVisible =>
+            fadeContainer.State == Visibility.Visible
+            && buttonContainer.State.Value == Visibility.Visible;
+
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
         /// <summary>
@@ -77,32 +80,30 @@ namespace osu.Game.Screens.Play
             InternalChild = buttonContainer = new ButtonContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = fadeContainer = new FadeContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                Child = fadeContainer =
+                    new FadeContainer
                     {
-                        button = new Button
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
+                            button = new Button { Anchor = Anchor.Centre, Origin = Anchor.Centre },
+                            remainingTimeBox = new Circle
+                            {
+                                Height = 5,
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.BottomCentre,
+                                Colour = colours.Yellow,
+                                RelativeSizeAxes = Axes.X,
+                            },
                         },
-                        remainingTimeBox = new Circle
-                        {
-                            Height = 5,
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Colour = colours.Yellow,
-                            RelativeSizeAxes = Axes.X
-                        }
-                    }
-                }
+                    },
             };
         }
 
         private const double fade_time = 300;
 
-        private double fadeOutBeginTime => startTime - MasterGameplayClockContainer.MINIMUM_SKIP_TIME;
+        private double fadeOutBeginTime =>
+            startTime - MasterGameplayClockContainer.MINIMUM_SKIP_TIME;
 
         public override void Hide()
         {
@@ -144,22 +145,27 @@ namespace osu.Game.Screens.Play
         /// </summary>
         public void SkipWhenReady()
         {
-            if (skipQueued) return;
+            if (skipQueued)
+                return;
 
             skipQueued = true;
             attemptNextSkip();
 
-            void attemptNextSkip() => Scheduler.AddDelayed(() =>
-            {
-                if (!button.Enabled.Value)
-                {
-                    skipQueued = false;
-                    return;
-                }
+            void attemptNextSkip() =>
+                Scheduler.AddDelayed(
+                    () =>
+                    {
+                        if (!button.Enabled.Value)
+                        {
+                            skipQueued = false;
+                            return;
+                        }
 
-                button.TriggerClick();
-                attemptNextSkip();
-            }, 200);
+                        button.TriggerClick();
+                        attemptNextSkip();
+                    },
+                    200
+                );
         }
 
         protected override void Update()
@@ -171,9 +177,17 @@ namespace osu.Game.Screens.Play
             if (fadeOutBeginTime <= displayTime)
                 return;
 
-            double progress = Math.Max(0, 1 - (gameplayClock.CurrentTime - displayTime) / (fadeOutBeginTime - displayTime));
+            double progress = Math.Max(
+                0,
+                1 - (gameplayClock.CurrentTime - displayTime) / (fadeOutBeginTime - displayTime)
+            );
 
-            remainingTimeBox.Width = (float)Interpolation.Lerp(remainingTimeBox.Width, progress, Math.Clamp(Time.Elapsed / 40, 0, 1));
+            remainingTimeBox.Width = (float)
+                Interpolation.Lerp(
+                    remainingTimeBox.Width,
+                    progress,
+                    Math.Clamp(Time.Elapsed / 40, 0, 1)
+                );
 
             isClickable = progress > 0;
             button.Enabled.Value = isClickable;
@@ -206,18 +220,23 @@ namespace osu.Game.Screens.Play
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
             if (fadeOutBeginTime <= gameplayClock.CurrentTime)
                 return;
 
-            float progress = (float)(gameplayClock.CurrentTime - displayTime) / (float)(fadeOutBeginTime - displayTime);
+            float progress =
+                (float)(gameplayClock.CurrentTime - displayTime)
+                / (float)(fadeOutBeginTime - displayTime);
             float newWidth = 1 - Math.Clamp(progress, 0, 1);
             remainingTimeBox.ResizeWidthTo(newWidth, timingPoint.BeatLength * 3.5, Easing.OutQuint);
         }
@@ -350,11 +369,7 @@ namespace osu.Game.Screens.Play
                         CornerRadius = 15,
                         Children = new Drawable[]
                         {
-                            box = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = colourNormal,
-                            },
+                            box = new Box { RelativeSizeAxes = Axes.Both, Colour = colourNormal },
                             flow = new FillFlowContainer
                             {
                                 Anchor = Anchor.TopCentre,
@@ -365,10 +380,25 @@ namespace osu.Game.Screens.Play
                                 Direction = FillDirection.Horizontal,
                                 Children = new[]
                                 {
-                                    new SpriteIcon { Size = new Vector2(15), Shadow = true, Icon = FontAwesome.Solid.ChevronRight },
-                                    new SpriteIcon { Size = new Vector2(15), Shadow = true, Icon = FontAwesome.Solid.ChevronRight },
-                                    new SpriteIcon { Size = new Vector2(15), Shadow = true, Icon = FontAwesome.Solid.ChevronRight },
-                                }
+                                    new SpriteIcon
+                                    {
+                                        Size = new Vector2(15),
+                                        Shadow = true,
+                                        Icon = FontAwesome.Solid.ChevronRight,
+                                    },
+                                    new SpriteIcon
+                                    {
+                                        Size = new Vector2(15),
+                                        Shadow = true,
+                                        Icon = FontAwesome.Solid.ChevronRight,
+                                    },
+                                    new SpriteIcon
+                                    {
+                                        Size = new Vector2(15),
+                                        Shadow = true,
+                                        Icon = FontAwesome.Solid.ChevronRight,
+                                    },
+                                },
                             },
                             new OsuSpriteText
                             {
@@ -379,8 +409,8 @@ namespace osu.Game.Screens.Play
                                 Origin = Anchor.Centre,
                                 Text = @"SKIP",
                             },
-                        }
-                    }
+                        },
+                    },
                 };
             }
 

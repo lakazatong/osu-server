@@ -45,13 +45,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
             if (!result.IsHit())
                 return;
 
-            InternalChildren = new[]
-            {
-                body = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }
-            };
+            InternalChildren = new[] { body = new Box { RelativeSizeAxes = Axes.Both } };
 
             updateColour();
         }

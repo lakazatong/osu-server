@@ -79,6 +79,7 @@ namespace osu.Game.Utils
         /// <summary>
         /// Compute a random floating point value between <paramref name="min"/> and <paramref name="max"/> from given seed and series number.
         /// </summary>
-        public static float NextSingle(float min, float max, int seed, int series = 0) => min + NextSingle(seed, series) * (max - min);
+        public static float NextSingle(float min, float max, int seed, int series = 0) =>
+            min + NextSingle(seed, series) * (max - min);
     }
 }

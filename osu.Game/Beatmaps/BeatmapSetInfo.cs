@@ -17,7 +17,13 @@ namespace osu.Game.Beatmaps
     /// A realm model containing metadata for a beatmap set (containing multiple <see cref="BeatmapInfo"/>s).
     /// </summary>
     [MapTo("BeatmapSet")]
-    public class BeatmapSetInfo : RealmObject, IHasGuidPrimaryKey, IHasRealmFiles, ISoftDelete, IEquatable<BeatmapSetInfo>, IBeatmapSetInfo
+    public class BeatmapSetInfo
+        : RealmObject,
+            IHasGuidPrimaryKey,
+            IHasRealmFiles,
+            ISoftDelete,
+            IEquatable<BeatmapSetInfo>,
+            IBeatmapSetInfo
     {
         [PrimaryKey]
         public Guid ID { get; set; }
@@ -38,7 +44,8 @@ namespace osu.Game.Beatmaps
         public DateTimeOffset? DateRanked { get; set; }
 
         [JsonIgnore]
-        public IBeatmapMetadataInfo Metadata => Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
+        public IBeatmapMetadataInfo Metadata =>
+            Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
 
         public IList<BeatmapInfo> Beatmaps { get; } = null!;
 
@@ -63,7 +70,8 @@ namespace osu.Game.Beatmaps
         /// </summary>
         public bool Protected { get; set; }
 
-        public double MaxStarDifficulty => Beatmaps.Count == 0 ? 0 : Beatmaps.Max(b => b.StarRating);
+        public double MaxStarDifficulty =>
+            Beatmaps.Count == 0 ? 0 : Beatmaps.Max(b => b.StarRating);
 
         public double MaxLength => Beatmaps.Count == 0 ? 0 : Beatmaps.Max(b => b.Length);
 
@@ -78,14 +86,14 @@ namespace osu.Game.Beatmaps
         }
 
         [UsedImplicitly] // Realm
-        private BeatmapSetInfo()
-        {
-        }
+        private BeatmapSetInfo() { }
 
         public bool Equals(BeatmapSetInfo? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other == null) return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
 
             return ID == other.ID;
         }

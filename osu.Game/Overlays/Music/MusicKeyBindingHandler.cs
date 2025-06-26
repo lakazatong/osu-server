@@ -42,14 +42,23 @@ namespace osu.Game.Overlays.Music
                     bool wasPlaying = musicController.IsPlaying;
 
                     if (musicController.TogglePause())
-                        onScreenDisplay?.Display(new MusicActionToast(wasPlaying ? ToastStrings.PauseTrack : ToastStrings.PlayTrack, e.Action));
+                        onScreenDisplay?.Display(
+                            new MusicActionToast(
+                                wasPlaying ? ToastStrings.PauseTrack : ToastStrings.PlayTrack,
+                                e.Action
+                            )
+                        );
                     return true;
 
                 case GlobalAction.MusicNext:
                     if (beatmap.Disabled)
                         return false;
 
-                    musicController.NextTrack(() => onScreenDisplay?.Display(new MusicActionToast(GlobalActionKeyBindingStrings.MusicNext, e.Action)));
+                    musicController.NextTrack(() =>
+                        onScreenDisplay?.Display(
+                            new MusicActionToast(GlobalActionKeyBindingStrings.MusicNext, e.Action)
+                        )
+                    );
 
                     return true;
 
@@ -62,11 +71,18 @@ namespace osu.Game.Overlays.Music
                         switch (res)
                         {
                             case PreviousTrackResult.Restart:
-                                onScreenDisplay?.Display(new MusicActionToast(ToastStrings.RestartTrack, e.Action));
+                                onScreenDisplay?.Display(
+                                    new MusicActionToast(ToastStrings.RestartTrack, e.Action)
+                                );
                                 break;
 
                             case PreviousTrackResult.Previous:
-                                onScreenDisplay?.Display(new MusicActionToast(GlobalActionKeyBindingStrings.MusicPrev, e.Action));
+                                onScreenDisplay?.Display(
+                                    new MusicActionToast(
+                                        GlobalActionKeyBindingStrings.MusicPrev,
+                                        e.Action
+                                    )
+                                );
                                 break;
                         }
                     });
@@ -77,9 +93,7 @@ namespace osu.Game.Overlays.Music
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private partial class MusicActionToast : Toast
         {

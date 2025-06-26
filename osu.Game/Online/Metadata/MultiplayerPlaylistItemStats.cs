@@ -24,7 +24,8 @@ namespace osu.Game.Online.Metadata
         /// The last bin will contain count of all scores with total of 1,200,000 or larger.
         /// </summary>
         [Key(1)]
-        public long[] TotalScoreDistribution { get; set; } = new long[TOTAL_SCORE_DISTRIBUTION_BINS];
+        public long[] TotalScoreDistribution { get; set; } =
+            new long[TOTAL_SCORE_DISTRIBUTION_BINS];
 
         /// <summary>
         /// The cumulative total of all passing scores (across all users) for the playlist item so far.

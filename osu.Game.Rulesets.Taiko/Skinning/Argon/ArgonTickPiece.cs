@@ -40,29 +40,32 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             if (drawableHitObject is DrawableDrumRollTick drumRollTick)
                 isFirstTick.BindTo(drumRollTick.IsFirstTick);
 
-            isFirstTick.BindValueChanged(first =>
-            {
-                if (first.NewValue)
+            isFirstTick.BindValueChanged(
+                first =>
                 {
-                    InternalChild = new Circle
+                    if (first.NewValue)
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both
-                    };
-                }
-                else
-                {
-                    InternalChild = new SpriteIcon
+                        InternalChild = new Circle
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                        };
+                    }
+                    else
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        Icon = FontAwesome.Solid.AngleLeft,
-                        Scale = new Vector2(0.8f, 1)
-                    };
-                }
-            }, true);
+                        InternalChild = new SpriteIcon
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Icon = FontAwesome.Solid.AngleLeft,
+                            Scale = new Vector2(0.8f, 1),
+                        };
+                    }
+                },
+                true
+            );
         }
     }
 }

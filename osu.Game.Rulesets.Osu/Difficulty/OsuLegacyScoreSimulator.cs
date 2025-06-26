@@ -27,7 +27,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         private double scoreMultiplier;
 
-        public LegacyScoreAttributes Simulate(IWorkingBeatmap workingBeatmap, IBeatmap playableBeatmap)
+        public LegacyScoreAttributes Simulate(
+            IWorkingBeatmap workingBeatmap,
+            IBeatmap playableBeatmap
+        )
         {
             IBeatmap baseBeatmap = workingBeatmap.Beatmap;
 
@@ -59,18 +62,30 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             if (baseBeatmap.HitObjects.Count > 0)
             {
-                int breakLength = baseBeatmap.Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime)).Sum();
-                drainLength = ((int)Math.Round(baseBeatmap.HitObjects[^1].StartTime) - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime) - breakLength) / 1000;
+                int breakLength = baseBeatmap
+                    .Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime))
+                    .Sum();
+                drainLength =
+                    (
+                        (int)Math.Round(baseBeatmap.HitObjects[^1].StartTime)
+                        - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime)
+                        - breakLength
+                    ) / 1000;
             }
 
-            scoreMultiplier = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(baseBeatmap.Difficulty, objectCount, drainLength);
+            scoreMultiplier = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(
+                baseBeatmap.Difficulty,
+                objectCount,
+                drainLength
+            );
 
             LegacyScoreAttributes attributes = new LegacyScoreAttributes();
 
             foreach (var obj in playableBeatmap.HitObjects)
                 simulateHit(obj, ref attributes);
 
-            attributes.BonusScoreRatio = legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
+            attributes.BonusScoreRatio =
+                legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
             attributes.BonusScore = legacyBonusScore;
             attributes.MaxCombo = combo;
 
@@ -140,15 +155,22 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                     double secondsDuration = spinner.Duration / 1000;
 
                     // The total amount of half spins possible for the entire spinner.
-                    int totalHalfSpinsPossible = (int)(secondsDuration * maximum_rotations_per_second * 2);
+                    int totalHalfSpinsPossible = (int)(
+                        secondsDuration * maximum_rotations_per_second * 2
+                    );
                     // The amount of half spins that are required to successfully complete the spinner (i.e. get a 300).
-                    int halfSpinsRequiredForCompletion = (int)(secondsDuration * minimum_rotations_per_second);
+                    int halfSpinsRequiredForCompletion = (int)(
+                        secondsDuration * minimum_rotations_per_second
+                    );
                     // To be able to receive bonus points, the spinner must be rotated another 1.5 times.
                     int halfSpinsRequiredBeforeBonus = halfSpinsRequiredForCompletion + 3;
 
                     for (int i = 0; i <= totalHalfSpinsPossible; i++)
                     {
-                        if (i > halfSpinsRequiredBeforeBonus && (i - halfSpinsRequiredBeforeBonus) % 2 == 0)
+                        if (
+                            i > halfSpinsRequiredBeforeBonus
+                            && (i - halfSpinsRequiredBeforeBonus) % 2 == 0
+                        )
                             simulateHit(new SpinnerBonusTick(), ref attributes);
                         else if (i > 1 && i % 2 == 0)
                             simulateHit(new SpinnerTick(), ref attributes);
@@ -162,7 +184,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (addScoreComboMultiplier)
             {
                 // ReSharper disable once PossibleLossOfFraction (intentional to match osu-stable...)
-                attributes.ComboScore += (int)(Math.Max(0, combo - 1) * (scoreIncrease / 25 * scoreMultiplier));
+                attributes.ComboScore += (int)(
+                    Math.Max(0, combo - 1) * (scoreIncrease / 25 * scoreMultiplier)
+                );
             }
 
             if (isBonus)
@@ -177,7 +201,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                 combo++;
         }
 
-        public double GetLegacyScoreMultiplier(IReadOnlyList<Mod> mods, LegacyBeatmapConversionDifficultyInfo difficulty)
+        public double GetLegacyScoreMultiplier(
+            IReadOnlyList<Mod> mods,
+            LegacyBeatmapConversionDifficultyInfo difficulty
+        )
         {
             bool scoreV2 = mods.Any(m => m is ModScoreV2);
 

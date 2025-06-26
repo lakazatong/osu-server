@@ -46,7 +46,10 @@ namespace osu.Game.Overlays.Changelog
 
             currentStream.ValueChanged += e =>
             {
-                if (e.NewValue?.LatestBuild != null && !e.NewValue.Equals(Build.Value?.UpdateStream))
+                if (
+                    e.NewValue?.LatestBuild != null
+                    && !e.NewValue.Equals(Build.Value?.UpdateStream)
+                )
                     Build.Value = e.NewValue.LatestBuild;
             };
         }
@@ -76,31 +79,33 @@ namespace osu.Game.Overlays.Changelog
             }
         }
 
-        protected override Drawable CreateBackground() => new OverlayHeaderBackground(@"Headers/changelog");
+        protected override Drawable CreateBackground() =>
+            new OverlayHeaderBackground(@"Headers/changelog");
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                streamsBackground = new Box
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Padding = new MarginPadding
+                    streamsBackground = new Box { RelativeSizeAxes = Axes.Both },
+                    new Container
                     {
-                        Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING - ChangelogUpdateStreamItem.PADDING,
-                        Vertical = 20
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Padding = new MarginPadding
+                        {
+                            Horizontal =
+                                WaveOverlayContainer.HORIZONTAL_PADDING
+                                - ChangelogUpdateStreamItem.PADDING,
+                            Vertical = 20,
+                        },
+                        Child = Streams =
+                            new ChangelogUpdateStreamControl { Current = currentStream },
                     },
-                    Child = Streams = new ChangelogUpdateStreamControl { Current = currentStream },
-                }
-            }
-        };
+                },
+            };
 
         protected override OverlayTitle CreateTitle() => new ChangelogHeaderTitle();
 
@@ -115,7 +120,9 @@ namespace osu.Game.Overlays.Changelog
             if (Build.Value == null)
                 return;
 
-            currentStream.Value = Streams.Items.FirstOrDefault(s => s.Name == Build.Value.UpdateStream.Name);
+            currentStream.Value = Streams.Items.FirstOrDefault(s =>
+                s.Name == Build.Value.UpdateStream.Name
+            );
         }
 
         private partial class ChangelogHeaderTitle : OverlayTitle

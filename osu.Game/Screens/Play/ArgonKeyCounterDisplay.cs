@@ -22,6 +22,7 @@ namespace osu.Game.Screens.Play
             };
         }
 
-        protected override KeyCounter CreateCounter(InputTrigger trigger) => new ArgonKeyCounter(trigger);
+        protected override KeyCounter CreateCounter(InputTrigger trigger) =>
+            new ArgonKeyCounter(trigger);
     }
 }

@@ -9,9 +9,7 @@ namespace osu.Game.Skinning
     public class LegacySkinDecoder : LegacyDecoder<SkinConfiguration>
     {
         public LegacySkinDecoder()
-            : base(1)
-        {
-        }
+            : base(1) { }
 
         protected override void ParseLine(SkinConfiguration skin, Section section, string line)
         {
@@ -35,7 +33,14 @@ namespace osu.Game.Skinning
                             case @"Version":
                                 if (pair.Value == "latest")
                                     skin.LegacyVersion = SkinConfiguration.LATEST_VERSION;
-                                else if (decimal.TryParse(pair.Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal version))
+                                else if (
+                                    decimal.TryParse(
+                                        pair.Value,
+                                        NumberStyles.AllowDecimalPoint,
+                                        CultureInfo.InvariantCulture,
+                                        out decimal version
+                                    )
+                                )
                                     skin.LegacyVersion = version;
 
                                 return;

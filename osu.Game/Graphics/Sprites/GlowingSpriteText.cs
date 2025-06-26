@@ -64,11 +64,12 @@ namespace osu.Game.Graphics.Sprites
             EffectBlending = BlendingParameters.Additive;
         }
 
-        protected override Drawable CreateDrawable() => text = new OsuSpriteText
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Shadow = false,
-        };
+        protected override Drawable CreateDrawable() =>
+            text = new OsuSpriteText
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Shadow = false,
+            };
     }
 }

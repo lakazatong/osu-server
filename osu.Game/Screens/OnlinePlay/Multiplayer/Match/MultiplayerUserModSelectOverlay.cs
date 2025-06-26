@@ -30,9 +30,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
         private ScheduledDelegate? debouncedModSettingsUpdate;
 
         public MultiplayerUserModSelectOverlay()
-            : base(OverlayColourScheme.Plum)
-        {
-        }
+            : base(OverlayColourScheme.Plum) { }
 
         protected override void LoadComplete()
         {
@@ -64,13 +62,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             {
                 // Debounce changes to mod settings so as to not thrash the network.
                 debouncedModSettingsUpdate?.Cancel();
-                debouncedModSettingsUpdate = Scheduler.AddDelayed(() =>
-                {
-                    if (client.Room == null)
-                        return;
+                debouncedModSettingsUpdate = Scheduler.AddDelayed(
+                    () =>
+                    {
+                        if (client.Room == null)
+                            return;
 
-                    client.ChangeUserMods(SelectedMods.Value).FireAndForget();
-                }, 500);
+                        client.ChangeUserMods(SelectedMods.Value).FireAndForget();
+                    },
+                    500
+                );
             };
         }
 
@@ -80,14 +81,24 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                 return;
 
             MultiplayerPlaylistItem currentItem = client.Room.CurrentPlaylistItem;
-            Ruleset ruleset = rulesets.GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!.CreateInstance();
-            Mod[] allowedMods = ModUtils.EnumerateUserSelectableFreeMods(client.Room.Settings.MatchType, currentItem.RequiredMods, currentItem.AllowedMods, currentItem.Freestyle, ruleset);
+            Ruleset ruleset = rulesets
+                .GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!
+                .CreateInstance();
+            Mod[] allowedMods = ModUtils.EnumerateUserSelectableFreeMods(
+                client.Room.Settings.MatchType,
+                currentItem.RequiredMods,
+                currentItem.AllowedMods,
+                currentItem.Freestyle,
+                ruleset
+            );
 
             // Update the mod panels to reflect the ones which are valid for selection.
             IsValidMod = m => allowedMods.Any(a => a.GetType() == m.GetType());
 
             // Remove any mods that are no longer allowed.
-            Mod[] newUserMods = SelectedMods.Value.Where(m => allowedMods.Any(a => m.GetType() == a.GetType())).ToArray();
+            Mod[] newUserMods = SelectedMods
+                .Value.Where(m => allowedMods.Any(a => m.GetType() == a.GetType()))
+                .ToArray();
             if (!newUserMods.SequenceEqual(SelectedMods.Value))
                 SelectedMods.Value = newUserMods;
 
@@ -103,8 +114,13 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                 return [];
 
             MultiplayerPlaylistItem currentItem = client.Room.CurrentPlaylistItem;
-            Ruleset ruleset = rulesets.GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!.CreateInstance();
-            return currentItem.RequiredMods.Select(m => m.ToMod(ruleset)).Concat(base.ComputeActiveMods()).ToArray();
+            Ruleset ruleset = rulesets
+                .GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!
+                .CreateInstance();
+            return currentItem
+                .RequiredMods.Select(m => m.ToMod(ruleset))
+                .Concat(base.ComputeActiveMods())
+                .ToArray();
         }
 
         protected override void Dispose(bool isDisposing)

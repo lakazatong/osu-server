@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         RelativePositionAxes = Axes.X,
                         X = -middle_split / 2,
                         RimAction = TaikoAction.LeftRim,
-                        CentreAction = TaikoAction.LeftCentre
+                        CentreAction = TaikoAction.LeftCentre,
                     },
                     new TaikoHalfDrum(true)
                     {
@@ -55,9 +55,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         RelativePositionAxes = Axes.X,
                         X = middle_split / 2,
                         RimAction = TaikoAction.RightRim,
-                        CentreAction = TaikoAction.RightCentre
-                    }
-                }
+                        CentreAction = TaikoAction.RightCentre,
+                    },
+                },
             };
         }
 
@@ -91,7 +91,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                     {
                         Anchor = flipped ? Anchor.CentreLeft : Anchor.CentreRight,
                         Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both
+                        RelativeSizeAxes = Axes.Both,
                     },
                     rimHit = new Sprite
                     {
@@ -106,7 +106,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         Anchor = flipped ? Anchor.CentreLeft : Anchor.CentreRight,
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.7f)
+                        Size = new Vector2(0.7f),
                     },
                     centreHit = new Sprite
                     {
@@ -115,8 +115,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(0.7f),
                         Alpha = 0,
-                        Blending = BlendingParameters.Additive
-                    }
+                        Blending = BlendingParameters.Additive,
+                    },
                 };
             }
 
@@ -160,21 +160,31 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         .Then()
                         .ScaleTo(1, up_time, Easing.OutQuint);
 
-                    target.Animate(
-                        t => t.ScaleTo(target.Scale.X - scale_amount, down_time, Easing.OutQuint),
-                        t => t.FadeTo(Math.Min(target.Alpha + alpha_amount, 1), down_time, Easing.OutQuint)
-                    ).Then(
-                        t => t.ScaleTo(1, up_time, Easing.OutQuint),
-                        t => t.FadeOut(up_time, Easing.OutQuint)
-                    );
+                    target
+                        .Animate(
+                            t =>
+                                t.ScaleTo(
+                                    target.Scale.X - scale_amount,
+                                    down_time,
+                                    Easing.OutQuint
+                                ),
+                            t =>
+                                t.FadeTo(
+                                    Math.Min(target.Alpha + alpha_amount, 1),
+                                    down_time,
+                                    Easing.OutQuint
+                                )
+                        )
+                        .Then(
+                            t => t.ScaleTo(1, up_time, Easing.OutQuint),
+                            t => t.FadeOut(up_time, Easing.OutQuint)
+                        );
                 }
 
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
         }
     }
 }

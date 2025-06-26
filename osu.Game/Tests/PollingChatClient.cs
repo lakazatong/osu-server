@@ -30,14 +30,17 @@ namespace osu.Game.Tests
 
         public override Task ConnectAsync(CancellationToken cancellationToken)
         {
-            Task.Run(async () =>
-            {
-                while (!cancellationToken.IsCancellationRequested)
+            Task.Run(
+                async () =>
                 {
-                    await api.PerformAsync(CreateInitialFetchRequest()).ConfigureAwait(true);
-                    await Task.Delay(1000, cancellationToken).ConfigureAwait(true);
-                }
-            }, cancellationToken);
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        await api.PerformAsync(CreateInitialFetchRequest()).ConfigureAwait(true);
+                        await Task.Delay(1000, cancellationToken).ConfigureAwait(true);
+                    }
+                },
+                cancellationToken
+            );
 
             return Task.CompletedTask;
         }

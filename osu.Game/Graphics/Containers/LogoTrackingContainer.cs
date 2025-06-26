@@ -34,7 +34,11 @@ namespace osu.Game.Graphics.Containers
         /// <param name="logo">The instance of the logo to be used for tracking.</param>
         /// <param name="duration">The duration of the initial transform. Default is instant.</param>
         /// <param name="easing">The easing type of the initial transform.</param>
-        public IDisposable StartTracking(OsuLogo logo, double duration = 0, Easing easing = Easing.None)
+        public IDisposable StartTracking(
+            OsuLogo logo,
+            double duration = 0,
+            Easing easing = Easing.None
+        )
         {
             if (Logo != null && Logo != logo)
                 throw new InvalidOperationException("A different logo is already being tracked.");
@@ -42,10 +46,14 @@ namespace osu.Game.Graphics.Containers
             ArgumentNullException.ThrowIfNull(logo);
 
             if (logo.IsTracking && Logo == null)
-                throw new InvalidOperationException($"Cannot track an instance of {typeof(OsuLogo)} to multiple {typeof(LogoTrackingContainer)}s");
+                throw new InvalidOperationException(
+                    $"Cannot track an instance of {typeof(OsuLogo)} to multiple {typeof(LogoTrackingContainer)}s"
+                );
 
             if (logo.IsTracking)
-                throw new InvalidOperationException("A previous tracking operation is still active. Dispose of its return value before starting a new tracking operation.");
+                throw new InvalidOperationException(
+                    "A previous tracking operation is still active. Dispose of its return value before starting a new tracking operation."
+                );
 
             Logo = logo;
             Logo.IsTracking = true;
@@ -76,8 +84,10 @@ namespace osu.Game.Graphics.Containers
         {
             var absolutePos = Logo!.Parent!.ToLocalSpace(LogoFacade.ScreenSpaceDrawQuad.Centre);
 
-            return new Vector2(absolutePos.X / Logo.Parent!.RelativeToAbsoluteFactor.X,
-                absolutePos.Y / Logo.Parent!.RelativeToAbsoluteFactor.Y);
+            return new Vector2(
+                absolutePos.X / Logo.Parent!.RelativeToAbsoluteFactor.X,
+                absolutePos.Y / Logo.Parent!.RelativeToAbsoluteFactor.Y
+            );
         }
 
         protected override void UpdateAfterChildren()
@@ -88,7 +98,9 @@ namespace osu.Game.Graphics.Containers
                 return;
 
             if (Logo.RelativePositionAxes != Axes.Both)
-                throw new InvalidOperationException($"Tracking logo must have {nameof(RelativePositionAxes)} = Axes.Both");
+                throw new InvalidOperationException(
+                    $"Tracking logo must have {nameof(RelativePositionAxes)} = Axes.Both"
+                );
 
             // Account for the scale of the actual OsuLogo, as SizeForFlow only accounts for the sprite scale.
             facade.SetSize(new Vector2(Logo.SizeForFlow * Logo.Scale.X));
@@ -108,7 +120,8 @@ namespace osu.Game.Graphics.Containers
                 {
                     double elapsedDuration = (double)(Time.Current - startTime);
 
-                    float amount = (float)Interpolation.ApplyEasing(easing, Math.Min(elapsedDuration / duration, 1));
+                    float amount = (float)
+                        Interpolation.ApplyEasing(easing, Math.Min(elapsedDuration / duration, 1));
 
                     // Interpolate the position of the logo, where amount 0 is where the logo was when it first began interpolating, and amount 1 is the target location.
                     Logo.Position = Vector2.Lerp(startPosition.Value, localPos, amount);
@@ -144,7 +157,10 @@ namespace osu.Game.Graphics.Containers
             public override Vector2 Size
             {
                 get => base.Size;
-                set => throw new InvalidOperationException($"Cannot set the Size of a {typeof(Facade)} outside of a {typeof(LogoTrackingContainer)}");
+                set =>
+                    throw new InvalidOperationException(
+                        $"Cannot set the Size of a {typeof(Facade)} outside of a {typeof(LogoTrackingContainer)}"
+                    );
             }
 
             protected void SetSize(Vector2 size)

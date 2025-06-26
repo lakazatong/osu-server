@@ -27,9 +27,12 @@ namespace osu.Game.Rulesets.Mania.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            InternalChild = skinnableExplosion = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.HitExplosion), _ => new DefaultHitExplosion())
+            InternalChild = skinnableExplosion = new SkinnableDrawable(
+                new ManiaSkinComponentLookup(ManiaSkinComponents.HitExplosion),
+                _ => new DefaultHitExplosion()
+            )
             {
-                RelativeSizeAxes = Axes.Both
+                RelativeSizeAxes = Axes.Both,
             };
         }
 

@@ -47,11 +47,7 @@ namespace osu.Game.Tests.Visual.Online
             {
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Black,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -61,9 +57,7 @@ namespace osu.Game.Tests.Visual.Online
             {
                 protected override OverlayTitle CreateTitle() => new TestTitle();
 
-                internal partial class TestTitle : OverlayTitle
-                {
-                }
+                internal partial class TestTitle : OverlayTitle { }
             }
         }
     }

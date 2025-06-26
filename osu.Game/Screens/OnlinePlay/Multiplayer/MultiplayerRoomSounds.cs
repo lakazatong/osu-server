@@ -39,14 +39,14 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             client.HostChanged += onHostChanged;
         }
 
-        private void onUserJoined(MultiplayerRoomUser user)
-            => Scheduler.AddOnce(() => userJoinedSample?.Play());
+        private void onUserJoined(MultiplayerRoomUser user) =>
+            Scheduler.AddOnce(() => userJoinedSample?.Play());
 
-        private void onUserLeft(MultiplayerRoomUser user)
-            => Scheduler.AddOnce(() => userLeftSample?.Play());
+        private void onUserLeft(MultiplayerRoomUser user) =>
+            Scheduler.AddOnce(() => userLeftSample?.Play());
 
-        private void onUserKicked(MultiplayerRoomUser user)
-            => Scheduler.AddOnce(() => userKickedSample?.Play());
+        private void onUserKicked(MultiplayerRoomUser user) =>
+            Scheduler.AddOnce(() => userKickedSample?.Play());
 
         private void onHostChanged(MultiplayerRoomUser? host)
         {

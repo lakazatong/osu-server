@@ -3,7 +3,5 @@
 
 namespace osu.Game.Rulesets.Mods
 {
-    public interface IApplicableToAudio : IApplicableToTrack, IApplicableToSample
-    {
-    }
+    public interface IApplicableToAudio : IApplicableToTrack, IApplicableToSample { }
 }

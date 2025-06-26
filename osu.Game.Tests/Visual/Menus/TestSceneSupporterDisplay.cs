@@ -14,24 +14,26 @@ namespace osu.Game.Tests.Visual.Menus
         [Test]
         public void TestBasic()
         {
-            AddStep("create display", () =>
-            {
-                Child = new SupporterDisplay
+            AddStep(
+                "create display",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                };
-            });
+                    Child = new SupporterDisplay { Anchor = Anchor.Centre, Origin = Anchor.Centre };
+                }
+            );
 
-            AddStep("toggle support", () =>
-            {
-                ((DummyAPIAccess)API).LocalUser.Value = new APIUser
+            AddStep(
+                "toggle support",
+                () =>
                 {
-                    Username = API.LocalUser.Value.Username,
-                    Id = API.LocalUser.Value.Id + 1,
-                    IsSupporter = !API.LocalUser.Value.IsSupporter,
-                };
-            });
+                    ((DummyAPIAccess)API).LocalUser.Value = new APIUser
+                    {
+                        Username = API.LocalUser.Value.Username,
+                        Id = API.LocalUser.Value.Id + 1,
+                        IsSupporter = !API.LocalUser.Value.IsSupporter,
+                    };
+                }
+            );
         }
     }
 }

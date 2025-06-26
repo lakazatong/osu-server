@@ -24,7 +24,8 @@ namespace osu.Game.Overlays.Rankings
     {
         private const int duration = 200;
 
-        private readonly BindableWithCurrent<CountryCode> current = new BindableWithCurrent<CountryCode>();
+        private readonly BindableWithCurrent<CountryCode> current =
+            new BindableWithCurrent<CountryCode>();
 
         public Bindable<CountryCode> Current
         {
@@ -49,10 +50,7 @@ namespace osu.Game.Overlays.Rankings
                 Masking = true,
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         Anchor = Anchor.Centre,
@@ -78,25 +76,25 @@ namespace osu.Game.Overlays.Rankings
                                     {
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        Size = new Vector2(28, 20)
+                                        Size = new Vector2(28, 20),
                                     },
                                     countryName = new OsuSpriteText
                                     {
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        Font = OsuFont.GetFont(size: 14)
-                                    }
-                                }
+                                        Font = OsuFont.GetFont(size: 14),
+                                    },
+                                },
                             },
                             new CloseButton
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 Action = Current.SetDefault,
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -147,11 +145,9 @@ namespace osu.Game.Overlays.Rankings
             public CloseButton()
             {
                 AutoSizeAxes = Axes.Both;
-                Add(icon = new SpriteIcon
-                {
-                    Size = new Vector2(10),
-                    Icon = FontAwesome.Solid.Times
-                });
+                Add(
+                    icon = new SpriteIcon { Size = new Vector2(10), Icon = FontAwesome.Solid.Times }
+                );
             }
 
             [BackgroundDependencyLoader]

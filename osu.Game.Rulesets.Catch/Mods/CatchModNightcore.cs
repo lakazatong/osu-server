@@ -6,7 +6,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Catch.Mods
 {
-    public class CatchModNightcore : ModNightcore<CatchHitObject>
-    {
-    }
+    public class CatchModNightcore : ModNightcore<CatchHitObject> { }
 }

@@ -26,14 +26,16 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(Lighting = new SkinnableLighting
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Blending = BlendingParameters.Additive,
-                Depth = float.MaxValue,
-                Alpha = 0
-            });
+            AddInternal(
+                Lighting = new SkinnableLighting
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Blending = BlendingParameters.Additive,
+                    Depth = float.MaxValue,
+                    Alpha = 0,
+                }
+            );
         }
 
         public override void Apply(JudgementResult result, DrawableHitObject? judgedObject)
@@ -48,7 +50,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             switch (osuObject)
             {
                 case DrawableSlider slider:
-                    screenSpacePosition = slider.TailCircle.ToScreenSpace(slider.TailCircle.OriginPosition);
+                    screenSpacePosition = slider.TailCircle.ToScreenSpace(
+                        slider.TailCircle.OriginPosition
+                    );
                     break;
 
                 default:
@@ -87,14 +91,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             base.ApplyHitAnimations();
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new OsuJudgementPiece(result);
+        protected override Drawable CreateDefaultJudgement(HitResult result) =>
+            new OsuJudgementPiece(result);
 
         private partial class OsuJudgementPiece : DefaultJudgementPiece
         {
             public OsuJudgementPiece(HitResult result)
-                : base(result)
-            {
-            }
+                : base(result) { }
 
             public override void PlayAnimation()
             {

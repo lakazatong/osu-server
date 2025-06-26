@@ -11,19 +11,28 @@ namespace osu.Game.Configuration
         /// <summary>
         /// Seasonal backgrounds are shown regardless of season, if at all available.
         /// </summary>
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.AlwaysSeasonalBackground))]
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.AlwaysSeasonalBackground)
+        )]
         Always,
 
         /// <summary>
         /// Seasonal backgrounds are shown only during their corresponding season.
         /// </summary>
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.SometimesSeasonalBackground))]
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.SometimesSeasonalBackground)
+        )]
         Sometimes,
 
         /// <summary>
         /// Seasonal backgrounds are never shown.
         /// </summary>
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.NeverSeasonalBackground))]
-        Never
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.NeverSeasonalBackground)
+        )]
+        Never,
     }
 }

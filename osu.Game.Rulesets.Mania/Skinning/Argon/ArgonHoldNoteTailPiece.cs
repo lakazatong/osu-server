@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         [Resolved]
         private DrawableHitObject? drawableObject { get; set; }
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
         private readonly IBindable<Color4> accentColour = new Bindable<Color4>();
 
         private readonly Box foreground;
@@ -46,7 +47,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientVertical(Color4.Black.Opacity(0), Colour4.Black),
+                            Colour = ColourInfo.GradientVertical(
+                                Color4.Black.Opacity(0),
+                                Colour4.Black
+                            ),
                             // Avoid ugly single pixel overlap.
                             Height = 0.9f,
                         },
@@ -60,10 +64,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                             Masking = true,
                             Children = new Drawable[]
                             {
-                                foreground = new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                },
+                                foreground = new Box { RelativeSizeAxes = Axes.Both },
                                 hittingLayer = new ArgonHoldNoteHittingLayer(),
                                 foregroundAdditive = new Box
                                 {
@@ -73,7 +74,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                                 },
                             },
                         },
-                    }
+                    },
                 },
             };
         }

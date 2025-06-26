@@ -30,7 +30,8 @@ namespace osu.Game.Beatmaps.Drawables
 
         public IEnumerable<BeatmapDownloadTracker> DownloadTrackers => downloadTrackers;
 
-        private readonly List<BeatmapDownloadTracker> downloadTrackers = new List<BeatmapDownloadTracker>();
+        private readonly List<BeatmapDownloadTracker> downloadTrackers =
+            new List<BeatmapDownloadTracker>();
 
         private readonly List<string> downloadableFilenames = new List<string>();
 
@@ -60,13 +61,23 @@ namespace osu.Game.Beatmaps.Drawables
             }
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var localDependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-            localDependencies.CacheAs<BeatmapModelDownloader>(beatmapDownloader = new BundledBeatmapModelDownloader(parent.Get<BeatmapManager>(), parent.Get<IAPIProvider>()));
+            localDependencies.CacheAs<BeatmapModelDownloader>(
+                beatmapDownloader = new BundledBeatmapModelDownloader(
+                    parent.Get<BeatmapManager>(),
+                    parent.Get<IAPIProvider>()
+                )
+            );
 
-            if (shouldPostNotifications && parent.Get<INotificationOverlay>() is INotificationOverlay notifications)
+            if (
+                shouldPostNotifications
+                && parent.Get<INotificationOverlay>() is INotificationOverlay notifications
+            )
                 beatmapDownloader.PostNotification = notifications.Post;
 
             return localDependencies;
@@ -103,31 +114,40 @@ namespace osu.Game.Beatmaps.Drawables
             try
             {
                 // Matches osu-stable, in order to provide new users with roughly the same randomised selection of bundled beatmaps.
-                var random = new LegacyRandom(DateTime.UtcNow.Year * 1000 + (DateTime.UtcNow.DayOfYear / 7));
+                var random = new LegacyRandom(
+                    DateTime.UtcNow.Year * 1000 + (DateTime.UtcNow.DayOfYear / 7)
+                );
 
-                downloadableFilenames.AddRange(sourceFilenames.OrderBy(_ => random.NextDouble()).Take(limit ?? int.MaxValue));
+                downloadableFilenames.AddRange(
+                    sourceFilenames.OrderBy(_ => random.NextDouble()).Take(limit ?? int.MaxValue)
+                );
             }
             catch { }
         }
 
         private class BundledBeatmapModelDownloader : BeatmapModelDownloader
         {
-            public BundledBeatmapModelDownloader(IModelImporter<BeatmapSetInfo> beatmapImporter, IAPIProvider api)
-                : base(beatmapImporter, api)
-            {
-            }
+            public BundledBeatmapModelDownloader(
+                IModelImporter<BeatmapSetInfo> beatmapImporter,
+                IAPIProvider api
+            )
+                : base(beatmapImporter, api) { }
 
-            protected override ArchiveDownloadRequest<IBeatmapSetInfo> CreateDownloadRequest(IBeatmapSetInfo set, bool minimiseDownloadSize)
-                => new BundledBeatmapDownloadRequest(set, minimiseDownloadSize);
+            protected override ArchiveDownloadRequest<IBeatmapSetInfo> CreateDownloadRequest(
+                IBeatmapSetInfo set,
+                bool minimiseDownloadSize
+            ) => new BundledBeatmapDownloadRequest(set, minimiseDownloadSize);
 
             public class BundledBeatmapDownloadRequest : DownloadBeatmapSetRequest
             {
-                protected override string Uri => $"https://assets.ppy.sh/client-resources/bundled/{Model.OnlineID}.osz";
+                protected override string Uri =>
+                    $"https://assets.ppy.sh/client-resources/bundled/{Model.OnlineID}.osz";
 
-                public BundledBeatmapDownloadRequest(IBeatmapSetInfo beatmapSetInfo, bool minimiseDownloadSize)
-                    : base(beatmapSetInfo, minimiseDownloadSize)
-                {
-                }
+                public BundledBeatmapDownloadRequest(
+                    IBeatmapSetInfo beatmapSetInfo,
+                    bool minimiseDownloadSize
+                )
+                    : base(beatmapSetInfo, minimiseDownloadSize) { }
             }
         }
 

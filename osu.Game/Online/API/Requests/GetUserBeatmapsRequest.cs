@@ -13,14 +13,19 @@ namespace osu.Game.Online.API.Requests
 
         private readonly BeatmapSetType type;
 
-        public GetUserBeatmapsRequest(long userId, BeatmapSetType type, PaginationParameters pagination)
+        public GetUserBeatmapsRequest(
+            long userId,
+            BeatmapSetType type,
+            PaginationParameters pagination
+        )
             : base(pagination)
         {
             this.userId = userId;
             this.type = type;
         }
 
-        protected override string Target => $@"users/{userId}/beatmapsets/{type.ToString().ToSnakeCase()}";
+        protected override string Target =>
+            $@"users/{userId}/beatmapsets/{type.ToString().ToSnakeCase()}";
     }
 
     public enum BeatmapSetType

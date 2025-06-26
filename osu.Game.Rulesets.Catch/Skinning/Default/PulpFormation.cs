@@ -29,9 +29,11 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
             RelativeSizeAxes = Axes.Both;
         }
 
-        protected static Vector2 PositionAt(float angle, float distance) => new Vector2(
-            distance * MathF.Sin(angle * MathF.PI / 180),
-            distance * MathF.Cos(angle * MathF.PI / 180));
+        protected static Vector2 PositionAt(float angle, float distance) =>
+            new Vector2(
+                distance * MathF.Sin(angle * MathF.PI / 180),
+                distance * MathF.Cos(angle * MathF.PI / 180)
+            );
 
         protected void Clear()
         {

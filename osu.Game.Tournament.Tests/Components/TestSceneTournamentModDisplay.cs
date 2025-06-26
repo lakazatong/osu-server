@@ -31,14 +31,16 @@ namespace osu.Game.Tournament.Tests.Components
             req.Success += success;
             api.Queue(req);
 
-            Add(fillFlow = new FillFlowContainer<TournamentBeatmapPanel>
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Direction = FillDirection.Full,
-                Spacing = new Vector2(10)
-            });
+            Add(
+                fillFlow = new FillFlowContainer<TournamentBeatmapPanel>
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Direction = FillDirection.Full,
+                    Spacing = new Vector2(10),
+                }
+            );
         }
 
         private void success(APIBeatmap beatmap)
@@ -52,11 +54,13 @@ namespace osu.Game.Tournament.Tests.Components
 
             foreach (var mod in mods)
             {
-                fillFlow.Add(new TournamentBeatmapPanel(new TournamentBeatmap(beatmap), mod.Acronym)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                });
+                fillFlow.Add(
+                    new TournamentBeatmapPanel(new TournamentBeatmap(beatmap), mod.Acronym)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
         }
     }

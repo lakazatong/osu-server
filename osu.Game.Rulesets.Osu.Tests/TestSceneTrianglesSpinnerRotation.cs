@@ -43,8 +43,16 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         protected override TestPlayer CreatePlayer(Ruleset ruleset) => new ScoreExposedPlayer();
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audioManager);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audioManager
+            );
 
         private DrawableSpinner drawableSpinner = null!;
         private SpriteIcon spinnerSymbol => drawableSpinner.ChildrenOfType<SpriteIcon>().Single();
@@ -54,31 +62,52 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             base.SetUpSteps();
 
-            AddStep("set triangles skin", () => skinManager.CurrentSkinInfo.Value = TrianglesSkin.CreateInfo().ToLiveUnmanaged());
+            AddStep(
+                "set triangles skin",
+                () =>
+                    skinManager.CurrentSkinInfo.Value = TrianglesSkin.CreateInfo().ToLiveUnmanaged()
+            );
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
-            AddStep("retrieve spinner", () => drawableSpinner = (DrawableSpinner)Player.DrawableRuleset.Playfield.AllHitObjects.First());
+            AddStep(
+                "retrieve spinner",
+                () =>
+                    drawableSpinner = (DrawableSpinner)
+                        Player.DrawableRuleset.Playfield.AllHitObjects.First()
+            );
         }
 
         [Test]
         public void TestSymbolMiddleRewindingRotation()
         {
-            double finalSpinnerSymbolRotation = 0, spinnerSymbolRotationTolerance = 0;
+            double finalSpinnerSymbolRotation = 0,
+                spinnerSymbolRotationTolerance = 0;
 
             addSeekStep(spinner_start_time + 5000);
-            AddStep("retrieve spinner symbol rotation", () =>
-            {
-                finalSpinnerSymbolRotation = spinnerSymbol.Rotation;
-                spinnerSymbolRotationTolerance = Math.Abs(finalSpinnerSymbolRotation * 0.05f);
-            });
+            AddStep(
+                "retrieve spinner symbol rotation",
+                () =>
+                {
+                    finalSpinnerSymbolRotation = spinnerSymbol.Rotation;
+                    spinnerSymbolRotationTolerance = Math.Abs(finalSpinnerSymbolRotation * 0.05f);
+                }
+            );
 
             addSeekStep(spinner_start_time + 2500);
-            AddAssert("symbol rotation rewound",
-                () => spinnerSymbol.Rotation, () => Is.EqualTo(finalSpinnerSymbolRotation / 2).Within(spinnerSymbolRotationTolerance));
+            AddAssert(
+                "symbol rotation rewound",
+                () => spinnerSymbol.Rotation,
+                () =>
+                    Is.EqualTo(finalSpinnerSymbolRotation / 2)
+                        .Within(spinnerSymbolRotationTolerance)
+            );
 
             addSeekStep(spinner_start_time + 5000);
-            AddAssert("is symbol rotation almost same",
-                () => spinnerSymbol.Rotation, () => Is.EqualTo(finalSpinnerSymbolRotation).Within(spinnerSymbolRotationTolerance));
+            AddAssert(
+                "is symbol rotation almost same",
+                () => spinnerSymbol.Rotation,
+                () => Is.EqualTo(finalSpinnerSymbolRotation).Within(spinnerSymbolRotationTolerance)
+            );
         }
 
         [Test]
@@ -88,62 +117,79 @@ namespace osu.Game.Rulesets.Osu.Tests
                 transformReplay(flip);
 
             addSeekStep(5000);
-            AddAssert("spinner symbol direction correct", () => clockwise ? spinnerSymbol.Rotation > 0 : spinnerSymbol.Rotation < 0);
+            AddAssert(
+                "spinner symbol direction correct",
+                () => clockwise ? spinnerSymbol.Rotation > 0 : spinnerSymbol.Rotation < 0
+            );
         }
 
-        private Replay flip(Replay scoreReplay) => new Replay
-        {
-            Frames = scoreReplay
-                     .Frames
-                     .Cast<OsuReplayFrame>()
-                     .Select(replayFrame =>
-                     {
-                         var flippedPosition = new Vector2(OsuPlayfield.BASE_SIZE.X - replayFrame.Position.X, replayFrame.Position.Y);
-                         return new OsuReplayFrame(replayFrame.Time, flippedPosition, replayFrame.Actions.ToArray());
-                     })
-                     .Cast<ReplayFrame>()
-                     .ToList()
-        };
+        private Replay flip(Replay scoreReplay) =>
+            new Replay
+            {
+                Frames = scoreReplay
+                    .Frames.Cast<OsuReplayFrame>()
+                    .Select(replayFrame =>
+                    {
+                        var flippedPosition = new Vector2(
+                            OsuPlayfield.BASE_SIZE.X - replayFrame.Position.X,
+                            replayFrame.Position.Y
+                        );
+                        return new OsuReplayFrame(
+                            replayFrame.Time,
+                            flippedPosition,
+                            replayFrame.Actions.ToArray()
+                        );
+                    })
+                    .Cast<ReplayFrame>()
+                    .ToList(),
+            };
 
         private void addSeekStep(double time)
         {
             AddStep($"seek to {time}", () => Player.GameplayClockContainer.Seek(time));
-            AddUntilStep("wait for seek to finish", () => Player.DrawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(time).Within(100));
+            AddUntilStep(
+                "wait for seek to finish",
+                () => Player.DrawableRuleset.FrameStableClock.CurrentTime,
+                () => Is.EqualTo(time).Within(100)
+            );
         }
 
-        private void transformReplay(Func<Replay, Replay> replayTransformation) => AddStep("set replay", () =>
-        {
-            var drawableRuleset = this.ChildrenOfType<DrawableOsuRuleset>().Single();
-            var score = drawableRuleset.ReplayScore;
-            var transformedScore = new Score
-            {
-                ScoreInfo = score.ScoreInfo,
-                Replay = replayTransformation.Invoke(score.Replay)
-            };
-            drawableRuleset.SetReplayScore(transformedScore);
-        });
-
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap
-        {
-            HitObjects = new List<HitObject>
-            {
-                new Spinner
+        private void transformReplay(Func<Replay, Replay> replayTransformation) =>
+            AddStep(
+                "set replay",
+                () =>
                 {
-                    Position = new Vector2(256, 192),
-                    StartTime = spinner_start_time,
-                    Duration = spinner_duration
+                    var drawableRuleset = this.ChildrenOfType<DrawableOsuRuleset>().Single();
+                    var score = drawableRuleset.ReplayScore;
+                    var transformedScore = new Score
+                    {
+                        ScoreInfo = score.ScoreInfo,
+                        Replay = replayTransformation.Invoke(score.Replay),
+                    };
+                    drawableRuleset.SetReplayScore(transformedScore);
+                }
+            );
+
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap
+            {
+                HitObjects = new List<HitObject>
+                {
+                    new Spinner
+                    {
+                        Position = new Vector2(256, 192),
+                        StartTime = spinner_start_time,
+                        Duration = spinner_duration,
+                    },
                 },
-            }
-        };
+            };
 
         private partial class ScoreExposedPlayer : TestPlayer
         {
             public new ScoreProcessor ScoreProcessor => base.ScoreProcessor;
 
             public ScoreExposedPlayer()
-                : base(false, false)
-            {
-            }
+                : base(false, false) { }
         }
     }
 }

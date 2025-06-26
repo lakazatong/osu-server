@@ -31,13 +31,15 @@ namespace osu.Game.Graphics.Backgrounds
             this.textureName = textureName;
             RelativeSizeAxes = Axes.Both;
 
-            AddInternal(Sprite = new Sprite
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                FillMode = FillMode.Fill,
-            });
+            AddInternal(
+                Sprite = new Sprite
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fill,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -47,7 +49,8 @@ namespace osu.Game.Graphics.Backgrounds
                 Sprite.Texture = textures.Get(textureName);
         }
 
-        public Vector2 BlurSigma => Vector2.Divide(bufferedContainer?.BlurSigma ?? Vector2.Zero, blurScale);
+        public Vector2 BlurSigma =>
+            Vector2.Divide(bufferedContainer?.BlurSigma ?? Vector2.Zero, blurScale);
 
         /// <summary>
         /// Smoothly adjusts <see cref="IBufferedContainer.BlurSigma"/> over time.
@@ -59,20 +62,22 @@ namespace osu.Game.Graphics.Backgrounds
             {
                 RemoveInternal(Sprite, false);
 
-                AddInternal(bufferedContainer = new BufferedContainer(cachedFrameBuffer: true)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    RedrawOnScale = false,
-                    Child = Sprite
-                });
+                AddInternal(
+                    bufferedContainer = new BufferedContainer(cachedFrameBuffer: true)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        RedrawOnScale = false,
+                        Child = Sprite,
+                    }
+                );
             }
 
             if (bufferedContainer != null)
                 transformBlurSigma(newBlurSigma, duration, easing);
         }
 
-        private void transformBlurSigma(Vector2 newBlurSigma, double duration, Easing easing)
-            => this.TransformTo(nameof(blurSigma), newBlurSigma, duration, easing);
+        private void transformBlurSigma(Vector2 newBlurSigma, double duration, Easing easing) =>
+            this.TransformTo(nameof(blurSigma), newBlurSigma, duration, easing);
 
         private Vector2 blurSigmaBacking = Vector2.Zero;
         private Vector2 blurScale = Vector2.One;
@@ -85,7 +90,10 @@ namespace osu.Game.Graphics.Backgrounds
                 Debug.Assert(bufferedContainer != null);
 
                 blurSigmaBacking = value;
-                blurScale = new Vector2(calculateBlurDownscale(value.X), calculateBlurDownscale(value.Y));
+                blurScale = new Vector2(
+                    calculateBlurDownscale(value.X),
+                    calculateBlurDownscale(value.Y)
+                );
 
                 bufferedContainer.FrameBufferScale = blurScale;
                 bufferedContainer.BlurSigma = value * blurScale; // If the image is scaled down, the blur radius also needs to be reduced to cover the same pixel block.
@@ -114,11 +122,12 @@ namespace osu.Game.Graphics.Backgrounds
 
         public virtual bool Equals(Background other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return other.GetType() == GetType()
-                   && other.textureName == textureName;
+            return other.GetType() == GetType() && other.textureName == textureName;
         }
     }
 }

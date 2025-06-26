@@ -16,27 +16,29 @@ namespace osu.Game.Tests.Mods
 {
     public class TestCustomisableModRuleset : Ruleset
     {
-        public static RulesetInfo CreateTestRulesetInfo() => new TestCustomisableModRuleset().RulesetInfo;
+        public static RulesetInfo CreateTestRulesetInfo() =>
+            new TestCustomisableModRuleset().RulesetInfo;
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
             if (type == ModType.Conversion)
             {
-                return new Mod[]
-                {
-                    new TestModCustomisable1(),
-                    new TestModCustomisable2()
-                };
+                return new Mod[] { new TestModCustomisable1(), new TestModCustomisable2() };
             }
 
             return Array.Empty<Mod>();
         }
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => throw new NotImplementedException();
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        ) => throw new NotImplementedException();
 
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => throw new NotImplementedException();
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+            throw new NotImplementedException();
 
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => throw new NotImplementedException();
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            throw new NotImplementedException();
 
         public override string Description { get; } = "test";
         public override string ShortName { get; } = "tst";
@@ -66,13 +68,14 @@ namespace osu.Game.Tests.Mods
             public override ModType Type => ModType.Conversion;
 
             [SettingSource("Sample float", "Change something for a mod")]
-            public BindableFloat SliderBindable { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 10,
-                Default = 5,
-                Value = 7
-            };
+            public BindableFloat SliderBindable { get; } =
+                new BindableFloat
+                {
+                    MinValue = 0,
+                    MaxValue = 10,
+                    Default = 5,
+                    Value = 7,
+                };
 
             [SettingSource("Sample bool", "Clicking this changes a setting")]
             public BindableBool TickBindable { get; } = new BindableBool();

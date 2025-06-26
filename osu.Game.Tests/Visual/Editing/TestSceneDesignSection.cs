@@ -28,35 +28,47 @@ namespace osu.Game.Tests.Visual.Editing
         private EditorBeatmap editorBeatmap { get; set; }
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [SetUpSteps]
         public void SetUp()
         {
-            AddStep("create blank beatmap", () => editorBeatmap = new EditorBeatmap(new Beatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo
-                }
-            }));
-            AddStep("create section", () => Child = new DependencyProvidingContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                CachedDependencies = new (Type, object)[]
-                {
-                    (typeof(EditorBeatmap), editorBeatmap)
-                },
-                Child = designSection = new TestDesignSection { RelativeSizeAxes = Axes.X }
-            });
+            AddStep(
+                "create blank beatmap",
+                () =>
+                    editorBeatmap = new EditorBeatmap(
+                        new Beatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+                    )
+            );
+            AddStep(
+                "create section",
+                () =>
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(EditorBeatmap), editorBeatmap),
+                        },
+                        Child = designSection = new TestDesignSection { RelativeSizeAxes = Axes.X },
+                    }
+            );
         }
 
         [Test]
         public void TestCountdownOff()
         {
-            AddStep("turn countdown off", () => designSection.EnableCountdown.Current.Value = false);
+            AddStep(
+                "turn countdown off",
+                () => designSection.EnableCountdown.Current.Value = false
+            );
 
-            AddAssert("beatmap has correct type", () => editorBeatmap.Countdown == CountdownType.None);
+            AddAssert(
+                "beatmap has correct type",
+                () => editorBeatmap.Countdown == CountdownType.None
+            );
             AddUntilStep("other controls hidden", () => !designSection.CountdownSettings.IsPresent);
         }
 
@@ -65,13 +77,25 @@ namespace osu.Game.Tests.Visual.Editing
         {
             AddStep("turn countdown on", () => designSection.EnableCountdown.Current.Value = true);
 
-            AddAssert("beatmap has correct type", () => editorBeatmap.Countdown == CountdownType.Normal);
+            AddAssert(
+                "beatmap has correct type",
+                () => editorBeatmap.Countdown == CountdownType.Normal
+            );
             AddUntilStep("other controls shown", () => designSection.CountdownSettings.IsPresent);
 
-            AddStep("change countdown speed", () => designSection.CountdownSpeed.Current.Value = CountdownType.DoubleSpeed);
+            AddStep(
+                "change countdown speed",
+                () => designSection.CountdownSpeed.Current.Value = CountdownType.DoubleSpeed
+            );
 
-            AddAssert("beatmap has correct type", () => editorBeatmap.Countdown == CountdownType.DoubleSpeed);
-            AddUntilStep("other controls still shown", () => designSection.CountdownSettings.IsPresent);
+            AddAssert(
+                "beatmap has correct type",
+                () => editorBeatmap.Countdown == CountdownType.DoubleSpeed
+            );
+            AddUntilStep(
+                "other controls still shown",
+                () => designSection.CountdownSettings.IsPresent
+            );
         }
 
         [Test]
@@ -79,7 +103,10 @@ namespace osu.Game.Tests.Visual.Editing
         {
             AddStep("turn countdown on", () => designSection.EnableCountdown.Current.Value = true);
 
-            AddAssert("beatmap has correct type", () => editorBeatmap.Countdown == CountdownType.Normal);
+            AddAssert(
+                "beatmap has correct type",
+                () => editorBeatmap.Countdown == CountdownType.Normal
+            );
 
             checkOffsetAfter("1", 1);
             checkOffsetAfter(string.Empty, 0);
@@ -89,17 +116,31 @@ namespace osu.Game.Tests.Visual.Editing
 
         private void checkOffsetAfter(string userInput, int expectedFinalValue)
         {
-            AddStep("click text box", () =>
-            {
-                var textBox = designSection.CountdownOffset.ChildrenOfType<TextBox>().Single();
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("set offset text", () => designSection.CountdownOffset.Current.Value = userInput);
+            AddStep(
+                "click text box",
+                () =>
+                {
+                    var textBox = designSection.CountdownOffset.ChildrenOfType<TextBox>().Single();
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "set offset text",
+                () => designSection.CountdownOffset.Current.Value = userInput
+            );
             AddStep("commit text", () => InputManager.Key(Key.Enter));
 
-            AddAssert($"displayed value is {expectedFinalValue}", () => designSection.CountdownOffset.Current.Value == expectedFinalValue.ToString(CultureInfo.InvariantCulture));
-            AddAssert($"beatmap value is {expectedFinalValue}", () => editorBeatmap.CountdownOffset == expectedFinalValue);
+            AddAssert(
+                $"displayed value is {expectedFinalValue}",
+                () =>
+                    designSection.CountdownOffset.Current.Value
+                    == expectedFinalValue.ToString(CultureInfo.InvariantCulture)
+            );
+            AddAssert(
+                $"beatmap value is {expectedFinalValue}",
+                () => editorBeatmap.CountdownOffset == expectedFinalValue
+            );
         }
 
         private partial class TestDesignSection : DesignSection

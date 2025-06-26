@@ -26,32 +26,39 @@ namespace osu.Game.Tests.Database
 
             ChangeSet? lastChanges = null;
 
-            RunTestWithRealm((realm, _) =>
-            {
-                var registration = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>(), onChanged);
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    var registration = realm.RegisterForNotifications(
+                        r => r.All<BeatmapSetInfo>(),
+                        onChanged
+                    );
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-                realm.Run(r => r.Refresh());
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(collectionChanges, Is.EqualTo(1));
-                Assert.That(propertyChanges, Is.EqualTo(0));
-                Assert.That(lastChanges?.InsertedIndices, Has.One.Items);
-                Assert.That(lastChanges?.ModifiedIndices, Is.Empty);
-                Assert.That(lastChanges?.NewModifiedIndices, Is.Empty);
+                    Assert.That(collectionChanges, Is.EqualTo(1));
+                    Assert.That(propertyChanges, Is.EqualTo(0));
+                    Assert.That(lastChanges?.InsertedIndices, Has.One.Items);
+                    Assert.That(lastChanges?.ModifiedIndices, Is.Empty);
+                    Assert.That(lastChanges?.NewModifiedIndices, Is.Empty);
 
-                realm.Write(r => r.All<BeatmapSetInfo>().First().Beatmaps.First().EditorTimestamp = 5);
-                realm.Run(r => r.Refresh());
+                    realm.Write(r =>
+                        r.All<BeatmapSetInfo>().First().Beatmaps.First().EditorTimestamp = 5
+                    );
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(collectionChanges, Is.EqualTo(1));
-                Assert.That(propertyChanges, Is.EqualTo(1));
-                Assert.That(lastChanges?.InsertedIndices, Is.Empty);
-                Assert.That(lastChanges?.ModifiedIndices, Has.One.Items);
-                Assert.That(lastChanges?.NewModifiedIndices, Has.One.Items);
+                    Assert.That(collectionChanges, Is.EqualTo(1));
+                    Assert.That(propertyChanges, Is.EqualTo(1));
+                    Assert.That(lastChanges?.InsertedIndices, Is.Empty);
+                    Assert.That(lastChanges?.ModifiedIndices, Has.One.Items);
+                    Assert.That(lastChanges?.NewModifiedIndices, Has.One.Items);
 
-                registration.Dispose();
-            });
+                    registration.Dispose();
+                }
+            );
 
             void onChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
             {
@@ -77,19 +84,26 @@ namespace osu.Game.Tests.Database
             ChangeSet? firstChanges = null;
             int receivedChangesCount = 0;
 
-            RunTestWithRealm((realm, _) =>
-            {
-                var registration = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>(), onChanged);
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    var registration = realm.RegisterForNotifications(
+                        r => r.All<BeatmapSetInfo>(),
+                        onChanged
+                    );
 
-                realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo())).WaitSafely();
+                    realm
+                        .WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()))
+                        .WaitSafely();
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(receivedChangesCount, Is.EqualTo(1));
-                Assert.That(firstChanges, Is.Null);
+                    Assert.That(receivedChangesCount, Is.EqualTo(1));
+                    Assert.That(firstChanges, Is.Null);
 
-                registration.Dispose();
-            });
+                    registration.Dispose();
+                }
+            );
 
             void onChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
             {
@@ -105,44 +119,60 @@ namespace osu.Game.Tests.Database
         {
             ChangeSet? lastChanges = null;
 
-            RunTestWithRealm((realm, _) =>
-            {
-                var registration = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>(), onChanged);
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    var registration = realm.RegisterForNotifications(
+                        r => r.All<BeatmapSetInfo>(),
+                        onChanged
+                    );
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo())).WaitSafely();
+                    realm
+                        .WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()))
+                        .WaitSafely();
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(lastChanges?.InsertedIndices, Has.One.Items);
+                    Assert.That(lastChanges?.InsertedIndices, Has.One.Items);
 
-                registration.Dispose();
-            });
+                    registration.Dispose();
+                }
+            );
 
-            void onChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes) => lastChanges = changes;
+            void onChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes) =>
+                lastChanges = changes;
         }
 
         [Test]
         public void TestPropertyChangedSubscription()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                bool? receivedValue = null;
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                using (realm.SubscribeToPropertyChanged(r => r.All<BeatmapSetInfo>().First(), setInfo => setInfo.Protected, val => receivedValue = val))
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    Assert.That(receivedValue, Is.False);
+                    bool? receivedValue = null;
 
-                    realm.Write(r => r.All<BeatmapSetInfo>().First().Protected = true);
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
 
-                    realm.Run(r => r.Refresh());
+                    using (
+                        realm.SubscribeToPropertyChanged(
+                            r => r.All<BeatmapSetInfo>().First(),
+                            setInfo => setInfo.Protected,
+                            val => receivedValue = val
+                        )
+                    )
+                    {
+                        Assert.That(receivedValue, Is.False);
 
-                    Assert.That(receivedValue, Is.True);
+                        realm.Write(r => r.All<BeatmapSetInfo>().First().Protected = true);
+
+                        realm.Run(r => r.Refresh());
+
+                        Assert.That(receivedValue, Is.True);
+                    }
                 }
-            });
+            );
         }
 
         [Test]
@@ -151,67 +181,72 @@ namespace osu.Game.Tests.Database
             IEnumerable<BeatmapSetInfo>? resolvedItems = null;
             ChangeSet? lastChanges = null;
 
-            RunTestWithRealm((realm, _) =>
-            {
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                var registration = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>(), onChanged);
-
-                testEventsArriving(true);
-
-                // All normal until here.
-                // Now let's yank the main realm context.
-                resolvedItems = null;
-                lastChanges = null;
-
-                using (realm.BlockAllOperations("testing"))
-                    Assert.That(resolvedItems, Is.Empty);
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                testEventsArriving(true);
-
-                // Now let's try unsubscribing.
-                resolvedItems = null;
-                lastChanges = null;
-
-                registration.Dispose();
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                testEventsArriving(false);
-
-                // And make sure even after another context loss we don't get firings.
-                using (realm.BlockAllOperations("testing"))
-                    Assert.That(resolvedItems, Is.Null);
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                testEventsArriving(false);
-
-                void testEventsArriving(bool shouldArrive)
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    realm.Run(r => r.Refresh());
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
 
-                    if (shouldArrive)
-                        Assert.That(resolvedItems, Has.One.Items);
-                    else
+                    var registration = realm.RegisterForNotifications(
+                        r => r.All<BeatmapSetInfo>(),
+                        onChanged
+                    );
+
+                    testEventsArriving(true);
+
+                    // All normal until here.
+                    // Now let's yank the main realm context.
+                    resolvedItems = null;
+                    lastChanges = null;
+
+                    using (realm.BlockAllOperations("testing"))
+                        Assert.That(resolvedItems, Is.Empty);
+
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
+
+                    testEventsArriving(true);
+
+                    // Now let's try unsubscribing.
+                    resolvedItems = null;
+                    lastChanges = null;
+
+                    registration.Dispose();
+
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
+
+                    testEventsArriving(false);
+
+                    // And make sure even after another context loss we don't get firings.
+                    using (realm.BlockAllOperations("testing"))
                         Assert.That(resolvedItems, Is.Null);
 
-                    realm.Write(r =>
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
+
+                    testEventsArriving(false);
+
+                    void testEventsArriving(bool shouldArrive)
                     {
-                        r.RemoveAll<BeatmapSetInfo>();
-                        r.RemoveAll<RulesetInfo>();
-                    });
+                        realm.Run(r => r.Refresh());
 
-                    realm.Run(r => r.Refresh());
+                        if (shouldArrive)
+                            Assert.That(resolvedItems, Has.One.Items);
+                        else
+                            Assert.That(resolvedItems, Is.Null);
 
-                    if (shouldArrive)
-                        Assert.That(lastChanges?.DeletedIndices, Has.One.Items);
-                    else
-                        Assert.That(lastChanges, Is.Null);
+                        realm.Write(r =>
+                        {
+                            r.RemoveAll<BeatmapSetInfo>();
+                            r.RemoveAll<RulesetInfo>();
+                        });
+
+                        realm.Run(r => r.Refresh());
+
+                        if (shouldArrive)
+                            Assert.That(lastChanges?.DeletedIndices, Has.One.Items);
+                        else
+                            Assert.That(lastChanges, Is.Null);
+                    }
                 }
-            });
+            );
 
             void onChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
             {
@@ -225,77 +260,80 @@ namespace osu.Game.Tests.Database
         [Test]
         public void TestCustomRegisterWithContextLoss()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                BeatmapSetInfo? beatmapSetInfo = null;
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                var subscription = realm.RegisterCustomSubscription(r =>
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    beatmapSetInfo = r.All<BeatmapSetInfo>().First();
+                    BeatmapSetInfo? beatmapSetInfo = null;
 
-                    return new InvokeOnDisposal(() => beatmapSetInfo = null);
-                });
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
 
-                Assert.That(beatmapSetInfo, Is.Not.Null);
+                    var subscription = realm.RegisterCustomSubscription(r =>
+                    {
+                        beatmapSetInfo = r.All<BeatmapSetInfo>().First();
 
-                using (realm.BlockAllOperations("testing"))
-                {
-                    // custom disposal action fired when context lost.
+                        return new InvokeOnDisposal(() => beatmapSetInfo = null);
+                    });
+
+                    Assert.That(beatmapSetInfo, Is.Not.Null);
+
+                    using (realm.BlockAllOperations("testing"))
+                    {
+                        // custom disposal action fired when context lost.
+                        Assert.That(beatmapSetInfo, Is.Null);
+                    }
+
+                    // re-registration after context restore.
+                    realm.Run(r => r.Refresh());
+                    Assert.That(beatmapSetInfo, Is.Not.Null);
+
+                    subscription.Dispose();
+
+                    Assert.That(beatmapSetInfo, Is.Null);
+
+                    using (realm.BlockAllOperations("testing"))
+                        Assert.That(beatmapSetInfo, Is.Null);
+
+                    realm.Run(r => r.Refresh());
                     Assert.That(beatmapSetInfo, Is.Null);
                 }
-
-                // re-registration after context restore.
-                realm.Run(r => r.Refresh());
-                Assert.That(beatmapSetInfo, Is.Not.Null);
-
-                subscription.Dispose();
-
-                Assert.That(beatmapSetInfo, Is.Null);
-
-                using (realm.BlockAllOperations("testing"))
-                    Assert.That(beatmapSetInfo, Is.Null);
-
-                realm.Run(r => r.Refresh());
-                Assert.That(beatmapSetInfo, Is.Null);
-            });
+            );
         }
 
         [Test]
         public void TestPropertyChangedSubscriptionWithContextLoss()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                bool? receivedValue = null;
-
-                realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-
-                var subscription = realm.SubscribeToPropertyChanged(
-                    r => r.All<BeatmapSetInfo>().First(),
-                    setInfo => setInfo.Protected,
-                    val => receivedValue = val);
-
-                Assert.That(receivedValue, Is.Not.Null);
-                receivedValue = null;
-
-                using (realm.BlockAllOperations("testing"))
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                }
+                    bool? receivedValue = null;
 
-                // re-registration after context restore.
-                realm.Run(r => r.Refresh());
-                Assert.That(receivedValue, Is.Not.Null);
+                    realm.Write(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
 
-                subscription.Dispose();
-                receivedValue = null;
+                    var subscription = realm.SubscribeToPropertyChanged(
+                        r => r.All<BeatmapSetInfo>().First(),
+                        setInfo => setInfo.Protected,
+                        val => receivedValue = val
+                    );
 
-                using (realm.BlockAllOperations("testing"))
+                    Assert.That(receivedValue, Is.Not.Null);
+                    receivedValue = null;
+
+                    using (realm.BlockAllOperations("testing")) { }
+
+                    // re-registration after context restore.
+                    realm.Run(r => r.Refresh());
+                    Assert.That(receivedValue, Is.Not.Null);
+
+                    subscription.Dispose();
+                    receivedValue = null;
+
+                    using (realm.BlockAllOperations("testing"))
+                        Assert.That(receivedValue, Is.Null);
+
+                    realm.Run(r => r.Refresh());
                     Assert.That(receivedValue, Is.Null);
-
-                realm.Run(r => r.Refresh());
-                Assert.That(receivedValue, Is.Null);
-            });
+                }
+            );
         }
     }
 }

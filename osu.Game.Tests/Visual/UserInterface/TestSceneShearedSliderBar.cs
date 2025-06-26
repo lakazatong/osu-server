@@ -18,36 +18,48 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         private TestSliderBar slider = null!;
 
-        protected override Drawable CreateContent() => slider = new TestSliderBar
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Current = new BindableDouble(5)
+        protected override Drawable CreateContent() =>
+            slider = new TestSliderBar
             {
-                Precision = 0.1,
-                MinValue = 0,
-                MaxValue = 15
-            },
-            RelativeSizeAxes = Axes.X,
-            Width = 0.4f
-        };
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Current = new BindableDouble(5)
+                {
+                    Precision = 0.1,
+                    MinValue = 0,
+                    MaxValue = 15,
+                },
+                RelativeSizeAxes = Axes.X,
+                Width = 0.4f,
+            };
 
         [Test]
         public void TestNubDisplay()
         {
-            AddSliderStep("nub width", 20, 80, 50, v =>
-            {
-                if (slider.IsNotNull())
+            AddSliderStep(
+                "nub width",
+                20,
+                80,
+                50,
+                v =>
                 {
-                    slider.Nub.Width = v;
-                    slider.RangePadding = v / 2f;
+                    if (slider.IsNotNull())
+                    {
+                        slider.Nub.Width = v;
+                        slider.RangePadding = v / 2f;
+                    }
                 }
-            });
-            AddToggleStep("nub shadow", v =>
-            {
-                if (slider.IsNotNull())
-                    slider.NubShadowColour = v ? Color4.Black.Opacity(0.2f) : Color4.Black.Opacity(0f);
-            });
+            );
+            AddToggleStep(
+                "nub shadow",
+                v =>
+                {
+                    if (slider.IsNotNull())
+                        slider.NubShadowColour = v
+                            ? Color4.Black.Opacity(0.2f)
+                            : Color4.Black.Opacity(0f);
+                }
+            );
         }
 
         [Test]
@@ -55,13 +67,19 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             AddStep("set slider to 1", () => slider.Current.Value = 1);
 
-            AddStep("move mouse to nub", () => InputManager.MoveMouseTo(slider.ChildrenOfType<ShearedNub>().Single()));
+            AddStep(
+                "move mouse to nub",
+                () => InputManager.MoveMouseTo(slider.ChildrenOfType<ShearedNub>().Single())
+            );
 
-            AddStep("double click nub", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "double click nub",
+                () =>
+                {
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("slider is default", () => slider.Current.IsDefault);
         }
@@ -72,13 +90,19 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("set slider to 1", () => slider.Current.Value = 1);
             AddStep("disable slider", () => slider.Current.Disabled = true);
 
-            AddStep("move mouse to nub", () => InputManager.MoveMouseTo(slider.ChildrenOfType<ShearedNub>().Single()));
+            AddStep(
+                "move mouse to nub",
+                () => InputManager.MoveMouseTo(slider.ChildrenOfType<ShearedNub>().Single())
+            );
 
-            AddStep("double click nub", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "double click nub",
+                () =>
+                {
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("slider is still at 1", () => slider.Current.Value, () => Is.EqualTo(1));
             AddStep("enable slider", () => slider.Current.Disabled = false);

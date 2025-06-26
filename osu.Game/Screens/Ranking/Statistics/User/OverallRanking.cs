@@ -16,8 +16,10 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     {
         private const float transition_duration = 300;
 
-        public Bindable<ScoreBasedUserStatisticsUpdate?> DisplayedUpdate { get; } = new Bindable<ScoreBasedUserStatisticsUpdate?>();
-        private readonly IBindable<ScoreBasedUserStatisticsUpdate?> latestGlobalStatisticsUpdate = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        public Bindable<ScoreBasedUserStatisticsUpdate?> DisplayedUpdate { get; } =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        private readonly IBindable<ScoreBasedUserStatisticsUpdate?> latestGlobalStatisticsUpdate =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
 
         private readonly ScoreInfo scoreInfo;
 
@@ -38,10 +40,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
 
             InternalChildren = new Drawable[]
             {
-                loadingLayer = new LoadingLayer(withBox: false)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                loadingLayer = new LoadingLayer(withBox: false) { RelativeSizeAxes = Axes.Both },
                 content = new GridContainer
                 {
                     AlwaysPresent = true,
@@ -65,36 +64,57 @@ namespace osu.Game.Screens.Ranking.Statistics.User
                     {
                         new Drawable[]
                         {
-                            new GlobalRankChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new GlobalRankChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
                             new SimpleStatisticTable.Spacer(),
-                            new PerformancePointsChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new PerformancePointsChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
                         },
                         [],
                         new Drawable[]
                         {
-                            new MaximumComboChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new MaximumComboChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
                             new SimpleStatisticTable.Spacer(),
-                            new AccuracyChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new AccuracyChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
                         },
                         [],
                         new Drawable[]
                         {
-                            new RankedScoreChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new RankedScoreChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
                             new SimpleStatisticTable.Spacer(),
-                            new TotalScoreChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
-                        }
-                    }
-                }
+                            new TotalScoreChangeRow
+                            {
+                                StatisticsUpdate = { BindTarget = DisplayedUpdate },
+                            },
+                        },
+                    },
+                },
             };
 
             if (userStatisticsWatcher != null)
             {
                 latestGlobalStatisticsUpdate.BindTo(userStatisticsWatcher.LatestUpdate);
-                latestGlobalStatisticsUpdate.BindValueChanged(update =>
-                {
-                    if (update.NewValue?.Score.MatchesOnlineID(scoreInfo) == true)
-                        DisplayedUpdate.Value = update.NewValue;
-                }, true);
+                latestGlobalStatisticsUpdate.BindValueChanged(
+                    update =>
+                    {
+                        if (update.NewValue?.Score.MatchesOnlineID(scoreInfo) == true)
+                            DisplayedUpdate.Value = update.NewValue;
+                    },
+                    true
+                );
             }
         }
 

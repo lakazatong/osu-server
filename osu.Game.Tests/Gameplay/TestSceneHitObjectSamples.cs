@@ -14,6 +14,7 @@ namespace osu.Game.Tests.Gameplay
     public partial class TestSceneHitObjectSamples : HitObjectSampleTest
     {
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
+
         protected override IResourceStore<byte[]> RulesetResources => TestResources.GetStore();
 
         /// <summary>
@@ -197,7 +198,7 @@ namespace osu.Game.Tests.Gameplay
             string[] expectedSamples =
             {
                 "normal-hitnormal2",
-                "normal-hitwhistle" // user skin lookups ignore custom sample set index
+                "normal-hitwhistle", // user skin lookups ignore custom sample set index
             };
 
             SetupSkins(expectedSamples[0], expectedSamples[1]);
@@ -244,7 +245,12 @@ namespace osu.Game.Tests.Gameplay
             AssertBeatmapLookup(expected_sample);
         }
 
-        private void disableLayeredHitSounds()
-            => AddStep("set LayeredHitSounds to false", () => Skin.Configuration.ConfigDictionary[LegacySetting.LayeredHitSounds.ToString()] = "0");
+        private void disableLayeredHitSounds() =>
+            AddStep(
+                "set LayeredHitSounds to false",
+                () =>
+                    Skin.Configuration.ConfigDictionary[LegacySetting.LayeredHitSounds.ToString()] =
+                        "0"
+            );
     }
 }

@@ -28,18 +28,14 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Children = new Drawable[]
                 {
                     receptor,
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.SlateGray
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.SlateGray },
                     button = new BackButton(receptor)
                     {
                         Action = () => button?.Hide(),
                         Anchor = Anchor.BottomLeft,
                         Origin = Anchor.BottomLeft,
-                    }
-                }
+                    },
+                },
             };
 
             AddStep("show button", () => button.Show());

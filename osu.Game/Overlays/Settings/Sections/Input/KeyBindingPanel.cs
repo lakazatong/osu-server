@@ -10,7 +10,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 {
     public partial class KeyBindingPanel : SettingsSubPanel
     {
-        protected override Drawable CreateHeader() => new SettingsHeader(InputSettingsStrings.KeyBindingPanelHeader, InputSettingsStrings.KeyBindingPanelDescription);
+        protected override Drawable CreateHeader() =>
+            new SettingsHeader(
+                InputSettingsStrings.KeyBindingPanelHeader,
+                InputSettingsStrings.KeyBindingPanelDescription
+            );
 
         [BackgroundDependencyLoader(permitNulls: true)]
         private void load(RulesetStore rulesets)

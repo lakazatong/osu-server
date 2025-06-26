@@ -34,7 +34,17 @@ namespace osu.Game.Tests.Visual.Playlists
         private void load(GameHost host, AudioManager audio)
         {
             Dependencies.Cache(new RealmRulesetStore(Realm));
-            Dependencies.Cache(manager = new BeatmapManager(LocalStorage, Realm, API, audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                manager = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    API,
+                    audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
             Dependencies.Cache(Realm);
 
             Add(notificationOverlay);
@@ -50,27 +60,38 @@ namespace osu.Game.Tests.Visual.Playlists
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("clear realm", () => Realm.Realm.Write(() => Realm.Realm.RemoveAll<BeatmapCollection>()));
+            AddStep(
+                "clear realm",
+                () => Realm.Realm.Write(() => Realm.Realm.RemoveAll<BeatmapCollection>())
+            );
 
-            AddStep("clear notifications", () =>
-            {
-                foreach (var notification in notificationOverlay.AllNotifications)
-                    notification.Close(runFlingAnimation: false);
-            });
+            AddStep(
+                "clear notifications",
+                () =>
+                {
+                    foreach (var notification in notificationOverlay.AllNotifications)
+                        notification.Close(runFlingAnimation: false);
+                }
+            );
 
             importBeatmap();
 
             setupRoom();
 
-            AddStep("create button", () =>
-            {
-                Add(button = new AddPlaylistToCollectionButton(room)
+            AddStep(
+                "create button",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(300, 40),
-                });
-            });
+                    Add(
+                        button = new AddPlaylistToCollectionButton(room)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(300, 40),
+                        }
+                    );
+                }
+            );
         }
 
         [Test]
@@ -80,37 +101,59 @@ namespace osu.Game.Tests.Visual.Playlists
 
             AddStep("click button", () => InputManager.Click(MouseButton.Left));
 
-            AddUntilStep("notification shown", () => notificationOverlay.AllNotifications.Any(n => n.Text.ToString().StartsWith("Created new collection", StringComparison.Ordinal)));
+            AddUntilStep(
+                "notification shown",
+                () =>
+                    notificationOverlay.AllNotifications.Any(n =>
+                        n.Text.ToString()
+                            .StartsWith("Created new collection", StringComparison.Ordinal)
+                    )
+            );
 
-            AddUntilStep("realm is updated", () => Realm.Realm.All<BeatmapCollection>().FirstOrDefault(c => c.Name == room.Name) != null);
+            AddUntilStep(
+                "realm is updated",
+                () =>
+                    Realm.Realm.All<BeatmapCollection>().FirstOrDefault(c => c.Name == room.Name)
+                    != null
+            );
         }
 
-        private void importBeatmap() => AddStep("import beatmap", () =>
-        {
-            var beatmap = CreateBeatmap(new OsuRuleset().RulesetInfo);
-
-            Debug.Assert(beatmap.BeatmapInfo.BeatmapSet != null);
-
-            importedBeatmap = manager.Import(beatmap.BeatmapInfo.BeatmapSet)!.Value.Detach();
-        });
-
-        private void setupRoom() => AddStep("setup room", () =>
-        {
-            room = new Room
-            {
-                Name = "my awesome room",
-                MaxAttempts = 5,
-                Host = API.LocalUser.Value
-            };
-            room.RecentParticipants = [room.Host];
-            room.EndDate = DateTimeOffset.Now.AddMinutes(5);
-            room.Playlist =
-            [
-                new PlaylistItem(importedBeatmap.Beatmaps.First())
+        private void importBeatmap() =>
+            AddStep(
+                "import beatmap",
+                () =>
                 {
-                    RulesetID = new OsuRuleset().RulesetInfo.OnlineID
+                    var beatmap = CreateBeatmap(new OsuRuleset().RulesetInfo);
+
+                    Debug.Assert(beatmap.BeatmapInfo.BeatmapSet != null);
+
+                    importedBeatmap = manager
+                        .Import(beatmap.BeatmapInfo.BeatmapSet)!
+                        .Value.Detach();
                 }
-            ];
-        });
+            );
+
+        private void setupRoom() =>
+            AddStep(
+                "setup room",
+                () =>
+                {
+                    room = new Room
+                    {
+                        Name = "my awesome room",
+                        MaxAttempts = 5,
+                        Host = API.LocalUser.Value,
+                    };
+                    room.RecentParticipants = [room.Host];
+                    room.EndDate = DateTimeOffset.Now.AddMinutes(5);
+                    room.Playlist =
+                    [
+                        new PlaylistItem(importedBeatmap.Beatmaps.First())
+                        {
+                            RulesetID = new OsuRuleset().RulesetInfo.OnlineID,
+                        },
+                    ];
+                }
+            );
     }
 }

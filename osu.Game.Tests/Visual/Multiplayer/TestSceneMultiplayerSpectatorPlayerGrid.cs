@@ -17,10 +17,11 @@ namespace osu.Game.Tests.Visual.Multiplayer
         private PlayerGrid grid = null!;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = grid = new PlayerGrid { RelativeSizeAxes = Axes.Both };
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                Child = grid = new PlayerGrid { RelativeSizeAxes = Axes.Both };
+            });
 
         [Test]
         public void TestMaximiseAndMinimise()
@@ -50,14 +51,17 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             addCells(2);
 
-            AddStep("click cell 0 then 1", () =>
-            {
-                InputManager.MoveMouseTo(grid.Content.ElementAt(0));
-                InputManager.Click(MouseButton.Left);
+            AddStep(
+                "click cell 0 then 1",
+                () =>
+                {
+                    InputManager.MoveMouseTo(grid.Content.ElementAt(0));
+                    InputManager.Click(MouseButton.Left);
 
-                InputManager.MoveMouseTo(grid.Content.ElementAt(1));
-                InputManager.Click(MouseButton.Left);
-            });
+                    InputManager.MoveMouseTo(grid.Content.ElementAt(1));
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertMaximisation(1, true);
             assertMaximisation(0, false);
@@ -79,28 +83,42 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddWaitStep("wait for display", 2);
         }
 
-        private void addCells(int count) => AddStep($"add {count} grid cells", () =>
-        {
-            for (int i = 0; i < count; i++)
-                grid.Add(new GridContent());
-        });
+        private void addCells(int count) =>
+            AddStep(
+                $"add {count} grid cells",
+                () =>
+                {
+                    for (int i = 0; i < count; i++)
+                        grid.Add(new GridContent());
+                }
+            );
 
-        private void clickCell(int index) => AddStep($"click cell index {index}", () =>
-        {
-            InputManager.MoveMouseTo(grid.Content.ElementAt(index));
-            InputManager.Click(MouseButton.Left);
-        });
+        private void clickCell(int index) =>
+            AddStep(
+                $"click cell index {index}",
+                () =>
+                {
+                    InputManager.MoveMouseTo(grid.Content.ElementAt(index));
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
         private void assertMaximisation(int index, bool shouldBeMaximised, bool instant = false)
         {
-            string assertionText = $"cell index {index} {(shouldBeMaximised ? "is" : "is not")} maximised";
+            string assertionText =
+                $"cell index {index} {(shouldBeMaximised ? "is" : "is not")} maximised";
 
             if (instant)
                 AddAssert(assertionText, checkAction);
             else
                 AddUntilStep(assertionText, checkAction);
 
-            bool checkAction() => Precision.AlmostEquals(grid.MaximisedFacade.DrawSize, grid.Content.ElementAt(index).DrawSize, 10) == shouldBeMaximised;
+            bool checkAction() =>
+                Precision.AlmostEquals(
+                    grid.MaximisedFacade.DrawSize,
+                    grid.Content.ElementAt(index).DrawSize,
+                    10
+                ) == shouldBeMaximised;
         }
 
         private partial class GridContent : Box

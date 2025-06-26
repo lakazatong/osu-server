@@ -20,13 +20,15 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
 
         public TestSceneOsuModPerfect()
-            : base(new OsuModPerfect())
-        {
-        }
+            : base(new OsuModPerfect()) { }
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestHitCircle(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new HitCircle { StartTime = 1000 }), shouldMiss);
+        public void TestHitCircle(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new HitCircle { StartTime = 1000 }),
+                shouldMiss
+            );
 
         [TestCase(false)]
         [TestCase(true)]
@@ -35,7 +37,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             var slider = new Slider
             {
                 StartTime = 1000,
-                Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(100, 0), })
+                Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(100, 0) }),
             };
 
             CreateHitObjectTest(new HitObjectTestData(slider), shouldMiss);
@@ -49,35 +51,42 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             {
                 StartTime = 1000,
                 EndTime = 3000,
-                Position = new Vector2(256, 192)
+                Position = new Vector2(256, 192),
             };
 
             CreateHitObjectTest(new HitObjectTestData(spinner), shouldMiss);
         }
 
         [Test]
-        public void TestMissSliderTail() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModPerfect(),
-            PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(true),
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject>
+        public void TestMissSliderTail() =>
+            CreateModTest(
+                new ModTestData
                 {
-                    new Slider
+                    Mod = new OsuModPerfect(),
+                    PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(true),
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = new List<HitObject>
+                            {
+                                new Slider
+                                {
+                                    Position = new Vector2(256, 192),
+                                    StartTime = 1000,
+                                    Path = new SliderPath(
+                                        PathType.LINEAR,
+                                        new[] { Vector2.Zero, new Vector2(100, 0) }
+                                    ),
+                                },
+                            },
+                        },
+                    ReplayFrames = new List<ReplayFrame>
                     {
-                        Position = new Vector2(256, 192),
-                        StartTime = 1000,
-                        Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(100, 0), })
+                        new OsuReplayFrame(1000, new Vector2(256, 192), OsuAction.LeftButton),
+                        new OsuReplayFrame(1001, new Vector2(256, 192)),
                     },
-                },
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new OsuReplayFrame(1000, new Vector2(256, 192), OsuAction.LeftButton),
-                new OsuReplayFrame(1001, new Vector2(256, 192)),
-            }
-        });
+                }
+            );
     }
 }

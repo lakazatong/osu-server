@@ -27,7 +27,8 @@ namespace osu.Game.Overlays.Music
         private const float transition_duration = 600;
         public const float PLAYLIST_HEIGHT = 510;
 
-        private readonly BindableList<Live<BeatmapSetInfo>> beatmapSets = new BindableList<Live<BeatmapSetInfo>>();
+        private readonly BindableList<Live<BeatmapSetInfo>> beatmapSets =
+            new BindableList<Live<BeatmapSetInfo>>();
 
         private readonly Bindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
 
@@ -61,11 +62,7 @@ namespace osu.Game.Overlays.Music
                     },
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = colours.Gray3,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = colours.Gray3, RelativeSizeAxes = Axes.Both },
                         list = new Playlist
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -80,10 +77,16 @@ namespace osu.Game.Overlays.Music
         {
             base.LoadComplete();
 
-            beatmapSubscription = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected), beatmapsChanged);
+            beatmapSubscription = realm.RegisterForNotifications(
+                r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected),
+                beatmapsChanged
+            );
 
             list.RowData.BindTo(beatmapSets);
-            beatmap.BindValueChanged(working => SelectedSet.Value = working.NewValue.BeatmapSetInfo.ToLive(realm), true);
+            beatmap.BindValueChanged(
+                working => SelectedSet.Value = working.NewValue.BeatmapSetInfo.ToLive(realm),
+                true
+            );
         }
 
         private void beatmapsChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
@@ -105,7 +108,11 @@ namespace osu.Game.Overlays.Music
 
         protected override void PopIn()
         {
-            this.ResizeTo(new Vector2(1, RelativeSizeAxes.HasFlag(Axes.Y) ? 1f : PLAYLIST_HEIGHT), transition_duration, Easing.OutQuint);
+            this.ResizeTo(
+                new Vector2(1, RelativeSizeAxes.HasFlag(Axes.Y) ? 1f : PLAYLIST_HEIGHT),
+                transition_duration,
+                Easing.OutQuint
+            );
             this.FadeIn(transition_duration, Easing.OutQuint);
         }
 

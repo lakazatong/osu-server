@@ -11,7 +11,8 @@ namespace osu.Game.Rulesets.Scoring
     /// </summary>
     public partial class AccumulatingHealthProcessor : HealthProcessor
     {
-        protected override bool CheckDefaultFailCondition(JudgementResult _) => JudgedHits == MaxHits && Health.Value < requiredHealth;
+        protected override bool CheckDefaultFailCondition(JudgementResult _) =>
+            JudgedHits == MaxHits && Health.Value < requiredHealth;
 
         private readonly double requiredHealth;
 

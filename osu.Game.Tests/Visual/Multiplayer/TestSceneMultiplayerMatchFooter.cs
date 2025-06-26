@@ -16,37 +16,41 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             base.SetUpSteps();
 
-            AddStep("create footer", () =>
-            {
-                MultiplayerBeatmapAvailabilityTracker tracker = new MultiplayerBeatmapAvailabilityTracker();
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "create footer",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies =
-                    [
-                        (typeof(OnlinePlayBeatmapAvailabilityTracker), tracker)
-                    ],
-                    Children =
-                    [
-                        tracker,
-                        new PopoverContainer
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
-                            Child = new Container
+                    MultiplayerBeatmapAvailabilityTracker tracker =
+                        new MultiplayerBeatmapAvailabilityTracker();
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies =
+                        [
+                            (typeof(OnlinePlayBeatmapAvailabilityTracker), tracker),
+                        ],
+                        Children =
+                        [
+                            tracker,
+                            new PopoverContainer
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                RelativeSizeAxes = Axes.X,
-                                Height = 50,
-                                Child = new MultiplayerMatchFooter()
-                            }
-                        }
-                    ]
-                };
-            });
+                                RelativeSizeAxes = Axes.Both,
+                                Child = new Container
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    RelativeSizeAxes = Axes.X,
+                                    Height = 50,
+                                    Child = new MultiplayerMatchFooter(),
+                                },
+                            },
+                        ],
+                    };
+                }
+            );
         }
     }
 }

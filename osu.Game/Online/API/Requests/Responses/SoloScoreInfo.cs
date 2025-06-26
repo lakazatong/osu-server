@@ -73,10 +73,12 @@ namespace osu.Game.Online.API.Requests.Responses
         public DateTimeOffset? DeletedAt { get; set; }
 
         [JsonProperty("statistics")]
-        public Dictionary<HitResult, int> Statistics { get; set; } = new Dictionary<HitResult, int>();
+        public Dictionary<HitResult, int> Statistics { get; set; } =
+            new Dictionary<HitResult, int>();
 
         [JsonProperty("maximum_statistics")]
-        public Dictionary<HitResult, int> MaximumStatistics { get; set; } = new Dictionary<HitResult, int>();
+        public Dictionary<HitResult, int> MaximumStatistics { get; set; } =
+            new Dictionary<HitResult, int>();
 
         /// <summary>
         /// Used to preserve the total score for legacy scores.
@@ -106,7 +108,9 @@ namespace osu.Game.Online.API.Requests.Responses
                 // in the deserialisation case we need to ferry this data across.
                 // the order of properties returned by the API guarantees that the beatmap is populated by this point.
                 if (!(Beatmap is APIBeatmap apiBeatmap))
-                    throw new InvalidOperationException("Beatmap set metadata arrived before beatmap metadata in response");
+                    throw new InvalidOperationException(
+                        "Beatmap set metadata arrived before beatmap metadata in response"
+                    );
 
                 apiBeatmap.BeatmapSet = value;
             }
@@ -129,25 +133,40 @@ namespace osu.Game.Online.API.Requests.Responses
 
         // These properties are calculated or not relevant to any external usage.
         public bool ShouldSerializeID() => false;
+
         public bool ShouldSerializeUser() => false;
+
         public bool ShouldSerializeBeatmap() => false;
+
         public bool ShouldSerializeBeatmapSet() => false;
+
         public bool ShouldSerializePP() => false;
+
         public bool ShouldSerializeOnlineID() => false;
+
         public bool ShouldSerializeHasReplay() => false;
+
         public bool ShouldSerializePreserve() => false;
+
         public bool ShouldSerializeProcessed() => false;
 
         // These fields only need to be serialised if they hold values.
         // Generally this is required because this model may be used by server-side components, but
         // we don't want to bother sending these fields in score submission requests, for instance.
         public bool ShouldSerializeEndedAt() => EndedAt != default;
+
         public bool ShouldSerializeStartedAt() => StartedAt != default;
+
         public bool ShouldSerializeLegacyScoreId() => LegacyScoreId != null;
+
         public bool ShouldSerializeLegacyTotalScore() => LegacyTotalScore != null;
+
         public bool ShouldSerializeMods() => Mods.Length > 0;
+
         public bool ShouldSerializeUserID() => UserID > 0;
+
         public bool ShouldSerializeBeatmapID() => BeatmapID > 0;
+
         public bool ShouldSerializeBuildID() => BuildID != null;
 
         #endregion
@@ -180,7 +199,11 @@ namespace osu.Game.Online.API.Requests.Responses
         /// <returns></returns>
         public ScoreInfo ToScoreInfo(RulesetStore rulesets, BeatmapInfo? beatmap = null)
         {
-            var ruleset = rulesets.GetRuleset(RulesetID) ?? throw new InvalidOperationException($"Ruleset with ID of {RulesetID} not found locally");
+            var ruleset =
+                rulesets.GetRuleset(RulesetID)
+                ?? throw new InvalidOperationException(
+                    $"Ruleset with ID of {RulesetID} not found locally"
+                );
 
             var rulesetInstance = ruleset.CreateInstance();
 
@@ -247,19 +270,22 @@ namespace osu.Game.Online.API.Requests.Responses
         /// Creates a <see cref="SoloScoreInfo"/> from a local score for score submission.
         /// </summary>
         /// <param name="score">The local score.</param>
-        public static SoloScoreInfo ForSubmission(ScoreInfo score) => new SoloScoreInfo
-        {
-            Rank = score.Rank,
-            TotalScore = score.TotalScore,
-            TotalScoreWithoutMods = score.TotalScoreWithoutMods,
-            Accuracy = score.Accuracy,
-            PP = score.PP,
-            MaxCombo = score.MaxCombo,
-            RulesetID = score.RulesetID,
-            Passed = score.Passed,
-            Mods = score.APIMods,
-            Statistics = score.Statistics.Where(kvp => kvp.Value != 0).ToDictionary(),
-            MaximumStatistics = score.MaximumStatistics.Where(kvp => kvp.Value != 0).ToDictionary(),
-        };
+        public static SoloScoreInfo ForSubmission(ScoreInfo score) =>
+            new SoloScoreInfo
+            {
+                Rank = score.Rank,
+                TotalScore = score.TotalScore,
+                TotalScoreWithoutMods = score.TotalScoreWithoutMods,
+                Accuracy = score.Accuracy,
+                PP = score.PP,
+                MaxCombo = score.MaxCombo,
+                RulesetID = score.RulesetID,
+                Passed = score.Passed,
+                Mods = score.APIMods,
+                Statistics = score.Statistics.Where(kvp => kvp.Value != 0).ToDictionary(),
+                MaximumStatistics = score
+                    .MaximumStatistics.Where(kvp => kvp.Value != 0)
+                    .ToDictionary(),
+            };
     }
 }

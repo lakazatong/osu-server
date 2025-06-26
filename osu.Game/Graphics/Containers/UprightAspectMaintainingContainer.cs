@@ -25,7 +25,10 @@ namespace osu.Game.Graphics.Containers
         /// </summary>
         public ScaleMode Scaling { get; set; } = ScaleMode.Vertical;
 
-        private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawInfo, InvalidationSource.Parent);
+        private readonly LayoutValue layout = new LayoutValue(
+            Invalidation.DrawInfo,
+            InvalidationSource.Parent
+        );
 
         public UprightAspectMaintainingContainer()
         {
@@ -94,7 +97,10 @@ namespace osu.Game.Graphics.Containers
                 if (ScalingFactor < 1.0f)
                     usedScale = 1.0f + (usedScale - 1.0f) * ScalingFactor;
                 if (ScalingFactor > 1.0f)
-                    usedScale = (usedScale < 1.0f) ? usedScale * (1.0f / ScalingFactor) : usedScale * ScalingFactor;
+                    usedScale =
+                        (usedScale < 1.0f)
+                            ? usedScale * (1.0f / ScalingFactor)
+                            : usedScale * ScalingFactor;
             }
 
             Scale = new Vector2(sx * usedScale, sy * usedScale);

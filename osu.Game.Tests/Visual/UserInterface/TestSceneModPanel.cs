@@ -21,27 +21,33 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneModPanel : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         [Test]
         public void TestVariousPanels()
         {
-            AddStep("create content", () => Child = new FillFlowContainer
-            {
-                Width = 300,
-                AutoSizeAxes = Axes.Y,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Spacing = new Vector2(0, 5),
-                Children = new[]
-                {
-                    new ModPanel(new OsuModHalfTime()),
-                    new ModPanel(new OsuModFlashlight()),
-                    new ModPanel(new OsuModAutoplay()),
-                    new ModPanel(new OsuModAlternate()),
-                    new ModPanel(new OsuModApproachDifferent())
-                }
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Child = new FillFlowContainer
+                    {
+                        Width = 300,
+                        AutoSizeAxes = Axes.Y,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Spacing = new Vector2(0, 5),
+                        Children = new[]
+                        {
+                            new ModPanel(new OsuModHalfTime()),
+                            new ModPanel(new OsuModFlashlight()),
+                            new ModPanel(new OsuModAutoplay()),
+                            new ModPanel(new OsuModAlternate()),
+                            new ModPanel(new OsuModApproachDifferent()),
+                        },
+                    }
+            );
         }
 
         [Test]
@@ -49,23 +55,26 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             IncompatibilityDisplayingModPanel panel = null;
 
-            AddStep("create panel with DT", () =>
-            {
-                Child = panel = new IncompatibilityDisplayingModPanel(new OsuModDoubleTime())
+            AddStep(
+                "create panel with DT",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.None,
-                    Width = 300,
-                };
+                    Child = panel = new IncompatibilityDisplayingModPanel(new OsuModDoubleTime())
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.None,
+                        Width = 300,
+                    };
 
-                panel.Active.BindValueChanged(active =>
-                {
-                    SelectedMods.Value = active.NewValue
-                        ? Array.Empty<Mod>()
-                        : new[] { panel.Mod };
-                });
-            });
+                    panel.Active.BindValueChanged(active =>
+                    {
+                        SelectedMods.Value = active.NewValue
+                            ? Array.Empty<Mod>()
+                            : new[] { panel.Mod };
+                    });
+                }
+            );
 
             clickPanel();
             AddAssert("panel active", () => panel.Active.Value);
@@ -73,16 +82,23 @@ namespace osu.Game.Tests.Visual.UserInterface
             clickPanel();
             AddAssert("panel not active", () => !panel.Active.Value);
 
-            AddStep("set incompatible mod", () => SelectedMods.Value = new[] { new OsuModHalfTime() });
+            AddStep(
+                "set incompatible mod",
+                () => SelectedMods.Value = new[] { new OsuModHalfTime() }
+            );
 
             clickPanel();
             AddAssert("panel active", () => panel.Active.Value);
 
-            void clickPanel() => AddStep("click panel", () =>
-            {
-                InputManager.MoveMouseTo(panel);
-                InputManager.Click(MouseButton.Left);
-            });
+            void clickPanel() =>
+                AddStep(
+                    "click panel",
+                    () =>
+                    {
+                        InputManager.MoveMouseTo(panel);
+                        InputManager.Click(MouseButton.Left);
+                    }
+                );
         }
     }
 }

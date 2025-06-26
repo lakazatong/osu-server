@@ -29,10 +29,19 @@ namespace osu.Game.Skinning.Components
     [UsedImplicitly]
     public partial class BeatmapAttributeText : FontAdjustableSkinComponent
     {
-        [SettingSource(typeof(BeatmapAttributeTextStrings), nameof(BeatmapAttributeTextStrings.Attribute), nameof(BeatmapAttributeTextStrings.AttributeDescription))]
-        public Bindable<BeatmapAttribute> Attribute { get; } = new Bindable<BeatmapAttribute>(BeatmapAttribute.StarRating);
+        [SettingSource(
+            typeof(BeatmapAttributeTextStrings),
+            nameof(BeatmapAttributeTextStrings.Attribute),
+            nameof(BeatmapAttributeTextStrings.AttributeDescription)
+        )]
+        public Bindable<BeatmapAttribute> Attribute { get; } =
+            new Bindable<BeatmapAttribute>(BeatmapAttribute.StarRating);
 
-        [SettingSource(typeof(BeatmapAttributeTextStrings), nameof(BeatmapAttributeTextStrings.Template), nameof(BeatmapAttributeTextStrings.TemplateDescription))]
+        [SettingSource(
+            typeof(BeatmapAttributeTextStrings),
+            nameof(BeatmapAttributeTextStrings.Template),
+            nameof(BeatmapAttributeTextStrings.TemplateDescription)
+        )]
         public Bindable<string> Template { get; } = new Bindable<string>("{Label}: {Value}");
 
         [Resolved]
@@ -59,11 +68,7 @@ namespace osu.Game.Skinning.Components
 
             InternalChildren = new Drawable[]
             {
-                text = new OsuSpriteText
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                }
+                text = new OsuSpriteText { Anchor = Anchor.CentreLeft, Origin = Anchor.CentreLeft },
             };
         }
 
@@ -74,32 +79,41 @@ namespace osu.Game.Skinning.Components
             Attribute.BindValueChanged(_ => updateText());
             Template.BindValueChanged(_ => updateText());
 
-            beatmap.BindValueChanged(b =>
-            {
-                difficultyCancellationSource?.Cancel();
-                difficultyCancellationSource = new CancellationTokenSource();
-
-                difficultyBindable?.UnbindAll();
-                difficultyBindable = difficultyCache.GetBindableDifficulty(b.NewValue.BeatmapInfo, difficultyCancellationSource.Token);
-                difficultyBindable.BindValueChanged(d =>
+            beatmap.BindValueChanged(
+                b =>
                 {
-                    starDifficulty = d.NewValue;
+                    difficultyCancellationSource?.Cancel();
+                    difficultyCancellationSource = new CancellationTokenSource();
+
+                    difficultyBindable?.UnbindAll();
+                    difficultyBindable = difficultyCache.GetBindableDifficulty(
+                        b.NewValue.BeatmapInfo,
+                        difficultyCancellationSource.Token
+                    );
+                    difficultyBindable.BindValueChanged(d =>
+                    {
+                        starDifficulty = d.NewValue;
+                        updateText();
+                    });
+
                     updateText();
-                });
+                },
+                true
+            );
 
-                updateText();
-            }, true);
-
-            mods.BindValueChanged(m =>
-            {
-                modSettingTracker?.Dispose();
-                modSettingTracker = new ModSettingChangeTracker(m.NewValue)
+            mods.BindValueChanged(
+                m =>
                 {
-                    SettingChanged = _ => updateText()
-                };
+                    modSettingTracker?.Dispose();
+                    modSettingTracker = new ModSettingChangeTracker(m.NewValue)
+                    {
+                        SettingChanged = _ => updateText(),
+                    };
 
-                updateText();
-            }, true);
+                    updateText();
+                },
+                true
+            );
 
             ruleset.BindValueChanged(_ => updateText());
 
@@ -108,21 +122,24 @@ namespace osu.Game.Skinning.Components
 
         private void updateText()
         {
-            string numberedTemplate = Template.Value
-                                              .Replace("{", "{{")
-                                              .Replace("}", "}}")
-                                              .Replace(@"{{Label}}", "{0}")
-                                              .Replace(@"{{Value}}", "{1}");
+            string numberedTemplate = Template
+                .Value.Replace("{", "{{")
+                .Replace("}", "}}")
+                .Replace(@"{{Label}}", "{0}")
+                .Replace(@"{{Value}}", "{1}");
 
             List<object?> values = new List<object?>
             {
                 getLabelString(Attribute.Value),
-                getValueString(Attribute.Value)
+                getValueString(Attribute.Value),
             };
 
             foreach (var type in Enum.GetValues<BeatmapAttribute>())
             {
-                string replaced = numberedTemplate.Replace($@"{{{{{type}}}}}", $@"{{{values.Count}}}");
+                string replaced = numberedTemplate.Replace(
+                    $@"{{{{{type}}}}}",
+                    $@"{{{values.Count}}}"
+                );
 
                 if (numberedTemplate != replaced)
                 {
@@ -190,10 +207,16 @@ namespace osu.Game.Skinning.Components
             switch (attribute)
             {
                 case BeatmapAttribute.Title:
-                    return new RomanisableString(beatmap.Value.BeatmapInfo.Metadata.TitleUnicode, beatmap.Value.BeatmapInfo.Metadata.Title);
+                    return new RomanisableString(
+                        beatmap.Value.BeatmapInfo.Metadata.TitleUnicode,
+                        beatmap.Value.BeatmapInfo.Metadata.Title
+                    );
 
                 case BeatmapAttribute.Artist:
-                    return new RomanisableString(beatmap.Value.BeatmapInfo.Metadata.ArtistUnicode, beatmap.Value.BeatmapInfo.Metadata.Artist);
+                    return new RomanisableString(
+                        beatmap.Value.BeatmapInfo.Metadata.ArtistUnicode,
+                        beatmap.Value.BeatmapInfo.Metadata.Artist
+                    );
 
                 case BeatmapAttribute.DifficultyName:
                     return beatmap.Value.BeatmapInfo.DifficultyName;
@@ -205,13 +228,22 @@ namespace osu.Game.Skinning.Components
                     return beatmap.Value.BeatmapInfo.Metadata.Source;
 
                 case BeatmapAttribute.Length:
-                    return Math.Round(beatmap.Value.BeatmapInfo.Length / ModUtils.CalculateRateWithMods(mods.Value)).ToFormattedDuration();
+                    return Math.Round(
+                            beatmap.Value.BeatmapInfo.Length
+                                / ModUtils.CalculateRateWithMods(mods.Value)
+                        )
+                        .ToFormattedDuration();
 
                 case BeatmapAttribute.RankedStatus:
                     return beatmap.Value.BeatmapInfo.Status.GetLocalisableDescription();
 
                 case BeatmapAttribute.BPM:
-                    return FormatUtils.RoundBPM(beatmap.Value.BeatmapInfo.BPM, ModUtils.CalculateRateWithMods(mods.Value)).ToLocalisableString(@"0.##");
+                    return FormatUtils
+                        .RoundBPM(
+                            beatmap.Value.BeatmapInfo.BPM,
+                            ModUtils.CalculateRateWithMods(mods.Value)
+                        )
+                        .ToLocalisableString(@"0.##");
 
                 case BeatmapAttribute.CircleSize:
                     return computeDifficulty().CircleSize.ToLocalisableString(@"0.##");
@@ -229,7 +261,11 @@ namespace osu.Game.Skinning.Components
                     return (starDifficulty?.Stars ?? 0).FormatStarRating();
 
                 case BeatmapAttribute.MaxPP:
-                    return Math.Round(starDifficulty?.PerformanceAttributes?.Total ?? 0, MidpointRounding.AwayFromZero).ToLocalisableString();
+                    return Math.Round(
+                            starDifficulty?.PerformanceAttributes?.Total ?? 0,
+                            MidpointRounding.AwayFromZero
+                        )
+                        .ToLocalisableString();
 
                 default:
                     return string.Empty;
@@ -237,7 +273,9 @@ namespace osu.Game.Skinning.Components
 
             BeatmapDifficulty computeDifficulty()
             {
-                BeatmapDifficulty difficulty = new BeatmapDifficulty(beatmap.Value.BeatmapInfo.Difficulty);
+                BeatmapDifficulty difficulty = new BeatmapDifficulty(
+                    beatmap.Value.BeatmapInfo.Difficulty
+                );
 
                 foreach (var mod in mods.Value.OfType<IApplicableToDifficulty>())
                     mod.ApplyToDifficulty(difficulty);
@@ -245,7 +283,9 @@ namespace osu.Game.Skinning.Components
                 if (ruleset.Value is RulesetInfo rulesetInfo)
                 {
                     double rate = ModUtils.CalculateRateWithMods(mods.Value);
-                    difficulty = rulesetInfo.CreateInstance().GetRateAdjustedDisplayDifficulty(difficulty, rate);
+                    difficulty = rulesetInfo
+                        .CreateInstance()
+                        .GetRateAdjustedDisplayDifficulty(difficulty, rate);
                 }
 
                 return difficulty;
@@ -285,6 +325,6 @@ namespace osu.Game.Skinning.Components
         RankedStatus,
         BPM,
         Source,
-        MaxPP
+        MaxPP,
     }
 }

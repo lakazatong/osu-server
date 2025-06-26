@@ -1,13 +1,13 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -40,11 +40,8 @@ namespace osu.Game.Graphics.UserInterface
 
         protected override DropdownMenu CreateMenu() => new OsuTabDropdownMenu();
 
-        protected override DropdownHeader CreateHeader() => new OsuTabDropdownHeader
-        {
-            Anchor = Anchor.TopRight,
-            Origin = Anchor.TopRight
-        };
+        protected override DropdownHeader CreateHeader() =>
+            new OsuTabDropdownHeader { Anchor = Anchor.TopRight, Origin = Anchor.TopRight };
 
         private void propagateAccentColour()
         {
@@ -69,7 +66,9 @@ namespace osu.Game.Graphics.UserInterface
                 MaxHeight = 200;
             }
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new DrawableOsuTabDropdownMenuItem(item);
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) => new DrawableOsuTabDropdownMenuItem(item);
 
             private partial class DrawableOsuTabDropdownMenuItem : DrawableOsuDropdownMenuItem
             {
@@ -120,7 +119,7 @@ namespace osu.Game.Graphics.UserInterface
                         Size = new Vector2(14),
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
-                    }
+                    },
                 };
             }
 

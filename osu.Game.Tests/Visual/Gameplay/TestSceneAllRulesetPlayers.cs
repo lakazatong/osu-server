@@ -49,16 +49,19 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             Player p = null;
             AddStep($"load {ruleset.Name} player", () => p = loadPlayerFor(ruleset));
-            AddUntilStep("player loaded", () =>
-            {
-                if (p?.IsLoaded == true)
+            AddUntilStep(
+                "player loaded",
+                () =>
                 {
-                    p = null;
-                    return true;
-                }
+                    if (p?.IsLoaded == true)
+                    {
+                        p = null;
+                        return true;
+                    }
 
-                return false;
-            });
+                    return false;
+                }
+            );
 
             AddCheckSteps();
         }

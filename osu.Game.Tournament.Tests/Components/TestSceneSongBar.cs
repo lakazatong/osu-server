@@ -21,43 +21,56 @@ namespace osu.Game.Tournament.Tests.Components
         {
             base.SetUpSteps();
 
-            AddStep("setup picks bans", () =>
-            {
-                ladderBeatmap = CreateSampleBeatmap();
-                Ladder.CurrentMatch.Value!.PicksBans.Add(new BeatmapChoice
+            AddStep(
+                "setup picks bans",
+                () =>
                 {
-                    BeatmapID = ladderBeatmap.OnlineID,
-                    Team = TeamColour.Red,
-                    Type = ChoiceType.Pick,
-                });
-            });
+                    ladderBeatmap = CreateSampleBeatmap();
+                    Ladder.CurrentMatch.Value!.PicksBans.Add(
+                        new BeatmapChoice
+                        {
+                            BeatmapID = ladderBeatmap.OnlineID,
+                            Team = TeamColour.Red,
+                            Type = ChoiceType.Pick,
+                        }
+                    );
+                }
+            );
 
-            AddStep("create bar", () => Child = songBar = new SongBar
-            {
-                RelativeSizeAxes = Axes.X,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            AddStep(
+                "create bar",
+                () =>
+                    Child = songBar =
+                        new SongBar
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
             AddUntilStep("wait for loaded", () => songBar.IsLoaded);
         }
 
         [Test]
         public void TestSongBar()
         {
-            AddStep("set beatmap", () =>
-            {
-                var beatmap = CreateAPIBeatmap(Ruleset.Value);
+            AddStep(
+                "set beatmap",
+                () =>
+                {
+                    var beatmap = CreateAPIBeatmap(Ruleset.Value);
 
-                beatmap.CircleSize = 3.4f;
-                beatmap.ApproachRate = 6.8f;
-                beatmap.OverallDifficulty = 5.5f;
-                beatmap.StarRating = 4.56f;
-                beatmap.Length = 123456;
-                beatmap.BPM = 133;
-                beatmap.OnlineID = ladderBeatmap.OnlineID;
+                    beatmap.CircleSize = 3.4f;
+                    beatmap.ApproachRate = 6.8f;
+                    beatmap.OverallDifficulty = 5.5f;
+                    beatmap.StarRating = 4.56f;
+                    beatmap.Length = 123456;
+                    beatmap.BPM = 133;
+                    beatmap.OnlineID = ladderBeatmap.OnlineID;
 
-                songBar.Beatmap = new TournamentBeatmap(beatmap);
-            });
+                    songBar.Beatmap = new TournamentBeatmap(beatmap);
+                }
+            );
 
             AddStep("set mods to HR", () => songBar.Mods = LegacyMods.HardRock);
             AddStep("set mods to DT", () => songBar.Mods = LegacyMods.DoubleTime);

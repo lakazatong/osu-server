@@ -12,9 +12,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
     public partial class InputSettings : PlayerSettingsGroup
     {
         public InputSettings()
-            : base("Input Settings")
-        {
-        }
+            : base("Input Settings") { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -24,9 +22,15 @@ namespace osu.Game.Screens.Play.PlayerSettings
                 new PlayerCheckbox
                 {
                     // TODO: change to touchscreen detection once https://github.com/ppy/osu/pull/25348 makes it in
-                    LabelText = RuntimeInfo.IsDesktop ? MouseSettingsStrings.DisableClicksDuringGameplay : TouchSettingsStrings.DisableTapsDuringGameplay,
-                    Current = config.GetBindable<bool>(RuntimeInfo.IsDesktop ? OsuSetting.MouseDisableButtons : OsuSetting.TouchDisableGameplayTaps)
-                }
+                    LabelText = RuntimeInfo.IsDesktop
+                        ? MouseSettingsStrings.DisableClicksDuringGameplay
+                        : TouchSettingsStrings.DisableTapsDuringGameplay,
+                    Current = config.GetBindable<bool>(
+                        RuntimeInfo.IsDesktop
+                            ? OsuSetting.MouseDisableButtons
+                            : OsuSetting.TouchDisableGameplayTaps
+                    ),
+                },
             };
         }
     }

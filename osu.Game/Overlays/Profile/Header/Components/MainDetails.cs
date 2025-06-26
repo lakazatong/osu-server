@@ -21,7 +21,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
 {
     public partial class MainDetails : CompositeDrawable
     {
-        private readonly Dictionary<ScoreRank, ScoreRankInfo> scoreRankInfos = new Dictionary<ScoreRank, ScoreRankInfo>();
+        private readonly Dictionary<ScoreRank, ScoreRankInfo> scoreRankInfos =
+            new Dictionary<ScoreRank, ScoreRankInfo>();
         private ProfileValueDisplay medalInfo = null!;
         private ProfileValueDisplay ppInfo = null!;
         private ProfileValueDisplay detailGlobalRank = null!;
@@ -56,10 +57,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
                             new Dimension(),
                             new Dimension(GridSizeMode.AutoSize),
                         },
-                        RowDimensions = new[]
-                        {
-                            new Dimension(GridSizeMode.AutoSize),
-                        },
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                         Content = new[]
                         {
                             new[]
@@ -78,9 +76,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     User = { BindTarget = User },
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
                     new Container
                     {
@@ -88,11 +86,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
                         Height = 60,
                         Children = new Drawable[]
                         {
-                            rankGraph = new RankGraph
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                        }
+                            rankGraph = new RankGraph { RelativeSizeAxes = Axes.Both },
+                        },
                     },
                     new Container
                     {
@@ -113,15 +108,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                     {
                                         Title = UsersStrings.ShowStatsMedals,
                                     },
-                                    ppInfo = new ProfileValueDisplay
-                                    {
-                                        Title = "pp",
-                                    },
-                                    new TotalPlayTime
-                                    {
-                                        User = { BindTarget = User }
-                                    },
-                                }
+                                    ppInfo = new ProfileValueDisplay { Title = "pp" },
+                                    new TotalPlayTime { User = { BindTarget = User } },
+                                },
                             },
                             new FillFlowContainer
                             {
@@ -137,11 +126,11 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                     scoreRankInfos[ScoreRank.SH] = new ScoreRankInfo(ScoreRank.SH),
                                     scoreRankInfos[ScoreRank.S] = new ScoreRankInfo(ScoreRank.S),
                                     scoreRankInfos[ScoreRank.A] = new ScoreRankInfo(ScoreRank.A),
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
-                }
+                },
             };
         }
 
@@ -157,15 +146,21 @@ namespace osu.Game.Overlays.Profile.Header.Components
             var user = data?.User;
 
             medalInfo.Content = user?.Achievements?.Length.ToString() ?? "0";
-            ppInfo.Content = user?.Statistics?.PP?.ToLocalisableString("#,##0") ?? (LocalisableString)"0";
+            ppInfo.Content =
+                user?.Statistics?.PP?.ToLocalisableString("#,##0") ?? (LocalisableString)"0";
 
             foreach (var scoreRankInfo in scoreRankInfos)
-                scoreRankInfo.Value.RankCount = user?.Statistics?.GradesCount[scoreRankInfo.Key] ?? 0;
+                scoreRankInfo.Value.RankCount =
+                    user?.Statistics?.GradesCount[scoreRankInfo.Key] ?? 0;
 
-            detailGlobalRank.Content = user?.Statistics?.GlobalRank?.ToLocalisableString("\\##,##0") ?? (LocalisableString)"-";
+            detailGlobalRank.Content =
+                user?.Statistics?.GlobalRank?.ToLocalisableString("\\##,##0")
+                ?? (LocalisableString)"-";
             detailGlobalRank.ContentTooltipText = getGlobalRankTooltipText(user);
 
-            detailCountryRank.Content = user?.Statistics?.CountryRank?.ToLocalisableString("\\##,##0") ?? (LocalisableString)"-";
+            detailCountryRank.Content =
+                user?.Statistics?.CountryRank?.ToLocalisableString("\\##,##0")
+                ?? (LocalisableString)"-";
             detailCountryRank.ContentTooltipText = getCountryRankTooltipText(user);
 
             rankGraph.Statistics.Value = user?.Statistics;
@@ -184,7 +179,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 {
                     if (variant.GlobalRank != null)
                     {
-                        var variantText = LocalisableString.Interpolate($"{variant.VariantType.GetLocalisableDescription()}: {variant.GlobalRank.ToLocalisableString("\\##,##0")}");
+                        var variantText = LocalisableString.Interpolate(
+                            $"{variant.VariantType.GetLocalisableDescription()}: {variant.GlobalRank.ToLocalisableString("\\##,##0")}"
+                        );
 
                         if (result == null)
                             result = variantText;
@@ -198,7 +195,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
             {
                 var rankHighestText = UsersStrings.ShowRankHighest(
                     rankHighest.Rank.ToLocalisableString("\\##,##0"),
-                    rankHighest.UpdatedAt.ToLocalisableString(@"d MMM yyyy"));
+                    rankHighest.UpdatedAt.ToLocalisableString(@"d MMM yyyy")
+                );
 
                 if (result == null)
                     result = rankHighestText;
@@ -221,7 +219,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 {
                     if (variant.CountryRank != null)
                     {
-                        var variantText = LocalisableString.Interpolate($"{variant.VariantType.GetLocalisableDescription()}: {variant.CountryRank.ToLocalisableString("\\##,##0")}");
+                        var variantText = LocalisableString.Interpolate(
+                            $"{variant.VariantType.GetLocalisableDescription()}: {variant.CountryRank.ToLocalisableString("\\##,##0")}"
+                        );
 
                         if (result == null)
                             result = variantText;
@@ -253,18 +253,14 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        new DrawableRank(rank)
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 22,
-                        },
+                        new DrawableRank(rank) { RelativeSizeAxes = Axes.X, Height = 22 },
                         rankCount = new OsuSpriteText
                         {
                             Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
                             Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre
-                        }
-                    }
+                            Origin = Anchor.TopCentre,
+                        },
+                    },
                 };
             }
         }

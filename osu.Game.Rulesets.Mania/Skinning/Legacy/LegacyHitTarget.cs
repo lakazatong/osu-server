@@ -16,21 +16,28 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public partial class LegacyHitTarget : CompositeDrawable
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container directionContainer = null!;
 
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            string targetImage = skin.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.HitTargetImage)?.Value
-                                 ?? "mania-stage-hint";
+            string targetImage =
+                skin.GetManiaSkinConfig<string>(
+                    LegacyManiaSkinConfigurationLookups.HitTargetImage
+                )?.Value ?? "mania-stage-hint";
 
-            bool showJudgementLine = skin.GetManiaSkinConfig<bool>(LegacyManiaSkinConfigurationLookups.ShowJudgementLine)?.Value
-                                     ?? true;
+            bool showJudgementLine =
+                skin.GetManiaSkinConfig<bool>(
+                    LegacyManiaSkinConfigurationLookups.ShowJudgementLine
+                )?.Value ?? true;
 
-            Color4 lineColour = skin.GetManiaSkinConfig<Color4>(LegacyManiaSkinConfigurationLookups.JudgementLineColour)?.Value
-                                ?? Color4.White;
+            Color4 lineColour =
+                skin.GetManiaSkinConfig<Color4>(
+                    LegacyManiaSkinConfigurationLookups.JudgementLineColour
+                )?.Value ?? Color4.White;
 
             InternalChild = directionContainer = new Container
             {
@@ -44,7 +51,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                         Texture = skin.GetTexture(targetImage),
                         Scale = new Vector2(1, 0.9f * 1.6025f),
                         RelativeSizeAxes = Axes.X,
-                        Width = 1
+                        Width = 1,
                     },
                     new Box
                     {
@@ -52,9 +59,9 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                         RelativeSizeAxes = Axes.X,
                         Height = 1,
                         Colour = LegacyColourCompatibility.DisallowZeroAlpha(lineColour),
-                        Alpha = showJudgementLine ? 0.9f : 0
-                    }
-                }
+                        Alpha = showJudgementLine ? 0.9f : 0,
+                    },
+                },
             };
 
             direction.BindTo(scrollingInfo.Direction);

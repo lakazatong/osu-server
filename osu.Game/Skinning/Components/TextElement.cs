@@ -15,7 +15,11 @@ namespace osu.Game.Skinning.Components
     [UsedImplicitly]
     public partial class TextElement : FontAdjustableSkinComponent
     {
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.TextElementText), nameof(SkinnableComponentStrings.TextElementTextDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.TextElementText),
+            nameof(SkinnableComponentStrings.TextElementTextDescription)
+        )]
         public Bindable<string> Text { get; } = new Bindable<string>("Circles!");
 
         private readonly OsuSpriteText text;
@@ -29,8 +33,8 @@ namespace osu.Game.Skinning.Components
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font = OsuFont.Default.With(size: 40)
-                }
+                    Font = OsuFont.Default.With(size: 40),
+                },
             };
             text.Current.BindTo(Text);
         }

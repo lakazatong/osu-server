@@ -107,22 +107,18 @@ namespace osu.Game.Screens.SelectV2
                     IdleColour = colourProvider.Light2,
                     AlwaysPresent = true,
                     Alpha = 0f,
-                    Child = new OsuSpriteText
-                    {
-                        Text = t,
-                        Font = OsuFont.Style.Caption1,
-                    },
+                    Child = new OsuSpriteText { Text = t, Font = OsuFont.Style.Caption1 },
                 });
 
-                Add(overflowButton = new TagsOverflowButton(tags)
-                {
-                    Alpha = 0f,
-                });
+                Add(overflowButton = new TagsOverflowButton(tags) { Alpha = 0f });
 
                 drawSizeLayout.Invalidate();
             }
 
-            private partial class TagsOverflowButton : CompositeDrawable, IHasPopover, IHasLineBaseHeight
+            private partial class TagsOverflowButton
+                : CompositeDrawable,
+                    IHasPopover,
+                    IHasLineBaseHeight
             {
                 private readonly string[] tags;
 

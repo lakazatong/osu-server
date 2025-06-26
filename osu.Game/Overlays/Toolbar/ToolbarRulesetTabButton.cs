@@ -22,10 +22,7 @@ namespace osu.Game.Overlays.Toolbar
         {
             AutoSizeAxes = Axes.X;
             RelativeSizeAxes = Axes.Y;
-            Child = ruleset = new RulesetButton
-            {
-                Active = false,
-            };
+            Child = ruleset = new RulesetButton { Active = false };
 
             var rInstance = value.CreateInstance();
 
@@ -40,25 +37,26 @@ namespace osu.Game.Overlays.Toolbar
 
         private partial class RulesetButton : ToolbarButton
         {
-            protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds();
+            protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+                new HoverSounds();
 
             [Resolved]
             private OsuColour colours { get; set; } = null!;
 
             public RulesetButton()
             {
-                ButtonContent.Padding = new MarginPadding(PADDING)
-                {
-                    Bottom = 5
-                };
+                ButtonContent.Padding = new MarginPadding(PADDING) { Bottom = 5 };
             }
 
             public bool Active
             {
-                set => Scheduler.AddOnce(() =>
-                {
-                    IconContainer.Colour = value ? Color4Extensions.FromHex("#00FFAA") : colours.GrayF;
-                });
+                set =>
+                    Scheduler.AddOnce(() =>
+                    {
+                        IconContainer.Colour = value
+                            ? Color4Extensions.FromHex("#00FFAA")
+                            : colours.GrayF;
+                    });
             }
 
             protected override bool OnClick(ClickEvent e)

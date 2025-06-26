@@ -18,11 +18,14 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [Resolved]
         private LegacyImportManager legacyImportManager { get; set; } = null!;
 
-        protected override OverlayActivation InitialOverlayActivationMode => OverlayActivation.Disabled;
+        protected override OverlayActivation InitialOverlayActivationMode =>
+            OverlayActivation.Disabled;
 
-        protected override bool IsValidDirectory(DirectoryInfo? info) => legacyImportManager.IsUsableForStableImport(info, out _);
+        protected override bool IsValidDirectory(DirectoryInfo? info) =>
+            legacyImportManager.IsUsableForStableImport(info, out _);
 
-        public override LocalisableString HeaderText => "Please select your osu!stable install location";
+        public override LocalisableString HeaderText =>
+            "Please select your osu!stable install location";
 
         public StableDirectorySelectScreen(TaskCompletionSource<string> taskCompletionSource)
         {
@@ -32,7 +35,9 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         protected override void OnSelection(DirectoryInfo directory)
         {
             if (!legacyImportManager.IsUsableForStableImport(directory, out var stableRoot))
-                throw new InvalidOperationException($@"{nameof(OnSelection)} was called on an invalid directory. This should never happen.");
+                throw new InvalidOperationException(
+                    $@"{nameof(OnSelection)} was called on an invalid directory. This should never happen."
+                );
 
             taskCompletionSource.TrySetResult(stableRoot.FullName);
             this.Exit();

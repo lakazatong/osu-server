@@ -17,7 +17,8 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 {
     public abstract partial class CatchSelectionBlueprintTestScene : SelectionBlueprintTestScene
     {
-        protected ScrollingHitObjectContainer HitObjectContainer => contentContainer.Playfield.HitObjectContainer;
+        protected ScrollingHitObjectContainer HitObjectContainer =>
+            contentContainer.Playfield.HitObjectContainer;
 
         protected override Container<Drawable> Content => contentContainer;
 
@@ -31,34 +32,36 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
         {
             var catchBeatmap = new CatchBeatmap
             {
-                BeatmapInfo =
-                {
-                    Ruleset = new CatchRuleset().RulesetInfo,
-                }
+                BeatmapInfo = { Ruleset = new CatchRuleset().RulesetInfo },
             };
             EditorBeatmap = new EditorBeatmap(catchBeatmap) { Difficulty = { CircleSize = 0 } };
-            EditorBeatmap.ControlPointInfo.Add(0, new TimingControlPoint
-            {
-                BeatLength = 100
-            });
+            EditorBeatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = 100 });
 
-            base.Content.Add(new EditorBeatmapDependencyContainer(EditorBeatmap, new BindableBeatDivisor())
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            base.Content.Add(
+                new EditorBeatmapDependencyContainer(EditorBeatmap, new BindableBeatDivisor())
                 {
-                    EditorBeatmap,
-                    contentContainer = new CatchEditorTestSceneContainer()
-                },
-            });
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
+                    {
+                        EditorBeatmap,
+                        contentContainer = new CatchEditorTestSceneContainer(),
+                    },
+                }
+            );
         }
 
-        protected void AddMouseMoveStep(double time, float x) => AddStep($"move to time={time}, x={x}", () =>
-        {
-            float y = HitObjectContainer.PositionAtTime(time);
-            Vector2 pos = HitObjectContainer.ToScreenSpace(new Vector2(x, y + HitObjectContainer.DrawHeight));
-            InputManager.MoveMouseTo(pos);
-        });
+        protected void AddMouseMoveStep(double time, float x) =>
+            AddStep(
+                $"move to time={time}, x={x}",
+                () =>
+                {
+                    float y = HitObjectContainer.PositionAtTime(time);
+                    Vector2 pos = HitObjectContainer.ToScreenSpace(
+                        new Vector2(x, y + HitObjectContainer.DrawHeight)
+                    );
+                    InputManager.MoveMouseTo(pos);
+                }
+            );
 
         private partial class EditorBeatmapDependencyContainer : Container
         {
@@ -68,9 +71,13 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             [Cached]
             private readonly BindableBeatDivisor beatDivisor;
 
-            protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+            protected override Container<Drawable> Content { get; } =
+                new Container { RelativeSizeAxes = Axes.Both };
 
-            public EditorBeatmapDependencyContainer(IBeatmap beatmap, BindableBeatDivisor beatDivisor)
+            public EditorBeatmapDependencyContainer(
+                IBeatmap beatmap,
+                BindableBeatDivisor beatDivisor
+            )
             {
                 this.beatDivisor = beatDivisor;
 

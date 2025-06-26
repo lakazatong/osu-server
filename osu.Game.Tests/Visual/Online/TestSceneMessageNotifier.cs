@@ -33,27 +33,36 @@ namespace osu.Game.Tests.Visual.Online
         private int messageIdCounter;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            if (API is DummyAPIAccess daa)
-            {
-                daa.HandleRequest = dummyAPIHandleRequest;
-            }
-
-            friend = new APIUser { Id = 0, Username = "Friend" };
-            publicChannel = new Channel { Id = 1, Name = "osu" };
-            privateMessageChannel = new Channel(friend) { Id = 2, Name = friend.Username, Type = ChannelType.PM };
-
+        public void Setup() =>
             Schedule(() =>
             {
-                Child = testContainer = new TestContainer(API, new[] { publicChannel, privateMessageChannel })
+                if (API is DummyAPIAccess daa)
                 {
-                    RelativeSizeAxes = Axes.Both,
+                    daa.HandleRequest = dummyAPIHandleRequest;
+                }
+
+                friend = new APIUser { Id = 0, Username = "Friend" };
+                publicChannel = new Channel { Id = 1, Name = "osu" };
+                privateMessageChannel = new Channel(friend)
+                {
+                    Id = 2,
+                    Name = friend.Username,
+                    Type = ChannelType.PM,
                 };
 
-                testContainer.ChatOverlay.Show();
+                Schedule(() =>
+                {
+                    Child = testContainer = new TestContainer(
+                        API,
+                        new[] { publicChannel, privateMessageChannel }
+                    )
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    };
+
+                    testContainer.ChatOverlay.Show();
+                });
             });
-        });
 
         private bool dummyAPIHandleRequest(APIRequest request)
         {
@@ -67,7 +76,7 @@ namespace osu.Game.Tests.Visual.Online
                     var apiChatChannel = new APIChatChannel
                     {
                         RecentMessages = new List<Message>(0),
-                        ChannelID = (int)createChannelRequest.Channel.Id
+                        ChannelID = (int)createChannelRequest.Channel.Id,
                     };
                     createChannelRequest.TriggerSuccess(apiChatChannel);
                     return true;
@@ -77,11 +86,13 @@ namespace osu.Game.Tests.Visual.Online
                     return true;
 
                 case GetUpdatesRequest updatesRequest:
-                    updatesRequest.TriggerSuccess(new GetUpdatesResponse
-                    {
-                        Messages = new List<Message>(0),
-                        Presence = new List<Channel>(0)
-                    });
+                    updatesRequest.TriggerSuccess(
+                        new GetUpdatesResponse
+                        {
+                            Messages = new List<Message>(0),
+                            Presence = new List<Channel>(0),
+                        }
+                    );
                     return true;
 
                 case JoinChannelRequest joinChannelRequest:
@@ -96,89 +107,193 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestPublicChannelMention()
         {
-            AddStep("switch to PMs", () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel);
+            AddStep(
+                "switch to PMs",
+                () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel
+            );
 
-            AddStep("receive public message", () => receiveMessage(friend, publicChannel, "Hello everyone"));
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+            AddStep(
+                "receive public message",
+                () => receiveMessage(friend, publicChannel, "Hello everyone")
+            );
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
 
-            AddStep("receive message containing mention", () => receiveMessage(friend, publicChannel, $"Hello {API.LocalUser.Value.Username.ToLowerInvariant()}!"));
-            AddAssert("1 notification fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 1);
+            AddStep(
+                "receive message containing mention",
+                () =>
+                    receiveMessage(
+                        friend,
+                        publicChannel,
+                        $"Hello {API.LocalUser.Value.Username.ToLowerInvariant()}!"
+                    )
+            );
+            AddAssert(
+                "1 notification fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 1
+            );
 
             AddStep("open notification overlay", () => testContainer.NotificationOverlay.Show());
             AddStep("click notification", clickNotification<MessageNotifier.MentionNotification>);
 
-            AddAssert("chat overlay is open", () => testContainer.ChatOverlay.State.Value == Visibility.Visible);
-            AddAssert("public channel is selected", () => testContainer.ChannelManager.CurrentChannel.Value == publicChannel);
+            AddAssert(
+                "chat overlay is open",
+                () => testContainer.ChatOverlay.State.Value == Visibility.Visible
+            );
+            AddAssert(
+                "public channel is selected",
+                () => testContainer.ChannelManager.CurrentChannel.Value == publicChannel
+            );
         }
 
         [Test]
         public void TestPrivateMessageNotification()
         {
-            AddStep("switch to public channel", () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel);
+            AddStep(
+                "switch to public channel",
+                () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel
+            );
 
-            AddStep("receive PM", () => receiveMessage(friend, privateMessageChannel, $"Hello {API.LocalUser.Value.Username}"));
-            AddAssert("1 notification fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 1);
+            AddStep(
+                "receive PM",
+                () =>
+                    receiveMessage(
+                        friend,
+                        privateMessageChannel,
+                        $"Hello {API.LocalUser.Value.Username}"
+                    )
+            );
+            AddAssert(
+                "1 notification fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 1
+            );
 
             AddStep("open notification overlay", () => testContainer.NotificationOverlay.Show());
-            AddStep("click notification", clickNotification<MessageNotifier.PrivateMessageNotification>);
+            AddStep(
+                "click notification",
+                clickNotification<MessageNotifier.PrivateMessageNotification>
+            );
 
-            AddAssert("chat overlay is open", () => testContainer.ChatOverlay.State.Value == Visibility.Visible);
-            AddAssert("PM channel is selected", () => testContainer.ChannelManager.CurrentChannel.Value == privateMessageChannel);
+            AddAssert(
+                "chat overlay is open",
+                () => testContainer.ChatOverlay.State.Value == Visibility.Visible
+            );
+            AddAssert(
+                "PM channel is selected",
+                () => testContainer.ChannelManager.CurrentChannel.Value == privateMessageChannel
+            );
         }
 
         [Test]
         public void TestNoNotificationWhenPMChannelOpen()
         {
-            AddStep("switch to PMs", () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel);
+            AddStep(
+                "switch to PMs",
+                () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel
+            );
 
-            AddStep("receive PM", () => receiveMessage(friend, privateMessageChannel, "you're reading this, right?"));
+            AddStep(
+                "receive PM",
+                () => receiveMessage(friend, privateMessageChannel, "you're reading this, right?")
+            );
 
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
         }
 
         [Test]
         public void TestNoNotificationWhenMentionedInOpenPublicChannel()
         {
-            AddStep("switch to public channel", () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel);
+            AddStep(
+                "switch to public channel",
+                () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel
+            );
 
-            AddStep("receive mention", () => receiveMessage(friend, publicChannel, $"{API.LocalUser.Value.Username.ToUpperInvariant()} has been reading this"));
+            AddStep(
+                "receive mention",
+                () =>
+                    receiveMessage(
+                        friend,
+                        publicChannel,
+                        $"{API.LocalUser.Value.Username.ToUpperInvariant()} has been reading this"
+                    )
+            );
 
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
         }
 
         [Test]
         public void TestNoNotificationOnSelfMention()
         {
-            AddStep("switch to PM channel", () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel);
+            AddStep(
+                "switch to PM channel",
+                () => testContainer.ChannelManager.CurrentChannel.Value = privateMessageChannel
+            );
 
-            AddStep("receive self-mention", () => receiveMessage(API.LocalUser.Value, publicChannel, $"my name is {API.LocalUser.Value.Username}"));
+            AddStep(
+                "receive self-mention",
+                () =>
+                    receiveMessage(
+                        API.LocalUser.Value,
+                        publicChannel,
+                        $"my name is {API.LocalUser.Value.Username}"
+                    )
+            );
 
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
         }
 
         [Test]
         public void TestNoNotificationOnPMFromSelf()
         {
-            AddStep("switch to public channel", () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel);
+            AddStep(
+                "switch to public channel",
+                () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel
+            );
 
-            AddStep("receive PM from self", () => receiveMessage(API.LocalUser.Value, privateMessageChannel, "hey hey"));
+            AddStep(
+                "receive PM from self",
+                () => receiveMessage(API.LocalUser.Value, privateMessageChannel, "hey hey")
+            );
 
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
         }
 
         [Test]
         public void TestNotificationsNotFiredTwice()
         {
-            AddStep("switch to public channel", () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel);
+            AddStep(
+                "switch to public channel",
+                () => testContainer.ChannelManager.CurrentChannel.Value = publicChannel
+            );
 
-            AddStep("receive same PM twice", () =>
-            {
-                var message = createMessage(friend, privateMessageChannel, "hey hey");
-                privateMessageChannel.AddNewMessages(message, message);
-            });
+            AddStep(
+                "receive same PM twice",
+                () =>
+                {
+                    var message = createMessage(friend, privateMessageChannel, "hey hey");
+                    privateMessageChannel.AddNewMessages(message, message);
+                }
+            );
 
             AddStep("open notification overlay", () => testContainer.NotificationOverlay.Show());
-            AddAssert("1 notification fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 1);
+            AddAssert(
+                "1 notification fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 1
+            );
         }
 
         /// <summary>
@@ -190,37 +305,53 @@ namespace osu.Game.Tests.Visual.Online
             int i = 1;
             Channel unresolved = null;
 
-            AddRepeatStep("join unresolved channels", () => testContainer.ChannelManager.JoinChannel(unresolved = new Channel(new APIUser
-            {
-                Id = 100 + i,
-                Username = $"Foreign #{i++}",
-            })), 5);
+            AddRepeatStep(
+                "join unresolved channels",
+                () =>
+                    testContainer.ChannelManager.JoinChannel(
+                        unresolved = new Channel(
+                            new APIUser { Id = 100 + i, Username = $"Foreign #{i++}" }
+                        )
+                    ),
+                5
+            );
 
-            AddStep("send message in unresolved channel", () =>
-            {
-                Debug.Assert(unresolved.Id == 0);
-
-                unresolved.AddLocalEcho(new LocalEchoMessage
+            AddStep(
+                "send message in unresolved channel",
+                () =>
                 {
-                    Sender = API.LocalUser.Value,
-                    ChannelId = unresolved.Id,
-                    Content = "Some message",
-                });
-            });
+                    Debug.Assert(unresolved.Id == 0);
 
-            AddAssert("no notifications fired", () => testContainer.NotificationOverlay.UnreadCount.Value == 0);
+                    unresolved.AddLocalEcho(
+                        new LocalEchoMessage
+                        {
+                            Sender = API.LocalUser.Value,
+                            ChannelId = unresolved.Id,
+                            Content = "Some message",
+                        }
+                    );
+                }
+            );
+
+            AddAssert(
+                "no notifications fired",
+                () => testContainer.NotificationOverlay.UnreadCount.Value == 0
+            );
         }
 
-        private void receiveMessage(APIUser sender, Channel channel, string content) => channel.AddNewMessages(createMessage(sender, channel, content));
+        private void receiveMessage(APIUser sender, Channel channel, string content) =>
+            channel.AddNewMessages(createMessage(sender, channel, content));
 
-        private Message createMessage(APIUser sender, Channel channel, string content) => new Message(messageIdCounter++)
-        {
-            Content = content,
-            Sender = sender,
-            ChannelId = channel.Id
-        };
+        private Message createMessage(APIUser sender, Channel channel, string content) =>
+            new Message(messageIdCounter++)
+            {
+                Content = content,
+                Sender = sender,
+                ChannelId = channel.Id,
+            };
 
-        private void clickNotification<T>() where T : Notification
+        private void clickNotification<T>()
+            where T : Notification
         {
             var notification = testContainer.NotificationOverlay.ChildrenOfType<T>().Single();
 
@@ -234,11 +365,8 @@ namespace osu.Game.Tests.Visual.Online
             public ChannelManager ChannelManager { get; }
 
             [Cached(typeof(INotificationOverlay))]
-            public NotificationOverlay NotificationOverlay { get; } = new NotificationOverlay
-            {
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-            };
+            public NotificationOverlay NotificationOverlay { get; } =
+                new NotificationOverlay { Anchor = Anchor.TopRight, Origin = Anchor.TopRight };
 
             [Cached]
             public ChatOverlay ChatOverlay { get; } = new ChatOverlay();

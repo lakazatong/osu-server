@@ -26,11 +26,13 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         [BackgroundDependencyLoader]
         private void load()
         {
-            var path = PathApproximator.CircularArcToPiecewiseLinear([
-                new Vector2(0, OsuHitObject.OBJECT_RADIUS),
-                new Vector2(OsuHitObject.OBJECT_RADIUS, 0),
-                new Vector2(0, -OsuHitObject.OBJECT_RADIUS)
-            ]);
+            var path = PathApproximator.CircularArcToPiecewiseLinear(
+                [
+                    new Vector2(0, OsuHitObject.OBJECT_RADIUS),
+                    new Vector2(OsuHitObject.OBJECT_RADIUS, 0),
+                    new Vector2(0, -OsuHitObject.OBJECT_RADIUS),
+                ]
+            );
 
             Anchor = Anchor.CentreLeft;
             Origin = Anchor.CentreLeft;

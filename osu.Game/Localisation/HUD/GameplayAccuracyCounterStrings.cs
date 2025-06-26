@@ -7,32 +7,41 @@ namespace osu.Game.Localisation.HUD
 {
     public static class GameplayAccuracyCounterStrings
     {
-        private const string prefix = @"osu.Game.Resources.Localisation.HUD.GameplayAccuracyCounter";
+        private const string prefix =
+            @"osu.Game.Resources.Localisation.HUD.GameplayAccuracyCounter";
 
         /// <summary>
         /// "Accuracy display mode"
         /// </summary>
-        public static LocalisableString AccuracyDisplay => new TranslatableString(getKey(@"accuracy_display"), "Accuracy display mode");
+        public static LocalisableString AccuracyDisplay =>
+            new TranslatableString(getKey(@"accuracy_display"), "Accuracy display mode");
 
         /// <summary>
         /// "Which accuracy mode should be displayed."
         /// </summary>
-        public static LocalisableString AccuracyDisplayDescription => new TranslatableString(getKey(@"accuracy_display_description"), "Which accuracy mode should be displayed.");
+        public static LocalisableString AccuracyDisplayDescription =>
+            new TranslatableString(
+                getKey(@"accuracy_display_description"),
+                "Which accuracy mode should be displayed."
+            );
 
         /// <summary>
         /// "Standard"
         /// </summary>
-        public static LocalisableString AccuracyDisplayModeStandard => new TranslatableString(getKey(@"accuracy_display_mode_standard"), "Standard");
+        public static LocalisableString AccuracyDisplayModeStandard =>
+            new TranslatableString(getKey(@"accuracy_display_mode_standard"), "Standard");
 
         /// <summary>
         /// "Maximum achievable"
         /// </summary>
-        public static LocalisableString AccuracyDisplayModeMax => new TranslatableString(getKey(@"accuracy_display_mode_max"), "Maximum achievable");
+        public static LocalisableString AccuracyDisplayModeMax =>
+            new TranslatableString(getKey(@"accuracy_display_mode_max"), "Maximum achievable");
 
         /// <summary>
         /// "Minimum achievable"
         /// </summary>
-        public static LocalisableString AccuracyDisplayModeMin => new TranslatableString(getKey(@"accuracy_display_mode_min"), "Minimum achievable");
+        public static LocalisableString AccuracyDisplayModeMin =>
+            new TranslatableString(getKey(@"accuracy_display_mode_min"), "Minimum achievable");
 
         private static string getKey(string key) => $"{prefix}:{key}";
     }

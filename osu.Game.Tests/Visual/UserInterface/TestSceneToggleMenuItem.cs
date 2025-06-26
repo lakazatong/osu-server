@@ -10,16 +10,18 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         public TestSceneToggleMenuItem()
         {
-            Add(new OsuMenu(Direction.Vertical, true)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Items = new[]
+            Add(
+                new OsuMenu(Direction.Vertical, true)
                 {
-                    new ToggleMenuItem("First"),
-                    new ToggleMenuItem("Second") { State = { Value = true } }
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Items = new[]
+                    {
+                        new ToggleMenuItem("First"),
+                        new ToggleMenuItem("Second") { State = { Value = true } },
+                    },
                 }
-            });
+            );
         }
     }
 }

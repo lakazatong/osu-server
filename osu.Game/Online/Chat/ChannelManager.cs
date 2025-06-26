@@ -28,12 +28,7 @@ namespace osu.Game.Online.Chat
         /// <summary>
         /// The channels the player joins on startup
         /// </summary>
-        private readonly string[] defaultChannels =
-        {
-            @"#lazer",
-            @"#osu",
-            @"#lobby"
-        };
+        private readonly string[] defaultChannels = { @"#lazer", @"#osu", @"#lobby" };
 
         private readonly BindableList<Channel> availableChannels = new BindableList<Channel>();
         private readonly BindableList<Channel> joinedChannels = new BindableList<Channel>();
@@ -106,7 +101,9 @@ namespace osu.Game.Online.Chat
         {
             ArgumentNullException.ThrowIfNull(name);
 
-            CurrentChannel.Value = AvailableChannels.FirstOrDefault(c => c.Name == name) ?? throw new ChannelNotFoundException(name);
+            CurrentChannel.Value =
+                AvailableChannels.FirstOrDefault(c => c.Name == name)
+                ?? throw new ChannelNotFoundException(name);
         }
 
         /// <summary>
@@ -120,8 +117,12 @@ namespace osu.Game.Online.Chat
             if (user.Id == api.LocalUser.Value.Id)
                 return;
 
-            CurrentChannel.Value = JoinedChannels.FirstOrDefault(c => c.Type == ChannelType.PM && c.Users.Count == 1 && c.Users.Any(u => u.Id == user.Id))
-                                   ?? JoinChannel(new Channel(user));
+            CurrentChannel.Value =
+                JoinedChannels.FirstOrDefault(c =>
+                    c.Type == ChannelType.PM
+                    && c.Users.Count == 1
+                    && c.Users.Any(u => u.Id == user.Id)
+                ) ?? JoinChannel(new Channel(user));
         }
 
         private void currentChannelChanged(ValueChangedEvent<Channel> channel)
@@ -162,7 +163,9 @@ namespace osu.Game.Online.Chat
             {
                 if (!api.IsLoggedIn)
                 {
-                    target.AddNewMessages(new ErrorMessage("Please sign in to participate in chat!"));
+                    target.AddNewMessages(
+                        new ErrorMessage("Please sign in to participate in chat!")
+                    );
                     return;
                 }
 
@@ -173,7 +176,7 @@ namespace osu.Game.Online.Chat
                     ChannelId = target.Id,
                     IsAction = isAction,
                     Content = text,
-                    Uuid = Guid.NewGuid().ToString()
+                    Uuid = Guid.NewGuid().ToString(),
                 };
 
                 target.AddLocalEcho(message);
@@ -181,7 +184,10 @@ namespace osu.Game.Online.Chat
                 // if this is a PM and the first message, we need to do a special request to create the PM channel
                 if (target.Type == ChannelType.PM && target.Id == 0)
                 {
-                    var createNewPrivateMessageRequest = new CreateNewPrivateMessageRequest(target.Users.First(), message);
+                    var createNewPrivateMessageRequest = new CreateNewPrivateMessageRequest(
+                        target.Users.First(),
+                        message
+                    );
 
                     createNewPrivateMessageRequest.Success += _ => dequeueAndRun();
                     createNewPrivateMessageRequest.Failure += exception =>
@@ -260,7 +266,9 @@ namespace osu.Game.Online.Chat
                         break;
                     }
 
-                    var channel = availableChannels.FirstOrDefault(c => c.Name == content || c.Name == $"#{content}");
+                    var channel = availableChannels.FirstOrDefault(c =>
+                        c.Name == content || c.Name == $"#{content}"
+                    );
 
                     if (channel == null)
                     {
@@ -282,8 +290,11 @@ namespace osu.Game.Online.Chat
 
                     // Check if the user has joined the requested channel already.
                     // This uses the channel name for comparison as the PM user's username is unavailable after a restart.
-                    var privateChannel = JoinedChannels.FirstOrDefault(
-                        c => c.Type == ChannelType.PM && c.Users.Count == 1 && c.Name.Equals(content, StringComparison.OrdinalIgnoreCase));
+                    var privateChannel = JoinedChannels.FirstOrDefault(c =>
+                        c.Type == ChannelType.PM
+                        && c.Users.Count == 1
+                        && c.Name.Equals(content, StringComparison.OrdinalIgnoreCase)
+                    );
 
                     if (privateChannel != null)
                     {
@@ -293,18 +304,32 @@ namespace osu.Game.Online.Chat
 
                     var request = new GetUserRequest(content);
                     request.Success += OpenPrivateChannel;
-                    request.Failure += e => target.AddNewMessages(
-                        new ErrorMessage(e.InnerException?.Message == @"NotFound" ? $"User '{content}' was not found." : $"Could not fetch user '{content}'."));
+                    request.Failure += e =>
+                        target.AddNewMessages(
+                            new ErrorMessage(
+                                e.InnerException?.Message == @"NotFound"
+                                    ? $"User '{content}' was not found."
+                                    : $"Could not fetch user '{content}'."
+                            )
+                        );
 
                     api.Queue(request);
                     break;
 
                 case "help":
-                    target.AddNewMessages(new InfoMessage("Supported commands: /help, /me [action], /join [channel], /chat [user], /np"));
+                    target.AddNewMessages(
+                        new InfoMessage(
+                            "Supported commands: /help, /me [action], /join [channel], /chat [user], /np"
+                        )
+                    );
                     break;
 
                 default:
-                    target.AddNewMessages(new ErrorMessage($@"""/{command}"" is not supported! For a list of supported commands see /help"));
+                    target.AddNewMessages(
+                        new ErrorMessage(
+                            $@"""/{command}"" is not supported! For a list of supported commands see /help"
+                        )
+                    );
                     break;
             }
         }
@@ -337,7 +362,12 @@ namespace osu.Game.Online.Chat
                     var ch = getChannel(channel, addToAvailable: true);
 
                     // join any channels classified as "defaults"
-                    if (joinDefaults && defaultChannels.Any(c => c.Equals(channel.Name, StringComparison.OrdinalIgnoreCase)))
+                    if (
+                        joinDefaults
+                        && defaultChannels.Any(c =>
+                            c.Equals(channel.Name, StringComparison.OrdinalIgnoreCase)
+                        )
+                    )
                         joinChannel(ch);
                 }
             };
@@ -360,7 +390,8 @@ namespace osu.Game.Online.Chat
         /// <param name="channel">The channel </param>
         private void fetchInitialMessages(Channel channel)
         {
-            if (channel.Id <= 0 || channel.MessagesLoaded) return;
+            if (channel.Id <= 0 || channel.MessagesLoaded)
+                return;
 
             var fetchInitialMsgReq = new GetMessagesRequest(channel);
             fetchInitialMsgReq.Success += messages =>
@@ -385,7 +416,7 @@ namespace osu.Game.Online.Chat
             var req = new ChatAckRequest
             {
                 SinceMessageId = lastSilenceMessageId,
-                SinceSilenceId = lastSilenceId
+                SinceSilenceId = lastSilenceId,
             };
 
             req.Failure += _ => scheduleNextRequest();
@@ -418,7 +449,11 @@ namespace osu.Game.Online.Chat
         /// <param name="addToAvailable">Whether the channel should be added to <see cref="AvailableChannels"/> if not already.</param>
         /// <param name="addToJoined">Whether the channel should be added to <see cref="JoinedChannels"/> if not already.</param>
         /// <returns>The found channel.</returns>
-        private Channel getChannel(Channel lookup, bool addToAvailable = false, bool addToJoined = false)
+        private Channel getChannel(
+            Channel lookup,
+            bool addToAvailable = false,
+            bool addToJoined = false
+        )
         {
             Channel found = null;
 
@@ -455,8 +490,10 @@ namespace osu.Game.Online.Chat
                 found.LastMessageId = Math.Max(found.LastMessageId ?? 0, lookup.LastMessageId ?? 0);
             }
 
-            if (joined == null && addToJoined) joinedChannels.Add(found);
-            if (available == null && addToAvailable) availableChannels.Add(found);
+            if (joined == null && addToJoined)
+                joinedChannels.Add(found);
+            if (available == null && addToAvailable)
+                availableChannels.Add(found);
 
             return found;
         }
@@ -470,7 +507,8 @@ namespace osu.Game.Online.Chat
 
         private Channel joinChannel(Channel channel, bool fetchInitialMessages = false)
         {
-            if (channel == null) return null;
+            if (channel == null)
+                return null;
 
             channel = getChannel(channel, addToJoined: true);
 
@@ -552,7 +590,8 @@ namespace osu.Game.Online.Chat
 
         private void leaveChannel(Channel channel, bool sendLeaveRequest)
         {
-            if (channel == null) return;
+            if (channel == null)
+                return;
 
             if (channel == CurrentChannel.Value)
                 CurrentChannel.Value = null;
@@ -567,9 +606,11 @@ namespace osu.Game.Online.Chat
             }
 
             // For PM channels, we store the user ID; else, we store the channel ID
-            closedChannels.Add(channel.Type == ChannelType.PM
-                ? new ClosedChannel(ChannelType.PM, channel.Users.Single().Id)
-                : new ClosedChannel(channel.Type, channel.Id));
+            closedChannels.Add(
+                channel.Type == ChannelType.PM
+                    ? new ClosedChannel(ChannelType.PM, channel.Users.Single().Id)
+                    : new ClosedChannel(channel.Type, channel.Id)
+            );
 
             if (channel.Joined.Value)
             {
@@ -607,13 +648,17 @@ namespace osu.Game.Online.Chat
                 else if (lastClosedChannel.Type == ChannelType.PM)
                 {
                     // Try to get user in order to open PM chat
-                    users.GetUserAsync((int)lastClosedChannel.Id).ContinueWith(task =>
-                    {
-                        var user = task.GetResultSafely();
+                    users
+                        .GetUserAsync((int)lastClosedChannel.Id)
+                        .ContinueWith(task =>
+                        {
+                            var user = task.GetResultSafely();
 
-                        if (user != null)
-                            Schedule(() => CurrentChannel.Value = JoinChannel(new Channel(user)));
-                    });
+                            if (user != null)
+                                Schedule(() =>
+                                    CurrentChannel.Value = JoinChannel(new Channel(user))
+                                );
+                        });
                 }
 
                 return;
@@ -637,7 +682,11 @@ namespace osu.Game.Online.Chat
             var req = new MarkChannelAsReadRequest(channel, message);
 
             req.Success += () => channel.LastReadId = message.Id;
-            req.Failure += e => Logger.Log($"Failed to mark channel {channel} up to '{message}' as read ({e.Message})", LoggingTarget.Network);
+            req.Failure += e =>
+                Logger.Log(
+                    $"Failed to mark channel {channel} up to '{message}' as read ({e.Message})",
+                    LoggingTarget.Network
+                );
 
             api.Queue(req);
         }
@@ -655,9 +704,7 @@ namespace osu.Game.Online.Chat
     public class ChannelNotFoundException : Exception
     {
         public ChannelNotFoundException(string channelName)
-            : base($"A channel with the name {channelName} could not be found.")
-        {
-        }
+            : base($"A channel with the name {channelName} could not be found.") { }
     }
 
     /// <summary>
@@ -676,11 +723,10 @@ namespace osu.Game.Online.Chat
 
         public bool Matches(Channel channel)
         {
-            if (channel.Type != Type) return false;
+            if (channel.Type != Type)
+                return false;
 
-            return Type == ChannelType.PM
-                ? channel.Users.Single().Id == Id
-                : channel.Id == Id;
+            return Type == ChannelType.PM ? channel.Users.Single().Id == Id : channel.Id == Id;
         }
     }
 }

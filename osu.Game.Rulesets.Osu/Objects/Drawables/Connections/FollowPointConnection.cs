@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Connections
     /// <summary>
     /// Visualises the <see cref="FollowPoint"/>s between two <see cref="DrawableOsuHitObject"/>s.
     /// </summary>
-    public partial class FollowPointConnection : PoolableDrawableWithLifetime<FollowPointLifetimeEntry>
+    public partial class FollowPointConnection
+        : PoolableDrawableWithLifetime<FollowPointLifetimeEntry>
     {
         // Todo: These shouldn't be constants
         public const int SPACING = 32;
@@ -42,63 +43,73 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Connections
             ClearInternal(false);
         }
 
-        private void scheduleRefresh() => Scheduler.AddOnce(() =>
-        {
-            Debug.Assert(Pool != null);
-
-            ClearInternal(false);
-
-            var entry = Entry;
-
-            if (entry?.End == null) return;
-
-            OsuHitObject start = entry.Start;
-            OsuHitObject end = entry.End;
-
-            double startTime = start.GetEndTime();
-
-            Vector2 startPosition = start.StackedEndPosition;
-            Vector2 endPosition = end.StackedPosition;
-
-            Vector2 distanceVector = endPosition - startPosition;
-            int distance = (int)distanceVector.Length;
-            float rotation = (float)(Math.Atan2(distanceVector.Y, distanceVector.X) * (180 / Math.PI));
-
-            double finalTransformEndTime = startTime;
-
-            for (int d = (int)(SPACING * 1.5); d < distance - SPACING; d += SPACING)
+        private void scheduleRefresh() =>
+            Scheduler.AddOnce(() =>
             {
-                float fraction = (float)d / distance;
-                Vector2 pointStartPosition = startPosition + (fraction - 0.1f) * distanceVector;
-                Vector2 pointEndPosition = startPosition + fraction * distanceVector;
+                Debug.Assert(Pool != null);
 
-                GetFadeTimes(start, end, (float)d / distance, out double fadeInTime, out double fadeOutTime);
+                ClearInternal(false);
 
-                FollowPoint fp;
+                var entry = Entry;
 
-                AddInternal(fp = Pool.Get());
+                if (entry?.End == null)
+                    return;
 
-                fp.ClearTransforms();
-                fp.Position = pointStartPosition;
-                fp.Rotation = rotation;
-                fp.Alpha = 0;
-                fp.Scale = new Vector2(1.5f * end.Scale);
+                OsuHitObject start = entry.Start;
+                OsuHitObject end = entry.End;
 
-                fp.AnimationStartTime.Value = fadeInTime;
+                double startTime = start.GetEndTime();
 
-                using (fp.BeginAbsoluteSequence(fadeInTime))
+                Vector2 startPosition = start.StackedEndPosition;
+                Vector2 endPosition = end.StackedPosition;
+
+                Vector2 distanceVector = endPosition - startPosition;
+                int distance = (int)distanceVector.Length;
+                float rotation = (float)(
+                    Math.Atan2(distanceVector.Y, distanceVector.X) * (180 / Math.PI)
+                );
+
+                double finalTransformEndTime = startTime;
+
+                for (int d = (int)(SPACING * 1.5); d < distance - SPACING; d += SPACING)
                 {
-                    fp.FadeIn(end.TimeFadeIn);
-                    fp.ScaleTo(end.Scale, end.TimeFadeIn, Easing.Out);
-                    fp.MoveTo(pointEndPosition, end.TimeFadeIn, Easing.Out);
-                    fp.Delay(fadeOutTime - fadeInTime).FadeOut(end.TimeFadeIn).Expire();
+                    float fraction = (float)d / distance;
+                    Vector2 pointStartPosition = startPosition + (fraction - 0.1f) * distanceVector;
+                    Vector2 pointEndPosition = startPosition + fraction * distanceVector;
 
-                    finalTransformEndTime = fp.LifetimeEnd;
+                    GetFadeTimes(
+                        start,
+                        end,
+                        (float)d / distance,
+                        out double fadeInTime,
+                        out double fadeOutTime
+                    );
+
+                    FollowPoint fp;
+
+                    AddInternal(fp = Pool.Get());
+
+                    fp.ClearTransforms();
+                    fp.Position = pointStartPosition;
+                    fp.Rotation = rotation;
+                    fp.Alpha = 0;
+                    fp.Scale = new Vector2(1.5f * end.Scale);
+
+                    fp.AnimationStartTime.Value = fadeInTime;
+
+                    using (fp.BeginAbsoluteSequence(fadeInTime))
+                    {
+                        fp.FadeIn(end.TimeFadeIn);
+                        fp.ScaleTo(end.Scale, end.TimeFadeIn, Easing.Out);
+                        fp.MoveTo(pointEndPosition, end.TimeFadeIn, Easing.Out);
+                        fp.Delay(fadeOutTime - fadeInTime).FadeOut(end.TimeFadeIn).Expire();
+
+                        finalTransformEndTime = fp.LifetimeEnd;
+                    }
                 }
-            }
 
-            entry.LifetimeEnd = finalTransformEndTime;
-        });
+                entry.LifetimeEnd = finalTransformEndTime;
+            });
 
         /// <summary>
         /// Computes the fade time of follow point positioned between two hitobjects.
@@ -108,7 +119,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Connections
         /// <param name="fraction">The fractional distance along <paramref name="start"/> and <paramref name="end"/> at which the follow point is to be located.</param>
         /// <param name="fadeInTime">The fade-in time of the follow point/</param>
         /// <param name="fadeOutTime">The fade-out time of the follow point.</param>
-        public static void GetFadeTimes(OsuHitObject start, OsuHitObject end, float fraction, out double fadeInTime, out double fadeOutTime)
+        public static void GetFadeTimes(
+            OsuHitObject start,
+            OsuHitObject end,
+            float fraction,
+            out double fadeInTime,
+            out double fadeOutTime
+        )
         {
             double startTime = start.GetEndTime();
             double duration = end.StartTime - startTime;

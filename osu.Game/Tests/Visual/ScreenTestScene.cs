@@ -36,24 +36,28 @@ namespace osu.Game.Tests.Visual
 
         protected ScreenTestScene()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                Stack = new OsuScreenStack
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    Name = nameof(ScreenTestScene),
-                    RelativeSizeAxes = Axes.Both
-                },
-                content = new Container { RelativeSizeAxes = Axes.Both },
-                overlayContent = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = DialogOverlay = new DialogOverlay()
-                },
-                footer = new ScreenFooter(),
-            });
+                    Stack = new OsuScreenStack
+                    {
+                        Name = nameof(ScreenTestScene),
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    content = new Container { RelativeSizeAxes = Axes.Both },
+                    overlayContent = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = DialogOverlay = new DialogOverlay(),
+                    },
+                    footer = new ScreenFooter(),
+                }
+            );
 
-            Stack.ScreenPushed += (_, newScreen) => Logger.Log($"{nameof(ScreenTestScene)} screen changed → {newScreen}");
-            Stack.ScreenExited += (_, newScreen) => Logger.Log($"{nameof(ScreenTestScene)} screen changed ← {newScreen}");
+            Stack.ScreenPushed += (_, newScreen) =>
+                Logger.Log($"{nameof(ScreenTestScene)} screen changed → {newScreen}");
+            Stack.ScreenExited += (_, newScreen) =>
+                Logger.Log($"{nameof(ScreenTestScene)} screen changed ← {newScreen}");
         }
 
         protected void LoadScreen(OsuScreen screen) => Stack.Push(screen);
@@ -70,18 +74,23 @@ namespace osu.Game.Tests.Visual
 
         private void addExitAllScreensStep()
         {
-            AddUntilStep("exit all screens", () =>
-            {
-                if (Stack.CurrentScreen == null) return true;
+            AddUntilStep(
+                "exit all screens",
+                () =>
+                {
+                    if (Stack.CurrentScreen == null)
+                        return true;
 
-                Stack.Exit();
-                return false;
-            });
+                    Stack.Exit();
+                    return false;
+                }
+            );
         }
 
         #region IOverlayManager
 
-        IBindable<OverlayActivation> IOverlayManager.OverlayActivationMode { get; } = new Bindable<OverlayActivation>(OverlayActivation.All);
+        IBindable<OverlayActivation> IOverlayManager.OverlayActivationMode { get; } =
+            new Bindable<OverlayActivation>(OverlayActivation.All);
 
         // in the blocking methods below it is important to be careful about threading (e.g. use `Expire()` rather than `Remove()`, and schedule transforms),
         // because in the worst case the clean-up methods could be called from async disposal.
@@ -92,11 +101,11 @@ namespace osu.Game.Tests.Visual
             return new InvokeOnDisposal(() => overlayContainer.Expire());
         }
 
-        void IOverlayManager.ShowBlockingOverlay(OverlayContainer overlay)
-            => Schedule(() => Stack.FadeColour(OsuColour.Gray(0.5f), 500, Easing.OutQuint));
+        void IOverlayManager.ShowBlockingOverlay(OverlayContainer overlay) =>
+            Schedule(() => Stack.FadeColour(OsuColour.Gray(0.5f), 500, Easing.OutQuint));
 
-        void IOverlayManager.HideBlockingOverlay(OverlayContainer overlay)
-            => Schedule(() => Stack.FadeColour(Colour4.White, 500, Easing.OutQuint));
+        void IOverlayManager.HideBlockingOverlay(OverlayContainer overlay) =>
+            Schedule(() => Stack.FadeColour(Colour4.White, 500, Easing.OutQuint));
 
         #endregion
     }

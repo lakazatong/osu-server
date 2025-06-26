@@ -21,6 +21,6 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// Query online sources immediately.
         /// </summary>
-        OnlineFirst
+        OnlineFirst,
     }
 }

@@ -28,9 +28,11 @@ namespace osu.Game.Updater
         /// <summary>
         /// Whether this UpdateManager should be or is capable of checking for updates.
         /// </summary>
-        public bool CanCheckForUpdate => game.IsDeployedBuild &&
-                                         // only implementations will actually check for updates.
-                                         GetType() != typeof(UpdateManager);
+        public bool CanCheckForUpdate =>
+            game.IsDeployedBuild
+            &&
+            // only implementations will actually check for updates.
+            GetType() != typeof(UpdateManager);
 
         public virtual ReleaseStream? FixedReleaseStream => null;
 
@@ -63,7 +65,9 @@ namespace osu.Game.Updater
                     Notifications.Post(new UpdateCompleteNotification(version));
 
                 if (RuntimeInfo.EntryAssembly.GetCustomAttribute<OfficialBuildAttribute>() == null)
-                    Notifications.Post(new SimpleNotification { Text = NotificationsStrings.NotOfficialBuild });
+                    Notifications.Post(
+                        new SimpleNotification { Text = NotificationsStrings.NotOfficialBuild }
+                    );
             }
 
             // debug / local compilations will reset to a non-release string.
@@ -106,7 +110,8 @@ namespace osu.Game.Updater
         /// Performs an asynchronous check for application updates.
         /// </summary>
         /// <returns>Whether any update is waiting. May return true if an error occured (there is potentially an update available).</returns>
-        protected virtual Task<bool> PerformUpdateCheck(CancellationToken cancellationToken) => Task.FromResult(false);
+        protected virtual Task<bool> PerformUpdateCheck(CancellationToken cancellationToken) =>
+            Task.FromResult(false);
 
         protected override void Dispose(bool isDisposing)
         {
@@ -127,7 +132,11 @@ namespace osu.Game.Updater
             }
 
             [BackgroundDependencyLoader]
-            private void load(OsuColour colours, ChangelogOverlay changelog, INotificationOverlay notificationOverlay)
+            private void load(
+                OsuColour colours,
+                ChangelogOverlay changelog,
+                INotificationOverlay notificationOverlay
+            )
             {
                 Icon = FontAwesome.Solid.CheckSquare;
                 IconContent.Colour = colours.BlueDark;
@@ -153,18 +162,20 @@ namespace osu.Game.Updater
             [BackgroundDependencyLoader]
             private void load()
             {
-                IconContent.AddRange(new Drawable[]
-                {
-                    new SpriteIcon
+                IconContent.AddRange(
+                    new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Icon = FontAwesome.Solid.Download,
-                        Size = new Vector2(34),
-                        Colour = OsuColour.Gray(0.2f),
-                        Depth = float.MaxValue,
+                        new SpriteIcon
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Icon = FontAwesome.Solid.Download,
+                            Size = new Vector2(34),
+                            Colour = OsuColour.Gray(0.2f),
+                            Depth = float.MaxValue,
+                        },
                     }
-                });
+                );
             }
 
             protected override void Update()
@@ -188,16 +199,17 @@ namespace osu.Game.Updater
                 Close(false);
             }
 
-            protected override Notification CreateCompletionNotification() => new UpdateReadyNotification(cancellationToken)
-            {
-                Activated = () =>
+            protected override Notification CreateCompletionNotification() =>
+                new UpdateReadyNotification(cancellationToken)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        return true;
+                    Activated = () =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                            return true;
 
-                    return CompletionClickAction?.Invoke() ?? true;
-                }
-            };
+                        return CompletionClickAction?.Invoke() ?? true;
+                    },
+                };
         }
 
         public partial class UpdateReadyNotification : ProgressCompletionNotification

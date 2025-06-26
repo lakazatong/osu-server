@@ -43,8 +43,8 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
                 updateCurrentItem();
         }
 
-        private void updateCurrentItem()
-            => PlaylistItem = SelectedRoom.Value?.Playlist.GetCurrentItem();
+        private void updateCurrentItem() =>
+            PlaylistItem = SelectedRoom.Value?.Playlist.GetCurrentItem();
 
         public override bool OnExiting(ScreenExitEvent e)
         {

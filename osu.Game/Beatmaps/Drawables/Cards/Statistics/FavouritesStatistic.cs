@@ -13,7 +13,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
     /// <summary>
     /// Shows the number of favourites that a beatmap set has received.
     /// </summary>
-    public partial class FavouritesStatistic : BeatmapCardStatistic, IHasCurrentValue<BeatmapSetFavouriteState>
+    public partial class FavouritesStatistic
+        : BeatmapCardStatistic,
+            IHasCurrentValue<BeatmapSetFavouriteState>
     {
         private readonly BindableWithCurrent<BeatmapSetFavouriteState> current;
 
@@ -25,7 +27,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
 
         public FavouritesStatistic(IBeatmapSetOnlineInfo onlineInfo)
         {
-            current = new BindableWithCurrent<BeatmapSetFavouriteState>(new BeatmapSetFavouriteState(onlineInfo.HasFavourited, onlineInfo.FavouriteCount));
+            current = new BindableWithCurrent<BeatmapSetFavouriteState>(
+                new BeatmapSetFavouriteState(onlineInfo.HasFavourited, onlineInfo.FavouriteCount)
+            );
         }
 
         protected override void LoadComplete()
@@ -38,7 +42,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
         {
             Icon = current.Value.Favourited ? FontAwesome.Solid.Heart : FontAwesome.Regular.Heart;
             Text = current.Value.FavouriteCount.ToMetric(decimals: 1);
-            TooltipText = BeatmapsStrings.PanelFavourites(current.Value.FavouriteCount.ToLocalisableString(@"N0"));
+            TooltipText = BeatmapsStrings.PanelFavourites(
+                current.Value.FavouriteCount.ToLocalisableString(@"N0")
+            );
         }
     }
 }

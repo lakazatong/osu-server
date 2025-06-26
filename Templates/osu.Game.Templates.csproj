@@ -17,7 +17,6 @@
     <ContentTargetFolders>content</ContentTargetFolders>
     <NoDefaultExcludes>true</NoDefaultExcludes>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="Rulesets\**\*" Exclude="Rulesets\**\bin\**;Rulesets\**\obj\**" />
     <Compile Remove="**\*" />

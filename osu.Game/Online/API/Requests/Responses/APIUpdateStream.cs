@@ -33,7 +33,10 @@ namespace osu.Game.Online.API.Requests.Responses
 
         public bool Equals(APIUpdateStream other) => Id == other?.Id;
 
-        internal static readonly Dictionary<string, Color4> KNOWN_STREAMS = new Dictionary<string, Color4>
+        internal static readonly Dictionary<string, Color4> KNOWN_STREAMS = new Dictionary<
+            string,
+            Color4
+        >
         {
             ["stable40"] = new Color4(102, 204, 255, 255),
             ["stable"] = new Color4(34, 153, 187, 255),
@@ -41,9 +44,10 @@ namespace osu.Game.Online.API.Requests.Responses
             ["cuttingedge"] = new Color4(238, 170, 0, 255),
             ["lazer"] = new Color4(237, 18, 33, 255),
             ["tachyon"] = new Color4(206, 0, 255, 255),
-            ["web"] = new Color4(136, 102, 238, 255)
+            ["web"] = new Color4(136, 102, 238, 255),
         };
 
-        public ColourInfo Colour => KNOWN_STREAMS.TryGetValue(Name, out var colour) ? colour : new Color4(0, 0, 0, 255);
+        public ColourInfo Colour =>
+            KNOWN_STREAMS.TryGetValue(Name, out var colour) ? colour : new Color4(0, 0, 0, 255);
     }
 }

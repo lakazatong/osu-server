@@ -101,11 +101,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     RelativeSizeAxes = Axes.Both,
                     Colour = colourProvider.Background5,
                 },
-                flashLayer = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.Transparent,
-                },
+                flashLayer = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Transparent },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -134,7 +130,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             SelectAllOnFocus = true,
                             OnInputError = () =>
                             {
-                                flashLayer.Colour = ColourInfo.GradientVertical(colours.Red3.Opacity(0), colours.Red3);
+                                flashLayer.Colour = ColourInfo.GradientVertical(
+                                    colours.Red3.Opacity(0),
+                                    colours.Red3
+                                );
                                 flashLayer.FadeOutFromOne(200, Easing.OutQuint);
                             },
                             TabbableContentContainer = tabbableContentContainer,
@@ -148,7 +147,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             KeyboardStep = KeyboardStep,
                             Current = currentNumberInstantaneous,
                             OnCommit = () => current.Value = currentNumberInstantaneous.Value,
-                        }
+                        },
                     },
                 },
             };
@@ -187,14 +186,17 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             current.CopyTo(currentNumberInstantaneous);
             currentLanguage.BindValueChanged(_ => Schedule(updateValueDisplay));
-            currentNumberInstantaneous.BindValueChanged(e =>
-            {
-                if (!TransferValueOnCommit)
-                    current.Value = e.NewValue;
+            currentNumberInstantaneous.BindValueChanged(
+                e =>
+                {
+                    if (!TransferValueOnCommit)
+                        current.Value = e.NewValue;
 
-                updateState();
-                updateValueDisplay();
-            }, true);
+                    updateState();
+                    updateValueDisplay();
+                },
+                true
+            );
         }
 
         private bool updatingFromTextBox;
@@ -211,7 +213,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
             currentNumberInstantaneous.TriggerChange();
             current.Value = currentNumberInstantaneous.Value;
 
-            flashLayer.Colour = ColourInfo.GradientVertical(colourProvider.Dark2.Opacity(0), colourProvider.Dark2);
+            flashLayer.Colour = ColourInfo.GradientVertical(
+                colourProvider.Dark2.Opacity(0),
+                colourProvider.Dark2
+            );
             flashLayer.FadeOutFromOne(800, Easing.OutQuint);
         }
 
@@ -232,7 +237,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         break;
 
                     default:
-                        currentNumberInstantaneous.Parse(textBox.Current.Value, CultureInfo.CurrentCulture);
+                        currentNumberInstantaneous.Parse(
+                            textBox.Current.Value,
+                            CultureInfo.CurrentCulture
+                        );
                         break;
                 }
             }
@@ -269,24 +277,37 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             textBox.Alpha = 1;
 
-            background.Colour = currentNumberInstantaneous.Disabled ? colourProvider.Background4 : colourProvider.Background5;
-            caption.Colour = currentNumberInstantaneous.Disabled ? colourProvider.Foreground1 : colourProvider.Content2;
-            textBox.Colour = currentNumberInstantaneous.Disabled ? colourProvider.Foreground1 : colourProvider.Content1;
+            background.Colour = currentNumberInstantaneous.Disabled
+                ? colourProvider.Background4
+                : colourProvider.Background5;
+            caption.Colour = currentNumberInstantaneous.Disabled
+                ? colourProvider.Foreground1
+                : colourProvider.Content2;
+            textBox.Colour = currentNumberInstantaneous.Disabled
+                ? colourProvider.Foreground1
+                : colourProvider.Content1;
 
             BorderThickness = childHasFocus || IsHovered || slider.IsDragging.Value ? 2 : 0;
             BorderColour = childHasFocus ? colourProvider.Highlight1 : colourProvider.Light4;
 
             if (childHasFocus)
-                background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark3);
+                background.Colour = ColourInfo.GradientVertical(
+                    colourProvider.Background5,
+                    colourProvider.Dark3
+                );
             else if (IsHovered || slider.IsDragging.Value)
-                background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark4);
+                background.Colour = ColourInfo.GradientVertical(
+                    colourProvider.Background5,
+                    colourProvider.Dark4
+                );
             else
                 background.Colour = colourProvider.Background5;
         }
 
         private void updateValueDisplay()
         {
-            if (updatingFromTextBox) return;
+            if (updatingFromTextBox)
+                return;
 
             textBox.Text = slider.GetDisplayableValue(currentNumberInstantaneous.Value).ToString();
         }
@@ -339,16 +360,17 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Horizontal = RangePadding, },
-                        Child = nub = new Circle
-                        {
-                            Width = nub_width,
-                            RelativeSizeAxes = Axes.Y,
-                            RelativePositionAxes = Axes.X,
-                            Origin = Anchor.TopCentre,
-                        }
+                        Padding = new MarginPadding { Horizontal = RangePadding },
+                        Child = nub =
+                            new Circle
+                            {
+                                Width = nub_width,
+                                RelativeSizeAxes = Axes.Y,
+                                RelativePositionAxes = Axes.X,
+                                Origin = Anchor.TopCentre,
+                            },
                     },
-                    new HoverClickSounds()
+                    new HoverClickSounds(),
                 };
             }
 
@@ -361,8 +383,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
             protected override void UpdateAfterChildren()
             {
                 base.UpdateAfterChildren();
-                leftBox.Width = Math.Clamp(RangePadding + nub.DrawPosition.X, 0, Math.Max(0, DrawWidth)) / DrawWidth;
-                rightBox.Width = Math.Clamp(DrawWidth - nub.DrawPosition.X - RangePadding, 0, Math.Max(0, DrawWidth)) / DrawWidth;
+                leftBox.Width =
+                    Math.Clamp(RangePadding + nub.DrawPosition.X, 0, Math.Max(0, DrawWidth))
+                    / DrawWidth;
+                rightBox.Width =
+                    Math.Clamp(
+                        DrawWidth - nub.DrawPosition.X - RangePadding,
+                        0,
+                        Math.Max(0, DrawWidth)
+                    ) / DrawWidth;
             }
 
             protected override bool OnDragStart(DragStartEvent e)
@@ -409,8 +438,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
             private void updateState()
             {
                 rightBox.Colour = colourProvider.Background6;
-                leftBox.Colour = HasFocus || IsHovered || IsDragged ? colourProvider.Highlight1.Opacity(0.5f) : colourProvider.Dark2;
-                nub.Colour = HasFocus || IsHovered || IsDragged ? colourProvider.Highlight1 : colourProvider.Light4;
+                leftBox.Colour =
+                    HasFocus || IsHovered || IsDragged
+                        ? colourProvider.Highlight1.Opacity(0.5f)
+                        : colourProvider.Dark2;
+                nub.Colour =
+                    HasFocus || IsHovered || IsDragged
+                        ? colourProvider.Highlight1
+                        : colourProvider.Light4;
             }
 
             protected override void UpdateValue(float value)

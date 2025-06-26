@@ -47,55 +47,62 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             releaseAllTouches();
 
-            AddStep("Create tests", () =>
-            {
-                InputTrigger triggerLeft;
-                InputTrigger triggerRight;
-
-                Children = new Drawable[]
+            AddStep(
+                "Create tests",
+                () =>
                 {
-                    osuInputManager = new OsuInputManager(new OsuRuleset().RulesetInfo)
+                    InputTrigger triggerLeft;
+                    InputTrigger triggerRight;
+
+                    Children = new Drawable[]
                     {
-                        Child = mainContent = new Container
+                        osuInputManager = new OsuInputManager(new OsuRuleset().RulesetInfo)
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Children = new Drawable[]
-                            {
-                                new OsuCursorContainer
+                            Child = mainContent =
+                                new Container
                                 {
-                                    Depth = float.MinValue,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Children = new Drawable[]
+                                    {
+                                        new OsuCursorContainer { Depth = float.MinValue },
+                                        triggerLeft = new TestActionKeyCounterTrigger(
+                                            OsuAction.LeftButton
+                                        )
+                                        {
+                                            Depth = float.MinValue,
+                                        },
+                                        triggerRight = new TestActionKeyCounterTrigger(
+                                            OsuAction.RightButton
+                                        )
+                                        {
+                                            Depth = float.MinValue,
+                                        },
+                                    },
                                 },
-                                triggerLeft = new TestActionKeyCounterTrigger(OsuAction.LeftButton)
-                                {
-                                    Depth = float.MinValue
-                                },
-                                triggerRight = new TestActionKeyCounterTrigger(OsuAction.RightButton)
-                                {
-                                    Depth = float.MinValue
-                                }
-                            },
                         },
-                    },
-                    new TouchVisualiser(),
-                };
+                        new TouchVisualiser(),
+                    };
 
-                mainContent.AddRange(new[]
-                {
-                    leftKeyCounter = new DefaultKeyCounter(triggerLeft)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.CentreRight,
-                        X = -100,
-                    },
-                    rightKeyCounter = new DefaultKeyCounter(triggerRight)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.CentreLeft,
-                        X = 100,
-                    },
-                });
-            });
+                    mainContent.AddRange(
+                        new[]
+                        {
+                            leftKeyCounter = new DefaultKeyCounter(triggerLeft)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.CentreRight,
+                                X = -100,
+                            },
+                            rightKeyCounter = new DefaultKeyCounter(triggerRight)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.CentreLeft,
+                                X = 100,
+                            },
+                        }
+                    );
+                }
+            );
         }
 
         [Test]
@@ -111,32 +118,39 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             int i = 0;
 
-            AddRepeatStep("Alternate", () =>
-            {
-                TouchSource down = i % 2 == 0 ? TouchSource.Touch3 : TouchSource.Touch4;
-                TouchSource up = i % 2 == 0 ? TouchSource.Touch4 : TouchSource.Touch3;
-
-                // sometimes the user will end the previous touch before touching again, sometimes not.
-                if (RNG.NextBool())
+            AddRepeatStep(
+                "Alternate",
+                () =>
                 {
-                    InputManager.BeginTouch(new Touch(down, getSanePositionForSource(down)));
-                    InputManager.EndTouch(new Touch(up, getSanePositionForSource(up)));
-                }
-                else
-                {
-                    InputManager.EndTouch(new Touch(up, getSanePositionForSource(up)));
-                    InputManager.BeginTouch(new Touch(down, getSanePositionForSource(down)));
-                }
+                    TouchSource down = i % 2 == 0 ? TouchSource.Touch3 : TouchSource.Touch4;
+                    TouchSource up = i % 2 == 0 ? TouchSource.Touch4 : TouchSource.Touch3;
 
-                i++;
-            }, 100);
+                    // sometimes the user will end the previous touch before touching again, sometimes not.
+                    if (RNG.NextBool())
+                    {
+                        InputManager.BeginTouch(new Touch(down, getSanePositionForSource(down)));
+                        InputManager.EndTouch(new Touch(up, getSanePositionForSource(up)));
+                    }
+                    else
+                    {
+                        InputManager.EndTouch(new Touch(up, getSanePositionForSource(up)));
+                        InputManager.BeginTouch(new Touch(down, getSanePositionForSource(down)));
+                    }
+
+                    i++;
+                },
+                100
+            );
         }
 
         [Test]
         public void TestSimpleInput([Values] bool disableMouseButtons)
         {
             // OsuSetting.MouseDisableButtons should not affect touch taps
-            AddStep($"{(disableMouseButtons ? "disable" : "enable")} mouse buttons", () => config.SetValue(OsuSetting.MouseDisableButtons, disableMouseButtons));
+            AddStep(
+                $"{(disableMouseButtons ? "disable" : "enable")} mouse buttons",
+                () => config.SetValue(OsuSetting.MouseDisableButtons, disableMouseButtons)
+            );
 
             beginTouch(TouchSource.Touch1);
 
@@ -442,16 +456,26 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             // aka "autopilot" mod
 
-            AddStep("Disallow gameplay cursor movement", () => osuInputManager.AllowUserCursorMovement = false);
+            AddStep(
+                "Disallow gameplay cursor movement",
+                () => osuInputManager.AllowUserCursorMovement = false
+            );
 
             Vector2? positionBefore = null;
 
-            AddStep("Store cursor position", () => positionBefore = osuInputManager.CurrentState.Mouse.Position);
+            AddStep(
+                "Store cursor position",
+                () => positionBefore = osuInputManager.CurrentState.Mouse.Position
+            );
             beginTouch(TouchSource.Touch1);
 
             assertKeyCounter(1, 0);
             checkPressed(OsuAction.LeftButton);
-            AddAssert("Cursor position unchanged", () => osuInputManager.CurrentState.Mouse.Position, () => Is.EqualTo(positionBefore));
+            AddAssert(
+                "Cursor position unchanged",
+                () => osuInputManager.CurrentState.Mouse.Position,
+                () => Is.EqualTo(positionBefore)
+            );
         }
 
         [Test]
@@ -471,7 +495,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestInputWhileMouseButtonsDisabled()
         {
-            AddStep("Disable gameplay taps", () => config.SetValue(OsuSetting.TouchDisableGameplayTaps, true));
+            AddStep(
+                "Disable gameplay taps",
+                () => config.SetValue(OsuSetting.TouchDisableGameplayTaps, true)
+            );
 
             beginTouch(TouchSource.Touch1);
 
@@ -599,59 +626,105 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private void addHitCircleAt(TouchSource source)
         {
-            AddStep($"Add circle at {source}", () =>
-            {
-                var hitCircle = new HitCircle();
-
-                hitCircle.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
-
-                mainContent.Add(new DrawableHitCircle(hitCircle)
+            AddStep(
+                $"Add circle at {source}",
+                () =>
                 {
-                    Clock = new FramedClock(new ManualClock()),
-                    Position = mainContent.ToLocalSpace(getSanePositionForSource(source)),
-                    CheckHittable = (_, _, _) => ClickAction.Hit
-                });
-            });
+                    var hitCircle = new HitCircle();
+
+                    hitCircle.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
+
+                    mainContent.Add(
+                        new DrawableHitCircle(hitCircle)
+                        {
+                            Clock = new FramedClock(new ManualClock()),
+                            Position = mainContent.ToLocalSpace(getSanePositionForSource(source)),
+                            CheckHittable = (_, _, _) => ClickAction.Hit,
+                        }
+                    );
+                }
+            );
         }
 
         private void beginTouch(TouchSource source, Vector2? screenSpacePosition = null) =>
-            AddStep($"Begin touch for {source}", () => InputManager.BeginTouch(new Touch(source, screenSpacePosition ??= getSanePositionForSource(source))));
+            AddStep(
+                $"Begin touch for {source}",
+                () =>
+                    InputManager.BeginTouch(
+                        new Touch(source, screenSpacePosition ??= getSanePositionForSource(source))
+                    )
+            );
 
         private void endTouch(TouchSource source, Vector2? screenSpacePosition = null) =>
-            AddStep($"Release touch for {source}", () => InputManager.EndTouch(new Touch(source, screenSpacePosition ??= getSanePositionForSource(source))));
+            AddStep(
+                $"Release touch for {source}",
+                () =>
+                    InputManager.EndTouch(
+                        new Touch(source, screenSpacePosition ??= getSanePositionForSource(source))
+                    )
+            );
 
         private Vector2 getSanePositionForSource(TouchSource source)
         {
             return new Vector2(
-                osuInputManager.ScreenSpaceDrawQuad.Centre.X + osuInputManager.ScreenSpaceDrawQuad.Width * (-1 + (int)source) / 8,
+                osuInputManager.ScreenSpaceDrawQuad.Centre.X
+                    + osuInputManager.ScreenSpaceDrawQuad.Width * (-1 + (int)source) / 8,
                 osuInputManager.ScreenSpaceDrawQuad.Centre.Y - 100
             );
         }
 
         private void checkPosition(TouchSource touchSource) =>
-            AddAssert("Cursor position is correct", () => osuInputManager.CurrentState.Mouse.Position, () => Is.EqualTo(getSanePositionForSource(touchSource)));
+            AddAssert(
+                "Cursor position is correct",
+                () => osuInputManager.CurrentState.Mouse.Position,
+                () => Is.EqualTo(getSanePositionForSource(touchSource))
+            );
 
         private void assertKeyCounter(int left, int right)
         {
-            AddAssert($"The left key was pressed {left} times", () => leftKeyCounter.CountPresses.Value, () => Is.EqualTo(left));
-            AddAssert($"The right key was pressed {right} times", () => rightKeyCounter.CountPresses.Value, () => Is.EqualTo(right));
+            AddAssert(
+                $"The left key was pressed {left} times",
+                () => leftKeyCounter.CountPresses.Value,
+                () => Is.EqualTo(left)
+            );
+            AddAssert(
+                $"The right key was pressed {right} times",
+                () => rightKeyCounter.CountPresses.Value,
+                () => Is.EqualTo(right)
+            );
         }
 
         private void releaseAllTouches()
         {
-            AddStep("Release all touches", () =>
-            {
-                config.SetValue(OsuSetting.MouseDisableButtons, false);
-                config.SetValue(OsuSetting.TouchDisableGameplayTaps, false);
-                foreach (TouchSource source in InputManager.CurrentState.Touch.ActiveSources)
-                    InputManager.EndTouch(new Touch(source, osuInputManager.ScreenSpaceDrawQuad.Centre));
-            });
+            AddStep(
+                "Release all touches",
+                () =>
+                {
+                    config.SetValue(OsuSetting.MouseDisableButtons, false);
+                    config.SetValue(OsuSetting.TouchDisableGameplayTaps, false);
+                    foreach (TouchSource source in InputManager.CurrentState.Touch.ActiveSources)
+                        InputManager.EndTouch(
+                            new Touch(source, osuInputManager.ScreenSpaceDrawQuad.Centre)
+                        );
+                }
+            );
         }
 
-        private void checkNotPressed(OsuAction action) => AddAssert($"Not pressing {action}", () => !osuInputManager.PressedActions.Contains(action));
-        private void checkPressed(OsuAction action) => AddAssert($"Is pressing {action}", () => osuInputManager.PressedActions.Contains(action));
+        private void checkNotPressed(OsuAction action) =>
+            AddAssert(
+                $"Not pressing {action}",
+                () => !osuInputManager.PressedActions.Contains(action)
+            );
 
-        public partial class TestActionKeyCounterTrigger : InputTrigger, IKeyBindingHandler<OsuAction>
+        private void checkPressed(OsuAction action) =>
+            AddAssert(
+                $"Is pressing {action}",
+                () => osuInputManager.PressedActions.Contains(action)
+            );
+
+        public partial class TestActionKeyCounterTrigger
+            : InputTrigger,
+                IKeyBindingHandler<OsuAction>
         {
             public OsuAction Action { get; }
 
@@ -680,7 +753,9 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         public partial class TouchVisualiser : CompositeDrawable
         {
-            private readonly Drawable?[] drawableTouches = new Drawable?[TouchState.MAX_TOUCH_COUNT];
+            private readonly Drawable?[] drawableTouches = new Drawable?[
+                TouchState.MAX_TOUCH_COUNT
+            ];
 
             public TouchVisualiser()
             {
@@ -733,7 +808,9 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             private Color4 colourFor(TouchSource source)
             {
-                return Color4.FromHsv(new Vector4((float)source / TouchState.MAX_TOUCH_COUNT, 1f, 1f, 1f));
+                return Color4.FromHsv(
+                    new Vector4((float)source / TouchState.MAX_TOUCH_COUNT, 1f, 1f, 1f)
+                );
             }
 
             private partial class FadingCircle : Circle

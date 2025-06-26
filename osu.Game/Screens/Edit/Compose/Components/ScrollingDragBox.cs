@@ -23,7 +23,12 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         public ScrollingDragBox(Playfield playfield)
         {
-            this.playfield = playfield as ScrollingPlayfield ?? throw new ArgumentException("Playfield must be of type {nameof(ScrollingPlayfield)} to use this class.", nameof(playfield));
+            this.playfield =
+                playfield as ScrollingPlayfield
+                ?? throw new ArgumentException(
+                    "Playfield must be of type {nameof(ScrollingPlayfield)} to use this class.",
+                    nameof(playfield)
+                );
         }
 
         public override void HandleDrag(MouseButtonEvent e)

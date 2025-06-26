@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.ExceptionExtensions;
-using osu.Framework.Logging;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Logging;
 using osu.Game.Configuration;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
@@ -37,7 +37,9 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             yield return roomAccessTypeDropdown = new SlimEnumDropdown<RoomPermissionsFilter>
             {
                 RelativeSizeAxes = Axes.None,
-                Current = Config.GetBindable<RoomPermissionsFilter>(OsuSetting.MultiplayerRoomFilter),
+                Current = Config.GetBindable<RoomPermissionsFilter>(
+                    OsuSetting.MultiplayerRoomFilter
+                ),
                 Width = 160,
             };
 
@@ -48,12 +50,17 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 LabelText = "Show in-progress rooms",
                 RelativeSizeAxes = Axes.None,
                 Width = 220,
-                Padding = new MarginPadding { Vertical = 5, },
+                Padding = new MarginPadding { Vertical = 5 },
                 Current = Config.GetBindable<bool>(OsuSetting.MultiplayerShowInProgressFilter),
             };
 
             showInProgress.Current.BindValueChanged(_ => UpdateFilter());
-            StatusDropdown.Current.BindValueChanged(_ => showInProgress.Alpha = StatusDropdown.Current.Value == RoomModeFilter.Open ? 1 : 0, true);
+            StatusDropdown.Current.BindValueChanged(
+                _ =>
+                    showInProgress.Alpha =
+                        StatusDropdown.Current.Value == RoomModeFilter.Open ? 1 : 0,
+                true
+            );
         }
 
         protected override FilterCriteria CreateFilterCriteria()
@@ -61,46 +68,61 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             var criteria = base.CreateFilterCriteria();
             criteria.Category = @"realtime";
             criteria.Permissions = roomAccessTypeDropdown.Current.Value;
-            criteria.Status = showInProgress.Current.Value && criteria.Mode == RoomModeFilter.Open ? null : RoomStatusFilter.Idle;
+            criteria.Status =
+                showInProgress.Current.Value && criteria.Mode == RoomModeFilter.Open
+                    ? null
+                    : RoomStatusFilter.Idle;
             return criteria;
         }
 
         protected override OsuButton CreateNewRoomButton() => new CreateMultiplayerMatchButton();
 
-        protected override Room CreateNewRoom() => new Room
-        {
-            Name = $"{api.LocalUser}'s awesome room",
-            Type = MatchType.HeadToHead,
-        };
+        protected override Room CreateNewRoom() =>
+            new Room { Name = $"{api.LocalUser}'s awesome room", Type = MatchType.HeadToHead };
 
-        protected override OnlinePlaySubScreen CreateRoomSubScreen(Room room) => new MultiplayerMatchSubScreen(room);
+        protected override OnlinePlaySubScreen CreateRoomSubScreen(Room room) =>
+            new MultiplayerMatchSubScreen(room);
 
-        protected override void JoinInternal(Room room, string? password, Action<Room> onSuccess, Action<string, Exception?> onFailure)
+        protected override void JoinInternal(
+            Room room,
+            string? password,
+            Action<Room> onSuccess,
+            Action<string, Exception?> onFailure
+        )
         {
-            client.JoinRoom(room, password).ContinueWith(result =>
-            {
-                if (result.IsCompletedSuccessfully)
-                    onSuccess(room);
-                else
+            client
+                .JoinRoom(room, password)
+                .ContinueWith(result =>
                 {
-                    Exception? exception = result.Exception?.AsSingular();
-
-                    if (exception?.GetHubExceptionMessage() is string message)
-                        onFailure(message, exception);
+                    if (result.IsCompletedSuccessfully)
+                        onSuccess(room);
                     else
-                        onFailure($"Failed to join multiplayer room. {exception?.Message}", exception);
-                }
-            });
+                    {
+                        Exception? exception = result.Exception?.AsSingular();
+
+                        if (exception?.GetHubExceptionMessage() is string message)
+                            onFailure(message, exception);
+                        else
+                            onFailure(
+                                $"Failed to join multiplayer room. {exception?.Message}",
+                                exception
+                            );
+                    }
+                });
         }
 
-        public override void Close(Room room)
-            => throw new NotSupportedException("Cannot close multiplayer rooms.");
+        public override void Close(Room room) =>
+            throw new NotSupportedException("Cannot close multiplayer rooms.");
 
         protected override void OpenNewRoom(Room room)
         {
             if (!client.IsConnected.Value)
             {
-                Logger.Log("Not currently connected to the multiplayer server.", LoggingTarget.Runtime, LogLevel.Important);
+                Logger.Log(
+                    "Not currently connected to the multiplayer server.",
+                    LoggingTarget.Runtime,
+                    LogLevel.Important
+                );
                 return;
             }
 

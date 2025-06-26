@@ -40,7 +40,10 @@ namespace osu.Game.Tests.Database
         {
             var item = new TestModel(short_filename);
 
-            Assert.That(item.Filename.Length, Is.LessThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH));
+            Assert.That(
+                item.Filename.Length,
+                Is.LessThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH)
+            );
 
             exportItemAndAssert(item, short_filename);
         }
@@ -50,7 +53,10 @@ namespace osu.Game.Tests.Database
         {
             var item = new TestModel(short_filename);
 
-            Assert.That(item.Filename.Length, Is.LessThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH));
+            Assert.That(
+                item.Filename.Length,
+                Is.LessThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH)
+            );
 
             //Export multiple times
             for (int i = 0; i < 100; i++)
@@ -63,24 +69,34 @@ namespace osu.Game.Tests.Database
         [Test]
         public void ExportFileWithSuperLongNameTest()
         {
-            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - (legacyExporter.GetExtension().Length);
+            int expectedLength =
+                TestLegacyModelExporter.MAX_FILENAME_LENGTH
+                - (legacyExporter.GetExtension().Length);
             string expectedName = long_filename.Remove(expectedLength);
 
             var item = new TestModel(long_filename);
 
-            Assert.That(item.Filename.Length, Is.GreaterThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH));
+            Assert.That(
+                item.Filename.Length,
+                Is.GreaterThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH)
+            );
             exportItemAndAssert(item, expectedName);
         }
 
         [Test]
         public void ExportFileWithSuperLongNameMultipleTimesTest()
         {
-            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - (legacyExporter.GetExtension().Length);
+            int expectedLength =
+                TestLegacyModelExporter.MAX_FILENAME_LENGTH
+                - (legacyExporter.GetExtension().Length);
             string expectedName = long_filename.Remove(expectedLength);
 
             var item = new TestModel(long_filename);
 
-            Assert.That(item.Filename.Length, Is.GreaterThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH));
+            Assert.That(
+                item.Filename.Length,
+                Is.GreaterThan(TestLegacyModelExporter.MAX_FILENAME_LENGTH)
+            );
 
             //Export multiple times
             for (int i = 0; i < 100; i++)
@@ -94,9 +110,13 @@ namespace osu.Game.Tests.Database
         {
             Assert.DoesNotThrow(() =>
             {
-                Task.Run(() => legacyExporter.ExportAsync(new RealmLiveUnmanaged<TestModel>(item))).WaitSafely();
+                Task.Run(() => legacyExporter.ExportAsync(new RealmLiveUnmanaged<TestModel>(item)))
+                    .WaitSafely();
             });
-            Assert.That(storage.Exists($"exports/{expectedName}{legacyExporter.GetExtension()}"), Is.True);
+            Assert.That(
+                storage.Exists($"exports/{expectedName}{legacyExporter.GetExtension()}"),
+                Is.True
+            );
         }
 
         [TearDown]
@@ -109,15 +129,16 @@ namespace osu.Game.Tests.Database
         private class TestLegacyModelExporter : LegacyExporter<TestModel>
         {
             public TestLegacyModelExporter(Storage storage)
-                : base(storage)
-            {
-            }
+                : base(storage) { }
 
             public string GetExtension() => FileExtension;
 
-            public override void ExportToStream(TestModel model, Stream outputStream, ProgressNotification? notification, CancellationToken cancellationToken = default)
-            {
-            }
+            public override void ExportToStream(
+                TestModel model,
+                Stream outputStream,
+                ProgressNotification? notification,
+                CancellationToken cancellationToken = default
+            ) { }
 
             protected override string FileExtension => ".test";
         }

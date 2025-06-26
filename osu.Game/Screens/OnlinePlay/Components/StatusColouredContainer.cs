@@ -50,7 +50,10 @@ namespace osu.Game.Screens.OnlinePlay.Components
 
         private void updateRoomStatus()
         {
-            this.FadeColour(colours.ForRoomCategory(room.Category) ?? colours.ForRoomStatus(room), transitionDuration);
+            this.FadeColour(
+                colours.ForRoomCategory(room.Category) ?? colours.ForRoomStatus(room),
+                transitionDuration
+            );
         }
 
         protected override void Dispose(bool isDisposing)

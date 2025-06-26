@@ -33,24 +33,32 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private int iteration;
 
-        protected override Drawable CreateDefaultImplementation() => new TrianglesPerformancePointsCounter();
-        protected override Drawable CreateArgonImplementation() => new ArgonPerformancePointsCounter();
+        protected override Drawable CreateDefaultImplementation() =>
+            new TrianglesPerformancePointsCounter();
+
+        protected override Drawable CreateArgonImplementation() =>
+            new ArgonPerformancePointsCounter();
+
         protected override Drawable CreateLegacyImplementation() => Empty();
 
-        private Bindable<JudgementResult> lastJudgementResult => (Bindable<JudgementResult>)gameplayState.LastJudgementResult;
+        private Bindable<JudgementResult> lastJudgementResult =>
+            (Bindable<JudgementResult>)gameplayState.LastJudgementResult;
 
         public override void SetUpSteps()
         {
-            AddStep("reset", () =>
-            {
-                var ruleset = new OsuRuleset();
-                var beatmap = CreateWorkingBeatmap(ruleset.RulesetInfo)
-                    .GetPlayableBeatmap(ruleset.RulesetInfo);
+            AddStep(
+                "reset",
+                () =>
+                {
+                    var ruleset = new OsuRuleset();
+                    var beatmap = CreateWorkingBeatmap(ruleset.RulesetInfo)
+                        .GetPlayableBeatmap(ruleset.RulesetInfo);
 
-                iteration = 0;
-                scoreProcessor.ApplyBeatmap(beatmap);
-                lastJudgementResult.SetDefault();
-            });
+                    iteration = 0;
+                    scoreProcessor.ApplyBeatmap(beatmap);
+                    lastJudgementResult.SetDefault();
+                }
+            );
 
             base.SetUpSteps();
         }
@@ -58,8 +66,19 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestDisplay()
         {
-            AddSliderStep("pp", 0, 2000, 0, v => this.ChildrenOfType<PerformancePointsCounter>().ForEach(c => c.Current.Value = v));
-            AddToggleStep("toggle validity", v => this.ChildrenOfType<PerformancePointsCounter>().ForEach(c => c.IsValid = v));
+            AddSliderStep(
+                "pp",
+                0,
+                2000,
+                0,
+                v =>
+                    this.ChildrenOfType<PerformancePointsCounter>()
+                        .ForEach(c => c.Current.Value = v)
+            );
+            AddToggleStep(
+                "toggle validity",
+                v => this.ChildrenOfType<PerformancePointsCounter>().ForEach(c => c.IsValid = v)
+            );
         }
 
         [Test]
@@ -67,25 +86,49 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             int previousValue = 0;
 
-            AddAssert("counter displaying zero", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value == 0));
+            AddAssert(
+                "counter displaying zero",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value == 0)
+            );
 
             AddRepeatStep("Add judgement", applyOneJudgement, 10);
 
-            AddUntilStep("counter non-zero", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0));
-            AddUntilStep("counter valid", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.IsValid));
+            AddUntilStep(
+                "counter non-zero",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0)
+            );
+            AddUntilStep(
+                "counter valid",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.IsValid)
+            );
 
-            AddStep("Revert judgement", () =>
-            {
-                previousValue = this.ChildrenOfType<PerformancePointsCounter>().First().Current.Value;
+            AddStep(
+                "Revert judgement",
+                () =>
+                {
+                    previousValue = this.ChildrenOfType<PerformancePointsCounter>()
+                        .First()
+                        .Current.Value;
 
-                scoreProcessor.RevertResult(new JudgementResult(new HitObject(), new OsuJudgement()));
-            });
+                    scoreProcessor.RevertResult(
+                        new JudgementResult(new HitObject(), new OsuJudgement())
+                    );
+                }
+            );
 
-            AddUntilStep("counter decreased", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value < previousValue));
+            AddUntilStep(
+                "counter decreased",
+                () =>
+                    this.ChildrenOfType<PerformancePointsCounter>()
+                        .All(c => c.Current.Value < previousValue)
+            );
 
             AddStep("Add judgement", applyOneJudgement);
 
-            AddUntilStep("counter non-zero", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0));
+            AddUntilStep(
+                "counter non-zero",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0)
+            );
         }
 
         [Test]
@@ -95,8 +138,14 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddStep("recreate counter", SetUpComponents);
 
-            AddUntilStep("counter non-zero", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0));
-            AddUntilStep("counter valid", () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.IsValid));
+            AddUntilStep(
+                "counter non-zero",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.Current.Value > 0)
+            );
+            AddUntilStep(
+                "counter valid",
+                () => this.ChildrenOfType<PerformancePointsCounter>().All(c => c.IsValid)
+            );
         }
 
         private void applyOneJudgement()
@@ -107,10 +156,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             scoreInfo.Accuracy = 1;
             scoreInfo.Statistics[HitResult.Great] = iteration * 1000;
 
-            lastJudgementResult.Value = new OsuJudgementResult(new HitObject
-            {
-                StartTime = iteration * 10000,
-            }, new OsuJudgement())
+            lastJudgementResult.Value = new OsuJudgementResult(
+                new HitObject { StartTime = iteration * 10000 },
+                new OsuJudgement()
+            )
             {
                 Type = HitResult.Perfect,
             };

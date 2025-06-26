@@ -24,13 +24,25 @@ namespace osu.Game.Screens.Play.HUD
         [Resolved]
         private Bindable<IReadOnlyList<Mod>> mods { get; set; } = null!;
 
-        [SettingSource(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.ShowExtendedInformation), nameof(SkinnableModDisplayStrings.ShowExtendedInformationDescription))]
+        [SettingSource(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.ShowExtendedInformation),
+            nameof(SkinnableModDisplayStrings.ShowExtendedInformationDescription)
+        )]
         public Bindable<bool> ShowExtendedInformation { get; } = new Bindable<bool>(true);
 
-        [SettingSource(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.ExpansionMode), nameof(SkinnableModDisplayStrings.ExpansionModeDescription))]
-        public Bindable<ExpansionMode> ExpansionModeSetting { get; } = new Bindable<ExpansionMode>();
+        [SettingSource(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.ExpansionMode),
+            nameof(SkinnableModDisplayStrings.ExpansionModeDescription)
+        )]
+        public Bindable<ExpansionMode> ExpansionModeSetting { get; } =
+            new Bindable<ExpansionMode>();
 
-        [SettingSource(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.DisplayDirection))]
+        [SettingSource(
+            typeof(SkinnableModDisplayStrings),
+            nameof(SkinnableModDisplayStrings.DisplayDirection)
+        )]
         public Bindable<Direction> Direction { get; } = new Bindable<Direction>();
 
         [BackgroundDependencyLoader]
@@ -51,9 +63,22 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.LoadComplete();
 
-            ShowExtendedInformation.BindValueChanged(_ => modDisplay.ShowExtendedInformation = ShowExtendedInformation.Value, true);
-            ExpansionModeSetting.BindValueChanged(_ => modDisplay.ExpansionMode = ExpansionModeSetting.Value, true);
-            Direction.BindValueChanged(_ => modDisplay.FillDirection = Direction.Value == Framework.Graphics.Direction.Horizontal ? FillDirection.Horizontal : FillDirection.Vertical, true);
+            ShowExtendedInformation.BindValueChanged(
+                _ => modDisplay.ShowExtendedInformation = ShowExtendedInformation.Value,
+                true
+            );
+            ExpansionModeSetting.BindValueChanged(
+                _ => modDisplay.ExpansionMode = ExpansionModeSetting.Value,
+                true
+            );
+            Direction.BindValueChanged(
+                _ =>
+                    modDisplay.FillDirection =
+                        Direction.Value == Framework.Graphics.Direction.Horizontal
+                            ? FillDirection.Horizontal
+                            : FillDirection.Vertical,
+                true
+            );
 
             FinishTransforms(true);
         }

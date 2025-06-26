@@ -21,9 +21,7 @@ namespace osu.Game.Beatmaps
         public double SliderMultiplier { get; set; } = 1.4;
         public double SliderTickRate { get; set; } = 1;
 
-        public BeatmapDifficulty()
-        {
-        }
+        public BeatmapDifficulty() { }
 
         public BeatmapDifficulty(IBeatmapDifficultyInfo source)
         {

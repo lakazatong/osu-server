@@ -26,13 +26,15 @@ namespace osu.Game.Tests.Visual.UserInterface
                 {
                     new NamedIconButton("No change", new IconButton()),
                     new NamedIconButton("Background colours", new ColouredIconButton()),
-                    new NamedIconButton("Full-width", new IconButton { Size = new Vector2(200, 30) }),
-                    new NamedIconButton("Icon colours", new IconButton
-                    {
-                        IconColour = Color4.Green,
-                        IconHoverColour = Color4.Red
-                    })
-                }
+                    new NamedIconButton(
+                        "Full-width",
+                        new IconButton { Size = new Vector2(200, 30) }
+                    ),
+                    new NamedIconButton(
+                        "Icon colours",
+                        new IconButton { IconColour = Color4.Green, IconHoverColour = Color4.Red }
+                    ),
+                },
             };
         }
 
@@ -73,7 +75,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                             {
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
-                                Text = name
+                                Text = name,
                             },
                             new Container
                             {
@@ -83,21 +85,17 @@ namespace osu.Game.Tests.Visual.UserInterface
                                 AutoSizeAxes = Axes.Y,
                                 Children = new Drawable[]
                                 {
-                                    new Box
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Alpha = 0.1f,
-                                    },
+                                    new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.1f },
                                     iconContainer = new Container
                                     {
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        Child = button
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                        Child = button,
+                                    },
+                                },
+                            },
+                        },
+                    },
                 };
 
                 iconContainer.AutoSizeAxes = Axes.Both;

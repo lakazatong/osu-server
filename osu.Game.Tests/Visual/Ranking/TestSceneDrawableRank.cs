@@ -17,23 +17,29 @@ namespace osu.Game.Tests.Visual.Ranking
         [Test]
         public void TestAllRanks()
         {
-            AddStep("create content", () => Child = new FillFlowContainer<DrawableRank>
-            {
-                AutoSizeAxes = Axes.X,
-                RelativeSizeAxes = Axes.Y,
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Direction = FillDirection.Vertical,
-                Padding = new MarginPadding(20),
-                Spacing = new Vector2(10),
-                ChildrenEnumerable = Enum.GetValues<ScoreRank>().OrderBy(v => v).Select(rank => new DrawableRank(rank)
-                {
-                    RelativeSizeAxes = Axes.None,
-                    Size = new Vector2(50, 25),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                })
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Child = new FillFlowContainer<DrawableRank>
+                    {
+                        AutoSizeAxes = Axes.X,
+                        RelativeSizeAxes = Axes.Y,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Direction = FillDirection.Vertical,
+                        Padding = new MarginPadding(20),
+                        Spacing = new Vector2(10),
+                        ChildrenEnumerable = Enum.GetValues<ScoreRank>()
+                            .OrderBy(v => v)
+                            .Select(rank => new DrawableRank(rank)
+                            {
+                                RelativeSizeAxes = Axes.None,
+                                Size = new Vector2(50, 25),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            }),
+                    }
+            );
         }
     }
 }

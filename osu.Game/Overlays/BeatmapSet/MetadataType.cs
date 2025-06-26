@@ -8,25 +8,46 @@ namespace osu.Game.Overlays.BeatmapSet
 {
     public enum MetadataType
     {
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoUserTags))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoUserTags)
+        )]
         UserTags,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoMapperTags))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoMapperTags)
+        )]
         MapperTags,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoSource))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoSource)
+        )]
         Source,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoDescription))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoDescription)
+        )]
         Description,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoGenre))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoGenre)
+        )]
         Genre,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoLanguage))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoLanguage)
+        )]
         Language,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowInfoNominators))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowInfoNominators)
+        )]
         Nominators,
     }
 }

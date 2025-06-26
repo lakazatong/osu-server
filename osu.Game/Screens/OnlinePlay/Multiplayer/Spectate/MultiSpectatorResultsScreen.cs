@@ -10,9 +10,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
     public partial class MultiSpectatorResultsScreen : SpectatorResultsScreen
     {
         public MultiSpectatorResultsScreen(ScoreInfo score)
-            : base(score)
-        {
-        }
+            : base(score) { }
 
         protected override void LoadComplete()
         {
@@ -23,6 +21,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
 
         protected override Task<ScoreInfo[]> FetchScores() => Task.FromResult<ScoreInfo[]>([]);
 
-        protected override Task<ScoreInfo[]> FetchNextPage(int direction) => Task.FromResult<ScoreInfo[]>([]);
+        protected override Task<ScoreInfo[]> FetchNextPage(int direction) =>
+            Task.FromResult<ScoreInfo[]>([]);
     }
 }

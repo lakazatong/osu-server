@@ -39,22 +39,20 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 ContentContainer.Size = new Vector2(0.5f, 1f);
 
-                Add(new Container
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.5f, 1f),
-                    Children = new[]
+                Add(
+                    new Container
                     {
-                        new Box
+                        Anchor = Anchor.TopLeft,
+                        Origin = Anchor.TopLeft,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.5f, 1f),
+                        Children = new[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colours.GreySeaFoam
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = colours.GreySeaFoam },
+                            CreateContent(),
                         },
-                        CreateContent()
                     }
-                });
+                );
             }
         }
 
@@ -63,23 +61,25 @@ namespace osu.Game.Tests.Visual.UserInterface
             var colourProvider = new OverlayColourProvider(colourScheme);
 
             ContentContainer.Clear();
-            ContentContainer.Add(new DependencyProvidingContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                CachedDependencies = new (Type, object)[]
+            ContentContainer.Add(
+                new DependencyProvidingContainer
                 {
-                    (typeof(OverlayColourProvider), colourProvider)
-                },
-                Children = new[]
-                {
-                    new Box
+                    RelativeSizeAxes = Axes.Both,
+                    CachedDependencies = new (Type, object)[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background3
+                        (typeof(OverlayColourProvider), colourProvider),
                     },
-                    CreateContent()
+                    Children = new[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background3,
+                        },
+                        CreateContent(),
+                    },
                 }
-            });
+            );
         }
 
         protected abstract Drawable CreateContent();
@@ -87,7 +87,10 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestAllColourSchemes()
         {
-            foreach (var scheme in Enum.GetValues(typeof(OverlayColourScheme)).Cast<OverlayColourScheme>())
+            foreach (
+                var scheme in Enum.GetValues(typeof(OverlayColourScheme))
+                    .Cast<OverlayColourScheme>()
+            )
                 AddStep($"set {scheme} scheme", () => CreateThemedContent(scheme));
         }
     }

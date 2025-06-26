@@ -23,7 +23,9 @@ namespace osu.Game.Online.API.Requests
             {
                 // can be removed once the service has been successfully deployed to production
                 if (API!.Endpoints.BeatmapSubmissionServiceUrl == null)
-                    throw new NotSupportedException("Beatmap submission not supported in this configuration!");
+                    throw new NotSupportedException(
+                        "Beatmap submission not supported in this configuration!"
+                    );
 
                 return $@"{API!.Endpoints.BeatmapSubmissionServiceUrl}/beatmapsets";
             }
@@ -46,25 +48,33 @@ namespace osu.Game.Online.API.Requests
         [JsonProperty("notify_on_discussion_replies")]
         public bool NotifyOnDiscussionReplies { get; init; }
 
-        private PutBeatmapSetRequest()
-        {
-        }
+        private PutBeatmapSetRequest() { }
 
-        public static PutBeatmapSetRequest CreateNew(uint beatmapCount, BeatmapSubmissionSettings settings) => new PutBeatmapSetRequest
-        {
-            BeatmapsToCreate = beatmapCount,
-            SubmissionTarget = settings.Target.Value,
-            NotifyOnDiscussionReplies = settings.NotifyOnDiscussionReplies.Value,
-        };
+        public static PutBeatmapSetRequest CreateNew(
+            uint beatmapCount,
+            BeatmapSubmissionSettings settings
+        ) =>
+            new PutBeatmapSetRequest
+            {
+                BeatmapsToCreate = beatmapCount,
+                SubmissionTarget = settings.Target.Value,
+                NotifyOnDiscussionReplies = settings.NotifyOnDiscussionReplies.Value,
+            };
 
-        public static PutBeatmapSetRequest UpdateExisting(uint beatmapSetId, IEnumerable<uint> beatmapsToKeep, uint beatmapsToCreate, BeatmapSubmissionSettings settings) => new PutBeatmapSetRequest
-        {
-            BeatmapSetID = beatmapSetId,
-            BeatmapsToKeep = beatmapsToKeep.ToArray(),
-            BeatmapsToCreate = beatmapsToCreate,
-            SubmissionTarget = settings.Target.Value,
-            NotifyOnDiscussionReplies = settings.NotifyOnDiscussionReplies.Value,
-        };
+        public static PutBeatmapSetRequest UpdateExisting(
+            uint beatmapSetId,
+            IEnumerable<uint> beatmapsToKeep,
+            uint beatmapsToCreate,
+            BeatmapSubmissionSettings settings
+        ) =>
+            new PutBeatmapSetRequest
+            {
+                BeatmapSetID = beatmapSetId,
+                BeatmapsToKeep = beatmapsToKeep.ToArray(),
+                BeatmapsToCreate = beatmapsToCreate,
+                SubmissionTarget = settings.Target.Value,
+                NotifyOnDiscussionReplies = settings.NotifyOnDiscussionReplies.Value,
+            };
 
         protected override WebRequest CreateWebRequest()
         {
@@ -79,10 +89,16 @@ namespace osu.Game.Online.API.Requests
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BeatmapSubmissionTarget
     {
-        [LocalisableDescription(typeof(BeatmapSubmissionStrings), nameof(BeatmapSubmissionStrings.BeatmapSubmissionTargetWIP))]
+        [LocalisableDescription(
+            typeof(BeatmapSubmissionStrings),
+            nameof(BeatmapSubmissionStrings.BeatmapSubmissionTargetWIP)
+        )]
         WIP,
 
-        [LocalisableDescription(typeof(BeatmapSubmissionStrings), nameof(BeatmapSubmissionStrings.BeatmapSubmissionTargetPending))]
+        [LocalisableDescription(
+            typeof(BeatmapSubmissionStrings),
+            nameof(BeatmapSubmissionStrings.BeatmapSubmissionTargetPending)
+        )]
         Pending,
     }
 }

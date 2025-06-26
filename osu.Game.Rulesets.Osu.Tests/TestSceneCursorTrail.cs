@@ -37,11 +37,13 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             Container scalingContainer = null;
 
-            createTest(() => scalingContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = new CursorTrail()
-            });
+            createTest(() =>
+                scalingContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = new CursorTrail(),
+                }
+            );
 
             AddStep("set large scale", () => scalingContainer.Scale = new Vector2(10));
         }
@@ -79,7 +81,11 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             createTest(() =>
             {
-                var skinContainer = new LegacySkinContainer(renderer, provideMiddle: false, provideCursor: false);
+                var skinContainer = new LegacySkinContainer(
+                    renderer,
+                    provideMiddle: false,
+                    provideCursor: false
+                );
                 var legacyCursorTrail = new LegacyCursorTrail(skinContainer);
 
                 skinContainer.Child = legacyCursorTrail;
@@ -87,22 +93,34 @@ namespace osu.Game.Rulesets.Osu.Tests
                 return skinContainer;
             });
 
-            AddAssert("trail is disjoint", () => this.ChildrenOfType<LegacyCursorTrail>().Single().DisjointTrail, () => Is.True);
+            AddAssert(
+                "trail is disjoint",
+                () => this.ChildrenOfType<LegacyCursorTrail>().Single().DisjointTrail,
+                () => Is.True
+            );
         }
 
         [Test]
         public void TestClickExpand()
         {
-            createTest(() => new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Scale = new Vector2(10),
-                Child = new CursorTrail(),
-            });
+            createTest(() =>
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Scale = new Vector2(10),
+                    Child = new CursorTrail(),
+                }
+            );
 
-            AddStep("expand", () => this.ChildrenOfType<CursorTrail>().Single().NewPartScale = new Vector2(3));
+            AddStep(
+                "expand",
+                () => this.ChildrenOfType<CursorTrail>().Single().NewPartScale = new Vector2(3)
+            );
             AddWaitStep("let the cursor trail draw a bit", 5);
-            AddStep("contract", () => this.ChildrenOfType<CursorTrail>().Single().NewPartScale = Vector2.One);
+            AddStep(
+                "contract",
+                () => this.ChildrenOfType<CursorTrail>().Single().NewPartScale = Vector2.One
+            );
         }
 
         [Test]
@@ -110,10 +128,14 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             createTest(() =>
             {
-                var skinContainer = new LegacySkinContainer(renderer, provideMiddle: true, enableRotation: true);
+                var skinContainer = new LegacySkinContainer(
+                    renderer,
+                    provideMiddle: true,
+                    enableRotation: true
+                );
                 var legacyCursorTrail = new LegacyRotatingCursorTrail(skinContainer)
                 {
-                    NewPartScale = new Vector2(10)
+                    NewPartScale = new Vector2(10),
                 };
 
                 skinContainer.Child = legacyCursorTrail;
@@ -122,17 +144,23 @@ namespace osu.Game.Rulesets.Osu.Tests
             });
         }
 
-        private void createTest(Func<Drawable> createContent) => AddStep("create trail", () =>
-        {
-            Clear();
+        private void createTest(Func<Drawable> createContent) =>
+            AddStep(
+                "create trail",
+                () =>
+                {
+                    Clear();
 
-            Add(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.8f),
-                Child = new MovingCursorInputManager { Child = createContent() }
-            });
-        });
+                    Add(
+                        new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.8f),
+                            Child = new MovingCursorInputManager { Child = createContent() },
+                        }
+                    );
+                }
+            );
 
         [Cached(typeof(ISkinSource))]
         private partial class LegacySkinContainer : Container, ISkinSource
@@ -142,7 +170,12 @@ namespace osu.Game.Rulesets.Osu.Tests
             private readonly bool provideCursor;
             private readonly bool enableRotation;
 
-            public LegacySkinContainer(IRenderer renderer, bool provideMiddle, bool provideCursor = true, bool enableRotation = false)
+            public LegacySkinContainer(
+                IRenderer renderer,
+                bool provideMiddle,
+                bool provideCursor = true,
+                bool enableRotation = false
+            )
             {
                 this.renderer = renderer;
                 this.provideMiddle = provideMiddle;
@@ -187,7 +220,8 @@ namespace osu.Game.Rulesets.Osu.Tests
                 return null;
             }
 
-            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) => lookupFunction(this) ? this : null;
+            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) =>
+                lookupFunction(this) ? this : null;
 
             public IEnumerable<ISkin> AllSources => new[] { this };
 
@@ -222,9 +256,7 @@ namespace osu.Game.Rulesets.Osu.Tests
         private partial class LegacyRotatingCursorTrail : LegacyCursorTrail
         {
             public LegacyRotatingCursorTrail([NotNull] ISkin skin)
-                : base(skin)
-            {
-            }
+                : base(skin) { }
 
             protected override void Update()
             {

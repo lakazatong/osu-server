@@ -58,19 +58,19 @@ namespace osu.Game.Overlays
 
         protected override Drawable CreateHeader() => new SettingsHeader(Title, Description);
 
-        protected override Drawable CreateFooter() => new OsuContextMenuContainer
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Child = new SettingsFooter()
-        };
+        protected override Drawable CreateFooter() =>
+            new OsuContextMenuContainer
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Child = new SettingsFooter(),
+            };
 
         public SettingsOverlay()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
-        public override bool AcceptsFocus => lastOpenedSubPanel == null || lastOpenedSubPanel.State.Value == Visibility.Hidden;
+        public override bool AcceptsFocus =>
+            lastOpenedSubPanel == null || lastOpenedSubPanel.State.Value == Visibility.Hidden;
 
         public void ShowAtControl<T>()
             where T : Drawable
@@ -102,7 +102,10 @@ namespace osu.Game.Overlays
             return subPanel;
         }
 
-        private void subPanelStateChanged(SettingsSubPanel panel, ValueChangedEvent<Visibility> state)
+        private void subPanelStateChanged(
+            SettingsSubPanel panel,
+            ValueChangedEvent<Visibility> state
+        )
         {
             switch (state.NewValue)
             {
@@ -127,7 +130,10 @@ namespace osu.Game.Overlays
             }
         }
 
-        protected override float ExpandedPosition => lastOpenedSubPanel?.State.Value == Visibility.Visible ? -PANEL_WIDTH : base.ExpandedPosition;
+        protected override float ExpandedPosition =>
+            lastOpenedSubPanel?.State.Value == Visibility.Visible
+                ? -PANEL_WIDTH
+                : base.ExpandedPosition;
 
         [BackgroundDependencyLoader]
         private void load()

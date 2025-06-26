@@ -52,7 +52,10 @@ namespace osu.Game.Tests.Collections.IO
                 {
                     var osu = LoadOsuIntoHost(host);
 
-                    await importCollectionsFromStream(osu, TestResources.OpenResource("Collections/collections.db"));
+                    await importCollectionsFromStream(
+                        osu,
+                        TestResources.OpenResource("Collections/collections.db")
+                    );
 
                     osu.Realm.Run(realm =>
                     {
@@ -87,7 +90,10 @@ namespace osu.Game.Tests.Collections.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    await importCollectionsFromStream(osu, TestResources.OpenResource("Collections/collections.db"));
+                    await importCollectionsFromStream(
+                        osu,
+                        TestResources.OpenResource("Collections/collections.db")
+                    );
 
                     osu.Realm.Run(realm =>
                     {
@@ -164,7 +170,10 @@ namespace osu.Game.Tests.Collections.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    await importCollectionsFromStream(osu, TestResources.OpenResource("Collections/collections.db"));
+                    await importCollectionsFromStream(
+                        osu,
+                        TestResources.OpenResource("Collections/collections.db")
+                    );
 
                     // ReSharper disable once MethodHasAsyncOverload
                     osu.Realm.Write(realm =>
@@ -215,7 +224,10 @@ namespace osu.Game.Tests.Collections.IO
         {
             // intentionally spin this up on a separate task to avoid disposal deadlocks.
             // see https://github.com/EventStore/EventStore/issues/1179
-            await Task.Factory.StartNew(() => new LegacyCollectionImporter(osu.Realm).Import(stream).WaitSafely(), TaskCreationOptions.LongRunning);
+            await Task.Factory.StartNew(
+                () => new LegacyCollectionImporter(osu.Realm).Import(stream).WaitSafely(),
+                TaskCreationOptions.LongRunning
+            );
         }
     }
 }

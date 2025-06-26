@@ -28,8 +28,10 @@ namespace osu.Game.Screens.SelectV2
         /// </summary>
         public IDictionary<GroupDefinition, HashSet<CarouselItem>> GroupItems => groupMap;
 
-        private readonly Dictionary<BeatmapSetInfo, HashSet<CarouselItem>> setMap = new Dictionary<BeatmapSetInfo, HashSet<CarouselItem>>();
-        private readonly Dictionary<GroupDefinition, HashSet<CarouselItem>> groupMap = new Dictionary<GroupDefinition, HashSet<CarouselItem>>();
+        private readonly Dictionary<BeatmapSetInfo, HashSet<CarouselItem>> setMap =
+            new Dictionary<BeatmapSetInfo, HashSet<CarouselItem>>();
+        private readonly Dictionary<GroupDefinition, HashSet<CarouselItem>> groupMap =
+            new Dictionary<GroupDefinition, HashSet<CarouselItem>>();
 
         private readonly Func<FilterCriteria> getCriteria;
 
@@ -38,91 +40,116 @@ namespace osu.Game.Screens.SelectV2
             this.getCriteria = getCriteria;
         }
 
-        public async Task<List<CarouselItem>> Run(IEnumerable<CarouselItem> items, CancellationToken cancellationToken)
+        public async Task<List<CarouselItem>> Run(
+            IEnumerable<CarouselItem> items,
+            CancellationToken cancellationToken
+        )
         {
-            return await Task.Run(() =>
-            {
-                setMap.Clear();
-                groupMap.Clear();
-
-                var criteria = getCriteria();
-                var newItems = new List<CarouselItem>();
-
-                BeatmapSetsGroupedTogether = ShouldGroupBeatmapsTogether(criteria);
-
-                var groups = getGroups((List<CarouselItem>)items, criteria);
-
-                foreach (var (group, itemsInGroup) in groups)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    CarouselItem? groupItem = null;
-                    HashSet<CarouselItem>? currentGroupItems = null;
-                    HashSet<CarouselItem>? currentSetItems = null;
-                    BeatmapInfo? lastBeatmap = null;
-
-                    if (group != null)
+            return await Task.Run(
+                    () =>
                     {
-                        groupMap[group] = currentGroupItems = new HashSet<CarouselItem>();
+                        setMap.Clear();
+                        groupMap.Clear();
 
-                        addItem(groupItem = new CarouselItem(group)
+                        var criteria = getCriteria();
+                        var newItems = new List<CarouselItem>();
+
+                        BeatmapSetsGroupedTogether = ShouldGroupBeatmapsTogether(criteria);
+
+                        var groups = getGroups((List<CarouselItem>)items, criteria);
+
+                        foreach (var (group, itemsInGroup) in groups)
                         {
-                            DrawHeight = PanelGroup.HEIGHT,
-                            DepthLayer = -2,
-                        });
-                    }
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                    foreach (var item in itemsInGroup)
-                    {
-                        var beatmap = (BeatmapInfo)item.Model;
+                            CarouselItem? groupItem = null;
+                            HashSet<CarouselItem>? currentGroupItems = null;
+                            HashSet<CarouselItem>? currentSetItems = null;
+                            BeatmapInfo? lastBeatmap = null;
 
-                        bool newBeatmapSet = lastBeatmap?.BeatmapSet!.ID != beatmap.BeatmapSet!.ID;
-
-                        if (newBeatmapSet)
-                        {
-                            if (!setMap.TryGetValue(beatmap.BeatmapSet!, out currentSetItems))
-                                setMap[beatmap.BeatmapSet!] = currentSetItems = new HashSet<CarouselItem>();
-                        }
-
-                        if (BeatmapSetsGroupedTogether)
-                        {
-                            if (newBeatmapSet)
+                            if (group != null)
                             {
-                                if (groupItem != null)
-                                    groupItem.NestedItemCount++;
+                                groupMap[group] = currentGroupItems = new HashSet<CarouselItem>();
 
-                                addItem(new CarouselItem(beatmap.BeatmapSet!)
+                                addItem(
+                                    groupItem = new CarouselItem(group)
+                                    {
+                                        DrawHeight = PanelGroup.HEIGHT,
+                                        DepthLayer = -2,
+                                    }
+                                );
+                            }
+
+                            foreach (var item in itemsInGroup)
+                            {
+                                var beatmap = (BeatmapInfo)item.Model;
+
+                                bool newBeatmapSet =
+                                    lastBeatmap?.BeatmapSet!.ID != beatmap.BeatmapSet!.ID;
+
+                                if (newBeatmapSet)
                                 {
-                                    DrawHeight = PanelBeatmapSet.HEIGHT,
-                                    DepthLayer = -1
-                                });
+                                    if (
+                                        !setMap.TryGetValue(
+                                            beatmap.BeatmapSet!,
+                                            out currentSetItems
+                                        )
+                                    )
+                                        setMap[beatmap.BeatmapSet!] = currentSetItems =
+                                            new HashSet<CarouselItem>();
+                                }
+
+                                if (BeatmapSetsGroupedTogether)
+                                {
+                                    if (newBeatmapSet)
+                                    {
+                                        if (groupItem != null)
+                                            groupItem.NestedItemCount++;
+
+                                        addItem(
+                                            new CarouselItem(beatmap.BeatmapSet!)
+                                            {
+                                                DrawHeight = PanelBeatmapSet.HEIGHT,
+                                                DepthLayer = -1,
+                                            }
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    if (groupItem != null)
+                                        groupItem.NestedItemCount++;
+
+                                    item.DrawHeight = PanelBeatmapStandalone.HEIGHT;
+                                }
+
+                                addItem(item);
+                                lastBeatmap = beatmap;
+                            }
+
+                            void addItem(CarouselItem i)
+                            {
+                                newItems.Add(i);
+
+                                currentGroupItems?.Add(i);
+                                currentSetItems?.Add(i);
+
+                                i.IsVisible =
+                                    i.Model is GroupDefinition
+                                    || (
+                                        group == null
+                                        && (
+                                            i.Model is BeatmapSetInfo || !BeatmapSetsGroupedTogether
+                                        )
+                                    );
                             }
                         }
-                        else
-                        {
-                            if (groupItem != null)
-                                groupItem.NestedItemCount++;
 
-                            item.DrawHeight = PanelBeatmapStandalone.HEIGHT;
-                        }
-
-                        addItem(item);
-                        lastBeatmap = beatmap;
-                    }
-
-                    void addItem(CarouselItem i)
-                    {
-                        newItems.Add(i);
-
-                        currentGroupItems?.Add(i);
-                        currentSetItems?.Add(i);
-
-                        i.IsVisible = i.Model is GroupDefinition || (group == null && (i.Model is BeatmapSetInfo || !BeatmapSetsGroupedTogether));
-                    }
-                }
-
-                return newItems;
-            }, cancellationToken).ConfigureAwait(false);
+                        return newItems;
+                    },
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
         }
 
         public static bool ShouldGroupBeatmapsTogether(FilterCriteria criteria)
@@ -146,61 +173,85 @@ namespace osu.Game.Screens.SelectV2
                     return new List<GroupMapping> { new GroupMapping(null, items) };
 
                 case GroupMode.Artist:
-                    return getGroupsBy(b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Artist), items);
+                    return getGroupsBy(
+                        b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Artist),
+                        items
+                    );
 
                 case GroupMode.Author:
-                    return getGroupsBy(b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Author.Username), items);
+                    return getGroupsBy(
+                        b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Author.Username),
+                        items
+                    );
 
                 case GroupMode.Title:
-                    return getGroupsBy(b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Title), items);
+                    return getGroupsBy(
+                        b => defineGroupAlphabetically(b.BeatmapSet!.Metadata.Title),
+                        items
+                    );
 
                 case GroupMode.DateAdded:
                     return getGroupsBy(b => defineGroupByDate(b.BeatmapSet!.DateAdded), items);
 
                 case GroupMode.DateRanked:
-                    return getGroupsBy(b => defineGroupByRankedDate(b.BeatmapSet!.DateRanked), items);
+                    return getGroupsBy(
+                        b => defineGroupByRankedDate(b.BeatmapSet!.DateRanked),
+                        items
+                    );
 
                 case GroupMode.LastPlayed:
-                    return getGroupsBy(b =>
-                    {
-                        var date = b.LastPlayed;
+                    return getGroupsBy(
+                        b =>
+                        {
+                            var date = b.LastPlayed;
 
-                        if (BeatmapSetsGroupedTogether)
-                            date = aggregateMax(b, static b => (b.LastPlayed ?? DateTimeOffset.MinValue));
+                            if (BeatmapSetsGroupedTogether)
+                                date = aggregateMax(
+                                    b,
+                                    static b => (b.LastPlayed ?? DateTimeOffset.MinValue)
+                                );
 
-                        if (date == null || date == DateTimeOffset.MinValue)
-                            return new GroupDefinition(int.MaxValue, "Never");
+                            if (date == null || date == DateTimeOffset.MinValue)
+                                return new GroupDefinition(int.MaxValue, "Never");
 
-                        return defineGroupByDate(date.Value);
-                    }, items);
+                            return defineGroupByDate(date.Value);
+                        },
+                        items
+                    );
 
                 case GroupMode.RankedStatus:
                     return getGroupsBy(b => defineGroupByStatus(b.BeatmapSet!.Status), items);
 
                 case GroupMode.BPM:
-                    return getGroupsBy(b =>
-                    {
-                        double bpm = b.BPM;
+                    return getGroupsBy(
+                        b =>
+                        {
+                            double bpm = b.BPM;
 
-                        if (BeatmapSetsGroupedTogether)
-                            bpm = aggregateMax(b, bb => bb.BPM);
+                            if (BeatmapSetsGroupedTogether)
+                                bpm = aggregateMax(b, bb => bb.BPM);
 
-                        return defineGroupByBPM(bpm);
-                    }, items);
+                            return defineGroupByBPM(bpm);
+                        },
+                        items
+                    );
 
                 case GroupMode.Difficulty:
                     return getGroupsBy(b => defineGroupByStars(b.StarRating), items);
 
                 case GroupMode.Length:
-                    return getGroupsBy(b =>
-                    {
-                        double length = b.Length;
+                    return getGroupsBy(
+                        b =>
+                        {
+                            double length = b.Length;
 
-                        if (BeatmapSetsGroupedTogether)
-                            length = aggregateMax(b, bb => bb.Length);
+                            if (BeatmapSetsGroupedTogether)
+                                length = aggregateMax(b, bb => bb.Length);
 
-                        return defineGroupByLength(length);
-                    }, items);
+                            return defineGroupByLength(length);
+                        },
+                        items
+                    );
 
                 // TODO: need implementation
                 //
@@ -221,12 +272,16 @@ namespace osu.Game.Screens.SelectV2
             }
         }
 
-        private List<GroupMapping> getGroupsBy(Func<BeatmapInfo, GroupDefinition> getGroup, List<CarouselItem> items)
+        private List<GroupMapping> getGroupsBy(
+            Func<BeatmapInfo, GroupDefinition> getGroup,
+            List<CarouselItem> items
+        )
         {
-            return items.GroupBy(i => getGroup((BeatmapInfo)i.Model))
-                        .OrderBy(s => s.Key.Order)
-                        .Select(g => new GroupMapping(g.Key, g.ToList()))
-                        .ToList();
+            return items
+                .GroupBy(i => getGroup((BeatmapInfo)i.Model))
+                .OrderBy(s => s.Key.Order)
+                .Select(g => new GroupMapping(g.Key, g.ToList()))
+                .ToList();
         }
 
         private GroupDefinition defineGroupAlphabetically(string name)
@@ -237,7 +292,10 @@ namespace osu.Game.Screens.SelectV2
                 return new GroupDefinition(int.MinValue, "0-9");
 
             if (char.IsAsciiLetter(firstChar))
-                return new GroupDefinition(char.ToUpperInvariant(firstChar) - 'A', char.ToUpperInvariant(firstChar).ToString());
+                return new GroupDefinition(
+                    char.ToUpperInvariant(firstChar) - 'A',
+                    char.ToUpperInvariant(firstChar).ToString()
+                );
 
             return new GroupDefinition(int.MaxValue, "Other");
         }

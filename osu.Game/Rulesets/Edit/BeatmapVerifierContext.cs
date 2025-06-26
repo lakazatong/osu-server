@@ -26,7 +26,11 @@ namespace osu.Game.Rulesets.Edit
         /// </summary>
         public DifficultyRating InterpretedDifficulty;
 
-        public BeatmapVerifierContext(IBeatmap beatmap, IWorkingBeatmap workingBeatmap, DifficultyRating difficultyRating = DifficultyRating.ExpertPlus)
+        public BeatmapVerifierContext(
+            IBeatmap beatmap,
+            IWorkingBeatmap workingBeatmap,
+            DifficultyRating difficultyRating = DifficultyRating.ExpertPlus
+        )
         {
             Beatmap = beatmap;
             WorkingBeatmap = workingBeatmap;

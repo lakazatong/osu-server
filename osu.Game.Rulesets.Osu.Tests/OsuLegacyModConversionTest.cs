@@ -29,7 +29,11 @@ namespace osu.Game.Rulesets.Osu.Tests
             new object[] { LegacyMods.SpunOut, new[] { typeof(OsuModSpunOut) } },
             new object[] { LegacyMods.Autopilot, new[] { typeof(OsuModAutopilot) } },
             new object[] { LegacyMods.Target, new[] { typeof(OsuModTargetPractice) } },
-            new object[] { LegacyMods.HardRock | LegacyMods.DoubleTime, new[] { typeof(OsuModHardRock), typeof(OsuModDoubleTime) } },
+            new object[]
+            {
+                LegacyMods.HardRock | LegacyMods.DoubleTime,
+                new[] { typeof(OsuModHardRock), typeof(OsuModDoubleTime) },
+            },
             new object[] { LegacyMods.ScoreV2, new[] { typeof(ModScoreV2) } },
         };
 
@@ -40,13 +44,15 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(OsuModNightcore) })]
         [TestCase(LegacyMods.Perfect, new[] { typeof(OsuModPerfect) })]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(OsuModPerfect) })]
-        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) => base.TestFromLegacy(legacyMods, expectedMods);
+        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) =>
+            base.TestFromLegacy(legacyMods, expectedMods);
 
         [TestCaseSource(nameof(osu_mod_mapping))]
         [TestCase(LegacyMods.Cinema | LegacyMods.Autoplay, new[] { typeof(OsuModCinema) })]
         [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(OsuModNightcore) })]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(OsuModPerfect) })]
-        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) => base.TestToLegacy(legacyMods, givenMods);
+        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) =>
+            base.TestToLegacy(legacyMods, givenMods);
 
         protected override Ruleset CreateRuleset() => new OsuRuleset();
     }

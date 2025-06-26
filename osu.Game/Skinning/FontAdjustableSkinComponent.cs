@@ -18,10 +18,18 @@ namespace osu.Game.Skinning
     {
         public bool UsesFixedAnchor { get; set; }
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.Font), nameof(SkinnableComponentStrings.FontDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.Font),
+            nameof(SkinnableComponentStrings.FontDescription)
+        )]
         public Bindable<Typeface> Font { get; } = new Bindable<Typeface>(Typeface.Torus);
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.TextColour), nameof(SkinnableComponentStrings.TextColourDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.TextColour),
+            nameof(SkinnableComponentStrings.TextColourDescription)
+        )]
         public BindableColour4 TextColour { get; } = new BindableColour4(Colour4.White);
 
         /// <summary>
@@ -35,14 +43,18 @@ namespace osu.Game.Skinning
         {
             base.LoadComplete();
 
-            Font.BindValueChanged(e =>
-            {
-                // We only have bold weight for venera, so let's force that.
-                FontWeight fontWeight = e.NewValue == Typeface.Venera ? FontWeight.Bold : FontWeight.Regular;
+            Font.BindValueChanged(
+                e =>
+                {
+                    // We only have bold weight for venera, so let's force that.
+                    FontWeight fontWeight =
+                        e.NewValue == Typeface.Venera ? FontWeight.Bold : FontWeight.Regular;
 
-                FontUsage f = OsuFont.GetFont(e.NewValue, weight: fontWeight);
-                SetFont(f);
-            }, true);
+                    FontUsage f = OsuFont.GetFont(e.NewValue, weight: fontWeight);
+                    SetFont(f);
+                },
+                true
+            );
 
             TextColour.BindValueChanged(e => SetTextColour(e.NewValue), true);
         }

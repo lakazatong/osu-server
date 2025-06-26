@@ -54,12 +54,13 @@ namespace osu.Game.Screens.Play
         [Resolved]
         private OsuConfigManager config { get; set; } = null!;
 
-        protected override Container<Drawable> Content { get; } = new Container
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            RelativeSizeAxes = Axes.Both,
-        };
+        protected override Container<Drawable> Content { get; } =
+            new Container
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+            };
 
         /// <summary>
         /// The player screen background, used to adjust appearance on failing.
@@ -79,26 +80,31 @@ namespace osu.Game.Screens.Play
             track = beatmap.Value.Track;
             AddInternal(failSample = new SkinnableSound(new SampleInfo("Gameplay/failsound")));
 
-            AddRangeInternal(new Drawable[]
-            {
-                filters = new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Children = new Drawable[]
+                    filters = new Container
                     {
-                        failLowPassFilter = new AudioFilter(audio.TrackMixer),
-                        failHighPassFilter = new AudioFilter(audio.TrackMixer, BQFType.HighPass),
+                        Children = new Drawable[]
+                        {
+                            failLowPassFilter = new AudioFilter(audio.TrackMixer),
+                            failHighPassFilter = new AudioFilter(
+                                audio.TrackMixer,
+                                BQFType.HighPass
+                            ),
+                        },
                     },
-                },
-                Content,
-                redFlashLayer = new Box
-                {
-                    Colour = Color4.Red.Opacity(0.6f),
-                    RelativeSizeAxes = Axes.Both,
-                    Blending = BlendingParameters.Additive,
-                    Depth = float.MinValue,
-                    Alpha = 0
-                },
-            });
+                    Content,
+                    redFlashLayer = new Box
+                    {
+                        Colour = Color4.Red.Opacity(0.6f),
+                        RelativeSizeAxes = Axes.Both,
+                        Blending = BlendingParameters.Additive,
+                        Depth = float.MinValue,
+                        Alpha = 0,
+                    },
+                }
+            );
         }
 
         private bool started;
@@ -110,17 +116,22 @@ namespace osu.Game.Screens.Play
         /// <exception cref="InvalidOperationException">Thrown if started more than once.</exception>
         public void Start()
         {
-            if (started) throw new InvalidOperationException("Animation cannot be started more than once.");
-            if (filtersRemoved) throw new InvalidOperationException("Animation cannot be started after filters have been removed.");
+            if (started)
+                throw new InvalidOperationException("Animation cannot be started more than once.");
+            if (filtersRemoved)
+                throw new InvalidOperationException(
+                    "Animation cannot be started after filters have been removed."
+                );
 
             started = true;
 
-            this.TransformBindableTo(trackFreq, 0, duration).OnComplete(_ =>
-            {
-                // Don't reset frequency as the pause screen may appear post transform, causing a second frequency sweep.
-                removeFilters(false);
-                OnComplete?.Invoke();
-            });
+            this.TransformBindableTo(trackFreq, 0, duration)
+                .OnComplete(_ =>
+                {
+                    // Don't reset frequency as the pause screen may appear post transform, causing a second frequency sweep.
+                    removeFilters(false);
+                    OnComplete?.Invoke();
+                });
 
             failHighPassFilter.CutoffTo(300);
             failLowPassFilter.CutoffTo(300, duration, Easing.OutCubic);
@@ -137,12 +148,14 @@ namespace osu.Game.Screens.Play
 
             Content.Masking = true;
 
-            Content.Add(new Box
-            {
-                Colour = Color4.Black,
-                RelativeSizeAxes = Axes.Both,
-                Depth = float.MaxValue
-            });
+            Content.Add(
+                new Box
+                {
+                    Colour = Color4.Black,
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = float.MaxValue,
+                }
+            );
 
             Content.ScaleTo(0.85f, duration, Easing.OutQuart);
             Content.RotateTo(1, duration, Easing.OutQuart);
@@ -212,13 +225,20 @@ namespace osu.Game.Screens.Play
                 dropOffScreen(obj, failTime, rotation, originalScale, originalPosition);
 
                 // need to reapply the fail drop after judgement state changes
-                obj.ApplyCustomUpdateState += (_, _) => dropOffScreen(obj, failTime, rotation, originalScale, originalPosition);
+                obj.ApplyCustomUpdateState += (_, _) =>
+                    dropOffScreen(obj, failTime, rotation, originalScale, originalPosition);
 
                 appliedObjects.Add(obj);
             }
         }
 
-        private void dropOffScreen(DrawableHitObject obj, double failTime, float randomRotation, Vector2 originalScale, Vector2 originalPosition)
+        private void dropOffScreen(
+            DrawableHitObject obj,
+            double failTime,
+            float randomRotation,
+            Vector2 originalScale,
+            Vector2 originalPosition
+        )
         {
             using (obj.BeginAbsoluteSequence(failTime))
             {

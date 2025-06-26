@@ -28,10 +28,11 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                }
+                },
             };
         }
 
-        private DrawableTestHit createHit(HitType type) => new DrawableTestHit(new Hit { StartTime = Time.Current, Type = type });
+        private DrawableTestHit createHit(HitType type) =>
+            new DrawableTestHit(new Hit { StartTime = Time.Current, Type = type });
     }
 }

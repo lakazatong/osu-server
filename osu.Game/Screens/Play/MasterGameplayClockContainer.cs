@@ -76,7 +76,11 @@ namespace osu.Game.Screens.Play
             StartTime = findEarliestStartTime(gameplayStartTime, beatmap, working.Storyboard);
         }
 
-        private static double findEarliestStartTime(double gameplayStartTime, IBeatmap beatmap, Storyboard storyboard)
+        private static double findEarliestStartTime(
+            double gameplayStartTime,
+            IBeatmap beatmap,
+            Storyboard storyboard
+        )
         {
             // here we are trying to find the time to start playback from the "zero" point.
             // generally this is either zero, or some point earlier than zero in the case of storyboards, lead-ins etc.
@@ -180,13 +184,17 @@ namespace osu.Game.Screens.Play
                         if (playbackRateValid.Value)
                         {
                             playbackRateValid.Value = false;
-                            Logger.Log("System audio playback is not working as expected. Some online functionality will not work.\n\nPlease check your audio drivers.", level: LogLevel.Important);
+                            Logger.Log(
+                                "System audio playback is not working as expected. Some online functionality will not work.\n\nPlease check your audio drivers.",
+                                level: LogLevel.Important
+                            );
                         }
                     }
                     else
                     {
                         Logger.Log(
-                            $"Playback discrepancy detected ({playbackDiscrepancyCount} of allowed {allowed_playback_discrepancies}): {elapsedGameplayClockTime:N1} vs {elapsedValidationTime:N1}");
+                            $"Playback discrepancy detected ({playbackDiscrepancyCount} of allowed {allowed_playback_discrepancies}): {elapsedGameplayClockTime:N1} vs {elapsedValidationTime:N1}"
+                        );
                     }
 
                     elapsedValidationTime = null;

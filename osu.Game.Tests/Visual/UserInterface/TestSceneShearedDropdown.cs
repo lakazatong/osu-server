@@ -14,30 +14,25 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneShearedDropdown : ThemeComparisonTestScene
     {
         public TestSceneShearedDropdown()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.Both,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                new Box
+                RelativeSizeAxes = Axes.Both,
+                Children = new Drawable[]
                 {
-                    Colour = Color4.Black.Opacity(0.75f),
-                    RelativeSizeAxes = Axes.Both,
+                    new Box { Colour = Color4.Black.Opacity(0.75f), RelativeSizeAxes = Axes.Both },
+                    new ShearedDropdown<string>("Test")
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Y = 300f,
+                        Width = 140,
+                        Current = new Bindable<string>(),
+                        Items = new[] { "Global", "Friends", "Local", "Really lonnnnnnng option" },
+                    },
                 },
-                new ShearedDropdown<string>("Test")
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Y = 300f,
-                    Width = 140,
-                    Current = new Bindable<string>(),
-                    Items = new[] { "Global", "Friends", "Local", "Really lonnnnnnng option" },
-                }
-            }
-        };
+            };
     }
 }

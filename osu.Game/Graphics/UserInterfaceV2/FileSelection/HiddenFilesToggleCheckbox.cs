@@ -17,7 +17,10 @@ namespace osu.Game.Graphics.UserInterfaceV2.FileSelection
             RelativeSizeAxes = Axes.None;
             AutoSizeAxes = Axes.None;
             Size = new Vector2(140, OsuDirectorySelectorBreadcrumbDisplay.HEIGHT);
-            Margin = new MarginPadding { Right = OsuDirectorySelectorBreadcrumbDisplay.HORIZONTAL_PADDING, };
+            Margin = new MarginPadding
+            {
+                Right = OsuDirectorySelectorBreadcrumbDisplay.HORIZONTAL_PADDING,
+            };
             Anchor = Anchor.CentreLeft;
             Origin = Anchor.CentreLeft;
             LabelTextFlowContainer.Anchor = Anchor.CentreLeft;

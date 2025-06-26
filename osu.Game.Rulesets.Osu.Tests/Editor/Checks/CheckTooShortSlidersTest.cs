@@ -33,11 +33,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             {
                 StartTime = 0,
                 RepeatCount = 0,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(new Vector2(0, 0)),
-                    new PathControlPoint(new Vector2(100, 0))
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(new Vector2(0, 0)),
+                        new PathControlPoint(new Vector2(100, 0)),
+                    }
+                ),
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -52,11 +54,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             {
                 StartTime = 0,
                 RepeatCount = 0,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(new Vector2(0, 0)),
-                    new PathControlPoint(new Vector2(25, 0))
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(new Vector2(0, 0)),
+                        new PathControlPoint(new Vector2(25, 0)),
+                    }
+                ),
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -71,11 +75,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             {
                 StartTime = 0,
                 RepeatCount = 0,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(new Vector2(0, 0)),
-                    new PathControlPoint(new Vector2(10, 0))
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(new Vector2(0, 0)),
+                        new PathControlPoint(new Vector2(10, 0)),
+                    }
+                ),
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -90,11 +96,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             {
                 StartTime = 0,
                 RepeatCount = 0,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(new Vector2(0, 0)),
-                    new PathControlPoint(new Vector2(10, 0))
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(new Vector2(0, 0)),
+                        new PathControlPoint(new Vector2(10, 0)),
+                    }
+                ),
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -110,11 +118,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             {
                 StartTime = 0,
                 RepeatCount = 2,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(new Vector2(0, 0)),
-                    new PathControlPoint(new Vector2(10, 0))
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(new Vector2(0, 0)),
+                        new PathControlPoint(new Vector2(10, 0)),
+                    }
+                ),
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -122,12 +132,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             assertTooShort(new List<HitObject> { slider });
         }
 
-        private void assertOk(List<HitObject> hitObjects, DifficultyRating difficultyRating = DifficultyRating.Easy)
+        private void assertOk(
+            List<HitObject> hitObjects,
+            DifficultyRating difficultyRating = DifficultyRating.Easy
+        )
         {
             Assert.That(check.Run(getContext(hitObjects, difficultyRating)), Is.Empty);
         }
 
-        private void assertTooShort(List<HitObject> hitObjects, DifficultyRating difficultyRating = DifficultyRating.Easy)
+        private void assertTooShort(
+            List<HitObject> hitObjects,
+            DifficultyRating difficultyRating = DifficultyRating.Easy
+        )
         {
             var issues = check.Run(getContext(hitObjects, difficultyRating)).ToList();
 
@@ -135,11 +151,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             Assert.That(issues.First().Template is CheckTooShortSliders.IssueTemplateTooShort);
         }
 
-        private BeatmapVerifierContext getContext(List<HitObject> hitObjects, DifficultyRating difficultyRating)
+        private BeatmapVerifierContext getContext(
+            List<HitObject> hitObjects,
+            DifficultyRating difficultyRating
+        )
         {
             var beatmap = new Beatmap<HitObject> { HitObjects = hitObjects };
 
-            return new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap), difficultyRating);
+            return new BeatmapVerifierContext(
+                beatmap,
+                new TestWorkingBeatmap(beatmap),
+                difficultyRating
+            );
         }
     }
 }

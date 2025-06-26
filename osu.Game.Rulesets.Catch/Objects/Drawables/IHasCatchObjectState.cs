@@ -26,14 +26,16 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
 
     public static class HasCatchObjectStateExtensions
     {
-        public static CatchObjectState SaveState(this IHasCatchObjectState target) => new CatchObjectState(
-            target.HitObject,
-            target.AccentColour.Value,
-            target.HyperDash.Value,
-            target.IndexInBeatmap.Value,
-            target.DisplayPosition,
-            target.DisplaySize,
-            target.DisplayRotation);
+        public static CatchObjectState SaveState(this IHasCatchObjectState target) =>
+            new CatchObjectState(
+                target.HitObject,
+                target.AccentColour.Value,
+                target.HyperDash.Value,
+                target.IndexInBeatmap.Value,
+                target.DisplayPosition,
+                target.DisplaySize,
+                target.DisplayRotation
+            );
     }
 
     public readonly record struct CatchObjectState(
@@ -43,5 +45,6 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         int IndexInBeatmap,
         Vector2 DisplayPosition,
         Vector2 DisplaySize,
-        float DisplayRotation);
+        float DisplayRotation
+    );
 }

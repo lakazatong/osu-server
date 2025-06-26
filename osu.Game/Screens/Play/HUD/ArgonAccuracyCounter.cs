@@ -19,24 +19,33 @@ namespace osu.Game.Screens.Play.HUD
     {
         protected override double RollingDuration => 250;
 
-        [SettingSource("Wireframe opacity", "Controls the opacity of the wireframes behind the digits.")]
-        public BindableFloat WireframeOpacity { get; } = new BindableFloat(0.25f)
-        {
-            Precision = 0.01f,
-            MinValue = 0,
-            MaxValue = 1,
-        };
+        [SettingSource(
+            "Wireframe opacity",
+            "Controls the opacity of the wireframes behind the digits."
+        )]
+        public BindableFloat WireframeOpacity { get; } =
+            new BindableFloat(0.25f)
+            {
+                Precision = 0.01f,
+                MinValue = 0,
+                MaxValue = 1,
+            };
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.ShowLabel), nameof(SkinnableComponentStrings.ShowLabelDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.ShowLabel),
+            nameof(SkinnableComponentStrings.ShowLabelDescription)
+        )]
         public Bindable<bool> ShowLabel { get; } = new BindableBool(true);
 
         public bool UsesFixedAnchor { get; set; }
 
-        protected override IHasText CreateText() => new ArgonAccuracyTextComponent
-        {
-            WireframeOpacity = { BindTarget = WireframeOpacity },
-            ShowLabel = { BindTarget = ShowLabel },
-        };
+        protected override IHasText CreateText() =>
+            new ArgonAccuracyTextComponent
+            {
+                WireframeOpacity = { BindTarget = WireframeOpacity },
+                ShowLabel = { BindTarget = ShowLabel },
+            };
 
         private partial class ArgonAccuracyTextComponent : CompositeDrawable, IHasText
         {
@@ -73,12 +82,16 @@ namespace osu.Game.Screens.Play.HUD
                         new Container
                         {
                             AutoSizeAxes = Axes.Both,
-                            Child = wholePart = new ArgonCounterTextComponent(Anchor.TopRight, BeatmapsetsStrings.ShowScoreboardHeadersAccuracy.ToUpper())
-                            {
-                                WireframeOpacity = { BindTarget = WireframeOpacity },
-                                WireframeTemplate = @"###",
-                                ShowLabel = { BindTarget = ShowLabel },
-                            }
+                            Child = wholePart =
+                                new ArgonCounterTextComponent(
+                                    Anchor.TopRight,
+                                    BeatmapsetsStrings.ShowScoreboardHeadersAccuracy.ToUpper()
+                                )
+                                {
+                                    WireframeOpacity = { BindTarget = WireframeOpacity },
+                                    WireframeTemplate = @"###",
+                                    ShowLabel = { BindTarget = ShowLabel },
+                                },
                         },
                         fractionPart = new ArgonCounterTextComponent(Anchor.TopLeft)
                         {
@@ -90,9 +103,9 @@ namespace osu.Game.Screens.Play.HUD
                         {
                             Text = @"%",
                             WireframeTemplate = @"#",
-                            WireframeOpacity = { BindTarget = WireframeOpacity }
+                            WireframeOpacity = { BindTarget = WireframeOpacity },
                         },
-                    }
+                    },
                 };
             }
 
@@ -100,11 +113,17 @@ namespace osu.Game.Screens.Play.HUD
             {
                 base.LoadComplete();
 
-                ShowLabel.BindValueChanged(s =>
-                {
-                    fractionPart.Margin = new MarginPadding { Top = s.NewValue ? 12f * 2f + 4f : 4f }; // +4 to account for the extra spaces above the digits.
-                    percentText.Margin = new MarginPadding { Top = s.NewValue ? 12f : 0 };
-                }, true);
+                ShowLabel.BindValueChanged(
+                    s =>
+                    {
+                        fractionPart.Margin = new MarginPadding
+                        {
+                            Top = s.NewValue ? 12f * 2f + 4f : 4f,
+                        }; // +4 to account for the extra spaces above the digits.
+                        percentText.Margin = new MarginPadding { Top = s.NewValue ? 12f : 0 };
+                    },
+                    true
+                );
             }
         }
     }

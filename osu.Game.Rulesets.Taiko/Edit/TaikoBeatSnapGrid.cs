@@ -11,9 +11,7 @@ namespace osu.Game.Rulesets.Taiko.Edit
 {
     public partial class TaikoBeatSnapGrid : BeatSnapGrid
     {
-        protected override IEnumerable<Container> GetTargetContainers(HitObjectComposer composer) => new[]
-        {
-            ((TaikoPlayfield)composer.Playfield).UnderlayElements
-        };
+        protected override IEnumerable<Container> GetTargetContainers(HitObjectComposer composer) =>
+            new[] { ((TaikoPlayfield)composer.Playfield).UnderlayElements };
     }
 }

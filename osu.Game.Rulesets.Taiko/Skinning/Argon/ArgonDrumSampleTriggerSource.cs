@@ -16,10 +16,11 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
         [Resolved]
         private ISkinSource skinSource { get; set; } = null!;
 
-        public ArgonDrumSampleTriggerSource(HitObjectContainer hitObjectContainer, SampleBalance balance)
-            : base(hitObjectContainer, balance)
-        {
-        }
+        public ArgonDrumSampleTriggerSource(
+            HitObjectContainer hitObjectContainer,
+            SampleBalance balance
+        )
+            : base(hitObjectContainer, balance) { }
 
         public override void Play(HitType hitType, bool strong)
         {
@@ -28,17 +29,25 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             if (hitObject == null)
                 return;
 
-            var originalSample = hitObject.CreateHitSampleInfo(hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL);
+            var originalSample = hitObject.CreateHitSampleInfo(
+                hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL
+            );
 
             // If the sample is provided by a legacy skin, we should not try and do anything special.
-            if (skinSource.FindProvider(s => s.GetSample(originalSample) != null) is LegacySkinTransformer)
+            if (
+                skinSource.FindProvider(s => s.GetSample(originalSample) != null)
+                is LegacySkinTransformer
+            )
             {
                 base.Play(hitType, strong);
                 return;
             }
 
             // let the magic begin...
-            var samplesToPlay = new List<ISampleInfo> { new VolumeAwareHitSampleInfo(originalSample, strong) };
+            var samplesToPlay = new List<ISampleInfo>
+            {
+                new VolumeAwareHitSampleInfo(originalSample, strong),
+            };
 
             PlaySamples(samplesToPlay.ToArray());
         }

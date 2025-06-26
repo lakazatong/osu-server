@@ -20,24 +20,24 @@ namespace osu.Game.Tests.Visual.UserInterface
         private Box colourContainer;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = hoverContainer = new OsuHoverTestContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Enabled = { Value = true },
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(100),
-                Child = colourContainer = new Box
+                Child = hoverContainer = new OsuHoverTestContainer
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-            };
+                    Enabled = { Value = true },
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(100),
+                    Child = colourContainer = new Box { RelativeSizeAxes = Axes.Both },
+                };
 
-            doMoveOut();
-        });
+                doMoveOut();
+            });
 
-        [Description("Checks IsHovered property value on a container when it is hovered/unhovered.")]
+        [Description(
+            "Checks IsHovered property value on a container when it is hovered/unhovered."
+        )]
         [TestCase(true, TestName = "Enabled_Check_IsHovered")]
         [TestCase(false, TestName = "Disabled_Check_IsHovered")]
         public void TestIsHoveredHasProperValue(bool isEnabled)
@@ -102,7 +102,9 @@ namespace osu.Game.Tests.Visual.UserInterface
         }
 
         [Test]
-        [Description("Checks that when a disabled & hovered container gets enabled, colour fading happens")]
+        [Description(
+            "Checks that when a disabled & hovered container gets enabled, colour fading happens"
+        )]
         public void TestBecomesEnabledTransition()
         {
             disableContainer();
@@ -116,7 +118,9 @@ namespace osu.Game.Tests.Visual.UserInterface
         }
 
         [Test]
-        [Description("Checks that when an enabled & hovered container gets disabled, colour fading happens")]
+        [Description(
+            "Checks that when an enabled & hovered container gets disabled, colour fading happens"
+        )]
         public void TestBecomesDisabledTransition()
         {
             enableContainer();
@@ -130,7 +134,9 @@ namespace osu.Game.Tests.Visual.UserInterface
         }
 
         [Test]
-        [Description("Checks that when a hovered container gets enabled and disabled multiple times, colour fading happens")]
+        [Description(
+            "Checks that when a hovered container gets enabled and disabled multiple times, colour fading happens"
+        )]
         public void TestDisabledChangesMultipleTimes()
         {
             enableContainer();
@@ -159,27 +165,40 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep($"{word} container", () => hoverContainer.Enabled.Value = newValue);
         }
 
-        private void moveToText() => AddStep("Move mouse to text", () => InputManager.MoveMouseTo(hoverContainer));
+        private void moveToText() =>
+            AddStep("Move mouse to text", () => InputManager.MoveMouseTo(hoverContainer));
 
         private void moveOut() => AddStep("Move out", doMoveOut);
 
         private void checkHovered() => AddAssert("Check hovered", () => hoverContainer.IsHovered);
 
-        private void checkNotHovered() => AddAssert("Check not hovered", () => !hoverContainer.IsHovered);
+        private void checkNotHovered() =>
+            AddAssert("Check not hovered", () => !hoverContainer.IsHovered);
 
-        private void checkColour(ColourInfo expectedColour)
-            => AddAssert($"Check colour to be '{expectedColour}'", () => currentColour.Equals(expectedColour));
+        private void checkColour(ColourInfo expectedColour) =>
+            AddAssert(
+                $"Check colour to be '{expectedColour}'",
+                () => currentColour.Equals(expectedColour)
+            );
 
-        private void waitUntilColourIs(ColourInfo expectedColour)
-            => AddUntilStep($"Wait until hover colour is {expectedColour}", () => currentColour.Equals(expectedColour));
+        private void waitUntilColourIs(ColourInfo expectedColour) =>
+            AddUntilStep(
+                $"Wait until hover colour is {expectedColour}",
+                () => currentColour.Equals(expectedColour)
+            );
 
         private ColourInfo currentColour => colourContainer.DrawColourInfo.Colour;
 
         /// <summary>
         ///     Moves the cursor to top left corner of the screen
         /// </summary>
-        private void doMoveOut()
-            => InputManager.MoveMouseTo(new Vector2(InputManager.ScreenSpaceDrawQuad.TopLeft.X, InputManager.ScreenSpaceDrawQuad.TopLeft.Y));
+        private void doMoveOut() =>
+            InputManager.MoveMouseTo(
+                new Vector2(
+                    InputManager.ScreenSpaceDrawQuad.TopLeft.X,
+                    InputManager.ScreenSpaceDrawQuad.TopLeft.Y
+                )
+            );
 
         private sealed partial class OsuHoverTestContainer : OsuHoverContainer
         {

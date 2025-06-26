@@ -29,7 +29,8 @@ namespace osu.Game.Beatmaps.Drawables
         private readonly SpriteIcon starIcon;
         private readonly OsuSpriteText starsText;
 
-        private readonly BindableWithCurrent<StarDifficulty> current = new BindableWithCurrent<StarDifficulty>();
+        private readonly BindableWithCurrent<StarDifficulty> current =
+            new BindableWithCurrent<StarDifficulty>();
 
         public Bindable<StarDifficulty> Current
         {
@@ -63,7 +64,11 @@ namespace osu.Game.Beatmaps.Drawables
         /// <param name="starDifficulty">The already computed <see cref="StarDifficulty"/> to display.</param>
         /// <param name="size">The size of the star rating display.</param>
         /// <param name="animated">Whether the star rating display will perform transforms on change rather than updating instantaneously.</param>
-        public StarRatingDisplay(StarDifficulty starDifficulty, StarRatingDisplaySize size = StarRatingDisplaySize.Regular, bool animated = false)
+        public StarRatingDisplay(
+            StarDifficulty starDifficulty,
+            StarRatingDisplaySize size = StarRatingDisplaySize.Regular,
+            bool animated = false
+        )
         {
             this.animated = animated;
 
@@ -94,10 +99,7 @@ namespace osu.Game.Beatmaps.Drawables
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new GridContainer
                     {
                         Anchor = Anchor.Centre,
@@ -129,13 +131,17 @@ namespace osu.Game.Beatmaps.Drawables
                                     Origin = Anchor.Centre,
                                     Margin = new MarginPadding { Bottom = 1.5f },
                                     Spacing = new Vector2(-1.4f),
-                                    Font = OsuFont.Torus.With(size: 14.4f, weight: FontWeight.Bold, fixedWidth: true),
+                                    Font = OsuFont.Torus.With(
+                                        size: 14.4f,
+                                        weight: FontWeight.Bold,
+                                        fixedWidth: true
+                                    ),
                                     Shadow = false,
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
-                }
+                },
             };
         }
 
@@ -147,22 +153,36 @@ namespace osu.Game.Beatmaps.Drawables
             {
                 if (animated)
                     // Animation roughly matches `StarCounter`'s implementation.
-                    this.TransformBindableTo(displayedStars, c.NewValue.Stars, 100 + 80 * Math.Abs(c.NewValue.Stars - c.OldValue.Stars), Easing.OutQuint);
+                    this.TransformBindableTo(
+                        displayedStars,
+                        c.NewValue.Stars,
+                        100 + 80 * Math.Abs(c.NewValue.Stars - c.OldValue.Stars),
+                        Easing.OutQuint
+                    );
                 else
                     displayedStars.Value = c.NewValue.Stars;
             });
 
             displayedStars.Value = Current.Value.Stars;
 
-            displayedStars.BindValueChanged(s =>
-            {
-                starsText.Text = s.NewValue < 0 ? "-" : s.NewValue.FormatStarRating();
+            displayedStars.BindValueChanged(
+                s =>
+                {
+                    starsText.Text = s.NewValue < 0 ? "-" : s.NewValue.FormatStarRating();
 
-                background.Colour = colours.ForStarDifficulty(s.NewValue);
+                    background.Colour = colours.ForStarDifficulty(s.NewValue);
 
-                starIcon.Colour = s.NewValue >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF ? colours.Orange1 : colourProvider?.Background5 ?? Color4Extensions.FromHex("303d47");
-                starsText.Colour = s.NewValue >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF ? colours.Orange1 : colourProvider?.Background5 ?? Color4.Black.Opacity(0.75f);
-            }, true);
+                    starIcon.Colour =
+                        s.NewValue >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF
+                            ? colours.Orange1
+                            : colourProvider?.Background5 ?? Color4Extensions.FromHex("303d47");
+                    starsText.Colour =
+                        s.NewValue >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF
+                            ? colours.Orange1
+                            : colourProvider?.Background5 ?? Color4.Black.Opacity(0.75f);
+                },
+                true
+            );
         }
     }
 

@@ -46,7 +46,11 @@ namespace osu.Game.Extensions
         /// </example>
         public static string ToPascalCase(this string input)
         {
-            return Regex.Replace(input, "(?:^|_|-| +)(.)", match => match.Groups[1].Value.ToUpperInvariant());
+            return Regex.Replace(
+                input,
+                "(?:^|_|-| +)(.)",
+                match => match.Groups[1].Value.ToUpperInvariant()
+            );
         }
 
         /// <summary>
@@ -73,9 +77,17 @@ namespace osu.Game.Extensions
         /// </example>
         public static string ToSnakeCase(this string input)
         {
-            return Regex.Replace(
-                Regex.Replace(
-                    Regex.Replace(input, @"([\p{Lu}]+)([\p{Lu}][\p{Ll}])", "$1_$2"), @"([\p{Ll}\d])([\p{Lu}])", "$1_$2"), @"[-\s]", "_").ToLowerInvariant();
+            return Regex
+                .Replace(
+                    Regex.Replace(
+                        Regex.Replace(input, @"([\p{Lu}]+)([\p{Lu}][\p{Ll}])", "$1_$2"),
+                        @"([\p{Ll}\d])([\p{Lu}])",
+                        "$1_$2"
+                    ),
+                    @"[-\s]",
+                    "_"
+                )
+                .ToLowerInvariant();
         }
 
         /// <summary>

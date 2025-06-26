@@ -69,67 +69,67 @@ namespace osu.Game.Screens.Utility
                     Origin = Anchor.TopCentre,
                     Action = () => ReportUserBest?.Invoke(),
                 },
-                visualContent = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                visualContent = new Container { RelativeSizeAxes = Axes.Both },
             };
 
-            IsActiveArea.BindValueChanged(active =>
-            {
-                background.FadeColour(active.NewValue ? overlayColourProvider.Background4 : overlayColourProvider.Background6, 200, Easing.OutQuint);
-            }, true);
-
-            VisualMode.BindValueChanged(mode =>
-            {
-                switch (mode.NewValue)
+            IsActiveArea.BindValueChanged(
+                active =>
                 {
-                    case LatencyVisualMode.Simple:
-                        visualContent.Children = new Drawable[]
-                        {
-                            new LatencyMovableBox
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            Cursor = new LatencyCursorContainer
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                        };
-                        break;
+                    background.FadeColour(
+                        active.NewValue
+                            ? overlayColourProvider.Background4
+                            : overlayColourProvider.Background6,
+                        200,
+                        Easing.OutQuint
+                    );
+                },
+                true
+            );
 
-                    case LatencyVisualMode.CircleGameplay:
-                        visualContent.Children = new Drawable[]
-                        {
-                            new CircleGameplay
+            VisualMode.BindValueChanged(
+                mode =>
+                {
+                    switch (mode.NewValue)
+                    {
+                        case LatencyVisualMode.Simple:
+                            visualContent.Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            Cursor = new LatencyCursorContainer
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                        };
-                        break;
+                                new LatencyMovableBox { RelativeSizeAxes = Axes.Both },
+                                Cursor = new LatencyCursorContainer
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                            };
+                            break;
 
-                    case LatencyVisualMode.ScrollingGameplay:
-                        visualContent.Children = new Drawable[]
-                        {
-                            new ScrollingGameplay
+                        case LatencyVisualMode.CircleGameplay:
+                            visualContent.Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            Cursor = new LatencyCursorContainer
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                        };
-                        break;
+                                new CircleGameplay { RelativeSizeAxes = Axes.Both },
+                                Cursor = new LatencyCursorContainer
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                            };
+                            break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }, true);
+                        case LatencyVisualMode.ScrollingGameplay:
+                            visualContent.Children = new Drawable[]
+                            {
+                                new ScrollingGameplay { RelativeSizeAxes = Axes.Both },
+                                Cursor = new LatencyCursorContainer
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                            };
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                },
+                true
+            );
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)

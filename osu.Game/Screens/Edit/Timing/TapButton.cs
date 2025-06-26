@@ -90,12 +90,9 @@ namespace osu.Game.Screens.Edit.Timing
                     new Circle
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background4
+                        Colour = colourProvider.Background4,
                     },
-                    lights = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    lights = new Container { RelativeSizeAxes = Axes.Both },
                     new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -112,7 +109,7 @@ namespace osu.Game.Screens.Edit.Timing
                                 Alpha = 0,
                                 AlwaysPresent = true,
                             },
-                        }
+                        },
                     },
                     new Circle
                     {
@@ -122,10 +119,7 @@ namespace osu.Game.Screens.Edit.Timing
                         Origin = Anchor.Centre,
                         Colour = colourProvider.Background4,
                     },
-                    lightsGlow = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    lightsGlow = new Container { RelativeSizeAxes = Axes.Both },
                     innerCircle = new CircularContainer
                     {
                         Size = new Vector2(SIZE - ring_width * 2),
@@ -154,7 +148,10 @@ namespace osu.Game.Screens.Edit.Timing
                                 {
                                     new OsuSpriteText
                                     {
-                                        Font = OsuFont.Torus.With(size: 34, weight: FontWeight.SemiBold),
+                                        Font = OsuFont.Torus.With(
+                                            size: 34,
+                                            weight: FontWeight.SemiBold
+                                        ),
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.BottomCentre,
                                         Y = 5,
@@ -162,12 +159,15 @@ namespace osu.Game.Screens.Edit.Timing
                                     },
                                     bpmText = new OsuSpriteText
                                     {
-                                        Font = OsuFont.Torus.With(size: 23, weight: FontWeight.Regular),
+                                        Font = OsuFont.Torus.With(
+                                            size: 23,
+                                            weight: FontWeight.Regular
+                                        ),
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.TopCentre,
                                         Y = -1,
                                     },
-                                }
+                                },
                             },
                             hoverLayer = new Circle
                             {
@@ -176,9 +176,9 @@ namespace osu.Game.Screens.Edit.Timing
                                 Blending = BlendingParameters.Additive,
                                 Alpha = 0,
                             },
-                        }
+                        },
                     },
-                }
+                },
             };
 
             for (int i = 0; i < light_count; i++)
@@ -309,14 +309,18 @@ namespace osu.Game.Screens.Edit.Timing
                 return;
             }
 
-            double averageBeatLength = (tapTimings.Last() - tapTimings.Skip(initial_taps_to_ignore).First()) / (tapTimings.Count - initial_taps_to_ignore - 1);
+            double averageBeatLength =
+                (tapTimings.Last() - tapTimings.Skip(initial_taps_to_ignore).First())
+                / (tapTimings.Count - initial_taps_to_ignore - 1);
             double clockRate = beatSyncSource?.Clock.Rate ?? 1;
 
             double bpm = Math.Round(60000 / averageBeatLength / clockRate);
 
             bpmText.Text = $"{bpm} BPM";
 
-            var timingPoint = selectedGroup?.Value.ControlPoints.OfType<TimingControlPoint>().FirstOrDefault();
+            var timingPoint = selectedGroup
+                ?.Value.ControlPoints.OfType<TimingControlPoint>()
+                .FirstOrDefault();
 
             if (timingPoint != null)
             {
@@ -380,7 +384,7 @@ namespace osu.Game.Screens.Edit.Timing
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Progress = 1f / light_count - angular_light_gap,
-                                Blending = BlendingParameters.Additive
+                                Blending = BlendingParameters.Additive,
                             },
                             // Please do not try and make sense of this.
                             // Getting the visual effect I was going for relies on what I can only imagine is broken implementation
@@ -389,15 +393,17 @@ namespace osu.Game.Screens.Edit.Timing
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Progress = 1f / light_count - 0.01f,
-                                Blending = BlendingParameters.Additive
-                            }.WithEffect(new GlowEffect
-                            {
-                                Colour = colourProvider.Colour1.Opacity(0.4f),
-                                BlurSigma = new Vector2(9f),
-                                Strength = 10,
-                                PadExtent = true
-                            }),
-                        }
+                                Blending = BlendingParameters.Additive,
+                            }.WithEffect(
+                                new GlowEffect
+                                {
+                                    Colour = colourProvider.Colour1.Opacity(0.4f),
+                                    BlurSigma = new Vector2(9f),
+                                    Strength = 10,
+                                    PadExtent = true,
+                                }
+                            ),
+                        },
                     },
                 };
             }
@@ -411,8 +417,7 @@ namespace osu.Game.Screens.Edit.Timing
 
             public override void Hide()
             {
-                fillContent
-                    .FadeOut(300, Easing.OutQuint);
+                fillContent.FadeOut(300, Easing.OutQuint);
             }
         }
     }

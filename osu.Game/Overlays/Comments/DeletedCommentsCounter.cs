@@ -1,14 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Game.Graphics;
-using osu.Framework.Graphics.Sprites;
-using osuTK;
-using osu.Framework.Bindables;
 using Humanizer;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
+using osuTK;
 
 namespace osu.Game.Overlays.Comments
 {
@@ -30,16 +30,12 @@ namespace osu.Game.Overlays.Comments
                 Spacing = new Vector2(3, 0),
                 Children = new Drawable[]
                 {
-                    new SpriteIcon
-                    {
-                        Icon = FontAwesome.Regular.TrashAlt,
-                        Size = new Vector2(14),
-                    },
+                    new SpriteIcon { Icon = FontAwesome.Regular.TrashAlt, Size = new Vector2(14) },
                     countText = new OsuSpriteText
                     {
                         Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold, italics: true),
-                    }
-                }
+                    },
+                },
             };
         }
 

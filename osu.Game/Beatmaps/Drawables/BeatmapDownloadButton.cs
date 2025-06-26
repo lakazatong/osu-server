@@ -46,24 +46,27 @@ namespace osu.Game.Beatmaps.Drawables
                 shakeContainer = new ShakeContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = button = new DownloadButton
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        State = { BindTarget = State }
-                    },
+                    Child = button =
+                        new DownloadButton
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            State = { BindTarget = State },
+                        },
                 },
                 DownloadTracker = new BeatmapDownloadTracker(beatmapSet)
                 {
-                    State = { BindTarget = State }
-                }
+                    State = { BindTarget = State },
+                },
             };
 
-            button.Add(new DownloadProgressBar(beatmapSet)
-            {
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                Depth = -1,
-            });
+            button.Add(
+                new DownloadProgressBar(beatmapSet)
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Depth = -1,
+                }
+            );
         }
 
         [BackgroundDependencyLoader(true)]
@@ -94,25 +97,31 @@ namespace osu.Game.Beatmaps.Drawables
                 }
             };
 
-            State.BindValueChanged(state =>
-            {
-                switch (state.NewValue)
+            State.BindValueChanged(
+                state =>
                 {
-                    case DownloadState.LocallyAvailable:
-                        button.Enabled.Value = true;
-                        button.TooltipText = "Go to beatmap";
-                        break;
+                    switch (state.NewValue)
+                    {
+                        case DownloadState.LocallyAvailable:
+                            button.Enabled.Value = true;
+                            button.TooltipText = "Go to beatmap";
+                            break;
 
-                    default:
-                        if ((beatmapSet as IBeatmapSetOnlineInfo)?.Availability.DownloadDisabled == true)
-                        {
-                            button.Enabled.Value = false;
-                            button.TooltipText = BeatmapsetsStrings.AvailabilityDisabled;
-                        }
+                        default:
+                            if (
+                                (beatmapSet as IBeatmapSetOnlineInfo)?.Availability.DownloadDisabled
+                                == true
+                            )
+                            {
+                                button.Enabled.Value = false;
+                                button.TooltipText = BeatmapsetsStrings.AvailabilityDisabled;
+                            }
 
-                        break;
-                }
-            }, true);
+                            break;
+                    }
+                },
+                true
+            );
         }
 
         protected override void LoadComplete()

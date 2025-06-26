@@ -19,7 +19,6 @@ namespace osu.Game.Rulesets.Edit
             new CheckBackgroundPresence(),
             new CheckBackgroundQuality(),
             new CheckVideoResolution(),
-
             // Audio
             new CheckAudioPresence(),
             new CheckAudioQuality(),
@@ -30,22 +29,17 @@ namespace osu.Game.Rulesets.Edit
             new CheckDelayedHitsounds(),
             new CheckSongFormat(),
             new CheckHitsoundsFormat(),
-
             // Files
             new CheckZeroByteFiles(),
-
             // Compose
             new CheckUnsnappedObjects(),
             new CheckZeroLengthObjects(),
             new CheckDrainLength(),
             new CheckUnusedAudioAtEnd(),
-
             // Timing
             new CheckPreviewTime(),
-
             // Events
             new CheckBreaks(),
-
             // Metadata
             new CheckTitleMarkers(),
         };

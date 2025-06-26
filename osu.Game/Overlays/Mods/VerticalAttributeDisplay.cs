@@ -93,15 +93,15 @@ namespace osu.Game.Overlays.Mods
                         Anchor = Anchor.Centre,
                         Text = Label,
                         Margin = new MarginPadding { Horizontal = 15 }, // to reserve space for 0.XX value
-                        Font = OsuFont.Default.With(size: 20, weight: FontWeight.Bold)
+                        Font = OsuFont.Default.With(size: 20, weight: FontWeight.Bold),
                     },
                     counter = new EffectCounter
                     {
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
                         Current = { BindTarget = Current },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -126,12 +126,14 @@ namespace osu.Game.Overlays.Mods
         {
             protected override double RollingDuration => 250;
 
-            protected override LocalisableString FormatCount(double count) => count.ToLocalisableString("0.0#");
+            protected override LocalisableString FormatCount(double count) =>
+                count.ToLocalisableString("0.0#");
 
-            protected override OsuSpriteText CreateSpriteText() => new OsuSpriteText
-            {
-                Font = OsuFont.Default.With(size: 18, weight: FontWeight.SemiBold)
-            };
+            protected override OsuSpriteText CreateSpriteText() =>
+                new OsuSpriteText
+                {
+                    Font = OsuFont.Default.With(size: 18, weight: FontWeight.SemiBold),
+                };
         }
     }
 }

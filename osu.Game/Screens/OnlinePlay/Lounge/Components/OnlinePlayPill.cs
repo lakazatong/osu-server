@@ -26,12 +26,13 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
         {
             InternalChild = Pill = new PillContainer
             {
-                Child = TextFlow = new OsuTextFlowContainer(s => s.Font = Font)
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft
-                }
+                Child = TextFlow =
+                    new OsuTextFlowContainer(s => s.Font = Font)
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                    },
             };
         }
     }

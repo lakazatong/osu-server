@@ -87,8 +87,8 @@ namespace osu.Game.Rulesets.Osu.Statistics
                                 Child = new Box
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4Extensions.FromHex("#202624")
-                                }
+                                    Colour = Color4Extensions.FromHex("#202624"),
+                                },
                             },
                             new Container
                             {
@@ -163,22 +163,19 @@ namespace osu.Game.Rulesets.Osu.Statistics
                                             Width = line_thickness,
                                             Height = 10,
                                             Rotation = -45,
-                                        }
-                                    }
+                                        },
+                                    },
                                 },
                             },
-                        }
+                        },
                     },
                     bufferedGrid = new BufferedContainer(cachedFrameBuffer: true)
                     {
                         RelativeSizeAxes = Axes.Both,
                         BackgroundColour = Color4Extensions.FromHex("#202624").Opacity(0),
-                        Child = pointGrid = new GridContainer
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = pointGrid = new GridContainer { RelativeSizeAxes = Axes.Both },
                     },
-                }
+                },
             };
 
             Vector2 centre = new Vector2(points_per_dimension) / 2;
@@ -192,20 +189,21 @@ namespace osu.Game.Rulesets.Osu.Statistics
 
                 for (int c = 0; c < points_per_dimension; c++)
                 {
-                    bool isHit = Vector2.Distance(new Vector2(c + 0.5f, r + 0.5f), centre) <= innerRadius;
+                    bool isHit =
+                        Vector2.Distance(new Vector2(c + 0.5f, r + 0.5f), centre) <= innerRadius;
 
                     if (isHit)
                     {
                         points[r][c] = new HitPoint(this)
                         {
-                            BaseColour = new Color4(102, 255, 204, 255)
+                            BaseColour = new Color4(102, 255, 204, 255),
                         };
                     }
                     else
                     {
                         points[r][c] = new MissPoint
                         {
-                            BaseColour = new Color4(255, 102, 102, 255)
+                            BaseColour = new Color4(255, 102, 102, 255),
                         };
                     }
                 }
@@ -216,14 +214,28 @@ namespace osu.Game.Rulesets.Osu.Statistics
             if (score.HitEvents.Count == 0)
                 return;
 
-            float radius = OsuHitObject.OBJECT_RADIUS * LegacyRulesetExtensions.CalculateScaleFromCircleSize(playableBeatmap.Difficulty.CircleSize, true);
+            float radius =
+                OsuHitObject.OBJECT_RADIUS
+                * LegacyRulesetExtensions.CalculateScaleFromCircleSize(
+                    playableBeatmap.Difficulty.CircleSize,
+                    true
+                );
 
-            foreach (var e in score.HitEvents.Where(e => e.HitObject is HitCircle && !(e.HitObject is SliderTailCircle)))
+            foreach (
+                var e in score.HitEvents.Where(e =>
+                    e.HitObject is HitCircle && !(e.HitObject is SliderTailCircle)
+                )
+            )
             {
                 if (e.LastHitObject == null || e.Position == null)
                     continue;
 
-                AddPoint(((OsuHitObject)e.LastHitObject).StackedEndPosition, ((OsuHitObject)e.HitObject).StackedEndPosition, e.Position.Value, radius);
+                AddPoint(
+                    ((OsuHitObject)e.LastHitObject).StackedEndPosition,
+                    ((OsuHitObject)e.HitObject).StackedEndPosition,
+                    e.Position.Value,
+                    radius
+                );
             }
         }
 
@@ -254,7 +266,8 @@ namespace osu.Game.Rulesets.Osu.Statistics
             //
             // We also need to apply the anti-clockwise rotation.
             double rotatedAngle = finalAngle - float.DegreesToRadians(rotation);
-            var rotatedCoordinate = -1 * new Vector2((float)Math.Cos(rotatedAngle), (float)Math.Sin(rotatedAngle));
+            var rotatedCoordinate =
+                -1 * new Vector2((float)Math.Cos(rotatedAngle), (float)Math.Sin(rotatedAngle));
 
             Vector2 localCentre = new Vector2(points_per_dimension - 1) / 2;
             float localRadius = localCentre.X * inner_portion * normalisedDistance;
@@ -302,7 +315,7 @@ namespace osu.Game.Rulesets.Osu.Statistics
                 InternalChild = new SpriteIcon
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Icon = FontAwesome.Solid.Times
+                    Icon = FontAwesome.Solid.Times,
                 };
             }
 

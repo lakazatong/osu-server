@@ -12,18 +12,15 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         public override bool DisplayResult => false;
 
         public DrawableHoldNoteBody()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHoldNoteBody(HoldNoteBody hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
 
         internal void TriggerResult(bool hit)
         {
-            if (AllJudged) return;
+            if (AllJudged)
+                return;
 
             if (hit)
                 ApplyMaxResult();

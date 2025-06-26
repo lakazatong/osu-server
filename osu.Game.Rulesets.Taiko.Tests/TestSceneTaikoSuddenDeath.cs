@@ -17,7 +17,9 @@ namespace osu.Game.Rulesets.Taiko.Tests
 
         protected override TestPlayer CreatePlayer(Ruleset ruleset)
         {
-            SelectedMods.Value = SelectedMods.Value.Concat(new[] { new TaikoModSuddenDeath() }).ToArray();
+            SelectedMods.Value = SelectedMods
+                .Value.Concat(new[] { new TaikoModSuddenDeath() })
+                .ToArray();
             return base.CreatePlayer(ruleset);
         }
 
@@ -29,21 +31,21 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new Swell { StartTime = 1500 },
                     new Hit { StartTime = 100000 },
                 },
-                BeatmapInfo =
-                {
-                    Ruleset = new TaikoRuleset().RulesetInfo
-                }
+                BeatmapInfo = { Ruleset = new TaikoRuleset().RulesetInfo },
             };
 
         [Test]
         public void TestSwellDoesNotFail()
         {
             bool judged = false;
-            AddStep("Setup judgements", () =>
-            {
-                judged = false;
-                Player.ScoreProcessor.NewJudgement += _ => judged = true;
-            });
+            AddStep(
+                "Setup judgements",
+                () =>
+                {
+                    judged = false;
+                    Player.ScoreProcessor.NewJudgement += _ => judged = true;
+                }
+            );
             AddUntilStep("swell judged", () => judged);
             AddAssert("not failed", () => !Player.GameplayState.HasFailed);
         }

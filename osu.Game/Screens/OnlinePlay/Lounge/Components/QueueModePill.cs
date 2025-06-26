@@ -30,8 +30,8 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 updateRoomQueueMode();
         }
 
-        private void updateRoomQueueMode()
-            => TextFlow.Text = room.QueueMode.GetLocalisableDescription();
+        private void updateRoomQueueMode() =>
+            TextFlow.Text = room.QueueMode.GetLocalisableDescription();
 
         protected override void Dispose(bool isDisposing)
         {

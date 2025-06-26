@@ -32,14 +32,19 @@ namespace osu.Game.Graphics.UserInterface
             [BackgroundDependencyLoader]
             private void load(OsuColour colours)
             {
-                TextContainer.Add(StatusText = new OsuSpriteText
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.TopLeft,
-                    Font = OsuFont.Torus.With(size: filter_text_size, weight: FontWeight.SemiBold),
-                    Margin = new MarginPadding { Top = 2, Left = -1 },
-                    Colour = colours.Yellow
-                });
+                TextContainer.Add(
+                    StatusText = new OsuSpriteText
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.TopLeft,
+                        Font = OsuFont.Torus.With(
+                            size: filter_text_size,
+                            weight: FontWeight.SemiBold
+                        ),
+                        Margin = new MarginPadding { Top = 2, Left = -1 },
+                        Colour = colours.Yellow,
+                    }
+                );
             }
 
             protected override void LoadComplete()

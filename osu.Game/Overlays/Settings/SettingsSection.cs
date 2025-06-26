@@ -69,10 +69,7 @@ namespace osu.Game.Overlays.Settings
 
             FlowContent = new FillFlowContainer
             {
-                Margin = new MarginPadding
-                {
-                    Top = 36
-                },
+                Margin = new MarginPadding { Top = 36 },
                 Spacing = new Vector2(0, ITEM_SPACING),
                 Direction = FillDirection.Vertical,
                 AutoSizeAxes = Axes.Y,
@@ -83,56 +80,55 @@ namespace osu.Game.Overlays.Settings
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Name = "separator",
-                    Colour = colourProvider.Background6,
-                    RelativeSizeAxes = Axes.X,
-                    Height = border_size,
-                },
-                new Container
-                {
-                    Padding = new MarginPadding { Top = border_size },
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    new Box
                     {
-                        new Container
+                        Name = "separator",
+                        Colour = colourProvider.Background6,
+                        RelativeSizeAxes = Axes.X,
+                        Height = border_size,
+                    },
+                    new Container
+                    {
+                        Padding = new MarginPadding { Top = border_size },
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding
+                            new Container
                             {
-                                Top = 24,
-                                Bottom = 40,
-                            },
-                            Children = new Drawable[]
-                            {
-                                new OsuSpriteText
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding { Top = 24, Bottom = 40 },
+                                Children = new Drawable[]
                                 {
-                                    Font = OsuFont.TorusAlternate.With(size: header_size),
-                                    Text = Header,
-                                    Margin = new MarginPadding
+                                    new OsuSpriteText
                                     {
-                                        Horizontal = SettingsPanel.CONTENT_MARGINS
-                                    }
+                                        Font = OsuFont.TorusAlternate.With(size: header_size),
+                                        Text = Header,
+                                        Margin = new MarginPadding
+                                        {
+                                            Horizontal = SettingsPanel.CONTENT_MARGINS,
+                                        },
+                                    },
+                                    FlowContent,
                                 },
-                                FlowContent
-                            }
+                            },
+                            dim = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = colourProvider.Background5,
+                                Alpha = inactive_alpha,
+                            },
                         },
-                        dim = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colourProvider.Background5,
-                            Alpha = inactive_alpha,
-                        },
-                    }
-                },
-            });
+                    },
+                }
+            );
 
-            selectedSection = settingsPanel?.CurrentSection.GetBoundCopy() ?? new Bindable<SettingsSection>(this);
+            selectedSection =
+                settingsPanel?.CurrentSection.GetBoundCopy() ?? new Bindable<SettingsSection>(this);
             selectedSection.BindValueChanged(_ => updateContentFade(), true);
         }
 

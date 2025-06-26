@@ -20,7 +20,11 @@ namespace osu.Game.Tests.Extensions
         [TestCase("camelCase", "CamelCase")]
         [TestCase("snake_case", "SnakeCase")]
         [TestCase("kebab-case", "KebabCase")]
-        [TestCase("i will not break in a different culture", "IWillNotBreakInADifferentCulture", "tr-TR")]
+        [TestCase(
+            "i will not break in a different culture",
+            "IWillNotBreakInADifferentCulture",
+            "tr-TR"
+        )]
         public void TestToPascalCase(string input, string expectedOutput, string? culture = null)
         {
             using (temporaryCurrentCulture(culture))
@@ -35,7 +39,11 @@ namespace osu.Game.Tests.Extensions
         [TestCase("camelCase", "camelCase")]
         [TestCase("snake_case", "snakeCase")]
         [TestCase("kebab-case", "kebabCase")]
-        [TestCase("I will not break in a different culture", "iWillNotBreakInADifferentCulture", "tr-TR")]
+        [TestCase(
+            "I will not break in a different culture",
+            "iWillNotBreakInADifferentCulture",
+            "tr-TR"
+        )]
         public void TestToCamelCase(string input, string expectedOutput, string? culture = null)
         {
             using (temporaryCurrentCulture(culture))
@@ -50,7 +58,11 @@ namespace osu.Game.Tests.Extensions
         [TestCase("camelCase", "camel_case")]
         [TestCase("snake_case", "snake_case")]
         [TestCase("kebab-case", "kebab_case")]
-        [TestCase("I will not break in a different culture", "i_will_not_break_in_a_different_culture", "tr-TR")]
+        [TestCase(
+            "I will not break in a different culture",
+            "i_will_not_break_in_a_different_culture",
+            "tr-TR"
+        )]
         public void TestToSnakeCase(string input, string expectedOutput, string? culture = null)
         {
             using (temporaryCurrentCulture(culture))
@@ -65,7 +77,11 @@ namespace osu.Game.Tests.Extensions
         [TestCase("camelCase", "camel-case")]
         [TestCase("snake_case", "snake-case")]
         [TestCase("kebab-case", "kebab-case")]
-        [TestCase("I will not break in a different culture", "i-will-not-break-in-a-different-culture", "tr-TR")]
+        [TestCase(
+            "I will not break in a different culture",
+            "i-will-not-break-in-a-different-culture",
+            "tr-TR"
+        )]
         public void TestToKebabCase(string input, string expectedOutput, string? culture = null)
         {
             using (temporaryCurrentCulture(culture))

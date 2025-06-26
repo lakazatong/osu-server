@@ -28,10 +28,10 @@ namespace osu.Game.Rulesets.Osu.Tests
                     {
                         new PathControlPoint(new Vector2(), PathType.LINEAR),
                         new PathControlPoint(new Vector2(-64, -128), PathType.LINEAR), // absolute position: (64, 0)
-                        new PathControlPoint(new Vector2(-128, 0), PathType.LINEAR) // absolute position: (0, 128)
-                    }
+                        new PathControlPoint(new Vector2(-128, 0), PathType.LINEAR), // absolute position: (0, 128)
+                    },
                 },
-                RepeatCount = 2
+                RepeatCount = 2,
             };
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
             return slider;
@@ -44,16 +44,26 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             OsuHitObjectGenerationUtils.ReflectHorizontallyAlongPlayfield(slider);
 
-            Assert.That(slider.Position, Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 128, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position, Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 128, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderRepeat>().First().Position, Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 0, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position, Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X, 128)));
-            Assert.That(slider.Path.ControlPoints.Select(point => point.Position), Is.EquivalentTo(new[]
-            {
-                new Vector2(),
-                new Vector2(64, -128),
-                new Vector2(128, 0)
-            }));
+            Assert.That(
+                slider.Position,
+                Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 128, 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position,
+                Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 128, 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderRepeat>().First().Position,
+                Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X - 0, 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position,
+                Is.EqualTo(new Vector2(OsuPlayfield.BASE_SIZE.X, 128))
+            );
+            Assert.That(
+                slider.Path.ControlPoints.Select(point => point.Position),
+                Is.EquivalentTo(new[] { new Vector2(), new Vector2(64, -128), new Vector2(128, 0) })
+            );
         }
 
         [Test]
@@ -63,16 +73,28 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             OsuHitObjectGenerationUtils.ReflectVerticallyAlongPlayfield(slider);
 
-            Assert.That(slider.Position, Is.EqualTo(new Vector2(128, OsuPlayfield.BASE_SIZE.Y - 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position, Is.EqualTo(new Vector2(128, OsuPlayfield.BASE_SIZE.Y - 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderRepeat>().First().Position, Is.EqualTo(new Vector2(0, OsuPlayfield.BASE_SIZE.Y - 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position, Is.EqualTo(new Vector2(0, OsuPlayfield.BASE_SIZE.Y - 128)));
-            Assert.That(slider.Path.ControlPoints.Select(point => point.Position), Is.EquivalentTo(new[]
-            {
-                new Vector2(),
-                new Vector2(-64, 128),
-                new Vector2(-128, 0)
-            }));
+            Assert.That(
+                slider.Position,
+                Is.EqualTo(new Vector2(128, OsuPlayfield.BASE_SIZE.Y - 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position,
+                Is.EqualTo(new Vector2(128, OsuPlayfield.BASE_SIZE.Y - 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderRepeat>().First().Position,
+                Is.EqualTo(new Vector2(0, OsuPlayfield.BASE_SIZE.Y - 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position,
+                Is.EqualTo(new Vector2(0, OsuPlayfield.BASE_SIZE.Y - 128))
+            );
+            Assert.That(
+                slider.Path.ControlPoints.Select(point => point.Position),
+                Is.EquivalentTo(
+                    new[] { new Vector2(), new Vector2(-64, 128), new Vector2(-128, 0) }
+                )
+            );
         }
 
         [Test]
@@ -83,15 +105,22 @@ namespace osu.Game.Rulesets.Osu.Tests
             OsuHitObjectGenerationUtils.FlipSliderInPlaceHorizontally(slider);
 
             Assert.That(slider.Position, Is.EqualTo(new Vector2(128, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position, Is.EqualTo(new Vector2(128, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderRepeat>().First().Position, Is.EqualTo(new Vector2(256, 128)));
-            Assert.That(slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position, Is.EqualTo(new Vector2(256, 128)));
-            Assert.That(slider.Path.ControlPoints.Select(point => point.Position), Is.EquivalentTo(new[]
-            {
-                new Vector2(),
-                new Vector2(64, -128),
-                new Vector2(128, 0)
-            }));
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderHeadCircle>().Single().Position,
+                Is.EqualTo(new Vector2(128, 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderRepeat>().First().Position,
+                Is.EqualTo(new Vector2(256, 128))
+            );
+            Assert.That(
+                slider.NestedHitObjects.OfType<SliderTailCircle>().Single().Position,
+                Is.EqualTo(new Vector2(256, 128))
+            );
+            Assert.That(
+                slider.Path.ControlPoints.Select(point => point.Position),
+                Is.EquivalentTo(new[] { new Vector2(), new Vector2(64, -128), new Vector2(128, 0) })
+            );
         }
     }
 }

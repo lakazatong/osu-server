@@ -45,12 +45,24 @@ namespace osu.Game.Rulesets.Osu.Tests
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            AddSliderStep("cursor size", 0.1f, 2f, 1f, v => localConfig.SetValue(OsuSetting.GameplayCursorSize, v));
-            AddSliderStep("circle size", 0f, 10f, 0f, val =>
-            {
-                gameplayState.Beatmap.Difficulty.CircleSize = val;
-                SetUp();
-            });
+            AddSliderStep(
+                "cursor size",
+                0.1f,
+                2f,
+                1f,
+                v => localConfig.SetValue(OsuSetting.GameplayCursorSize, v)
+            );
+            AddSliderStep(
+                "circle size",
+                0f,
+                10f,
+                0f,
+                val =>
+                {
+                    gameplayState.Beatmap.Difficulty.CircleSize = val;
+                    SetUp();
+                }
+            );
 
             AddToggleStep("auto size", v => localConfig.SetValue(OsuSetting.AutoCursorSize, v));
         }
@@ -63,35 +75,65 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(2)]
         public void TestResume(float cursorSize)
         {
-            AddStep($"set cursor size to {cursorSize}", () => localConfig.SetValue(OsuSetting.GameplayCursorSize, cursorSize));
+            AddStep(
+                $"set cursor size to {cursorSize}",
+                () => localConfig.SetValue(OsuSetting.GameplayCursorSize, cursorSize)
+            );
 
-            AddStep("move mouse to center", () => InputManager.MoveMouseTo(ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move mouse to center",
+                () => InputManager.MoveMouseTo(ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("show", () => resume.Show());
 
             AddStep("move mouse away", () => InputManager.MoveMouseTo(ScreenSpaceDrawQuad.TopLeft));
             AddStep("click", () => osuInputManager.GameClick());
-            AddAssert("not dismissed", () => !resumeFired && resume.State.Value == Visibility.Visible);
+            AddAssert(
+                "not dismissed",
+                () => !resumeFired && resume.State.Value == Visibility.Visible
+            );
 
-            AddStep("move mouse just out of range", () =>
-            {
-                var resumeOverlay = this.ChildrenOfType<OsuResumeOverlay>().Single();
-                var resumeOverlayCursor = resumeOverlay.ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>().Single();
+            AddStep(
+                "move mouse just out of range",
+                () =>
+                {
+                    var resumeOverlay = this.ChildrenOfType<OsuResumeOverlay>().Single();
+                    var resumeOverlayCursor = resumeOverlay
+                        .ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>()
+                        .Single();
 
-                Vector2 offset = resumeOverlay.ToScreenSpace(new Vector2(OsuCursor.SIZE / 2)) - resumeOverlay.ToScreenSpace(Vector2.Zero);
-                InputManager.MoveMouseTo(resumeOverlayCursor.ScreenSpaceDrawQuad.Centre - offset - new Vector2(1));
-            });
+                    Vector2 offset =
+                        resumeOverlay.ToScreenSpace(new Vector2(OsuCursor.SIZE / 2))
+                        - resumeOverlay.ToScreenSpace(Vector2.Zero);
+                    InputManager.MoveMouseTo(
+                        resumeOverlayCursor.ScreenSpaceDrawQuad.Centre - offset - new Vector2(1)
+                    );
+                }
+            );
 
             AddStep("click", () => osuInputManager.GameClick());
-            AddAssert("not dismissed", () => !resumeFired && resume.State.Value == Visibility.Visible);
+            AddAssert(
+                "not dismissed",
+                () => !resumeFired && resume.State.Value == Visibility.Visible
+            );
 
-            AddStep("move mouse just within range", () =>
-            {
-                var resumeOverlay = this.ChildrenOfType<OsuResumeOverlay>().Single();
-                var resumeOverlayCursor = resumeOverlay.ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>().Single();
+            AddStep(
+                "move mouse just within range",
+                () =>
+                {
+                    var resumeOverlay = this.ChildrenOfType<OsuResumeOverlay>().Single();
+                    var resumeOverlayCursor = resumeOverlay
+                        .ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>()
+                        .Single();
 
-                Vector2 offset = resumeOverlay.ToScreenSpace(new Vector2(OsuCursor.SIZE / 2)) - resumeOverlay.ToScreenSpace(Vector2.Zero);
-                InputManager.MoveMouseTo(resumeOverlayCursor.ScreenSpaceDrawQuad.Centre - offset + new Vector2(1));
-            });
+                    Vector2 offset =
+                        resumeOverlay.ToScreenSpace(new Vector2(OsuCursor.SIZE / 2))
+                        - resumeOverlay.ToScreenSpace(Vector2.Zero);
+                    InputManager.MoveMouseTo(
+                        resumeOverlayCursor.ScreenSpaceDrawQuad.Centre - offset + new Vector2(1)
+                    );
+                }
+            );
 
             AddStep("click", () => osuInputManager.GameClick());
             AddAssert("dismissed", () => resumeFired && resume.State.Value == Visibility.Hidden);
@@ -104,11 +146,8 @@ namespace osu.Game.Rulesets.Osu.Tests
                 Children = new Drawable[]
                 {
                     cursor = new GameplayCursorContainer(),
-                    resume = new OsuResumeOverlay
-                    {
-                        GameplayCursor = cursor
-                    },
-                }
+                    resume = new OsuResumeOverlay { GameplayCursor = cursor },
+                },
             };
 
             resumeFired = false;
@@ -118,9 +157,7 @@ namespace osu.Game.Rulesets.Osu.Tests
         private partial class ManualOsuInputManager : OsuInputManager
         {
             public ManualOsuInputManager(RulesetInfo ruleset)
-                : base(ruleset)
-            {
-            }
+                : base(ruleset) { }
 
             public void GameClick()
             {

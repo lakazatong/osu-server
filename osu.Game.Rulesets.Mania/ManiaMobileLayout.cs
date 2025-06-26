@@ -8,13 +8,22 @@ namespace osu.Game.Rulesets.Mania
 {
     public enum ManiaMobileLayout
     {
-        [LocalisableDescription(typeof(RulesetSettingsStrings), nameof(RulesetSettingsStrings.PortraitExpandedColumns))]
+        [LocalisableDescription(
+            typeof(RulesetSettingsStrings),
+            nameof(RulesetSettingsStrings.PortraitExpandedColumns)
+        )]
         Portrait,
 
-        [LocalisableDescription(typeof(RulesetSettingsStrings), nameof(RulesetSettingsStrings.LandscapeExpandedColumns))]
+        [LocalisableDescription(
+            typeof(RulesetSettingsStrings),
+            nameof(RulesetSettingsStrings.LandscapeExpandedColumns)
+        )]
         Landscape,
 
-        [LocalisableDescription(typeof(RulesetSettingsStrings), nameof(RulesetSettingsStrings.LandscapeTouchOverlay))]
+        [LocalisableDescription(
+            typeof(RulesetSettingsStrings),
+            nameof(RulesetSettingsStrings.LandscapeTouchOverlay)
+        )]
         LandscapeWithOverlay,
     }
 }

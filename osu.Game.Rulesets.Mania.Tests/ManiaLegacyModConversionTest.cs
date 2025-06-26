@@ -37,7 +37,11 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { LegacyMods.Key3, new[] { typeof(ManiaModKey3) } },
             new object[] { LegacyMods.Key2, new[] { typeof(ManiaModKey2) } },
             new object[] { LegacyMods.Mirror, new[] { typeof(ManiaModMirror) } },
-            new object[] { LegacyMods.HardRock | LegacyMods.DoubleTime, new[] { typeof(ManiaModHardRock), typeof(ManiaModDoubleTime) } },
+            new object[]
+            {
+                LegacyMods.HardRock | LegacyMods.DoubleTime,
+                new[] { typeof(ManiaModHardRock), typeof(ManiaModDoubleTime) },
+            },
             new object[] { LegacyMods.ScoreV2, new[] { typeof(ModScoreV2) } },
         };
 
@@ -45,16 +49,24 @@ namespace osu.Game.Rulesets.Mania.Tests
         [TestCase(LegacyMods.Cinema, new[] { typeof(ManiaModCinema) })]
         [TestCase(LegacyMods.Cinema | LegacyMods.Autoplay, new[] { typeof(ManiaModCinema) })]
         [TestCase(LegacyMods.Nightcore, new[] { typeof(ManiaModNightcore) })]
-        [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(ManiaModNightcore) })]
+        [TestCase(
+            LegacyMods.Nightcore | LegacyMods.DoubleTime,
+            new[] { typeof(ManiaModNightcore) }
+        )]
         [TestCase(LegacyMods.Perfect, new[] { typeof(ManiaModPerfect) })]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(ManiaModPerfect) })]
-        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) => base.TestFromLegacy(legacyMods, expectedMods);
+        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) =>
+            base.TestFromLegacy(legacyMods, expectedMods);
 
         [TestCaseSource(nameof(mania_mod_mapping))]
         [TestCase(LegacyMods.Cinema | LegacyMods.Autoplay, new[] { typeof(ManiaModCinema) })]
-        [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(ManiaModNightcore) })]
+        [TestCase(
+            LegacyMods.Nightcore | LegacyMods.DoubleTime,
+            new[] { typeof(ManiaModNightcore) }
+        )]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(ManiaModPerfect) })]
-        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) => base.TestToLegacy(legacyMods, givenMods);
+        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) =>
+            base.TestToLegacy(legacyMods, givenMods);
 
         protected override Ruleset CreateRuleset() => new ManiaRuleset();
     }

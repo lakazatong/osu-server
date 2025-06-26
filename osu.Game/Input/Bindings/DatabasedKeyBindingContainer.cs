@@ -30,7 +30,8 @@ namespace osu.Game.Input.Bindings
         [Resolved]
         private RealmAccess realm { get; set; }
 
-        public override IEnumerable<IKeyBinding> DefaultKeyBindings => ruleset.CreateInstance().GetDefaultKeyBindings(variant ?? 0);
+        public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+            ruleset.CreateInstance().GetDefaultKeyBindings(variant ?? 0);
 
         /// <summary>
         /// Create a new instance.
@@ -39,46 +40,60 @@ namespace osu.Game.Input.Bindings
         /// <param name="variant">An optional variant for the specified <see cref="Ruleset"/>. Used when a ruleset has more than one possible keyboard layouts.</param>
         /// <param name="simultaneousMode">Specify how to deal with multiple matches of <see cref="KeyCombination"/>s and <typeparamref name="T"/>s.</param>
         /// <param name="matchingMode">Specify how to deal with exact <see cref="KeyCombination"/> matches.</param>
-        public DatabasedKeyBindingContainer(RulesetInfo ruleset = null, int? variant = null, SimultaneousBindingMode simultaneousMode = SimultaneousBindingMode.None, KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any)
+        public DatabasedKeyBindingContainer(
+            RulesetInfo ruleset = null,
+            int? variant = null,
+            SimultaneousBindingMode simultaneousMode = SimultaneousBindingMode.None,
+            KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any
+        )
             : base(simultaneousMode, matchingMode)
         {
             this.ruleset = ruleset;
             this.variant = variant;
 
             if (ruleset != null && variant == null)
-                throw new InvalidOperationException($"{nameof(variant)} can not be null when a non-null {nameof(ruleset)} is provided.");
+                throw new InvalidOperationException(
+                    $"{nameof(variant)} can not be null when a non-null {nameof(ruleset)} is provided."
+                );
         }
 
         protected override void LoadComplete()
         {
-            realmSubscription = realm.RegisterForNotifications(queryRealmKeyBindings, (sender, _) =>
-            {
-                // The first fire of this is a bit redundant as this is being called in base.LoadComplete,
-                // but this is safest in case the subscription is restored after a context recycle.
-                ReloadMappings(sender.AsQueryable());
-            });
+            realmSubscription = realm.RegisterForNotifications(
+                queryRealmKeyBindings,
+                (sender, _) =>
+                {
+                    // The first fire of this is a bit redundant as this is being called in base.LoadComplete,
+                    // but this is safest in case the subscription is restored after a context recycle.
+                    ReloadMappings(sender.AsQueryable());
+                }
+            );
 
             base.LoadComplete();
         }
 
-        protected sealed override void ReloadMappings() => ReloadMappings(queryRealmKeyBindings(realm.Realm));
+        protected sealed override void ReloadMappings() =>
+            ReloadMappings(queryRealmKeyBindings(realm.Realm));
 
         private IQueryable<RealmKeyBinding> queryRealmKeyBindings(Realm realm)
         {
             string rulesetName = ruleset?.ShortName;
-            return realm.All<RealmKeyBinding>()
-                        .Where(b => b.RulesetName == rulesetName && b.Variant == variant);
+            return realm
+                .All<RealmKeyBinding>()
+                .Where(b => b.RulesetName == rulesetName && b.Variant == variant);
         }
 
         protected virtual void ReloadMappings(IQueryable<RealmKeyBinding> realmKeyBindings)
         {
             var defaults = DefaultKeyBindings.ToList();
 
-            List<RealmKeyBinding> newBindings = realmKeyBindings.Detach()
-                                                                // this ordering is important to ensure that we read entries from the database in the order
-                                                                // enforced by DefaultKeyBindings. allow for song select to handle actions that may otherwise
-                                                                // have been eaten by the music controller due to query order.
-                                                                .OrderBy(b => defaults.FindIndex(d => (int)d.Action == b.ActionInt)).ToList();
+            List<RealmKeyBinding> newBindings = realmKeyBindings
+                .Detach()
+                // this ordering is important to ensure that we read entries from the database in the order
+                // enforced by DefaultKeyBindings. allow for song select to handle actions that may otherwise
+                // have been eaten by the music controller due to query order.
+                .OrderBy(b => defaults.FindIndex(d => (int)d.Action == b.ActionInt))
+                .ToList();
 
             // In the case no bindings were found in the database, presume this usage is for a non-databased ruleset.
             // This actually should never be required and can be removed if it is ever deemed to cause a problem.

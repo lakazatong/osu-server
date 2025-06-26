@@ -6,7 +6,5 @@ using osu.Game.Rulesets.Taiko.Objects;
 
 namespace osu.Game.Rulesets.Taiko.Mods
 {
-    public class TaikoModMuted : ModMuted<TaikoHitObject>
-    {
-    }
+    public class TaikoModMuted : ModMuted<TaikoHitObject> { }
 }

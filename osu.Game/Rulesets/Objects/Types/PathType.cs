@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Objects.Types
         Catmull,
         BSpline,
         Linear,
-        PerfectCurve
+        PerfectCurve,
     }
 
     public readonly struct PathType : IEquatable<PathType>, IHasDescription
@@ -69,16 +69,14 @@ namespace osu.Game.Rulesets.Objects.Types
             }
         }
 
-        public override int GetHashCode()
-            => HashCode.Combine(Type, Degree);
+        public override int GetHashCode() => HashCode.Combine(Type, Degree);
 
-        public override bool Equals(object? obj)
-            => obj is PathType pathType && Equals(pathType);
+        public override bool Equals(object? obj) => obj is PathType pathType && Equals(pathType);
 
-        public bool Equals(PathType other)
-            => Type == other.Type && Degree == other.Degree;
+        public bool Equals(PathType other) => Type == other.Type && Degree == other.Degree;
 
         public static bool operator ==(PathType a, PathType b) => a.Equals(b);
+
         public static bool operator !=(PathType a, PathType b) => !a.Equals(b);
 
         public override string ToString() => Description;

@@ -17,7 +17,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneWikiSidebar : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         [Cached]
         private readonly OverlayScrollContainer scrollContainer = new OverlayScrollContainer();
@@ -36,21 +38,27 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestOnlyMainTitle()
         {
-            AddStep("Add TOC", () =>
-            {
-                for (int i = 0; i < 10; i++)
-                    addTitle($"This is a very long title {i + 1}");
-            });
+            AddStep(
+                "Add TOC",
+                () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        addTitle($"This is a very long title {i + 1}");
+                }
+            );
         }
 
         [Test]
         public void TestWithSubtitle()
         {
-            AddStep("Add TOC", () =>
-            {
-                for (int i = 0; i < 10; i++)
-                    addTitle($"This is a very long title {i + 1}", i % 4 != 0);
-            });
+            AddStep(
+                "Add TOC",
+                () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        addTitle($"This is a very long title {i + 1}", i % 4 != 0);
+                }
+            );
         }
 
         private void addTitle(string text, bool subtitle = false)

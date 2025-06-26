@@ -63,16 +63,18 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Text = InputSettingsStrings.KeyBindingConflictDetected,
-                        Margin = new MarginPadding { Bottom = 10 }
+                        Margin = new MarginPadding { Bottom = 10 },
                     },
                     existingPreview = new ConflictingKeyBindingPreview(
                         conflictInfo.Existing.Action,
                         conflictInfo.Existing.CombinationWhenChosen,
-                        conflictInfo.Existing.CombinationWhenNotChosen),
+                        conflictInfo.Existing.CombinationWhenNotChosen
+                    ),
                     newPreview = new ConflictingKeyBindingPreview(
                         conflictInfo.New.Action,
                         conflictInfo.New.CombinationWhenChosen,
-                        conflictInfo.New.CombinationWhenNotChosen),
+                        conflictInfo.New.CombinationWhenNotChosen
+                    ),
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,
@@ -87,7 +89,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                 Width = 0.48f,
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
-                                Action = Hide
+                                Action = Hide,
                             },
                             applyNewButton = new HoverableRoundedButton
                             {
@@ -97,11 +99,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                 Width = 0.48f,
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
-                                Action = applyNew
-                            }
-                        }
-                    }
-                }
+                                Action = applyNew,
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -113,10 +115,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             realm.Write(r =>
             {
                 var existingBinding = r.Find<RealmKeyBinding>(conflictInfo.Existing.ID);
-                existingBinding!.KeyCombinationString = conflictInfo.Existing.CombinationWhenNotChosen.ToString();
+                existingBinding!.KeyCombinationString =
+                    conflictInfo.Existing.CombinationWhenNotChosen.ToString();
 
                 var newBinding = r.Find<RealmKeyBinding>(conflictInfo.New.ID);
-                newBinding!.KeyCombinationString = conflictInfo.Existing.CombinationWhenChosen.ToString();
+                newBinding!.KeyCombinationString =
+                    conflictInfo.Existing.CombinationWhenChosen.ToString();
             });
 
             Hide();
@@ -179,7 +183,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             [Resolved]
             private OsuColour colours { get; set; } = null!;
 
-            public ConflictingKeyBindingPreview(object action, KeyCombination combinationWhenChosen, KeyCombination combinationWhenNotChosen)
+            public ConflictingKeyBindingPreview(
+                object action,
+                KeyCombination combinationWhenChosen,
+                KeyCombination combinationWhenNotChosen
+            )
             {
                 this.action = action;
                 this.combinationWhenChosen = combinationWhenChosen;
@@ -203,7 +211,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = colourProvider.Background5
+                            Colour = colourProvider.Background5,
                         },
                         new GridContainer
                         {
@@ -237,7 +245,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                             new Box
                                             {
                                                 RelativeSizeAxes = Axes.Both,
-                                                Colour = colourProvider.Background6
+                                                Colour = colourProvider.Background6,
                                             },
                                             Empty().With(d => d.Width = 80), // poor man's min-width
                                             newBindingText = new OsuSpriteText
@@ -245,14 +253,14 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                                 Font = OsuFont.Numeric.With(size: 10),
                                                 Margin = new MarginPadding(5),
                                                 Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre
-                                            }
-                                        }
+                                                Origin = Anchor.Centre,
+                                            },
+                                        },
                                     },
-                                }
-                            }
-                        }
-                    }
+                                },
+                            },
+                        },
+                    },
                 };
             }
 
@@ -270,17 +278,23 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 switch (IsChosen.Value)
                 {
                     case true:
-                        keyCombinationText = keyCombinationProvider.GetReadableString(combinationWhenChosen);
+                        keyCombinationText = keyCombinationProvider.GetReadableString(
+                            combinationWhenChosen
+                        );
                         newBindingText.Colour = colours.Green1;
                         break;
 
                     case false:
-                        keyCombinationText = keyCombinationProvider.GetReadableString(combinationWhenNotChosen);
+                        keyCombinationText = keyCombinationProvider.GetReadableString(
+                            combinationWhenNotChosen
+                        );
                         newBindingText.Colour = colours.Red1;
                         break;
 
                     case null:
-                        keyCombinationText = keyCombinationProvider.GetReadableString(combinationWhenChosen);
+                        keyCombinationText = keyCombinationProvider.GetReadableString(
+                            combinationWhenChosen
+                        );
                         newBindingText.Colour = Colour4.White;
                         break;
                 }

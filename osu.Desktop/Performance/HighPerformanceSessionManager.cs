@@ -21,14 +21,19 @@ namespace osu.Desktop.Performance
         public IDisposable BeginSession()
         {
             enterSession();
-            return new InvokeOnDisposal<HighPerformanceSessionManager>(this, static m => m.exitSession());
+            return new InvokeOnDisposal<HighPerformanceSessionManager>(
+                this,
+                static m => m.exitSession()
+            );
         }
 
         private void enterSession()
         {
             if (Interlocked.Increment(ref activeSessions) > 1)
             {
-                Logger.Log($"High performance session requested ({activeSessions} running in total)");
+                Logger.Log(
+                    $"High performance session requested ({activeSessions} running in total)"
+                );
                 return;
             }
 

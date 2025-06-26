@@ -33,41 +33,60 @@ namespace osu.Game.Tests.Skins
         private OsuConfigManager config { get; set; }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Add(new SkinProvidingContainer(userSource = new UserSkinSource())
-                .WithChild(new BeatmapSkinProvidingContainer(beatmapSource = new BeatmapSkinSource())
-                    .WithChild(requester = new SkinRequester())));
-        });
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                Add(
+                    new SkinProvidingContainer(userSource = new UserSkinSource()).WithChild(
+                        new BeatmapSkinProvidingContainer(
+                            beatmapSource = new BeatmapSkinSource()
+                        ).WithChild(requester = new SkinRequester())
+                    )
+                );
+            });
 
         [TestCase(false)]
         [TestCase(true)]
         public void TestDrawableLookup(bool allowBeatmapLookups)
         {
-            AddStep($"Set beatmap skin enabled to {allowBeatmapLookups}", () => config.SetValue(OsuSetting.BeatmapSkins, allowBeatmapLookups));
+            AddStep(
+                $"Set beatmap skin enabled to {allowBeatmapLookups}",
+                () => config.SetValue(OsuSetting.BeatmapSkins, allowBeatmapLookups)
+            );
 
             string expected = allowBeatmapLookups ? "beatmap" : "user";
 
-            AddAssert($"Check lookup is from {expected}", () => requester.GetDrawableComponent(new TestSkinComponentLookup())?.Name == expected);
+            AddAssert(
+                $"Check lookup is from {expected}",
+                () =>
+                    requester.GetDrawableComponent(new TestSkinComponentLookup())?.Name == expected
+            );
         }
 
         [TestCase(false)]
         [TestCase(true)]
         public void TestProviderLookup(bool allowBeatmapLookups)
         {
-            AddStep($"Set beatmap skin enabled to {allowBeatmapLookups}", () => config.SetValue(OsuSetting.BeatmapSkins, allowBeatmapLookups));
+            AddStep(
+                $"Set beatmap skin enabled to {allowBeatmapLookups}",
+                () => config.SetValue(OsuSetting.BeatmapSkins, allowBeatmapLookups)
+            );
 
             ISkin expected() => allowBeatmapLookups ? beatmapSource : userSource;
 
-            AddAssert("Check lookup is from correct source", () => requester.FindProvider(s => s.GetDrawableComponent(new TestSkinComponentLookup()) != null) == expected());
+            AddAssert(
+                "Check lookup is from correct source",
+                () =>
+                    requester.FindProvider(s =>
+                        s.GetDrawableComponent(new TestSkinComponentLookup()) != null
+                    ) == expected()
+            );
         }
 
         public class UserSkinSource : LegacySkin
         {
             public UserSkinSource()
-                : base(new SkinInfo(), null, null, string.Empty)
-            {
-            }
+                : base(new SkinInfo(), null, null, string.Empty) { }
 
             public override Drawable GetDrawableComponent(ISkinComponentLookup lookup)
             {
@@ -78,9 +97,7 @@ namespace osu.Game.Tests.Skins
         public class BeatmapSkinSource : LegacyBeatmapSkin
         {
             public BeatmapSkinSource()
-                : base(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo, null)
-            {
-            }
+                : base(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo, null) { }
 
             public override Drawable GetDrawableComponent(ISkinComponentLookup lookup)
             {
@@ -98,15 +115,22 @@ namespace osu.Game.Tests.Skins
                 this.skin = skin;
             }
 
-            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) => skin.GetDrawableComponent(lookup);
+            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) =>
+                skin.GetDrawableComponent(lookup);
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => skin.GetTexture(componentName, wrapModeS, wrapModeT);
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => skin.GetTexture(componentName, wrapModeS, wrapModeT);
 
             public ISample GetSample(ISampleInfo sampleInfo) => skin.GetSample(sampleInfo);
 
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => skin.GetConfig<TLookup, TValue>(lookup);
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                skin.GetConfig<TLookup, TValue>(lookup);
 
-            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) => skin.FindProvider(lookupFunction);
+            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) =>
+                skin.FindProvider(lookupFunction);
         }
 
         private class TestSkinComponentLookup : ISkinComponentLookup

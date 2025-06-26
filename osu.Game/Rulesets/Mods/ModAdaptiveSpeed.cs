@@ -19,7 +19,12 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public class ModAdaptiveSpeed : Mod, IApplicableToRate, IApplicableToDrawableHitObject, IApplicableToBeatmap, IUpdatableByPlayfield
+    public class ModAdaptiveSpeed
+        : Mod,
+            IApplicableToRate,
+            IApplicableToDrawableHitObject,
+            IApplicableToBeatmap,
+            IUpdatableByPlayfield
     {
         public override string Name => "Adaptive Speed";
 
@@ -34,15 +39,21 @@ namespace osu.Game.Rulesets.Mods
         public sealed override bool ValidForMultiplayer => false;
         public sealed override bool ValidForMultiplayerAsFreeMod => false;
 
-        public override Type[] IncompatibleMods => new[] { typeof(ModRateAdjust), typeof(ModTimeRamp), typeof(ModAutoplay) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModRateAdjust), typeof(ModTimeRamp), typeof(ModAutoplay) };
 
-        [SettingSource("Initial rate", "The starting speed of the track", SettingControlType = typeof(MultiplierSettingsSlider))]
-        public BindableNumber<double> InitialRate { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.5,
-            MaxValue = 2,
-            Precision = 0.01
-        };
+        [SettingSource(
+            "Initial rate",
+            "The starting speed of the track",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
+        public BindableNumber<double> InitialRate { get; } =
+            new BindableDouble(1)
+            {
+                MinValue = 0.5,
+                MaxValue = 2,
+                Precision = 0.01,
+            };
 
         [SettingSource("Adjust pitch", "Should pitch be adjusted with speed")]
         public BindableBool AdjustPitch { get; } = new BindableBool(true);
@@ -51,11 +62,8 @@ namespace osu.Game.Rulesets.Mods
         /// The instantaneous rate of the track.
         /// Every frame this mod will attempt to smoothly adjust this to meet <see cref="targetRate"/>.
         /// </summary>
-        public BindableNumber<double> SpeedChange { get; } = new BindableDouble(1)
-        {
-            MinValue = min_allowable_rate,
-            MaxValue = max_allowable_rate,
-        };
+        public BindableNumber<double> SpeedChange { get; } =
+            new BindableDouble(1) { MinValue = min_allowable_rate, MaxValue = max_allowable_rate };
 
         // The two constants below denote the maximum allowable range of rates that `SpeedChange` can take.
         // The range is purposefully wider than the range of values that `InitialRate` allows
@@ -106,21 +114,25 @@ namespace osu.Game.Rulesets.Mods
         /// Therefore, the approximated target rate for this object would be equal to 500 / 480 * <see cref="InitialRate"/>.
         /// </para>
         /// </example>
-        private readonly List<double> recentRates = Enumerable.Repeat(1d, recent_rate_count).ToList();
+        private readonly List<double> recentRates = Enumerable
+            .Repeat(1d, recent_rate_count)
+            .ToList();
 
         /// <summary>
         /// For each given <see cref="HitObject"/> in the map, this dictionary maps the object onto the latest end time of any other object
         /// that precedes the end time of the given object.
         /// This can be loosely interpreted as the end time of the preceding hit object in rulesets that do not have overlapping hit objects.
         /// </summary>
-        private readonly Dictionary<HitObject, double> precedingEndTimes = new Dictionary<HitObject, double>();
+        private readonly Dictionary<HitObject, double> precedingEndTimes =
+            new Dictionary<HitObject, double>();
 
         /// <summary>
         /// For each given <see cref="HitObject"/> in the map, this dictionary maps the object onto the track rate dequeued from
         /// <see cref="recentRates"/> (i.e. the oldest value in the queue) when the object is hit. If the hit is then reverted,
         /// the mapped value can be re-introduced to <see cref="recentRates"/> to properly rewind the queue.
         /// </summary>
-        private readonly Dictionary<HitObject, double> ratesForRewinding = new Dictionary<HitObject, double>();
+        private readonly Dictionary<HitObject, double> ratesForRewinding =
+            new Dictionary<HitObject, double>();
 
         private readonly RateAdjustModHelper rateAdjustHelper;
 
@@ -152,7 +164,12 @@ namespace osu.Game.Rulesets.Mods
 
         public void Update(Playfield playfield)
         {
-            SpeedChange.Value = Interpolation.DampContinuously(SpeedChange.Value, targetRate, 50, playfield.Clock.ElapsedFrameTime);
+            SpeedChange.Value = Interpolation.DampContinuously(
+                SpeedChange.Value,
+                targetRate,
+                50,
+                playfield.Clock.ElapsedFrameTime
+            );
         }
 
         public double ApplyToRate(double time, double rate = 1) => rate * InitialRate.Value;
@@ -161,20 +178,30 @@ namespace osu.Game.Rulesets.Mods
         {
             drawable.OnNewResult += (_, result) =>
             {
-                if (ratesForRewinding.ContainsKey(result.HitObject)) return;
-                if (!shouldProcessResult(result)) return;
+                if (ratesForRewinding.ContainsKey(result.HitObject))
+                    return;
+                if (!shouldProcessResult(result))
+                    return;
 
                 ratesForRewinding.Add(result.HitObject, recentRates[0]);
                 recentRates.RemoveAt(0);
 
-                recentRates.Add(Math.Clamp(getRelativeRateChange(result) * SpeedChange.Value, min_allowable_rate, max_allowable_rate));
+                recentRates.Add(
+                    Math.Clamp(
+                        getRelativeRateChange(result) * SpeedChange.Value,
+                        min_allowable_rate,
+                        max_allowable_rate
+                    )
+                );
 
                 updateTargetRate();
             };
             drawable.OnRevertResult += (_, result) =>
             {
-                if (!ratesForRewinding.TryGetValue(result.HitObject, out double rate)) return;
-                if (!shouldProcessResult(result)) return;
+                if (!ratesForRewinding.TryGetValue(result.HitObject, out double rate))
+                    return;
+                if (!shouldProcessResult(result))
+                    return;
 
                 recentRates.Insert(0, rate);
                 ratesForRewinding.Remove(result.HitObject);
@@ -193,7 +220,8 @@ namespace osu.Game.Rulesets.Mods
             foreach (HitObject hitObject in hitObjects)
             {
                 int index = endTimes.BinarySearch(hitObject.GetEndTime());
-                if (index < 0) index = ~index; // BinarySearch returns the next larger element in bitwise complement if there's no exact match
+                if (index < 0)
+                    index = ~index; // BinarySearch returns the next larger element in bitwise complement if there's no exact match
                 index -= 1;
 
                 if (index >= 0)
@@ -215,8 +243,10 @@ namespace osu.Game.Rulesets.Mods
 
         private bool shouldProcessResult(JudgementResult result)
         {
-            if (!result.Type.AffectsAccuracy()) return false;
-            if (!precedingEndTimes.ContainsKey(result.HitObject)) return false;
+            if (!result.Type.AffectsAccuracy())
+                return false;
+            if (!precedingEndTimes.ContainsKey(result.HitObject))
+                return false;
 
             return true;
         }
@@ -250,7 +280,11 @@ namespace osu.Game.Rulesets.Mods
             }
 
             // Scale the rate adjustment based on consistency
-            targetRate = Interpolation.Lerp(targetRate, recentRates.Average(), Math.Abs(consistency) / (recent_rate_count - 1d));
+            targetRate = Interpolation.Lerp(
+                targetRate,
+                recentRates.Average(),
+                Math.Abs(consistency) / (recent_rate_count - 1d)
+            );
         }
     }
 }

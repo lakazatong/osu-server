@@ -12,7 +12,8 @@ using osu.Game.Online.API;
 
 namespace osu.Game.Database
 {
-    public abstract partial class OnlineLookupCache<TLookup, TValue, TRequest> : MemoryCachingComponent<TLookup, TValue>
+    public abstract partial class OnlineLookupCache<TLookup, TValue, TRequest>
+        : MemoryCachingComponent<TLookup, TValue>
         where TLookup : IEquatable<TLookup>
         where TValue : class, IHasOnlineID<TLookup>
         where TRequest : APIRequest
@@ -37,7 +38,8 @@ namespace osu.Game.Database
         /// <param name="id">The ID to lookup.</param>
         /// <param name="token">An optional cancellation token.</param>
         /// <returns>The populated <typeparamref name="TValue"/>, or null if the value does not exist or the request could not be satisfied.</returns>
-        protected Task<TValue?> LookupAsync(TLookup id, CancellationToken token = default) => GetAsync(id, token);
+        protected Task<TValue?> LookupAsync(TLookup id, CancellationToken token = default) =>
+            GetAsync(id, token);
 
         /// <summary>
         /// Perform an API lookup on the specified <paramref name="ids"/>, populating a <typeparamref name="TValue"/>.
@@ -51,23 +53,32 @@ namespace osu.Game.Database
 
             foreach (var id in ids)
             {
-                lookupTasks.Add(LookupAsync(id, token).ContinueWith(task =>
-                {
-                    if (!task.IsCompletedSuccessfully)
-                        return null;
+                lookupTasks.Add(
+                    LookupAsync(id, token)
+                        .ContinueWith(
+                            task =>
+                            {
+                                if (!task.IsCompletedSuccessfully)
+                                    return null;
 
-                    return task.GetResultSafely();
-                }, token));
+                                return task.GetResultSafely();
+                            },
+                            token
+                        )
+                );
             }
 
             return Task.WhenAll(lookupTasks);
         }
 
         // cannot be sealed due to test usages (see TestUserLookupCache).
-        protected override async Task<TValue?> ComputeValueAsync(TLookup lookup, CancellationToken token = default)
-            => await queryValue(lookup).ConfigureAwait(false);
+        protected override async Task<TValue?> ComputeValueAsync(
+            TLookup lookup,
+            CancellationToken token = default
+        ) => await queryValue(lookup).ConfigureAwait(false);
 
-        private readonly Queue<(TLookup id, TaskCompletionSource<TValue?>)> pendingTasks = new Queue<(TLookup, TaskCompletionSource<TValue?>)>();
+        private readonly Queue<(TLookup id, TaskCompletionSource<TValue?>)> pendingTasks =
+            new Queue<(TLookup, TaskCompletionSource<TValue?>)>();
         private Task? pendingRequestTask;
         private readonly object taskAssignmentLock = new object();
 
@@ -108,7 +119,10 @@ namespace osu.Game.Database
                         if (nextTaskBatch.TryGetValue(next.id, out var tasks))
                             tasks.Add(next.task);
                         else
-                            nextTaskBatch[next.id] = new List<TaskCompletionSource<TValue?>> { next.task };
+                            nextTaskBatch[next.id] = new List<TaskCompletionSource<TValue?>>
+                            {
+                                next.task,
+                            };
                     }
                 }
             }

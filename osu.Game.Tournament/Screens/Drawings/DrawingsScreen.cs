@@ -65,17 +65,23 @@ namespace osu.Game.Tournament.Screens.Drawings
                         Origin = Anchor.Centre,
                         Height = 0.3f,
                     },
-                    new WarningBox("No drawings.txt file found. Please create one and restart the client."),
+                    new WarningBox(
+                        "No drawings.txt file found. Please create one and restart the client."
+                    ),
                     links = new LinkFlowContainer
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Y = 60,
-                        AutoSizeAxes = Axes.Both
-                    }
+                        AutoSizeAxes = Axes.Both,
+                    },
                 };
 
-                links.AddLink("Click for details on the file format", "https://osu.ppy.sh/wiki/en/Tournament_Drawings", t => t.Colour = Color4.White);
+                links.AddLink(
+                    "Click for details on the file format",
+                    "https://osu.ppy.sh/wiki/en/Tournament_Drawings",
+                    t => t.Colour = Color4.White
+                );
                 return;
             }
 
@@ -89,11 +95,7 @@ namespace osu.Game.Tournament.Screens.Drawings
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        new TourneyVideo("drawings")
-                        {
-                            Loop = true,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new TourneyVideo("drawings") { Loop = true, RelativeSizeAxes = Axes.Both },
                         // Visualiser
                         new VisualiserContainer
                         {
@@ -105,10 +107,13 @@ namespace osu.Game.Tournament.Screens.Drawings
 
                             Colour = new Color4(255, 204, 34, 255),
 
-                            Lines = 6
+                            Lines = 6,
                         },
                         // Groups
-                        groupsContainer = new GroupContainer(drawingsConfig.Get<int>(DrawingsConfig.Groups), drawingsConfig.Get<int>(DrawingsConfig.TeamsPerGroup))
+                        groupsContainer = new GroupContainer(
+                            drawingsConfig.Get<int>(DrawingsConfig.Groups),
+                            drawingsConfig.Get<int>(DrawingsConfig.TeamsPerGroup)
+                        )
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
@@ -116,11 +121,7 @@ namespace osu.Game.Tournament.Screens.Drawings
                             RelativeSizeAxes = Axes.Y,
                             AutoSizeAxes = Axes.X,
 
-                            Padding = new MarginPadding
-                            {
-                                Top = 35f,
-                                Bottom = 35f
-                            }
+                            Padding = new MarginPadding { Top = 35f, Bottom = 35f },
                         },
                         // Scrolling teams
                         teamsContainer = new ScrollingTeamContainer
@@ -143,8 +144,8 @@ namespace osu.Game.Tournament.Screens.Drawings
                             Alpha = 0,
 
                             Font = OsuFont.Torus.With(weight: FontWeight.Light, size: 42),
-                        }
-                    }
+                        },
+                    },
                 },
                 // Control panel container
                 new ControlPanel
@@ -168,7 +169,7 @@ namespace osu.Game.Tournament.Screens.Drawings
                         RelativeSizeAxes = Axes.X,
 
                         Text = "Reload",
-                        Action = reloadTeams
+                        Action = reloadTeams,
                     },
                     new ControlPanel.Spacer(),
                     new TourneyButton
@@ -176,9 +177,9 @@ namespace osu.Game.Tournament.Screens.Drawings
                         RelativeSizeAxes = Axes.X,
 
                         Text = "Reset",
-                        Action = () => reset()
-                    }
-                }
+                        Action = () => reset(),
+                    },
+                },
             };
 
             teamsContainer.OnSelected += onTeamSelected;
@@ -216,7 +217,11 @@ namespace osu.Game.Tournament.Screens.Drawings
                 }
             }
 
-            writeOp = writeOp?.ContinueWith(_ => { writeAction(); }) ?? Task.Run(writeAction);
+            writeOp =
+                writeOp?.ContinueWith(_ =>
+                {
+                    writeAction();
+                }) ?? Task.Run(writeAction);
         }
 
         private void reloadTeams()
@@ -248,7 +253,13 @@ namespace osu.Game.Tournament.Screens.Drawings
                 try
                 {
                     // Read from drawings_results
-                    using (Stream stream = storage.GetStream(results_filename, FileAccess.Read, FileMode.Open))
+                    using (
+                        Stream stream = storage.GetStream(
+                            results_filename,
+                            FileAccess.Read,
+                            FileMode.Open
+                        )
+                    )
                     using (StreamReader sr = new StreamReader(stream))
                     {
                         string? line;
@@ -258,10 +269,15 @@ namespace osu.Game.Tournament.Screens.Drawings
                             if (string.IsNullOrEmpty(line))
                                 continue;
 
-                            if (line.ToUpperInvariant().StartsWith("GROUP", StringComparison.Ordinal))
+                            if (
+                                line.ToUpperInvariant()
+                                    .StartsWith("GROUP", StringComparison.Ordinal)
+                            )
                                 continue;
 
-                            TournamentTeam? teamToAdd = allTeams.FirstOrDefault(t => t.FullName.Value == line);
+                            TournamentTeam? teamToAdd = allTeams.FirstOrDefault(t =>
+                                t.FullName.Value == line
+                            );
 
                             if (teamToAdd == null)
                                 continue;

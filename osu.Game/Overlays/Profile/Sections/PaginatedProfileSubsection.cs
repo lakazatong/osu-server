@@ -10,10 +10,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
 using osu.Game.Graphics;
+using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
-using osu.Game.Graphics.Containers;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
 using osuTK;
@@ -37,7 +37,8 @@ namespace osu.Game.Overlays.Profile.Sections
 
         protected PaginationParameters? CurrentPage { get; private set; }
 
-        protected ReverseChildIDFillFlowContainer<Drawable> ItemsContainer { get; private set; } = null!;
+        protected ReverseChildIDFillFlowContainer<Drawable> ItemsContainer { get; private set; } =
+            null!;
 
         private APIRequest<List<TModel>>? retrievalRequest;
         private CancellationTokenSource? loadCancellation;
@@ -46,45 +47,50 @@ namespace osu.Game.Overlays.Profile.Sections
         private OsuSpriteText missing = null!;
         private readonly LocalisableString? missingText;
 
-        protected PaginatedProfileSubsection(Bindable<UserProfileData?> user, LocalisableString? headerText = null, LocalisableString? missingText = null)
+        protected PaginatedProfileSubsection(
+            Bindable<UserProfileData?> user,
+            LocalisableString? headerText = null,
+            LocalisableString? missingText = null
+        )
             : base(user, headerText, CounterVisibilityState.AlwaysVisible)
         {
             this.missingText = missingText;
         }
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Direction = FillDirection.Vertical,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                // reverse ID flow is required for correct Z-ordering of the items (last item should be front-most).
-                // particularly important in PaginatedBeatmapContainer, as it uses beatmap cards, which have expandable overhanging content.
-                ItemsContainer = new ReverseChildIDFillFlowContainer<Drawable>
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Vertical,
+                Children = new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Spacing = new Vector2(0, 2),
-                    // ensure the container and its contents are in front of the "more" button.
-                    Depth = float.MinValue
+                    // reverse ID flow is required for correct Z-ordering of the items (last item should be front-most).
+                    // particularly important in PaginatedBeatmapContainer, as it uses beatmap cards, which have expandable overhanging content.
+                    ItemsContainer = new ReverseChildIDFillFlowContainer<Drawable>
+                    {
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Spacing = new Vector2(0, 2),
+                        // ensure the container and its contents are in front of the "more" button.
+                        Depth = float.MinValue,
+                    },
+                    moreButton = new ShowMoreButton
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Alpha = 0,
+                        Margin = new MarginPadding { Top = 10 },
+                        Action = showMore,
+                    },
+                    missing = new OsuSpriteText
+                    {
+                        Font = OsuFont.GetFont(size: 15),
+                        Text = missingText ?? string.Empty,
+                        Alpha = 0,
+                    },
                 },
-                moreButton = new ShowMoreButton
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Alpha = 0,
-                    Margin = new MarginPadding { Top = 10 },
-                    Action = showMore,
-                },
-                missing = new OsuSpriteText
-                {
-                    Font = OsuFont.GetFont(size: 15),
-                    Text = missingText ?? string.Empty,
-                    Alpha = 0,
-                }
-            }
-        };
+            };
 
         protected override void LoadComplete()
         {
@@ -114,52 +120,65 @@ namespace osu.Game.Overlays.Profile.Sections
 
             loadCancellation = new CancellationTokenSource();
 
-            CurrentPage = CurrentPage?.TakeNext(ItemsPerPage) ?? new PaginationParameters(InitialItemsCount);
+            CurrentPage =
+                CurrentPage?.TakeNext(ItemsPerPage) ?? new PaginationParameters(InitialItemsCount);
 
-            retrievalRequest = CreateRequest(User.Value, new PaginationParameters(CurrentPage.Value.Offset, CurrentPage.Value.Limit + 1));
+            retrievalRequest = CreateRequest(
+                User.Value,
+                new PaginationParameters(CurrentPage.Value.Offset, CurrentPage.Value.Limit + 1)
+            );
             retrievalRequest.Success += items => UpdateItems(items, loadCancellation);
 
             api.Queue(retrievalRequest);
         }
 
-        protected virtual void UpdateItems(List<TModel> items, CancellationTokenSource cancellationTokenSource) => Schedule(() =>
-        {
-            if (!items.Any() && CurrentPage?.Offset == 0)
+        protected virtual void UpdateItems(
+            List<TModel> items,
+            CancellationTokenSource cancellationTokenSource
+        ) =>
+            Schedule(() =>
             {
-                moreButton.Hide();
-                moreButton.IsLoading = false;
+                if (!items.Any() && CurrentPage?.Offset == 0)
+                {
+                    moreButton.Hide();
+                    moreButton.IsLoading = false;
 
-                if (missingText.HasValue)
-                    missing.Show();
+                    if (missingText.HasValue)
+                        missing.Show();
 
-                return;
-            }
+                    return;
+                }
 
-            bool hasMore = items.Count > CurrentPage?.Limit;
+                bool hasMore = items.Count > CurrentPage?.Limit;
 
-            if (hasMore)
-                items.RemoveAt(items.Count - 1);
+                if (hasMore)
+                    items.RemoveAt(items.Count - 1);
 
-            OnItemsReceived(items);
+                OnItemsReceived(items);
 
-            LoadComponentsAsync(items.Select(CreateDrawableItem).Where(d => d != null).Cast<Drawable>(), drawables =>
-            {
-                missing.Hide();
+                LoadComponentsAsync(
+                    items.Select(CreateDrawableItem).Where(d => d != null).Cast<Drawable>(),
+                    drawables =>
+                    {
+                        missing.Hide();
 
-                moreButton.FadeTo(hasMore ? 1 : 0);
-                moreButton.IsLoading = false;
+                        moreButton.FadeTo(hasMore ? 1 : 0);
+                        moreButton.IsLoading = false;
 
-                ItemsContainer.AddRange(drawables);
-            }, cancellationTokenSource.Token);
-        });
+                        ItemsContainer.AddRange(drawables);
+                    },
+                    cancellationTokenSource.Token
+                );
+            });
 
         protected virtual int GetCount(APIUser user) => 0;
 
-        protected virtual void OnItemsReceived(List<TModel> items)
-        {
-        }
+        protected virtual void OnItemsReceived(List<TModel> items) { }
 
-        protected abstract APIRequest<List<TModel>> CreateRequest(UserProfileData user, PaginationParameters pagination);
+        protected abstract APIRequest<List<TModel>> CreateRequest(
+            UserProfileData user,
+            PaginationParameters pagination
+        );
 
         protected abstract Drawable? CreateDrawableItem(TModel model);
 

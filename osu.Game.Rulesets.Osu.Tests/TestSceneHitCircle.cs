@@ -34,7 +34,10 @@ namespace osu.Game.Rulesets.Osu.Tests
             AddStep("Hit Big Stream", () => SetContents(_ => testStream(2, true)));
             AddStep("Hit Medium Stream", () => SetContents(_ => testStream(5, true)));
             AddStep("Hit Small Stream", () => SetContents(_ => testStream(7, true)));
-            AddStep("High combo index", () => SetContents(_ => testSingle(2, true, comboIndex: 15)));
+            AddStep(
+                "High combo index",
+                () => SetContents(_ => testSingle(2, true, comboIndex: 15))
+            );
         }
 
         [Test]
@@ -67,12 +70,20 @@ namespace osu.Game.Rulesets.Osu.Tests
             AddStep("Hit Big Single", () => SetContents(_ => testSingle(2, true)));
         }
 
-        private Drawable testSingle(float circleSize, bool auto = false, double timeOffset = 0, Vector2? positionOffset = null, int comboIndex = 0)
+        private Drawable testSingle(
+            float circleSize,
+            bool auto = false,
+            double timeOffset = 0,
+            Vector2? positionOffset = null,
+            int comboIndex = 0
+        )
         {
             var playfield = new TestOsuPlayfield();
 
             for (double t = timeOffset; t < timeOffset + 60000; t += 2000)
-                playfield.Add(createSingle(circleSize, auto, t, positionOffset, comboIndex: comboIndex));
+                playfield.Add(
+                    createSingle(circleSize, auto, t, positionOffset, comboIndex: comboIndex)
+                );
 
             return playfield;
         }
@@ -92,7 +103,14 @@ namespace osu.Game.Rulesets.Osu.Tests
             return playfield;
         }
 
-        private TestDrawableHitCircle createSingle(float circleSize, bool auto, double timeOffset, Vector2? positionOffset, double hitOffset = 0, int comboIndex = 0)
+        private TestDrawableHitCircle createSingle(
+            float circleSize,
+            bool auto,
+            double timeOffset,
+            Vector2? positionOffset,
+            double hitOffset = 0,
+            int comboIndex = 0
+        )
         {
             positionOffset ??= Vector2.Zero;
 
@@ -103,7 +121,10 @@ namespace osu.Game.Rulesets.Osu.Tests
                 IndexInCurrentCombo = comboIndex,
             };
 
-            circle.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty { CircleSize = circleSize });
+            circle.ApplyDefaults(
+                new ControlPointInfo(),
+                new BeatmapDifficulty { CircleSize = circleSize }
+            );
 
             var drawable = CreateDrawableHitCircle(circle, auto, hitOffset);
 
@@ -112,10 +133,11 @@ namespace osu.Game.Rulesets.Osu.Tests
             return drawable;
         }
 
-        protected virtual TestDrawableHitCircle CreateDrawableHitCircle(HitCircle circle, bool auto, double hitOffset = 0) => new TestDrawableHitCircle(circle, auto, hitOffset)
-        {
-            Depth = depthIndex++
-        };
+        protected virtual TestDrawableHitCircle CreateDrawableHitCircle(
+            HitCircle circle,
+            bool auto,
+            double hitOffset = 0
+        ) => new TestDrawableHitCircle(circle, auto, hitOffset) { Depth = depthIndex++ };
 
         protected partial class TestDrawableHitCircle : DrawableHitCircle
         {
@@ -133,7 +155,12 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             protected override void CheckForResult(bool userTriggered, double timeOffset)
             {
-                if (auto && !userTriggered && timeOffset > hitOffset && CheckHittable?.Invoke(this, Time.Current, HitResult.Great) == ClickAction.Hit)
+                if (
+                    auto
+                    && !userTriggered
+                    && timeOffset > hitOffset
+                    && CheckHittable?.Invoke(this, Time.Current, HitResult.Great) == ClickAction.Hit
+                )
                 {
                     // force success
                     ApplyResult(HitResult.Great);

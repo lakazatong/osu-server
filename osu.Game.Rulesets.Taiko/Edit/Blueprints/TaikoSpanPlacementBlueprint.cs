@@ -28,7 +28,8 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
         [Resolved]
         private TaikoHitObjectComposer? composer { get; set; }
 
-        protected override bool IsValidForPlacement => Precision.DefinitelyBigger(spanPlacementObject.Duration, 0);
+        protected override bool IsValidForPlacement =>
+            Precision.DefinitelyBigger(spanPlacementObject.Duration, 0);
 
         public TaikoSpanPlacementBlueprint(HitObject hitObject)
             : base(hitObject)
@@ -41,16 +42,16 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
             {
                 headPiece = new HitPiece
                 {
-                    Size = new Vector2(TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT)
+                    Size = new Vector2(TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT),
                 },
                 lengthPiece = new LengthPiece
                 {
-                    Height = TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT
+                    Height = TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT,
                 },
                 tailPiece = new HitPiece
                 {
-                    Size = new Vector2(TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT)
-                }
+                    Size = new Vector2(TaikoHitObject.DEFAULT_SIZE * TaikoPlayfield.BASE_HEIGHT),
+                },
             };
         }
 
@@ -81,9 +82,14 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
             EndPlacement(true);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
-            var result = composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var result =
+                composer?.FindSnappedPositionAndTime(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
 
             base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
 
@@ -112,7 +118,10 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
             }
             else
             {
-                lengthPiece.Position = headPiece.Position = tailPiece.Position = ToLocalSpace(result.ScreenSpacePosition);
+                lengthPiece.Position =
+                    headPiece.Position =
+                    tailPiece.Position =
+                        ToLocalSpace(result.ScreenSpacePosition);
 
                 if (result.Time is double startTime)
                 {

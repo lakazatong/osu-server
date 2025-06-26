@@ -35,10 +35,7 @@ namespace osu.Game.Scoring.Legacy
 
         public Score Parse(Stream stream)
         {
-            var score = new Score
-            {
-                Replay = new Replay()
-            };
+            var score = new Score { Replay = new Replay() };
 
             WorkingBeatmap workingBeatmap;
             ScoreRank? decodedRank = null;
@@ -59,7 +56,8 @@ namespace osu.Game.Scoring.Legacy
                 // to mark it with the correct version increment to trigger reprocessing to new standardised scoring.
                 //
                 // See StandardisedScoreMigrationTools.ShouldMigrateToNewStandardised().
-                scoreInfo.TotalScoreVersion = version < 30000002 ? 30000001 : LegacyScoreEncoder.LATEST_VERSION;
+                scoreInfo.TotalScoreVersion =
+                    version < 30000002 ? 30000001 : LegacyScoreEncoder.LATEST_VERSION;
 
                 string beatmapHash = sr.ReadString();
 
@@ -86,17 +84,27 @@ namespace osu.Game.Scoring.Legacy
                 /* score.Perfect = */
                 sr.ReadBoolean();
 
-                scoreInfo.Mods = currentRuleset.ConvertFromLegacyMods((LegacyMods)sr.ReadInt32()).ToArray();
+                scoreInfo.Mods = currentRuleset
+                    .ConvertFromLegacyMods((LegacyMods)sr.ReadInt32())
+                    .ToArray();
 
                 // lazer replays get a really high version number.
                 if (version < LegacyScoreEncoder.FIRST_LAZER_VERSION)
-                    scoreInfo.Mods = scoreInfo.Mods.Append(currentRuleset.CreateMod<ModClassic>()).ToArray();
+                    scoreInfo.Mods = scoreInfo
+                        .Mods.Append(currentRuleset.CreateMod<ModClassic>())
+                        .ToArray();
 
-                currentBeatmap = workingBeatmap.GetPlayableBeatmap(currentRuleset.RulesetInfo, scoreInfo.Mods);
+                currentBeatmap = workingBeatmap.GetPlayableBeatmap(
+                    currentRuleset.RulesetInfo,
+                    scoreInfo.Mods
+                );
                 scoreInfo.BeatmapInfo = currentBeatmap.BeatmapInfo;
 
                 // As this is baked into hitobject timing (see `LegacyBeatmapDecoder`) we also need to apply this to replay frame timing.
-                beatmapOffset = currentBeatmap.BeatmapVersion < 5 ? LegacyBeatmapDecoder.EARLY_VERSION_TIMING_OFFSET : 0;
+                beatmapOffset =
+                    currentBeatmap.BeatmapVersion < 5
+                        ? LegacyBeatmapDecoder.EARLY_VERSION_TIMING_OFFSET
+                        : 0;
 
                 /* score.HpGraphString = */
                 sr.ReadString();
@@ -119,30 +127,41 @@ namespace osu.Game.Scoring.Legacy
                     compressedScoreInfo = sr.ReadByteArray();
 
                 if (compressedReplay?.Length > 0)
-                    readCompressedData(compressedReplay, reader => readLegacyReplay(score.Replay, reader));
+                    readCompressedData(
+                        compressedReplay,
+                        reader => readLegacyReplay(score.Replay, reader)
+                    );
 
                 if (compressedScoreInfo?.Length > 0)
                 {
-                    readCompressedData(compressedScoreInfo, reader =>
-                    {
-                        LegacyReplaySoloScoreInfo readScore = JsonConvert.DeserializeObject<LegacyReplaySoloScoreInfo>(reader.ReadToEnd());
+                    readCompressedData(
+                        compressedScoreInfo,
+                        reader =>
+                        {
+                            LegacyReplaySoloScoreInfo readScore =
+                                JsonConvert.DeserializeObject<LegacyReplaySoloScoreInfo>(
+                                    reader.ReadToEnd()
+                                );
 
-                        Debug.Assert(readScore != null);
+                            Debug.Assert(readScore != null);
 
-                        score.ScoreInfo.OnlineID = readScore.OnlineID;
-                        score.ScoreInfo.Statistics = readScore.Statistics;
-                        score.ScoreInfo.MaximumStatistics = readScore.MaximumStatistics;
-                        score.ScoreInfo.Mods = readScore.Mods.Select(m => m.ToMod(currentRuleset)).ToArray();
-                        score.ScoreInfo.ClientVersion = readScore.ClientVersion;
-                        decodedRank = readScore.Rank;
-                        if (readScore.UserID > 1)
-                            score.ScoreInfo.RealmUser.OnlineID = readScore.UserID;
+                            score.ScoreInfo.OnlineID = readScore.OnlineID;
+                            score.ScoreInfo.Statistics = readScore.Statistics;
+                            score.ScoreInfo.MaximumStatistics = readScore.MaximumStatistics;
+                            score.ScoreInfo.Mods = readScore
+                                .Mods.Select(m => m.ToMod(currentRuleset))
+                                .ToArray();
+                            score.ScoreInfo.ClientVersion = readScore.ClientVersion;
+                            decodedRank = readScore.Rank;
+                            if (readScore.UserID > 1)
+                                score.ScoreInfo.RealmUser.OnlineID = readScore.UserID;
 
-                        if (readScore.TotalScoreWithoutMods is long totalScoreWithoutMods)
-                            score.ScoreInfo.TotalScoreWithoutMods = totalScoreWithoutMods;
-                        else
-                            PopulateTotalScoreWithoutMods(score.ScoreInfo);
-                    });
+                            if (readScore.TotalScoreWithoutMods is long totalScoreWithoutMods)
+                                score.ScoreInfo.TotalScoreWithoutMods = totalScoreWithoutMods;
+                            else
+                                PopulateTotalScoreWithoutMods(score.ScoreInfo);
+                        }
+                    );
                 }
             }
 
@@ -185,7 +204,9 @@ namespace osu.Game.Scoring.Legacy
 
                 long compressedSize = replayInStream.Length - replayInStream.Position;
 
-                using (var lzma = new LzmaStream(properties, replayInStream, compressedSize, outSize))
+                using (
+                    var lzma = new LzmaStream(properties, replayInStream, compressedSize, outSize)
+                )
                 using (var reader = new StreamReader(lzma))
                     readFunc(reader);
             }
@@ -208,9 +229,11 @@ namespace osu.Game.Scoring.Legacy
             var scoreProcessor = rulesetInstance.CreateScoreProcessor();
 
             // Populate the maximum statistics.
-            HitResult maxBasicResult = rulesetInstance.GetHitResults()
-                                                      .Select(h => h.result)
-                                                      .Where(h => h.IsBasic()).MaxBy(scoreProcessor.GetBaseScoreForResult);
+            HitResult maxBasicResult = rulesetInstance
+                .GetHitResults()
+                .Select(h => h.result)
+                .Where(h => h.IsBasic())
+                .MaxBy(scoreProcessor.GetBaseScoreForResult);
 
             foreach ((HitResult result, int count) in score.Statistics)
             {
@@ -218,12 +241,16 @@ namespace osu.Game.Scoring.Legacy
                 {
                     case HitResult.LargeTickHit:
                     case HitResult.LargeTickMiss:
-                        score.MaximumStatistics[HitResult.LargeTickHit] = score.MaximumStatistics.GetValueOrDefault(HitResult.LargeTickHit) + count;
+                        score.MaximumStatistics[HitResult.LargeTickHit] =
+                            score.MaximumStatistics.GetValueOrDefault(HitResult.LargeTickHit)
+                            + count;
                         break;
 
                     case HitResult.SmallTickHit:
                     case HitResult.SmallTickMiss:
-                        score.MaximumStatistics[HitResult.SmallTickHit] = score.MaximumStatistics.GetValueOrDefault(HitResult.SmallTickHit) + count;
+                        score.MaximumStatistics[HitResult.SmallTickHit] =
+                            score.MaximumStatistics.GetValueOrDefault(HitResult.SmallTickHit)
+                            + count;
                         break;
 
                     case HitResult.IgnoreHit:
@@ -233,7 +260,8 @@ namespace osu.Game.Scoring.Legacy
                         break;
 
                     default:
-                        score.MaximumStatistics[maxBasicResult] = score.MaximumStatistics.GetValueOrDefault(maxBasicResult) + count;
+                        score.MaximumStatistics[maxBasicResult] =
+                            score.MaximumStatistics.GetValueOrDefault(maxBasicResult) + count;
                         break;
                 }
             }
@@ -247,9 +275,14 @@ namespace osu.Game.Scoring.Legacy
             var calculator = rulesetInstance.CreateDifficultyCalculator(workingBeatmap);
             var attributes = calculator.Calculate(score.Mods);
 
-            int maxComboFromStatistics = score.MaximumStatistics.Where(kvp => kvp.Key.AffectsCombo()).Select(kvp => kvp.Value).DefaultIfEmpty(0).Sum();
+            int maxComboFromStatistics = score
+                .MaximumStatistics.Where(kvp => kvp.Key.AffectsCombo())
+                .Select(kvp => kvp.Value)
+                .DefaultIfEmpty(0)
+                .Sum();
             if (attributes.MaxCombo > maxComboFromStatistics)
-                score.MaximumStatistics[HitResult.LegacyComboIncrease] = attributes.MaxCombo - maxComboFromStatistics;
+                score.MaximumStatistics[HitResult.LegacyComboIncrease] =
+                    attributes.MaxCombo - maxComboFromStatistics;
 #pragma warning restore CS0618
         }
 
@@ -284,7 +317,10 @@ namespace osu.Game.Scoring.Legacy
                 }
 
                 // In mania, mouseX encodes the pressed keys in the lower 20 bits
-                int mouseXParseLimit = currentRuleset.RulesetInfo.OnlineID == 3 ? (1 << 20) - 1 : Parsing.MAX_COORDINATE_VALUE;
+                int mouseXParseLimit =
+                    currentRuleset.RulesetInfo.OnlineID == 3
+                        ? (1 << 20) - 1
+                        : Parsing.MAX_COORDINATE_VALUE;
 
                 int diff = Parsing.ParseInt(split[0]);
                 float mouseX = Parsing.ParseFloat(split[1], mouseXParseLimit);
@@ -292,10 +328,14 @@ namespace osu.Game.Scoring.Legacy
 
                 lastTime += diff;
 
-                legacyFrames.Add(new LegacyReplayFrame(lastTime,
-                    mouseX,
-                    mouseY,
-                    (ReplayButtonState)Parsing.ParseInt(split[3])));
+                legacyFrames.Add(
+                    new LegacyReplayFrame(
+                        lastTime,
+                        mouseX,
+                        mouseY,
+                        (ReplayButtonState)Parsing.ParseInt(split[3])
+                    )
+                );
             }
 
             // https://github.com/peppy/osu-stable-reference/blob/e53980dd76857ee899f66ce519ba1597e7874f28/osu!/GameModes/Play/ReplayWatcher.cs#L62-L67
@@ -337,7 +377,9 @@ namespace osu.Game.Scoring.Legacy
         {
             var convertible = currentRuleset.CreateConvertibleReplayFrame();
             if (convertible == null)
-                throw new InvalidOperationException($"Legacy replay cannot be converted for the ruleset: {currentRuleset.Description}");
+                throw new InvalidOperationException(
+                    $"Legacy replay cannot be converted for the ruleset: {currentRuleset.Description}"
+                );
 
             convertible.FromLegacy(currentFrame, currentBeatmap, lastFrame);
 

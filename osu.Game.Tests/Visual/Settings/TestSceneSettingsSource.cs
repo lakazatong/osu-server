@@ -32,7 +32,7 @@ namespace osu.Game.Tests.Visual.Settings
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Padding = new MarginPadding(50),
-                        ChildrenEnumerable = new TestTargetClass().CreateSettingsControls()
+                        ChildrenEnumerable = new TestTargetClass().CreateSettingsControls(),
                     },
                 },
             };
@@ -43,53 +43,59 @@ namespace osu.Game.Tests.Visual.Settings
             [SettingSource("Sample bool", "Clicking this changes a setting")]
             public BindableBool TickBindable { get; } = new BindableBool();
 
-            [SettingSource(typeof(TestStrings), nameof(TestStrings.LocalisableLabel), nameof(TestStrings.LocalisableDescription))]
+            [SettingSource(
+                typeof(TestStrings),
+                nameof(TestStrings.LocalisableLabel),
+                nameof(TestStrings.LocalisableDescription)
+            )]
             public BindableBool LocalisableBindable { get; } = new BindableBool(true);
 
             [SettingSource("Sample float", "Change something for a mod")]
-            public BindableFloat SliderBindable { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 10,
-                Default = 5,
-                Value = 7
-            };
+            public BindableFloat SliderBindable { get; } =
+                new BindableFloat
+                {
+                    MinValue = 0,
+                    MaxValue = 10,
+                    Default = 5,
+                    Value = 7,
+                };
 
             [SettingSource("Sample enum", "Change something for a mod")]
-            public Bindable<TestEnum> EnumBindable { get; } = new Bindable<TestEnum>
-            {
-                Default = TestEnum.Value1,
-                Value = TestEnum.Value2
-            };
+            public Bindable<TestEnum> EnumBindable { get; } =
+                new Bindable<TestEnum> { Default = TestEnum.Value1, Value = TestEnum.Value2 };
 
             [SettingSource("Sample string", "Change something for a mod")]
-            public Bindable<string> StringBindable { get; } = new Bindable<string>
-            {
-                Default = string.Empty,
-                Value = "Sample text"
-            };
+            public Bindable<string> StringBindable { get; } =
+                new Bindable<string> { Default = string.Empty, Value = "Sample text" };
 
-            [SettingSource("Sample number textbox", "Textbox number entry", SettingControlType = typeof(SettingsNumberBox))]
+            [SettingSource(
+                "Sample number textbox",
+                "Textbox number entry",
+                SettingControlType = typeof(SettingsNumberBox)
+            )]
             public Bindable<int?> IntTextBoxBindable { get; } = new Bindable<int?>();
 
-            [SettingSource("Sample colour", "Change the colour", SettingControlType = typeof(SettingsColour))]
-            public BindableColour4 ColourBindable { get; } = new BindableColour4
-            {
-                Default = Colour4.White,
-                Value = Colour4.Red
-            };
+            [SettingSource(
+                "Sample colour",
+                "Change the colour",
+                SettingControlType = typeof(SettingsColour)
+            )]
+            public BindableColour4 ColourBindable { get; } =
+                new BindableColour4 { Default = Colour4.White, Value = Colour4.Red };
         }
 
         private enum TestEnum
         {
             Value1,
-            Value2
+            Value2,
         }
 
         private class TestStrings
         {
-            public static LocalisableString LocalisableLabel => new LocalisableString("Sample localisable label");
-            public static LocalisableString LocalisableDescription => new LocalisableString("Sample localisable description");
+            public static LocalisableString LocalisableLabel =>
+                new LocalisableString("Sample localisable label");
+            public static LocalisableString LocalisableDescription =>
+                new LocalisableString("Sample localisable description");
         }
     }
 }

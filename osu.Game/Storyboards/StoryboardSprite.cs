@@ -13,8 +13,10 @@ namespace osu.Game.Storyboards
 {
     public class StoryboardSprite : IStoryboardElementWithDuration
     {
-        private readonly List<StoryboardLoopingGroup> loopingGroups = new List<StoryboardLoopingGroup>();
-        private readonly List<StoryboardTriggerGroup> triggerGroups = new List<StoryboardTriggerGroup>();
+        private readonly List<StoryboardLoopingGroup> loopingGroups =
+            new List<StoryboardLoopingGroup>();
+        private readonly List<StoryboardTriggerGroup> triggerGroups =
+            new List<StoryboardTriggerGroup>();
 
         public string Path { get; }
         public virtual bool IsDrawable => HasCommands;
@@ -57,7 +59,9 @@ namespace osu.Game.Storyboards
                     // - If a 0->0 transform exists, we still need to check it to ensure the absolute first start value is non-visible.
                     // - After ascertaining this, we then check the first non-noop transform to get the true start lifetime.
                     var firstAlpha = alphaCommands.MinBy(c => c.StartTime);
-                    var firstRealAlpha = alphaCommands.Where(visibleAtStartOrEnd).MinBy(c => c.StartTime);
+                    var firstRealAlpha = alphaCommands
+                        .Where(visibleAtStartOrEnd)
+                        .MinBy(c => c.StartTime);
 
                     if (firstAlpha!.StartValue == 0 && firstRealAlpha != null)
                         return firstRealAlpha.StartTime;
@@ -65,7 +69,8 @@ namespace osu.Game.Storyboards
 
                 return EarliestTransformTime;
 
-                bool visibleAtStartOrEnd(StoryboardCommand<float> command) => command.StartValue > 0 || command.EndValue > 0;
+                bool visibleAtStartOrEnd(StoryboardCommand<float> command) =>
+                    command.StartValue > 0 || command.EndValue > 0;
             }
         }
 
@@ -102,7 +107,10 @@ namespace osu.Game.Storyboards
                 double latestEndTime = Commands.EndTime;
 
                 foreach (var l in loopingGroups)
-                    latestEndTime = Math.Max(latestEndTime, l.StartTime + l.Duration * l.TotalIterations);
+                    latestEndTime = Math.Max(
+                        latestEndTime,
+                        l.StartTime + l.Duration * l.TotalIterations
+                    );
 
                 return latestEndTime;
             }
@@ -126,7 +134,12 @@ namespace osu.Game.Storyboards
             return loop;
         }
 
-        public StoryboardTriggerGroup AddTriggerGroup(string triggerName, double startTime, double endTime, int groupNumber)
+        public StoryboardTriggerGroup AddTriggerGroup(
+            string triggerName,
+            double startTime,
+            double endTime,
+            int groupNumber
+        )
         {
             var trigger = new StoryboardTriggerGroup(triggerName, startTime, endTime, groupNumber);
             triggerGroups.Add(trigger);

@@ -55,7 +55,14 @@ namespace osu.Game.Rulesets.Scoring
         /// <param name="hitObject">The <see cref="HitObject"/> that triggered the event.</param>
         /// <param name="lastHitObject">The previous <see cref="HitObject"/>.</param>
         /// <param name="position">A position corresponding to the event.</param>
-        public HitEvent(double timeOffset, double? gameplayRate, HitResult result, HitObject hitObject, [CanBeNull] HitObject lastHitObject, [CanBeNull] Vector2? position)
+        public HitEvent(
+            double timeOffset,
+            double? gameplayRate,
+            HitResult result,
+            HitObject hitObject,
+            [CanBeNull] HitObject lastHitObject,
+            [CanBeNull] Vector2? position
+        )
         {
             TimeOffset = timeOffset;
             GameplayRate = gameplayRate;
@@ -70,6 +77,14 @@ namespace osu.Game.Rulesets.Scoring
         /// </summary>
         /// <param name="positionOffset">The positional offset.</param>
         /// <returns>The new <see cref="HitEvent"/>.</returns>
-        public HitEvent With(Vector2? positionOffset) => new HitEvent(TimeOffset, GameplayRate, Result, HitObject, LastHitObject, positionOffset);
+        public HitEvent With(Vector2? positionOffset) =>
+            new HitEvent(
+                TimeOffset,
+                GameplayRate,
+                Result,
+                HitObject,
+                LastHitObject,
+                positionOffset
+            );
     }
 }

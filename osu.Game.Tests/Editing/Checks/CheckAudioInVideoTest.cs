@@ -31,12 +31,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files =
-                        {
-                            CheckTestHelpers.CreateMockFile("mp4"),
-                        }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("mp4") },
+                    },
+                },
             };
         }
 
@@ -50,24 +47,34 @@ namespace osu.Game.Tests.Editing.Checks
         [Test]
         public void TestVideoFileWithAudio()
         {
-            using (var resourceStream = TestResources.OpenResource("Videos/test-video-with-audio.mp4"))
+            using (
+                var resourceStream = TestResources.OpenResource("Videos/test-video-with-audio.mp4")
+            )
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
 
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckAudioInVideo.IssueTemplateHasAudioTrack);
+                Assert.That(
+                    issues.Single().Template is CheckAudioInVideo.IssueTemplateHasAudioTrack
+                );
             }
         }
 
         [Test]
         public void TestVideoFileWithTrackButNoAudio()
         {
-            using (var resourceStream = TestResources.OpenResource("Videos/test-video-with-track-but-no-audio.mp4"))
+            using (
+                var resourceStream = TestResources.OpenResource(
+                    "Videos/test-video-with-track-but-no-audio.mp4"
+                )
+            )
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
 
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckAudioInVideo.IssueTemplateHasAudioTrack);
+                Assert.That(
+                    issues.Single().Template is CheckAudioInVideo.IssueTemplateHasAudioTrack
+                );
             }
         }
 
@@ -90,7 +97,10 @@ namespace osu.Game.Tests.Editing.Checks
 
             var mockWorkingBeatmap = new Mock<TestWorkingBeatmap>(beatmap, null, null);
             mockWorkingBeatmap.Setup(w => w.GetStream(It.IsAny<string>())).Returns(resourceStream);
-            mockWorkingBeatmap.As<IWorkingBeatmap>().SetupGet(w => w.Storyboard).Returns(storyboard);
+            mockWorkingBeatmap
+                .As<IWorkingBeatmap>()
+                .SetupGet(w => w.Storyboard)
+                .Returns(storyboard);
 
             return new BeatmapVerifierContext(beatmap, mockWorkingBeatmap.Object);
         }

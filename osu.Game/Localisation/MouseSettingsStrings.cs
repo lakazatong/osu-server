@@ -17,67 +17,101 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Not applicable in full screen mode"
         /// </summary>
-        public static LocalisableString NotApplicableFullscreen => new TranslatableString(getKey(@"not_applicable_full_screen"), @"Not applicable in full screen mode");
+        public static LocalisableString NotApplicableFullscreen =>
+            new TranslatableString(
+                getKey(@"not_applicable_full_screen"),
+                @"Not applicable in full screen mode"
+            );
 
         /// <summary>
         /// "High precision mouse"
         /// </summary>
-        public static LocalisableString HighPrecisionMouse => new TranslatableString(getKey(@"high_precision_mouse"), @"High precision mouse");
+        public static LocalisableString HighPrecisionMouse =>
+            new TranslatableString(getKey(@"high_precision_mouse"), @"High precision mouse");
 
         /// <summary>
         /// "Attempts to bypass any operating system mouse acceleration. On Windows, this is equivalent to what used to be known as &quot;Raw Input&quot;."
         /// </summary>
-        public static LocalisableString HighPrecisionMouseTooltip => new TranslatableString(getKey(@"high_precision_mouse_tooltip"), @"Attempts to bypass any operating system mouse acceleration. On Windows, this is equivalent to what used to be known as ""Raw Input"".");
+        public static LocalisableString HighPrecisionMouseTooltip =>
+            new TranslatableString(
+                getKey(@"high_precision_mouse_tooltip"),
+                @"Attempts to bypass any operating system mouse acceleration. On Windows, this is equivalent to what used to be known as ""Raw Input""."
+            );
 
         /// <summary>
         /// "Confine mouse cursor to window"
         /// </summary>
-        public static LocalisableString ConfineMouseMode => new TranslatableString(getKey(@"confine_mouse_mode"), @"Confine mouse cursor to window");
+        public static LocalisableString ConfineMouseMode =>
+            new TranslatableString(
+                getKey(@"confine_mouse_mode"),
+                @"Confine mouse cursor to window"
+            );
 
         /// <summary>
         /// "Disable mouse wheel adjusting volume during gameplay"
         /// </summary>
-        public static LocalisableString DisableMouseWheelVolumeAdjust => new TranslatableString(getKey(@"disable_mouse_wheel_volume_adjust"), @"Disable mouse wheel adjusting volume during gameplay");
+        public static LocalisableString DisableMouseWheelVolumeAdjust =>
+            new TranslatableString(
+                getKey(@"disable_mouse_wheel_volume_adjust"),
+                @"Disable mouse wheel adjusting volume during gameplay"
+            );
 
         /// <summary>
         /// "Volume can still be adjusted using the mouse wheel by holding &quot;Alt&quot;"
         /// </summary>
-        public static LocalisableString DisableMouseWheelVolumeAdjustTooltip => new TranslatableString(getKey(@"disable_mouse_wheel_volume_adjust_tooltip"), @"Volume can still be adjusted using the mouse wheel by holding ""Alt""");
+        public static LocalisableString DisableMouseWheelVolumeAdjustTooltip =>
+            new TranslatableString(
+                getKey(@"disable_mouse_wheel_volume_adjust_tooltip"),
+                @"Volume can still be adjusted using the mouse wheel by holding ""Alt"""
+            );
 
         /// <summary>
         /// "Disable clicks during gameplay"
         /// </summary>
-        public static LocalisableString DisableClicksDuringGameplay => new TranslatableString(getKey(@"disable_clicks"), @"Disable clicks during gameplay");
+        public static LocalisableString DisableClicksDuringGameplay =>
+            new TranslatableString(getKey(@"disable_clicks"), @"Disable clicks during gameplay");
 
         /// <summary>
         /// "Enable high precision mouse to adjust sensitivity"
         /// </summary>
-        public static LocalisableString EnableHighPrecisionForSensitivityAdjust => new TranslatableString(getKey(@"enable_high_precision_for_sensitivity_adjust"), @"Enable high precision mouse to adjust sensitivity");
+        public static LocalisableString EnableHighPrecisionForSensitivityAdjust =>
+            new TranslatableString(
+                getKey(@"enable_high_precision_for_sensitivity_adjust"),
+                @"Enable high precision mouse to adjust sensitivity"
+            );
 
         /// <summary>
         /// "Cursor sensitivity"
         /// </summary>
-        public static LocalisableString CursorSensitivity => new TranslatableString(getKey(@"cursor_sensitivity"), @"Cursor sensitivity");
+        public static LocalisableString CursorSensitivity =>
+            new TranslatableString(getKey(@"cursor_sensitivity"), @"Cursor sensitivity");
 
         /// <summary>
         /// "This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now."
         /// </summary>
-        public static LocalisableString HighPrecisionPlatformWarning => new TranslatableString(getKey(@"high_precision_platform_warning"), @"This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now.");
+        public static LocalisableString HighPrecisionPlatformWarning =>
+            new TranslatableString(
+                getKey(@"high_precision_platform_warning"),
+                @"This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now."
+            );
 
         /// <summary>
         /// "Always"
         /// </summary>
-        public static LocalisableString AlwaysConfine => new TranslatableString(getKey(@"always_confine"), @"Always");
+        public static LocalisableString AlwaysConfine =>
+            new TranslatableString(getKey(@"always_confine"), @"Always");
 
         /// <summary>
         /// "During Gameplay"
         /// </summary>
-        public static LocalisableString ConfineDuringGameplay => new TranslatableString(getKey(@"confine_during_gameplay"), @"During Gameplay");
+        public static LocalisableString ConfineDuringGameplay =>
+            new TranslatableString(getKey(@"confine_during_gameplay"), @"During Gameplay");
 
         /// <summary>
         /// "Never"
         /// </summary>
-        public static LocalisableString NeverConfine => new TranslatableString(getKey(@"never_confine"), @"Never");
+        public static LocalisableString NeverConfine =>
+            new TranslatableString(getKey(@"never_confine"), @"Never");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

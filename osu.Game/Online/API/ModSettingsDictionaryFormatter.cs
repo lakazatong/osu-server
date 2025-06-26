@@ -12,9 +12,14 @@ namespace osu.Game.Online.API
 {
     public class ModSettingsDictionaryFormatter : IMessagePackFormatter<Dictionary<string, object>?>
     {
-        public void Serialize(ref MessagePackWriter writer, Dictionary<string, object>? value, MessagePackSerializerOptions options)
+        public void Serialize(
+            ref MessagePackWriter writer,
+            Dictionary<string, object>? value,
+            MessagePackSerializerOptions options
+        )
         {
-            if (value == null) return;
+            if (value == null)
+                return;
 
             var primitiveFormatter = PrimitiveObjectFormatter.Instance;
 
@@ -25,11 +30,18 @@ namespace osu.Game.Online.API
                 var stringBytes = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(kvp.Key));
                 writer.WriteString(in stringBytes);
 
-                primitiveFormatter.Serialize(ref writer, kvp.Value.GetUnderlyingSettingValue(), options);
+                primitiveFormatter.Serialize(
+                    ref writer,
+                    kvp.Value.GetUnderlyingSettingValue(),
+                    options
+                );
             }
         }
 
-        public Dictionary<string, object> Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        public Dictionary<string, object> Deserialize(
+            ref MessagePackReader reader,
+            MessagePackSerializerOptions options
+        )
         {
             var output = new Dictionary<string, object>();
 
@@ -37,8 +49,10 @@ namespace osu.Game.Online.API
 
             for (int i = 0; i < itemCount; i++)
             {
-                output[reader.ReadString()!] =
-                    PrimitiveObjectFormatter.Instance.Deserialize(ref reader, options)!;
+                output[reader.ReadString()!] = PrimitiveObjectFormatter.Instance.Deserialize(
+                    ref reader,
+                    options
+                )!;
             }
 
             return output;

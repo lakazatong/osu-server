@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Osu.UI
         protected override LocalisableString Header => "osu!";
 
         public OsuSettingsSubsection(Ruleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -30,28 +28,30 @@ namespace osu.Game.Rulesets.Osu.UI
                 new SettingsCheckbox
                 {
                     LabelText = RulesetSettingsStrings.SnakingInSliders,
-                    Current = config.GetBindable<bool>(OsuRulesetSetting.SnakingInSliders)
+                    Current = config.GetBindable<bool>(OsuRulesetSetting.SnakingInSliders),
                 },
                 new SettingsCheckbox
                 {
                     ClassicDefault = false,
                     LabelText = RulesetSettingsStrings.SnakingOutSliders,
-                    Current = config.GetBindable<bool>(OsuRulesetSetting.SnakingOutSliders)
+                    Current = config.GetBindable<bool>(OsuRulesetSetting.SnakingOutSliders),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = RulesetSettingsStrings.CursorTrail,
-                    Current = config.GetBindable<bool>(OsuRulesetSetting.ShowCursorTrail)
+                    Current = config.GetBindable<bool>(OsuRulesetSetting.ShowCursorTrail),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = RulesetSettingsStrings.CursorRipples,
-                    Current = config.GetBindable<bool>(OsuRulesetSetting.ShowCursorRipples)
+                    Current = config.GetBindable<bool>(OsuRulesetSetting.ShowCursorRipples),
                 },
                 new SettingsEnumDropdown<PlayfieldBorderStyle>
                 {
                     LabelText = RulesetSettingsStrings.PlayfieldBorderStyle,
-                    Current = config.GetBindable<PlayfieldBorderStyle>(OsuRulesetSetting.PlayfieldBorderStyle),
+                    Current = config.GetBindable<PlayfieldBorderStyle>(
+                        OsuRulesetSetting.PlayfieldBorderStyle
+                    ),
                 },
             };
         }

@@ -22,9 +22,7 @@ namespace osu.Game.Rulesets.Replays
         [IgnoreMember]
         public FrameHeader? Header;
 
-        public ReplayFrame()
-        {
-        }
+        public ReplayFrame() { }
 
         public ReplayFrame(double time)
         {

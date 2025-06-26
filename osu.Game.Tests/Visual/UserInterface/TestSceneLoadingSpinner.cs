@@ -15,69 +15,61 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             LoadingSpinner loading;
 
-            Cell(0).AddRange(new Drawable[]
-            {
-                new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both
-                },
-                loading = new LoadingSpinner()
-            });
+            Cell(0)
+                .AddRange(
+                    new Drawable[]
+                    {
+                        new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
+                        loading = new LoadingSpinner(),
+                    }
+                );
 
             loading.Show();
 
-            Cell(1).AddRange(new Drawable[]
-            {
-                new Box
-                {
-                    Colour = Color4.White,
-                    RelativeSizeAxes = Axes.Both
-                },
-                loading = new LoadingSpinner(true)
-            });
+            Cell(1)
+                .AddRange(
+                    new Drawable[]
+                    {
+                        new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
+                        loading = new LoadingSpinner(true),
+                    }
+                );
 
             loading.Show();
 
-            Cell(2).AddRange(new Drawable[]
-            {
-                new Box
-                {
-                    Colour = Color4.Gray,
-                    RelativeSizeAxes = Axes.Both
-                },
-                loading = new LoadingSpinner()
-            });
+            Cell(2)
+                .AddRange(
+                    new Drawable[]
+                    {
+                        new Box { Colour = Color4.Gray, RelativeSizeAxes = Axes.Both },
+                        loading = new LoadingSpinner(),
+                    }
+                );
 
             loading.Show();
 
-            Cell(3).AddRange(new Drawable[]
-            {
-                new Box
-                {
-                    Colour = Color4.White,
-                    RelativeSizeAxes = Axes.Both
-                },
-                loading = new LoadingSpinner(false, true)
-            });
+            Cell(3)
+                .AddRange(
+                    new Drawable[]
+                    {
+                        new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
+                        loading = new LoadingSpinner(false, true),
+                    }
+                );
 
             loading.Show();
 
-            Cell(4).AddRange(new Drawable[]
-            {
-                new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both
-                },
-                loading = new LoadingSpinner(true, true)
-            });
+            Cell(4)
+                .AddRange(
+                    new Drawable[]
+                    {
+                        new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
+                        loading = new LoadingSpinner(true, true),
+                    }
+                );
             loading.Show();
 
-            Cell(5).AddRange(new Drawable[]
-            {
-                loading = new LoadingSpinner()
-            });
+            Cell(5).AddRange(new Drawable[] { loading = new LoadingSpinner() });
 
             Scheduler.AddDelayed(() => loading.ToggleVisibility(), 200, true);
         }

@@ -16,26 +16,38 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public partial class OsuModDifficultyAdjust : ModDifficultyAdjust
     {
-        [SettingSource("Circle Size", "Override a beatmap's set CS.", FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable CircleSize { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.CircleSize,
-        };
+        [SettingSource(
+            "Circle Size",
+            "Override a beatmap's set CS.",
+            FIRST_SETTING_ORDER - 1,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable CircleSize { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.CircleSize,
+            };
 
-        [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1, SettingControlType = typeof(ApproachRateSettingsControl))]
-        public DifficultyBindable ApproachRate { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMinValue = -10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.ApproachRate,
-        };
+        [SettingSource(
+            "Approach Rate",
+            "Override a beatmap's set AR.",
+            LAST_SETTING_ORDER + 1,
+            SettingControlType = typeof(ApproachRateSettingsControl)
+        )]
+        public DifficultyBindable ApproachRate { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMinValue = -10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.ApproachRate,
+            };
 
         public override string ExtendedIconInformation
         {
@@ -44,18 +56,26 @@ namespace osu.Game.Rulesets.Osu.Mods
                 if (UserAdjustedSettingsCount != 1)
                     return string.Empty;
 
-                if (!CircleSize.IsDefault) return format("CS", CircleSize);
-                if (!ApproachRate.IsDefault) return format("AR", ApproachRate);
-                if (!OverallDifficulty.IsDefault) return format("OD", OverallDifficulty);
-                if (!DrainRate.IsDefault) return format("HP", DrainRate);
+                if (!CircleSize.IsDefault)
+                    return format("CS", CircleSize);
+                if (!ApproachRate.IsDefault)
+                    return format("AR", ApproachRate);
+                if (!OverallDifficulty.IsDefault)
+                    return format("OD", OverallDifficulty);
+                if (!DrainRate.IsDefault)
+                    return format("HP", DrainRate);
 
                 return string.Empty;
 
-                string format(string acronym, DifficultyBindable bindable) => $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
+                string format(string acronym, DifficultyBindable bindable) =>
+                    $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
             }
         }
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -74,13 +94,17 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             base.ApplySettings(difficulty);
 
-            if (CircleSize.Value != null) difficulty.CircleSize = CircleSize.Value.Value;
-            if (ApproachRate.Value != null) difficulty.ApproachRate = ApproachRate.Value.Value;
+            if (CircleSize.Value != null)
+                difficulty.CircleSize = CircleSize.Value.Value;
+            if (ApproachRate.Value != null)
+                difficulty.ApproachRate = ApproachRate.Value.Value;
         }
 
         private partial class ApproachRateSettingsControl : DifficultyAdjustSettingsControl
         {
-            protected override RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) => new ApproachRateSlider();
+            protected override RoundedSliderBar<float> CreateSlider(
+                BindableNumber<float> current
+            ) => new ApproachRateSlider();
 
             /// <summary>
             /// A slider bar with more detailed approach rate info for its given value
@@ -95,7 +119,10 @@ namespace osu.Game.Rulesets.Osu.Mods
                 private double getPreemptTime(float approachRate)
                 {
                     var hitCircle = new HitCircle();
-                    hitCircle.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty { ApproachRate = approachRate });
+                    hitCircle.ApplyDefaults(
+                        new ControlPointInfo(),
+                        new BeatmapDifficulty { ApproachRate = approachRate }
+                    );
                     return hitCircle.TimePreempt;
                 }
             }

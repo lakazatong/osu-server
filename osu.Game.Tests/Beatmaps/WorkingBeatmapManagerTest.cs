@@ -28,111 +28,160 @@ namespace osu.Game.Tests.Beatmaps
         [BackgroundDependencyLoader]
         private void load(GameHost host, AudioManager audio, RulesetStore rulesets)
         {
-            Dependencies.Cache(beatmaps = new BeatmapManager(LocalStorage, Realm, null, audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                beatmaps = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
         }
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("import beatmap", () =>
-            {
-                beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
-                importedSet = beatmaps.GetAllUsableBeatmapSets().First();
-            });
+            AddStep(
+                "import beatmap",
+                () =>
+                {
+                    beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
+                    importedSet = beatmaps.GetAllUsableBeatmapSets().First();
+                }
+            );
         }
 
         [Test]
-        public void TestGetWorkingBeatmap() => AddStep("run test", () =>
-        {
-            Assert.That(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First()), Is.Not.Null);
-        });
+        public void TestGetWorkingBeatmap() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    Assert.That(
+                        beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First()),
+                        Is.Not.Null
+                    );
+                }
+            );
 
         [Test]
-        public void TestCachedRetrievalNoFiles() => AddStep("run test", () =>
-        {
-            var beatmap = importedSet.Beatmaps.First();
+        public void TestCachedRetrievalNoFiles() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    var beatmap = importedSet.Beatmaps.First();
 
-            Assert.That(beatmap.BeatmapSet?.Files, Is.Empty);
+                    Assert.That(beatmap.BeatmapSet?.Files, Is.Empty);
 
-            var first = beatmaps.GetWorkingBeatmap(beatmap);
-            var second = beatmaps.GetWorkingBeatmap(beatmap);
+                    var first = beatmaps.GetWorkingBeatmap(beatmap);
+                    var second = beatmaps.GetWorkingBeatmap(beatmap);
 
-            Assert.That(first, Is.SameAs(second));
-            Assert.That(first.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
-        });
-
-        [Test]
-        public void TestCachedRetrievalWithFiles() => AddStep("run test", () =>
-        {
-            var beatmap = Realm.Run(r => r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach());
-
-            Assert.That(beatmap.BeatmapSet?.Files, Has.Count.GreaterThan(0));
-
-            var first = beatmaps.GetWorkingBeatmap(beatmap);
-            var second = beatmaps.GetWorkingBeatmap(beatmap);
-
-            Assert.That(first, Is.SameAs(second));
-            Assert.That(first.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
-        });
+                    Assert.That(first, Is.SameAs(second));
+                    Assert.That(first.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
+                }
+            );
 
         [Test]
-        public void TestForcedRefetchRetrievalNoFiles() => AddStep("run test", () =>
-        {
-            var beatmap = importedSet.Beatmaps.First();
+        public void TestCachedRetrievalWithFiles() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    var beatmap = Realm.Run(r =>
+                        r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach()
+                    );
 
-            Assert.That(beatmap.BeatmapSet?.Files, Is.Empty);
+                    Assert.That(beatmap.BeatmapSet?.Files, Has.Count.GreaterThan(0));
 
-            var first = beatmaps.GetWorkingBeatmap(beatmap);
-            var second = beatmaps.GetWorkingBeatmap(beatmap, true);
-            Assert.That(first, Is.Not.SameAs(second));
-        });
+                    var first = beatmaps.GetWorkingBeatmap(beatmap);
+                    var second = beatmaps.GetWorkingBeatmap(beatmap);
 
-        [Test]
-        public void TestForcedRefetchRetrievalWithFiles() => AddStep("run test", () =>
-        {
-            var beatmap = Realm.Run(r => r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach());
-
-            Assert.That(beatmap.BeatmapSet?.Files, Has.Count.GreaterThan(0));
-
-            var first = beatmaps.GetWorkingBeatmap(beatmap);
-            var second = beatmaps.GetWorkingBeatmap(beatmap, true);
-            Assert.That(first, Is.Not.SameAs(second));
-        });
+                    Assert.That(first, Is.SameAs(second));
+                    Assert.That(first.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
+                }
+            );
 
         [Test]
-        public void TestSavePreservesCollections() => AddStep("run test", () =>
-        {
-            var beatmap = Realm.Run(r => r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach());
+        public void TestForcedRefetchRetrievalNoFiles() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    var beatmap = importedSet.Beatmaps.First();
 
-            var working = beatmaps.GetWorkingBeatmap(beatmap);
+                    Assert.That(beatmap.BeatmapSet?.Files, Is.Empty);
 
-            Assert.That(working.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
+                    var first = beatmaps.GetWorkingBeatmap(beatmap);
+                    var second = beatmaps.GetWorkingBeatmap(beatmap, true);
+                    Assert.That(first, Is.Not.SameAs(second));
+                }
+            );
 
-            string initialHash = working.BeatmapInfo.MD5Hash;
+        [Test]
+        public void TestForcedRefetchRetrievalWithFiles() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    var beatmap = Realm.Run(r =>
+                        r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach()
+                    );
 
-            var preserveCollection = new BeatmapCollection("test contained");
-            preserveCollection.BeatmapMD5Hashes.Add(initialHash);
+                    Assert.That(beatmap.BeatmapSet?.Files, Has.Count.GreaterThan(0));
 
-            var noNewCollection = new BeatmapCollection("test not contained");
+                    var first = beatmaps.GetWorkingBeatmap(beatmap);
+                    var second = beatmaps.GetWorkingBeatmap(beatmap, true);
+                    Assert.That(first, Is.Not.SameAs(second));
+                }
+            );
 
-            Realm.Write(r =>
-            {
-                r.Add(preserveCollection);
-                r.Add(noNewCollection);
-            });
+        [Test]
+        public void TestSavePreservesCollections() =>
+            AddStep(
+                "run test",
+                () =>
+                {
+                    var beatmap = Realm.Run(r =>
+                        r.Find<BeatmapInfo>(importedSet.Beatmaps.First().ID)!.Detach()
+                    );
 
-            Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Contain(initialHash));
-            Assert.That(noNewCollection.BeatmapMD5Hashes, Does.Not.Contain(initialHash));
+                    var working = beatmaps.GetWorkingBeatmap(beatmap);
 
-            beatmaps.Save(working.BeatmapInfo, working.GetPlayableBeatmap(new OsuRuleset().RulesetInfo));
+                    Assert.That(working.BeatmapInfo.BeatmapSet?.Files, Has.Count.GreaterThan(0));
 
-            string finalHash = working.BeatmapInfo.MD5Hash;
+                    string initialHash = working.BeatmapInfo.MD5Hash;
 
-            Assert.That(finalHash, Is.Not.SameAs(initialHash));
+                    var preserveCollection = new BeatmapCollection("test contained");
+                    preserveCollection.BeatmapMD5Hashes.Add(initialHash);
 
-            Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Not.Contain(initialHash));
-            Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Contain(finalHash));
-            Assert.That(noNewCollection.BeatmapMD5Hashes, Does.Not.Contain(finalHash));
-        });
+                    var noNewCollection = new BeatmapCollection("test not contained");
+
+                    Realm.Write(r =>
+                    {
+                        r.Add(preserveCollection);
+                        r.Add(noNewCollection);
+                    });
+
+                    Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Contain(initialHash));
+                    Assert.That(noNewCollection.BeatmapMD5Hashes, Does.Not.Contain(initialHash));
+
+                    beatmaps.Save(
+                        working.BeatmapInfo,
+                        working.GetPlayableBeatmap(new OsuRuleset().RulesetInfo)
+                    );
+
+                    string finalHash = working.BeatmapInfo.MD5Hash;
+
+                    Assert.That(finalHash, Is.Not.SameAs(initialHash));
+
+                    Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Not.Contain(initialHash));
+                    Assert.That(preserveCollection.BeatmapMD5Hashes, Does.Contain(finalHash));
+                    Assert.That(noNewCollection.BeatmapMD5Hashes, Does.Not.Contain(finalHash));
+                }
+            );
     }
 }

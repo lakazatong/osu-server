@@ -64,24 +64,16 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                     Children = new Drawable[]
                     {
                         background = new SpinnerBackgroundLayer(),
-                        fill = new SpinnerFill
-                        {
-                            Alpha = idle_alpha,
-                            AccentColour = normalColour
-                        },
+                        fill = new SpinnerFill { Alpha = idle_alpha, AccentColour = normalColour },
                         ticks = new SpinnerTicks
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            AccentColour = normalColour
+                            AccentColour = normalColour,
                         },
-                    }
+                    },
                 },
-                centre = new SpinnerCentreLayer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
+                centre = new SpinnerCentreLayer { Anchor = Anchor.Centre, Origin = Anchor.Centre },
             };
         }
 
@@ -106,21 +98,34 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 if (checkNewRotationCount)
                 {
                     fill.FinishTransforms(false, nameof(Alpha));
-                    fill
-                        .FadeTo(tracking_alpha + 0.2f, 60, Easing.OutExpo)
+                    fill.FadeTo(tracking_alpha + 0.2f, 60, Easing.OutExpo)
                         .Then()
                         .FadeTo(tracking_alpha, 250, Easing.OutQuint);
                 }
             }
             else
             {
-                fill.Alpha = (float)Interpolation.Damp(fill.Alpha, drawableSpinner.RotationTracker.Tracking ? tracking_alpha : idle_alpha, 0.98f, (float)Math.Abs(Clock.ElapsedFrameTime));
+                fill.Alpha = (float)
+                    Interpolation.Damp(
+                        fill.Alpha,
+                        drawableSpinner.RotationTracker.Tracking ? tracking_alpha : idle_alpha,
+                        0.98f,
+                        (float)Math.Abs(Clock.ElapsedFrameTime)
+                    );
             }
 
             const float initial_fill_scale = 0.2f;
-            float targetScale = initial_fill_scale + (1 - initial_fill_scale) * drawableSpinner.Progress;
+            float targetScale =
+                initial_fill_scale + (1 - initial_fill_scale) * drawableSpinner.Progress;
 
-            fill.Scale = new Vector2((float)Interpolation.Lerp(fill.Scale.X, targetScale, Math.Clamp(Math.Abs(Time.Elapsed) / 100, 0, 1)));
+            fill.Scale = new Vector2(
+                (float)
+                    Interpolation.Lerp(
+                        fill.Scale.X,
+                        targetScale,
+                        Math.Clamp(Math.Abs(Time.Elapsed) / 100, 0, 1)
+                    )
+            );
             mainContainer.Rotation = drawableSpinner.RotationTracker.Rotation;
         }
 
@@ -141,10 +146,17 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 using (BeginDelayedSequence(spinner.TimePreempt / 2))
                 {
                     // constant ambient rotation to give the spinner "spinning" character.
-                    this.RotateTo((float)(25 * spinner.Duration / 2000), spinner.TimePreempt + spinner.Duration);
+                    this.RotateTo(
+                        (float)(25 * spinner.Duration / 2000),
+                        spinner.TimePreempt + spinner.Duration
+                    );
                 }
 
-                using (BeginDelayedSequence(spinner.TimePreempt + spinner.Duration + drawableHitObject.Result.TimeOffset))
+                using (
+                    BeginDelayedSequence(
+                        spinner.TimePreempt + spinner.Duration + drawableHitObject.Result.TimeOffset
+                    )
+                )
                 {
                     switch (state)
                     {
@@ -202,7 +214,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             {
                 int rotations = (int)(drawableSpinner.Result.TotalRotation / 360);
 
-                if (wholeRotationCount == rotations) return false;
+                if (wholeRotationCount == rotations)
+                    return false;
 
                 wholeRotationCount = rotations;
                 return true;

@@ -23,16 +23,12 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 HitObjects =
                 {
-                    new Hit
-                    {
-                        Type = HitType.Centre,
-                        StartTime = start_time
-                    }
+                    new Hit { Type = HitType.Centre, StartTime = start_time },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new TaikoRuleset().RulesetInfo
+                    Ruleset = new TaikoRuleset().RulesetInfo,
                 },
             };
 
@@ -41,8 +37,14 @@ namespace osu.Game.Rulesets.Taiko.Tests
 
             var barlines = new BarLineGenerator<BarLine>(beatmap).BarLines;
 
-            AddAssert("first barline generated", () => barlines.Any(b => b.StartTime == start_time));
-            AddAssert("second barline generated", () => barlines.Any(b => b.StartTime == start_time + 1));
+            AddAssert(
+                "first barline generated",
+                () => barlines.Any(b => b.StartTime == start_time)
+            );
+            AddAssert(
+                "second barline generated",
+                () => barlines.Any(b => b.StartTime == start_time + 1)
+            );
         }
 
         [Test]
@@ -57,30 +59,35 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 HitObjects =
                 {
-                    new Hit
-                    {
-                        Type = HitType.Centre,
-                        StartTime = start_time
-                    }
+                    new Hit { Type = HitType.Centre, StartTime = start_time },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new TaikoRuleset().RulesetInfo
+                    Ruleset = new TaikoRuleset().RulesetInfo,
                 },
             };
 
-            beatmap.ControlPointInfo.Add(start_time, new TimingControlPoint
-            {
-                BeatLength = beat_length,
-                TimeSignature = new TimeSignature(time_signature_numerator),
-                OmitFirstBarLine = true
-            });
+            beatmap.ControlPointInfo.Add(
+                start_time,
+                new TimingControlPoint
+                {
+                    BeatLength = beat_length,
+                    TimeSignature = new TimeSignature(time_signature_numerator),
+                    OmitFirstBarLine = true,
+                }
+            );
 
             var barlines = new BarLineGenerator<BarLine>(beatmap).BarLines;
 
             AddAssert("first barline ommited", () => barlines.All(b => b.StartTime != start_time));
-            AddAssert("second barline generated", () => barlines.Any(b => b.StartTime == start_time + (beat_length * time_signature_numerator)));
+            AddAssert(
+                "second barline generated",
+                () =>
+                    barlines.Any(b =>
+                        b.StartTime == start_time + (beat_length * time_signature_numerator)
+                    )
+            );
         }
 
         [Test]
@@ -94,29 +101,34 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 HitObjects =
                 {
-                    new Hit
-                    {
-                        Type = HitType.Centre,
-                        StartTime = 1000
-                    }
+                    new Hit { Type = HitType.Centre, StartTime = 1000 },
                 },
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new TaikoRuleset().RulesetInfo
+                    Ruleset = new TaikoRuleset().RulesetInfo,
                 },
             };
 
-            beatmap.ControlPointInfo.Add(-100, new TimingControlPoint
-            {
-                BeatLength = beat_length,
-                TimeSignature = new TimeSignature(time_signature_numerator)
-            });
+            beatmap.ControlPointInfo.Add(
+                -100,
+                new TimingControlPoint
+                {
+                    BeatLength = beat_length,
+                    TimeSignature = new TimeSignature(time_signature_numerator),
+                }
+            );
 
             var barlines = new BarLineGenerator<BarLine>(beatmap).BarLines;
 
-            AddAssert("bar line generated at t=900", () => barlines.Any(line => line.StartTime == 900));
-            AddAssert("bar line generated at t=1900", () => barlines.Any(line => line.StartTime == 1900));
+            AddAssert(
+                "bar line generated at t=900",
+                () => barlines.Any(line => line.StartTime == 900)
+            );
+            AddAssert(
+                "bar line generated at t=1900",
+                () => barlines.Any(line => line.StartTime == 1900)
+            );
         }
     }
 }

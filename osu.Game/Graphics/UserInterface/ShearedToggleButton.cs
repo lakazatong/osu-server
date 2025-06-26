@@ -35,9 +35,7 @@ namespace osu.Game.Graphics.UserInterface
         /// </list>
         /// </param>
         public ShearedToggleButton(float? width = null)
-            : base(width)
-        {
-        }
+            : base(width) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
@@ -46,7 +44,8 @@ namespace osu.Game.Graphics.UserInterface
             sampleOff = audio.Samples.Get(@"UI/check-off");
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds(sampleSet);
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverSounds(sampleSet);
 
         protected override void LoadComplete()
         {

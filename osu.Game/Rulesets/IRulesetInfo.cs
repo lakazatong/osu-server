@@ -9,7 +9,10 @@ namespace osu.Game.Rulesets
     /// <summary>
     /// A representation of a ruleset's metadata.
     /// </summary>
-    public interface IRulesetInfo : IHasOnlineID<int>, IEquatable<IRulesetInfo>, IComparable<IRulesetInfo>
+    public interface IRulesetInfo
+        : IHasOnlineID<int>,
+            IEquatable<IRulesetInfo>,
+            IComparable<IRulesetInfo>
     {
         /// <summary>
         /// The user-exposed name of this ruleset.

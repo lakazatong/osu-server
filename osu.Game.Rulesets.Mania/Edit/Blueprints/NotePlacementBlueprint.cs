@@ -18,9 +18,7 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         private Circle piece = null!;
 
         public NotePlacementBlueprint()
-            : base(new Note())
-        {
-        }
+            : base(new Note()) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -32,11 +30,14 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
             {
                 Origin = Anchor.Centre,
                 Colour = colours.Yellow,
-                Height = 10
+                Height = 10,
             };
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double referenceTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double referenceTime
+        )
         {
             var result = base.UpdateTimeAndPosition(screenSpacePosition, referenceTime);
 

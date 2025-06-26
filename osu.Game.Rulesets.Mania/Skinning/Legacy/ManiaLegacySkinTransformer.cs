@@ -23,37 +23,42 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public class ManiaLegacySkinTransformer : LegacySkinTransformer
     {
-        public override bool IsProvidingLegacyResources => base.IsProvidingLegacyResources || hasKeyTexture.Value;
+        public override bool IsProvidingLegacyResources =>
+            base.IsProvidingLegacyResources || hasKeyTexture.Value;
 
         /// <summary>
         /// Mapping of <see cref="HitResult"/> to their corresponding
         /// <see cref="LegacyManiaSkinConfigurationLookups"/> value.
         /// </summary>
-        private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> hit_result_mapping
-            = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
-            {
-                { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300g },
-                { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300 },
-                { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200 },
-                { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100 },
-                { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50 },
-                { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0 }
-            };
+        private static readonly IReadOnlyDictionary<
+            HitResult,
+            LegacyManiaSkinConfigurationLookups
+        > hit_result_mapping = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
+        {
+            { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300g },
+            { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300 },
+            { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200 },
+            { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100 },
+            { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50 },
+            { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0 },
+        };
 
         /// <summary>
         /// Mapping of <see cref="HitResult"/> to their corresponding
         /// default filenames.
         /// </summary>
-        private static readonly IReadOnlyDictionary<HitResult, string> default_hit_result_skin_filenames
-            = new Dictionary<HitResult, string>
-            {
-                { HitResult.Perfect, "mania-hit300g" },
-                { HitResult.Great, "mania-hit300" },
-                { HitResult.Good, "mania-hit200" },
-                { HitResult.Ok, "mania-hit100" },
-                { HitResult.Meh, "mania-hit50" },
-                { HitResult.Miss, "mania-hit0" }
-            };
+        private static readonly IReadOnlyDictionary<
+            HitResult,
+            string
+        > default_hit_result_skin_filenames = new Dictionary<HitResult, string>
+        {
+            { HitResult.Perfect, "mania-hit300g" },
+            { HitResult.Great, "mania-hit300" },
+            { HitResult.Good, "mania-hit200" },
+            { HitResult.Ok, "mania-hit100" },
+            { HitResult.Meh, "mania-hit50" },
+            { HitResult.Miss, "mania-hit0" },
+        };
 
         private readonly Lazy<bool> isLegacySkin;
 
@@ -70,10 +75,18 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         {
             this.beatmap = (ManiaBeatmap)beatmap;
 
-            isLegacySkin = new Lazy<bool>(() => GetConfig<SkinConfiguration.LegacySetting, decimal>(SkinConfiguration.LegacySetting.Version) != null);
+            isLegacySkin = new Lazy<bool>(() =>
+                GetConfig<SkinConfiguration.LegacySetting, decimal>(
+                    SkinConfiguration.LegacySetting.Version
+                ) != null
+            );
             hasKeyTexture = new Lazy<bool>(() =>
             {
-                string keyImage = this.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.KeyImage, 0)?.Value ?? "mania-key1";
+                string keyImage =
+                    this.GetManiaSkinConfig<string>(
+                        LegacyManiaSkinConfigurationLookups.KeyImage,
+                        0
+                    )?.Value ?? "mania-key1";
                 return this.GetAnimation(keyImage, true, true) != null;
             });
         }
@@ -96,15 +109,24 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                         case GlobalSkinnableContainers.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var combo = container.ChildrenOfType<LegacyManiaComboCounter>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
+                                var combo = container
+                                    .ChildrenOfType<LegacyManiaComboCounter>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
 
                                 if (combo != null)
                                 {
                                     combo.Anchor = Anchor.TopCentre;
                                     combo.Origin = Anchor.Centre;
-                                    combo.Y = this.GetManiaSkinConfig<float>(LegacyManiaSkinConfigurationLookups.ComboPosition)?.Value ?? 0;
+                                    combo.Y =
+                                        this.GetManiaSkinConfig<float>(
+                                            LegacyManiaSkinConfigurationLookups.ComboPosition
+                                        )?.Value ?? 0;
                                 }
 
                                 if (spectatorList != null)
@@ -187,8 +209,9 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             if (!hit_result_mapping.TryGetValue(result, out var value))
                 return null;
 
-            string filename = this.GetManiaSkinConfig<string>(value)?.Value
-                              ?? default_hit_result_skin_filenames[result];
+            string filename =
+                this.GetManiaSkinConfig<string>(value)?.Value
+                ?? default_hit_result_skin_filenames[result];
 
             var animation = this.GetAnimation(filename, true, true, frameLength: 1000 / 20d);
             return animation == null ? null : new LegacyManiaJudgementPiece(result, animation);
@@ -197,7 +220,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         public override ISample GetSample(ISampleInfo sampleInfo)
         {
             // layered hit sounds never play in mania
-            if (sampleInfo is ConvertHitObjectParser.LegacyHitSampleInfo legacySample && legacySample.IsLayered)
+            if (
+                sampleInfo is ConvertHitObjectParser.LegacyHitSampleInfo legacySample
+                && legacySample.IsLayered
+            )
                 return new SampleVirtual();
 
             return base.GetSample(sampleInfo);
@@ -207,7 +233,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         {
             if (lookup is ManiaSkinConfigurationLookup maniaLookup)
             {
-                return base.GetConfig<LegacyManiaSkinConfigurationLookup, TValue>(new LegacyManiaSkinConfigurationLookup(beatmap.TotalColumns, maniaLookup.Lookup, maniaLookup.ColumnIndex));
+                return base.GetConfig<LegacyManiaSkinConfigurationLookup, TValue>(
+                    new LegacyManiaSkinConfigurationLookup(
+                        beatmap.TotalColumns,
+                        maniaLookup.Lookup,
+                        maniaLookup.ColumnIndex
+                    )
+                );
             }
 
             return base.GetConfig<TLookup, TValue>(lookup);

@@ -102,7 +102,11 @@ namespace osu.Game.Tests.Skins
                 }
             }
 
-            var editableTypes = SerialisedDrawableInfo.GetAllAvailableDrawables().Where(t => (Activator.CreateInstance(t) as ISerialisableDrawable)?.IsEditable == true);
+            var editableTypes = SerialisedDrawableInfo
+                .GetAllAvailableDrawables()
+                .Where(t =>
+                    (Activator.CreateInstance(t) as ISerialisableDrawable)?.IsEditable == true
+                );
 
             Assert.That(instantiatedTypes, Is.EquivalentTo(editableTypes));
         }
@@ -110,13 +114,19 @@ namespace osu.Game.Tests.Skins
         [Test]
         public void TestDeserialiseModifiedDefault()
         {
-            using (var stream = TestResources.OpenResource("Archives/modified-default-20220723.osk"))
+            using (
+                var stream = TestResources.OpenResource("Archives/modified-default-20220723.osk")
+            )
             using (var storage = new ZipArchiveReader(stream))
             {
                 var skin = new TestSkin(new SkinInfo(), null, storage);
 
                 Assert.That(skin.LayoutInfos, Has.Count.EqualTo(2));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.ToArray(), Has.Length.EqualTo(9));
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.ToArray(),
+                    Has.Length.EqualTo(9)
+                );
             }
         }
 
@@ -129,8 +139,16 @@ namespace osu.Game.Tests.Skins
                 var skin = new TestSkin(new SkinInfo(), null, storage);
 
                 Assert.That(skin.LayoutInfos, Has.Count.EqualTo(2));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.ToArray(), Has.Length.EqualTo(10));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.Select(i => i.Type), Contains.Item(typeof(PlayerName)));
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.ToArray(),
+                    Has.Length.EqualTo(10)
+                );
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.Select(i => i.Type),
+                    Contains.Item(typeof(PlayerName))
+                );
             }
         }
 
@@ -142,52 +160,94 @@ namespace osu.Game.Tests.Skins
             {
                 var skin = new TestSkin(new SkinInfo(), null, storage);
 
-                Assert.That(skin.LayoutInfos.Any(kvp => kvp.Value.AllDrawables.Any(d => d.Type == typeof(StarFountain))), Is.False);
+                Assert.That(
+                    skin.LayoutInfos.Any(kvp =>
+                        kvp.Value.AllDrawables.Any(d => d.Type == typeof(StarFountain))
+                    ),
+                    Is.False
+                );
             }
         }
 
         [Test]
         public void TestDeserialiseModifiedClassic()
         {
-            using (var stream = TestResources.OpenResource("Archives/modified-classic-20220723.osk"))
+            using (
+                var stream = TestResources.OpenResource("Archives/modified-classic-20220723.osk")
+            )
             using (var storage = new ZipArchiveReader(stream))
             {
                 var skin = new TestSkin(new SkinInfo(), null, storage);
 
                 Assert.That(skin.LayoutInfos, Has.Count.EqualTo(2));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.ToArray(), Has.Length.EqualTo(6));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.SongSelect].AllDrawables.ToArray(), Has.Length.EqualTo(1));
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.ToArray(),
+                    Has.Length.EqualTo(6)
+                );
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.SongSelect].AllDrawables.ToArray(),
+                    Has.Length.EqualTo(1)
+                );
 
-                var skinnableInfo = skin.LayoutInfos[GlobalSkinnableContainers.SongSelect].AllDrawables.First();
+                var skinnableInfo = skin.LayoutInfos[GlobalSkinnableContainers.SongSelect]
+                    .AllDrawables.First();
 
                 Assert.That(skinnableInfo.Type, Is.EqualTo(typeof(SkinnableSprite)));
                 Assert.That(skinnableInfo.Settings.First().Key, Is.EqualTo("sprite_name"));
                 Assert.That(skinnableInfo.Settings.First().Value, Is.EqualTo("ppy_logo-2.png"));
             }
 
-            using (var stream = TestResources.OpenResource("Archives/modified-classic-20220801.osk"))
+            using (
+                var stream = TestResources.OpenResource("Archives/modified-classic-20220801.osk")
+            )
             using (var storage = new ZipArchiveReader(stream))
             {
                 var skin = new TestSkin(new SkinInfo(), null, storage);
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.ToArray(), Has.Length.EqualTo(8));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.Select(i => i.Type), Contains.Item(typeof(UnstableRateCounter)));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.Select(i => i.Type), Contains.Item(typeof(ColourHitErrorMeter)));
-                Assert.That(skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents].AllDrawables.Select(i => i.Type), Contains.Item(typeof(LegacySongProgress)));
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.ToArray(),
+                    Has.Length.EqualTo(8)
+                );
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.Select(i => i.Type),
+                    Contains.Item(typeof(UnstableRateCounter))
+                );
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.Select(i => i.Type),
+                    Contains.Item(typeof(ColourHitErrorMeter))
+                );
+                Assert.That(
+                    skin.LayoutInfos[GlobalSkinnableContainers.MainHUDComponents]
+                        .AllDrawables.Select(i => i.Type),
+                    Contains.Item(typeof(LegacySongProgress))
+                );
             }
         }
 
         private class TestSkin : Skin
         {
-            public TestSkin(SkinInfo skin, IStorageResourceProvider? resources, IResourceStore<byte[]>? fallbackStore = null, string configurationFilename = "skin.ini")
-                : base(skin, resources, fallbackStore, configurationFilename)
-            {
-            }
+            public TestSkin(
+                SkinInfo skin,
+                IStorageResourceProvider? resources,
+                IResourceStore<byte[]>? fallbackStore = null,
+                string configurationFilename = "skin.ini"
+            )
+                : base(skin, resources, fallbackStore, configurationFilename) { }
 
-            public override Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => throw new NotImplementedException();
+            public override Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => throw new NotImplementedException();
 
-            public override IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new NotImplementedException();
+            public override IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new NotImplementedException();
 
-            public override ISample GetSample(ISampleInfo sampleInfo) => throw new NotImplementedException();
+            public override ISample GetSample(ISampleInfo sampleInfo) =>
+                throw new NotImplementedException();
         }
     }
 }

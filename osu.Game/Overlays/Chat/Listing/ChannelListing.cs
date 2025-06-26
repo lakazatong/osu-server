@@ -34,34 +34,28 @@ namespace osu.Game.Overlays.Chat.Listing
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
                 new OsuScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     ScrollbarAnchor = Anchor.TopRight,
-                    Child = flow = new SearchContainer<ChannelListingItem>
-                    {
-                        Direction = FillDirection.Vertical,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding
+                    Child = flow =
+                        new SearchContainer<ChannelListingItem>
                         {
-                            Vertical = 13,
-                            Horizontal = 15,
+                            Direction = FillDirection.Vertical,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding { Vertical = 13, Horizontal = 15 },
                         },
-                    },
                 },
             };
         }
 
         public void UpdateAvailableChannels(IEnumerable<Channel> newChannels)
         {
-            flow.ChildrenEnumerable = newChannels.Where(c => c.Type == ChannelType.Public)
-                                                 .Select(c => new ChannelListingItem(c));
+            flow.ChildrenEnumerable = newChannels
+                .Where(c => c.Type == ChannelType.Public)
+                .Select(c => new ChannelListingItem(c));
 
             foreach (var item in flow)
             {

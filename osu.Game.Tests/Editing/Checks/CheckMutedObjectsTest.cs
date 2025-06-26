@@ -44,7 +44,10 @@ namespace osu.Game.Tests.Editing.Checks
             var hitCircle = new HitCircle
             {
                 StartTime = 2000,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular),
+                },
             };
             hitCircle.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -57,7 +60,10 @@ namespace osu.Game.Tests.Editing.Checks
             var hitCircle = new HitCircle
             {
                 StartTime = 2000,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_low) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_low),
+                },
             };
             hitCircle.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -70,7 +76,10 @@ namespace osu.Game.Tests.Editing.Checks
             var hitCircle = new HitCircle
             {
                 StartTime = 0,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted),
+                },
             };
             hitCircle.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -83,20 +92,33 @@ namespace osu.Game.Tests.Editing.Checks
             var sliderHead = new SliderHeadCircle
             {
                 StartTime = 0,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular),
+                },
             };
             sliderHead.ApplyDefaults(cpi, new BeatmapDifficulty());
 
             var sliderTick = new SliderTick
             {
                 StartTime = 250,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo("slidertick", volume: volume_muted) } // Should be fine.
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo("slidertick", volume: volume_muted),
+                }, // Should be fine.
             };
             sliderTick.ApplyDefaults(cpi, new BeatmapDifficulty());
 
-            var slider = new MockNestableHitObject(new List<HitObject> { sliderHead, sliderTick, }, startTime: 0, endTime: 500)
+            var slider = new MockNestableHitObject(
+                new List<HitObject> { sliderHead, sliderTick },
+                startTime: 0,
+                endTime: 500
+            )
             {
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular),
+                },
             };
             slider.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -109,20 +131,33 @@ namespace osu.Game.Tests.Editing.Checks
             var sliderHead = new SliderHeadCircle
             {
                 StartTime = 0,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted),
+                },
             };
             sliderHead.ApplyDefaults(cpi, new BeatmapDifficulty());
 
             var sliderTick = new SliderTick
             {
                 StartTime = 250,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo("slidertick", volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo("slidertick", volume: volume_regular),
+                },
             };
             sliderTick.ApplyDefaults(cpi, new BeatmapDifficulty());
 
-            var slider = new MockNestableHitObject(new List<HitObject> { sliderHead, sliderTick, }, startTime: 0, endTime: 500)
+            var slider = new MockNestableHitObject(
+                new List<HitObject> { sliderHead, sliderTick },
+                startTime: 0,
+                endTime: 500
+            )
             {
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular) } // Applies to the tail.
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular),
+                }, // Applies to the tail.
             };
             slider.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -135,20 +170,33 @@ namespace osu.Game.Tests.Editing.Checks
             var sliderHead = new SliderHeadCircle
             {
                 StartTime = 0,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_regular),
+                },
             };
             sliderHead.ApplyDefaults(cpi, new BeatmapDifficulty());
 
             var sliderTick = new SliderTick
             {
                 StartTime = 250,
-                Samples = new List<HitSampleInfo> { new HitSampleInfo("slidertick", volume: volume_regular) }
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo("slidertick", volume: volume_regular),
+                },
             };
             sliderTick.ApplyDefaults(cpi, new BeatmapDifficulty());
 
-            var slider = new MockNestableHitObject(new List<HitObject> { sliderHead, sliderTick, }, startTime: 0, endTime: 2500)
+            var slider = new MockNestableHitObject(
+                new List<HitObject> { sliderHead, sliderTick },
+                startTime: 0,
+                endTime: 2500
+            )
             {
-                Samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted) } // Applies to the tail.
+                Samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL, volume: volume_muted),
+                }, // Applies to the tail.
             };
             slider.ApplyDefaults(cpi, new BeatmapDifficulty());
 
@@ -165,7 +213,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckMutedObjects.IssueTemplateLowVolumeActive));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckMutedObjects.IssueTemplateLowVolumeActive
+                )
+            );
         }
 
         private void assertMuted(List<HitObject> hitObjects, int count = 1)
@@ -173,7 +225,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckMutedObjects.IssueTemplateMutedActive));
+            Assert.That(
+                issues.All(issue => issue.Template is CheckMutedObjects.IssueTemplateMutedActive)
+            );
         }
 
         private void assertMutedPassive(List<HitObject> hitObjects)
@@ -181,7 +235,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Any(issue => issue.Template is CheckMutedObjects.IssueTemplateMutedPassive));
+            Assert.That(
+                issues.Any(issue => issue.Template is CheckMutedObjects.IssueTemplateMutedPassive)
+            );
         }
 
         private BeatmapVerifierContext getContext(List<HitObject> hitObjects)
@@ -189,7 +245,7 @@ namespace osu.Game.Tests.Editing.Checks
             var beatmap = new Beatmap<HitObject>
             {
                 ControlPointInfo = cpi,
-                HitObjects = hitObjects
+                HitObjects = hitObjects,
             };
 
             return new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));

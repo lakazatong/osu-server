@@ -49,11 +49,15 @@ namespace osu.Game.Overlays.Profile.Header
                 for (int index = 0; index < banners.Length; index++)
                 {
                     int displayIndex = index;
-                    LoadComponentAsync(new DrawableTournamentBanner(banners[index]), asyncBanner =>
-                    {
-                        // load in stable order regardless of async load order.
-                        Insert(displayIndex, asyncBanner);
-                    }, cancellationTokenSource.Token);
+                    LoadComponentAsync(
+                        new DrawableTournamentBanner(banners[index]),
+                        asyncBanner =>
+                        {
+                            // load in stable order regardless of async load order.
+                            Insert(displayIndex, asyncBanner);
+                        },
+                        cancellationTokenSource.Token
+                    );
                 }
             }
             else

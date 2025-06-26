@@ -47,11 +47,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -80,7 +76,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             Width = ButtonText == default ? 90 : 0.45f,
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
-                        }
+                        },
                     },
                 },
             };
@@ -133,14 +129,16 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 if (Text == default)
                 {
-                    Add(new SpriteIcon
-                    {
-                        Icon = FontAwesome.Solid.ChevronRight,
-                        Size = new Vector2(16),
-                        Shadow = true,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    });
+                    Add(
+                        new SpriteIcon
+                        {
+                            Icon = FontAwesome.Solid.ChevronRight,
+                            Size = new Vector2(16),
+                            Shadow = true,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+                    );
                 }
             }
 
@@ -150,13 +148,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 Content.CornerRadius = 4;
 
-                Add(triangles = new TrianglesV2
-                {
-                    Thickness = 0.02f,
-                    SpawnRatio = 0.6f,
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue,
-                });
+                Add(
+                    triangles = new TrianglesV2
+                    {
+                        Thickness = 0.02f,
+                        SpawnRatio = 0.6f,
+                        RelativeSizeAxes = Axes.Both,
+                        Depth = float.MaxValue,
+                    }
+                );
 
                 updateColours();
             }
@@ -168,7 +168,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 Debug.Assert(triangleGradientSecondColour != null);
 
-                triangles.Colour = ColourInfo.GradientVertical(triangleGradientSecondColour.Value, BackgroundColour);
+                triangles.Colour = ColourInfo.GradientVertical(
+                    triangleGradientSecondColour.Value,
+                    BackgroundColour
+                );
             }
 
             protected override bool OnHover(HoverEvent e)

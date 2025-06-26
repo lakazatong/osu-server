@@ -56,10 +56,7 @@ namespace osu.Game.Screens.Ranking
             InternalChild = shakeContainer = new ShakeContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = button = new DownloadButton
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }
+                Child = button = new DownloadButton { RelativeSizeAxes = Axes.Both },
             };
 
             button.Action = () =>
@@ -81,32 +78,40 @@ namespace osu.Game.Screens.Ranking
                 }
             };
 
-            Score.BindValueChanged(score =>
-            {
-                // An export may be pending from the last score.
-                // Reset this to meet user expectations (a new score which has just been switched to shouldn't export)
-                State.ValueChanged -= exportWhenReady;
-
-                downloadTracker?.RemoveAndDisposeImmediately();
-                downloadTracker = null;
-                State.SetDefault();
-
-                if (score.NewValue != null)
+            Score.BindValueChanged(
+                score =>
                 {
-                    AddInternal(downloadTracker = new ScoreDownloadTracker(score.NewValue)
+                    // An export may be pending from the last score.
+                    // Reset this to meet user expectations (a new score which has just been switched to shouldn't export)
+                    State.ValueChanged -= exportWhenReady;
+
+                    downloadTracker?.RemoveAndDisposeImmediately();
+                    downloadTracker = null;
+                    State.SetDefault();
+
+                    if (score.NewValue != null)
                     {
-                        State = { BindTarget = State }
-                    });
-                }
+                        AddInternal(
+                            downloadTracker = new ScoreDownloadTracker(score.NewValue)
+                            {
+                                State = { BindTarget = State },
+                            }
+                        );
+                    }
 
-                updateState();
-            }, true);
+                    updateState();
+                },
+                true
+            );
 
-            State.BindValueChanged(state =>
-            {
-                button.State.Value = state.NewValue;
-                updateState();
-            }, true);
+            State.BindValueChanged(
+                state =>
+                {
+                    button.State.Value = state.NewValue;
+                    updateState();
+                },
+                true
+            );
         }
 
         #region Export via hotkey logic (also in SaveFailedScoreButton)
@@ -141,13 +146,12 @@ namespace osu.Game.Screens.Ranking
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void exportWhenReady(ValueChangedEvent<DownloadState> state)
         {
-            if (state.NewValue != DownloadState.LocallyAvailable) return;
+            if (state.NewValue != DownloadState.LocallyAvailable)
+                return;
 
             scoreManager.Export(Score.Value!);
 

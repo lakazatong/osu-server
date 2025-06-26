@@ -15,12 +15,13 @@ namespace osu.Game.Rulesets.Pippidon.UI
         private Sprite cursorSprite;
         private Texture cursorTexture;
 
-        protected override Drawable CreateCursor() => cursorSprite = new Sprite
-        {
-            Scale = new Vector2(0.5f),
-            Origin = Anchor.Centre,
-            Texture = cursorTexture,
-        };
+        protected override Drawable CreateCursor() =>
+            cursorSprite = new Sprite
+            {
+                Scale = new Vector2(0.5f),
+                Origin = Anchor.Centre,
+                Texture = cursorTexture,
+            };
 
         [BackgroundDependencyLoader]
         private void load(TextureStore textures)

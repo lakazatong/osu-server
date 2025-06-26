@@ -26,7 +26,9 @@ namespace osu.Game.Tests.Online
         {
             var apiMod = new APIMod(new TestMod());
 
-            var deserialized = MessagePackSerializer.Deserialize<APIMod>(MessagePackSerializer.Serialize(apiMod));
+            var deserialized = MessagePackSerializer.Deserialize<APIMod>(
+                MessagePackSerializer.Serialize(apiMod)
+            );
 
             Assert.That(deserialized.Acronym, Is.EqualTo(apiMod.Acronym));
         }
@@ -36,7 +38,9 @@ namespace osu.Game.Tests.Online
         {
             var apiMod = new APIMod(new TestMod { TestSetting = { Value = 2 } });
 
-            var deserialized = MessagePackSerializer.Deserialize<APIMod>(MessagePackSerializer.Serialize(apiMod));
+            var deserialized = MessagePackSerializer.Deserialize<APIMod>(
+                MessagePackSerializer.Serialize(apiMod)
+            );
 
             Assert.That(deserialized.Settings, Contains.Key("test_setting").With.ContainValue(2.0));
         }
@@ -46,7 +50,9 @@ namespace osu.Game.Tests.Online
         {
             var apiMod = new APIMod(new TestMod { TestSetting = { Value = 2 } });
 
-            var deserialized = MessagePackSerializer.Deserialize<APIMod>(MessagePackSerializer.Serialize(apiMod));
+            var deserialized = MessagePackSerializer.Deserialize<APIMod>(
+                MessagePackSerializer.Serialize(apiMod)
+            );
             var converted = (TestMod)deserialized.ToMod(new TestRuleset());
 
             Assert.That(converted.TestSetting.Value, Is.EqualTo(2));
@@ -56,14 +62,18 @@ namespace osu.Game.Tests.Online
         public void TestDeserialiseTimeRampMod()
         {
             // Create the mod with values different from default.
-            var apiMod = new APIMod(new TestModTimeRamp
-            {
-                AdjustPitch = { Value = false },
-                InitialRate = { Value = 1.25 },
-                FinalRate = { Value = 0.25 }
-            });
+            var apiMod = new APIMod(
+                new TestModTimeRamp
+                {
+                    AdjustPitch = { Value = false },
+                    InitialRate = { Value = 1.25 },
+                    FinalRate = { Value = 0.25 },
+                }
+            );
 
-            var deserialised = MessagePackSerializer.Deserialize<APIMod>(MessagePackSerializer.Serialize(apiMod));
+            var deserialised = MessagePackSerializer.Deserialize<APIMod>(
+                MessagePackSerializer.Serialize(apiMod)
+            );
             var converted = (TestModTimeRamp)deserialised.ToMod(new TestRuleset());
 
             Assert.That(converted.AdjustPitch.Value, Is.EqualTo(false));
@@ -76,24 +86,29 @@ namespace osu.Game.Tests.Online
         {
             var apiMod = new APIMod(new TestModEnum { TestSetting = { Value = TestEnum.Value2 } });
 
-            var deserialized = MessagePackSerializer.Deserialize<APIMod>(MessagePackSerializer.Serialize(apiMod));
+            var deserialized = MessagePackSerializer.Deserialize<APIMod>(
+                MessagePackSerializer.Serialize(apiMod)
+            );
 
             Assert.That(deserialized.Settings, Contains.Key("test_setting").With.ContainValue(1));
         }
 
         private class TestRuleset : Ruleset
         {
-            public override IEnumerable<Mod> GetModsFor(ModType type) => new Mod[]
-            {
-                new TestMod(),
-                new TestModTimeRamp(),
-            };
+            public override IEnumerable<Mod> GetModsFor(ModType type) =>
+                new Mod[] { new TestMod(), new TestModTimeRamp() };
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => throw new System.NotImplementedException();
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod> mods = null
+            ) => throw new System.NotImplementedException();
 
-            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => throw new System.NotImplementedException();
+            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+                throw new System.NotImplementedException();
 
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => throw new System.NotImplementedException();
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => throw new System.NotImplementedException();
 
             public override string Description { get; } = string.Empty;
             public override string ShortName { get; } = string.Empty;
@@ -107,13 +122,14 @@ namespace osu.Game.Tests.Online
             public override double ScoreMultiplier => 1;
 
             [SettingSource("Test")]
-            public BindableNumber<double> TestSetting { get; } = new BindableDouble
-            {
-                MinValue = 0,
-                MaxValue = 10,
-                Default = 5,
-                Precision = 0.01,
-            };
+            public BindableNumber<double> TestSetting { get; } =
+                new BindableDouble
+                {
+                    MinValue = 0,
+                    MaxValue = 10,
+                    Default = 5,
+                    Precision = 0.01,
+                };
         }
 
         private class TestModTimeRamp : ModTimeRamp
@@ -124,20 +140,22 @@ namespace osu.Game.Tests.Online
             public override double ScoreMultiplier => 1;
 
             [SettingSource("Initial rate", "The starting speed of the track")]
-            public override BindableNumber<double> InitialRate { get; } = new BindableDouble(1.5)
-            {
-                MinValue = 1,
-                MaxValue = 2,
-                Precision = 0.01,
-            };
+            public override BindableNumber<double> InitialRate { get; } =
+                new BindableDouble(1.5)
+                {
+                    MinValue = 1,
+                    MaxValue = 2,
+                    Precision = 0.01,
+                };
 
             [SettingSource("Final rate", "The speed increase to ramp towards")]
-            public override BindableNumber<double> FinalRate { get; } = new BindableDouble(0.5)
-            {
-                MinValue = 0,
-                MaxValue = 1,
-                Precision = 0.01,
-            };
+            public override BindableNumber<double> FinalRate { get; } =
+                new BindableDouble(0.5)
+                {
+                    MinValue = 0,
+                    MaxValue = 1,
+                    Precision = 0.01,
+                };
 
             [SettingSource("Adjust pitch", "Should pitch be adjusted with speed")]
             public override BindableBool AdjustPitch { get; } = new BindableBool(true);
@@ -158,7 +176,7 @@ namespace osu.Game.Tests.Online
         {
             Value1 = 0,
             Value2 = 1,
-            Value3 = 2
+            Value3 = 2,
         }
     }
 }

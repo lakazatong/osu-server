@@ -8,14 +8,15 @@ using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
-using osu.Framework.Screens;
 using osu.Framework.Graphics;
+using osu.Framework.Screens;
 
 namespace osu.Game.Screens.Menu
 {
     public partial class IntroCircles : IntroScreen
     {
-        protected override string BeatmapHash => "3c8b1fcc9434dbb29e2fb613d3b9eada9d7bb6c125ceb32396c3b53437280c83";
+        protected override string BeatmapHash =>
+            "3c8b1fcc9434dbb29e2fb613d3b9eada9d7bb6c125ceb32396c3b53437280c83";
 
         protected override string BeatmapFile => "circles.osz";
 
@@ -26,9 +27,7 @@ namespace osu.Game.Screens.Menu
         private Sample welcome;
 
         public IntroCircles([CanBeNull] Func<MainMenu> createNextScreen = null)
-            : base(createNextScreen)
-        {
-        }
+            : base(createNextScreen) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
@@ -45,14 +44,17 @@ namespace osu.Game.Screens.Menu
             {
                 welcome?.Play();
 
-                Scheduler.AddDelayed(delegate
-                {
-                    StartTrack();
+                Scheduler.AddDelayed(
+                    delegate
+                    {
+                        StartTrack();
 
-                    PrepareMenuLoad();
+                        PrepareMenuLoad();
 
-                    Scheduler.AddDelayed(LoadMenu, delay_for_menu - TRACK_START_DELAY);
-                }, TRACK_START_DELAY);
+                        Scheduler.AddDelayed(LoadMenu, delay_for_menu - TRACK_START_DELAY);
+                    },
+                    TRACK_START_DELAY
+                );
 
                 logo.ScaleTo(1);
                 logo.FadeIn();

@@ -18,7 +18,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
     /// </summary>
     public partial class MultiplayerPlaylist : CompositeDrawable
     {
-        public readonly Bindable<MultiplayerPlaylistDisplayMode> DisplayMode = new Bindable<MultiplayerPlaylistDisplayMode>();
+        public readonly Bindable<MultiplayerPlaylistDisplayMode> DisplayMode =
+            new Bindable<MultiplayerPlaylistDisplayMode>();
 
         /// <summary>
         /// Invoked when the user requests to edit an item.
@@ -49,7 +50,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
                 {
                     RelativeSizeAxes = Axes.X,
                     Height = tab_control_height,
-                    Current = { BindTarget = DisplayMode }
+                    Current = { BindTarget = DisplayMode },
                 },
                 new Container
                 {
@@ -61,16 +62,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
                         queueList = new MultiplayerQueueList
                         {
                             RelativeSizeAxes = Axes.Both,
-                            RequestEdit = item => RequestEdit?.Invoke(item)
+                            RequestEdit = item => RequestEdit?.Invoke(item),
                         },
                         historyList = new MultiplayerHistoryList
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            RequestResults = item => RequestResults?.Invoke(item)
-                        }
-                    }
-                }
+                            RequestResults = item => RequestResults?.Invoke(item),
+                        },
+                    },
+                },
             };
 
             playlistTabControl.QueueItems.BindTarget = queueList.Items;
@@ -92,7 +93,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
 
         private void onDisplayModeChanged(ValueChangedEvent<MultiplayerPlaylistDisplayMode> mode)
         {
-            historyList.FadeTo(mode.NewValue == MultiplayerPlaylistDisplayMode.History ? 1 : 0, 100);
+            historyList.FadeTo(
+                mode.NewValue == MultiplayerPlaylistDisplayMode.History ? 1 : 0,
+                100
+            );
             queueList.FadeTo(mode.NewValue == MultiplayerPlaylistDisplayMode.Queue ? 1 : 0, 100);
         }
 
@@ -116,35 +120,44 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
                 firstPopulation = false;
             }
 
-            PlaylistItem? currentItem = client.Room == null ? null : new PlaylistItem(client.Room.CurrentPlaylistItem);
+            PlaylistItem? currentItem =
+                client.Room == null ? null : new PlaylistItem(client.Room.CurrentPlaylistItem);
             queueList.SelectedItem.Value = currentItem;
             historyList.SelectedItem.Value = currentItem;
         }
 
-        private void playlistItemAdded(MultiplayerPlaylistItem item) => Scheduler.Add(() => addItemToLists(item));
+        private void playlistItemAdded(MultiplayerPlaylistItem item) =>
+            Scheduler.Add(() => addItemToLists(item));
 
-        private void playlistItemRemoved(long item) => Scheduler.Add(() => removeItemFromLists(item));
+        private void playlistItemRemoved(long item) =>
+            Scheduler.Add(() => removeItemFromLists(item));
 
-        private void playlistItemChanged(MultiplayerPlaylistItem item) => Scheduler.Add(() =>
-        {
-            if (client.Room == null)
-                return;
-
-            var existingItem = queueList.Items.SingleOrDefault(i => i.ID == item.ID);
-
-            // Test if the only change between the two playlist items is the order.
-            if (existingItem != null && existingItem.With(playlistOrder: item.PlaylistOrder).Equals(new PlaylistItem(item)))
+        private void playlistItemChanged(MultiplayerPlaylistItem item) =>
+            Scheduler.Add(() =>
             {
-                // Set the new order directly and refresh the flow layout as an optimisation to avoid refreshing the items' visual state.
-                existingItem.PlaylistOrder = item.PlaylistOrder;
-                queueList.Invalidate();
-            }
-            else
-            {
-                removeItemFromLists(item.ID);
-                addItemToLists(item);
-            }
-        });
+                if (client.Room == null)
+                    return;
+
+                var existingItem = queueList.Items.SingleOrDefault(i => i.ID == item.ID);
+
+                // Test if the only change between the two playlist items is the order.
+                if (
+                    existingItem != null
+                    && existingItem
+                        .With(playlistOrder: item.PlaylistOrder)
+                        .Equals(new PlaylistItem(item))
+                )
+                {
+                    // Set the new order directly and refresh the flow layout as an optimisation to avoid refreshing the items' visual state.
+                    existingItem.PlaylistOrder = item.PlaylistOrder;
+                    queueList.Invalidate();
+                }
+                else
+                {
+                    removeItemFromLists(item.ID);
+                    addItemToLists(item);
+                }
+            });
 
         private void addItemToLists(MultiplayerPlaylistItem item)
         {

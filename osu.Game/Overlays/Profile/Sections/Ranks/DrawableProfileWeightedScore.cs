@@ -22,39 +22,48 @@ namespace osu.Game.Overlays.Profile.Sections.Ranks
             this.weight = weight;
         }
 
-        protected override Drawable CreateRightContent() => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Vertical,
-            Origin = Anchor.CentreLeft,
-            Anchor = Anchor.CentreLeft,
-            Children = new Drawable[]
+        protected override Drawable CreateRightContent() =>
+            new FillFlowContainer
             {
-                new FillFlowContainer
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Vertical,
+                Origin = Anchor.CentreLeft,
+                Anchor = Anchor.CentreLeft,
+                Children = new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(10, 0),
-                    Children = new[]
+                    new FillFlowContainer
                     {
-                        CreateDrawableAccuracy(),
-                        new Container
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(10, 0),
+                        Children = new[]
                         {
-                            Size = new Vector2(50, 14),
-                            Child = new OsuSpriteText
+                            CreateDrawableAccuracy(),
+                            new Container
                             {
-                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold, italics: true),
-                                Text = Score.PP.HasValue ? $"{Score.PP * weight:0}pp" : string.Empty,
+                                Size = new Vector2(50, 14),
+                                Child = new OsuSpriteText
+                                {
+                                    Font = OsuFont.GetFont(
+                                        size: 14,
+                                        weight: FontWeight.Bold,
+                                        italics: true
+                                    ),
+                                    Text = Score.PP.HasValue
+                                        ? $"{Score.PP * weight:0}pp"
+                                        : string.Empty,
+                                },
                             },
-                        }
-                    }
+                        },
+                    },
+                    new OsuSpriteText
+                    {
+                        Font = OsuFont.GetFont(size: 12),
+                        Text = UsersStrings.ShowExtraTopRanksPpWeight(
+                            weight.ToLocalisableString("0%")
+                        ),
+                    },
                 },
-                new OsuSpriteText
-                {
-                    Font = OsuFont.GetFont(size: 12),
-                    Text = UsersStrings.ShowExtraTopRanksPpWeight(weight.ToLocalisableString("0%"))
-                }
-            }
-        };
+            };
     }
 }

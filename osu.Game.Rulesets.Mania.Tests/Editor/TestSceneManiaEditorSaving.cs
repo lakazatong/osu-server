@@ -23,23 +23,50 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
             FormSliderBar<float> keyCount = null!;
 
             AddStep("go to setup screen", () => InputManager.Key(Key.F4));
-            AddUntilStep("retrieve key count slider", () => keyCount = Editor.ChildrenOfType<SetupScreen>().Single().ChildrenOfType<FormSliderBar<float>>().First(), () => Is.Not.Null);
+            AddUntilStep(
+                "retrieve key count slider",
+                () =>
+                    keyCount = Editor
+                        .ChildrenOfType<SetupScreen>()
+                        .Single()
+                        .ChildrenOfType<FormSliderBar<float>>()
+                        .First(),
+                () => Is.Not.Null
+            );
             AddAssert("key count is 5", () => keyCount.Current.Value, () => Is.EqualTo(5));
-            AddStep("change key count to 8", () =>
-            {
-                keyCount.Current.Value = 8;
-            });
-            AddUntilStep("dialog visible", () => Game.ChildrenOfType<IDialogOverlay>().SingleOrDefault()?.CurrentDialog, Is.InstanceOf<SaveAndReloadEditorDialog>);
+            AddStep(
+                "change key count to 8",
+                () =>
+                {
+                    keyCount.Current.Value = 8;
+                }
+            );
+            AddUntilStep(
+                "dialog visible",
+                () => Game.ChildrenOfType<IDialogOverlay>().SingleOrDefault()?.CurrentDialog,
+                Is.InstanceOf<SaveAndReloadEditorDialog>
+            );
             AddStep("refuse", () => InputManager.Key(Key.Number2));
             AddAssert("key count is 5", () => keyCount.Current.Value, () => Is.EqualTo(5));
 
-            AddStep("change key count to 8 again", () =>
-            {
-                keyCount.Current.Value = 8;
-            });
-            AddUntilStep("dialog visible", () => Game.ChildrenOfType<IDialogOverlay>().Single().CurrentDialog, Is.InstanceOf<SaveAndReloadEditorDialog>);
+            AddStep(
+                "change key count to 8 again",
+                () =>
+                {
+                    keyCount.Current.Value = 8;
+                }
+            );
+            AddUntilStep(
+                "dialog visible",
+                () => Game.ChildrenOfType<IDialogOverlay>().Single().CurrentDialog,
+                Is.InstanceOf<SaveAndReloadEditorDialog>
+            );
             AddStep("acquiesce", () => InputManager.Key(Key.Number1));
-            AddUntilStep("beatmap became 8K", () => Game.Beatmap.Value.BeatmapInfo.Difficulty.CircleSize, () => Is.EqualTo(8));
+            AddUntilStep(
+                "beatmap became 8K",
+                () => Game.Beatmap.Value.BeatmapInfo.Difficulty.CircleSize,
+                () => Is.EqualTo(8)
+            );
         }
     }
 }

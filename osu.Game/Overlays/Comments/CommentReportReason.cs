@@ -14,13 +14,16 @@ namespace osu.Game.Overlays.Comments
         [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsSpam))]
         Spam,
 
-        [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsUnwantedContent))]
+        [LocalisableDescription(
+            typeof(UsersStrings),
+            nameof(UsersStrings.ReportOptionsUnwantedContent)
+        )]
         UnwantedContent,
 
         [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsNonsense))]
         Nonsense,
 
         [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsOther))]
-        Other
+        Other,
     }
 }

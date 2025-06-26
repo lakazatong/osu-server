@@ -12,7 +12,11 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Play samples on rank change"
         /// </summary>
-        public static LocalisableString PlaySamplesOnRankChange => new TranslatableString(getKey(@"play_samples_on_rank_change"), @"Play samples on rank change");
+        public static LocalisableString PlaySamplesOnRankChange =>
+            new TranslatableString(
+                getKey(@"play_samples_on_rank_change"),
+                @"Play samples on rank change"
+            );
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

@@ -34,7 +34,11 @@ namespace osu.Game.Screens.Edit.Components
 
         private Drawable icon = null!;
 
-        public EditorToolButton(LocalisableString text, Func<Drawable> createIcon, Func<Popover?> createPopover)
+        public EditorToolButton(
+            LocalisableString text,
+            Func<Drawable> createIcon,
+            Func<Popover?> createPopover
+        )
         {
             Text = text;
             this.createIcon = createIcon;
@@ -52,14 +56,17 @@ namespace osu.Game.Screens.Edit.Components
             defaultIconColour = defaultBackgroundColour.Darken(0.5f);
             selectedIconColour = selectedBackgroundColour.Lighten(0.5f);
 
-            Add(icon = createIcon().With(b =>
-            {
-                b.Blending = BlendingParameters.Additive;
-                b.Anchor = Anchor.CentreLeft;
-                b.Origin = Anchor.CentreLeft;
-                b.Size = new Vector2(20);
-                b.X = 10;
-            }));
+            Add(
+                icon = createIcon()
+                    .With(b =>
+                    {
+                        b.Blending = BlendingParameters.Additive;
+                        b.Anchor = Anchor.CentreLeft;
+                        b.Origin = Anchor.CentreLeft;
+                        b.Size = new Vector2(20);
+                        b.X = 10;
+                    })
+            );
 
             Action = Selected.Toggle;
         }
@@ -85,23 +92,26 @@ namespace osu.Game.Screens.Edit.Components
                 this.HidePopover();
         }
 
-        protected override SpriteText CreateText() => new OsuSpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.CentreLeft,
-            Anchor = Anchor.CentreLeft,
-            X = 40f
-        };
-
-        public Popover? GetPopover() => Enabled.Value
-            ? createPopover()?.With(p =>
+        protected override SpriteText CreateText() =>
+            new OsuSpriteText
             {
-                p.State.BindValueChanged(state =>
-                {
-                    if (state.NewValue == Visibility.Hidden)
-                        Selected.Value = false;
-                });
-            })
-            : null;
+                Depth = -1,
+                Origin = Anchor.CentreLeft,
+                Anchor = Anchor.CentreLeft,
+                X = 40f,
+            };
+
+        public Popover? GetPopover() =>
+            Enabled.Value
+                ? createPopover()
+                    ?.With(p =>
+                    {
+                        p.State.BindValueChanged(state =>
+                        {
+                            if (state.NewValue == Visibility.Hidden)
+                                Selected.Value = false;
+                        });
+                    })
+                : null;
     }
 }

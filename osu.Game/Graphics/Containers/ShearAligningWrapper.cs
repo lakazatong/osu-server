@@ -47,7 +47,11 @@ namespace osu.Game.Graphics.Containers
         private void updateLayout()
         {
             float shearWidth = OsuGame.SHEAR.X * Parent!.DrawHeight;
-            float relativeY = Parent!.DrawHeight == 0 ? 0 : InternalChild.ToSpaceOfOtherDrawable(Vector2.Zero, Parent).Y / Parent!.DrawHeight;
+            float relativeY =
+                Parent!.DrawHeight == 0
+                    ? 0
+                    : InternalChild.ToSpaceOfOtherDrawable(Vector2.Zero, Parent).Y
+                        / Parent!.DrawHeight;
             Padding = new MarginPadding { Left = shearWidth * relativeY };
         }
     }

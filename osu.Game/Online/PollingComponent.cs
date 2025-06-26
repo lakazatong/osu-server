@@ -92,13 +92,16 @@ namespace osu.Game.Online
         private void pollIfNecessary()
         {
             // we must be loaded so we have access to clock.
-            if (!IsLoaded) return;
+            if (!IsLoaded)
+                return;
 
             // there's already a poll process running.
-            if (pollingActive) return;
+            if (pollingActive)
+                return;
 
             // don't try polling if the time between polls hasn't been set.
-            if (TimeBetweenPolls.Value == 0) return;
+            if (TimeBetweenPolls.Value == 0)
+                return;
 
             if (!lastTimePolled.HasValue)
             {
@@ -120,9 +123,14 @@ namespace osu.Game.Online
         {
             scheduledPoll?.Cancel();
 
-            double lastPollDuration = lastTimePolled.HasValue ? Time.Current - lastTimePolled.Value : 0;
+            double lastPollDuration = lastTimePolled.HasValue
+                ? Time.Current - lastTimePolled.Value
+                : 0;
 
-            scheduledPoll = Scheduler.AddDelayed(doPoll, Math.Max(0, TimeBetweenPolls.Value - lastPollDuration));
+            scheduledPoll = Scheduler.AddDelayed(
+                doPoll,
+                Math.Max(0, TimeBetweenPolls.Value - lastPollDuration)
+            );
         }
     }
 }

@@ -54,10 +54,7 @@ namespace osu.Game.Overlays.Dashboard.Friends
                         AutoSizeAxes = Axes.Y,
                         Children = new Drawable[]
                         {
-                            controlBackground = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            controlBackground = new Box { RelativeSizeAxes = Axes.Both },
                             new Container
                             {
                                 RelativeSizeAxes = Axes.X,
@@ -65,11 +62,13 @@ namespace osu.Game.Overlays.Dashboard.Friends
                                 Padding = new MarginPadding
                                 {
                                     Top = 20,
-                                    Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING - FriendsOnlineStatusItem.PADDING
+                                    Horizontal =
+                                        WaveOverlayContainer.HORIZONTAL_PADDING
+                                        - FriendsOnlineStatusItem.PADDING,
                                 },
                                 Child = streamControl = new FriendOnlineStreamControl(),
-                            }
-                        }
+                            },
+                        },
                     },
                     new Container
                     {
@@ -78,10 +77,7 @@ namespace osu.Game.Overlays.Dashboard.Friends
                         AutoSizeAxes = Axes.Y,
                         Children = new Drawable[]
                         {
-                            background = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            background = new Box { RelativeSizeAxes = Axes.Both },
                             new FillFlowContainer
                             {
                                 RelativeSizeAxes = Axes.X,
@@ -97,7 +93,7 @@ namespace osu.Game.Overlays.Dashboard.Friends
                                         Padding = new MarginPadding
                                         {
                                             Horizontal = 40,
-                                            Vertical = 20
+                                            Vertical = 20,
                                         },
                                         ColumnDimensions = new[]
                                         {
@@ -142,16 +138,20 @@ namespace osu.Game.Overlays.Dashboard.Friends
                                             {
                                                 RelativeSizeAxes = Axes.X,
                                                 AutoSizeAxes = Axes.Y,
-                                                Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING }
+                                                Padding = new MarginPadding
+                                                {
+                                                    Horizontal =
+                                                        WaveOverlayContainer.HORIZONTAL_PADDING,
+                                                },
                                             },
-                                            loading = new LoadingLayer(true)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                            loading = new LoadingLayer(true),
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
 
             background.Colour = colourProvider.Background4;
@@ -174,11 +174,14 @@ namespace osu.Game.Overlays.Dashboard.Friends
             var cancellationSource = listLoadCancellation = new CancellationTokenSource();
 
             FriendsList? currentList = listContainer.SingleOrDefault();
-            FriendsList newList = new FriendsList(userListToolbar.DisplayStyle.Value, apiFriends.Select(f => f.TargetUser!).ToArray())
+            FriendsList newList = new FriendsList(
+                userListToolbar.DisplayStyle.Value,
+                apiFriends.Select(f => f.TargetUser!).ToArray()
+            )
             {
                 OnlineStream = { BindTarget = streamControl.Current },
                 SortCriteria = { BindTarget = userListToolbar.SortCriteria },
-                SearchText = { BindTarget = searchTextBox.Current }
+                SearchText = { BindTarget = searchTextBox.Current },
             };
 
             loading.Show();

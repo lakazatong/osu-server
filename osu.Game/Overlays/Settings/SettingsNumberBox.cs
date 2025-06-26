@@ -11,10 +11,8 @@ namespace osu.Game.Overlays.Settings
 {
     public partial class SettingsNumberBox : SettingsItem<int?>
     {
-        protected override Drawable CreateControl() => new NumberControl
-        {
-            RelativeSizeAxes = Axes.X,
-        };
+        protected override Drawable CreateControl() =>
+            new NumberControl { RelativeSizeAxes = Axes.X };
 
         private sealed partial class NumberControl : CompositeDrawable, IHasCurrentValue<int?>
         {
@@ -37,8 +35,8 @@ namespace osu.Game.Overlays.Settings
                     numberBox = new OutlinedNumberBox
                     {
                         RelativeSizeAxes = Axes.X,
-                        CommitOnFocusLost = true
-                    }
+                        CommitOnFocusLost = true,
+                    },
                 };
 
                 numberBox.Current.BindValueChanged(e =>

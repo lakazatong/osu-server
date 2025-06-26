@@ -5,21 +5,21 @@
 
 using System.Linq;
 using NUnit.Framework;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Beatmaps;
-using osu.Game.Beatmaps.ControlPoints;
-using osu.Game.Tests.Visual;
-using osu.Framework.Timing;
-using osu.Game.Rulesets.Mania.Objects;
-using osu.Game.Rulesets.Mania.Beatmaps;
-using osu.Game.Rulesets.Mania.Configuration;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.ObjectExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
+using osu.Framework.Timing;
 using osu.Framework.Utils;
+using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Mania.Beatmaps;
+using osu.Game.Rulesets.Mania.Configuration;
+using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mania.Objects.Drawables;
 using osu.Game.Rulesets.Mania.UI;
+using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Mania.Tests
 {
@@ -34,27 +34,39 @@ namespace osu.Game.Rulesets.Mania.Tests
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup hierarchy", () =>
-            {
-                Child = new Container
+            AddStep(
+                "setup hierarchy",
+                () =>
                 {
-                    Clock = new FramedClock(clock = new ManualClock()),
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new[]
+                    Child = new Container
                     {
-                        drawableRuleset = (DrawableManiaRuleset)Ruleset.Value.CreateInstance().CreateDrawableRulesetWith(createTestBeatmap())
-                    }
-                };
+                        Clock = new FramedClock(clock = new ManualClock()),
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Children = new[]
+                        {
+                            drawableRuleset = (DrawableManiaRuleset)
+                                Ruleset
+                                    .Value.CreateInstance()
+                                    .CreateDrawableRulesetWith(createTestBeatmap()),
+                        },
+                    };
 
-                drawableRuleset.AllowBackwardsSeeks = true;
-            });
-            AddStep("retrieve config bindable", () =>
-            {
-                var config = (ManiaRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
-                configTimingBasedNoteColouring = config.GetBindable<bool>(ManiaRulesetSetting.TimingBasedNoteColouring);
-            });
+                    drawableRuleset.AllowBackwardsSeeks = true;
+                }
+            );
+            AddStep(
+                "retrieve config bindable",
+                () =>
+                {
+                    var config = (ManiaRulesetConfigManager)
+                        RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
+                    configTimingBasedNoteColouring = config.GetBindable<bool>(
+                        ManiaRulesetSetting.TimingBasedNoteColouring
+                    );
+                }
+            );
         }
 
         [Test]
@@ -72,18 +84,27 @@ namespace osu.Game.Rulesets.Mania.Tests
             seekTo(10000);
             AddStep("disable", () => configTimingBasedNoteColouring.Value = false);
             seekTo(0);
-            AddAssert("all notes not coloured", () => this.ChildrenOfType<DrawableNote>().All(note => note.Colour == Colour4.White));
+            AddAssert(
+                "all notes not coloured",
+                () => this.ChildrenOfType<DrawableNote>().All(note => note.Colour == Colour4.White)
+            );
 
             seekTo(10000);
             AddStep("enable again", () => configTimingBasedNoteColouring.Value = true);
             seekTo(0);
-            AddAssert("some notes coloured", () => this.ChildrenOfType<DrawableNote>().Any(note => note.Colour != Colour4.White));
+            AddAssert(
+                "some notes coloured",
+                () => this.ChildrenOfType<DrawableNote>().Any(note => note.Colour != Colour4.White)
+            );
         }
 
         private void seekTo(double time)
         {
             AddStep($"seek to {time}", () => clock.CurrentTime = time);
-            AddUntilStep("wait for seek", () => Precision.AlmostEquals(drawableRuleset.FrameStableClock.CurrentTime, time, 1));
+            AddUntilStep(
+                "wait for seek",
+                () => Precision.AlmostEquals(drawableRuleset.FrameStableClock.CurrentTime, time, 1)
+            );
         }
 
         private ManiaBeatmap createTestBeatmap()
@@ -102,7 +123,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new Note { StartTime = beat_length / 4 },
                     new Note { StartTime = beat_length / 3 },
                     new Note { StartTime = beat_length / 2 },
-                    new Note { StartTime = beat_length }
+                    new Note { StartTime = beat_length },
                 },
                 ControlPointInfo = new ControlPointInfo(),
                 BeatmapInfo = { Ruleset = Ruleset.Value },
@@ -113,10 +134,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                 note.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
             }
 
-            beatmap.ControlPointInfo.Add(0, new TimingControlPoint
-            {
-                BeatLength = beat_length
-            });
+            beatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = beat_length });
             return beatmap;
         }
     }

@@ -2,16 +2,16 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Game.Beatmaps;
-using osu.Game.Rulesets;
-using osu.Game.Screens.Select.Leaderboards;
-using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Rulesets.Mods;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using osu.Framework.IO.Network;
+using osu.Game.Beatmaps;
 using osu.Game.Extensions;
+using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Rulesets;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Screens.Select.Leaderboards;
 
 namespace osu.Game.Online.API.Requests
 {
@@ -25,13 +25,22 @@ namespace osu.Game.Online.API.Requests
         private readonly IRulesetInfo ruleset;
         private readonly IEnumerable<IMod> mods;
 
-        public GetScoresRequest(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset, BeatmapLeaderboardScope scope = BeatmapLeaderboardScope.Global, IEnumerable<IMod>? mods = null)
+        public GetScoresRequest(
+            IBeatmapInfo beatmapInfo,
+            IRulesetInfo ruleset,
+            BeatmapLeaderboardScope scope = BeatmapLeaderboardScope.Global,
+            IEnumerable<IMod>? mods = null
+        )
         {
             if (beatmapInfo.OnlineID <= 0)
-                throw new InvalidOperationException($"Cannot lookup a beatmap's scores without having a populated {nameof(IBeatmapInfo.OnlineID)}.");
+                throw new InvalidOperationException(
+                    $"Cannot lookup a beatmap's scores without having a populated {nameof(IBeatmapInfo.OnlineID)}."
+                );
 
             if (scope == BeatmapLeaderboardScope.Local)
-                throw new InvalidOperationException("Should not attempt to request online scores for a local scoped leaderboard");
+                throw new InvalidOperationException(
+                    "Should not attempt to request online scores for a local scoped leaderboard"
+                );
 
             this.beatmapInfo = beatmapInfo;
             this.scope = scope;
@@ -51,19 +60,28 @@ namespace osu.Game.Online.API.Requests
             foreach (var mod in mods)
                 req.AddParameter(@"mods[]", mod.Acronym);
 
-            req.AddParameter(@"limit", (scope.RequiresSupporter(mods.Any()) ? MAX_SCORES_PER_REQUEST : DEFAULT_SCORES_PER_REQUEST).ToString(CultureInfo.InvariantCulture));
+            req.AddParameter(
+                @"limit",
+                (
+                    scope.RequiresSupporter(mods.Any())
+                        ? MAX_SCORES_PER_REQUEST
+                        : DEFAULT_SCORES_PER_REQUEST
+                ).ToString(CultureInfo.InvariantCulture)
+            );
             return req;
         }
 
         public bool Equals(GetScoresRequest? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return beatmapInfo.Equals(other.beatmapInfo)
-                   && scope == other.scope
-                   && ruleset.Equals(other.ruleset)
-                   && mods.SequenceEqual(other.mods);
+                && scope == other.scope
+                && ruleset.Equals(other.ruleset)
+                && mods.SequenceEqual(other.mods);
         }
     }
 }

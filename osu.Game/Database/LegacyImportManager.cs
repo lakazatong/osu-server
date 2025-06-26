@@ -54,7 +54,8 @@ namespace osu.Game.Database
 
         public bool SupportsImportFromStable => RuntimeInfo.IsDesktop;
 
-        public void UpdateStorage(string stablePath) => cachedStorage = new StableStorage(stablePath, gameHost as DesktopGameHost);
+        public void UpdateStorage(string stablePath) =>
+            cachedStorage = new StableStorage(stablePath, gameHost as DesktopGameHost);
 
         /// <summary>
         /// Checks whether a valid location to run a stable import from can be determined starting from the supplied <paramref name="directory"/>.
@@ -64,7 +65,10 @@ namespace osu.Game.Database
         /// If the return value is <see langword="true"/>,
         /// this parameter will contain the <see cref="DirectoryInfo"/> to use as the root directory for importing.
         /// </param>
-        public bool IsUsableForStableImport(DirectoryInfo? directory, [NotNullWhen(true)] out DirectoryInfo? stableRoot)
+        public bool IsUsableForStableImport(
+            DirectoryInfo? directory,
+            [NotNullWhen(true)] out DirectoryInfo? stableRoot
+        )
         {
             if (directory == null)
             {
@@ -82,14 +86,19 @@ namespace osu.Game.Database
 
             // The user may only have their songs or skins folders left.
             // We still want to allow them to import based on this.
-            if (directory.GetDirectories(@"Songs").Any() || directory.GetDirectories(@"Skins").Any())
+            if (
+                directory.GetDirectories(@"Songs").Any() || directory.GetDirectories(@"Skins").Any()
+            )
             {
                 stableRoot = directory;
                 return true;
             }
 
             // The user may have traversed *inside* their songs or skins folders.
-            if (directory.Parent != null && (directory.Name == @"Songs" || directory.Name == @"Skins"))
+            if (
+                directory.Parent != null
+                && (directory.Name == @"Songs" || directory.Name == @"Skins")
+            )
             {
                 stableRoot = directory.Parent;
                 return true;
@@ -112,7 +121,10 @@ namespace osu.Game.Database
             return HardLinkHelper.CheckAvailability(testDestinationPath, testExistingPath);
         }
 
-        public virtual async Task<int> GetImportCount(StableContent content, CancellationToken cancellationToken)
+        public virtual async Task<int> GetImportCount(
+            StableContent content,
+            CancellationToken cancellationToken
+        )
         {
             var stableStorage = GetCurrentStableStorage();
 
@@ -124,23 +136,36 @@ namespace osu.Game.Database
             switch (content)
             {
                 case StableContent.Beatmaps:
-                    return await new LegacyBeatmapImporter(beatmaps).GetAvailableCount(stableStorage).ConfigureAwait(false);
+                    return await new LegacyBeatmapImporter(beatmaps)
+                        .GetAvailableCount(stableStorage)
+                        .ConfigureAwait(false);
 
                 case StableContent.Skins:
-                    return await new LegacySkinImporter(skins).GetAvailableCount(stableStorage).ConfigureAwait(false);
+                    return await new LegacySkinImporter(skins)
+                        .GetAvailableCount(stableStorage)
+                        .ConfigureAwait(false);
 
                 case StableContent.Collections:
-                    return await new LegacyCollectionImporter(realmAccess).GetAvailableCount(stableStorage).ConfigureAwait(false);
+                    return await new LegacyCollectionImporter(realmAccess)
+                        .GetAvailableCount(stableStorage)
+                        .ConfigureAwait(false);
 
                 case StableContent.Scores:
-                    return await new LegacyScoreImporter(scores).GetAvailableCount(stableStorage).ConfigureAwait(false);
+                    return await new LegacyScoreImporter(scores)
+                        .GetAvailableCount(stableStorage)
+                        .ConfigureAwait(false);
 
                 default:
-                    throw new ArgumentException($"Only one {nameof(StableContent)} flag should be specified.");
+                    throw new ArgumentException(
+                        $"Only one {nameof(StableContent)} flag should be specified."
+                    );
             }
         }
 
-        public async Task ImportFromStableAsync(StableContent content, bool interactiveLocateIfNotFound = true)
+        public async Task ImportFromStableAsync(
+            StableContent content,
+            bool interactiveLocateIfNotFound = true
+        )
         {
             var stableStorage = GetCurrentStableStorage();
 
@@ -149,8 +174,12 @@ namespace osu.Game.Database
                 if (!interactiveLocateIfNotFound)
                     return;
 
-                var taskCompletionSource = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-                Schedule(() => dialogOverlay.Push(new StableDirectoryLocationDialog(taskCompletionSource)));
+                var taskCompletionSource = new TaskCompletionSource<string>(
+                    TaskCreationOptions.RunContinuationsAsynchronously
+                );
+                Schedule(() =>
+                    dialogOverlay.Push(new StableDirectoryLocationDialog(taskCompletionSource))
+                );
                 string stablePath = await taskCompletionSource.Task.ConfigureAwait(false);
 
                 UpdateStorage(stablePath);
@@ -164,23 +193,38 @@ namespace osu.Game.Database
 
             Task beatmapImportTask = Task.CompletedTask;
             if (content.HasFlag(StableContent.Beatmaps))
-                importTasks.Add(beatmapImportTask = new LegacyBeatmapImporter(beatmaps).ImportFromStableAsync(stableStorage));
+                importTasks.Add(
+                    beatmapImportTask = new LegacyBeatmapImporter(beatmaps).ImportFromStableAsync(
+                        stableStorage
+                    )
+                );
 
             if (content.HasFlag(StableContent.Skins))
                 importTasks.Add(new LegacySkinImporter(skins).ImportFromStableAsync(stableStorage));
 
             if (content.HasFlag(StableContent.Collections))
             {
-                importTasks.Add(beatmapImportTask.ContinueWith(_ => new LegacyCollectionImporter(realmAccess)
-                {
-                    // Other legacy importers import via model managers which handle the posting of notifications.
-                    // Collections are an exception.
-                    PostNotification = n => notifications?.Post(n)
-                }.ImportFromStorage(stableStorage), TaskContinuationOptions.OnlyOnRanToCompletion));
+                importTasks.Add(
+                    beatmapImportTask.ContinueWith(
+                        _ =>
+                            new LegacyCollectionImporter(realmAccess)
+                            {
+                                // Other legacy importers import via model managers which handle the posting of notifications.
+                                // Collections are an exception.
+                                PostNotification = n => notifications?.Post(n),
+                            }.ImportFromStorage(stableStorage),
+                        TaskContinuationOptions.OnlyOnRanToCompletion
+                    )
+                );
             }
 
             if (content.HasFlag(StableContent.Scores))
-                importTasks.Add(beatmapImportTask.ContinueWith(_ => new LegacyScoreImporter(scores).ImportFromStableAsync(stableStorage), TaskContinuationOptions.OnlyOnRanToCompletion));
+                importTasks.Add(
+                    beatmapImportTask.ContinueWith(
+                        _ => new LegacyScoreImporter(scores).ImportFromStableAsync(stableStorage),
+                        TaskContinuationOptions.OnlyOnRanToCompletion
+                    )
+                );
 
             await Task.WhenAll(importTasks.ToArray()).ConfigureAwait(false);
         }
@@ -205,6 +249,6 @@ namespace osu.Game.Database
         Scores = 1 << 1,
         Skins = 1 << 2,
         Collections = 1 << 3,
-        All = Beatmaps | Scores | Skins | Collections
+        All = Beatmaps | Scores | Skins | Collections,
     }
 }

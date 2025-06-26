@@ -12,7 +12,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         private VolumeOverlay volume = null!;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
             dependencies.CacheAs(volume = new VolumeOverlay());
@@ -23,14 +25,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             base.LoadComplete();
 
-            AddRange(new Drawable[]
-            {
-                volume,
-                new GlobalScrollAdjustsVolume
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-            });
+                    volume,
+                    new GlobalScrollAdjustsVolume { RelativeSizeAxes = Axes.Both },
+                }
+            );
 
             AddStep("show controls", () => volume.Show());
         }

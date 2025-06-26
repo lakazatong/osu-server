@@ -82,18 +82,34 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             base.Update();
 
-            if (timeline == null || DrawWidth <= 0) return;
+            if (timeline == null || DrawWidth <= 0)
+                return;
 
             (float, float) newRange = (
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X - PointVisualisation.MAX_WIDTH * 2) / DrawWidth * Content.RelativeChildSize.X,
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X + PointVisualisation.MAX_WIDTH * 2) / DrawWidth * Content.RelativeChildSize.X);
+                (
+                    ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X
+                    - PointVisualisation.MAX_WIDTH * 2
+                )
+                    / DrawWidth
+                    * Content.RelativeChildSize.X,
+                (
+                    ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X
+                    + PointVisualisation.MAX_WIDTH * 2
+                )
+                    / DrawWidth
+                    * Content.RelativeChildSize.X
+            );
 
             if (visibleRange != newRange)
             {
                 visibleRange = newRange;
 
                 // actual regeneration only needs to occur if we've passed one of the known next min/max tick boundaries.
-                if (nextMinTick == null || nextMaxTick == null || (visibleRange.min < nextMinTick || visibleRange.max > nextMaxTick))
+                if (
+                    nextMinTick == null
+                    || nextMaxTick == null
+                    || (visibleRange.min < nextMinTick || visibleRange.max > nextMaxTick)
+                )
                     tickCache.Invalidate();
             }
 
@@ -111,7 +127,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             for (int i = 0; i < beatmap.ControlPointInfo.TimingPoints.Count; i++)
             {
                 var point = beatmap.ControlPointInfo.TimingPoints[i];
-                double until = i + 1 < beatmap.ControlPointInfo.TimingPoints.Count ? beatmap.ControlPointInfo.TimingPoints[i + 1].Time : working.Value.Track.Length;
+                double until =
+                    i + 1 < beatmap.ControlPointInfo.TimingPoints.Count
+                        ? beatmap.ControlPointInfo.TimingPoints[i + 1].Time
+                        : working.Value.Track.Length;
 
                 int beat = 0;
 
@@ -131,14 +150,18 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                         int indexInBar = beat % (point.TimeSignature.Numerator * beatDivisor.Value);
 
-                        int divisor = BindableBeatDivisor.GetDivisorForBeatIndex(beat, beatDivisor.Value);
+                        int divisor = BindableBeatDivisor.GetDivisorForBeatIndex(
+                            beat,
+                            beatDivisor.Value
+                        );
                         var colour = BindableBeatDivisor.GetColourFor(divisor, colours);
 
                         // even though "bar lines" take up the full vertical space, we render them in two pieces because it allows for less anchor/origin churn.
 
-                        var size = indexInBar == 0
-                            ? new Vector2(1.3f, 1)
-                            : BindableBeatDivisor.GetSize(divisor);
+                        var size =
+                            indexInBar == 0
+                                ? new Vector2(1.3f, 1)
+                                : BindableBeatDivisor.GetSize(divisor);
 
                         var line = getNextUsableLine();
                         line.X = xPos;
@@ -170,11 +193,13 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                 if (drawableIndex >= Count)
                 {
-                    Add(point = new PointVisualisation(0)
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.Centre,
-                    });
+                    Add(
+                        point = new PointVisualisation(0)
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.Centre,
+                        }
+                    );
                 }
                 else
                     point = Children[drawableIndex];

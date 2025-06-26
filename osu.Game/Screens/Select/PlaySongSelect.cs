@@ -35,11 +35,22 @@ namespace osu.Game.Screens.Select
 
         public override bool AllowExternalScreenChange => true;
 
-        public override MenuItem[] CreateForwardNavigationMenuItemsForBeatmap(Func<BeatmapInfo> getBeatmap) => new MenuItem[]
-        {
-            new OsuMenuItem(ButtonSystemStrings.Play.ToSentence(), MenuItemType.Highlighted, () => FinaliseSelection(getBeatmap())),
-            new OsuMenuItem(ButtonSystemStrings.Edit.ToSentence(), MenuItemType.Standard, () => Edit(getBeatmap()))
-        };
+        public override MenuItem[] CreateForwardNavigationMenuItemsForBeatmap(
+            Func<BeatmapInfo> getBeatmap
+        ) =>
+            new MenuItem[]
+            {
+                new OsuMenuItem(
+                    ButtonSystemStrings.Play.ToSentence(),
+                    MenuItemType.Highlighted,
+                    () => FinaliseSelection(getBeatmap())
+                ),
+                new OsuMenuItem(
+                    ButtonSystemStrings.Edit.ToSentence(),
+                    MenuItemType.Standard,
+                    () => Edit(getBeatmap())
+                ),
+            };
 
         protected override UserActivity InitialActivity => new UserActivity.ChoosingBeatmap();
 
@@ -48,22 +59,29 @@ namespace osu.Game.Screens.Select
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
-            BeatmapOptions.AddButton(ButtonSystemStrings.Edit.ToSentence(), @"beatmap", FontAwesome.Solid.PencilAlt, colours.Yellow, () => Edit());
+            BeatmapOptions.AddButton(
+                ButtonSystemStrings.Edit.ToSentence(),
+                @"beatmap",
+                FontAwesome.Solid.PencilAlt,
+                colours.Yellow,
+                () => Edit()
+            );
 
             AddInternal(new SongSelectTouchInputDetector());
         }
 
         protected void PresentScore(ScoreInfo score) =>
-            FinaliseSelection(score.BeatmapInfo, score.Ruleset, () => this.Push(new SoloResultsScreen(score)));
+            FinaliseSelection(
+                score.BeatmapInfo,
+                score.Ruleset,
+                () => this.Push(new SoloResultsScreen(score))
+            );
 
         protected override BeatmapDetailArea CreateBeatmapDetailArea()
         {
             playBeatmapDetailArea = new PlayBeatmapDetailArea
             {
-                Leaderboard =
-                {
-                    ScoreSelected = PresentScore
-                }
+                Leaderboard = { ScoreSelected = PresentScore },
             };
 
             return playBeatmapDetailArea;
@@ -90,7 +108,8 @@ namespace osu.Game.Screens.Select
 
         protected override bool OnStart()
         {
-            if (playerLoader != null) return false;
+            if (playerLoader != null)
+                return false;
 
             modsAtGameplayStart = Mods.Value.Select(m => m.DeepClone()).ToArray();
 
@@ -101,10 +120,9 @@ namespace osu.Game.Screens.Select
 
                 if (autoInstance == null)
                 {
-                    notifications?.Post(new SimpleNotification
-                    {
-                        Text = NotificationsStrings.NoAutoplayMod
-                    });
+                    notifications?.Post(
+                        new SimpleNotification { Text = NotificationsStrings.NoAutoplayMod }
+                    );
                     return false;
                 }
 
@@ -129,7 +147,10 @@ namespace osu.Game.Screens.Select
 
                 if (replayGeneratingMod != null)
                 {
-                    player = new ReplayPlayer((beatmap, mods) => replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods));
+                    player = new ReplayPlayer(
+                        (beatmap, mods) =>
+                            replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods)
+                    );
                 }
                 else
                 {
@@ -157,7 +178,8 @@ namespace osu.Game.Screens.Select
 
         private void revertMods()
         {
-            if (playerLoader == null) return;
+            if (playerLoader == null)
+                return;
 
             Mods.Value = modsAtGameplayStart;
             playerLoader = null;

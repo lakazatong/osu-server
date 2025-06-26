@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Catch.Mods
 {
-    public class CatchModDoubleTime : ModDoubleTime
-    {
-    }
+    public class CatchModDoubleTime : ModDoubleTime { }
 }

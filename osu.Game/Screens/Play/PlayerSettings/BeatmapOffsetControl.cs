@@ -39,12 +39,13 @@ namespace osu.Game.Screens.Play.PlayerSettings
 
         private Bindable<ScoreInfo?> lastAppliedScore { get; } = new Bindable<ScoreInfo?>();
 
-        public BindableDouble Current { get; } = new BindableDouble
-        {
-            MinValue = -50,
-            MaxValue = 50,
-            Precision = 0.1,
-        };
+        public BindableDouble Current { get; } =
+            new BindableDouble
+            {
+                MinValue = -50,
+                MaxValue = 50,
+                Precision = 0.1,
+            };
 
         private readonly FillFlowContainer referenceScoreContainer;
 
@@ -97,7 +98,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                     },
-                }
+                },
             };
         }
 
@@ -130,7 +131,8 @@ namespace osu.Game.Screens.Play.PlayerSettings
                         // we can also mark any in-flight write that is managed locally as "seen" and start handling any incoming changes again.
                         realmWriteTask = null;
                     }
-                });
+                }
+            );
 
             Current.BindValueChanged(currentChanged);
             ReferenceScore.BindValueChanged(scoreChanged, true);
@@ -198,7 +200,8 @@ namespace osu.Game.Screens.Play.PlayerSettings
             // affecting unstable rate here is used as a substitute of determining if a hit event represents a *timed* hit event,
             // i.e. an user input that the user had to *time to the track*,
             // i.e. one that it *makes sense to use* when doing anything with timing and offsets.
-            bool hasEnoughUsableEvents = hitEvents.Count(HitEventExtensions.AffectsUnstableRate) >= 50;
+            bool hasEnoughUsableEvents =
+                hitEvents.Count(HitEventExtensions.AffectsUnstableRate) >= 50;
 
             // If we already have an old score with enough hit events and the new score doesn't have enough, continue displaying the old one rather than showing the user "play too short" message.
             if (lastValidScore != null && !hasEnoughUsableEvents)
@@ -206,24 +209,24 @@ namespace osu.Game.Screens.Play.PlayerSettings
 
             referenceScoreContainer.Children = new Drawable[]
             {
-                new OsuSpriteText
-                {
-                    Text = BeatmapOffsetControlStrings.PreviousPlay
-                },
+                new OsuSpriteText { Text = BeatmapOffsetControlStrings.PreviousPlay },
             };
 
             if (!hasEnoughUsableEvents)
             {
-                referenceScoreContainer.AddRange(new Drawable[]
-                {
-                    new OsuTextFlowContainer
+                referenceScoreContainer.AddRange(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Colour = colours.Red1,
-                        Text = BeatmapOffsetControlStrings.PreviousPlayTooShortToUseForCalibration
-                    },
-                });
+                        new OsuTextFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Colour = colours.Red1,
+                            Text =
+                                BeatmapOffsetControlStrings.PreviousPlayTooShortToUseForCalibration,
+                        },
+                    }
+                );
 
                 return;
             }
@@ -234,37 +237,42 @@ namespace osu.Game.Screens.Play.PlayerSettings
 
             LinkFlowContainer globalOffsetText;
 
-            referenceScoreContainer.AddRange(new Drawable[]
-            {
-                lastPlayGraph = new HitEventTimingDistributionGraph(hitEvents)
+            referenceScoreContainer.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 50,
-                },
-                new AverageHitError(hitEvents),
-                calibrateFromLastPlayButton = new SettingsButton
-                {
-                    Text = BeatmapOffsetControlStrings.CalibrateUsingLastPlay,
-                    Action = () =>
+                    lastPlayGraph = new HitEventTimingDistributionGraph(hitEvents)
                     {
-                        if (Current.Disabled)
-                            return;
-
-                        Current.Value = lastPlayBeatmapOffset - lastPlayMedian;
-                        lastAppliedScore.Value = lastValidScore;
+                        RelativeSizeAxes = Axes.X,
+                        Height = 50,
                     },
-                },
-                globalOffsetText = new LinkFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
+                    new AverageHitError(hitEvents),
+                    calibrateFromLastPlayButton = new SettingsButton
+                    {
+                        Text = BeatmapOffsetControlStrings.CalibrateUsingLastPlay,
+                        Action = () =>
+                        {
+                            if (Current.Disabled)
+                                return;
+
+                            Current.Value = lastPlayBeatmapOffset - lastPlayMedian;
+                            lastAppliedScore.Value = lastValidScore;
+                        },
+                    },
+                    globalOffsetText = new LinkFlowContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                    },
                 }
-            });
+            );
 
             if (settings != null)
             {
                 globalOffsetText.AddText("You can also ");
-                globalOffsetText.AddLink("adjust the global offset", () => settings.ShowAtControl<AudioOffsetAdjustControl>());
+                globalOffsetText.AddLink(
+                    "adjust the global offset",
+                    () => settings.ShowAtControl<AudioOffsetAdjustControl>()
+                );
                 globalOffsetText.AddText(" based off this play.");
             }
         }
@@ -285,7 +293,13 @@ namespace osu.Game.Screens.Play.PlayerSettings
             bool allow = allowOffsetAdjust;
 
             if (calibrateFromLastPlayButton != null)
-                calibrateFromLastPlayButton.Enabled.Value = allow && !Precision.AlmostEquals(lastPlayMedian, adjustmentSinceLastPlay, Current.Precision / 2);
+                calibrateFromLastPlayButton.Enabled.Value =
+                    allow
+                    && !Precision.AlmostEquals(
+                        lastPlayMedian,
+                        adjustmentSinceLastPlay,
+                        Current.Precision / 2
+                    );
 
             Current.Disabled = !allow;
         }
@@ -315,9 +329,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         public static LocalisableString GetOffsetExplanatoryText(double offset)
         {
@@ -341,7 +353,8 @@ namespace osu.Game.Screens.Play.PlayerSettings
 
             protected partial class CustomSliderBar : SliderBar
             {
-                public override LocalisableString TooltipText => GetOffsetExplanatoryText(Current.Value);
+                public override LocalisableString TooltipText =>
+                    GetOffsetExplanatoryText(Current.Value);
             }
         }
     }

@@ -17,7 +17,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         [Resolved]
         private Bindable<CatcherAnimationState> currentState { get; set; } = null!;
 
-        private readonly Dictionary<CatcherAnimationState, Drawable> drawables = new Dictionary<CatcherAnimationState, Drawable>();
+        private readonly Dictionary<CatcherAnimationState, Drawable> drawables =
+            new Dictionary<CatcherAnimationState, Drawable>();
 
         private Drawable currentDrawable = null!;
 
@@ -32,23 +33,31 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             currentDrawable = drawables[CatcherAnimationState.Idle];
 
             Drawable getDrawableFor(CatcherAnimationState state) =>
-                skin.GetAnimation(@$"fruit-catcher-{state.ToString().ToLowerInvariant()}", true, true, true) ??
-                skin.GetAnimation(@"fruit-catcher-idle", true, true, true) ??
-                Empty();
+                skin.GetAnimation(
+                    @$"fruit-catcher-{state.ToString().ToLowerInvariant()}",
+                    true,
+                    true,
+                    true
+                )
+                ?? skin.GetAnimation(@"fruit-catcher-idle", true, true, true)
+                ?? Empty();
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            currentState.BindValueChanged(state =>
-            {
-                currentDrawable.Alpha = 0;
-                currentDrawable = drawables[state.NewValue];
-                currentDrawable.Alpha = 1;
+            currentState.BindValueChanged(
+                state =>
+                {
+                    currentDrawable.Alpha = 0;
+                    currentDrawable = drawables[state.NewValue];
+                    currentDrawable.Alpha = 1;
 
-                (currentDrawable as IFramedAnimation)?.GotoFrame(0);
-            }, true);
+                    (currentDrawable as IFramedAnimation)?.GotoFrame(0);
+                },
+                true
+            );
         }
     }
 }

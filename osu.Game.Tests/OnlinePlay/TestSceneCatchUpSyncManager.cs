@@ -29,23 +29,21 @@ namespace osu.Game.Tests.OnlinePlay
         [SetUp]
         public void Setup()
         {
-            syncManager = new SpectatorSyncManager(master = new GameplayClockContainer(new TestManualClock(), false, false));
+            syncManager = new SpectatorSyncManager(
+                master = new GameplayClockContainer(new TestManualClock(), false, false)
+            );
             player1 = syncManager.CreateManagedClock();
             player2 = syncManager.CreateManagedClock();
 
             clocksById = new Dictionary<SpectatorPlayerClock, int>
             {
                 { player1, 1 },
-                { player2, 2 }
+                { player2, 2 },
             };
 
             Schedule(() =>
             {
-                Children = new Drawable[]
-                {
-                    syncManager,
-                    master
-                };
+                Children = new Drawable[] { syncManager, master };
             });
         }
 
@@ -65,7 +63,10 @@ namespace osu.Game.Tests.OnlinePlay
         public void TestReadyPlayersStartWhenReadyForMaximumDelayTime()
         {
             setWaiting(() => player1, false);
-            AddWaitStep($"wait {SpectatorSyncManager.MAXIMUM_START_DELAY} milliseconds", (int)Math.Ceiling(SpectatorSyncManager.MAXIMUM_START_DELAY / TimePerAction));
+            AddWaitStep(
+                $"wait {SpectatorSyncManager.MAXIMUM_START_DELAY} milliseconds",
+                (int)Math.Ceiling(SpectatorSyncManager.MAXIMUM_START_DELAY / TimePerAction)
+            );
             assertPlayerClockState(() => player1, true);
             assertPlayerClockState(() => player2, false);
         }
@@ -146,29 +147,48 @@ namespace osu.Game.Tests.OnlinePlay
             assertPlayerClockState(() => player1, false);
         }
 
-        private void setWaiting(Func<SpectatorPlayerClock> playerClock, bool waiting)
-            => AddStep($"set player clock {clocksById[playerClock()]} waiting = {waiting}", () => playerClock().WaitingOnFrames = waiting);
+        private void setWaiting(Func<SpectatorPlayerClock> playerClock, bool waiting) =>
+            AddStep(
+                $"set player clock {clocksById[playerClock()]} waiting = {waiting}",
+                () => playerClock().WaitingOnFrames = waiting
+            );
 
-        private void setAllWaiting(bool waiting) => AddStep($"set all player clocks waiting = {waiting}", () =>
-        {
-            player1.WaitingOnFrames = waiting;
-            player2.WaitingOnFrames = waiting;
-        });
+        private void setAllWaiting(bool waiting) =>
+            AddStep(
+                $"set all player clocks waiting = {waiting}",
+                () =>
+                {
+                    player1.WaitingOnFrames = waiting;
+                    player2.WaitingOnFrames = waiting;
+                }
+            );
 
-        private void setMasterTime(double time)
-            => AddStep($"set master = {time}", () => master.Seek(time));
+        private void setMasterTime(double time) =>
+            AddStep($"set master = {time}", () => master.Seek(time));
 
         /// <summary>
         /// clock.Time = master.Time - offsetFromMaster
         /// </summary>
-        private void setPlayerClockTime(Func<SpectatorPlayerClock> playerClock, double offsetFromMaster)
-            => AddStep($"set player clock {clocksById[playerClock()]} = master - {offsetFromMaster}", () => playerClock().Seek(master.CurrentTime - offsetFromMaster));
+        private void setPlayerClockTime(
+            Func<SpectatorPlayerClock> playerClock,
+            double offsetFromMaster
+        ) =>
+            AddStep(
+                $"set player clock {clocksById[playerClock()]} = master - {offsetFromMaster}",
+                () => playerClock().Seek(master.CurrentTime - offsetFromMaster)
+            );
 
         private void assertCatchingUp(Func<SpectatorPlayerClock> playerClock, bool catchingUp) =>
-            AddAssert($"player clock {clocksById[playerClock()]} {(catchingUp ? "is" : "is not")} catching up", () => playerClock().IsCatchingUp == catchingUp);
+            AddAssert(
+                $"player clock {clocksById[playerClock()]} {(catchingUp ? "is" : "is not")} catching up",
+                () => playerClock().IsCatchingUp == catchingUp
+            );
 
-        private void assertPlayerClockState(Func<SpectatorPlayerClock> playerClock, bool running)
-            => AddAssert($"player clock {clocksById[playerClock()]} {(running ? "is" : "is not")} running", () => playerClock().IsRunning == running);
+        private void assertPlayerClockState(Func<SpectatorPlayerClock> playerClock, bool running) =>
+            AddAssert(
+                $"player clock {clocksById[playerClock()]} {(running ? "is" : "is not")} running",
+                () => playerClock().IsRunning == running
+            );
 
         private class TestManualClock : ManualClock, IAdjustableClock
         {
@@ -193,9 +213,7 @@ namespace osu.Game.Tests.OnlinePlay
                 CurrentTime = 0;
             }
 
-            public void ResetSpeedAdjustments()
-            {
-            }
+            public void ResetSpeedAdjustments() { }
         }
     }
 }

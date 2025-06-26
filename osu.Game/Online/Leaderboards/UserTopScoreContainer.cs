@@ -57,9 +57,9 @@ namespace osu.Game.Online.Leaderboards
                             Origin = Anchor.TopCentre,
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             Score.BindValueChanged(onScoreChanged);
@@ -75,11 +75,15 @@ namespace osu.Game.Online.Leaderboards
             if (newScore == null)
                 return;
 
-            LoadComponentAsync(createScoreDelegate(newScore), drawableScore =>
-            {
-                scoreContainer.Child = drawableScore;
-                drawableScore.FadeInFromZero(duration, Easing.OutQuint);
-            }, (loadScoreCancellation = new CancellationTokenSource()).Token);
+            LoadComponentAsync(
+                createScoreDelegate(newScore),
+                drawableScore =>
+                {
+                    scoreContainer.Child = drawableScore;
+                    drawableScore.FadeInFromZero(duration, Easing.OutQuint);
+                },
+                (loadScoreCancellation = new CancellationTokenSource()).Token
+            );
         }
 
         protected override void PopIn() => this.FadeIn(duration, Easing.OutQuint);

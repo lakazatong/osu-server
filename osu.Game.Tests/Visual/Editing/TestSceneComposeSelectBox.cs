@@ -38,28 +38,29 @@ namespace osu.Game.Tests.Visual.Editing
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = selectionArea = new Container
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Size = new Vector2(400),
-                Position = -new Vector2(150),
-                Anchor = Anchor.Centre,
-                Children = new Drawable[]
+                Child = selectionArea = new Container
                 {
-                    selectionBox = new SelectionBox
+                    Size = new Vector2(400),
+                    Position = -new Vector2(150),
+                    Anchor = Anchor.Centre,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
+                        selectionBox = new SelectionBox
+                        {
+                            RelativeSizeAxes = Axes.Both,
 
-                        CanFlipX = true,
-                        CanFlipY = true,
-                    }
-                }
-            };
+                            CanFlipX = true,
+                            CanFlipY = true,
+                        },
+                    },
+                };
 
-            InputManager.MoveMouseTo(selectionBox);
-            InputManager.ReleaseButton(MouseButton.Left);
-        });
+                InputManager.MoveMouseTo(selectionBox);
+                InputManager.ReleaseButton(MouseButton.Left);
+            });
 
         private partial class TestSelectionRotationHandler : SelectionRotationHandler
         {
@@ -80,7 +81,9 @@ namespace osu.Game.Tests.Visual.Editing
             public override void Begin()
             {
                 if (targetContainer != null)
-                    throw new InvalidOperationException($"Cannot {nameof(Begin)} a rotate operation while another is in progress!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Begin)} a rotate operation while another is in progress!"
+                    );
 
                 targetContainer = getTargetContainer();
                 initialRotation = targetContainer!.Rotation;
@@ -92,7 +95,9 @@ namespace osu.Game.Tests.Visual.Editing
             public override void Update(float rotation, Vector2? origin = null)
             {
                 if (targetContainer == null)
-                    throw new InvalidOperationException($"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!"
+                    );
 
                 // kinda silly and wrong, but just showing that the drag handles work.
                 targetContainer.Rotation = initialRotation!.Value + rotation;
@@ -101,7 +106,9 @@ namespace osu.Game.Tests.Visual.Editing
             public override void Commit()
             {
                 if (targetContainer == null)
-                    throw new InvalidOperationException($"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!"
+                    );
 
                 targetContainer = null;
                 initialRotation = null;
@@ -129,27 +136,47 @@ namespace osu.Game.Tests.Visual.Editing
             public override void Begin()
             {
                 if (targetContainer != null)
-                    throw new InvalidOperationException($"Cannot {nameof(Begin)} a scale operation while another is in progress!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Begin)} a scale operation while another is in progress!"
+                    );
 
                 targetContainer = getTargetContainer();
-                OriginalSurroundingQuad = new Quad(targetContainer!.X, targetContainer.Y, targetContainer.Width, targetContainer.Height);
+                OriginalSurroundingQuad = new Quad(
+                    targetContainer!.X,
+                    targetContainer.Y,
+                    targetContainer.Width,
+                    targetContainer.Height
+                );
             }
 
-            public override void Update(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both, float axisRotation = 0)
+            public override void Update(
+                Vector2 scale,
+                Vector2? origin = null,
+                Axes adjustAxis = Axes.Both,
+                float axisRotation = 0
+            )
             {
                 if (targetContainer == null)
-                    throw new InvalidOperationException($"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!"
+                    );
 
                 Vector2 actualOrigin = origin ?? Vector2.Zero;
 
-                targetContainer.Position = GeometryUtils.GetScaledPosition(scale, actualOrigin, OriginalSurroundingQuad!.Value.TopLeft);
+                targetContainer.Position = GeometryUtils.GetScaledPosition(
+                    scale,
+                    actualOrigin,
+                    OriginalSurroundingQuad!.Value.TopLeft
+                );
                 targetContainer.Size = OriginalSurroundingQuad!.Value.Size * scale;
             }
 
             public override void Commit()
             {
                 if (targetContainer == null)
-                    throw new InvalidOperationException($"Cannot {nameof(Commit)} a scale operation without calling {nameof(Begin)} first!");
+                    throw new InvalidOperationException(
+                        $"Cannot {nameof(Commit)} a scale operation without calling {nameof(Begin)} first!"
+                    );
 
                 targetContainer = null;
             }
@@ -160,7 +187,10 @@ namespace osu.Game.Tests.Visual.Editing
         {
             SelectionBoxRotationHandle rotationHandle = null;
 
-            AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
+            AddStep(
+                "retrieve rotation handle",
+                () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First()
+            );
 
             AddAssert("handle hidden", () => rotationHandle.Alpha == 0);
             AddStep("hover over handle", () => InputManager.MoveMouseTo(rotationHandle));
@@ -175,13 +205,22 @@ namespace osu.Game.Tests.Visual.Editing
         {
             SelectionBoxRotationHandle rotationHandle = null;
 
-            AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
+            AddStep(
+                "retrieve rotation handle",
+                () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First()
+            );
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep(
+                "hover over closest scale handle",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<SelectionBoxScaleHandle>()
+                            .Single(s => s.Anchor == rotationHandle.Anchor)
+                    );
+                }
+            );
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
 
             AddStep("move mouse away", () => InputManager.MoveMouseTo(selectionBox));
@@ -193,13 +232,22 @@ namespace osu.Game.Tests.Visual.Editing
         {
             SelectionBoxRotationHandle rotationHandle = null;
 
-            AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
+            AddStep(
+                "retrieve rotation handle",
+                () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First()
+            );
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep(
+                "hover over closest scale handle",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<SelectionBoxScaleHandle>()
+                            .Single(s => s.Anchor == rotationHandle.Anchor)
+                    );
+                }
+            );
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
             AddAssert("rotation handle not hovered", () => !rotationHandle.IsHovered);
 
@@ -216,13 +264,22 @@ namespace osu.Game.Tests.Visual.Editing
         {
             SelectionBoxRotationHandle rotationHandle = null;
 
-            AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
+            AddStep(
+                "retrieve rotation handle",
+                () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First()
+            );
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep(
+                "hover over closest scale handle",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<SelectionBoxScaleHandle>()
+                            .Single(s => s.Anchor == rotationHandle.Anchor)
+                    );
+                }
+            );
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
             AddStep("hold scale handle", () => InputManager.PressButton(MouseButton.Left));
             AddUntilStep("rotation handle hidden", () => rotationHandle.Alpha == 0);
@@ -230,22 +287,34 @@ namespace osu.Game.Tests.Visual.Editing
             int i;
             ScheduledDelegate mouseMove = null;
 
-            AddStep("start dragging", () =>
-            {
-                i = 0;
-
-                mouseMove = Scheduler.AddDelayed(() =>
+            AddStep(
+                "start dragging",
+                () =>
                 {
-                    InputManager.MoveMouseTo(selectionBox.ScreenSpaceDrawQuad.TopLeft + Vector2.One * (5 * ++i));
-                }, 100, true);
-            });
+                    i = 0;
+
+                    mouseMove = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            InputManager.MoveMouseTo(
+                                selectionBox.ScreenSpaceDrawQuad.TopLeft + Vector2.One * (5 * ++i)
+                            );
+                        },
+                        100,
+                        true
+                    );
+                }
+            );
             AddAssert("rotation handle still hidden", () => rotationHandle.Alpha == 0);
 
             AddStep("end dragging", () => mouseMove.Cancel());
             AddAssert("rotation handle still hidden", () => rotationHandle.Alpha == 0);
             AddStep("unhold left", () => InputManager.ReleaseButton(MouseButton.Left));
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
-            AddStep("move mouse away", () => InputManager.MoveMouseTo(selectionBox, new Vector2(20)));
+            AddStep(
+                "move mouse away",
+                () => InputManager.MoveMouseTo(selectionBox, new Vector2(20))
+            );
             AddUntilStep("rotation handle hidden", () => rotationHandle.Alpha == 0);
         }
 
@@ -255,14 +324,36 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestHoverOverTwoHandlesInstantaneously()
         {
-            AddStep("hover over top-left scale handle", () =>
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == Anchor.TopLeft)));
-            AddStep("hover over top-right scale handle", () =>
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == Anchor.TopRight)));
-            AddUntilStep("top-left rotation handle hidden", () =>
-                this.ChildrenOfType<SelectionBoxRotationHandle>().Single(r => r.Anchor == Anchor.TopLeft).Alpha == 0);
-            AddUntilStep("top-right rotation handle shown", () =>
-                this.ChildrenOfType<SelectionBoxRotationHandle>().Single(r => r.Anchor == Anchor.TopRight).Alpha == 1);
+            AddStep(
+                "hover over top-left scale handle",
+                () =>
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<SelectionBoxScaleHandle>()
+                            .Single(s => s.Anchor == Anchor.TopLeft)
+                    )
+            );
+            AddStep(
+                "hover over top-right scale handle",
+                () =>
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<SelectionBoxScaleHandle>()
+                            .Single(s => s.Anchor == Anchor.TopRight)
+                    )
+            );
+            AddUntilStep(
+                "top-left rotation handle hidden",
+                () =>
+                    this.ChildrenOfType<SelectionBoxRotationHandle>()
+                        .Single(r => r.Anchor == Anchor.TopLeft)
+                        .Alpha == 0
+            );
+            AddUntilStep(
+                "top-right rotation handle shown",
+                () =>
+                    this.ChildrenOfType<SelectionBoxRotationHandle>()
+                        .Single(r => r.Anchor == Anchor.TopRight)
+                        .Alpha == 1
+            );
         }
     }
 }

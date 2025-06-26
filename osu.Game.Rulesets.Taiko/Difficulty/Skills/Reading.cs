@@ -22,9 +22,7 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Skills
         private double currentStrain;
 
         public Reading(Mod[] mods)
-            : base(mods)
-        {
-        }
+            : base(mods) { }
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {

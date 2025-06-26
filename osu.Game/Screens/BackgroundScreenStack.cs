@@ -30,7 +30,12 @@ namespace osu.Game.Screens
             bool isFirstScreen = CurrentScreen == null;
             screen.AnimateEntry = !isFirstScreen;
 
-            if (EqualityComparer<BackgroundScreen>.Default.Equals((BackgroundScreen?)CurrentScreen, screen))
+            if (
+                EqualityComparer<BackgroundScreen>.Default.Equals(
+                    (BackgroundScreen?)CurrentScreen,
+                    screen
+                )
+            )
                 return false;
 
             base.Push(screen);

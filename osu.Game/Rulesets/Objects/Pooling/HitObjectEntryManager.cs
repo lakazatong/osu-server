@@ -32,7 +32,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// <summary>
         /// Provides the reverse mapping of <see cref="HitObjectLifetimeEntry.HitObject"/> for each entry.
         /// </summary>
-        private readonly Dictionary<HitObject, HitObjectLifetimeEntry> entryMap = new Dictionary<HitObject, HitObjectLifetimeEntry>();
+        private readonly Dictionary<HitObject, HitObjectLifetimeEntry> entryMap =
+            new Dictionary<HitObject, HitObjectLifetimeEntry>();
 
         /// <summary>
         /// Stores the parent hit object for entries of the nested hit objects.
@@ -41,14 +42,17 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// The parent hit object of a pooled hit object may be non-pooled.
         /// In that case, no corresponding <see cref="HitObjectLifetimeEntry"/> is stored in this <see cref="HitObjectEntryManager"/>.
         /// </remarks>
-        private readonly Dictionary<HitObjectLifetimeEntry, HitObject> parentMap = new Dictionary<HitObjectLifetimeEntry, HitObject>();
+        private readonly Dictionary<HitObjectLifetimeEntry, HitObject> parentMap =
+            new Dictionary<HitObjectLifetimeEntry, HitObject>();
 
         public void Add(HitObjectLifetimeEntry entry, HitObject? parent)
         {
             HitObject hitObject = entry.HitObject;
 
             if (!entryMap.TryAdd(hitObject, entry))
-                throw new InvalidOperationException($@"The {nameof(HitObjectLifetimeEntry)} is already added to this {nameof(HitObjectEntryManager)}.");
+                throw new InvalidOperationException(
+                    $@"The {nameof(HitObjectLifetimeEntry)} is already added to this {nameof(HitObjectEntryManager)}."
+                );
 
             // If the entry has a parent, set it and add the entry to the parent's children.
             if (parent != null)
@@ -70,12 +74,17 @@ namespace osu.Game.Rulesets.Objects.Pooling
             HitObject hitObject = entry.HitObject;
 
             if (!entryMap.ContainsKey(hitObject))
-                throw new InvalidOperationException($@"The {nameof(HitObjectLifetimeEntry)} is not contained in this {nameof(HitObjectEntryManager)}.");
+                throw new InvalidOperationException(
+                    $@"The {nameof(HitObjectLifetimeEntry)} is not contained in this {nameof(HitObjectEntryManager)}."
+                );
 
             entryMap.Remove(hitObject);
 
             // If the entry has a parent, unset it and remove the entry from the parents' children.
-            if (parentMap.Remove(entry, out var parent) && entryMap.TryGetValue(parent, out var parentEntry))
+            if (
+                parentMap.Remove(entry, out var parent)
+                && entryMap.TryGetValue(parent, out var parentEntry)
+            )
                 parentEntry.NestedEntries.Remove(entry);
 
             // Remove all the entries' children.
@@ -87,7 +96,10 @@ namespace osu.Game.Rulesets.Objects.Pooling
             return true;
         }
 
-        public bool TryGet(HitObject hitObject, [MaybeNullWhen(false)] out HitObjectLifetimeEntry entry)
+        public bool TryGet(
+            HitObject hitObject,
+            [MaybeNullWhen(false)] out HitObjectLifetimeEntry entry
+        )
         {
             return entryMap.TryGetValue(hitObject, out entry);
         }

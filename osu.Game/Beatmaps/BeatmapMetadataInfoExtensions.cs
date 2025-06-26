@@ -21,20 +21,33 @@ namespace osu.Game.Beatmaps
             return termsList.ToArray();
         }
 
-        public static bool Match(IBeatmapMetadataInfo metadataInfo, FilterCriteria.OptionalTextFilter filter)
+        public static bool Match(
+            IBeatmapMetadataInfo metadataInfo,
+            FilterCriteria.OptionalTextFilter filter
+        )
         {
-            if (filter.Matches(metadataInfo.Author.Username)) return true;
-            if (filter.Matches(metadataInfo.Artist)) return true;
-            if (filter.Matches(metadataInfo.ArtistUnicode)) return true;
-            if (filter.Matches(metadataInfo.Title)) return true;
-            if (filter.Matches(metadataInfo.TitleUnicode)) return true;
-            if (filter.Matches(metadataInfo.Source)) return true;
-            if (filter.Matches(metadataInfo.Tags)) return true;
+            if (filter.Matches(metadataInfo.Author.Username))
+                return true;
+            if (filter.Matches(metadataInfo.Artist))
+                return true;
+            if (filter.Matches(metadataInfo.ArtistUnicode))
+                return true;
+            if (filter.Matches(metadataInfo.Title))
+                return true;
+            if (filter.Matches(metadataInfo.TitleUnicode))
+                return true;
+            if (filter.Matches(metadataInfo.Source))
+                return true;
+            if (filter.Matches(metadataInfo.Tags))
+                return true;
 
             return false;
         }
 
-        internal static void CollectSearchableTerms(IBeatmapMetadataInfo metadataInfo, IList<string> termsList)
+        internal static void CollectSearchableTerms(
+            IBeatmapMetadataInfo metadataInfo,
+            IList<string> termsList
+        )
         {
             addIfNotNull(metadataInfo.Author.Username);
             addIfNotNull(metadataInfo.Artist);
@@ -56,10 +69,16 @@ namespace osu.Game.Beatmaps
         /// </summary>
         public static string GetDisplayTitle(this IBeatmapMetadataInfo metadataInfo)
         {
-            string author = string.IsNullOrEmpty(metadataInfo.Author.Username) ? string.Empty : $" ({metadataInfo.Author.Username})";
+            string author = string.IsNullOrEmpty(metadataInfo.Author.Username)
+                ? string.Empty
+                : $" ({metadataInfo.Author.Username})";
 
-            string artist = string.IsNullOrEmpty(metadataInfo.Artist) ? "unknown artist" : metadataInfo.Artist;
-            string title = string.IsNullOrEmpty(metadataInfo.Title) ? "unknown title" : metadataInfo.Title;
+            string artist = string.IsNullOrEmpty(metadataInfo.Artist)
+                ? "unknown artist"
+                : metadataInfo.Artist;
+            string title = string.IsNullOrEmpty(metadataInfo.Title)
+                ? "unknown title"
+                : metadataInfo.Title;
 
             return $"{artist} - {title}{author}".Trim();
         }
@@ -67,13 +86,26 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// A user-presentable display title representing this beatmap, with localisation handling for potentially romanisable fields.
         /// </summary>
-        public static RomanisableString GetDisplayTitleRomanisable(this IBeatmapMetadataInfo metadataInfo, bool includeCreator = true)
+        public static RomanisableString GetDisplayTitleRomanisable(
+            this IBeatmapMetadataInfo metadataInfo,
+            bool includeCreator = true
+        )
         {
-            string author = !includeCreator || string.IsNullOrEmpty(metadataInfo.Author.Username) ? string.Empty : $"({metadataInfo.Author.Username})";
-            string artistUnicode = string.IsNullOrEmpty(metadataInfo.ArtistUnicode) ? metadataInfo.Artist : metadataInfo.ArtistUnicode;
-            string titleUnicode = string.IsNullOrEmpty(metadataInfo.TitleUnicode) ? metadataInfo.Title : metadataInfo.TitleUnicode;
+            string author =
+                !includeCreator || string.IsNullOrEmpty(metadataInfo.Author.Username)
+                    ? string.Empty
+                    : $"({metadataInfo.Author.Username})";
+            string artistUnicode = string.IsNullOrEmpty(metadataInfo.ArtistUnicode)
+                ? metadataInfo.Artist
+                : metadataInfo.ArtistUnicode;
+            string titleUnicode = string.IsNullOrEmpty(metadataInfo.TitleUnicode)
+                ? metadataInfo.Title
+                : metadataInfo.TitleUnicode;
 
-            return new RomanisableString($"{artistUnicode} - {titleUnicode} {author}".Trim(), $"{metadataInfo.Artist} - {metadataInfo.Title} {author}".Trim());
+            return new RomanisableString(
+                $"{artistUnicode} - {titleUnicode} {author}".Trim(),
+                $"{metadataInfo.Artist} - {metadataInfo.Title} {author}".Trim()
+            );
         }
     }
 }

@@ -12,6 +12,6 @@ namespace osu.Game.Scoring
         Platinum,
         Rhodium,
         Radiant,
-        Lustrous
+        Lustrous,
     }
 }

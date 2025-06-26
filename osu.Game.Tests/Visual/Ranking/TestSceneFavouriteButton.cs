@@ -24,25 +24,37 @@ namespace osu.Game.Tests.Visual.Ranking
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create button", () => Child = favourite = new FavouriteButton(beatmapSetInfo)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddStep(
+                "create button",
+                () =>
+                    Child = favourite =
+                        new FavouriteButton(beatmapSetInfo)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
 
-            AddStep("register request handling", () => dummyAPI.HandleRequest = request =>
-            {
-                if (!(request is GetBeatmapSetRequest beatmapSetRequest)) return false;
+            AddStep(
+                "register request handling",
+                () =>
+                    dummyAPI.HandleRequest = request =>
+                    {
+                        if (!(request is GetBeatmapSetRequest beatmapSetRequest))
+                            return false;
 
-                beatmapSetRequest.TriggerSuccess(new APIBeatmapSet
-                {
-                    OnlineID = beatmapSetRequest.ID,
-                    HasFavourited = false,
-                    FavouriteCount = 0,
-                });
+                        beatmapSetRequest.TriggerSuccess(
+                            new APIBeatmapSet
+                            {
+                                OnlineID = beatmapSetRequest.ID,
+                                HasFavourited = false,
+                                FavouriteCount = 0,
+                            }
+                        );
 
-                return true;
-            });
+                        return true;
+                    }
+            );
         }
 
         [Test]
@@ -50,33 +62,47 @@ namespace osu.Game.Tests.Visual.Ranking
         {
             AddStep("log out", () => API.Logout());
             checkEnabled(false);
-            AddStep("log in", () =>
-            {
-                API.Login("test", "test");
-                ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
-            });
+            AddStep(
+                "log in",
+                () =>
+                {
+                    API.Login("test", "test");
+                    ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
+                }
+            );
             checkEnabled(true);
         }
 
         [Test]
         public void TestInvalidBeatmap()
         {
-            AddStep("make beatmap invalid", () => Child = favourite = new FavouriteButton(invalidBeatmapSetInfo)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
-            AddStep("log in", () =>
-            {
-                API.Login("test", "test");
-                ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
-            });
+            AddStep(
+                "make beatmap invalid",
+                () =>
+                    Child = favourite =
+                        new FavouriteButton(invalidBeatmapSetInfo)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
+            AddStep(
+                "log in",
+                () =>
+                {
+                    API.Login("test", "test");
+                    ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
+                }
+            );
             checkEnabled(false);
         }
 
         private void checkEnabled(bool expected)
         {
-            AddAssert("is " + (expected ? "enabled" : "disabled"), () => favourite!.Enabled.Value == expected);
+            AddAssert(
+                "is " + (expected ? "enabled" : "disabled"),
+                () => favourite!.Enabled.Value == expected
+            );
         }
     }
 }

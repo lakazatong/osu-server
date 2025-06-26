@@ -28,7 +28,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             TimeSpan.FromSeconds(10),
             TimeSpan.FromSeconds(30),
             TimeSpan.FromMinutes(1),
-            TimeSpan.FromMinutes(2)
+            TimeSpan.FromMinutes(2),
         };
 
         public new required Action<TimeSpan> Action;
@@ -46,11 +46,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
         {
             Icon = FontAwesome.Regular.Clock;
 
-            Add(background = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Depth = float.MaxValue
-            });
+            Add(background = new Box { RelativeSizeAxes = Axes.Both, Depth = float.MaxValue });
 
             base.Action = this.ShowPopover;
 
@@ -76,24 +72,26 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             multiplayerClient.RoomUpdated -= onRoomUpdated;
         }
 
-        private void onRoomUpdated() => Scheduler.AddOnce(() =>
-        {
-            bool countdownActive = multiplayerClient.Room?.ActiveCountdowns.Any(c => c is MatchStartCountdown) == true;
+        private void onRoomUpdated() =>
+            Scheduler.AddOnce(() =>
+            {
+                bool countdownActive =
+                    multiplayerClient.Room?.ActiveCountdowns.Any(c => c is MatchStartCountdown)
+                    == true;
 
-            if (countdownActive)
-            {
-                background
-                    .FadeColour(colours.YellowLight, 100, Easing.In)
-                    .Then()
-                    .FadeColour(colours.YellowDark, 900, Easing.OutQuint)
-                    .Loop();
-            }
-            else
-            {
-                background
-                    .FadeColour(colours.Green, 200, Easing.OutQuint);
-            }
-        });
+                if (countdownActive)
+                {
+                    background
+                        .FadeColour(colours.YellowLight, 100, Easing.In)
+                        .Then()
+                        .FadeColour(colours.YellowDark, 900, Easing.OutQuint)
+                        .Loop();
+                }
+                else
+                {
+                    background.FadeColour(colours.Green, 200, Easing.OutQuint);
+                }
+            });
 
         public Popover GetPopover()
         {
@@ -107,32 +105,39 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
 
             foreach (var duration in available_delays)
             {
-                flow.Add(new RoundedButton
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Text = MultiplayerMatchStrings.StartMatchWithCountdown(duration.Humanize()),
-                    BackgroundColour = colours.Green,
-                    Action = () =>
+                flow.Add(
+                    new RoundedButton
                     {
-                        Action(duration);
-                        this.HidePopover();
+                        RelativeSizeAxes = Axes.X,
+                        Text = MultiplayerMatchStrings.StartMatchWithCountdown(duration.Humanize()),
+                        BackgroundColour = colours.Green,
+                        Action = () =>
+                        {
+                            Action(duration);
+                            this.HidePopover();
+                        },
                     }
-                });
+                );
             }
 
-            if (multiplayerClient.Room?.ActiveCountdowns.Any(c => c is MatchStartCountdown) == true && multiplayerClient.IsHost)
+            if (
+                multiplayerClient.Room?.ActiveCountdowns.Any(c => c is MatchStartCountdown) == true
+                && multiplayerClient.IsHost
+            )
             {
-                flow.Add(new RoundedButton
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Text = MultiplayerMatchStrings.StopCountdown,
-                    BackgroundColour = colours.Red,
-                    Action = () =>
+                flow.Add(
+                    new RoundedButton
                     {
-                        CancelAction();
-                        this.HidePopover();
+                        RelativeSizeAxes = Axes.X,
+                        Text = MultiplayerMatchStrings.StopCountdown,
+                        BackgroundColour = colours.Red,
+                        Action = () =>
+                        {
+                            CancelAction();
+                            this.HidePopover();
+                        },
                     }
-                });
+                );
             }
 
             return new OsuPopover { Child = flow };

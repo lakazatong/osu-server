@@ -29,7 +29,10 @@ using osu.Game.Overlays.Chat.Listing;
 
 namespace osu.Game.Overlays
 {
-    public partial class ChatOverlay : OsuFocusedOverlayContainer, INamedOverlayComponent, IKeyBindingHandler<PlatformAction>
+    public partial class ChatOverlay
+        : OsuFocusedOverlayContainer,
+            INamedOverlayComponent,
+            IKeyBindingHandler<PlatformAction>
     {
         public IconUsage Icon => OsuIcon.Chat;
         public LocalisableString Title => ChatStrings.HeaderTitle;
@@ -42,7 +45,8 @@ namespace osu.Game.Overlays
         private ChatTextBar textBar = null!;
         private Container<DrawableChannel> currentChannelContainer = null!;
 
-        private readonly Dictionary<Channel, DrawableChannel> loadedChannels = new Dictionary<Channel, DrawableChannel>();
+        private readonly Dictionary<Channel, DrawableChannel> loadedChannels =
+            new Dictionary<Channel, DrawableChannel>();
 
         protected IEnumerable<DrawableChannel> DrawableChannels => loadedChannels.Values;
 
@@ -66,7 +70,9 @@ namespace osu.Game.Overlays
         private ChannelManager channelManager { get; set; } = null!;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         [Cached]
         private readonly Bindable<Channel?> currentChannel = new Bindable<Channel?>();
@@ -142,10 +148,11 @@ namespace osu.Game.Overlays
                                         new PopoverContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Child = currentChannelContainer = new Container<DrawableChannel>
-                                            {
-                                                RelativeSizeAxes = Axes.Both,
-                                            }
+                                            Child = currentChannelContainer =
+                                                new Container<DrawableChannel>
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                },
                                         },
                                         loading = new LoadingLayer(true),
                                         channelListing = new ChannelListing
@@ -161,10 +168,10 @@ namespace osu.Game.Overlays
                                     Origin = Anchor.BottomRight,
                                     Padding = new MarginPadding { Left = side_bar_width },
                                 },
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -174,7 +181,13 @@ namespace osu.Game.Overlays
 
             config.BindWith(OsuSetting.ChatDisplayHeight, chatHeight);
 
-            chatHeight.BindValueChanged(height => { Height = height.NewValue; }, true);
+            chatHeight.BindValueChanged(
+                height =>
+                {
+                    Height = height.NewValue;
+                },
+                true
+            );
 
             currentChannel.BindTo(channelManager.CurrentChannel);
             joinedChannels.BindTo(channelManager.JoinedChannels);
@@ -249,9 +262,7 @@ namespace osu.Game.Overlays
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
@@ -273,7 +284,9 @@ namespace osu.Game.Overlays
             if (!isDraggingTopBar)
                 return;
 
-            float targetChatHeight = dragStartChatHeight - (e.MousePosition.Y - e.MouseDownPosition.Y) / Parent!.DrawSize.Y;
+            float targetChatHeight =
+                dragStartChatHeight
+                - (e.MousePosition.Y - e.MouseDownPosition.Y) / Parent!.DrawSize.Y;
             chatHeight.Value = targetChatHeight;
         }
 
@@ -340,20 +353,23 @@ namespace osu.Game.Overlays
                     DrawableChannel drawableChannel = CreateDrawableChannel(newChannel);
                     loadedChannels.Add(newChannel, drawableChannel);
 
-                    LoadComponentAsync(drawableChannel, loadedDrawable =>
-                    {
-                        // Ensure the current channel hasn't changed by the time the load completes
-                        if (currentChannel.Value != loadedDrawable.Channel)
-                            return;
+                    LoadComponentAsync(
+                        drawableChannel,
+                        loadedDrawable =>
+                        {
+                            // Ensure the current channel hasn't changed by the time the load completes
+                            if (currentChannel.Value != loadedDrawable.Channel)
+                                return;
 
-                        // Ensure the cached reference hasn't been removed from leaving the channel
-                        if (!loadedChannels.ContainsKey(loadedDrawable.Channel))
-                            return;
+                            // Ensure the cached reference hasn't been removed from leaving the channel
+                            if (!loadedChannels.ContainsKey(loadedDrawable.Channel))
+                                return;
 
-                        currentChannelContainer.Clear(false);
-                        currentChannelContainer.Add(loadedDrawable);
-                        loading.Hide();
-                    });
+                            currentChannelContainer.Clear(false);
+                            currentChannelContainer.Add(loadedDrawable);
+                            loading.Hide();
+                        }
+                    );
                 }
             }
 
@@ -362,7 +378,8 @@ namespace osu.Game.Overlays
                 channelManager.MarkChannelAsRead(newChannel);
         }
 
-        protected virtual DrawableChannel CreateDrawableChannel(Channel newChannel) => new DrawableChannel(newChannel);
+        protected virtual DrawableChannel CreateDrawableChannel(Channel newChannel) =>
+            new DrawableChannel(newChannel);
 
         private void joinedChannelsChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
@@ -371,7 +388,9 @@ namespace osu.Game.Overlays
                 case NotifyCollectionChangedAction.Add:
                     Debug.Assert(args.NewItems != null);
 
-                    IEnumerable<Channel> newChannels = args.NewItems.OfType<Channel>().Where(isChatChannel);
+                    IEnumerable<Channel> newChannels = args
+                        .NewItems.OfType<Channel>()
+                        .Where(isChatChannel);
 
                     foreach (var channel in newChannels)
                         channelList.AddChannel(channel);
@@ -381,7 +400,9 @@ namespace osu.Game.Overlays
                 case NotifyCollectionChangedAction.Remove:
                     Debug.Assert(args.OldItems != null);
 
-                    IEnumerable<Channel> leftChannels = args.OldItems.OfType<Channel>().Where(isChatChannel);
+                    IEnumerable<Channel> leftChannels = args
+                        .OldItems.OfType<Channel>()
+                        .Where(isChatChannel);
 
                     foreach (var channel in leftChannels)
                     {
@@ -398,8 +419,10 @@ namespace osu.Game.Overlays
             }
         }
 
-        private void availableChannelsChanged(object? sender, NotifyCollectionChangedEventArgs args)
-            => channelListing.UpdateAvailableChannels(channelManager.AvailableChannels);
+        private void availableChannelsChanged(
+            object? sender,
+            NotifyCollectionChangedEventArgs args
+        ) => channelListing.UpdateAvailableChannels(channelManager.AvailableChannels);
 
         private void handleChatMessage(string message)
         {
@@ -421,7 +444,9 @@ namespace osu.Game.Overlays
 
             int currentIndex = overlayChannels.IndexOf(currentChannel.Value);
 
-            currentChannel.Value = overlayChannels[(currentIndex + direction + overlayChannels.Count) % overlayChannels.Count];
+            currentChannel.Value = overlayChannels[
+                (currentIndex + direction + overlayChannels.Count) % overlayChannels.Count
+            ];
 
             channelList.ScrollChannelIntoView(currentChannel.Value);
         }

@@ -21,11 +21,7 @@ namespace osu.Game.Beatmaps.Drawables
         {
             InternalChildren = new Drawable[]
             {
-                progressBar = new ProgressBar(false)
-                {
-                    Height = 0,
-                    Alpha = 0,
-                },
+                progressBar = new ProgressBar(false) { Height = 0, Alpha = 0 },
                 downloadTracker = new BeatmapDownloadTracker(beatmapSet),
             };
 
@@ -40,33 +36,36 @@ namespace osu.Game.Beatmaps.Drawables
             progressBar.BackgroundColour = Color4.Black.Opacity(0.7f);
             progressBar.Current.BindTarget = downloadTracker.Progress;
 
-            downloadTracker.State.BindValueChanged(state =>
-            {
-                switch (state.NewValue)
+            downloadTracker.State.BindValueChanged(
+                state =>
                 {
-                    case DownloadState.NotDownloaded:
-                        progressBar.Current.Value = 0;
-                        progressBar.FadeOut(500);
-                        break;
+                    switch (state.NewValue)
+                    {
+                        case DownloadState.NotDownloaded:
+                            progressBar.Current.Value = 0;
+                            progressBar.FadeOut(500);
+                            break;
 
-                    case DownloadState.Downloading:
-                        progressBar.FadeIn(400, Easing.OutQuint);
-                        progressBar.ResizeHeightTo(4, 400, Easing.OutQuint);
-                        break;
+                        case DownloadState.Downloading:
+                            progressBar.FadeIn(400, Easing.OutQuint);
+                            progressBar.ResizeHeightTo(4, 400, Easing.OutQuint);
+                            break;
 
-                    case DownloadState.Importing:
-                        progressBar.FadeIn(400, Easing.OutQuint);
-                        progressBar.ResizeHeightTo(4, 400, Easing.OutQuint);
+                        case DownloadState.Importing:
+                            progressBar.FadeIn(400, Easing.OutQuint);
+                            progressBar.ResizeHeightTo(4, 400, Easing.OutQuint);
 
-                        progressBar.Current.Value = 1;
-                        progressBar.FillColour = colours.Yellow;
-                        break;
+                            progressBar.Current.Value = 1;
+                            progressBar.FillColour = colours.Yellow;
+                            break;
 
-                    case DownloadState.LocallyAvailable:
-                        progressBar.FadeOut(500);
-                        break;
-                }
-            }, true);
+                        case DownloadState.LocallyAvailable:
+                            progressBar.FadeOut(500);
+                            break;
+                    }
+                },
+                true
+            );
         }
     }
 }

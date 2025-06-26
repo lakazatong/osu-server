@@ -27,18 +27,23 @@ namespace osu.Game.Rulesets.Catch.Difficulty
         public override int Version => 20250306;
 
         public CatchDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
-            : base(ruleset, beatmap)
-        {
-        }
+            : base(ruleset, beatmap) { }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(
+            IBeatmap beatmap,
+            Mod[] mods,
+            Skill[] skills,
+            double clockRate
+        )
         {
             if (beatmap.HitObjects.Count == 0)
                 return new CatchDifficultyAttributes { Mods = mods };
 
             CatchDifficultyAttributes attributes = new CatchDifficultyAttributes
             {
-                StarRating = Math.Sqrt(skills.OfType<Movement>().Single().DifficultyValue()) * difficulty_multiplier,
+                StarRating =
+                    Math.Sqrt(skills.OfType<Movement>().Single().DifficultyValue())
+                    * difficulty_multiplier,
                 Mods = mods,
                 MaxCombo = beatmap.GetMaxCombo(),
             };
@@ -46,7 +51,10 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             return attributes;
         }
 
-        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(
+            IBeatmap beatmap,
+            double clockRate
+        )
         {
             CatchHitObject? lastObject = null;
 
@@ -60,7 +68,16 @@ namespace osu.Game.Rulesets.Catch.Difficulty
                     continue;
 
                 if (lastObject != null)
-                    objects.Add(new CatchDifficultyHitObject(hitObject, lastObject, clockRate, halfCatcherWidth, objects, objects.Count));
+                    objects.Add(
+                        new CatchDifficultyHitObject(
+                            hitObject,
+                            lastObject,
+                            clockRate,
+                            halfCatcherWidth,
+                            objects,
+                            objects.Count
+                        )
+                    );
 
                 lastObject = hitObject;
             }
@@ -75,18 +92,16 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             // For circle sizes above 5.5, reduce the catcher width further to simulate imperfect gameplay.
             halfCatcherWidth *= 1 - (Math.Max(0, beatmap.Difficulty.CircleSize - 5.5f) * 0.0625f);
 
-            return new Skill[]
-            {
-                new Movement(mods, halfCatcherWidth, clockRate),
-            };
+            return new Skill[] { new Movement(mods, halfCatcherWidth, clockRate) };
         }
 
-        protected override Mod[] DifficultyAdjustmentMods => new Mod[]
-        {
-            new CatchModDoubleTime(),
-            new CatchModHalfTime(),
-            new CatchModHardRock(),
-            new CatchModEasy(),
-        };
+        protected override Mod[] DifficultyAdjustmentMods =>
+            new Mod[]
+            {
+                new CatchModDoubleTime(),
+                new CatchModHalfTime(),
+                new CatchModHardRock(),
+                new CatchModEasy(),
+            };
     }
 }

@@ -18,21 +18,23 @@ namespace osu.Game.Screens.Play.HUD.ArgonHealthDisplayParts
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "ArgonBarPathBackground");
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                "ArgonBarPathBackground"
+            );
         }
 
         protected override DrawNode CreateDrawNode() => new ArgonBarPathDrawNode(this);
 
         private class ArgonBarPathDrawNode : SpriteDrawNode
         {
-            protected new ArgonHealthDisplayBackground Source => (ArgonHealthDisplayBackground)base.Source;
+            protected new ArgonHealthDisplayBackground Source =>
+                (ArgonHealthDisplayBackground)base.Source;
 
             private IUniformBuffer<ArgonBarPathBackgroundParameters>? parametersBuffer;
 
             public ArgonBarPathDrawNode(ArgonHealthDisplayBackground source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private Vector2 size;
 
@@ -46,7 +48,8 @@ namespace osu.Game.Screens.Play.HUD.ArgonHealthDisplayParts
             {
                 base.BindUniformResources(shader, renderer);
 
-                parametersBuffer ??= renderer.CreateUniformBuffer<ArgonBarPathBackgroundParameters>();
+                parametersBuffer ??=
+                    renderer.CreateUniformBuffer<ArgonBarPathBackgroundParameters>();
                 parametersBuffer.Data = new ArgonBarPathBackgroundParameters { Size = size };
 
                 shader.BindUniformBlock("m_ArgonBarPathBackgroundParameters", parametersBuffer);

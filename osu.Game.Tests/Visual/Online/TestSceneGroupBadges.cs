@@ -24,46 +24,102 @@ namespace osu.Game.Tests.Visual.Online
                 {
                     Groups = new[]
                     {
-                        new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" },
-                    }
+                        new APIUserGroup
+                        {
+                            Colour = "#EB47D0",
+                            ShortName = "DEV",
+                            Name = "Developers",
+                        },
+                    },
                 },
                 new APIUser
                 {
                     Groups = new[]
                     {
-                        new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" },
-                        new APIUserGroup { Colour = "#A347EB", ShortName = "BN", Name = "Beatmap Nominators", Playmodes = new[] { "osu", "taiko" } }
-                    }
+                        new APIUserGroup
+                        {
+                            Colour = "#EB47D0",
+                            ShortName = "DEV",
+                            Name = "Developers",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#A347EB",
+                            ShortName = "BN",
+                            Name = "Beatmap Nominators",
+                            Playmodes = new[] { "osu", "taiko" },
+                        },
+                    },
                 },
                 new APIUser
                 {
                     Groups = new[]
                     {
-                        new APIUserGroup { Colour = "#0066FF", ShortName = "PPY", Name = "peppy" },
-                        new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" },
-                        new APIUserGroup { Colour = "#A347EB", ShortName = "BN", Name = "Beatmap Nominators", Playmodes = new[] { "osu", "taiko" } }
-                    }
+                        new APIUserGroup
+                        {
+                            Colour = "#0066FF",
+                            ShortName = "PPY",
+                            Name = "peppy",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#EB47D0",
+                            ShortName = "DEV",
+                            Name = "Developers",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#A347EB",
+                            ShortName = "BN",
+                            Name = "Beatmap Nominators",
+                            Playmodes = new[] { "osu", "taiko" },
+                        },
+                    },
                 },
                 new APIUser
                 {
                     Groups = new[]
                     {
-                        new APIUserGroup { Colour = "#0066FF", ShortName = "PPY", Name = "peppy" },
-                        new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" },
-                        new APIUserGroup { Colour = "#999999", ShortName = "ALM", Name = "osu! Alumni" },
-                        new APIUserGroup { Colour = "#A347EB", ShortName = "BN", Name = "Beatmap Nominators", Playmodes = new[] { "osu", "taiko" } },
-                        new APIUserGroup { Colour = "#A347EB", ShortName = "BN", Name = "Beatmap Nominators (Probationary)", Playmodes = new[] { "osu", "taiko" }, IsProbationary = true }
-                    }
-                }
+                        new APIUserGroup
+                        {
+                            Colour = "#0066FF",
+                            ShortName = "PPY",
+                            Name = "peppy",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#EB47D0",
+                            ShortName = "DEV",
+                            Name = "Developers",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#999999",
+                            ShortName = "ALM",
+                            Name = "osu! Alumni",
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#A347EB",
+                            ShortName = "BN",
+                            Name = "Beatmap Nominators",
+                            Playmodes = new[] { "osu", "taiko" },
+                        },
+                        new APIUserGroup
+                        {
+                            Colour = "#A347EB",
+                            ShortName = "BN",
+                            Name = "Beatmap Nominators (Probationary)",
+                            Playmodes = new[] { "osu", "taiko" },
+                            IsProbationary = true,
+                        },
+                    },
+                },
             };
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.DarkGray
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.DarkGray },
                 new FillFlowContainer
                 {
                     Anchor = Anchor.Centre,
@@ -82,10 +138,13 @@ namespace osu.Game.Tests.Visual.Online
                             AutoSizeAxes = Axes.Y,
                             Direction = FillDirection.Vertical,
                             Spacing = new Vector2(5),
-                            ChildrenEnumerable = groups.Select(g => new GroupBadgeFlow { User = { Value = g } })
+                            ChildrenEnumerable = groups.Select(g => new GroupBadgeFlow
+                            {
+                                User = { Value = g },
+                            }),
                         },
-                    }
-                }
+                    },
+                },
             };
         }
     }

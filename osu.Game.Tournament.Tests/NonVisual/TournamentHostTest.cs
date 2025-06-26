@@ -11,20 +11,34 @@ namespace osu.Game.Tournament.Tests.NonVisual
 {
     public abstract class TournamentHostTest
     {
-        public static TournamentGameBase LoadTournament(GameHost host, TournamentGameBase? tournament = null)
+        public static TournamentGameBase LoadTournament(
+            GameHost host,
+            TournamentGameBase? tournament = null
+        )
         {
             tournament ??= new TournamentGameBase();
             Task.Factory.StartNew(() => host.Run(tournament), TaskCreationOptions.LongRunning)
-                .ContinueWith(t => Assert.Fail($"Host threw exception {t.Exception}"), TaskContinuationOptions.OnlyOnFaulted);
-            WaitForOrAssert(() => tournament.IsLoaded, @"osu! failed to start in a reasonable amount of time");
+                .ContinueWith(
+                    t => Assert.Fail($"Host threw exception {t.Exception}"),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
+            WaitForOrAssert(
+                () => tournament.IsLoaded,
+                @"osu! failed to start in a reasonable amount of time"
+            );
             return tournament;
         }
 
-        public static void WaitForOrAssert(Func<bool> result, string failureMessage, int timeout = 30000)
+        public static void WaitForOrAssert(
+            Func<bool> result,
+            string failureMessage,
+            int timeout = 30000
+        )
         {
             Task task = Task.Run(() =>
             {
-                while (!result()) Thread.Sleep(200);
+                while (!result())
+                    Thread.Sleep(200);
             });
 
             Assert.IsTrue(task.Wait(timeout), failureMessage);

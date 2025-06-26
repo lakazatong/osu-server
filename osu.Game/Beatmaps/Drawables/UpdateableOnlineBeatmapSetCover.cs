@@ -11,7 +11,8 @@ using osu.Game.Graphics;
 
 namespace osu.Game.Beatmaps.Drawables
 {
-    public partial class UpdateableOnlineBeatmapSetCover : ModelBackedDrawable<IBeatmapSetOnlineInfo>
+    public partial class UpdateableOnlineBeatmapSetCover
+        : ModelBackedDrawable<IBeatmapSetOnlineInfo>
     {
         private readonly BeatmapSetCoverType coverType;
 
@@ -33,22 +34,25 @@ namespace osu.Game.Beatmaps.Drawables
 
         protected override double TransformDuration => 400;
 
-        public UpdateableOnlineBeatmapSetCover(BeatmapSetCoverType coverType = BeatmapSetCoverType.Cover, double timeBeforeLoad = 500, double timeBeforeUnload = 1000)
+        public UpdateableOnlineBeatmapSetCover(
+            BeatmapSetCoverType coverType = BeatmapSetCoverType.Cover,
+            double timeBeforeLoad = 500,
+            double timeBeforeUnload = 1000
+        )
         {
             LoadDelay = timeBeforeLoad;
             this.timeBeforeUnload = timeBeforeUnload;
 
             this.coverType = coverType;
 
-            InternalChild = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = OsuColour.Gray(0.2f),
-            };
+            InternalChild = new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) };
         }
 
-        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad)
-            => new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, timeBeforeUnload)
+        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(
+            Func<Drawable> createContentFunc,
+            double timeBeforeLoad
+        ) =>
+            new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, timeBeforeUnload)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,

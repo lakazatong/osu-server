@@ -9,18 +9,13 @@ using osu.Game.Graphics.UserInterface;
 namespace osu.Game.Overlays.Settings
 {
     public partial class SettingsSlider<T> : SettingsSlider<T, RoundedSliderBar<T>>
-        where T : struct, INumber<T>, IMinMaxValue<T>
-    {
-    }
+        where T : struct, INumber<T>, IMinMaxValue<T> { }
 
     public partial class SettingsSlider<TValue, TSlider> : SettingsItem<TValue>
         where TValue : struct, INumber<TValue>, IMinMaxValue<TValue>
         where TSlider : RoundedSliderBar<TValue>, new()
     {
-        protected override Drawable CreateControl() => new TSlider
-        {
-            RelativeSizeAxes = Axes.X
-        };
+        protected override Drawable CreateControl() => new TSlider { RelativeSizeAxes = Axes.X };
 
         /// <summary>
         /// When set, value changes based on user input are only transferred to any bound control's Current on commit.

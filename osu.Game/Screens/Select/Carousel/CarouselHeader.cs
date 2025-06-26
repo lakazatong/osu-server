@@ -23,11 +23,14 @@ namespace osu.Game.Screens.Select.Carousel
     {
         public Container BorderContainer;
 
-        public readonly Bindable<CarouselItemState> State = new Bindable<CarouselItemState>(CarouselItemState.NotSelected);
+        public readonly Bindable<CarouselItemState> State = new Bindable<CarouselItemState>(
+            CarouselItemState.NotSelected
+        );
 
         private readonly HoverLayer hoverLayer;
 
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         private const float corner_radius = 10;
         private const float border_thickness = 2.5f;
@@ -48,7 +51,7 @@ namespace osu.Game.Screens.Select.Carousel
                     Content,
                     hoverLayer = new HoverLayer(),
                     new HeaderSounds(),
-                }
+                },
             };
         }
 
@@ -158,7 +161,8 @@ namespace osu.Game.Screens.Select.Carousel
 
             public override void PlayHoverSample()
             {
-                if (sampleHover == null) return;
+                if (sampleHover == null)
+                    return;
 
                 sampleHover.Frequency.Value = 0.99 + RNG.NextDouble(0.02);
                 sampleHover.Play();

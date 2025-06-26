@@ -31,36 +31,47 @@ namespace osu.Game.Tests.Visual.UserInterface
         private void load(GameHost host)
         {
             Dependencies.Cache(new RealmRulesetStore(Realm));
-            Dependencies.Cache(beatmapManager = new BeatmapManager(LocalStorage, Realm, null, Audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                beatmapManager = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    Audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
             Dependencies.Cache(Realm);
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = new Container
+        public void Setup() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(300, 500),
-                Child = new PlaylistOverlay
+                Child = new Container
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    State = { Value = Visibility.Visible }
+                    Size = new Vector2(300, 500),
+                    Child = new PlaylistOverlay
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.X,
+                        State = { Value = Visibility.Visible },
+                    },
+                };
+
+                for (int i = 0; i < item_count; i++)
+                {
+                    beatmapManager.Import(TestResources.CreateTestBeatmapSetInfo());
                 }
-            };
 
-            for (int i = 0; i < item_count; i++)
-            {
-                beatmapManager.Import(TestResources.CreateTestBeatmapSetInfo());
-            }
+                beatmapSets.First().ToLive(Realm);
 
-            beatmapSets.First().ToLive(Realm);
-
-            // Ensure all the initial imports are present before running any tests.
-            Realm.Run(r => r.Refresh());
-        });
+                // Ensure all the initial imports are present before running any tests.
+                Realm.Run(r => r.Refresh());
+            });
     }
 }

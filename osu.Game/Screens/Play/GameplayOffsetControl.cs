@@ -72,13 +72,15 @@ namespace osu.Game.Screens.Play
                     Children = new Drawable[]
                     {
                         offsetControl = new BeatmapOffsetControl(),
-                        text = new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(weight: FontWeight.SemiBold))
+                        text = new OsuTextFlowContainer(cp =>
+                            cp.Font = OsuFont.Default.With(weight: FontWeight.SemiBold)
+                        )
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                             TextAnchor = Anchor.TopCentre,
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
@@ -94,14 +96,12 @@ namespace osu.Game.Screens.Play
 
         protected override void PopIn()
         {
-            this.FadeIn(500, Easing.OutQuint)
-                .MoveToX(0, 500, Easing.OutQuint);
+            this.FadeIn(500, Easing.OutQuint).MoveToX(0, 500, Easing.OutQuint);
         }
 
         protected override void PopOut()
         {
-            this.FadeOut(500, Easing.InQuint)
-                .MoveToX(100, 500, Easing.InQuint);
+            this.FadeOut(500, Easing.InQuint).MoveToX(100, 500, Easing.InQuint);
         }
     }
 }

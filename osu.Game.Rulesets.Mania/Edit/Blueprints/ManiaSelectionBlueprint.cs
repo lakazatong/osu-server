@@ -18,7 +18,8 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         [Resolved]
         private Playfield playfield { get; set; } = null!;
 
-        protected ScrollingHitObjectContainer HitObjectContainer => ((ManiaPlayfield)playfield).GetColumn(HitObject.Column).HitObjectContainer;
+        protected ScrollingHitObjectContainer HitObjectContainer =>
+            ((ManiaPlayfield)playfield).GetColumn(HitObject.Column).HitObjectContainer;
 
         protected ManiaSelectionBlueprint(T hitObject)
             : base(hitObject)
@@ -26,7 +27,8 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
             RelativeSizeAxes = Axes.None;
         }
 
-        private readonly IBindable<ScrollingDirection> directionBindable = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> directionBindable =
+            new Bindable<ScrollingDirection>();
 
         [BackgroundDependencyLoader]
         private void load(IScrollingInfo scrollingInfo)
@@ -46,7 +48,10 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         {
             base.Update();
 
-            Position = Parent!.ToLocalSpace(HitObjectContainer.ScreenSpacePositionAtTime(HitObject.StartTime)) - AnchorPosition;
+            Position =
+                Parent!.ToLocalSpace(
+                    HitObjectContainer.ScreenSpacePositionAtTime(HitObject.StartTime)
+                ) - AnchorPosition;
             Width = HitObjectContainer.DrawWidth;
         }
     }

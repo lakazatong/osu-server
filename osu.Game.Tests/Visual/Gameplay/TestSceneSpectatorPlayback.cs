@@ -51,105 +51,127 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Setup containers", () =>
-            {
-                recordingScore = new Score
+            AddStep(
+                "Setup containers",
+                () =>
                 {
-                    ScoreInfo =
+                    recordingScore = new Score
                     {
-                        BeatmapInfo = new BeatmapInfo(),
-                        Ruleset = new OsuRuleset().RulesetInfo,
-                    }
-                };
-
-                playbackReplay = new Replay();
-                manualClock = new ManualClock();
-
-                Child = new DependencyProvidingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new[]
-                    {
-                        (typeof(SpectatorClient), (object)(spectatorClient = new TestSpectatorClient())),
-                    },
-                    Children = new Drawable[]
-                    {
-                        spectatorClient,
-                        new GridContainer
+                        ScoreInfo =
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Content = new[]
-                            {
-                                new Drawable[]
-                                {
-                                    recordingManager = new TestRulesetInputManager(TestCustomisableModRuleset.CreateTestRulesetInfo(), 0, SimultaneousBindingMode.Unique)
-                                    {
-                                        Recorder = recorder = new TestReplayRecorder(recordingScore)
-                                        {
-                                            ScreenSpaceToGamefield = pos => recordingManager.ToLocalSpace(pos),
-                                        },
-                                        Child = new Container
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Children = new Drawable[]
-                                            {
-                                                new Box
-                                                {
-                                                    Colour = Color4.Brown,
-                                                    RelativeSizeAxes = Axes.Both,
-                                                },
-                                                new OsuSpriteText
-                                                {
-                                                    Text = "Sending",
-                                                    Scale = new Vector2(3),
-                                                    Anchor = Anchor.Centre,
-                                                    Origin = Anchor.Centre,
-                                                },
-                                                new TestInputConsumer()
-                                            }
-                                        },
-                                    }
-                                },
-                                new Drawable[]
-                                {
-                                    playbackManager = new TestRulesetInputManager(TestCustomisableModRuleset.CreateTestRulesetInfo(), 0, SimultaneousBindingMode.Unique)
-                                    {
-                                        Clock = new FramedClock(manualClock),
-                                        ReplayInputHandler = replayHandler = new TestFramedReplayInputHandler(playbackReplay)
-                                        {
-                                            GamefieldToScreenSpace = pos => playbackManager.ToScreenSpace(pos),
-                                        },
-                                        Child = new Container
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Children = new Drawable[]
-                                            {
-                                                new Box
-                                                {
-                                                    Colour = Color4.DarkBlue,
-                                                    RelativeSizeAxes = Axes.Both,
-                                                },
-                                                new OsuSpriteText
-                                                {
-                                                    Text = "Receiving",
-                                                    Scale = new Vector2(3),
-                                                    Anchor = Anchor.Centre,
-                                                    Origin = Anchor.Centre,
-                                                },
-                                                new TestInputConsumer()
-                                            }
-                                        },
-                                    }
-                                }
-                            }
+                            BeatmapInfo = new BeatmapInfo(),
+                            Ruleset = new OsuRuleset().RulesetInfo,
                         },
-                        latencyDisplay = new OsuSpriteText()
-                    }
-                };
+                    };
 
-                spectatorClient.BeginPlaying(0, TestGameplayState.Create(new OsuRuleset()), recordingScore);
-                spectatorClient.OnNewFrames += onNewFrames;
-            });
+                    playbackReplay = new Replay();
+                    manualClock = new ManualClock();
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new[]
+                        {
+                            (
+                                typeof(SpectatorClient),
+                                (object)(spectatorClient = new TestSpectatorClient())
+                            ),
+                        },
+                        Children = new Drawable[]
+                        {
+                            spectatorClient,
+                            new GridContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Content = new[]
+                                {
+                                    new Drawable[]
+                                    {
+                                        recordingManager = new TestRulesetInputManager(
+                                            TestCustomisableModRuleset.CreateTestRulesetInfo(),
+                                            0,
+                                            SimultaneousBindingMode.Unique
+                                        )
+                                        {
+                                            Recorder = recorder =
+                                                new TestReplayRecorder(recordingScore)
+                                                {
+                                                    ScreenSpaceToGamefield = pos =>
+                                                        recordingManager.ToLocalSpace(pos),
+                                                },
+                                            Child = new Container
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Children = new Drawable[]
+                                                {
+                                                    new Box
+                                                    {
+                                                        Colour = Color4.Brown,
+                                                        RelativeSizeAxes = Axes.Both,
+                                                    },
+                                                    new OsuSpriteText
+                                                    {
+                                                        Text = "Sending",
+                                                        Scale = new Vector2(3),
+                                                        Anchor = Anchor.Centre,
+                                                        Origin = Anchor.Centre,
+                                                    },
+                                                    new TestInputConsumer(),
+                                                },
+                                            },
+                                        },
+                                    },
+                                    new Drawable[]
+                                    {
+                                        playbackManager = new TestRulesetInputManager(
+                                            TestCustomisableModRuleset.CreateTestRulesetInfo(),
+                                            0,
+                                            SimultaneousBindingMode.Unique
+                                        )
+                                        {
+                                            Clock = new FramedClock(manualClock),
+                                            ReplayInputHandler = replayHandler =
+                                                new TestFramedReplayInputHandler(playbackReplay)
+                                                {
+                                                    GamefieldToScreenSpace = pos =>
+                                                        playbackManager.ToScreenSpace(pos),
+                                                },
+                                            Child = new Container
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Children = new Drawable[]
+                                                {
+                                                    new Box
+                                                    {
+                                                        Colour = Color4.DarkBlue,
+                                                        RelativeSizeAxes = Axes.Both,
+                                                    },
+                                                    new OsuSpriteText
+                                                    {
+                                                        Text = "Receiving",
+                                                        Scale = new Vector2(3),
+                                                        Anchor = Anchor.Centre,
+                                                        Origin = Anchor.Centre,
+                                                    },
+                                                    new TestInputConsumer(),
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            latencyDisplay = new OsuSpriteText(),
+                        },
+                    };
+
+                    spectatorClient.BeginPlaying(
+                        0,
+                        TestGameplayState.Create(new OsuRuleset()),
+                        recordingScore
+                    );
+                    spectatorClient.OnNewFrames += onNewFrames;
+                }
+            );
         }
 
         [Test]
@@ -157,7 +179,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddUntilStep("received frames", () => playbackReplay.Frames.Count > 50);
             AddStep("stop sending frames", () => recorder.Expire());
-            AddUntilStep("wait for all frames received", () => playbackReplay.Frames.Count == recorder.SentFrames.Count);
+            AddUntilStep(
+                "wait for all frames received",
+                () => playbackReplay.Frames.Count == recorder.SentFrames.Count
+            );
         }
 
         [Test]
@@ -168,29 +193,53 @@ namespace osu.Game.Tests.Visual.Gameplay
             int framesReceivedSoFar = 0;
             int frameSendAttemptsSoFar = 0;
 
-            AddStep("start failing sends", () =>
-            {
-                spectatorClient.ShouldFailSendingFrames = true;
-                frameSendAttemptsSoFar = spectatorClient.FrameSendAttempts;
-            });
+            AddStep(
+                "start failing sends",
+                () =>
+                {
+                    spectatorClient.ShouldFailSendingFrames = true;
+                    frameSendAttemptsSoFar = spectatorClient.FrameSendAttempts;
+                }
+            );
 
-            AddUntilStep("wait for next send attempt", () =>
-            {
-                framesReceivedSoFar = playbackReplay.Frames.Count;
-                return spectatorClient.FrameSendAttempts > frameSendAttemptsSoFar + 1;
-            });
+            AddUntilStep(
+                "wait for next send attempt",
+                () =>
+                {
+                    framesReceivedSoFar = playbackReplay.Frames.Count;
+                    return spectatorClient.FrameSendAttempts > frameSendAttemptsSoFar + 1;
+                }
+            );
 
-            AddUntilStep("wait for more send attempts", () => spectatorClient.FrameSendAttempts > frameSendAttemptsSoFar + 10);
-            AddAssert("frames did not increase", () => framesReceivedSoFar == playbackReplay.Frames.Count);
+            AddUntilStep(
+                "wait for more send attempts",
+                () => spectatorClient.FrameSendAttempts > frameSendAttemptsSoFar + 10
+            );
+            AddAssert(
+                "frames did not increase",
+                () => framesReceivedSoFar == playbackReplay.Frames.Count
+            );
 
             AddStep("stop failing sends", () => spectatorClient.ShouldFailSendingFrames = false);
 
-            AddUntilStep("wait for next frames", () => framesReceivedSoFar < playbackReplay.Frames.Count);
+            AddUntilStep(
+                "wait for next frames",
+                () => framesReceivedSoFar < playbackReplay.Frames.Count
+            );
 
             AddStep("stop sending frames", () => recorder.Expire());
 
-            AddUntilStep("wait for all frames received", () => playbackReplay.Frames.Count == recorder.SentFrames.Count);
-            AddAssert("ensure frames were received in the correct sequence", () => playbackReplay.Frames.Select(f => f.Time).SequenceEqual(recorder.SentFrames.Select(f => f.Time)));
+            AddUntilStep(
+                "wait for all frames received",
+                () => playbackReplay.Frames.Count == recorder.SentFrames.Count
+            );
+            AddAssert(
+                "ensure frames were received in the correct sequence",
+                () =>
+                    playbackReplay
+                        .Frames.Select(f => f.Time)
+                        .SequenceEqual(recorder.SentFrames.Select(f => f.Time))
+            );
         }
 
         private void onNewFrames(int userId, FrameDataBundle frames)
@@ -202,7 +251,9 @@ namespace osu.Game.Tests.Visual.Gameplay
                 playbackReplay.Frames.Add(frame);
             }
 
-            Logger.Log($"Received {frames.Frames.Count} new frames (total {playbackReplay.Frames.Count} of {recorder.SentFrames.Count})");
+            Logger.Log(
+                $"Received {frames.Frames.Count} new frames (total {playbackReplay.Frames.Count} of {recorder.SentFrames.Count})"
+            );
         }
 
         private double latency = SpectatorClient.TIME_BETWEEN_SENDS;
@@ -211,7 +262,8 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.Update();
 
-            if (latencyDisplay == null) return;
+            if (latencyDisplay == null)
+                return;
 
             // propagate initial time value
             if (manualClock.CurrentTime == 0)
@@ -246,20 +298,29 @@ namespace osu.Game.Tests.Visual.Gameplay
         public class TestFramedReplayInputHandler : FramedReplayInputHandler<TestReplayFrame>
         {
             public TestFramedReplayInputHandler(Replay replay)
-                : base(replay)
-            {
-            }
+                : base(replay) { }
 
             protected override void CollectReplayInputs(List<IInput> inputs)
             {
-                inputs.Add(new MousePositionAbsoluteInput { Position = GamefieldToScreenSpace(CurrentFrame?.Position ?? Vector2.Zero) });
-                inputs.Add(new ReplayState<TestAction> { PressedActions = CurrentFrame?.Actions ?? new List<TestAction>() });
+                inputs.Add(
+                    new MousePositionAbsoluteInput
+                    {
+                        Position = GamefieldToScreenSpace(CurrentFrame?.Position ?? Vector2.Zero),
+                    }
+                );
+                inputs.Add(
+                    new ReplayState<TestAction>
+                    {
+                        PressedActions = CurrentFrame?.Actions ?? new List<TestAction>(),
+                    }
+                );
             }
         }
 
         public partial class TestInputConsumer : CompositeDrawable, IKeyBindingHandler<TestAction>
         {
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Parent!.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                Parent!.ReceivePositionalInputAt(screenSpacePos);
 
             private readonly Box box;
 
@@ -271,11 +332,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                 InternalChildren = new Drawable[]
                 {
-                    box = new Box
-                    {
-                        Colour = Color4.Black,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    box = new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -302,20 +359,23 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public partial class TestRulesetInputManager : RulesetInputManager<TestAction>
         {
-            public TestRulesetInputManager(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                : base(ruleset, variant, unique)
-            {
-            }
+            public TestRulesetInputManager(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            )
+                : base(ruleset, variant, unique) { }
 
-            protected override KeyBindingContainer<TestAction> CreateKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                => new TestKeyBindingContainer();
+            protected override KeyBindingContainer<TestAction> CreateKeyBindingContainer(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            ) => new TestKeyBindingContainer();
 
             internal partial class TestKeyBindingContainer : KeyBindingContainer<TestAction>
             {
-                public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-                {
-                    new KeyBinding(InputKey.MouseLeft, TestAction.Down),
-                };
+                public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+                    new[] { new KeyBinding(InputKey.MouseLeft, TestAction.Down) };
             }
         }
 
@@ -332,11 +392,13 @@ namespace osu.Game.Tests.Visual.Gameplay
                 Actions.AddRange(actions);
             }
 
-            public TestReplayFrame()
-            {
-            }
+            public TestReplayFrame() { }
 
-            public void FromLegacy(LegacyReplayFrame currentFrame, IBeatmap beatmap, ReplayFrame lastFrame = null)
+            public void FromLegacy(
+                LegacyReplayFrame currentFrame,
+                IBeatmap beatmap,
+                ReplayFrame lastFrame = null
+            )
             {
                 Position = currentFrame.Position;
                 Time = currentFrame.Time;
@@ -354,8 +416,11 @@ namespace osu.Game.Tests.Visual.Gameplay
                 return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
             }
 
-            public override bool IsEquivalentTo(ReplayFrame other)
-                => other is TestReplayFrame testFrame && Time == testFrame.Time && Position == testFrame.Position && Actions.SequenceEqual(testFrame.Actions);
+            public override bool IsEquivalentTo(ReplayFrame other) =>
+                other is TestReplayFrame testFrame
+                && Time == testFrame.Time
+                && Position == testFrame.Position
+                && Actions.SequenceEqual(testFrame.Actions);
         }
 
         public enum TestAction
@@ -368,13 +433,19 @@ namespace osu.Game.Tests.Visual.Gameplay
             public List<ReplayFrame> SentFrames = new List<ReplayFrame>();
 
             public TestReplayRecorder(Score score)
-                : base(score)
-            {
-            }
+                : base(score) { }
 
-            protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<TestAction> actions, ReplayFrame previousFrame)
+            protected override ReplayFrame HandleFrame(
+                Vector2 mousePosition,
+                List<TestAction> actions,
+                ReplayFrame previousFrame
+            )
             {
-                var testReplayFrame = new TestReplayFrame(Time.Current, mousePosition, actions.ToArray());
+                var testReplayFrame = new TestReplayFrame(
+                    Time.Current,
+                    mousePosition,
+                    actions.ToArray()
+                );
                 SentFrames.Add(testReplayFrame);
                 return testReplayFrame;
             }

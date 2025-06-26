@@ -11,12 +11,14 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         public TestSceneGhostIcon()
         {
-            Add(new GhostIcon
-            {
-                Size = new Vector2(64),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            Add(
+                new GhostIcon
+                {
+                    Size = new Vector2(64),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
     }
 }

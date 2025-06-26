@@ -38,18 +38,24 @@ namespace osu.Game.Skinning
             return limitTextureUploadSize(textureUpload);
         }
 
-        public async Task<TextureUpload> GetAsync(string name, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<TextureUpload> GetAsync(
+            string name,
+            CancellationToken cancellationToken = new CancellationToken()
+        )
         {
             // NRT not enabled on framework side classes (IResourceStore / TextureLoaderStore), welp.
             if (textureStore == null)
                 return null!;
 
-            var textureUpload = await textureStore.GetAsync(name, cancellationToken).ConfigureAwait(false);
+            var textureUpload = await textureStore
+                .GetAsync(name, cancellationToken)
+                .ConfigureAwait(false);
 
             if (textureUpload == null)
                 return null!;
 
-            return await Task.Run(() => limitTextureUploadSize(textureUpload), cancellationToken).ConfigureAwait(false);
+            return await Task.Run(() => limitTextureUploadSize(textureUpload), cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private TextureUpload limitTextureUploadSize(TextureUpload textureUpload)
@@ -59,17 +65,28 @@ namespace osu.Game.Skinning
             // To work around this, let's look out for any stupid images and shrink them down into a usable size.
             const int max_supported_texture_size = 8192;
 
-            if (textureUpload.Height > max_supported_texture_size || textureUpload.Width > max_supported_texture_size)
+            if (
+                textureUpload.Height > max_supported_texture_size
+                || textureUpload.Width > max_supported_texture_size
+            )
             {
-                var image = Image.LoadPixelData(textureUpload.Data, textureUpload.Width, textureUpload.Height);
+                var image = Image.LoadPixelData(
+                    textureUpload.Data,
+                    textureUpload.Width,
+                    textureUpload.Height
+                );
 
                 // The original texture upload will no longer be returned or used.
                 textureUpload.Dispose();
 
-                image.Mutate(i => i.Resize(new Size(
-                    Math.Min(textureUpload.Width, max_supported_texture_size),
-                    Math.Min(textureUpload.Height, max_supported_texture_size)
-                )));
+                image.Mutate(i =>
+                    i.Resize(
+                        new Size(
+                            Math.Min(textureUpload.Width, max_supported_texture_size),
+                            Math.Min(textureUpload.Height, max_supported_texture_size)
+                        )
+                    )
+                );
 
                 return new TextureUpload(image);
             }
@@ -79,6 +96,7 @@ namespace osu.Game.Skinning
 
         public Stream? GetStream(string name) => textureStore?.GetStream(name);
 
-        public IEnumerable<string> GetAvailableResources() => textureStore?.GetAvailableResources() ?? Array.Empty<string>();
+        public IEnumerable<string> GetAvailableResources() =>
+            textureStore?.GetAvailableResources() ?? Array.Empty<string>();
     }
 }

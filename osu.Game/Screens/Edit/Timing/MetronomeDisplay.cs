@@ -155,14 +155,17 @@ namespace osu.Game.Screens.Edit.Timing
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Colour1, overlayColourProvider.Colour0),
+                                    Colour = ColourInfo.GradientVertical(
+                                        overlayColourProvider.Colour1,
+                                        overlayColourProvider.Colour0
+                                    ),
                                     RelativeSizeAxes = Axes.Y,
                                     Width = 1,
-                                    Height = 0.9f
+                                    Height = 0.9f,
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
                 new Container
                 {
@@ -180,7 +183,7 @@ namespace osu.Game.Screens.Edit.Timing
                             Origin = Anchor.Centre,
                             Colour = overlayColourProvider.Background1,
                             Size = new Vector2(8),
-                        }
+                        },
                     },
                 },
                 new Circle
@@ -190,7 +193,7 @@ namespace osu.Game.Screens.Edit.Timing
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.Centre,
                     Colour = overlayColourProvider.Colour0,
-                    Size = new Vector2(8)
+                    Size = new Vector2(8),
                 },
                 new Container
                 {
@@ -209,9 +212,9 @@ namespace osu.Game.Screens.Edit.Timing
                             Size = triangleSize,
                             Colour = overlayColourProvider.Background2,
                             EdgeSmoothness = new Vector2(1),
-                            Alpha = 0.8f
+                            Alpha = 0.8f,
                         },
-                    }
+                    },
                 },
                 bpmText = new OsuTextFlowContainer(st =>
                 {
@@ -281,7 +284,10 @@ namespace osu.Game.Screens.Edit.Timing
             if (breakPoint != null)
             {
                 bpmText.Text = text.Substring(0, breakPoint.Value);
-                bpmText.AddText(text.Substring(breakPoint.Value), cp => cp.Alpha = reachedFinalNumber ? 0.5f : 0.2f);
+                bpmText.AddText(
+                    text.Substring(breakPoint.Value),
+                    cp => cp.Alpha = reachedFinalNumber ? 0.5f : 0.2f
+                );
             }
             else
             {
@@ -298,7 +304,9 @@ namespace osu.Game.Screens.Edit.Timing
 
             metronomeClock.Rate = IsBeatSyncedWithTrack ? BeatSyncSource.Clock.Rate : 1;
 
-            timingPoint = BeatSyncSource.ControlPoints.TimingPointAt(BeatSyncSource.Clock.CurrentTime);
+            timingPoint = BeatSyncSource.ControlPoints.TimingPointAt(
+                BeatSyncSource.Clock.CurrentTime
+            );
 
             Divisor = metronomeTick.Divisor = computeSpedUpDivisor();
 
@@ -309,9 +317,17 @@ namespace osu.Game.Screens.Edit.Timing
 
                 EarlyActivationMilliseconds = timingPoint.BeatLength / 2;
 
-                float bpmRatio = (float)Interpolation.ApplyEasing(Easing.OutQuad, Math.Clamp((effectiveBpm - 30) / 480, 0, 1));
+                float bpmRatio = (float)
+                    Interpolation.ApplyEasing(
+                        Easing.OutQuad,
+                        Math.Clamp((effectiveBpm - 30) / 480, 0, 1)
+                    );
 
-                weight.MoveToY((float)Interpolation.Lerp(0.1f, 0.83f, bpmRatio), 600, Easing.OutQuint);
+                weight.MoveToY(
+                    (float)Interpolation.Lerp(0.1f, 0.83f, bpmRatio),
+                    600,
+                    Easing.OutQuint
+                );
 
                 this.TransformBindableTo(interpolatedBpm, effectiveBpm, 300, Easing.OutExpo);
             }
@@ -342,7 +358,12 @@ namespace osu.Game.Screens.Edit.Timing
             }
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
@@ -407,14 +428,22 @@ namespace osu.Game.Screens.Edit.Timing
                 sampleTickDownbeat = audio.Samples.Get(@"UI/metronome-tick-downbeat");
             }
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
                 if (!IsBeatSyncedWithTrack || !EnableClicking)
                     return;
 
-                var channel = beatIndex % timingPoint.TimeSignature.Numerator == 0 ? sampleTickDownbeat?.GetChannel() : sampleTick?.GetChannel();
+                var channel =
+                    beatIndex % timingPoint.TimeSignature.Numerator == 0
+                        ? sampleTickDownbeat?.GetChannel()
+                        : sampleTick?.GetChannel();
 
                 if (channel == null)
                     return;

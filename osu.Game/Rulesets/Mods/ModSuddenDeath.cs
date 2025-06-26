@@ -22,10 +22,12 @@ namespace osu.Game.Rulesets.Mods
         public override bool Ranked => true;
         public override bool ValidForFreestyleAsRequiredMod => true;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(ModPerfect)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(ModPerfect)).ToArray();
 
-        protected override bool FailCondition(HealthProcessor healthProcessor, JudgementResult result)
-            => result.Type.AffectsCombo()
-               && !result.IsHit;
+        protected override bool FailCondition(
+            HealthProcessor healthProcessor,
+            JudgementResult result
+        ) => result.Type.AffectsCombo() && !result.IsHit;
     }
 }

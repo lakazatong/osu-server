@@ -23,7 +23,11 @@ namespace osu.Game.Screens.Edit
     /// <summary>
     /// A decoupled clock which adds editor-specific functionality, such as snapping to a user-defined beat divisor.
     /// </summary>
-    public partial class EditorClock : CompositeComponent, IFrameBasedClock, IAdjustableClock, ISourceChangeableClock
+    public partial class EditorClock
+        : CompositeComponent,
+            IFrameBasedClock,
+            IAdjustableClock,
+            ISourceChangeableClock
     {
         [CanBeNull]
         public event Action TrackChanged;
@@ -84,7 +88,9 @@ namespace osu.Game.Screens.Edit
 
             // Depending on beatSnapLength, we may snap to a beat that is beyond timingPoint's end time, but we want to instead snap to
             // the next timing point's start time
-            var nextTimingPoint = ControlPointInfo.TimingPoints.FirstOrDefault(t => t.Time > timingPoint.Time);
+            var nextTimingPoint = ControlPointInfo.TimingPoints.FirstOrDefault(t =>
+                t.Time > timingPoint.Time
+            );
             if (position > nextTimingPoint?.Time)
                 position = nextTimingPoint.Time;
 
@@ -96,20 +102,23 @@ namespace osu.Game.Screens.Edit
         /// </summary>
         /// <param name="snapped">Whether to snap to the closest beat after seeking.</param>
         /// <param name="amount">The relative amount (magnitude) which should be seeked.</param>
-        public void SeekBackward(bool snapped = false, double amount = 1) => seek(-1, snapped, amount + (IsRunning ? 1.5 : 0));
+        public void SeekBackward(bool snapped = false, double amount = 1) =>
+            seek(-1, snapped, amount + (IsRunning ? 1.5 : 0));
 
         /// <summary>
         /// Seeks forwards by one beat length.
         /// </summary>
         /// <param name="snapped">Whether to snap to the closest beat after seeking.</param>
         /// <param name="amount">The relative amount (magnitude) which should be seeked.</param>
-        public void SeekForward(bool snapped = false, double amount = 1) => seek(1, snapped, amount);
+        public void SeekForward(bool snapped = false, double amount = 1) =>
+            seek(1, snapped, amount);
 
         private void seek(int direction, bool snapped, double amount = 1)
         {
             double current = CurrentTimeAccurate;
 
-            if (amount <= 0) throw new ArgumentException("Value should be greater than zero", nameof(amount));
+            if (amount <= 0)
+                throw new ArgumentException("Value should be greater than zero", nameof(amount));
 
             var timingPoint = ControlPointInfo.TimingPointAt(current);
 
@@ -151,7 +160,10 @@ namespace osu.Game.Screens.Edit
                 seekTime = timingPoint.Time + closestBeat * seekAmount;
             }
 
-            if (seekTime < timingPoint.Time && !ReferenceEquals(timingPoint, ControlPointInfo.TimingPoints.First()))
+            if (
+                seekTime < timingPoint.Time
+                && !ReferenceEquals(timingPoint, ControlPointInfo.TimingPoints.First())
+            )
                 seekTime = timingPoint.Time;
 
             SeekSmoothlyTo(seekTime);
@@ -300,8 +312,19 @@ namespace osu.Game.Screens.Edit
             }
         }
 
-        private void transformSeekTo(double seek, double duration = 0, Easing easing = Easing.None)
-            => this.TransformTo(this.PopulateTransform(new TransformSeek(), Math.Clamp(seek, 0, TrackLength), duration, easing));
+        private void transformSeekTo(
+            double seek,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) =>
+            this.TransformTo(
+                this.PopulateTransform(
+                    new TransformSeek(),
+                    Math.Clamp(seek, 0, TrackLength),
+                    duration,
+                    easing
+                )
+            );
 
         private double currentTime
         {
@@ -313,17 +336,28 @@ namespace osu.Game.Screens.Edit
         {
             public override string TargetMember => nameof(currentTime);
 
-            protected override void Apply(EditorClock clock, double time) => clock.currentTime = valueAt(time);
+            protected override void Apply(EditorClock clock, double time) =>
+                clock.currentTime = valueAt(time);
 
             private double valueAt(double time)
             {
-                if (time < StartTime) return StartValue;
-                if (time >= EndTime) return EndValue;
+                if (time < StartTime)
+                    return StartValue;
+                if (time >= EndTime)
+                    return EndValue;
 
-                return Interpolation.ValueAt(time, StartValue, EndValue, StartTime, EndTime, Easing);
+                return Interpolation.ValueAt(
+                    time,
+                    StartValue,
+                    EndValue,
+                    StartTime,
+                    EndTime,
+                    Easing
+                );
             }
 
-            protected override void ReadIntoStartValue(EditorClock clock) => StartValue = clock.currentTime;
+            protected override void ReadIntoStartValue(EditorClock clock) =>
+                StartValue = clock.currentTime;
         }
     }
 }

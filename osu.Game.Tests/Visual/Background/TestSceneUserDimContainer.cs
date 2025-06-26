@@ -30,33 +30,34 @@ namespace osu.Game.Tests.Visual.Background
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = userDimContainer = new TestUserDimContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Child = new Box
+                Child = userDimContainer = new TestUserDimContainer
                 {
-                    Colour = Color4.White,
                     RelativeSizeAxes = Axes.Both,
-                },
-            };
+                    Child = new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
+                };
 
-            userDimContainer.IsBreakTime.BindTo(isBreakTime);
-            isBreakTime.Value = false;
+                userDimContainer.IsBreakTime.BindTo(isBreakTime);
+                isBreakTime.Value = false;
 
-            lightenDuringBreaks.Value = false;
-        });
+                lightenDuringBreaks.Value = false;
+            });
 
         private const float test_user_dim = 0.6f;
-        private const float test_user_dim_lightened = test_user_dim - UserDimContainer.BREAK_LIGHTEN_AMOUNT;
+        private const float test_user_dim_lightened =
+            test_user_dim - UserDimContainer.BREAK_LIGHTEN_AMOUNT;
 
         [TestCase(test_user_dim, test_user_dim_lightened)]
         [TestCase(0.2f, 0.0f)]
         [TestCase(0.0f, 0.0f)]
         public void TestBreakLightening(float userDim, float expectedBreakDim)
         {
-            AddStep($"set dim level {userDim}", () => userDimContainer.UserDimLevel.Value = userDim);
+            AddStep(
+                $"set dim level {userDim}",
+                () => userDimContainer.UserDimLevel.Value = userDim
+            );
             AddStep("set lighten during break", () => lightenDuringBreaks.Value = true);
 
             AddStep("set break", () => isBreakTime.Value = true);
@@ -106,7 +107,8 @@ namespace osu.Game.Tests.Visual.Background
 
         private partial class TestUserDimContainer : UserDimContainer
         {
-            public bool DimEqual(float expectedDimLevel) => Content.Colour == OsuColour.Gray(1f - expectedDimLevel);
+            public bool DimEqual(float expectedDimLevel) =>
+                Content.Colour == OsuColour.Gray(1f - expectedDimLevel);
 
             public new Bindable<double> UserDimLevel => base.UserDimLevel;
         }

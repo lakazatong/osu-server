@@ -53,13 +53,12 @@ namespace osu.Game.Screens.Edit
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new LoadingSpinner(true)
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    State = { Value = Visibility.Visible },
+                    new LoadingSpinner(true) { State = { Value = Visibility.Visible } },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -87,32 +86,61 @@ namespace osu.Game.Screens.Edit
             }
         }
 
-        public void ScheduleSwitchToNewDifficulty(BeatmapInfo referenceBeatmapInfo, RulesetInfo rulesetInfo, bool createCopy, EditorState editorState)
-            => scheduleDifficultySwitch(() =>
-            {
-                try
+        public void ScheduleSwitchToNewDifficulty(
+            BeatmapInfo referenceBeatmapInfo,
+            RulesetInfo rulesetInfo,
+            bool createCopy,
+            EditorState editorState
+        ) =>
+            scheduleDifficultySwitch(
+                () =>
                 {
-                    // fetch a fresh detached reference from database to avoid polluting model instances attached to cached working beatmaps.
-                    var targetBeatmapSet = beatmapManager.QueryBeatmap(b => b.ID == referenceBeatmapInfo.ID).AsNonNull().BeatmapSet.AsNonNull();
-                    var referenceWorkingBeatmap = beatmapManager.GetWorkingBeatmap(referenceBeatmapInfo);
+                    try
+                    {
+                        // fetch a fresh detached reference from database to avoid polluting model instances attached to cached working beatmaps.
+                        var targetBeatmapSet = beatmapManager
+                            .QueryBeatmap(b => b.ID == referenceBeatmapInfo.ID)
+                            .AsNonNull()
+                            .BeatmapSet.AsNonNull();
+                        var referenceWorkingBeatmap = beatmapManager.GetWorkingBeatmap(
+                            referenceBeatmapInfo
+                        );
 
-                    return createCopy
-                        ? beatmapManager.CopyExistingDifficulty(targetBeatmapSet, referenceWorkingBeatmap)
-                        : beatmapManager.CreateNewDifficulty(targetBeatmapSet, referenceWorkingBeatmap, rulesetInfo);
-                }
-                catch (Exception ex)
-                {
-                    // if the beatmap creation fails (e.g. due to duplicated difficulty names),
-                    // bring the user back to the previous beatmap as a best-effort.
-                    Logger.Error(ex, ex.Message);
-                    return Beatmap.Value;
-                }
-            }, editorState);
+                        return createCopy
+                            ? beatmapManager.CopyExistingDifficulty(
+                                targetBeatmapSet,
+                                referenceWorkingBeatmap
+                            )
+                            : beatmapManager.CreateNewDifficulty(
+                                targetBeatmapSet,
+                                referenceWorkingBeatmap,
+                                rulesetInfo
+                            );
+                    }
+                    catch (Exception ex)
+                    {
+                        // if the beatmap creation fails (e.g. due to duplicated difficulty names),
+                        // bring the user back to the previous beatmap as a best-effort.
+                        Logger.Error(ex, ex.Message);
+                        return Beatmap.Value;
+                    }
+                },
+                editorState
+            );
 
-        public void ScheduleSwitchToExistingDifficulty(BeatmapInfo beatmapInfo, EditorState editorState)
-            => scheduleDifficultySwitch(() => beatmapManager.GetWorkingBeatmap(beatmapInfo), editorState);
+        public void ScheduleSwitchToExistingDifficulty(
+            BeatmapInfo beatmapInfo,
+            EditorState editorState
+        ) =>
+            scheduleDifficultySwitch(
+                () => beatmapManager.GetWorkingBeatmap(beatmapInfo),
+                editorState
+            );
 
-        private void scheduleDifficultySwitch(Func<WorkingBeatmap> nextBeatmap, EditorState editorState)
+        private void scheduleDifficultySwitch(
+            Func<WorkingBeatmap> nextBeatmap,
+            EditorState editorState
+        )
         {
             scheduledDifficultySwitch?.Cancel();
             ValidForResume = true;

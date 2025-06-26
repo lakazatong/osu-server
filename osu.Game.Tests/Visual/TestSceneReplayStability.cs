@@ -31,26 +31,35 @@ namespace osu.Game.Tests.Visual
                     new HitCircle
                     {
                         StartTime = hit_circle_time,
-                        Position = OsuPlayfield.BASE_SIZE / 2
-                    }
+                        Position = OsuPlayfield.BASE_SIZE / 2,
+                    },
                 },
                 AudioLeadIn = lead_in_time,
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo },
             };
 
             var replay = new Replay
             {
-                Frames = Enumerable.Range(0, 300).Select(t => new OsuReplayFrame(-lead_in_time + 40 * t, new Vector2(t), t % 2 == 0 ? [] : [OsuAction.LeftButton]))
-                                   .Concat([
-                                       new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
-                                       new OsuReplayFrame(hit_circle_time, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                                       new OsuReplayFrame(hit_circle_time + 20, OsuPlayfield.BASE_SIZE / 2),
-                                   ])
-                                   .Cast<ReplayFrame>()
-                                   .ToList(),
+                Frames = Enumerable
+                    .Range(0, 300)
+                    .Select(t => new OsuReplayFrame(
+                        -lead_in_time + 40 * t,
+                        new Vector2(t),
+                        t % 2 == 0 ? [] : [OsuAction.LeftButton]
+                    ))
+                    .Concat(
+                        [
+                            new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
+                            new OsuReplayFrame(
+                                hit_circle_time,
+                                OsuPlayfield.BASE_SIZE / 2,
+                                OsuAction.LeftButton
+                            ),
+                            new OsuReplayFrame(hit_circle_time + 20, OsuPlayfield.BASE_SIZE / 2),
+                        ]
+                    )
+                    .Cast<ReplayFrame>()
+                    .ToList(),
             };
 
             RunTest(beatmap, replay, [HitResult.Great]);

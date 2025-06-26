@@ -14,7 +14,9 @@ namespace osu.Game.Tests.Visual.Beatmaps
     public partial class TestSceneBeatmapCardDifficultyList : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [BackgroundDependencyLoader]
         private void load()
@@ -23,24 +25,85 @@ namespace osu.Game.Tests.Visual.Beatmaps
             {
                 Beatmaps = new[]
                 {
-                    new APIBeatmap { RulesetID = 1, StarRating = 5.76, DifficultyName = "Oni" },
-                    new APIBeatmap { RulesetID = 1, StarRating = 3.20, DifficultyName = "Muzukashii" },
-                    new APIBeatmap { RulesetID = 1, StarRating = 2.45, DifficultyName = "Futsuu" },
-
-                    new APIBeatmap { RulesetID = 0, StarRating = 2.04, DifficultyName = "Normal" },
-                    new APIBeatmap { RulesetID = 0, StarRating = 3.51, DifficultyName = "Hard" },
-                    new APIBeatmap { RulesetID = 0, StarRating = 5.25, DifficultyName = "Insane" },
-
-                    new APIBeatmap { RulesetID = 2, StarRating = 2.64, DifficultyName = "Salad" },
-                    new APIBeatmap { RulesetID = 2, StarRating = 3.56, DifficultyName = "Platter" },
-                    new APIBeatmap { RulesetID = 2, StarRating = 4.65, DifficultyName = "Rain" },
-
-                    new APIBeatmap { RulesetID = 3, StarRating = 1.93, DifficultyName = "[7K] Normal" },
-                    new APIBeatmap { RulesetID = 3, StarRating = 3.18, DifficultyName = "[7K] Hyper" },
-                    new APIBeatmap { RulesetID = 3, StarRating = 4.82, DifficultyName = "[7K] Another" },
-
-                    new APIBeatmap { RulesetID = 4, StarRating = 9.99, DifficultyName = "Unknown?!" },
-                }
+                    new APIBeatmap
+                    {
+                        RulesetID = 1,
+                        StarRating = 5.76,
+                        DifficultyName = "Oni",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 1,
+                        StarRating = 3.20,
+                        DifficultyName = "Muzukashii",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 1,
+                        StarRating = 2.45,
+                        DifficultyName = "Futsuu",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 0,
+                        StarRating = 2.04,
+                        DifficultyName = "Normal",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 0,
+                        StarRating = 3.51,
+                        DifficultyName = "Hard",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 0,
+                        StarRating = 5.25,
+                        DifficultyName = "Insane",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 2,
+                        StarRating = 2.64,
+                        DifficultyName = "Salad",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 2,
+                        StarRating = 3.56,
+                        DifficultyName = "Platter",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 2,
+                        StarRating = 4.65,
+                        DifficultyName = "Rain",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 3,
+                        StarRating = 1.93,
+                        DifficultyName = "[7K] Normal",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 3,
+                        StarRating = 3.18,
+                        DifficultyName = "[7K] Hyper",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 3,
+                        StarRating = 4.82,
+                        DifficultyName = "[7K] Another",
+                    },
+                    new APIBeatmap
+                    {
+                        RulesetID = 4,
+                        StarRating = 9.99,
+                        DifficultyName = "Unknown?!",
+                    },
+                },
             };
 
             Child = new Container
@@ -51,19 +114,15 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background2
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background2 },
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Padding = new MarginPadding(10),
-                        Child = new BeatmapCardDifficultyList(beatmapSet)
-                    }
-                }
+                        Child = new BeatmapCardDifficultyList(beatmapSet),
+                    },
+                },
             };
         }
     }

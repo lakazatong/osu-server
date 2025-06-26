@@ -16,11 +16,16 @@ namespace osu.Game.Screens.Edit.Submission
         private readonly uint? beatmapSetId;
         private readonly HashSet<int>? allocatedBeatmapIds;
 
-        public SubmissionBeatmapExporter(Storage storage, PutBeatmapSetResponse putBeatmapSetResponse)
+        public SubmissionBeatmapExporter(
+            Storage storage,
+            PutBeatmapSetResponse putBeatmapSetResponse
+        )
             : base(storage)
         {
             beatmapSetId = putBeatmapSetResponse.BeatmapSetId;
-            allocatedBeatmapIds = putBeatmapSetResponse.BeatmapIds.Select(id => (int)id).ToHashSet();
+            allocatedBeatmapIds = putBeatmapSetResponse
+                .BeatmapIds.Select(id => (int)id)
+                .ToHashSet();
         }
 
         protected override void MutateBeatmap(BeatmapSetInfo beatmapSet, IBeatmap playableBeatmap)
@@ -39,10 +44,14 @@ namespace osu.Game.Screens.Edit.Submission
                 }
 
                 if (playableBeatmap.BeatmapInfo.OnlineID > 0)
-                    throw new InvalidOperationException($@"Difficulty ""{playableBeatmap.BeatmapInfo.DifficultyName}"" has BeatmapID {playableBeatmap.BeatmapInfo.OnlineID} that has not been assigned to it by the server!");
+                    throw new InvalidOperationException(
+                        $@"Difficulty ""{playableBeatmap.BeatmapInfo.DifficultyName}"" has BeatmapID {playableBeatmap.BeatmapInfo.OnlineID} that has not been assigned to it by the server!"
+                    );
 
                 if (allocatedBeatmapIds.Count == 0)
-                    throw new InvalidOperationException(@"Ran out of new beatmap IDs to assign to unsubmitted beatmaps!");
+                    throw new InvalidOperationException(
+                        @"Ran out of new beatmap IDs to assign to unsubmitted beatmaps!"
+                    );
 
                 int newId = allocatedBeatmapIds.First();
                 allocatedBeatmapIds.Remove(newId);

@@ -47,12 +47,13 @@ namespace osu.Game.Overlays.Dashboard.Home
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Horizontal = -10 },
-                    Child = hoverBackground = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = ColourProvider.Background3,
-                        Alpha = 0
-                    }
+                    Child = hoverBackground =
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = ColourProvider.Background3,
+                            Alpha = 0,
+                        },
                 },
                 new Container
                 {
@@ -64,12 +65,9 @@ namespace osu.Game.Overlays.Dashboard.Home
                         {
                             new Dimension(GridSizeMode.Absolute, 70),
                             new Dimension(),
-                            new Dimension(GridSizeMode.AutoSize)
+                            new Dimension(GridSizeMode.AutoSize),
                         },
-                        RowDimensions = new[]
-                        {
-                            new Dimension()
-                        },
+                        RowDimensions = new[] { new Dimension() },
                         Content = new[]
                         {
                             new Drawable[]
@@ -84,8 +82,8 @@ namespace osu.Game.Overlays.Dashboard.Home
                                         RelativeSizeAxes = Axes.Both,
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        OnlineInfo = BeatmapSet
-                                    }
+                                        OnlineInfo = BeatmapSet,
+                                    },
                                 },
                                 new Container
                                 {
@@ -104,28 +102,36 @@ namespace osu.Game.Overlays.Dashboard.Home
                                             {
                                                 RelativeSizeAxes = Axes.X,
                                                 Font = OsuFont.GetFont(weight: FontWeight.Regular),
-                                                Text = BeatmapSet.Title
+                                                Text = BeatmapSet.Title,
                                             },
                                             new TruncatingSpriteText
                                             {
                                                 RelativeSizeAxes = Axes.X,
-                                                Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular),
-                                                Text = BeatmapSet.Artist
+                                                Font = OsuFont.GetFont(
+                                                    size: 12,
+                                                    weight: FontWeight.Regular
+                                                ),
+                                                Text = BeatmapSet.Artist,
                                             },
-                                            new LinkFlowContainer(f => f.Font = OsuFont.GetFont(size: 10, weight: FontWeight.Regular))
+                                            new LinkFlowContainer(f =>
+                                                f.Font = OsuFont.GetFont(
+                                                    size: 10,
+                                                    weight: FontWeight.Regular
+                                                )
+                                            )
                                             {
                                                 AutoSizeAxes = Axes.Y,
                                                 RelativeSizeAxes = Axes.X,
                                                 Spacing = new Vector2(3),
-                                                Margin = new MarginPadding { Top = 2 }
+                                                Margin = new MarginPadding { Top = 2 },
                                             }.With(c =>
                                             {
                                                 c.AddText("by");
                                                 c.AddUserLink(BeatmapSet.Author);
                                                 c.AddArbitraryDrawable(CreateInfo());
-                                            })
-                                        }
-                                    }
+                                            }),
+                                        },
+                                    },
                                 },
                                 chevron = new SpriteIcon
                                 {
@@ -133,12 +139,12 @@ namespace osu.Game.Overlays.Dashboard.Home
                                     Origin = Anchor.CentreRight,
                                     Size = new Vector2(16),
                                     Icon = FontAwesome.Solid.ChevronRight,
-                                    Colour = ColourProvider.Foreground1
-                                }
-                            }
-                        }
-                    }
-                }
+                                    Colour = ColourProvider.Foreground1,
+                                },
+                            },
+                        },
+                    },
+                },
             };
 
             Action = () =>

@@ -37,11 +37,13 @@ namespace osu.Game.Beatmaps
         public ProcessBeatmapDelegate? ProcessBeatmap { private get; set; }
 
         public BeatmapImporter(Storage storage, RealmAccess realm)
-            : base(storage, realm)
-        {
-        }
+            : base(storage, realm) { }
 
-        public override async Task<Live<BeatmapSetInfo>?> ImportAsUpdate(ProgressNotification notification, ImportTask importTask, BeatmapSetInfo original)
+        public override async Task<Live<BeatmapSetInfo>?> ImportAsUpdate(
+            ProgressNotification notification,
+            ImportTask importTask,
+            BeatmapSetInfo original
+        )
         {
             var originalDateAdded = original.DateAdded;
 
@@ -90,14 +92,19 @@ namespace osu.Game.Beatmaps
 
                     foreach (var beatmap in original.Beatmaps.ToArray())
                     {
-                        var updatedBeatmap = updated.Beatmaps.FirstOrDefault(b => b.Hash == beatmap.Hash);
+                        var updatedBeatmap = updated.Beatmaps.FirstOrDefault(b =>
+                            b.Hash == beatmap.Hash
+                        );
 
                         if (updatedBeatmap != null)
                         {
                             // If the updated beatmap matches an existing one, transfer any user data across..
                             if (beatmap.Scores.Any())
                             {
-                                Logger.Log($"Transferring {beatmap.Scores.Count()} scores for unchanged difficulty \"{beatmap}\"", LoggingTarget.Database);
+                                Logger.Log(
+                                    $"Transferring {beatmap.Scores.Count()} scores for unchanged difficulty \"{beatmap}\"",
+                                    LoggingTarget.Database
+                                );
 
                                 foreach (var score in beatmap.Scores)
                                     score.BeatmapInfo = updatedBeatmap;
@@ -125,11 +132,18 @@ namespace osu.Game.Beatmaps
                     if (!original.Beatmaps.Any())
                         realm.Remove(original);
 
-                    Logger.Log($"Beatmap \"{updated}\" update completed successfully", LoggingTarget.Database);
+                    Logger.Log(
+                        $"Beatmap \"{updated}\" update completed successfully",
+                        LoggingTarget.Database
+                    );
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex, $"Failed to update beatmap \"{updated}\"", LoggingTarget.Database);
+                    Logger.Error(
+                        ex,
+                        $"Failed to update beatmap \"{updated}\"",
+                        LoggingTarget.Database
+                    );
                     throw;
                 }
             });
@@ -137,7 +151,11 @@ namespace osu.Game.Beatmaps
             return first;
         }
 
-        private static void transferCollectionReferences(Realm realm, BeatmapSetInfo original, BeatmapSetInfo updated)
+        private static void transferCollectionReferences(
+            Realm realm,
+            BeatmapSetInfo original,
+            BeatmapSetInfo updated
+        )
         {
             // First check if every beatmap in the original set is in any collections.
             // In this case, we will assume they also want any newly added difficulties added to the collection.
@@ -156,15 +174,23 @@ namespace osu.Game.Beatmaps
             // Handle collections using permissive difficulty name to track difficulties.
             foreach (var originalBeatmap in original.Beatmaps)
             {
-                updated.Beatmaps
-                       .FirstOrDefault(b => b.DifficultyName == originalBeatmap.DifficultyName)?
-                       .TransferCollectionReferences(realm, originalBeatmap.MD5Hash);
+                updated
+                    .Beatmaps.FirstOrDefault(b =>
+                        b.DifficultyName == originalBeatmap.DifficultyName
+                    )
+                    ?.TransferCollectionReferences(realm, originalBeatmap.MD5Hash);
             }
         }
 
-        protected override bool ShouldDeleteArchive(string path) => HandledExtensions.Contains(Path.GetExtension(path).ToLowerInvariant());
+        protected override bool ShouldDeleteArchive(string path) =>
+            HandledExtensions.Contains(Path.GetExtension(path).ToLowerInvariant());
 
-        protected override void Populate(BeatmapSetInfo beatmapSet, ArchiveReader? archive, Realm realm, CancellationToken cancellationToken = default)
+        protected override void Populate(
+            BeatmapSetInfo beatmapSet,
+            ArchiveReader? archive,
+            Realm realm,
+            CancellationToken cancellationToken = default
+        )
         {
             if (archive != null)
                 beatmapSet.Beatmaps.AddRange(createBeatmapDifficulties(beatmapSet, realm));
@@ -178,7 +204,9 @@ namespace osu.Game.Beatmaps
                 // ensure we aren't trying to add a new ruleset to the database
                 // this can happen in tests, mostly
                 if (!b.Ruleset.IsManaged)
-                    b.Ruleset = realm.Find<RulesetInfo>(b.Ruleset.ShortName) ?? throw new ArgumentNullException(nameof(b.Ruleset));
+                    b.Ruleset =
+                        realm.Find<RulesetInfo>(b.Ruleset.ShortName)
+                        ?? throw new ArgumentNullException(nameof(b.Ruleset));
             }
 
             validateOnlineIds(beatmapSet, realm);
@@ -192,7 +220,10 @@ namespace osu.Game.Beatmaps
                 if (beatmapSet.OnlineID > 0)
                 {
                     beatmapSet.OnlineID = -1;
-                    LogForModel(beatmapSet, "Disassociating beatmap set ID due to loss of all beatmap IDs");
+                    LogForModel(
+                        beatmapSet,
+                        "Disassociating beatmap set ID due to loss of all beatmap IDs"
+                    );
                 }
             }
         }
@@ -210,7 +241,11 @@ namespace osu.Game.Beatmaps
                 int onlineId = beatmapSet.OnlineID;
 
                 // OnlineID should really be unique, but to avoid catastrophic failure let's iterate just to be sure.
-                foreach (var existingSetWithSameOnlineID in realm.All<BeatmapSetInfo>().Where(b => b.OnlineID == onlineId))
+                foreach (
+                    var existingSetWithSameOnlineID in realm
+                        .All<BeatmapSetInfo>()
+                        .Where(b => b.OnlineID == onlineId)
+                )
                 {
                     existingSetWithSameOnlineID.DeletePending = true;
                     existingSetWithSameOnlineID.OnlineID = -1;
@@ -218,12 +253,19 @@ namespace osu.Game.Beatmaps
                     foreach (var b in existingSetWithSameOnlineID.Beatmaps)
                         b.ResetOnlineInfo();
 
-                    LogForModel(beatmapSet, $"Found existing beatmap set with same OnlineID ({beatmapSet.OnlineID}). It will be disassociated and marked for deletion.");
+                    LogForModel(
+                        beatmapSet,
+                        $"Found existing beatmap set with same OnlineID ({beatmapSet.OnlineID}). It will be disassociated and marked for deletion."
+                    );
                 }
             }
         }
 
-        protected override void PostImport(BeatmapSetInfo model, Realm realm, ImportParameters parameters)
+        protected override void PostImport(
+            BeatmapSetInfo model,
+            Realm realm,
+            ImportParameters parameters
+        )
         {
             base.PostImport(model, realm, parameters);
 
@@ -234,12 +276,20 @@ namespace osu.Game.Beatmaps
                 beatmap.UpdateLocalScores(realm);
             }
 
-            ProcessBeatmap?.Invoke(model, parameters.Batch ? MetadataLookupScope.LocalCacheFirst : MetadataLookupScope.OnlineFirst);
+            ProcessBeatmap?.Invoke(
+                model,
+                parameters.Batch
+                    ? MetadataLookupScope.LocalCacheFirst
+                    : MetadataLookupScope.OnlineFirst
+            );
         }
 
         private void validateOnlineIds(BeatmapSetInfo beatmapSet, Realm realm)
         {
-            var beatmapIds = beatmapSet.Beatmaps.Where(b => b.OnlineID > 0).Select(b => b.OnlineID).ToList();
+            var beatmapIds = beatmapSet
+                .Beatmaps.Where(b => b.OnlineID > 0)
+                .Select(b => b.OnlineID)
+                .ToList();
 
             // ensure all IDs are unique
             if (beatmapIds.GroupBy(b => b).Any(g => g.Count() > 1))
@@ -264,7 +314,10 @@ namespace osu.Game.Beatmaps
 
                 if (existing == null || existingBeatmaps.Any(b => !existing.Beatmaps.Contains(b)))
                 {
-                    LogForModel(beatmapSet, "Found existing import with online IDs already, resetting...");
+                    LogForModel(
+                        beatmapSet,
+                        "Found existing import with online IDs already, resetting..."
+                    );
                     resetIds();
                 }
             }
@@ -303,14 +356,22 @@ namespace osu.Game.Beatmaps
 
         public override string HumanisedModelName => "beatmap";
 
-        protected override BeatmapSetInfo? CreateModel(ArchiveReader reader, ImportParameters parameters)
+        protected override BeatmapSetInfo? CreateModel(
+            ArchiveReader reader,
+            ImportParameters parameters
+        )
         {
             // let's make sure there are actually .osu files to import.
-            string? mapName = reader.Filenames.FirstOrDefault(f => f.EndsWith(".osu", StringComparison.OrdinalIgnoreCase));
+            string? mapName = reader.Filenames.FirstOrDefault(f =>
+                f.EndsWith(".osu", StringComparison.OrdinalIgnoreCase)
+            );
 
             if (string.IsNullOrEmpty(mapName))
             {
-                Logger.Log($"No beatmap files found in the beatmap archive ({reader.Name}).", LoggingTarget.Database);
+                Logger.Log(
+                    $"No beatmap files found in the beatmap archive ({reader.Name}).",
+                    LoggingTarget.Database
+                );
                 return null;
             }
 
@@ -320,17 +381,17 @@ namespace osu.Game.Beatmaps
             {
                 if (stream.PeekLine() == null)
                 {
-                    Logger.Log($"No content found in first .osu file of beatmap archive ({reader.Name} / {mapName})", LoggingTarget.Database);
+                    Logger.Log(
+                        $"No content found in first .osu file of beatmap archive ({reader.Name} / {mapName})",
+                        LoggingTarget.Database
+                    );
                     return null;
                 }
 
                 beatmap = Decoder.GetDecoder<Beatmap>(stream).Decode(stream);
             }
 
-            return new BeatmapSetInfo
-            {
-                OnlineID = beatmap.BeatmapInfo.BeatmapSet?.OnlineID ?? -1,
-            };
+            return new BeatmapSetInfo { OnlineID = beatmap.BeatmapInfo.BeatmapSet?.OnlineID ?? -1 };
         }
 
         /// <summary>
@@ -344,13 +405,17 @@ namespace osu.Game.Beatmaps
 
             if (reader is DirectoryArchiveReader legacyReader)
             {
-                var beatmaps = reader.Filenames.Where(f => f.EndsWith(".osu", StringComparison.OrdinalIgnoreCase));
+                var beatmaps = reader.Filenames.Where(f =>
+                    f.EndsWith(".osu", StringComparison.OrdinalIgnoreCase)
+                );
 
                 dateAdded = File.GetLastWriteTimeUtc(legacyReader.GetFullPath(beatmaps.First()));
 
                 foreach (string beatmapName in beatmaps)
                 {
-                    var currentDateAdded = File.GetLastWriteTimeUtc(legacyReader.GetFullPath(beatmapName));
+                    var currentDateAdded = File.GetLastWriteTimeUtc(
+                        legacyReader.GetFullPath(beatmapName)
+                    );
 
                     if (currentDateAdded < dateAdded)
                         dateAdded = currentDateAdded;
@@ -367,9 +432,15 @@ namespace osu.Game.Beatmaps
         {
             var beatmaps = new List<BeatmapInfo>();
 
-            foreach (var file in beatmapSet.Files.Where(f => f.Filename.EndsWith(".osu", StringComparison.OrdinalIgnoreCase)))
+            foreach (
+                var file in beatmapSet.Files.Where(f =>
+                    f.Filename.EndsWith(".osu", StringComparison.OrdinalIgnoreCase)
+                )
+            )
             {
-                using (var memoryStream = new MemoryStream(Files.Store.Get(file.File.GetStoragePath()))) // we need a memory stream so we can seek
+                using (
+                    var memoryStream = new MemoryStream(Files.Store.Get(file.File.GetStoragePath()))
+                ) // we need a memory stream so we can seek
                 {
                     IBeatmap decoded;
 
@@ -377,7 +448,10 @@ namespace osu.Game.Beatmaps
                     {
                         if (lineReader.PeekLine() == null)
                         {
-                            LogForModel(beatmapSet, $"No content found in beatmap file {file.Filename}.");
+                            LogForModel(
+                                beatmapSet,
+                                $"No content found in beatmap file {file.Filename}."
+                            );
                             continue;
                         }
 
@@ -388,18 +462,26 @@ namespace osu.Game.Beatmaps
 
                     if (beatmaps.Any(b => b.Hash == hash))
                     {
-                        LogForModel(beatmapSet, $"Skipping import of {file.Filename} due to duplicate file content.");
+                        LogForModel(
+                            beatmapSet,
+                            $"Skipping import of {file.Filename} due to duplicate file content."
+                        );
                         continue;
                     }
 
                     var decodedInfo = decoded.BeatmapInfo;
                     var decodedDifficulty = decodedInfo.Difficulty;
 
-                    var ruleset = realm.All<RulesetInfo>().FirstOrDefault(r => r.OnlineID == decodedInfo.Ruleset.OnlineID);
+                    var ruleset = realm
+                        .All<RulesetInfo>()
+                        .FirstOrDefault(r => r.OnlineID == decodedInfo.Ruleset.OnlineID);
 
                     if (ruleset?.Available != true)
                     {
-                        LogForModel(beatmapSet, $"Skipping import of {file.Filename} due to missing local ruleset {decodedInfo.Ruleset.OnlineID}.");
+                        LogForModel(
+                            beatmapSet,
+                            $"Skipping import of {file.Filename} due to missing local ruleset {decodedInfo.Ruleset.OnlineID}."
+                        );
                         continue;
                     }
 
@@ -410,7 +492,7 @@ namespace osu.Game.Beatmaps
                         OverallDifficulty = decodedDifficulty.OverallDifficulty,
                         ApproachRate = decodedDifficulty.ApproachRate,
                         SliderMultiplier = decodedDifficulty.SliderMultiplier,
-                        SliderTickRate = decodedDifficulty.SliderTickRate
+                        SliderTickRate = decodedDifficulty.SliderTickRate,
                     };
 
                     var metadata = new BeatmapMetadata
@@ -422,7 +504,7 @@ namespace osu.Game.Beatmaps
                         Author =
                         {
                             OnlineID = decoded.Metadata.Author.OnlineID,
-                            Username = decoded.Metadata.Author.Username
+                            Username = decoded.Metadata.Author.Username,
                         },
                         Source = decoded.Metadata.Source,
                         Tags = decoded.Metadata.Tags,
@@ -439,7 +521,7 @@ namespace osu.Game.Beatmaps
                         BeatDivisor = decodedInfo.BeatDivisor,
                         MD5Hash = memoryStream.ComputeMD5Hash(),
                         EndTimeObjectCount = decoded.HitObjects.Count(h => h is IHasDuration),
-                        TotalObjectCount = decoded.HitObjects.Count
+                        TotalObjectCount = decoded.HitObjects.Count,
                     };
 
                     beatmaps.Add(beatmap);

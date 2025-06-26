@@ -34,23 +34,31 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                     {
                         Colour = TournamentGame.TEXT_COLOUR,
                         Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre
+                        Anchor = Anchor.TopCentre,
                     },
                     textName = new TournamentSpriteText
                     {
                         Font = OsuFont.Torus.With(weight: FontWeight.Bold),
                         Colour = TournamentGame.TEXT_COLOUR,
                         Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre
+                        Anchor = Anchor.TopCentre,
                     },
-                }
+                },
             };
 
             name = round.Name.GetBoundCopy();
-            name.BindValueChanged(_ => textName.Text = ((losers ? "Losers " : "") + round.Name).ToUpperInvariant(), true);
+            name.BindValueChanged(
+                _ => textName.Text = ((losers ? "Losers " : "") + round.Name).ToUpperInvariant(),
+                true
+            );
 
             description = round.Description.GetBoundCopy();
-            description.BindValueChanged(_ => textDescription.Text = round.Description.Value?.ToUpperInvariant() ?? string.Empty, true);
+            description.BindValueChanged(
+                _ =>
+                    textDescription.Text =
+                        round.Description.Value?.ToUpperInvariant() ?? string.Empty,
+                true
+            );
         }
     }
 }

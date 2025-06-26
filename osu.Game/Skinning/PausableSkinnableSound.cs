@@ -15,23 +15,18 @@ namespace osu.Game.Skinning
 {
     public partial class PausableSkinnableSound : SkinnableSound
     {
-        public double Length => !DrawableSamples.Any() ? 0 : DrawableSamples.Max(sample => sample.Length);
+        public double Length =>
+            !DrawableSamples.Any() ? 0 : DrawableSamples.Max(sample => sample.Length);
 
         public bool RequestedPlaying { get; private set; }
 
-        public PausableSkinnableSound()
-        {
-        }
+        public PausableSkinnableSound() { }
 
         public PausableSkinnableSound([NotNull] IEnumerable<ISampleInfo> samples)
-            : base(samples)
-        {
-        }
+            : base(samples) { }
 
         public PausableSkinnableSound([NotNull] ISampleInfo sample)
-            : base(sample)
-        {
-        }
+            : base(sample) { }
 
         private readonly IBindable<bool> samplePlaybackDisabled = new Bindable<bool>();
 
@@ -50,10 +45,12 @@ namespace osu.Game.Skinning
 
         protected virtual void SamplePlaybackDisabledChanged(ValueChangedEvent<bool> disabled)
         {
-            if (!RequestedPlaying) return;
+            if (!RequestedPlaying)
+                return;
 
             // let non-looping samples that have already been started play out to completion (sounds better than abruptly cutting off).
-            if (!Looping) return;
+            if (!Looping)
+                return;
 
             cancelPendingStart();
 

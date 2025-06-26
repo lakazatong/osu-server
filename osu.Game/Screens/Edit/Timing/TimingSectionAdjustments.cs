@@ -16,19 +16,40 @@ namespace osu.Game.Screens.Edit.Timing
         /// <summary>
         /// Returns all objects from <paramref name="beatmap"/> which are affected by the supplied <paramref name="timingControlPoint"/>.
         /// </summary>
-        public static List<HitObject> HitObjectsInTimingRange(IBeatmap beatmap, TimingControlPoint timingControlPoint)
+        public static List<HitObject> HitObjectsInTimingRange(
+            IBeatmap beatmap,
+            TimingControlPoint timingControlPoint
+        )
         {
             // If the first group, we grab all hitobjects prior to the next, if the last group, we grab all remaining hitobjects
-            double startTime = beatmap.ControlPointInfo.TimingPoints.Any(x => x.Time < timingControlPoint.Time) ? timingControlPoint.Time : double.MinValue;
-            double endTime = beatmap.ControlPointInfo.TimingPoints.FirstOrDefault(x => x.Time > timingControlPoint.Time)?.Time ?? double.MaxValue;
+            double startTime = beatmap.ControlPointInfo.TimingPoints.Any(x =>
+                x.Time < timingControlPoint.Time
+            )
+                ? timingControlPoint.Time
+                : double.MinValue;
+            double endTime =
+                beatmap
+                    .ControlPointInfo.TimingPoints.FirstOrDefault(x =>
+                        x.Time > timingControlPoint.Time
+                    )
+                    ?.Time ?? double.MaxValue;
 
-            return beatmap.HitObjects.Where(x => Precision.AlmostBigger(x.StartTime, startTime) && Precision.DefinitelyBigger(endTime, x.StartTime)).ToList();
+            return beatmap
+                .HitObjects.Where(x =>
+                    Precision.AlmostBigger(x.StartTime, startTime)
+                    && Precision.DefinitelyBigger(endTime, x.StartTime)
+                )
+                .ToList();
         }
 
         /// <summary>
         /// Moves all relevant objects after <paramref name="timingControlPoint"/>'s offset has been changed by <paramref name="adjustment"/>.
         /// </summary>
-        public static void AdjustHitObjectOffset(IBeatmap beatmap, TimingControlPoint timingControlPoint, double adjustment)
+        public static void AdjustHitObjectOffset(
+            IBeatmap beatmap,
+            TimingControlPoint timingControlPoint,
+            double adjustment
+        )
         {
             foreach (HitObject hitObject in HitObjectsInTimingRange(beatmap, timingControlPoint))
             {
@@ -39,13 +60,18 @@ namespace osu.Game.Screens.Edit.Timing
         /// <summary>
         /// Ensures all relevant objects are still snapped to the same beats after <paramref name="timingControlPoint"/>'s beat length / BPM has been changed.
         /// </summary>
-        public static void SetHitObjectBPM(IBeatmap beatmap, TimingControlPoint timingControlPoint, double oldBeatLength)
+        public static void SetHitObjectBPM(
+            IBeatmap beatmap,
+            TimingControlPoint timingControlPoint,
+            double oldBeatLength
+        )
         {
             foreach (HitObject hitObject in HitObjectsInTimingRange(beatmap, timingControlPoint))
             {
                 double beat = (hitObject.StartTime - timingControlPoint.Time) / oldBeatLength;
 
-                hitObject.StartTime = (beat * timingControlPoint.BeatLength) + timingControlPoint.Time;
+                hitObject.StartTime =
+                    (beat * timingControlPoint.BeatLength) + timingControlPoint.Time;
 
                 if (hitObject is not IHasRepeats && hitObject is IHasDuration hitObjectWithDuration)
                     hitObjectWithDuration.Duration *= timingControlPoint.BeatLength / oldBeatLength;

@@ -15,12 +15,11 @@ namespace osu.Game.Rulesets.Edit.Checks
         /// </summary>
         private const double leniency = 0.5d;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Compose, "Zero-length hitobjects");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Compose, "Zero-length hitobjects");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateZeroLength(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateZeroLength(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -30,18 +29,20 @@ namespace osu.Game.Rulesets.Edit.Checks
                     continue;
 
                 if (hasDuration.Duration < leniency)
-                    yield return new IssueTemplateZeroLength(this).Create(hitObject, hasDuration.Duration);
+                    yield return new IssueTemplateZeroLength(this).Create(
+                        hitObject,
+                        hasDuration.Duration
+                    );
             }
         }
 
         public class IssueTemplateZeroLength : IssueTemplate
         {
             public IssueTemplateZeroLength(ICheck check)
-                : base(check, IssueType.Problem, "{0} has a duration of {1:0}.")
-            {
-            }
+                : base(check, IssueType.Problem, "{0} has a duration of {1:0}.") { }
 
-            public Issue Create(HitObject hitobject, double duration) => new Issue(hitobject, this, hitobject.GetType(), duration);
+            public Issue Create(HitObject hitobject, double duration) =>
+                new Issue(hitobject, this, hitobject.GetType(), duration);
         }
     }
 }

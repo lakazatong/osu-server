@@ -37,45 +37,57 @@ namespace osu.Game.Rulesets.Edit
         protected virtual BeatSnapGrid? CreateBeatSnapGrid() => null;
 
         protected ScrollingHitObjectComposer(Ruleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
             if (DrawableRuleset is ISupportConstantAlgorithmToggle toggleRuleset)
             {
-                LeftToolbox.Add(new EditorToolboxGroup("playfield")
-                {
-                    Child = new FillFlowContainer
+                LeftToolbox.Add(
+                    new EditorToolboxGroup("playfield")
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 5),
-                        Children = new[]
+                        Child = new FillFlowContainer
                         {
-                            new DrawableTernaryButton
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 5),
+                            Children = new[]
                             {
-                                Current = showSpeedChanges,
-                                Description = "Show speed changes",
-                                CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.TachometerAlt },
-                            }
-                        }
+                                new DrawableTernaryButton
+                                {
+                                    Current = showSpeedChanges,
+                                    Description = "Show speed changes",
+                                    CreateIcon = () =>
+                                        new SpriteIcon { Icon = FontAwesome.Solid.TachometerAlt },
+                                },
+                            },
+                        },
+                    }
+                );
+
+                configShowSpeedChanges = config.GetBindable<bool>(
+                    OsuSetting.EditorShowSpeedChanges
+                );
+                configShowSpeedChanges.BindValueChanged(
+                    enabled =>
+                        showSpeedChanges.Value = enabled.NewValue
+                            ? TernaryState.True
+                            : TernaryState.False,
+                    true
+                );
+
+                showSpeedChanges.BindValueChanged(
+                    state =>
+                    {
+                        bool enabled = state.NewValue == TernaryState.True;
+
+                        toggleRuleset.ShowSpeedChanges.Value = enabled;
+                        configShowSpeedChanges.Value = enabled;
                     },
-                });
-
-                configShowSpeedChanges = config.GetBindable<bool>(OsuSetting.EditorShowSpeedChanges);
-                configShowSpeedChanges.BindValueChanged(enabled => showSpeedChanges.Value = enabled.NewValue ? TernaryState.True : TernaryState.False, true);
-
-                showSpeedChanges.BindValueChanged(state =>
-                {
-                    bool enabled = state.NewValue == TernaryState.True;
-
-                    toggleRuleset.ShowSpeedChanges.Value = enabled;
-                    configShowSpeedChanges.Value = enabled;
-                }, true);
+                    true
+                );
             }
 
             beatSnapGrid = CreateBeatSnapGrid();
@@ -83,7 +95,8 @@ namespace osu.Game.Rulesets.Edit
             if (beatSnapGrid != null)
                 AddInternal(beatSnapGrid);
 
-            EditorBeatmap.ControlPointInfo.ControlPointsChanged += expireComposeScreenOnControlPointChange;
+            EditorBeatmap.ControlPointInfo.ControlPointsChanged +=
+                expireComposeScreenOnControlPointChange;
         }
 
         protected override void UpdateAfterChildren()
@@ -102,7 +115,10 @@ namespace osu.Game.Rulesets.Edit
             {
                 if (EditorBeatmap.SelectedHitObjects.Any())
                 {
-                    beatSnapGrid.SelectionTimeRange = (EditorBeatmap.SelectedHitObjects.Min(h => h.StartTime), EditorBeatmap.SelectedHitObjects.Max(h => h.GetEndTime()));
+                    beatSnapGrid.SelectionTimeRange = (
+                        EditorBeatmap.SelectedHitObjects.Min(h => h.StartTime),
+                        EditorBeatmap.SelectedHitObjects.Max(h => h.GetEndTime())
+                    );
                 }
                 else
                     beatSnapGrid.SelectionTimeRange = null;
@@ -119,7 +135,8 @@ namespace osu.Game.Rulesets.Edit
 
         public SnapResult FindSnappedPositionAndTime(Vector2 screenSpacePosition)
         {
-            var scrollingPlayfield = PlayfieldAtScreenSpacePosition(screenSpacePosition) as ScrollingPlayfield;
+            var scrollingPlayfield =
+                PlayfieldAtScreenSpacePosition(screenSpacePosition) as ScrollingPlayfield;
             if (scrollingPlayfield == null)
                 return new SnapResult(screenSpacePosition, null);
 
@@ -139,7 +156,8 @@ namespace osu.Game.Rulesets.Edit
             base.Dispose(isDisposing);
 
             if (EditorBeatmap.IsNotNull())
-                EditorBeatmap.ControlPointInfo.ControlPointsChanged -= expireComposeScreenOnControlPointChange;
+                EditorBeatmap.ControlPointInfo.ControlPointsChanged -=
+                    expireComposeScreenOnControlPointChange;
         }
 
         private void expireComposeScreenOnControlPointChange() => editor?.ReloadComposeScreen();

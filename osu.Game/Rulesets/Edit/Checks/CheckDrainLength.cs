@@ -11,12 +11,11 @@ namespace osu.Game.Rulesets.Edit.Checks
     {
         private const int min_drain_threshold = 30 * 1000;
 
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Compose, "Drain length is too short");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Compose, "Drain length is too short");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooShort(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateTooShort(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -29,9 +28,11 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateTooShort : IssueTemplate
         {
             public IssueTemplateTooShort(ICheck check)
-                : base(check, IssueType.Problem, "Less than 30 seconds of drain time, currently {0}.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "Less than 30 seconds of drain time, currently {0}."
+                ) { }
 
             public Issue Create(int drainTimeSeconds) => new Issue(this, drainTimeSeconds);
         }

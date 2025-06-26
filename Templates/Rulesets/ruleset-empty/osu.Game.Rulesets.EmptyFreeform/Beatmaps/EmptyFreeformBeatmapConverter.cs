@@ -14,15 +14,17 @@ namespace osu.Game.Rulesets.EmptyFreeform.Beatmaps
     public class EmptyFreeformBeatmapConverter : BeatmapConverter<EmptyFreeformHitObject>
     {
         public EmptyFreeformBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
-            : base(beatmap, ruleset)
-        {
-        }
+            : base(beatmap, ruleset) { }
 
         // todo: Check for conversion types that should be supported (ie. Beatmap.HitObjects.Any(h => h is IHasXPosition))
         // https://github.com/ppy/osu/tree/master/osu.Game/Rulesets/Objects/Types
         public override bool CanConvert() => true;
 
-        protected override IEnumerable<EmptyFreeformHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
+        protected override IEnumerable<EmptyFreeformHitObject> ConvertHitObject(
+            HitObject original,
+            IBeatmap beatmap,
+            CancellationToken cancellationToken
+        )
         {
             yield return new EmptyFreeformHitObject
             {

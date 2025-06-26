@@ -14,7 +14,9 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
-    public abstract class ManiaModWithPlayfieldCover : ModHidden, IApplicableToDrawableRuleset<ManiaHitObject>
+    public abstract class ManiaModWithPlayfieldCover
+        : ModHidden,
+            IApplicableToDrawableRuleset<ManiaHitObject>
     {
         public override Type[] IncompatibleMods => new[] { typeof(ModFlashlight<ManiaHitObject>) };
 
@@ -38,23 +40,29 @@ namespace osu.Game.Rulesets.Mania.Mods
                 Container hocParent = (Container)hoc.Parent!;
 
                 hocParent.Remove(hoc, false);
-                hocParent.Add(CreateCover(hoc).With(c =>
-                {
-                    c.RelativeSizeAxes = Axes.Both;
-                    c.Direction = ExpandDirection;
-                    c.Coverage.BindTo(Coverage);
-                }));
+                hocParent.Add(
+                    CreateCover(hoc)
+                        .With(c =>
+                        {
+                            c.RelativeSizeAxes = Axes.Both;
+                            c.Direction = ExpandDirection;
+                            c.Coverage.BindTo(Coverage);
+                        })
+                );
             }
         }
 
-        protected virtual PlayfieldCoveringWrapper CreateCover(Drawable content) => new PlayfieldCoveringWrapper(content);
+        protected virtual PlayfieldCoveringWrapper CreateCover(Drawable content) =>
+            new PlayfieldCoveringWrapper(content);
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
-        {
-        }
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) { }
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state)
-        {
-        }
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) { }
     }
 }

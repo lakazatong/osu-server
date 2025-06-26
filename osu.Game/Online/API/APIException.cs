@@ -8,8 +8,6 @@ namespace osu.Game.Online.API
     public class APIException : InvalidOperationException
     {
         public APIException(string message, Exception? innerException)
-            : base(message, innerException)
-        {
-        }
+            : base(message, innerException) { }
     }
 }

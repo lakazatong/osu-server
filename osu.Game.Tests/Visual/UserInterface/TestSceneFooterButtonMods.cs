@@ -38,9 +38,17 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep(@"Add DoubleTime", () => changeMods(doubleTimeMod));
             AddAssert(@"Check DoubleTime multiplier", () => assertModsMultiplier(doubleTimeMod));
 
-            var multipleIncrementMods = new Mod[] { new OsuModDoubleTime(), new OsuModHidden(), new OsuModHardRock() };
+            var multipleIncrementMods = new Mod[]
+            {
+                new OsuModDoubleTime(),
+                new OsuModHidden(),
+                new OsuModHardRock(),
+            };
             AddStep(@"Add multiple Mods", () => changeMods(multipleIncrementMods));
-            AddAssert(@"Check multiple mod multiplier", () => assertModsMultiplier(multipleIncrementMods));
+            AddAssert(
+                @"Check multiple mod multiplier",
+                () => assertModsMultiplier(multipleIncrementMods)
+            );
         }
 
         [Test]
@@ -56,7 +64,10 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             var multipleDecrementMods = new Mod[] { new OsuModEasy(), new OsuModNoFail() };
             AddStep(@"Add Multiple Mods", () => changeMods(multipleDecrementMods));
-            AddAssert(@"Check multiple mod multiplier", () => assertModsMultiplier(multipleDecrementMods));
+            AddAssert(
+                @"Check multiple mod multiplier",
+                () => assertModsMultiplier(multipleDecrementMods)
+            );
         }
 
         [Test]
@@ -84,8 +95,14 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private bool assertModsMultiplier(IEnumerable<Mod> mods)
         {
-            double multiplier = mods.Aggregate(1.0, (current, mod) => current * mod.ScoreMultiplier);
-            string expectedValue = multiplier == 1 ? string.Empty : ModUtils.FormatScoreMultiplier(multiplier).ToString();
+            double multiplier = mods.Aggregate(
+                1.0,
+                (current, mod) => current * mod.ScoreMultiplier
+            );
+            string expectedValue =
+                multiplier == 1
+                    ? string.Empty
+                    : ModUtils.FormatScoreMultiplier(multiplier).ToString();
 
             return expectedValue == footerButtonMods.MultiplierText.Current.Value;
         }

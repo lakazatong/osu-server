@@ -38,8 +38,6 @@ namespace osu.Game.Rulesets.Osu.Judgements
         public double? TimeCompleted;
 
         public OsuSpinnerJudgementResult(HitObject hitObject, Judgement judgement)
-            : base(hitObject, judgement)
-        {
-        }
+            : base(hitObject, judgement) { }
     }
 }

@@ -39,14 +39,18 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                         Colour = Color4.White.Opacity(0.5f),
                     },
                 },
-                number = new SkinnableSpriteText(new OsuSkinComponentLookup(OsuSkinComponents.HitCircleText), _ => new OsuSpriteText
+                number = new SkinnableSpriteText(
+                    new OsuSkinComponentLookup(OsuSkinComponents.HitCircleText),
+                    _ => new OsuSpriteText
+                    {
+                        Font = OsuFont.Numeric.With(size: 40),
+                        UseFullGlyphHeight = false,
+                    },
+                    confineMode: ConfineMode.NoScaling
+                )
                 {
-                    Font = OsuFont.Numeric.With(size: 40),
-                    UseFullGlyphHeight = false,
-                }, confineMode: ConfineMode.NoScaling)
-                {
-                    Text = @"1"
-                }
+                    Text = @"1",
+                },
             };
         }
     }

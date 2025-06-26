@@ -17,15 +17,14 @@ namespace osu.Game.Overlays.Settings.Sections
     {
         public override LocalisableString Header => RulesetSettingsStrings.Rulesets;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Rulesets
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Rulesets };
 
         [BackgroundDependencyLoader]
         private void load(RulesetStore rulesets)
         {
-            foreach (Ruleset ruleset in rulesets.AvailableRulesets.Select(info => info.CreateInstance()))
+            foreach (
+                Ruleset ruleset in rulesets.AvailableRulesets.Select(info => info.CreateInstance())
+            )
             {
                 try
                 {
@@ -36,7 +35,10 @@ namespace osu.Game.Overlays.Settings.Sections
                 }
                 catch
                 {
-                    Logger.Log($"Failed to load ruleset settings for {ruleset.RulesetInfo.Name}. Please check for an update from the developer.", level: LogLevel.Error);
+                    Logger.Log(
+                        $"Failed to load ruleset settings for {ruleset.RulesetInfo.Name}. Please check for an update from the developer.",
+                        level: LogLevel.Error
+                    );
                 }
             }
         }

@@ -38,25 +38,28 @@ namespace osu.Game.Rulesets.Mania.Tests
             DrawableHoldNote holdNote1 = null;
             DrawableHoldNote holdNote2 = null;
 
-            AddStep("create notes", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "create notes",
+                () =>
                 {
-                    Clock = new FramedClock(new ManualClock()),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(20),
-                    Children = new[]
+                    Child = new FillFlowContainer
                     {
-                        createNoteDisplay(ScrollingDirection.Down, 1, out note1),
-                        createNoteDisplay(ScrollingDirection.Up, 2, out note2),
-                        createHoldNoteDisplay(ScrollingDirection.Down, 1, out holdNote1),
-                        createHoldNoteDisplay(ScrollingDirection.Up, 2, out holdNote2),
-                    }
-                };
-            });
+                        Clock = new FramedClock(new ManualClock()),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(20),
+                        Children = new[]
+                        {
+                            createNoteDisplay(ScrollingDirection.Down, 1, out note1),
+                            createNoteDisplay(ScrollingDirection.Up, 2, out note2),
+                            createHoldNoteDisplay(ScrollingDirection.Down, 1, out holdNote1),
+                            createHoldNoteDisplay(ScrollingDirection.Up, 2, out holdNote2),
+                        },
+                    };
+                }
+            );
 
             AddAssert("note 1 facing downwards", () => verifyAnchors(note1, Anchor.y2));
             AddAssert("note 2 facing upwards", () => verifyAnchors(note2, Anchor.y0));
@@ -64,7 +67,11 @@ namespace osu.Game.Rulesets.Mania.Tests
             AddAssert("hold note 2 facing upwards", () => verifyAnchors(holdNote2, Anchor.y0));
         }
 
-        private Drawable createNoteDisplay(ScrollingDirection direction, int identifier, out DrawableNote hitObject)
+        private Drawable createNoteDisplay(
+            ScrollingDirection direction,
+            int identifier,
+            out DrawableNote hitObject
+        )
         {
             var note = new Note { StartTime = 0 };
             note.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -72,14 +79,22 @@ namespace osu.Game.Rulesets.Mania.Tests
             return new ScrollingTestContainer(direction)
             {
                 AutoSizeAxes = Axes.Both,
-                Child = new NoteContainer(direction, $"note {identifier}, scrolling {direction.ToString().ToLowerInvariant()}")
+                Child = new NoteContainer(
+                    direction,
+                    $"note {identifier}, scrolling {direction.ToString().ToLowerInvariant()}"
+                )
                 {
-                    Child = hitObject = new DrawableNote(note) { AccentColour = { Value = Color4.OrangeRed } }
-                }
+                    Child = hitObject =
+                        new DrawableNote(note) { AccentColour = { Value = Color4.OrangeRed } },
+                },
             };
         }
 
-        private Drawable createHoldNoteDisplay(ScrollingDirection direction, int identifier, out DrawableHoldNote hitObject)
+        private Drawable createHoldNoteDisplay(
+            ScrollingDirection direction,
+            int identifier,
+            out DrawableHoldNote hitObject
+        )
         {
             var note = new HoldNote { StartTime = 0, Duration = 5000 };
             note.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -87,22 +102,27 @@ namespace osu.Game.Rulesets.Mania.Tests
             return new ScrollingTestContainer(direction)
             {
                 AutoSizeAxes = Axes.Both,
-                Child = new NoteContainer(direction, $"hold note {identifier}, scrolling {direction.ToString().ToLowerInvariant()}")
+                Child = new NoteContainer(
+                    direction,
+                    $"hold note {identifier}, scrolling {direction.ToString().ToLowerInvariant()}"
+                )
                 {
-                    Child = hitObject = new DrawableHoldNote(note)
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        AccentColour = { Value = Color4.OrangeRed },
-                    }
-                }
+                    Child = hitObject =
+                        new DrawableHoldNote(note)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            AccentColour = { Value = Color4.OrangeRed },
+                        },
+                },
             };
         }
 
-        private bool verifyAnchors(DrawableHitObject hitObject, Anchor expectedAnchor)
-            => hitObject.Anchor.HasFlag(expectedAnchor) && hitObject.Origin.HasFlag(expectedAnchor);
+        private bool verifyAnchors(DrawableHitObject hitObject, Anchor expectedAnchor) =>
+            hitObject.Anchor.HasFlag(expectedAnchor) && hitObject.Origin.HasFlag(expectedAnchor);
 
-        private bool verifyAnchors(DrawableHoldNote holdNote, Anchor expectedAnchor)
-            => verifyAnchors((DrawableHitObject)holdNote, expectedAnchor) && holdNote.NestedHitObjects.All(n => verifyAnchors(n, expectedAnchor));
+        private bool verifyAnchors(DrawableHoldNote holdNote, Anchor expectedAnchor) =>
+            verifyAnchors((DrawableHitObject)holdNote, expectedAnchor)
+            && holdNote.NestedHitObjects.All(n => verifyAnchors(n, expectedAnchor));
 
         private partial class NoteContainer : Container
         {
@@ -137,23 +157,25 @@ namespace osu.Game.Rulesets.Mania.Tests
                                     Origin = Anchor.TopCentre,
                                     RelativeSizeAxes = Axes.Both,
                                     Width = 1.25f,
-                                    Colour = Color4.Green.Opacity(0.5f)
+                                    Colour = Color4.Green.Opacity(0.5f),
                                 },
-                                content = new Container { RelativeSizeAxes = Axes.Both }
-                            }
+                                content = new Container { RelativeSizeAxes = Axes.Both },
+                            },
                         },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Font = OsuFont.GetFont(size: 14),
-                            Text = description
-                        }
-                    }
+                            Text = description,
+                        },
+                    },
                 };
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
                 dependencies.CacheAs<IBindable<ManiaAction>>(new Bindable<ManiaAction>());
@@ -171,7 +193,9 @@ namespace osu.Game.Rulesets.Mania.Tests
 
                     foreach (var nested in obj.NestedHitObjects)
                     {
-                        double finalPosition = (nested.HitObject.StartTime - obj.HitObject.StartTime) / endTime.Duration;
+                        double finalPosition =
+                            (nested.HitObject.StartTime - obj.HitObject.StartTime)
+                            / endTime.Duration;
 
                         switch (direction)
                         {

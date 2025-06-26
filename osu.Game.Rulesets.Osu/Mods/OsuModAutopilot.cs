@@ -16,24 +16,29 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModAutopilot : Mod, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>
+    public class OsuModAutopilot
+        : Mod,
+            IUpdatableByPlayfield,
+            IApplicableToDrawableRuleset<OsuHitObject>
     {
         public override string Name => "Autopilot";
         public override string Acronym => "AP";
         public override IconUsage? Icon => OsuIcon.ModAutopilot;
         public override ModType Type => ModType.Automation;
-        public override LocalisableString Description => @"Automatic cursor movement - just follow the rhythm.";
+        public override LocalisableString Description =>
+            @"Automatic cursor movement - just follow the rhythm.";
         public override double ScoreMultiplier => 0.1;
 
-        public override Type[] IncompatibleMods => new[]
-        {
-            typeof(OsuModSpunOut),
-            typeof(ModRelax),
-            typeof(ModAutoplay),
-            typeof(OsuModMagnetised),
-            typeof(OsuModRepel),
-            typeof(ModTouchDevice)
-        };
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(OsuModSpunOut),
+                typeof(ModRelax),
+                typeof(ModAutoplay),
+                typeof(OsuModMagnetised),
+                typeof(OsuModRepel),
+                typeof(ModTouchDevice),
+            };
 
         private OsuInputManager inputManager = null!;
 
@@ -43,17 +48,25 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         public void Update(Playfield playfield)
         {
-            if (currentFrame == replayFrames.Count - 1) return;
+            if (currentFrame == replayFrames.Count - 1)
+                return;
 
             double time = playfield.Clock.CurrentTime;
 
             // Very naive implementation of autopilot based on proximity to replay frames.
             // Special case for the first frame is required to ensure the mouse is in a sane position until the actual time of the first frame is hit.
             // TODO: this needs to be based on user interactions to better match stable (pausing until judgement is registered).
-            if (currentFrame < 0 || Math.Abs(replayFrames[currentFrame + 1].Time - time) <= Math.Abs(replayFrames[currentFrame].Time - time))
+            if (
+                currentFrame < 0
+                || Math.Abs(replayFrames[currentFrame + 1].Time - time)
+                    <= Math.Abs(replayFrames[currentFrame].Time - time)
+            )
             {
                 currentFrame++;
-                new MousePositionAbsoluteInput { Position = playfield.ToScreenSpace(replayFrames[currentFrame].Position) }.Apply(inputManager.CurrentState, inputManager);
+                new MousePositionAbsoluteInput
+                {
+                    Position = playfield.ToScreenSpace(replayFrames[currentFrame].Position),
+                }.Apply(inputManager.CurrentState, inputManager);
             }
 
             // TODO: Implement the functionality to automatically spin spinners
@@ -66,7 +79,10 @@ namespace osu.Game.Rulesets.Osu.Mods
             inputManager.AllowUserCursorMovement = false;
 
             // Generate the replay frames the cursor should follow
-            replayFrames = new OsuAutoGenerator(drawableRuleset.Beatmap, drawableRuleset.Mods).Generate().Frames.Cast<OsuReplayFrame>().ToList();
+            replayFrames = new OsuAutoGenerator(drawableRuleset.Beatmap, drawableRuleset.Mods)
+                .Generate()
+                .Frames.Cast<OsuReplayFrame>()
+                .ToList();
         }
     }
 }

@@ -19,7 +19,14 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             Debug.Assert(pendingKeyBindingConflict != null);
             return new KeyBindingConflictPopover(pendingKeyBindingConflict)
             {
-                BindingConflictResolved = () => BindingUpdated?.Invoke(this, new KeyBindingUpdatedEventArgs(bindingConflictResolved: true, canAdvanceToNextBinding: false))
+                BindingConflictResolved = () =>
+                    BindingUpdated?.Invoke(
+                        this,
+                        new KeyBindingUpdatedEventArgs(
+                            bindingConflictResolved: true,
+                            canAdvanceToNextBinding: false
+                        )
+                    ),
             };
         }
 
@@ -40,7 +47,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             /// <summary>
             /// Contains information about the key binding conflict to be resolved.
             /// </summary>
-            public KeyBindingConflictInfo(ConflictingKeyBinding existingBinding, ConflictingKeyBinding newBinding)
+            public KeyBindingConflictInfo(
+                ConflictingKeyBinding existingBinding,
+                ConflictingKeyBinding newBinding
+            )
             {
                 Existing = existingBinding;
                 New = newBinding;
@@ -54,7 +64,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             public KeyCombination CombinationWhenChosen { get; }
             public KeyCombination CombinationWhenNotChosen { get; }
 
-            public ConflictingKeyBinding(Guid id, object action, KeyCombination combinationWhenChosen, KeyCombination combinationWhenNotChosen)
+            public ConflictingKeyBinding(
+                Guid id,
+                object action,
+                KeyCombination combinationWhenChosen,
+                KeyCombination combinationWhenNotChosen
+            )
             {
                 ID = id;
                 Action = action;
@@ -68,7 +83,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             public bool BindingConflictResolved { get; }
             public bool CanAdvanceToNextBinding { get; }
 
-            public KeyBindingUpdatedEventArgs(bool bindingConflictResolved, bool canAdvanceToNextBinding)
+            public KeyBindingUpdatedEventArgs(
+                bool bindingConflictResolved,
+                bool canAdvanceToNextBinding
+            )
             {
                 BindingConflictResolved = bindingConflictResolved;
                 CanAdvanceToNextBinding = canAdvanceToNextBinding;

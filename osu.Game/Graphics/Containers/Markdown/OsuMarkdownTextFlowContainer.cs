@@ -24,29 +24,37 @@ namespace osu.Game.Graphics.Containers.Markdown
 {
     public partial class OsuMarkdownTextFlowContainer : MarkdownTextFlowContainer
     {
-        protected override void AddLinkText(string text, LinkInline linkInline)
-            => AddDrawable(new OsuMarkdownLinkText(text, linkInline));
+        protected override void AddLinkText(string text, LinkInline linkInline) =>
+            AddDrawable(new OsuMarkdownLinkText(text, linkInline));
 
-        protected override void AddAutoLink(AutolinkInline autolinkInline)
-            => AddDrawable(new OsuMarkdownLinkText(autolinkInline));
+        protected override void AddAutoLink(AutolinkInline autolinkInline) =>
+            AddDrawable(new OsuMarkdownLinkText(autolinkInline));
 
-        protected override void AddImage(LinkInline linkInline) => AddDrawable(new OsuMarkdownImage(linkInline));
+        protected override void AddImage(LinkInline linkInline) =>
+            AddDrawable(new OsuMarkdownImage(linkInline));
 
         // TODO : Change font to monospace
-        protected override void AddCodeInLine(CodeInline codeInline) => AddDrawable(new OsuMarkdownInlineCode
-        {
-            Text = codeInline.Content
-        });
+        protected override void AddCodeInLine(CodeInline codeInline) =>
+            AddDrawable(new OsuMarkdownInlineCode { Text = codeInline.Content });
 
-        protected override void AddFootnoteLink(FootnoteLink footnoteLink) => AddDrawable(new OsuMarkdownFootnoteLink(footnoteLink));
+        protected override void AddFootnoteLink(FootnoteLink footnoteLink) =>
+            AddDrawable(new OsuMarkdownFootnoteLink(footnoteLink));
 
-        protected override void AddFootnoteBacklink(FootnoteLink footnoteBacklink) => AddDrawable(new OsuMarkdownFootnoteBacklink(footnoteBacklink));
+        protected override void AddFootnoteBacklink(FootnoteLink footnoteBacklink) =>
+            AddDrawable(new OsuMarkdownFootnoteBacklink(footnoteBacklink));
 
-        protected override void ApplyEmphasisedCreationParameters(SpriteText spriteText, bool bold, bool italic)
+        protected override void ApplyEmphasisedCreationParameters(
+            SpriteText spriteText,
+            bool bold,
+            bool italic
+        )
         {
             base.ApplyEmphasisedCreationParameters(spriteText, bold, italic);
 
-            spriteText.Font = spriteText.Font.With(weight: bold ? FontWeight.Bold : FontWeight.Regular, italics: italic);
+            spriteText.Font = spriteText.Font.With(
+                weight: bold ? FontWeight.Bold : FontWeight.Regular,
+                italics: italic
+            );
         }
 
         protected override void AddCustomComponent(CustomContainerInline inline)
@@ -58,7 +66,9 @@ namespace osu.Game.Graphics.Containers.Markdown
             }
 
             string[] attributes = literal.Content.ToString().Trim(' ', '{', '}').Split();
-            string flagAttribute = attributes.SingleOrDefault(a => a.StartsWith(@"flag", StringComparison.Ordinal));
+            string flagAttribute = attributes.SingleOrDefault(a =>
+                a.StartsWith(@"flag", StringComparison.Ordinal)
+            );
 
             if (flagAttribute == null)
             {
@@ -89,21 +99,15 @@ namespace osu.Game.Graphics.Containers.Markdown
                 Masking = true;
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background6,
-                    },
-                    parentTextComponent.CreateSpriteText().With(t =>
-                    {
-                        t.Colour = colourProvider.Light1;
-                        t.Text = Text;
-                        t.Padding = new MarginPadding
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background6 },
+                    parentTextComponent
+                        .CreateSpriteText()
+                        .With(t =>
                         {
-                            Vertical = 1,
-                            Horizontal = 4,
-                        };
-                    }),
+                            t.Colour = colourProvider.Light1;
+                            t.Text = Text;
+                            t.Padding = new MarginPadding { Vertical = 1, Horizontal = 4 };
+                        }),
                 };
             }
         }

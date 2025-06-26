@@ -26,14 +26,10 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         public readonly Bindable<bool> Major = new Bindable<bool>();
 
         public DrawableBarLine()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableBarLine(BarLine? barLine)
-            : base(barLine!)
-        {
-        }
+            : base(barLine!) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -44,11 +40,16 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             RelativeSizeAxes = Axes.Y;
             Width = tracker_width;
 
-            AddInternal(new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.BarLine), _ => new DefaultBarLine())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(
+                new SkinnableDrawable(
+                    new TaikoSkinComponentLookup(TaikoSkinComponents.BarLine),
+                    _ => new DefaultBarLine()
+                )
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
 
         protected override void OnApply()

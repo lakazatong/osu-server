@@ -13,9 +13,7 @@ namespace osu.Game.Database
     public class BeatmapExporter : LegacyArchiveExporter<BeatmapSetInfo>
     {
         public BeatmapExporter(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
 
         protected override bool UseFixedEncoding => false;
 

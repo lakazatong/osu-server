@@ -10,9 +10,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
     public partial class VideoIconPill : IconPill
     {
         public VideoIconPill()
-            : base(FontAwesome.Solid.Film)
-        {
-        }
+            : base(FontAwesome.Solid.Film) { }
 
         public override LocalisableString TooltipText => BeatmapsetsStrings.ShowInfoVideo;
     }

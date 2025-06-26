@@ -42,11 +42,7 @@ namespace osu.Game.Tournament.Screens.Ladder
                 Masking = true,
                 Children = new Drawable[]
                 {
-                    new TourneyVideo("ladder")
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Loop = true,
-                    },
+                    new TourneyVideo("ladder") { RelativeSizeAxes = Axes.Both, Loop = true },
                     new DrawableTournamentHeaderText
                     {
                         Y = 100,
@@ -62,18 +58,20 @@ namespace osu.Game.Tournament.Screens.Ladder
                             headings = new Container { RelativeSizeAxes = Axes.Both },
                             MatchesContainer = new Container<DrawableTournamentMatch>
                             {
-                                AutoSizeAxes = Axes.Both
+                                AutoSizeAxes = Axes.Both,
                             },
-                        }
+                        },
                     },
-                }
+                },
             };
 
             void addMatch(TournamentMatch match) =>
-                MatchesContainer.Add(new DrawableTournamentMatch(match, this is LadderEditorScreen)
-                {
-                    Changed = () => layout.Invalidate()
-                });
+                MatchesContainer.Add(
+                    new DrawableTournamentMatch(match, this is LadderEditorScreen)
+                    {
+                        Changed = () => layout.Invalidate(),
+                    }
+                );
 
             foreach (var match in LadderInfo.Matches)
                 addMatch(match);
@@ -134,56 +132,92 @@ namespace osu.Game.Tournament.Screens.Ladder
 
                 if (match.Match.Progression.Value != null)
                 {
-                    var dest = MatchesContainer.FirstOrDefault(p => p.Match == match.Match.Progression.Value);
+                    var dest = MatchesContainer.FirstOrDefault(p =>
+                        p.Match == match.Match.Progression.Value
+                    );
 
                     if (dest == null)
                         // clean up outdated progressions.
                         match.Match.Progression.Value = null;
                     else
-                        paths.Add(new ProgressionPath(match, dest) { Colour = match.Match.Losers.Value ? losersPathColour : normalPathColour });
+                        paths.Add(
+                            new ProgressionPath(match, dest)
+                            {
+                                Colour = match.Match.Losers.Value
+                                    ? losersPathColour
+                                    : normalPathColour,
+                            }
+                        );
                 }
 
                 if (DrawLoserPaths)
                 {
                     if (match.Match.LosersProgression.Value != null)
                     {
-                        var dest = MatchesContainer.FirstOrDefault(p => p.Match == match.Match.LosersProgression.Value);
+                        var dest = MatchesContainer.FirstOrDefault(p =>
+                            p.Match == match.Match.LosersProgression.Value
+                        );
 
                         if (dest == null)
                             // clean up outdated progressions.
                             match.Match.LosersProgression.Value = null;
                         else
-                            paths.Add(new ProgressionPath(match, dest) { Colour = losersPathColour.Opacity(0.1f) });
+                            paths.Add(
+                                new ProgressionPath(match, dest)
+                                {
+                                    Colour = losersPathColour.Opacity(0.1f),
+                                }
+                            );
                     }
                 }
             }
 
             foreach (var round in LadderInfo.Rounds)
             {
-                var topMatch = MatchesContainer.Where(p => !p.Match.Losers.Value && p.Match.Round.Value == round).MinBy(p => p.Y);
+                var topMatch = MatchesContainer
+                    .Where(p => !p.Match.Losers.Value && p.Match.Round.Value == round)
+                    .MinBy(p => p.Y);
 
-                if (topMatch == null) continue;
+                if (topMatch == null)
+                    continue;
 
-                headings.Add(new DrawableTournamentRound(round)
-                {
-                    Position = headings.ToLocalSpace((topMatch.ScreenSpaceDrawQuad.TopLeft + topMatch.ScreenSpaceDrawQuad.TopRight) / 2),
-                    Margin = new MarginPadding { Bottom = 10 },
-                    Origin = Anchor.BottomCentre,
-                });
+                headings.Add(
+                    new DrawableTournamentRound(round)
+                    {
+                        Position = headings.ToLocalSpace(
+                            (
+                                topMatch.ScreenSpaceDrawQuad.TopLeft
+                                + topMatch.ScreenSpaceDrawQuad.TopRight
+                            ) / 2
+                        ),
+                        Margin = new MarginPadding { Bottom = 10 },
+                        Origin = Anchor.BottomCentre,
+                    }
+                );
             }
 
             foreach (var round in LadderInfo.Rounds)
             {
-                var topMatch = MatchesContainer.Where(p => p.Match.Losers.Value && p.Match.Round.Value == round).MinBy(p => p.Y);
+                var topMatch = MatchesContainer
+                    .Where(p => p.Match.Losers.Value && p.Match.Round.Value == round)
+                    .MinBy(p => p.Y);
 
-                if (topMatch == null) continue;
+                if (topMatch == null)
+                    continue;
 
-                headings.Add(new DrawableTournamentRound(round, true)
-                {
-                    Position = headings.ToLocalSpace((topMatch.ScreenSpaceDrawQuad.TopLeft + topMatch.ScreenSpaceDrawQuad.TopRight) / 2),
-                    Margin = new MarginPadding { Bottom = 10 },
-                    Origin = Anchor.BottomCentre,
-                });
+                headings.Add(
+                    new DrawableTournamentRound(round, true)
+                    {
+                        Position = headings.ToLocalSpace(
+                            (
+                                topMatch.ScreenSpaceDrawQuad.TopLeft
+                                + topMatch.ScreenSpaceDrawQuad.TopRight
+                            ) / 2
+                        ),
+                        Margin = new MarginPadding { Bottom = 10 },
+                        Origin = Anchor.BottomCentre,
+                    }
+                );
             }
 
             layout.Validate();

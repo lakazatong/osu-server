@@ -34,7 +34,11 @@ namespace osu.Game.Overlays.Changelog
         }
 
         [BackgroundDependencyLoader]
-        private void load(CancellationToken? cancellation, IAPIProvider api, OverlayColourProvider colourProvider)
+        private void load(
+            CancellationToken? cancellation,
+            IAPIProvider api,
+            OverlayColourProvider colourProvider
+        )
         {
             bool complete = false;
 
@@ -73,10 +77,7 @@ namespace osu.Game.Overlays.Changelog
                         Colour = colourProvider.Background6,
                         Margin = new MarginPadding { Top = 30 },
                     },
-                    new ChangelogSupporterPromo
-                    {
-                        Alpha = api.LocalUser.Value.IsSupporter ? 0 : 1,
-                    },
+                    new ChangelogSupporterPromo { Alpha = api.LocalUser.Value.IsSupporter ? 0 : 1 },
                     new Box
                     {
                         RelativeSizeAxes = Axes.X,
@@ -84,7 +85,7 @@ namespace osu.Game.Overlays.Changelog
                         Colour = colourProvider.Background6,
                         Alpha = api.LocalUser.Value.IsSupporter ? 0 : 1,
                     },
-                    comments = new CommentsContainer()
+                    comments = new CommentsContainer(),
                 };
 
                 comments.ShowComments(CommentableType.Build, build.Id);
@@ -94,9 +95,7 @@ namespace osu.Game.Overlays.Changelog
         public partial class ChangelogBuildWithNavigation : ChangelogBuild
         {
             public ChangelogBuildWithNavigation(APIChangelogBuild build)
-                : base(build)
-            {
-            }
+                : base(build) { }
 
             private OsuSpriteText date;
 
@@ -111,26 +110,34 @@ namespace osu.Game.Overlays.Changelog
                 buildDisplay.Scale = new Vector2(1.25f);
                 buildDisplay.Action = null;
 
-                fill.Add(date = new OsuSpriteText
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Text = Build.CreatedAt.Date.ToLocalisableString("dd MMMM yyyy"),
-                    Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 14),
-                    Margin = new MarginPadding { Top = 5 },
-                    Scale = new Vector2(1.25f),
-                });
+                fill.Add(
+                    date = new OsuSpriteText
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Text = Build.CreatedAt.Date.ToLocalisableString("dd MMMM yyyy"),
+                        Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 14),
+                        Margin = new MarginPadding { Top = 5 },
+                        Scale = new Vector2(1.25f),
+                    }
+                );
 
-                nestedFill.Insert(-1, new NavigationIconButton(Build.Versions?.Previous)
-                {
-                    Icon = FontAwesome.Solid.ChevronLeft,
-                    SelectBuild = b => SelectBuild(b)
-                });
-                nestedFill.Insert(1, new NavigationIconButton(Build.Versions?.Next)
-                {
-                    Icon = FontAwesome.Solid.ChevronRight,
-                    SelectBuild = b => SelectBuild(b)
-                });
+                nestedFill.Insert(
+                    -1,
+                    new NavigationIconButton(Build.Versions?.Previous)
+                    {
+                        Icon = FontAwesome.Solid.ChevronLeft,
+                        SelectBuild = b => SelectBuild(b),
+                    }
+                );
+                nestedFill.Insert(
+                    1,
+                    new NavigationIconButton(Build.Versions?.Next)
+                    {
+                        Icon = FontAwesome.Solid.ChevronRight,
+                        SelectBuild = b => SelectBuild(b),
+                    }
+                );
 
                 return fill;
             }
@@ -151,7 +158,8 @@ namespace osu.Game.Overlays.Changelog
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 
-                if (build == null) return;
+                if (build == null)
+                    return;
 
                 TooltipText = build.DisplayVersion;
 

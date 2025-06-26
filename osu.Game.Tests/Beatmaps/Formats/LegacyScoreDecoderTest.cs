@@ -65,13 +65,26 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 Assert.AreEqual(829_931, score.ScoreInfo.LegacyTotalScore);
                 Assert.AreEqual(3, score.ScoreInfo.MaxCombo);
 
-                Assert.That(score.ScoreInfo.APIMods.Select(m => m.Acronym), Is.EquivalentTo(new[] { "CL", "9K", "DS" }));
+                Assert.That(
+                    score.ScoreInfo.APIMods.Select(m => m.Acronym),
+                    Is.EquivalentTo(new[] { "CL", "9K", "DS" })
+                );
 
-                Assert.That((2 * 300d + 1 * 200) / (3 * 305d), Is.EqualTo(score.ScoreInfo.Accuracy).Within(0.0001));
+                Assert.That(
+                    (2 * 300d + 1 * 200) / (3 * 305d),
+                    Is.EqualTo(score.ScoreInfo.Accuracy).Within(0.0001)
+                );
                 Assert.AreEqual(ScoreRank.B, score.ScoreInfo.Rank);
 
-                Assert.That(score.Replay.Frames, Has.One.Matches<ManiaReplayFrame>(frame =>
-                    frame.Time == 414 && frame.Actions.SequenceEqual(new[] { ManiaAction.Key1, ManiaAction.Key18 })));
+                Assert.That(
+                    score.Replay.Frames,
+                    Has.One.Matches<ManiaReplayFrame>(frame =>
+                        frame.Time == 414
+                        && frame.Actions.SequenceEqual(
+                            new[] { ManiaAction.Key1, ManiaAction.Key18 }
+                        )
+                    )
+                );
             }
         }
 
@@ -98,7 +111,11 @@ namespace osu.Game.Tests.Beatmaps.Formats
         {
             var decoder = new TestLegacyScoreDecoder();
 
-            using (var resourceStream = TestResources.OpenResource("Replays/taiko-replay-with-legacy-online-id.osr"))
+            using (
+                var resourceStream = TestResources.OpenResource(
+                    "Replays/taiko-replay-with-legacy-online-id.osr"
+                )
+            )
             {
                 var score = decoder.Parse(resourceStream);
 
@@ -112,7 +129,11 @@ namespace osu.Game.Tests.Beatmaps.Formats
         {
             var decoder = new TestLegacyScoreDecoder();
 
-            using (var resourceStream = TestResources.OpenResource("Replays/taiko-replay-with-new-online-id.osr"))
+            using (
+                var resourceStream = TestResources.OpenResource(
+                    "Replays/taiko-replay-with-new-online-id.osr"
+                )
+            )
             {
                 var score = decoder.Parse(resourceStream);
 
@@ -153,10 +174,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             var ruleset = new OsuRuleset().RulesetInfo;
             var scoreInfo = TestResources.CreateTestScoreInfo(ruleset);
-            var beatmap = new TestBeatmap(ruleset)
-            {
-                BeatmapVersion = beatmapVersion
-            };
+            var beatmap = new TestBeatmap(ruleset) { BeatmapVersion = beatmapVersion };
 
             var score = new Score
             {
@@ -165,10 +183,18 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     Frames = new List<ReplayFrame>
                     {
-                        new OsuReplayFrame(first_frame_time, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                        new OsuReplayFrame(second_frame_time, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton)
-                    }
-                }
+                        new OsuReplayFrame(
+                            first_frame_time,
+                            OsuPlayfield.BASE_SIZE / 2,
+                            OsuAction.LeftButton
+                        ),
+                        new OsuReplayFrame(
+                            second_frame_time,
+                            OsuPlayfield.BASE_SIZE / 2,
+                            OsuAction.LeftButton
+                        ),
+                    },
+                },
             };
 
             var decodedAfterEncode = encodeThenDecode(beatmapVersion, score, beatmap);
@@ -195,11 +221,15 @@ namespace osu.Game.Tests.Beatmaps.Formats
                         new OsuReplayFrame(1000, OsuPlayfield.BASE_SIZE),
                         new OsuReplayFrame(500, OsuPlayfield.BASE_SIZE / 2),
                         new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE),
-                    }
-                }
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyScoreEncoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyScoreEncoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.That(decodedAfterEncode.Replay.Frames, Has.Count.EqualTo(3));
             Assert.That(decodedAfterEncode.Replay.Frames[0].Time, Is.EqualTo(0));
@@ -224,11 +254,15 @@ namespace osu.Game.Tests.Beatmaps.Formats
                         new OsuReplayFrame(100, new Vector2()),
                         new OsuReplayFrame(50, OsuPlayfield.BASE_SIZE / 2),
                         new OsuReplayFrame(1000, OsuPlayfield.BASE_SIZE),
-                    }
-                }
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyScoreEncoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyScoreEncoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.That(decodedAfterEncode.Replay.Frames, Has.Count.EqualTo(3));
             Assert.That(decodedAfterEncode.Replay.Frames[0].Time, Is.EqualTo(0));
@@ -253,11 +287,15 @@ namespace osu.Game.Tests.Beatmaps.Formats
                         new OsuReplayFrame(0, new Vector2()),
                         new OsuReplayFrame(500, OsuPlayfield.BASE_SIZE / 2),
                         new OsuReplayFrame(-1500, OsuPlayfield.BASE_SIZE),
-                    }
-                }
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyScoreEncoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyScoreEncoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.That(decodedAfterEncode.Replay.Frames, Has.Count.EqualTo(3));
             Assert.That(decodedAfterEncode.Replay.Frames[0].Time, Is.EqualTo(-1500));
@@ -278,24 +316,34 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     Frames = new List<ReplayFrame>
                     {
-                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton)
-                    }
-                }
+                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
+                    },
+                },
             };
 
             // the "se" culture is used here, as it encodes the negative number sign as U+2212 MINUS SIGN,
             // rather than the classic ASCII U+002D HYPHEN-MINUS.
             CultureInfo.CurrentCulture = new CultureInfo("se");
 
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.Multiple(() =>
             {
                 Assert.That(decodedAfterEncode, Is.Not.Null);
 
-                Assert.That(decodedAfterEncode.ScoreInfo.User.Username, Is.EqualTo(scoreInfo.User.Username));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.User.Username,
+                    Is.EqualTo(scoreInfo.User.Username)
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.Ruleset, Is.EqualTo(scoreInfo.Ruleset));
-                Assert.That(decodedAfterEncode.ScoreInfo.TotalScore, Is.EqualTo(scoreInfo.TotalScore));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.TotalScore,
+                    Is.EqualTo(scoreInfo.TotalScore)
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.MaxCombo, Is.EqualTo(scoreInfo.MaxCombo));
                 Assert.That(decodedAfterEncode.ScoreInfo.Date, Is.EqualTo(scoreInfo.Date));
 
@@ -309,16 +357,13 @@ namespace osu.Game.Tests.Beatmaps.Formats
             var ruleset = new OsuRuleset().RulesetInfo;
 
             var scoreInfo = TestResources.CreateTestScoreInfo(ruleset);
-            scoreInfo.Mods = new Mod[]
-            {
-                new OsuModDoubleTime { SpeedChange = { Value = 1.1 } }
-            };
+            scoreInfo.Mods = new Mod[] { new OsuModDoubleTime { SpeedChange = { Value = 1.1 } } };
             scoreInfo.OnlineID = 123123;
             scoreInfo.User = new APIUser
             {
                 Username = "spaceman_atlas",
                 Id = 3035836,
-                CountryCode = CountryCode.PL
+                CountryCode = CountryCode.PL,
             };
             scoreInfo.ClientVersion = "2023.1221.0";
 
@@ -330,18 +375,28 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     Frames = new List<ReplayFrame>
                     {
-                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton)
-                    }
-                }
+                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.Multiple(() =>
             {
                 Assert.That(decodedAfterEncode.ScoreInfo.OnlineID, Is.EqualTo(123123));
-                Assert.That(decodedAfterEncode.ScoreInfo.Statistics, Is.EqualTo(scoreInfo.Statistics));
-                Assert.That(decodedAfterEncode.ScoreInfo.MaximumStatistics, Is.EqualTo(scoreInfo.MaximumStatistics));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.Statistics,
+                    Is.EqualTo(scoreInfo.Statistics)
+                );
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.MaximumStatistics,
+                    Is.EqualTo(scoreInfo.MaximumStatistics)
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.Mods, Is.EqualTo(scoreInfo.Mods));
                 Assert.That(decodedAfterEncode.ScoreInfo.ClientVersion, Is.EqualTo("2023.1221.0"));
                 Assert.That(decodedAfterEncode.ScoreInfo.RealmUser.OnlineID, Is.EqualTo(3035836));
@@ -359,7 +414,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
             using (var sw = new SerializationWriter(memoryStream, true))
             {
                 sw.Write((byte)3); // ruleset id (mania).
-                                   // mania is used intentionally as it is the only ruleset wherein default accuracy calculation is changed in lazer
+                // mania is used intentionally as it is the only ruleset wherein default accuracy calculation is changed in lazer
                 sw.Write(20240116); // version (anything below `LegacyScoreEncoder.FIRST_LAZER_VERSION` is stable)
                 sw.Write(string.Empty.ComputeMD5Hash()); // beatmap hash, irrelevant to this test
                 sw.Write("username"); // irrelevant to this test
@@ -385,7 +440,10 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             Assert.Multiple(() =>
             {
-                Assert.That(decoded.ScoreInfo.Accuracy, Is.EqualTo((double)(198 * 305 + 300) / (200 * 305)));
+                Assert.That(
+                    decoded.ScoreInfo.Accuracy,
+                    Is.EqualTo((double)(198 * 305 + 300) / (200 * 305))
+                );
                 Assert.That(decoded.ScoreInfo.Rank, Is.EqualTo(ScoreRank.SH));
             });
         }
@@ -452,18 +510,22 @@ namespace osu.Game.Tests.Beatmaps.Formats
             scoreInfo.Rank = ScoreRank.A;
 
             var beatmap = new TestBeatmap(ruleset);
-            var score = new Score
-            {
-                ScoreInfo = scoreInfo,
-            };
+            var score = new Score { ScoreInfo = scoreInfo };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.Multiple(() =>
             {
                 Assert.That(decodedAfterEncode.ScoreInfo.TotalScore, Is.EqualTo(284_537));
                 Assert.That(decodedAfterEncode.ScoreInfo.LegacyTotalScore, Is.Null);
-                Assert.That(decodedAfterEncode.ScoreInfo.Accuracy, Is.EqualTo((double)(199 * 300 + 30) / (200 * 300 + 30)));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.Accuracy,
+                    Is.EqualTo((double)(199 * 300 + 30) / (200 * 300 + 30))
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.Rank, Is.EqualTo(ScoreRank.A));
             });
         }
@@ -505,7 +567,10 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             Assert.Multiple(() =>
             {
-                Assert.That(decoded.ScoreInfo.Accuracy, Is.EqualTo((double)(198 * 300 + 50) / (200 * 300)));
+                Assert.That(
+                    decoded.ScoreInfo.Accuracy,
+                    Is.EqualTo((double)(198 * 300 + 50) / (200 * 300))
+                );
                 Assert.That(decoded.ScoreInfo.Rank, Is.EqualTo(ScoreRank.A));
             });
         }
@@ -516,10 +581,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
             var ruleset = new OsuRuleset().RulesetInfo;
 
             var scoreInfo = TestResources.CreateTestScoreInfo(ruleset);
-            scoreInfo.Mods = new Mod[]
-            {
-                new OsuModDoubleTime { SpeedChange = { Value = 1.1 } }
-            };
+            scoreInfo.Mods = new Mod[] { new OsuModDoubleTime { SpeedChange = { Value = 1.1 } } };
             scoreInfo.OnlineID = 123123;
             scoreInfo.ClientVersion = "2023.1221.0";
             scoreInfo.TotalScoreWithoutMods = 1_000_000;
@@ -533,16 +595,23 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     Frames = new List<ReplayFrame>
                     {
-                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton)
-                    }
-                }
+                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.Multiple(() =>
             {
-                Assert.That(decodedAfterEncode.ScoreInfo.TotalScoreWithoutMods, Is.EqualTo(1_000_000));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.TotalScoreWithoutMods,
+                    Is.EqualTo(1_000_000)
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.TotalScore, Is.EqualTo(1_020_000));
             });
         }
@@ -553,10 +622,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
             var ruleset = new OsuRuleset().RulesetInfo;
 
             var scoreInfo = TestResources.CreateTestScoreInfo(ruleset);
-            scoreInfo.Mods = new Mod[]
-            {
-                new OsuModDoubleTime { SpeedChange = { Value = 1.1 } }
-            };
+            scoreInfo.Mods = new Mod[] { new OsuModDoubleTime { SpeedChange = { Value = 1.1 } } };
             scoreInfo.OnlineID = 123123;
             scoreInfo.ClientVersion = "2023.1221.0";
             scoreInfo.TotalScoreWithoutMods = 0;
@@ -570,16 +636,23 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     Frames = new List<ReplayFrame>
                     {
-                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton)
-                    }
-                }
+                        new OsuReplayFrame(2000, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
+                    },
+                },
             };
 
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.Multiple(() =>
             {
-                Assert.That(decodedAfterEncode.ScoreInfo.TotalScoreWithoutMods, Is.EqualTo(1_000_000));
+                Assert.That(
+                    decodedAfterEncode.ScoreInfo.TotalScoreWithoutMods,
+                    Is.EqualTo(1_000_000)
+                );
                 Assert.That(decodedAfterEncode.ScoreInfo.TotalScore, Is.EqualTo(1_020_000));
             });
         }
@@ -613,7 +686,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 new OsuRuleset(),
                 new TaikoRuleset(),
                 new CatchRuleset(),
-                new ManiaRuleset()
+                new ManiaRuleset(),
             }.ToDictionary(ruleset => ((ILegacyRuleset)ruleset).LegacyID);
 
             public TestLegacyScoreDecoder(int beatmapVersion = LegacyBeatmapDecoder.LATEST_VERSION)
@@ -623,22 +696,22 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             protected override Ruleset GetRuleset(int rulesetId) => rulesets[rulesetId];
 
-            protected override WorkingBeatmap GetBeatmap(string md5Hash) => new TestWorkingBeatmap(new Beatmap
-            {
-                BeatmapInfo = new BeatmapInfo
-                {
-                    MD5Hash = md5Hash,
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                    Difficulty = new BeatmapDifficulty(),
-                },
-                // needs to have at least one object so that `StandardisedScoreMigrationTools` doesn't die
-                // when trying to recompute total score.
-                HitObjects =
-                {
-                    new HitCircle()
-                },
-                BeatmapVersion = beatmapVersion,
-            });
+            protected override WorkingBeatmap GetBeatmap(string md5Hash) =>
+                new TestWorkingBeatmap(
+                    new Beatmap
+                    {
+                        BeatmapInfo = new BeatmapInfo
+                        {
+                            MD5Hash = md5Hash,
+                            Ruleset = new OsuRuleset().RulesetInfo,
+                            Difficulty = new BeatmapDifficulty(),
+                        },
+                        // needs to have at least one object so that `StandardisedScoreMigrationTools` doesn't die
+                        // when trying to recompute total score.
+                        HitObjects = { new HitCircle() },
+                        BeatmapVersion = beatmapVersion,
+                    }
+                );
         }
     }
 }

@@ -18,7 +18,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 {
     public partial class ArgonColumnBackground : CompositeDrawable, IKeyBindingHandler<ManiaAction>
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Color4 brightColour;
         private Color4 dimColour;
@@ -44,28 +45,27 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         {
             InternalChildren = new[]
             {
-                background = new Box
-                {
-                    Name = "Background",
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { Name = "Background", RelativeSizeAxes = Axes.Both },
                 backgroundOverlay = new Box
                 {
                     Name = "Background Gradient Overlay",
                     RelativeSizeAxes = Axes.Both,
                     Height = 0.5f,
                     Blending = BlendingParameters.Additive,
-                    Alpha = 0
-                }
+                    Alpha = 0,
+                },
             };
 
             accentColour = column.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour =>
-            {
-                background.Colour = colour.NewValue.Darken(3).Opacity(0.8f);
-                brightColour = colour.NewValue.Opacity(0.6f);
-                dimColour = colour.NewValue.Opacity(0);
-            }, true);
+            accentColour.BindValueChanged(
+                colour =>
+                {
+                    background.Colour = colour.NewValue.Darken(3).Opacity(0.8f);
+                    brightColour = colour.NewValue.Opacity(0.6f);
+                    dimColour = colour.NewValue.Opacity(0);
+                },
+                true
+            );
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);
@@ -88,7 +88,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         public bool OnPressed(KeyBindingPressEvent<ManiaAction> e)
         {
             if (e.Action == column.Action.Value)
-                backgroundOverlay.FadeTo(1, 50, Easing.OutQuint).Then().FadeTo(0.5f, 250, Easing.OutQuint);
+                backgroundOverlay
+                    .FadeTo(1, 50, Easing.OutQuint)
+                    .Then()
+                    .FadeTo(0.5f, 250, Easing.OutQuint);
             return false;
         }
 

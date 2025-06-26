@@ -14,13 +14,12 @@ namespace osu.Game.Graphics.Containers.Markdown
     {
         // TODO : change to monospace font for this component
         public OsuMarkdownCodeBlock(CodeBlock codeBlock)
-            : base(codeBlock)
-        {
-        }
+            : base(codeBlock) { }
 
         protected override Drawable CreateBackground() => new CodeBlockBackground();
 
-        public override MarkdownTextFlowContainer CreateTextFlow() => new CodeBlockTextFlowContainer();
+        public override MarkdownTextFlowContainer CreateTextFlow() =>
+            new CodeBlockTextFlowContainer();
 
         private partial class CodeBlockBackground : Box
         {

@@ -16,20 +16,24 @@ namespace osu.Game.Tests.Visual.Editing
         public override Drawable CreateTestComponent() => Empty(); // tick display is implicitly inside the timeline.
 
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         [BackgroundDependencyLoader]
         private void load()
         {
             BeatDivisor.Value = 4;
 
-            Add(new BeatDivisorControl
-            {
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-                Margin = new MarginPadding(30),
-                Size = new Vector2(90)
-            });
+            Add(
+                new BeatDivisorControl
+                {
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Margin = new MarginPadding(30),
+                    Size = new Vector2(90),
+                }
+            );
         }
     }
 }

@@ -26,17 +26,17 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private BeatmapSetInfo beatmapSet = null!;
 
         public TestScenePanelSet()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            beatmapSet = beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => b.OnlineID == 241526)
-                         ?? beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => !b.Protected)
-                         ?? TestResources.CreateTestBeatmapSetInfo();
-        });
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                beatmapSet =
+                    beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => b.OnlineID == 241526)
+                    ?? beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => !b.Protected)
+                    ?? TestResources.CreateTestBeatmapSetInfo();
+            });
 
         [Test]
         public void TestDisplay()
@@ -47,14 +47,17 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestRandomBeatmap()
         {
-            AddStep("random beatmap", () =>
-            {
-                var randomSet = beatmaps.GetAllUsableBeatmapSets().MinBy(_ => RNG.Next());
-                randomSet ??= TestResources.CreateTestBeatmapSetInfo();
-                beatmapSet = randomSet;
+            AddStep(
+                "random beatmap",
+                () =>
+                {
+                    var randomSet = beatmaps.GetAllUsableBeatmapSets().MinBy(_ => RNG.Next());
+                    randomSet ??= TestResources.CreateTestBeatmapSetInfo();
+                    beatmapSet = randomSet;
 
-                CreateThemedContent(OverlayColourScheme.Aquamarine);
-            });
+                    CreateThemedContent(OverlayColourScheme.Aquamarine);
+                }
+            );
         }
 
         protected override Drawable CreateContent()
@@ -73,28 +76,25 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                     Spacing = new Vector2(0f, 5f),
                     Children = new Drawable[]
                     {
+                        new PanelBeatmapSet { Item = new CarouselItem(beatmapSet) },
                         new PanelBeatmapSet
                         {
-                            Item = new CarouselItem(beatmapSet)
+                            Item = new CarouselItem(beatmapSet),
+                            KeyboardSelected = { Value = true },
                         },
                         new PanelBeatmapSet
                         {
                             Item = new CarouselItem(beatmapSet),
-                            KeyboardSelected = { Value = true }
-                        },
-                        new PanelBeatmapSet
-                        {
-                            Item = new CarouselItem(beatmapSet),
-                            Expanded = { Value = true }
+                            Expanded = { Value = true },
                         },
                         new PanelBeatmapSet
                         {
                             Item = new CarouselItem(beatmapSet),
                             KeyboardSelected = { Value = true },
-                            Expanded = { Value = true }
+                            Expanded = { Value = true },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
     }

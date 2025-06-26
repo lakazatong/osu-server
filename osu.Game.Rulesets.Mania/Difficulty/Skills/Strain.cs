@@ -51,13 +51,16 @@ namespace osu.Game.Rulesets.Mania.Difficulty.Skills
             for (int i = 0; i < endTimes.Length; ++i)
             {
                 // The current note is overlapped if a previous note or end is overlapping the current note body
-                isOverlapping |= Precision.DefinitelyBigger(endTimes[i], startTime, 1) &&
-                                 Precision.DefinitelyBigger(endTime, endTimes[i], 1) &&
-                                 Precision.DefinitelyBigger(startTime, startTimes[i], 1);
+                isOverlapping |=
+                    Precision.DefinitelyBigger(endTimes[i], startTime, 1)
+                    && Precision.DefinitelyBigger(endTime, endTimes[i], 1)
+                    && Precision.DefinitelyBigger(startTime, startTimes[i], 1);
 
                 // We give a slight bonus to everything if something is held meanwhile
-                if (Precision.DefinitelyBigger(endTimes[i], endTime, 1) &&
-                    Precision.DefinitelyBigger(startTime, startTimes[i], 1))
+                if (
+                    Precision.DefinitelyBigger(endTimes[i], endTime, 1)
+                    && Precision.DefinitelyBigger(startTime, startTimes[i], 1)
+                )
                     holdFactor = 1.25;
 
                 closestEndTime = Math.Min(closestEndTime, Math.Abs(endTime - endTimes[i]));
@@ -74,14 +77,25 @@ namespace osu.Game.Rulesets.Mania.Difficulty.Skills
             // 0.0 +--------+-+---------------> Release Difference / ms
             //         release_threshold
             if (isOverlapping)
-                holdAddition = DifficultyCalculationUtils.Logistic(x: closestEndTime, multiplier: 0.27, midpointOffset: release_threshold);
+                holdAddition = DifficultyCalculationUtils.Logistic(
+                    x: closestEndTime,
+                    multiplier: 0.27,
+                    midpointOffset: release_threshold
+                );
 
             // Decay and increase individualStrains in own column
-            individualStrains[column] = applyDecay(individualStrains[column], startTime - startTimes[column], individual_decay_base);
+            individualStrains[column] = applyDecay(
+                individualStrains[column],
+                startTime - startTimes[column],
+                individual_decay_base
+            );
             individualStrains[column] += 2.0 * holdFactor;
 
             // For notes at the same time (in a chord), the individualStrain should be the hardest individualStrain out of those columns
-            individualStrain = maniaCurrent.DeltaTime <= 1 ? Math.Max(individualStrain, individualStrains[column]) : individualStrains[column];
+            individualStrain =
+                maniaCurrent.DeltaTime <= 1
+                    ? Math.Max(individualStrain, individualStrains[column])
+                    : individualStrains[column];
 
             // Decay and increase overallStrain
             overallStrain = applyDecay(overallStrain, current.DeltaTime, overall_decay_base);
@@ -95,11 +109,18 @@ namespace osu.Game.Rulesets.Mania.Difficulty.Skills
             return individualStrain + overallStrain - CurrentStrain;
         }
 
-        protected override double CalculateInitialStrain(double offset, DifficultyHitObject current)
-            => applyDecay(individualStrain, offset - current.Previous(0).StartTime, individual_decay_base)
-               + applyDecay(overallStrain, offset - current.Previous(0).StartTime, overall_decay_base);
+        protected override double CalculateInitialStrain(
+            double offset,
+            DifficultyHitObject current
+        ) =>
+            applyDecay(
+                individualStrain,
+                offset - current.Previous(0).StartTime,
+                individual_decay_base
+            )
+            + applyDecay(overallStrain, offset - current.Previous(0).StartTime, overall_decay_base);
 
-        private double applyDecay(double value, double deltaTime, double decayBase)
-            => value * Math.Pow(decayBase, deltaTime / 1000);
+        private double applyDecay(double value, double deltaTime, double decayBase) =>
+            value * Math.Pow(decayBase, deltaTime / 1000);
     }
 }

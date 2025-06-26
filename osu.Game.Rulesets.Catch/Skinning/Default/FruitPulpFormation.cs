@@ -9,7 +9,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
 {
     public partial class FruitPulpFormation : PulpFormation
     {
-        public readonly Bindable<FruitVisualRepresentation> VisualRepresentation = new Bindable<FruitVisualRepresentation>();
+        public readonly Bindable<FruitVisualRepresentation> VisualRepresentation =
+            new Bindable<FruitVisualRepresentation>();
 
         protected override void LoadComplete()
         {

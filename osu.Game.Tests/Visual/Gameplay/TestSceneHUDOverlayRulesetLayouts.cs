@@ -32,7 +32,9 @@ using osu.Game.Tests.Visual.Spectator;
 
 namespace osu.Game.Tests.Visual.Gameplay
 {
-    [Description(@"Exercises the appearance of the HUD overlay on various skin and ruleset combinations.")]
+    [Description(
+        @"Exercises the appearance of the HUD overlay on various skin and ruleset combinations."
+    )]
     public partial class TestSceneHUDOverlayRulesetLayouts : OsuTestScene, IStorageResourceProvider
     {
         private readonly Dictionary<string, ISkin> skins = new Dictionary<string, ISkin>();
@@ -57,97 +59,116 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddToggleStep("toggle leaderboard", b => configManager.SetValue(OsuSetting.GameplayLeaderboard, b));
+            AddToggleStep(
+                "toggle leaderboard",
+                b => configManager.SetValue(OsuSetting.GameplayLeaderboard, b)
+            );
         }
 
         [Test]
         public void TestLayout(
-            [Values("argon", "triangles", "legacy")]
-            string skinName,
-            [Values("osu", "taiko", "fruits", "mania")]
-            string rulesetName)
+            [Values("argon", "triangles", "legacy")] string skinName,
+            [Values("osu", "taiko", "fruits", "mania")] string rulesetName
+        )
         {
-            AddStep("create content", () =>
-            {
-                var rulesetInfo = rulesets.GetRuleset(rulesetName);
-                var ruleset = rulesetInfo!.CreateInstance();
-                var beatmap = ruleset.CreateBeatmapConverter(new Beatmap()).Convert();
-                var drawableRuleset = ruleset.CreateDrawableRulesetWith(beatmap);
-
-                ISkin provider = ruleset.CreateSkinTransformer(skins[skinName], beatmap)!;
-
-                var gameplayState = TestGameplayState.Create(ruleset);
-                ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value = LocalUserPlayingState.Playing;
-                var spectatorClient = new TestSpectatorClient();
-
-                for (int i = 0; i < 15; ++i)
+            AddStep(
+                "create content",
+                () =>
                 {
-                    ((ISpectatorClient)spectatorClient).UserStartedWatching([
-                        new SpectatorUser
-                        {
-                            OnlineID = i,
-                            Username = $"User {i}"
-                        }
-                    ]);
-                }
+                    var rulesetInfo = rulesets.GetRuleset(rulesetName);
+                    var ruleset = rulesetInfo!.CreateInstance();
+                    var beatmap = ruleset.CreateBeatmapConverter(new Beatmap()).Convert();
+                    var drawableRuleset = ruleset.CreateDrawableRulesetWith(beatmap);
 
-                GameplayClockContainer gameplayClock;
+                    ISkin provider = ruleset.CreateSkinTransformer(skins[skinName], beatmap)!;
 
-                List<(Type, object)> dependencies =
-                [
-                    (typeof(GameplayState), gameplayState),
-                    (typeof(ScoreProcessor), gameplayState.ScoreProcessor),
-                    (typeof(HealthProcessor), gameplayState.HealthProcessor),
-                    (typeof(IGameplayClock), gameplayClock = new GameplayClockContainer(new TrackVirtual(60000), false, false)),
-                    (typeof(SpectatorClient), spectatorClient),
-                    (typeof(IGameplayLeaderboardProvider), new TestGameplayLeaderboardProvider()),
-                ];
+                    var gameplayState = TestGameplayState.Create(ruleset);
+                    ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value =
+                        LocalUserPlayingState.Playing;
+                    var spectatorClient = new TestSpectatorClient();
 
-                if (drawableRuleset is IDrawableScrollingRuleset scrolling)
-                    dependencies.Add((typeof(IScrollingInfo), scrolling.ScrollingInfo));
-
-                Child = new DependencyProvidingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = dependencies.ToArray(),
-                    Children = new Drawable[]
+                    for (int i = 0; i < 15; ++i)
                     {
-                        spectatorClient,
-                        new SkinProvidingContainer(provider)
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
-                            {
-                                drawableRuleset,
-                                new HUDOverlay(drawableRuleset, [])
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                }
-                            }
-                        }
+                        ((ISpectatorClient)spectatorClient).UserStartedWatching(
+                            [new SpectatorUser { OnlineID = i, Username = $"User {i}" }]
+                        );
                     }
-                };
 
-                gameplayClock.Start();
-            });
+                    GameplayClockContainer gameplayClock;
+
+                    List<(Type, object)> dependencies =
+                    [
+                        (typeof(GameplayState), gameplayState),
+                        (typeof(ScoreProcessor), gameplayState.ScoreProcessor),
+                        (typeof(HealthProcessor), gameplayState.HealthProcessor),
+                        (
+                            typeof(IGameplayClock),
+                            gameplayClock = new GameplayClockContainer(
+                                new TrackVirtual(60000),
+                                false,
+                                false
+                            )
+                        ),
+                        (typeof(SpectatorClient), spectatorClient),
+                        (
+                            typeof(IGameplayLeaderboardProvider),
+                            new TestGameplayLeaderboardProvider()
+                        ),
+                    ];
+
+                    if (drawableRuleset is IDrawableScrollingRuleset scrolling)
+                        dependencies.Add((typeof(IScrollingInfo), scrolling.ScrollingInfo));
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = dependencies.ToArray(),
+                        Children = new Drawable[]
+                        {
+                            spectatorClient,
+                            new SkinProvidingContainer(provider)
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Children = new Drawable[]
+                                {
+                                    drawableRuleset,
+                                    new HUDOverlay(drawableRuleset, [])
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                },
+                            },
+                        },
+                    };
+
+                    gameplayClock.Start();
+                }
+            );
         }
 
         private class TestGameplayLeaderboardProvider : IGameplayLeaderboardProvider
         {
             IBindableList<GameplayLeaderboardScore> IGameplayLeaderboardProvider.Scores => Scores;
-            public BindableList<GameplayLeaderboardScore> Scores { get; } = new BindableList<GameplayLeaderboardScore>();
+            public BindableList<GameplayLeaderboardScore> Scores { get; } =
+                new BindableList<GameplayLeaderboardScore>();
 
             public TestGameplayLeaderboardProvider()
             {
                 for (int i = 0; i < 20; ++i)
                 {
-                    Scores.Add(new GameplayLeaderboardScore(new ScoreInfo
-                    {
-                        User = new APIUser { Username = $"User {i}" },
-                        TotalScore = (20 - i) * 50_000,
-                        Accuracy = i * 0.05,
-                        MaxCombo = i * 50,
-                    }, i == 19, GameplayLeaderboardScore.ComboDisplayMode.Highest));
+                    Scores.Add(
+                        new GameplayLeaderboardScore(
+                            new ScoreInfo
+                            {
+                                User = new APIUser { Username = $"User {i}" },
+                                TotalScore = (20 - i) * 50_000,
+                                Accuracy = i * 0.05,
+                                MaxCombo = i * 50,
+                            },
+                            i == 19,
+                            GameplayLeaderboardScore.ComboDisplayMode.Highest
+                        )
+                    );
                 }
             }
         }
@@ -158,7 +179,11 @@ namespace osu.Game.Tests.Visual.Gameplay
         public AudioManager AudioManager => Audio;
         public IResourceStore<byte[]> Files => null!;
         public new IResourceStore<byte[]> Resources => base.Resources;
-        public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => host.CreateTextureLoaderStore(underlyingStore);
+
+        public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => host.CreateTextureLoaderStore(underlyingStore);
+
         RealmAccess IStorageResourceProvider.RealmAccess => null!;
 
         #endregion

@@ -16,14 +16,10 @@ namespace osu.Game.Graphics.Containers
 {
     public partial class OsuScrollContainer : OsuScrollContainer<Drawable>
     {
-        public OsuScrollContainer()
-        {
-        }
+        public OsuScrollContainer() { }
 
         public OsuScrollContainer(Direction direction)
-            : base(direction)
-        {
-        }
+            : base(direction) { }
     }
 
     public partial class OsuScrollContainer<T> : ScrollContainer<T>
@@ -33,9 +29,7 @@ namespace osu.Game.Graphics.Containers
         public const float SCROLL_BAR_PADDING = 3;
 
         public OsuScrollContainer(Direction scrollDirection = Direction.Vertical)
-            : base(scrollDirection)
-        {
-        }
+            : base(scrollDirection) { }
 
         /// <summary>
         /// Scrolls a <see cref="Drawable"/> into view.
@@ -51,7 +45,10 @@ namespace osu.Game.Graphics.Containers
             double minPos = Math.Min(childPos0, childPos1);
             double maxPos = Math.Max(childPos0, childPos1);
 
-            if (minPos < Current || (minPos > Current && d.DrawSize[ScrollDim] > DisplayableContent))
+            if (
+                minPos < Current
+                || (minPos > Current && d.DrawSize[ScrollDim] > DisplayableContent)
+            )
                 ScrollTo(minPos - extraScroll, animated);
             else if (maxPos > Current + DisplayableContent)
                 ScrollTo(maxPos - DisplayableContent + extraScroll, animated);
@@ -61,7 +58,8 @@ namespace osu.Game.Graphics.Containers
         {
             // allow for controlling volume when alt is held.
             // mostly for compatibility with osu-stable.
-            if (e.AltPressed) return false;
+            if (e.AltPressed)
+                return false;
 
             return base.OnScroll(e);
         }
@@ -75,15 +73,22 @@ namespace osu.Game.Graphics.Containers
 
         protected virtual void ScrollToAbsolutePosition(Vector2 screenSpacePosition)
         {
-            float fromScrollbarPosition = FromScrollbarPosition(ToLocalSpace(screenSpacePosition)[ScrollDim]);
+            float fromScrollbarPosition = FromScrollbarPosition(
+                ToLocalSpace(screenSpacePosition)[ScrollDim]
+            );
             float scrollbarCentreOffset = FromScrollbarPosition(Scrollbar.DrawHeight) * 0.5f;
 
-            ScrollTo(Clamp(fromScrollbarPosition - scrollbarCentreOffset), true, DistanceDecayOnAbsoluteScroll);
+            ScrollTo(
+                Clamp(fromScrollbarPosition - scrollbarCentreOffset),
+                true,
+                DistanceDecayOnAbsoluteScroll
+            );
         }
 
         #endregion
 
-        protected override ScrollbarContainer CreateScrollbar(Direction direction) => new OsuScrollbar(direction);
+        protected override ScrollbarContainer CreateScrollbar(Direction direction) =>
+            new OsuScrollbar(direction);
 
         protected partial class OsuScrollbar : ScrollbarContainer
         {
@@ -129,10 +134,11 @@ namespace osu.Game.Graphics.Containers
 
             public override void ResizeTo(float val, int duration = 0, Easing easing = Easing.None)
             {
-                this.ResizeTo(new Vector2(SCROLL_BAR_WIDTH)
-                {
-                    [(int)ScrollDirection] = val
-                }, duration, easing);
+                this.ResizeTo(
+                    new Vector2(SCROLL_BAR_WIDTH) { [(int)ScrollDirection] = val },
+                    duration,
+                    easing
+                );
             }
 
             protected override bool OnHover(HoverEvent e)
@@ -148,7 +154,8 @@ namespace osu.Game.Graphics.Containers
 
             protected override bool OnMouseDown(MouseDownEvent e)
             {
-                if (!base.OnMouseDown(e)) return false;
+                if (!base.OnMouseDown(e))
+                    return false;
 
                 // note that we are changing the colour of the box here as to not interfere with the hover effect.
                 box.FadeColour(highlightColour, 100);
@@ -157,7 +164,8 @@ namespace osu.Game.Graphics.Containers
 
             protected override void OnMouseUp(MouseUpEvent e)
             {
-                if (e.Button != MouseButton.Left) return;
+                if (e.Button != MouseButton.Left)
+                    return;
 
                 box.FadeColour(Color4.White, 100);
 

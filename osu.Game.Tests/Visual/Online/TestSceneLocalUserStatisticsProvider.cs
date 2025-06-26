@@ -24,7 +24,10 @@ namespace osu.Game.Tests.Visual.Online
     {
         private LocalUserStatisticsProvider statisticsProvider = null!;
 
-        private readonly Dictionary<(int userId, string rulesetName), UserStatistics> serverSideStatistics = new Dictionary<(int userId, string rulesetName), UserStatistics>();
+        private readonly Dictionary<
+            (int userId, string rulesetName),
+            UserStatistics
+        > serverSideStatistics = new Dictionary<(int userId, string rulesetName), UserStatistics>();
 
         [SetUpSteps]
         public void SetUpSteps()
@@ -33,66 +36,95 @@ namespace osu.Game.Tests.Visual.Online
 
             setUser(1000);
 
-            AddStep("setup provider", () =>
-            {
-                OsuTextFlowContainer text;
-
-                ((DummyAPIAccess)API).HandleRequest = r =>
+            AddStep(
+                "setup provider",
+                () =>
                 {
-                    switch (r)
+                    OsuTextFlowContainer text;
+
+                    ((DummyAPIAccess)API).HandleRequest = r =>
                     {
-                        case GetUserRequest userRequest:
-                            int userId = int.Parse(userRequest.Lookup);
-                            string rulesetName = userRequest.Ruleset!.ShortName;
-                            var response = new APIUser
-                            {
-                                Id = userId,
-                                Statistics = tryGetStatistics(userId, rulesetName)
-                            };
+                        switch (r)
+                        {
+                            case GetUserRequest userRequest:
+                                int userId = int.Parse(userRequest.Lookup);
+                                string rulesetName = userRequest.Ruleset!.ShortName;
+                                var response = new APIUser
+                                {
+                                    Id = userId,
+                                    Statistics = tryGetStatistics(userId, rulesetName),
+                                };
 
-                            userRequest.TriggerSuccess(response);
-                            return true;
+                                userRequest.TriggerSuccess(response);
+                                return true;
 
-                        default:
-                            return false;
-                    }
-                };
+                            default:
+                                return false;
+                        }
+                    };
 
-                Clear();
-                Add(statisticsProvider = new LocalUserStatisticsProvider());
-                Add(text = new OsuTextFlowContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                    Clear();
+                    Add(statisticsProvider = new LocalUserStatisticsProvider());
+                    Add(
+                        text = new OsuTextFlowContainer
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+                    );
 
-                statisticsProvider.StatisticsUpdated += update =>
-                {
-                    text.Clear();
-
-                    foreach (var ruleset in Dependencies.Get<RulesetStore>().AvailableRulesets)
+                    statisticsProvider.StatisticsUpdated += update =>
                     {
-                        text.AddText(statisticsProvider.GetStatisticsFor(ruleset) is UserStatistics statistics
-                            ? $"{ruleset.Name} statistics: (total score: {statistics.TotalScore})"
-                            : $"{ruleset.Name} statistics: (null)");
-                        text.NewLine();
-                    }
+                        text.Clear();
 
-                    text.AddText($"latest update: {update.Ruleset}"
-                                 + $" ({(update.OldStatistics?.TotalScore.ToString() ?? "null")} -> {update.NewStatistics.TotalScore})");
-                };
+                        foreach (var ruleset in Dependencies.Get<RulesetStore>().AvailableRulesets)
+                        {
+                            text.AddText(
+                                statisticsProvider.GetStatisticsFor(ruleset)
+                                    is UserStatistics statistics
+                                    ? $"{ruleset.Name} statistics: (total score: {statistics.TotalScore})"
+                                    : $"{ruleset.Name} statistics: (null)"
+                            );
+                            text.NewLine();
+                        }
 
-                Ruleset.Value = new OsuRuleset().RulesetInfo;
-            });
+                        text.AddText(
+                            $"latest update: {update.Ruleset}"
+                                + $" ({(update.OldStatistics?.TotalScore.ToString() ?? "null")} -> {update.NewStatistics.TotalScore})"
+                        );
+                    };
+
+                    Ruleset.Value = new OsuRuleset().RulesetInfo;
+                }
+            );
         }
 
         [Test]
         public void TestInitialStatistics()
         {
-            AddAssert("osu statistics populated", () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore, () => Is.EqualTo(4_000_000));
-            AddAssert("taiko statistics populated", () => statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore, () => Is.EqualTo(3_000_000));
-            AddAssert("catch statistics populated", () => statisticsProvider.GetStatisticsFor(new CatchRuleset().RulesetInfo)!.TotalScore, () => Is.EqualTo(2_000_000));
-            AddAssert("mania statistics populated", () => statisticsProvider.GetStatisticsFor(new ManiaRuleset().RulesetInfo)!.TotalScore, () => Is.EqualTo(1_000_000));
+            AddAssert(
+                "osu statistics populated",
+                () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(4_000_000)
+            );
+            AddAssert(
+                "taiko statistics populated",
+                () =>
+                    statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(3_000_000)
+            );
+            AddAssert(
+                "catch statistics populated",
+                () =>
+                    statisticsProvider.GetStatisticsFor(new CatchRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(2_000_000)
+            );
+            AddAssert(
+                "mania statistics populated",
+                () =>
+                    statisticsProvider.GetStatisticsFor(new ManiaRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(1_000_000)
+            );
         }
 
         [Test]
@@ -100,29 +132,48 @@ namespace osu.Game.Tests.Visual.Online
         {
             setUser(1001);
 
-            AddStep("update statistics for user 1000", () =>
-            {
-                serverSideStatistics[(1000, "osu")] = new UserStatistics { TotalScore = 5_000_000 };
-                serverSideStatistics[(1000, "taiko")] = new UserStatistics { TotalScore = 6_000_000 };
-            });
+            AddStep(
+                "update statistics for user 1000",
+                () =>
+                {
+                    serverSideStatistics[(1000, "osu")] = new UserStatistics
+                    {
+                        TotalScore = 5_000_000,
+                    };
+                    serverSideStatistics[(1000, "taiko")] = new UserStatistics
+                    {
+                        TotalScore = 6_000_000,
+                    };
+                }
+            );
 
-            AddAssert("statistics matches user 1001 in osu",
+            AddAssert(
+                "statistics matches user 1001 in osu",
                 () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(4_000_000));
+                () => Is.EqualTo(4_000_000)
+            );
 
-            AddAssert("statistics matches user 1001 in taiko",
-                () => statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(3_000_000));
+            AddAssert(
+                "statistics matches user 1001 in taiko",
+                () =>
+                    statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(3_000_000)
+            );
 
             setUser(1000, false);
 
-            AddAssert("statistics matches user 1000 in osu",
+            AddAssert(
+                "statistics matches user 1000 in osu",
                 () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(5_000_000));
+                () => Is.EqualTo(5_000_000)
+            );
 
-            AddAssert("statistics matches user 1000 in taiko",
-                () => statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(6_000_000));
+            AddAssert(
+                "statistics matches user 1000 in taiko",
+                () =>
+                    statisticsProvider.GetStatisticsFor(new TaikoRuleset().RulesetInfo)!.TotalScore,
+                () => Is.EqualTo(6_000_000)
+            );
         }
 
         [Test]
@@ -132,48 +183,83 @@ namespace osu.Game.Tests.Visual.Online
 
             setUser(1001);
 
-            AddStep("update statistics server side",
-                () => serverSideStatistics[(1001, "osu")] = new UserStatistics { TotalScore = 9_000_000 });
+            AddStep(
+                "update statistics server side",
+                () =>
+                    serverSideStatistics[(1001, "osu")] = new UserStatistics
+                    {
+                        TotalScore = 9_000_000,
+                    }
+            );
 
-            AddAssert("statistics match old score",
+            AddAssert(
+                "statistics match old score",
                 () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(4_000_000));
+                () => Is.EqualTo(4_000_000)
+            );
 
-            AddStep("setup event", () =>
-            {
-                update = null;
-                statisticsProvider.StatisticsUpdated -= onStatisticsUpdated;
-                statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
-            });
+            AddStep(
+                "setup event",
+                () =>
+                {
+                    update = null;
+                    statisticsProvider.StatisticsUpdated -= onStatisticsUpdated;
+                    statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
+                }
+            );
 
-            AddStep("request refetch", () => statisticsProvider.RefetchStatistics(new OsuRuleset().RulesetInfo));
-            AddUntilStep("statistics update raised",
+            AddStep(
+                "request refetch",
+                () => statisticsProvider.RefetchStatistics(new OsuRuleset().RulesetInfo)
+            );
+            AddUntilStep(
+                "statistics update raised",
                 () => update?.NewStatistics.TotalScore,
-                () => Is.EqualTo(9_000_000));
-            AddAssert("statistics match new score",
+                () => Is.EqualTo(9_000_000)
+            );
+            AddAssert(
+                "statistics match new score",
                 () => statisticsProvider.GetStatisticsFor(new OsuRuleset().RulesetInfo)!.TotalScore,
-                () => Is.EqualTo(9_000_000));
+                () => Is.EqualTo(9_000_000)
+            );
 
             void onStatisticsUpdated(UserStatisticsUpdate u) => update = u;
         }
 
-        private UserStatistics tryGetStatistics(int userId, string rulesetName)
-            => serverSideStatistics.TryGetValue((userId, rulesetName), out var stats) ? stats : new UserStatistics();
+        private UserStatistics tryGetStatistics(int userId, string rulesetName) =>
+            serverSideStatistics.TryGetValue((userId, rulesetName), out var stats)
+                ? stats
+                : new UserStatistics();
 
         private void setUser(int userId, bool generateStatistics = true)
         {
-            AddStep($"set local user to {userId}", () =>
-            {
-                if (generateStatistics)
+            AddStep(
+                $"set local user to {userId}",
+                () =>
                 {
-                    serverSideStatistics[(userId, "osu")] = new UserStatistics { TotalScore = 4_000_000 };
-                    serverSideStatistics[(userId, "taiko")] = new UserStatistics { TotalScore = 3_000_000 };
-                    serverSideStatistics[(userId, "fruits")] = new UserStatistics { TotalScore = 2_000_000 };
-                    serverSideStatistics[(userId, "mania")] = new UserStatistics { TotalScore = 1_000_000 };
-                }
+                    if (generateStatistics)
+                    {
+                        serverSideStatistics[(userId, "osu")] = new UserStatistics
+                        {
+                            TotalScore = 4_000_000,
+                        };
+                        serverSideStatistics[(userId, "taiko")] = new UserStatistics
+                        {
+                            TotalScore = 3_000_000,
+                        };
+                        serverSideStatistics[(userId, "fruits")] = new UserStatistics
+                        {
+                            TotalScore = 2_000_000,
+                        };
+                        serverSideStatistics[(userId, "mania")] = new UserStatistics
+                        {
+                            TotalScore = 1_000_000,
+                        };
+                    }
 
-                ((DummyAPIAccess)API).LocalUser.Value = new APIUser { Id = userId };
-            });
+                    ((DummyAPIAccess)API).LocalUser.Value = new APIUser { Id = userId };
+                }
+            );
         }
     }
 }

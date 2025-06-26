@@ -25,7 +25,11 @@ using static osu.Game.Input.Handlers.ReplayInputHandler;
 
 namespace osu.Game.Rulesets.UI
 {
-    public abstract partial class RulesetInputManager<T> : PassThroughInputManager, ICanAttachHUDPieces, IHasReplayHandler, IHasRecordingHandler
+    public abstract partial class RulesetInputManager<T>
+        : PassThroughInputManager,
+            ICanAttachHUDPieces,
+            IHasReplayHandler,
+            IHasRecordingHandler
         where T : struct
     {
         protected override bool AllowRightClickFromLongTouch => false;
@@ -56,17 +60,25 @@ namespace osu.Game.Rulesets.UI
             }
         }
 
-        protected override InputState CreateInitialState() => new RulesetInputManagerInputState<T>(base.CreateInitialState());
+        protected override InputState CreateInitialState() =>
+            new RulesetInputManagerInputState<T>(base.CreateInitialState());
 
         protected override Container<Drawable> Content => content;
 
         private readonly Container content;
 
-        protected RulesetInputManager(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
+        protected RulesetInputManager(
+            RulesetInfo ruleset,
+            int variant,
+            SimultaneousBindingMode unique
+        )
         {
-            InternalChild = KeyBindingContainer =
-                CreateKeyBindingContainer(ruleset, variant, unique)
-                    .WithChild(content = new Container { RelativeSizeAxes = Axes.Both });
+            InternalChild = KeyBindingContainer = CreateKeyBindingContainer(
+                    ruleset,
+                    variant,
+                    unique
+                )
+                .WithChild(content = new Container { RelativeSizeAxes = Axes.Both });
         }
 
         [BackgroundDependencyLoader(true)]
@@ -174,11 +186,11 @@ namespace osu.Game.Rulesets.UI
 
         public void Attach(InputCountController inputCountController)
         {
-            var triggers = KeyBindingContainer.DefaultKeyBindings
-                                              .Select(b => b.GetAction<T>())
-                                              .Distinct()
-                                              .Select(action => new KeyCounterActionTrigger<T>(action))
-                                              .ToArray();
+            var triggers = KeyBindingContainer
+                .DefaultKeyBindings.Select(b => b.GetAction<T>())
+                .Distinct()
+                .Select(action => new KeyCounterActionTrigger<T>(action))
+                .ToArray();
 
             KeyBindingContainer.AddRange(triggers);
             inputCountController.AddRange(triggers);
@@ -188,7 +200,8 @@ namespace osu.Game.Rulesets.UI
 
         #region Keys per second Counter Attachment
 
-        public void Attach(ClicksPerSecondController controller) => KeyBindingContainer.Add(new ActionListener(controller));
+        public void Attach(ClicksPerSecondController controller) =>
+            KeyBindingContainer.Add(new ActionListener(controller));
 
         private partial class ActionListener : Component, IKeyBindingHandler<T>
         {
@@ -205,30 +218,35 @@ namespace osu.Game.Rulesets.UI
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<T> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<T> e) { }
         }
 
         #endregion
 
-        protected virtual KeyBindingContainer<T> CreateKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-            => new RulesetKeyBindingContainer(ruleset, variant, unique);
+        protected virtual KeyBindingContainer<T> CreateKeyBindingContainer(
+            RulesetInfo ruleset,
+            int variant,
+            SimultaneousBindingMode unique
+        ) => new RulesetKeyBindingContainer(ruleset, variant, unique);
 
         public partial class RulesetKeyBindingContainer : DatabasedKeyBindingContainer<T>
         {
             protected override bool HandleRepeats => false;
 
-            public RulesetKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                : base(ruleset, variant, unique)
-            {
-            }
+            public RulesetKeyBindingContainer(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            )
+                : base(ruleset, variant, unique) { }
 
             protected override void ReloadMappings(IQueryable<RealmKeyBinding> realmKeyBindings)
             {
                 base.ReloadMappings(realmKeyBindings);
 
-                KeyBindings = KeyBindings.Where(static b => RealmKeyBindingStore.CheckValidForGameplay(b.KeyCombination)).ToList();
+                KeyBindings = KeyBindings
+                    .Where(static b => RealmKeyBindingStore.CheckValidForGameplay(b.KeyCombination))
+                    .ToList();
                 RealmKeyBindingStore.ClearDuplicateBindings(KeyBindings);
             }
         }
@@ -238,17 +256,32 @@ namespace osu.Game.Rulesets.UI
             public void Apply(InputState state, IInputStateChangeHandler handler)
             {
                 if (!(state is RulesetInputManagerInputState<T> inputState))
-                    throw new InvalidOperationException($"{nameof(ReplayState<T>)} should only be applied to a {nameof(RulesetInputManagerInputState<T>)}");
+                    throw new InvalidOperationException(
+                        $"{nameof(ReplayState<T>)} should only be applied to a {nameof(RulesetInputManagerInputState<T>)}"
+                    );
 
                 new MouseButtonInput([], state.Mouse.Buttons).Apply(state, handler);
                 new KeyboardKeyInput([], state.Keyboard.Keys).Apply(state, handler);
-                new TouchInput(Enum.GetValues<TouchSource>().Select(s => new Touch(s, Vector2.Zero)), false).Apply(state, handler);
+                new TouchInput(
+                    Enum.GetValues<TouchSource>().Select(s => new Touch(s, Vector2.Zero)),
+                    false
+                ).Apply(state, handler);
                 new JoystickButtonInput([], state.Joystick.Buttons).Apply(state, handler);
                 new MidiKeyInput(new MidiState(), state.Midi).Apply(state, handler);
                 new TabletPenButtonInput([], state.Tablet.PenButtons).Apply(state, handler);
-                new TabletAuxiliaryButtonInput([], state.Tablet.AuxiliaryButtons).Apply(state, handler);
+                new TabletAuxiliaryButtonInput([], state.Tablet.AuxiliaryButtons).Apply(
+                    state,
+                    handler
+                );
 
-                handler.HandleInputStateChange(new ReplayStateChangeEvent<T>(state, this, inputState.LastReplayState?.PressedActions.ToArray() ?? [], []));
+                handler.HandleInputStateChange(
+                    new ReplayStateChangeEvent<T>(
+                        state,
+                        this,
+                        inputState.LastReplayState?.PressedActions.ToArray() ?? [],
+                        []
+                    )
+                );
                 inputState.LastReplayState = null;
             }
         }
@@ -260,8 +293,6 @@ namespace osu.Game.Rulesets.UI
         public ReplayState<T>? LastReplayState;
 
         public RulesetInputManagerInputState(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
     }
 }

@@ -24,7 +24,8 @@ namespace osu.Game.Tests.Database
     {
         public IBindable<LocalUserPlayingState> PlayingState => isPlaying;
 
-        private readonly Bindable<LocalUserPlayingState> isPlaying = new Bindable<LocalUserPlayingState>();
+        private readonly Bindable<LocalUserPlayingState> isPlaying =
+            new Bindable<LocalUserPlayingState>();
 
         private BeatmapSetInfo importedSet = null!;
 
@@ -43,87 +44,114 @@ namespace osu.Game.Tests.Database
         [Test]
         public void TestDifficultyProcessing()
         {
-            AddAssert("Difficulty is initially set", () =>
-            {
-                return Realm.Run(r =>
+            AddAssert(
+                "Difficulty is initially set",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
-                });
-            });
+                    return Realm.Run(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
+                    });
+                }
+            );
 
-            AddStep("Reset difficulty", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "Reset difficulty",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    foreach (var b in beatmapSetInfo.Beatmaps)
-                        b.StarRating = -1;
-                });
-            });
+                    Realm.Write(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        foreach (var b in beatmapSetInfo.Beatmaps)
+                            b.StarRating = -1;
+                    });
+                }
+            );
 
             TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep(
+                "Run background processor",
+                () => Add(processor = new TestBackgroundDataStoreProcessor())
+            );
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Difficulties repopulated", () =>
-            {
-                return Realm.Run(r =>
+            AddAssert(
+                "Difficulties repopulated",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
-                });
-            });
+                    return Realm.Run(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
+                    });
+                }
+            );
         }
 
         [Test]
         public void TestDifficultyProcessingWhilePlaying()
         {
-            AddAssert("Difficulty is initially set", () =>
-            {
-                return Realm.Run(r =>
+            AddAssert(
+                "Difficulty is initially set",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
-                });
-            });
+                    return Realm.Run(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
+                    });
+                }
+            );
 
             AddStep("Set playing", () => isPlaying.Value = LocalUserPlayingState.Playing);
 
-            AddStep("Reset difficulty", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "Reset difficulty",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    foreach (var b in beatmapSetInfo.Beatmaps)
-                        b.StarRating = -1;
-                });
-            });
+                    Realm.Write(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        foreach (var b in beatmapSetInfo.Beatmaps)
+                            b.StarRating = -1;
+                    });
+                }
+            );
 
             TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep(
+                "Run background processor",
+                () => Add(processor = new TestBackgroundDataStoreProcessor())
+            );
 
             AddWaitStep("wait some", 500);
-            AddAssert("Difficulty still not populated", () =>
-            {
-                return Realm.Run(r =>
+            AddAssert(
+                "Difficulty still not populated",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    return beatmapSetInfo.Beatmaps.All(b => b.StarRating == -1);
-                });
-            });
+                    return Realm.Run(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        return beatmapSetInfo.Beatmaps.All(b => b.StarRating == -1);
+                    });
+                }
+            );
 
             AddStep("Set not playing", () => isPlaying.Value = LocalUserPlayingState.NotPlaying);
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Difficulties repopulated", () =>
-            {
-                return Realm.Run(r =>
+            AddAssert(
+                "Difficulties repopulated",
+                () =>
                 {
-                    var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
-                    return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
-                });
-            });
+                    return Realm.Run(r =>
+                    {
+                        var beatmapSetInfo = r.Find<BeatmapSetInfo>(importedSet.ID)!;
+                        return beatmapSetInfo.Beatmaps.All(b => b.StarRating > 0);
+                    });
+                }
+            );
         }
 
         [TestCase(30000001)]
@@ -135,25 +163,44 @@ namespace osu.Game.Tests.Database
         {
             ScoreInfo scoreInfo = null!;
 
-            AddStep("Add score which requires upgrade (and has beatmap)", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "Add score which requires upgrade (and has beatmap)",
+                () =>
                 {
-                    r.Add(scoreInfo = new ScoreInfo(ruleset: r.All<RulesetInfo>().First(), beatmap: r.All<BeatmapInfo>().First())
+                    Realm.Write(r =>
                     {
-                        TotalScoreVersion = scoreVersion,
-                        LegacyTotalScore = 123456,
-                        IsLegacyScore = true,
+                        r.Add(
+                            scoreInfo = new ScoreInfo(
+                                ruleset: r.All<RulesetInfo>().First(),
+                                beatmap: r.All<BeatmapInfo>().First()
+                            )
+                            {
+                                TotalScoreVersion = scoreVersion,
+                                LegacyTotalScore = 123456,
+                                IsLegacyScore = true,
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep(
+                "Run background processor",
+                () => Add(processor = new TestBackgroundDataStoreProcessor())
+            );
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Score version upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(LegacyScoreEncoder.LATEST_VERSION));
-            AddAssert("Score not marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.False);
+            AddAssert(
+                "Score version upgraded",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion),
+                () => Is.EqualTo(LegacyScoreEncoder.LATEST_VERSION)
+            );
+            AddAssert(
+                "Score not marked as failed",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed),
+                () => Is.False
+            );
         }
 
         [TestCase(30000002)]
@@ -162,28 +209,47 @@ namespace osu.Game.Tests.Database
         {
             ScoreInfo scoreInfo = null!;
 
-            AddStep("Add score which requires upgrade (but has no beatmap)", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "Add score which requires upgrade (but has no beatmap)",
+                () =>
                 {
-                    r.Add(scoreInfo = new ScoreInfo(ruleset: r.All<RulesetInfo>().First(), beatmap: new BeatmapInfo
+                    Realm.Write(r =>
                     {
-                        BeatmapSet = new BeatmapSetInfo(),
-                        Ruleset = r.All<RulesetInfo>().First(),
-                    })
-                    {
-                        TotalScoreVersion = scoreVersion,
-                        IsLegacyScore = true,
+                        r.Add(
+                            scoreInfo = new ScoreInfo(
+                                ruleset: r.All<RulesetInfo>().First(),
+                                beatmap: new BeatmapInfo
+                                {
+                                    BeatmapSet = new BeatmapSetInfo(),
+                                    Ruleset = r.All<RulesetInfo>().First(),
+                                }
+                            )
+                            {
+                                TotalScoreVersion = scoreVersion,
+                                IsLegacyScore = true,
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep(
+                "Run background processor",
+                () => Add(processor = new TestBackgroundDataStoreProcessor())
+            );
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Score marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.True);
-            AddAssert("Score version not upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(scoreVersion));
+            AddAssert(
+                "Score marked as failed",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed),
+                () => Is.True
+            );
+            AddAssert(
+                "Score version not upgraded",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion),
+                () => Is.EqualTo(scoreVersion)
+            );
         }
 
         [Test]
@@ -193,24 +259,52 @@ namespace osu.Game.Tests.Database
             ScoreInfo scoreInfo = null!;
             TestBackgroundDataStoreProcessor processor = null!;
 
-            AddStep("Add unavailable ruleset", () => Realm.Write(r => r.Add(rulesetInfo = new RulesetInfo
-            {
-                ShortName = Guid.NewGuid().ToString(),
-                Available = available
-            })));
+            AddStep(
+                "Add unavailable ruleset",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            rulesetInfo = new RulesetInfo
+                            {
+                                ShortName = Guid.NewGuid().ToString(),
+                                Available = available,
+                            }
+                        )
+                    )
+            );
 
-            AddStep("Add score for unavailable ruleset", () => Realm.Write(r => r.Add(scoreInfo = new ScoreInfo(
-                ruleset: rulesetInfo,
-                beatmap: r.All<BeatmapInfo>().First())
-            {
-                TotalScoreVersion = 30000001
-            })));
+            AddStep(
+                "Add score for unavailable ruleset",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            scoreInfo = new ScoreInfo(
+                                ruleset: rulesetInfo,
+                                beatmap: r.All<BeatmapInfo>().First()
+                            )
+                            {
+                                TotalScoreVersion = 30000001,
+                            }
+                        )
+                    )
+            );
 
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep(
+                "Run background processor",
+                () => Add(processor = new TestBackgroundDataStoreProcessor())
+            );
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Score not marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.False);
-            AddAssert("Score version not upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(30000001));
+            AddAssert(
+                "Score not marked as failed",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed),
+                () => Is.False
+            );
+            AddAssert(
+                "Score version not upgraded",
+                () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion),
+                () => Is.EqualTo(30000001)
+            );
         }
 
         public partial class TestBackgroundDataStoreProcessor : BackgroundDataStoreProcessor

@@ -49,7 +49,10 @@ namespace osu.Game.Database
             if (Stream == null)
             {
                 if (ZipUtils.IsZipArchive(Path))
-                    return new ZipArchiveReader(File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read), System.IO.Path.GetFileName(Path));
+                    return new ZipArchiveReader(
+                        File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read),
+                        System.IO.Path.GetFileName(Path)
+                    );
                 if (Directory.Exists(Path))
                     return new DirectoryArchiveReader(Path);
                 if (File.Exists(Path))

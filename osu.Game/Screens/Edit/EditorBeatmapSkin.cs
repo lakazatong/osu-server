@@ -57,20 +57,25 @@ namespace osu.Game.Screens.Edit
             // performs the inverse of the index rotation operation described in the ctor.
             Skin.Configuration.CustomComboColours.Clear();
             for (int i = 0; i < ComboColours.Count; ++i)
-                Skin.Configuration.CustomComboColours.Add(ComboColours[(ComboColours.Count + i - 1) % ComboColours.Count]);
+                Skin.Configuration.CustomComboColours.Add(
+                    ComboColours[(ComboColours.Count + i - 1) % ComboColours.Count]
+                );
             invokeSkinChanged();
         }
 
         #region Delegated ISkin implementation
 
-        public Drawable? GetDrawableComponent(ISkinComponentLookup lookup) => Skin.GetDrawableComponent(lookup);
-        public Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => Skin.GetTexture(componentName, wrapModeS, wrapModeT);
+        public Drawable? GetDrawableComponent(ISkinComponentLookup lookup) =>
+            Skin.GetDrawableComponent(lookup);
+
+        public Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) =>
+            Skin.GetTexture(componentName, wrapModeS, wrapModeT);
+
         public ISample? GetSample(ISampleInfo sampleInfo) => Skin.GetSample(sampleInfo);
 
         public IBindable<TValue>? GetConfig<TLookup, TValue>(TLookup lookup)
             where TLookup : notnull
-            where TValue : notnull
-            => Skin.GetConfig<TLookup, TValue>(lookup);
+            where TValue : notnull => Skin.GetConfig<TLookup, TValue>(lookup);
 
         #endregion
     }

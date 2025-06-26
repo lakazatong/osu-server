@@ -33,10 +33,7 @@ namespace osu.Game.Screens.Play.HUD
         {
             Size = new Vector2(default_size, default_size / 1.4f);
 
-            InternalChild = flag = new UpdateableFlag
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            InternalChild = flag = new UpdateableFlag { RelativeSizeAxes = Axes.Both };
         }
 
         [BackgroundDependencyLoader]

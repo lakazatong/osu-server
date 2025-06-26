@@ -51,30 +51,32 @@ namespace osu.Game.Graphics.UserInterface
         public OsuAnimatedButton(HoverSampleSet sampleSet = HoverSampleSet.Button)
             : base(sampleSet)
         {
-            base.Content.Add(content = new Container
-            {
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                CornerRadius = 5,
-                Masking = true,
-                EdgeEffect = new EdgeEffectParameters
+            base.Content.Add(
+                content = new Container
                 {
-                    Colour = Color4.Black.Opacity(0.04f),
-                    Type = EdgeEffectType.Shadow,
-                    Radius = 5,
-                },
-                Children = new Drawable[]
-                {
-                    hover = new Box
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    CornerRadius = 5,
+                    Masking = true,
+                    EdgeEffect = new EdgeEffectParameters
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = HoverColour,
-                        Blending = BlendingParameters.Additive,
-                        Alpha = 0,
+                        Colour = Color4.Black.Opacity(0.04f),
+                        Type = EdgeEffectType.Shadow,
+                        Radius = 5,
+                    },
+                    Children = new Drawable[]
+                    {
+                        hover = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = HoverColour,
+                            Blending = BlendingParameters.Additive,
+                            Alpha = 0,
+                        },
                     },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]

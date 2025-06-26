@@ -30,17 +30,26 @@ namespace osu.Desktop
         public const string PROFILE_NAME = @"osu!";
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus EnumPhysicalGPUsDelegate([Out] IntPtr[] gpuHandles, out int gpuCount);
+        public delegate NvStatus EnumPhysicalGPUsDelegate(
+            [Out] IntPtr[] gpuHandles,
+            out int gpuCount
+        );
 
         public static readonly EnumPhysicalGPUsDelegate EnumPhysicalGPUs;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus EnumLogicalGPUsDelegate([Out] IntPtr[] gpuHandles, out int gpuCount);
+        public delegate NvStatus EnumLogicalGPUsDelegate(
+            [Out] IntPtr[] gpuHandles,
+            out int gpuCount
+        );
 
         public static readonly EnumLogicalGPUsDelegate EnumLogicalGPUs;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus GetSystemTypeDelegate(IntPtr gpuHandle, out NvSystemType systemType);
+        public delegate NvStatus GetSystemTypeDelegate(
+            IntPtr gpuHandle,
+            out NvSystemType systemType
+        );
 
         public static readonly GetSystemTypeDelegate GetSystemType;
 
@@ -60,42 +69,77 @@ namespace osu.Desktop
         public static LoadSettingsDelegate LoadSettings;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus FindApplicationByNameDelegate(IntPtr sessionHandle, [MarshalAs(UnmanagedType.BStr)] string appName, out IntPtr profileHandle, ref NvApplication application);
+        public delegate NvStatus FindApplicationByNameDelegate(
+            IntPtr sessionHandle,
+            [MarshalAs(UnmanagedType.BStr)] string appName,
+            out IntPtr profileHandle,
+            ref NvApplication application
+        );
 
         public static FindApplicationByNameDelegate FindApplicationByName;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus GetCurrentGlobalProfileDelegate(IntPtr sessionHandle, out IntPtr profileHandle);
+        public delegate NvStatus GetCurrentGlobalProfileDelegate(
+            IntPtr sessionHandle,
+            out IntPtr profileHandle
+        );
 
         public static GetCurrentGlobalProfileDelegate GetCurrentGlobalProfile;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus GetProfileInfoDelegate(IntPtr sessionHandle, IntPtr profileHandle, ref NvProfile profile);
+        public delegate NvStatus GetProfileInfoDelegate(
+            IntPtr sessionHandle,
+            IntPtr profileHandle,
+            ref NvProfile profile
+        );
 
         public static GetProfileInfoDelegate GetProfileInfo;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate NvStatus GetSettingDelegate(IntPtr sessionHandle, IntPtr profileHandle, NvSettingID settingID, ref NvSetting setting);
+        public delegate NvStatus GetSettingDelegate(
+            IntPtr sessionHandle,
+            IntPtr profileHandle,
+            NvSettingID settingID,
+            ref NvSetting setting
+        );
 
         public static GetSettingDelegate GetSetting;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate NvStatus CreateProfileDelegate(IntPtr sessionHandle, ref NvProfile profile, out IntPtr profileHandle);
+        private delegate NvStatus CreateProfileDelegate(
+            IntPtr sessionHandle,
+            ref NvProfile profile,
+            out IntPtr profileHandle
+        );
 
         private static readonly CreateProfileDelegate CreateProfile;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate NvStatus SetSettingDelegate(IntPtr sessionHandle, IntPtr profileHandle, ref NvSetting setting);
+        private delegate NvStatus SetSettingDelegate(
+            IntPtr sessionHandle,
+            IntPtr profileHandle,
+            ref NvSetting setting
+        );
 
         private static readonly SetSettingDelegate SetSetting;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate NvStatus EnumApplicationsDelegate(IntPtr sessionHandle, IntPtr profileHandle, uint startIndex, ref uint appCount, [In, Out, MarshalAs(UnmanagedType.LPArray)] NvApplication[] applications);
+        private delegate NvStatus EnumApplicationsDelegate(
+            IntPtr sessionHandle,
+            IntPtr profileHandle,
+            uint startIndex,
+            ref uint appCount,
+            [In, Out, MarshalAs(UnmanagedType.LPArray)] NvApplication[] applications
+        );
 
         private static readonly EnumApplicationsDelegate EnumApplications;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate NvStatus CreateApplicationDelegate(IntPtr sessionHandle, IntPtr profileHandle, ref NvApplication application);
+        private delegate NvStatus CreateApplicationDelegate(
+            IntPtr sessionHandle,
+            IntPtr profileHandle,
+            ref NvApplication application
+        );
 
         private static readonly CreateApplicationDelegate CreateApplication;
 
@@ -128,7 +172,8 @@ namespace osu.Desktop
                 if (!getSetting(NvSettingID.SHIM_RENDERING_MODE_ID, profileHandle, out setting))
                     return false;
 
-                return (setting.U32CurrentValue & (uint)NvShimSetting.SHIM_RENDERING_MODE_ENABLE) > 0;
+                return (setting.U32CurrentValue & (uint)NvShimSetting.SHIM_RENDERING_MODE_ENABLE)
+                    > 0;
             }
         }
 
@@ -182,7 +227,11 @@ namespace osu.Desktop
 
                 bool success = setSetting(NvSettingID.OGL_THREAD_CONTROL_ID, (uint)value);
 
-                Logger.Log(success ? $"[NVAPI] Threaded optimizations set to \"{value}\"!" : "[NVAPI] Threaded optimizations set failed!");
+                Logger.Log(
+                    success
+                        ? $"[NVAPI] Threaded optimizations set to \"{value}\"!"
+                        : "[NVAPI] Threaded optimizations set failed!"
+                );
             }
         }
 
@@ -190,12 +239,13 @@ namespace osu.Desktop
         /// Checks if the profile contains the current application.
         /// </summary>
         /// <returns>If the profile contains the current application.</returns>
-        private static bool containsApplication(IntPtr profileHandle, NvProfile profile, out NvApplication application)
+        private static bool containsApplication(
+            IntPtr profileHandle,
+            NvProfile profile,
+            out NvApplication application
+        )
         {
-            application = new NvApplication
-            {
-                Version = NvApplication.Stride
-            };
+            application = new NvApplication { Version = NvApplication.Stride };
 
             if (profile.NumOfApps == 0)
                 return false;
@@ -205,7 +255,12 @@ namespace osu.Desktop
 
             uint numApps = profile.NumOfApps;
 
-            if (checkError(EnumApplications(sessionHandle, profileHandle, 0, ref numApps, applications), nameof(EnumApplications)))
+            if (
+                checkError(
+                    EnumApplications(sessionHandle, profileHandle, 0, ref numApps, applications),
+                    nameof(EnumApplications)
+                )
+            )
                 return false;
 
             for (uint i = 0; i < numApps; i++)
@@ -227,19 +282,35 @@ namespace osu.Desktop
         /// <param name="application">The current application description.</param>
         /// <param name="isApplicationSpecific">If this profile is not a global (default) profile.</param>
         /// <returns>If the operation succeeded.</returns>
-        private static bool getProfile(out IntPtr profileHandle, out NvApplication application, out bool isApplicationSpecific)
+        private static bool getProfile(
+            out IntPtr profileHandle,
+            out NvApplication application,
+            out bool isApplicationSpecific
+        )
         {
-            application = new NvApplication
-            {
-                Version = NvApplication.Stride
-            };
+            application = new NvApplication { Version = NvApplication.Stride };
 
             isApplicationSpecific = true;
 
-            if (checkError(FindApplicationByName(sessionHandle, osu_filename, out profileHandle, ref application), nameof(FindApplicationByName)))
+            if (
+                checkError(
+                    FindApplicationByName(
+                        sessionHandle,
+                        osu_filename,
+                        out profileHandle,
+                        ref application
+                    ),
+                    nameof(FindApplicationByName)
+                )
+            )
             {
                 isApplicationSpecific = false;
-                if (checkError(GetCurrentGlobalProfile(sessionHandle, out profileHandle), nameof(GetCurrentGlobalProfile)))
+                if (
+                    checkError(
+                        GetCurrentGlobalProfile(sessionHandle, out profileHandle),
+                        nameof(GetCurrentGlobalProfile)
+                    )
+                )
                     return false;
             }
 
@@ -258,10 +329,15 @@ namespace osu.Desktop
                 Version = NvProfile.Stride,
                 IsPredefined = 0,
                 ProfileName = PROFILE_NAME,
-                GpuSupport = NvDrsGpuSupport.Geforce
+                GpuSupport = NvDrsGpuSupport.Geforce,
             };
 
-            if (checkError(CreateProfile(sessionHandle, ref newProfile, out profileHandle), nameof(CreateProfile)))
+            if (
+                checkError(
+                    CreateProfile(sessionHandle, ref newProfile, out profileHandle),
+                    nameof(CreateProfile)
+                )
+            )
                 return false;
 
             return true;
@@ -274,15 +350,20 @@ namespace osu.Desktop
         /// <param name="profileHandle">The profile handle to retrieve the setting from.</param>
         /// <param name="setting">The setting.</param>
         /// <returns>If the operation succeeded.</returns>
-        private static bool getSetting(NvSettingID settingId, IntPtr profileHandle, out NvSetting setting)
+        private static bool getSetting(
+            NvSettingID settingId,
+            IntPtr profileHandle,
+            out NvSetting setting
+        )
         {
-            setting = new NvSetting
-            {
-                Version = NvSetting.Stride,
-                SettingID = settingId
-            };
+            setting = new NvSetting { Version = NvSetting.Stride, SettingID = settingId };
 
-            if (checkError(GetSetting(sessionHandle, profileHandle, settingId, ref setting), nameof(GetSetting)))
+            if (
+                checkError(
+                    GetSetting(sessionHandle, profileHandle, settingId, ref setting),
+                    nameof(GetSetting)
+                )
+            )
                 return false;
 
             return true;
@@ -307,19 +388,26 @@ namespace osu.Desktop
             {
                 Version = NvSetting.Stride,
                 SettingID = settingId,
-                U32CurrentValue = settingValue
+                U32CurrentValue = settingValue,
             };
 
             // Set the thread state
-            if (checkError(SetSetting(sessionHandle, profileHandle, ref newSetting), nameof(SetSetting)))
+            if (
+                checkError(
+                    SetSetting(sessionHandle, profileHandle, ref newSetting),
+                    nameof(SetSetting)
+                )
+            )
                 return false;
 
             // Get the profile (needed to check app count)
-            NvProfile profile = new NvProfile
-            {
-                Version = NvProfile.Stride
-            };
-            if (checkError(GetProfileInfo(sessionHandle, profileHandle, ref profile), nameof(GetProfileInfo)))
+            NvProfile profile = new NvProfile { Version = NvProfile.Stride };
+            if (
+                checkError(
+                    GetProfileInfo(sessionHandle, profileHandle, ref profile),
+                    nameof(GetProfileInfo)
+                )
+            )
                 return false;
 
             if (!containsApplication(profileHandle, profile, out application))
@@ -330,7 +418,12 @@ namespace osu.Desktop
                 application.AppName = osu_filename;
                 application.UserFriendlyName = APPLICATION_NAME;
 
-                if (checkError(CreateApplication(sessionHandle, profileHandle, ref application), nameof(CreateApplication)))
+                if (
+                    checkError(
+                        CreateApplication(sessionHandle, profileHandle, ref application),
+                        nameof(CreateApplication)
+                    )
+                )
                     return false;
             }
 
@@ -372,8 +465,10 @@ namespace osu.Desktop
             try
             {
                 // Try to load NVAPI
-                if ((IntPtr.Size == 4 && loadLibrary(@"nvapi.dll") == IntPtr.Zero)
-                    || (IntPtr.Size == 8 && loadLibrary(@"nvapi64.dll") == IntPtr.Zero))
+                if (
+                    (IntPtr.Size == 4 && loadLibrary(@"nvapi.dll") == IntPtr.Zero)
+                    || (IntPtr.Size == 8 && loadLibrary(@"nvapi64.dll") == IntPtr.Zero)
+                )
                 {
                     return;
                 }
@@ -408,19 +503,31 @@ namespace osu.Desktop
             catch { }
         }
 
-        private static void getDelegate<T>(uint id, out T newDelegate) where T : class
+        private static void getDelegate<T>(uint id, out T newDelegate)
+            where T : class
         {
             IntPtr ptr = IntPtr.Size == 4 ? queryInterface32(id) : queryInterface64(id);
-            newDelegate = ptr == IntPtr.Zero ? null : Marshal.GetDelegateForFunctionPointer(ptr, typeof(T)) as T;
+            newDelegate =
+                ptr == IntPtr.Zero
+                    ? null
+                    : Marshal.GetDelegateForFunctionPointer(ptr, typeof(T)) as T;
         }
 
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary")]
         private static extern IntPtr loadLibrary(string dllToLoad);
 
-        [DllImport(@"nvapi.dll", EntryPoint = "nvapi_QueryInterface", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(
+            @"nvapi.dll",
+            EntryPoint = "nvapi_QueryInterface",
+            CallingConvention = CallingConvention.Cdecl
+        )]
         private static extern IntPtr queryInterface32(uint id);
 
-        [DllImport(@"nvapi64.dll", EntryPoint = "nvapi_QueryInterface", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(
+            @"nvapi64.dll",
+            EntryPoint = "nvapi_QueryInterface",
+            CallingConvention = CallingConvention.Cdecl
+        )]
         private static extern IntPtr queryInterface64(uint id);
 
         private delegate NvStatus InitializeDelegate();
@@ -619,7 +726,7 @@ namespace osu.Desktop
     {
         UNKNOWN = 0,
         LAPTOP = 1,
-        DESKTOP = 2
+        DESKTOP = 2,
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -720,7 +827,7 @@ namespace osu.Desktop
         TOTAL_DWORD_SETTING_NUM = 80,
         TOTAL_WSTRING_SETTING_NUM = 4,
         TOTAL_SETTING_NUM = 84,
-        INVALID_SETTING_ID = 0xFFFFFFFF
+        INVALID_SETTING_ID = 0xFFFFFFFF,
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -735,7 +842,7 @@ namespace osu.Desktop
         SHIM_RENDERING_MODE_AUTO_SELECT = 0x00000010,
         SHIM_RENDERING_MODE_OVERRIDE_BIT = 0x80000000,
         SHIM_RENDERING_MODE_NUM_VALUES = 8,
-        SHIM_RENDERING_MODE_DEFAULT = SHIM_RENDERING_MODE_AUTO_SELECT
+        SHIM_RENDERING_MODE_DEFAULT = SHIM_RENDERING_MODE_AUTO_SELECT,
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -744,7 +851,7 @@ namespace osu.Desktop
         OGL_THREAD_CONTROL_ENABLE = 0x00000001,
         OGL_THREAD_CONTROL_DISABLE = 0x00000002,
         OGL_THREAD_CONTROL_NUM_VALUES = 2,
-        OGL_THREAD_CONTROL_DEFAULT = 0
+        OGL_THREAD_CONTROL_DEFAULT = 0,
     }
 
     [Flags]
@@ -752,6 +859,6 @@ namespace osu.Desktop
     {
         Geforce = 1 << 0,
         Quadro = 1 << 1,
-        Nvs = 1 << 2
+        Nvs = 1 << 2,
     }
 }

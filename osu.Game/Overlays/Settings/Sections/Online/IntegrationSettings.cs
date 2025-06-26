@@ -21,8 +21,10 @@ namespace osu.Game.Overlays.Settings.Sections.Online
                 new SettingsEnumDropdown<DiscordRichPresenceMode>
                 {
                     LabelText = OnlineSettingsStrings.DiscordRichPresence,
-                    Current = config.GetBindable<DiscordRichPresenceMode>(OsuSetting.DiscordRichPresence)
-                }
+                    Current = config.GetBindable<DiscordRichPresenceMode>(
+                        OsuSetting.DiscordRichPresence
+                    ),
+                },
             };
         }
     }

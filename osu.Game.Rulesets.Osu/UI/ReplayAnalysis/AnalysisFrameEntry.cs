@@ -12,7 +12,12 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
 
         public Vector2 Position { get; }
 
-        public AnalysisFrameEntry(double time, double displayLength, Vector2 position, params OsuAction[] action)
+        public AnalysisFrameEntry(
+            double time,
+            double displayLength,
+            Vector2 position,
+            params OsuAction[] action
+        )
         {
             LifetimeStart = time;
             LifetimeEnd = time + displayLength;

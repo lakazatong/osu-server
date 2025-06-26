@@ -11,14 +11,19 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneFirstRunScreenBehaviour : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         public TestSceneFirstRunScreenBehaviour()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new ScreenStack(new ScreenBehaviour());
-            });
+            AddStep(
+                "load screen",
+                () =>
+                {
+                    Child = new ScreenStack(new ScreenBehaviour());
+                }
+            );
         }
     }
 }

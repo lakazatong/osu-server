@@ -37,19 +37,31 @@ namespace osu.Game.Rulesets.Taiko.Tests
 
             // due to pooling we can't access all samples right away due to object re-use,
             // so we need to collect as we go.
-            AddStep("collect sample names", () => Player.DrawableRuleset.Playfield.NewResult += (dho, _) =>
-            {
-                if (!(dho is DrawableHit h))
-                    return;
+            AddStep(
+                "collect sample names",
+                () =>
+                    Player.DrawableRuleset.Playfield.NewResult += (dho, _) =>
+                    {
+                        if (!(dho is DrawableHit h))
+                            return;
 
-                actualSampleNames.Add(string.Join(',', h.GetSamples().Select(s => s.Name)));
-            });
+                        actualSampleNames.Add(string.Join(',', h.GetSamples().Select(s => s.Name)));
+                    }
+            );
 
-            AddUntilStep("all samples collected", () => actualSampleNames.Count == expectedSampleNames.Length);
+            AddUntilStep(
+                "all samples collected",
+                () => actualSampleNames.Count == expectedSampleNames.Length
+            );
 
-            AddAssert("samples are correct", () => actualSampleNames, () => Is.EqualTo(expectedSampleNames));
+            AddAssert(
+                "samples are correct",
+                () => actualSampleNames,
+                () => Is.EqualTo(expectedSampleNames)
+            );
         }
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TaikoBeatmapConversionTest().GetBeatmap("sample-to-type-conversions");
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TaikoBeatmapConversionTest().GetBeatmap("sample-to-type-conversions");
     }
 }

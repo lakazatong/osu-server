@@ -55,17 +55,18 @@ namespace osu.Game.Overlays.OSD
                             Direction = FillDirection.Horizontal,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            AutoSizeAxes = Axes.Both
+                            AutoSizeAxes = Axes.Both,
                         },
-                    }
-                }
+                    },
+                },
             };
 
             switch (description.RawValue)
             {
                 case bool val:
                     optionCount = 1;
-                    if (val) selectedOption = 0;
+                    if (val)
+                        selectedOption = 0;
                     break;
 
                 case Enum:
@@ -99,9 +100,12 @@ namespace osu.Game.Overlays.OSD
             // the whole toast system should be rewritten to avoid recreating this drawable each time a value changes.
             lastPlaybackTime = statics.GetBindable<double?>(Static.LastHoverSoundPlaybackTime);
 
-            bool enoughTimePassedSinceLastPlayback = !lastPlaybackTime.Value.HasValue || Time.Current - lastPlaybackTime.Value >= OsuGameBase.SAMPLE_DEBOUNCE_TIME;
+            bool enoughTimePassedSinceLastPlayback =
+                !lastPlaybackTime.Value.HasValue
+                || Time.Current - lastPlaybackTime.Value >= OsuGameBase.SAMPLE_DEBOUNCE_TIME;
 
-            if (!enoughTimePassedSinceLastPlayback) return;
+            if (!enoughTimePassedSinceLastPlayback)
+                return;
 
             if (optionCount == 1)
             {
@@ -112,9 +116,11 @@ namespace osu.Game.Overlays.OSD
             }
             else
             {
-                if (sampleChange == null) return;
+                if (sampleChange == null)
+                    return;
 
-                sampleChange.Frequency.Value = 1 + (double)selectedOption / (optionCount - 1) * 0.25f;
+                sampleChange.Frequency.Value =
+                    1 + (double)selectedOption / (optionCount - 1) * 0.25f;
                 sampleChange.Play();
             }
 
@@ -131,7 +137,8 @@ namespace osu.Game.Overlays.OSD
 
         private partial class OptionLight : Container
         {
-            private Color4 glowingColour, idleColour;
+            private Color4 glowingColour,
+                idleColour;
 
             private const float transition_speed = 300;
 
@@ -143,11 +150,7 @@ namespace osu.Game.Overlays.OSD
             {
                 Children = new[]
                 {
-                    fill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 1,
-                    },
+                    fill = new Box { RelativeSizeAxes = Axes.Both, Alpha = 1 },
                 };
             }
 
@@ -158,7 +161,8 @@ namespace osu.Game.Overlays.OSD
                 set
                 {
                     glowing = value;
-                    if (!IsLoaded) return;
+                    if (!IsLoaded)
+                        return;
 
                     updateGlow();
                 }

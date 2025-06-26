@@ -25,7 +25,10 @@ using osuTK.Input;
 
 namespace osu.Game.Overlays.Mods
 {
-    public abstract partial class ModSelectPanel : OsuClickableContainer, IHasAccentColour, IFilterable
+    public abstract partial class ModSelectPanel
+        : OsuClickableContainer,
+            IHasAccentColour,
+            IFilterable
     {
         public abstract BindableBool Active { get; }
 
@@ -50,9 +53,12 @@ namespace osu.Game.Overlays.Mods
 
         protected virtual float IdleSwitchWidth => 14;
         protected virtual float ExpandedSwitchWidth => 30;
-        protected virtual Colour4 BackgroundColour => Active.Value ? AccentColour.Darken(0.3f) : ColourProvider.Background3;
-        protected virtual Colour4 ForegroundColour => Active.Value ? AccentColour : ColourProvider.Background2;
-        protected virtual Colour4 TextColour => Active.Value ? ColourProvider.Background6 : Colour4.White;
+        protected virtual Colour4 BackgroundColour =>
+            Active.Value ? AccentColour.Darken(0.3f) : ColourProvider.Background3;
+        protected virtual Colour4 ForegroundColour =>
+            Active.Value ? AccentColour : ColourProvider.Background2;
+        protected virtual Colour4 TextColour =>
+            Active.Value ? ColourProvider.Background6 : Colour4.White;
 
         protected const double TRANSITION_DURATION = 150;
 
@@ -90,14 +96,8 @@ namespace osu.Game.Overlays.Mods
 
             Children = new Drawable[]
             {
-                Background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
-                SwitchContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Y,
-                },
+                Background = new Box { RelativeSizeAxes = Axes.Both },
+                SwitchContainer = new Container { RelativeSizeAxes = Axes.Y },
                 MainContentContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -108,30 +108,23 @@ namespace osu.Game.Overlays.Mods
                         CornerRadius = CORNER_RADIUS,
                         Children = new Drawable[]
                         {
-                            TextBackground = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            TextBackground = new Box { RelativeSizeAxes = Axes.Both },
                             TextFlow = new FillFlowContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Padding = new MarginPadding
-                                {
-                                    Horizontal = 17.5f,
-                                    Vertical = 4
-                                },
+                                Padding = new MarginPadding { Horizontal = 17.5f, Vertical = 4 },
                                 Direction = FillDirection.Vertical,
                                 Children = new[]
                                 {
                                     titleText = new TruncatingSpriteText
                                     {
-                                        Font = OsuFont.TorusAlternate.With(size: 18, weight: FontWeight.SemiBold),
+                                        Font = OsuFont.TorusAlternate.With(
+                                            size: 18,
+                                            weight: FontWeight.SemiBold
+                                        ),
                                         RelativeSizeAxes = Axes.X,
                                         Shear = -OsuGame.SHEAR,
-                                        Margin = new MarginPadding
-                                        {
-                                            Left = -18 * OsuGame.SHEAR.X
-                                        },
+                                        Margin = new MarginPadding { Left = -18 * OsuGame.SHEAR.X },
                                         ShowTooltip = false, // Tooltip is handled by `IncompatibilityDisplayingModPanel`.
                                     },
                                     descriptionText = new TruncatingSpriteText
@@ -140,12 +133,12 @@ namespace osu.Game.Overlays.Mods
                                         RelativeSizeAxes = Axes.X,
                                         Shear = -OsuGame.SHEAR,
                                         ShowTooltip = false, // Tooltip is handled by `IncompatibilityDisplayingModPanel`.
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
 
             Action = () =>
@@ -168,18 +161,25 @@ namespace osu.Game.Overlays.Mods
         protected abstract void Deselect();
 
         [BackgroundDependencyLoader]
-        private void load(AudioManager audio, SessionStatics statics, ISamplePlaybackDisabler? samplePlaybackDisabler)
+        private void load(
+            AudioManager audio,
+            SessionStatics statics,
+            ISamplePlaybackDisabler? samplePlaybackDisabler
+        )
         {
             sampleOn = audio.Samples.Get(@"UI/check-on");
             sampleOff = audio.Samples.Get(@"UI/check-off");
 
             if (samplePlaybackDisabler != null)
-                ((IBindable<bool>)samplePlaybackDisabled).BindTo(samplePlaybackDisabler.SamplePlaybackDisabled);
+                ((IBindable<bool>)samplePlaybackDisabled).BindTo(
+                    samplePlaybackDisabler.SamplePlaybackDisabled
+                );
 
             lastPlaybackTime = statics.GetBindable<double?>(Static.LastHoverSoundPlaybackTime);
         }
 
-        protected sealed override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds(sampleSet);
+        protected sealed override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverSounds(sampleSet);
 
         protected override void LoadComplete()
         {
@@ -202,7 +202,9 @@ namespace osu.Game.Overlays.Mods
             if (!IsPresent)
                 return;
 
-            bool enoughTimePassedSinceLastPlayback = !lastPlaybackTime.Value.HasValue || Time.Current - lastPlaybackTime.Value >= SAMPLE_PLAYBACK_DELAY;
+            bool enoughTimePassedSinceLastPlayback =
+                !lastPlaybackTime.Value.HasValue
+                || Time.Current - lastPlaybackTime.Value >= SAMPLE_PLAYBACK_DELAY;
 
             if (enoughTimePassedSinceLastPlayback)
             {
@@ -269,14 +271,20 @@ namespace osu.Game.Overlays.Mods
                 transitionDuration *= 4;
             }
 
-            Content.TransformTo(nameof(BorderColour), ColourInfo.GradientVertical(backgroundColour, foregroundColour), transitionDuration, Easing.OutQuint);
+            Content.TransformTo(
+                nameof(BorderColour),
+                ColourInfo.GradientVertical(backgroundColour, foregroundColour),
+                transitionDuration,
+                Easing.OutQuint
+            );
             Background.FadeColour(backgroundColour, transitionDuration, Easing.OutQuint);
             SwitchContainer.ResizeWidthTo(targetWidth, transitionDuration, Easing.OutQuint);
-            MainContentContainer.TransformTo(nameof(Padding), new MarginPadding
-            {
-                Left = targetWidth,
-                Right = CORNER_RADIUS
-            }, transitionDuration, Easing.OutQuint);
+            MainContentContainer.TransformTo(
+                nameof(Padding),
+                new MarginPadding { Left = targetWidth, Right = CORNER_RADIUS },
+                transitionDuration,
+                Easing.OutQuint
+            );
             TextBackground.FadeColour(foregroundColour, transitionDuration, Easing.OutQuint);
             TextFlow.FadeColour(textColour, transitionDuration, Easing.OutQuint);
         }

@@ -17,21 +17,26 @@ namespace osu.Game.Tests.Visual.Online
         private OverlayColourProvider colourProvider = null!;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
-            Child = new DependencyProvidingContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Child = container = new PreviousUsernamesDisplay
+                colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+                Child = new DependencyProvidingContainer
                 {
+                    Child = container =
+                        new PreviousUsernamesDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    CachedDependencies = new (Type, object)[]
+                    {
+                        (typeof(OverlayColourProvider), colourProvider),
+                    },
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                },
-                CachedDependencies = new (Type, object)[] { (typeof(OverlayColourProvider), colourProvider) },
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
-        });
+                };
+            });
 
         [Test]
         public void TestVisibility()
@@ -61,10 +66,18 @@ namespace osu.Game.Tests.Visual.Online
         {
             new APIUser { Id = 1, PreviousUsernames = new[] { "username1" } },
             new APIUser { Id = 2, PreviousUsernames = new[] { "longusername", "longerusername" } },
-            new APIUser { Id = 3, PreviousUsernames = new[] { "test", "angelsim", "verylongusername" } },
-            new APIUser { Id = 4, PreviousUsernames = new[] { "ihavenoidea", "howcani", "makethistext", "anylonger" } },
+            new APIUser
+            {
+                Id = 3,
+                PreviousUsernames = new[] { "test", "angelsim", "verylongusername" },
+            },
+            new APIUser
+            {
+                Id = 4,
+                PreviousUsernames = new[] { "ihavenoidea", "howcani", "makethistext", "anylonger" },
+            },
             new APIUser { Id = 5, PreviousUsernames = Array.Empty<string>() },
-            null
+            null,
         };
     }
 }

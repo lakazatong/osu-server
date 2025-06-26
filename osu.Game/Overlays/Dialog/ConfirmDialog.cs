@@ -30,15 +30,11 @@ namespace osu.Game.Overlays.Dialog
 
             Buttons = new PopupDialogButton[]
             {
-                new PopupDialogOkButton
-                {
-                    Text = @"Yes",
-                    Action = onConfirm
-                },
+                new PopupDialogOkButton { Text = @"Yes", Action = onConfirm },
                 new PopupDialogCancelButton
                 {
                     Text = CommonStrings.ButtonsCancel,
-                    Action = onCancel
+                    Action = onCancel,
                 },
             };
         }

@@ -50,16 +50,22 @@ namespace osu.Game.Overlays.Login
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding { Horizontal = SettingsPanel.CONTENT_MARGINS },
+                            Padding = new MarginPadding
+                            {
+                                Horizontal = SettingsPanel.CONTENT_MARGINS,
+                            },
                             Direction = FillDirection.Vertical,
                             Spacing = new Vector2(0f, SettingsSection.ITEM_SPACING),
                             Children = new Drawable[]
                             {
-                                new OsuTextFlowContainer(s => s.Font = OsuFont.GetFont(weight: FontWeight.Regular))
+                                new OsuTextFlowContainer(s =>
+                                    s.Font = OsuFont.GetFont(weight: FontWeight.Regular)
+                                )
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                    Text = "An email has been sent to you with a verification code. Enter the code.",
+                                    Text =
+                                        "An email has been sent to you with a verification code. Enter the code.",
                                 },
                                 codeTextBox = new OsuTextBox
                                 {
@@ -68,7 +74,9 @@ namespace osu.Game.Overlays.Login
                                     RelativeSizeAxes = Axes.X,
                                     TabbableContentContainer = this,
                                 },
-                                explainText = new LinkFlowContainer(s => s.Font = OsuFont.GetFont(weight: FontWeight.Regular))
+                                explainText = new LinkFlowContainer(s =>
+                                    s.Font = OsuFont.GetFont(weight: FontWeight.Regular)
+                                )
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
@@ -83,42 +91,59 @@ namespace osu.Game.Overlays.Login
                         },
                         new LinkFlowContainer
                         {
-                            Padding = new MarginPadding { Horizontal = SettingsPanel.CONTENT_MARGINS },
+                            Padding = new MarginPadding
+                            {
+                                Horizontal = SettingsPanel.CONTENT_MARGINS,
+                            },
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                         },
-                    }
+                    },
                 },
                 loading = new LoadingLayer(true)
                 {
                     Padding = new MarginPadding { Vertical = -SettingsSection.ITEM_SPACING },
-                }
+                },
             };
 
             explainText.AddParagraph(UserVerificationStrings.BoxInfoCheckSpam);
             // We can't support localisable strings with nested links yet. Not sure if we even can (probably need to allow markdown link formatting or something).
-            explainText.AddParagraph("If you can't access your email or have forgotten what you used, please follow the ");
-            explainText.AddLink(UserVerificationStrings.BoxInfoRecoverLink, $"{api.Endpoints.WebsiteUrl}/home/password-reset");
+            explainText.AddParagraph(
+                "If you can't access your email or have forgotten what you used, please follow the "
+            );
+            explainText.AddLink(
+                UserVerificationStrings.BoxInfoRecoverLink,
+                $"{api.Endpoints.WebsiteUrl}/home/password-reset"
+            );
             explainText.AddText(". You can also ");
-            explainText.AddLink(UserVerificationStrings.BoxInfoReissueLink, () =>
-            {
-                loading.Show();
-
-                var reissueRequest = new ReissueVerificationCodeRequest();
-                reissueRequest.Failure += ex =>
+            explainText.AddLink(
+                UserVerificationStrings.BoxInfoReissueLink,
+                () =>
                 {
-                    Logger.Error(ex, @"Failed to retrieve new verification code.");
-                    loading.Hide();
-                };
-                reissueRequest.Success += () =>
-                {
-                    loading.Hide();
-                };
+                    loading.Show();
 
-                Task.Run(() => api.Perform(reissueRequest));
-            });
+                    var reissueRequest = new ReissueVerificationCodeRequest();
+                    reissueRequest.Failure += ex =>
+                    {
+                        Logger.Error(ex, @"Failed to retrieve new verification code.");
+                        loading.Hide();
+                    };
+                    reissueRequest.Success += () =>
+                    {
+                        loading.Hide();
+                    };
+
+                    Task.Run(() => api.Perform(reissueRequest));
+                }
+            );
             explainText.AddText(" or ");
-            explainText.AddLink(UserVerificationStrings.BoxInfoLogoutLink, () => { api.Logout(); });
+            explainText.AddLink(
+                UserVerificationStrings.BoxInfoLogoutLink,
+                () =>
+                {
+                    api.Logout();
+                }
+            );
             explainText.AddText(".");
 
             codeTextBox.Current.BindValueChanged(code =>
@@ -145,7 +170,10 @@ namespace osu.Game.Overlays.Login
 
         protected override void OnFocus(FocusEvent e)
         {
-            Schedule(() => { GetContainingFocusManager()!.ChangeFocus(codeTextBox); });
+            Schedule(() =>
+            {
+                GetContainingFocusManager()!.ChangeFocus(codeTextBox);
+            });
         }
     }
 }

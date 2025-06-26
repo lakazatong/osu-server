@@ -25,7 +25,10 @@ namespace osu.Game.Rulesets.Osu.Tests
             using (var reader = new LineBufferedReader(stream))
             {
                 var beatmap = Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
-                var converted = new TestWorkingBeatmap(beatmap).GetPlayableBeatmap(new OsuRuleset().RulesetInfo, Array.Empty<Mod>());
+                var converted = new TestWorkingBeatmap(beatmap).GetPlayableBeatmap(
+                    new OsuRuleset().RulesetInfo,
+                    Array.Empty<Mod>()
+                );
 
                 var objects = converted.HitObjects.ToList();
 
@@ -35,7 +38,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             }
         }
 
-        private const string beatmap_data = @"
+        private const string beatmap_data =
+            @"
 osu file format v14
 
 [General]

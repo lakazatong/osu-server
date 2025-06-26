@@ -30,7 +30,8 @@ namespace osu.Game.Beatmaps
         [Resolved]
         private RulesetStore rulesets { get; set; } = null!;
 
-        private readonly Dictionary<string, double> recommendedDifficultyMapping = new Dictionary<string, double>();
+        private readonly Dictionary<string, double> recommendedDifficultyMapping =
+            new Dictionary<string, double>();
 
         /// <returns>
         /// Rulesets ordered descending by their respective recommended difficulties.
@@ -44,10 +45,10 @@ namespace osu.Game.Beatmaps
                     return Enumerable.Empty<string>();
 
                 return recommendedDifficultyMapping
-                       .OrderByDescending(pair => pair.Value)
-                       .Select(pair => pair.Key)
-                       .Where(r => !r.Equals(gameRuleset.Value.ShortName, StringComparison.Ordinal))
-                       .Prepend(gameRuleset.Value.ShortName);
+                    .OrderByDescending(pair => pair.Value)
+                    .Select(pair => pair.Key)
+                    .Where(r => !r.Equals(gameRuleset.Value.ShortName, StringComparison.Ordinal))
+                    .Prepend(gameRuleset.Value.ShortName);
             }
         }
 
@@ -73,7 +74,8 @@ namespace osu.Game.Beatmaps
             statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
         }
 
-        private void onStatisticsUpdated(UserStatisticsUpdate update) => updateMapping(update.Ruleset, update.NewStatistics);
+        private void onStatisticsUpdated(UserStatisticsUpdate update) =>
+            updateMapping(update.Ruleset, update.NewStatistics);
 
         private void updateMapping(RulesetInfo ruleset, UserStatistics statistics)
         {
@@ -86,8 +88,10 @@ namespace osu.Game.Beatmaps
             StarRatingUpdated?.Invoke();
         }
 
-        public double? GetRecommendedStarRatingFor(RulesetInfo ruleset)
-            => recommendedDifficultyMapping.TryGetValue(ruleset.ShortName, out double starRating) ? starRating : null;
+        public double? GetRecommendedStarRatingFor(RulesetInfo ruleset) =>
+            recommendedDifficultyMapping.TryGetValue(ruleset.ShortName, out double starRating)
+                ? starRating
+                : null;
 
         /// <summary>
         /// Find the recommended difficulty from a selection of available difficulties for the current local user.
@@ -104,11 +108,13 @@ namespace osu.Game.Beatmaps
                 if (!recommendedDifficultyMapping.TryGetValue(r, out double recommendation))
                     continue;
 
-                BeatmapInfo? beatmapInfo = beatmaps.Where(b => b.Ruleset.ShortName.Equals(r, StringComparison.Ordinal)).MinBy(b =>
-                {
-                    double difference = b.StarRating - recommendation;
-                    return difference >= 0 ? difference * 2 : difference * -1; // prefer easier over harder
-                });
+                BeatmapInfo? beatmapInfo = beatmaps
+                    .Where(b => b.Ruleset.ShortName.Equals(r, StringComparison.Ordinal))
+                    .MinBy(b =>
+                    {
+                        double difference = b.StarRating - recommendation;
+                        return difference >= 0 ? difference * 2 : difference * -1; // prefer easier over harder
+                    });
 
                 if (beatmapInfo != null)
                     return beatmapInfo;

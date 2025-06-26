@@ -26,7 +26,9 @@ namespace osu.Game.Collections
     /// <summary>
     /// Visualises a <see cref="BeatmapCollection"/> inside a <see cref="DrawableCollectionList"/>.
     /// </summary>
-    public partial class DrawableCollectionListItem : OsuRearrangeableListItem<Live<BeatmapCollection>>, IFilterable
+    public partial class DrawableCollectionListItem
+        : OsuRearrangeableListItem<Live<BeatmapCollection>>,
+            IFilterable
     {
         private const float item_height = 45;
         private const float button_width = item_height * 0.75f;
@@ -84,13 +86,16 @@ namespace osu.Game.Collections
                         {
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
-                            IsTextBoxHovered = v => TextBox.ReceivePositionalInputAt(v)
+                            IsTextBoxHovered = v => TextBox.ReceivePositionalInputAt(v),
                         }
                         : Empty(),
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Right = collection.IsManaged ? button_width : 0 },
+                        Padding = new MarginPadding
+                        {
+                            Right = collection.IsManaged ? button_width : 0,
+                        },
                         Children = new Drawable[]
                         {
                             TextBox = new ItemTextBox(collection)
@@ -99,7 +104,7 @@ namespace osu.Game.Collections
                                 Height = item_height,
                                 CommitOnFocusLost = true,
                             },
-                        }
+                        },
                     },
                 };
             }
@@ -109,7 +114,9 @@ namespace osu.Game.Collections
                 base.LoadComplete();
 
                 // Bind late, as the collection name may change externally while still loading.
-                TextBox.Current.Value = collection.PerformRead(c => c.IsValid ? c.Name : string.Empty);
+                TextBox.Current.Value = collection.PerformRead(c =>
+                    c.IsValid ? c.Name : string.Empty
+                );
                 TextBox.OnCommit += onCommit;
             }
 
@@ -148,15 +155,20 @@ namespace osu.Game.Collections
                     TextContainer.Height *= (Height - count_text_size) / Height;
                     TextContainer.Margin = new MarginPadding { Bottom = count_text_size };
 
-                    TextContainer.Add(countText = new OsuSpriteText
-                    {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.TopLeft,
-                        Depth = float.MinValue,
-                        Font = OsuFont.Default.With(size: count_text_size, weight: FontWeight.SemiBold),
-                        Margin = new MarginPadding { Top = 2, Left = 2 },
-                        Colour = colours.Yellow
-                    });
+                    TextContainer.Add(
+                        countText = new OsuSpriteText
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.TopLeft,
+                            Depth = float.MinValue,
+                            Font = OsuFont.Default.With(
+                                size: count_text_size,
+                                weight: FontWeight.SemiBold
+                            ),
+                            Margin = new MarginPadding { Top = 2, Left = 2 },
+                            Colour = colours.Yellow,
+                        }
+                    );
 
                     // interestingly, it is not required to subscribe to change notifications on this collection at all for this to work correctly.
                     // the reasoning for this is that `DrawableCollectionList` already takes out a subscription on the set of all `BeatmapCollection`s -
@@ -165,11 +177,12 @@ namespace osu.Game.Collections
                     // when a collection item changes due to `BeatmapMD5Hashes` changing, the list item is deleted and re-inserted, thus guaranteeing this to work correctly.
                     int count = collection.PerformRead(c => c.BeatmapMD5Hashes.Count);
 
-                    countText.Text = count == 1
-                        // Intentionally not localised until we have proper support for this (see https://github.com/ppy/osu-framework/pull/4918
-                        // but also in this case we want support for formatting a number within a string).
-                        ? $"{count:#,0} item"
-                        : $"{count:#,0} items";
+                    countText.Text =
+                        count == 1
+                            // Intentionally not localised until we have proper support for this (see https://github.com/ppy/osu-framework/pull/4918
+                            // but also in this case we want support for formatting a number within a string).
+                            ? $"{count:#,0} item"
+                            : $"{count:#,0} items";
                 }
                 else
                 {
@@ -207,20 +220,16 @@ namespace osu.Game.Collections
                     Alpha = 0.1f,
                     Children = new[]
                     {
-                        background = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colours.Red
-                        },
+                        background = new Box { RelativeSizeAxes = Axes.Both, Colour = colours.Red },
                         new SpriteIcon
                         {
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.Centre,
                             X = -button_width * 0.6f,
                             Size = new Vector2(10),
-                            Icon = FontAwesome.Solid.Trash
-                        }
-                    }
+                            Icon = FontAwesome.Solid.Trash,
+                        },
+                    },
                 };
 
                 Action = () =>
@@ -228,11 +237,14 @@ namespace osu.Game.Collections
                     if (collection.PerformRead(c => c.BeatmapMD5Hashes.Count) == 0)
                         deleteCollection();
                     else
-                        dialogOverlay?.Push(new DeleteCollectionDialog(collection, deleteCollection));
+                        dialogOverlay?.Push(
+                            new DeleteCollectionDialog(collection, deleteCollection)
+                        );
                 };
             }
 
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => base.ReceivePositionalInputAt(screenSpacePos) && !IsTextBoxHovered(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                base.ReceivePositionalInputAt(screenSpacePos) && !IsTextBoxHovered(screenSpacePos);
 
             protected override bool OnHover(HoverEvent e)
             {
@@ -255,7 +267,8 @@ namespace osu.Game.Collections
             private void deleteCollection() => collection.PerformWrite(c => c.Realm!.Remove(c));
         }
 
-        public IEnumerable<LocalisableString> FilterTerms => Model.PerformRead(m => m.IsValid ? new[] { (LocalisableString)m.Name } : []);
+        public IEnumerable<LocalisableString> FilterTerms =>
+            Model.PerformRead(m => m.IsValid ? new[] { (LocalisableString)m.Name } : []);
 
         private bool matchingFilter = true;
 

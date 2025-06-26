@@ -43,7 +43,8 @@ namespace osu.Game.Screens.OnlinePlay
             }
         }
 
-        private void updateSubScreenTitle() => title.Screen = stack?.CurrentScreen as IOnlinePlaySubScreen;
+        private void updateSubScreenTitle() =>
+            title.Screen = stack?.CurrentScreen as IOnlinePlaySubScreen;
 
         private partial class MultiHeaderTitle : CompositeDrawable
         {
@@ -79,7 +80,7 @@ namespace osu.Game.Screens.OnlinePlay
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Font = OsuFont.TorusAlternate.With(size: 24),
-                                Text = mainTitle
+                                Text = mainTitle,
                             },
                             dot = new OsuSpriteText
                             {
@@ -94,8 +95,8 @@ namespace osu.Game.Screens.OnlinePlay
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Font = OsuFont.TorusAlternate.With(size: 24),
-                            }
-                        }
+                            },
+                        },
                     },
                 };
             }

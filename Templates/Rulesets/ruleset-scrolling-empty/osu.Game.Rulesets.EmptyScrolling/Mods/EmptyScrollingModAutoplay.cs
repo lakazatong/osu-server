@@ -10,7 +10,10 @@ namespace osu.Game.Rulesets.EmptyScrolling.Mods
 {
     public class EmptyScrollingModAutoplay : ModAutoplay
     {
-        public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods)
-            => new ModReplayData(new EmptyScrollingAutoGenerator(beatmap).Generate(), new ModCreatedUser { Username = "sample" });
+        public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods) =>
+            new ModReplayData(
+                new EmptyScrollingAutoGenerator(beatmap).Generate(),
+                new ModCreatedUser { Username = "sample" }
+            );
     }
 }

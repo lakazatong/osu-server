@@ -29,25 +29,29 @@ namespace osu.Game.Tests.Visual.Multiplayer
     {
         protected const int TOTAL_USERS = 16;
 
-        protected readonly BindableList<MultiplayerRoomUser> MultiplayerUsers = new BindableList<MultiplayerRoomUser>();
+        protected readonly BindableList<MultiplayerRoomUser> MultiplayerUsers =
+            new BindableList<MultiplayerRoomUser>();
 
         protected MultiplayerLeaderboardProvider? LeaderboardProvider { get; private set; }
 
         protected DrawableGameplayLeaderboard? Leaderboard { get; private set; }
 
-        protected virtual MultiplayerRoomUser CreateUser(int userId) => new MultiplayerRoomUser(userId);
+        protected virtual MultiplayerRoomUser CreateUser(int userId) =>
+            new MultiplayerRoomUser(userId);
 
         protected abstract MultiplayerLeaderboardProvider CreateLeaderboardProvider();
 
         private readonly BindableList<int> multiplayerUserIds = new BindableList<int>();
-        private readonly BindableDictionary<int, SpectatorState> watchedUserStates = new BindableDictionary<int, SpectatorState>();
+        private readonly BindableDictionary<int, SpectatorState> watchedUserStates =
+            new BindableDictionary<int, SpectatorState>();
 
         private OsuConfigManager config = null!;
 
         private readonly Mock<SpectatorClient> spectatorClient = new Mock<SpectatorClient>();
         private readonly Mock<MultiplayerClient> multiplayerClient = new Mock<MultiplayerClient>();
 
-        private readonly Dictionary<int, FrameHeader> lastHeaders = new Dictionary<int, FrameHeader>();
+        private readonly Dictionary<int, FrameHeader> lastHeaders =
+            new Dictionary<int, FrameHeader>();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -58,151 +62,189 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             // To emulate `MultiplayerClient.CurrentMatchPlayingUserIds` we need a bindable list of *only IDs*.
             // This tracks the list of users 1:1.
-            MultiplayerUsers.BindCollectionChanged((_, e) =>
-            {
-                switch (e.Action)
+            MultiplayerUsers.BindCollectionChanged(
+                (_, e) =>
                 {
-                    case NotifyCollectionChangedAction.Add:
-                        Debug.Assert(e.NewItems != null);
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Add:
+                            Debug.Assert(e.NewItems != null);
 
-                        foreach (var user in e.NewItems.OfType<MultiplayerRoomUser>())
-                            multiplayerUserIds.Add(user.UserID);
-                        break;
+                            foreach (var user in e.NewItems.OfType<MultiplayerRoomUser>())
+                                multiplayerUserIds.Add(user.UserID);
+                            break;
 
-                    case NotifyCollectionChangedAction.Remove:
-                        Debug.Assert(e.OldItems != null);
+                        case NotifyCollectionChangedAction.Remove:
+                            Debug.Assert(e.OldItems != null);
 
-                        foreach (var user in e.OldItems.OfType<MultiplayerRoomUser>())
-                            multiplayerUserIds.Remove(user.UserID);
-                        break;
+                            foreach (var user in e.OldItems.OfType<MultiplayerRoomUser>())
+                                multiplayerUserIds.Remove(user.UserID);
+                            break;
 
-                    case NotifyCollectionChangedAction.Reset:
-                        multiplayerUserIds.Clear();
-                        break;
+                        case NotifyCollectionChangedAction.Reset:
+                            multiplayerUserIds.Clear();
+                            break;
+                    }
                 }
-            });
+            );
 
-            multiplayerClient.SetupGet(c => c.CurrentMatchPlayingUserIds)
-                             .Returns(() => multiplayerUserIds);
+            multiplayerClient
+                .SetupGet(c => c.CurrentMatchPlayingUserIds)
+                .Returns(() => multiplayerUserIds);
 
-            spectatorClient.SetupGet(c => c.WatchedUserStates)
-                           .Returns(() => watchedUserStates);
+            spectatorClient.SetupGet(c => c.WatchedUserStates).Returns(() => watchedUserStates);
         }
 
         [SetUpSteps]
         public virtual void SetUpSteps()
         {
-            AddStep("reset counts", () =>
-            {
-                spectatorClient.Invocations.Clear();
-                lastHeaders.Clear();
-            });
-
-            AddStep("set local user", () => ((DummyAPIAccess)API).LocalUser.Value = new APIUser
-            {
-                Id = 1,
-            });
-
-            AddStep("populate users", () =>
-            {
-                MultiplayerUsers.Clear();
-
-                for (int i = 0; i < TOTAL_USERS; i++)
+            AddStep(
+                "reset counts",
+                () =>
                 {
-                    var user = CreateUser(i);
-
-                    MultiplayerUsers.Add(user);
-
-                    watchedUserStates[i] = new SpectatorState
-                    {
-                        BeatmapID = 0,
-                        RulesetID = 0,
-                        Mods = user.Mods,
-                        MaximumStatistics = new Dictionary<HitResult, int>
-                        {
-                            { HitResult.Perfect, 100 }
-                        }
-                    };
+                    spectatorClient.Invocations.Clear();
+                    lastHeaders.Clear();
                 }
-            });
+            );
 
-            AddStep("create leaderboard", () =>
-            {
-                Clear(true);
+            AddStep(
+                "set local user",
+                () => ((DummyAPIAccess)API).LocalUser.Value = new APIUser { Id = 1 }
+            );
 
-                Beatmap.Value = CreateWorkingBeatmap(Ruleset.Value);
-
-                LoadComponentAsync(LeaderboardProvider = CreateLeaderboardProvider(), Add);
-                Add(new DependencyProvidingContainer
+            AddStep(
+                "populate users",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = [(typeof(IGameplayLeaderboardProvider), LeaderboardProvider)],
-                    Child = Leaderboard = new DrawableGameplayLeaderboard
+                    MultiplayerUsers.Clear();
+
+                    for (int i = 0; i < TOTAL_USERS; i++)
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
+                        var user = CreateUser(i);
+
+                        MultiplayerUsers.Add(user);
+
+                        watchedUserStates[i] = new SpectatorState
+                        {
+                            BeatmapID = 0,
+                            RulesetID = 0,
+                            Mods = user.Mods,
+                            MaximumStatistics = new Dictionary<HitResult, int>
+                            {
+                                { HitResult.Perfect, 100 },
+                            },
+                        };
                     }
-                });
-            });
+                }
+            );
+
+            AddStep(
+                "create leaderboard",
+                () =>
+                {
+                    Clear(true);
+
+                    Beatmap.Value = CreateWorkingBeatmap(Ruleset.Value);
+
+                    LoadComponentAsync(LeaderboardProvider = CreateLeaderboardProvider(), Add);
+                    Add(
+                        new DependencyProvidingContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (typeof(IGameplayLeaderboardProvider), LeaderboardProvider),
+                            ],
+                            Child = Leaderboard =
+                                new DrawableGameplayLeaderboard
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        }
+                    );
+                }
+            );
 
             AddUntilStep("wait for load", () => Leaderboard!.IsLoaded);
 
-            AddUntilStep("check watch requests were sent", () =>
-            {
-                try
+            AddUntilStep(
+                "check watch requests were sent",
+                () =>
                 {
-                    foreach (var user in MultiplayerUsers)
-                        spectatorClient.Verify(s => s.WatchUser(user.UserID), Times.Once);
+                    try
+                    {
+                        foreach (var user in MultiplayerUsers)
+                            spectatorClient.Verify(s => s.WatchUser(user.UserID), Times.Once);
 
-                    return true;
+                        return true;
+                    }
+                    catch (MockException)
+                    {
+                        return false;
+                    }
                 }
-                catch (MockException)
-                {
-                    return false;
-                }
-            });
+            );
         }
 
         [Test]
         public void TestScoreUpdates()
         {
             AddRepeatStep("update state", UpdateUserStatesRandomly, 100);
-            AddToggleStep("switch compact mode", collapsed => Leaderboard!.CollapseDuringGameplay.Value = collapsed);
+            AddToggleStep(
+                "switch compact mode",
+                collapsed => Leaderboard!.CollapseDuringGameplay.Value = collapsed
+            );
         }
 
         [Test]
         public void TestUserQuit()
         {
-            AddUntilStep("mark users quit", () =>
-            {
-                if (MultiplayerUsers.Count == 0)
-                    return true;
-
-                MultiplayerUsers.RemoveAt(0);
-                return false;
-            });
-
-            AddUntilStep("check stop watching requests were sent", () =>
-            {
-                try
+            AddUntilStep(
+                "mark users quit",
+                () =>
                 {
-                    foreach (var user in MultiplayerUsers)
-                        spectatorClient.Verify(s => s.StopWatchingUser(user.UserID), Times.Once);
-                    return true;
-                }
-                catch (MockException)
-                {
+                    if (MultiplayerUsers.Count == 0)
+                        return true;
+
+                    MultiplayerUsers.RemoveAt(0);
                     return false;
                 }
-            });
+            );
+
+            AddUntilStep(
+                "check stop watching requests were sent",
+                () =>
+                {
+                    try
+                    {
+                        foreach (var user in MultiplayerUsers)
+                            spectatorClient.Verify(
+                                s => s.StopWatchingUser(user.UserID),
+                                Times.Once
+                            );
+                        return true;
+                    }
+                    catch (MockException)
+                    {
+                        return false;
+                    }
+                }
+            );
         }
 
         [Test]
         public void TestChangeScoringMode()
         {
             AddRepeatStep("update state", UpdateUserStatesRandomly, 5);
-            AddStep("change to classic", () => config.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Classic));
-            AddStep("change to standardised", () => config.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Standardised));
+            AddStep(
+                "change to classic",
+                () => config.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Classic)
+            );
+            AddStep(
+                "change to standardised",
+                () => config.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Standardised)
+            );
         }
 
         protected void UpdateUserStatesRandomly()
@@ -216,12 +258,20 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
                 if (!lastHeaders.TryGetValue(userId, out var header))
                 {
-                    lastHeaders[userId] = header = new FrameHeader(0, 0, 0, 0, new Dictionary<HitResult, int>
-                    {
-                        [HitResult.Miss] = 0,
-                        [HitResult.Meh] = 0,
-                        [HitResult.Great] = 0
-                    }, new ScoreProcessorStatistics(), DateTimeOffset.Now);
+                    lastHeaders[userId] = header = new FrameHeader(
+                        0,
+                        0,
+                        0,
+                        0,
+                        new Dictionary<HitResult, int>
+                        {
+                            [HitResult.Miss] = 0,
+                            [HitResult.Meh] = 0,
+                            [HitResult.Great] = 0,
+                        },
+                        new ScoreProcessorStatistics(),
+                        DateTimeOffset.Now
+                    );
                 }
 
                 switch (RNG.Next(0, 3))
@@ -246,9 +296,15 @@ namespace osu.Game.Tests.Visual.Multiplayer
                         break;
                 }
 
-                spectatorClient.Raise(s => s.OnNewFrames -= null, userId, new FrameDataBundle(header, new[] { new LegacyReplayFrame(Time.Current, 0, 0, ReplayButtonState.None) }));
+                spectatorClient.Raise(
+                    s => s.OnNewFrames -= null,
+                    userId,
+                    new FrameDataBundle(
+                        header,
+                        new[] { new LegacyReplayFrame(Time.Current, 0, 0, ReplayButtonState.None) }
+                    )
+                );
             }
         }
     }
 }
-

@@ -25,12 +25,16 @@ namespace osu.Game.Rulesets.Mania.Skinning
         /// </summary>
         /// <param name="lookup">The lookup value.</param>
         /// <param name="columnIndex">The intended <see cref="Column"/> index for the configuration. May be null if the configuration does not apply to a <see cref="Column"/>.</param>
-        public ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups lookup, int? columnIndex = null)
+        public ManiaSkinConfigurationLookup(
+            LegacyManiaSkinConfigurationLookups lookup,
+            int? columnIndex = null
+        )
         {
             Lookup = lookup;
             ColumnIndex = columnIndex;
         }
 
-        public override string ToString() => $"[{nameof(ManiaSkinConfigurationLookup)} lookup:{Lookup} col:{ColumnIndex}]";
+        public override string ToString() =>
+            $"[{nameof(ManiaSkinConfigurationLookup)} lookup:{Lookup} col:{ColumnIndex}]";
     }
 }

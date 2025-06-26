@@ -48,7 +48,12 @@ namespace osu.Game.Input.Bindings
         [MapTo(nameof(KeyCombination))]
         public string KeyCombinationString { get; set; } = null!;
 
-        public RealmKeyBinding(object action, KeyCombination keyCombination, string? rulesetName = null, int? variant = null)
+        public RealmKeyBinding(
+            object action,
+            KeyCombination keyCombination,
+            string? rulesetName = null,
+            int? variant = null
+        )
         {
             Action = action;
             KeyCombination = keyCombination;
@@ -59,9 +64,7 @@ namespace osu.Game.Input.Bindings
         }
 
         [UsedImplicitly] // Realm
-        private RealmKeyBinding()
-        {
-        }
+        private RealmKeyBinding() { }
 
         public object GetAction(RulesetStore rulesets)
         {
@@ -69,11 +72,11 @@ namespace osu.Game.Input.Bindings
                 return (GlobalAction)ActionInt;
 
             var ruleset = rulesets.GetRuleset(RulesetName);
-            var actionType = ruleset!.CreateInstance()
-                                     .GetDefaultKeyBindings(Variant ?? 0)
-                                     .First() // let's just assume nobody does something stupid like mix multiple types...
-                                     .Action
-                                     .GetType();
+            var actionType = ruleset!
+                .CreateInstance()
+                .GetDefaultKeyBindings(Variant ?? 0)
+                .First() // let's just assume nobody does something stupid like mix multiple types...
+                .Action.GetType();
 
             return Enum.ToObject(actionType, ActionInt);
         }

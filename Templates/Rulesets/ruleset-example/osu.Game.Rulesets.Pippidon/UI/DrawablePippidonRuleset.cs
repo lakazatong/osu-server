@@ -19,19 +19,26 @@ namespace osu.Game.Rulesets.Pippidon.UI
     [Cached]
     public partial class DrawablePippidonRuleset : DrawableRuleset<PippidonHitObject>
     {
-        public DrawablePippidonRuleset(PippidonRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawablePippidonRuleset(
+            PippidonRuleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        )
+            : base(ruleset, beatmap, mods) { }
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new PippidonPlayfieldAdjustmentContainer();
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new PippidonPlayfieldAdjustmentContainer();
 
         protected override Playfield CreatePlayfield() => new PippidonPlayfield();
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new PippidonFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new PippidonFramedReplayInputHandler(replay);
 
-        public override DrawableHitObject<PippidonHitObject> CreateDrawableRepresentation(PippidonHitObject h) => new DrawablePippidonHitObject(h);
+        public override DrawableHitObject<PippidonHitObject> CreateDrawableRepresentation(
+            PippidonHitObject h
+        ) => new DrawablePippidonHitObject(h);
 
-        protected override PassThroughInputManager CreateInputManager() => new PippidonInputManager(Ruleset?.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new PippidonInputManager(Ruleset?.RulesetInfo);
     }
 }

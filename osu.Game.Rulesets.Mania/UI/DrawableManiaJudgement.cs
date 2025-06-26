@@ -22,6 +22,7 @@ namespace osu.Game.Rulesets.Mania.UI
             Size = new Vector2(1f);
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new DefaultManiaJudgementPiece(result);
+        protected override Drawable CreateDefaultJudgement(HitResult result) =>
+            new DefaultManiaJudgementPiece(result);
     }
 }

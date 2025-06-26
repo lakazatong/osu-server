@@ -2,15 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Game.Beatmaps.Timing;
-using osu.Game.Rulesets.Objects;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Game.Beatmaps.ControlPoints;
 using Newtonsoft.Json;
 using osu.Framework.Lists;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps.Formats;
+using osu.Game.Beatmaps.Timing;
 using osu.Game.IO.Serialization.Converters;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Beatmaps
 {
@@ -63,7 +63,8 @@ namespace osu.Game.Beatmaps
 
         public ControlPointInfo ControlPointInfo { get; set; } = new ControlPointInfo();
 
-        public SortedList<BreakPeriod> Breaks { get; set; } = new SortedList<BreakPeriod>(Comparer<BreakPeriod>.Default);
+        public SortedList<BreakPeriod> Breaks { get; set; } =
+            new SortedList<BreakPeriod>(Comparer<BreakPeriod>.Default);
 
         public List<string> UnhandledEventLines { get; set; } = new List<string>();
 
@@ -77,7 +78,8 @@ namespace osu.Game.Beatmaps
 
         IReadOnlyList<HitObject> IBeatmap.HitObjects => HitObjects;
 
-        public virtual IEnumerable<BeatmapStatistic> GetStatistics() => Enumerable.Empty<BeatmapStatistic>();
+        public virtual IEnumerable<BeatmapStatistic> GetStatistics() =>
+            Enumerable.Empty<BeatmapStatistic>();
 
         public double GetMostCommonBeatLength()
         {
@@ -92,23 +94,30 @@ namespace osu.Game.Beatmaps
 
             var mostCommon =
                 // Construct a set of (beatLength, duration) tuples for each individual timing point.
-                ControlPointInfo.TimingPoints.Select((t, i) =>
-                                {
-                                    if (t.Time > lastTime)
-                                        return (beatLength: t.BeatLength, 0);
+                ControlPointInfo
+                    .TimingPoints.Select(
+                        (t, i) =>
+                        {
+                            if (t.Time > lastTime)
+                                return (beatLength: t.BeatLength, 0);
 
-                                    // osu-stable forced the first control point to start at 0.
-                                    // This is reproduced here to maintain compatibility around osu!mania scroll speed and song select display.
-                                    double currentTime = i == 0 ? 0 : t.Time;
-                                    double nextTime = i == ControlPointInfo.TimingPoints.Count - 1 ? lastTime : ControlPointInfo.TimingPoints[i + 1].Time;
+                            // osu-stable forced the first control point to start at 0.
+                            // This is reproduced here to maintain compatibility around osu!mania scroll speed and song select display.
+                            double currentTime = i == 0 ? 0 : t.Time;
+                            double nextTime =
+                                i == ControlPointInfo.TimingPoints.Count - 1
+                                    ? lastTime
+                                    : ControlPointInfo.TimingPoints[i + 1].Time;
 
-                                    return (beatLength: t.BeatLength, duration: nextTime - currentTime);
-                                })
-                                // Aggregate durations into a set of (beatLength, duration) tuples for each beat length
-                                .GroupBy(t => Math.Round(t.beatLength * 1000) / 1000)
-                                .Select(g => (beatLength: g.Key, duration: g.Sum(t => t.duration)))
-                                // Get the most common one, or 0 as a suitable default (see handling below)
-                                .OrderByDescending(i => i.duration).FirstOrDefault();
+                            return (beatLength: t.BeatLength, duration: nextTime - currentTime);
+                        }
+                    )
+                    // Aggregate durations into a set of (beatLength, duration) tuples for each beat length
+                    .GroupBy(t => Math.Round(t.beatLength * 1000) / 1000)
+                    .Select(g => (beatLength: g.Key, duration: g.Sum(t => t.duration)))
+                    // Get the most common one, or 0 as a suitable default (see handling below)
+                    .OrderByDescending(i => i.duration)
+                    .FirstOrDefault();
 
             if (mostCommon.beatLength == 0)
                 return TimingControlPoint.DEFAULT_BEAT_LENGTH;
@@ -151,7 +160,5 @@ namespace osu.Game.Beatmaps
         public override string ToString() => BeatmapInfo.ToString();
     }
 
-    public class Beatmap : Beatmap<HitObject>
-    {
-    }
+    public class Beatmap : Beatmap<HitObject> { }
 }

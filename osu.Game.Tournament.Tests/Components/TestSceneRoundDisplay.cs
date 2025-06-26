@@ -13,19 +13,15 @@ namespace osu.Game.Tournament.Tests.Components
         {
             Children = new Drawable[]
             {
-                new RoundDisplay(new TournamentMatch
-                {
-                    Round =
+                new RoundDisplay(
+                    new TournamentMatch
                     {
-                        Value = new TournamentRound
-                        {
-                            Name = { Value = "Test Round" }
-                        }
+                        Round = { Value = new TournamentRound { Name = { Value = "Test Round" } } },
                     }
-                })
+                )
                 {
-                    Margin = new MarginPadding(20)
-                }
+                    Margin = new MarginPadding(20),
+                },
             };
         }
     }

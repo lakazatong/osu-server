@@ -31,11 +31,15 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("set custom prefix", () => component.ColourNamePrefix = "Combo");
 
-            AddRepeatStep("remove random colour", () =>
-            {
-                if (component.Colours.Count > 0)
-                    component.Colours.RemoveAt(RNG.Next(component.Colours.Count));
-            }, 8);
+            AddRepeatStep(
+                "remove random colour",
+                () =>
+                {
+                    if (component.Colours.Count > 0)
+                        component.Colours.RemoveAt(RNG.Next(component.Colours.Count));
+                },
+                8
+            );
         }
 
         [Test]
@@ -56,78 +60,100 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void createColourPalette(bool hasDescription = false)
         {
-            AddStep("create component", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "create component",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new OsuContextMenuContainer
+                    Child = new PopoverContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = new Container
+                        Child = new OsuContextMenuContainer
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Width = 500,
-                            AutoSizeAxes = Axes.Y,
-                            Child = component = new LabelledColourPalette
+                            RelativeSizeAxes = Axes.Both,
+                            Child = new Container
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                ColourNamePrefix = "My colour #"
-                            }
+                                Width = 500,
+                                AutoSizeAxes = Axes.Y,
+                                Child = component =
+                                    new LabelledColourPalette
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        ColourNamePrefix = "My colour #",
+                                    },
+                            },
+                        },
+                    };
+
+                    component.Label = "a sample component";
+                    component.Description = hasDescription
+                        ? "this text describes the component"
+                        : string.Empty;
+
+                    component.Colours.AddRange(
+                        new[]
+                        {
+                            Colour4.DarkRed,
+                            Colour4.Aquamarine,
+                            Colour4.Goldenrod,
+                            Colour4.Gainsboro,
                         }
-                    }
-                };
-
-                component.Label = "a sample component";
-                component.Description = hasDescription ? "this text describes the component" : string.Empty;
-
-                component.Colours.AddRange(new[]
-                {
-                    Colour4.DarkRed,
-                    Colour4.Aquamarine,
-                    Colour4.Goldenrod,
-                    Colour4.Gainsboro
-                });
-            });
+                    );
+                }
+            );
         }
 
-        private Colour4 randomColour() => new Color4(
-            RNG.NextSingle(),
-            RNG.NextSingle(),
-            RNG.NextSingle(),
-            1);
+        private Colour4 randomColour() =>
+            new Color4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1);
 
-        private void assertColourCount(int count) => AddAssert($"colour count is {count}", () => component.Colours.Count == count);
+        private void assertColourCount(int count) =>
+            AddAssert($"colour count is {count}", () => component.Colours.Count == count);
 
-        private void clickAddColour() => AddStep("click new colour button", () =>
-        {
-            InputManager.MoveMouseTo(this.ChildrenOfType<ColourPalette.AddColourButton>().Single());
-            InputManager.Click(MouseButton.Left);
-        });
+        private void clickAddColour() =>
+            AddStep(
+                "click new colour button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<ColourPalette.AddColourButton>().Single()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-        private void clickFirstColour() => AddStep("click first colour", () =>
-        {
-            InputManager.MoveMouseTo(this.ChildrenOfType<ColourDisplay>().First());
-            InputManager.Click(MouseButton.Left);
-        });
+        private void clickFirstColour() =>
+            AddStep(
+                "click first colour",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<ColourDisplay>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
         private void deleteFirstColour()
         {
-            AddStep("right-click first colour", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<ColourDisplay>().First());
-                InputManager.Click(MouseButton.Right);
-            });
+            AddStep(
+                "right-click first colour",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<ColourDisplay>().First());
+                    InputManager.Click(MouseButton.Right);
+                }
+            );
 
             AddUntilStep("wait for menu", () => this.ChildrenOfType<OsuContextMenu>().Any());
 
-            AddStep("click delete", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click delete",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
         }
     }
 }

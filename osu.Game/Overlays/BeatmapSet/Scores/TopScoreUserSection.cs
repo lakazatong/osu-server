@@ -54,7 +54,7 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold)
+                                Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold),
                             },
                             rank = new UpdateableRank(ScoreRank.D)
                             {
@@ -63,7 +63,7 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                                 Size = new Vector2(28),
                                 FillMode = FillMode.Fit,
                             },
-                        }
+                        },
                     },
                     avatar = new UpdateableAvatar(showGuestOnNull: false)
                     {
@@ -89,7 +89,13 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                         Spacing = new Vector2(0, 3),
                         Children = new Drawable[]
                         {
-                            usernameText = new LinkFlowContainer(s => s.Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold, italics: true))
+                            usernameText = new LinkFlowContainer(s =>
+                                s.Font = OsuFont.GetFont(
+                                    size: 18,
+                                    weight: FontWeight.Bold,
+                                    italics: true
+                                )
+                            )
                             {
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
@@ -106,13 +112,13 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                                     new OsuSpriteText
                                     {
                                         Text = "achieved ",
-                                        Font = OsuFont.GetFont(size: 10, weight: FontWeight.Bold)
+                                        Font = OsuFont.GetFont(size: 10, weight: FontWeight.Bold),
                                     },
                                     achievedOn = new DrawableDate(DateTimeOffset.MinValue)
                                     {
-                                        Font = OsuFont.GetFont(size: 10, weight: FontWeight.Bold)
+                                        Font = OsuFont.GetFont(size: 10, weight: FontWeight.Bold),
                                     },
-                                }
+                                },
                             },
                             new FillFlowContainer
                             {
@@ -137,11 +143,11 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                                         Size = new Vector2(28, 14),
                                         Margin = new MarginPadding { Top = 3 }, // makes spacing look more even
                                     },
-                                }
+                                },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 

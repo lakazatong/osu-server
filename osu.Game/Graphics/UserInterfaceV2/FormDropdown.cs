@@ -40,10 +40,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
             header.HintText = HintText;
         }
 
-        protected override DropdownHeader CreateHeader() => header = new FormDropdownHeader
-        {
-            Dropdown = this,
-        };
+        protected override DropdownHeader CreateHeader() =>
+            header = new FormDropdownHeader { Dropdown = this };
 
         protected override DropdownMenu CreateMenu() => new FormDropdownMenu();
 
@@ -51,7 +49,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
         {
             public FormDropdown<T> Dropdown { get; set; } = null!;
 
-            protected override DropdownSearchBar CreateSearchBar() => SearchBar = new FormDropdownSearchBar();
+            protected override DropdownSearchBar CreateSearchBar() =>
+                SearchBar = new FormDropdownSearchBar();
 
             private LocalisableString captionText;
             private LocalisableString hintText;
@@ -155,7 +154,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 };
                 SearchBar.TextBox.OnCommit += (_, _) =>
                 {
-                    Background.FlashColour(ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark2), 800, Easing.OutQuint);
+                    Background.FlashColour(
+                        ColourInfo.GradientVertical(
+                            colourProvider.Background5,
+                            colourProvider.Dark2
+                        ),
+                        800,
+                        Easing.OutQuint
+                    );
                 };
             }
 
@@ -175,9 +181,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
             {
                 label.Alpha = string.IsNullOrEmpty(SearchBar.SearchTerm.Value) ? 1 : 0;
 
-                caption.Colour = Dropdown.Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content2;
-                label.Colour = Dropdown.Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content1;
-                chevron.Colour = Dropdown.Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content1;
+                caption.Colour = Dropdown.Current.Disabled
+                    ? colourProvider.Foreground1
+                    : colourProvider.Content2;
+                label.Colour = Dropdown.Current.Disabled
+                    ? colourProvider.Foreground1
+                    : colourProvider.Content1;
+                chevron.Colour = Dropdown.Current.Disabled
+                    ? colourProvider.Foreground1
+                    : colourProvider.Content1;
                 DisabledColour = Colour4.White;
 
                 bool dropdownOpen = Dropdown.Menu.State == MenuState.Open;
@@ -188,9 +200,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     BorderColour = dropdownOpen ? colourProvider.Highlight1 : colourProvider.Light4;
 
                     if (dropdownOpen)
-                        Background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark3);
+                        Background.Colour = ColourInfo.GradientVertical(
+                            colourProvider.Background5,
+                            colourProvider.Dark3
+                        );
                     else if (IsHovered)
-                        Background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark4);
+                        Background.Colour = ColourInfo.GradientVertical(
+                            colourProvider.Background5,
+                            colourProvider.Dark4
+                        );
                     else
                         Background.Colour = colourProvider.Background5;
                 }
@@ -212,6 +230,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
             public FormTextBox.InnerTextBox TextBox { get; private set; } = null!;
 
             protected override void PopIn() => this.FadeIn();
+
             protected override void PopOut() => this.FadeOut();
 
             protected override TextBox CreateTextBox() => TextBox = new FormTextBox.InnerTextBox();

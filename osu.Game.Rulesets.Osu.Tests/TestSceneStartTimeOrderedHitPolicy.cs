@@ -45,22 +45,26 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_first_circle,
-                    Position = positionFirstCircle
-                },
+                new TestHitCircle { StartTime = time_first_circle, Position = positionFirstCircle },
                 new TestHitCircle
                 {
                     StartTime = time_second_circle,
-                    Position = positionSecondCircle
-                }
+                    Position = positionSecondCircle,
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_first_circle - 100, Position = positionSecondCircle, Actions = { OsuAction.LeftButton } }
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_circle - 100,
+                        Position = positionSecondCircle,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Miss);
             addJudgementAssert(hitObjects[1], HitResult.Miss);
@@ -80,22 +84,26 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_first_circle,
-                    Position = positionFirstCircle
-                },
+                new TestHitCircle { StartTime = time_first_circle, Position = positionFirstCircle },
                 new TestHitCircle
                 {
                     StartTime = time_second_circle,
-                    Position = positionSecondCircle
-                }
+                    Position = positionSecondCircle,
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_first_circle, Position = positionSecondCircle, Actions = { OsuAction.LeftButton } }
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_circle,
+                        Position = positionSecondCircle,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Miss);
             addJudgementAssert(hitObjects[1], HitResult.Great);
@@ -115,22 +123,26 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_first_circle,
-                    Position = positionFirstCircle
-                },
+                new TestHitCircle { StartTime = time_first_circle, Position = positionFirstCircle },
                 new TestHitCircle
                 {
                     StartTime = time_second_circle,
-                    Position = positionSecondCircle
-                }
+                    Position = positionSecondCircle,
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_first_circle + 100, Position = positionSecondCircle, Actions = { OsuAction.LeftButton } }
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_circle + 100,
+                        Position = positionSecondCircle,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Miss);
             addJudgementAssert(hitObjects[1], HitResult.Great);
@@ -150,23 +162,32 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_first_circle,
-                    Position = positionFirstCircle
-                },
+                new TestHitCircle { StartTime = time_first_circle, Position = positionFirstCircle },
                 new TestHitCircle
                 {
                     StartTime = time_second_circle,
-                    Position = positionSecondCircle
-                }
+                    Position = positionSecondCircle,
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_first_circle - 200, Position = positionFirstCircle, Actions = { OsuAction.LeftButton } },
-                new OsuReplayFrame { Time = time_first_circle - 100, Position = positionSecondCircle, Actions = { OsuAction.RightButton } }
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_circle - 200,
+                        Position = positionFirstCircle,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_circle - 100,
+                        Position = positionSecondCircle,
+                        Actions = { OsuAction.RightButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Great);
             addJudgementAssert(hitObjects[1], HitResult.Great);
@@ -187,33 +208,49 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_circle,
-                    Position = positionCircle
-                },
+                new TestHitCircle { StartTime = time_circle, Position = positionCircle },
                 new TestSlider
                 {
                     StartTime = time_slider,
                     Position = positionSlider,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(25, 0),
-                    })
-                }
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(25, 0) }
+                    ),
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_slider, Position = positionCircle, Actions = { OsuAction.LeftButton } },
-                new OsuReplayFrame { Time = time_slider + 10, Position = positionSlider, Actions = { OsuAction.RightButton } }
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_slider,
+                        Position = positionCircle,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_slider + 10,
+                        Position = positionSlider,
+                        Actions = { OsuAction.RightButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Great);
             addJudgementAssert(hitObjects[1], HitResult.IgnoreHit);
-            addJudgementAssert("slider head", () => ((Slider)hitObjects[1]).HeadCircle, HitResult.Miss);
-            addJudgementAssert("slider tick", () => ((Slider)hitObjects[1]).NestedHitObjects[1] as SliderTick, HitResult.LargeTickHit);
+            addJudgementAssert(
+                "slider head",
+                () => ((Slider)hitObjects[1]).HeadCircle,
+                HitResult.Miss
+            );
+            addJudgementAssert(
+                "slider tick",
+                () => ((Slider)hitObjects[1]).NestedHitObjects[1] as SliderTick,
+                HitResult.LargeTickHit
+            );
         }
 
         /// <summary>
@@ -229,34 +266,55 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_circle,
-                    Position = positionCircle
-                },
+                new TestHitCircle { StartTime = time_circle, Position = positionCircle },
                 new TestSlider
                 {
                     StartTime = time_slider,
                     Position = positionSlider,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(25, 0),
-                    })
-                }
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(25, 0) }
+                    ),
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_slider, Position = positionSlider, Actions = { OsuAction.LeftButton } },
-                new OsuReplayFrame { Time = time_circle + late_miss_window - 100, Position = positionCircle, Actions = { OsuAction.RightButton } },
-                new OsuReplayFrame { Time = time_circle + late_miss_window - 90, Position = positionSlider, Actions = { OsuAction.LeftButton } },
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_slider,
+                        Position = positionSlider,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_circle + late_miss_window - 100,
+                        Position = positionCircle,
+                        Actions = { OsuAction.RightButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_circle + late_miss_window - 90,
+                        Position = positionSlider,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Great);
             addJudgementAssert(hitObjects[1], HitResult.IgnoreHit);
-            addJudgementAssert("slider head", () => ((Slider)hitObjects[1]).HeadCircle, HitResult.Great);
-            addJudgementAssert("slider tick", () => ((Slider)hitObjects[1]).NestedHitObjects[1] as SliderTick, HitResult.LargeTickHit);
+            addJudgementAssert(
+                "slider head",
+                () => ((Slider)hitObjects[1]).HeadCircle,
+                HitResult.Great
+            );
+            addJudgementAssert(
+                "slider tick",
+                () => ((Slider)hitObjects[1]).NestedHitObjects[1] as SliderTick,
+                HitResult.LargeTickHit
+            );
         }
 
         /// <summary>
@@ -277,21 +335,20 @@ namespace osu.Game.Rulesets.Osu.Tests
                     Position = new Vector2(256, 192),
                     EndTime = time_spinner + 1000,
                 },
-                new TestHitCircle
-                {
-                    StartTime = time_circle,
-                    Position = positionCircle
-                },
+                new TestHitCircle { StartTime = time_circle, Position = positionCircle },
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
             {
-                new OsuReplayFrame { Time = time_spinner - 100, Position = positionCircle, Actions = { OsuAction.LeftButton } },
+                new OsuReplayFrame
+                {
+                    Time = time_spinner - 100,
+                    Position = positionCircle,
+                    Actions = { OsuAction.LeftButton },
+                },
             };
 
-            frames.AddRange(new SpinFramesGenerator(time_spinner + 10)
-                            .Spin(360, 500)
-                            .Build());
+            frames.AddRange(new SpinFramesGenerator(time_spinner + 10).Spin(360, 500).Build());
 
             performTest(hitObjects, frames);
 
@@ -309,29 +366,42 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var hitObjects = new List<OsuHitObject>
             {
-                new TestHitCircle
-                {
-                    StartTime = time_circle,
-                    Position = positionCircle
-                },
+                new TestHitCircle { StartTime = time_circle, Position = positionCircle },
                 new TestSlider
                 {
                     StartTime = time_slider,
                     Position = positionSlider,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(25, 0),
-                    })
-                }
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(25, 0) }
+                    ),
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_circle - 100, Position = positionSlider, Actions = { OsuAction.LeftButton } },
-                new OsuReplayFrame { Time = time_circle, Position = positionCircle, Actions = { OsuAction.RightButton } },
-                new OsuReplayFrame { Time = time_slider, Position = positionSlider, Actions = { OsuAction.LeftButton } },
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_circle - 100,
+                        Position = positionSlider,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_circle,
+                        Position = positionCircle,
+                        Actions = { OsuAction.RightButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_slider,
+                        Position = positionSlider,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                }
+            );
 
             addJudgementAssert(hitObjects[0], HitResult.Great);
             addJudgementAssert(hitObjects[1], HitResult.IgnoreHit);
@@ -352,59 +422,104 @@ namespace osu.Game.Rulesets.Osu.Tests
                 {
                     StartTime = time_first_slider,
                     Position = positionFirstSlider,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(25, 0),
-                    })
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(25, 0) }
+                    ),
                 },
                 new TestSlider
                 {
                     StartTime = time_second_slider,
                     Position = positionSecondSlider,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(25, 0),
-                    })
-                }
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(25, 0) }
+                    ),
+                },
             };
 
-            performTest(hitObjects, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Time = time_first_slider, Position = midpoint, Actions = { OsuAction.RightButton } },
-                new OsuReplayFrame { Time = time_first_slider + 25, Position = midpoint, Actions = { OsuAction.LeftButton } },
-                new OsuReplayFrame { Time = time_first_slider + 50, Position = midpoint },
-            });
+            performTest(
+                hitObjects,
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_slider,
+                        Position = midpoint,
+                        Actions = { OsuAction.RightButton },
+                    },
+                    new OsuReplayFrame
+                    {
+                        Time = time_first_slider + 25,
+                        Position = midpoint,
+                        Actions = { OsuAction.LeftButton },
+                    },
+                    new OsuReplayFrame { Time = time_first_slider + 50, Position = midpoint },
+                }
+            );
 
-            addJudgementAssert("first slider head", () => ((Slider)hitObjects[0]).HeadCircle, HitResult.Great);
-            addJudgementOffsetAssert("first slider head", () => ((Slider)hitObjects[0]).HeadCircle, 0);
-            addJudgementAssert("second slider head", () => ((Slider)hitObjects[1]).HeadCircle, HitResult.Great);
-            addJudgementOffsetAssert("second slider head", () => ((Slider)hitObjects[1]).HeadCircle, -200);
+            addJudgementAssert(
+                "first slider head",
+                () => ((Slider)hitObjects[0]).HeadCircle,
+                HitResult.Great
+            );
+            addJudgementOffsetAssert(
+                "first slider head",
+                () => ((Slider)hitObjects[0]).HeadCircle,
+                0
+            );
+            addJudgementAssert(
+                "second slider head",
+                () => ((Slider)hitObjects[1]).HeadCircle,
+                HitResult.Great
+            );
+            addJudgementOffsetAssert(
+                "second slider head",
+                () => ((Slider)hitObjects[1]).HeadCircle,
+                -200
+            );
         }
 
         private void addJudgementAssert(OsuHitObject hitObject, HitResult result)
         {
-            AddAssert($"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judgement is {result}",
-                () => judgementResults.Single(r => r.HitObject == hitObject).Type == result);
+            AddAssert(
+                $"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judgement is {result}",
+                () => judgementResults.Single(r => r.HitObject == hitObject).Type == result
+            );
         }
 
         private void addJudgementAssert(string name, Func<OsuHitObject> hitObject, HitResult result)
         {
-            AddAssert($"{name} judgement is {result}",
-                () => judgementResults.Single(r => r.HitObject == hitObject()).Type == result);
+            AddAssert(
+                $"{name} judgement is {result}",
+                () => judgementResults.Single(r => r.HitObject == hitObject()).Type == result
+            );
         }
 
         private void addJudgementOffsetAssert(OsuHitObject hitObject, double offset)
         {
-            AddAssert($"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judged at {offset}",
-                () => Precision.AlmostEquals(judgementResults.Single(r => r.HitObject == hitObject).TimeOffset, offset, 100));
+            AddAssert(
+                $"({hitObject.GetType().ReadableName()} @ {hitObject.StartTime}) judged at {offset}",
+                () =>
+                    Precision.AlmostEquals(
+                        judgementResults.Single(r => r.HitObject == hitObject).TimeOffset,
+                        offset,
+                        100
+                    )
+            );
         }
 
-        private void addJudgementOffsetAssert(string name, Func<OsuHitObject> hitObject, double offset)
+        private void addJudgementOffsetAssert(
+            string name,
+            Func<OsuHitObject> hitObject,
+            double offset
+        )
         {
-            AddAssert($"{name} @ judged at {offset}",
-                () => judgementResults.Single(r => r.HitObject == hitObject()).TimeOffset, () => Is.EqualTo(offset).Within(50));
+            AddAssert(
+                $"{name} @ judged at {offset}",
+                () => judgementResults.Single(r => r.HitObject == hitObject()).TimeOffset,
+                () => Is.EqualTo(offset).Within(50)
+            );
         }
 
         private ScoreAccessibleReplayPlayer currentPlayer;
@@ -412,35 +527,46 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private void performTest(List<OsuHitObject> hitObjects, List<ReplayFrame> frames)
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new Beatmap<OsuHitObject>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects = hitObjects,
-                    BeatmapInfo =
-                    {
-                        Difficulty = new BeatmapDifficulty { SliderTickRate = 3 },
-                        Ruleset = new OsuRuleset().RulesetInfo
-                    },
-                });
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new Beatmap<OsuHitObject>
+                        {
+                            HitObjects = hitObjects,
+                            BeatmapInfo =
+                            {
+                                Difficulty = new BeatmapDifficulty { SliderTickRate = 3 },
+                                Ruleset = new OsuRuleset().RulesetInfo,
+                            },
+                        }
+                    );
 
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
 
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
+                    p.OnLoadComplete += _ =>
                     {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private class TestHitCircle : HitCircle
@@ -467,7 +593,10 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private class TestSpinner : Spinner
         {
-            protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+            protected override void ApplyDefaultsToSelf(
+                ControlPointInfo controlPointInfo,
+                IBeatmapDifficultyInfo difficulty
+            )
             {
                 base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
                 SpinsRequired = 1;
@@ -476,7 +605,8 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private class TestHitWindows : HitWindows
         {
-            public override bool IsHitResultAllowed(HitResult result) => result == HitResult.Great || result == HitResult.Miss;
+            public override bool IsHitResultAllowed(HitResult result) =>
+                result == HitResult.Great || result == HitResult.Miss;
 
             public override void SetDifficulty(double difficulty) { }
 
@@ -503,13 +633,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

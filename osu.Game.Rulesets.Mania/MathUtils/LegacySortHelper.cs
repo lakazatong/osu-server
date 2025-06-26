@@ -31,7 +31,13 @@ namespace osu.Game.Rulesets.Mania.MathUtils
             depthLimitedQuickSort(keys, 0, keys.Length - 1, comparer, quick_sort_depth_threshold);
         }
 
-        private static void depthLimitedQuickSort(T[] keys, int left, int right, IComparer<T> comparer, int depthLimit)
+        private static void depthLimitedQuickSort(
+            T[] keys,
+            int left,
+            int right,
+            IComparer<T> comparer,
+            int depthLimit
+        )
         {
             do
             {
@@ -56,10 +62,16 @@ namespace osu.Game.Rulesets.Mania.MathUtils
 
                 do
                 {
-                    while (comparer.Compare(keys[i], x) < 0) i++;
-                    while (comparer.Compare(x, keys[j]) < 0) j--;
-                    Contract.Assert(i >= left && j <= right, "(i>=left && j<=right)  Sort failed - Is your IComparer bogus?");
-                    if (i > j) break;
+                    while (comparer.Compare(keys[i], x) < 0)
+                        i++;
+                    while (comparer.Compare(x, keys[j]) < 0)
+                        j--;
+                    Contract.Assert(
+                        i >= left && j <= right,
+                        "(i>=left && j<=right)  Sort failed - Is your IComparer bogus?"
+                    );
+                    if (i > j)
+                        break;
 
                     if (i < j)
                     {
@@ -77,12 +89,14 @@ namespace osu.Game.Rulesets.Mania.MathUtils
 
                 if (j - left <= right - i)
                 {
-                    if (left < j) depthLimitedQuickSort(keys, left, j, comparer, depthLimit);
+                    if (left < j)
+                        depthLimitedQuickSort(keys, left, j, comparer, depthLimit);
                     left = i;
                 }
                 else
                 {
-                    if (i < right) depthLimitedQuickSort(keys, i, right, comparer, depthLimit);
+                    if (i < right)
+                        depthLimitedQuickSort(keys, i, right, comparer, depthLimit);
                     right = j;
                 }
             } while (left < right);

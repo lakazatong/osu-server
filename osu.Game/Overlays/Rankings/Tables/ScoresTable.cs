@@ -13,26 +13,29 @@ namespace osu.Game.Overlays.Rankings.Tables
     public partial class ScoresTable : UserBasedTable
     {
         public ScoresTable(int page, IReadOnlyList<UserStatistics> rankings)
-            : base(page, rankings)
-        {
-        }
+            : base(page, rankings) { }
 
-        protected override RankingsTableColumn[] CreateUniqueHeaders() => new[]
-        {
-            new RankingsTableColumn(RankingsStrings.StatTotalScore, Anchor.Centre, new Dimension(GridSizeMode.AutoSize)),
-            new RankingsTableColumn(RankingsStrings.StatRankedScore, Anchor.Centre, new Dimension(GridSizeMode.AutoSize), true)
-        };
+        protected override RankingsTableColumn[] CreateUniqueHeaders() =>
+            new[]
+            {
+                new RankingsTableColumn(
+                    RankingsStrings.StatTotalScore,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.AutoSize)
+                ),
+                new RankingsTableColumn(
+                    RankingsStrings.StatRankedScore,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.AutoSize),
+                    true
+                ),
+            };
 
-        protected override Drawable[] CreateUniqueContent(UserStatistics item) => new Drawable[]
-        {
-            new ColouredRowText
+        protected override Drawable[] CreateUniqueContent(UserStatistics item) =>
+            new Drawable[]
             {
-                Text = item.TotalScore.ToLocalisableString(@"N0"),
-            },
-            new RowText
-            {
-                Text = item.RankedScore.ToLocalisableString(@"N0")
-            }
-        };
+                new ColouredRowText { Text = item.TotalScore.ToLocalisableString(@"N0") },
+                new RowText { Text = item.RankedScore.ToLocalisableString(@"N0") },
+            };
     }
 }

@@ -77,158 +77,198 @@ namespace osu.Game.Screens.SelectV2
                 Shear = OsuGame.SHEAR,
                 Children = new[]
                 {
-                    new ShearAligningWrapper(new Container
-                    {
-                        CornerRadius = 10,
-                        Masking = true,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Children = new Drawable[]
+                    new ShearAligningWrapper(
+                        new Container
                         {
-                            new WedgeBackground(),
-                            new Container
+                            CornerRadius = 10,
+                            Masking = true,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Shear = -OsuGame.SHEAR,
-                                Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN, Right = 35, Vertical = 16 },
-                                Children = new Drawable[]
+                                new WedgeBackground(),
+                                new Container
                                 {
-                                    new FillFlowContainer
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Shear = -OsuGame.SHEAR,
+                                    Padding = new MarginPadding
                                     {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Direction = FillDirection.Vertical,
-                                        Spacing = new Vector2(0f, 10f),
-                                        AutoSizeDuration = (float)transition_duration / 3,
-                                        AutoSizeEasing = Easing.OutQuint,
-                                        Children = new Drawable[]
+                                        Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                                        Right = 35,
+                                        Vertical = 16,
+                                    },
+                                    Children = new Drawable[]
+                                    {
+                                        new FillFlowContainer
                                         {
-                                            new GridContainer
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Direction = FillDirection.Vertical,
+                                            Spacing = new Vector2(0f, 10f),
+                                            AutoSizeDuration = (float)transition_duration / 3,
+                                            AutoSizeEasing = Easing.OutQuint,
+                                            Children = new Drawable[]
                                             {
-                                                RelativeSizeAxes = Axes.X,
-                                                AutoSizeAxes = Axes.Y,
-                                                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                                                ColumnDimensions = new[]
+                                                new GridContainer
                                                 {
-                                                    new Dimension(),
-                                                    new Dimension(),
-                                                    new Dimension(),
-                                                },
-                                                Content = new[]
-                                                {
-                                                    new[]
+                                                    RelativeSizeAxes = Axes.X,
+                                                    AutoSizeAxes = Axes.Y,
+                                                    RowDimensions = new[]
                                                     {
-                                                        new FillFlowContainer
+                                                        new Dimension(GridSizeMode.AutoSize),
+                                                    },
+                                                    ColumnDimensions = new[]
+                                                    {
+                                                        new Dimension(),
+                                                        new Dimension(),
+                                                        new Dimension(),
+                                                    },
+                                                    Content = new[]
+                                                    {
+                                                        new[]
                                                         {
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            Direction = FillDirection.Vertical,
-                                                            Spacing = new Vector2(0f, 10f),
-                                                            Children = new[]
+                                                            new FillFlowContainer
                                                             {
-                                                                creator = new MetadataDisplay(EditorSetupStrings.Creator),
-                                                                genre = new MetadataDisplay(BeatmapsetsStrings.ShowInfoGenre),
+                                                                RelativeSizeAxes = Axes.X,
+                                                                AutoSizeAxes = Axes.Y,
+                                                                Direction = FillDirection.Vertical,
+                                                                Spacing = new Vector2(0f, 10f),
+                                                                Children = new[]
+                                                                {
+                                                                    creator = new MetadataDisplay(
+                                                                        EditorSetupStrings.Creator
+                                                                    ),
+                                                                    genre = new MetadataDisplay(
+                                                                        BeatmapsetsStrings.ShowInfoGenre
+                                                                    ),
+                                                                },
                                                             },
-                                                        },
-                                                        new FillFlowContainer
-                                                        {
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            Direction = FillDirection.Vertical,
-                                                            Spacing = new Vector2(0f, 10f),
-                                                            Children = new[]
+                                                            new FillFlowContainer
                                                             {
-                                                                source = new MetadataDisplay(BeatmapsetsStrings.ShowInfoSource),
-                                                                language = new MetadataDisplay(BeatmapsetsStrings.ShowInfoLanguage),
+                                                                RelativeSizeAxes = Axes.X,
+                                                                AutoSizeAxes = Axes.Y,
+                                                                Direction = FillDirection.Vertical,
+                                                                Spacing = new Vector2(0f, 10f),
+                                                                Children = new[]
+                                                                {
+                                                                    source = new MetadataDisplay(
+                                                                        BeatmapsetsStrings.ShowInfoSource
+                                                                    ),
+                                                                    language = new MetadataDisplay(
+                                                                        BeatmapsetsStrings.ShowInfoLanguage
+                                                                    ),
+                                                                },
                                                             },
-                                                        },
-                                                        new FillFlowContainer
-                                                        {
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            Direction = FillDirection.Vertical,
-                                                            Spacing = new Vector2(0f, 10f),
-                                                            Children = new[]
+                                                            new FillFlowContainer
                                                             {
-                                                                submitted = new MetadataDisplay(SongSelectStrings.Submitted),
-                                                                ranked = new MetadataDisplay(SongSelectStrings.Ranked),
+                                                                RelativeSizeAxes = Axes.X,
+                                                                AutoSizeAxes = Axes.Y,
+                                                                Direction = FillDirection.Vertical,
+                                                                Spacing = new Vector2(0f, 10f),
+                                                                Children = new[]
+                                                                {
+                                                                    submitted = new MetadataDisplay(
+                                                                        SongSelectStrings.Submitted
+                                                                    ),
+                                                                    ranked = new MetadataDisplay(
+                                                                        SongSelectStrings.Ranked
+                                                                    ),
+                                                                },
                                                             },
                                                         },
                                                     },
                                                 },
+                                                userTags = new MetadataDisplay(
+                                                    BeatmapsetsStrings.ShowInfoUserTags
+                                                )
+                                                {
+                                                    Alpha = 0,
+                                                },
+                                                mapperTags = new MetadataDisplay(
+                                                    BeatmapsetsStrings.ShowInfoMapperTags
+                                                ),
                                             },
-                                            userTags = new MetadataDisplay(BeatmapsetsStrings.ShowInfoUserTags)
-                                            {
-                                                Alpha = 0,
-                                            },
-                                            mapperTags = new MetadataDisplay(BeatmapsetsStrings.ShowInfoMapperTags),
                                         },
                                     },
                                 },
                             },
-                        },
-                    }),
-                    new ShearAligningWrapper(ratingsWedge = new Container
-                    {
-                        Alpha = 0f,
-                        CornerRadius = 10,
-                        Masking = true,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Children = new Drawable[]
+                        }
+                    ),
+                    new ShearAligningWrapper(
+                        ratingsWedge = new Container
                         {
-                            new WedgeBackground(),
-                            new GridContainer
+                            Alpha = 0f,
+                            CornerRadius = 10,
+                            Masking = true,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Shear = -OsuGame.SHEAR,
-                                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                                ColumnDimensions = new[]
+                                new WedgeBackground(),
+                                new GridContainer
                                 {
-                                    new Dimension(),
-                                    new Dimension(GridSizeMode.Absolute, 10),
-                                    new Dimension(),
-                                    new Dimension(GridSizeMode.Absolute, 10),
-                                    new Dimension(),
-                                },
-                                Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN, Right = 40f, Vertical = 16 },
-                                Content = new[]
-                                {
-                                    new[]
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Shear = -OsuGame.SHEAR,
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                    ColumnDimensions = new[]
                                     {
-                                        successRateDisplay = new SuccessRateDisplay(),
-                                        Empty(),
-                                        userRatingDisplay = new UserRatingDisplay(),
-                                        Empty(),
-                                        ratingSpreadDisplay = new RatingSpreadDisplay(),
+                                        new Dimension(),
+                                        new Dimension(GridSizeMode.Absolute, 10),
+                                        new Dimension(),
+                                        new Dimension(GridSizeMode.Absolute, 10),
+                                        new Dimension(),
+                                    },
+                                    Padding = new MarginPadding
+                                    {
+                                        Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                                        Right = 40f,
+                                        Vertical = 16,
+                                    },
+                                    Content = new[]
+                                    {
+                                        new[]
+                                        {
+                                            successRateDisplay = new SuccessRateDisplay(),
+                                            Empty(),
+                                            userRatingDisplay = new UserRatingDisplay(),
+                                            Empty(),
+                                            ratingSpreadDisplay = new RatingSpreadDisplay(),
+                                        },
                                     },
                                 },
                             },
                         }
-                    }),
-                    new ShearAligningWrapper(failRetryWedge = new Container
-                    {
-                        Alpha = 0f,
-                        CornerRadius = 10,
-                        Masking = true,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Children = new Drawable[]
+                    ),
+                    new ShearAligningWrapper(
+                        failRetryWedge = new Container
                         {
-                            new WedgeBackground(),
-                            new Container
+                            Alpha = 0f,
+                            CornerRadius = 10,
+                            Masking = true,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Shear = -OsuGame.SHEAR,
-                                Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN, Right = 40f, Vertical = 16 },
-                                Child = failRetryDisplay = new FailRetryDisplay(),
+                                new WedgeBackground(),
+                                new Container
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Shear = -OsuGame.SHEAR,
+                                    Padding = new MarginPadding
+                                    {
+                                        Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                                        Right = 40f,
+                                        Vertical = 16,
+                                    },
+                                    Child = failRetryDisplay = new FailRetryDisplay(),
+                                },
                             },
-                        },
-                    }),
-                }
+                        }
+                    ),
+                },
             };
         }
 
@@ -265,25 +305,31 @@ namespace osu.Game.Screens.SelectV2
             // Needs some experimentation on what looks good.
 
             var beatmapInfo = beatmap.Value.BeatmapInfo;
-            var currentOnlineBeatmap = currentOnlineBeatmapSet?.Beatmaps.SingleOrDefault(b => b.OnlineID == beatmapInfo.OnlineID);
+            var currentOnlineBeatmap = currentOnlineBeatmapSet?.Beatmaps.SingleOrDefault(b =>
+                b.OnlineID == beatmapInfo.OnlineID
+            );
 
             if (State.Value == Visibility.Visible && currentOnlineBeatmap != null)
             {
-                ratingsWedge.FadeIn(transition_duration, Easing.OutQuint)
-                            .MoveToX(0, transition_duration, Easing.OutQuint);
+                ratingsWedge
+                    .FadeIn(transition_duration, Easing.OutQuint)
+                    .MoveToX(0, transition_duration, Easing.OutQuint);
 
-                failRetryWedge.Delay(100)
-                              .FadeIn(transition_duration, Easing.OutQuint)
-                              .MoveToX(0, transition_duration, Easing.OutQuint);
+                failRetryWedge
+                    .Delay(100)
+                    .FadeIn(transition_duration, Easing.OutQuint)
+                    .MoveToX(0, transition_duration, Easing.OutQuint);
             }
             else
             {
-                failRetryWedge.FadeOut(transition_duration, Easing.OutQuint)
-                              .MoveToX(-50, transition_duration, Easing.OutQuint);
+                failRetryWedge
+                    .FadeOut(transition_duration, Easing.OutQuint)
+                    .MoveToX(-50, transition_duration, Easing.OutQuint);
 
-                ratingsWedge.Delay(100)
-                            .FadeOut(transition_duration, Easing.OutQuint)
-                            .MoveToX(-50, transition_duration, Easing.OutQuint);
+                ratingsWedge
+                    .Delay(100)
+                    .FadeOut(transition_duration, Easing.OutQuint)
+                    .MoveToX(-50, transition_duration, Easing.OutQuint);
             }
         }
 
@@ -292,7 +338,13 @@ namespace osu.Game.Screens.SelectV2
             var metadata = beatmap.Value.Metadata;
             var beatmapSetInfo = beatmap.Value.BeatmapSetInfo;
 
-            creator.Data = (metadata.Author.Username, () => linkHandler?.HandleLink(new LinkDetails(LinkAction.OpenUserProfile, metadata.Author)));
+            creator.Data = (
+                metadata.Author.Username,
+                () =>
+                    linkHandler?.HandleLink(
+                        new LinkDetails(LinkAction.OpenUserProfile, metadata.Author)
+                    )
+            );
 
             if (!string.IsNullOrEmpty(metadata.Source))
                 source.Data = (metadata.Source, () => songSelect?.Search(metadata.Source));
@@ -307,7 +359,10 @@ namespace osu.Game.Screens.SelectV2
             submitted.Date = beatmapSetInfo.DateSubmitted;
             ranked.Date = beatmapSetInfo.DateRanked;
 
-            if (currentOnlineBeatmapSet == null || currentOnlineBeatmapSet.OnlineID != beatmapSetInfo.OnlineID)
+            if (
+                currentOnlineBeatmapSet == null
+                || currentOnlineBeatmapSet.OnlineID != beatmapSetInfo.OnlineID
+            )
                 refetchBeatmapSet();
 
             updateOnlineDisplay();
@@ -359,10 +414,18 @@ namespace osu.Game.Screens.SelectV2
                 var beatmapInfo = beatmap.Value.BeatmapInfo;
 
                 var onlineBeatmapSet = currentOnlineBeatmapSet;
-                var onlineBeatmap = onlineBeatmapSet.Beatmaps.SingleOrDefault(b => b.OnlineID == beatmapInfo.OnlineID);
+                var onlineBeatmap = onlineBeatmapSet.Beatmaps.SingleOrDefault(b =>
+                    b.OnlineID == beatmapInfo.OnlineID
+                );
 
-                genre.Data = (onlineBeatmapSet.Genre.Name, () => songSelect?.Search(onlineBeatmapSet.Genre.Name));
-                language.Data = (onlineBeatmapSet.Language.Name, () => songSelect?.Search(onlineBeatmapSet.Language.Name));
+                genre.Data = (
+                    onlineBeatmapSet.Genre.Name,
+                    () => songSelect?.Search(onlineBeatmapSet.Genre.Name)
+                );
+                language.Data = (
+                    onlineBeatmapSet.Language.Name,
+                    () => songSelect?.Search(onlineBeatmapSet.Language.Name)
+                );
 
                 if (onlineBeatmap != null)
                 {
@@ -381,23 +444,29 @@ namespace osu.Game.Screens.SelectV2
         {
             var beatmapInfo = beatmap.Value.BeatmapInfo;
             var onlineBeatmapSet = currentOnlineBeatmapSet;
-            var onlineBeatmap = onlineBeatmapSet?.Beatmaps.SingleOrDefault(b => b.OnlineID == beatmapInfo.OnlineID);
+            var onlineBeatmap = onlineBeatmapSet?.Beatmaps.SingleOrDefault(b =>
+                b.OnlineID == beatmapInfo.OnlineID
+            );
 
-            if (onlineBeatmap?.TopTags == null || onlineBeatmap.TopTags.Length == 0 || onlineBeatmapSet?.RelatedTags == null)
+            if (
+                onlineBeatmap?.TopTags == null
+                || onlineBeatmap.TopTags.Length == 0
+                || onlineBeatmapSet?.RelatedTags == null
+            )
             {
                 userTags.FadeOut(transition_duration, Easing.OutQuint);
                 return;
             }
 
             var tagsById = onlineBeatmapSet.RelatedTags.ToDictionary(t => t.Id);
-            string[] userTagsArray = onlineBeatmap.TopTags
-                                                  .Select(t => (topTag: t, relatedTag: tagsById.GetValueOrDefault(t.TagId)))
-                                                  .Where(t => t.relatedTag != null)
-                                                  // see https://github.com/ppy/osu-web/blob/bb3bd2e7c6f84f26066df5ea20a81c77ec9bb60a/resources/js/beatmapsets-show/controller.ts#L103-L106 for sort criteria
-                                                  .OrderByDescending(t => t.topTag.VoteCount)
-                                                  .ThenBy(t => t.relatedTag!.Name)
-                                                  .Select(t => t.relatedTag!.Name)
-                                                  .ToArray();
+            string[] userTagsArray = onlineBeatmap
+                .TopTags.Select(t => (topTag: t, relatedTag: tagsById.GetValueOrDefault(t.TagId)))
+                .Where(t => t.relatedTag != null)
+                // see https://github.com/ppy/osu-web/blob/bb3bd2e7c6f84f26066df5ea20a81c77ec9bb60a/resources/js/beatmapsets-show/controller.ts#L103-L106 for sort criteria
+                .OrderByDescending(t => t.topTag.VoteCount)
+                .ThenBy(t => t.relatedTag!.Name)
+                .Select(t => t.relatedTag!.Name)
+                .ToArray();
 
             userTags.FadeIn(transition_duration, Easing.OutQuint);
             userTags.Tags = (userTagsArray, t => songSelect?.Search(t));

@@ -10,7 +10,5 @@ namespace osu.Game.Graphics.Containers
     /// A target expanding container that should be resolved by children <see cref="IExpandable"/>s to propagate state changes.
     /// </summary>
     [Cached(typeof(IExpandingContainer))]
-    public interface IExpandingContainer : IContainer, IExpandable
-    {
-    }
+    public interface IExpandingContainer : IContainer, IExpandable { }
 }

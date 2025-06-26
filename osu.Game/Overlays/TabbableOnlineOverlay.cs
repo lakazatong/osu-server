@@ -21,9 +21,7 @@ namespace osu.Game.Overlays
         private bool displayUpdateRequired = true;
 
         protected TabbableOnlineOverlay(OverlayColourScheme colourScheme)
-            : base(colourScheme)
-        {
-        }
+            : base(colourScheme) { }
 
         [BackgroundDependencyLoader]
         private void load(IAPIProvider api)
@@ -61,12 +59,16 @@ namespace osu.Game.Overlays
         {
             ScrollFlow.ScrollToStart();
 
-            LoadComponentAsync(display, loaded =>
-            {
-                Loading.Hide();
+            LoadComponentAsync(
+                display,
+                loaded =>
+                {
+                    Loading.Hide();
 
-                Child = loaded;
-            }, (cancellationToken = new CancellationTokenSource()).Token);
+                    Child = loaded;
+                },
+                (cancellationToken = new CancellationTokenSource()).Token
+            );
         }
 
         protected virtual void OnTabChanged(TEnum tab)
@@ -85,13 +87,14 @@ namespace osu.Game.Overlays
 
         protected abstract void CreateDisplayToLoad(TEnum tab);
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            if (State.Value == Visibility.Hidden)
-                return;
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
+            {
+                if (State.Value == Visibility.Hidden)
+                    return;
 
-            Header.Current.TriggerChange();
-        });
+                Header.Current.TriggerChange();
+            });
 
         protected override void Dispose(bool isDisposing)
         {

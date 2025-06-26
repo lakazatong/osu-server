@@ -28,7 +28,8 @@ namespace osu.Game.Screens.Edit.Timing
 {
     public partial class ControlPointTable : CompositeDrawable
     {
-        public BindableList<ControlPointGroup> Groups { get; } = new BindableList<ControlPointGroup>();
+        public BindableList<ControlPointGroup> Groups { get; } =
+            new BindableList<ControlPointGroup>();
 
         public new MarginPadding Padding
         {
@@ -37,10 +38,12 @@ namespace osu.Game.Screens.Edit.Timing
         }
 
         [Cached]
-        private Bindable<TimingControlPoint?> activeTimingPoint { get; } = new Bindable<TimingControlPoint?>();
+        private Bindable<TimingControlPoint?> activeTimingPoint { get; } =
+            new Bindable<TimingControlPoint?>();
 
         [Cached]
-        private Bindable<EffectControlPoint?> activeEffectPoint { get; } = new Bindable<EffectControlPoint?>();
+        private Bindable<EffectControlPoint?> activeEffectPoint { get; } =
+            new Bindable<EffectControlPoint?>();
 
         [Resolved]
         private EditorBeatmap beatmap { get; set; } = null!;
@@ -64,11 +67,7 @@ namespace osu.Game.Screens.Edit.Timing
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Background4,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Background4, RelativeSizeAxes = Axes.Both },
                 new Box
                 {
                     Colour = colours.Background3,
@@ -91,19 +90,20 @@ namespace osu.Game.Screens.Edit.Timing
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            Margin = new MarginPadding { Left = timing_column_width }
+                            Margin = new MarginPadding { Left = timing_column_width },
                         },
-                    }
+                    },
                 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Top = row_height },
-                    Child = list = new ControlPointRowList
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        RowData = { BindTarget = Groups, },
-                    },
+                    Child = list =
+                        new ControlPointRowList
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            RowData = { BindTarget = Groups },
+                        },
                 },
             };
         }
@@ -129,21 +129,26 @@ namespace osu.Game.Screens.Edit.Timing
             activeTimingPoint.Value = beatmap.ControlPointInfo.TimingPointAt(accurateTime);
             activeEffectPoint.Value = beatmap.ControlPointInfo.EffectPointAt(accurateTime);
 
-            double latestActiveTime = Math.Max(activeTimingPoint.Value?.Time ?? double.NegativeInfinity, activeEffectPoint.Value?.Time ?? double.NegativeInfinity);
-            var groupToShow = selectedGroup.Value ?? beatmap.ControlPointInfo.GroupAt(latestActiveTime);
+            double latestActiveTime = Math.Max(
+                activeTimingPoint.Value?.Time ?? double.NegativeInfinity,
+                activeEffectPoint.Value?.Time ?? double.NegativeInfinity
+            );
+            var groupToShow =
+                selectedGroup.Value ?? beatmap.ControlPointInfo.GroupAt(latestActiveTime);
             list.ScrollTo(groupToShow, force);
         }
 
-        private partial class ControlPointRowList : VirtualisedListContainer<ControlPointGroup, DrawableControlGroup>
+        private partial class ControlPointRowList
+            : VirtualisedListContainer<ControlPointGroup, DrawableControlGroup>
         {
             public ControlPointRowList()
-                : base(row_height, 50)
-            {
-            }
+                : base(row_height, 50) { }
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer() => new UserTrackingScrollContainer();
+            protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+                new UserTrackingScrollContainer();
 
-            protected new UserTrackingScrollContainer Scroll => (UserTrackingScrollContainer)base.Scroll;
+            protected new UserTrackingScrollContainer Scroll =>
+                (UserTrackingScrollContainer)base.Scroll;
 
             public void ScrollTo(ControlPointGroup group, bool force)
             {
@@ -168,7 +173,9 @@ namespace osu.Game.Screens.Edit.Timing
             }
         }
 
-        public partial class DrawableControlGroup : PoolableDrawable, IHasCurrentValue<ControlPointGroup>
+        public partial class DrawableControlGroup
+            : PoolableDrawable,
+                IHasCurrentValue<ControlPointGroup>
         {
             public Bindable<ControlPointGroup> Current
             {
@@ -176,7 +183,8 @@ namespace osu.Game.Screens.Edit.Timing
                 set => current.Current = value;
             }
 
-            private readonly BindableWithCurrent<ControlPointGroup> current = new BindableWithCurrent<ControlPointGroup>();
+            private readonly BindableWithCurrent<ControlPointGroup> current =
+                new BindableWithCurrent<ControlPointGroup>();
 
             private Box background = null!;
             private Drawable currentIndicator = null!;
@@ -218,35 +226,34 @@ namespace osu.Game.Screens.Edit.Timing
                         Alpha = 0,
                         Children = new Drawable[]
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Y,
-                                Width = 5,
-                            },
+                            new Box { RelativeSizeAxes = Axes.Y, Width = 5 },
                             new Box
                             {
                                 RelativeSizeAxes = Axes.Y,
                                 Blending = BlendingParameters.Additive,
                                 X = 5,
                                 Width = 150,
-                                Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.1f), Color4.White.Opacity(0))
+                                Colour = ColourInfo.GradientHorizontal(
+                                    Color4.White.Opacity(0.1f),
+                                    Color4.White.Opacity(0)
+                                ),
                             },
-                        }
+                        },
                     },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Horizontal = row_horizontal_padding, },
+                        Padding = new MarginPadding { Horizontal = row_horizontal_padding },
                         Children = new Drawable[]
                         {
-                            new ControlGroupTiming { Group = { BindTarget = current }, },
+                            new ControlGroupTiming { Group = { BindTarget = current } },
                             new ControlGroupAttributes(point => point is not TimingControlPoint)
                             {
                                 Group = { BindTarget = current },
-                                Margin = new MarginPadding { Left = timing_column_width }
-                            }
-                        }
-                    }
+                                Margin = new MarginPadding { Left = timing_column_width },
+                            },
+                        },
+                    },
                 };
             }
 
@@ -295,22 +302,37 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 bool isSelected = selectedGroup.Value?.Equals(current.Value) == true;
 
-                bool hasCurrentTimingPoint = activeTimingPoint.Value != null && current.Value.ControlPoints.Contains(activeTimingPoint.Value);
-                bool hasCurrentEffectPoint = activeEffectPoint.Value != null && current.Value.ControlPoints.Contains(activeEffectPoint.Value);
+                bool hasCurrentTimingPoint =
+                    activeTimingPoint.Value != null
+                    && current.Value.ControlPoints.Contains(activeTimingPoint.Value);
+                bool hasCurrentEffectPoint =
+                    activeEffectPoint.Value != null
+                    && current.Value.ControlPoints.Contains(activeEffectPoint.Value);
 
                 background.FadeTo(IsHovered || isSelected ? 1 : 0, 100, Easing.OutQuint);
-                background.FadeColour(isSelected ? colourProvider.Colour3 : colourProvider.Background1, 100, Easing.OutQuint);
+                background.FadeColour(
+                    isSelected ? colourProvider.Colour3 : colourProvider.Background1,
+                    100,
+                    Easing.OutQuint
+                );
 
                 if (hasCurrentTimingPoint || hasCurrentEffectPoint)
                 {
                     currentIndicator.FadeIn(100, Easing.OutQuint);
 
                     if (hasCurrentTimingPoint && hasCurrentEffectPoint)
-                        currentIndicator.Colour = ColourInfo.GradientVertical(activeTimingPoint.Value!.GetRepresentingColour(colours), activeEffectPoint.Value!.GetRepresentingColour(colours));
+                        currentIndicator.Colour = ColourInfo.GradientVertical(
+                            activeTimingPoint.Value!.GetRepresentingColour(colours),
+                            activeEffectPoint.Value!.GetRepresentingColour(colours)
+                        );
                     else if (hasCurrentTimingPoint)
-                        currentIndicator.Colour = activeTimingPoint.Value!.GetRepresentingColour(colours);
+                        currentIndicator.Colour = activeTimingPoint.Value!.GetRepresentingColour(
+                            colours
+                        );
                     else
-                        currentIndicator.Colour = activeEffectPoint.Value!.GetRepresentingColour(colours);
+                        currentIndicator.Colour = activeEffectPoint.Value!.GetRepresentingColour(
+                            colours
+                        );
                 }
                 else
                     currentIndicator.FadeOut(100, Easing.OutQuint);
@@ -344,7 +366,7 @@ namespace osu.Game.Screens.Edit.Timing
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Group = { BindTarget = Group },
-                    }
+                    },
                 };
             }
 
@@ -352,14 +374,21 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 base.LoadComplete();
 
-                Group.BindValueChanged(_ => timeText.Text = Group.Value?.Time.ToEditorFormattedString() ?? default(LocalisableString), true);
+                Group.BindValueChanged(
+                    _ =>
+                        timeText.Text =
+                            Group.Value?.Time.ToEditorFormattedString()
+                            ?? default(LocalisableString),
+                    true
+                );
             }
         }
 
         private partial class ControlGroupAttributes : CompositeDrawable
         {
             public Bindable<ControlPointGroup> Group { get; } = new Bindable<ControlPointGroup>();
-            private BindableList<ControlPoint> controlPoints { get; } = new BindableList<ControlPoint>();
+            private BindableList<ControlPoint> controlPoints { get; } =
+                new BindableList<ControlPoint>();
 
             private readonly Func<ControlPoint, bool> matchFunction;
 
@@ -382,7 +411,7 @@ namespace osu.Game.Screens.Edit.Timing
                     AutoSizeAxes = Axes.X,
                     RelativeSizeAxes = Axes.Y,
                     Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(2)
+                    Spacing = new Vector2(2),
                 };
             }
 
@@ -390,13 +419,18 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 base.LoadComplete();
 
-                Group.BindValueChanged(_ =>
-                {
-                    controlPoints.UnbindBindings();
-                    controlPoints.Clear();
-                    if (Group.Value != null)
-                        ((IBindableList<ControlPoint>)controlPoints).BindTo(Group.Value.ControlPoints);
-                }, true);
+                Group.BindValueChanged(
+                    _ =>
+                    {
+                        controlPoints.UnbindBindings();
+                        controlPoints.Clear();
+                        if (Group.Value != null)
+                            ((IBindableList<ControlPoint>)controlPoints).BindTo(
+                                Group.Value.ControlPoints
+                            );
+                    },
+                    true
+                );
 
                 controlPoints.BindCollectionChanged((_, _) => createChildren(), true);
             }
@@ -404,11 +438,11 @@ namespace osu.Game.Screens.Edit.Timing
             private void createChildren()
             {
                 fill.ChildrenEnumerable = controlPoints
-                                          .Where(matchFunction)
-                                          .Select(createAttribute)
-                                          // arbitrary ordering to make timing points first.
-                                          // probably want to explicitly define order in the future.
-                                          .OrderByDescending(c => c.GetType().Name);
+                    .Where(matchFunction)
+                    .Select(createAttribute)
+                    // arbitrary ordering to make timing points first.
+                    // probably want to explicitly define order in the future.
+                    .OrderByDescending(c => c.GetType().Name);
             }
 
             private Drawable createAttribute(ControlPoint controlPoint)
@@ -422,7 +456,10 @@ namespace osu.Game.Screens.Edit.Timing
                         return new EffectRowAttribute(effect);
                 }
 
-                throw new ArgumentOutOfRangeException(nameof(controlPoint), $"Control point type {controlPoint.GetType()} is not supported");
+                throw new ArgumentOutOfRangeException(
+                    nameof(controlPoint),
+                    $"Control point type {controlPoint.GetType()} is not supported"
+                );
             }
         }
     }

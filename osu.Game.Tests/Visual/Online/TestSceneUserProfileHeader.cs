@@ -26,7 +26,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneUserProfileHeader : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         private DummyAPIAccess dummyAPI => (DummyAPIAccess)API;
 
@@ -40,467 +42,649 @@ namespace osu.Game.Tests.Visual.Online
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create header", () =>
-            {
-                Child = new OsuScrollContainer(Direction.Vertical)
+            AddStep(
+                "create header",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = header = new ProfileHeader()
-                };
-            });
+                    Child = new OsuScrollContainer(Direction.Vertical)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = header = new ProfileHeader(),
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestBasic()
         {
-            AddStep("Show example user", () => header.User.Value = new UserProfileData(TestSceneUserProfileOverlay.TEST_USER, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show example user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        TestSceneUserProfileOverlay.TEST_USER,
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
 
         [Test]
         public void TestProfileCoverExpanded()
         {
-            AddStep("Set cover to expanded", () => configManager.SetValue(OsuSetting.ProfileCoverExpanded, true));
-            AddStep("Show example user", () => header.User.Value = new UserProfileData(TestSceneUserProfileOverlay.TEST_USER, new OsuRuleset().RulesetInfo));
-            AddUntilStep("Cover is expanded", () => header.ChildrenOfType<UserCoverBackground>().Single().Height, () => Is.GreaterThan(0));
+            AddStep(
+                "Set cover to expanded",
+                () => configManager.SetValue(OsuSetting.ProfileCoverExpanded, true)
+            );
+            AddStep(
+                "Show example user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        TestSceneUserProfileOverlay.TEST_USER,
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
+            AddUntilStep(
+                "Cover is expanded",
+                () => header.ChildrenOfType<UserCoverBackground>().Single().Height,
+                () => Is.GreaterThan(0)
+            );
         }
 
         [Test]
         public void TestProfileCoverCollapsed()
         {
-            AddStep("Set cover to collapsed", () => configManager.SetValue(OsuSetting.ProfileCoverExpanded, false));
-            AddStep("Show example user", () => header.User.Value = new UserProfileData(TestSceneUserProfileOverlay.TEST_USER, new OsuRuleset().RulesetInfo));
-            AddUntilStep("Cover is collapsed", () => header.ChildrenOfType<UserCoverBackground>().Single().Height, () => Is.EqualTo(0));
+            AddStep(
+                "Set cover to collapsed",
+                () => configManager.SetValue(OsuSetting.ProfileCoverExpanded, false)
+            );
+            AddStep(
+                "Show example user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        TestSceneUserProfileOverlay.TEST_USER,
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
+            AddUntilStep(
+                "Cover is collapsed",
+                () => header.ChildrenOfType<UserCoverBackground>().Single().Height,
+                () => Is.EqualTo(0)
+            );
         }
 
         [Test]
         public void TestOnlineState()
         {
-            AddStep("Show online user", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 1001,
-                Username = "IAmOnline",
-                LastVisit = DateTimeOffset.Now,
-                WasRecentlyOnline = true,
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show online user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 1001,
+                            Username = "IAmOnline",
+                            LastVisit = DateTimeOffset.Now,
+                            WasRecentlyOnline = true,
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
 
-            AddStep("Show offline user", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 1002,
-                Username = "IAmOffline",
-                LastVisit = DateTimeOffset.Now.AddDays(-10),
-                WasRecentlyOnline = false,
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show offline user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 1002,
+                            Username = "IAmOffline",
+                            LastVisit = DateTimeOffset.Now.AddDays(-10),
+                            WasRecentlyOnline = false,
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
 
         [Test]
         public void TestRankedState()
         {
-            AddStep("Show ranked user", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 2001,
-                Username = "RankedUser",
-                Groups = new[] { new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" } },
-                Statistics = new UserStatistics
-                {
-                    IsRanked = true,
-                    GlobalRank = 15000,
-                    CountryRank = 1500,
-                    RankHistory = new APIRankHistory
-                    {
-                        Mode = @"osu",
-                        Data = Enumerable.Range(2345, 45).Concat(Enumerable.Range(2109, 40)).ToArray()
-                    },
-                }
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show ranked user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 2001,
+                            Username = "RankedUser",
+                            Groups = new[]
+                            {
+                                new APIUserGroup
+                                {
+                                    Colour = "#EB47D0",
+                                    ShortName = "DEV",
+                                    Name = "Developers",
+                                },
+                            },
+                            Statistics = new UserStatistics
+                            {
+                                IsRanked = true,
+                                GlobalRank = 15000,
+                                CountryRank = 1500,
+                                RankHistory = new APIRankHistory
+                                {
+                                    Mode = @"osu",
+                                    Data = Enumerable
+                                        .Range(2345, 45)
+                                        .Concat(Enumerable.Range(2109, 40))
+                                        .ToArray(),
+                                },
+                            },
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
 
-            AddStep("Show unranked user", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 2002,
-                Username = "UnrankedUser",
-                Statistics = new UserStatistics
-                {
-                    IsRanked = false,
-                    // web will sometimes return non-empty rank history even for unranked users.
-                    RankHistory = new APIRankHistory
-                    {
-                        Mode = @"osu",
-                        Data = Enumerable.Range(2345, 85).ToArray()
-                    },
-                }
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show unranked user",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 2002,
+                            Username = "UnrankedUser",
+                            Statistics = new UserStatistics
+                            {
+                                IsRanked = false,
+                                // web will sometimes return non-empty rank history even for unranked users.
+                                RankHistory = new APIRankHistory
+                                {
+                                    Mode = @"osu",
+                                    Data = Enumerable.Range(2345, 85).ToArray(),
+                                },
+                            },
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
 
         [Test]
         public void TestPreviousUsernames()
         {
-            AddStep("Show user w/ previous usernames", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 727,
-                Username = "SomeoneIndecisive",
-                CoverUrl = TestResources.COVER_IMAGE_1,
-                Groups = new[]
-                {
-                    new APIUserGroup { Colour = "#EB47D0", ShortName = "DEV", Name = "Developers" },
-                },
-                Statistics = new UserStatistics
-                {
-                    IsRanked = false,
-                    // web will sometimes return non-empty rank history even for unranked users.
-                    RankHistory = new APIRankHistory
-                    {
-                        Mode = @"osu",
-                        Data = Enumerable.Range(2345, 85).ToArray()
-                    },
-                },
-                PreviousUsernames = new[] { "tsrk.", "quoicoubeh", "apagnan", "epita" }
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show user w/ previous usernames",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 727,
+                            Username = "SomeoneIndecisive",
+                            CoverUrl = TestResources.COVER_IMAGE_1,
+                            Groups = new[]
+                            {
+                                new APIUserGroup
+                                {
+                                    Colour = "#EB47D0",
+                                    ShortName = "DEV",
+                                    Name = "Developers",
+                                },
+                            },
+                            Statistics = new UserStatistics
+                            {
+                                IsRanked = false,
+                                // web will sometimes return non-empty rank history even for unranked users.
+                                RankHistory = new APIRankHistory
+                                {
+                                    Mode = @"osu",
+                                    Data = Enumerable.Range(2345, 85).ToArray(),
+                                },
+                            },
+                            PreviousUsernames = new[] { "tsrk.", "quoicoubeh", "apagnan", "epita" },
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
 
         [Test]
         public void TestManyTournamentBanners()
         {
-            AddStep("Show user w/ many tournament banners", () => header.User.Value = new UserProfileData(new APIUser
-            {
-                Id = 728,
-                Username = "Certain Guy",
-                CoverUrl = TestResources.COVER_IMAGE_2,
-                Statistics = new UserStatistics
-                {
-                    IsRanked = false,
-                    // web will sometimes return non-empty rank history even for unranked users.
-                    RankHistory = new APIRankHistory
-                    {
-                        Mode = @"osu",
-                        Data = Enumerable.Range(2345, 85).ToArray()
-                    },
-                },
-                TournamentBanners = new[]
-                {
-                    new TournamentBanner
-                    {
-                        Id = 15329,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15588,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CN.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CN@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15589,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PH.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PH@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15590,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CL.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CL@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15591,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_JP.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_JP@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15592,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RU.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RU@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15593,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KR.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KR@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15594,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NZ.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NZ@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15595,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TH.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TH@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15596,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TW.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TW@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15603,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ID.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ID@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15604,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KZ.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KZ@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15605,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AR.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AR@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15606,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_BR.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_BR@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15607,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15639,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_MX.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_MX@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15640,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AU.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AU@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15641,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_IT.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_IT@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15642,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_UA.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_UA@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15643,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NL.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NL@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15644,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FI.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FI@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15645,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RO.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RO@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15646,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SG.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SG@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15647,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_DE.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_DE@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15648,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ES.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ES@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15649,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SE.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SE@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15650,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CA.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CA@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15651,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NO.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NO@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15652,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_GB.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_GB@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15653,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_US.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_US@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15654,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15655,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FR.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FR@2x.jpg"
-                    },
-                    new TournamentBanner
-                    {
-                        Id = 15686,
-                        TournamentId = 41,
-                        ImageLowRes = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK.jpg",
-                        Image = "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK@2x.jpg"
-                    }
-                }
-            }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show user w/ many tournament banners",
+                () =>
+                    header.User.Value = new UserProfileData(
+                        new APIUser
+                        {
+                            Id = 728,
+                            Username = "Certain Guy",
+                            CoverUrl = TestResources.COVER_IMAGE_2,
+                            Statistics = new UserStatistics
+                            {
+                                IsRanked = false,
+                                // web will sometimes return non-empty rank history even for unranked users.
+                                RankHistory = new APIRankHistory
+                                {
+                                    Mode = @"osu",
+                                    Data = Enumerable.Range(2345, 85).ToArray(),
+                                },
+                            },
+                            TournamentBanners = new[]
+                            {
+                                new TournamentBanner
+                                {
+                                    Id = 15329,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15588,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CN.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CN@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15589,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PH.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PH@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15590,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CL.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CL@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15591,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_JP.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_JP@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15592,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RU.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RU@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15593,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KR.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KR@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15594,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NZ.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NZ@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15595,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TH.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TH@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15596,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TW.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_TW@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15603,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ID.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ID@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15604,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KZ.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_KZ@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15605,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AR.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AR@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15606,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_BR.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_BR@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15607,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15639,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_MX.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_MX@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15640,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AU.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_AU@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15641,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_IT.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_IT@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15642,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_UA.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_UA@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15643,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NL.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NL@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15644,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FI.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FI@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15645,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RO.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_RO@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15646,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SG.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SG@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15647,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_DE.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_DE@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15648,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ES.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_ES@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15649,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SE.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_SE@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15650,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CA.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_CA@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15651,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NO.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_NO@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15652,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_GB.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_GB@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15653,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_US.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_US@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15654,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_PL@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15655,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FR.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_FR@2x.jpg",
+                                },
+                                new TournamentBanner
+                                {
+                                    Id = 15686,
+                                    TournamentId = 41,
+                                    ImageLowRes =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK.jpg",
+                                    Image =
+                                        "https://assets.ppy.sh/tournament-banners/official/owc2023/profile/supporter_HK@2x.jpg",
+                                },
+                            },
+                        },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
 
-        private APIUser nonFriend => new APIUser
-        {
-            Id = 727,
-            Username = "Whatever",
-        };
+        private APIUser nonFriend => new APIUser { Id = 727, Username = "Whatever" };
 
         [Test]
         public void TestAddFriend()
         {
-            AddStep("Setup request", () =>
-            {
-                requestLock.Reset();
-
-                dummyAPI.HandleRequest = request =>
+            AddStep(
+                "Setup request",
+                () =>
                 {
-                    if (request is not AddFriendRequest req)
-                        return false;
+                    requestLock.Reset();
 
-                    if (req.TargetId != nonFriend.OnlineID)
-                        return false;
-
-                    var apiRelation = new APIRelation
+                    dummyAPI.HandleRequest = request =>
                     {
-                        TargetID = nonFriend.OnlineID,
-                        Mutual = true,
-                        RelationType = RelationType.Friend,
-                        TargetUser = nonFriend
-                    };
+                        if (request is not AddFriendRequest req)
+                            return false;
 
-                    Task.Run(() =>
-                    {
-                        requestLock.Wait(3000);
-                        dummyAPI.Friends.Add(apiRelation);
-                        req.TriggerSuccess(new AddFriendResponse
+                        if (req.TargetId != nonFriend.OnlineID)
+                            return false;
+
+                        var apiRelation = new APIRelation
                         {
-                            UserRelation = apiRelation
-                        });
-                    });
+                            TargetID = nonFriend.OnlineID,
+                            Mutual = true,
+                            RelationType = RelationType.Friend,
+                            TargetUser = nonFriend,
+                        };
 
-                    return true;
-                };
-            });
+                        Task.Run(() =>
+                        {
+                            requestLock.Wait(3000);
+                            dummyAPI.Friends.Add(apiRelation);
+                            req.TriggerSuccess(
+                                new AddFriendResponse { UserRelation = apiRelation }
+                            );
+                        });
+
+                        return true;
+                    };
+                }
+            );
             AddStep("clear friend list", () => dummyAPI.Friends.Clear());
-            AddStep("Show non-friend user", () => header.User.Value = new UserProfileData(nonFriend, new OsuRuleset().RulesetInfo));
-            AddStep("Click followers button", () => this.ChildrenOfType<FollowersButton>().First().TriggerClick());
+            AddStep(
+                "Show non-friend user",
+                () =>
+                    header.User.Value = new UserProfileData(nonFriend, new OsuRuleset().RulesetInfo)
+            );
+            AddStep(
+                "Click followers button",
+                () => this.ChildrenOfType<FollowersButton>().First().TriggerClick()
+            );
             AddStep("Complete request", () => requestLock.Set());
-            AddUntilStep("Friend added", () => API.Friends.Any(f => f.TargetID == nonFriend.OnlineID));
+            AddUntilStep(
+                "Friend added",
+                () => API.Friends.Any(f => f.TargetID == nonFriend.OnlineID)
+            );
         }
 
         [Test]
         public void TestAddFriendNonMutual()
         {
-            AddStep("Setup request", () =>
-            {
-                requestLock.Reset();
-
-                dummyAPI.HandleRequest = request =>
+            AddStep(
+                "Setup request",
+                () =>
                 {
-                    if (request is not AddFriendRequest req)
-                        return false;
+                    requestLock.Reset();
 
-                    if (req.TargetId != nonFriend.OnlineID)
-                        return false;
-
-                    var apiRelation = new APIRelation
+                    dummyAPI.HandleRequest = request =>
                     {
-                        TargetID = nonFriend.OnlineID,
-                        Mutual = false,
-                        RelationType = RelationType.Friend,
-                        TargetUser = nonFriend
-                    };
+                        if (request is not AddFriendRequest req)
+                            return false;
 
-                    Task.Run(() =>
-                    {
-                        requestLock.Wait(3000);
-                        dummyAPI.Friends.Add(apiRelation);
-                        req.TriggerSuccess(new AddFriendResponse
+                        if (req.TargetId != nonFriend.OnlineID)
+                            return false;
+
+                        var apiRelation = new APIRelation
                         {
-                            UserRelation = apiRelation
-                        });
-                    });
+                            TargetID = nonFriend.OnlineID,
+                            Mutual = false,
+                            RelationType = RelationType.Friend,
+                            TargetUser = nonFriend,
+                        };
 
-                    return true;
-                };
-            });
+                        Task.Run(() =>
+                        {
+                            requestLock.Wait(3000);
+                            dummyAPI.Friends.Add(apiRelation);
+                            req.TriggerSuccess(
+                                new AddFriendResponse { UserRelation = apiRelation }
+                            );
+                        });
+
+                        return true;
+                    };
+                }
+            );
             AddStep("clear friend list", () => dummyAPI.Friends.Clear());
-            AddStep("Show non-friend user", () => header.User.Value = new UserProfileData(nonFriend, new OsuRuleset().RulesetInfo));
-            AddStep("Click followers button", () => this.ChildrenOfType<FollowersButton>().First().TriggerClick());
+            AddStep(
+                "Show non-friend user",
+                () =>
+                    header.User.Value = new UserProfileData(nonFriend, new OsuRuleset().RulesetInfo)
+            );
+            AddStep(
+                "Click followers button",
+                () => this.ChildrenOfType<FollowersButton>().First().TriggerClick()
+            );
             AddStep("Complete request", () => requestLock.Set());
-            AddUntilStep("Friend added", () => API.Friends.Any(f => f.TargetID == nonFriend.OnlineID));
+            AddUntilStep(
+                "Friend added",
+                () => API.Friends.Any(f => f.TargetID == nonFriend.OnlineID)
+            );
         }
     }
 }

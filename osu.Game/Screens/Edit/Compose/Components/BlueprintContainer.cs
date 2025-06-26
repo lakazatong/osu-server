@@ -27,7 +27,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
     /// A container which provides a "blueprint" display of items.
     /// Includes selection and manipulation support via a <see cref="Components.SelectionHandler{T}"/>.
     /// </summary>
-    public abstract partial class BlueprintContainer<T> : CompositeDrawable, IKeyBindingHandler<PlatformAction>, IKeyBindingHandler<GlobalAction>
+    public abstract partial class BlueprintContainer<T>
+        : CompositeDrawable,
+            IKeyBindingHandler<PlatformAction>,
+            IKeyBindingHandler<GlobalAction>
         where T : class
     {
         protected DragBox DragBox { get; private set; }
@@ -36,12 +39,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         public partial class SelectionBlueprintContainer : Container<SelectionBlueprint<T>>
         {
-            public new virtual void ChangeChildDepth(SelectionBlueprint<T> child, float newDepth) => base.ChangeChildDepth(child, newDepth);
+            public new virtual void ChangeChildDepth(SelectionBlueprint<T> child, float newDepth) =>
+                base.ChangeChildDepth(child, newDepth);
         }
 
         public SelectionHandler<T> SelectionHandler { get; private set; }
 
-        private readonly Dictionary<T, SelectionBlueprint<T>> blueprintMap = new Dictionary<T, SelectionBlueprint<T>>();
+        private readonly Dictionary<T, SelectionBlueprint<T>> blueprintMap =
+            new Dictionary<T, SelectionBlueprint<T>>();
 
         [Resolved(CanBeNull = true)]
         private IEditorChangeHandler changeHandler { get; set; }
@@ -87,17 +92,20 @@ namespace osu.Game.Screens.Edit.Compose.Components
             SelectionHandler = CreateSelectionHandler();
             SelectionHandler.SelectedItems.BindTo(SelectedItems);
 
-            AddRangeInternal(new[]
-            {
-                DragBox = CreateDragBox(),
-                SelectionHandler,
-                SelectionBlueprints = CreateSelectionBlueprintContainer(),
-                SelectionHandler.CreateProxy(),
-                DragBox.CreateProxy().With(p => p.Depth = float.MinValue)
-            });
+            AddRangeInternal(
+                new[]
+                {
+                    DragBox = CreateDragBox(),
+                    SelectionHandler,
+                    SelectionBlueprints = CreateSelectionBlueprintContainer(),
+                    SelectionHandler.CreateProxy(),
+                    DragBox.CreateProxy().With(p => p.Depth = float.MinValue),
+                }
+            );
         }
 
-        protected virtual SelectionBlueprintContainer CreateSelectionBlueprintContainer() => new SelectionBlueprintContainer { RelativeSizeAxes = Axes.Both };
+        protected virtual SelectionBlueprintContainer CreateSelectionBlueprintContainer() =>
+            new SelectionBlueprintContainer { RelativeSizeAxes = Axes.Both };
 
         /// <summary>
         /// Creates a <see cref="Components.SelectionHandler{T}"/> which outlines items and handles movement of selections.
@@ -121,7 +129,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (SelectedItems.Any())
             {
                 // if there is a selection and there are no modifiers pressed, don't block so the context menu still shows.
-                bool shouldShowContextMenu = e.Button == MouseButton.Right && !e.ShiftPressed && !e.AltPressed && !e.SuperPressed;
+                bool shouldShowContextMenu =
+                    e.Button == MouseButton.Right
+                    && !e.ShiftPressed
+                    && !e.AltPressed
+                    && !e.SuperPressed;
                 return !shouldShowContextMenu;
             }
 
@@ -157,7 +169,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 return false;
 
             // ensure the blueprint which was hovered for the first click is still the hovered blueprint.
-            if (ClickedBlueprint == null || SelectionHandler.SelectedBlueprints.FirstOrDefault(b => b.IsHovered) != ClickedBlueprint)
+            if (
+                ClickedBlueprint == null
+                || SelectionHandler.SelectedBlueprints.FirstOrDefault(b => b.IsHovered)
+                    != ClickedBlueprint
+            )
                 return false;
 
             doubleClickHandled = true;
@@ -247,9 +263,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// Called whenever a drag operation completes, before any change transaction is committed.
         /// </summary>
-        protected virtual void DragOperationCompleted()
-        {
-        }
+        protected virtual void DragOperationCompleted() { }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
@@ -281,9 +295,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
@@ -305,9 +317,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         #region Blueprint Addition/Removal
 
@@ -354,17 +364,13 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// Called after an item's blueprint has been added.
         /// </summary>
         /// <param name="item">The item for which the blueprint has been added.</param>
-        protected virtual void OnBlueprintAdded(T item)
-        {
-        }
+        protected virtual void OnBlueprintAdded(T item) { }
 
         /// <summary>
         /// Called after an item's blueprint has been removed.
         /// </summary>
         /// <param name="item">The item for which the blueprint has been removed.</param>
-        protected virtual void OnBlueprintRemoved(T item)
-        {
-        }
+        protected virtual void OnBlueprintRemoved(T item) { }
 
         /// <summary>
         /// Retrieves an item's blueprint.
@@ -396,7 +402,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// Sorts the supplied <paramref name="blueprints"/> by the order of preference when making a selection.
         /// Blueprints at the start of the list will be prioritised over later items if the selection requested is ambiguous due to spatial overlap.
         /// </summary>
-        protected virtual IEnumerable<SelectionBlueprint<T>> ApplySelectionOrder(IEnumerable<SelectionBlueprint<T>> blueprints) => blueprints.Reverse();
+        protected virtual IEnumerable<SelectionBlueprint<T>> ApplySelectionOrder(
+            IEnumerable<SelectionBlueprint<T>> blueprints
+        ) => blueprints.Reverse();
 
         /// <summary>
         /// Attempts to select any hovered blueprints.
@@ -407,13 +415,21 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             // Iterate from the top of the input stack (blueprints closest to the front of the screen first).
             // Priority is given to already-selected blueprints.
-            foreach (SelectionBlueprint<T> blueprint in SelectionBlueprints.AliveChildren.Where(b => b.IsSelected))
+            foreach (
+                SelectionBlueprint<T> blueprint in SelectionBlueprints.AliveChildren.Where(b =>
+                    b.IsSelected
+                )
+            )
             {
                 if (runForBlueprint(blueprint))
                     return true;
             }
 
-            foreach (SelectionBlueprint<T> blueprint in ApplySelectionOrder(SelectionBlueprints.AliveChildren))
+            foreach (
+                SelectionBlueprint<T> blueprint in ApplySelectionOrder(
+                    SelectionBlueprints.AliveChildren
+                )
+            )
             {
                 if (runForBlueprint(blueprint))
                     return true;
@@ -423,9 +439,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             bool runForBlueprint(SelectionBlueprint<T> blueprint)
             {
-                if (!blueprint.IsHovered) return false;
+                if (!blueprint.IsHovered)
+                    return false;
 
-                selectedBlueprintAlreadySelectedOnMouseDown = blueprint.State == SelectionState.Selected;
+                selectedBlueprintAlreadySelectedOnMouseDown =
+                    blueprint.State == SelectionState.Selected;
                 clickSelectionHandled = SelectionHandler.MouseDownSelectionRequested(blueprint, e);
                 return true;
             }
@@ -442,16 +460,30 @@ namespace osu.Game.Screens.Edit.Compose.Components
         private bool endClickSelection(MouseButtonEvent e)
         {
             // If already handled a selection, double-click, or drag, we don't want to perform a mouse up / click action.
-            if (clickSelectionHandled || doubleClickHandled || isDraggingBlueprint || wasDragStarted) return true;
+            if (
+                clickSelectionHandled
+                || doubleClickHandled
+                || isDraggingBlueprint
+                || wasDragStarted
+            )
+                return true;
 
-            if (e.Button != MouseButton.Left) return false;
+            if (e.Button != MouseButton.Left)
+                return false;
 
             if (e.ControlPressed)
             {
                 // Iterate from the top of the input stack (blueprints closest to the front of the screen first).
                 // Priority is given to already-selected blueprints.
-                foreach (SelectionBlueprint<T> blueprint in SelectionBlueprints.AliveChildren.Where(b => b.IsHovered).OrderByDescending(b => b.IsSelected))
-                    return clickSelectionHandled = SelectionHandler.MouseUpSelectionRequested(blueprint, e);
+                foreach (
+                    SelectionBlueprint<T> blueprint in SelectionBlueprints
+                        .AliveChildren.Where(b => b.IsHovered)
+                        .OrderByDescending(b => b.IsSelected)
+                )
+                    return clickSelectionHandled = SelectionHandler.MouseUpSelectionRequested(
+                        blueprint,
+                        e
+                    );
 
                 // can only be reached if there are no hovered blueprints.
                 // in that case, we still want to suppress mouse up / click handling, because when control is pressed,
@@ -467,20 +499,30 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
                 // The depth of blueprints is constantly changing (see above where selected blueprints are brought to the front).
                 // For this logic, we want a stable sort order so we can correctly cycle, thus using the blueprintMap instead.
-                IEnumerable<SelectionBlueprint<T>> cyclingSelectionBlueprints = ApplySelectionOrder(blueprintMap.Values);
+                IEnumerable<SelectionBlueprint<T>> cyclingSelectionBlueprints = ApplySelectionOrder(
+                    blueprintMap.Values
+                );
 
                 // If there's already a selection, let's start from the blueprint after the selection.
-                cyclingSelectionBlueprints = cyclingSelectionBlueprints.SkipWhile(b => !b.IsSelected).Skip(1);
+                cyclingSelectionBlueprints = cyclingSelectionBlueprints
+                    .SkipWhile(b => !b.IsSelected)
+                    .Skip(1);
 
                 // Add the blueprints from before the selection to the end of the enumerable to allow for cyclic selection.
-                cyclingSelectionBlueprints = cyclingSelectionBlueprints.Concat(ApplySelectionOrder(blueprintMap.Values).TakeWhile(b => !b.IsSelected));
+                cyclingSelectionBlueprints = cyclingSelectionBlueprints.Concat(
+                    ApplySelectionOrder(blueprintMap.Values).TakeWhile(b => !b.IsSelected)
+                );
 
                 foreach (SelectionBlueprint<T> blueprint in cyclingSelectionBlueprints)
                 {
-                    if (!blueprint.IsHovered) continue;
+                    if (!blueprint.IsHovered)
+                        continue;
 
                     // We are performing a mouse up, but selection handlers perform selection on mouse down, so we need to call that instead.
-                    return clickSelectionHandled = SelectionHandler.MouseDownSelectionRequested(blueprint, e);
+                    return clickSelectionHandled = SelectionHandler.MouseDownSelectionRequested(
+                        blueprint,
+                        e
+                    );
                 }
             }
 
@@ -500,12 +542,18 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 {
                     case SelectionState.Selected:
                         // Selection is preserved even after blueprint becomes dead.
-                        if (!quad.Contains(blueprint.ScreenSpaceSelectionPoint) && !selectionBeforeDrag.Contains(blueprint.Item))
+                        if (
+                            !quad.Contains(blueprint.ScreenSpaceSelectionPoint)
+                            && !selectionBeforeDrag.Contains(blueprint.Item)
+                        )
                             blueprint.Deselect();
                         break;
 
                     case SelectionState.NotSelected:
-                        if (blueprint.IsSelectable && quad.Contains(blueprint.ScreenSpaceSelectionPoint))
+                        if (
+                            blueprint.IsSelectable
+                            && quad.Contains(blueprint.ScreenSpaceSelectionPoint)
+                        )
                             blueprint.Select();
                         break;
                 }
@@ -540,7 +588,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         #region Selection Movement
 
-        private (SelectionBlueprint<T> blueprint, Vector2[] originalSnapPositions)[] movementBlueprints;
+        private (
+            SelectionBlueprint<T> blueprint,
+            Vector2[] originalSnapPositions
+        )[] movementBlueprints;
 
         /// <summary>
         /// Whether a blueprint is currently being dragged.
@@ -569,11 +620,15 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             // Any selected blueprint that is hovered can begin the movement of the group, however only the first item (according to SortForMovement) is used for movement.
             // A special case is added for when a click selection occurred before the drag
-            if (!clickSelectionHandled && !SelectionHandler.SelectedBlueprints.Any(b => b.IsHovered))
+            if (
+                !clickSelectionHandled && !SelectionHandler.SelectedBlueprints.Any(b => b.IsHovered)
+            )
                 return false;
 
             // Movement is tracked from the blueprint of the earliest item, since it only makes sense to distance snap from that item
-            movementBlueprints = SortForMovement(SelectionHandler.SelectedBlueprints).Select(b => (b, b.ScreenSpaceSnapPoints)).ToArray();
+            movementBlueprints = SortForMovement(SelectionHandler.SelectedBlueprints)
+                .Select(b => (b, b.ScreenSpaceSnapPoints))
+                .ToArray();
             return true;
         }
 
@@ -582,7 +637,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// </summary>
         /// <param name="blueprints">The blueprints to be moved.</param>
         /// <returns>Sorted blueprints.</returns>
-        protected virtual IEnumerable<SelectionBlueprint<T>> SortForMovement(IReadOnlyList<SelectionBlueprint<T>> blueprints) => blueprints;
+        protected virtual IEnumerable<SelectionBlueprint<T>> SortForMovement(
+            IReadOnlyList<SelectionBlueprint<T>> blueprints
+        ) => blueprints;
 
         /// <summary>
         /// Moves the current selected blueprints.
@@ -597,7 +654,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return TryMoveBlueprints(e, movementBlueprints);
         }
 
-        protected abstract bool TryMoveBlueprints(DragEvent e, IList<(SelectionBlueprint<T> blueprint, Vector2[] originalSnapPositions)> blueprints);
+        protected abstract bool TryMoveBlueprints(
+            DragEvent e,
+            IList<(SelectionBlueprint<T> blueprint, Vector2[] originalSnapPositions)> blueprints
+        );
 
         /// <summary>
         /// Finishes the current movement of selected blueprints.

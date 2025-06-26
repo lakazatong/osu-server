@@ -76,114 +76,128 @@ namespace osu.Game.Overlays.Login
             apiState.BindValueChanged(onlineStateChanged, true);
         }
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            form = null;
-
-            switch (state.NewValue)
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
             {
-                case APIState.Offline:
-                    Child = form = new LoginForm
-                    {
-                        RequestHide = RequestHide
-                    };
-                    break;
+                form = null;
 
-                case APIState.RequiresSecondFactorAuth:
-                    Child = form = new SecondFactorAuthForm();
-                    break;
+                switch (state.NewValue)
+                {
+                    case APIState.Offline:
+                        Child = form = new LoginForm { RequestHide = RequestHide };
+                        break;
 
-                case APIState.Failing:
-                case APIState.Connecting:
-                    LinkFlowContainer linkFlow;
+                    case APIState.RequiresSecondFactorAuth:
+                        Child = form = new SecondFactorAuthForm();
+                        break;
 
-                    Child = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Horizontal = SettingsPanel.CONTENT_MARGINS },
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0f, SettingsSection.ITEM_SPACING),
-                        Children = new Drawable[]
+                    case APIState.Failing:
+                    case APIState.Connecting:
+                        LinkFlowContainer linkFlow;
+
+                        Child = new FillFlowContainer
                         {
-                            new LoadingSpinner
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding
                             {
-                                State = { Value = Visibility.Visible },
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
+                                Horizontal = SettingsPanel.CONTENT_MARGINS,
                             },
-                            linkFlow = new LinkFlowContainer
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0f, SettingsSection.ITEM_SPACING),
+                            Children = new Drawable[]
                             {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                TextAnchor = Anchor.TopCentre,
-                                AutoSizeAxes = Axes.Both,
-                                Text = state.NewValue == APIState.Failing ? ToolbarStrings.AttemptingToReconnect : ToolbarStrings.Connecting,
+                                new LoadingSpinner
+                                {
+                                    State = { Value = Visibility.Visible },
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                },
+                                linkFlow = new LinkFlowContainer
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    TextAnchor = Anchor.TopCentre,
+                                    AutoSizeAxes = Axes.Both,
+                                    Text =
+                                        state.NewValue == APIState.Failing
+                                            ? ToolbarStrings.AttemptingToReconnect
+                                            : ToolbarStrings.Connecting,
+                                },
                             },
-                        },
-                    };
+                        };
 
-                    linkFlow.AddLink(Resources.Localisation.Web.CommonStrings.ButtonsCancel.ToLower(), api.Logout, string.Empty);
-                    break;
+                        linkFlow.AddLink(
+                            Resources.Localisation.Web.CommonStrings.ButtonsCancel.ToLower(),
+                            api.Logout,
+                            string.Empty
+                        );
+                        break;
 
-                case APIState.Online:
-                    Child = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Horizontal = SettingsPanel.CONTENT_MARGINS },
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0f, SettingsSection.ITEM_SPACING),
-                        Children = new Drawable[]
+                    case APIState.Online:
+                        Child = new FillFlowContainer
                         {
-                            new OsuSpriteText
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding
                             {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Text = LoginPanelStrings.SignedIn,
-                                Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold),
+                                Horizontal = SettingsPanel.CONTENT_MARGINS,
                             },
-                            new UserRankPanel(api.LocalUser.Value)
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0f, SettingsSection.ITEM_SPACING),
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                Action = RequestHide
+                                new OsuSpriteText
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Text = LoginPanelStrings.SignedIn,
+                                    Font = OsuFont.GetFont(size: 18, weight: FontWeight.Bold),
+                                },
+                                new UserRankPanel(api.LocalUser.Value)
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    Action = RequestHide,
+                                },
+                                dropdown = new UserDropdown { RelativeSizeAxes = Axes.X },
                             },
-                            dropdown = new UserDropdown { RelativeSizeAxes = Axes.X },
-                        },
-                    };
+                        };
 
-                    updateDropdownCurrent(configUserStatus.Value);
-                    dropdown.Current.BindValueChanged(action =>
-                    {
-                        switch (action.NewValue)
-                        {
-                            case UserAction.Online:
-                                configUserStatus.Value = UserStatus.Online;
-                                dropdown.StatusColour = colours.Green;
-                                break;
+                        updateDropdownCurrent(configUserStatus.Value);
+                        dropdown.Current.BindValueChanged(
+                            action =>
+                            {
+                                switch (action.NewValue)
+                                {
+                                    case UserAction.Online:
+                                        configUserStatus.Value = UserStatus.Online;
+                                        dropdown.StatusColour = colours.Green;
+                                        break;
 
-                            case UserAction.DoNotDisturb:
-                                configUserStatus.Value = UserStatus.DoNotDisturb;
-                                dropdown.StatusColour = colours.Red;
-                                break;
+                                    case UserAction.DoNotDisturb:
+                                        configUserStatus.Value = UserStatus.DoNotDisturb;
+                                        dropdown.StatusColour = colours.Red;
+                                        break;
 
-                            case UserAction.AppearOffline:
-                                configUserStatus.Value = UserStatus.Offline;
-                                dropdown.StatusColour = colours.Gray7;
-                                break;
+                                    case UserAction.AppearOffline:
+                                        configUserStatus.Value = UserStatus.Offline;
+                                        dropdown.StatusColour = colours.Gray7;
+                                        break;
 
-                            case UserAction.SignOut:
-                                api.Logout();
-                                break;
-                        }
-                    }, true);
+                                    case UserAction.SignOut:
+                                        api.Logout();
+                                        break;
+                                }
+                            },
+                            true
+                        );
 
-                    break;
-            }
+                        break;
+                }
 
-            if (form != null)
-                ScheduleAfterChildren(() => GetContainingFocusManager()?.ChangeFocus(form));
-        });
+                if (form != null)
+                    ScheduleAfterChildren(() => GetContainingFocusManager()?.ChangeFocus(form));
+            });
 
         private void updateDropdownCurrent(UserStatus? status)
         {
@@ -212,7 +226,8 @@ namespace osu.Game.Overlays.Login
 
         protected override void OnFocus(FocusEvent e)
         {
-            if (form != null) GetContainingFocusManager()!.ChangeFocus(form);
+            if (form != null)
+                GetContainingFocusManager()!.ChangeFocus(form);
             base.OnFocus(e);
         }
     }

@@ -13,9 +13,7 @@ namespace osu.Game.Overlays.BeatmapListing
     public partial class BeatmapSearchRulesetFilterRow : BeatmapSearchFilterRow<RulesetInfo>
     {
         public BeatmapSearchRulesetFilterRow()
-            : base(BeatmapsStrings.ListingSearchFiltersMode)
-        {
-        }
+            : base(BeatmapsStrings.ListingSearchFiltersMode) { }
 
         protected override Drawable CreateFilter() => new RulesetFilter();
 
@@ -39,12 +37,11 @@ namespace osu.Game.Overlays.BeatmapListing
 
         private partial class RulesetFilterTabItemAny : FilterTabItem<RulesetInfo>
         {
-            protected override LocalisableString LabelFor(RulesetInfo info) => BeatmapsStrings.ModeAny;
+            protected override LocalisableString LabelFor(RulesetInfo info) =>
+                BeatmapsStrings.ModeAny;
 
             public RulesetFilterTabItemAny()
-                : base(new RulesetInfo())
-            {
-            }
+                : base(new RulesetInfo()) { }
         }
     }
 }

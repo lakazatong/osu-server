@@ -19,12 +19,17 @@ namespace osu.Game.Overlays.Chat
         {
             base.LoadComplete();
 
-            ShowSearch.BindValueChanged(change =>
-            {
-                bool showSearch = change.NewValue;
+            ShowSearch.BindValueChanged(
+                change =>
+                {
+                    bool showSearch = change.NewValue;
 
-                PlaceholderText = showSearch ? HomeStrings.SearchPlaceholder : ChatStrings.InputPlaceholder;
-            }, true);
+                    PlaceholderText = showSearch
+                        ? HomeStrings.SearchPlaceholder
+                        : ChatStrings.InputPlaceholder;
+                },
+                true
+            );
         }
 
         protected override void Commit()

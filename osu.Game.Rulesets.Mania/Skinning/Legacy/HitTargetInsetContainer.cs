@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public partial class HitTargetInsetContainer : Container
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         protected override Container<Drawable> Content => content;
         private readonly Container content;
@@ -30,7 +31,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            hitPosition = skin.GetManiaSkinConfig<float>(LegacyManiaSkinConfigurationLookups.HitPosition)?.Value ?? Stage.HIT_TARGET_POSITION;
+            hitPosition =
+                skin.GetManiaSkinConfig<float>(
+                    LegacyManiaSkinConfigurationLookups.HitPosition
+                )?.Value ?? Stage.HIT_TARGET_POSITION;
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);
@@ -38,9 +42,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            content.Padding = direction.NewValue == ScrollingDirection.Up
-                ? new MarginPadding { Top = hitPosition }
-                : new MarginPadding { Bottom = hitPosition };
+            content.Padding =
+                direction.NewValue == ScrollingDirection.Up
+                    ? new MarginPadding { Top = hitPosition }
+                    : new MarginPadding { Bottom = hitPosition };
         }
     }
 }

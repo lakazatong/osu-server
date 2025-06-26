@@ -18,9 +18,7 @@ namespace osu.Game.Rulesets.Mania
         protected override LocalisableString Header => "osu!mania";
 
         public ManiaSettingsSubsection(ManiaRuleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -32,35 +30,47 @@ namespace osu.Game.Rulesets.Mania
                 new SettingsEnumDropdown<ManiaScrollingDirection>
                 {
                     LabelText = RulesetSettingsStrings.ScrollingDirection,
-                    Current = config.GetBindable<ManiaScrollingDirection>(ManiaRulesetSetting.ScrollDirection)
+                    Current = config.GetBindable<ManiaScrollingDirection>(
+                        ManiaRulesetSetting.ScrollDirection
+                    ),
                 },
                 new SettingsSlider<double, ManiaScrollSlider>
                 {
                     LabelText = RulesetSettingsStrings.ScrollSpeed,
                     Current = config.GetBindable<double>(ManiaRulesetSetting.ScrollSpeed),
-                    KeyboardStep = 1
+                    KeyboardStep = 1,
                 },
                 new SettingsCheckbox
                 {
                     Keywords = new[] { "color" },
                     LabelText = RulesetSettingsStrings.TimingBasedColouring,
-                    Current = config.GetBindable<bool>(ManiaRulesetSetting.TimingBasedNoteColouring),
+                    Current = config.GetBindable<bool>(
+                        ManiaRulesetSetting.TimingBasedNoteColouring
+                    ),
                 },
             };
 
             if (RuntimeInfo.IsMobile)
             {
-                Add(new SettingsEnumDropdown<ManiaMobileLayout>
-                {
-                    LabelText = RulesetSettingsStrings.MobileLayout,
-                    Current = config.GetBindable<ManiaMobileLayout>(ManiaRulesetSetting.MobileLayout),
-                });
+                Add(
+                    new SettingsEnumDropdown<ManiaMobileLayout>
+                    {
+                        LabelText = RulesetSettingsStrings.MobileLayout,
+                        Current = config.GetBindable<ManiaMobileLayout>(
+                            ManiaRulesetSetting.MobileLayout
+                        ),
+                    }
+                );
             }
         }
 
         private partial class ManiaScrollSlider : RoundedSliderBar<double>
         {
-            public override LocalisableString TooltipText => RulesetSettingsStrings.ScrollSpeedTooltip((int)DrawableManiaRuleset.ComputeScrollTime(Current.Value), Current.Value);
+            public override LocalisableString TooltipText =>
+                RulesetSettingsStrings.ScrollSpeedTooltip(
+                    (int)DrawableManiaRuleset.ComputeScrollTime(Current.Value),
+                    Current.Value
+                );
         }
     }
 }

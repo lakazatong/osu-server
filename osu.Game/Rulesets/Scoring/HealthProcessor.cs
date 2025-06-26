@@ -24,7 +24,11 @@ namespace osu.Game.Rulesets.Scoring
         /// <summary>
         /// The current health.
         /// </summary>
-        public readonly BindableDouble Health = new BindableDouble(1) { MinValue = 0, MaxValue = 1 };
+        public readonly BindableDouble Health = new BindableDouble(1)
+        {
+            MinValue = 0,
+            MaxValue = 1,
+        };
 
         /// <summary>
         /// Whether this ScoreProcessor has already triggered the failed state.
@@ -69,13 +73,15 @@ namespace osu.Game.Rulesets.Scoring
         /// </summary>
         /// <param name="result">The <see cref="JudgementResult"/>.</param>
         /// <returns>The health increase.</returns>
-        protected virtual double GetHealthIncreaseFor(JudgementResult result) => result.HealthIncrease;
+        protected virtual double GetHealthIncreaseFor(JudgementResult result) =>
+            result.HealthIncrease;
 
         /// <summary>
         /// Checks whether the default conditions for failing are met.
         /// </summary>
         /// <returns><see langword="true"/> if failure should be invoked.</returns>
-        protected virtual bool CheckDefaultFailCondition(JudgementResult result) => Precision.AlmostBigger(Health.MinValue, Health.Value);
+        protected virtual bool CheckDefaultFailCondition(JudgementResult result) =>
+            Precision.AlmostBigger(Health.MinValue, Health.Value);
 
         /// <summary>
         /// Whether the current state of <see cref="HealthProcessor"/> or the provided <paramref name="result"/> meets any fail condition.
@@ -90,7 +96,8 @@ namespace osu.Game.Rulesets.Scoring
             {
                 foreach (var condition in FailConditions.GetInvocationList())
                 {
-                    bool conditionResult = (bool)condition.Method.Invoke(condition.Target, new object[] { this, result })!;
+                    bool conditionResult = (bool)
+                        condition.Method.Invoke(condition.Target, new object[] { this, result })!;
                     if (conditionResult)
                         return true;
                 }

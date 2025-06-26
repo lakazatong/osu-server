@@ -8,14 +8,10 @@ namespace osu.Game.Overlays
     public abstract partial class SettingsSubPanel : SettingsPanel
     {
         protected SettingsSubPanel()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
         [BackgroundDependencyLoader]
-        private void load()
-        {
-        }
+        private void load() { }
 
         protected override bool DimMainContent => false; // dimming is handled by main overlay
     }

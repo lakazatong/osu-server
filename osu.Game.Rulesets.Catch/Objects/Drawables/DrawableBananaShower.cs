@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         private readonly Container bananaContainer;
 
         public DrawableBananaShower()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableBananaShower(BananaShower? s)
             : base(s)
@@ -22,7 +20,9 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             RelativeSizeAxes = Axes.X;
             Origin = Anchor.BottomLeft;
 
-            AddInternal(bananaContainer = new NestedFruitContainer { RelativeSizeAxes = Axes.Both });
+            AddInternal(
+                bananaContainer = new NestedFruitContainer { RelativeSizeAxes = Axes.Both }
+            );
         }
 
         protected override void AddNestedHitObject(DrawableHitObject hitObject)

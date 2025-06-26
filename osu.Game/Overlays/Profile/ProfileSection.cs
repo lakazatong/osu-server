@@ -48,12 +48,9 @@ namespace osu.Game.Overlays.Profile
                         Type = EdgeEffectType.Shadow,
                         Offset = new Vector2(0, 1),
                         Radius = 3,
-                        Colour = Colour4.Black.Opacity(0.25f)
+                        Colour = Colour4.Black.Opacity(0.25f),
                     },
-                    Child = background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = background = new Box { RelativeSizeAxes = Axes.Both },
                 },
                 new FillFlowContainer
                 {
@@ -67,7 +64,8 @@ namespace osu.Game.Overlays.Profile
                             AutoSizeAxes = Axes.Both,
                             Margin = new MarginPadding
                             {
-                                Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING - outer_gutter_width,
+                                Horizontal =
+                                    WaveOverlayContainer.HORIZONTAL_PADDING - outer_gutter_width,
                                 Top = 20,
                                 Bottom = 20,
                             },
@@ -85,8 +83,8 @@ namespace osu.Game.Overlays.Profile
                                     Margin = new MarginPadding { Top = 4 },
                                     RelativeSizeAxes = Axes.X,
                                     Height = 2,
-                                }
-                            }
+                                },
+                            },
                         },
                         // reverse ID flow is required for correct Z-ordering of the content (last item should be front-most).
                         // particularly important in BeatmapsSection, as it uses beatmap cards, which have expandable overhanging content.
@@ -97,12 +95,13 @@ namespace osu.Game.Overlays.Profile
                             RelativeSizeAxes = Axes.X,
                             Padding = new MarginPadding
                             {
-                                Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING - outer_gutter_width,
-                                Bottom = 20
-                            }
+                                Horizontal =
+                                    WaveOverlayContainer.HORIZONTAL_PADDING - outer_gutter_width,
+                                Bottom = 20,
+                            },
                         },
                     },
-                }
+                },
             };
         }
 

@@ -15,7 +15,5 @@ namespace osu.Game.Skinning
     /// More commonly, a ruleset could make use of <see cref="SkinComponentLookup{T}"/> to do a simple lookup based on
     /// a provided enum.
     /// </remarks>
-    public interface ISkinComponentLookup
-    {
-    }
+    public interface ISkinComponentLookup { }
 }

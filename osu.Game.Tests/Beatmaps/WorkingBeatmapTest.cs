@@ -41,12 +41,21 @@ namespace osu.Game.Tests.Beatmaps
             var loadStarted = new ManualResetEventSlim();
             var loadCompleted = new ManualResetEventSlim();
 
-            Task.Factory.StartNew(() =>
-            {
-                loadStarted.Set();
-                Assert.Throws<OperationCanceledException>(() => working.GetPlayableBeatmap(new OsuRuleset().RulesetInfo, Array.Empty<Mod>(), cts.Token));
-                loadCompleted.Set();
-            }, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(
+                () =>
+                {
+                    loadStarted.Set();
+                    Assert.Throws<OperationCanceledException>(() =>
+                        working.GetPlayableBeatmap(
+                            new OsuRuleset().RulesetInfo,
+                            Array.Empty<Mod>(),
+                            cts.Token
+                        )
+                    );
+                    loadCompleted.Set();
+                },
+                TaskCreationOptions.LongRunning
+            );
 
             Assert.IsTrue(loadStarted.Wait(10000));
 
@@ -62,7 +71,10 @@ namespace osu.Game.Tests.Beatmaps
         {
             var working = new TestNeverLoadsWorkingBeatmap();
 
-            Assert.Throws(Is.InstanceOf<TimeoutException>(), () => working.GetPlayableBeatmap(new OsuRuleset().RulesetInfo));
+            Assert.Throws(
+                Is.InstanceOf<TimeoutException>(),
+                () => working.GetPlayableBeatmap(new OsuRuleset().RulesetInfo)
+            );
 
             working.ResetEvent.Set();
         }
@@ -83,11 +95,12 @@ namespace osu.Game.Tests.Beatmaps
             public ManualResetEventSlim ResetEvent = new ManualResetEventSlim();
 
             public TestNeverLoadsWorkingBeatmap()
-                : base(new Beatmap())
-            {
-            }
+                : base(new Beatmap()) { }
 
-            protected override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap, Ruleset ruleset) => new TestConverter(beatmap, ResetEvent);
+            protected override IBeatmapConverter CreateBeatmapConverter(
+                IBeatmap beatmap,
+                Ruleset ruleset
+            ) => new TestConverter(beatmap, ResetEvent);
 
             public class TestConverter : IBeatmapConverter
             {

@@ -10,22 +10,27 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     public partial class AccuracyChangeRow : RankingChangeRow<double>
     {
         public AccuracyChangeRow()
-            : base(stats => stats.Accuracy)
-        {
-        }
+            : base(stats => stats.Accuracy) { }
 
         protected override LocalisableString Label => UsersStrings.ShowStatsHitAccuracy;
 
-        protected override LocalisableString FormatCurrentValue(double current) => (current / 100).FormatAccuracy();
+        protected override LocalisableString FormatCurrentValue(double current) =>
+            (current / 100).FormatAccuracy();
 
-        protected override int CalculateDifference(double previous, double current, out LocalisableString formattedDifference)
+        protected override int CalculateDifference(
+            double previous,
+            double current,
+            out LocalisableString formattedDifference
+        )
         {
             double difference = (current - previous) / 100;
 
             if (difference < 0)
                 formattedDifference = difference.FormatAccuracy();
             else if (difference > 0)
-                formattedDifference = LocalisableString.Interpolate($@"+{difference.FormatAccuracy()}");
+                formattedDifference = LocalisableString.Interpolate(
+                    $@"+{difference.FormatAccuracy()}"
+                );
             else
                 formattedDifference = string.Empty;
 

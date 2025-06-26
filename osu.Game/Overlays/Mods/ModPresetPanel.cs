@@ -18,7 +18,11 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Overlays.Mods
 {
-    public partial class ModPresetPanel : ModSelectPanel, IHasCustomTooltip<ModPreset>, IHasContextMenu, IHasPopover
+    public partial class ModPresetPanel
+        : ModSelectPanel,
+            IHasCustomTooltip<ModPreset>,
+            IHasContextMenu,
+            IHasPopover
     {
         public readonly Live<ModPreset> Preset;
 
@@ -58,8 +62,10 @@ namespace osu.Game.Overlays.Mods
             // this implicitly presumes that if a system mod declares incompatibility with a non-system mod,
             // the non-system mod should take precedence.
             // if this assumption is ever broken, this should be reconsidered.
-            var selectedSystemMods = selectedMods.Value.Where(mod => mod.Type == ModType.System &&
-                                                                     !mod.IncompatibleMods.Any(t => Preset.Value.Mods.Any(t.IsInstanceOfType)));
+            var selectedSystemMods = selectedMods.Value.Where(mod =>
+                mod.Type == ModType.System
+                && !mod.IncompatibleMods.Any(t => Preset.Value.Mods.Any(t.IsInstanceOfType))
+            );
 
             // will also have the side effect of activating the preset (see `updateActiveState()`).
             selectedMods.Value = Preset.Value.Mods.Concat(selectedSystemMods).ToArray();
@@ -80,7 +86,9 @@ namespace osu.Game.Overlays.Mods
 
         private void updateActiveState()
         {
-            Active.Value = new HashSet<Mod>(Preset.Value.Mods).SetEquals(selectedMods.Value.Where(mod => mod.Type != ModType.System));
+            Active.Value = new HashSet<Mod>(Preset.Value.Mods).SetEquals(
+                selectedMods.Value.Where(mod => mod.Type != ModType.System)
+            );
         }
 
         #region Filtering support
@@ -107,17 +115,27 @@ namespace osu.Game.Overlays.Mods
         #region IHasCustomTooltip
 
         public ModPreset TooltipContent => Preset.Value;
+
         public ITooltip<ModPreset> GetCustomTooltip() => new ModPresetTooltip(ColourProvider);
 
         #endregion
 
         #region IHasContextMenu
 
-        public MenuItem[] ContextMenuItems => new MenuItem[]
-        {
-            new OsuMenuItem(CommonStrings.ButtonsEdit, MenuItemType.Highlighted, this.ShowPopover),
-            new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => dialogOverlay?.Push(new DeleteModPresetDialog(Preset))),
-        };
+        public MenuItem[] ContextMenuItems =>
+            new MenuItem[]
+            {
+                new OsuMenuItem(
+                    CommonStrings.ButtonsEdit,
+                    MenuItemType.Highlighted,
+                    this.ShowPopover
+                ),
+                new OsuMenuItem(
+                    CommonStrings.ButtonsDelete,
+                    MenuItemType.Destructive,
+                    () => dialogOverlay?.Push(new DeleteModPresetDialog(Preset))
+                ),
+            };
 
         #endregion
 

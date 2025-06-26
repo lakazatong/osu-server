@@ -25,7 +25,7 @@ namespace osu.Game.Screens.Edit.Setup
                 comboColours = new FormColourPalette
                 {
                     Caption = EditorSetupStrings.HitCircleSliderCombos,
-                }
+                },
             };
         }
 
@@ -40,45 +40,55 @@ namespace osu.Game.Screens.Edit.Setup
             {
                 // compare ctor of `EditorBeatmapSkin`
                 for (int i = 0; i < SkinConfiguration.DefaultComboColours.Count; ++i)
-                    comboColours.Colours.Add(SkinConfiguration.DefaultComboColours[(i + 1) % SkinConfiguration.DefaultComboColours.Count]);
+                    comboColours.Colours.Add(
+                        SkinConfiguration.DefaultComboColours[
+                            (i + 1) % SkinConfiguration.DefaultComboColours.Count
+                        ]
+                    );
             }
 
-            comboColours.Colours.BindCollectionChanged((_, _) =>
-            {
-                if (Beatmap.BeatmapSkin != null)
+            comboColours.Colours.BindCollectionChanged(
+                (_, _) =>
+                {
+                    if (Beatmap.BeatmapSkin != null)
+                    {
+                        if (syncingColours)
+                            return;
+
+                        syncingColours = true;
+
+                        Beatmap.BeatmapSkin.ComboColours.Clear();
+                        Beatmap.BeatmapSkin.ComboColours.AddRange(comboColours.Colours);
+
+                        updateAddButtonVisibility();
+
+                        syncingColours = false;
+                    }
+                }
+            );
+
+            Beatmap.BeatmapSkin?.ComboColours.BindCollectionChanged(
+                (_, _) =>
                 {
                     if (syncingColours)
                         return;
 
                     syncingColours = true;
 
-                    Beatmap.BeatmapSkin.ComboColours.Clear();
-                    Beatmap.BeatmapSkin.ComboColours.AddRange(comboColours.Colours);
+                    comboColours.Colours.Clear();
+                    comboColours.Colours.AddRange(Beatmap.BeatmapSkin?.ComboColours);
 
                     updateAddButtonVisibility();
 
                     syncingColours = false;
                 }
-            });
-
-            Beatmap.BeatmapSkin?.ComboColours.BindCollectionChanged((_, _) =>
-            {
-                if (syncingColours)
-                    return;
-
-                syncingColours = true;
-
-                comboColours.Colours.Clear();
-                comboColours.Colours.AddRange(Beatmap.BeatmapSkin?.ComboColours);
-
-                updateAddButtonVisibility();
-
-                syncingColours = false;
-            });
+            );
 
             updateAddButtonVisibility();
 
-            void updateAddButtonVisibility() => comboColours.CanAdd.Value = comboColours.Colours.Count < LegacyBeatmapDecoder.MAX_COMBO_COLOUR_COUNT;
+            void updateAddButtonVisibility() =>
+                comboColours.CanAdd.Value =
+                    comboColours.Colours.Count < LegacyBeatmapDecoder.MAX_COMBO_COLOUR_COUNT;
         }
     }
 }

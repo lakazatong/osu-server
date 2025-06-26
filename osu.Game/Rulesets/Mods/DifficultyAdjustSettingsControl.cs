@@ -29,9 +29,11 @@ namespace osu.Game.Rulesets.Mods
         /// </remarks>
         private readonly BindableNumber<float> sliderDisplayCurrent = new BindableNumber<float>();
 
-        protected sealed override Drawable CreateControl() => new SliderControl(sliderDisplayCurrent, CreateSlider);
+        protected sealed override Drawable CreateControl() =>
+            new SliderControl(sliderDisplayCurrent, CreateSlider);
 
-        protected virtual RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) => new RoundedSliderBar<float>();
+        protected virtual RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) =>
+            new RoundedSliderBar<float>();
 
         /// <summary>
         /// Guards against beatmap values displayed on slider bars being transferred to user override.
@@ -94,7 +96,8 @@ namespace osu.Game.Rulesets.Mods
         {
             // This is required as SettingsItem relies heavily on this bindable for internal use.
             // The actual update flow is done via the bindable provided in the constructor.
-            private readonly DifficultyBindableWithCurrent current = new DifficultyBindableWithCurrent();
+            private readonly DifficultyBindableWithCurrent current =
+                new DifficultyBindableWithCurrent();
 
             public Bindable<float?> Current
             {
@@ -102,25 +105,29 @@ namespace osu.Game.Rulesets.Mods
                 set => current.Current = value;
             }
 
-            public SliderControl(BindableNumber<float> currentNumber, Func<BindableNumber<float>, RoundedSliderBar<float>> createSlider)
+            public SliderControl(
+                BindableNumber<float> currentNumber,
+                Func<BindableNumber<float>, RoundedSliderBar<float>> createSlider
+            )
             {
                 InternalChildren = new Drawable[]
                 {
-                    createSlider(currentNumber).With(slider =>
-                    {
-                        slider.RelativeSizeAxes = Axes.X;
-                        slider.Current = currentNumber;
-                        slider.KeyboardStep = 0.1f;
-                        // this looks redundant, but isn't because of the various games this component plays
-                        // (`Current` is nullable and represents the underlying setting value,
-                        // `currentNumber` is not nullable and represents what is getting displayed,
-                        // therefore without this, double-clicking the slider would reset `currentNumber` to its bogus default of 0).
-                        slider.ResetToDefault = () =>
+                    createSlider(currentNumber)
+                        .With(slider =>
                         {
-                            if (!Current.Disabled)
-                                Current.SetDefault();
-                        };
-                    })
+                            slider.RelativeSizeAxes = Axes.X;
+                            slider.Current = currentNumber;
+                            slider.KeyboardStep = 0.1f;
+                            // this looks redundant, but isn't because of the various games this component plays
+                            // (`Current` is nullable and represents the underlying setting value,
+                            // `currentNumber` is not nullable and represents what is getting displayed,
+                            // therefore without this, double-clicking the slider would reset `currentNumber` to its bogus default of 0).
+                            slider.ResetToDefault = () =>
+                            {
+                                if (!Current.Disabled)
+                                    Current.SetDefault();
+                            };
+                        }),
                 };
 
                 AutoSizeAxes = Axes.Y;
@@ -139,17 +146,17 @@ namespace osu.Game.Rulesets.Mods
                 {
                     ArgumentNullException.ThrowIfNull(value);
 
-                    if (currentBound != null) UnbindFrom(currentBound);
+                    if (currentBound != null)
+                        UnbindFrom(currentBound);
                     BindTo(currentBound = value);
                 }
             }
 
             public DifficultyBindableWithCurrent(float? defaultValue = default)
-                : base(defaultValue)
-            {
-            }
+                : base(defaultValue) { }
 
-            protected override Bindable<float?> CreateInstance() => new DifficultyBindableWithCurrent();
+            protected override Bindable<float?> CreateInstance() =>
+                new DifficultyBindableWithCurrent();
         }
     }
 }

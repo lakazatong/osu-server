@@ -29,35 +29,52 @@ namespace osu.Game.Rulesets.Mania.Tests
             return beatmap;
         }
 
-        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods) => new ScoreV1(MaxCombo.Value, selectedMods);
-        protected override IScoringAlgorithm CreateScoreV2(int maxCombo, IReadOnlyList<Mod> selectedMods) => new ScoreV2(maxCombo, selectedMods);
+        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods) =>
+            new ScoreV1(MaxCombo.Value, selectedMods);
 
-        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
-            => new ManiaProcessorBasedScoringAlgorithm(beatmap, mode, selectedMods);
+        protected override IScoringAlgorithm CreateScoreV2(
+            int maxCombo,
+            IReadOnlyList<Mod> selectedMods
+        ) => new ScoreV2(maxCombo, selectedMods);
+
+        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(
+            IBeatmap beatmap,
+            ScoringMode mode,
+            IReadOnlyList<Mod> selectedMods
+        ) => new ManiaProcessorBasedScoringAlgorithm(beatmap, mode, selectedMods);
 
         [Test]
         public void TestBasicScenarios()
         {
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
-            AddStep("set perfect score", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-            });
-            AddStep("set score with misses", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-                MissLocations.AddRange(new[] { 24d, 49 });
-            });
-            AddStep("set score with misses and OKs", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
+            AddStep(
+                "set perfect score",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                }
+            );
+            AddStep(
+                "set score with misses",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                    MissLocations.AddRange(new[] { 24d, 49 });
+                }
+            );
+            AddStep(
+                "set score with misses and OKs",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
 
-                NonPerfectLocations.AddRange(new[] { 9d, 19, 29, 39, 59, 69, 79, 89, 99 });
-                MissLocations.AddRange(new[] { 24d, 49 });
-            });
+                    NonPerfectLocations.AddRange(new[] { 9d, 19, 29, 39, 59, 69, 79, 89, 99 });
+                    MissLocations.AddRange(new[] { 24d, 49 });
+                }
+            );
         }
 
         private class ScoreV1 : IScoringAlgorithm
@@ -72,17 +89,31 @@ namespace osu.Game.Rulesets.Mania.Tests
             {
                 var ruleset = new ManiaRuleset();
 
-                scoreMultiplier = 500000d / maxCombo * ruleset.CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(selectedMods, new LegacyBeatmapConversionDifficultyInfo
-                {
-                    SourceRuleset = ruleset.RulesetInfo
-                });
+                scoreMultiplier =
+                    500000d
+                    / maxCombo
+                    * ruleset
+                        .CreateLegacyScoreSimulator()
+                        .GetLegacyScoreMultiplier(
+                            selectedMods,
+                            new LegacyBeatmapConversionDifficultyInfo
+                            {
+                                SourceRuleset = ruleset.RulesetInfo,
+                            }
+                        );
             }
 
             public void ApplyHit() => applyHitV1(320, add => add + 2, 32);
+
             public void ApplyNonPerfect() => applyHitV1(100, add => add - 24, 8);
+
             public void ApplyMiss() => applyHitV1(0, _ => -56, 0);
 
-            private void applyHitV1(int scoreIncrease, Func<double, double> comboAdditionFunc, int delta)
+            private void applyHitV1(
+                int scoreIncrease,
+                Func<double, double> comboAdditionFunc,
+                int delta
+            )
             {
                 comboAddition = comboAdditionFunc(comboAddition);
                 if (currentCombo != 0 && currentCombo % 384 == 0)
@@ -124,12 +155,15 @@ namespace osu.Game.Rulesets.Mania.Tests
                 this.maxCombo = maxCombo;
 
                 var ruleset = new ManiaRuleset();
-                modMultiplier = new ManiaRuleset().CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(
-                    selectedMods.Append(new ModScoreV2()).ToArray(),
-                    new LegacyBeatmapConversionDifficultyInfo
-                    {
-                        SourceRuleset = ruleset.RulesetInfo
-                    });
+                modMultiplier = new ManiaRuleset()
+                    .CreateLegacyScoreSimulator()
+                    .GetLegacyScoreMultiplier(
+                        selectedMods.Append(new ModScoreV2()).ToArray(),
+                        new LegacyBeatmapConversionDifficultyInfo
+                        {
+                            SourceRuleset = ruleset.RulesetInfo,
+                        }
+                    );
 
                 for (int i = 0; i < this.maxCombo; i++)
                     ApplyHit();
@@ -144,13 +178,19 @@ namespace osu.Game.Rulesets.Mania.Tests
             }
 
             public void ApplyHit() => applyHitV2(305, 300);
+
             public void ApplyNonPerfect() => applyHitV2(100, 100);
 
             private void applyHitV2(int hitValue, int baseHitValue)
             {
                 maxBaseScore += 305;
                 currentBaseScore += hitValue;
-                comboPortion += baseHitValue * Math.Min(Math.Max(0.5, Math.Log(++currentCombo, combo_base)), Math.Log(400, combo_base));
+                comboPortion +=
+                    baseHitValue
+                    * Math.Min(
+                        Math.Max(0.5, Math.Log(++currentCombo, combo_base)),
+                        Math.Log(400, combo_base)
+                    );
 
                 currentHits++;
             }
@@ -168,29 +208,38 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     float accuracy = (float)(currentBaseScore / maxBaseScore);
 
-                    return (int)Math.Round
-                    ((
-                        200000 * comboPortion / comboPortionMax +
-                        800000 * Math.Pow(accuracy, 2 + 2 * accuracy) * ((double)currentHits / maxCombo)
-                    ) * modMultiplier);
+                    return (int)
+                        Math.Round(
+                            (
+                                200000 * comboPortion / comboPortionMax
+                                + 800000
+                                    * Math.Pow(accuracy, 2 + 2 * accuracy)
+                                    * ((double)currentHits / maxCombo)
+                            ) * modMultiplier
+                        );
                 }
             }
         }
 
         private class ManiaProcessorBasedScoringAlgorithm : ProcessorBasedScoringAlgorithm
         {
-            public ManiaProcessorBasedScoringAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
-                : base(beatmap, mode, selectedMods)
-            {
-            }
+            public ManiaProcessorBasedScoringAlgorithm(
+                IBeatmap beatmap,
+                ScoringMode mode,
+                IReadOnlyList<Mod> selectedMods
+            )
+                : base(beatmap, mode, selectedMods) { }
 
             protected override ScoreProcessor CreateScoreProcessor() => new ManiaScoreProcessor();
 
-            protected override JudgementResult CreatePerfectJudgementResult() => new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Perfect };
+            protected override JudgementResult CreatePerfectJudgementResult() =>
+                new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Perfect };
 
-            protected override JudgementResult CreateNonPerfectJudgementResult() => new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Ok };
+            protected override JudgementResult CreateNonPerfectJudgementResult() =>
+                new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Ok };
 
-            protected override JudgementResult CreateMissJudgementResult() => new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Miss };
+            protected override JudgementResult CreateMissJudgementResult() =>
+                new JudgementResult(new Note(), new ManiaJudgement()) { Type = HitResult.Miss };
         }
     }
 }

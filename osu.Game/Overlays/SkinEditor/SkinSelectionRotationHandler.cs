@@ -23,7 +23,8 @@ namespace osu.Game.Overlays.SkinEditor
         [Resolved]
         private IEditorChangeHandler? changeHandler { get; set; }
 
-        private BindableList<ISerialisableDrawable> selectedItems { get; } = new BindableList<ISerialisableDrawable>();
+        private BindableList<ISerialisableDrawable> selectedItems { get; } =
+            new BindableList<ISerialisableDrawable>();
 
         [BackgroundDependencyLoader]
         private void load(SkinEditor skinEditor)
@@ -52,14 +53,25 @@ namespace osu.Game.Overlays.SkinEditor
         public override void Begin()
         {
             if (objectsInRotation != null)
-                throw new InvalidOperationException($"Cannot {nameof(Begin)} a rotate operation while another is in progress!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Begin)} a rotate operation while another is in progress!"
+                );
 
             changeHandler?.BeginChange();
 
             objectsInRotation = selectedItems.Cast<Drawable>().ToArray();
             originalRotations = objectsInRotation.ToDictionary(d => d, d => d.Rotation);
-            originalPositions = objectsInRotation.ToDictionary(d => d, d => d.ToScreenSpace(d.OriginPosition));
-            DefaultOrigin = GeometryUtils.GetSurroundingQuad(objectsInRotation.SelectMany(d => ToLocalSpace(d.ScreenSpaceDrawQuad).GetVertices().ToArray())).Centre;
+            originalPositions = objectsInRotation.ToDictionary(
+                d => d,
+                d => d.ToScreenSpace(d.OriginPosition)
+            );
+            DefaultOrigin = GeometryUtils
+                .GetSurroundingQuad(
+                    objectsInRotation.SelectMany(d =>
+                        ToLocalSpace(d.ScreenSpaceDrawQuad).GetVertices().ToArray()
+                    )
+                )
+                .Centre;
 
             base.Begin();
         }
@@ -67,9 +79,13 @@ namespace osu.Game.Overlays.SkinEditor
         public override void Update(float rotation, Vector2? origin = null)
         {
             if (objectsInRotation == null)
-                throw new InvalidOperationException($"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!"
+                );
 
-            Debug.Assert(originalRotations != null && originalPositions != null && DefaultOrigin != null);
+            Debug.Assert(
+                originalRotations != null && originalPositions != null && DefaultOrigin != null
+            );
 
             if (objectsInRotation.Length == 1 && origin == null)
             {
@@ -82,7 +98,11 @@ namespace osu.Game.Overlays.SkinEditor
 
             foreach (var drawableItem in objectsInRotation)
             {
-                var rotatedPosition = GeometryUtils.RotatePointAroundOrigin(originalPositions[drawableItem], actualOrigin, rotation);
+                var rotatedPosition = GeometryUtils.RotatePointAroundOrigin(
+                    originalPositions[drawableItem],
+                    actualOrigin,
+                    rotation
+                );
                 UpdatePosition(drawableItem, rotatedPosition);
 
                 drawableItem.Rotation = originalRotations[drawableItem] + rotation;
@@ -92,7 +112,9 @@ namespace osu.Game.Overlays.SkinEditor
         public override void Commit()
         {
             if (objectsInRotation == null)
-                throw new InvalidOperationException($"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!"
+                );
 
             changeHandler?.EndChange();
 

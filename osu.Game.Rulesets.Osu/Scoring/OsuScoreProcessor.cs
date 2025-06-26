@@ -12,11 +12,12 @@ namespace osu.Game.Rulesets.Osu.Scoring
     public partial class OsuScoreProcessor : ScoreProcessor
     {
         public OsuScoreProcessor()
-            : base(new OsuRuleset())
-        {
-        }
+            : base(new OsuRuleset()) { }
 
-        public override ScoreRank RankFromScore(double accuracy, IReadOnlyDictionary<HitResult, int> results)
+        public override ScoreRank RankFromScore(
+            double accuracy,
+            IReadOnlyDictionary<HitResult, int> results
+        )
         {
             ScoreRank rank = base.RankFromScore(accuracy, results);
 
@@ -32,7 +33,8 @@ namespace osu.Game.Rulesets.Osu.Scoring
             return rank;
         }
 
-        protected override HitEvent CreateHitEvent(JudgementResult result)
-            => base.CreateHitEvent(result).With((result as OsuHitCircleJudgementResult)?.CursorPositionAtHit);
+        protected override HitEvent CreateHitEvent(JudgementResult result) =>
+            base.CreateHitEvent(result)
+                .With((result as OsuHitCircleJudgementResult)?.CursorPositionAtHit);
     }
 }

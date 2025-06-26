@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
         {
             base.Update();
 
-            if (!IsSelected) return;
+            if (!IsSelected)
+                return;
 
             outline.Position = CatchHitObjectUtils.GetStartPosition(HitObjectContainer, HitObject);
             outline.UpdateFrom(HitObject);

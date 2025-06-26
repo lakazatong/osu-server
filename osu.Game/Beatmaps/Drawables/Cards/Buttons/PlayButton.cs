@@ -51,12 +51,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Icon = FontAwesome.Solid.Play,
-                    Size = new Vector2(14)
+                    Size = new Vector2(14),
                 },
-                loadingSpinner = new LoadingSpinner
-                {
-                    Size = new Vector2(14)
-                }
+                loadingSpinner = new LoadingSpinner { Size = new Vector2(14) },
             };
 
             Action = () => Playing.Toggle();
@@ -79,7 +76,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
         {
             base.Update();
 
-            icon.Scale = new Vector2(DrawWidth / (BeatmapCardNormal.HEIGHT - BeatmapCard.CORNER_RADIUS));
+            icon.Scale = new Vector2(
+                DrawWidth / (BeatmapCardNormal.HEIGHT - BeatmapCard.CORNER_RADIUS)
+            );
 
             if (Playing.Value && previewTrack != null && previewTrack.TrackLoaded)
                 progress.Value = previewTrack.CurrentTime / previewTrack.Length;
@@ -101,7 +100,10 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
             {
                 toggleLoading(true);
 
-                LoadComponentAsync(previewTrack = previewTrackManager.Get(beatmapSetInfo), onPreviewLoaded);
+                LoadComponentAsync(
+                    previewTrack = previewTrackManager.Get(beatmapSetInfo),
+                    onPreviewLoaded
+                );
             }
             else
                 tryStartPreview();

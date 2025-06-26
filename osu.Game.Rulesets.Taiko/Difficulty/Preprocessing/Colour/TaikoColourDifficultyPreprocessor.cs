@@ -29,7 +29,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
                 // documentation.
                 for (int i = 0; i < repeatingHitPattern.AlternatingMonoPatterns.Count; ++i)
                 {
-                    AlternatingMonoPattern monoPattern = repeatingHitPattern.AlternatingMonoPatterns[i];
+                    AlternatingMonoPattern monoPattern =
+                        repeatingHitPattern.AlternatingMonoPatterns[i];
                     monoPattern.Parent = repeatingHitPattern;
                     monoPattern.Index = i;
 
@@ -56,8 +57,12 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
         private static List<RepeatingHitPatterns> encode(List<DifficultyHitObject> data)
         {
             List<MonoStreak> monoStreaks = encodeMonoStreak(data);
-            List<AlternatingMonoPattern> alternatingMonoPatterns = encodeAlternatingMonoPattern(monoStreaks);
-            List<RepeatingHitPatterns> repeatingHitPatterns = encodeRepeatingHitPattern(alternatingMonoPatterns);
+            List<AlternatingMonoPattern> alternatingMonoPatterns = encodeAlternatingMonoPattern(
+                monoStreaks
+            );
+            List<RepeatingHitPatterns> repeatingHitPatterns = encodeRepeatingHitPattern(
+                alternatingMonoPatterns
+            );
 
             return repeatingHitPatterns;
         }
@@ -78,7 +83,12 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
                 TaikoDifficultyHitObject? previousObject = taikoObject.PreviousNote(0);
 
                 // If this is the first object in the list or the colour changed, create a new mono streak
-                if (currentMonoStreak == null || previousObject == null || (taikoObject.BaseObject as Hit)?.Type != (previousObject.BaseObject as Hit)?.Type)
+                if (
+                    currentMonoStreak == null
+                    || previousObject == null
+                    || (taikoObject.BaseObject as Hit)?.Type
+                        != (previousObject.BaseObject as Hit)?.Type
+                )
                 {
                     currentMonoStreak = new MonoStreak();
                     monoStreaks.Add(currentMonoStreak);
@@ -94,7 +104,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
         /// <summary>
         /// Encodes a list of <see cref="MonoStreak"/>s into a list of <see cref="AlternatingMonoPattern"/>s.
         /// </summary>
-        private static List<AlternatingMonoPattern> encodeAlternatingMonoPattern(List<MonoStreak> data)
+        private static List<AlternatingMonoPattern> encodeAlternatingMonoPattern(
+            List<MonoStreak> data
+        )
         {
             List<AlternatingMonoPattern> monoPatterns = new List<AlternatingMonoPattern>();
             AlternatingMonoPattern? currentMonoPattern = null;
@@ -118,7 +130,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
         /// <summary>
         /// Encodes a list of <see cref="AlternatingMonoPattern"/>s into a list of <see cref="RepeatingHitPatterns"/>s.
         /// </summary>
-        private static List<RepeatingHitPatterns> encodeRepeatingHitPattern(List<AlternatingMonoPattern> data)
+        private static List<RepeatingHitPatterns> encodeRepeatingHitPattern(
+            List<AlternatingMonoPattern> data
+        )
         {
             List<RepeatingHitPatterns> hitPatterns = new List<RepeatingHitPatterns>();
             RepeatingHitPatterns? currentHitPattern = null;

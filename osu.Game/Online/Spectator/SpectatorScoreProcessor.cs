@@ -32,7 +32,11 @@ namespace osu.Game.Online.Spectator
         /// <summary>
         /// The current accuracy.
         /// </summary>
-        public readonly BindableDouble Accuracy = new BindableDouble(1) { MinValue = 0, MaxValue = 1 };
+        public readonly BindableDouble Accuracy = new BindableDouble(1)
+        {
+            MinValue = 0,
+            MaxValue = 1,
+        };
 
         /// <summary>
         /// The current combo.
@@ -54,7 +58,8 @@ namespace osu.Game.Online.Spectator
         /// </summary>
         public IReadOnlyList<Mod> Mods => scoreInfo?.Mods ?? Array.Empty<Mod>();
 
-        public Func<ScoringMode, long> GetDisplayScore => mode => scoreInfo?.GetDisplayScore(mode) ?? 0;
+        public Func<ScoringMode, long> GetDisplayScore =>
+            mode => scoreInfo?.GetDisplayScore(mode) ?? 0;
 
         private IClock? referenceClock;
 
@@ -73,7 +78,8 @@ namespace osu.Game.Online.Spectator
         [Resolved]
         private RulesetStore rulesetStore { get; set; } = null!;
 
-        private readonly IBindableDictionary<int, SpectatorState> spectatorStates = new BindableDictionary<int, SpectatorState>();
+        private readonly IBindableDictionary<int, SpectatorState> spectatorStates =
+            new BindableDictionary<int, SpectatorState>();
         private readonly List<TimedFrame> replayFrames = new List<TimedFrame>();
         private readonly int userId;
 
@@ -97,9 +103,16 @@ namespace osu.Game.Online.Spectator
             spectatorClient.OnNewFrames += onNewFrames;
         }
 
-        private void onSpectatorStatesChanged(object? sender, NotifyDictionaryChangedEventArgs<int, SpectatorState> e)
+        private void onSpectatorStatesChanged(
+            object? sender,
+            NotifyDictionaryChangedEventArgs<int, SpectatorState> e
+        )
         {
-            if (!spectatorStates.TryGetValue(userId, out var userState) || userState.BeatmapID == null || userState.RulesetID == null)
+            if (
+                !spectatorStates.TryGetValue(userId, out var userState)
+                || userState.BeatmapID == null
+                || userState.RulesetID == null
+            )
             {
                 scoreInfo = null;
                 spectatorState = null;
@@ -120,7 +133,7 @@ namespace osu.Game.Online.Spectator
             scoreInfo = new ScoreInfo
             {
                 Ruleset = rulesetInfo,
-                Mods = userState.Mods.Select(m => m.ToMod(ruleset)).ToArray()
+                Mods = userState.Mods.Select(m => m.ToMod(ruleset)).ToArray(),
             };
         }
 

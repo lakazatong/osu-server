@@ -13,8 +13,13 @@ namespace osu.Game.Screens.Play.HUD
 {
     public abstract partial class GameplayAccuracyCounter : PercentageCounter
     {
-        [SettingSource(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplay), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayDescription))]
-        public Bindable<AccuracyDisplayMode> AccuracyDisplay { get; } = new Bindable<AccuracyDisplayMode>();
+        [SettingSource(
+            typeof(GameplayAccuracyCounterStrings),
+            nameof(GameplayAccuracyCounterStrings.AccuracyDisplay),
+            nameof(GameplayAccuracyCounterStrings.AccuracyDisplayDescription)
+        )]
+        public Bindable<AccuracyDisplayMode> AccuracyDisplay { get; } =
+            new Bindable<AccuracyDisplayMode>();
 
         [Resolved]
         private ScoreProcessor scoreProcessor { get; set; } = null!;
@@ -23,25 +28,28 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.LoadComplete();
 
-            AccuracyDisplay.BindValueChanged(mode =>
-            {
-                Current.UnbindBindings();
-
-                switch (mode.NewValue)
+            AccuracyDisplay.BindValueChanged(
+                mode =>
                 {
-                    case AccuracyDisplayMode.Standard:
-                        Current.BindTo(scoreProcessor.Accuracy);
-                        break;
+                    Current.UnbindBindings();
 
-                    case AccuracyDisplayMode.MinimumAchievable:
-                        Current.BindTo(scoreProcessor.MinimumAccuracy);
-                        break;
+                    switch (mode.NewValue)
+                    {
+                        case AccuracyDisplayMode.Standard:
+                            Current.BindTo(scoreProcessor.Accuracy);
+                            break;
 
-                    case AccuracyDisplayMode.MaximumAchievable:
-                        Current.BindTo(scoreProcessor.MaximumAccuracy);
-                        break;
-                }
-            }, true);
+                        case AccuracyDisplayMode.MinimumAchievable:
+                            Current.BindTo(scoreProcessor.MinimumAccuracy);
+                            break;
+
+                        case AccuracyDisplayMode.MaximumAchievable:
+                            Current.BindTo(scoreProcessor.MaximumAccuracy);
+                            break;
+                    }
+                },
+                true
+            );
 
             // if the accuracy counter is using the "minimum achievable" mode,
             // then its initial value is 0%, rather than the 100% that the base PercentageCounter assumes.
@@ -52,14 +60,23 @@ namespace osu.Game.Screens.Play.HUD
 
         public enum AccuracyDisplayMode
         {
-            [LocalisableDescription(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeStandard))]
+            [LocalisableDescription(
+                typeof(GameplayAccuracyCounterStrings),
+                nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeStandard)
+            )]
             Standard,
 
-            [LocalisableDescription(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMax))]
+            [LocalisableDescription(
+                typeof(GameplayAccuracyCounterStrings),
+                nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMax)
+            )]
             MaximumAchievable,
 
-            [LocalisableDescription(typeof(GameplayAccuracyCounterStrings), nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMin))]
-            MinimumAchievable
+            [LocalisableDescription(
+                typeof(GameplayAccuracyCounterStrings),
+                nameof(GameplayAccuracyCounterStrings.AccuracyDisplayModeMin)
+            )]
+            MinimumAchievable,
         }
     }
 }

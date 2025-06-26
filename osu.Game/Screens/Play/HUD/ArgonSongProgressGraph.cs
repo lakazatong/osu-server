@@ -8,8 +8,8 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Screens.Play.HUD
 {
@@ -32,7 +32,9 @@ namespace osu.Game.Screens.Play.HUD
                 if (!objects.Any())
                     return;
 
-                (double firstHit, double lastHit) = BeatmapExtensions.CalculatePlayableBounds(objects);
+                (double firstHit, double lastHit) = BeatmapExtensions.CalculatePlayableBounds(
+                    objects
+                );
 
                 if (lastHit == 0)
                     lastHit = objects.Last().StartTime;

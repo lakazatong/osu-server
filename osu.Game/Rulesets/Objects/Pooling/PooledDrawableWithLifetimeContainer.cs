@@ -19,7 +19,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
     /// </summary>
     /// <typeparam name="TEntry">The type of entries managed by this container.</typeparam>
     /// <typeparam name="TDrawable">The type of drawables corresponding to the entries.</typeparam>
-    public abstract partial class PooledDrawableWithLifetimeContainer<TEntry, TDrawable> : CompositeDrawable
+    public abstract partial class PooledDrawableWithLifetimeContainer<TEntry, TDrawable>
+        : CompositeDrawable
         where TEntry : LifetimeEntry
         where TDrawable : Drawable
     {
@@ -55,7 +56,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// </summary>
         internal double FutureLifetimeExtension { get; set; }
 
-        private readonly Dictionary<TEntry, TDrawable> aliveDrawableMap = new Dictionary<TEntry, TDrawable>();
+        private readonly Dictionary<TEntry, TDrawable> aliveDrawableMap =
+            new Dictionary<TEntry, TDrawable>();
         private readonly HashSet<TEntry> allEntries = new HashSet<TEntry>();
 
         private readonly LifetimeEntryManager lifetimeManager = new LifetimeEntryManager();
@@ -90,7 +92,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// <returns>Whether the entry was in this container.</returns>
         public virtual bool Remove(TEntry entry)
         {
-            if (!lifetimeManager.RemoveEntry(entry)) return false;
+            if (!lifetimeManager.RemoveEntry(entry))
+                return false;
 
             allEntries.Remove(entry);
             return true;
@@ -118,7 +121,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// <remarks>
         /// Invoked when the entry became alive and a <typeparamref name="TDrawable"/> is obtained by <see cref="GetDrawable"/>.
         /// </remarks>
-        protected virtual void AddDrawable(TEntry entry, TDrawable drawable) => AddInternal(drawable);
+        protected virtual void AddDrawable(TEntry entry, TDrawable drawable) =>
+            AddInternal(drawable);
 
         private void entryBecameDead(LifetimeEntry lifetimeEntry)
         {
@@ -136,11 +140,20 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// <remarks>
         /// Invoked when the entry became dead.
         /// </remarks>
-        protected virtual void RemoveDrawable(TEntry entry, TDrawable drawable) => RemoveInternal(drawable, false);
+        protected virtual void RemoveDrawable(TEntry entry, TDrawable drawable) =>
+            RemoveInternal(drawable, false);
 
-        private void entryCrossedBoundary(LifetimeEntry lifetimeEntry, LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)
+        private void entryCrossedBoundary(
+            LifetimeEntry lifetimeEntry,
+            LifetimeBoundaryKind kind,
+            LifetimeBoundaryCrossingDirection direction
+        )
         {
-            if (RemoveRewoundEntry && kind == LifetimeBoundaryKind.Start && direction == LifetimeBoundaryCrossingDirection.Backward)
+            if (
+                RemoveRewoundEntry
+                && kind == LifetimeBoundaryKind.Start
+                && direction == LifetimeBoundaryCrossingDirection.Backward
+            )
                 Remove((TEntry)lifetimeEntry);
         }
 
@@ -161,7 +174,10 @@ namespace osu.Game.Rulesets.Objects.Pooling
                 return false;
 
             bool aliveChanged = base.CheckChildrenLife();
-            aliveChanged |= lifetimeManager.Update(Time.Current - PastLifetimeExtension, Time.Current + FutureLifetimeExtension);
+            aliveChanged |= lifetimeManager.Update(
+                Time.Current - PastLifetimeExtension,
+                Time.Current + FutureLifetimeExtension
+            );
             return aliveChanged;
         }
     }

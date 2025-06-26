@@ -30,15 +30,20 @@ namespace osu.Game.Database
         protected virtual bool UseFixedEncoding => true;
 
         protected LegacyArchiveExporter(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
 
-        public override void ExportToStream(TModel model, Stream outputStream, ProgressNotification? notification, CancellationToken cancellationToken = default)
+        public override void ExportToStream(
+            TModel model,
+            Stream outputStream,
+            ProgressNotification? notification,
+            CancellationToken cancellationToken = default
+        )
         {
             var zipWriterOptions = new ZipWriterOptions(CompressionType.Deflate)
             {
-                ArchiveEncoding = UseFixedEncoding ? ZipArchiveReader.DEFAULT_ENCODING : new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8)
+                ArchiveEncoding = UseFixedEncoding
+                    ? ZipArchiveReader.DEFAULT_ENCODING
+                    : new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
             };
 
             using (var writer = new ZipWriter(outputStream, zipWriterOptions))
@@ -55,7 +60,10 @@ namespace osu.Game.Database
                     {
                         if (stream == null)
                         {
-                            Logger.Log($"File {file.Filename} is missing in local storage and will not be included in the export", LoggingTarget.Database);
+                            Logger.Log(
+                                $"File {file.Filename} is missing in local storage and will not be included in the export",
+                                LoggingTarget.Database
+                            );
                             anyFileMissing = true;
                             continue;
                         }
@@ -73,11 +81,16 @@ namespace osu.Game.Database
 
                 if (anyFileMissing)
                 {
-                    Logger.Log("Some files are missing in local storage and will not be included in the export", LoggingTarget.Database, LogLevel.Error);
+                    Logger.Log(
+                        "Some files are missing in local storage and will not be included in the export",
+                        LoggingTarget.Database,
+                        LogLevel.Error
+                    );
                 }
             }
         }
 
-        protected virtual Stream? GetFileContents(TModel model, INamedFileUsage file) => UserFileStorage.GetStream(file.File.GetStoragePath());
+        protected virtual Stream? GetFileContents(TModel model, INamedFileUsage file) =>
+            UserFileStorage.GetStream(file.File.GetStoragePath());
     }
 }

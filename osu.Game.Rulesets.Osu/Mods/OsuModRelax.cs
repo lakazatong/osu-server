@@ -18,12 +18,28 @@ using static osu.Game.Input.Handlers.ReplayInputHandler;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModRelax : ModRelax, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>, IApplicableToPlayer, IHasNoTimedInputs
+    public class OsuModRelax
+        : ModRelax,
+            IUpdatableByPlayfield,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IApplicableToPlayer,
+            IHasNoTimedInputs
     {
-        public override LocalisableString Description => @"You don't need to click. Give your clicking/tapping fingers a break from the heat of things.";
+        public override LocalisableString Description =>
+            @"You don't need to click. Give your clicking/tapping fingers a break from the heat of things.";
 
         public override Type[] IncompatibleMods =>
-            base.IncompatibleMods.Concat(new[] { typeof(OsuModAutopilot), typeof(OsuModMagnetised), typeof(OsuModAlternate), typeof(OsuModSingleTap) }).ToArray();
+            base
+                .IncompatibleMods.Concat(
+                    new[]
+                    {
+                        typeof(OsuModAutopilot),
+                        typeof(OsuModMagnetised),
+                        typeof(OsuModAlternate),
+                        typeof(OsuModSingleTap),
+                    }
+                )
+                .ToArray();
 
         /// <summary>
         /// How early before a hitobject's start time to trigger a hit.
@@ -61,7 +77,9 @@ namespace osu.Game.Rulesets.Osu.Mods
                 Debug.Assert(ruleset.ReplayScore != null);
                 legacyReplay = ruleset.ReplayScore.ScoreInfo.IsLegacyScore;
 
-                pressHandler = legacyReplay ? new LegacyReplayPressHandler(this) : new PressHandler(this);
+                pressHandler = legacyReplay
+                    ? new LegacyReplayPressHandler(this)
+                    : new PressHandler(this);
 
                 return;
             }
@@ -80,7 +98,9 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             double time = playfield.Clock.CurrentTime;
 
-            foreach (var h in playfield.HitObjectContainer.AliveObjects.OfType<DrawableOsuHitObject>())
+            foreach (
+                var h in playfield.HitObjectContainer.AliveObjects.OfType<DrawableOsuHitObject>()
+            )
             {
                 // we are not yet close enough to the object.
                 if (time < h.HitObject.StartTime - RELAX_LENIENCY)
@@ -101,7 +121,9 @@ namespace osu.Game.Rulesets.Osu.Mods
                         if (!slider.HeadCircle.IsHit)
                             handleHitCircle(slider.HeadCircle);
 
-                        requiresHold |= slider.SliderInputManager.IsMouseInFollowArea(slider.Tracking.Value);
+                        requiresHold |= slider.SliderInputManager.IsMouseInFollowArea(
+                            slider.Tracking.Value
+                        );
                         break;
 
                     case DrawableSpinner spinner:
@@ -127,7 +149,9 @@ namespace osu.Game.Rulesets.Osu.Mods
                     return;
 
                 Debug.Assert(circle.HitObject.HitWindows != null);
-                requiresHit |= circle.HitObject.HitWindows.CanBeHit(time - circle.HitObject.StartTime);
+                requiresHit |= circle.HitObject.HitWindows.CanBeHit(
+                    time - circle.HitObject.StartTime
+                );
             }
 
             void changeState(bool down)
@@ -138,10 +162,7 @@ namespace osu.Game.Rulesets.Osu.Mods
                 isDownState = down;
                 lastStateChangeTime = time;
 
-                state = new ReplayState<OsuAction>
-                {
-                    PressedActions = new List<OsuAction>()
-                };
+                state = new ReplayState<OsuAction> { PressedActions = new List<OsuAction>() };
 
                 if (down)
                 {
@@ -172,7 +193,9 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             public void HandlePress(bool wasLeft)
             {
-                mod.state.PressedActions.Add(wasLeft ? OsuAction.LeftButton : OsuAction.RightButton);
+                mod.state.PressedActions.Add(
+                    wasLeft ? OsuAction.LeftButton : OsuAction.RightButton
+                );
                 mod.state.Apply(mod.osuInputManager.CurrentState, mod.osuInputManager);
             }
 
@@ -194,13 +217,17 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             public void HandlePress(bool wasLeft)
             {
-                mod.osuInputManager.KeyBindingContainer.TriggerPressed(wasLeft ? OsuAction.LeftButton : OsuAction.RightButton);
+                mod.osuInputManager.KeyBindingContainer.TriggerPressed(
+                    wasLeft ? OsuAction.LeftButton : OsuAction.RightButton
+                );
             }
 
             public void HandleRelease(bool wasLeft)
             {
                 // this intentionally releases right when `wasLeft` is true because `wasLeft` is set at point of press and not at point of release
-                mod.osuInputManager.KeyBindingContainer.TriggerReleased(wasLeft ? OsuAction.RightButton : OsuAction.LeftButton);
+                mod.osuInputManager.KeyBindingContainer.TriggerReleased(
+                    wasLeft ? OsuAction.RightButton : OsuAction.LeftButton
+                );
             }
         }
     }

@@ -26,7 +26,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             foreach (var attribute in base.GetAttributesForDisplay())
                 yield return attribute;
 
-            yield return new PerformanceDisplayAttribute(nameof(Difficulty), "Difficulty", Difficulty);
+            yield return new PerformanceDisplayAttribute(
+                nameof(Difficulty),
+                "Difficulty",
+                Difficulty
+            );
             yield return new PerformanceDisplayAttribute(nameof(Accuracy), "Accuracy", Accuracy);
         }
     }

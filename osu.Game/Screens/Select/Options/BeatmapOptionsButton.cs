@@ -10,11 +10,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Graphics;
+using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Graphics.Containers;
-using osu.Game.Graphics.UserInterface;
 
 namespace osu.Game.Screens.Select.Options
 {
@@ -74,7 +74,8 @@ namespace osu.Game.Screens.Select.Options
             return base.OnClick(e);
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => box.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            box.ReceivePositionalInputAt(screenSpacePos);
 
         public BeatmapOptionsButton()
             : base(HoverSampleSet.Button)
@@ -132,10 +133,7 @@ namespace osu.Game.Screens.Select.Options
                             Size = new Vector2(30),
                             Shadow = true,
                             Icon = FontAwesome.Solid.TimesCircle,
-                            Margin = new MarginPadding
-                            {
-                                Bottom = 5,
-                            },
+                            Margin = new MarginPadding { Bottom = 5 },
                         },
                         firstLine = new OsuSpriteText
                         {

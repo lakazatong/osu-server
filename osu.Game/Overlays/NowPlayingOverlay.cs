@@ -49,7 +49,8 @@ namespace osu.Game.Overlays
         private MusicIconButton shuffleButton = null!;
         private IconButton playlistButton = null!;
 
-        private MarqueeContainer title = null!, artist = null!;
+        private MarqueeContainer title = null!,
+            artist = null!;
 
         private PlaylistOverlay? playlist;
 
@@ -72,7 +73,11 @@ namespace osu.Game.Overlays
         private readonly BindableBool shuffle = new BindableBool(true);
 
         private static readonly FontUsage title_font = OsuFont.GetFont(size: 25, italics: true);
-        private static readonly FontUsage artist_font = OsuFont.GetFont(size: 15, weight: FontWeight.Bold, italics: true);
+        private static readonly FontUsage artist_font = OsuFont.GetFont(
+            size: 15,
+            weight: FontWeight.Bold,
+            italics: true
+        );
 
         public NowPlayingOverlay()
         {
@@ -113,13 +118,14 @@ namespace osu.Game.Overlays
                                     Anchor = Anchor.TopCentre,
                                     Position = new Vector2(0, 40),
                                     Colour = Color4.White,
-                                    CreateContent = () => new OsuSpriteText
-                                    {
-                                        Font = title_font,
-                                        Text = @"Nothing to play",
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                    },
+                                    CreateContent = () =>
+                                        new OsuSpriteText
+                                        {
+                                            Font = title_font,
+                                            Text = @"Nothing to play",
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
                                     NonOverflowingContentAnchor = Anchor.Centre,
                                 },
                                 artist = new MarqueeContainer
@@ -128,13 +134,14 @@ namespace osu.Game.Overlays
                                     Anchor = Anchor.TopCentre,
                                     Position = new Vector2(0, 45),
                                     Colour = Color4.White,
-                                    CreateContent = () => new OsuSpriteText
-                                    {
-                                        Font = artist_font,
-                                        Text = @"Nothing to play",
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                    },
+                                    CreateContent = () =>
+                                        new OsuSpriteText
+                                        {
+                                            Font = artist_font,
+                                            Text = @"Nothing to play",
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
                                     NonOverflowingContentAnchor = Anchor.Centre,
                                 },
                                 new Container
@@ -178,7 +185,7 @@ namespace osu.Game.Overlays
                                                     Action = () => musicController.NextTrack(),
                                                     Icon = FontAwesome.Solid.StepForward,
                                                 },
-                                            }
+                                            },
                                         },
                                         shuffleButton = new MusicIconButton
                                         {
@@ -192,11 +199,14 @@ namespace osu.Game.Overlays
                                         {
                                             Origin = Anchor.Centre,
                                             Anchor = Anchor.CentreRight,
-                                            Position = new Vector2(-bottom_black_area_height / 2, 0),
+                                            Position = new Vector2(
+                                                -bottom_black_area_height / 2,
+                                                0
+                                            ),
                                             Icon = FontAwesome.Solid.Bars,
-                                            Action = togglePlaylist
+                                            Action = togglePlaylist,
                                         },
-                                    }
+                                    },
                                 },
                                 progressBar = new HoverableProgressBar
                                 {
@@ -205,16 +215,16 @@ namespace osu.Game.Overlays
                                     Height = progress_height / 2,
                                     FillColour = colours.Yellow,
                                     BackgroundColour = colours.YellowDarker.Opacity(0.5f),
-                                    OnSeek = musicController.SeekTo
-                                }
+                                    OnSeek = musicController.SeekTo,
+                                },
                             },
                         },
                         playlistContainer = new Container
                         {
                             RelativeSizeAxes = Axes.X,
                             Y = player_height + margin,
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -223,17 +233,27 @@ namespace osu.Game.Overlays
         {
             if (playlist == null)
             {
-                LoadComponentAsync(playlist = new PlaylistOverlay
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }, _ =>
-                {
-                    playlistContainer.Add(playlist);
+                LoadComponentAsync(
+                    playlist = new PlaylistOverlay { RelativeSizeAxes = Axes.Both },
+                    _ =>
+                    {
+                        playlistContainer.Add(playlist);
 
-                    playlist.State.BindValueChanged(s => playlistButton.FadeColour(s.NewValue == Visibility.Visible ? colours.Yellow : Color4.White, 200, Easing.OutQuint), true);
+                        playlist.State.BindValueChanged(
+                            s =>
+                                playlistButton.FadeColour(
+                                    s.NewValue == Visibility.Visible
+                                        ? colours.Yellow
+                                        : Color4.White,
+                                    200,
+                                    Easing.OutQuint
+                                ),
+                            true
+                        );
 
-                    togglePlaylist();
-                });
+                        togglePlaylist();
+                    }
+                );
 
                 return;
             }
@@ -252,7 +272,15 @@ namespace osu.Game.Overlays
             allowTrackControl.BindValueChanged(_ => Scheduler.AddOnce(updateEnabledStates), true);
 
             shuffle.BindTo(musicController.Shuffle);
-            shuffle.BindValueChanged(s => shuffleButton.FadeColour(s.NewValue ? colours.Yellow : Color4.White, 200, Easing.OutQuint), true);
+            shuffle.BindValueChanged(
+                s =>
+                    shuffleButton.FadeColour(
+                        s.NewValue ? colours.Yellow : Color4.White,
+                        200,
+                        Easing.OutQuint
+                    ),
+                true
+            );
 
             musicController.TrackChanged += trackChanged;
             trackChanged(beatmap.Value);
@@ -276,7 +304,10 @@ namespace osu.Game.Overlays
         {
             base.UpdateAfterChildren();
 
-            playlistContainer.Height = MathF.Min(Parent!.DrawHeight - margin * 3 - player_height, PlaylistOverlay.PLAYLIST_HEIGHT);
+            playlistContainer.Height = MathF.Min(
+                Parent!.DrawHeight - margin * 3 - player_height,
+                PlaylistOverlay.PLAYLIST_HEIGHT
+            );
 
             float height = player_height;
 
@@ -307,7 +338,9 @@ namespace osu.Game.Overlays
                 progressBar.EndTime = track.Length;
                 progressBar.CurrentTime = track.CurrentTime;
 
-                playButton.Icon = track.IsRunning ? FontAwesome.Regular.PauseCircle : FontAwesome.Regular.PlayCircle;
+                playButton.Icon = track.IsRunning
+                    ? FontAwesome.Regular.PauseCircle
+                    : FontAwesome.Regular.PlayCircle;
             }
             else
             {
@@ -323,7 +356,10 @@ namespace osu.Game.Overlays
 
         private WorkingBeatmap? currentBeatmap;
 
-        private void trackChanged(WorkingBeatmap beatmap, TrackChangeDirection direction = TrackChangeDirection.None)
+        private void trackChanged(
+            WorkingBeatmap beatmap,
+            TrackChangeDirection direction = TrackChangeDirection.None
+        )
         {
             currentBeatmap = beatmap;
 
@@ -332,51 +368,57 @@ namespace osu.Game.Overlays
             {
                 BeatmapMetadata metadata = beatmap.Metadata;
 
-                title.CreateContent = () => new OsuSpriteText
-                {
-                    Text = new RomanisableString(metadata.TitleUnicode, metadata.Title),
-                    Font = title_font,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                };
-                artist.CreateContent = () => new OsuSpriteText
-                {
-                    Text = new RomanisableString(metadata.ArtistUnicode, metadata.Artist),
-                    Font = artist_font,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                };
+                title.CreateContent = () =>
+                    new OsuSpriteText
+                    {
+                        Text = new RomanisableString(metadata.TitleUnicode, metadata.Title),
+                        Font = title_font,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    };
+                artist.CreateContent = () =>
+                    new OsuSpriteText
+                    {
+                        Text = new RomanisableString(metadata.ArtistUnicode, metadata.Artist),
+                        Font = artist_font,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    };
 
                 backgroundLoadCancellation?.Cancel();
 
-                LoadComponentAsync(new Background(beatmap) { Depth = float.MaxValue }, newBackground =>
-                {
-                    if (beatmap != currentBeatmap)
+                LoadComponentAsync(
+                    new Background(beatmap) { Depth = float.MaxValue },
+                    newBackground =>
                     {
-                        newBackground.Dispose();
-                        return;
-                    }
+                        if (beatmap != currentBeatmap)
+                        {
+                            newBackground.Dispose();
+                            return;
+                        }
 
-                    switch (direction)
-                    {
-                        case TrackChangeDirection.Next:
-                            newBackground.Position = new Vector2(player_width, 0);
-                            newBackground.MoveToX(0, 500, Easing.OutCubic);
-                            background.MoveToX(-player_width, 500, Easing.OutCubic);
-                            break;
+                        switch (direction)
+                        {
+                            case TrackChangeDirection.Next:
+                                newBackground.Position = new Vector2(player_width, 0);
+                                newBackground.MoveToX(0, 500, Easing.OutCubic);
+                                background.MoveToX(-player_width, 500, Easing.OutCubic);
+                                break;
 
-                        case TrackChangeDirection.Prev:
-                            newBackground.Position = new Vector2(-player_width, 0);
-                            newBackground.MoveToX(0, 500, Easing.OutCubic);
-                            background.MoveToX(player_width, 500, Easing.OutCubic);
-                            break;
-                    }
+                            case TrackChangeDirection.Prev:
+                                newBackground.Position = new Vector2(-player_width, 0);
+                                newBackground.MoveToX(0, 500, Easing.OutCubic);
+                                background.MoveToX(player_width, 500, Easing.OutCubic);
+                                break;
+                        }
 
-                    background.Expire();
-                    background = newBackground;
+                        background.Expire();
+                        background = newBackground;
 
-                    playerContainer.Add(newBackground);
-                }, (backgroundLoadCancellation = new CancellationTokenSource()).Token);
+                        playerContainer.Add(newBackground);
+                    },
+                    (backgroundLoadCancellation = new CancellationTokenSource()).Token
+                );
             };
         }
 
@@ -455,8 +497,8 @@ namespace osu.Game.Overlays
                         Height = bottom_black_area_height,
                         Origin = Anchor.BottomCentre,
                         Anchor = Anchor.BottomCentre,
-                        Colour = Color4.Black.Opacity(0.5f)
-                    }
+                        Colour = Color4.Black.Opacity(0.5f),
+                    },
                 };
             }
 
@@ -494,9 +536,7 @@ namespace osu.Game.Overlays
         private partial class HoverableProgressBar : ProgressBar
         {
             public HoverableProgressBar()
-                : base(true)
-            {
-            }
+                : base(true) { }
 
             protected override bool OnHover(HoverEvent e)
             {

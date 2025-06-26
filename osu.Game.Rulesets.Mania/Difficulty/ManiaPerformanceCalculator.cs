@@ -22,11 +22,12 @@ namespace osu.Game.Rulesets.Mania.Difficulty
         private double scoreAccuracy;
 
         public ManiaPerformanceCalculator()
-            : base(new ManiaRuleset())
-        {
-        }
+            : base(new ManiaRuleset()) { }
 
-        protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
+        protected override PerformanceAttributes CreatePerformanceAttributes(
+            ScoreInfo score,
+            DifficultyAttributes attributes
+        )
         {
             var maniaAttributes = (ManiaDifficultyAttributes)attributes;
 
@@ -51,20 +52,23 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             return new ManiaPerformanceAttributes
             {
                 Difficulty = difficultyValue,
-                Total = totalValue
+                Total = totalValue,
             };
         }
 
         private double computeDifficultyValue(ManiaDifficultyAttributes attributes)
         {
-            double difficultyValue = 8.0 * Math.Pow(Math.Max(attributes.StarRating - 0.15, 0.05), 2.2) // Star rating to pp curve
-                                         * Math.Max(0, 5 * scoreAccuracy - 4) // From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
-                                         * (1 + 0.1 * Math.Min(1, totalHits / 1500)); // Length bonus, capped at 1500 notes
+            double difficultyValue =
+                8.0
+                * Math.Pow(Math.Max(attributes.StarRating - 0.15, 0.05), 2.2) // Star rating to pp curve
+                * Math.Max(0, 5 * scoreAccuracy - 4) // From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
+                * (1 + 0.1 * Math.Min(1, totalHits / 1500)); // Length bonus, capped at 1500 notes
 
             return difficultyValue;
         }
 
-        private double totalHits => countPerfect + countOk + countGreat + countGood + countMeh + countMiss;
+        private double totalHits =>
+            countPerfect + countOk + countGreat + countGood + countMeh + countMiss;
 
         /// <summary>
         /// Accuracy used to weight judgements independently from the score's actual accuracy.
@@ -74,7 +78,13 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             if (totalHits == 0)
                 return 0;
 
-            return (countPerfect * 320 + countGreat * 300 + countGood * 200 + countOk * 100 + countMeh * 50) / (totalHits * 320);
+            return (
+                    countPerfect * 320
+                    + countGreat * 300
+                    + countGood * 200
+                    + countOk * 100
+                    + countMeh * 50
+                ) / (totalHits * 320);
         }
     }
 }

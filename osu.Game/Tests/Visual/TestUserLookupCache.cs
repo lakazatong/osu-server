@@ -16,16 +16,17 @@ namespace osu.Game.Tests.Visual
         /// </summary>
         public const int UNRESOLVED_USER_ID = -1;
 
-        protected override Task<APIUser?> ComputeValueAsync(int lookup, CancellationToken token = default)
+        protected override Task<APIUser?> ComputeValueAsync(
+            int lookup,
+            CancellationToken token = default
+        )
         {
             if (lookup == UNRESOLVED_USER_ID)
                 return Task.FromResult<APIUser?>(null);
 
-            return Task.FromResult<APIUser?>(new APIUser
-            {
-                Id = lookup,
-                Username = $"User {lookup}"
-            });
+            return Task.FromResult<APIUser?>(
+                new APIUser { Id = lookup, Username = $"User {lookup}" }
+            );
         }
     }
 }

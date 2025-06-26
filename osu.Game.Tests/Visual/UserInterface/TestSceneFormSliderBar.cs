@@ -17,7 +17,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneFormSliderBar : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [Test]
         public void TestTransferValueOnCommit()
@@ -25,39 +27,48 @@ namespace osu.Game.Tests.Visual.UserInterface
             OsuSpriteText text;
             FormSliderBar<float> slider = null!;
 
-            AddStep("create content", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 0.5f,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(10),
-                    Children = new Drawable[]
+                    Child = new FillFlowContainer
                     {
-                        text = new OsuSpriteText(),
-                        slider = new FormSliderBar<float>
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 0.5f,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(10),
+                        Children = new Drawable[]
                         {
-                            Caption = "Slider",
-                            Current = new BindableFloat
+                            text = new OsuSpriteText(),
+                            slider = new FormSliderBar<float>
                             {
-                                MinValue = 0,
-                                MaxValue = 10,
-                                Precision = 0.1f,
-                                Default = 5f,
-                            }
+                                Caption = "Slider",
+                                Current = new BindableFloat
+                                {
+                                    MinValue = 0,
+                                    MaxValue = 10,
+                                    Precision = 0.1f,
+                                    Default = 5f,
+                                },
+                            },
                         },
-                    }
-                };
-                slider.Current.BindValueChanged(_ => text.Text = $"Current value is: {slider.Current.Value}", true);
-            });
-            AddToggleStep("toggle transfer value on commit", b =>
-            {
-                if (slider.IsNotNull())
-                    slider.TransferValueOnCommit = b;
-            });
+                    };
+                    slider.Current.BindValueChanged(
+                        _ => text.Text = $"Current value is: {slider.Current.Value}",
+                        true
+                    );
+                }
+            );
+            AddToggleStep(
+                "toggle transfer value on commit",
+                b =>
+                {
+                    if (slider.IsNotNull())
+                        slider.TransferValueOnCommit = b;
+                }
+            );
         }
     }
 }

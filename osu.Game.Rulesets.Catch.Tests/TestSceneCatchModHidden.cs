@@ -22,25 +22,32 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Test]
         public void TestJuiceStream()
         {
-            CreateModTest(new ModTestData
-            {
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = new List<HitObject>
-                    {
-                        new JuiceStream
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            StartTime = 1000,
-                            Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(0, -192) }),
-                            X = CatchPlayfield.WIDTH / 2
-                        }
-                    }
-                },
-                Mod = new CatchModHidden(),
-                PassCondition = () => Player.Results.Count > 0
-                                      && Player.ChildrenOfType<DrawableJuiceStream>().Single().Alpha > 0
-                                      && Player.ChildrenOfType<DrawableFruit>().First().Alpha > 0
-            });
+                            HitObjects = new List<HitObject>
+                            {
+                                new JuiceStream
+                                {
+                                    StartTime = 1000,
+                                    Path = new SliderPath(
+                                        PathType.LINEAR,
+                                        new[] { Vector2.Zero, new Vector2(0, -192) }
+                                    ),
+                                    X = CatchPlayfield.WIDTH / 2,
+                                },
+                            },
+                        },
+                    Mod = new CatchModHidden(),
+                    PassCondition = () =>
+                        Player.Results.Count > 0
+                        && Player.ChildrenOfType<DrawableJuiceStream>().Single().Alpha > 0
+                        && Player.ChildrenOfType<DrawableFruit>().First().Alpha > 0,
+                }
+            );
         }
 
         protected override Ruleset CreatePlayerRuleset() => new CatchRuleset();

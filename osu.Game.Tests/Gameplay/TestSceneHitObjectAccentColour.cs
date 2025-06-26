@@ -47,13 +47,16 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject hitObject = null;
 
-            AddStep("set combo and add hitobject", () =>
-            {
-                hitObject = new TestDrawableHitObject();
-                hitObject.HitObject.ComboIndex = 1;
+            AddStep(
+                "set combo and add hitobject",
+                () =>
+                {
+                    hitObject = new TestDrawableHitObject();
+                    hitObject.HitObject.ComboIndex = 1;
 
-                skinContainer.Add(hitObject);
-            });
+                    skinContainer.Add(hitObject);
+                }
+            );
 
             AddAssert("combo colour is green", () => hitObject.AccentColour.Value == Color4.Green);
         }
@@ -63,11 +66,14 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject hitObject = null;
 
-            AddStep("add hitobject and set combo", () =>
-            {
-                skinContainer.Add(hitObject = new TestDrawableHitObject());
-                hitObject.HitObject.ComboIndex = 1;
-            });
+            AddStep(
+                "add hitobject and set combo",
+                () =>
+                {
+                    skinContainer.Add(hitObject = new TestDrawableHitObject());
+                    hitObject.HitObject.ComboIndex = 1;
+                }
+            );
 
             AddAssert("combo colour is green", () => hitObject.AccentColour.Value == Color4.Green);
         }
@@ -77,7 +83,10 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject hitObject = null;
 
-            AddStep("add hitobject", () => skinContainer.Add(hitObject = new TestDrawableHitObject()));
+            AddStep(
+                "add hitobject",
+                () => skinContainer.Add(hitObject = new TestDrawableHitObject())
+            );
             AddAssert("combo colour is red", () => hitObject.AccentColour.Value == Color4.Red);
 
             AddStep("change combo", () => hitObject.HitObject.ComboIndex = 1);
@@ -87,9 +96,7 @@ namespace osu.Game.Tests.Gameplay
         private partial class TestDrawableHitObject : DrawableHitObject<TestHitObjectWithCombo>
         {
             public TestDrawableHitObject()
-                : base(new TestHitObjectWithCombo())
-            {
-            }
+                : base(new TestHitObjectWithCombo()) { }
         }
 
         private class TestHitObjectWithCombo : ConvertHitObject, IHasComboInformation
@@ -132,12 +139,17 @@ namespace osu.Game.Tests.Gameplay
             public readonly List<Color4> ComboColours = new List<Color4>
             {
                 Color4.Red,
-                Color4.Green
+                Color4.Green,
             };
 
-            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) => throw new NotImplementedException();
+            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) =>
+                throw new NotImplementedException();
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => throw new NotImplementedException();
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => throw new NotImplementedException();
 
             public ISample GetSample(ISampleInfo sampleInfo) => throw new NotImplementedException();
 
@@ -146,7 +158,11 @@ namespace osu.Game.Tests.Gameplay
                 switch (lookup)
                 {
                     case SkinComboColourLookup comboColour:
-                        return SkinUtils.As<TValue>(new Bindable<Color4>(ComboColours[comboColour.ColourIndex % ComboColours.Count]));
+                        return SkinUtils.As<TValue>(
+                            new Bindable<Color4>(
+                                ComboColours[comboColour.ColourIndex % ComboColours.Count]
+                            )
+                        );
                 }
 
                 throw new NotImplementedException();

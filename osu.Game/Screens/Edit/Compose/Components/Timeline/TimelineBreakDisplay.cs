@@ -43,22 +43,30 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             breaks.UnbindAll();
             breaks.BindTo(beatmap.Breaks);
-            breaks.BindCollectionChanged((_, e) =>
-            {
-                if (e.Action != NotifyCollectionChangedAction.Replace)
-                    breakCache.Invalidate();
-            });
+            breaks.BindCollectionChanged(
+                (_, e) =>
+                {
+                    if (e.Action != NotifyCollectionChangedAction.Replace)
+                        breakCache.Invalidate();
+                }
+            );
         }
 
         protected override void Update()
         {
             base.Update();
 
-            if (DrawWidth <= 0) return;
+            if (DrawWidth <= 0)
+                return;
 
             (float, float) newRange = (
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X) / DrawWidth * Content.RelativeChildSize.X,
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X) / DrawWidth * Content.RelativeChildSize.X);
+                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X)
+                    / DrawWidth
+                    * Content.RelativeChildSize.X,
+                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X)
+                    / DrawWidth
+                    * Content.RelativeChildSize.X
+            );
 
             if (visibleRange != newRange)
             {
@@ -87,18 +95,21 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 if (!shouldBeVisible(breakPeriod))
                     continue;
 
-                Add(new TimelineBreak(breakPeriod)
-                {
-                    OnDeleted = b =>
+                Add(
+                    new TimelineBreak(breakPeriod)
                     {
-                        editorChangeHandler?.BeginChange();
-                        breaks.Remove(b);
-                        editorChangeHandler?.EndChange();
-                    },
-                });
+                        OnDeleted = b =>
+                        {
+                            editorChangeHandler?.BeginChange();
+                            breaks.Remove(b);
+                            editorChangeHandler?.EndChange();
+                        },
+                    }
+                );
             }
         }
 
-        private bool shouldBeVisible(BreakPeriod breakPeriod) => breakPeriod.EndTime >= visibleRange.min && breakPeriod.StartTime <= visibleRange.max;
+        private bool shouldBeVisible(BreakPeriod breakPeriod) =>
+            breakPeriod.EndTime >= visibleRange.min && breakPeriod.StartTime <= visibleRange.max;
     }
 }

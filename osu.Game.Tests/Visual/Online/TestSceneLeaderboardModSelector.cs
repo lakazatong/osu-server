@@ -1,22 +1,22 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Overlays.BeatmapSet;
 using System.Collections.Specialized;
 using System.Linq;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Osu;
-using osu.Game.Rulesets.Mania;
-using osu.Game.Rulesets.Taiko;
-using osu.Game.Rulesets.Catch;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Extensions.IEnumerableExtensions;
-using osu.Framework.Bindables;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Overlays.BeatmapSet;
 using osu.Game.Rulesets;
+using osu.Game.Rulesets.Catch;
+using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Osu;
+using osu.Game.Rulesets.Taiko;
 
 namespace osu.Game.Tests.Visual.Online
 {
@@ -29,42 +29,49 @@ namespace osu.Game.Tests.Visual.Online
 
             var ruleset = new Bindable<IRulesetInfo?>();
 
-            Add(selectedMods = new FillFlowContainer<SpriteText>
-            {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
-            });
+            Add(
+                selectedMods = new FillFlowContainer<SpriteText>
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                }
+            );
 
-            Add(modSelector = new LeaderboardModSelector
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Ruleset = { BindTarget = ruleset }
-            });
+            Add(
+                modSelector = new LeaderboardModSelector
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Ruleset = { BindTarget = ruleset },
+                }
+            );
 
             modSelector.SelectedMods.CollectionChanged += (_, args) =>
             {
                 switch (args.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        args.NewItems.AsNonNull().Cast<Mod>().ForEach(mod => selectedMods.Add(new OsuSpriteText
-                        {
-                            Text = mod.Acronym,
-                        }));
+                        args.NewItems.AsNonNull()
+                            .Cast<Mod>()
+                            .ForEach(mod =>
+                                selectedMods.Add(new OsuSpriteText { Text = mod.Acronym })
+                            );
                         break;
 
                     case NotifyCollectionChangedAction.Remove:
-                        args.OldItems.AsNonNull().Cast<Mod>().ForEach(mod =>
-                        {
-                            foreach (var selected in selectedMods)
+                        args.OldItems.AsNonNull()
+                            .Cast<Mod>()
+                            .ForEach(mod =>
                             {
-                                if (selected.Text == mod.Acronym)
+                                foreach (var selected in selectedMods)
                                 {
-                                    selectedMods.Remove(selected, true);
-                                    break;
+                                    if (selected.Text == mod.Acronym)
+                                    {
+                                        selectedMods.Remove(selected, true);
+                                        break;
+                                    }
                                 }
-                            }
-                        });
+                            });
                         break;
                 }
             };

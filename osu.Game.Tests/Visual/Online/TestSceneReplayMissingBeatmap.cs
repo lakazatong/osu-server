@@ -30,23 +30,29 @@ namespace osu.Game.Tests.Visual.Online
                     Artist = "xi",
                     Covers = new BeatmapSetOnlineCovers
                     {
-                        Card = "https://assets.ppy.sh/beatmaps/173612/covers/card@2x.jpg"
+                        Card = "https://assets.ppy.sh/beatmaps/173612/covers/card@2x.jpg",
                     },
-                    OnlineID = 173612
-                }
+                    OnlineID = 173612,
+                },
             };
 
             setupBeatmapResponse(beatmap);
 
-            AddStep("import score", () =>
-            {
-                var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
-                var importTask = new ImportTask(resourceStream, "replay.osr");
+            AddStep(
+                "import score",
+                () =>
+                {
+                    var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
+                    var importTask = new ImportTask(resourceStream, "replay.osr");
 
-                Game.ScoreManager.Import(new[] { importTask });
-            });
+                    Game.ScoreManager.Import(new[] { importTask });
+                }
+            );
 
-            AddUntilStep("Replay missing notification shown", () => Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
+            AddUntilStep(
+                "Replay missing notification shown",
+                () => Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any()
+            );
         }
 
         [Test]
@@ -54,40 +60,52 @@ namespace osu.Game.Tests.Visual.Online
         {
             setupFailedResponse();
 
-            AddStep("import score", () =>
-            {
-                var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
-                var importTask = new ImportTask(resourceStream, "replay.osr");
+            AddStep(
+                "import score",
+                () =>
+                {
+                    var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
+                    var importTask = new ImportTask(resourceStream, "replay.osr");
 
-                Game.ScoreManager.Import(new[] { importTask });
-            });
+                    Game.ScoreManager.Import(new[] { importTask });
+                }
+            );
 
-            AddUntilStep("Replay missing notification not shown", () => !Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
+            AddUntilStep(
+                "Replay missing notification not shown",
+                () => !Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any()
+            );
         }
 
-        private void setupBeatmapResponse(APIBeatmap b)
-            => AddStep("setup response", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+        private void setupBeatmapResponse(APIBeatmap b) =>
+            AddStep(
+                "setup response",
+                () =>
                 {
-                    if (request is GetBeatmapRequest getBeatmapRequest)
+                    dummyAPI.HandleRequest = request =>
                     {
-                        getBeatmapRequest.TriggerSuccess(b);
-                        return true;
-                    }
+                        if (request is GetBeatmapRequest getBeatmapRequest)
+                        {
+                            getBeatmapRequest.TriggerSuccess(b);
+                            return true;
+                        }
 
-                    return false;
-                };
-            });
+                        return false;
+                    };
+                }
+            );
 
-        private void setupFailedResponse()
-            => AddStep("setup failed response", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+        private void setupFailedResponse() =>
+            AddStep(
+                "setup failed response",
+                () =>
                 {
-                    request.TriggerFailure(new WebException());
-                    return true;
-                };
-            });
+                    dummyAPI.HandleRequest = request =>
+                    {
+                        request.TriggerFailure(new WebException());
+                        return true;
+                    };
+                }
+            );
     }
 }

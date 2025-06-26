@@ -9,9 +9,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
     public partial class PlayerSettingsGroup : SettingsToolboxGroup
     {
         public PlayerSettingsGroup(string title)
-            : base(title)
-        {
-        }
+            : base(title) { }
 
         protected override bool OnHover(HoverEvent e)
         {

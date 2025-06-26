@@ -101,9 +101,7 @@ namespace osu.Game.Rulesets.Mods
         }
 
         public DifficultyBindable()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DifficultyBindable(float? defaultValue = null)
             : base(defaultValue)
@@ -119,10 +117,22 @@ namespace osu.Game.Rulesets.Mods
                 // Ensure that in the case serialisation runs in the wrong order (and limit extensions aren't applied yet) the deserialised value is still propagated.
                 if (value != null)
                 {
-                    CurrentNumber.MinValue = Math.Clamp(MathF.Min(CurrentNumber.MinValue, value.Value), ExtendedMinValue ?? MinValue, MinValue);
-                    CurrentNumber.MaxValue = Math.Clamp(MathF.Max(CurrentNumber.MaxValue, value.Value), MaxValue, ExtendedMaxValue ?? MaxValue);
+                    CurrentNumber.MinValue = Math.Clamp(
+                        MathF.Min(CurrentNumber.MinValue, value.Value),
+                        ExtendedMinValue ?? MinValue,
+                        MinValue
+                    );
+                    CurrentNumber.MaxValue = Math.Clamp(
+                        MathF.Max(CurrentNumber.MaxValue, value.Value),
+                        MaxValue,
+                        ExtendedMaxValue ?? MaxValue
+                    );
 
-                    base.Value = Math.Clamp(value.Value, CurrentNumber.MinValue, CurrentNumber.MaxValue);
+                    base.Value = Math.Clamp(
+                        value.Value,
+                        CurrentNumber.MinValue,
+                        CurrentNumber.MaxValue
+                    );
                 }
                 else
                     base.Value = value;
@@ -131,14 +141,22 @@ namespace osu.Game.Rulesets.Mods
 
         private void updateExtents()
         {
-            CurrentNumber.MinValue = ExtendedLimits.Value && extendedMinValue != null ? extendedMinValue.Value : minValue;
-            CurrentNumber.MaxValue = ExtendedLimits.Value && extendedMaxValue != null ? extendedMaxValue.Value : maxValue;
+            CurrentNumber.MinValue =
+                ExtendedLimits.Value && extendedMinValue != null
+                    ? extendedMinValue.Value
+                    : minValue;
+            CurrentNumber.MaxValue =
+                ExtendedLimits.Value && extendedMaxValue != null
+                    ? extendedMaxValue.Value
+                    : maxValue;
         }
 
         public override void CopyTo(Bindable<float?> them)
         {
             if (!(them is DifficultyBindable otherDifficultyBindable))
-                throw new InvalidOperationException($"Cannot copy to a non-{nameof(DifficultyBindable)}.");
+                throw new InvalidOperationException(
+                    $"Cannot copy to a non-{nameof(DifficultyBindable)}."
+                );
 
             base.CopyTo(them);
 
@@ -154,7 +172,9 @@ namespace osu.Game.Rulesets.Mods
         public override void BindTo(Bindable<float?> them)
         {
             if (!(them is DifficultyBindable otherDifficultyBindable))
-                throw new InvalidOperationException($"Cannot bind to a non-{nameof(DifficultyBindable)}.");
+                throw new InvalidOperationException(
+                    $"Cannot bind to a non-{nameof(DifficultyBindable)}."
+                );
 
             // ensure that MaxValue and ExtendedMaxValue are copied across first before continuing.
             // not doing so may cause the value of CurrentNumber to be truncated to 10.
@@ -174,7 +194,9 @@ namespace osu.Game.Rulesets.Mods
         public override void UnbindFrom(IUnbindable them)
         {
             if (!(them is DifficultyBindable otherDifficultyBindable))
-                throw new InvalidOperationException($"Cannot unbind from a non-{nameof(DifficultyBindable)}.");
+                throw new InvalidOperationException(
+                    $"Cannot unbind from a non-{nameof(DifficultyBindable)}."
+                );
 
             base.UnbindFrom(them);
 

@@ -36,6 +36,7 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps.Formats;
+using osu.Game.BellaFiora;
 using osu.Game.Configuration;
 using osu.Game.Database;
 using osu.Game.Extensions;
@@ -64,7 +65,6 @@ using osu.Game.Scoring;
 using osu.Game.Skinning;
 using osu.Game.Utils;
 using RuntimeInfo = osu.Framework.RuntimeInfo;
-using osu.Game.BellaFiora;
 
 namespace osu.Game
 {
@@ -106,11 +106,14 @@ namespace osu.Game
         public virtual bool UseDevelopmentServer => DebugUtils.IsDebugBuild;
 
         public virtual EndpointConfiguration CreateEndpoints() =>
-            UseDevelopmentServer ? new DevelopmentEndpointConfiguration() : new ProductionEndpointConfiguration();
+            UseDevelopmentServer
+                ? new DevelopmentEndpointConfiguration()
+                : new ProductionEndpointConfiguration();
 
         protected override OnlineStore CreateOnlineStore() => new TrustedDomainOnlineStore();
 
-        public virtual Version AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
+        public virtual Version AssemblyVersion =>
+            Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
 
         /// <summary>
         /// MD5 representation of the game executable.
@@ -126,9 +129,10 @@ namespace osu.Game
                 if (!IsDeployedBuild)
                     return @"local " + (DebugUtils.IsDebugBuild ? @"debug" : @"release");
 
-                string informationalVersion = Assembly.GetEntryAssembly()?
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion;
+                string informationalVersion = Assembly
+                    .GetEntryAssembly()
+                    ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    ?.InformationalVersion;
 
                 // Example: [assembly: AssemblyInformationalVersion("2025.613.0-tachyon+d934e574b2539e8787956c3c9ecce9dadebb10ee")]
                 if (!string.IsNullOrEmpty(informationalVersion))
@@ -197,12 +201,17 @@ namespace osu.Game
         /// </remarks>
         [Cached]
         [Cached(typeof(IBindable<IReadOnlyList<Mod>>))]
-        protected readonly Bindable<IReadOnlyList<Mod>> SelectedMods = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        protected readonly Bindable<IReadOnlyList<Mod>> SelectedMods = new Bindable<
+            IReadOnlyList<Mod>
+        >(Array.Empty<Mod>());
 
         /// <summary>
         /// Mods available for the current <see cref="Ruleset"/>.
         /// </summary>
-        public readonly Bindable<Dictionary<ModType, IReadOnlyList<Mod>>> AvailableMods = new Bindable<Dictionary<ModType, IReadOnlyList<Mod>>>(new Dictionary<ModType, IReadOnlyList<Mod>>());
+        public readonly Bindable<Dictionary<ModType, IReadOnlyList<Mod>>> AvailableMods =
+            new Bindable<Dictionary<ModType, IReadOnlyList<Mod>>>(
+                new Dictionary<ModType, IReadOnlyList<Mod>>()
+            );
 
         private BeatmapDifficultyCache difficultyCache;
         private IBeatmapUpdater beatmapUpdater;
@@ -229,7 +238,10 @@ namespace osu.Game
         /// For now, this is used as a source specifically for beat synced components.
         /// Going forward, it could potentially be used as the single source-of-truth for beatmap timing.
         /// </summary>
-        private readonly FramedBeatmapClock beatmapClock = new FramedBeatmapClock(applyOffsets: true, requireDecoupling: false);
+        private readonly FramedBeatmapClock beatmapClock = new FramedBeatmapClock(
+            applyOffsets: true,
+            requireDecoupling: false
+        );
 
         protected override Container<Drawable> Content => content;
 
@@ -237,7 +249,8 @@ namespace osu.Game
 
         private DependencyContainer dependencies;
 
-        private readonly BindableNumber<double> globalTrackVolumeAdjust = new BindableNumber<double>(global_track_volume_adjust);
+        private readonly BindableNumber<double> globalTrackVolumeAdjust =
+            new BindableNumber<double>(global_track_volume_adjust);
 
         private Bindable<string> frameworkLocale = null!;
 
@@ -261,7 +274,10 @@ namespace osu.Game
         }
 
         [BackgroundDependencyLoader]
-        private void load(ReadableKeyCombinationProvider keyCombinationProvider, FrameworkConfigManager frameworkConfig)
+        private void load(
+            ReadableKeyCombinationProvider keyCombinationProvider,
+            FrameworkConfigManager frameworkConfig
+        )
         {
             try
             {
@@ -277,16 +293,25 @@ namespace osu.Game
 
             Resources.AddStore(new DllResourceStore(OsuResources.ResourceAssembly));
 
-            dependencies.Cache(realm = new RealmAccess(Storage, CLIENT_DATABASE_FILENAME, Host.UpdateThread));
+            dependencies.Cache(
+                realm = new RealmAccess(Storage, CLIENT_DATABASE_FILENAME, Host.UpdateThread)
+            );
 
-            dependencies.CacheAs<RulesetStore>(RulesetStore = new RealmRulesetStore(realm, Storage));
+            dependencies.CacheAs<RulesetStore>(
+                RulesetStore = new RealmRulesetStore(realm, Storage)
+            );
             dependencies.CacheAs<IRulesetStore>(RulesetStore);
 
             Decoder.RegisterDependencies(RulesetStore);
 
             dependencies.CacheAs(Storage);
 
-            var largeStore = new LargeTextureStore(Host.Renderer, Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
+            var largeStore = new LargeTextureStore(
+                Host.Renderer,
+                Host.CreateTextureLoaderStore(
+                    new NamespacedResourceStore<byte[]>(Resources, @"Textures")
+                )
+            );
             largeStore.AddTextureSource(Host.CreateTextureLoaderStore(CreateOnlineStore()));
             dependencies.Cache(largeStore);
 
@@ -299,7 +324,9 @@ namespace osu.Game
 
             Audio.Samples.PlaybackConcurrency = SAMPLE_CONCURRENCY;
 
-            dependencies.Cache(SkinManager = new SkinManager(Storage, realm, Host, Resources, Audio, Scheduler));
+            dependencies.Cache(
+                SkinManager = new SkinManager(Storage, realm, Host, Resources, Audio, Scheduler)
+            );
             dependencies.CacheAs<ISkinSource>(SkinManager);
 
             EndpointConfiguration endpoints = CreateEndpoints();
@@ -312,7 +339,9 @@ namespace osu.Game
             localisationParameters = Localisation.CurrentParameters.GetBoundCopy();
             localisationParameters.BindValueChanged(_ => updateLanguage(), true);
 
-            CurrentLanguage.BindValueChanged(val => frameworkLocale.Value = val.NewValue.ToCultureCode());
+            CurrentLanguage.BindValueChanged(val =>
+                frameworkLocale.Value = val.NewValue.ToCultureCode()
+            );
 
             dependencies.CacheAs(API ??= new APIAccess(this, LocalConfig, endpoints, VersionHash));
 
@@ -323,9 +352,30 @@ namespace osu.Game
             Triggers.BeatmapDifficultyCacheCreated(difficultyCache);
 
             // ordering is important here to ensure foreign keys rules are not broken in ModelStore.Cleanup()
-            dependencies.Cache(ScoreManager = new ScoreManager(RulesetStore, () => BeatmapManager, Storage, realm, API, LocalConfig));
+            dependencies.Cache(
+                ScoreManager = new ScoreManager(
+                    RulesetStore,
+                    () => BeatmapManager,
+                    Storage,
+                    realm,
+                    API,
+                    LocalConfig
+                )
+            );
 
-            dependencies.Cache(BeatmapManager = new BeatmapManager(Storage, realm, API, Audio, Resources, Host, defaultBeatmap, difficultyCache, performOnlineLookups: true));
+            dependencies.Cache(
+                BeatmapManager = new BeatmapManager(
+                    Storage,
+                    realm,
+                    API,
+                    Audio,
+                    Resources,
+                    Host,
+                    defaultBeatmap,
+                    difficultyCache,
+                    performOnlineLookups: true
+                )
+            );
             dependencies.CacheAs<IWorkingBeatmapCache>(BeatmapManager);
 
             Triggers.BeatmapManagerCreated(BeatmapManager);
@@ -344,7 +394,8 @@ namespace osu.Game
 
             base.Content.Add(new BeatmapOnlineChangeIngest(beatmapUpdater, realm, metadataClient));
 
-            BeatmapManager.ProcessBeatmap = (beatmapSet, scope) => beatmapUpdater.Process(beatmapSet, scope);
+            BeatmapManager.ProcessBeatmap = (beatmapSet, scope) =>
+                beatmapUpdater.Process(beatmapSet, scope);
 
             dependencies.Cache(userCache = new UserLookupCache());
             base.Content.Add(userCache);
@@ -352,7 +403,9 @@ namespace osu.Game
             dependencies.Cache(beatmapCache = new BeatmapLookupCache());
             base.Content.Add(beatmapCache);
 
-            dependencies.CacheAs<IRulesetConfigCache>(rulesetConfigCache = new RulesetConfigCache(realm, RulesetStore));
+            dependencies.CacheAs<IRulesetConfigCache>(
+                rulesetConfigCache = new RulesetConfigCache(realm, RulesetStore)
+            );
 
             var powerStatus = CreateBatteryInfo();
             if (powerStatus != null)
@@ -390,7 +443,9 @@ namespace osu.Game
             base.Content.Add(rulesetConfigCache);
 
             PreviewTrackManager previewTrackManager;
-            dependencies.Cache(previewTrackManager = new PreviewTrackManager(BeatmapManager.BeatmapTrackStore));
+            dependencies.Cache(
+                previewTrackManager = new PreviewTrackManager(BeatmapManager.BeatmapTrackStore)
+            );
             base.Content.Add(previewTrackManager);
 
             base.Content.Add(MusicController = new MusicController());
@@ -405,24 +460,35 @@ namespace osu.Game
             dependencies.Cache(menuSamples = new OsuMenuSamples());
             base.Content.Add(menuSamples);
 
-            base.Content.Add(SafeAreaContainer = new SafeAreaContainer
-            {
-                SafeAreaOverrideEdges = SafeAreaOverrideEdges,
-                RelativeSizeAxes = Axes.Both,
-                Child = CreateScalingContainer().WithChild(globalBindings = new GlobalActionContainer(this)
+            base.Content.Add(
+                SafeAreaContainer = new SafeAreaContainer
                 {
-                    Children = new Drawable[]
-                    {
-                        (GlobalCursorDisplay = new GlobalCursorDisplay
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }).WithChild(content = new OsuTooltipContainer(GlobalCursorDisplay.MenuCursor)
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }),
-                    }
-                })
-            });
+                    SafeAreaOverrideEdges = SafeAreaOverrideEdges,
+                    RelativeSizeAxes = Axes.Both,
+                    Child = CreateScalingContainer()
+                        .WithChild(
+                            globalBindings = new GlobalActionContainer(this)
+                            {
+                                Children = new Drawable[]
+                                {
+                                    (
+                                        GlobalCursorDisplay = new GlobalCursorDisplay
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                        }
+                                    ).WithChild(
+                                        content = new OsuTooltipContainer(
+                                            GlobalCursorDisplay.MenuCursor
+                                        )
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                        }
+                                    ),
+                                },
+                            }
+                        ),
+                }
+            );
 
             base.Content.Add(new TouchInputInterceptor());
             base.Content.Add(hitErrorTracker);
@@ -438,13 +504,18 @@ namespace osu.Game
 
             // make config aware of how to lookup skins for on-screen display purposes.
             // if this becomes a more common thing, tracked settings should be reconsidered to allow local DI.
-            LocalConfig.LookupSkinName = id => SkinManager.Query(s => s.ID == id)?.ToString() ?? "Unknown";
+            LocalConfig.LookupSkinName = id =>
+                SkinManager.Query(s => s.ID == id)?.ToString() ?? "Unknown";
             LocalConfig.LookupKeyBindings = l => KeyBindingStore.GetBindingsStringFor(l);
 
             Triggers.LocalConfigLoaded(LocalConfig, frameworkConfig);
         }
 
-        private void updateLanguage() => CurrentLanguage.Value = LanguageExtensions.GetLanguageFor(frameworkLocale.Value, localisationParameters.Value);
+        private void updateLanguage() =>
+            CurrentLanguage.Value = LanguageExtensions.GetLanguageFor(
+                frameworkLocale.Value,
+                localisationParameters.Value
+            );
 
         private void addFilesWarning()
         {
@@ -455,14 +526,24 @@ namespace osu.Game
                 using (var stream = Storage.CreateFileSafely(filename))
                 using (var textWriter = new StreamWriter(stream))
                 {
-                    textWriter.WriteLine(@"This folder contains all your user files and configuration.");
+                    textWriter.WriteLine(
+                        @"This folder contains all your user files and configuration."
+                    );
                     textWriter.WriteLine(@"Please DO NOT make manual changes to this folder.");
                     textWriter.WriteLine();
-                    textWriter.WriteLine(@"- If you want to back up your game files, please back up THE ENTIRETY OF THIS DIRECTORY.");
-                    textWriter.WriteLine(@"- If you want to delete all of your game files, please delete THE ENTIRETY OF THIS DIRECTORY.");
+                    textWriter.WriteLine(
+                        @"- If you want to back up your game files, please back up THE ENTIRETY OF THIS DIRECTORY."
+                    );
+                    textWriter.WriteLine(
+                        @"- If you want to delete all of your game files, please delete THE ENTIRETY OF THIS DIRECTORY."
+                    );
                     textWriter.WriteLine();
-                    textWriter.WriteLine(@"To be very clear, the ""files/"" directory inside this directory stores all the raw pieces of your beatmaps, skins, and replays.");
-                    textWriter.WriteLine(@"Importantly, it is NOT the only directory you need a backup of to avoid losing data. If you copy only the ""files/"" directory, YOU WILL LOSE DATA.");
+                    textWriter.WriteLine(
+                        @"To be very clear, the ""files/"" directory inside this directory stores all the raw pieces of your beatmaps, skins, and replays."
+                    );
+                    textWriter.WriteLine(
+                        @"Importantly, it is NOT the only directory you need a backup of to avoid losing data. If you copy only the ""files/"" directory, YOU WILL LOSE DATA."
+                    );
                     textWriter.WriteLine();
                     textWriter.WriteLine(@"For more information on how these files are organised,");
                     textWriter.WriteLine(@"see https://github.com/ppy/osu/wiki/User-file-storage");
@@ -470,7 +551,8 @@ namespace osu.Game
             }
         }
 
-        private void onTrackChanged(WorkingBeatmap beatmap, TrackChangeDirection direction) => beatmapClock.ChangeSource(beatmap.Track);
+        private void onTrackChanged(WorkingBeatmap beatmap, TrackChangeDirection direction) =>
+            beatmapClock.ChangeSource(beatmap.Track);
 
         protected virtual void InitialiseFonts()
         {
@@ -508,8 +590,9 @@ namespace osu.Game
             Fonts.AddStore(new OsuIcon.OsuIconStore(Textures));
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
-            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
         public override void SetHost(GameHost host)
         {
@@ -552,7 +635,9 @@ namespace osu.Game
         /// <exception cref="TimeoutException"></exception>
         public bool Migrate(string path)
         {
-            Logger.Log($@"Migrating osu! data from ""{Storage.GetFullPath(string.Empty)}"" to ""{path}""...");
+            Logger.Log(
+                $@"Migrating osu! data from ""{Storage.GetFullPath(string.Empty)}"" to ""{path}""..."
+            );
 
             IDisposable realmBlocker = null;
 
@@ -562,20 +647,26 @@ namespace osu.Game
 
                 bool success = false;
 
-                Scheduler.Add(() =>
-                {
-                    try
+                Scheduler.Add(
+                    () =>
                     {
-                        realmBlocker = realm.BlockAllOperations("migration");
-                        success = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"Attempting to block all operations failed: {ex}", LoggingTarget.Database);
-                    }
+                        try
+                        {
+                            realmBlocker = realm.BlockAllOperations("migration");
+                            success = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(
+                                $"Attempting to block all operations failed: {ex}",
+                                LoggingTarget.Database
+                            );
+                        }
 
-                    readyToRun.Set();
-                }, false);
+                        readyToRun.Set();
+                    },
+                    false
+                );
 
                 if (!readyToRun.Wait(30000) || !success)
                     throw new TimeoutException("Attempting to block for migration took too long.");
@@ -591,15 +682,18 @@ namespace osu.Game
             }
         }
 
-        protected virtual IBeatmapUpdater CreateBeatmapUpdater() => new BeatmapUpdater(BeatmapManager, difficultyCache, API, Storage);
+        protected virtual IBeatmapUpdater CreateBeatmapUpdater() =>
+            new BeatmapUpdater(BeatmapManager, difficultyCache, API, Storage);
 
         protected override UserInputManager CreateUserInputManager() => new OsuUserInputManager();
 
         protected virtual BatteryInfo CreateBatteryInfo() => null;
 
-        protected virtual Container CreateScalingContainer() => new DrawSizePreservingFillContainer();
+        protected virtual Container CreateScalingContainer() =>
+            new DrawSizePreservingFillContainer();
 
-        protected override Storage CreateStorage(GameHost host, Storage defaultStorage) => new OsuStorage(host, defaultStorage);
+        protected override Storage CreateStorage(GameHost host, Storage defaultStorage) =>
+            new OsuStorage(host, defaultStorage);
 
         /// <summary>
         /// Creates an input settings subsection for an <see cref="InputHandler"/>.
@@ -644,7 +738,9 @@ namespace osu.Game
         private void onBeatmapChanged(ValueChangedEvent<WorkingBeatmap> beatmap)
         {
             if (IsLoaded && !ThreadSafety.IsUpdateThread)
-                throw new InvalidOperationException("Global beatmap bindable must be changed from update thread.");
+                throw new InvalidOperationException(
+                    "Global beatmap bindable must be changed from update thread."
+                );
 
             Logger.Log($"Game-wide working beatmap updated to {beatmap.NewValue}");
         }
@@ -652,7 +748,9 @@ namespace osu.Game
         private void onRulesetChanged(ValueChangedEvent<RulesetInfo> r)
         {
             if (IsLoaded && !ThreadSafety.IsUpdateThread)
-                throw new InvalidOperationException("Global ruleset bindable must be changed from update thread.");
+                throw new InvalidOperationException(
+                    "Global ruleset bindable must be changed from update thread."
+                );
 
             Ruleset instance = null;
 
@@ -681,16 +779,20 @@ namespace osu.Game
             {
                 foreach (ModType type in Enum.GetValues<ModType>())
                 {
-                    dict[type] = instance.GetModsFor(type)
-                                         // Rulesets should never return null mods, but let's be defensive just in case.
-                                         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                                         .Where(mod => mod != null)
-                                         .ToList();
+                    dict[type] = instance
+                        .GetModsFor(type)
+                        // Rulesets should never return null mods, but let's be defensive just in case.
+                        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                        .Where(mod => mod != null)
+                        .ToList();
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Could not load mods for \"{instance.RulesetInfo.Name}\" ruleset. Current ruleset has been rolled back.");
+                Logger.Error(
+                    e,
+                    $"Could not load mods for \"{instance.RulesetInfo.Name}\" ruleset. Current ruleset has been rolled back."
+                );
                 revertRulesetChange();
                 return;
             }
@@ -700,19 +802,26 @@ namespace osu.Game
             if (SelectedMods.Disabled)
                 return;
 
-            var convertedMods = SelectedMods.Value.Select(mod =>
-            {
-                var newMod = instance.CreateModFromAcronym(mod.Acronym);
-                newMod?.CopyCommonSettingsFrom(mod);
-                return newMod;
-            }).Where(newMod => newMod != null).ToList();
+            var convertedMods = SelectedMods
+                .Value.Select(mod =>
+                {
+                    var newMod = instance.CreateModFromAcronym(mod.Acronym);
+                    newMod?.CopyCommonSettingsFrom(mod);
+                    return newMod;
+                })
+                .Where(newMod => newMod != null)
+                .ToList();
 
             if (!ModUtils.CheckValidForGameplay(convertedMods, out var invalid))
                 invalid.ForEach(newMod => convertedMods.Remove(newMod));
 
             SelectedMods.Value = convertedMods;
 
-            void revertRulesetChange() => Ruleset.Value = r.OldValue?.Available == true ? r.OldValue : RulesetStore.AvailableRulesets.First();
+            void revertRulesetChange() =>
+                Ruleset.Value =
+                    r.OldValue?.Available == true
+                        ? r.OldValue
+                        : RulesetStore.AvailableRulesets.First();
         }
 
         private int allowableExceptions;
@@ -730,7 +839,9 @@ namespace osu.Game
                 return false;
             }
 
-            Logger.Log($"Unhandled exception has been allowed with {allowableExceptions} more allowable exceptions.");
+            Logger.Log(
+                $"Unhandled exception has been allowed with {allowableExceptions} more allowable exceptions."
+            );
             // restore the stock of allowable exceptions after a short delay.
             Task.Delay(1000).ContinueWith(_ => Interlocked.Increment(ref allowableExceptions));
 
@@ -752,8 +863,12 @@ namespace osu.Game
                 Host.ExceptionThrown -= onExceptionThrown;
         }
 
-        ControlPointInfo IBeatSyncProvider.ControlPoints => Beatmap.Value.BeatmapLoaded ? Beatmap.Value.Beatmap.ControlPointInfo : null;
+        ControlPointInfo IBeatSyncProvider.ControlPoints =>
+            Beatmap.Value.BeatmapLoaded ? Beatmap.Value.Beatmap.ControlPointInfo : null;
         IClock IBeatSyncProvider.Clock => beatmapClock;
-        ChannelAmplitudes IHasAmplitudes.CurrentAmplitudes => Beatmap.Value.TrackLoaded ? Beatmap.Value.Track.CurrentAmplitudes : ChannelAmplitudes.Empty;
+        ChannelAmplitudes IHasAmplitudes.CurrentAmplitudes =>
+            Beatmap.Value.TrackLoaded
+                ? Beatmap.Value.Track.CurrentAmplitudes
+                : ChannelAmplitudes.Empty;
     }
 }

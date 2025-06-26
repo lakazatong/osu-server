@@ -39,7 +39,8 @@ namespace osu.Game.Graphics.Sprites
         public new Axes AutoSizeAxes
         {
             get => Axes.None;
-            set => throw new InvalidOperationException("You can't set AutoSizeAxes of this container");
+            set =>
+                throw new InvalidOperationException("You can't set AutoSizeAxes of this container");
         }
 
         /// <summary>

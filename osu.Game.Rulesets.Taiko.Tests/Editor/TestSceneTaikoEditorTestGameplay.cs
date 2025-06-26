@@ -34,37 +34,58 @@ namespace osu.Game.Rulesets.Taiko.Tests.Editor
 
         public override void SetUpSteps()
         {
-            AddStep("import test beatmap", () => importedBeatmapSet = BeatmapImportHelper.LoadOszIntoOsu(game).GetResultSafely());
+            AddStep(
+                "import test beatmap",
+                () =>
+                    importedBeatmapSet = BeatmapImportHelper.LoadOszIntoOsu(game).GetResultSafely()
+            );
             base.SetUpSteps();
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => beatmaps.GetWorkingBeatmap(importedBeatmapSet.Beatmaps.First(b => b.Ruleset.OnlineID == 1));
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            beatmaps.GetWorkingBeatmap(
+                importedBeatmapSet.Beatmaps.First(b => b.Ruleset.OnlineID == 1)
+            );
 
         [Test]
         public void TestBasicGameplayTest()
         {
-            AddStep("add objects", () =>
-            {
-                EditorBeatmap.Clear();
-                EditorBeatmap.Add(new Swell { StartTime = 500, EndTime = 1500 });
-                EditorBeatmap.Add(new Hit { StartTime = 3000 });
-            });
+            AddStep(
+                "add objects",
+                () =>
+                {
+                    EditorBeatmap.Clear();
+                    EditorBeatmap.Add(new Swell { StartTime = 500, EndTime = 1500 });
+                    EditorBeatmap.Add(new Hit { StartTime = 3000 });
+                }
+            );
             AddStep("seek to 250", () => EditorClock.Seek(250));
             AddUntilStep("wait for seek", () => EditorClock.CurrentTime, () => Is.EqualTo(250));
 
-            AddStep("click test gameplay button", () =>
-            {
-                var button = Editor.ChildrenOfType<TestGameplayButton>().Single();
+            AddStep(
+                "click test gameplay button",
+                () =>
+                {
+                    var button = Editor.ChildrenOfType<TestGameplayButton>().Single();
 
-                InputManager.MoveMouseTo(button);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("save prompt shown", () => DialogOverlay.CurrentDialog is SaveRequiredPopupDialog);
+                    InputManager.MoveMouseTo(button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "save prompt shown",
+                () => DialogOverlay.CurrentDialog is SaveRequiredPopupDialog
+            );
 
             AddStep("save changes", () => DialogOverlay.CurrentDialog!.PerformOkAction());
             AddUntilStep("player pushed", () => Stack.CurrentScreen is EditorPlayer);
-            AddUntilStep("wait for return to editor", () => Stack.CurrentScreen is Screens.Edit.Editor);
+            AddUntilStep(
+                "wait for return to editor",
+                () => Stack.CurrentScreen is Screens.Edit.Editor
+            );
         }
     }
 }

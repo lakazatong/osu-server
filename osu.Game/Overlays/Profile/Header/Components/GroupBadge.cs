@@ -47,48 +47,65 @@ namespace osu.Game.Overlays.Profile.Header.Components
         {
             FillFlowContainer innerContainer;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider?.Background6 ?? Colour4.Black,
-                    // Normal badges background opacity is 75%, probationary is full opacity as the whole badge gets a bit transparent
-                    // Goal is to match osu-web so this is the most accurate it can be, its a bit scuffed but it is what it is
-                    // Source: https://github.com/ppy/osu-web/blob/master/resources/css/bem/user-group-badge.less#L50
-                    Alpha = group.IsProbationary ? 1 : 0.75f,
-                },
-                innerContainer = new FillFlowContainer
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Padding = new MarginPadding { Vertical = 2, Horizontal = 10 },
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(5),
-                    Children = new[]
+                    new Box
                     {
-                        new OsuSpriteText
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = colourProvider?.Background6 ?? Colour4.Black,
+                        // Normal badges background opacity is 75%, probationary is full opacity as the whole badge gets a bit transparent
+                        // Goal is to match osu-web so this is the most accurate it can be, its a bit scuffed but it is what it is
+                        // Source: https://github.com/ppy/osu-web/blob/master/resources/css/bem/user-group-badge.less#L50
+                        Alpha = group.IsProbationary ? 1 : 0.75f,
+                    },
+                    innerContainer = new FillFlowContainer
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Padding = new MarginPadding { Vertical = 2, Horizontal = 10 },
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(5),
+                        Children = new[]
                         {
-                            Text = group.ShortName,
-                            Colour = Color4Extensions.FromHex(group.Colour ?? Colour4.White.ToHex()),
-                            Shadow = false,
-                            Font = OsuFont.GetFont(size: TextSize, weight: FontWeight.Bold, italics: true)
-                        }
-                    }
+                            new OsuSpriteText
+                            {
+                                Text = group.ShortName,
+                                Colour = Color4Extensions.FromHex(
+                                    group.Colour ?? Colour4.White.ToHex()
+                                ),
+                                Shadow = false,
+                                Font = OsuFont.GetFont(
+                                    size: TextSize,
+                                    weight: FontWeight.Bold,
+                                    italics: true
+                                ),
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             if (group.Playmodes?.Length > 0)
             {
-                innerContainer.AddRange(group.Playmodes.Select(p =>
-                        (rulesets.GetRuleset(p)?.CreateInstance().CreateIcon() ?? new SpriteIcon { Icon = FontAwesome.Regular.QuestionCircle }).With(icon =>
-                        {
-                            icon.Size = new Vector2(TextSize - 1);
-                        })).ToList()
+                innerContainer.AddRange(
+                    group
+                        .Playmodes.Select(p =>
+                            (
+                                rulesets.GetRuleset(p)?.CreateInstance().CreateIcon()
+                                ?? new SpriteIcon { Icon = FontAwesome.Regular.QuestionCircle }
+                            ).With(icon =>
+                            {
+                                icon.Size = new Vector2(TextSize - 1);
+                            })
+                        )
+                        .ToList()
                 );
 
-                var badgeModesList = group.Playmodes.Select(p => rulesets.GetRuleset(p)?.Name).ToList();
+                var badgeModesList = group
+                    .Playmodes.Select(p => rulesets.GetRuleset(p)?.Name)
+                    .ToList();
 
                 string modesDisplay = string.Join(", ", badgeModesList);
                 TooltipText += $" ({modesDisplay})";

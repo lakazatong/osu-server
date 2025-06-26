@@ -15,11 +15,7 @@ namespace osu.Game.Scoring
 
         public Score DeepClone()
         {
-            return new Score
-            {
-                ScoreInfo = ScoreInfo.DeepClone(),
-                Replay = Replay.DeepClone(),
-            };
+            return new Score { ScoreInfo = ScoreInfo.DeepClone(), Replay = Replay.DeepClone() };
         }
     }
 }

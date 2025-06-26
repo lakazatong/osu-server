@@ -9,6 +9,6 @@ namespace osu.Game.Online
         NotDownloaded,
         Downloading,
         Importing,
-        LocallyAvailable
+        LocallyAvailable,
     }
 }

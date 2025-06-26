@@ -17,7 +17,8 @@ namespace osu.Game.Beatmaps.Drawables.Cards
     public partial class CollapsibleButtonContainer : Container
     {
         public Bindable<bool> ShowDetails = new Bindable<bool>();
-        public Bindable<BeatmapSetFavouriteState> FavouriteState = new Bindable<BeatmapSetFavouriteState>();
+        public Bindable<BeatmapSetFavouriteState> FavouriteState =
+            new Bindable<BeatmapSetFavouriteState>();
 
         private readonly BeatmapDownloadTracker downloadTracker;
 
@@ -80,11 +81,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                     RelativeSizeAxes = Axes.Y,
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
-                    Child = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Colour4.White
-                    },
+                    Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.White },
                 },
                 buttonArea = new Container
                 {
@@ -92,37 +89,38 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                     RelativeSizeAxes = Axes.Y,
                     Origin = Anchor.TopRight,
                     Anchor = Anchor.TopRight,
-                    Child = buttons = new Container<BeatmapCardIconButton>
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Children = new BeatmapCardIconButton[]
+                    Child = buttons =
+                        new Container<BeatmapCardIconButton>
                         {
-                            new FavouriteButton(beatmapSet)
+                            RelativeSizeAxes = Axes.Both,
+                            Children = new BeatmapCardIconButton[]
                             {
-                                Current = FavouriteState,
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                RelativeSizeAxes = Axes.Both,
-                                Height = 0.5f,
+                                new FavouriteButton(beatmapSet)
+                                {
+                                    Current = FavouriteState,
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Height = 0.5f,
+                                },
+                                new DownloadButton(beatmapSet)
+                                {
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    State = { BindTarget = downloadTracker.State },
+                                    RelativeSizeAxes = Axes.Both,
+                                    Height = 0.5f,
+                                },
+                                new GoToBeatmapButton(beatmapSet)
+                                {
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    State = { BindTarget = downloadTracker.State },
+                                    RelativeSizeAxes = Axes.Both,
+                                    Height = 0.5f,
+                                },
                             },
-                            new DownloadButton(beatmapSet)
-                            {
-                                Anchor = Anchor.BottomCentre,
-                                Origin = Anchor.BottomCentre,
-                                State = { BindTarget = downloadTracker.State },
-                                RelativeSizeAxes = Axes.Both,
-                                Height = 0.5f,
-                            },
-                            new GoToBeatmapButton(beatmapSet)
-                            {
-                                Anchor = Anchor.BottomCentre,
-                                Origin = Anchor.BottomCentre,
-                                State = { BindTarget = downloadTracker.State },
-                                RelativeSizeAxes = Axes.Both,
-                                Height = 0.5f,
-                            }
-                        }
-                    }
+                        },
                 },
                 mainArea = new Container
                 {
@@ -135,19 +133,15 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                         new BeatmapCardContentBackground(beatmapSet)
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Dimmed = { BindTarget = ShowDetails }
+                            Dimmed = { BindTarget = ShowDetails },
                         },
                         mainContent = new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Padding = new MarginPadding
-                            {
-                                Horizontal = 10,
-                                Vertical = 4
-                            },
-                        }
-                    }
-                }
+                            Padding = new MarginPadding { Horizontal = 10, Vertical = 4 },
+                        },
+                    },
+                },
             };
         }
 
@@ -162,21 +156,43 @@ namespace osu.Game.Beatmaps.Drawables.Cards
 
         private void updateState()
         {
-            float buttonAreaWidth = ShowDetails.Value ? ButtonsExpandedWidth : ButtonsCollapsedWidth;
+            float buttonAreaWidth = ShowDetails.Value
+                ? ButtonsExpandedWidth
+                : ButtonsCollapsedWidth;
             float mainAreaWidth = Width - buttonAreaWidth;
 
             mainArea.ResizeWidthTo(mainAreaWidth, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
 
             // By limiting the width we avoid this box showing up as an outline around the drawables that are on top of it.
-            background.ResizeWidthTo(buttonAreaWidth + BeatmapCard.CORNER_RADIUS, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            background.ResizeWidthTo(
+                buttonAreaWidth + BeatmapCard.CORNER_RADIUS,
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
 
-            background.FadeColour(downloadTracker.State.Value == DownloadState.LocallyAvailable ? colours.Lime0 : colourProvider.Background3, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
-            buttons.FadeTo(ShowDetails.Value ? 1 : 0, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            background.FadeColour(
+                downloadTracker.State.Value == DownloadState.LocallyAvailable
+                    ? colours.Lime0
+                    : colourProvider.Background3,
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
+            buttons.FadeTo(
+                ShowDetails.Value ? 1 : 0,
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
 
             foreach (var button in buttons)
             {
-                button.IdleColour = downloadTracker.State.Value != DownloadState.LocallyAvailable ? colourProvider.Light1 : colourProvider.Background3;
-                button.HoverColour = downloadTracker.State.Value != DownloadState.LocallyAvailable ? colourProvider.Content1 : colourProvider.Foreground1;
+                button.IdleColour =
+                    downloadTracker.State.Value != DownloadState.LocallyAvailable
+                        ? colourProvider.Light1
+                        : colourProvider.Background3;
+                button.HoverColour =
+                    downloadTracker.State.Value != DownloadState.LocallyAvailable
+                        ? colourProvider.Content1
+                        : colourProvider.Foreground1;
             }
         }
     }

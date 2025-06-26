@@ -20,13 +20,25 @@ namespace osu.Game.Tournament.Tests.Components
                 Spacing = new Vector2(50),
                 Children = new Drawable[]
                 {
-                    new TournamentSpriteText { Text = "with logo", Font = OsuFont.Torus.With(size: 30) },
+                    new TournamentSpriteText
+                    {
+                        Text = "with logo",
+                        Font = OsuFont.Torus.With(size: 30),
+                    },
                     new MatchHeader(),
-                    new TournamentSpriteText { Text = "without logo", Font = OsuFont.Torus.With(size: 30) },
+                    new TournamentSpriteText
+                    {
+                        Text = "without logo",
+                        Font = OsuFont.Torus.With(size: 30),
+                    },
                     new MatchHeader { ShowLogo = false },
-                    new TournamentSpriteText { Text = "without scores", Font = OsuFont.Torus.With(size: 30) },
+                    new TournamentSpriteText
+                    {
+                        Text = "without scores",
+                        Font = OsuFont.Torus.With(size: 30),
+                    },
                     new MatchHeader { ShowScores = false },
-                }
+                },
             };
         }
     }

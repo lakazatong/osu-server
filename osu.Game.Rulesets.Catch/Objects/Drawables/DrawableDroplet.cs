@@ -11,21 +11,18 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
     public partial class DrawableDroplet : DrawablePalpableCatchHitObject
     {
         public DrawableDroplet()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableDroplet(CatchHitObject? h)
-            : base(h)
-        {
-        }
+            : base(h) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             ScalingContainer.Child = new SkinnableDrawable(
                 new CatchSkinComponentLookup(CatchSkinComponents.Droplet),
-                _ => new DropletPiece());
+                _ => new DropletPiece()
+            );
         }
 
         private float startRotation;
@@ -44,8 +41,11 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
 
             // No clamping for droplets. They should be considered indefinitely spinning regardless of time.
             // They also never end up on the plate, so they shouldn't stop spinning when caught.
-            double preemptProgress = (Time.Current - (HitObject.StartTime - InitialLifetimeOffset)) / (HitObject.TimePreempt + 2000);
-            ScalingContainer.Rotation = (float)Interpolation.Lerp(startRotation, startRotation + 720, preemptProgress);
+            double preemptProgress =
+                (Time.Current - (HitObject.StartTime - InitialLifetimeOffset))
+                / (HitObject.TimePreempt + 2000);
+            ScalingContainer.Rotation = (float)
+                Interpolation.Lerp(startRotation, startRotation + 720, preemptProgress);
         }
     }
 }

@@ -44,9 +44,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         public Func<DrawableHitObject, double, HitResult, ClickAction> CheckHittable;
 
         protected DrawableOsuHitObject(OsuHitObject hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -119,12 +117,14 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                 piece.FadeColour(Color4.White, 100);
         }
 
-        private void applyDimToDrawableHitObject(DrawableHitObject dho, ArmedState _) => applyDim(dho);
+        private void applyDimToDrawableHitObject(DrawableHitObject dho, ArmedState _) =>
+            applyDim(dho);
 
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
         private OsuInputManager osuActionInputManager;
-        internal OsuInputManager OsuActionInputManager => osuActionInputManager ??= GetContainingInputManager() as OsuInputManager;
+        internal OsuInputManager OsuActionInputManager =>
+            osuActionInputManager ??= GetContainingInputManager() as OsuInputManager;
 
         /// <summary>
         /// Shake the hit object in case it was clicked far too early or late (aka "note lock").
@@ -141,15 +141,20 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// </summary>
         public void MissForcefully() => ApplyMinResult();
 
-        private RectangleF parentScreenSpaceRectangle => ((DrawableOsuHitObject)ParentHitObject)?.parentScreenSpaceRectangle ?? Parent!.ScreenSpaceDrawQuad.AABBFloat;
+        private RectangleF parentScreenSpaceRectangle =>
+            ((DrawableOsuHitObject)ParentHitObject)?.parentScreenSpaceRectangle
+            ?? Parent!.ScreenSpaceDrawQuad.AABBFloat;
 
         /// <summary>
         /// Calculates the position of the given <paramref name="drawable"/> relative to the playfield area.
         /// </summary>
         /// <param name="drawable">The drawable to calculate its relative position.</param>
-        protected float CalculateDrawableRelativePosition(Drawable drawable) => (drawable.ScreenSpaceDrawQuad.Centre.X - parentScreenSpaceRectangle.X) / parentScreenSpaceRectangle.Width;
+        protected float CalculateDrawableRelativePosition(Drawable drawable) =>
+            (drawable.ScreenSpaceDrawQuad.Centre.X - parentScreenSpaceRectangle.X)
+            / parentScreenSpaceRectangle.Width;
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new OsuJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new OsuJudgementResult(HitObject, judgement);
 
         protected void ApplyRepeatFadeIn(Drawable target, double fadeTime)
         {

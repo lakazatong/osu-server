@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Catch
     public partial class CatchInputManager : RulesetInputManager<CatchAction>
     {
         public CatchInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
     }
 
     public enum CatchAction

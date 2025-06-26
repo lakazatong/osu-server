@@ -29,11 +29,8 @@ namespace osu.Game.Screens.Play.HUD
 
         private readonly IBindableList<InputTrigger> triggers = new BindableList<InputTrigger>();
 
-        protected override Container<Drawable> Content { get; } = new Container
-        {
-            Alpha = 0,
-            AutoSizeAxes = Axes.Both,
-        };
+        protected override Container<Drawable> Content { get; } =
+            new Container { Alpha = 0, AutoSizeAxes = Axes.Both };
 
         [Resolved]
         private InputCountController controller { get; set; } = null!;

@@ -31,9 +31,7 @@ namespace osu.Game.Overlays
         protected List<APIUpdateStream> Streams;
 
         public ChangelogOverlay()
-            : base(OverlayColourScheme.Purple, false)
-        {
-        }
+            : base(OverlayColourScheme.Purple, false) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -49,10 +47,8 @@ namespace osu.Game.Overlays
             });
         }
 
-        protected override ChangelogHeader CreateHeader() => new ChangelogHeader
-        {
-            ListingSelected = ShowListing,
-        };
+        protected override ChangelogHeader CreateHeader() =>
+            new ChangelogHeader { ListingSelected = ShowListing };
 
         protected override Color4 BackgroundColour => ColourProvider.Background4;
 
@@ -87,8 +83,10 @@ namespace osu.Game.Overlays
                 string versionPart = version.Split('-')[0];
                 string updateStream = version.Split('-')[1];
 
-                var build = builds.Find(b => b.Version == versionPart && b.UpdateStream.Name == updateStream)
-                            ?? Streams.Find(s => s.Name == updateStream)?.LatestBuild;
+                var build =
+                    builds.Find(b =>
+                        b.Version == versionPart && b.UpdateStream.Name == updateStream
+                    ) ?? Streams.Find(s => s.Name == updateStream)?.LatestBuild;
 
                 if (build != null)
                     ShowBuild(build);
@@ -135,8 +133,11 @@ namespace osu.Game.Overlays
 
             Schedule(() =>
             {
-                fetchListing()?.ContinueWith(_ =>
-                    Schedule(action), TaskContinuationOptions.OnlyOnRanToCompletion);
+                fetchListing()
+                    ?.ContinueWith(
+                        _ => Schedule(action),
+                        TaskContinuationOptions.OnlyOnRanToCompletion
+                    );
             });
         }
 
@@ -146,35 +147,43 @@ namespace osu.Game.Overlays
                 return initialFetchTask;
 
             return initialFetchTask = Task.Run(async () =>
-            {
-                var tcs = new TaskCompletionSource<bool>();
-
-                var req = new GetChangelogRequest();
-
-                req.Success += res => Schedule(() =>
                 {
-                    // remap streams to builds to ensure model equality
-                    res.Builds.ForEach(b => b.UpdateStream = res.Streams.Find(s => s.Id == b.UpdateStream.Id));
-                    res.Streams.ForEach(s => s.LatestBuild.UpdateStream = res.Streams.Find(s2 => s2.Id == s.LatestBuild.UpdateStream.Id));
+                    var tcs = new TaskCompletionSource<bool>();
 
-                    builds = res.Builds;
-                    Streams = res.Streams;
+                    var req = new GetChangelogRequest();
 
-                    Header.Populate(res.Streams);
+                    req.Success += res =>
+                        Schedule(() =>
+                        {
+                            // remap streams to builds to ensure model equality
+                            res.Builds.ForEach(b =>
+                                b.UpdateStream = res.Streams.Find(s => s.Id == b.UpdateStream.Id)
+                            );
+                            res.Streams.ForEach(s =>
+                                s.LatestBuild.UpdateStream = res.Streams.Find(s2 =>
+                                    s2.Id == s.LatestBuild.UpdateStream.Id
+                                )
+                            );
 
-                    tcs.SetResult(true);
-                });
+                            builds = res.Builds;
+                            Streams = res.Streams;
 
-                req.Failure += e =>
-                {
-                    initialFetchTask = null;
-                    tcs.SetException(e);
-                };
+                            Header.Populate(res.Streams);
 
-                await API.PerformAsync(req).ConfigureAwait(false);
+                            tcs.SetResult(true);
+                        });
 
-                return tcs.Task;
-            }).Unwrap();
+                    req.Failure += e =>
+                    {
+                        initialFetchTask = null;
+                        tcs.SetException(e);
+                    };
+
+                    await API.PerformAsync(req).ConfigureAwait(false);
+
+                    return tcs.Task;
+                })
+                .Unwrap();
         }
 
         private CancellationTokenSource loadContentCancellation;
@@ -185,13 +194,17 @@ namespace osu.Game.Overlays
 
             loadContentCancellation?.Cancel();
 
-            LoadComponentAsync(newContent, c =>
-            {
-                Content.FadeIn(300, Easing.OutQuint);
+            LoadComponentAsync(
+                newContent,
+                c =>
+                {
+                    Content.FadeIn(300, Easing.OutQuint);
 
-                c.BuildSelected = ShowBuild;
-                Child = c;
-            }, (loadContentCancellation = new CancellationTokenSource()).Token);
+                    c.BuildSelected = ShowBuild;
+                    Child = c;
+                },
+                (loadContentCancellation = new CancellationTokenSource()).Token
+            );
         }
     }
 }

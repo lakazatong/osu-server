@@ -77,11 +77,8 @@ namespace osu.Game.Screens.Select.Carousel
                     Children = new Drawable[]
                     {
                         Header = new CarouselHeader(),
-                        Content = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        }
-                    }
+                        Content = new Container { RelativeSizeAxes = Axes.Both },
+                    },
                 },
             };
         }
@@ -118,7 +115,8 @@ namespace osu.Game.Screens.Select.Carousel
             }
         }
 
-        private void onStateChange(ValueChangedEvent<CarouselItemState> obj) => Scheduler.AddOnce(ApplyState);
+        private void onStateChange(ValueChangedEvent<CarouselItemState> obj) =>
+            Scheduler.AddOnce(ApplyState);
 
         private void onStateChange(ValueChangedEvent<bool> _) => Scheduler.AddOnce(ApplyState);
 
@@ -152,9 +150,7 @@ namespace osu.Game.Screens.Select.Carousel
             Debug.Assert(Item != null);
         }
 
-        protected virtual void Deselected()
-        {
-        }
+        protected virtual void Deselected() { }
 
         protected override bool OnClick(ClickEvent e)
         {

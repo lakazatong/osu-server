@@ -27,40 +27,40 @@ namespace osu.Game.Users
             Background.FadeTo(0.2f);
         }
 
-        protected override Drawable CreateLayout() => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(5, 0),
-            Margin = new MarginPadding
+        protected override Drawable CreateLayout() =>
+            new FillFlowContainer
             {
-                Horizontal = 10,
-                Vertical = 3,
-            },
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Children = new Drawable[]
-            {
-                new CircularContainer
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(5, 0),
+                Margin = new MarginPadding { Horizontal = 10, Vertical = 3 },
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Children = new Drawable[]
                 {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Masking = true,
-                    Width = 4,
-                    Height = 13,
-                    Child = new Box
+                    new CircularContainer
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = string.IsNullOrEmpty(User.Colour) ? Color4Extensions.FromHex("0087ca") : Color4Extensions.FromHex(User.Colour)
-                    }
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Masking = true,
+                        Width = 4,
+                        Height = 13,
+                        Child = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = string.IsNullOrEmpty(User.Colour)
+                                ? Color4Extensions.FromHex("0087ca")
+                                : Color4Extensions.FromHex(User.Colour),
+                        },
+                    },
+                    CreateUsername()
+                        .With(u =>
+                        {
+                            u.Anchor = Anchor.CentreLeft;
+                            u.Origin = Anchor.CentreLeft;
+                            u.Font = OsuFont.GetFont(size: 13, weight: FontWeight.Bold);
+                        }),
                 },
-                CreateUsername().With(u =>
-                {
-                    u.Anchor = Anchor.CentreLeft;
-                    u.Origin = Anchor.CentreLeft;
-                    u.Font = OsuFont.GetFont(size: 13, weight: FontWeight.Bold);
-                })
-            }
-        };
+            };
     }
 }

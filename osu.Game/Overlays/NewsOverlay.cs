@@ -43,15 +43,8 @@ namespace osu.Game.Overlays
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize)
-                },
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension()
-                },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 Content = new[]
                 {
                     new Drawable[]
@@ -59,15 +52,15 @@ namespace osu.Game.Overlays
                         sidebarContainer = new Container
                         {
                             AutoSizeAxes = Axes.X,
-                            Child = sidebar = new NewsSidebar()
+                            Child = sidebar = new NewsSidebar(),
                         },
                         content = new Container
                         {
                             RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y
-                        }
-                    }
-                }
+                            AutoSizeAxes = Axes.Y,
+                        },
+                    },
+                },
             };
         }
 
@@ -85,7 +78,8 @@ namespace osu.Game.Overlays
             });
         }
 
-        protected override NewsHeader CreateHeader() => new NewsHeader { ShowFrontPage = ShowFrontPage };
+        protected override NewsHeader CreateHeader() =>
+            new NewsHeader { ShowFrontPage = ShowFrontPage };
 
         protected override void PopIn()
         {
@@ -125,18 +119,30 @@ namespace osu.Game.Overlays
         protected void LoadDisplay(Drawable display)
         {
             ScrollFlow.ScrollToStart();
-            LoadComponentAsync(display, loaded =>
-            {
-                content.Child = loaded;
-                Loading.Hide();
-            }, (cancellationToken = new CancellationTokenSource()).Token);
+            LoadComponentAsync(
+                display,
+                loaded =>
+                {
+                    content.Child = loaded;
+                    Loading.Hide();
+                },
+                (cancellationToken = new CancellationTokenSource()).Token
+            );
         }
 
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
             sidebarContainer.Height = DrawHeight;
-            sidebarContainer.Y = (float)Math.Clamp(ScrollFlow.Current - Header.DrawHeight, 0, Math.Max(ScrollFlow.ScrollContent.DrawHeight - DrawHeight - Header.DrawHeight, 0));
+            sidebarContainer.Y = (float)
+                Math.Clamp(
+                    ScrollFlow.Current - Header.DrawHeight,
+                    0,
+                    Math.Max(
+                        ScrollFlow.ScrollContent.DrawHeight - DrawHeight - Header.DrawHeight,
+                        0
+                    )
+                );
         }
 
         private void loadListing(int? year = null)
@@ -149,15 +155,16 @@ namespace osu.Game.Overlays
             beginLoading(true);
 
             request = new GetNewsRequest(displayedYear);
-            request.Success += response => Schedule(() =>
-            {
-                lastCursor = response.Cursor;
-                sidebar.Metadata.Value = response.SidebarMetadata;
+            request.Success += response =>
+                Schedule(() =>
+                {
+                    lastCursor = response.Cursor;
+                    sidebar.Metadata.Value = response.SidebarMetadata;
 
-                var listing = new ArticleListing(getMorePosts);
-                listing.AddPosts(response.NewsPosts, response.Cursor != null);
-                LoadDisplay(listing);
-            });
+                    var listing = new ArticleListing(getMorePosts);
+                    listing.AddPosts(response.NewsPosts, response.Cursor != null);
+                    LoadDisplay(listing);
+                });
 
             API.PerformAsync(request);
         }
@@ -167,12 +174,13 @@ namespace osu.Game.Overlays
             beginLoading(false);
 
             request = new GetNewsRequest(displayedYear, lastCursor);
-            request.Success += response => Schedule(() =>
-            {
-                lastCursor = response.Cursor;
-                if (content.Child is ArticleListing listing)
-                    listing.AddPosts(response.NewsPosts, response.Cursor != null);
-            });
+            request.Success += response =>
+                Schedule(() =>
+                {
+                    lastCursor = response.Cursor;
+                    if (content.Child is ArticleListing listing)
+                        listing.AddPosts(response.NewsPosts, response.Cursor != null);
+                });
 
             API.PerformAsync(request);
         }

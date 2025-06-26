@@ -28,17 +28,19 @@ namespace osu.Game.Rulesets.Edit.Checks
             Head,
             Repeat,
             Tail,
-            None
+            None,
         }
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Audio, "Low volume hitobjects");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Audio, "Low volume hitobjects");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateMutedActive(this),
-            new IssueTemplateLowVolumeActive(this),
-            new IssueTemplateMutedPassive(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateMutedActive(this),
+                new IssueTemplateLowVolumeActive(this),
+                new IssueTemplateMutedPassive(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -57,7 +59,10 @@ namespace osu.Game.Rulesets.Edit.Checks
             }
         }
 
-        private IEnumerable<Issue> getVolumeIssues(HitObject hitObject, HitObject? sampledHitObject = null)
+        private IEnumerable<Issue> getVolumeIssues(
+            HitObject hitObject,
+            HitObject? sampledHitObject = null
+        )
         {
             sampledHitObject ??= hitObject;
             if (!sampledHitObject.Samples.Any())
@@ -72,18 +77,34 @@ namespace osu.Game.Rulesets.Edit.Checks
             if (edgeType == EdgeType.None)
                 yield break;
 
-            string postfix = hitObject is IHasDuration ? edgeType.ToString().ToLowerInvariant() : string.Empty;
+            string postfix =
+                hitObject is IHasDuration ? edgeType.ToString().ToLowerInvariant() : string.Empty;
 
             if (maxVolume <= muted_threshold)
             {
                 if (edgeType == EdgeType.Head)
-                    yield return new IssueTemplateMutedActive(this).Create(hitObject, maxVolume / 100f, sampledHitObject.GetEndTime(), postfix);
+                    yield return new IssueTemplateMutedActive(this).Create(
+                        hitObject,
+                        maxVolume / 100f,
+                        sampledHitObject.GetEndTime(),
+                        postfix
+                    );
                 else
-                    yield return new IssueTemplateMutedPassive(this).Create(hitObject, maxVolume / 100f, sampledHitObject.GetEndTime(), postfix);
+                    yield return new IssueTemplateMutedPassive(this).Create(
+                        hitObject,
+                        maxVolume / 100f,
+                        sampledHitObject.GetEndTime(),
+                        postfix
+                    );
             }
             else if (maxVolume <= low_volume_threshold && edgeType == EdgeType.Head)
             {
-                yield return new IssueTemplateLowVolumeActive(this).Create(hitObject, maxVolume / 100f, sampledHitObject.GetEndTime(), postfix);
+                yield return new IssueTemplateLowVolumeActive(this).Create(
+                    hitObject,
+                    maxVolume / 100f,
+                    sampledHitObject.GetEndTime(),
+                    postfix
+                );
             }
         }
 
@@ -104,8 +125,10 @@ namespace osu.Game.Rulesets.Edit.Checks
                 double spans = (time - hitObject.StartTime) / spanDuration;
                 double acceptableDifference = 1 / spanDuration; // 1 ms of acceptable difference, as with head/tail above.
 
-                if (Precision.AlmostEquals(spans, Math.Ceiling(spans), acceptableDifference) ||
-                    Precision.AlmostEquals(spans, Math.Floor(spans), acceptableDifference))
+                if (
+                    Precision.AlmostEquals(spans, Math.Ceiling(spans), acceptableDifference)
+                    || Precision.AlmostEquals(spans, Math.Floor(spans), acceptableDifference)
+                )
                 {
                     return EdgeType.Repeat;
                 }
@@ -117,11 +140,14 @@ namespace osu.Game.Rulesets.Edit.Checks
         public abstract class IssueTemplateMuted : IssueTemplate
         {
             protected IssueTemplateMuted(ICheck check, IssueType type, string unformattedMessage)
-                : base(check, type, unformattedMessage)
-            {
-            }
+                : base(check, type, unformattedMessage) { }
 
-            public Issue Create(HitObject hitobject, double volume, double time, string postfix = "")
+            public Issue Create(
+                HitObject hitobject,
+                double volume,
+                double time,
+                string postfix = ""
+            )
             {
                 string objectName = hitobject.GetType().Name;
                 if (!string.IsNullOrEmpty(postfix))
@@ -134,25 +160,31 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateMutedActive : IssueTemplateMuted
         {
             public IssueTemplateMutedActive(ICheck check)
-                : base(check, IssueType.Problem, "{0} has a volume of {1:0%}. Clickable objects must have clearly audible feedback.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "{0} has a volume of {1:0%}. Clickable objects must have clearly audible feedback."
+                ) { }
         }
 
         public class IssueTemplateLowVolumeActive : IssueTemplateMuted
         {
             public IssueTemplateLowVolumeActive(ICheck check)
-                : base(check, IssueType.Warning, "{0} has a volume of {1:0%}, ensure this is audible.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "{0} has a volume of {1:0%}, ensure this is audible."
+                ) { }
         }
 
         public class IssueTemplateMutedPassive : IssueTemplateMuted
         {
             public IssueTemplateMutedPassive(ICheck check)
-                : base(check, IssueType.Negligible, "{0} has a volume of {1:0%}, ensure there is no distinct sound here in the song if inaudible.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Negligible,
+                    "{0} has a volume of {1:0%}, ensure there is no distinct sound here in the song if inaudible."
+                ) { }
         }
     }
 }

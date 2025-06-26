@@ -25,9 +25,10 @@ namespace osu.Game.Rulesets.Catch.UI
         private readonly IBindable<bool> showCombo = new BindableBool(true);
 
         public CatchComboDisplay()
-            : base(new CatchSkinComponentLookup(CatchSkinComponents.CatchComboCounter), _ => Empty())
-        {
-        }
+            : base(
+                new CatchSkinComponentLookup(CatchSkinComponents.CatchComboCounter),
+                _ => Empty()
+            ) { }
 
         [Resolved]
         private Player? player { get; set; }
@@ -39,7 +40,15 @@ namespace osu.Game.Rulesets.Catch.UI
             if (player != null)
             {
                 showCombo.BindTo(player.ShowingOverlayComponents);
-                showCombo.BindValueChanged(s => this.FadeTo(s.NewValue ? 1 : 0, HUDOverlay.FADE_DURATION, HUDOverlay.FADE_EASING), true);
+                showCombo.BindValueChanged(
+                    s =>
+                        this.FadeTo(
+                            s.NewValue ? 1 : 0,
+                            HUDOverlay.FADE_DURATION,
+                            HUDOverlay.FADE_EASING
+                        ),
+                    true
+                );
             }
         }
 

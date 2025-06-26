@@ -25,35 +25,50 @@ namespace osu.Game.Rulesets.Taiko.Tests.Editor
         public void TestTaikoSliderMultiplierInExport(float? multiplier)
         {
             if (multiplier.HasValue)
-                AddStep("Set slider multiplier", () => EditorBeatmap.Difficulty.SliderMultiplier = multiplier.Value);
+                AddStep(
+                    "Set slider multiplier",
+                    () => EditorBeatmap.Difficulty.SliderMultiplier = multiplier.Value
+                );
 
             SaveEditor();
-            AddStep("export beatmap", () => Game.BeatmapManager.Export(EditorBeatmap.BeatmapInfo.BeatmapSet!).WaitSafely());
+            AddStep(
+                "export beatmap",
+                () => Game.BeatmapManager.Export(EditorBeatmap.BeatmapInfo.BeatmapSet!).WaitSafely()
+            );
 
-            AddAssert("check slider multiplier correct in file", () =>
-            {
-                string export = LocalStorage.GetFiles("exports").First();
-
-                using (var stream = LocalStorage.GetStream(export))
-                using (var zip = ZipArchive.Open(stream))
+            AddAssert(
+                "check slider multiplier correct in file",
+                () =>
                 {
-                    using (var osuStream = zip.Entries.First().OpenEntryStream())
-                    using (var reader = new StreamReader(osuStream))
-                    {
-                        string? line;
+                    string export = LocalStorage.GetFiles("exports").First();
 
-                        while ((line = reader.ReadLine()) != null)
+                    using (var stream = LocalStorage.GetStream(export))
+                    using (var zip = ZipArchive.Open(stream))
+                    {
+                        using (var osuStream = zip.Entries.First().OpenEntryStream())
+                        using (var reader = new StreamReader(osuStream))
                         {
-                            if (line.StartsWith("SliderMultiplier", StringComparison.Ordinal))
+                            string? line;
+
+                            while ((line = reader.ReadLine()) != null)
                             {
-                                return float.Parse(line.Split(':', StringSplitOptions.TrimEntries).Last(), provider: CultureInfo.InvariantCulture);
+                                if (line.StartsWith("SliderMultiplier", StringComparison.Ordinal))
+                                {
+                                    return float.Parse(
+                                        line.Split(':', StringSplitOptions.TrimEntries).Last(),
+                                        provider: CultureInfo.InvariantCulture
+                                    );
+                                }
                             }
                         }
                     }
-                }
 
-                return 0;
-            }, () => Is.EqualTo(multiplier ?? new BeatmapDifficulty().SliderMultiplier).Within(Precision.FLOAT_EPSILON));
+                    return 0;
+                },
+                () =>
+                    Is.EqualTo(multiplier ?? new BeatmapDifficulty().SliderMultiplier)
+                        .Within(Precision.FLOAT_EPSILON)
+            );
         }
 
         [Test]

@@ -91,18 +91,20 @@ namespace osu.Game.Rulesets.Osu.Skinning
         /// </summary>
         public virtual void RecyclePath()
         {
-            InternalChild = path = CreateSliderPath().With(p =>
-            {
-                p.Position = path?.Position ?? Vector2.Zero;
-                p.PathRadius = path?.PathRadius ?? 10;
-                p.AccentColour = path?.AccentColour ?? Color4.White;
-                p.BorderColour = path?.BorderColour ?? Color4.White;
-                p.BorderSize = path?.BorderSize ?? 1;
-                p.Vertices = path?.Vertices ?? Array.Empty<Vector2>();
-            });
+            InternalChild = path = CreateSliderPath()
+                .With(p =>
+                {
+                    p.Position = path?.Position ?? Vector2.Zero;
+                    p.PathRadius = path?.PathRadius ?? 10;
+                    p.AccentColour = path?.AccentColour ?? Color4.White;
+                    p.BorderColour = path?.BorderColour ?? Color4.White;
+                    p.BorderSize = path?.BorderSize ?? 1;
+                    p.Vertices = path?.Vertices ?? Array.Empty<Vector2>();
+                });
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => path.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            path.ReceivePositionalInputAt(screenSpacePos);
 
         /// <summary>
         /// Sets the vertices of the path which should be drawn by this <see cref="SliderBody"/>.
@@ -123,7 +125,15 @@ namespace osu.Game.Rulesets.Osu.Skinning
                     return BorderColour;
 
                 position -= CalculatedBorderPortion;
-                return new Color4(AccentColour.R, AccentColour.G, AccentColour.B, (opacity_at_edge - (opacity_at_edge - opacity_at_centre) * position / GRADIENT_PORTION) * AccentColour.A);
+                return new Color4(
+                    AccentColour.R,
+                    AccentColour.G,
+                    AccentColour.B,
+                    (
+                        opacity_at_edge
+                        - (opacity_at_edge - opacity_at_centre) * position / GRADIENT_PORTION
+                    ) * AccentColour.A
+                );
             }
         }
     }

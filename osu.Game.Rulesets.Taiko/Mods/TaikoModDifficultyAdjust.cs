@@ -12,14 +12,20 @@ namespace osu.Game.Rulesets.Taiko.Mods
 {
     public class TaikoModDifficultyAdjust : ModDifficultyAdjust
     {
-        [SettingSource("Scroll Speed", "Adjust a beatmap's set scroll speed", LAST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable ScrollSpeed { get; } = new DifficultyBindable
-        {
-            Precision = 0.05f,
-            MinValue = 0.25f,
-            MaxValue = 4,
-            ReadCurrentFromDifficulty = _ => 1,
-        };
+        [SettingSource(
+            "Scroll Speed",
+            "Adjust a beatmap's set scroll speed",
+            LAST_SETTING_ORDER + 1,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable ScrollSpeed { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.05f,
+                MinValue = 0.25f,
+                MaxValue = 4,
+                ReadCurrentFromDifficulty = _ => 1,
+            };
 
         public override string ExtendedIconInformation
         {
@@ -28,17 +34,24 @@ namespace osu.Game.Rulesets.Taiko.Mods
                 if (UserAdjustedSettingsCount != 1)
                     return string.Empty;
 
-                if (!ScrollSpeed.IsDefault) return format("SC", ScrollSpeed);
-                if (!OverallDifficulty.IsDefault) return format("OD", OverallDifficulty);
-                if (!DrainRate.IsDefault) return format("HP", DrainRate);
+                if (!ScrollSpeed.IsDefault)
+                    return format("SC", ScrollSpeed);
+                if (!OverallDifficulty.IsDefault)
+                    return format("OD", OverallDifficulty);
+                if (!DrainRate.IsDefault)
+                    return format("HP", DrainRate);
 
                 return string.Empty;
 
-                string format(string acronym, DifficultyBindable bindable) => $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
+                string format(string acronym, DifficultyBindable bindable) =>
+                    $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
             }
         }
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -54,7 +67,8 @@ namespace osu.Game.Rulesets.Taiko.Mods
         {
             base.ApplySettings(difficulty);
 
-            if (ScrollSpeed.Value != null) difficulty.SliderMultiplier *= ScrollSpeed.Value.Value;
+            if (ScrollSpeed.Value != null)
+                difficulty.SliderMultiplier *= ScrollSpeed.Value.Value;
         }
     }
 }

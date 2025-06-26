@@ -43,10 +43,7 @@ namespace osu.Game.Overlays
 
             api.NotificationsClient.MessageReceived += handleMedalMessages;
 
-            Add(medalContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            Add(medalContainer = new Container { RelativeSizeAxes = Axes.Both });
         }
 
         protected override void LoadComplete()
@@ -83,13 +80,20 @@ namespace osu.Game.Overlays
 
             var medalAnimation = new MedalAnimation(medal);
 
-            Logger.Log($"Queueing medal unlock for \"{medal.Name}\" ({queuedMedals.Count} to display)");
+            Logger.Log(
+                $"Queueing medal unlock for \"{medal.Name}\" ({queuedMedals.Count} to display)"
+            );
 
-            Schedule(() => LoadComponentAsync(medalAnimation, m =>
-            {
-                queuedMedals.Enqueue(m);
-                showNextMedal();
-            }));
+            Schedule(() =>
+                LoadComponentAsync(
+                    medalAnimation,
+                    m =>
+                    {
+                        queuedMedals.Enqueue(m);
+                        showNextMedal();
+                    }
+                )
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -122,7 +126,10 @@ namespace osu.Game.Overlays
         private void showNextMedal()
         {
             // If already displayed, keep displaying medals regardless of activation mode changes.
-            if (OverlayActivationMode.Value != OverlayActivation.All && State.Value == Visibility.Hidden)
+            if (
+                OverlayActivationMode.Value != OverlayActivation.All
+                && State.Value == Visibility.Hidden
+            )
                 return;
 
             // A medal is already displaying.

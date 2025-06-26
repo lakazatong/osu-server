@@ -15,7 +15,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
     /// <remarks>
     /// Only used for parsing beatmaps and not gameplay.
     /// </remarks>
-    internal abstract class ConvertHitObject : HitObject, IHasCombo, IHasPosition, IHasLegacyHitObjectType
+    internal abstract class ConvertHitObject
+        : HitObject,
+            IHasCombo,
+            IHasPosition,
+            IHasLegacyHitObjectType
     {
         public bool NewCombo { get; set; }
 

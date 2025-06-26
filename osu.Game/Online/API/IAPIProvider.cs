@@ -139,7 +139,11 @@ namespace osu.Game.Online.API
         /// <param name="clientName">The name of the client this connector connects for, used for logging.</param>
         /// <param name="endpoint">The endpoint to the hub.</param>
         /// <param name="preferMessagePack">Whether to use MessagePack for serialisation if available on this platform.</param>
-        IHubClientConnector? GetHubConnector(string clientName, string endpoint, bool preferMessagePack = true);
+        IHubClientConnector? GetHubConnector(
+            string clientName,
+            string endpoint,
+            bool preferMessagePack = true
+        );
 
         /// <summary>
         /// Accesses the <see cref="INotificationsClient"/> used to receive asynchronous notifications from web.
@@ -158,6 +162,10 @@ namespace osu.Game.Online.API
         /// <param name="username">The username to create the account with.</param>
         /// <param name="password">The password to create the account with.</param>
         /// <returns>Any errors encoutnered during account creation.</returns>
-        RegistrationRequest.RegistrationRequestErrors? CreateAccount(string email, string username, string password);
+        RegistrationRequest.RegistrationRequestErrors? CreateAccount(
+            string email,
+            string username,
+            string password
+        );
     }
 }

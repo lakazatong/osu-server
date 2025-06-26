@@ -24,7 +24,10 @@ namespace osu.Game.Beatmaps
     /// </remarks>
     [Serializable]
     [MapTo("BeatmapMetadata")]
-    public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo, IDeepCloneable<BeatmapMetadata>
+    public class BeatmapMetadata
+        : RealmObject,
+            IBeatmapMetadataInfo,
+            IDeepCloneable<BeatmapMetadata>
     {
         public string Title { get; set; } = string.Empty;
 
@@ -58,25 +61,24 @@ namespace osu.Game.Beatmaps
         }
 
         [UsedImplicitly] // Realm
-        private BeatmapMetadata()
-        {
-        }
+        private BeatmapMetadata() { }
 
         IUser IBeatmapMetadataInfo.Author => Author;
 
         public override string ToString() => this.GetDisplayTitle();
 
-        public BeatmapMetadata DeepClone() => new BeatmapMetadata(Author.DeepClone())
-        {
-            Title = Title,
-            TitleUnicode = TitleUnicode,
-            Artist = Artist,
-            ArtistUnicode = ArtistUnicode,
-            Source = Source,
-            Tags = Tags,
-            PreviewTime = PreviewTime,
-            AudioFile = AudioFile,
-            BackgroundFile = BackgroundFile
-        };
+        public BeatmapMetadata DeepClone() =>
+            new BeatmapMetadata(Author.DeepClone())
+            {
+                Title = Title,
+                TitleUnicode = TitleUnicode,
+                Artist = Artist,
+                ArtistUnicode = ArtistUnicode,
+                Source = Source,
+                Tags = Tags,
+                PreviewTime = PreviewTime,
+                AudioFile = AudioFile,
+                BackgroundFile = BackgroundFile,
+            };
     }
 }

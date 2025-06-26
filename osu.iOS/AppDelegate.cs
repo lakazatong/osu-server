@@ -17,7 +17,8 @@ namespace osu.iOS
         /// <summary>
         /// The current orientation the game is displayed in.
         /// </summary>
-        public UIInterfaceOrientation CurrentOrientation => Host.Window.UIWindow.WindowScene!.InterfaceOrientation;
+        public UIInterfaceOrientation CurrentOrientation =>
+            Host.Window.UIWindow.WindowScene!.InterfaceOrientation;
 
         /// <summary>
         /// Controls the orientations allowed for the device to rotate to, overriding the default allowed orientations.
@@ -41,7 +42,10 @@ namespace osu.iOS
 
         protected override Framework.Game CreateGame() => new OsuGameIOS(this);
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, UIWindow forWindow)
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(
+            UIApplication application,
+            UIWindow forWindow
+        )
         {
             if (orientations != null)
                 return orientations.Value;
@@ -49,10 +53,13 @@ namespace osu.iOS
             if (defaultOrientationsMask == null)
             {
                 defaultOrientationsMask = 0;
-                var defaultOrientations = (NSArray)NSBundle.MainBundle.ObjectForInfoDictionary("UISupportedInterfaceOrientations");
+                var defaultOrientations = (NSArray)
+                    NSBundle.MainBundle.ObjectForInfoDictionary("UISupportedInterfaceOrientations");
 
                 foreach (var value in defaultOrientations.ToArray<NSString>())
-                    defaultOrientationsMask |= Enum.Parse<UIInterfaceOrientationMask>(value.ToString().Replace("UIInterfaceOrientation", string.Empty));
+                    defaultOrientationsMask |= Enum.Parse<UIInterfaceOrientationMask>(
+                        value.ToString().Replace("UIInterfaceOrientation", string.Empty)
+                    );
             }
 
             return defaultOrientationsMask.Value;

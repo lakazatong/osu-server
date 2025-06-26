@@ -9,9 +9,7 @@ namespace osu.Game.Overlays.BeatmapSet
     public partial class MetadataSectionDescription : MetadataSection
     {
         public MetadataSectionDescription(Action<string>? searchAction = null)
-            : base(MetadataType.Description, searchAction)
-        {
-        }
+            : base(MetadataType.Description, searchAction) { }
 
         protected override void AddMetadata(string metadata, LinkFlowContainer loaded)
         {

@@ -10,21 +10,18 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
     public partial class DrawableFruit : DrawablePalpableCatchHitObject
     {
         public DrawableFruit()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableFruit(Fruit? h)
-            : base(h)
-        {
-        }
+            : base(h) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             ScalingContainer.Child = new SkinnableDrawable(
                 new CatchSkinComponentLookup(CatchSkinComponents.Fruit),
-                _ => new FruitPiece());
+                _ => new FruitPiece()
+            );
         }
 
         protected override void UpdateInitialTransforms()

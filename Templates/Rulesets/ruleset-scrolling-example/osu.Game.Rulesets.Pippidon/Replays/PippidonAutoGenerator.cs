@@ -14,9 +14,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
         public new Beatmap<PippidonHitObject> Beatmap => (Beatmap<PippidonHitObject>)base.Beatmap;
 
         public PippidonAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
@@ -30,12 +28,18 @@ namespace osu.Game.Rulesets.Pippidon.Replays
                     continue;
 
                 int totalTravel = Math.Abs(hitObject.Lane - currentLane);
-                var direction = hitObject.Lane > currentLane ? PippidonAction.MoveDown : PippidonAction.MoveUp;
+                var direction =
+                    hitObject.Lane > currentLane ? PippidonAction.MoveDown : PippidonAction.MoveUp;
 
                 double time = hitObject.StartTime - 5;
 
                 if (totalTravel == PippidonPlayfield.LANE_COUNT - 1)
-                    addFrame(time, direction == PippidonAction.MoveDown ? PippidonAction.MoveUp : PippidonAction.MoveDown);
+                    addFrame(
+                        time,
+                        direction == PippidonAction.MoveDown
+                            ? PippidonAction.MoveUp
+                            : PippidonAction.MoveDown
+                    );
                 else
                 {
                     time -= totalTravel * KEY_UP_DELAY;

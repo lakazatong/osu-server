@@ -22,19 +22,29 @@ namespace osu.Game.Rulesets.Osu.Edit
 
                 Debug.Assert(firstInSelection != null && lastInSelection != null);
 
-                var precedingObject = (OsuHitObject?)EditorBeatmap.HitObjects.LastOrDefault(ho => ho.GetEndTime() < firstInSelection.StartTime);
-                var nextObject = (OsuHitObject?)EditorBeatmap.HitObjects.FirstOrDefault(ho => ho.StartTime > lastInSelection.GetEndTime());
+                var precedingObject = (OsuHitObject?)
+                    EditorBeatmap.HitObjects.LastOrDefault(ho =>
+                        ho.GetEndTime() < firstInSelection.StartTime
+                    );
+                var nextObject = (OsuHitObject?)
+                    EditorBeatmap.HitObjects.FirstOrDefault(ho =>
+                        ho.StartTime > lastInSelection.GetEndTime()
+                    );
 
                 if (precedingObject != null && precedingObject is not Spinner)
                 {
                     AddHeader("To previous");
-                    AddValue($"{(firstInSelection.StackedPosition - precedingObject.StackedEndPosition).Length:#,0.##}px");
+                    AddValue(
+                        $"{(firstInSelection.StackedPosition - precedingObject.StackedEndPosition).Length:#,0.##}px"
+                    );
                 }
 
                 if (nextObject != null && nextObject is not Spinner)
                 {
                     AddHeader("To next");
-                    AddValue($"{(nextObject.StackedPosition - lastInSelection.StackedEndPosition).Length:#,0.##}px");
+                    AddValue(
+                        $"{(nextObject.StackedPosition - lastInSelection.StackedEndPosition).Length:#,0.##}px"
+                    );
                 }
             }
         }

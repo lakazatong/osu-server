@@ -60,7 +60,10 @@ namespace osu.Game.Storyboards.Drawables
                 if (vectorScale == value)
                     return;
 
-                if (!Validation.IsFinite(value)) throw new ArgumentException($@"{nameof(VectorScale)} must be finite, but is {value}.");
+                if (!Validation.IsFinite(value))
+                    throw new ArgumentException(
+                        $@"{nameof(VectorScale)} must be finite, but is {value}."
+                    );
 
                 vectorScale = value;
                 Invalidate(Invalidation.MiscGeometry);
@@ -69,13 +72,17 @@ namespace osu.Game.Storyboards.Drawables
 
         public override bool RemoveWhenNotAlive => false;
 
-        protected override Vector2 DrawScale
-            => new Vector2(FlipH ? -base.DrawScale.X : base.DrawScale.X, FlipV ? -base.DrawScale.Y : base.DrawScale.Y) * VectorScale;
+        protected override Vector2 DrawScale =>
+            new Vector2(
+                FlipH ? -base.DrawScale.X : base.DrawScale.X,
+                FlipV ? -base.DrawScale.Y : base.DrawScale.Y
+            ) * VectorScale;
 
-        public override Anchor Origin => StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
+        public override Anchor Origin =>
+            StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
 
-        public override bool IsPresent
-            => !float.IsNaN(DrawPosition.X) && !float.IsNaN(DrawPosition.Y) && base.IsPresent;
+        public override bool IsPresent =>
+            !float.IsNaN(DrawPosition.X) && !float.IsNaN(DrawPosition.Y) && base.IsPresent;
 
         public DrawableStoryboardAnimation(StoryboardAnimation animation)
         {
@@ -130,7 +137,15 @@ namespace osu.Game.Storyboards.Drawables
 
             // When reading from a skin, we match stables weird behaviour where `FrameCount` is ignored
             // and resources are retrieved until the end of the animation.
-            var skinTextures = skin.GetTextures(Path.ChangeExtension(Animation.Path, null), default, default, true, string.Empty, null, out _);
+            var skinTextures = skin.GetTextures(
+                Path.ChangeExtension(Animation.Path, null),
+                default,
+                default,
+                true,
+                string.Empty,
+                null,
+                out _
+            );
 
             if (skinTextures.Length > 0)
             {

@@ -37,7 +37,10 @@ namespace osu.Game.Skinning
         /// </summary>
         public PoolableSkinnableSample()
         {
-            InternalChild = sampleContainer = new AudioContainer<DrawableSample> { RelativeSizeAxes = Axes.Both };
+            InternalChild = sampleContainer = new AudioContainer<DrawableSample>
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
         }
 
         /// <summary>
@@ -59,7 +62,9 @@ namespace osu.Game.Skinning
         public void Apply(ISampleInfo sampleInfo)
         {
             if (this.sampleInfo != null)
-                throw new InvalidOperationException($"A {nameof(PoolableSkinnableSample)} cannot be applied multiple {nameof(ISampleInfo)}s.");
+                throw new InvalidOperationException(
+                    $"A {nameof(PoolableSkinnableSample)} cannot be applied multiple {nameof(ISampleInfo)}s."
+                );
 
             this.sampleInfo = sampleInfo;
 
@@ -84,7 +89,8 @@ namespace osu.Game.Skinning
         {
             // only run if the samples aren't already cleared.
             // this ensures the "wasPlaying" state is stored correctly even if multiple clear calls are executed.
-            if (!sampleContainer.Any()) return;
+            if (!sampleContainer.Any())
+                return;
 
             wasPlaying = Playing;
 
@@ -171,15 +177,20 @@ namespace osu.Game.Skinning
 
         public BindableNumber<double> Tempo => sampleContainer.Tempo;
 
-        public void BindAdjustments(IAggregateAudioAdjustment component) => sampleContainer.BindAdjustments(component);
+        public void BindAdjustments(IAggregateAudioAdjustment component) =>
+            sampleContainer.BindAdjustments(component);
 
-        public void UnbindAdjustments(IAggregateAudioAdjustment component) => sampleContainer.UnbindAdjustments(component);
+        public void UnbindAdjustments(IAggregateAudioAdjustment component) =>
+            sampleContainer.UnbindAdjustments(component);
 
-        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => sampleContainer.AddAdjustment(type, adjustBindable);
+        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            sampleContainer.AddAdjustment(type, adjustBindable);
 
-        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => sampleContainer.RemoveAdjustment(type, adjustBindable);
+        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            sampleContainer.RemoveAdjustment(type, adjustBindable);
 
-        public void RemoveAllAdjustments(AdjustableProperty type) => sampleContainer.RemoveAllAdjustments(type);
+        public void RemoveAllAdjustments(AdjustableProperty type) =>
+            sampleContainer.RemoveAllAdjustments(type);
 
         public IBindable<double> AggregateVolume => sampleContainer.AggregateVolume;
 

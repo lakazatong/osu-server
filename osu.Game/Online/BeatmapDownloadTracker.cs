@@ -23,9 +23,7 @@ namespace osu.Game.Online
         private RealmAccess realm { get; set; } = null!;
 
         public BeatmapDownloadTracker(IBeatmapSetInfo trackedItem)
-            : base(trackedItem)
-        {
-        }
+            : base(trackedItem) { }
 
         protected override void LoadComplete()
         {
@@ -43,32 +41,37 @@ namespace osu.Game.Online
             // Required local for iOS. Will cause runtime crash if inlined.
             int onlineId = TrackedItem.OnlineID;
 
-            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>().Where(s => s.OnlineID == onlineId && !s.DeletePending), (items, _) =>
-            {
-                if (items.Any())
-                    Schedule(() => UpdateState(DownloadState.LocallyAvailable));
-                else
+            realmSubscription = realm.RegisterForNotifications(
+                r => r.All<BeatmapSetInfo>().Where(s => s.OnlineID == onlineId && !s.DeletePending),
+                (items, _) =>
                 {
-                    Schedule(() =>
+                    if (items.Any())
+                        Schedule(() => UpdateState(DownloadState.LocallyAvailable));
+                    else
                     {
-                        UpdateState(DownloadState.NotDownloaded);
-                        attachDownload(Downloader.GetExistingDownload(beatmapSetInfo));
-                    });
+                        Schedule(() =>
+                        {
+                            UpdateState(DownloadState.NotDownloaded);
+                            attachDownload(Downloader.GetExistingDownload(beatmapSetInfo));
+                        });
+                    }
                 }
-            });
+            );
         }
 
-        private void downloadBegan(ArchiveDownloadRequest<IBeatmapSetInfo> request) => Schedule(() =>
-        {
-            if (checkEquality(request.Model, TrackedItem))
-                attachDownload(request);
-        });
+        private void downloadBegan(ArchiveDownloadRequest<IBeatmapSetInfo> request) =>
+            Schedule(() =>
+            {
+                if (checkEquality(request.Model, TrackedItem))
+                    attachDownload(request);
+            });
 
-        private void downloadFailed(ArchiveDownloadRequest<IBeatmapSetInfo> request) => Schedule(() =>
-        {
-            if (checkEquality(request.Model, TrackedItem))
-                attachDownload(null);
-        });
+        private void downloadFailed(ArchiveDownloadRequest<IBeatmapSetInfo> request) =>
+            Schedule(() =>
+            {
+                if (checkEquality(request.Model, TrackedItem))
+                    attachDownload(null);
+            });
 
         private void attachDownload(ArchiveDownloadRequest<IBeatmapSetInfo>? request)
         {
@@ -104,13 +107,15 @@ namespace osu.Game.Online
             }
         }
 
-        private void onRequestSuccess(string _) => Schedule(() => UpdateState(DownloadState.Importing));
+        private void onRequestSuccess(string _) =>
+            Schedule(() => UpdateState(DownloadState.Importing));
 
         private void onRequestProgress(float progress) => Schedule(() => UpdateProgress(progress));
 
         private void onRequestFailure(Exception e) => Schedule(() => attachDownload(null));
 
-        private bool checkEquality(IBeatmapSetInfo x, IBeatmapSetInfo y) => x.OnlineID == y.OnlineID;
+        private bool checkEquality(IBeatmapSetInfo x, IBeatmapSetInfo y) =>
+            x.OnlineID == y.OnlineID;
 
         #region Disposal
 

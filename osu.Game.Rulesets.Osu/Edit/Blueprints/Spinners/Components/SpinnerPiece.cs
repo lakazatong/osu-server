@@ -25,11 +25,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Spinners.Components
 
             InternalChildren = new Drawable[]
             {
-                circle = new Circle
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.5f,
-                },
+                circle = new Circle { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                 ring = new Circle
                 {
                     Anchor = Anchor.Centre,
@@ -52,6 +48,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Spinners.Components
             ring.Scale = new Vector2(hitObject.Scale);
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => circle.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            circle.ReceivePositionalInputAt(screenSpacePos);
     }
 }

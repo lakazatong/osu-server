@@ -39,7 +39,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             {
                 int rotations = (int)(drawableSpinner.Result.TotalRotation / 360);
 
-                if (wholeRotationCount == rotations) return false;
+                if (wholeRotationCount == rotations)
+                    return false;
 
                 wholeRotationCount = rotations;
                 return true;
@@ -95,7 +96,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                                         RelativeSizeAxes = Axes.Both,
                                         Alpha = 0f,
                                         AlwaysPresent = true,
-                                    }
+                                    },
                                 },
                                 ticksContainer = new Container
                                 {
@@ -103,7 +104,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                                     Origin = Anchor.Centre,
                                     RelativeSizeAxes = Axes.Both,
                                     Child = ticks = new ArgonSpinnerTicks(),
-                                }
+                                },
                             },
                         },
                         new Container
@@ -127,7 +128,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                                     Name = "Bottom Arc",
                                     Scale = new Vector2(1, -1),
                                 },
-                            }
+                            },
                         },
                         new Container
                         {
@@ -139,7 +140,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Name = "Left Bar"
+                                    Name = "Left Bar",
                                 },
                                 new ArgonSpinnerProgressArc
                                 {
@@ -148,9 +149,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                                     Name = "Right Bar",
                                     Scale = new Vector2(-1, 1),
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
                 centre = new Container
                 {
@@ -164,11 +165,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                             RelativeSizeAxes = Axes.Both,
                             Size = new Vector2(0.8f),
                         },
-                        new RingPiece(3)
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(1f),
-                        }
+                        new RingPiece(3) { RelativeSizeAxes = Axes.Both, Size = new Vector2(1f) },
                     },
                 },
             };
@@ -196,25 +193,41 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                 if (checkNewRotationCount)
                 {
                     fill.FinishTransforms(false, nameof(Alpha));
-                    fill
-                        .FadeTo(tracking_alpha + 0.2f, 60, Easing.OutExpo)
+                    fill.FadeTo(tracking_alpha + 0.2f, 60, Easing.OutExpo)
                         .Then()
                         .FadeTo(tracking_alpha, 250, Easing.OutQuint);
                 }
             }
             else
             {
-                trackingElementInterpolation =
-                    (float)Interpolation.Damp(trackingElementInterpolation, drawableSpinner.RotationTracker.Tracking ? 1 : 0, 0.985f, (float)Math.Abs(Clock.ElapsedFrameTime));
+                trackingElementInterpolation = (float)
+                    Interpolation.Damp(
+                        trackingElementInterpolation,
+                        drawableSpinner.RotationTracker.Tracking ? 1 : 0,
+                        0.985f,
+                        (float)Math.Abs(Clock.ElapsedFrameTime)
+                    );
 
-                fill.Alpha = trackingElementInterpolation * (tracking_alpha - idle_alpha) + idle_alpha;
-                centre.Size = new Vector2(trackingElementInterpolation * (tracking_centre_size - idle_centre_size) + idle_centre_size);
+                fill.Alpha =
+                    trackingElementInterpolation * (tracking_alpha - idle_alpha) + idle_alpha;
+                centre.Size = new Vector2(
+                    trackingElementInterpolation * (tracking_centre_size - idle_centre_size)
+                        + idle_centre_size
+                );
             }
 
             const float initial_fill_scale = 0.1f;
-            float targetScale = initial_fill_scale + (0.98f - initial_fill_scale) * drawableSpinner.Progress;
+            float targetScale =
+                initial_fill_scale + (0.98f - initial_fill_scale) * drawableSpinner.Progress;
 
-            fill.Scale = new Vector2((float)Interpolation.Lerp(fill.Scale.X, targetScale, Math.Clamp(Math.Abs(Time.Elapsed) / 100, 0, 1)));
+            fill.Scale = new Vector2(
+                (float)
+                    Interpolation.Lerp(
+                        fill.Scale.X,
+                        targetScale,
+                        Math.Clamp(Math.Abs(Time.Elapsed) / 100, 0, 1)
+                    )
+            );
             ticks.Rotation = drawableSpinner.RotationTracker.Rotation;
         }
 
@@ -235,7 +248,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                 using (BeginDelayedSequence(spinner.TimePreempt / 2))
                 {
                     // constant ambient rotation to give the spinner "spinning" character.
-                    ticksContainer.RotateTo((float)(25 * spinner.Duration / 2000), spinner.TimePreempt + spinner.Duration);
+                    ticksContainer.RotateTo(
+                        (float)(25 * spinner.Duration / 2000),
+                        spinner.TimePreempt + spinner.Duration
+                    );
                 }
 
                 using (BeginDelayedSequence(spinner.TimePreempt / 2))
@@ -250,7 +266,11 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                     }
                 }
 
-                using (BeginDelayedSequence(spinner.TimePreempt + spinner.Duration + drawableHitObject.Result.TimeOffset))
+                using (
+                    BeginDelayedSequence(
+                        spinner.TimePreempt + spinner.Duration + drawableHitObject.Result.TimeOffset
+                    )
+                )
                 {
                     switch (state)
                     {

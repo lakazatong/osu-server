@@ -77,13 +77,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             AutoSizeAxes = Axes.Y,
                             Direction = FillDirection.Full,
                             Spacing = new Vector2(5),
-                            Child = addButton = new RoundedButton
-                            {
-                                Action = addNewColour,
-                                Size = new Vector2(70),
-                                Text = "+",
-                            }
-                        }
+                            Child = addButton =
+                                new RoundedButton
+                                {
+                                    Action = addNewColour,
+                                    Size = new Vector2(70),
+                                    Text = "+",
+                                },
+                        },
                     },
                 },
             };
@@ -95,24 +96,30 @@ namespace osu.Game.Graphics.UserInterfaceV2
         {
             base.LoadComplete();
 
-            Colours.BindCollectionChanged((_, args) =>
-            {
-                if (args.Action != NotifyCollectionChangedAction.Replace)
-                    updateColours();
-            }, true);
-            CanAdd.BindValueChanged(canAdd =>
-            {
-                if (canAdd.NewValue)
+            Colours.BindCollectionChanged(
+                (_, args) =>
                 {
-                    addButton.Enabled.Value = true;
-                    addButton.TooltipText = string.Empty;
-                }
-                else
+                    if (args.Action != NotifyCollectionChangedAction.Replace)
+                        updateColours();
+                },
+                true
+            );
+            CanAdd.BindValueChanged(
+                canAdd =>
                 {
-                    addButton.Enabled.Value = false;
-                    addButton.TooltipText = "Maximum combo colours reached";
-                }
-            }, true);
+                    if (canAdd.NewValue)
+                    {
+                        addButton.Enabled.Value = true;
+                        addButton.TooltipText = string.Empty;
+                    }
+                    else
+                    {
+                        addButton.Enabled.Value = false;
+                        addButton.TooltipText = "Maximum combo colours reached";
+                    }
+                },
+                true
+            );
             updateState();
         }
 
@@ -130,9 +137,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void addNewColour()
         {
-            Color4 startingColour = Colours.Count > 0
-                ? Colours.Last()
-                : Colour4.White;
+            Color4 startingColour = Colours.Count > 0 ? Colours.Last() : Colour4.White;
 
             Colours.Add(startingColour);
             flow.OfType<ColourButton>().Last().TriggerClick();
@@ -158,7 +163,9 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 // copy to avoid accesses to modified closure.
                 int colourIndex = i;
                 var colourButton = new ColourButton { Current = { Value = Colours[colourIndex] } };
-                colourButton.Current.BindValueChanged(colour => Colours[colourIndex] = colour.NewValue);
+                colourButton.Current.BindValueChanged(colour =>
+                    Colours[colourIndex] = colour.NewValue
+                );
                 colourButton.DeleteRequested = () => Colours.RemoveAt(colourIndex);
                 flow.Add(colourButton);
             }
@@ -183,15 +190,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    hexCode = new OsuSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    hexCode = new OsuSpriteText { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 };
             }
 
@@ -202,15 +202,18 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 Current.BindValueChanged(_ => updateState(), true);
             }
 
-            public Popover GetPopover() => new ColourPickerPopover
-            {
-                Current = { BindTarget = Current }
-            };
+            public Popover GetPopover() =>
+                new ColourPickerPopover { Current = { BindTarget = Current } };
 
-            public MenuItem[] ContextMenuItems => new MenuItem[]
-            {
-                new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => DeleteRequested?.Invoke())
-            };
+            public MenuItem[] ContextMenuItems =>
+                new MenuItem[]
+                {
+                    new OsuMenuItem(
+                        CommonStrings.ButtonsDelete,
+                        MenuItemType.Destructive,
+                        () => DeleteRequested?.Invoke()
+                    ),
+                };
 
             private void updateState()
             {
@@ -228,20 +231,16 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 set => current.Current = value;
             }
 
-            private readonly BindableWithCurrent<Colour4> current = new BindableWithCurrent<Colour4>();
+            private readonly BindableWithCurrent<Colour4> current =
+                new BindableWithCurrent<Colour4>();
 
             public ColourPickerPopover()
-                : base(false)
-            {
-            }
+                : base(false) { }
 
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colourProvider)
             {
-                Child = new OsuColourPicker
-                {
-                    Current = { BindTarget = Current }
-                };
+                Child = new OsuColourPicker { Current = { BindTarget = Current } };
 
                 Body.BorderThickness = 2;
                 Body.BorderColour = colourProvider.Highlight1;

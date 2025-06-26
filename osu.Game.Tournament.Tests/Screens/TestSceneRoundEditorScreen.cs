@@ -11,10 +11,12 @@ namespace osu.Game.Tournament.Tests.Screens
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new RoundEditorScreen
-            {
-                Width = 0.85f // create room for control panel
-            });
+            Add(
+                new RoundEditorScreen
+                {
+                    Width = 0.85f, // create room for control panel
+                }
+            );
         }
     }
 }

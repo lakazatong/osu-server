@@ -29,23 +29,29 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("set button always on", () =>
-            {
-                config.SetValue(OsuSetting.AlwaysShowHoldForMenuButton, true);
-            });
-
-            AddStep("create button", () =>
-            {
-                exitAction = false;
-
-                Child = holdForMenuButton = new HoldForMenuButton
+            AddStep(
+                "set button always on",
+                () =>
                 {
-                    Scale = new Vector2(2),
-                    Origin = Anchor.CentreRight,
-                    Anchor = Anchor.CentreRight,
-                    Action = () => exitAction = true
-                };
-            });
+                    config.SetValue(OsuSetting.AlwaysShowHoldForMenuButton, true);
+                }
+            );
+
+            AddStep(
+                "create button",
+                () =>
+                {
+                    exitAction = false;
+
+                    Child = holdForMenuButton = new HoldForMenuButton
+                    {
+                        Scale = new Vector2(2),
+                        Origin = Anchor.CentreRight,
+                        Anchor = Anchor.CentreRight,
+                        Action = () => exitAction = true,
+                    };
+                }
+            );
         }
 
         [Test]
@@ -56,11 +62,14 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("Trigger text fade out", () => InputManager.MoveMouseTo(Vector2.One));
             AddUntilStep("Text is not visible", () => !getSpriteText().IsPresent && !exitAction);
 
-            AddStep("Trigger exit action", () =>
-            {
-                InputManager.MoveMouseTo(holdForMenuButton);
-                InputManager.PressButton(MouseButton.Left);
-            });
+            AddStep(
+                "Trigger exit action",
+                () =>
+                {
+                    InputManager.MoveMouseTo(holdForMenuButton);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
 
             AddStep("Early release", () => InputManager.ReleaseButton(MouseButton.Left));
             AddAssert("action not triggered", () => !exitAction);
@@ -78,6 +87,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddUntilStep("wait for button fade out", () => holdForMenuButton.Alpha < 0.1f);
         }
 
-        private SpriteText getSpriteText() => holdForMenuButton.Children.OfType<SpriteText>().First();
+        private SpriteText getSpriteText() =>
+            holdForMenuButton.Children.OfType<SpriteText>().First();
     }
 }

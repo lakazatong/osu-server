@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
-using osu.Framework.Localisation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.Drawables.Cards;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.BeatmapListing;
@@ -47,9 +47,7 @@ namespace osu.Game.Overlays
         private BeatmapListingFilterControl filterControl => Header.FilterControl;
 
         public BeatmapListingOverlay()
-            : base(OverlayColourScheme.Blue)
-        {
-        }
+            : base(OverlayColourScheme.Blue) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -78,10 +76,10 @@ namespace osu.Game.Overlays
                                 RelativeSizeAxes = Axes.X,
                                 Masking = true,
                                 Padding = new MarginPadding { Horizontal = 20 },
-                            }
+                            },
                         },
                     },
-                }
+                },
             };
 
             filterControl.TypingStarted = onTypingStarted;
@@ -95,11 +93,13 @@ namespace osu.Game.Overlays
             filterControl.CardSize.BindValueChanged(_ => onCardSizeChanged());
 
             apiUser = api.LocalUser.GetBoundCopy();
-            apiUser.BindValueChanged(_ => Schedule(() =>
-            {
-                if (api.IsLoggedIn)
-                    replaceResultsAreaContent(Empty());
-            }));
+            apiUser.BindValueChanged(_ =>
+                Schedule(() =>
+                {
+                    if (api.IsLoggedIn)
+                        replaceResultsAreaContent(Empty());
+                })
+            );
         }
 
         public void ShowWithSearch(string query)
@@ -156,9 +156,14 @@ namespace osu.Game.Overlays
         {
             cancellationToken?.Cancel();
 
-            if (searchResult.Type == BeatmapListingFilterControl.SearchResultType.SupporterOnlyFilters)
+            if (
+                searchResult.Type
+                == BeatmapListingFilterControl.SearchResultType.SupporterOnlyFilters
+            )
             {
-                var supporterOnly = new SupporterRequiredDrawable(searchResult.SupporterOnlyFiltersUsed);
+                var supporterOnly = new SupporterRequiredDrawable(
+                    searchResult.SupporterOnlyFiltersUsed
+                );
                 replaceResultsAreaContent(supporterOnly);
                 return;
             }
@@ -176,31 +181,51 @@ namespace osu.Game.Overlays
 
                 var content = createCardContainerFor(newCards);
 
-                panelLoadTask = LoadComponentAsync(foundContent = content, replaceResultsAreaContent, (cancellationToken = new CancellationTokenSource()).Token);
+                panelLoadTask = LoadComponentAsync(
+                    foundContent = content,
+                    replaceResultsAreaContent,
+                    (cancellationToken = new CancellationTokenSource()).Token
+                );
             }
             else
             {
                 // new results may contain beatmaps from a previous page,
                 // this is dodgy but matches web behaviour for now.
                 // see: https://github.com/ppy/osu-web/issues/9270
-                newCards = newCards.ExceptBy(foundContent.Select(c => c.BeatmapSet.OnlineID), c => c.BeatmapSet.OnlineID);
+                newCards = newCards.ExceptBy(
+                    foundContent.Select(c => c.BeatmapSet.OnlineID),
+                    c => c.BeatmapSet.OnlineID
+                );
 
-                panelLoadTask = LoadComponentsAsync(newCards, loaded =>
-                {
-                    lastFetchDisplayedTime = Time.Current;
-                    foundContent.AddRange(loaded);
-                    loaded.ForEach(p => p.FadeIn(200, Easing.OutQuint));
-                }, (cancellationToken = new CancellationTokenSource()).Token);
+                panelLoadTask = LoadComponentsAsync(
+                    newCards,
+                    loaded =>
+                    {
+                        lastFetchDisplayedTime = Time.Current;
+                        foundContent.AddRange(loaded);
+                        loaded.ForEach(p => p.FadeIn(200, Easing.OutQuint));
+                    },
+                    (cancellationToken = new CancellationTokenSource()).Token
+                );
             }
         }
 
-        private IEnumerable<BeatmapCard> createCardsFor(IEnumerable<APIBeatmapSet> beatmapSets) => beatmapSets.Select(set => BeatmapCard.Create(set, filterControl.CardSize.Value).With(c =>
-        {
-            c.Anchor = Anchor.TopCentre;
-            c.Origin = Anchor.TopCentre;
-        })).ToArray();
+        private IEnumerable<BeatmapCard> createCardsFor(IEnumerable<APIBeatmapSet> beatmapSets) =>
+            beatmapSets
+                .Select(set =>
+                    BeatmapCard
+                        .Create(set, filterControl.CardSize.Value)
+                        .With(c =>
+                        {
+                            c.Anchor = Anchor.TopCentre;
+                            c.Origin = Anchor.TopCentre;
+                        })
+                )
+                .ToArray();
 
-        private static ReverseChildIDFillFlowContainer<BeatmapCard> createCardContainerFor(IEnumerable<BeatmapCard> newCards)
+        private static ReverseChildIDFillFlowContainer<BeatmapCard> createCardContainerFor(
+            IEnumerable<BeatmapCard> newCards
+        )
         {
             // spawn new children with the contained so we only clear old content at the last moment.
             // reverse ID flow is required for correct Z-ordering of the cards' expandable content (last card should be front-most).
@@ -215,9 +240,9 @@ namespace osu.Game.Overlays
                     Top = 15,
                     // the + 20 adjustment is roughly eyeballed in order to fit all of the expanded content height after it's scaled
                     // as well as provide visual balance to the top margin.
-                    Bottom = ExpandedContentScrollContainer.HEIGHT + 20
+                    Bottom = ExpandedContentScrollContainer.HEIGHT + 20,
                 },
-                ChildrenEnumerable = newCards
+                ChildrenEnumerable = newCards,
             };
             return content;
         }
@@ -243,12 +268,16 @@ namespace osu.Game.Overlays
 
             cancellationToken?.Cancel();
 
-            panelLoadTask = LoadComponentsAsync(newCards, cards =>
-            {
-                foundContent.Clear();
-                foundContent.AddRange(cards);
-                Loading.Hide();
-            }, (cancellationToken = new CancellationTokenSource()).Token);
+            panelLoadTask = LoadComponentsAsync(
+                newCards,
+                cards =>
+                {
+                    foundContent.Clear();
+                    foundContent.AddRange(cards);
+                    Loading.Hide();
+                },
+                (cancellationToken = new CancellationTokenSource()).Token
+            );
         }
 
         protected override void Dispose(bool isDisposing)
@@ -270,32 +299,34 @@ namespace osu.Game.Overlays
             [BackgroundDependencyLoader]
             private void load(LargeTextureStore textures)
             {
-                AddInternal(new FillFlowContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    AutoSizeAxes = Axes.X,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(10, 0),
-                    Children = new Drawable[]
+                AddInternal(
+                    new FillFlowContainer
                     {
-                        new Sprite
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Y,
+                        AutoSizeAxes = Axes.X,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(10, 0),
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
-                            FillMode = FillMode.Fit,
-                            Texture = textures.Get(@"Online/not-found")
+                            new Sprite
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Both,
+                                FillMode = FillMode.Fit,
+                                Texture = textures.Get(@"Online/not-found"),
+                            },
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = BeatmapsStrings.ListingSearchNotFoundQuote,
+                            },
                         },
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = BeatmapsStrings.ListingSearchNotFoundQuote,
-                        }
                     }
-                });
+                );
             }
         }
 
@@ -319,35 +350,42 @@ namespace osu.Game.Overlays
             [BackgroundDependencyLoader]
             private void load(LargeTextureStore textures)
             {
-                AddInternal(new FillFlowContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    AutoSizeAxes = Axes.X,
-                    Direction = FillDirection.Horizontal,
-                    Children = new Drawable[]
+                AddInternal(
+                    new FillFlowContainer
                     {
-                        new Sprite
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Y,
+                        AutoSizeAxes = Axes.X,
+                        Direction = FillDirection.Horizontal,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
-                            FillMode = FillMode.Fit,
-                            Texture = textures.Get(@"Online/supporter-required"),
-                        },
-                        supporterRequiredText = new LinkFlowContainer
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            AutoSizeAxes = Axes.Both,
-                            Margin = new MarginPadding { Bottom = 10 },
+                            new Sprite
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Both,
+                                FillMode = FillMode.Fit,
+                                Texture = textures.Get(@"Online/supporter-required"),
+                            },
+                            supporterRequiredText = new LinkFlowContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                AutoSizeAxes = Axes.Both,
+                                Margin = new MarginPadding { Bottom = 10 },
+                            },
                         },
                     }
-                });
+                );
 
                 supporterRequiredText.AddText(
-                    BeatmapsStrings.ListingSearchSupporterFilterQuoteDefault(string.Join(" and ", filtersUsed), "").ToString(),
+                    BeatmapsStrings
+                        .ListingSearchSupporterFilterQuoteDefault(
+                            string.Join(" and ", filtersUsed),
+                            ""
+                        )
+                        .ToString(),
                     t =>
                     {
                         t.Font = OsuFont.GetFont(size: 16);
@@ -355,7 +393,10 @@ namespace osu.Game.Overlays
                     }
                 );
 
-                supporterRequiredText.AddLink(BeatmapsStrings.ListingSearchSupporterFilterQuoteLinkText.ToString(), @"/store/products/supporter-tag");
+                supporterRequiredText.AddLink(
+                    BeatmapsStrings.ListingSearchSupporterFilterQuoteLinkText.ToString(),
+                    @"/store/products/supporter-tag"
+                );
             }
         }
 
@@ -369,9 +410,13 @@ namespace osu.Game.Overlays
 
             const int pagination_scroll_distance = 500;
 
-            bool shouldShowMore = panelLoadTask?.IsCompleted != false
-                                  && Time.Current - lastFetchDisplayedTime > time_between_fetches
-                                  && (ScrollFlow.ScrollableExtent > 0 && ScrollFlow.IsScrolledToEnd(pagination_scroll_distance));
+            bool shouldShowMore =
+                panelLoadTask?.IsCompleted != false
+                && Time.Current - lastFetchDisplayedTime > time_between_fetches
+                && (
+                    ScrollFlow.ScrollableExtent > 0
+                    && ScrollFlow.IsScrolledToEnd(pagination_scroll_distance)
+                );
 
             if (shouldShowMore)
                 filterControl.FetchNextPage();

@@ -25,7 +25,11 @@ namespace osu.Game.Rulesets.Catch.Tests
             new object[] { LegacyMods.HalfTime, new[] { typeof(CatchModHalfTime) } },
             new object[] { LegacyMods.Flashlight, new[] { typeof(CatchModFlashlight) } },
             new object[] { LegacyMods.Autoplay, new[] { typeof(CatchModAutoplay) } },
-            new object[] { LegacyMods.HardRock | LegacyMods.DoubleTime, new[] { typeof(CatchModHardRock), typeof(CatchModDoubleTime) } },
+            new object[]
+            {
+                LegacyMods.HardRock | LegacyMods.DoubleTime,
+                new[] { typeof(CatchModHardRock), typeof(CatchModDoubleTime) },
+            },
             new object[] { LegacyMods.ScoreV2, new[] { typeof(ModScoreV2) } },
         };
 
@@ -33,16 +37,24 @@ namespace osu.Game.Rulesets.Catch.Tests
         [TestCase(LegacyMods.Cinema, new[] { typeof(CatchModCinema) })]
         [TestCase(LegacyMods.Cinema | LegacyMods.Autoplay, new[] { typeof(CatchModCinema) })]
         [TestCase(LegacyMods.Nightcore, new[] { typeof(CatchModNightcore) })]
-        [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(CatchModNightcore) })]
+        [TestCase(
+            LegacyMods.Nightcore | LegacyMods.DoubleTime,
+            new[] { typeof(CatchModNightcore) }
+        )]
         [TestCase(LegacyMods.Perfect, new[] { typeof(CatchModPerfect) })]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(CatchModPerfect) })]
-        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) => base.TestFromLegacy(legacyMods, expectedMods);
+        public new void TestFromLegacy(LegacyMods legacyMods, Type[] expectedMods) =>
+            base.TestFromLegacy(legacyMods, expectedMods);
 
         [TestCaseSource(nameof(catch_mod_mapping))]
         [TestCase(LegacyMods.Cinema | LegacyMods.Autoplay, new[] { typeof(CatchModCinema) })]
-        [TestCase(LegacyMods.Nightcore | LegacyMods.DoubleTime, new[] { typeof(CatchModNightcore) })]
+        [TestCase(
+            LegacyMods.Nightcore | LegacyMods.DoubleTime,
+            new[] { typeof(CatchModNightcore) }
+        )]
         [TestCase(LegacyMods.Perfect | LegacyMods.SuddenDeath, new[] { typeof(CatchModPerfect) })]
-        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) => base.TestToLegacy(legacyMods, givenMods);
+        public new void TestToLegacy(LegacyMods legacyMods, Type[] givenMods) =>
+            base.TestToLegacy(legacyMods, givenMods);
 
         protected override Ruleset CreateRuleset() => new CatchRuleset();
     }

@@ -12,10 +12,6 @@ namespace osu.Game.Tournament.Models
 
         public Bindable<string> Mod = new Bindable<string>(string.Empty);
 
-        public Bindable<int> Seed = new BindableInt
-        {
-            MinValue = 1,
-            MaxValue = 256
-        };
+        public Bindable<int> Seed = new BindableInt { MinValue = 1, MaxValue = 256 };
     }
 }

@@ -21,14 +21,18 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
             AllowShowingResults = true;
         }
 
-        protected override FillFlowContainer<RearrangeableListItem<PlaylistItem>> CreateListFillFlowContainer() => new HistoryFillFlowContainer
-        {
-            Spacing = new Vector2(0, 2)
-        };
+        protected override FillFlowContainer<
+            RearrangeableListItem<PlaylistItem>
+        > CreateListFillFlowContainer() =>
+            new HistoryFillFlowContainer { Spacing = new Vector2(0, 2) };
 
-        private partial class HistoryFillFlowContainer : FillFlowContainer<RearrangeableListItem<PlaylistItem>>
+        private partial class HistoryFillFlowContainer
+            : FillFlowContainer<RearrangeableListItem<PlaylistItem>>
         {
-            public override IEnumerable<Drawable> FlowingChildren => base.FlowingChildren.OfType<RearrangeableListItem<PlaylistItem>>().OrderByDescending(item => item.Model.PlayedAt);
+            public override IEnumerable<Drawable> FlowingChildren =>
+                base
+                    .FlowingChildren.OfType<RearrangeableListItem<PlaylistItem>>()
+                    .OrderByDescending(item => item.Model.PlayedAt);
         }
     }
 }

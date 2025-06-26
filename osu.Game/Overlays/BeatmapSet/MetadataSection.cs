@@ -31,9 +31,7 @@ namespace osu.Game.Overlays.BeatmapSet
         }
 
         protected MetadataSection(MetadataType type, Action<string>? searchAction = null)
-            : base(type, searchAction)
-        {
-        }
+            : base(type, searchAction) { }
     }
 
     public abstract partial class MetadataSection<T> : Container
@@ -96,22 +94,25 @@ namespace osu.Game.Overlays.BeatmapSet
 
         private void setTextFlowAsync(T metadata)
         {
-            LoadComponentAsync(new LinkFlowContainer(s => s.Font = s.Font.With(size: 14))
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Colour = Color4.White.Opacity(0.75f),
-            }, loaded =>
-            {
-                textFlow?.Expire();
+            LoadComponentAsync(
+                new LinkFlowContainer(s => s.Font = s.Font.With(size: 14))
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Colour = Color4.White.Opacity(0.75f),
+                },
+                loaded =>
+                {
+                    textFlow?.Expire();
 
-                AddMetadata(metadata, loaded);
+                    AddMetadata(metadata, loaded);
 
-                textContainer.Add(textFlow = loaded);
+                    textContainer.Add(textFlow = loaded);
 
-                // fade in if we haven't yet.
-                textContainer.FadeIn(TRANSITION_DURATION);
-            });
+                    // fade in if we haven't yet.
+                    textContainer.FadeIn(TRANSITION_DURATION);
+                }
+            );
         }
 
         protected abstract void AddMetadata(T metadata, LinkFlowContainer loaded);

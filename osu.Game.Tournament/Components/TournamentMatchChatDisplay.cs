@@ -39,33 +39,33 @@ namespace osu.Game.Tournament.Components
             if (ipc != null)
             {
                 chatChannel.BindTo(ipc.ChatChannel);
-                chatChannel.BindValueChanged(c =>
-                {
-                    if (string.IsNullOrWhiteSpace(c.NewValue))
-                        return;
-
-                    int id = int.Parse(c.NewValue);
-
-                    if (id <= 0) return;
-
-                    if (manager == null)
+                chatChannel.BindValueChanged(
+                    c =>
                     {
-                        AddInternal(manager = new ChannelManager(api));
-                        Channel.BindTo(manager.CurrentChannel);
-                    }
+                        if (string.IsNullOrWhiteSpace(c.NewValue))
+                            return;
 
-                    foreach (var ch in manager.JoinedChannels.ToList())
-                        manager.LeaveChannel(ch);
+                        int id = int.Parse(c.NewValue);
 
-                    var channel = new Channel
-                    {
-                        Id = id,
-                        Type = ChannelType.Public
-                    };
+                        if (id <= 0)
+                            return;
 
-                    manager.JoinChannel(channel);
-                    manager.CurrentChannel.Value = channel;
-                }, true);
+                        if (manager == null)
+                        {
+                            AddInternal(manager = new ChannelManager(api));
+                            Channel.BindTo(manager.CurrentChannel);
+                        }
+
+                        foreach (var ch in manager.JoinedChannels.ToList())
+                            manager.LeaveChannel(ch);
+
+                        var channel = new Channel { Id = id, Type = ChannelType.Public };
+
+                        manager.JoinChannel(channel);
+                        manager.CurrentChannel.Value = channel;
+                    },
+                    true
+                );
             }
         }
 
@@ -81,7 +81,8 @@ namespace osu.Game.Tournament.Components
             return new MatchMessage(message, ladderInfo);
         }
 
-        protected override StandAloneDrawableChannel CreateDrawableChannel(Channel channel) => new MatchChannel(channel);
+        protected override StandAloneDrawableChannel CreateDrawableChannel(Channel channel) =>
+            new MatchChannel(channel);
 
         public partial class MatchChannel : StandAloneDrawableChannel
         {
@@ -99,9 +100,15 @@ namespace osu.Game.Tournament.Components
             {
                 if (info.CurrentMatch.Value is TournamentMatch match)
                 {
-                    if (match.Team1.Value?.Players.Any(u => u.OnlineID == Message.Sender.OnlineID) == true)
+                    if (
+                        match.Team1.Value?.Players.Any(u => u.OnlineID == Message.Sender.OnlineID)
+                        == true
+                    )
                         UsernameColour = TournamentGame.COLOUR_RED;
-                    else if (match.Team2.Value?.Players.Any(u => u.OnlineID == Message.Sender.OnlineID) == true)
+                    else if (
+                        match.Team2.Value?.Players.Any(u => u.OnlineID == Message.Sender.OnlineID)
+                        == true
+                    )
                         UsernameColour = TournamentGame.COLOUR_BLUE;
                 }
             }

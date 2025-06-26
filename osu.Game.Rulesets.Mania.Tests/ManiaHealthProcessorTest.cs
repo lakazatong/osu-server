@@ -16,14 +16,16 @@ namespace osu.Game.Rulesets.Mania.Tests
         public void TestNoDrain()
         {
             var processor = new ManiaHealthProcessor(0);
-            processor.ApplyBeatmap(new ManiaBeatmap(new StageDefinition(4))
-            {
-                HitObjects =
+            processor.ApplyBeatmap(
+                new ManiaBeatmap(new StageDefinition(4))
                 {
-                    new Note { StartTime = 0 },
-                    new Note { StartTime = 1000 },
+                    HitObjects =
+                    {
+                        new Note { StartTime = 0 },
+                        new Note { StartTime = 1000 },
+                    },
                 }
-            });
+            );
 
             // No matter what, mania doesn't have passive HP drain.
             Assert.That(processor.DrainRate, Is.Zero);
@@ -40,13 +42,16 @@ namespace osu.Game.Rulesets.Mania.Tests
         ];
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestFailAfterMinResult(ManiaHitObject hitObject, double startingHealth, bool failExpected)
+        public void TestFailAfterMinResult(
+            ManiaHitObject hitObject,
+            double startingHealth,
+            bool failExpected
+        )
         {
             var healthProcessor = new ManiaHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new ManiaBeatmap(new StageDefinition(4))
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(
+                new ManiaBeatmap(new StageDefinition(4)) { HitObjects = { hitObject } }
+            );
             healthProcessor.Health.Value = startingHealth;
 
             var result = new JudgementResult(hitObject, hitObject.CreateJudgement());
@@ -57,13 +62,16 @@ namespace osu.Game.Rulesets.Mania.Tests
         }
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestNoFailAfterMaxResult(ManiaHitObject hitObject, double startingHealth, bool _)
+        public void TestNoFailAfterMaxResult(
+            ManiaHitObject hitObject,
+            double startingHealth,
+            bool _
+        )
         {
             var healthProcessor = new ManiaHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new ManiaBeatmap(new StageDefinition(4))
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(
+                new ManiaBeatmap(new StageDefinition(4)) { HitObjects = { hitObject } }
+            );
             healthProcessor.Health.Value = startingHealth;
 
             var result = new JudgementResult(hitObject, hitObject.CreateJudgement());

@@ -19,9 +19,10 @@ namespace osu.Game.Tests.NonVisual.Ranking
         [Test]
         public void TestDistributedHits()
         {
-            var events = Enumerable.Range(-5, 11)
-                                   .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
-                                   .ToList();
+            var events = Enumerable
+                .Range(-5, 11)
+                .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
+                .ToList();
 
             var unstableRate = new UnstableRate(events);
 
@@ -32,20 +33,30 @@ namespace osu.Game.Tests.NonVisual.Ranking
         [Test]
         public void TestDistributedHitsIncrementalRewind()
         {
-            var events = Enumerable.Range(-5, 11)
-                                   .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
-                                   .ToList();
+            var events = Enumerable
+                .Range(-5, 11)
+                .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
+                .ToList();
 
             // Add some red herrings
-            events.Insert(4, new HitEvent(200, 1.0, HitResult.Meh, new HitObject { HitWindows = HitWindows.Empty }, null, null));
+            events.Insert(
+                4,
+                new HitEvent(
+                    200,
+                    1.0,
+                    HitResult.Meh,
+                    new HitObject { HitWindows = HitWindows.Empty },
+                    null,
+                    null
+                )
+            );
             events.Insert(8, new HitEvent(-100, 1.0, HitResult.Miss, new HitObject(), null, null));
 
             HitEventExtensions.UnstableRateCalculationResult result = null;
 
             for (int i = 0; i < events.Count; i++)
             {
-                result = events.GetRange(0, i + 1)
-                               .CalculateUnstableRate(result);
+                result = events.GetRange(0, i + 1).CalculateUnstableRate(result);
             }
 
             result = events.GetRange(0, 2).CalculateUnstableRate(result);
@@ -57,20 +68,30 @@ namespace osu.Game.Tests.NonVisual.Ranking
         [Test]
         public void TestDistributedHitsIncremental()
         {
-            var events = Enumerable.Range(-5, 11)
-                                   .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
-                                   .ToList();
+            var events = Enumerable
+                .Range(-5, 11)
+                .Select(t => new HitEvent(t - 5, 1.0, HitResult.Great, new HitObject(), null, null))
+                .ToList();
 
             // Add some red herrings
-            events.Insert(4, new HitEvent(200, 1.0, HitResult.Meh, new HitObject { HitWindows = HitWindows.Empty }, null, null));
+            events.Insert(
+                4,
+                new HitEvent(
+                    200,
+                    1.0,
+                    HitResult.Meh,
+                    new HitObject { HitWindows = HitWindows.Empty },
+                    null,
+                    null
+                )
+            );
             events.Insert(8, new HitEvent(-100, 1.0, HitResult.Miss, new HitObject(), null, null));
 
             HitEventExtensions.UnstableRateCalculationResult result = null;
 
             for (int i = 0; i < events.Count; i++)
             {
-                result = events.GetRange(0, i + 1)
-                               .CalculateUnstableRate(result);
+                result = events.GetRange(0, i + 1).CalculateUnstableRate(result);
             }
 
             Assert.IsNotNull(result!.Result);
@@ -84,7 +105,14 @@ namespace osu.Game.Tests.NonVisual.Ranking
             {
                 new HitEvent(-100, 1.0, HitResult.Miss, new HitObject(), null, null),
                 new HitEvent(0, 1.0, HitResult.Great, new HitObject(), null, null),
-                new HitEvent(200, 1.0, HitResult.Meh, new HitObject { HitWindows = HitWindows.Empty }, null, null),
+                new HitEvent(
+                    200,
+                    1.0,
+                    HitResult.Meh,
+                    new HitObject { HitWindows = HitWindows.Empty },
+                    null,
+                    null
+                ),
             };
 
             var unstableRate = new UnstableRate(events);

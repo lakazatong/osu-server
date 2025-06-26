@@ -39,17 +39,21 @@ namespace osu.Game.Overlays.Mods
 
         public readonly BindableBool Enabled = new BindableBool();
 
-        public readonly Bindable<ModCustomisationPanelState> ExpandedState = new Bindable<ModCustomisationPanelState>();
+        public readonly Bindable<ModCustomisationPanelState> ExpandedState =
+            new Bindable<ModCustomisationPanelState>();
 
-        public Bindable<IReadOnlyList<Mod>> SelectedMods { get; } = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        public Bindable<IReadOnlyList<Mod>> SelectedMods { get; } =
+            new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
         // Handle{Non}PositionalInput controls whether the panel should act as a blocking layer on the screen. only block when the panel is expanded.
         // These properties are used because they correctly handle blocking/unblocking hover when mouse is pointing at a drawable outside
         // (handling OnHover or overriding Block{Non}PositionalInput doesn't work).
-        public override bool HandlePositionalInput => ExpandedState.Value != ModCustomisationPanelState.Collapsed;
-        public override bool HandleNonPositionalInput => ExpandedState.Value != ModCustomisationPanelState.Collapsed;
+        public override bool HandlePositionalInput =>
+            ExpandedState.Value != ModCustomisationPanelState.Collapsed;
+        public override bool HandleNonPositionalInput =>
+            ExpandedState.Value != ModCustomisationPanelState.Collapsed;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -84,33 +88,30 @@ namespace osu.Game.Overlays.Mods
                     ExpandedState = { BindTarget = ExpandedState },
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colourProvider.Dark4,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Dark4 },
                         scrollContainer = new OsuScrollContainer(Direction.Vertical)
                         {
                             RelativeSizeAxes = Axes.X,
                             Margin = new MarginPadding
                             {
                                 Top = header_height + content_border_thickness,
-                                Bottom = content_border_thickness
+                                Bottom = content_border_thickness,
                             },
-                            Child = sectionsFlow = new FillFlowContainer
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(0f, 40f),
-                                Margin = new MarginPadding
+                            Child = sectionsFlow =
+                                new FillFlowContainer
                                 {
-                                    Top = content_vertical_padding,
-                                    Bottom = 5f + content_vertical_padding
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Spacing = new Vector2(0f, 40f),
+                                    Margin = new MarginPadding
+                                    {
+                                        Top = content_vertical_padding,
+                                        Bottom = 5f + content_vertical_padding,
+                                    },
                                 },
-                            }
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -118,10 +119,13 @@ namespace osu.Game.Overlays.Mods
         {
             base.LoadComplete();
 
-            Enabled.BindValueChanged(e =>
-            {
-                this.FadeColour(OsuColour.Gray(e.NewValue ? 1f : 0.6f), 300, Easing.OutQuint);
-            }, true);
+            Enabled.BindValueChanged(
+                e =>
+                {
+                    this.FadeColour(OsuColour.Gray(e.NewValue ? 1f : 0.6f), 300, Easing.OutQuint);
+                },
+                true
+            );
 
             ExpandedState.BindValueChanged(_ => updateDisplay(), true);
             SelectedMods.BindValueChanged(_ => updateMods(), true);
@@ -155,9 +159,7 @@ namespace osu.Game.Overlays.Mods
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void updateDisplay()
         {
@@ -198,15 +200,21 @@ namespace osu.Game.Overlays.Mods
         protected override void Update()
         {
             base.Update();
-            scrollContainer.Height = Math.Min(scrollContainer.AvailableContent, DrawHeight - header_height);
+            scrollContainer.Height = Math.Min(
+                scrollContainer.AvailableContent,
+                DrawHeight - header_height
+            );
         }
 
         private partial class FocusGrabbingContainer : InputBlockingContainer
         {
-            public readonly Bindable<ModCustomisationPanelState> ExpandedState = new Bindable<ModCustomisationPanelState>();
+            public readonly Bindable<ModCustomisationPanelState> ExpandedState =
+                new Bindable<ModCustomisationPanelState>();
 
-            public override bool RequestsFocus => panel.ExpandedState.Value != ModCustomisationPanelState.Collapsed;
-            public override bool AcceptsFocus => panel.ExpandedState.Value != ModCustomisationPanelState.Collapsed;
+            public override bool RequestsFocus =>
+                panel.ExpandedState.Value != ModCustomisationPanelState.Collapsed;
+            public override bool AcceptsFocus =>
+                panel.ExpandedState.Value != ModCustomisationPanelState.Collapsed;
 
             private readonly ModCustomisationPanel panel;
 
@@ -234,8 +242,11 @@ namespace osu.Game.Overlays.Mods
 
                 if (ExpandedState.Value == ModCustomisationPanelState.Expanded)
                 {
-                    bool canCollapse = !DrawRectangle.Inflate(new Vector2(collapse_grace_position)).Contains(ToLocalSpace(inputManager.CurrentState.Mouse.Position))
-                                       && inputManager.DraggedDrawable == null;
+                    bool canCollapse =
+                        !DrawRectangle
+                            .Inflate(new Vector2(collapse_grace_position))
+                            .Contains(ToLocalSpace(inputManager.CurrentState.Mouse.Position))
+                        && inputManager.DraggedDrawable == null;
 
                     if (canCollapse)
                     {

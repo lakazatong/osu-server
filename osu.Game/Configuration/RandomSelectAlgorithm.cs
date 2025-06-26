@@ -8,10 +8,16 @@ namespace osu.Game.Configuration
 {
     public enum RandomSelectAlgorithm
     {
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.NeverRepeat))]
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.NeverRepeat)
+        )]
         RandomPermutation,
 
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.TrueRandom))]
-        Random
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.TrueRandom)
+        )]
+        Random,
     }
 }

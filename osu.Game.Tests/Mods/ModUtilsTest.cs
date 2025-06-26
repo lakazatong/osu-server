@@ -28,7 +28,10 @@ namespace osu.Game.Tests.Mods
         public void TestModIsNotCompatibleWithItself()
         {
             var mod = new Mock<CustomMod1>();
-            Assert.That(ModUtils.CheckCompatibleSet(new[] { mod.Object, mod.Object }, out var invalid), Is.False);
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new[] { mod.Object, mod.Object }, out var invalid),
+                Is.False
+            );
             Assert.That(invalid, Is.EquivalentTo(new[] { mod.Object }));
         }
 
@@ -43,7 +46,8 @@ namespace osu.Game.Tests.Mods
         public void TestModIsCompatibleByItselfWithIncompatibleInterface()
         {
             var mod = new Mock<CustomMod1>();
-            mod.Setup(m => m.IncompatibleMods).Returns(new[] { typeof(IModCompatibilitySpecification) });
+            mod.Setup(m => m.IncompatibleMods)
+                .Returns(new[] { typeof(IModCompatibilitySpecification) });
             Assert.That(ModUtils.CheckCompatibleSet(new[] { mod.Object }));
         }
 
@@ -56,8 +60,14 @@ namespace osu.Game.Tests.Mods
             mod1.Setup(m => m.IncompatibleMods).Returns(new[] { mod2.Object.GetType() });
 
             // Test both orderings.
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }), Is.False);
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }), Is.False);
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }),
+                Is.False
+            );
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }),
+                Is.False
+            );
         }
 
         [Test]
@@ -66,12 +76,20 @@ namespace osu.Game.Tests.Mods
             var mod1 = new Mock<CustomMod1>();
             var mod2 = new Mock<CustomMod2>();
 
-            mod1.Setup(m => m.IncompatibleMods).Returns(new[] { typeof(IModCompatibilitySpecification) });
-            mod2.Setup(m => m.IncompatibleMods).Returns(new[] { typeof(IModCompatibilitySpecification) });
+            mod1.Setup(m => m.IncompatibleMods)
+                .Returns(new[] { typeof(IModCompatibilitySpecification) });
+            mod2.Setup(m => m.IncompatibleMods)
+                .Returns(new[] { typeof(IModCompatibilitySpecification) });
 
             // Test both orderings.
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }), Is.False);
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }), Is.False);
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }),
+                Is.False
+            );
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }),
+                Is.False
+            );
         }
 
         [Test]
@@ -112,8 +130,14 @@ namespace osu.Game.Tests.Mods
             var mod2 = new Mock<CustomMod2>();
 
             // Test both orderings.
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }), Is.True);
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }), Is.True);
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }),
+                Is.True
+            );
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }),
+                Is.True
+            );
         }
 
         [Test]
@@ -124,22 +148,33 @@ namespace osu.Game.Tests.Mods
             mod2.Setup(m => m.IncompatibleMods).Returns(new[] { typeof(Mod) });
 
             // Test both orderings.
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }), Is.False);
-            Assert.That(ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }), Is.False);
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod1.Object, mod2.Object }),
+                Is.False
+            );
+            Assert.That(
+                ModUtils.CheckCompatibleSet(new Mod[] { mod2.Object, mod1.Object }),
+                Is.False
+            );
         }
 
         [Test]
         public void TestAllowedThroughMostDerivedType()
         {
             var mod = new Mock<CustomMod1>();
-            Assert.That(ModUtils.CheckAllowed(new[] { mod.Object }, new[] { mod.Object.GetType() }));
+            Assert.That(
+                ModUtils.CheckAllowed(new[] { mod.Object }, new[] { mod.Object.GetType() })
+            );
         }
 
         [Test]
         public void TestNotAllowedThroughBaseType()
         {
             var mod = new Mock<CustomMod1>();
-            Assert.That(ModUtils.CheckAllowed(new[] { mod.Object }, new[] { typeof(Mod) }), Is.False);
+            Assert.That(
+                ModUtils.CheckAllowed(new[] { mod.Object }, new[] { typeof(Mod) }),
+                Is.False
+            );
         }
 
         private static readonly object[] invalid_mod_test_scenarios =
@@ -148,43 +183,43 @@ namespace osu.Game.Tests.Mods
             new object[]
             {
                 new Mod[] { new OsuModHidden(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModHidden), typeof(OsuModApproachDifferent) }
+                new[] { typeof(OsuModHidden), typeof(OsuModApproachDifferent) },
             },
             // incompatible pair with derived class.
             new object[]
             {
                 new Mod[] { new OsuModDeflate(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModDeflate), typeof(OsuModApproachDifferent) }
+                new[] { typeof(OsuModDeflate), typeof(OsuModApproachDifferent) },
             },
             // system mod not applicable in lazer.
             new object[]
             {
                 new Mod[] { new OsuModHidden(), new ModScoreV2() },
-                new[] { typeof(ModScoreV2) }
+                new[] { typeof(ModScoreV2) },
             },
             // multi mod.
             new object[]
             {
                 new Mod[] { new MultiMod(new OsuModSuddenDeath(), new OsuModPerfect()) },
-                new[] { typeof(MultiMod) }
+                new[] { typeof(MultiMod) },
             },
             // invalid multiplayer mod is valid for local.
             new object[]
             {
                 new Mod[] { new OsuModHidden(), new InvalidMultiplayerMod() },
-                Array.Empty<Type>()
+                Array.Empty<Type>(),
             },
             // invalid free mod is valid for local.
             new object[]
             {
                 new Mod[] { new OsuModHidden(), new InvalidMultiplayerFreeMod() },
-                Array.Empty<Type>()
+                Array.Empty<Type>(),
             },
             // valid pair.
             new object[]
             {
                 new Mod[] { new OsuModHidden(), new OsuModHardRock() },
-                Array.Empty<Type>()
+                Array.Empty<Type>(),
             },
         };
 
@@ -205,10 +240,32 @@ namespace osu.Game.Tests.Mods
         public void TestModBelongsToRuleset()
         {
             Assert.That(ModUtils.CheckModsBelongToRuleset(new OsuRuleset(), Array.Empty<Mod>()));
-            Assert.That(ModUtils.CheckModsBelongToRuleset(new OsuRuleset(), new Mod[] { new OsuModDoubleTime() }));
-            Assert.That(ModUtils.CheckModsBelongToRuleset(new OsuRuleset(), new Mod[] { new OsuModDoubleTime(), new OsuModAccuracyChallenge() }));
-            Assert.That(ModUtils.CheckModsBelongToRuleset(new OsuRuleset(), new Mod[] { new OsuModDoubleTime(), new ModAccuracyChallenge() }), Is.False);
-            Assert.That(ModUtils.CheckModsBelongToRuleset(new OsuRuleset(), new Mod[] { new OsuModDoubleTime(), new TaikoModFlashlight() }), Is.False);
+            Assert.That(
+                ModUtils.CheckModsBelongToRuleset(
+                    new OsuRuleset(),
+                    new Mod[] { new OsuModDoubleTime() }
+                )
+            );
+            Assert.That(
+                ModUtils.CheckModsBelongToRuleset(
+                    new OsuRuleset(),
+                    new Mod[] { new OsuModDoubleTime(), new OsuModAccuracyChallenge() }
+                )
+            );
+            Assert.That(
+                ModUtils.CheckModsBelongToRuleset(
+                    new OsuRuleset(),
+                    new Mod[] { new OsuModDoubleTime(), new ModAccuracyChallenge() }
+                ),
+                Is.False
+            );
+            Assert.That(
+                ModUtils.CheckModsBelongToRuleset(
+                    new OsuRuleset(),
+                    new Mod[] { new OsuModDoubleTime(), new TaikoModFlashlight() }
+                ),
+                Is.False
+            );
         }
 
         [Test]
@@ -240,8 +297,18 @@ namespace osu.Game.Tests.Mods
             new MultiplayerTestScenario(false, false, [new OsuModHardRock(), new OsuModEasy()], []),
             new MultiplayerTestScenario(false, true, [new OsuModHardRock(), new OsuModEasy()], []),
             // valid - as allowed mod (incompatible pair with derived classes).
-            new MultiplayerTestScenario(false, false, [new OsuModDeflate(), new OsuModApproachDifferent()], []),
-            new MultiplayerTestScenario(false, true, [new OsuModDeflate(), new OsuModApproachDifferent()], []),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModDeflate(), new OsuModApproachDifferent()],
+                []
+            ),
+            new MultiplayerTestScenario(
+                false,
+                true,
+                [new OsuModDeflate(), new OsuModApproachDifferent()],
+                []
+            ),
             // valid - as allowed mod (not implemented in all rulesets).
             new MultiplayerTestScenario(false, false, [new OsuModBarrelRoll()], []),
             new MultiplayerTestScenario(false, true, [new OsuModBarrelRoll()], []),
@@ -263,39 +330,143 @@ namespace osu.Game.Tests.Mods
             new MultiplayerTestScenario(true, true, [new ModWindUp()], []),
             new MultiplayerTestScenario(true, true, [new ModWindDown()], []),
             new MultiplayerTestScenario(true, true, [new OsuModMuted()], []),
-
             // invalid - always (system mod)
-            new MultiplayerTestScenario(false, false, [new OsuModTouchDevice()], [typeof(OsuModTouchDevice)]),
-            new MultiplayerTestScenario(true, false, [new OsuModTouchDevice()], [typeof(OsuModTouchDevice)]),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModTouchDevice()],
+                [typeof(OsuModTouchDevice)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new OsuModTouchDevice()],
+                [typeof(OsuModTouchDevice)]
+            ),
             // invalid - always (multi mod).
             new MultiplayerTestScenario(false, false, [new MultiMod()], [typeof(MultiMod)]),
             new MultiplayerTestScenario(true, false, [new MultiMod()], [typeof(MultiMod)]),
             // invalid - always (disallowed by mod)
-            new MultiplayerTestScenario(false, false, [new InvalidMultiplayerMod()], [typeof(InvalidMultiplayerMod)]),
-            new MultiplayerTestScenario(true, false, [new InvalidMultiplayerMod()], [typeof(InvalidMultiplayerMod)]),
-            new MultiplayerTestScenario(false, false, [new OsuModAutoplay()], [typeof(OsuModAutoplay)]),
-            new MultiplayerTestScenario(true, false, [new OsuModAutoplay()], [typeof(OsuModAutoplay)]),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new InvalidMultiplayerMod()],
+                [typeof(InvalidMultiplayerMod)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new InvalidMultiplayerMod()],
+                [typeof(InvalidMultiplayerMod)]
+            ),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModAutoplay()],
+                [typeof(OsuModAutoplay)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new OsuModAutoplay()],
+                [typeof(OsuModAutoplay)]
+            ),
             // invalid - always (changes play length - for now not allowed in multiplayer).
-            new MultiplayerTestScenario(false, false, [new ModAdaptiveSpeed()], [typeof(ModAdaptiveSpeed)]),
-            new MultiplayerTestScenario(true, false, [new ModAdaptiveSpeed()], [typeof(ModAdaptiveSpeed)]),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new ModAdaptiveSpeed()],
+                [typeof(ModAdaptiveSpeed)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new ModAdaptiveSpeed()],
+                [typeof(ModAdaptiveSpeed)]
+            ),
             // invalid - as allowed mod (disallowed by mod).
-            new MultiplayerTestScenario(false, false, [new InvalidMultiplayerFreeMod()], [typeof(InvalidMultiplayerFreeMod)]),
-            new MultiplayerTestScenario(false, true, [new InvalidMultiplayerFreeMod()], [typeof(InvalidMultiplayerFreeMod)]),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new InvalidMultiplayerFreeMod()],
+                [typeof(InvalidMultiplayerFreeMod)]
+            ),
+            new MultiplayerTestScenario(
+                false,
+                true,
+                [new InvalidMultiplayerFreeMod()],
+                [typeof(InvalidMultiplayerFreeMod)]
+            ),
             // invalid - as allowed mod (changes play length - for now not allowed in multiplayer).
-            new MultiplayerTestScenario(false, false, [new OsuModHalfTime()], [typeof(OsuModHalfTime)]),
-            new MultiplayerTestScenario(false, false, [new OsuModDaycore()], [typeof(OsuModDaycore)]),
-            new MultiplayerTestScenario(false, false, [new OsuModDoubleTime()], [typeof(OsuModDoubleTime)]),
-            new MultiplayerTestScenario(false, false, [new OsuModNightcore()], [typeof(OsuModNightcore)]),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModHalfTime()],
+                [typeof(OsuModHalfTime)]
+            ),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModDaycore()],
+                [typeof(OsuModDaycore)]
+            ),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModDoubleTime()],
+                [typeof(OsuModDoubleTime)]
+            ),
+            new MultiplayerTestScenario(
+                false,
+                false,
+                [new OsuModNightcore()],
+                [typeof(OsuModNightcore)]
+            ),
             // invalid - as required mod (incompatible pair)
-            new MultiplayerTestScenario(true, false, [new OsuModHidden(), new OsuModApproachDifferent()], [typeof(OsuModHidden), typeof(OsuModApproachDifferent)]),
-            new MultiplayerTestScenario(true, true, [new OsuModHidden(), new OsuModApproachDifferent()], [typeof(OsuModHidden), typeof(OsuModApproachDifferent)]),
-            new MultiplayerTestScenario(true, false, [new OsuModDeflate(), new OsuModApproachDifferent()], [typeof(OsuModDeflate), typeof(OsuModApproachDifferent)]),
-            new MultiplayerTestScenario(true, true, [new OsuModDeflate(), new OsuModApproachDifferent()], [typeof(OsuModDeflate), typeof(OsuModApproachDifferent)]),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new OsuModHidden(), new OsuModApproachDifferent()],
+                [typeof(OsuModHidden), typeof(OsuModApproachDifferent)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                true,
+                [new OsuModHidden(), new OsuModApproachDifferent()],
+                [typeof(OsuModHidden), typeof(OsuModApproachDifferent)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                false,
+                [new OsuModDeflate(), new OsuModApproachDifferent()],
+                [typeof(OsuModDeflate), typeof(OsuModApproachDifferent)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                true,
+                [new OsuModDeflate(), new OsuModApproachDifferent()],
+                [typeof(OsuModDeflate), typeof(OsuModApproachDifferent)]
+            ),
             // invalid - as required mod when freestyle (disallowed by mod).
-            new MultiplayerTestScenario(true, true, [new InvalidFreestyleRequiredMod()], [typeof(InvalidFreestyleRequiredMod)]),
+            new MultiplayerTestScenario(
+                true,
+                true,
+                [new InvalidFreestyleRequiredMod()],
+                [typeof(InvalidFreestyleRequiredMod)]
+            ),
             // invalid - as required mod when freestyle (not implemented in all rulesets).
-            new MultiplayerTestScenario(true, true, [new OsuModStrictTracking()], [typeof(OsuModStrictTracking)]),
-            new MultiplayerTestScenario(true, true, [new OsuModBarrelRoll()], [typeof(OsuModBarrelRoll)]),
+            new MultiplayerTestScenario(
+                true,
+                true,
+                [new OsuModStrictTracking()],
+                [typeof(OsuModStrictTracking)]
+            ),
+            new MultiplayerTestScenario(
+                true,
+                true,
+                [new OsuModBarrelRoll()],
+                [typeof(OsuModBarrelRoll)]
+            ),
         };
 
         [TestCaseSource(nameof(multiplayer_mod_test_scenarios))]
@@ -303,27 +474,70 @@ namespace osu.Game.Tests.Mods
         {
             List<Mod>? invalidMods;
             bool isValid = scenario.IsRequired
-                ? ModUtils.CheckValidRequiredModsForMultiplayer(scenario.Mods, scenario.IsFreestyle, out invalidMods)
-                : ModUtils.CheckValidAllowedModsForMultiplayer(scenario.Mods, scenario.IsFreestyle, out invalidMods);
+                ? ModUtils.CheckValidRequiredModsForMultiplayer(
+                    scenario.Mods,
+                    scenario.IsFreestyle,
+                    out invalidMods
+                )
+                : ModUtils.CheckValidAllowedModsForMultiplayer(
+                    scenario.Mods,
+                    scenario.IsFreestyle,
+                    out invalidMods
+                );
 
             Assert.That(isValid, Is.EqualTo(scenario.InvalidTypes.Length == 0));
 
             if (isValid)
                 Assert.IsNull(invalidMods);
             else
-                Assert.That(invalidMods?.Select(t => t.GetType()), Is.EquivalentTo(scenario.InvalidTypes));
+                Assert.That(
+                    invalidMods?.Select(t => t.GetType()),
+                    Is.EquivalentTo(scenario.InvalidTypes)
+                );
         }
 
         [Test]
         public void TestPlaylistsModScenarios()
         {
             // The rest are tested by TestMultiplayerModScenarios.
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new OsuModHardRock(), false, MatchType.Playlists, false));
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new OsuModHardRock(), true, MatchType.Playlists, false));
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new OsuModDoubleTime(), false, MatchType.Playlists, false));
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new OsuModDoubleTime(), true, MatchType.Playlists, false));
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new ModAdaptiveSpeed(), false, MatchType.Playlists, false));
-            Assert.IsTrue(ModUtils.IsValidModForMatch(new ModAdaptiveSpeed(), true, MatchType.Playlists, false));
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(new OsuModHardRock(), false, MatchType.Playlists, false)
+            );
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(new OsuModHardRock(), true, MatchType.Playlists, false)
+            );
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(
+                    new OsuModDoubleTime(),
+                    false,
+                    MatchType.Playlists,
+                    false
+                )
+            );
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(
+                    new OsuModDoubleTime(),
+                    true,
+                    MatchType.Playlists,
+                    false
+                )
+            );
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(
+                    new ModAdaptiveSpeed(),
+                    false,
+                    MatchType.Playlists,
+                    false
+                )
+            );
+            Assert.IsTrue(
+                ModUtils.IsValidModForMatch(
+                    new ModAdaptiveSpeed(),
+                    true,
+                    MatchType.Playlists,
+                    false
+                )
+            );
         }
 
         [Test]
@@ -338,17 +552,37 @@ namespace osu.Game.Tests.Mods
 
             Assert.Multiple(() =>
             {
-                foreach (var ruleset in new Ruleset[] { new OsuRuleset(), new TaikoRuleset(), new CatchRuleset(), new ManiaRuleset() })
+                foreach (
+                    var ruleset in new Ruleset[]
+                    {
+                        new OsuRuleset(),
+                        new TaikoRuleset(),
+                        new CatchRuleset(),
+                        new ManiaRuleset(),
+                    }
+                )
                 {
                     foreach (var mod in ruleset.CreateAllMods())
                     {
-                        if (mod.ValidForFreestyleAsRequiredMod && mod.UserPlayable && !commonAcronyms.Contains(mod.Acronym))
-                            Assert.Fail($"{mod.GetType().ReadableName()} declares {nameof(Mod.ValidForFreestyleAsRequiredMod)} but does not exist in all four basic rulesets!");
+                        if (
+                            mod.ValidForFreestyleAsRequiredMod
+                            && mod.UserPlayable
+                            && !commonAcronyms.Contains(mod.Acronym)
+                        )
+                            Assert.Fail(
+                                $"{mod.GetType().ReadableName()} declares {nameof(Mod.ValidForFreestyleAsRequiredMod)} but does not exist in all four basic rulesets!"
+                            );
 
                         // downgraded to warning, because there are valid reasons why they may still not be specified to be valid for freestyle as required
                         // (see `TestModsValidForRequiredFreestyleAreConsistentlyCompatibleAcrossRulesets()` test case below).
-                        if (!mod.ValidForFreestyleAsRequiredMod && mod.UserPlayable && commonAcronyms.Contains(mod.Acronym))
-                            Assert.Warn($"{mod.GetType().ReadableName()} does not declare {nameof(Mod.ValidForFreestyleAsRequiredMod)} but exists in all four basic rulesets.");
+                        if (
+                            !mod.ValidForFreestyleAsRequiredMod
+                            && mod.UserPlayable
+                            && commonAcronyms.Contains(mod.Acronym)
+                        )
+                            Assert.Warn(
+                                $"{mod.GetType().ReadableName()} does not declare {nameof(Mod.ValidForFreestyleAsRequiredMod)} but exists in all four basic rulesets."
+                            );
                     }
                 }
             });
@@ -357,7 +591,8 @@ namespace osu.Game.Tests.Mods
         [Test]
         public void TestModsValidForRequiredFreestyleAreConsistentlyCompatibleAcrossRulesets()
         {
-            Dictionary<(string firstMod, string secondMod), bool> compatibilityMap = new Dictionary<(string, string), bool>();
+            Dictionary<(string firstMod, string secondMod), bool> compatibilityMap =
+                new Dictionary<(string, string), bool>();
 
             Assert.Multiple(() =>
             {
@@ -366,7 +601,11 @@ namespace osu.Game.Tests.Mods
                     var rulesetStore = new AssemblyRulesetStore();
                     var ruleset = rulesetStore.GetRuleset(rulesetId)!.CreateInstance();
 
-                    var modsValidForFreestyleAsRequired = ruleset.CreateAllMods().Where(m => m.ValidForFreestyleAsRequiredMod).OrderBy(m => m.Acronym).ToList();
+                    var modsValidForFreestyleAsRequired = ruleset
+                        .CreateAllMods()
+                        .Where(m => m.ValidForFreestyleAsRequiredMod)
+                        .OrderBy(m => m.Acronym)
+                        .ToList();
 
                     for (int i = 0; i < modsValidForFreestyleAsRequired.Count; i++)
                     {
@@ -377,23 +616,26 @@ namespace osu.Game.Tests.Mods
 
                             bool compatible = ModUtils.CheckCompatibleSet([first, second]);
 
-                            if (!compatibilityMap.TryGetValue((first.Acronym, second.Acronym), out bool previousCompatible))
+                            if (
+                                !compatibilityMap.TryGetValue(
+                                    (first.Acronym, second.Acronym),
+                                    out bool previousCompatible
+                                )
+                            )
                                 compatibilityMap[(first.Acronym, second.Acronym)] = compatible;
                             else if (previousCompatible != compatible)
-                                Assert.Fail($"{first.Acronym} and {second.Acronym} declare {nameof(Mod.ValidForFreestyleAsRequiredMod)} while not being consistently compatible in all four rulesets!");
+                                Assert.Fail(
+                                    $"{first.Acronym} and {second.Acronym} declare {nameof(Mod.ValidForFreestyleAsRequiredMod)} while not being consistently compatible in all four rulesets!"
+                                );
                         }
                     }
                 }
             });
         }
 
-        public abstract class CustomMod1 : Mod, IModCompatibilitySpecification
-        {
-        }
+        public abstract class CustomMod1 : Mod, IModCompatibilitySpecification { }
 
-        public abstract class CustomMod2 : Mod, IModCompatibilitySpecification
-        {
-        }
+        public abstract class CustomMod2 : Mod, IModCompatibilitySpecification { }
 
         private class InvalidMultiplayerMod : Mod
         {
@@ -428,10 +670,15 @@ namespace osu.Game.Tests.Mods
 
         public interface IModCompatibilitySpecification;
 
-        public readonly record struct MultiplayerTestScenario(bool IsRequired, bool IsFreestyle, Mod[] Mods, Type[] InvalidTypes)
+        public readonly record struct MultiplayerTestScenario(
+            bool IsRequired,
+            bool IsFreestyle,
+            Mod[] Mods,
+            Type[] InvalidTypes
+        )
         {
-            public override string ToString()
-                => $"{IsRequired}, {IsFreestyle}, [{string.Join(',', Mods.Select(m => m.GetType().ReadableName()))}], [{string.Join(',', InvalidTypes.Select(t => t.ReadableName()))}]";
+            public override string ToString() =>
+                $"{IsRequired}, {IsFreestyle}, [{string.Join(',', Mods.Select(m => m.GetType().ReadableName()))}], [{string.Join(',', InvalidTypes.Select(t => t.ReadableName()))}]";
         }
     }
 }

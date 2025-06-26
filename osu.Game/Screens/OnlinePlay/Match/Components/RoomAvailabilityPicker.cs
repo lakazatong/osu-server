@@ -19,7 +19,9 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
 {
     public partial class RoomAvailabilityPicker : DisableableTabControl<RoomAvailability>
     {
-        protected override TabItem<RoomAvailability> CreateTabItem(RoomAvailability value) => new RoomAvailabilityPickerItem(value);
+        protected override TabItem<RoomAvailability> CreateTabItem(RoomAvailability value) =>
+            new RoomAvailabilityPickerItem(value);
+
         protected override Dropdown<RoomAvailability>? CreateDropdown() => null;
 
         public RoomAvailabilityPicker()
@@ -38,7 +40,8 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
         {
             private const float transition_duration = 200;
 
-            private readonly Box hover, selection;
+            private readonly Box hover,
+                selection;
 
             public RoomAvailabilityPickerItem(RoomAvailability value)
                 : base(value)
@@ -55,11 +58,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4Extensions.FromHex(@"3d3943"),
                     },
-                    selection = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                    },
+                    selection = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0 },
                     hover = new Box
                     {
                         RelativeSizeAxes = Axes.Both,

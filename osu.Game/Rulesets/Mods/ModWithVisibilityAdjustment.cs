@@ -14,7 +14,11 @@ namespace osu.Game.Rulesets.Mods
     /// A <see cref="Mod"/> which applies visibility adjustments to <see cref="DrawableHitObject"/>s
     /// with an optional increased visibility adjustment depending on the user's "increase first object visibility" setting.
     /// </summary>
-    public abstract class ModWithVisibilityAdjustment : Mod, IReadFromConfig, IApplicableToBeatmap, IApplicableToDrawableHitObject
+    public abstract class ModWithVisibilityAdjustment
+        : Mod,
+            IReadFromConfig,
+            IApplicableToBeatmap,
+            IApplicableToDrawableHitObject
     {
         /// <summary>
         /// The first adjustable object.
@@ -39,18 +43,27 @@ namespace osu.Game.Rulesets.Mods
         /// </summary>
         /// <param name="hitObject">The hit object to apply the state change to.</param>
         /// <param name="state">The state of the hitobject.</param>
-        protected abstract void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state);
+        protected abstract void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        );
 
         /// <summary>
         /// Apply a normal visibility state adjustment to an object.
         /// </summary>
         /// <param name="hitObject">The hit object to apply the state change to.</param>
         /// <param name="state">The state of the hitobject.</param>
-        protected abstract void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state);
+        protected abstract void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        );
 
         public virtual void ReadFromConfig(OsuConfigManager config)
         {
-            config.BindWith(OsuSetting.IncreaseFirstObjectVisibility, IncreaseFirstObjectVisibility);
+            config.BindWith(
+                OsuSetting.IncreaseFirstObjectVisibility,
+                IncreaseFirstObjectVisibility
+            );
         }
 
         public virtual void ApplyToBeatmap(IBeatmap beatmap)
@@ -78,7 +91,10 @@ namespace osu.Game.Rulesets.Mods
             dho.ApplyCustomUpdateState += (o, state) =>
             {
                 // Increased visibility is applied to the entire first object, including all of its nested hitobjects.
-                if (IncreaseFirstObjectVisibility.Value && isObjectEqualToOrNestedIn(o.HitObject, FirstObject))
+                if (
+                    IncreaseFirstObjectVisibility.Value
+                    && isObjectEqualToOrNestedIn(o.HitObject, FirstObject)
+                )
                     ApplyIncreasedVisibilityState(o, state);
                 else
                     ApplyNormalVisibilityState(o, state);

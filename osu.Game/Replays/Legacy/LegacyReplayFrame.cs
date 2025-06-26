@@ -52,7 +52,12 @@ namespace osu.Game.Replays.Legacy
         [Key(3)]
         public ReplayButtonState ButtonState;
 
-        public LegacyReplayFrame(double time, float? mouseX, float? mouseY, ReplayButtonState buttonState)
+        public LegacyReplayFrame(
+            double time,
+            float? mouseX,
+            float? mouseY,
+            ReplayButtonState buttonState
+        )
             : base(time)
         {
             MouseX = mouseX;
@@ -65,11 +70,11 @@ namespace osu.Game.Replays.Legacy
             return $"{Time}\t({MouseX},{MouseY})\t{MouseLeft}\t{MouseRight}\t{MouseLeft1}\t{MouseRight1}\t{MouseLeft2}\t{MouseRight2}\t{ButtonState}";
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is LegacyReplayFrame legacyFrame
-               && Time == legacyFrame.Time
-               && MouseX == legacyFrame.MouseX
-               && MouseY == legacyFrame.MouseY
-               && ButtonState == legacyFrame.ButtonState;
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is LegacyReplayFrame legacyFrame
+            && Time == legacyFrame.Time
+            && MouseX == legacyFrame.MouseX
+            && MouseY == legacyFrame.MouseY
+            && ButtonState == legacyFrame.ButtonState;
     }
 }

@@ -40,26 +40,44 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestStoryboard()
         {
             AddStep("Restart", restart);
-            AddToggleStep("Toggle passing state", passing => testGameplayState.HealthProcessor.Health.Value = passing ? 1 : 0);
+            AddToggleStep(
+                "Toggle passing state",
+                passing => testGameplayState.HealthProcessor.Health.Value = passing ? 1 : 0
+            );
         }
 
         [Test]
         public void TestStoryboardMissingVideo()
         {
-            AddStep("Load storyboard with missing video", () => loadStoryboard("storyboard_no_video.osu"));
+            AddStep(
+                "Load storyboard with missing video",
+                () => loadStoryboard("storyboard_no_video.osu")
+            );
         }
 
         [Test]
         public void TestVideo()
         {
-            AddStep("load storyboard with only video", () =>
-            {
-                // LegacyStoryboardDecoder doesn't parse WidescreenStoryboard, so it is set manually
-                loadStoryboard("storyboard_only_video.osu", s => s.Beatmap.WidescreenStoryboard = false);
-            });
+            AddStep(
+                "load storyboard with only video",
+                () =>
+                {
+                    // LegacyStoryboardDecoder doesn't parse WidescreenStoryboard, so it is set manually
+                    loadStoryboard(
+                        "storyboard_only_video.osu",
+                        s => s.Beatmap.WidescreenStoryboard = false
+                    );
+                }
+            );
 
-            AddAssert("storyboard video present in hierarchy", () => this.ChildrenOfType<DrawableStoryboardVideo>().Any());
-            AddAssert("storyboard is correct width", () => Precision.AlmostEquals(storyboard?.Width ?? 0f, 480 * 16 / 9f));
+            AddAssert(
+                "storyboard video present in hierarchy",
+                () => this.ChildrenOfType<DrawableStoryboardVideo>().Any()
+            );
+            AddAssert(
+                "storyboard is correct width",
+                () => Precision.AlmostEquals(storyboard?.Width ?? 0f, 480 * 16 / 9f)
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -67,36 +85,35 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             Clock = new FramedClock();
 
-            AddRange(new Drawable[]
-            {
-                new Container
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    new Container
                     {
-                        new Box
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Black,
-                        },
-                        storyboardContainer = new Container<DrawableStoryboard>
-                        {
-                            RelativeSizeAxes = Axes.Both,
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
+                            storyboardContainer = new Container<DrawableStoryboard>
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
                         },
                     },
-                },
-                new NowPlayingOverlay
-                {
-                    Origin = Anchor.TopRight,
-                    Anchor = Anchor.TopRight,
-                    State = { Value = Visibility.Visible },
+                    new NowPlayingOverlay
+                    {
+                        Origin = Anchor.TopRight,
+                        Anchor = Anchor.TopRight,
+                        State = { Value = Visibility.Visible },
+                    },
                 }
-            });
+            );
 
             Beatmap.BindValueChanged(beatmapChanged, true);
         }
 
-        private void beatmapChanged(ValueChangedEvent<WorkingBeatmap> e) => loadStoryboard(e.NewValue.Storyboard);
+        private void beatmapChanged(ValueChangedEvent<WorkingBeatmap> e) =>
+            loadStoryboard(e.NewValue.Storyboard);
 
         private void restart()
         {

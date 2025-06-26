@@ -64,7 +64,9 @@ namespace osu.Game.Tests.Visual
         protected void CreateTest([CanBeNull] Action action = null)
         {
             if (action != null && !HasCustomSteps)
-                throw new InvalidOperationException($"Cannot add custom test steps without {nameof(HasCustomSteps)} being set.");
+                throw new InvalidOperationException(
+                    $"Cannot add custom test steps without {nameof(HasCustomSteps)} being set."
+                );
 
             action?.Invoke();
 
@@ -73,10 +75,13 @@ namespace osu.Game.Tests.Visual
 
             if (AllowBackwardsSeeks)
             {
-                AddStep("allow backwards seeking", () =>
-                {
-                    Player.DrawableRuleset.AllowBackwardsSeeks = AllowBackwardsSeeks;
-                });
+                AddStep(
+                    "allow backwards seeking",
+                    () =>
+                    {
+                        Player.DrawableRuleset.AllowBackwardsSeeks = AllowBackwardsSeeks;
+                    }
+                );
             }
         }
 
@@ -136,6 +141,7 @@ namespace osu.Game.Tests.Visual
 
         protected sealed override Ruleset CreateRuleset() => CreatePlayerRuleset();
 
-        protected virtual TestPlayer CreatePlayer(Ruleset ruleset) => new TestPlayer(false, false, AllowBackwardsSeeks);
+        protected virtual TestPlayer CreatePlayer(Ruleset ruleset) =>
+            new TestPlayer(false, false, AllowBackwardsSeeks);
     }
 }

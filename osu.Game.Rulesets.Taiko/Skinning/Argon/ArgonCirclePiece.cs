@@ -54,25 +54,23 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
 
             EarlyActivationMilliseconds = pre_beat_transition_time;
 
-            AddRangeInternal(new[]
-            {
-                new Circle
+            AddRangeInternal(
+                new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = new Color4(0, 0, 0, 190)
-                },
-                ring = new RingPiece(20 / 70f),
-                ring2 = new RingPiece(5 / 70f),
-                flash = new Circle
-                {
-                    Name = "Flash layer",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Blending = BlendingParameters.Additive,
-                    Alpha = 0,
-                },
-            });
+                    new Circle { RelativeSizeAxes = Axes.Both, Colour = new Color4(0, 0, 0, 190) },
+                    ring = new RingPiece(20 / 70f),
+                    ring2 = new RingPiece(5 / 70f),
+                    flash = new Circle
+                    {
+                        Name = "Flash layer",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Blending = BlendingParameters.Additive,
+                        Alpha = 0,
+                    },
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -100,7 +98,12 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             }
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (!effectPoint.KiaiMode)
                 return;

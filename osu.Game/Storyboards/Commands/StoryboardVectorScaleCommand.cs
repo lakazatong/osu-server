@@ -10,17 +10,23 @@ namespace osu.Game.Storyboards.Commands
 {
     public class StoryboardVectorScaleCommand : StoryboardCommand<Vector2>
     {
-        public StoryboardVectorScaleCommand(Easing easing, double startTime, double endTime, Vector2 startValue, Vector2 endValue)
-            : base(easing, startTime, endTime, startValue, endValue)
-        {
-        }
+        public StoryboardVectorScaleCommand(
+            Easing easing,
+            double startTime,
+            double endTime,
+            Vector2 startValue,
+            Vector2 endValue
+        )
+            : base(easing, startTime, endTime, startValue, endValue) { }
 
         public override string PropertyName => nameof(IVectorScalable.VectorScale);
 
-        public override void ApplyInitialValue<TDrawable>(TDrawable d) => d.VectorScale = StartValue;
+        public override void ApplyInitialValue<TDrawable>(TDrawable d) =>
+            d.VectorScale = StartValue;
 
-        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d)
-            => d.TransformTo(nameof(d.VectorScale), StartValue).Then()
+        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d) =>
+            d.TransformTo(nameof(d.VectorScale), StartValue)
+                .Then()
                 .TransformTo(nameof(d.VectorScale), EndValue, Duration, Easing);
     }
 }

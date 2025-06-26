@@ -22,13 +22,26 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             if (withModifiedSkin)
             {
-                AddStep("change component scale", () => Player.ChildrenOfType<LegacyScoreCounter>().First().Scale = new Vector2(2f));
-                AddStep("update target", () => Player.ChildrenOfType<SkinnableContainer>().ForEach(LegacySkin.UpdateDrawableTarget));
+                AddStep(
+                    "change component scale",
+                    () =>
+                        Player.ChildrenOfType<LegacyScoreCounter>().First().Scale = new Vector2(2f)
+                );
+                AddStep(
+                    "update target",
+                    () =>
+                        Player
+                            .ChildrenOfType<SkinnableContainer>()
+                            .ForEach(LegacySkin.UpdateDrawableTarget)
+                );
                 AddStep("exit player", () => Player.Exit());
                 CreateTest();
             }
 
-            AddAssert("legacy HUD combo counter not added", () => !Player.ChildrenOfType<LegacyDefaultComboCounter>().Any());
+            AddAssert(
+                "legacy HUD combo counter not added",
+                () => !Player.ChildrenOfType<LegacyDefaultComboCounter>().Any()
+            );
         }
     }
 }

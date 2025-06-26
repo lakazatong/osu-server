@@ -102,53 +102,61 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuColour colours, OverlayColourProvider colourProvider, OsuConfigManager config)
+        private void load(
+            OsuColour colours,
+            OverlayColourProvider colourProvider,
+            OsuConfigManager config
+        )
         {
             CentreMarker centreMarker;
 
             // We don't want the centre marker to scroll
             AddInternal(centreMarker = new CentreMarker());
 
-            AddRange(new Drawable[]
-            {
-                ticks = new TimelineTickDisplay(),
-                new Box
+            AddRange(
+                new Drawable[]
                 {
-                    Name = "zero marker",
-                    RelativeSizeAxes = Axes.Y,
-                    Width = TimelineTickDisplay.TICK_WIDTH / 2,
-                    Origin = Anchor.TopCentre,
-                    Colour = colourProvider.Background1,
-                },
-                controlPoints = new TimelineTimingChangeDisplay
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = timeline_height,
-                    Children = new[]
+                    ticks = new TimelineTickDisplay(),
+                    new Box
                     {
-                        waveform = new WaveformGraph
+                        Name = "zero marker",
+                        RelativeSizeAxes = Axes.Y,
+                        Width = TimelineTickDisplay.TICK_WIDTH / 2,
+                        Origin = Anchor.TopCentre,
+                        Colour = colourProvider.Background1,
+                    },
+                    controlPoints = new TimelineTimingChangeDisplay
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                    },
+                    new Container
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = timeline_height,
+                        Children = new[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            BaseColour = colours.Blue.Opacity(0.2f),
-                            LowColour = colours.BlueLighter,
-                            MidColour = colours.BlueDark,
-                            HighColour = colours.BlueDarker,
+                            waveform = new WaveformGraph
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                BaseColour = colours.Blue.Opacity(0.2f),
+                                LowColour = colours.BlueLighter,
+                                MidColour = colours.BlueDark,
+                                HighColour = colours.BlueDarker,
+                            },
+                            centreMarker.CreateProxy(),
+                            ticks.CreateProxy(),
+                            userContent,
                         },
-                        centreMarker.CreateProxy(),
-                        ticks.CreateProxy(),
-                        userContent,
-                    }
-                },
-            });
+                    },
+                }
+            );
 
             waveformOpacity = config.GetBindable<float>(OsuSetting.EditorWaveformOpacity);
-            controlPointsVisible = config.GetBindable<bool>(OsuSetting.EditorTimelineShowTimingChanges);
+            controlPointsVisible = config.GetBindable<bool>(
+                OsuSetting.EditorTimelineShowTimingChanges
+            );
             ticksVisible = config.GetBindable<bool>(OsuSetting.EditorTimelineShowTicks);
 
             editorClock.TrackChanged += updateWaveform;
@@ -183,15 +191,21 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             waveformOpacity.BindValueChanged(_ => updateWaveformOpacity(), true);
 
-            ticksVisible.BindValueChanged(visible => ticks.FadeTo(visible.NewValue ? 1 : 0, 200, Easing.OutQuint), true);
+            ticksVisible.BindValueChanged(
+                visible => ticks.FadeTo(visible.NewValue ? 1 : 0, 200, Easing.OutQuint),
+                true
+            );
 
-            controlPointsVisible.BindValueChanged(visible =>
-            {
-                if (visible.NewValue || alwaysShowControlPoints)
-                    controlPoints.FadeIn(400, Easing.OutQuint);
-                else
-                    controlPoints.FadeOut(200, Easing.OutQuint);
-            }, true);
+            controlPointsVisible.BindValueChanged(
+                visible =>
+                {
+                    if (visible.NewValue || alwaysShowControlPoints)
+                        controlPoints.FadeIn(400, Easing.OutQuint);
+                    else
+                        controlPoints.FadeOut(200, Easing.OutQuint);
+                },
+                true
+            );
         }
 
         private void updateWaveformOpacity() =>
@@ -215,11 +229,18 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 float minimumZoom = getZoomLevelForVisibleMilliseconds(10000);
                 float maximumZoom = getZoomLevelForVisibleMilliseconds(500);
 
-                float initialZoom = (float)Math.Clamp(defaultTimelineZoom * (editorBeatmap.TimelineZoom == 0 ? 1 : editorBeatmap.TimelineZoom), minimumZoom, maximumZoom);
+                float initialZoom = (float)
+                    Math.Clamp(
+                        defaultTimelineZoom
+                            * (editorBeatmap.TimelineZoom == 0 ? 1 : editorBeatmap.TimelineZoom),
+                        minimumZoom,
+                        maximumZoom
+                    );
 
                 SetupZoom(initialZoom, minimumZoom, maximumZoom);
 
-                float getZoomLevelForVisibleMilliseconds(double milliseconds) => Math.Max(1, (float)(editorClock.TrackLength / milliseconds));
+                float getZoomLevelForVisibleMilliseconds(double milliseconds) =>
+                    Math.Max(1, (float)(editorClock.TrackLength / milliseconds));
 
                 trackLengthForZoom = editorClock.TrackLength;
             }
@@ -255,7 +276,11 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                 // The simplest way to cover the first two cases is by checking whether the scroll position has changed and the audio hasn't been changed externally
                 // Checking IsSeeking covers the third case, where the transform may not have been applied yet.
-                if (Current != lastScrollPosition && editorClock.CurrentTime == lastTrackTime && !editorClock.IsSeeking)
+                if (
+                    Current != lastScrollPosition
+                    && editorClock.CurrentTime == lastTrackTime
+                    && !editorClock.IsSeeking
+                )
                     seekTrackToCurrent();
                 else
                     scrollToTrackTime();

@@ -28,66 +28,95 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("join room", () => JoinRoom(CreateDefaultRoom()));
             WaitForJoined();
 
-            AddStep("reset", () =>
-            {
-                Clear(true);
-
-                clocks = new Dictionary<int, ManualClock>
+            AddStep(
+                "reset",
+                () =>
                 {
-                    { PLAYER_1_ID, new ManualClock() },
-                    { PLAYER_2_ID, new ManualClock() }
-                };
+                    Clear(true);
 
-                foreach ((int userId, _) in clocks)
-                {
-                    SpectatorClient.SendStartPlay(userId, 0);
-                    OnlinePlayDependencies.MultiplayerClient.AddUser(new APIUser { Id = userId }, true);
-                }
-            });
-
-            AddStep("create leaderboard", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(Ruleset.Value);
-
-                LoadComponentAsync(leaderboardProvider = new MultiSpectatorLeaderboardProvider(clocks.Keys.Select(id => new MultiplayerRoomUser(id)).ToArray()), Add);
-                Add(new DependencyProvidingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = [(typeof(IGameplayLeaderboardProvider), leaderboardProvider)],
-                    Child = leaderboard = new DrawableGameplayLeaderboard
+                    clocks = new Dictionary<int, ManualClock>
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        CollapseDuringGameplay = { Value = false }
+                        { PLAYER_1_ID, new ManualClock() },
+                        { PLAYER_2_ID, new ManualClock() },
+                    };
+
+                    foreach ((int userId, _) in clocks)
+                    {
+                        SpectatorClient.SendStartPlay(userId, 0);
+                        OnlinePlayDependencies.MultiplayerClient.AddUser(
+                            new APIUser { Id = userId },
+                            true
+                        );
                     }
-                });
-            });
+                }
+            );
+
+            AddStep(
+                "create leaderboard",
+                () =>
+                {
+                    Beatmap.Value = CreateWorkingBeatmap(Ruleset.Value);
+
+                    LoadComponentAsync(
+                        leaderboardProvider = new MultiSpectatorLeaderboardProvider(
+                            clocks.Keys.Select(id => new MultiplayerRoomUser(id)).ToArray()
+                        ),
+                        Add
+                    );
+                    Add(
+                        new DependencyProvidingContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (typeof(IGameplayLeaderboardProvider), leaderboardProvider),
+                            ],
+                            Child = leaderboard =
+                                new DrawableGameplayLeaderboard
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    CollapseDuringGameplay = { Value = false },
+                                },
+                        }
+                    );
+                }
+            );
 
             AddUntilStep("wait for load", () => leaderboard.IsLoaded);
-            AddUntilStep("wait for user population", () => leaderboard.ChildrenOfType<DrawableGameplayLeaderboardScore>().Count() == 2);
+            AddUntilStep(
+                "wait for user population",
+                () => leaderboard.ChildrenOfType<DrawableGameplayLeaderboardScore>().Count() == 2
+            );
 
-            AddStep("add clock sources", () =>
-            {
-                foreach ((int userId, var clock) in clocks)
-                    leaderboardProvider!.AddClock(userId, clock);
-            });
+            AddStep(
+                "add clock sources",
+                () =>
+                {
+                    foreach ((int userId, var clock) in clocks)
+                        leaderboardProvider!.AddClock(userId, clock);
+                }
+            );
         }
 
         [Test]
         public void TestLeaderboardTracksCurrentTime()
         {
-            AddStep("send frames", () =>
-            {
-                // For player 1, send frames in sets of 1.
-                // For player 2, send frames in sets of 10.
-                for (int i = 0; i < 100; i++)
+            AddStep(
+                "send frames",
+                () =>
                 {
-                    SpectatorClient.SendFramesFromUser(PLAYER_1_ID, 1);
+                    // For player 1, send frames in sets of 1.
+                    // For player 2, send frames in sets of 10.
+                    for (int i = 0; i < 100; i++)
+                    {
+                        SpectatorClient.SendFramesFromUser(PLAYER_1_ID, 1);
 
-                    if (i % 10 == 0)
-                        SpectatorClient.SendFramesFromUser(PLAYER_2_ID, 10);
+                        if (i % 10 == 0)
+                            SpectatorClient.SendFramesFromUser(PLAYER_2_ID, 10);
+                    }
                 }
-            });
+            );
 
             assertCombo(PLAYER_1_ID, 1);
             assertCombo(PLAYER_2_ID, 10);
@@ -120,16 +149,26 @@ namespace osu.Game.Tests.Visual.Multiplayer
             assertCombo(PLAYER_2_ID, 0);
         }
 
-        private void setTime(double time) => AddStep($"set time {time}", () =>
-        {
-            foreach (var (_, clock) in clocks)
-                clock.CurrentTime = time;
-        });
+        private void setTime(double time) =>
+            AddStep(
+                $"set time {time}",
+                () =>
+                {
+                    foreach (var (_, clock) in clocks)
+                        clock.CurrentTime = time;
+                }
+            );
 
-        private void setTime(int userId, double time)
-            => AddStep($"set user {userId} time {time}", () => clocks[userId].CurrentTime = time);
+        private void setTime(int userId, double time) =>
+            AddStep($"set user {userId} time {time}", () => clocks[userId].CurrentTime = time);
 
-        private void assertCombo(int userId, int expectedCombo)
-            => AddUntilStep($"player {userId} has {expectedCombo} combo", () => this.ChildrenOfType<DrawableGameplayLeaderboardScore>().Single(s => s.User?.OnlineID == userId).Combo.Value == expectedCombo);
+        private void assertCombo(int userId, int expectedCombo) =>
+            AddUntilStep(
+                $"player {userId} has {expectedCombo} combo",
+                () =>
+                    this.ChildrenOfType<DrawableGameplayLeaderboardScore>()
+                        .Single(s => s.User?.OnlineID == userId)
+                        .Combo.Value == expectedCombo
+            );
     }
 }

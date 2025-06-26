@@ -22,13 +22,16 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 
             previewTime.UnbindAll();
             previewTime.BindTo(beatmap.PreviewTime);
-            previewTime.BindValueChanged(t =>
-            {
-                Clear();
+            previewTime.BindValueChanged(
+                t =>
+                {
+                    Clear();
 
-                if (t.NewValue >= 0)
-                    Add(new PreviewTimeVisualisation(t.NewValue));
-            }, true);
+                    if (t.NewValue >= 0)
+                        Add(new PreviewTimeVisualisation(t.NewValue));
+                },
+                true
+            );
         }
 
         private partial class PreviewTimeVisualisation : PointVisualisation, IHasTooltip
@@ -46,7 +49,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
             [BackgroundDependencyLoader]
             private void load(OsuColour colours) => Colour = colours.Green1;
 
-            public LocalisableString TooltipText => $"{StartTime.ToEditorFormattedString()} preview time";
+            public LocalisableString TooltipText =>
+                $"{StartTime.ToEditorFormattedString()} preview time";
         }
     }
 }

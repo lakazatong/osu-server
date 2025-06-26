@@ -30,7 +30,8 @@ namespace osu.Game.Rulesets.Taiko.UI
 
         private KeyBindingContainer<TaikoAction> keyBindingContainer = null!;
 
-        private readonly Dictionary<object, TaikoAction> trackedActions = new Dictionary<object, TaikoAction>();
+        private readonly Dictionary<object, TaikoAction> trackedActions =
+            new Dictionary<object, TaikoAction>();
 
         private Container mainContent = null!;
 
@@ -39,7 +40,8 @@ namespace osu.Game.Rulesets.Taiko.UI
         private DrumSegment leftRim = null!;
         private DrumSegment rightRim = null!;
 
-        private readonly Bindable<TaikoTouchControlScheme> configTouchControlScheme = new Bindable<TaikoTouchControlScheme>();
+        private readonly Bindable<TaikoTouchControlScheme> configTouchControlScheme =
+            new Bindable<TaikoTouchControlScheme>();
 
         [BackgroundDependencyLoader]
         private void load(TaikoInputManager taikoInputManager, TaikoRulesetConfigManager config)
@@ -97,23 +99,26 @@ namespace osu.Game.Rulesets.Taiko.UI
                                     X = 2,
                                     Scale = new Vector2(centre_region),
                                     Rotation = 90,
-                                }
-                            }
+                                },
+                            },
                         },
-                    }
+                    },
                 },
             };
 
             config.BindWith(TaikoRulesetSetting.TouchControlScheme, configTouchControlScheme);
-            configTouchControlScheme.BindValueChanged(scheme =>
-            {
-                var actions = getOrderedActionsForScheme(scheme.NewValue);
+            configTouchControlScheme.BindValueChanged(
+                scheme =>
+                {
+                    var actions = getOrderedActionsForScheme(scheme.NewValue);
 
-                leftRim.Action = actions[0];
-                leftCentre.Action = actions[1];
-                rightCentre.Action = actions[2];
-                rightRim.Action = actions[3];
-            }, true);
+                    leftRim.Action = actions[0];
+                    leftCentre.Action = actions[1];
+                    rightCentre.Action = actions[2];
+                    rightRim.Action = actions[3];
+                },
+                true
+            );
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -145,7 +150,7 @@ namespace osu.Game.Rulesets.Taiko.UI
                         TaikoAction.LeftRim,
                         TaikoAction.LeftCentre,
                         TaikoAction.RightCentre,
-                        TaikoAction.RightRim
+                        TaikoAction.RightRim,
                     };
 
                 case TaikoTouchControlScheme.DDKK:
@@ -154,7 +159,7 @@ namespace osu.Game.Rulesets.Taiko.UI
                         TaikoAction.LeftCentre,
                         TaikoAction.RightCentre,
                         TaikoAction.LeftRim,
-                        TaikoAction.RightRim
+                        TaikoAction.RightRim,
                     };
 
                 case TaikoTouchControlScheme.KKDD:
@@ -163,7 +168,7 @@ namespace osu.Game.Rulesets.Taiko.UI
                         TaikoAction.LeftRim,
                         TaikoAction.RightRim,
                         TaikoAction.LeftCentre,
-                        TaikoAction.RightCentre
+                        TaikoAction.RightCentre,
                     };
 
                 default:
@@ -192,7 +197,8 @@ namespace osu.Game.Rulesets.Taiko.UI
 
         private TaikoAction getTaikoActionFromPosition(Vector2 inputPosition)
         {
-            bool centreHit = leftCentre.Contains(inputPosition) || rightCentre.Contains(inputPosition);
+            bool centreHit =
+                leftCentre.Contains(inputPosition) || rightCentre.Contains(inputPosition);
             bool leftSide = ToLocalSpace(inputPosition).X < DrawWidth / 2;
 
             if (leftSide)
@@ -235,7 +241,8 @@ namespace osu.Game.Rulesets.Taiko.UI
             [Resolved]
             private OsuColour colours { get; set; } = null!;
 
-            public override bool Contains(Vector2 screenSpacePos) => circle.Contains(screenSpacePos);
+            public override bool Contains(Vector2 screenSpacePos) =>
+                circle.Contains(screenSpacePos);
 
             public DrumSegment()
             {
@@ -267,8 +274,8 @@ namespace osu.Game.Rulesets.Taiko.UI
                                 RelativeSizeAxes = Axes.Both,
                                 Blending = BlendingParameters.Additive,
                                 Scale = new Vector2(2),
-                            }
-                        }
+                            },
+                        },
                     },
                 };
             }

@@ -38,7 +38,9 @@ namespace osu.Game.Online.Chat
         /// <summary>
         /// Contains all the messages send in the channel.
         /// </summary>
-        public readonly SortedList<Message> Messages = new SortedList<Message>(Comparer<Message>.Default);
+        public readonly SortedList<Message> Messages = new SortedList<Message>(
+            Comparer<Message>.Default
+        );
 
         /// <summary>
         /// Contains all the messages that weren't read by the user.
@@ -111,9 +113,7 @@ namespace osu.Game.Online.Chat
         public Bindable<string> TextBoxMessage = new Bindable<string>(string.Empty);
 
         [JsonConstructor]
-        public Channel()
-        {
-        }
+        public Channel() { }
 
         /// <summary>
         /// Create a private messaging channel with the specified user.
@@ -148,7 +148,9 @@ namespace osu.Game.Online.Chat
         {
             foreach (var m in messages)
             {
-                LocalEchoMessage localEcho = pendingMessages.FirstOrDefault(local => local.Uuid == m.Uuid);
+                LocalEchoMessage localEcho = pendingMessages.FirstOrDefault(local =>
+                    local.Uuid == m.Uuid
+                );
 
                 if (localEcho != null)
                     ReplaceMessage(localEcho, m);
@@ -156,7 +158,8 @@ namespace osu.Game.Online.Chat
 
             messages = messages.Except(Messages).ToArray();
 
-            if (messages.Length == 0) return;
+            if (messages.Length == 0)
+                return;
 
             Messages.AddRange(messages);
 

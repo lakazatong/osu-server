@@ -9,11 +9,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 {
     public partial class DailyChallengePlayer : PlaylistsPlayer
     {
-        protected override UserActivity InitialActivity => new UserActivity.PlayingDailyChallenge(Beatmap.Value.BeatmapInfo, Ruleset.Value);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.PlayingDailyChallenge(Beatmap.Value.BeatmapInfo, Ruleset.Value);
 
         public DailyChallengePlayer(Room room, PlaylistItem playlistItem)
-            : base(room, playlistItem)
-        {
-        }
+            : base(room, playlistItem) { }
     }
 }

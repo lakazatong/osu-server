@@ -17,21 +17,25 @@ namespace osu.Game.Screens.Edit.Verify
     {
         public readonly Bindable<Issue> SelectedIssue = new Bindable<Issue>();
 
-        public readonly Bindable<DifficultyRating> InterpretedDifficulty = new Bindable<DifficultyRating>();
+        public readonly Bindable<DifficultyRating> InterpretedDifficulty =
+            new Bindable<DifficultyRating>();
 
-        public readonly BindableList<IssueType> HiddenIssueTypes = new BindableList<IssueType> { IssueType.Negligible };
+        public readonly BindableList<IssueType> HiddenIssueTypes = new BindableList<IssueType>
+        {
+            IssueType.Negligible,
+        };
 
         public IssueList IssueList { get; private set; }
 
         public VerifyScreen()
-            : base(EditorScreenMode.Verify)
-        {
-        }
+            : base(EditorScreenMode.Verify) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            InterpretedDifficulty.Default = StarDifficulty.GetDifficultyRating(EditorBeatmap.BeatmapInfo.StarRating);
+            InterpretedDifficulty.Default = StarDifficulty.GetDifficultyRating(
+                EditorBeatmap.BeatmapInfo.StarRating
+            );
             InterpretedDifficulty.SetDefault();
 
             Child = new GridContainer
@@ -44,12 +48,8 @@ namespace osu.Game.Screens.Edit.Verify
                 },
                 Content = new[]
                 {
-                    new Drawable[]
-                    {
-                        IssueList = new IssueList(),
-                        new IssueSettings(),
-                    },
-                }
+                    new Drawable[] { IssueList = new IssueList(), new IssueSettings() },
+                },
             };
         }
 

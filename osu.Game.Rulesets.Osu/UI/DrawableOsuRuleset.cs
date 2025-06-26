@@ -28,16 +28,19 @@ namespace osu.Game.Rulesets.Osu.UI
     {
         private Bindable<bool>? cursorHideEnabled;
 
-        public new OsuInputManager KeyBindingInputManager => (OsuInputManager)base.KeyBindingInputManager;
+        public new OsuInputManager KeyBindingInputManager =>
+            (OsuInputManager)base.KeyBindingInputManager;
 
         public new OsuPlayfield Playfield => (OsuPlayfield)base.Playfield;
 
         protected new OsuRulesetConfigManager Config => (OsuRulesetConfigManager)base.Config;
 
-        public DrawableOsuRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawableOsuRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        )
+            : base(ruleset, beatmap, mods) { }
 
         [BackgroundDependencyLoader]
         private void load(ReplayPlayer? replayPlayer)
@@ -45,27 +48,40 @@ namespace osu.Game.Rulesets.Osu.UI
             if (replayPlayer != null)
             {
                 ReplayAnalysisOverlay analysisOverlay;
-                PlayfieldAdjustmentContainer.Add(analysisOverlay = new ReplayAnalysisOverlay(replayPlayer.Score.Replay));
-                Overlays.Add(analysisOverlay.CreateProxy().With(p => p.Depth = float.NegativeInfinity));
+                PlayfieldAdjustmentContainer.Add(
+                    analysisOverlay = new ReplayAnalysisOverlay(replayPlayer.Score.Replay)
+                );
+                Overlays.Add(
+                    analysisOverlay.CreateProxy().With(p => p.Depth = float.NegativeInfinity)
+                );
                 replayPlayer.AddSettings(new ReplayAnalysisSettings(Config));
 
-                cursorHideEnabled = Config.GetBindable<bool>(OsuRulesetSetting.ReplayCursorHideEnabled);
+                cursorHideEnabled = Config.GetBindable<bool>(
+                    OsuRulesetSetting.ReplayCursorHideEnabled
+                );
 
                 // I have little faith in this working (other things touch cursor visibility) but haven't broken it yet.
                 // Let's wait for someone to report an issue before spending too much time on it.
-                cursorHideEnabled.BindValueChanged(enabled => Playfield.Cursor.FadeTo(enabled.NewValue ? 0 : 1), true);
+                cursorHideEnabled.BindValueChanged(
+                    enabled => Playfield.Cursor.FadeTo(enabled.NewValue ? 0 : 1),
+                    true
+                );
             }
         }
 
-        public override DrawableHitObject<OsuHitObject>? CreateDrawableRepresentation(OsuHitObject h) => null;
+        public override DrawableHitObject<OsuHitObject>? CreateDrawableRepresentation(
+            OsuHitObject h
+        ) => null;
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true; // always show the gameplay cursor
 
         protected override Playfield CreatePlayfield() => new OsuPlayfield();
 
-        protected override PassThroughInputManager CreateInputManager() => new OsuInputManager(Ruleset.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new OsuInputManager(Ruleset.RulesetInfo);
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new OsuPlayfieldAdjustmentContainer { AlignWithStoryboard = true };
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new OsuPlayfieldAdjustmentContainer { AlignWithStoryboard = true };
 
         protected override ResumeOverlay CreateResumeOverlay()
         {
@@ -75,9 +91,11 @@ namespace osu.Game.Rulesets.Osu.UI
             return new OsuResumeOverlay();
         }
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new OsuFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new OsuFramedReplayInputHandler(replay);
 
-        protected override ReplayRecorder CreateReplayRecorder(Score score) => new OsuReplayRecorder(score);
+        protected override ReplayRecorder CreateReplayRecorder(Score score) =>
+            new OsuReplayRecorder(score);
 
         public override double GameplayStartTime
         {

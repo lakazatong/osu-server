@@ -33,9 +33,15 @@ namespace osu.Game.Rulesets.Mania.Edit.Checks
                         break;
 
                     if (hitobject.GetType() == nextHitobject.GetType())
-                        yield return new IssueTemplateConcurrentSame(this).Create(hitobject, nextHitobject);
+                        yield return new IssueTemplateConcurrentSame(this).Create(
+                            hitobject,
+                            nextHitobject
+                        );
                     else
-                        yield return new IssueTemplateConcurrentDifferent(this).Create(hitobject, nextHitobject);
+                        yield return new IssueTemplateConcurrentDifferent(this).Create(
+                            hitobject,
+                            nextHitobject
+                        );
                 }
             }
         }

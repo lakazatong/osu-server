@@ -23,7 +23,11 @@ namespace osu.Game.Rulesets.Pippidon
         [BackgroundDependencyLoader]
         private void load(IRenderer renderer)
         {
-            Texture = new TextureStore(renderer, new TextureLoaderStore(ruleset.CreateResourceStore()), false).Get("Textures/coin");
+            Texture = new TextureStore(
+                renderer,
+                new TextureLoaderStore(ruleset.CreateResourceStore()),
+                false
+            ).Get("Textures/coin");
         }
     }
 }

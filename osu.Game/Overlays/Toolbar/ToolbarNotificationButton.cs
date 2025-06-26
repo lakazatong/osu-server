@@ -26,14 +26,16 @@ namespace osu.Game.Overlays.Toolbar
         {
             Hotkey = GlobalAction.ToggleNotifications;
 
-            Add(countDisplay = new CountCircle
-            {
-                Alpha = 0,
-                Height = 16,
-                RelativePositionAxes = Axes.Both,
-                Origin = Anchor.Centre,
-                Position = new Vector2(0.7f, 0.25f),
-            });
+            Add(
+                countDisplay = new CountCircle
+                {
+                    Alpha = 0,
+                    Height = 16,
+                    RelativePositionAxes = Axes.Both,
+                    Origin = Anchor.Centre,
+                    Position = new Vector2(0.7f, 0.25f),
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -87,11 +89,7 @@ namespace osu.Game.Overlays.Toolbar
 
                 InternalChildren = new Drawable[]
                 {
-                    circle = new Circle
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Red
-                    },
+                    circle = new Circle { RelativeSizeAxes = Axes.Both, Colour = Color4.Red },
                     countText = new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
@@ -101,7 +99,7 @@ namespace osu.Game.Overlays.Toolbar
                         Padding = new MarginPadding(5),
                         Colour = Color4.White,
                         UseFullGlyphHeight = true,
-                    }
+                    },
                 };
             }
         }

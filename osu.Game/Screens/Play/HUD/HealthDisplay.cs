@@ -28,11 +28,8 @@ namespace osu.Game.Screens.Play.HUD
 
         protected virtual bool PlayInitialIncreaseAnimation => true;
 
-        public Bindable<double> Current { get; } = new BindableDouble
-        {
-            MinValue = 0,
-            MaxValue = 1,
-        };
+        public Bindable<double> Current { get; } =
+            new BindableDouble { MinValue = 0, MaxValue = 1 };
 
         private BindableNumber<double> health = null!;
 
@@ -44,9 +41,7 @@ namespace osu.Game.Screens.Play.HUD
         /// Triggered when a <see cref="Judgement"/> is a successful hit, signaling the health display to perform a flash animation (if designed to do so).
         /// Calls to this method are debounced.
         /// </summary>
-        protected virtual void Flash()
-        {
-        }
+        protected virtual void Flash() { }
 
         [Resolved]
         private HUDOverlay? hudOverlay { get; set; }
@@ -64,7 +59,15 @@ namespace osu.Game.Screens.Play.HUD
                 showHealthBar.BindTo(hudOverlay.ShowHealthBar);
 
             // this probably shouldn't be operating on `this.`
-            showHealthBar.BindValueChanged(healthBar => this.FadeTo(healthBar.NewValue ? 1 : 0, HUDOverlay.FADE_DURATION, HUDOverlay.FADE_EASING), true);
+            showHealthBar.BindValueChanged(
+                healthBar =>
+                    this.FadeTo(
+                        healthBar.NewValue ? 1 : 0,
+                        HUDOverlay.FADE_DURATION,
+                        HUDOverlay.FADE_EASING
+                    ),
+                true
+            );
 
             initialHealthValue = health.Value;
 
@@ -98,9 +101,7 @@ namespace osu.Game.Screens.Play.HUD
             }
         }
 
-        protected virtual void HealthChanged(bool increase)
-        {
-        }
+        protected virtual void HealthChanged(bool increase) { }
 
         private void startInitialAnimation()
         {
@@ -111,15 +112,19 @@ namespace osu.Game.Screens.Play.HUD
             // TODO: it should also start increasing relative to the first hitobject.
             const double increase_delay = 150;
 
-            initialIncrease = Scheduler.AddDelayed(() =>
-            {
-                double newValue = Math.Min(Current.Value + 0.05f, health.Value);
-                this.TransformBindableTo(Current, newValue, increase_delay);
-                Scheduler.AddOnce(Flash);
+            initialIncrease = Scheduler.AddDelayed(
+                () =>
+                {
+                    double newValue = Math.Min(Current.Value + 0.05f, health.Value);
+                    this.TransformBindableTo(Current, newValue, increase_delay);
+                    Scheduler.AddOnce(Flash);
 
-                if (newValue >= health.Value)
-                    FinishInitialAnimation(health.Value);
-            }, increase_delay, true);
+                    if (newValue >= health.Value)
+                        FinishInitialAnimation(health.Value);
+                },
+                increase_delay,
+                true
+            );
         }
 
         protected virtual void FinishInitialAnimation(double value)

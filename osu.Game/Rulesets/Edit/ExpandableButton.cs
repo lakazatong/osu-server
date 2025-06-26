@@ -70,34 +70,40 @@ namespace osu.Game.Rulesets.Edit
         {
             base.LoadComplete();
 
-            expandingContainer?.Expanded.BindValueChanged(containerExpanded =>
-            {
-                Expanded.Value = containerExpanded.NewValue;
-            }, true);
-
-            Expanded.BindValueChanged(expanded =>
-            {
-                Text = expanded.NewValue ? expandedLabelText : contractedLabelText;
-
-                if (expanded.NewValue)
+            expandingContainer?.Expanded.BindValueChanged(
+                containerExpanded =>
                 {
-                    SpriteText.Anchor = Anchor.Centre;
-                    SpriteText.Origin = Anchor.Centre;
-                    SpriteText.Font = OsuFont.GetFont(weight: FontWeight.Bold);
-                    base.Height = actualHeight;
-                    Background.Show();
-                    Triangles?.Show();
-                }
-                else
+                    Expanded.Value = containerExpanded.NewValue;
+                },
+                true
+            );
+
+            Expanded.BindValueChanged(
+                expanded =>
                 {
-                    SpriteText.Anchor = Anchor.CentreLeft;
-                    SpriteText.Origin = Anchor.CentreLeft;
-                    SpriteText.Font = OsuFont.GetFont(weight: FontWeight.Regular);
-                    base.Height = actualHeight / 2;
-                    Background.Hide();
-                    Triangles?.Hide();
-                }
-            }, true);
+                    Text = expanded.NewValue ? expandedLabelText : contractedLabelText;
+
+                    if (expanded.NewValue)
+                    {
+                        SpriteText.Anchor = Anchor.Centre;
+                        SpriteText.Origin = Anchor.Centre;
+                        SpriteText.Font = OsuFont.GetFont(weight: FontWeight.Bold);
+                        base.Height = actualHeight;
+                        Background.Show();
+                        Triangles?.Show();
+                    }
+                    else
+                    {
+                        SpriteText.Anchor = Anchor.CentreLeft;
+                        SpriteText.Origin = Anchor.CentreLeft;
+                        SpriteText.Font = OsuFont.GetFont(weight: FontWeight.Regular);
+                        base.Height = actualHeight / 2;
+                        Background.Hide();
+                        Triangles?.Hide();
+                    }
+                },
+                true
+            );
         }
     }
 }

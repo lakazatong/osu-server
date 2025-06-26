@@ -23,11 +23,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             SetContents(skin =>
             {
-                var implementation = skin is LegacySkin
-                    ? CreateLegacyImplementation()
-                    : skin is ArgonSkin
-                        ? CreateArgonImplementation()
-                        : CreateDefaultImplementation();
+                var implementation =
+                    skin is LegacySkin ? CreateLegacyImplementation()
+                    : skin is ArgonSkin ? CreateArgonImplementation()
+                    : CreateDefaultImplementation();
 
                 implementation.Anchor = Anchor.Centre;
                 implementation.Origin = Anchor.Centre;
@@ -36,7 +35,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         protected abstract Drawable CreateDefaultImplementation();
+
         protected virtual Drawable CreateArgonImplementation() => CreateDefaultImplementation();
+
         protected abstract Drawable CreateLegacyImplementation();
     }
 }

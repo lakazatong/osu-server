@@ -11,9 +11,7 @@ namespace osu.Game.Configuration
         protected override string Filename => "storage.ini";
 
         public StorageConfigManager(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
 
         protected override void InitialiseDefaults()
         {

@@ -19,7 +19,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// </summary>
         public Bindable<Vector2> StartPosition { get; } = new Bindable<Vector2>(Vector2.Zero);
 
-        protected readonly LayoutValue GridCache = new LayoutValue(Invalidation.RequiredParentSizeToFit);
+        protected readonly LayoutValue GridCache = new LayoutValue(
+            Invalidation.RequiredParentSizeToFit
+        );
 
         protected PositionSnapGrid()
             : base(cachedFrameBuffer: true)
@@ -54,42 +56,44 @@ namespace osu.Game.Screens.Edit.Compose.Components
             // Make lines the same width independent of display resolution.
             float lineWidth = DrawWidth / ScreenSpaceDrawQuad.Width;
 
-            AddRangeInternal(new[]
-            {
-                new Box
+            AddRangeInternal(
+                new[]
                 {
-                    Colour = Colour4.White,
-                    Alpha = 0.3f,
-                    RelativeSizeAxes = Axes.X,
-                    Height = lineWidth,
-                    Y = 0,
-                },
-                new Box
-                {
-                    Colour = Colour4.White,
-                    Alpha = 0.3f,
-                    Origin = Anchor.BottomLeft,
-                    Anchor = Anchor.BottomLeft,
-                    RelativeSizeAxes = Axes.X,
-                    Height = lineWidth
-                },
-                new Box
-                {
-                    Colour = Colour4.White,
-                    Alpha = 0.3f,
-                    RelativeSizeAxes = Axes.Y,
-                    Width = lineWidth
-                },
-                new Box
-                {
-                    Colour = Colour4.White,
-                    Alpha = 0.3f,
-                    Origin = Anchor.TopRight,
-                    Anchor = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Y,
-                    Width = lineWidth
-                },
-            });
+                    new Box
+                    {
+                        Colour = Colour4.White,
+                        Alpha = 0.3f,
+                        RelativeSizeAxes = Axes.X,
+                        Height = lineWidth,
+                        Y = 0,
+                    },
+                    new Box
+                    {
+                        Colour = Colour4.White,
+                        Alpha = 0.3f,
+                        Origin = Anchor.BottomLeft,
+                        Anchor = Anchor.BottomLeft,
+                        RelativeSizeAxes = Axes.X,
+                        Height = lineWidth,
+                    },
+                    new Box
+                    {
+                        Colour = Colour4.White,
+                        Alpha = 0.3f,
+                        RelativeSizeAxes = Axes.Y,
+                        Width = lineWidth,
+                    },
+                    new Box
+                    {
+                        Colour = Colour4.White,
+                        Alpha = 0.3f,
+                        Origin = Anchor.TopRight,
+                        Anchor = Anchor.TopRight,
+                        RelativeSizeAxes = Axes.Y,
+                        Width = lineWidth,
+                    },
+                }
+            );
         }
 
         public abstract Vector2 GetSnappedPosition(Vector2 original);

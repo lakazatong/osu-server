@@ -4,14 +4,14 @@
 #nullable disable
 
 using NUnit.Framework;
-using osu.Framework.Graphics;
-using osu.Game.Overlays.Comments;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Framework.Allocation;
-using osu.Game.Overlays;
-using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Online.API;
+using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Overlays;
+using osu.Game.Overlays.Comments;
 
 namespace osu.Game.Tests.Visual.Online
 {
@@ -19,7 +19,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneVotePill : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [Cached]
         private LoginOverlay login;
@@ -29,16 +31,18 @@ namespace osu.Game.Tests.Visual.Online
 
         public TestSceneVotePill()
         {
-            AddRange(new Drawable[]
-            {
-                pillContainer = new Container
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both
-                },
-                login = new LoginOverlay()
-            });
+                    pillContainer = new Container
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                    },
+                    login = new LoginOverlay(),
+                }
+            );
         }
 
         [Test]
@@ -79,19 +83,21 @@ namespace osu.Game.Tests.Visual.Online
             ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
         }
 
-        private Comment getUserComment() => new Comment
-        {
-            IsVoted = false,
-            UserId = API.LocalUser.Value.Id,
-            VotesCount = 10,
-        };
+        private Comment getUserComment() =>
+            new Comment
+            {
+                IsVoted = false,
+                UserId = API.LocalUser.Value.Id,
+                VotesCount = 10,
+            };
 
-        private Comment getRandomComment() => new Comment
-        {
-            IsVoted = false,
-            UserId = 4444,
-            VotesCount = 2,
-        };
+        private Comment getRandomComment() =>
+            new Comment
+            {
+                IsVoted = false,
+                UserId = 4444,
+                VotesCount = 2,
+            };
 
         private void addVotePill(Comment comment)
         {
@@ -108,9 +114,7 @@ namespace osu.Game.Tests.Visual.Online
             public new Box Background => base.Background;
 
             public TestPill(Comment comment)
-                : base(comment)
-            {
-            }
+                : base(comment) { }
         }
     }
 }

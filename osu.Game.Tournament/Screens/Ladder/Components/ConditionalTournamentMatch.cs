@@ -8,7 +8,5 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
     /// <summary>
     /// A match that may not necessarily occur.
     /// </summary>
-    public class ConditionalTournamentMatch : TournamentMatch
-    {
-    }
+    public class ConditionalTournamentMatch : TournamentMatch { }
 }

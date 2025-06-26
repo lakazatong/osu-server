@@ -46,9 +46,12 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Skills
 
             // Safely prevents previous strains from shifting as new notes are added.
             var currentObject = current as TaikoDifficultyHitObject;
-            int index = currentObject?.ColourData.MonoStreak?.HitObjects.IndexOf(currentObject) ?? 0;
+            int index =
+                currentObject?.ColourData.MonoStreak?.HitObjects.IndexOf(currentObject) ?? 0;
 
-            double monolengthBonus = isConvert ? 1 : 1 + Math.Min(Math.Max((index - 5) / 50.0, 0), 0.30);
+            double monolengthBonus = isConvert
+                ? 1
+                : 1 + Math.Min(Math.Max((index - 5) / 50.0, 0), 0.30);
 
             if (SingleColourStamina)
                 return DifficultyCalculationUtils.Logistic(-(index - 10) / 2.0, currentStrain);
@@ -56,6 +59,12 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Skills
             return currentStrain * monolengthBonus;
         }
 
-        protected override double CalculateInitialStrain(double time, DifficultyHitObject current) => SingleColourStamina ? 0 : currentStrain * strainDecay(time - current.Previous(0).StartTime);
+        protected override double CalculateInitialStrain(
+            double time,
+            DifficultyHitObject current
+        ) =>
+            SingleColourStamina
+                ? 0
+                : currentStrain * strainDecay(time - current.Previous(0).StartTime);
     }
 }

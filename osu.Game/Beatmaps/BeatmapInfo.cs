@@ -26,7 +26,11 @@ namespace osu.Game.Beatmaps
     /// </remarks>
     [Serializable]
     [MapTo("Beatmap")]
-    public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquatable<BeatmapInfo>
+    public class BeatmapInfo
+        : RealmObject,
+            IHasGuidPrimaryKey,
+            IBeatmapInfo,
+            IEquatable<BeatmapInfo>
     {
         [PrimaryKey]
         public Guid ID { get; set; }
@@ -45,29 +49,34 @@ namespace osu.Game.Beatmaps
 
         public BeatmapUserSettings UserSettings { get; set; } = null!;
 
-        public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
+        public BeatmapInfo(
+            RulesetInfo? ruleset = null,
+            BeatmapDifficulty? difficulty = null,
+            BeatmapMetadata? metadata = null
+        )
         {
             ID = Guid.NewGuid();
-            Ruleset = ruleset ?? new RulesetInfo
-            {
-                OnlineID = 0,
-                ShortName = @"osu",
-                Name = @"null placeholder ruleset"
-            };
+            Ruleset =
+                ruleset
+                ?? new RulesetInfo
+                {
+                    OnlineID = 0,
+                    ShortName = @"osu",
+                    Name = @"null placeholder ruleset",
+                };
             Difficulty = difficulty ?? new BeatmapDifficulty();
             Metadata = metadata ?? new BeatmapMetadata();
             UserSettings = new BeatmapUserSettings();
         }
 
         [UsedImplicitly]
-        protected BeatmapInfo()
-        {
-        }
+        protected BeatmapInfo() { }
 
         public BeatmapSetInfo? BeatmapSet { get; set; }
 
         [Ignored]
-        public RealmNamedFileUsage? File => BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
+        public RealmNamedFileUsage? File =>
+            BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
 
         [Ignored]
         public BeatmapOnlineStatus Status
@@ -149,25 +158,33 @@ namespace osu.Game.Beatmaps
 
         public bool Equals(BeatmapInfo? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other == null) return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
 
             return ID == other.ID;
         }
 
         public bool Equals(IBeatmapInfo? other) => other is BeatmapInfo b && Equals(b);
 
-        public bool AudioEquals(BeatmapInfo? other) => other != null
-                                                       && BeatmapSet != null
-                                                       && other.BeatmapSet != null
-                                                       && compareFiles(this, other, m => m.AudioFile);
+        public bool AudioEquals(BeatmapInfo? other) =>
+            other != null
+            && BeatmapSet != null
+            && other.BeatmapSet != null
+            && compareFiles(this, other, m => m.AudioFile);
 
-        public bool BackgroundEquals(BeatmapInfo? other) => other != null
-                                                            && BeatmapSet != null
-                                                            && other.BeatmapSet != null
-                                                            && compareFiles(this, other, m => m.BackgroundFile);
+        public bool BackgroundEquals(BeatmapInfo? other) =>
+            other != null
+            && BeatmapSet != null
+            && other.BeatmapSet != null
+            && compareFiles(this, other, m => m.BackgroundFile);
 
-        private static bool compareFiles(BeatmapInfo x, BeatmapInfo y, Func<IBeatmapMetadataInfo, string> getFilename)
+        private static bool compareFiles(
+            BeatmapInfo x,
+            BeatmapInfo y,
+            Func<IBeatmapMetadataInfo, string> getFilename
+        )
         {
             Debug.Assert(x.BeatmapSet != null);
             Debug.Assert(y.BeatmapSet != null);
@@ -186,7 +203,10 @@ namespace osu.Game.Beatmaps
         /// <param name="previousMD5Hash">The previous MD5 hash of the beatmap before update.</param>
         public void TransferCollectionReferences(Realm realm, string previousMD5Hash)
         {
-            var collections = realm.All<BeatmapCollection>().AsEnumerable().Where(c => c.BeatmapMD5Hashes.Contains(previousMD5Hash));
+            var collections = realm
+                .All<BeatmapCollection>()
+                .AsEnumerable()
+                .Where(c => c.BeatmapMD5Hashes.Contains(previousMD5Hash));
 
             foreach (var c in collections)
             {

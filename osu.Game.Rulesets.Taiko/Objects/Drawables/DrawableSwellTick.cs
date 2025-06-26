@@ -14,14 +14,10 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         public override bool DisplayResult => false;
 
         public DrawableSwellTick()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableSwellTick([CanBeNull] SwellTick hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
 
         public void TriggerResult(bool hit)
         {
@@ -33,9 +29,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
                 ApplyMinResult();
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset)
-        {
-        }
+        protected override void CheckForResult(bool userTriggered, double timeOffset) { }
 
         public override bool OnPressed(KeyBindingPressEvent<TaikoAction> e) => false;
 

@@ -48,14 +48,16 @@ namespace osu.Game.Overlays.Toolbar
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
-            BackgroundContent.Add(stateBackground = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = colours.Carmine.Opacity(180),
-                Blending = BlendingParameters.Additive,
-                Depth = float.MaxValue,
-                Alpha = 0,
-            });
+            BackgroundContent.Add(
+                stateBackground = new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = colours.Carmine.Opacity(180),
+                    Blending = BlendingParameters.Additive,
+                    Depth = float.MaxValue,
+                    Alpha = 0,
+                }
+            );
 
             overlayState.ValueChanged += stateChanged;
         }

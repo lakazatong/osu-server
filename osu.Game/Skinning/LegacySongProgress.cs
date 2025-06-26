@@ -37,10 +37,8 @@ namespace osu.Game.Skinning
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.92f),
-                    Child = circularProgress = new CircularProgress
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = circularProgress =
+                        new CircularProgress { RelativeSizeAxes = Axes.Both },
                 },
                 new CircularContainer
                 {
@@ -53,7 +51,7 @@ namespace osu.Game.Skinning
                         RelativeSizeAxes = Axes.Both,
                         AlwaysPresent = true,
                         Alpha = 0,
-                    }
+                    },
                 },
                 new Circle
                 {
@@ -61,7 +59,7 @@ namespace osu.Game.Skinning
                     Origin = Anchor.Centre,
                     Colour = Colour4.White,
                     Size = new Vector2(4),
-                }
+                },
             };
         }
 

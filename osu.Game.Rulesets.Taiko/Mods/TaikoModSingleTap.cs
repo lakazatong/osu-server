@@ -1,33 +1,37 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Localisation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps.Timing;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Taiko.Objects;
+using osu.Game.Rulesets.Taiko.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
 using osu.Game.Utils;
-using osu.Game.Rulesets.Taiko.UI;
 
 namespace osu.Game.Rulesets.Taiko.Mods
 {
-    public partial class TaikoModSingleTap : Mod, IApplicableToDrawableRuleset<TaikoHitObject>, IUpdatableByPlayfield
+    public partial class TaikoModSingleTap
+        : Mod,
+            IApplicableToDrawableRuleset<TaikoHitObject>,
+            IUpdatableByPlayfield
     {
         public override string Name => @"Single Tap";
         public override string Acronym => @"SG";
         public override LocalisableString Description => @"One key for dons, one key for kats.";
 
         public override double ScoreMultiplier => 1.0;
-        public override Type[] IncompatibleMods => new[] { typeof(ModAutoplay), typeof(ModRelax), typeof(TaikoModCinema) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModAutoplay), typeof(ModRelax), typeof(TaikoModCinema) };
         public override ModType Type => ModType.Conversion;
 
         private DrawableTaikoRuleset ruleset = null!;
@@ -57,12 +61,22 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
             if (drawableRuleset.Objects.Any())
             {
-                periods.Add(new Period(int.MinValue, getValidJudgementTime(ruleset.Objects.First()) - 1));
+                periods.Add(
+                    new Period(int.MinValue, getValidJudgementTime(ruleset.Objects.First()) - 1)
+                );
 
                 foreach (BreakPeriod b in drawableRuleset.Beatmap.Breaks)
-                    periods.Add(new Period(b.StartTime, getValidJudgementTime(ruleset.Objects.First(h => h.StartTime >= b.EndTime)) - 1));
+                    periods.Add(
+                        new Period(
+                            b.StartTime,
+                            getValidJudgementTime(
+                                ruleset.Objects.First(h => h.StartTime >= b.EndTime)
+                            ) - 1
+                        )
+                    );
 
-                static double getValidJudgementTime(HitObject hitObject) => hitObject.StartTime - hitObject.HitWindows.WindowFor(HitResult.Ok);
+                static double getValidJudgementTime(HitObject hitObject) =>
+                    hitObject.StartTime - hitObject.HitWindows.WindowFor(HitResult.Ok);
             }
 
             nonGameplayPeriods = new PeriodTracker(periods);
@@ -72,7 +86,8 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
         public void Update(Playfield playfield)
         {
-            if (!nonGameplayPeriods.IsInAny(gameplayClock.CurrentTime)) return;
+            if (!nonGameplayPeriods.IsInAny(gameplayClock.CurrentTime))
+                return;
 
             lastAcceptedCentreAction = null;
             lastAcceptedRimAction = null;
@@ -84,20 +99,31 @@ namespace osu.Game.Rulesets.Taiko.Mods
                 return true;
 
             // If next hit object is strong, allow usage of all actions. Strong drumrolls are ignored in this check.
-            if (playfield.HitObjectContainer.AliveObjects.FirstOrDefault(h => h.Result?.HasResult != true)?.HitObject is TaikoStrongableHitObject hitObject
+            if (
+                playfield
+                    .HitObjectContainer.AliveObjects.FirstOrDefault(h =>
+                        h.Result?.HasResult != true
+                    )
+                    ?.HitObject
+                    is TaikoStrongableHitObject hitObject
                 && hitObject.IsStrong
-                && hitObject is not DrumRoll)
+                && hitObject is not DrumRoll
+            )
                 return true;
 
-            if ((action == TaikoAction.LeftCentre || action == TaikoAction.RightCentre)
-                && (lastAcceptedCentreAction == null || lastAcceptedCentreAction == action))
+            if (
+                (action == TaikoAction.LeftCentre || action == TaikoAction.RightCentre)
+                && (lastAcceptedCentreAction == null || lastAcceptedCentreAction == action)
+            )
             {
                 lastAcceptedCentreAction = action;
                 return true;
             }
 
-            if ((action == TaikoAction.LeftRim || action == TaikoAction.RightRim)
-                && (lastAcceptedRimAction == null || lastAcceptedRimAction == action))
+            if (
+                (action == TaikoAction.LeftRim || action == TaikoAction.RightRim)
+                && (lastAcceptedRimAction == null || lastAcceptedRimAction == action)
+            )
             {
                 lastAcceptedRimAction = action;
                 return true;
@@ -117,11 +143,10 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
             public bool OnPressed(KeyBindingPressEvent<TaikoAction> e)
                 // if the pressed action is incorrect, block it from reaching gameplay.
-                => !mod.checkCorrectAction(e.Action);
+                =>
+                !mod.checkCorrectAction(e.Action);
 
-            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
         }
     }
 }

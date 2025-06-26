@@ -43,14 +43,18 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
 
         private void updateCount()
         {
-            int activeItems = room.Playlist.Count > 0 || room.PlaylistItemStats == null
-                // For now, use the playlist as the source of truth if it has any items.
-                // This allows the count to display correctly on the room screen (after joining a room).
-                ? room.Playlist.Count(i => !i.Expired)
-                : room.PlaylistItemStats.CountActive;
+            int activeItems =
+                room.Playlist.Count > 0 || room.PlaylistItemStats == null
+                    // For now, use the playlist as the source of truth if it has any items.
+                    // This allows the count to display correctly on the room screen (after joining a room).
+                    ? room.Playlist.Count(i => !i.Expired)
+                    : room.PlaylistItemStats.CountActive;
 
             TextFlow.Clear();
-            TextFlow.AddText(activeItems.ToLocalisableString(), s => s.Font = s.Font.With(weight: FontWeight.Bold));
+            TextFlow.AddText(
+                activeItems.ToLocalisableString(),
+                s => s.Font = s.Font.With(weight: FontWeight.Bold)
+            );
             TextFlow.AddText(" ");
             TextFlow.AddText("Beatmap".ToQuantity(activeItems, ShowQuantityAs.None));
         }

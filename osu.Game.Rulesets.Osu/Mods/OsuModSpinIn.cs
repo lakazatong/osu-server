@@ -24,16 +24,27 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         // todo: this mod needs to be incompatible with "hidden" due to forcing the circle to remain opaque,
         // further implementation will be required for supporting that.
-        public override Type[] IncompatibleMods => new[] { typeof(IRequiresApproachCircles), typeof(OsuModObjectScaleTween), typeof(OsuModHidden), typeof(OsuModDepth) };
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(IRequiresApproachCircles),
+                typeof(OsuModObjectScaleTween),
+                typeof(OsuModHidden),
+                typeof(OsuModDepth),
+            };
 
         private const int rotate_offset = 360;
         private const float rotate_starting_width = 2;
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
-        {
-        }
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) { }
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyZoomState(hitObject, state);
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyZoomState(hitObject, state);
 
         private void applyZoomState(DrawableHitObject drawable, ArmedState state)
         {
@@ -49,8 +60,14 @@ namespace osu.Game.Rulesets.Osu.Mods
                     {
                         circle.ApproachCircle.Hide();
 
-                        circle.RotateTo(rotate_offset).Then().RotateTo(0, h.TimePreempt, Easing.InOutSine);
-                        circle.ScaleTo(new Vector2(rotate_starting_width, 0)).Then().ScaleTo(1, h.TimePreempt, Easing.InOutSine);
+                        circle
+                            .RotateTo(rotate_offset)
+                            .Then()
+                            .RotateTo(0, h.TimePreempt, Easing.InOutSine);
+                        circle
+                            .ScaleTo(new Vector2(rotate_starting_width, 0))
+                            .Then()
+                            .ScaleTo(1, h.TimePreempt, Easing.InOutSine);
 
                         // bypass fade in.
                         if (state == ArmedState.Idle)

@@ -30,7 +30,8 @@ namespace osu.Game.Screens.SelectV2
 
             public IBindable<BeatmapLeaderboardScope> Scope => scopeDropdown.Current;
 
-            private readonly Bindable<BeatmapDetailTab> configDetailTab = new Bindable<BeatmapDetailTab>();
+            private readonly Bindable<BeatmapDetailTab> configDetailTab =
+                new Bindable<BeatmapDetailTab>();
 
             public IBindable<bool> FilterBySelectedMods => selectedModsToggle.Active;
 
@@ -42,7 +43,11 @@ namespace osu.Game.Screens.SelectV2
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN, Right = 20f },
+                        Padding = new MarginPadding
+                        {
+                            Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                            Right = 20f,
+                        },
                         Children = new Drawable[]
                         {
                             tabControl = new WedgeSelector<Selection>(20f)
@@ -67,13 +72,14 @@ namespace osu.Game.Screens.SelectV2
                                         Anchor = Anchor.CentreRight,
                                         Origin = Anchor.CentreRight,
                                         Size = new Vector2(128f, 30f),
-                                        Child = selectedModsToggle = new ShearedToggleButton
-                                        {
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            Text = @"Selected Mods",
-                                            Height = 30,
-                                        },
+                                        Child = selectedModsToggle =
+                                            new ShearedToggleButton
+                                            {
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                                Text = @"Selected Mods",
+                                                Height = 30,
+                                            },
                                     },
                                     // new Container
                                     // {
@@ -91,11 +97,15 @@ namespace osu.Game.Screens.SelectV2
                                         Anchor = Anchor.CentreRight,
                                         Origin = Anchor.CentreRight,
                                         Size = new Vector2(160f, 32f),
-                                        Child = scopeDropdown = new ScopeDropdown
-                                        {
-                                            Width = 160f,
-                                            Current = { Value = BeatmapLeaderboardScope.Global },
-                                        },
+                                        Child = scopeDropdown =
+                                            new ScopeDropdown
+                                            {
+                                                Width = 160f,
+                                                Current =
+                                                {
+                                                    Value = BeatmapLeaderboardScope.Global,
+                                                },
+                                            },
                                     },
                                 },
                             },
@@ -111,15 +121,27 @@ namespace osu.Game.Screens.SelectV2
             {
                 base.LoadComplete();
 
-                scopeDropdown.Current.Value = tryMapDetailTabToLeaderboardScope(configDetailTab.Value) ?? scopeDropdown.Current.Value;
+                scopeDropdown.Current.Value =
+                    tryMapDetailTabToLeaderboardScope(configDetailTab.Value)
+                    ?? scopeDropdown.Current.Value;
                 scopeDropdown.Current.BindValueChanged(_ => updateConfigDetailTab());
 
-                tabControl.Current.Value = configDetailTab.Value == BeatmapDetailTab.Details ? Selection.Details : Selection.Ranking;
-                tabControl.Current.BindValueChanged(v =>
-                {
-                    leaderboardControls.FadeTo(v.NewValue == Selection.Ranking ? 1 : 0, 300, Easing.OutQuint);
-                    updateConfigDetailTab();
-                }, true);
+                tabControl.Current.Value =
+                    configDetailTab.Value == BeatmapDetailTab.Details
+                        ? Selection.Details
+                        : Selection.Ranking;
+                tabControl.Current.BindValueChanged(
+                    v =>
+                    {
+                        leaderboardControls.FadeTo(
+                            v.NewValue == Selection.Ranking ? 1 : 0,
+                            300,
+                            Easing.OutQuint
+                        );
+                        updateConfigDetailTab();
+                    },
+                    true
+                );
             }
 
             #region Reading / writing state from / to configuration
@@ -133,15 +155,23 @@ namespace osu.Game.Screens.SelectV2
                         return;
 
                     case Selection.Ranking:
-                        configDetailTab.Value = mapLeaderboardScopeToDetailTab(scopeDropdown.Current.Value);
+                        configDetailTab.Value = mapLeaderboardScopeToDetailTab(
+                            scopeDropdown.Current.Value
+                        );
                         return;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(tabControl.Current.Value), tabControl.Current.Value, null);
+                        throw new ArgumentOutOfRangeException(
+                            nameof(tabControl.Current.Value),
+                            tabControl.Current.Value,
+                            null
+                        );
                 }
             }
 
-            private static BeatmapLeaderboardScope? tryMapDetailTabToLeaderboardScope(BeatmapDetailTab tab)
+            private static BeatmapLeaderboardScope? tryMapDetailTabToLeaderboardScope(
+                BeatmapDetailTab tab
+            )
             {
                 switch (tab)
                 {
@@ -165,7 +195,9 @@ namespace osu.Game.Screens.SelectV2
                 }
             }
 
-            private static BeatmapDetailTab mapLeaderboardScopeToDetailTab(BeatmapLeaderboardScope scope)
+            private static BeatmapDetailTab mapLeaderboardScopeToDetailTab(
+                BeatmapLeaderboardScope scope
+            )
             {
                 switch (scope)
                 {
@@ -214,7 +246,9 @@ namespace osu.Game.Screens.SelectV2
                     Items = Enum.GetValues<BeatmapLeaderboardScope>();
                 }
 
-                protected override LocalisableString GenerateItemText(BeatmapLeaderboardScope item) => item.ToString();
+                protected override LocalisableString GenerateItemText(
+                    BeatmapLeaderboardScope item
+                ) => item.ToString();
             }
         }
     }

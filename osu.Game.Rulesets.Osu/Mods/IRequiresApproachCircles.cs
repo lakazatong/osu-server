@@ -10,7 +10,5 @@ namespace osu.Game.Rulesets.Osu.Mods
     /// <remarks>
     /// Note that this is only a marker interface for incompatibility purposes, it does not change any gameplay behaviour.
     /// </remarks>
-    public interface IRequiresApproachCircles
-    {
-    }
+    public interface IRequiresApproachCircles { }
 }

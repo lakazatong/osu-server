@@ -150,7 +150,7 @@ namespace osu.Game.Graphics.UserInterface
                                             TriangleScale = 4,
                                             ColourDark = OsuColour.Gray(0.88f),
                                             Shear = -OsuGame.SHEAR,
-                                            ClampAxes = Axes.Y
+                                            ClampAxes = Axes.Y,
                                         },
                                     },
                                 },
@@ -218,7 +218,8 @@ namespace osu.Game.Graphics.UserInterface
             set => spriteText.Font = spriteText.Font.With(size: value);
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => backgroundContainer.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            backgroundContainer.ReceivePositionalInputAt(screenSpacePos);
 
         private bool clickAnimating;
 
@@ -229,19 +230,20 @@ namespace osu.Game.Graphics.UserInterface
                 RelativeSizeAxes = Axes.Both,
                 Colour = ButtonColour,
                 Blending = BlendingParameters.Additive,
-                Alpha = 0.05f
+                Alpha = 0.05f,
             };
 
             ColourContainer.Add(flash);
             flash.FadeOutFromOne(100).Expire();
 
             clickAnimating = true;
-            ColourContainer.ResizeWidthTo(ColourContainer.Width * 1.05f, 100, Easing.OutQuint)
-                           .OnComplete(_ =>
-                           {
-                               clickAnimating = false;
-                               StateChanged?.Invoke(State);
-                           });
+            ColourContainer
+                .ResizeWidthTo(ColourContainer.Width * 1.05f, 100, Easing.OutQuint)
+                .OnComplete(_ =>
+                {
+                    clickAnimating = false;
+                    StateChanged?.Invoke(State);
+                });
 
             return base.OnClick(e);
         }
@@ -294,9 +296,15 @@ namespace osu.Game.Graphics.UserInterface
 
         private void updateGlow()
         {
-            leftGlow.Colour = ColourInfo.GradientHorizontal(new Color4(ButtonColour.R, ButtonColour.G, ButtonColour.B, 0f), ButtonColour);
+            leftGlow.Colour = ColourInfo.GradientHorizontal(
+                new Color4(ButtonColour.R, ButtonColour.G, ButtonColour.B, 0f),
+                ButtonColour
+            );
             centerGlow.Colour = ButtonColour;
-            rightGlow.Colour = ColourInfo.GradientHorizontal(ButtonColour, new Color4(ButtonColour.R, ButtonColour.G, ButtonColour.B, 0f));
+            rightGlow.Colour = ColourInfo.GradientHorizontal(
+                ButtonColour,
+                new Color4(ButtonColour.R, ButtonColour.G, ButtonColour.B, 0f)
+            );
         }
     }
 }

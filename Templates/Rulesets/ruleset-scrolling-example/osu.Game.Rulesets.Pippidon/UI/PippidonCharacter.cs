@@ -36,13 +36,21 @@ namespace osu.Game.Rulesets.Pippidon.UI
                 Origin = Anchor.Centre,
                 Scale = new Vector2(1.2f),
                 RelativeSizeAxes = Axes.Both,
-                Texture = textures.Get("character")
+                Texture = textures.Get("character"),
             };
 
-            LanePosition.BindValueChanged(e => { this.MoveToY(e.NewValue * PippidonPlayfield.LANE_HEIGHT); });
+            LanePosition.BindValueChanged(e =>
+            {
+                this.MoveToY(e.NewValue * PippidonPlayfield.LANE_HEIGHT);
+            });
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (effectPoint.KiaiMode)
             {
@@ -51,8 +59,9 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
                 Child.RotateTo(direction ? 10 : -10, duration * 2, Easing.InOutSine);
 
-                Child.Animate(i => i.MoveToY(-10, duration, Easing.Out))
-                     .Then(i => i.MoveToY(0, duration, Easing.In));
+                Child
+                    .Animate(i => i.MoveToY(-10, duration, Easing.Out))
+                    .Then(i => i.MoveToY(0, duration, Easing.In));
             }
             else
             {
@@ -79,10 +88,11 @@ namespace osu.Game.Rulesets.Pippidon.UI
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PippidonAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PippidonAction> e) { }
 
-        private void changeLane(int change) => LanePosition.Value = (LanePosition.Value + change + PippidonPlayfield.LANE_COUNT) % PippidonPlayfield.LANE_COUNT;
+        private void changeLane(int change) =>
+            LanePosition.Value =
+                (LanePosition.Value + change + PippidonPlayfield.LANE_COUNT)
+                % PippidonPlayfield.LANE_COUNT;
     }
 }

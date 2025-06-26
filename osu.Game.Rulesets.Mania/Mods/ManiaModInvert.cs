@@ -39,12 +39,18 @@ namespace osu.Game.Rulesets.Mania.Mods
             {
                 var newColumnObjects = new List<ManiaHitObject>();
 
-                var locations = column.OfType<Note>().Select(n => (startTime: n.StartTime, samples: n.Samples))
-                                      .Concat(column.OfType<HoldNote>().SelectMany(h => new[]
-                                      {
-                                          (startTime: h.StartTime, samples: h.GetNodeSamples(0))
-                                      }))
-                                      .OrderBy(h => h.startTime).ToList();
+                var locations = column
+                    .OfType<Note>()
+                    .Select(n => (startTime: n.StartTime, samples: n.Samples))
+                    .Concat(
+                        column
+                            .OfType<HoldNote>()
+                            .SelectMany(h =>
+                                new[] { (startTime: h.StartTime, samples: h.GetNodeSamples(0)) }
+                            )
+                    )
+                    .OrderBy(h => h.startTime)
+                    .ToList();
 
                 for (int i = 0; i < locations.Count - 1; i++)
                 {
@@ -52,18 +58,26 @@ namespace osu.Game.Rulesets.Mania.Mods
                     double duration = locations[i + 1].startTime - locations[i].startTime;
 
                     // Beat length at the end of the hold note.
-                    double beatLength = beatmap.ControlPointInfo.TimingPointAt(locations[i + 1].startTime).BeatLength;
+                    double beatLength = beatmap
+                        .ControlPointInfo.TimingPointAt(locations[i + 1].startTime)
+                        .BeatLength;
 
                     // Decrease the duration by at most a 1/4 beat to ensure there's no instantaneous notes.
                     duration = Math.Max(duration / 2, duration - beatLength / 4);
 
-                    newColumnObjects.Add(new HoldNote
-                    {
-                        Column = column.Key,
-                        StartTime = locations[i].startTime,
-                        Duration = duration,
-                        NodeSamples = new List<IList<HitSampleInfo>> { locations[i].samples, Array.Empty<HitSampleInfo>() }
-                    });
+                    newColumnObjects.Add(
+                        new HoldNote
+                        {
+                            Column = column.Key,
+                            StartTime = locations[i].startTime,
+                            Duration = duration,
+                            NodeSamples = new List<IList<HitSampleInfo>>
+                            {
+                                locations[i].samples,
+                                Array.Empty<HitSampleInfo>(),
+                            },
+                        }
+                    );
                 }
 
                 newObjects.AddRange(newColumnObjects);

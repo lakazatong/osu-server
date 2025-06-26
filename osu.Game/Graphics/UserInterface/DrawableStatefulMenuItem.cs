@@ -15,9 +15,7 @@ namespace osu.Game.Graphics.UserInterface
         protected new StatefulMenuItem Item => (StatefulMenuItem)base.Item;
 
         public DrawableStatefulMenuItem(StatefulMenuItem item)
-            : base(item)
-        {
-        }
+            : base(item) { }
 
         protected override TextContainer CreateTextContainer() => new ToggleTextContainer(Item);
 
@@ -46,13 +44,15 @@ namespace osu.Game.Graphics.UserInterface
 
                 state = menuItem.State.GetBoundCopy();
 
-                CheckboxContainer.Add(stateIcon = new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(10),
-                    AlwaysPresent = true,
-                });
+                CheckboxContainer.Add(
+                    stateIcon = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(10),
+                        AlwaysPresent = true,
+                    }
+                );
             }
 
             protected override void LoadComplete()

@@ -50,50 +50,90 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddStep("Reset recorder state", cleanUpState);
 
-            AddStep("Setup containers", () =>
-            {
-                replay = new Replay();
-
-                gameplayState = TestGameplayState.Create(new OsuRuleset());
-                gameplayState.Score.Replay = replay;
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "Setup containers",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new (Type, object)[] { (typeof(GameplayState), gameplayState) },
-                    Child = content = createContent(),
-                };
-            });
+                    replay = new Replay();
+
+                    gameplayState = TestGameplayState.Create(new OsuRuleset());
+                    gameplayState.Score.Replay = replay;
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(GameplayState), gameplayState),
+                        },
+                        Child = content = createContent(),
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestBasic()
         {
-            AddStep("move to center", () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre));
-            AddUntilStep("at least one frame recorded", () => replay.Frames.Count, () => Is.GreaterThanOrEqualTo(0));
-            AddUntilStep("position matches", () => playbackManager.ChildrenOfType<Box>().First().Position == recordingManager.ChildrenOfType<Box>().First().Position);
+            AddStep(
+                "move to center",
+                () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre)
+            );
+            AddUntilStep(
+                "at least one frame recorded",
+                () => replay.Frames.Count,
+                () => Is.GreaterThanOrEqualTo(0)
+            );
+            AddUntilStep(
+                "position matches",
+                () =>
+                    playbackManager.ChildrenOfType<Box>().First().Position
+                    == recordingManager.ChildrenOfType<Box>().First().Position
+            );
         }
 
         [Test]
-        [Explicit("Making this test work in a headless context is high effort due to rate adjustment requirements not aligning with the global fast clock. StopwatchClock usage would need to be replace with a rate adjusting clock that still reads from the parent clock. High effort for a test which likely will not see any changes to covered code for some years.")]
+        [Explicit(
+            "Making this test work in a headless context is high effort due to rate adjustment requirements not aligning with the global fast clock. StopwatchClock usage would need to be replace with a rate adjusting clock that still reads from the parent clock. High effort for a test which likely will not see any changes to covered code for some years."
+        )]
         public void TestSlowClockStillRecordsFramesInRealtime()
         {
             ScheduledDelegate moveFunction = null;
 
-            AddStep("set slow running clock", () =>
-            {
-                var stopwatchClock = new StopwatchClock(true) { Rate = 0.01 };
-                stopwatchClock.Seek(Clock.CurrentTime);
+            AddStep(
+                "set slow running clock",
+                () =>
+                {
+                    var stopwatchClock = new StopwatchClock(true) { Rate = 0.01 };
+                    stopwatchClock.Seek(Clock.CurrentTime);
 
-                content.Clock = new FramedClock(stopwatchClock);
-            });
+                    content.Clock = new FramedClock(stopwatchClock);
+                }
+            );
 
-            AddStep("move to center", () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre));
-            AddStep("much move", () => moveFunction = Scheduler.AddDelayed(() =>
-                InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)), 10, true));
+            AddStep(
+                "move to center",
+                () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "much move",
+                () =>
+                    moveFunction = Scheduler.AddDelayed(
+                        () =>
+                            InputManager.MoveMouseTo(
+                                InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)
+                            ),
+                        10,
+                        true
+                    )
+            );
             AddWaitStep("move", 10);
             AddStep("stop move", () => moveFunction.Cancel());
-            AddAssert("at least 60 frames recorded", () => replay.Frames.Count, () => Is.GreaterThanOrEqualTo(60));
+            AddAssert(
+                "at least 60 frames recorded",
+                () => replay.Frames.Count,
+                () => Is.GreaterThanOrEqualTo(60)
+            );
         }
 
         [Test]
@@ -101,12 +141,29 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             ScheduledDelegate moveFunction = null;
 
-            AddStep("move to center", () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre));
-            AddStep("much move", () => moveFunction = Scheduler.AddDelayed(() =>
-                InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)), 10, true));
+            AddStep(
+                "move to center",
+                () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "much move",
+                () =>
+                    moveFunction = Scheduler.AddDelayed(
+                        () =>
+                            InputManager.MoveMouseTo(
+                                InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)
+                            ),
+                        10,
+                        true
+                    )
+            );
             AddWaitStep("move", 10);
             AddStep("stop move", () => moveFunction.Cancel());
-            AddAssert("at least 60 frames recorded", () => replay.Frames.Count, () => Is.GreaterThanOrEqualTo(60));
+            AddAssert(
+                "at least 60 frames recorded",
+                () => replay.Frames.Count,
+                () => Is.GreaterThanOrEqualTo(60)
+            );
         }
 
         [Test]
@@ -117,12 +174,29 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddStep("lower rate", () => recorder.RecordFrameRate = 2);
             AddStep("count frames", () => initialFrameCount = replay.Frames.Count);
-            AddStep("move to center", () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre));
-            AddStep("much move", () => moveFunction = Scheduler.AddDelayed(() =>
-                InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)), 10, true));
+            AddStep(
+                "move to center",
+                () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "much move",
+                () =>
+                    moveFunction = Scheduler.AddDelayed(
+                        () =>
+                            InputManager.MoveMouseTo(
+                                InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)
+                            ),
+                        10,
+                        true
+                    )
+            );
             AddWaitStep("move", 10);
             AddStep("stop move", () => moveFunction.Cancel());
-            AddAssert("less than 10 frames recorded", () => replay.Frames.Count - initialFrameCount, () => Is.LessThan(10));
+            AddAssert(
+                "less than 10 frames recorded",
+                () => replay.Frames.Count - initialFrameCount,
+                () => Is.LessThan(10)
+            );
         }
 
         [Test]
@@ -131,15 +205,32 @@ namespace osu.Game.Tests.Visual.Gameplay
             ScheduledDelegate moveFunction = null;
 
             AddStep("lower rate", () => recorder.RecordFrameRate = 2);
-            AddStep("move to center", () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre));
-            AddStep("much move with press", () => moveFunction = Scheduler.AddDelayed(() =>
-            {
-                InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0));
-                InputManager.Click(MouseButton.Left);
-            }, 10, true));
+            AddStep(
+                "move to center",
+                () => InputManager.MoveMouseTo(recordingManager.ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "much move with press",
+                () =>
+                    moveFunction = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            InputManager.MoveMouseTo(
+                                InputManager.CurrentState.Mouse.Position + new Vector2(-1, 0)
+                            );
+                            InputManager.Click(MouseButton.Left);
+                        },
+                        10,
+                        true
+                    )
+            );
             AddWaitStep("move", 10);
             AddStep("stop move", () => moveFunction.Cancel());
-            AddAssert("at least 60 frames recorded", () => replay.Frames.Count, () => Is.GreaterThanOrEqualTo(60));
+            AddAssert(
+                "at least 60 frames recorded",
+                () => replay.Frames.Count,
+                () => Is.GreaterThanOrEqualTo(60)
+            );
         }
 
         protected override void Update()
@@ -161,91 +252,107 @@ namespace osu.Game.Tests.Visual.Gameplay
             recorder = null;
         }
 
-        private Drawable createContent() => new GridContainer
-        {
-            RelativeSizeAxes = Axes.Both,
-            Content = new[]
+        private Drawable createContent() =>
+            new GridContainer
             {
-                new Drawable[]
+                RelativeSizeAxes = Axes.Both,
+                Content = new[]
                 {
-                    recordingManager = new TestRulesetInputManager(TestCustomisableModRuleset.CreateTestRulesetInfo(), 0, SimultaneousBindingMode.Unique)
+                    new Drawable[]
                     {
-                        Recorder = recorder = new TestReplayRecorder(gameplayState.Score)
+                        recordingManager = new TestRulesetInputManager(
+                            TestCustomisableModRuleset.CreateTestRulesetInfo(),
+                            0,
+                            SimultaneousBindingMode.Unique
+                        )
                         {
-                            ScreenSpaceToGamefield = pos => recordingManager.ToLocalSpace(pos),
-                        },
-                        Child = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            Recorder = recorder =
+                                new TestReplayRecorder(gameplayState.Score)
+                                {
+                                    ScreenSpaceToGamefield = pos =>
+                                        recordingManager.ToLocalSpace(pos),
+                                },
+                            Child = new Container
                             {
-                                new Box
+                                RelativeSizeAxes = Axes.Both,
+                                Children = new Drawable[]
                                 {
-                                    Colour = Color4.Brown,
-                                    RelativeSizeAxes = Axes.Both,
+                                    new Box { Colour = Color4.Brown, RelativeSizeAxes = Axes.Both },
+                                    new OsuSpriteText
+                                    {
+                                        Text = "Recording",
+                                        Scale = new Vector2(3),
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                    },
+                                    new TestInputConsumer(),
                                 },
-                                new OsuSpriteText
-                                {
-                                    Text = "Recording",
-                                    Scale = new Vector2(3),
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                },
-                                new TestInputConsumer()
-                            }
+                            },
                         },
-                    }
+                    },
+                    new Drawable[]
+                    {
+                        playbackManager = new TestRulesetInputManager(
+                            TestCustomisableModRuleset.CreateTestRulesetInfo(),
+                            0,
+                            SimultaneousBindingMode.Unique
+                        )
+                        {
+                            ReplayInputHandler = new TestFramedReplayInputHandler(replay)
+                            {
+                                GamefieldToScreenSpace = pos => playbackManager.ToScreenSpace(pos),
+                            },
+                            Child = new Container
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Children = new Drawable[]
+                                {
+                                    new Box
+                                    {
+                                        Colour = Color4.DarkBlue,
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                    new OsuSpriteText
+                                    {
+                                        Text = "Playback",
+                                        Scale = new Vector2(3),
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                    },
+                                    new TestInputConsumer(),
+                                },
+                            },
+                        },
+                    },
                 },
-                new Drawable[]
-                {
-                    playbackManager = new TestRulesetInputManager(TestCustomisableModRuleset.CreateTestRulesetInfo(), 0, SimultaneousBindingMode.Unique)
-                    {
-                        ReplayInputHandler = new TestFramedReplayInputHandler(replay)
-                        {
-                            GamefieldToScreenSpace = pos => playbackManager.ToScreenSpace(pos),
-                        },
-                        Child = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
-                            {
-                                new Box
-                                {
-                                    Colour = Color4.DarkBlue,
-                                    RelativeSizeAxes = Axes.Both,
-                                },
-                                new OsuSpriteText
-                                {
-                                    Text = "Playback",
-                                    Scale = new Vector2(3),
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                },
-                                new TestInputConsumer()
-                            }
-                        },
-                    }
-                }
-            }
-        };
+            };
 
         public class TestFramedReplayInputHandler : FramedReplayInputHandler<TestReplayFrame>
         {
             public TestFramedReplayInputHandler(Replay replay)
-                : base(replay)
-            {
-            }
+                : base(replay) { }
 
             protected override void CollectReplayInputs(List<IInput> inputs)
             {
-                inputs.Add(new MousePositionAbsoluteInput { Position = GamefieldToScreenSpace(CurrentFrame?.Position ?? Vector2.Zero) });
-                inputs.Add(new ReplayState<TestAction> { PressedActions = CurrentFrame?.Actions ?? new List<TestAction>() });
+                inputs.Add(
+                    new MousePositionAbsoluteInput
+                    {
+                        Position = GamefieldToScreenSpace(CurrentFrame?.Position ?? Vector2.Zero),
+                    }
+                );
+                inputs.Add(
+                    new ReplayState<TestAction>
+                    {
+                        PressedActions = CurrentFrame?.Actions ?? new List<TestAction>(),
+                    }
+                );
             }
         }
 
         public partial class TestInputConsumer : CompositeDrawable, IKeyBindingHandler<TestAction>
         {
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Parent!.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                Parent!.ReceivePositionalInputAt(screenSpacePos);
 
             private readonly Box box;
 
@@ -257,11 +364,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                 InternalChildren = new Drawable[]
                 {
-                    box = new Box
-                    {
-                        Colour = Color4.Black,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    box = new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -288,20 +391,23 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public partial class TestRulesetInputManager : RulesetInputManager<TestAction>
         {
-            public TestRulesetInputManager(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                : base(ruleset, variant, unique)
-            {
-            }
+            public TestRulesetInputManager(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            )
+                : base(ruleset, variant, unique) { }
 
-            protected override KeyBindingContainer<TestAction> CreateKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                => new TestKeyBindingContainer();
+            protected override KeyBindingContainer<TestAction> CreateKeyBindingContainer(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            ) => new TestKeyBindingContainer();
 
             internal partial class TestKeyBindingContainer : KeyBindingContainer<TestAction>
             {
-                public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-                {
-                    new KeyBinding(InputKey.MouseLeft, TestAction.Down),
-                };
+                public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+                    new[] { new KeyBinding(InputKey.MouseLeft, TestAction.Down) };
             }
         }
 
@@ -318,8 +424,11 @@ namespace osu.Game.Tests.Visual.Gameplay
                 Actions.AddRange(actions);
             }
 
-            public override bool IsEquivalentTo(ReplayFrame other)
-                => other is TestReplayFrame testFrame && Time == testFrame.Time && Position == testFrame.Position && Actions.SequenceEqual(testFrame.Actions);
+            public override bool IsEquivalentTo(ReplayFrame other) =>
+                other is TestReplayFrame testFrame
+                && Time == testFrame.Time
+                && Position == testFrame.Position
+                && Actions.SequenceEqual(testFrame.Actions);
         }
 
         public enum TestAction
@@ -330,12 +439,13 @@ namespace osu.Game.Tests.Visual.Gameplay
         internal partial class TestReplayRecorder : ReplayRecorder<TestAction>
         {
             public TestReplayRecorder(Score target)
-                : base(target)
-            {
-            }
+                : base(target) { }
 
-            protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<TestAction> actions, ReplayFrame previousFrame)
-                => new TestReplayFrame(Time.Current, mousePosition, actions.ToArray());
+            protected override ReplayFrame HandleFrame(
+                Vector2 mousePosition,
+                List<TestAction> actions,
+                ReplayFrame previousFrame
+            ) => new TestReplayFrame(Time.Current, mousePosition, actions.ToArray());
         }
     }
 }

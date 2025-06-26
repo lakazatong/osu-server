@@ -19,7 +19,13 @@ namespace osu.Game.Rulesets.Catch.UI
 
         public readonly CatcherTrailAnimation Animation;
 
-        public CatcherTrailEntry(double startTime, CatcherAnimationState catcherState, float position, Vector2 scale, CatcherTrailAnimation animation)
+        public CatcherTrailEntry(
+            double startTime,
+            CatcherAnimationState catcherState,
+            float position,
+            Vector2 scale,
+            CatcherTrailAnimation animation
+        )
         {
             LifetimeStart = startTime;
             CatcherState = catcherState;

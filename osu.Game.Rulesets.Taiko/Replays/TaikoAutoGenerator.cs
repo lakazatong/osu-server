@@ -5,10 +5,10 @@ using System;
 using System.Linq;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Taiko.Objects;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Taiko.Beatmaps;
-using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Taiko.Objects;
 
 namespace osu.Game.Rulesets.Taiko.Replays
 {
@@ -19,9 +19,7 @@ namespace osu.Game.Rulesets.Taiko.Replays
         private const double swell_hit_speed = 50;
 
         public TaikoAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
@@ -83,7 +81,12 @@ namespace osu.Game.Rulesets.Taiko.Replays
                     {
                         foreach (var tick in drumRoll.NestedHitObjects.OfType<DrumRollTick>())
                         {
-                            Frames.Add(new TaikoReplayFrame(tick.StartTime, hitButton ? TaikoAction.LeftCentre : TaikoAction.RightCentre));
+                            Frames.Add(
+                                new TaikoReplayFrame(
+                                    tick.StartTime,
+                                    hitButton ? TaikoAction.LeftCentre : TaikoAction.RightCentre
+                                )
+                            );
                             hitButton = !hitButton;
                         }
 
@@ -98,7 +101,10 @@ namespace osu.Game.Rulesets.Taiko.Replays
                         {
                             actions = hit.IsStrong
                                 ? new[] { TaikoAction.LeftCentre, TaikoAction.RightCentre }
-                                : new[] { hitButton ? TaikoAction.LeftCentre : TaikoAction.RightCentre };
+                                : new[]
+                                {
+                                    hitButton ? TaikoAction.LeftCentre : TaikoAction.RightCentre,
+                                };
                         }
                         else
                         {
@@ -117,8 +123,11 @@ namespace osu.Game.Rulesets.Taiko.Replays
 
                 var nextHitObject = GetNextObject(i); // Get the next object that requires pressing the same button
 
-                bool canDelayKeyUp = nextHitObject == null || nextHitObject.StartTime > endTime + KEY_UP_DELAY;
-                double calculatedDelay = canDelayKeyUp ? KEY_UP_DELAY : (nextHitObject.AsNonNull().StartTime - endTime) * 0.9;
+                bool canDelayKeyUp =
+                    nextHitObject == null || nextHitObject.StartTime > endTime + KEY_UP_DELAY;
+                double calculatedDelay = canDelayKeyUp
+                    ? KEY_UP_DELAY
+                    : (nextHitObject.AsNonNull().StartTime - endTime) * 0.9;
                 Frames.Add(new TaikoReplayFrame(endTime + calculatedDelay));
 
                 hitButton = !hitButton;

@@ -17,7 +17,8 @@ namespace osu.Game.Screens.Select.Carousel
     public partial class SetPanelContent : CompositeDrawable
     {
         // Disallow interacting with difficulty icons on a panel until the panel has been selected.
-        public override bool PropagatePositionalInputSubTree => carouselSet.State.Value == CarouselItemState.Selected;
+        public override bool PropagatePositionalInputSubTree =>
+            carouselSet.State.Value == CarouselItemState.Selected;
 
         private readonly CarouselBeatmapSet carouselSet;
 
@@ -41,19 +42,35 @@ namespace osu.Game.Screens.Select.Carousel
                 // required to ensure we load as soon as any part of the panel comes on screen
                 RelativeSizeAxes = Axes.Both,
                 Direction = FillDirection.Vertical,
-                Padding = new MarginPadding { Top = 5, Left = 18, Right = 10, Bottom = 10 },
+                Padding = new MarginPadding
+                {
+                    Top = 5,
+                    Left = 18,
+                    Right = 10,
+                    Bottom = 10,
+                },
                 Children = new Drawable[]
                 {
                     new OsuSpriteText
                     {
-                        Text = new RomanisableString(beatmapSet.Metadata.TitleUnicode, beatmapSet.Metadata.Title),
+                        Text = new RomanisableString(
+                            beatmapSet.Metadata.TitleUnicode,
+                            beatmapSet.Metadata.Title
+                        ),
                         Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 22, italics: true),
                         Shadow = true,
                     },
                     new OsuSpriteText
                     {
-                        Text = new RomanisableString(beatmapSet.Metadata.ArtistUnicode, beatmapSet.Metadata.Artist),
-                        Font = OsuFont.GetFont(weight: FontWeight.SemiBold, size: 17, italics: true),
+                        Text = new RomanisableString(
+                            beatmapSet.Metadata.ArtistUnicode,
+                            beatmapSet.Metadata.Artist
+                        ),
+                        Font = OsuFont.GetFont(
+                            weight: FontWeight.SemiBold,
+                            size: 17,
+                            italics: true
+                        ),
                         Shadow = true,
                     },
                     new FillFlowContainer
@@ -73,7 +90,7 @@ namespace osu.Game.Screens.Select.Carousel
                                     Children = new Drawable[]
                                     {
                                         new UpdateBeatmapSetButton(beatmapSet),
-                                    }
+                                    },
                                 },
                             new BeatmapSetOnlineStatusPill
                             {
@@ -81,7 +98,7 @@ namespace osu.Game.Screens.Select.Carousel
                                 Anchor = Anchor.CentreLeft,
                                 TextSize = 11,
                                 TextPadding = new MarginPadding { Horizontal = 8, Vertical = 2 },
-                                Status = beatmapSet.Status
+                                Status = beatmapSet.Status,
                             },
                             iconFlow = new FillFlowContainer<DifficultyIcon>
                             {
@@ -90,9 +107,9 @@ namespace osu.Game.Screens.Select.Carousel
                                 Anchor = Anchor.CentreLeft,
                                 Spacing = new Vector2(3),
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -109,8 +126,12 @@ namespace osu.Game.Screens.Select.Carousel
             var beatmaps = carouselSet.Beatmaps.ToList();
 
             return beatmaps.Count > maximum_difficulty_icons
-                ? beatmaps.GroupBy(b => b.BeatmapInfo.Ruleset)
-                          .Select(group => new GroupedDifficultyIcon(group.ToList(), group.Last().BeatmapInfo.Ruleset))
+                ? beatmaps
+                    .GroupBy(b => b.BeatmapInfo.Ruleset)
+                    .Select(group => new GroupedDifficultyIcon(
+                        group.ToList(),
+                        group.Last().BeatmapInfo.Ruleset
+                    ))
                 : beatmaps.Select(b => new FilterableDifficultyIcon(b));
         }
     }

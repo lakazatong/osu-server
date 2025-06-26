@@ -22,11 +22,12 @@ namespace osu.Game.Rulesets.Catch.Difficulty
         private int numMiss;
 
         public CatchPerformanceCalculator()
-            : base(new CatchRuleset())
-        {
-        }
+            : base(new CatchRuleset()) { }
 
-        protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
+        protected override PerformanceAttributes CreatePerformanceAttributes(
+            ScoreInfo score,
+            DifficultyAttributes attributes
+        )
         {
             var catchAttributes = (CatchDifficultyAttributes)attributes;
 
@@ -37,34 +38,45 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             numMiss = score.GetCountMiss() ?? 0; // HitResult.Miss PLUS HitResult.LargeTickMiss
 
             // We are heavily relying on aim in catch the beat
-            double value = Math.Pow(5.0 * Math.Max(1.0, catchAttributes.StarRating / 0.0049) - 4.0, 2.0) / 100000.0;
+            double value =
+                Math.Pow(5.0 * Math.Max(1.0, catchAttributes.StarRating / 0.0049) - 4.0, 2.0)
+                / 100000.0;
 
             // Longer maps are worth more. "Longer" means how many hits there are which can contribute to combo
             int numTotalHits = totalComboHits();
 
             double lengthBonus =
-                0.95 + 0.3 * Math.Min(1.0, numTotalHits / 2500.0) +
-                (numTotalHits > 2500 ? Math.Log10(numTotalHits / 2500.0) * 0.475 : 0.0);
+                0.95
+                + 0.3 * Math.Min(1.0, numTotalHits / 2500.0)
+                + (numTotalHits > 2500 ? Math.Log10(numTotalHits / 2500.0) * 0.475 : 0.0);
             value *= lengthBonus;
 
             value *= Math.Pow(0.97, numMiss);
 
             // Combo scaling
             if (catchAttributes.MaxCombo > 0)
-                value *= Math.Min(Math.Pow(score.MaxCombo, 0.8) / Math.Pow(catchAttributes.MaxCombo, 0.8), 1.0);
+                value *= Math.Min(
+                    Math.Pow(score.MaxCombo, 0.8) / Math.Pow(catchAttributes.MaxCombo, 0.8),
+                    1.0
+                );
 
             var difficulty = score.BeatmapInfo!.Difficulty.Clone();
 
-            score.Mods.OfType<IApplicableToDifficulty>().ForEach(m => m.ApplyToDifficulty(difficulty));
+            score
+                .Mods.OfType<IApplicableToDifficulty>()
+                .ForEach(m => m.ApplyToDifficulty(difficulty));
 
             var track = new TrackVirtual(10000);
             score.Mods.OfType<IApplicableToTrack>().ForEach(m => m.ApplyToTrack(track));
             double clockRate = track.Rate;
 
             // this is the same as osu!, so there's potential to share the implementation... maybe
-            double preempt = IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
+            double preempt =
+                IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450)
+                / clockRate;
 
-            double approachRate = preempt > 1200.0 ? -(preempt - 1800.0) / 120.0 : -(preempt - 1200.0) / 150.0 + 5.0;
+            double approachRate =
+                preempt > 1200.0 ? -(preempt - 1800.0) / 120.0 : -(preempt - 1200.0) / 150.0 + 5.0;
 
             double approachRateFactor = 1.0;
             if (approachRate > 9.0)
@@ -93,15 +105,16 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             if (score.Mods.Any(m => m is ModNoFail))
                 value *= Math.Max(0.90, 1.0 - 0.02 * numMiss);
 
-            return new CatchPerformanceAttributes
-            {
-                Total = value
-            };
+            return new CatchPerformanceAttributes { Total = value };
         }
 
-        private double accuracy() => totalHits() == 0 ? 0 : Math.Clamp((double)totalSuccessfulHits() / totalHits(), 0, 1);
+        private double accuracy() =>
+            totalHits() == 0 ? 0 : Math.Clamp((double)totalSuccessfulHits() / totalHits(), 0, 1);
+
         private int totalHits() => num50 + num100 + num300 + numMiss + numKatu;
+
         private int totalSuccessfulHits() => num50 + num100 + num300;
+
         private int totalComboHits() => numMiss + num100 + num300;
     }
 }

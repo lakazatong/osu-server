@@ -18,18 +18,28 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [BackgroundDependencyLoader]
         private void load(SkinManager skins, IDialogOverlay? dialogOverlay)
         {
-            Add(deleteSkinsButton = new DangerousSettingsButton
-            {
-                Text = MaintenanceSettingsStrings.DeleteAllSkins,
-                Action = () =>
+            Add(
+                deleteSkinsButton = new DangerousSettingsButton
                 {
-                    dialogOverlay?.Push(new MassDeleteConfirmationDialog(() =>
+                    Text = MaintenanceSettingsStrings.DeleteAllSkins,
+                    Action = () =>
                     {
-                        deleteSkinsButton.Enabled.Value = false;
-                        Task.Run(() => skins.Delete()).ContinueWith(_ => Schedule(() => deleteSkinsButton.Enabled.Value = true));
-                    }, DeleteConfirmationContentStrings.Skins));
+                        dialogOverlay?.Push(
+                            new MassDeleteConfirmationDialog(
+                                () =>
+                                {
+                                    deleteSkinsButton.Enabled.Value = false;
+                                    Task.Run(() => skins.Delete())
+                                        .ContinueWith(_ =>
+                                            Schedule(() => deleteSkinsButton.Enabled.Value = true)
+                                        );
+                                },
+                                DeleteConfirmationContentStrings.Skins
+                            )
+                        );
+                    },
                 }
-            });
+            );
         }
     }
 }

@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Graphics.Sprites;
-using osu.Game.Overlays.Dialog;
 using osu.Game.Localisation;
+using osu.Game.Overlays.Dialog;
 
 namespace osu.Game.Screens.Edit
 {
@@ -28,18 +28,18 @@ namespace osu.Game.Screens.Edit
                 new PopupDialogOkButton
                 {
                     Text = EditorDialogsStrings.CreateNew,
-                    Action = () => createNewDifficulty.Invoke(false)
+                    Action = () => createNewDifficulty.Invoke(false),
                 },
                 new PopupDialogCancelButton
                 {
                     Text = EditorDialogsStrings.CreateCopy,
-                    Action = () => createNewDifficulty.Invoke(true)
+                    Action = () => createNewDifficulty.Invoke(true),
                 },
                 new PopupDialogCancelButton
                 {
                     Text = EditorDialogsStrings.KeepEditing,
-                    Action = () => { }
-                }
+                    Action = () => { },
+                },
             };
         }
     }

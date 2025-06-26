@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
-    public class ManiaModDifficultyAdjust : ModDifficultyAdjust
-    {
-    }
+    public class ManiaModDifficultyAdjust : ModDifficultyAdjust { }
 }

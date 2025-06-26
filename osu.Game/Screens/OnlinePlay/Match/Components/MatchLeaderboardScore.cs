@@ -17,7 +17,11 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
 
         public override ScoreInfo? TooltipContent => null; // match aggregate scores can't show statistics that the custom tooltip displays.
 
-        public MatchLeaderboardScore(APIUserScoreAggregate score, int? rank, bool isOnlineScope = true)
+        public MatchLeaderboardScore(
+            APIUserScoreAggregate score,
+            int? rank,
+            bool isOnlineScope = true
+        )
             : base(score.CreateScoreInfo(), rank, isOnlineScope)
         {
             this.score = score;
@@ -29,11 +33,24 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
             RankContainer.Alpha = 0;
         }
 
-        protected override IEnumerable<LeaderboardScoreStatistic> GetStatistics(ScoreInfo model) => new[]
-        {
-            new LeaderboardScoreStatistic(FontAwesome.Solid.Crosshairs, RankingsStrings.StatAccuracy, model.DisplayAccuracy),
-            new LeaderboardScoreStatistic(FontAwesome.Solid.Sync, RankingsStrings.StatPlayCount, score.TotalAttempts.ToString()),
-            new LeaderboardScoreStatistic(FontAwesome.Solid.Check, "Completed Beatmaps", score.CompletedBeatmaps.ToString()),
-        };
+        protected override IEnumerable<LeaderboardScoreStatistic> GetStatistics(ScoreInfo model) =>
+            new[]
+            {
+                new LeaderboardScoreStatistic(
+                    FontAwesome.Solid.Crosshairs,
+                    RankingsStrings.StatAccuracy,
+                    model.DisplayAccuracy
+                ),
+                new LeaderboardScoreStatistic(
+                    FontAwesome.Solid.Sync,
+                    RankingsStrings.StatPlayCount,
+                    score.TotalAttempts.ToString()
+                ),
+                new LeaderboardScoreStatistic(
+                    FontAwesome.Solid.Check,
+                    "Completed Beatmaps",
+                    score.CompletedBeatmaps.ToString()
+                ),
+            };
     }
 }

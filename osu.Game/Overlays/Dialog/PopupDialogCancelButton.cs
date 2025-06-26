@@ -16,8 +16,6 @@ namespace osu.Game.Overlays.Dialog
         }
 
         public PopupDialogCancelButton()
-            : base(HoverSampleSet.DialogCancel)
-        {
-        }
+            : base(HoverSampleSet.DialogCancel) { }
     }
 }

@@ -39,7 +39,9 @@ namespace osu.Game.Overlays.Toolbar
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
-            clockDisplayMode = config.GetBindable<ToolbarClockDisplayMode>(OsuSetting.ToolbarClockDisplayMode);
+            clockDisplayMode = config.GetBindable<ToolbarClockDisplayMode>(
+                OsuSetting.ToolbarClockDisplayMode
+            );
             prefer24HourTime = config.GetBindable<bool>(OsuSetting.Prefer24HourTime);
 
             Children = new Drawable[]
@@ -73,7 +75,7 @@ namespace osu.Game.Overlays.Toolbar
                                     Colour = Color4.White.Opacity(100),
                                     Blending = BlendingParameters.Additive,
                                 },
-                            }
+                            },
                         },
                         new FillFlowContainer
                         {
@@ -93,11 +95,11 @@ namespace osu.Game.Overlays.Toolbar
                                 {
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                }
-                            }
-                        }
-                    }
-                }
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -105,19 +107,29 @@ namespace osu.Game.Overlays.Toolbar
         {
             base.LoadComplete();
 
-            clockDisplayMode.BindValueChanged(displayMode =>
-            {
-                bool showAnalog = displayMode.NewValue == ToolbarClockDisplayMode.Analog || displayMode.NewValue == ToolbarClockDisplayMode.Full;
-                bool showDigital = displayMode.NewValue != ToolbarClockDisplayMode.Analog;
-                bool showRuntime = displayMode.NewValue == ToolbarClockDisplayMode.DigitalWithRuntime || displayMode.NewValue == ToolbarClockDisplayMode.Full;
+            clockDisplayMode.BindValueChanged(
+                displayMode =>
+                {
+                    bool showAnalog =
+                        displayMode.NewValue == ToolbarClockDisplayMode.Analog
+                        || displayMode.NewValue == ToolbarClockDisplayMode.Full;
+                    bool showDigital = displayMode.NewValue != ToolbarClockDisplayMode.Analog;
+                    bool showRuntime =
+                        displayMode.NewValue == ToolbarClockDisplayMode.DigitalWithRuntime
+                        || displayMode.NewValue == ToolbarClockDisplayMode.Full;
 
-                digital.FadeTo(showDigital ? 1 : 0);
-                digital.ShowRuntime = showRuntime;
+                    digital.FadeTo(showDigital ? 1 : 0);
+                    digital.ShowRuntime = showRuntime;
 
-                analog.FadeTo(showAnalog ? 1 : 0);
-            }, true);
+                    analog.FadeTo(showAnalog ? 1 : 0);
+                },
+                true
+            );
 
-            prefer24HourTime.BindValueChanged(prefer24H => digital.Use24HourDisplay = prefer24H.NewValue, true);
+            prefer24HourTime.BindValueChanged(
+                prefer24H => digital.Use24HourDisplay = prefer24H.NewValue,
+                true
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -143,7 +155,8 @@ namespace osu.Game.Overlays.Toolbar
             base.OnHoverLost(e);
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverClickSounds(sampleSet);
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverClickSounds(sampleSet);
 
         private void cycleDisplayMode()
         {

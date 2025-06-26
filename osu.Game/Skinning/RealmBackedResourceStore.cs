@@ -21,7 +21,11 @@ namespace osu.Game.Skinning
         private readonly Live<T> liveSource;
         private readonly IDisposable? realmSubscription;
 
-        public RealmBackedResourceStore(Live<T> source, IResourceStore<byte[]> underlyingStore, RealmAccess? realm)
+        public RealmBackedResourceStore(
+            Live<T> source,
+            IResourceStore<byte[]> underlyingStore,
+            RealmAccess? realm
+        )
             : base(underlyingStore)
         {
             liveSource = source;
@@ -32,7 +36,10 @@ namespace osu.Game.Skinning
             // Required local for iOS. Will cause runtime crash if inlined.
             Guid id = source.ID;
 
-            realmSubscription = realm?.RegisterForNotifications(r => r.All<T>().Where(s => s.ID == id), skinChanged);
+            realmSubscription = realm?.RegisterForNotifications(
+                r => r.All<T>().Where(s => s.ID == id),
+                skinChanged
+            );
         }
 
         protected override void Dispose(bool disposing)
@@ -41,7 +48,8 @@ namespace osu.Game.Skinning
             realmSubscription?.Dispose();
         }
 
-        private void skinChanged(IRealmCollection<T> sender, ChangeSet? changes) => invalidateCache();
+        private void skinChanged(IRealmCollection<T> sender, ChangeSet? changes) =>
+            invalidateCache();
 
         protected override IEnumerable<string> GetFilenames(string name)
         {
@@ -55,24 +63,32 @@ namespace osu.Game.Skinning
 
         private string? getPathForFile(string filename)
         {
-            if (fileToStoragePathMapping.Value.TryGetValue(filename.ToLowerInvariant(), out string? path))
+            if (
+                fileToStoragePathMapping.Value.TryGetValue(
+                    filename.ToLowerInvariant(),
+                    out string? path
+                )
+            )
                 return path;
 
             return null;
         }
 
-        private void invalidateCache() => fileToStoragePathMapping = new Lazy<Dictionary<string, string>>(initialiseFileCache);
+        private void invalidateCache() =>
+            fileToStoragePathMapping = new Lazy<Dictionary<string, string>>(initialiseFileCache);
 
-        private Dictionary<string, string> initialiseFileCache() => liveSource.PerformRead(source =>
-        {
-            var dictionary = new Dictionary<string, string>();
-            dictionary.Clear();
-            foreach (var f in source.Files)
-                dictionary[f.Filename.ToLowerInvariant()] = f.File.GetStoragePath();
+        private Dictionary<string, string> initialiseFileCache() =>
+            liveSource.PerformRead(source =>
+            {
+                var dictionary = new Dictionary<string, string>();
+                dictionary.Clear();
+                foreach (var f in source.Files)
+                    dictionary[f.Filename.ToLowerInvariant()] = f.File.GetStoragePath();
 
-            return dictionary;
-        });
+                return dictionary;
+            });
 
-        public override IEnumerable<string> GetAvailableResources() => fileToStoragePathMapping.Value.Keys;
+        public override IEnumerable<string> GetAvailableResources() =>
+            fileToStoragePathMapping.Value.Keys;
     }
 }

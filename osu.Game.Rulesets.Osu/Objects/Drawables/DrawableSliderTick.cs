@@ -5,12 +5,12 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Skinning;
-using osu.Framework.Graphics.Containers;
 
 namespace osu.Game.Rulesets.Osu.Objects.Drawables
 {
@@ -25,14 +25,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private SkinnableDrawable scaleContainer;
 
         public DrawableSliderTick()
-            : base(null)
-        {
-        }
+            : base(null) { }
 
         public DrawableSliderTick(SliderTick sliderTick)
-            : base(sliderTick)
-        {
-        }
+            : base(sliderTick) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -40,26 +36,33 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Size = OsuHitObject.OBJECT_DIMENSIONS;
             Origin = Anchor.Centre;
 
-            AddInternal(scaleContainer = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderScorePoint), _ => new CircularContainer
-            {
-                Masking = true,
-                Origin = Anchor.Centre,
-                Size = new Vector2(DEFAULT_TICK_SIZE),
-                BorderThickness = DEFAULT_TICK_SIZE / 4,
-                BorderColour = Color4.White,
-                Child = new Box
+            AddInternal(
+                scaleContainer = new SkinnableDrawable(
+                    new OsuSkinComponentLookup(OsuSkinComponents.SliderScorePoint),
+                    _ => new CircularContainer
+                    {
+                        Masking = true,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(DEFAULT_TICK_SIZE),
+                        BorderThickness = DEFAULT_TICK_SIZE / 4,
+                        BorderColour = Color4.White,
+                        Child = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = AccentColour.Value,
+                            Alpha = 0.3f,
+                        },
+                    }
+                )
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = AccentColour.Value,
-                    Alpha = 0.3f,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                 }
-            })
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            );
 
-            ScaleBindable.BindValueChanged(scale => scaleContainer.Scale = new Vector2(scale.NewValue));
+            ScaleBindable.BindValueChanged(scale =>
+                scaleContainer.Scale = new Vector2(scale.NewValue)
+            );
         }
 
         protected override void OnApply()
@@ -69,7 +72,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Position = HitObject.Position - DrawableSlider.HitObject.Position;
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset) => DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
+        protected override void CheckForResult(bool userTriggered, double timeOffset) =>
+            DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
 
         protected override void UpdateInitialTransforms()
         {

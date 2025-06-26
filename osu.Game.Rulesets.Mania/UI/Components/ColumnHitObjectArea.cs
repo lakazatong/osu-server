@@ -22,25 +22,21 @@ namespace osu.Game.Rulesets.Mania.UI.Components
 
         public ColumnHitObjectArea()
         {
-            AddRangeInternal(new[]
-            {
-                UnderlayElements = new Container
+            AddRangeInternal(
+                new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                hitTarget = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.HitTarget), _ => new DefaultHitTarget())
-                {
-                    RelativeSizeAxes = Axes.X,
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                Explosions = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
+                    UnderlayElements = new Container { RelativeSizeAxes = Axes.Both },
+                    hitTarget = new SkinnableDrawable(
+                        new ManiaSkinComponentLookup(ManiaSkinComponents.HitTarget),
+                        _ => new DefaultHitTarget()
+                    )
+                    {
+                        RelativeSizeAxes = Axes.X,
+                    },
+                    content = new Container { RelativeSizeAxes = Axes.Both },
+                    Explosions = new Container { RelativeSizeAxes = Axes.Both },
                 }
-            });
+            );
         }
 
         protected override void UpdateHitPosition()

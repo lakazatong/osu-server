@@ -26,7 +26,8 @@ namespace osu.Game.Screens.Menu
 
         public bool FetchOnlineContent { get; set; } = true;
 
-        internal Bindable<APIMenuContent> Current { get; } = new Bindable<APIMenuContent>(new APIMenuContent());
+        internal Bindable<APIMenuContent> Current { get; } =
+            new Bindable<APIMenuContent>(new APIMenuContent());
 
         private const float transition_duration = 500;
 
@@ -52,7 +53,8 @@ namespace osu.Game.Screens.Menu
             };
         }
 
-        protected override void PopIn() => content.FadeInFromZero(transition_duration, Easing.OutQuint);
+        protected override void PopIn() =>
+            content.FadeInFromZero(transition_duration, Easing.OutQuint);
 
         protected override void PopOut() => content.FadeOut(transition_duration, Easing.OutQuint);
 
@@ -93,7 +95,10 @@ namespace osu.Game.Screens.Menu
                     if (r.IsFaulted)
                         _ = r.Exception;
 
-                    Scheduler.AddDelayed(checkForUpdates, TimeSpan.FromMinutes(5).TotalMilliseconds);
+                    Scheduler.AddDelayed(
+                        checkForUpdates,
+                        TimeSpan.FromMinutes(5).TotalMilliseconds
+                    );
                 });
         }
 
@@ -112,22 +117,26 @@ namespace osu.Game.Screens.Menu
             // so let's keep things simple for now.
             content.Clear(true);
 
-            LoadComponentsAsync(images.NewValue.Images.Select(i => new MenuImage(i)), loaded =>
-            {
-                if (!images.NewValue.Equals(Current.Value))
-                    return;
+            LoadComponentsAsync(
+                images.NewValue.Images.Select(i => new MenuImage(i)),
+                loaded =>
+                {
+                    if (!images.NewValue.Equals(Current.Value))
+                        return;
 
-                // start hidden
-                foreach (var image in loaded)
-                    image.Hide();
+                    // start hidden
+                    foreach (var image in loaded)
+                        image.Hide();
 
-                content.AddRange(loaded);
+                    content.AddRange(loaded);
 
-                // Many users don't spend much time at the main menu, so let's randomise where in the
-                // carousel of available images we start at to give each a fair chance.
-                displayIndex = RNG.Next(0, images.NewValue.Images.Length) - 1;
-                showNext();
-            }, (cancellationTokenSource ??= new CancellationTokenSource()).Token);
+                    // Many users don't spend much time at the main menu, so let's randomise where in the
+                    // carousel of available images we start at to give each a fair chance.
+                    displayIndex = RNG.Next(0, images.NewValue.Images.Length) - 1;
+                    showNext();
+                },
+                (cancellationTokenSource ??= new CancellationTokenSource()).Token
+            );
         }
 
         private void showNext()
@@ -144,8 +153,8 @@ namespace osu.Game.Screens.Menu
                 // To handle expiration simply, arrange all images in best-next order.
                 // Fade in the first valid one, then handle fading out the last if required.
                 var currentRotation = content
-                                      .Skip(previousIndex + 1)
-                                      .Concat(content.Take(previousIndex + 1));
+                    .Skip(previousIndex + 1)
+                    .Concat(content.Take(previousIndex + 1));
 
                 // After the loop, displayIndex will be the new valid index or -1 if
                 // none valid.
@@ -153,7 +162,8 @@ namespace osu.Game.Screens.Menu
 
                 foreach (var image in currentRotation)
                 {
-                    if (!image.Image.IsCurrent) continue;
+                    if (!image.Image.IsCurrent)
+                        continue;
 
                     using (BeginDelayedSequence(previousIndex >= 0 ? 300 : 0))
                     {
@@ -216,17 +226,18 @@ namespace osu.Game.Screens.Menu
 
                 Action = () =>
                 {
-                    flash.FadeInFromZero(50)
-                         .Then()
-                         .FadeOut(500, Easing.OutQuint);
+                    flash.FadeInFromZero(50).Then().FadeOut(500, Easing.OutQuint);
 
                     // Delay slightly to allow animation to play out.
                     openUrlAction?.Cancel();
-                    openUrlAction = Scheduler.AddDelayed(() =>
-                    {
-                        if (!string.IsNullOrEmpty(Image.Url))
-                            game?.HandleLink(Image.Url);
-                    }, 250);
+                    openUrlAction = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            if (!string.IsNullOrEmpty(Image.Url))
+                                game?.HandleLink(Image.Url);
+                        },
+                        250
+                    );
                 };
             }
 
@@ -256,9 +267,7 @@ namespace osu.Game.Screens.Menu
 
             protected override void OnMouseUp(MouseUpEvent e)
             {
-                this
-                    .ScaleTo(0.95f)
-                    .ScaleTo(1, 500, Easing.OutElastic);
+                this.ScaleTo(0.95f).ScaleTo(1, 500, Easing.OutElastic);
                 base.OnMouseUp(e);
             }
 

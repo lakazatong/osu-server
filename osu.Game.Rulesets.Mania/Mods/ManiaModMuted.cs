@@ -6,7 +6,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
-    public class ManiaModMuted : ModMuted<ManiaHitObject>
-    {
-    }
+    public class ManiaModMuted : ModMuted<ManiaHitObject> { }
 }

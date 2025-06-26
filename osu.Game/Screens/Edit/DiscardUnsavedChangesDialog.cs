@@ -21,12 +21,9 @@ namespace osu.Game.Screens.Edit
                 new PopupDialogDangerousButton
                 {
                     Text = EditorDialogsStrings.ForgetAllChanges,
-                    Action = exit
+                    Action = exit,
                 },
-                new PopupDialogCancelButton
-                {
-                    Text = EditorDialogsStrings.ContinueEditing,
-                },
+                new PopupDialogCancelButton { Text = EditorDialogsStrings.ContinueEditing },
             };
         }
     }

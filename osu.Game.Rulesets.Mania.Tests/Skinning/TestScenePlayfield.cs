@@ -24,21 +24,40 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         [Test]
         public void TestSingleStage()
         {
-            AddStep("create stage", () =>
-            {
-                stageDefinitions = new List<StageDefinition>
+            AddStep(
+                "create stage",
+                () =>
                 {
-                    new StageDefinition(2)
-                };
+                    stageDefinitions = new List<StageDefinition> { new StageDefinition(2) };
 
-                SetContents(_ => new ManiaInputManager(new ManiaRuleset().RulesetInfo, 2)
-                {
-                    Child = new ManiaPlayfield(stageDefinitions)
-                });
-            });
+                    SetContents(_ => new ManiaInputManager(new ManiaRuleset().RulesetInfo, 2)
+                    {
+                        Child = new ManiaPlayfield(stageDefinitions),
+                    });
+                }
+            );
 
-            AddRepeatStep("perform hit", () => scoreProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Perfect }), 20);
-            AddStep("perform miss", () => scoreProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss }));
+            AddRepeatStep(
+                "perform hit",
+                () =>
+                    scoreProcessor.ApplyResult(
+                        new JudgementResult(new HitObject(), new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    ),
+                20
+            );
+            AddStep(
+                "perform miss",
+                () =>
+                    scoreProcessor.ApplyResult(
+                        new JudgementResult(new HitObject(), new Judgement())
+                        {
+                            Type = HitResult.Miss,
+                        }
+                    )
+            );
         }
 
         [TestCase(2)]
@@ -46,27 +65,52 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         [TestCase(5)]
         public void TestDualStages(int columnCount)
         {
-            AddStep("create stage", () =>
-            {
-                stageDefinitions = new List<StageDefinition>
+            AddStep(
+                "create stage",
+                () =>
                 {
-                    new StageDefinition(columnCount),
-                    new StageDefinition(columnCount)
-                };
-
-                SetContents(_ => new ManiaInputManager(new ManiaRuleset().RulesetInfo, (int)PlayfieldType.Dual + 2 * columnCount)
-                {
-                    Child = new ManiaPlayfield(stageDefinitions)
+                    stageDefinitions = new List<StageDefinition>
                     {
-                        // bit of a hack to make sure the dual stages fit on screen without overlapping each other.
-                        Size = new Vector2(1.5f),
-                        Scale = new Vector2(1 / 1.5f)
-                    }
-                });
-            });
+                        new StageDefinition(columnCount),
+                        new StageDefinition(columnCount),
+                    };
 
-            AddRepeatStep("perform hit", () => scoreProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Perfect }), 20);
-            AddStep("perform miss", () => scoreProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss }));
+                    SetContents(_ => new ManiaInputManager(
+                        new ManiaRuleset().RulesetInfo,
+                        (int)PlayfieldType.Dual + 2 * columnCount
+                    )
+                    {
+                        Child = new ManiaPlayfield(stageDefinitions)
+                        {
+                            // bit of a hack to make sure the dual stages fit on screen without overlapping each other.
+                            Size = new Vector2(1.5f),
+                            Scale = new Vector2(1 / 1.5f),
+                        },
+                    });
+                }
+            );
+
+            AddRepeatStep(
+                "perform hit",
+                () =>
+                    scoreProcessor.ApplyResult(
+                        new JudgementResult(new HitObject(), new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    ),
+                20
+            );
+            AddStep(
+                "perform miss",
+                () =>
+                    scoreProcessor.ApplyResult(
+                        new JudgementResult(new HitObject(), new Judgement())
+                        {
+                            Type = HitResult.Miss,
+                        }
+                    )
+            );
         }
 
         protected override IBeatmap CreateBeatmapForSkinProvider()

@@ -25,9 +25,7 @@ namespace osu.Game.Rulesets.Osu.Edit
         public new OsuHitObjectComposer Composer => (OsuHitObjectComposer)base.Composer;
 
         public OsuBlueprintContainer(OsuHitObjectComposer composer)
-            : base(composer)
-        {
-        }
+            : base(composer) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -35,9 +33,12 @@ namespace osu.Game.Rulesets.Osu.Edit
             limitedDistanceSnap = config.GetBindable<bool>(OsuSetting.EditorLimitedDistanceSnap);
         }
 
-        protected override SelectionHandler<HitObject> CreateSelectionHandler() => new OsuSelectionHandler();
+        protected override SelectionHandler<HitObject> CreateSelectionHandler() =>
+            new OsuSelectionHandler();
 
-        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(HitObject hitObject)
+        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(
+            HitObject hitObject
+        )
         {
             switch (hitObject)
             {
@@ -54,13 +55,25 @@ namespace osu.Game.Rulesets.Osu.Edit
             return base.CreateHitObjectBlueprintFor(hitObject);
         }
 
-        protected override bool TryMoveBlueprints(DragEvent e, IList<(SelectionBlueprint<HitObject> blueprint, Vector2[] originalSnapPositions)> blueprints)
+        protected override bool TryMoveBlueprints(
+            DragEvent e,
+            IList<(
+                SelectionBlueprint<HitObject> blueprint,
+                Vector2[] originalSnapPositions
+            )> blueprints
+        )
         {
             Vector2 distanceTravelled = e.ScreenSpaceMousePosition - e.ScreenSpaceMouseDownPosition;
 
             for (int i = 0; i < blueprints.Count; i++)
             {
-                if (checkSnappingBlueprintToNearbyObjects(blueprints[i].blueprint, distanceTravelled, blueprints[i].originalSnapPositions))
+                if (
+                    checkSnappingBlueprintToNearbyObjects(
+                        blueprints[i].blueprint,
+                        distanceTravelled,
+                        blueprints[i].originalSnapPositions
+                    )
+                )
                     return true;
             }
 
@@ -68,17 +81,32 @@ namespace osu.Game.Rulesets.Osu.Edit
             // item in the selection.
 
             // The final movement position, relative to movementBlueprintOriginalPosition.
-            Vector2 movePosition = blueprints.First().originalSnapPositions.First() + distanceTravelled;
+            Vector2 movePosition =
+                blueprints.First().originalSnapPositions.First() + distanceTravelled;
             var referenceBlueprint = blueprints.First().blueprint;
 
             // Retrieve a snapped position.
             var result = Composer.TrySnapToNearbyObjects(movePosition);
-            result ??= Composer.TrySnapToDistanceGrid(movePosition, limitedDistanceSnap.Value ? referenceBlueprint.Item.StartTime : null);
-            if (Composer.TrySnapToPositionGrid(result?.ScreenSpacePosition ?? movePosition, result?.Time) is SnapResult gridSnapResult)
+            result ??= Composer.TrySnapToDistanceGrid(
+                movePosition,
+                limitedDistanceSnap.Value ? referenceBlueprint.Item.StartTime : null
+            );
+            if (
+                Composer.TrySnapToPositionGrid(
+                    result?.ScreenSpacePosition ?? movePosition,
+                    result?.Time
+                )
+                is SnapResult gridSnapResult
+            )
                 result = gridSnapResult;
             result ??= new SnapResult(movePosition, null);
 
-            bool moved = SelectionHandler.HandleMovement(new MoveSelectionEvent<HitObject>(referenceBlueprint, result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint));
+            bool moved = SelectionHandler.HandleMovement(
+                new MoveSelectionEvent<HitObject>(
+                    referenceBlueprint,
+                    result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint
+                )
+            );
             if (moved)
                 ApplySnapResultTime(result, referenceBlueprint.Item.StartTime);
             return moved;
@@ -91,7 +119,11 @@ namespace osu.Game.Rulesets.Osu.Edit
         /// <param name="distanceTravelled">Distance travelled since start of dragging action.</param>
         /// <param name="originalPositions">The snap positions of blueprint before start of dragging action.</param>
         /// <returns>Whether an object to snap to was found.</returns>
-        private bool checkSnappingBlueprintToNearbyObjects(SelectionBlueprint<HitObject> blueprint, Vector2 distanceTravelled, Vector2[] originalPositions)
+        private bool checkSnappingBlueprintToNearbyObjects(
+            SelectionBlueprint<HitObject> blueprint,
+            Vector2 distanceTravelled,
+            Vector2[] originalPositions
+        )
         {
             var currentPositions = blueprint.ScreenSpaceSnapPoints;
 
@@ -102,12 +134,20 @@ namespace osu.Game.Rulesets.Osu.Edit
 
                 var positionalResult = Composer.TrySnapToNearbyObjects(testPosition);
 
-                if (positionalResult == null || positionalResult.ScreenSpacePosition == testPosition) continue;
+                if (
+                    positionalResult == null
+                    || positionalResult.ScreenSpacePosition == testPosition
+                )
+                    continue;
 
                 var delta = positionalResult.ScreenSpacePosition - currentPositions[i];
 
                 // attempt to move the objects, and apply any time based snapping if we can.
-                if (SelectionHandler.HandleMovement(new MoveSelectionEvent<HitObject>(blueprint, delta)))
+                if (
+                    SelectionHandler.HandleMovement(
+                        new MoveSelectionEvent<HitObject>(blueprint, delta)
+                    )
+                )
                 {
                     ApplySnapResultTime(positionalResult, blueprint.Item.StartTime);
                     return true;

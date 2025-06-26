@@ -14,16 +14,29 @@ namespace osu.Game.Rulesets.Catch.Tests
 
         protected override void LoadComplete()
         {
-            AddStep("fruit changes visual and hyper", () => SetContents(_ => new TestDrawableCatchHitObjectSpecimen(new DrawableFruit(new Fruit
-            {
-                IndexInBeatmapBindable = { BindTarget = indexInBeatmap },
-                HyperDashBindable = { BindTarget = hyperDash },
-            }))));
+            AddStep(
+                "fruit changes visual and hyper",
+                () =>
+                    SetContents(_ => new TestDrawableCatchHitObjectSpecimen(
+                        new DrawableFruit(
+                            new Fruit
+                            {
+                                IndexInBeatmapBindable = { BindTarget = indexInBeatmap },
+                                HyperDashBindable = { BindTarget = hyperDash },
+                            }
+                        )
+                    ))
+            );
 
-            AddStep("droplet changes hyper", () => SetContents(_ => new TestDrawableCatchHitObjectSpecimen(new DrawableDroplet(new Droplet
-            {
-                HyperDashBindable = { BindTarget = hyperDash },
-            }))));
+            AddStep(
+                "droplet changes hyper",
+                () =>
+                    SetContents(_ => new TestDrawableCatchHitObjectSpecimen(
+                        new DrawableDroplet(
+                            new Droplet { HyperDashBindable = { BindTarget = hyperDash } }
+                        )
+                    ))
+            );
 
             Scheduler.AddDelayed(() => indexInBeatmap.Value++, 250, true);
             Scheduler.AddDelayed(() => hyperDash.Value = !hyperDash.Value, 1000, true);

@@ -16,9 +16,10 @@ namespace osu.Game.Graphics.UserInterface
         protected override double GetProportionalDuration(double currentValue, double newValue) =>
             currentValue > newValue ? currentValue - newValue : newValue - currentValue;
 
-        protected override LocalisableString FormatCount(double count) => ((long)count).ToLocalisableString(@"N0");
+        protected override LocalisableString FormatCount(double count) =>
+            ((long)count).ToLocalisableString(@"N0");
 
-        protected override OsuSpriteText CreateSpriteText()
-            => base.CreateSpriteText().With(s => s.Font = s.Font.With(fixedWidth: true));
+        protected override OsuSpriteText CreateSpriteText() =>
+            base.CreateSpriteText().With(s => s.Font = s.Font.With(fixedWidth: true));
     }
 }

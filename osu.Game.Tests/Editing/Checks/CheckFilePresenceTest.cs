@@ -28,11 +28,8 @@ namespace osu.Game.Tests.Editing.Checks
                 BeatmapInfo = new BeatmapInfo
                 {
                     Metadata = new BeatmapMetadata { BackgroundFile = file.Filename },
-                    BeatmapSet = new BeatmapSetInfo
-                    {
-                        Files = { file }
-                    }
-                }
+                    BeatmapSet = new BeatmapSetInfo { Files = { file } },
+                },
             };
         }
 

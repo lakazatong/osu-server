@@ -15,7 +15,6 @@ namespace osu.Game.Rulesets.Mania.Edit
         {
             // Compose
             new CheckManiaConcurrentObjects(),
-
             // Settings
             new CheckKeyCount(),
             new CheckManiaAbnormalDifficultySettings(),

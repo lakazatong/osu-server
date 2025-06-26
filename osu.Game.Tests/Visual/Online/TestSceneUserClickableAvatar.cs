@@ -21,40 +21,97 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneUserClickableAvatar : OsuManualInputManagerTestScene
     {
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new FillFlowContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                AutoSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Spacing = new Vector2(10f),
-                Children = new[]
+                Child = new FillFlowContainer
                 {
-                    generateUser(@"peppy", 2, CountryCode.AU, TestResources.COVER_IMAGE_3, false, "99EB47"),
-                    generateUser(@"flyte", 3103765, CountryCode.JP, TestResources.COVER_IMAGE_4, true),
-                    generateUser(@"joshika39", 17032217, CountryCode.RS, TestResources.COVER_IMAGE_3, false),
-                    new UpdateableAvatar(),
-                    new UpdateableAvatar()
-                },
-            };
-        });
+                    AutoSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Spacing = new Vector2(10f),
+                    Children = new[]
+                    {
+                        generateUser(
+                            @"peppy",
+                            2,
+                            CountryCode.AU,
+                            TestResources.COVER_IMAGE_3,
+                            false,
+                            "99EB47"
+                        ),
+                        generateUser(
+                            @"flyte",
+                            3103765,
+                            CountryCode.JP,
+                            TestResources.COVER_IMAGE_4,
+                            true
+                        ),
+                        generateUser(
+                            @"joshika39",
+                            17032217,
+                            CountryCode.RS,
+                            TestResources.COVER_IMAGE_3,
+                            false
+                        ),
+                        new UpdateableAvatar(),
+                        new UpdateableAvatar(),
+                    },
+                };
+            });
 
         [Test]
         public void TestClickableAvatarHover()
         {
-            AddStep("hover avatar with user panel", () => InputManager.MoveMouseTo(this.ChildrenOfType<ClickableAvatar>().ElementAt(1)));
-            AddUntilStep("wait for tooltip to show", () => this.ChildrenOfType<ClickableAvatar.UserCardTooltip>().FirstOrDefault()?.State.Value == Visibility.Visible);
+            AddStep(
+                "hover avatar with user panel",
+                () => InputManager.MoveMouseTo(this.ChildrenOfType<ClickableAvatar>().ElementAt(1))
+            );
+            AddUntilStep(
+                "wait for tooltip to show",
+                () =>
+                    this.ChildrenOfType<ClickableAvatar.UserCardTooltip>()
+                        .FirstOrDefault()
+                        ?.State.Value == Visibility.Visible
+            );
             AddStep("hover out", () => InputManager.MoveMouseTo(new Vector2(0)));
-            AddUntilStep("wait for tooltip to hide", () => this.ChildrenOfType<ClickableAvatar.UserCardTooltip>().FirstOrDefault()?.State.Value == Visibility.Hidden);
+            AddUntilStep(
+                "wait for tooltip to hide",
+                () =>
+                    this.ChildrenOfType<ClickableAvatar.UserCardTooltip>()
+                        .FirstOrDefault()
+                        ?.State.Value == Visibility.Hidden
+            );
 
-            AddStep("hover avatar without user panel", () => InputManager.MoveMouseTo(this.ChildrenOfType<ClickableAvatar>().ElementAt(0)));
-            AddUntilStep("wait for tooltip to show", () => this.ChildrenOfType<OsuTooltipContainer.OsuTooltip>().FirstOrDefault()?.State.Value == Visibility.Visible);
+            AddStep(
+                "hover avatar without user panel",
+                () => InputManager.MoveMouseTo(this.ChildrenOfType<ClickableAvatar>().ElementAt(0))
+            );
+            AddUntilStep(
+                "wait for tooltip to show",
+                () =>
+                    this.ChildrenOfType<OsuTooltipContainer.OsuTooltip>()
+                        .FirstOrDefault()
+                        ?.State.Value == Visibility.Visible
+            );
             AddStep("hover out", () => InputManager.MoveMouseTo(new Vector2(0)));
-            AddUntilStep("wait for tooltip to hide", () => this.ChildrenOfType<OsuTooltipContainer.OsuTooltip>().FirstOrDefault()?.State.Value == Visibility.Hidden);
+            AddUntilStep(
+                "wait for tooltip to hide",
+                () =>
+                    this.ChildrenOfType<OsuTooltipContainer.OsuTooltip>()
+                        .FirstOrDefault()
+                        ?.State.Value == Visibility.Hidden
+            );
         }
 
-        private Drawable generateUser(string username, int id, CountryCode countryCode, string cover, bool showPanel, string? color = null)
+        private Drawable generateUser(
+            string username,
+            int id,
+            CountryCode countryCode,
+            string cover,
+            bool showPanel,
+            string? color = null
+        )
         {
             var user = new APIUser
             {
@@ -63,7 +120,7 @@ namespace osu.Game.Tests.Visual.Online
                 CountryCode = countryCode,
                 CoverUrl = cover,
                 Colour = color ?? "000000",
-                WasRecentlyOnline = true
+                WasRecentlyOnline = true,
             };
 
             return new ClickableAvatar(user, showPanel)

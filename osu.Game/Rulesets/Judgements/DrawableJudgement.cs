@@ -41,13 +41,17 @@ namespace osu.Game.Rulesets.Judgements
             Size = new Vector2(judgement_size);
             Origin = Anchor.Centre;
 
-            AddInternal(aboveHitObjectsContent = new Container
-            {
-                Depth = float.MinValue,
-                RelativeSizeAxes = Axes.Both
-            });
+            AddInternal(
+                aboveHitObjectsContent = new Container
+                {
+                    Depth = float.MinValue,
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
 
-            proxiedAboveHitObjectsContent = new Lazy<Drawable>(() => aboveHitObjectsContent.CreateProxy());
+            proxiedAboveHitObjectsContent = new Lazy<Drawable>(() =>
+                aboveHitObjectsContent.CreateProxy()
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -64,9 +68,7 @@ namespace osu.Game.Rulesets.Judgements
         /// For animating the actual "default skin" judgement itself, it is recommended to use <see cref="CreateDefaultJudgement"/>.
         /// This allows applying animations which don't affect custom skins.
         /// </remarks>
-        protected virtual void ApplyHitAnimations()
-        {
-        }
+        protected virtual void ApplyHitAnimations() { }
 
         /// <summary>
         /// Apply top-level animations to the current judgement when missed.
@@ -76,9 +78,7 @@ namespace osu.Game.Rulesets.Judgements
         /// For animating the actual "default skin" judgement itself, it is recommended to use <see cref="CreateDefaultJudgement"/>.
         /// This allows applying animations which don't affect custom skins.
         /// </remarks>
-        protected virtual void ApplyMissAnimations()
-        {
-        }
+        protected virtual void ApplyMissAnimations() { }
 
         /// <summary>
         /// Associate a new result / object with this judgement. Should be called when retrieving a judgement from a pool.
@@ -103,7 +103,9 @@ namespace osu.Game.Rulesets.Judgements
             base.PrepareForUse();
 
             if (!IsInPool)
-                Logger.Log($"{nameof(DrawableJudgement)} for judgement type {Result} was not retrieved from a pool. Consider adding to a JudgementPooler.");
+                Logger.Log(
+                    $"{nameof(DrawableJudgement)} for judgement type {Result} was not retrieved from a pool. Consider adding to a JudgementPooler."
+                );
 
             Debug.Assert(Result != null);
 
@@ -163,8 +165,13 @@ namespace osu.Game.Rulesets.Judgements
             if (JudgementBody != null)
                 RemoveInternal(JudgementBody, true);
 
-            AddInternal(JudgementBody = new SkinnableDrawable(new SkinComponentLookup<HitResult>(type), _ =>
-                CreateDefaultJudgement(type), confineMode: ConfineMode.NoScaling));
+            AddInternal(
+                JudgementBody = new SkinnableDrawable(
+                    new SkinComponentLookup<HitResult>(type),
+                    _ => CreateDefaultJudgement(type),
+                    confineMode: ConfineMode.NoScaling
+                )
+            );
 
             JudgementBody.OnSkinChanged += () =>
             {
@@ -191,6 +198,7 @@ namespace osu.Game.Rulesets.Judgements
             }
         }
 
-        protected virtual Drawable CreateDefaultJudgement(HitResult result) => new DefaultJudgementPiece(result);
+        protected virtual Drawable CreateDefaultJudgement(HitResult result) =>
+            new DefaultJudgementPiece(result);
     }
 }

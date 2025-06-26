@@ -17,7 +17,9 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneLegacyReplayPlayback : LegacyReplayPlaybackTestScene
     {
         protected override Ruleset CreateRuleset() => new OsuRuleset();
@@ -47,7 +49,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             new object[] { 5f, 149d, HitResult.Meh },
             new object[] { 5f, 150d, HitResult.Miss },
             new object[] { 5f, 151d, HitResult.Miss },
-
             // OD = 5.7 test cases.
             // GREAT hit window is ( -45ms,  45ms)
             // OK    hit window is ( -94ms,  94ms)
@@ -85,7 +86,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             new object[] { 5f, 129d, HitResult.Meh },
             new object[] { 5f, 130d, HitResult.Miss },
             new object[] { 5f, 131d, HitResult.Miss },
-
             // OD = 8 test cases.
             // This would lead to "effective" OD of 11.2,
             // but the effects are capped to OD 10.
@@ -130,7 +130,11 @@ namespace osu.Game.Rulesets.Osu.Tests
         private const double hit_circle_time = 100;
 
         [TestCaseSource(nameof(no_mod_test_cases))]
-        public void TestHitWindowTreatment(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatment(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -142,25 +146,39 @@ namespace osu.Game.Rulesets.Osu.Tests
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
-                    new OsuReplayFrame(hit_circle_time + hitOffset, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                    new OsuReplayFrame(hit_circle_time + hitOffset + 20, OsuPlayfield.BASE_SIZE / 2),
-                }
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset,
+                        OsuPlayfield.BASE_SIZE / 2,
+                        OsuAction.LeftButton
+                    ),
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset + 20,
+                        OsuPlayfield.BASE_SIZE / 2
+                    ),
+                },
             };
 
             var score = new Score
             {
                 Replay = replay,
-                ScoreInfo = new ScoreInfo
-                {
-                    Ruleset = CreateRuleset().RulesetInfo,
-                }
+                ScoreInfo = new ScoreInfo { Ruleset = CreateRuleset().RulesetInfo },
             };
 
-            RunTest($@"single circle @ OD{overallDifficulty}", beatmap, $@"{hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"single circle @ OD{overallDifficulty}",
+                beatmap,
+                $@"{hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(hard_rock_test_cases))]
-        public void TestHitWindowTreatmentWithHardRock(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithHardRock(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -172,9 +190,16 @@ namespace osu.Game.Rulesets.Osu.Tests
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
-                    new OsuReplayFrame(hit_circle_time + hitOffset, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                    new OsuReplayFrame(hit_circle_time + hitOffset + 20, OsuPlayfield.BASE_SIZE / 2),
-                }
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset,
+                        OsuPlayfield.BASE_SIZE / 2,
+                        OsuAction.LeftButton
+                    ),
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset + 20,
+                        OsuPlayfield.BASE_SIZE / 2
+                    ),
+                },
             };
 
             var score = new Score
@@ -183,15 +208,25 @@ namespace osu.Game.Rulesets.Osu.Tests
                 ScoreInfo = new ScoreInfo
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
-                    Mods = [new OsuModHardRock()]
-                }
+                    Mods = [new OsuModHardRock()],
+                },
             };
 
-            RunTest($@"HR single circle @ OD{overallDifficulty}", beatmap, $@"HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"HR single circle @ OD{overallDifficulty}",
+                beatmap,
+                $@"HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(easy_test_cases))]
-        public void TestHitWindowTreatmentWithEasy(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithEasy(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -203,9 +238,16 @@ namespace osu.Game.Rulesets.Osu.Tests
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, new Vector2(256, -500)),
                     new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
-                    new OsuReplayFrame(hit_circle_time + hitOffset, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                    new OsuReplayFrame(hit_circle_time + hitOffset + 20, OsuPlayfield.BASE_SIZE / 2),
-                }
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset,
+                        OsuPlayfield.BASE_SIZE / 2,
+                        OsuAction.LeftButton
+                    ),
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset + 20,
+                        OsuPlayfield.BASE_SIZE / 2
+                    ),
+                },
             };
 
             var score = new Score
@@ -214,11 +256,17 @@ namespace osu.Game.Rulesets.Osu.Tests
                 ScoreInfo = new ScoreInfo
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
-                    Mods = [new OsuModEasy()]
-                }
+                    Mods = [new OsuModEasy()],
+                },
             };
 
-            RunTest($@"EZ single circle @ OD{overallDifficulty}", beatmap, $@"EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"EZ single circle @ OD{overallDifficulty}",
+                beatmap,
+                $@"EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         private static OsuBeatmap createBeatmap(float overallDifficulty)
@@ -232,14 +280,11 @@ namespace osu.Game.Rulesets.Osu.Tests
                     new HitCircle
                     {
                         StartTime = hit_circle_time,
-                        Position = OsuPlayfield.BASE_SIZE / 2
-                    }
+                        Position = OsuPlayfield.BASE_SIZE / 2,
+                    },
                 },
                 Difficulty = new BeatmapDifficulty { OverallDifficulty = overallDifficulty },
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo },
                 ControlPointInfo = cpi,
             };
             return beatmap;

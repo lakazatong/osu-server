@@ -25,7 +25,10 @@ namespace osu.Game.Tournament.Screens.Setup
 
             dropdown.Current = storage.CurrentTournament;
             dropdown.Items = storage.ListTournaments();
-            dropdown.Current.BindValueChanged(v => Button.Enabled.Value = v.NewValue != startupTournament, true);
+            dropdown.Current.BindValueChanged(
+                v => Button.Enabled.Value = v.NewValue != startupTournament,
+                true
+            );
 
             reloadTournamentsButton.Action = () => dropdown.Items = storage.ListTournaments();
 
@@ -43,22 +46,21 @@ namespace osu.Game.Tournament.Screens.Setup
         {
             var drawable = base.CreateComponent();
 
-            FlowContainer.Insert(-1, folderButton = new RoundedButton
-            {
-                Text = "Open folder",
-                Width = BUTTON_SIZE
-            });
+            FlowContainer.Insert(
+                -1,
+                folderButton = new RoundedButton { Text = "Open folder", Width = BUTTON_SIZE }
+            );
 
-            FlowContainer.Insert(-2, reloadTournamentsButton = new RoundedButton
-            {
-                Text = "Refresh",
-                Width = BUTTON_SIZE
-            });
+            FlowContainer.Insert(
+                -2,
+                reloadTournamentsButton = new RoundedButton
+                {
+                    Text = "Refresh",
+                    Width = BUTTON_SIZE,
+                }
+            );
 
-            FlowContainer.Insert(-3, dropdown = new OsuDropdown<string>
-            {
-                Width = 510
-            });
+            FlowContainer.Insert(-3, dropdown = new OsuDropdown<string> { Width = 510 });
 
             return drawable;
         }

@@ -15,27 +15,31 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneBeatmapSearchFilter : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private readonly ReverseChildIDFillFlowContainer<Drawable> resizableContainer;
 
         public TestSceneBeatmapSearchFilter()
         {
-            Add(resizableContainer = new ReverseChildIDFillFlowContainer<Drawable>
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(0, 10),
-                Children = new Drawable[]
+            Add(
+                resizableContainer = new ReverseChildIDFillFlowContainer<Drawable>
                 {
-                    new BeatmapSearchRulesetFilterRow(),
-                    new BeatmapSearchFilterRow<SearchCategory>("Categories"),
-                    new BeatmapSearchFilterRow<SearchCategory>("Header Name")
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(0, 10),
+                    Children = new Drawable[]
+                    {
+                        new BeatmapSearchRulesetFilterRow(),
+                        new BeatmapSearchFilterRow<SearchCategory>("Categories"),
+                        new BeatmapSearchFilterRow<SearchCategory>("Header Name"),
+                    },
                 }
-            });
+            );
         }
 
         [Test]

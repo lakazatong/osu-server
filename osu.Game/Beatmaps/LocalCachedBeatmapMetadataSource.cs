@@ -36,7 +36,9 @@ namespace osu.Game.Beatmaps
             {
                 // required to initialise native SQLite libraries on some platforms.
                 Batteries_V2.Init();
-                raw.sqlite3_config(2 /*SQLITE_CONFIG_MULTITHREAD*/);
+                raw.sqlite3_config(
+                    2 /*SQLITE_CONFIG_MULTITHREAD*/
+                );
             }
             catch
             {
@@ -66,7 +68,9 @@ namespace osu.Game.Beatmaps
 
             if (fileInfo.LastWriteTime < DateTime.Now.AddMonths(-1))
             {
-                log($@"Refetching local cache because it was last written to on {fileInfo.LastWriteTime}.");
+                log(
+                    $@"Refetching local cache because it was last written to on {fileInfo.LastWriteTime}."
+                );
                 return true;
             }
 
@@ -79,7 +83,10 @@ namespace osu.Game.Beatmaps
             // cached database exists on disk.
             && storage.Exists(cache_database_name);
 
-        public bool TryLookup(BeatmapInfo beatmapInfo, [NotNullWhen(true)] out OnlineBeatmapMetadata? onlineMetadata)
+        public bool TryLookup(
+            BeatmapInfo beatmapInfo,
+            [NotNullWhen(true)] out OnlineBeatmapMetadata? onlineMetadata
+        )
         {
             Debug.Assert(beatmapInfo.BeatmapSet != null);
 
@@ -89,8 +96,7 @@ namespace osu.Game.Beatmaps
                 return false;
             }
 
-            if (string.IsNullOrEmpty(beatmapInfo.MD5Hash)
-                && string.IsNullOrEmpty(beatmapInfo.Path))
+            if (string.IsNullOrEmpty(beatmapInfo.MD5Hash) && string.IsNullOrEmpty(beatmapInfo.Path))
             {
                 onlineMetadata = null;
                 return false;
@@ -131,12 +137,18 @@ namespace osu.Game.Beatmaps
                         return false;
                 }
 
-                logForModel(beatmapInfo.BeatmapSet, $@"Cached local retrieval for {beatmapInfo} failed with unhandled sqlite error {sqliteException}.");
+                logForModel(
+                    beatmapInfo.BeatmapSet,
+                    $@"Cached local retrieval for {beatmapInfo} failed with unhandled sqlite error {sqliteException}."
+                );
                 return false;
             }
             catch (Exception ex)
             {
-                logForModel(beatmapInfo.BeatmapSet, $@"Cached local retrieval for {beatmapInfo} failed with {ex}.");
+                logForModel(
+                    beatmapInfo.BeatmapSet,
+                    $@"Cached local retrieval for {beatmapInfo} failed with {ex}."
+                );
                 onlineMetadata = null;
                 return false;
             }
@@ -159,7 +171,9 @@ namespace osu.Game.Beatmaps
         }
 
         private SqliteConnection getConnection() =>
-            new SqliteConnection(string.Concat(@"Data Source=", storage.GetFullPath(@"online.db", true)));
+            new SqliteConnection(
+                string.Concat(@"Data Source=", storage.GetFullPath(@"online.db", true))
+            );
 
         private void prepareLocalCache()
         {
@@ -168,7 +182,10 @@ namespace osu.Game.Beatmaps
             string cacheFilePath = storage.GetFullPath(cache_database_name);
             string compressedCacheFilePath = $@"{cacheFilePath}.bz2";
 
-            cacheDownloadRequest = new FileWebRequest(compressedCacheFilePath, $@"https://assets.ppy.sh/client-resources/{cache_database_name}.bz2?{DateTimeOffset.UtcNow:yyyyMMdd}");
+            cacheDownloadRequest = new FileWebRequest(
+                compressedCacheFilePath,
+                $@"https://assets.ppy.sh/client-resources/{cache_database_name}.bz2?{DateTimeOffset.UtcNow:yyyyMMdd}"
+            );
 
             cacheDownloadRequest.Failed += ex =>
             {
@@ -240,12 +257,15 @@ namespace osu.Game.Beatmaps
         {
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = @"SELECT COUNT(1) FROM `sqlite_master` WHERE `type` = 'table' AND `name` = 'schema_version'";
+                cmd.CommandText =
+                    @"SELECT COUNT(1) FROM `sqlite_master` WHERE `type` = 'table' AND `name` = 'schema_version'";
 
                 using var reader = cmd.ExecuteReader();
 
                 if (!reader.Read())
-                    throw new InvalidOperationException("Error when attempting to check for existence of `schema_version` table.");
+                    throw new InvalidOperationException(
+                        "Error when attempting to check for existence of `schema_version` table."
+                    );
 
                 // No versioning table means that this is the very first version of the schema.
                 if (reader.GetInt32(0) == 0)
@@ -259,20 +279,25 @@ namespace osu.Game.Beatmaps
                 using var reader = cmd.ExecuteReader();
 
                 if (!reader.Read())
-                    throw new InvalidOperationException("Error when attempting to query schema version.");
+                    throw new InvalidOperationException(
+                        "Error when attempting to query schema version."
+                    );
 
                 return reader.GetInt32(0);
             }
         }
 
-        private bool queryCacheVersion2(SqliteConnection db, BeatmapInfo beatmapInfo, out OnlineBeatmapMetadata? onlineMetadata)
+        private bool queryCacheVersion2(
+            SqliteConnection db,
+            BeatmapInfo beatmapInfo,
+            out OnlineBeatmapMetadata? onlineMetadata
+        )
         {
             Debug.Assert(beatmapInfo.BeatmapSet != null);
 
             using var cmd = db.CreateCommand();
 
-            cmd.CommandText =
-                """
+            cmd.CommandText = """
                 SELECT `b`.`beatmapset_id`, `b`.`beatmap_id`, `b`.`approved`, `b`.`user_id`, `b`.`checksum`, `b`.`last_update`, `s`.`submit_date`, `s`.`approved_date`
                 FROM `osu_beatmaps` AS `b`
                 JOIN `osu_beatmapsets` AS `s` ON `s`.`beatmapset_id` = `b`.`beatmapset_id`
@@ -290,7 +315,10 @@ namespace osu.Game.Beatmaps
 
             if (reader.Read())
             {
-                logForModel(beatmapInfo.BeatmapSet, $@"Cached local retrieval for {beatmapInfo} (cache version 2).");
+                logForModel(
+                    beatmapInfo.BeatmapSet,
+                    $@"Cached local retrieval for {beatmapInfo} (cache version 2)."
+                );
 
                 onlineMetadata = new OnlineBeatmapMetadata
                 {
@@ -311,11 +339,17 @@ namespace osu.Game.Beatmaps
             return false;
         }
 
-        private static void log(string message)
-            => Logger.Log($@"[{nameof(LocalCachedBeatmapMetadataSource)}] {message}", LoggingTarget.Database);
+        private static void log(string message) =>
+            Logger.Log(
+                $@"[{nameof(LocalCachedBeatmapMetadataSource)}] {message}",
+                LoggingTarget.Database
+            );
 
         private void logForModel(BeatmapSetInfo set, string message) =>
-            RealmArchiveModelImporter<BeatmapSetInfo>.LogForModel(set, $@"[{nameof(LocalCachedBeatmapMetadataSource)}] {message}");
+            RealmArchiveModelImporter<BeatmapSetInfo>.LogForModel(
+                set,
+                $@"[{nameof(LocalCachedBeatmapMetadataSource)}] {message}"
+            );
 
         public void Dispose()
         {

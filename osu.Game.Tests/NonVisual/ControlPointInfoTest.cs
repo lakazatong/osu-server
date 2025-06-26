@@ -279,21 +279,51 @@ namespace osu.Game.Tests.NonVisual
             Assert.That(cpiCopy.TimingPoints.Count, Is.EqualTo(2));
 
             Assert.That(cpi.TimingPoints[0], Is.Not.SameAs(cpiCopy.TimingPoints[0]));
-            Assert.That(cpi.TimingPoints[0].BeatLengthBindable, Is.Not.SameAs(cpiCopy.TimingPoints[0].BeatLengthBindable));
+            Assert.That(
+                cpi.TimingPoints[0].BeatLengthBindable,
+                Is.Not.SameAs(cpiCopy.TimingPoints[0].BeatLengthBindable)
+            );
 
-            Assert.That(cpi.TimingPoints[0].BeatLength, Is.EqualTo(cpiCopy.TimingPoints[0].BeatLength));
+            Assert.That(
+                cpi.TimingPoints[0].BeatLength,
+                Is.EqualTo(cpiCopy.TimingPoints[0].BeatLength)
+            );
 
             cpi.TimingPoints[0].BeatLength = 800;
 
-            Assert.That(cpi.TimingPoints[0].BeatLength, Is.Not.EqualTo(cpiCopy.TimingPoints[0].BeatLength));
+            Assert.That(
+                cpi.TimingPoints[0].BeatLength,
+                Is.Not.EqualTo(cpiCopy.TimingPoints[0].BeatLength)
+            );
         }
 
         [Test]
         public void TestBinarySearchEmptyList()
         {
-            Assert.That(ControlPointInfo.BinarySearch(Array.Empty<TimingControlPoint>(), 0, EqualitySelection.FirstFound), Is.EqualTo(-1));
-            Assert.That(ControlPointInfo.BinarySearch(Array.Empty<TimingControlPoint>(), 0, EqualitySelection.Leftmost), Is.EqualTo(-1));
-            Assert.That(ControlPointInfo.BinarySearch(Array.Empty<TimingControlPoint>(), 0, EqualitySelection.Rightmost), Is.EqualTo(-1));
+            Assert.That(
+                ControlPointInfo.BinarySearch(
+                    Array.Empty<TimingControlPoint>(),
+                    0,
+                    EqualitySelection.FirstFound
+                ),
+                Is.EqualTo(-1)
+            );
+            Assert.That(
+                ControlPointInfo.BinarySearch(
+                    Array.Empty<TimingControlPoint>(),
+                    0,
+                    EqualitySelection.Leftmost
+                ),
+                Is.EqualTo(-1)
+            );
+            Assert.That(
+                ControlPointInfo.BinarySearch(
+                    Array.Empty<TimingControlPoint>(),
+                    0,
+                    EqualitySelection.Rightmost
+                ),
+                Is.EqualTo(-1)
+            );
         }
 
         [TestCase(new[] { 1 }, 0, -1)]
@@ -307,9 +337,18 @@ namespace osu.Game.Tests.NonVisual
         public void TestBinarySearchUniqueScenarios(int[] values, int search, int expectedIndex)
         {
             var items = values.Select(t => new TimingControlPoint { Time = t }).ToArray();
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.FirstFound), Is.EqualTo(expectedIndex));
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.Leftmost), Is.EqualTo(expectedIndex));
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.Rightmost), Is.EqualTo(expectedIndex));
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.FirstFound),
+                Is.EqualTo(expectedIndex)
+            );
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.Leftmost),
+                Is.EqualTo(expectedIndex)
+            );
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.Rightmost),
+                Is.EqualTo(expectedIndex)
+            );
         }
 
         [TestCase(new[] { 1, 1 }, 1, 0)]
@@ -317,10 +356,17 @@ namespace osu.Game.Tests.NonVisual
         [TestCase(new[] { 1, 2, 2, 2 }, 2, 1)]
         [TestCase(new[] { 1, 2, 2, 2, 3 }, 2, 2)]
         [TestCase(new[] { 1, 2, 2, 3 }, 2, 1)]
-        public void TestBinarySearchFirstFoundDuplicateScenarios(int[] values, int search, int expectedIndex)
+        public void TestBinarySearchFirstFoundDuplicateScenarios(
+            int[] values,
+            int search,
+            int expectedIndex
+        )
         {
             var items = values.Select(t => new TimingControlPoint { Time = t }).ToArray();
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.FirstFound), Is.EqualTo(expectedIndex));
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.FirstFound),
+                Is.EqualTo(expectedIndex)
+            );
         }
 
         [TestCase(new[] { 1, 1 }, 1, 0)]
@@ -328,10 +374,17 @@ namespace osu.Game.Tests.NonVisual
         [TestCase(new[] { 1, 2, 2, 2 }, 2, 1)]
         [TestCase(new[] { 1, 2, 2, 2, 3 }, 2, 1)]
         [TestCase(new[] { 1, 2, 2, 3 }, 2, 1)]
-        public void TestBinarySearchLeftMostDuplicateScenarios(int[] values, int search, int expectedIndex)
+        public void TestBinarySearchLeftMostDuplicateScenarios(
+            int[] values,
+            int search,
+            int expectedIndex
+        )
         {
             var items = values.Select(t => new TimingControlPoint { Time = t }).ToArray();
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.Leftmost), Is.EqualTo(expectedIndex));
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.Leftmost),
+                Is.EqualTo(expectedIndex)
+            );
         }
 
         [TestCase(new[] { 1, 1 }, 1, 1)]
@@ -339,10 +392,17 @@ namespace osu.Game.Tests.NonVisual
         [TestCase(new[] { 1, 2, 2, 2 }, 2, 3)]
         [TestCase(new[] { 1, 2, 2, 2, 3 }, 2, 3)]
         [TestCase(new[] { 1, 2, 2, 3 }, 2, 2)]
-        public void TestBinarySearchRightMostDuplicateScenarios(int[] values, int search, int expectedIndex)
+        public void TestBinarySearchRightMostDuplicateScenarios(
+            int[] values,
+            int search,
+            int expectedIndex
+        )
         {
             var items = values.Select(t => new TimingControlPoint { Time = t }).ToArray();
-            Assert.That(ControlPointInfo.BinarySearch(items, search, EqualitySelection.Rightmost), Is.EqualTo(expectedIndex));
+            Assert.That(
+                ControlPointInfo.BinarySearch(items, search, EqualitySelection.Rightmost),
+                Is.EqualTo(expectedIndex)
+            );
         }
     }
 }

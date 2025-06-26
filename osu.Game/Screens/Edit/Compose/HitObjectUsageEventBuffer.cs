@@ -59,12 +59,16 @@ namespace osu.Game.Screens.Edit.Compose
         private void onHitObjectUsageBegan(HitObject hitObject)
         {
             if (usageFinishedHitObjects.Remove(hitObject))
-                HitObjectUsageTransferred?.Invoke(hitObject, playfield.AllHitObjects.Single(d => d.HitObject == hitObject));
+                HitObjectUsageTransferred?.Invoke(
+                    hitObject,
+                    playfield.AllHitObjects.Single(d => d.HitObject == hitObject)
+                );
             else
                 HitObjectUsageBegan?.Invoke(hitObject);
         }
 
-        private void onHitObjectUsageFinished(HitObject hitObject) => usageFinishedHitObjects.Add(hitObject);
+        private void onHitObjectUsageFinished(HitObject hitObject) =>
+            usageFinishedHitObjects.Add(hitObject);
 
         public void Update()
         {

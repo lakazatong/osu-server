@@ -31,35 +31,53 @@ namespace osu.Game.Tests.NonVisual.Skinning
         private IRenderer renderer { get; set; }
 
         [Cached(typeof(IAnimationTimeReference))]
-        private TestAnimationTimeReference animationTimeReference = new TestAnimationTimeReference();
+        private TestAnimationTimeReference animationTimeReference =
+            new TestAnimationTimeReference();
 
         private TextureAnimation animation;
 
         [Test]
         public void TestAnimationTimeReferenceChange()
         {
-            AddStep("get animation", () =>
-            {
-                ISkin skin = new TestSkin(renderer);
-                Add(animation = (TextureAnimation)skin.GetAnimation(animation_name, true, false));
-            });
+            AddStep(
+                "get animation",
+                () =>
+                {
+                    ISkin skin = new TestSkin(renderer);
+                    Add(
+                        animation = (TextureAnimation)skin.GetAnimation(animation_name, true, false)
+                    );
+                }
+            );
 
             AddAssert("frame count correct", () => animation.FrameCount == frame_count);
             assertPlaybackPosition(0);
 
-            AddStep("set start time to 1000", () => animationTimeReference.AnimationStartTime.Value = 1000);
+            AddStep(
+                "set start time to 1000",
+                () => animationTimeReference.AnimationStartTime.Value = 1000
+            );
             assertPlaybackPosition(0);
 
-            AddStep("set current time to 500", () => animationTimeReference.ManualClock.CurrentTime = 500);
+            AddStep(
+                "set current time to 500",
+                () => animationTimeReference.ManualClock.CurrentTime = 500
+            );
             assertPlaybackPosition(0);
         }
 
-        private void assertPlaybackPosition(double expectedPosition)
-            => AddAssert($"playback position is {expectedPosition}", () => animation.PlaybackPosition == expectedPosition);
+        private void assertPlaybackPosition(double expectedPosition) =>
+            AddAssert(
+                $"playback position is {expectedPosition}",
+                () => animation.PlaybackPosition == expectedPosition
+            );
 
         private class TestSkin : ISkin
         {
-            private static readonly string[] lookup_names = Enumerable.Range(0, frame_count).Select(frame => $"{animation_name}-{frame}").ToArray();
+            private static readonly string[] lookup_names = Enumerable
+                .Range(0, frame_count)
+                .Select(frame => $"{animation_name}-{frame}")
+                .ToArray();
 
             private readonly IRenderer renderer;
 
@@ -73,9 +91,13 @@ namespace osu.Game.Tests.NonVisual.Skinning
                 return lookup_names.Contains(componentName) ? renderer.WhitePixel : null;
             }
 
-            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) => throw new NotSupportedException();
+            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) =>
+                throw new NotSupportedException();
+
             public ISample GetSample(ISampleInfo sampleInfo) => throw new NotSupportedException();
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new NotSupportedException();
+
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new NotSupportedException();
         }
 
         private class TestAnimationTimeReference : IAnimationTimeReference

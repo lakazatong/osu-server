@@ -50,7 +50,7 @@ namespace osu.Game.Screens.Edit.Timing
                 table = new ControlPointTable
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Groups = { BindTarget = Beatmap.ControlPointInfo.Groups, },
+                    Groups = { BindTarget = Beatmap.ControlPointInfo.Groups },
                 },
                 controls = new Container
                 {
@@ -71,7 +71,7 @@ namespace osu.Game.Screens.Edit.Timing
                             Direction = FillDirection.Horizontal,
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            Padding = new MarginPadding { Left = margins, Vertical = margins, },
+                            Padding = new MarginPadding { Left = margins, Vertical = margins },
                             Children = new Drawable[]
                             {
                                 new RoundedButton
@@ -82,7 +82,7 @@ namespace osu.Game.Screens.Edit.Timing
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
                                 },
-                            }
+                            },
                         },
                         new FillFlowContainer
                         {
@@ -91,7 +91,7 @@ namespace osu.Game.Screens.Edit.Timing
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
                             Spacing = new Vector2(5),
-                            Padding = new MarginPadding { Right = margins, Vertical = margins, },
+                            Padding = new MarginPadding { Right = margins, Vertical = margins },
                             Children = new Drawable[]
                             {
                                 deleteButton = new RoundedButton
@@ -110,9 +110,9 @@ namespace osu.Game.Screens.Edit.Timing
                                     Anchor = Anchor.CentreRight,
                                     Origin = Anchor.CentreRight,
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             };
 
@@ -124,14 +124,18 @@ namespace osu.Game.Screens.Edit.Timing
         {
             base.LoadComplete();
 
-            selectedGroup.BindValueChanged(selected =>
-            {
-                deleteButton.Enabled.Value = selected.NewValue != null;
+            selectedGroup.BindValueChanged(
+                selected =>
+                {
+                    deleteButton.Enabled.Value = selected.NewValue != null;
 
-                addButton.Text = selected.NewValue != null
-                    ? "+ Clone to current time"
-                    : "+ Add at current time";
-            }, true);
+                    addButton.Text =
+                        selected.NewValue != null
+                            ? "+ Clone to current time"
+                            : "+ Add at current time";
+                },
+                true
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -155,7 +159,9 @@ namespace osu.Game.Screens.Edit.Timing
 
             Beatmap.ControlPointInfo.RemoveGroup(selectedGroup.Value);
 
-            selectedGroup.Value = Beatmap.ControlPointInfo.Groups.FirstOrDefault(g => g.Time >= clock.CurrentTime);
+            selectedGroup.Value = Beatmap.ControlPointInfo.Groups.FirstOrDefault(g =>
+                g.Time >= clock.CurrentTime
+            );
         }
 
         private void addNew()
@@ -187,7 +193,10 @@ namespace osu.Game.Screens.Edit.Timing
         {
             // Best effort. We have no tracking of control points through undo/redo changes.
             // If we don't deselect, things like offset changes could spawn groups to be added from previous states (see https://github.com/ppy/osu/issues/31098).
-            if (selectedGroup.Value != null && !Beatmap.ControlPointInfo.Groups.Contains(selectedGroup.Value))
+            if (
+                selectedGroup.Value != null
+                && !Beatmap.ControlPointInfo.Groups.Contains(selectedGroup.Value)
+            )
                 selectedGroup.Value = null;
         }
 

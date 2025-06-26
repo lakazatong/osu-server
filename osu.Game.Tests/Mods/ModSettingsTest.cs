@@ -41,9 +41,18 @@ namespace osu.Game.Tests.Mods
         {
             const double setting_change = 50.4;
 
-            var modDouble = new TestNonMatchingSettingTypeModDouble { TestSetting = { Value = setting_change } };
-            var modBool = new TestNonMatchingSettingTypeModBool { TestSetting = { Default = false, Value = true } };
-            var modInt = new TestNonMatchingSettingTypeModInt { TestSetting = { Value = (int)setting_change / 2 } };
+            var modDouble = new TestNonMatchingSettingTypeModDouble
+            {
+                TestSetting = { Value = setting_change },
+            };
+            var modBool = new TestNonMatchingSettingTypeModBool
+            {
+                TestSetting = { Default = false, Value = true },
+            };
+            var modInt = new TestNonMatchingSettingTypeModInt
+            {
+                TestSetting = { Value = (int)setting_change / 2 },
+            };
 
             modDouble.CopyCommonSettingsFrom(modBool);
             modDouble.CopyCommonSettingsFrom(modInt);
@@ -60,8 +69,14 @@ namespace osu.Game.Tests.Mods
         [Test]
         public void TestDefaultValueKeptWhenCopied()
         {
-            var modBoolTrue = new TestNonMatchingSettingTypeModBool { TestSetting = { Default = true, Value = false } };
-            var modBoolFalse = new TestNonMatchingSettingTypeModBool { TestSetting = { Default = false, Value = true } };
+            var modBoolTrue = new TestNonMatchingSettingTypeModBool
+            {
+                TestSetting = { Default = true, Value = false },
+            };
+            var modBoolFalse = new TestNonMatchingSettingTypeModBool
+            {
+                TestSetting = { Default = false, Value = true },
+            };
 
             modBoolFalse.CopyCommonSettingsFrom(modBoolTrue);
 

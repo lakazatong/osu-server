@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                         },
-                    }
+                    },
                 },
                 side = new Sprite
                 {
@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                     Origin = Anchor.Centre,
                     Texture = textures.Get("Gameplay/osu/repeat-edge-piece"),
                     Size = new Vector2(ArgonMainCirclePiece.OUTER_GRADIENT_SIZE),
-                }
+                },
             };
 
             accentColour = drawableRepeat.AccentColour.GetBoundCopy();
@@ -81,10 +81,22 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             base.Update();
 
-            if (Time.Current >= drawableRepeat.HitStateUpdateTime && drawableRepeat.State.Value == ArmedState.Hit)
+            if (
+                Time.Current >= drawableRepeat.HitStateUpdateTime
+                && drawableRepeat.State.Value == ArmedState.Hit
+            )
             {
                 double animDuration = Math.Min(300, drawableRepeat.HitObject.SpanDuration);
-                Scale = new Vector2(Interpolation.ValueAt(Time.Current, 1, 1.5f, drawableRepeat.HitStateUpdateTime, drawableRepeat.HitStateUpdateTime + animDuration, Easing.Out));
+                Scale = new Vector2(
+                    Interpolation.ValueAt(
+                        Time.Current,
+                        1,
+                        1.5f,
+                        drawableRepeat.HitStateUpdateTime,
+                        drawableRepeat.HitStateUpdateTime + animDuration,
+                        Easing.Out
+                    )
+                );
 
                 // When hit, don't animate further. This avoids a scale being applied on a scale and looking very weird.
                 return;
@@ -99,17 +111,50 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             const double move_in_duration = 250;
             const double total = 300;
 
-            double loopCurrentTime = (Time.Current - drawableRepeat.AnimationStartTime.Value) % total;
+            double loopCurrentTime =
+                (Time.Current - drawableRepeat.AnimationStartTime.Value) % total;
 
             if (loopCurrentTime < move_out_duration)
-                main.Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, 1, scale_amount, 0, move_out_duration, Easing.Out));
+                main.Scale = new Vector2(
+                    Interpolation.ValueAt(
+                        loopCurrentTime,
+                        1,
+                        scale_amount,
+                        0,
+                        move_out_duration,
+                        Easing.Out
+                    )
+                );
             else
-                main.Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, scale_amount, 1f, move_out_duration, move_out_duration + move_in_duration, Easing.Out));
+                main.Scale = new Vector2(
+                    Interpolation.ValueAt(
+                        loopCurrentTime,
+                        scale_amount,
+                        1f,
+                        move_out_duration,
+                        move_out_duration + move_in_duration,
+                        Easing.Out
+                    )
+                );
 
             if (loopCurrentTime < move_out_duration)
-                side.X = Interpolation.ValueAt(loopCurrentTime, 0, move_distance, 0, move_out_duration, Easing.Out);
+                side.X = Interpolation.ValueAt(
+                    loopCurrentTime,
+                    0,
+                    move_distance,
+                    0,
+                    move_out_duration,
+                    Easing.Out
+                );
             else
-                side.X = Interpolation.ValueAt(loopCurrentTime, move_distance, 0, move_out_duration, move_out_duration + move_in_duration, Easing.Out);
+                side.X = Interpolation.ValueAt(
+                    loopCurrentTime,
+                    move_distance,
+                    0,
+                    move_out_duration,
+                    move_out_duration + move_in_duration,
+                    Easing.Out
+                );
         }
     }
 }

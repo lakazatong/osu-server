@@ -27,7 +27,9 @@ namespace osu.Game.Screens.Play
 
         public ScreenSuspensionHandler([NotNull] GameplayClockContainer gameplayClockContainer)
         {
-            this.gameplayClockContainer = gameplayClockContainer ?? throw new ArgumentNullException(nameof(gameplayClockContainer));
+            this.gameplayClockContainer =
+                gameplayClockContainer
+                ?? throw new ArgumentNullException(nameof(gameplayClockContainer));
         }
 
         protected override void LoadComplete()
@@ -35,13 +37,16 @@ namespace osu.Game.Screens.Play
             base.LoadComplete();
 
             isPaused = gameplayClockContainer.IsPaused.GetBoundCopy();
-            isPaused.BindValueChanged(paused =>
-            {
-                if (paused.NewValue)
-                    host.AllowScreenSuspension.RemoveSource(disableSuspensionBindable);
-                else
-                    host.AllowScreenSuspension.AddSource(disableSuspensionBindable);
-            }, true);
+            isPaused.BindValueChanged(
+                paused =>
+                {
+                    if (paused.NewValue)
+                        host.AllowScreenSuspension.RemoveSource(disableSuspensionBindable);
+                    else
+                        host.AllowScreenSuspension.AddSource(disableSuspensionBindable);
+                },
+                true
+            );
         }
 
         protected override void Dispose(bool isDisposing)

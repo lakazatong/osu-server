@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Catch.Mods
 {
-    public class CatchModNoFail : ModNoFail
-    {
-    }
+    public class CatchModNoFail : ModNoFail { }
 }

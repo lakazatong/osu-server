@@ -82,8 +82,12 @@ namespace osu.Game.Online.Metadata
 
         private int userPresenceWatchCount;
 
-        protected bool IsWatchingUserPresence
-            => Interlocked.CompareExchange(ref userPresenceWatchCount, userPresenceWatchCount, userPresenceWatchCount) > 0;
+        protected bool IsWatchingUserPresence =>
+            Interlocked.CompareExchange(
+                ref userPresenceWatchCount,
+                userPresenceWatchCount,
+                userPresenceWatchCount
+            ) > 0;
 
         /// <summary>
         /// Signals to the server that we want to begin receiving status updates for all users.

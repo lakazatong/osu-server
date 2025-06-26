@@ -40,12 +40,15 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            bookmarks.BindCollectionChanged((_, _) =>
-            {
-                Clear(disposeChildren: false);
-                foreach (int bookmark in bookmarks)
-                    Add(pool.Get(v => v.StartTime = bookmark));
-            }, true);
+            bookmarks.BindCollectionChanged(
+                (_, _) =>
+                {
+                    Clear(disposeChildren: false);
+                    foreach (int bookmark in bookmarks)
+                        Add(pool.Get(v => v.StartTime = bookmark));
+                },
+                true
+            );
         }
 
         private partial class BookmarkVisualisation : PoolableDrawable, IHasTooltip
@@ -81,7 +84,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
                 InternalChild = new FastCircle { RelativeSizeAxes = Axes.Both };
             }
 
-            public LocalisableString TooltipText => $"{((double)StartTime).ToEditorFormattedString()} bookmark";
+            public LocalisableString TooltipText =>
+                $"{((double)StartTime).ToEditorFormattedString()} bookmark";
         }
     }
 }

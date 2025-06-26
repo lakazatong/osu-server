@@ -12,36 +12,60 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "This beatmap contains scenes with rapidly flashing colours"
         /// </summary>
-        public static LocalisableString EpilepsyWarningTitle => new TranslatableString(getKey(@"epilepsy_warning_title"), @"This beatmap contains scenes with rapidly flashing colours");
+        public static LocalisableString EpilepsyWarningTitle =>
+            new TranslatableString(
+                getKey(@"epilepsy_warning_title"),
+                @"This beatmap contains scenes with rapidly flashing colours"
+            );
 
         /// <summary>
         /// "Please take caution if you are affected by epilepsy."
         /// </summary>
-        public static LocalisableString EpilepsyWarningContent => new TranslatableString(getKey(@"epilepsy_warning_content"), @"Please take caution if you are affected by epilepsy.");
+        public static LocalisableString EpilepsyWarningContent =>
+            new TranslatableString(
+                getKey(@"epilepsy_warning_content"),
+                @"Please take caution if you are affected by epilepsy."
+            );
 
         /// <summary>
         /// "This beatmap is loved"
         /// </summary>
-        public static LocalisableString LovedBeatmapDisclaimerTitle => new TranslatableString(getKey(@"loved_beatmap_disclaimer_title"), @"This beatmap is loved");
+        public static LocalisableString LovedBeatmapDisclaimerTitle =>
+            new TranslatableString(
+                getKey(@"loved_beatmap_disclaimer_title"),
+                @"This beatmap is loved"
+            );
 
         /// <summary>
         /// "No performance points will be awarded.
         /// Leaderboards may be reset."
         /// </summary>
-        public static LocalisableString LovedBeatmapDisclaimerContent => new TranslatableString(getKey(@"loved_beatmap_disclaimer_content"), @"No performance points will be awarded.
-Leaderboards may be reset.");
+        public static LocalisableString LovedBeatmapDisclaimerContent =>
+            new TranslatableString(
+                getKey(@"loved_beatmap_disclaimer_content"),
+                @"No performance points will be awarded.
+Leaderboards may be reset."
+            );
 
         /// <summary>
         /// "This beatmap is qualified"
         /// </summary>
-        public static LocalisableString QualifiedBeatmapDisclaimerTitle => new TranslatableString(getKey(@"qualified_beatmap_disclaimer_title"), @"This beatmap is qualified");
+        public static LocalisableString QualifiedBeatmapDisclaimerTitle =>
+            new TranslatableString(
+                getKey(@"qualified_beatmap_disclaimer_title"),
+                @"This beatmap is qualified"
+            );
 
         /// <summary>
         /// "No performance points will be awarded.
         /// Leaderboards will be reset when the beatmap is ranked."
         /// </summary>
-        public static LocalisableString QualifiedBeatmapDisclaimerContent => new TranslatableString(getKey(@"qualified_beatmap_disclaimer_content"), @"No performance points will be awarded.
-Leaderboards will be reset when the beatmap is ranked.");
+        public static LocalisableString QualifiedBeatmapDisclaimerContent =>
+            new TranslatableString(
+                getKey(@"qualified_beatmap_disclaimer_content"),
+                @"No performance points will be awarded.
+Leaderboards will be reset when the beatmap is ranked."
+            );
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

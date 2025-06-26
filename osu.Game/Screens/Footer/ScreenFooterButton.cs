@@ -23,7 +23,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.Footer
 {
-    public partial class ScreenFooterButton : OsuClickableContainer, IKeyBindingHandler<GlobalAction>
+    public partial class ScreenFooterButton
+        : OsuClickableContainer,
+            IKeyBindingHandler<GlobalAction>
     {
         public const int CORNER_RADIUS = 10;
 
@@ -95,14 +97,8 @@ namespace osu.Game.Screens.Footer
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        backgroundBox = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
-                        glowBox = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        backgroundBox = new Box { RelativeSizeAxes = Axes.Both },
+                        glowBox = new Box { RelativeSizeAxes = Axes.Both },
                         // For elements that should not be sheared.
                         new Container
                         {
@@ -118,20 +114,21 @@ namespace osu.Game.Screens.Footer
                                     Origin = Anchor.TopCentre,
                                     Y = 35,
                                     AutoSizeAxes = Axes.Both,
-                                    Child = text = new OsuSpriteText
-                                    {
-                                        Font = OsuFont.TorusAlternate.With(size: 16),
-                                        AlwaysPresent = true
-                                    }
+                                    Child = text =
+                                        new OsuSpriteText
+                                        {
+                                            Font = OsuFont.TorusAlternate.With(size: 16),
+                                            AlwaysPresent = true,
+                                        },
                                 },
                                 icon = new SpriteIcon
                                 {
                                     Y = 10,
                                     Size = new Vector2(16),
                                     Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre
+                                    Origin = Anchor.TopCentre,
                                 },
-                            }
+                            },
                         },
                         new Container
                         {
@@ -142,10 +139,7 @@ namespace osu.Game.Screens.Footer
                             Size = new Vector2(100, 5),
                             Masking = true,
                             CornerRadius = 3,
-                            Child = bar = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            }
+                            Child = bar = new Box { RelativeSizeAxes = Axes.Both },
                         },
                         flashLayer = new Box
                         {
@@ -155,7 +149,7 @@ namespace osu.Game.Screens.Footer
                             Alpha = 0,
                         },
                     },
-                }
+                },
             };
         }
 
@@ -173,7 +167,8 @@ namespace osu.Game.Screens.Footer
         }
 
         // account for shear and buttons temporarily hidden with DisappearToBottom.
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => shearedContent.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            shearedContent.ReceivePositionalInputAt(screenSpacePos);
 
         public GlobalAction? Hotkey;
 
@@ -197,7 +192,8 @@ namespace osu.Game.Screens.Footer
 
         public virtual bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
-            if (e.Action != Hotkey || e.Repeat) return false;
+            if (e.Action != Hotkey || e.Repeat)
+                return false;
 
             TriggerClick();
             return true;
@@ -207,9 +203,18 @@ namespace osu.Game.Screens.Footer
 
         public void UpdateDisplay()
         {
-            Color4 backgroundColour = OverlayState.Value == Visibility.Visible ? buttonAccentColour : colourProvider.Background3;
-            Color4 textColour = OverlayState.Value == Visibility.Visible ? colourProvider.Background6 : colourProvider.Content1;
-            Color4 accentColour = OverlayState.Value == Visibility.Visible ? colourProvider.Background6 : buttonAccentColour;
+            Color4 backgroundColour =
+                OverlayState.Value == Visibility.Visible
+                    ? buttonAccentColour
+                    : colourProvider.Background3;
+            Color4 textColour =
+                OverlayState.Value == Visibility.Visible
+                    ? colourProvider.Background6
+                    : colourProvider.Content1;
+            Color4 accentColour =
+                OverlayState.Value == Visibility.Visible
+                    ? colourProvider.Background6
+                    : buttonAccentColour;
 
             if (!Enabled.Value)
                 backgroundColour = backgroundColour.Darken(1f);
@@ -225,35 +230,45 @@ namespace osu.Game.Screens.Footer
             icon.FadeColour(accentColour, 150, Easing.OutQuint);
             bar.FadeColour(accentColour, 150, Easing.OutQuint);
 
-            glowBox.FadeColour(ColourInfo.GradientVertical(buttonAccentColour.Opacity(0f), buttonAccentColour.Opacity(0.2f)), 150, Easing.OutQuint);
+            glowBox.FadeColour(
+                ColourInfo.GradientVertical(
+                    buttonAccentColour.Opacity(0f),
+                    buttonAccentColour.Opacity(0.2f)
+                ),
+                150,
+                Easing.OutQuint
+            );
         }
 
         public void AppearFromLeft(double delay)
         {
             Content.FinishTransforms();
-            Content.MoveToX(-300f)
-                   .FadeOut()
-                   .Delay(delay)
-                   .MoveToX(0f, 240, Easing.OutCubic)
-                   .FadeIn(240, Easing.OutCubic);
+            Content
+                .MoveToX(-300f)
+                .FadeOut()
+                .Delay(delay)
+                .MoveToX(0f, 240, Easing.OutCubic)
+                .FadeIn(240, Easing.OutCubic);
         }
 
         public void AppearFromBottom(double delay)
         {
             Content.FinishTransforms();
-            Content.MoveToY(100f)
-                   .FadeOut()
-                   .Delay(delay)
-                   .MoveToY(0f, 240, Easing.OutCubic)
-                   .FadeIn(240, Easing.OutCubic);
+            Content
+                .MoveToY(100f)
+                .FadeOut()
+                .Delay(delay)
+                .MoveToY(0f, 240, Easing.OutCubic)
+                .FadeIn(240, Easing.OutCubic);
         }
 
         public void DisappearToRight(double delay, bool expire)
         {
             Content.FinishTransforms();
-            Content.Delay(delay)
-                   .FadeOut(240, Easing.InOutCubic)
-                   .MoveToX(300f, 360, Easing.InOutCubic);
+            Content
+                .Delay(delay)
+                .FadeOut(240, Easing.InOutCubic)
+                .MoveToX(300f, 360, Easing.InOutCubic);
 
             if (expire)
                 this.Delay(Content.LatestTransformEndTime - Time.Current).Expire();
@@ -262,9 +277,10 @@ namespace osu.Game.Screens.Footer
         public void DisappearToBottom(double delay, bool expire)
         {
             Content.FinishTransforms();
-            Content.Delay(delay)
-                   .FadeOut(240, Easing.InOutCubic)
-                   .MoveToY(100f, 240, Easing.InOutCubic);
+            Content
+                .Delay(delay)
+                .FadeOut(240, Easing.InOutCubic)
+                .MoveToY(100f, 240, Easing.InOutCubic);
 
             if (expire)
                 this.Delay(Content.LatestTransformEndTime - Time.Current).Expire();

@@ -2,11 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -65,13 +65,9 @@ namespace osu.Game.Graphics.UserInterface
                 background = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = new Color4(0, 0, 0, 0)
+                    Colour = new Color4(0, 0, 0, 0),
                 },
-                bar = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Width = 0,
-                },
+                bar = new Box { RelativeSizeAxes = Axes.Both, Width = 0 },
             };
         }
 
@@ -112,6 +108,6 @@ namespace osu.Game.Graphics.UserInterface
         LeftToRight,
         RightToLeft,
         TopToBottom,
-        BottomToTop
+        BottomToTop,
     }
 }

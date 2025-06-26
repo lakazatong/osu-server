@@ -25,17 +25,15 @@ namespace osu.Game.Tests.Visual.Editing
         private readonly EditorBeatmap editorBeatmap;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         public TestSceneSetupScreen()
         {
-            editorBeatmap = new EditorBeatmap(new OsuBeatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo
-                }
-            });
+            editorBeatmap = new EditorBeatmap(
+                new OsuBeatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+            );
         }
 
         [Test]
@@ -52,17 +50,17 @@ namespace osu.Game.Tests.Visual.Editing
 
         private void runForRuleset(RulesetInfo rulesetInfo)
         {
-            AddStep("create screen", () =>
-            {
-                editorBeatmap.BeatmapInfo.Ruleset = rulesetInfo;
-
-                Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
-
-                Child = new SetupScreen
+            AddStep(
+                "create screen",
+                () =>
                 {
-                    State = { Value = Visibility.Visible },
-                };
-            });
+                    editorBeatmap.BeatmapInfo.Ruleset = rulesetInfo;
+
+                    Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
+
+                    Child = new SetupScreen { State = { Value = Visibility.Visible } };
+                }
+            );
         }
     }
 }

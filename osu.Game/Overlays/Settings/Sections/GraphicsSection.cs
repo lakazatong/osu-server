@@ -14,10 +14,7 @@ namespace osu.Game.Overlays.Settings.Sections
     {
         public override LocalisableString Header => GraphicsSettingsStrings.GraphicsSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Graphics
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Graphics };
 
         public GraphicsSection()
         {

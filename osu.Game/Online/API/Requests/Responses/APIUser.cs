@@ -52,7 +52,10 @@ namespace osu.Game.Online.API.Requests.Responses
 
         public CountryCode CountryCode
         {
-            get => Enum.TryParse(countryCodeString, out CountryCode result) ? result : CountryCode.Unknown;
+            get =>
+                Enum.TryParse(countryCodeString, out CountryCode result)
+                    ? result
+                    : CountryCode.Unknown;
             set => countryCodeString = value.ToString();
         }
 
@@ -280,7 +283,8 @@ namespace osu.Game.Online.API.Requests.Responses
         public APIUserGroup[] Groups;
 
         [JsonProperty("daily_challenge_user_stats")]
-        public APIUserDailyChallengeStatistics DailyChallengeStatistics = new APIUserDailyChallengeStatistics();
+        public APIUserDailyChallengeStatistics DailyChallengeStatistics =
+            new APIUserDailyChallengeStatistics();
 
         public override string ToString() => Username;
 

@@ -18,14 +18,15 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        protected override SpriteText CreateText() => new OsuSpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.Centre,
-            Anchor = Anchor.Centre,
-            Font = OsuFont.TorusAlternate.With(weight: FontWeight.Light, size: 24),
-            Shadow = false
-        };
+        protected override SpriteText CreateText() =>
+            new OsuSpriteText
+            {
+                Depth = -1,
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Font = OsuFont.TorusAlternate.With(weight: FontWeight.Light, size: 24),
+                Shadow = false,
+            };
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)

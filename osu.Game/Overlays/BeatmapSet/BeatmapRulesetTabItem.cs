@@ -28,53 +28,59 @@ namespace osu.Game.Overlays.BeatmapSet
         private Container countContainer;
 
         public BeatmapRulesetTabItem(RulesetInfo value)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(countContainer = new Container
-            {
-                AutoSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Masking = true,
-                CornerRadius = 4f,
-                Children = new Drawable[]
+            Add(
+                countContainer = new Container
                 {
-                    new Box
+                    AutoSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Masking = true,
+                    CornerRadius = 4f,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background6
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background6,
+                        },
+                        count = new OsuSpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Margin = new MarginPadding { Horizontal = 5f },
+                            Font = OsuFont.Default.With(weight: FontWeight.SemiBold),
+                            Colour = colourProvider.Foreground1,
+                        },
                     },
-                    count = new OsuSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Margin = new MarginPadding { Horizontal = 5f },
-                        Font = OsuFont.Default.With(weight: FontWeight.SemiBold),
-                        Colour = colourProvider.Foreground1,
-                    }
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            BeatmapSet.BindValueChanged(setInfo =>
-            {
-                int beatmapsCount = setInfo.NewValue?.Beatmaps.Count(b => b.Ruleset.MatchesOnlineID(Value)) ?? 0;
-                int osuBeatmaps = setInfo.NewValue?.Beatmaps.Count(b => b.Ruleset.OnlineID == 0) ?? 0;
+            BeatmapSet.BindValueChanged(
+                setInfo =>
+                {
+                    int beatmapsCount =
+                        setInfo.NewValue?.Beatmaps.Count(b => b.Ruleset.MatchesOnlineID(Value))
+                        ?? 0;
+                    int osuBeatmaps =
+                        setInfo.NewValue?.Beatmaps.Count(b => b.Ruleset.OnlineID == 0) ?? 0;
 
-                count.Text = beatmapsCount.ToString();
-                countContainer.FadeTo(beatmapsCount > 0 ? 1 : 0);
+                    count.Text = beatmapsCount.ToString();
+                    countContainer.FadeTo(beatmapsCount > 0 ? 1 : 0);
 
-                Enabled.Value = beatmapsCount > 0 || osuBeatmaps > 0;
-            }, true);
+                    Enabled.Value = beatmapsCount > 0 || osuBeatmaps > 0;
+                },
+                true
+            );
         }
     }
 }

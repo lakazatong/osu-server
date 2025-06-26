@@ -61,42 +61,42 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Text = MaintenanceSettingsStrings.MigrationInProgress,
-                            Font = OsuFont.Default.With(size: 40)
+                            Font = OsuFont.Default.With(size: 40),
                         },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Text = MaintenanceSettingsStrings.MigrationDescription,
-                            Font = OsuFont.Default.With(size: 30)
+                            Font = OsuFont.Default.With(size: 30),
                         },
-                        new LoadingSpinner(true)
-                        {
-                            State = { Value = Visibility.Visible }
-                        },
+                        new LoadingSpinner(true) { State = { Value = Visibility.Visible } },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Text = MaintenanceSettingsStrings.ProhibitedInteractDuringMigration,
-                            Font = OsuFont.Default.With(size: 30)
+                            Font = OsuFont.Default.With(size: 30),
                         },
-                    }
+                    },
                 },
             };
 
             Beatmap.Value = Beatmap.Default;
 
             migrationTask = Task.Run(PerformMigration)
-                                .ContinueWith(task =>
-                                {
-                                    if (task.IsFaulted)
-                                    {
-                                        Logger.Error(task.Exception, $"Error during migration: {task.Exception?.Message}");
-                                    }
+                .ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        Logger.Error(
+                            task.Exception,
+                            $"Error during migration: {task.Exception?.Message}"
+                        );
+                    }
 
-                                    Schedule(this.Exit);
-                                });
+                    Schedule(this.Exit);
+                });
         }
 
         protected virtual bool PerformMigration() => game?.Migrate(destination.FullName) != false;

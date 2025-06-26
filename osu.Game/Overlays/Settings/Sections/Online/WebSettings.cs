@@ -21,26 +21,28 @@ namespace osu.Game.Overlays.Settings.Sections.Online
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.ExternalLinkWarning,
-                    Current = config.GetBindable<bool>(OsuSetting.ExternalLinkWarning)
+                    Current = config.GetBindable<bool>(OsuSetting.ExternalLinkWarning),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.PreferNoVideo,
                     Keywords = new[] { "no-video" },
-                    Current = config.GetBindable<bool>(OsuSetting.PreferNoVideo)
+                    Current = config.GetBindable<bool>(OsuSetting.PreferNoVideo),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.AutomaticallyDownloadMissingBeatmaps,
                     Keywords = new[] { "spectator", "replay" },
-                    Current = config.GetBindable<bool>(OsuSetting.AutomaticallyDownloadMissingBeatmaps),
+                    Current = config.GetBindable<bool>(
+                        OsuSetting.AutomaticallyDownloadMissingBeatmaps
+                    ),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = OnlineSettingsStrings.ShowExplicitContent,
                     Keywords = new[] { "nsfw", "18+", "offensive" },
                     Current = config.GetBindable<bool>(OsuSetting.ShowOnlineExplicitContent),
-                }
+                },
             };
         }
     }

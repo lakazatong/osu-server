@@ -13,7 +13,9 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Skinning.Default
 {
-    public partial class DefaultJudgementPieceSliderTickMiss : CompositeDrawable, IAnimatableJudgement
+    public partial class DefaultJudgementPieceSliderTickMiss
+        : CompositeDrawable,
+            IAnimatableJudgement
     {
         private readonly HitResult result;
         private Circle piece = null!;
@@ -29,14 +31,16 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(piece = new Circle
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Blending = BlendingParameters.Additive,
-                Colour = colours.ForHitResult(result),
-                Size = new Vector2(DrawableSliderTick.DEFAULT_TICK_SIZE)
-            });
+            AddInternal(
+                piece = new Circle
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Blending = BlendingParameters.Additive,
+                    Colour = colours.ForHitResult(result),
+                    Size = new Vector2(DrawableSliderTick.DEFAULT_TICK_SIZE),
+                }
+            );
         }
 
         public void PlayAnimation()

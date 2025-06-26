@@ -29,7 +29,8 @@ namespace osu.Game.Overlays.Mods
         [Resolved]
         private OverlayColourProvider colourProvider { get; set; } = null!;
 
-        public readonly Bindable<ModCustomisationPanelState> ExpandedState = new Bindable<ModCustomisationPanelState>();
+        public readonly Bindable<ModCustomisationPanelState> ExpandedState =
+            new Bindable<ModCustomisationPanelState>();
 
         private readonly ModCustomisationPanel panel;
 
@@ -47,10 +48,7 @@ namespace osu.Game.Overlays.Mods
 
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 hoverBackground = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -80,14 +78,15 @@ namespace osu.Game.Overlays.Mods
                     Origin = Anchor.CentreRight,
                     Size = new Vector2(16f),
                     Margin = new MarginPadding { Right = 20f },
-                    Child = icon = new SpriteIcon
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Icon = FontAwesome.Solid.ChevronDown,
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                }
+                    Child = icon =
+                        new SpriteIcon
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Icon = FontAwesome.Solid.ChevronDown,
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                },
             };
         }
 
@@ -95,35 +94,49 @@ namespace osu.Game.Overlays.Mods
         {
             base.LoadComplete();
 
-            Enabled.BindValueChanged(e =>
-            {
-                TooltipText = e.NewValue
-                    ? string.Empty
-                    : ModSelectOverlayStrings.CustomisationPanelDisabledReason;
-
-                if (e.NewValue)
+            Enabled.BindValueChanged(
+                e =>
                 {
-                    backgroundFlash.FadeInFromZero(150, Easing.OutQuad).Then()
-                                   .FadeOutFromOne(350, Easing.OutQuad);
-                }
-            }, true);
+                    TooltipText = e.NewValue
+                        ? string.Empty
+                        : ModSelectOverlayStrings.CustomisationPanelDisabledReason;
 
-            ExpandedState.BindValueChanged(v =>
-            {
-                icon.ScaleTo(v.NewValue > ModCustomisationPanelState.Collapsed ? new Vector2(1, -1) : Vector2.One, 300, Easing.OutQuint);
+                    if (e.NewValue)
+                    {
+                        backgroundFlash
+                            .FadeInFromZero(150, Easing.OutQuad)
+                            .Then()
+                            .FadeOutFromOne(350, Easing.OutQuad);
+                    }
+                },
+                true
+            );
 
-                switch (v.NewValue)
+            ExpandedState.BindValueChanged(
+                v =>
                 {
-                    case ModCustomisationPanelState.Collapsed:
-                        background.FadeColour(colourProvider.Dark3, 500, Easing.OutQuint);
-                        break;
+                    icon.ScaleTo(
+                        v.NewValue > ModCustomisationPanelState.Collapsed
+                            ? new Vector2(1, -1)
+                            : Vector2.One,
+                        300,
+                        Easing.OutQuint
+                    );
 
-                    case ModCustomisationPanelState.Expanded:
-                    case ModCustomisationPanelState.ExpandedByMod:
-                        background.FadeColour(colourProvider.Light4, 500, Easing.OutQuint);
-                        break;
-                }
-            }, true);
+                    switch (v.NewValue)
+                    {
+                        case ModCustomisationPanelState.Collapsed:
+                            background.FadeColour(colourProvider.Dark3, 500, Easing.OutQuint);
+                            break;
+
+                        case ModCustomisationPanelState.Expanded:
+                        case ModCustomisationPanelState.ExpandedByMod:
+                            background.FadeColour(colourProvider.Light4, 500, Easing.OutQuint);
+                            break;
+                    }
+                },
+                true
+            );
         }
 
         protected override bool OnHover(HoverEvent e)

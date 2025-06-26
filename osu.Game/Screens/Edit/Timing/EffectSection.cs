@@ -18,15 +18,17 @@ namespace osu.Game.Screens.Edit.Timing
         [BackgroundDependencyLoader]
         private void load()
         {
-            Flow.AddRange(new Drawable[]
-            {
-                kiai = new LabelledSwitchButton { Label = "Kiai Time" },
-                scrollSpeedSlider = new SliderWithTextBoxInput<double>("Scroll Speed")
+            Flow.AddRange(
+                new Drawable[]
                 {
-                    Current = new EffectControlPoint().ScrollSpeedBindable,
-                    KeyboardStep = 0.1f
+                    kiai = new LabelledSwitchButton { Label = "Kiai Time" },
+                    scrollSpeedSlider = new SliderWithTextBoxInput<double>("Scroll Speed")
+                    {
+                        Current = new EffectControlPoint().ScrollSpeedBindable,
+                        KeyboardStep = 0.1f,
+                    },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -41,7 +43,8 @@ namespace osu.Game.Screens.Edit.Timing
 
             void saveChanges()
             {
-                if (!isRebinding) ChangeHandler?.SaveState();
+                if (!isRebinding)
+                    ChangeHandler?.SaveState();
             }
         }
 
@@ -61,7 +64,7 @@ namespace osu.Game.Screens.Edit.Timing
                     MinValue = 0.01,
                     MaxValue = 10,
                     Precision = 0.01,
-                    Value = newEffectPoint.ScrollSpeedBindable.Value
+                    Value = newEffectPoint.ScrollSpeedBindable.Value,
                 };
                 scrollSpeedSlider.Current.ValueChanged += updateControlPointFromSlider;
                 // at this point in time the above is enough to keep the slider control in sync with reality,

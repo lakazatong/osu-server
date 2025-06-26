@@ -10,7 +10,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Checks
 {
     public class CheckCatchAbnormalDifficultySettings : CheckAbnormalDifficultySettings
     {
-        public override CheckMetadata Metadata => new CheckMetadata(CheckCategory.Settings, "Checks catch relevant settings");
+        public override CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Settings, "Checks catch relevant settings");
 
         public override IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {

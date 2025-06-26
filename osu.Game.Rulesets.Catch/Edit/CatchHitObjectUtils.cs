@@ -19,9 +19,15 @@ namespace osu.Game.Rulesets.Catch.Edit
         /// <summary>
         /// Get the position of the hit object in the playfield based on <see cref="CatchHitObject.OriginalX"/> and <see cref="HitObject.StartTime"/>.
         /// </summary>
-        public static Vector2 GetStartPosition(ScrollingHitObjectContainer hitObjectContainer, CatchHitObject hitObject)
+        public static Vector2 GetStartPosition(
+            ScrollingHitObjectContainer hitObjectContainer,
+            CatchHitObject hitObject
+        )
         {
-            return new Vector2(hitObject.OriginalX, hitObjectContainer.PositionAtTime(hitObject.StartTime));
+            return new Vector2(
+                hitObject.OriginalX,
+                hitObjectContainer.PositionAtTime(hitObject.StartTime)
+            );
         }
 
         /// <summary>
@@ -38,7 +44,9 @@ namespace osu.Game.Rulesets.Catch.Edit
                     return new PositionRange(fruit.OriginalX);
 
                 case Droplet droplet:
-                    return droplet is TinyDroplet ? PositionRange.EMPTY : new PositionRange(droplet.OriginalX);
+                    return droplet is TinyDroplet
+                        ? PositionRange.EMPTY
+                        : new PositionRange(droplet.OriginalX);
 
                 case JuiceStream:
                     return GetPositionRange(hitObject.NestedHitObjects);
@@ -58,6 +66,7 @@ namespace osu.Game.Rulesets.Catch.Edit
         /// <remarks>
         /// <see cref="TinyDroplet"/>s are excluded.
         /// </remarks>
-        public static PositionRange GetPositionRange(IEnumerable<HitObject> hitObjects) => hitObjects.Select(GetPositionRange).Aggregate(PositionRange.EMPTY, PositionRange.Union);
+        public static PositionRange GetPositionRange(IEnumerable<HitObject> hitObjects) =>
+            hitObjects.Select(GetPositionRange).Aggregate(PositionRange.EMPTY, PositionRange.Union);
     }
 }

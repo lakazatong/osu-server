@@ -10,7 +10,12 @@ namespace osu.Game.Storyboards.Commands
         public double TriggerEndTime;
         public int GroupNumber;
 
-        public StoryboardTriggerGroup(string triggerName, double startTime, double endTime, int groupNumber)
+        public StoryboardTriggerGroup(
+            string triggerName,
+            double startTime,
+            double endTime,
+            int groupNumber
+        )
         {
             TriggerName = triggerName;
             TriggerStartTime = startTime;
@@ -18,7 +23,7 @@ namespace osu.Game.Storyboards.Commands
             GroupNumber = groupNumber;
         }
 
-        public override string ToString()
-            => $"{TriggerName} {TriggerStartTime} -> {TriggerEndTime} ({GroupNumber})";
+        public override string ToString() =>
+            $"{TriggerName} {TriggerStartTime} -> {TriggerEndTime} ({GroupNumber})";
     }
 }

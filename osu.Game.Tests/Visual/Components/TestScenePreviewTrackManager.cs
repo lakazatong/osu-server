@@ -26,7 +26,9 @@ namespace osu.Game.Tests.Visual.Components
             trackManager = new TestPreviewTrackManager(gameTrackAudio);
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
             dependencies.CacheAs(trackManager);
@@ -61,11 +63,14 @@ namespace osu.Game.Tests.Visual.Components
             PreviewTrack track1 = null;
             PreviewTrack track2 = null;
 
-            AddStep("get tracks", () =>
-            {
-                track1 = getOwnedTrack();
-                track2 = getOwnedTrack();
-            });
+            AddStep(
+                "get tracks",
+                () =>
+                {
+                    track1 = getOwnedTrack();
+                    track2 = getOwnedTrack();
+                }
+            );
 
             AddUntilStep("wait loaded", () => track1.IsLoaded && track2.IsLoaded);
 
@@ -110,11 +115,14 @@ namespace osu.Game.Tests.Visual.Components
         {
             TestPreviewTrackManager.TestPreviewTrack track = null;
 
-            AddStep("get non-present track", () =>
-            {
-                Add(new TestTrackOwner(track = getTrack()));
-                track.Alpha = 0;
-            });
+            AddStep(
+                "get non-present track",
+                () =>
+                {
+                    Add(new TestTrackOwner(track = getTrack()));
+                    track.Alpha = 0;
+                }
+            );
             AddUntilStep("wait loaded", () => track.IsLoaded);
             AddStep("start", () => track.Start());
             AddStep("seek to end", () => track.Track.Seek(track.Track.Length));
@@ -151,14 +159,17 @@ namespace osu.Game.Tests.Visual.Components
             PreviewTrack track = null;
             TestTrackOwner owner = null;
 
-            AddStep("ensure volume not zero", () =>
-            {
-                if (audio.Volume.Value == 0)
-                    audio.Volume.Value = 1;
+            AddStep(
+                "ensure volume not zero",
+                () =>
+                {
+                    if (audio.Volume.Value == 0)
+                        audio.Volume.Value = 1;
 
-                if (audio.VolumeTrack.Value == 0)
-                    audio.VolumeTrack.Value = 1;
-            });
+                    if (audio.VolumeTrack.Value == 0)
+                        audio.VolumeTrack.Value = 1;
+                }
+            );
 
             AddAssert("game not muted", () => gameTrackAudio.AggregateVolume.Value != 0);
 
@@ -180,7 +191,10 @@ namespace osu.Game.Tests.Visual.Components
         {
             PreviewTrack track = null;
 
-            AddStep("get track", () => Add(new TestTrackOwner(track = getTrack(), registerAsOwner: false)));
+            AddStep(
+                "get track",
+                () => Add(new TestTrackOwner(track = getTrack(), registerAsOwner: false))
+            );
             AddUntilStep("wait for loaded", () => track.IsLoaded);
 
             AddStep("start track", () => track.Start());
@@ -190,7 +204,8 @@ namespace osu.Game.Tests.Visual.Components
             AddAssert("track stopped", () => !track.IsRunning);
         }
 
-        private TestPreviewTrackManager.TestPreviewTrack getTrack() => (TestPreviewTrackManager.TestPreviewTrack)trackManager.Get(CreateAPIBeatmapSet());
+        private TestPreviewTrackManager.TestPreviewTrack getTrack() =>
+            (TestPreviewTrackManager.TestPreviewTrack)trackManager.Get(CreateAPIBeatmapSet());
 
         private TestPreviewTrackManager.TestPreviewTrack getOwnedTrack()
         {
@@ -218,7 +233,9 @@ namespace osu.Game.Tests.Visual.Components
                 LoadComponentAsync(track, AddInternal);
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
                 if (registerAsOwner)
@@ -234,11 +251,12 @@ namespace osu.Game.Tests.Visual.Components
             public new PreviewTrack CurrentTrack => base.CurrentTrack;
 
             public TestPreviewTrackManager(IAdjustableAudioComponent mainTrackAdjustments)
-                : base(mainTrackAdjustments)
-            {
-            }
+                : base(mainTrackAdjustments) { }
 
-            protected override TrackManagerPreviewTrack CreatePreviewTrack(IBeatmapSetInfo beatmapSetInfo, ITrackStore trackStore) => new TestPreviewTrack(beatmapSetInfo, trackStore);
+            protected override TrackManagerPreviewTrack CreatePreviewTrack(
+                IBeatmapSetInfo beatmapSetInfo,
+                ITrackStore trackStore
+            ) => new TestPreviewTrack(beatmapSetInfo, trackStore);
 
             public override bool UpdateSubTree()
             {

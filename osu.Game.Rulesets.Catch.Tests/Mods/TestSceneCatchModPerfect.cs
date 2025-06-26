@@ -16,17 +16,20 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new CatchRuleset();
 
         public TestSceneCatchModPerfect()
-            : base(new CatchModPerfect())
-        {
-        }
+            : base(new CatchModPerfect()) { }
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestBananaShower(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new BananaShower { StartTime = 1000, EndTime = 3000 }, false), shouldMiss);
+        public void TestBananaShower(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new BananaShower { StartTime = 1000, EndTime = 3000 }, false),
+                shouldMiss
+            );
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestFruit(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new Fruit { StartTime = 1000 }), shouldMiss);
+        public void TestFruit(bool shouldMiss) =>
+            CreateHitObjectTest(new HitObjectTestData(new Fruit { StartTime = 1000 }), shouldMiss);
 
         [TestCase(false)]
         [TestCase(true)]
@@ -35,11 +38,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
             var stream = new JuiceStream
             {
                 StartTime = 1000,
-                Path = new SliderPath(PathType.LINEAR, new[]
-                {
-                    Vector2.Zero,
-                    new Vector2(100, 0),
-                })
+                Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(100, 0) }),
             };
 
             CreateHitObjectTest(new HitObjectTestData(stream), shouldMiss);
@@ -47,10 +46,18 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
 
         // We only care about testing misses, hits are tested via JuiceStream
         [TestCase(true)]
-        public void TestDroplet(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new Droplet { StartTime = 1000 }), shouldMiss);
+        public void TestDroplet(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new Droplet { StartTime = 1000 }),
+                shouldMiss
+            );
 
         // We only care about testing misses, hits are tested via JuiceStream
         [TestCase(true)]
-        public void TestTinyDroplet(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new TinyDroplet { StartTime = 1000 }), shouldMiss);
+        public void TestTinyDroplet(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new TinyDroplet { StartTime = 1000 }),
+                shouldMiss
+            );
     }
 }

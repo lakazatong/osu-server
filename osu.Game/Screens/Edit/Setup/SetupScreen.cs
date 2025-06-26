@@ -24,9 +24,7 @@ namespace osu.Game.Screens.Edit.Setup
         public Action? MetadataChanged { get; set; }
 
         public SetupScreen()
-            : base(EditorScreenMode.SongSetup)
-        {
-        }
+            : base(EditorScreenMode.SongSetup) { }
 
         private OsuScrollContainer scroll = null!;
         private FillFlowContainer flow = null!;
@@ -38,31 +36,32 @@ namespace osu.Game.Screens.Edit.Setup
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background3,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background3 },
                 scroll = new OsuScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding(15),
-                    Child = flow = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Full,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Spacing = new Vector2(25),
-                        ChildrenEnumerable = ruleset.CreateEditorSetupSections().Select(section => section.With(s =>
+                    Child = flow =
+                        new FillFlowContainer
                         {
-                            s.Width = 450;
-                            s.Anchor = Anchor.TopCentre;
-                            s.Origin = Anchor.TopCentre;
-                        })),
-                    }
-                }
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Full,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Spacing = new Vector2(25),
+                            ChildrenEnumerable = ruleset
+                                .CreateEditorSetupSections()
+                                .Select(section =>
+                                    section.With(s =>
+                                    {
+                                        s.Width = 450;
+                                        s.Anchor = Anchor.TopCentre;
+                                        s.Origin = Anchor.TopCentre;
+                                    })
+                                ),
+                        },
+                },
             };
         }
 

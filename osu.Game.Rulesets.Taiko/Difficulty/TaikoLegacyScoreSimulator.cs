@@ -28,7 +28,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
         private int difficultyPeppyStars;
         private IBeatmap playableBeatmap = null!;
 
-        public LegacyScoreAttributes Simulate(IWorkingBeatmap workingBeatmap, IBeatmap playableBeatmap)
+        public LegacyScoreAttributes Simulate(
+            IWorkingBeatmap workingBeatmap,
+            IBeatmap playableBeatmap
+        )
         {
             this.playableBeatmap = playableBeatmap;
 
@@ -62,18 +65,30 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
 
             if (baseBeatmap.HitObjects.Count > 0)
             {
-                int breakLength = baseBeatmap.Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime)).Sum();
-                drainLength = ((int)Math.Round(baseBeatmap.HitObjects[^1].StartTime) - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime) - breakLength) / 1000;
+                int breakLength = baseBeatmap
+                    .Breaks.Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime))
+                    .Sum();
+                drainLength =
+                    (
+                        (int)Math.Round(baseBeatmap.HitObjects[^1].StartTime)
+                        - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime)
+                        - breakLength
+                    ) / 1000;
             }
 
-            difficultyPeppyStars = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(baseBeatmap.Difficulty, objectCount, drainLength);
+            difficultyPeppyStars = LegacyRulesetExtensions.CalculateDifficultyPeppyStars(
+                baseBeatmap.Difficulty,
+                objectCount,
+                drainLength
+            );
 
             LegacyScoreAttributes attributes = new LegacyScoreAttributes();
 
             foreach (var obj in playableBeatmap.HitObjects)
                 simulateHit(obj, ref attributes);
 
-            attributes.BonusScoreRatio = legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
+            attributes.BonusScoreRatio =
+                legacyBonusScore == 0 ? 0 : (double)standardisedBonusScore / legacyBonusScore;
             attributes.BonusScore = legacyBonusScore;
             attributes.MaxCombo = combo;
 
@@ -114,8 +129,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                     const double minimum_rotations_per_second = 7.5;
 
                     // The amount of half spins that are required to successfully complete the spinner (i.e. get a 300).
-                    int halfSpinsRequiredForCompletion = (int)(swell.Duration / 1000 * minimum_rotations_per_second);
-                    halfSpinsRequiredForCompletion = (int)Math.Max(1, halfSpinsRequiredForCompletion * 1.65f);
+                    int halfSpinsRequiredForCompletion = (int)(
+                        swell.Duration / 1000 * minimum_rotations_per_second
+                    );
+                    halfSpinsRequiredForCompletion = (int)
+                        Math.Max(1, halfSpinsRequiredForCompletion * 1.65f);
 
                     //
                     // Normally, this multiplier depends on the active mods (DT = 0.75, HT = 1.5). For simplicity, we'll only consider the worst case that maximises rotations.
@@ -123,7 +141,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                     //   - A perfect DT/NM score will have less than 1M total score (excluding bonus).
                     //   - A perfect HT score will have 1M total score (excluding bonus).
                     //
-                    halfSpinsRequiredForCompletion = Math.Max(1, (int)(halfSpinsRequiredForCompletion * 1.5f));
+                    halfSpinsRequiredForCompletion = Math.Max(
+                        1,
+                        (int)(halfSpinsRequiredForCompletion * 1.5f)
+                    );
 
                     for (int i = 0; i <= halfSpinsRequiredForCompletion; i++)
                         simulateHit(new SwellTick(), ref attributes);
@@ -169,23 +190,37 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             {
                 int oldScoreIncrease = scoreIncrease;
 
-                scoreIncrease += scoreIncrease / 35 * 2 * (difficultyPeppyStars + 1) * (Math.Min(100, combo) / 10);
+                scoreIncrease +=
+                    scoreIncrease
+                    / 35
+                    * 2
+                    * (difficultyPeppyStars + 1)
+                    * (Math.Min(100, combo) / 10);
 
                 if (hitObject is Swell)
                 {
-                    if (playableBeatmap.ControlPointInfo.EffectPointAt(hitObject.GetEndTime()).KiaiMode)
+                    if (
+                        playableBeatmap
+                            .ControlPointInfo.EffectPointAt(hitObject.GetEndTime())
+                            .KiaiMode
+                    )
                         scoreIncrease = (int)(scoreIncrease * 1.2f);
                 }
                 else
                 {
-                    if (playableBeatmap.ControlPointInfo.EffectPointAt(hitObject.StartTime).KiaiMode)
+                    if (
+                        playableBeatmap.ControlPointInfo.EffectPointAt(hitObject.StartTime).KiaiMode
+                    )
                         scoreIncrease = (int)(scoreIncrease * 1.2f);
                 }
 
                 comboScoreIncrease = scoreIncrease - oldScoreIncrease;
             }
 
-            if (hitObject is Swell || (hitObject is TaikoStrongableHitObject strongable && strongable.IsStrong))
+            if (
+                hitObject is Swell
+                || (hitObject is TaikoStrongableHitObject strongable && strongable.IsStrong)
+            )
             {
                 scoreIncrease *= 2;
                 comboScoreIncrease *= 2;
@@ -208,7 +243,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                 combo++;
         }
 
-        public double GetLegacyScoreMultiplier(IReadOnlyList<Mod> mods, LegacyBeatmapConversionDifficultyInfo difficulty)
+        public double GetLegacyScoreMultiplier(
+            IReadOnlyList<Mod> mods,
+            LegacyBeatmapConversionDifficultyInfo difficulty
+        )
         {
             bool scoreV2 = mods.Any(m => m is ModScoreV2);
 

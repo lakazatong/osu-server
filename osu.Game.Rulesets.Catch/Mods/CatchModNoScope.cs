@@ -4,9 +4,9 @@
 using System;
 using osu.Framework.Bindables;
 using osu.Framework.Localisation;
-using osu.Game.Rulesets.Mods;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Catch.UI;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Catch.Mods
@@ -15,11 +15,8 @@ namespace osu.Game.Rulesets.Catch.Mods
     {
         public override LocalisableString Description => "Where's the catcher?";
 
-        public override BindableInt HiddenComboCount { get; } = new BindableInt(10)
-        {
-            MinValue = 0,
-            MaxValue = 50,
-        };
+        public override BindableInt HiddenComboCount { get; } =
+            new BindableInt(10) { MinValue = 0, MaxValue = 50 };
 
         public void Update(Playfield playfield)
         {
@@ -29,7 +26,12 @@ namespace osu.Game.Rulesets.Catch.Mods
 
             // AlwaysPresent required for catcher to still act on input when fully hidden.
             catchPlayfield.CatcherArea.AlwaysPresent = true;
-            catchPlayfield.CatcherArea.Alpha = (float)Interpolation.Lerp(catchPlayfield.CatcherArea.Alpha, targetAlpha, Math.Clamp(catchPlayfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
+            catchPlayfield.CatcherArea.Alpha = (float)
+                Interpolation.Lerp(
+                    catchPlayfield.CatcherArea.Alpha,
+                    targetAlpha,
+                    Math.Clamp(catchPlayfield.Time.Elapsed / TRANSITION_DURATION, 0, 1)
+                );
         }
     }
 }

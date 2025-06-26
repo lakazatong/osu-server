@@ -69,7 +69,7 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                             Origin = Anchor.BottomCentre,
                             Size = new Vector2(2, 55),
 
-                            Colour = ColourInfo.GradientVertical(Color4.Transparent, Color4.White)
+                            Colour = ColourInfo.GradientVertical(Color4.Transparent, Color4.White),
                         },
                         new Box
                         {
@@ -77,10 +77,10 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                             Origin = Anchor.TopCentre,
                             Size = new Vector2(2, 55),
 
-                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.Transparent)
-                        }
-                    }
-                }
+                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.Transparent),
+                        },
+                    },
+                },
             };
         }
 
@@ -108,7 +108,10 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                     speedTo(0f, 2000);
                     tracker.FadeIn(200);
 
-                    delayedStateChangeDelegate = Scheduler.AddDelayed(() => setScrollState(ScrollState.Stopped), 2300);
+                    delayedStateChangeDelegate = Scheduler.AddDelayed(
+                        () => setScrollState(ScrollState.Stopped),
+                        2300
+                    );
                     break;
 
                 case ScrollState.Stopped:
@@ -130,7 +133,9 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                         }
 
                         float o = Math.Abs(c.Position.X + c.DrawWidth / 2f - DrawWidth / 2f);
-                        float lastOffset = Math.Abs(closest.Position.X + closest.DrawWidth / 2f - DrawWidth / 2f);
+                        float lastOffset = Math.Abs(
+                            closest.Position.X + closest.DrawWidth / 2f - DrawWidth / 2f
+                        );
 
                         if (o < lastOffset)
                             closest = stc;
@@ -147,7 +152,10 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                     st.Selected = true;
                     OnSelected?.Invoke(st.Team.AsNonNull());
 
-                    delayedStateChangeDelegate = Scheduler.AddDelayed(() => setScrollState(ScrollState.Idle), 10000);
+                    delayedStateChangeDelegate = Scheduler.AddDelayed(
+                        () => setScrollState(ScrollState.Idle),
+                        10000
+                    );
                     break;
 
                 case ScrollState.Idle:
@@ -242,7 +250,9 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
             if (availableTeams.Count > 0)
             {
                 // Fill more than required to account for transformation + scrolling speed
-                while (Children.Count(c => c is ScrollingTeam) < DrawWidth * 2 / ScrollingTeam.WIDTH)
+                while (
+                    Children.Count(c => c is ScrollingTeam) < DrawWidth * 2 / ScrollingTeam.WIDTH
+                )
                     addFlags();
             }
 
@@ -273,10 +283,7 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
         {
             foreach (TournamentTeam t in availableTeams)
             {
-                Add(new ScrollingTeam(t)
-                {
-                    X = leftPos + DrawWidth
-                });
+                Add(new ScrollingTeam(t) { X = leftPos + DrawWidth });
             }
         }
 
@@ -304,7 +311,7 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
             Idle,
             Stopping,
             Stopped,
-            Scrolling
+            Scrolling,
         }
 
         public partial class ScrollingTeam : DrawableTournamentTeam
@@ -321,7 +328,6 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
             public bool Selected
             {
                 get => selected;
-
                 set
                 {
                     selected = value;
@@ -355,9 +361,9 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = OsuColour.Gray(0.33f),
-                        Alpha = 0
+                        Alpha = 0,
                     },
-                    Flag
+                    Flag,
                 };
             }
         }

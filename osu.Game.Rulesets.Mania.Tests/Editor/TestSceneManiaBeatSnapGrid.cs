@@ -26,16 +26,16 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
     public partial class TestSceneManiaBeatSnapGrid : EditorClockTestScene
     {
         [Cached(typeof(IScrollingInfo))]
-        private ScrollingTestContainer.TestScrollingInfo scrollingInfo = new ScrollingTestContainer.TestScrollingInfo();
+        private ScrollingTestContainer.TestScrollingInfo scrollingInfo =
+            new ScrollingTestContainer.TestScrollingInfo();
 
         [Cached(typeof(EditorBeatmap))]
-        private EditorBeatmap editorBeatmap = new EditorBeatmap(new ManiaBeatmap(new StageDefinition(2))
-        {
-            BeatmapInfo =
+        private EditorBeatmap editorBeatmap = new EditorBeatmap(
+            new ManiaBeatmap(new StageDefinition(2))
             {
-                Ruleset = new ManiaRuleset().RulesetInfo
+                BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
             }
-        });
+        );
 
         private readonly ManiaBeatSnapGrid beatSnapGrid;
 
@@ -53,25 +53,25 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
 
             Children = new Drawable[]
             {
-                Playfield = new ManiaPlayfield(new List<StageDefinition>
+                Playfield = new ManiaPlayfield(
+                    new List<StageDefinition> { new StageDefinition(4), new StageDefinition(3) }
+                )
                 {
-                    new StageDefinition(4),
-                    new StageDefinition(3)
-                })
-                {
-                    Clock = new FramedClock(new StopwatchClock())
+                    Clock = new FramedClock(new StopwatchClock()),
                 },
                 new TestHitObjectComposer(Playfield)
                 {
-                    Child = beatSnapGrid = new ManiaBeatSnapGrid()
-                }
+                    Child = beatSnapGrid = new ManiaBeatSnapGrid(),
+                },
             };
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             // We're providing a constant scroll algorithm.
-            float relativePosition = Playfield.Stages[0].HitObjectContainer.ToLocalSpace(e.ScreenSpaceMousePosition).Y / Playfield.Stages[0].HitObjectContainer.DrawHeight;
+            float relativePosition =
+                Playfield.Stages[0].HitObjectContainer.ToLocalSpace(e.ScreenSpaceMousePosition).Y
+                / Playfield.Stages[0].HitObjectContainer.DrawHeight;
             double timeValue = scrollingInfo.TimeRange.Value * relativePosition;
 
             beatSnapGrid.SelectionTimeRange = (timeValue, timeValue);
@@ -85,8 +85,10 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
     public partial class TestHitObjectComposer : HitObjectComposer
     {
         public override Playfield Playfield { get; }
-        public override ComposeBlueprintContainer BlueprintContainer => throw new NotImplementedException();
-        public override IEnumerable<DrawableHitObject> HitObjects => Enumerable.Empty<DrawableHitObject>();
+        public override ComposeBlueprintContainer BlueprintContainer =>
+            throw new NotImplementedException();
+        public override IEnumerable<DrawableHitObject> HitObjects =>
+            Enumerable.Empty<DrawableHitObject>();
         public override bool CursorInPlacementArea => false;
 
         public TestHitObjectComposer(Playfield playfield)

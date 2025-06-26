@@ -17,7 +17,11 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Disable taps during gameplay"
         /// </summary>
-        public static LocalisableString DisableTapsDuringGameplay => new TranslatableString(getKey(@"disable_taps_during_gameplay"), @"Disable taps during gameplay");
+        public static LocalisableString DisableTapsDuringGameplay =>
+            new TranslatableString(
+                getKey(@"disable_taps_during_gameplay"),
+                @"Disable taps during gameplay"
+            );
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

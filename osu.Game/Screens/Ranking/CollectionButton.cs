@@ -54,7 +54,10 @@ namespace osu.Game.Screens.Ranking
         {
             base.LoadComplete();
 
-            collectionSubscription = realmAccess.RegisterForNotifications(r => r.All<BeatmapCollection>(), collectionsChanged);
+            collectionSubscription = realmAccess.RegisterForNotifications(
+                r => r.All<BeatmapCollection>(),
+                collectionsChanged
+            );
 
             isInAnyCollection.BindValueChanged(_ => updateState(), true);
         }
@@ -66,14 +69,23 @@ namespace osu.Game.Screens.Ranking
             collectionSubscription?.Dispose();
         }
 
-        private void collectionsChanged(IRealmCollection<BeatmapCollection> sender, ChangeSet? changes)
+        private void collectionsChanged(
+            IRealmCollection<BeatmapCollection> sender,
+            ChangeSet? changes
+        )
         {
-            isInAnyCollection.Value = sender.AsEnumerable().Any(c => c.BeatmapMD5Hashes.Contains(beatmapInfo.MD5Hash));
+            isInAnyCollection.Value = sender
+                .AsEnumerable()
+                .Any(c => c.BeatmapMD5Hashes.Contains(beatmapInfo.MD5Hash));
         }
 
         private void updateState()
         {
-            Background.FadeColour(isInAnyCollection.Value ? colours.Green : colours.Gray4, 500, Easing.InOutExpo);
+            Background.FadeColour(
+                isInAnyCollection.Value ? colours.Green : colours.Gray4,
+                500,
+                Easing.InOutExpo
+            );
         }
 
         public Popover GetPopover() => new CollectionPopover(beatmapInfo);

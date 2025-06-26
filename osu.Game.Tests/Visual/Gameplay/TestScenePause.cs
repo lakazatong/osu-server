@@ -30,7 +30,10 @@ namespace osu.Game.Tests.Visual.Gameplay
     {
         protected new PausePlayer Player => (PausePlayer)base.Player;
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        )
         {
             beatmap.AudioLeadIn = 4000;
             return base.CreateWorkingBeatmap(beatmap, storyboard);
@@ -84,7 +87,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             hookForwardPlaybackCheck();
 
-            AddUntilStep("wait for forward playback", () => Player.GameplayClockContainer.CurrentTime > 1000);
+            AddUntilStep(
+                "wait for forward playback",
+                () => Player.GameplayClockContainer.CurrentTime > 1000
+            );
             AddStep("seek before gameplay", () => Player.GameplayClockContainer.Seek(-5000));
 
             checkForwardPlayback();
@@ -93,18 +99,25 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestPauseWithLargeOffset()
         {
-            AddStep("force large offset", () =>
-            {
-                var offset = (BindableDouble)LocalConfig.GetBindable<double>(OsuSetting.AudioOffset);
+            AddStep(
+                "force large offset",
+                () =>
+                {
+                    var offset = (BindableDouble)
+                        LocalConfig.GetBindable<double>(OsuSetting.AudioOffset);
 
-                // use a large negative offset to avoid triggering a fail from forwards seeking.
-                offset.MinValue = -5000;
-                offset.Value = -5000;
-            });
+                    // use a large negative offset to avoid triggering a fail from forwards seeking.
+                    offset.MinValue = -5000;
+                    offset.Value = -5000;
+                }
+            );
 
             hookForwardPlaybackCheck();
 
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
 
             pauseAndConfirm();
 
@@ -115,42 +128,58 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("reset offset", () => LocalConfig.SetValue(OsuSetting.AudioOffset, 0.0));
         }
 
-        private void checkForwardPlayback() => AddAssert("time didn't go too far backwards", () => gameplayClockAlwaysGoingForward);
+        private void checkForwardPlayback() =>
+            AddAssert("time didn't go too far backwards", () => gameplayClockAlwaysGoingForward);
 
         private void hookForwardPlaybackCheck()
         {
-            AddStep("add time forward check hook", () =>
-            {
-                lastForwardCheckTime = double.MinValue;
-                gameplayClockAlwaysGoingForward = true;
-
-                Player.OnUpdate += _ =>
+            AddStep(
+                "add time forward check hook",
+                () =>
                 {
-                    var frameStableClock = Player.ChildrenOfType<FrameStabilityContainer>().Single().Clock;
+                    lastForwardCheckTime = double.MinValue;
+                    gameplayClockAlwaysGoingForward = true;
 
-                    double currentTime = frameStableClock.CurrentTime;
+                    Player.OnUpdate += _ =>
+                    {
+                        var frameStableClock = Player
+                            .ChildrenOfType<FrameStabilityContainer>()
+                            .Single()
+                            .Clock;
 
-                    bool goingForward = currentTime >= lastForwardCheckTime;
-                    lastForwardCheckTime = currentTime;
+                        double currentTime = frameStableClock.CurrentTime;
 
-                    gameplayClockAlwaysGoingForward &= goingForward;
+                        bool goingForward = currentTime >= lastForwardCheckTime;
+                        lastForwardCheckTime = currentTime;
 
-                    if (!goingForward)
-                        Logger.Log($"Went too far backwards (last stop: {lastForwardCheckTime:N1} current: {currentTime:N1})");
-                };
-            });
+                        gameplayClockAlwaysGoingForward &= goingForward;
+
+                        if (!goingForward)
+                            Logger.Log(
+                                $"Went too far backwards (last stop: {lastForwardCheckTime:N1} current: {currentTime:N1})"
+                            );
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestPauseResume()
         {
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
             pauseAndConfirm();
             AddAssert("player not playing", () => !Player.LocalUserPlaying.Value);
 
             resumeAndConfirm();
 
-            AddAssert("continued playing forward", () => Player.LastResumeTime, () => Is.GreaterThanOrEqualTo(Player.LastPauseTime));
+            AddAssert(
+                "continued playing forward",
+                () => Player.LastResumeTime,
+                () => Is.GreaterThanOrEqualTo(Player.LastPauseTime)
+            );
 
             AddUntilStep("player playing", () => Player.LocalUserPlaying.Value);
         }
@@ -158,7 +187,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestResumeWithResumeOverlay()
         {
-            AddStep("move cursor to center", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move cursor to center",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.Centre)
+            );
             AddUntilStep("wait for hitobjects", () => Player.HealthProcessor.Health.Value < 1);
 
             pauseAndConfirm();
@@ -173,7 +205,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestPauseWithResumeOverlay()
         {
-            AddStep("move cursor to center", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move cursor to center",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.Centre)
+            );
             AddUntilStep("wait for hitobjects", () => Player.HealthProcessor.Health.Value < 1);
 
             pauseAndConfirm();
@@ -182,7 +217,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             confirmPausedWithNoOverlay();
             pauseAndConfirm();
 
-            AddUntilStep("resume overlay is not active", () => Player.DrawableRuleset.ResumeOverlay.State.Value == Visibility.Hidden);
+            AddUntilStep(
+                "resume overlay is not active",
+                () => Player.DrawableRuleset.ResumeOverlay.State.Value == Visibility.Hidden
+            );
             confirmPaused();
             confirmNotExited();
         }
@@ -190,8 +228,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestResumeWithResumeOverlaySkipped()
         {
-            AddStep("move cursor to button", () =>
-                InputManager.MoveMouseTo(Player.HUDOverlay.HoldToQuit.Children.OfType<HoldToConfirmContainer>().First().ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move cursor to button",
+                () =>
+                    InputManager.MoveMouseTo(
+                        Player
+                            .HUDOverlay.HoldToQuit.Children.OfType<HoldToConfirmContainer>()
+                            .First()
+                            .ScreenSpaceDrawQuad.Centre
+                    )
+            );
             AddUntilStep("wait for hitobjects", () => Player.HealthProcessor.Health.Value < 1);
 
             pauseAndConfirm();
@@ -212,7 +258,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestUserPauseDuringCooldownTooSoon()
         {
             AddStep("seek to gameplay", () => Player.GameplayClockContainer.Seek(0));
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
 
             pauseAndConfirm();
 
@@ -227,7 +276,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestUserPauseDuringIntroSkipsCooldown()
         {
             AddStep("seek before gameplay", () => Player.GameplayClockContainer.Seek(-5000));
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
 
             pauseAndConfirm();
 
@@ -240,7 +292,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestQuickExitDuringCooldownTooSoon()
         {
             AddStep("seek to gameplay", () => Player.GameplayClockContainer.Seek(0));
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
 
             pauseAndConfirm();
 
@@ -311,7 +366,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestQuickRetryFromFailedGameplay()
         {
             AddUntilStep("wait for fail", () => Player.GameplayState.HasFailed);
-            AddStep("quick retry", () => Player.GameplayClockContainer.ChildrenOfType<HotkeyRetryOverlay>().First().Action?.Invoke());
+            AddStep(
+                "quick retry",
+                () =>
+                    Player
+                        .GameplayClockContainer.ChildrenOfType<HotkeyRetryOverlay>()
+                        .First()
+                        .Action?.Invoke()
+            );
 
             confirmExited();
         }
@@ -344,13 +406,21 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestExitViaHoldToExit()
         {
-            AddStep("set hold button always visible", () => LocalConfig.SetValue(OsuSetting.AlwaysShowHoldForMenuButton, true));
+            AddStep(
+                "set hold button always visible",
+                () => LocalConfig.SetValue(OsuSetting.AlwaysShowHoldForMenuButton, true)
+            );
 
-            AddStep("exit", () =>
-            {
-                InputManager.MoveMouseTo(Player.HUDOverlay.HoldToQuit.First(c => c is HoldToConfirmContainer));
-                InputManager.PressButton(MouseButton.Left);
-            });
+            AddStep(
+                "exit",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        Player.HUDOverlay.HoldToQuit.First(c => c is HoldToConfirmContainer)
+                    );
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
 
             confirmPaused();
 
@@ -382,7 +452,12 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddStep("seek before gameplay", () => Player.GameplayClockContainer.Seek(-5000));
 
-            SkinnableSound getLoop() => Player.ChildrenOfType<PauseOverlay>().FirstOrDefault()?.ChildrenOfType<SkinnableSound>().FirstOrDefault();
+            SkinnableSound getLoop() =>
+                Player
+                    .ChildrenOfType<PauseOverlay>()
+                    .FirstOrDefault()
+                    ?.ChildrenOfType<SkinnableSound>()
+                    .FirstOrDefault();
 
             pauseAndConfirm();
             AddAssert("loop is playing", () => getLoop().IsPlaying);
@@ -390,11 +465,14 @@ namespace osu.Game.Tests.Visual.Gameplay
             resumeAndConfirm();
             AddUntilStep("loop is stopped", () => !getLoop().IsPlaying);
 
-            AddUntilStep("pause again", () =>
-            {
-                Player.Pause();
-                return !Player.GameplayClockContainer.IsRunning;
-            });
+            AddUntilStep(
+                "pause again",
+                () =>
+                {
+                    Player.Pause();
+                    return !Player.GameplayClockContainer.IsRunning;
+                }
+            );
 
             AddAssert("loop is playing", () => getLoop().IsPlaying);
 
@@ -442,42 +520,61 @@ namespace osu.Game.Tests.Visual.Gameplay
             confirmPauseOverlayShown(false);
         }
 
-        private void confirmExited() => AddUntilStep("player exited", () => !Player.IsCurrentScreen());
-        private void confirmNotExited() => AddAssert("player not exited", () => Player.IsCurrentScreen());
+        private void confirmExited() =>
+            AddUntilStep("player exited", () => !Player.IsCurrentScreen());
+
+        private void confirmNotExited() =>
+            AddAssert("player not exited", () => Player.IsCurrentScreen());
 
         private void confirmNoTrackAdjustments()
         {
-            AddUntilStep("track has no adjustments", () => Beatmap.Value.Track.AggregateFrequency.Value, () => Is.EqualTo(1));
+            AddUntilStep(
+                "track has no adjustments",
+                () => Beatmap.Value.Track.AggregateFrequency.Value,
+                () => Is.EqualTo(1)
+            );
         }
 
         private void restart() => AddStep("restart", () => Player.Restart());
-        private void pauseViaBackAction() => AddStep("press escape", () => InputManager.Key(Key.Escape));
-        private void pauseViaPauseGameplayAction() => AddStep("press middle mouse", () => InputManager.Click(MouseButton.Middle));
 
-        private void exitViaQuickExitAction() => AddStep("press ctrl-tilde", () =>
-        {
-            InputManager.PressKey(Key.ControlLeft);
-            InputManager.PressKey(Key.Tilde);
-            InputManager.ReleaseKey(Key.Tilde);
-            InputManager.ReleaseKey(Key.ControlLeft);
-        });
+        private void pauseViaBackAction() =>
+            AddStep("press escape", () => InputManager.Key(Key.Escape));
+
+        private void pauseViaPauseGameplayAction() =>
+            AddStep("press middle mouse", () => InputManager.Click(MouseButton.Middle));
+
+        private void exitViaQuickExitAction() =>
+            AddStep(
+                "press ctrl-tilde",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.PressKey(Key.Tilde);
+                    InputManager.ReleaseKey(Key.Tilde);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
 
         private void resume() => AddStep("resume", () => Player.Resume());
 
         private void confirmPauseOverlayShown(bool isShown) =>
-            AddAssert("pause overlay " + (isShown ? "shown" : "hidden"), () => Player.PauseOverlayVisible == isShown);
+            AddAssert(
+                "pause overlay " + (isShown ? "shown" : "hidden"),
+                () => Player.PauseOverlayVisible == isShown
+            );
 
         private void confirmClockRunning(bool isRunning) =>
-            AddUntilStep("clock " + (isRunning ? "running" : "stopped"), () =>
-            {
-                bool completed = Player.GameplayClockContainer.IsRunning == isRunning;
-
-                if (completed)
+            AddUntilStep(
+                "clock " + (isRunning ? "running" : "stopped"),
+                () =>
                 {
-                }
+                    bool completed = Player.GameplayClockContainer.IsRunning == isRunning;
 
-                return completed;
-            });
+                    if (completed) { }
+
+                    return completed;
+                }
+            );
 
         protected override bool AllowFail => true;
 

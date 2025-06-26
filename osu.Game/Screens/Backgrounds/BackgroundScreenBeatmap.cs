@@ -55,7 +55,8 @@ namespace osu.Game.Screens.Backgrounds
 
         private readonly DimmableBackground dimmable;
 
-        protected virtual DimmableBackground CreateFadeContainer() => new DimmableBackground { RelativeSizeAxes = Axes.Both };
+        protected virtual DimmableBackground CreateFadeContainer() =>
+            new DimmableBackground { RelativeSizeAxes = Axes.Both };
 
         public BackgroundScreenBeatmap(WorkingBeatmap beatmap = null)
         {
@@ -92,11 +93,19 @@ namespace osu.Game.Screens.Backgrounds
 
                 Schedule(() =>
                 {
-                    if ((Background as BeatmapBackground)?.Beatmap.BeatmapInfo.BackgroundEquals(beatmap?.BeatmapInfo) ?? false)
+                    if (
+                        (Background as BeatmapBackground)?.Beatmap.BeatmapInfo.BackgroundEquals(
+                            beatmap?.BeatmapInfo
+                        ) ?? false
+                    )
                         return;
 
                     cancellationSource?.Cancel();
-                    LoadComponentAsync(new BeatmapBackground(beatmap), switchBackground, (cancellationSource = new CancellationTokenSource()).Token);
+                    LoadComponentAsync(
+                        new BeatmapBackground(beatmap),
+                        switchBackground,
+                        (cancellationSource = new CancellationTokenSource()).Token
+                    );
                 });
             }
         }
@@ -119,7 +128,8 @@ namespace osu.Game.Screens.Backgrounds
 
         public override bool Equals(BackgroundScreen other)
         {
-            if (!(other is BackgroundScreenBeatmap otherBeatmapBackground)) return false;
+            if (!(other is BackgroundScreenBeatmap otherBeatmapBackground))
+                return false;
 
             return base.Equals(other) && beatmap == otherBeatmapBackground.Beatmap;
         }
@@ -157,7 +167,9 @@ namespace osu.Game.Screens.Backgrounds
                 ArgumentNullException.ThrowIfNull(drawable);
 
                 if (drawable is Background)
-                    throw new InvalidOperationException($"Use {nameof(Background)} to set a background.");
+                    throw new InvalidOperationException(
+                        $"Use {nameof(Background)} to set a background."
+                    );
 
                 base.Add(drawable);
             }
@@ -165,9 +177,10 @@ namespace osu.Game.Screens.Backgrounds
             /// <summary>
             /// As an optimisation, we add the two blur portions to be applied rather than actually applying two separate blurs.
             /// </summary>
-            private Vector2 blurTarget => !IgnoreUserSettings.Value
-                ? new Vector2(BlurAmount.Value + (float)userBlurLevel.Value * USER_BLUR_FACTOR)
-                : new Vector2(BlurAmount.Value);
+            private Vector2 blurTarget =>
+                !IgnoreUserSettings.Value
+                    ? new Vector2(BlurAmount.Value + (float)userBlurLevel.Value * USER_BLUR_FACTOR)
+                    : new Vector2(BlurAmount.Value);
 
             [BackgroundDependencyLoader]
             private void load(OsuConfigManager config)
@@ -188,7 +201,10 @@ namespace osu.Game.Screens.Backgrounds
             {
                 get
                 {
-                    if ((IgnoreUserSettings.Value || ShowStoryboard.Value) && StoryboardReplacesBackground.Value)
+                    if (
+                        (IgnoreUserSettings.Value || ShowStoryboard.Value)
+                        && StoryboardReplacesBackground.Value
+                    )
                         return 1;
 
                     return base.DimLevel;

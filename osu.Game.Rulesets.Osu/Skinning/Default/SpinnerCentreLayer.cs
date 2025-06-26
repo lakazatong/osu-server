@@ -31,11 +31,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             InternalChildren = new Drawable[]
             {
                 glow = new GlowPiece(),
-                circle = new CirclePiece
-                {
-                    Position = Vector2.Zero,
-                    Anchor = Anchor.Centre,
-                },
+                circle = new CirclePiece { Position = Vector2.Zero, Anchor = Anchor.Centre },
                 new RingPiece(),
                 symbol = new SpriteIcon
                 {
@@ -51,7 +47,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         protected override void Update()
         {
             base.Update();
-            symbol.Rotation = (float)Interpolation.Lerp(symbol.Rotation, spinner.RotationTracker.Rotation / 2, Math.Clamp(Math.Abs(Time.Elapsed) / 40, 0, 1));
+            symbol.Rotation = (float)
+                Interpolation.Lerp(
+                    symbol.Rotation,
+                    spinner.RotationTracker.Rotation / 2,
+                    Math.Clamp(Math.Abs(Time.Elapsed) / 40, 0, 1)
+                );
         }
 
         private Color4 accentColour;

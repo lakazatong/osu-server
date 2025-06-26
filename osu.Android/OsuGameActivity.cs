@@ -19,26 +19,75 @@ using Uri = Android.Net.Uri;
 
 namespace osu.Android
 {
-    [Activity(ConfigurationChanges = DEFAULT_CONFIG_CHANGES, Exported = true, LaunchMode = DEFAULT_LAUNCH_MODE, MainLauncher = true)]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataPathPattern = ".*\\\\.osz", DataHost = "*", DataMimeType = "*/*")]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataPathPattern = ".*\\\\.osk", DataHost = "*", DataMimeType = "*/*")]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataPathPattern = ".*\\\\.osr", DataHost = "*", DataMimeType = "*/*")]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataMimeType = "application/x-osu-beatmap-archive")]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataMimeType = "application/x-osu-skin-archive")]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault }, DataScheme = "content", DataMimeType = "application/x-osu-replay")]
-    [IntentFilter(new[] { Intent.ActionSend, Intent.ActionSendMultiple }, Categories = new[] { Intent.CategoryDefault }, DataMimeTypes = new[]
-    {
-        "application/zip",
-        "application/octet-stream",
-        "application/download",
-        "application/x-zip",
-        "application/x-zip-compressed",
-        // newer official mime types (see https://osu.ppy.sh/wiki/en/osu%21_File_Formats).
-        "application/x-osu-beatmap-archive",
-        "application/x-osu-skin-archive",
-        "application/x-osu-replay",
-    })]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryBrowsable, Intent.CategoryDefault }, DataSchemes = new[] { "osu", "osump" })]
+    [Activity(
+        ConfigurationChanges = DEFAULT_CONFIG_CHANGES,
+        Exported = true,
+        LaunchMode = DEFAULT_LAUNCH_MODE,
+        MainLauncher = true
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataPathPattern = ".*\\\\.osz",
+        DataHost = "*",
+        DataMimeType = "*/*"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataPathPattern = ".*\\\\.osk",
+        DataHost = "*",
+        DataMimeType = "*/*"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataPathPattern = ".*\\\\.osr",
+        DataHost = "*",
+        DataMimeType = "*/*"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataMimeType = "application/x-osu-beatmap-archive"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataMimeType = "application/x-osu-skin-archive"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault },
+        DataScheme = "content",
+        DataMimeType = "application/x-osu-replay"
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionSend, Intent.ActionSendMultiple },
+        Categories = new[] { Intent.CategoryDefault },
+        DataMimeTypes = new[]
+        {
+            "application/zip",
+            "application/octet-stream",
+            "application/download",
+            "application/x-zip",
+            "application/x-zip-compressed",
+            // newer official mime types (see https://osu.ppy.sh/wiki/en/osu%21_File_Formats).
+            "application/x-osu-beatmap-archive",
+            "application/x-osu-skin-archive",
+            "application/x-osu-replay",
+        }
+    )]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryBrowsable, Intent.CategoryDefault },
+        DataSchemes = new[] { "osu", "osump" }
+    )]
     public class OsuGameActivity : AndroidGameActivity
     {
         private static readonly string[] osu_url_schemes = { "osu", "osump" };
@@ -90,10 +139,13 @@ namespace osu.Android
 #pragma warning disable CA1422 // GetSize is deprecated
             WindowManager.DefaultDisplay.GetSize(displaySize);
 #pragma warning restore CA1422
-            float smallestWidthDp = Math.Min(displaySize.X, displaySize.Y) / Resources.DisplayMetrics.Density;
+            float smallestWidthDp =
+                Math.Min(displaySize.X, displaySize.Y) / Resources.DisplayMetrics.Density;
             IsTablet = smallestWidthDp >= 600f;
 
-            RequestedOrientation = DefaultOrientation = IsTablet ? ScreenOrientation.FullUser : ScreenOrientation.SensorLandscape;
+            RequestedOrientation = DefaultOrientation = IsTablet
+                ? ScreenOrientation.FullUser
+                : ScreenOrientation.SensorLandscape;
 
             // Currently (SDK 6.0.200), BundleAssemblies is not runnable for net6-android.
             // The assembly files are not available as files either after native AOT.
@@ -150,24 +202,33 @@ namespace osu.Android
             }
         }
 
-        private void handleImportFromUris(params Uri[] uris) => Task.Factory.StartNew(async () =>
-        {
-            var tasks = new List<ImportTask>();
-
-            await Task.WhenAll(uris.Select(async uri =>
-            {
-                var task = await AndroidImportTask.Create(ContentResolver!, uri).ConfigureAwait(false);
-
-                if (task != null)
+        private void handleImportFromUris(params Uri[] uris) =>
+            Task.Factory.StartNew(
+                async () =>
                 {
-                    lock (tasks)
-                    {
-                        tasks.Add(task);
-                    }
-                }
-            })).ConfigureAwait(false);
+                    var tasks = new List<ImportTask>();
 
-            await game.Import(tasks.ToArray()).ConfigureAwait(false);
-        }, TaskCreationOptions.LongRunning);
+                    await Task.WhenAll(
+                            uris.Select(async uri =>
+                            {
+                                var task = await AndroidImportTask
+                                    .Create(ContentResolver!, uri)
+                                    .ConfigureAwait(false);
+
+                                if (task != null)
+                                {
+                                    lock (tasks)
+                                    {
+                                        tasks.Add(task);
+                                    }
+                                }
+                            })
+                        )
+                        .ConfigureAwait(false);
+
+                    await game.Import(tasks.ToArray()).ConfigureAwait(false);
+                },
+                TaskCreationOptions.LongRunning
+            );
     }
 }

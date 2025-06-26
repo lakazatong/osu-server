@@ -52,16 +52,24 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("UR = 250", () => counter.Current.Value == 250.0);
 
-            AddRepeatStep("Revert UR", () =>
-            {
-                scoreProcessor.RevertResult(
-                    new JudgementResult(new HitCircle { HitWindows = hitWindows }, new Judgement())
-                    {
-                        GameplayRate = 1.0,
-                        TimeOffset = 25,
-                        Type = HitResult.Perfect,
-                    });
-            }, 4);
+            AddRepeatStep(
+                "Revert UR",
+                () =>
+                {
+                    scoreProcessor.RevertResult(
+                        new JudgementResult(
+                            new HitCircle { HitWindows = hitWindows },
+                            new Judgement()
+                        )
+                        {
+                            GameplayRate = 1.0,
+                            TimeOffset = 25,
+                            Type = HitResult.Perfect,
+                        }
+                    );
+                },
+                4
+            );
 
             AddUntilStep("UR is 0", () => counter.Current.Value == 0.0);
             AddUntilStep("Counter is invalid", () => counter.Child.Alpha == 0.3f);
@@ -107,12 +115,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             Clear();
 
-            Add(counter = new UnstableRateCounter
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(5),
-            });
+            Add(
+                counter = new UnstableRateCounter
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(5),
+                }
+            );
         }
 
         private void applyJudgement(double offsetMs, bool alt, double gameplayRate = 1.0)
@@ -125,20 +135,20 @@ namespace osu.Game.Tests.Visual.Gameplay
                 prev = placement;
             }
 
-            scoreProcessor.ApplyResult(new JudgementResult(new HitCircle { HitWindows = hitWindows }, new Judgement())
-            {
-                TimeOffset = placement,
-                GameplayRate = gameplayRate,
-                Type = HitResult.Perfect,
-            });
+            scoreProcessor.ApplyResult(
+                new JudgementResult(new HitCircle { HitWindows = hitWindows }, new Judgement())
+                {
+                    TimeOffset = placement,
+                    GameplayRate = gameplayRate,
+                    Type = HitResult.Perfect,
+                }
+            );
         }
 
         private partial class TestScoreProcessor : ScoreProcessor
         {
             public TestScoreProcessor()
-                : base(new OsuRuleset())
-            {
-            }
+                : base(new OsuRuleset()) { }
 
             public void Reset() => base.Reset(false);
         }

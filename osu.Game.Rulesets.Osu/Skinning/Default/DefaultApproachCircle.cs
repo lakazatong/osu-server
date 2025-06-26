@@ -23,7 +23,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         [BackgroundDependencyLoader]
         private void load(TextureStore textures)
         {
-            Texture = textures.Get(@"Gameplay/osu/approachcircle").WithMaximumSize(OsuHitObject.OBJECT_DIMENSIONS * 2);
+            Texture = textures
+                .Get(@"Gameplay/osu/approachcircle")
+                .WithMaximumSize(OsuHitObject.OBJECT_DIMENSIONS * 2);
 
             // In triangles and argon skins, we expanded hitcircles to take up the full 128 px which are clickable,
             // but still use the old approach circle sprite. To make it feel correct (ie. disappear as it collides
@@ -36,7 +38,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             base.LoadComplete();
 
             accentColour = drawableObject.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour => Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue), true);
+            accentColour.BindValueChanged(
+                colour => Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue),
+                true
+            );
         }
     }
 }

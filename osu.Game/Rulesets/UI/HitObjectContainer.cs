@@ -17,11 +17,15 @@ using osu.Game.Rulesets.Objects.Pooling;
 
 namespace osu.Game.Rulesets.UI
 {
-    public partial class HitObjectContainer : PooledDrawableWithLifetimeContainer<HitObjectLifetimeEntry, DrawableHitObject>, IHitObjectContainer
+    public partial class HitObjectContainer
+        : PooledDrawableWithLifetimeContainer<HitObjectLifetimeEntry, DrawableHitObject>,
+            IHitObjectContainer
     {
-        public IEnumerable<DrawableHitObject> Objects => InternalChildren.Cast<DrawableHitObject>().OrderBy(h => h.HitObject.StartTime);
+        public IEnumerable<DrawableHitObject> Objects =>
+            InternalChildren.Cast<DrawableHitObject>().OrderBy(h => h.HitObject.StartTime);
 
-        public IEnumerable<DrawableHitObject> AliveObjects => AliveEntries.Values.OrderBy(h => h.HitObject.StartTime);
+        public IEnumerable<DrawableHitObject> AliveObjects =>
+            AliveEntries.Values.OrderBy(h => h.HitObject.StartTime);
 
         /// <summary>
         /// Invoked when a <see cref="DrawableHitObject"/> is judged.
@@ -44,9 +48,13 @@ namespace osu.Game.Rulesets.UI
         /// </remarks>
         internal event Action<HitObject> HitObjectUsageFinished;
 
-        private readonly Dictionary<DrawableHitObject, IBindable> startTimeMap = new Dictionary<DrawableHitObject, IBindable>();
+        private readonly Dictionary<DrawableHitObject, IBindable> startTimeMap =
+            new Dictionary<DrawableHitObject, IBindable>();
 
-        private readonly Dictionary<HitObjectLifetimeEntry, DrawableHitObject> nonPooledDrawableMap = new Dictionary<HitObjectLifetimeEntry, DrawableHitObject>();
+        private readonly Dictionary<
+            HitObjectLifetimeEntry,
+            DrawableHitObject
+        > nonPooledDrawableMap = new Dictionary<HitObjectLifetimeEntry, DrawableHitObject>();
 
         [Resolved(CanBeNull = true)]
         private IPooledHitObjectProvider pooledObjectProvider { get; set; }
@@ -68,7 +76,8 @@ namespace osu.Game.Rulesets.UI
 
         public override bool Remove(HitObjectLifetimeEntry entry)
         {
-            if (!base.Remove(entry)) return false;
+            if (!base.Remove(entry))
+                return false;
 
             // This logic is not in `Remove(DrawableHitObject)` because a non-pooled drawable may be removed by specifying its entry.
             if (nonPooledDrawableMap.Remove(entry, out var drawable))
@@ -82,22 +91,32 @@ namespace osu.Game.Rulesets.UI
             if (nonPooledDrawableMap.TryGetValue(entry, out var drawable))
                 return drawable;
 
-            return pooledObjectProvider?.GetPooledDrawableRepresentation(entry.HitObject, null) ??
-                   throw new InvalidOperationException($"A drawable representation could not be retrieved for hitobject type: {entry.HitObject.GetType().ReadableName()}.");
+            return pooledObjectProvider?.GetPooledDrawableRepresentation(entry.HitObject, null)
+                ?? throw new InvalidOperationException(
+                    $"A drawable representation could not be retrieved for hitobject type: {entry.HitObject.GetType().ReadableName()}."
+                );
         }
 
-        protected override void AddDrawable(HitObjectLifetimeEntry entry, DrawableHitObject drawable)
+        protected override void AddDrawable(
+            HitObjectLifetimeEntry entry,
+            DrawableHitObject drawable
+        )
         {
-            if (nonPooledDrawableMap.ContainsKey(entry)) return;
+            if (nonPooledDrawableMap.ContainsKey(entry))
+                return;
 
             addDrawable(drawable);
             HitObjectUsageBegan?.Invoke(entry.HitObject);
         }
 
-        protected override void RemoveDrawable(HitObjectLifetimeEntry entry, DrawableHitObject drawable)
+        protected override void RemoveDrawable(
+            HitObjectLifetimeEntry entry,
+            DrawableHitObject drawable
+        )
         {
             drawable.OnKilled();
-            if (nonPooledDrawableMap.ContainsKey(entry)) return;
+            if (nonPooledDrawableMap.ContainsKey(entry))
+                return;
 
             removeDrawable(drawable);
             HitObjectUsageFinished?.Invoke(entry.HitObject);
@@ -127,7 +146,9 @@ namespace osu.Game.Rulesets.UI
         public virtual void Add(DrawableHitObject drawable)
         {
             if (drawable.Entry == null)
-                throw new InvalidOperationException($"May not add a {nameof(DrawableHitObject)} without {nameof(HitObject)} associated");
+                throw new InvalidOperationException(
+                    $"May not add a {nameof(DrawableHitObject)} without {nameof(HitObject)} associated"
+                );
 
             nonPooledDrawableMap.Add(drawable.Entry, drawable);
             addDrawable(drawable);

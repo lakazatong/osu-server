@@ -25,6 +25,7 @@ namespace osu.Game.Storyboards
         /// </remarks>
         /// <param name="element">The storyboard element.</param>
         /// <returns>The end time of this element.</returns>
-        public static double GetEndTime(this IStoryboardElement element) => (element as IStoryboardElementWithDuration)?.EndTime ?? element.StartTime;
+        public static double GetEndTime(this IStoryboardElement element) =>
+            (element as IStoryboardElementWithDuration)?.EndTime ?? element.StartTime;
     }
 }

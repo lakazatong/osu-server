@@ -41,13 +41,20 @@ namespace osu.Game.Skinning
         /// <param name="lookup">The namespace-complete resource name for this skinnable element.</param>
         /// <param name="defaultImplementation">A function to create the default skin implementation of this element.</param>
         /// <param name="confineMode">How (if at all) the <see cref="Drawable"/> should be resize to fit within our own bounds.</param>
-        public SkinnableDrawable(ISkinComponentLookup lookup, Func<ISkinComponentLookup, Drawable>? defaultImplementation = null, ConfineMode confineMode = ConfineMode.NoScaling)
+        public SkinnableDrawable(
+            ISkinComponentLookup lookup,
+            Func<ISkinComponentLookup, Drawable>? defaultImplementation = null,
+            ConfineMode confineMode = ConfineMode.NoScaling
+        )
             : this(lookup, confineMode)
         {
             createDefault = defaultImplementation;
         }
 
-        protected SkinnableDrawable(ISkinComponentLookup lookup, ConfineMode confineMode = ConfineMode.NoScaling)
+        protected SkinnableDrawable(
+            ISkinComponentLookup lookup,
+            ConfineMode confineMode = ConfineMode.NoScaling
+        )
         {
             ComponentLookup = lookup;
             this.confineMode = confineMode;
@@ -66,7 +73,8 @@ namespace osu.Game.Skinning
 
         private bool isDefault;
 
-        protected virtual Drawable CreateDefault(ISkinComponentLookup lookup) => createDefault?.Invoke(lookup) ?? Empty();
+        protected virtual Drawable CreateDefault(ISkinComponentLookup lookup) =>
+            createDefault?.Invoke(lookup) ?? Empty();
 
         /// <summary>
         /// Whether to apply size restrictions (specified via <see cref="confineMode"/>) to the default implementation.
@@ -107,7 +115,8 @@ namespace osu.Game.Skinning
             {
                 try
                 {
-                    if (isDefault && !ApplySizeRestrictionsToDefault) return;
+                    if (isDefault && !ApplySizeRestrictionsToDefault)
+                        return;
 
                     switch (confineMode)
                     {

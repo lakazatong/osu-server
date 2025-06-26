@@ -18,7 +18,8 @@ namespace osu.Game.Online
         /// Notifies the <see cref="PersistentEndpointClientConnector"/> that the connection has been closed.
         /// </summary>
         /// <param name="exception">The exception that the connection closed with.</param>
-        protected Task InvokeClosed(Exception? exception) => Closed?.Invoke(exception) ?? Task.CompletedTask;
+        protected Task InvokeClosed(Exception? exception) =>
+            Closed?.Invoke(exception) ?? Task.CompletedTask;
 
         /// <summary>
         /// Connects the client to the remote service to begin processing messages.

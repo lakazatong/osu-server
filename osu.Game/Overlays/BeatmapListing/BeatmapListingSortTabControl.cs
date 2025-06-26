@@ -2,18 +2,20 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Graphics;
-using osuTK.Graphics;
-using osuTK;
 using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays.BeatmapListing
 {
     public partial class BeatmapListingSortTabControl : OverlaySortTabControl<SortCriteria>
     {
-        public readonly Bindable<SortDirection> SortDirection = new Bindable<SortDirection>(Overlays.SortDirection.Descending);
+        public readonly Bindable<SortDirection> SortDirection = new Bindable<SortDirection>(
+            Overlays.SortDirection.Descending
+        );
 
         private (SearchCategory category, bool hasQuery)? currentParameters;
 
@@ -56,7 +58,8 @@ namespace osu.Game.Overlays.BeatmapListing
                     TabControl.AddItem(SortCriteria.Nominations);
             }
 
-            var nonQueryCriteria = category >= SearchCategory.Pending ? SortCriteria.Updated : SortCriteria.Ranked;
+            var nonQueryCriteria =
+                category >= SearchCategory.Pending ? SortCriteria.Updated : SortCriteria.Ranked;
 
             Current.Value = hasQuery ? SortCriteria.Relevance : nonQueryCriteria;
             SortDirection.Value = Overlays.SortDirection.Descending;
@@ -69,10 +72,8 @@ namespace osu.Game.Overlays.BeatmapListing
             currentParameters = newParameters;
         }
 
-        protected override SortTabControl CreateControl() => new BeatmapSortTabControl
-        {
-            SortDirection = { BindTarget = SortDirection },
-        };
+        protected override SortTabControl CreateControl() =>
+            new BeatmapSortTabControl { SortDirection = { BindTarget = SortDirection } };
 
         private partial class BeatmapSortTabControl : SortTabControl
         {
@@ -80,10 +81,8 @@ namespace osu.Game.Overlays.BeatmapListing
 
             public readonly Bindable<SortDirection> SortDirection = new Bindable<SortDirection>();
 
-            protected override TabItem<SortCriteria> CreateTabItem(SortCriteria value) => new BeatmapSortTabItem(value)
-            {
-                SortDirection = { BindTarget = SortDirection }
-            };
+            protected override TabItem<SortCriteria> CreateTabItem(SortCriteria value) =>
+                new BeatmapSortTabItem(value) { SortDirection = { BindTarget = SortDirection } };
         }
 
         private partial class BeatmapSortTabItem : SortTabItem
@@ -91,15 +90,14 @@ namespace osu.Game.Overlays.BeatmapListing
             public readonly Bindable<SortDirection> SortDirection = new Bindable<SortDirection>();
 
             public BeatmapSortTabItem(SortCriteria value)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
-            protected override TabButton CreateTabButton(SortCriteria value) => new BeatmapTabButton(value)
-            {
-                Active = { BindTarget = Active },
-                SortDirection = { BindTarget = SortDirection }
-            };
+            protected override TabButton CreateTabButton(SortCriteria value) =>
+                new BeatmapTabButton(value)
+                {
+                    Active = { BindTarget = Active },
+                    SortDirection = { BindTarget = SortDirection },
+                };
         }
 
         public partial class BeatmapTabButton : TabButton
@@ -120,25 +118,36 @@ namespace osu.Game.Overlays.BeatmapListing
             public BeatmapTabButton(SortCriteria value)
                 : base(value)
             {
-                Add(icon = new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AlwaysPresent = true,
-                    Alpha = 0,
-                    Size = new Vector2(6),
-                    Icon = FontAwesome.Solid.CaretDown,
-                });
+                Add(
+                    icon = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AlwaysPresent = true,
+                        Alpha = 0,
+                        Size = new Vector2(6),
+                        Icon = FontAwesome.Solid.CaretDown,
+                    }
+                );
             }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
 
-                SortDirection.BindValueChanged(direction =>
-                {
-                    icon.ScaleTo(direction.NewValue == Overlays.SortDirection.Ascending && Active.Value ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
-                }, true);
+                SortDirection.BindValueChanged(
+                    direction =>
+                    {
+                        icon.ScaleTo(
+                            direction.NewValue == Overlays.SortDirection.Ascending && Active.Value
+                                ? new Vector2(1f, -1f)
+                                : Vector2.One,
+                            300,
+                            Easing.OutQuint
+                        );
+                    },
+                    true
+                );
             }
 
             protected override void UpdateState()
@@ -150,7 +159,10 @@ namespace osu.Game.Overlays.BeatmapListing
             protected override bool OnClick(ClickEvent e)
             {
                 if (Active.Value)
-                    SortDirection.Value = SortDirection.Value == Overlays.SortDirection.Ascending ? Overlays.SortDirection.Descending : Overlays.SortDirection.Ascending;
+                    SortDirection.Value =
+                        SortDirection.Value == Overlays.SortDirection.Ascending
+                            ? Overlays.SortDirection.Descending
+                            : Overlays.SortDirection.Ascending;
 
                 return base.OnClick(e);
             }

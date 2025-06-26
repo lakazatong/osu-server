@@ -51,13 +51,15 @@ namespace osu.Game.Online.Multiplayer
         public MatchRoomState? MatchState { get; set; }
 
         [Key(6)]
-        public IList<MultiplayerPlaylistItem> Playlist { get; set; } = new List<MultiplayerPlaylistItem>();
+        public IList<MultiplayerPlaylistItem> Playlist { get; set; } =
+            new List<MultiplayerPlaylistItem>();
 
         /// <summary>
         /// The currently running countdowns.
         /// </summary>
         [Key(7)]
-        public IList<MultiplayerCountdown> ActiveCountdowns { get; set; } = new List<MultiplayerCountdown>();
+        public IList<MultiplayerCountdown> ActiveCountdowns { get; set; } =
+            new List<MultiplayerCountdown>();
 
         /// <summary>
         /// The ID of the chat channel for the room.
@@ -86,14 +88,17 @@ namespace osu.Game.Online.Multiplayer
         /// </summary>
         [IgnoreMember]
         [JsonIgnore]
-        public MultiplayerPlaylistItem CurrentPlaylistItem => Playlist.Single(item => item.ID == Settings.PlaylistItemId);
+        public MultiplayerPlaylistItem CurrentPlaylistItem =>
+            Playlist.Single(item => item.ID == Settings.PlaylistItemId);
 
         /// <summary>
         /// Determines whether a user is able to add playlist items to this room.
         /// </summary>
         /// <param name="user">The user to check.</param>
-        public bool CanAddPlaylistItems(MultiplayerRoomUser user) => user.Equals(Host) || Settings.QueueMode != QueueMode.HostOnly;
+        public bool CanAddPlaylistItems(MultiplayerRoomUser user) =>
+            user.Equals(Host) || Settings.QueueMode != QueueMode.HostOnly;
 
-        public override string ToString() => $"RoomID:{RoomID} Host:{Host?.UserID} Users:{Users.Count} State:{State} Settings: [{Settings}]";
+        public override string ToString() =>
+            $"RoomID:{RoomID} Host:{Host?.UserID} Users:{Users.Count} State:{State} Settings: [{Settings}]";
     }
 }

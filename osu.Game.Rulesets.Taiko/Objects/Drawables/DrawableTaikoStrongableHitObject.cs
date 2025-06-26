@@ -11,7 +11,8 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Taiko.Objects.Drawables
 {
-    public abstract partial class DrawableTaikoStrongableHitObject<TObject, TStrongNestedObject> : DrawableTaikoHitObject<TObject>
+    public abstract partial class DrawableTaikoStrongableHitObject<TObject, TStrongNestedObject>
+        : DrawableTaikoHitObject<TObject>
         where TObject : TaikoStrongableHitObject
         where TStrongNestedObject : StrongNestedHitObject
     {
@@ -78,6 +79,8 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         /// </summary>
         /// <param name="hitObject">The strong hitobject.</param>
         /// <returns>The strong hitobject handler.</returns>
-        protected abstract DrawableStrongNestedHit CreateStrongNestedHit(TStrongNestedObject hitObject);
+        protected abstract DrawableStrongNestedHit CreateStrongNestedHit(
+            TStrongNestedObject hitObject
+        );
     }
 }

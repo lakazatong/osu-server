@@ -52,7 +52,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// <summary>
         /// The amount of bonus score gained from spinning after the required number of spins, for display purposes.
         /// </summary>
-        public double CurrentBonusScore => score_per_tick * Math.Clamp(completedFullSpins.Value - HitObject.SpinsRequiredForBonus, 0, HitObject.MaximumBonusSpins);
+        public double CurrentBonusScore =>
+            score_per_tick
+            * Math.Clamp(
+                completedFullSpins.Value - HitObject.SpinsRequiredForBonus,
+                0,
+                HitObject.MaximumBonusSpins
+            );
 
         /// <summary>
         /// The maximum amount of bonus score which can be achieved from extra spins.
@@ -71,14 +77,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private const double fade_out_duration = 240;
 
         public DrawableSpinner()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableSpinner([CanBeNull] Spinner s = null)
-            : base(s)
-        {
-        }
+            : base(s) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -86,39 +88,41 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
 
-            AddRangeInternal(new Drawable[]
-            {
-                spmCalculator = new SpinnerSpmCalculator
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Result = { BindTarget = SpinsPerMinute },
-                },
-                ticks = new Container<DrawableSpinnerTick>
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new AspectContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    spmCalculator = new SpinnerSpmCalculator
                     {
-                        Body = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SpinnerBody), _ => new DefaultSpinner()),
-                        RotationTracker = new SpinnerRotationTracker(this)
-                    }
-                },
-                spinningSample = new PausableSkinnableSound
-                {
-                    Volume = { Value = 0 },
-                    MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
-                    Looping = true,
-                    Frequency = { Value = spinning_sample_initial_frequency }
-                },
-                maxBonusSample = new PausableSkinnableSound
-                {
-                    MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                        Result = { BindTarget = SpinsPerMinute },
+                    },
+                    ticks = new Container<DrawableSpinnerTick> { RelativeSizeAxes = Axes.Both },
+                    new AspectContainer
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Y,
+                        Children = new Drawable[]
+                        {
+                            Body = new SkinnableDrawable(
+                                new OsuSkinComponentLookup(OsuSkinComponents.SpinnerBody),
+                                _ => new DefaultSpinner()
+                            ),
+                            RotationTracker = new SpinnerRotationTracker(this),
+                        },
+                    },
+                    spinningSample = new PausableSkinnableSound
+                    {
+                        Volume = { Value = 0 },
+                        MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                        Looping = true,
+                        Frequency = { Value = spinning_sample_initial_frequency },
+                    },
+                    maxBonusSample = new PausableSkinnableSound
+                    {
+                        MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                    },
                 }
-            });
+            );
 
             PositionBindable.BindValueChanged(pos => Position = pos.NewValue);
         }
@@ -143,10 +147,16 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         {
             base.LoadSamples();
 
-            spinningSample.Samples = HitObject.CreateSpinningSamples().Cast<ISampleInfo>().ToArray();
+            spinningSample.Samples = HitObject
+                .CreateSpinningSamples()
+                .Cast<ISampleInfo>()
+                .ToArray();
             spinningSample.Frequency.Value = spinning_sample_initial_frequency;
 
-            maxBonusSample.Samples = new ISampleInfo[] { new SpinnerBonusMaxSampleInfo(HitObject.CreateHitSampleInfo()) };
+            maxBonusSample.Samples = new ISampleInfo[]
+            {
+                new SpinnerBonusMaxSampleInfo(HitObject.CreateHitSampleInfo()),
+            };
         }
 
         private void updateSpinningSample(ValueChangedEvent<bool> tracking)
@@ -187,12 +197,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         {
             base.UpdateHitStateTransforms(state);
 
-            this.FadeOut(fade_out_duration).OnComplete(_ =>
-            {
-                // looping sample should be stopped here as it is safer than running in the OnComplete
-                // of the volume transition above.
-                spinningSample.Stop();
-            });
+            this.FadeOut(fade_out_duration)
+                .OnComplete(_ =>
+                {
+                    // looping sample should be stopped here as it is safer than running in the OnComplete
+                    // of the volume transition above.
+                    spinningSample.Stop();
+                });
 
             Expire();
 
@@ -223,7 +234,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         protected override void ApplySkin(ISkinSource skin, bool allowFallback)
         {
             base.ApplySkin(skin, allowFallback);
-            spinnerFrequencyModulate = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.SpinnerFrequencyModulate)?.Value ?? true;
+            spinnerFrequencyModulate =
+                skin.GetConfig<OsuSkinConfiguration, bool>(
+                    OsuSkinConfiguration.SpinnerFrequencyModulate
+                )?.Value ?? true;
         }
 
         /// <summary>
@@ -242,11 +256,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             }
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new OsuSpinnerJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new OsuSpinnerJudgementResult(HitObject, judgement);
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (Time.Current < HitObject.StartTime) return;
+            if (Time.Current < HitObject.StartTime)
+                return;
 
             if (Progress >= 1)
                 Result.TimeCompleted ??= Time.Current;
@@ -258,18 +274,20 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             foreach (var tick in ticks.Where(t => !t.Result.HasResult))
                 tick.TriggerResult(false);
 
-            ApplyResult(static (r, hitObject) =>
-            {
-                var spinner = (DrawableSpinner)hitObject;
-                if (spinner.Progress >= 1)
-                    r.Type = HitResult.Great;
-                else if (spinner.Progress > .9)
-                    r.Type = HitResult.Ok;
-                else if (spinner.Progress > .75)
-                    r.Type = HitResult.Meh;
-                else if (spinner.Time.Current >= spinner.HitObject.EndTime)
-                    r.Type = r.Judgement.MinResult;
-            });
+            ApplyResult(
+                static (r, hitObject) =>
+                {
+                    var spinner = (DrawableSpinner)hitObject;
+                    if (spinner.Progress >= 1)
+                        r.Type = HitResult.Great;
+                    else if (spinner.Progress > .9)
+                        r.Type = HitResult.Ok;
+                    else if (spinner.Progress > .75)
+                        r.Type = HitResult.Meh;
+                    else if (spinner.Time.Current >= spinner.HitObject.EndTime)
+                        r.Type = r.Judgement.MinResult;
+                }
+            );
         }
 
         protected override void Update()
@@ -277,10 +295,12 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             base.Update();
 
             if (HandleUserInput)
-                RotationTracker.Tracking = RotationTracker.IsSpinnableTime && !Result.HasResult && correctButtonPressed();
+                RotationTracker.Tracking =
+                    RotationTracker.IsSpinnableTime && !Result.HasResult && correctButtonPressed();
 
             if (spinningSample != null && spinnerFrequencyModulate)
-                spinningSample.Frequency.Value = spinning_sample_modulated_base_frequency + Progress;
+                spinningSample.Frequency.Value =
+                    spinning_sample_modulated_base_frequency + Progress;
 
             // Ticks can theoretically be judged at any point in the spinner's duration.
             // A tick must be alive to correctly play back samples,
@@ -330,7 +350,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             updateBonusScore();
         }
 
-        private static readonly int score_per_tick = new OsuScoreProcessor().GetBaseScoreForResult(new SpinnerBonusTick.OsuSpinnerBonusTickJudgement().MaxResult);
+        private static readonly int score_per_tick = new OsuScoreProcessor().GetBaseScoreForResult(
+            new SpinnerBonusTick.OsuSpinnerBonusTickJudgement().MaxResult
+        );
 
         private void updateBonusScore()
         {
@@ -380,9 +402,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             public SpinnerBonusMaxSampleInfo(HitSampleInfo sampleInfo)
                 : base("spinnerbonus-max", sampleInfo.Bank, sampleInfo.Suffix, sampleInfo.Volume)
-
-            {
-            }
+            { }
         }
     }
 }

@@ -51,9 +51,7 @@ namespace osu.Game.Skinning
         public List<SerialisedDrawableInfo> Children { get; } = new List<SerialisedDrawableInfo>();
 
         [JsonConstructor]
-        public SerialisedDrawableInfo()
-        {
-        }
+        public SerialisedDrawableInfo() { }
 
         /// <summary>
         /// Construct a new instance populating all attributes from the provided drawable.
@@ -119,11 +117,11 @@ namespace osu.Game.Skinning
         public static Type[] GetAllAvailableDrawables(RulesetInfo? ruleset = null)
         {
             return (ruleset?.CreateInstance().GetType() ?? typeof(OsuGame))
-                   .Assembly.GetTypes()
-                   .Where(t => !t.IsInterface && !t.IsAbstract && t.IsPublic)
-                   .Where(t => typeof(ISerialisableDrawable).IsAssignableFrom(t))
-                   .OrderBy(t => t.Name)
-                   .ToArray();
+                .Assembly.GetTypes()
+                .Where(t => !t.IsInterface && !t.IsAbstract && t.IsPublic)
+                .Where(t => typeof(ISerialisableDrawable).IsAssignableFrom(t))
+                .OrderBy(t => t.Name)
+                .ToArray();
         }
     }
 }

@@ -41,16 +41,26 @@ namespace osu.Game.Tests.Visual.Gameplay
         private GameplayState gameplayState = TestGameplayState.Create(new OsuRuleset());
 
         [Cached(typeof(IGameplayClock))]
-        private readonly IGameplayClock gameplayClock = new GameplayClockContainer(new TrackVirtual(60000), false, false);
+        private readonly IGameplayClock gameplayClock = new GameplayClockContainer(
+            new TrackVirtual(60000),
+            false,
+            false
+        );
 
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private EmptyGameplayLeaderboardProvider leaderboardProvider = new EmptyGameplayLeaderboardProvider();
+        private EmptyGameplayLeaderboardProvider leaderboardProvider =
+            new EmptyGameplayLeaderboardProvider();
 
         private IEnumerable<HUDOverlay> hudOverlays => CreatedDrawables.OfType<HUDOverlay>();
 
         // best way to check without exposing.
         private Drawable hideTarget => hudOverlay.ChildrenOfType<SkinnableContainer>().First();
-        private Drawable keyCounterFlow => hudOverlay.ChildrenOfType<KeyCounterDisplay>().First().ChildrenOfType<FillFlowContainer<KeyCounter>>().Single();
+        private Drawable keyCounterFlow =>
+            hudOverlay
+                .ChildrenOfType<KeyCounterDisplay>()
+                .First()
+                .ChildrenOfType<FillFlowContainer<KeyCounter>>()
+                .Single();
 
         public TestSceneSkinnableHUDOverlay()
         {
@@ -83,7 +93,11 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddStep("set showhud false", () => hudOverlays.ForEach(h => h.ShowHud.Value = false));
 
-            AddUntilStep("hidetarget is hidden", () => hideTarget.Alpha, () => Is.LessThanOrEqualTo(0));
+            AddUntilStep(
+                "hidetarget is hidden",
+                () => hideTarget.Alpha,
+                () => Is.LessThanOrEqualTo(0)
+            );
             AddAssert("pause button is still visible", () => hudOverlay.HoldToQuit.IsPresent);
 
             // Key counter flow container should not be affected by this, only the key counter display will be hidden as checked above.
@@ -92,20 +106,29 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void createNew(Action<HUDOverlay> action = null)
         {
-            AddStep("create overlay", () =>
-            {
-                SetContents(_ =>
+            AddStep(
+                "create overlay",
+                () =>
                 {
-                    hudOverlay = new HUDOverlay(new DrawableOsuRuleset(new OsuRuleset(), new OsuBeatmap()), Array.Empty<Mod>());
+                    SetContents(_ =>
+                    {
+                        hudOverlay = new HUDOverlay(
+                            new DrawableOsuRuleset(new OsuRuleset(), new OsuBeatmap()),
+                            Array.Empty<Mod>()
+                        );
 
-                    action?.Invoke(hudOverlay);
+                        action?.Invoke(hudOverlay);
 
-                    return hudOverlay;
-                });
-            });
+                        return hudOverlay;
+                    });
+                }
+            );
             AddUntilStep("HUD overlay loaded", () => hudOverlay.IsAlive);
-            AddUntilStep("components container loaded",
-                () => hudOverlay.ChildrenOfType<SkinnableContainer>().Any(scc => scc.ComponentsLoaded));
+            AddUntilStep(
+                "components container loaded",
+                () =>
+                    hudOverlay.ChildrenOfType<SkinnableContainer>().Any(scc => scc.ComponentsLoaded)
+            );
         }
 
         protected override Ruleset CreateRulesetForSkinProvider() => new OsuRuleset();

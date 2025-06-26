@@ -19,7 +19,9 @@ using osuTK;
 
 namespace osu.Game.Beatmaps.Drawables
 {
-    internal partial class DifficultyIconTooltip : VisibilityContainer, ITooltip<DifficultyIconTooltipContent>
+    internal partial class DifficultyIconTooltip
+        : VisibilityContainer,
+            ITooltip<DifficultyIconTooltipContent>
     {
         private OsuSpriteText difficultyName = null!;
         private StarRatingDisplay starRating = null!;
@@ -42,11 +44,7 @@ namespace osu.Game.Beatmaps.Drawables
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Gray3,
-                    RelativeSizeAxes = Axes.Both
-                },
+                new Box { Colour = colours.Gray3, RelativeSizeAxes = Axes.Both },
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
@@ -61,12 +59,12 @@ namespace osu.Game.Beatmaps.Drawables
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Font = OsuFont.GetFont(size: 16, weight: FontWeight.Bold)
+                            Font = OsuFont.GetFont(size: 16, weight: FontWeight.Bold),
                         },
                         starRating = new StarRatingDisplay(default, StarRatingDisplaySize.Small)
                         {
                             Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
+                            Origin = Anchor.Centre,
                         },
                         difficultyFillFlowContainer = new FillFlowContainer
                         {
@@ -80,9 +78,15 @@ namespace osu.Game.Beatmaps.Drawables
                             {
                                 circleSize = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
                                 drainRate = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
-                                overallDifficulty = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
-                                approachRate = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
-                            }
+                                overallDifficulty = new OsuSpriteText
+                                {
+                                    Font = OsuFont.GetFont(size: 14),
+                                },
+                                approachRate = new OsuSpriteText
+                                {
+                                    Font = OsuFont.GetFont(size: 14),
+                                },
+                            },
                         },
                         miscFillFlowContainer = new FillFlowContainer
                         {
@@ -96,10 +100,10 @@ namespace osu.Game.Beatmaps.Drawables
                             {
                                 length = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
                                 bpm = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -131,7 +135,9 @@ namespace osu.Game.Beatmaps.Drawables
 
             double bpmAdjusted = displayedContent.BeatmapInfo.BPM * rate;
 
-            BeatmapDifficulty originalDifficulty = new BeatmapDifficulty(displayedContent.BeatmapInfo.Difficulty);
+            BeatmapDifficulty originalDifficulty = new BeatmapDifficulty(
+                displayedContent.BeatmapInfo.Difficulty
+            );
 
             if (displayedContent.Mods != null)
             {
@@ -140,14 +146,20 @@ namespace osu.Game.Beatmaps.Drawables
             }
 
             Ruleset ruleset = displayedContent.Ruleset.CreateInstance();
-            BeatmapDifficulty adjustedDifficulty = ruleset.GetRateAdjustedDisplayDifficulty(originalDifficulty, rate);
+            BeatmapDifficulty adjustedDifficulty = ruleset.GetRateAdjustedDisplayDifficulty(
+                originalDifficulty,
+                rate
+            );
 
             circleSize.Text = @"CS: " + adjustedDifficulty.CircleSize.ToString(@"0.##");
             drainRate.Text = @" HP: " + adjustedDifficulty.DrainRate.ToString(@"0.##");
             approachRate.Text = @" AR: " + adjustedDifficulty.ApproachRate.ToString(@"0.##");
-            overallDifficulty.Text = @" OD: " + adjustedDifficulty.OverallDifficulty.ToString(@"0.##");
+            overallDifficulty.Text =
+                @" OD: " + adjustedDifficulty.OverallDifficulty.ToString(@"0.##");
 
-            TimeSpan lengthTimeSpan = TimeSpan.FromMilliseconds(displayedContent.BeatmapInfo.Length / rate);
+            TimeSpan lengthTimeSpan = TimeSpan.FromMilliseconds(
+                displayedContent.BeatmapInfo.Length / rate
+            );
             length.Text = "Length: " + lengthTimeSpan.ToFormattedDuration();
             bpm.Text = " BPM: " + Math.Round(bpmAdjusted, 0);
         }
@@ -167,10 +179,20 @@ namespace osu.Game.Beatmaps.Drawables
         public readonly Mod[]? Mods;
         public readonly DifficultyIconTooltipType TooltipType;
 
-        public DifficultyIconTooltipContent(IBeatmapInfo beatmapInfo, IBindable<StarDifficulty> difficulty, IRulesetInfo rulesetInfo, Mod[]? mods, DifficultyIconTooltipType tooltipType)
+        public DifficultyIconTooltipContent(
+            IBeatmapInfo beatmapInfo,
+            IBindable<StarDifficulty> difficulty,
+            IRulesetInfo rulesetInfo,
+            Mod[]? mods,
+            DifficultyIconTooltipType tooltipType
+        )
         {
             if (tooltipType == DifficultyIconTooltipType.None)
-                throw new ArgumentOutOfRangeException(nameof(tooltipType), tooltipType, "Cannot instantiate a tooltip without a type");
+                throw new ArgumentOutOfRangeException(
+                    nameof(tooltipType),
+                    tooltipType,
+                    "Cannot instantiate a tooltip without a type"
+                );
 
             BeatmapInfo = beatmapInfo;
             Difficulty = difficulty;

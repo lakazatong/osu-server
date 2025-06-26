@@ -108,9 +108,7 @@ namespace osu.Game.Screens.Play.HUD.ArgonHealthDisplayParts
             private IUniformBuffer<ArgonBarPathParameters>? parametersBuffer;
 
             public ArgonBarPathDrawNode(ArgonHealthDisplayBar source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private Vector2 size;
             private Vector2 progressRange;
@@ -124,7 +122,10 @@ namespace osu.Game.Screens.Play.HUD.ArgonHealthDisplayParts
                 base.ApplyState();
 
                 size = Source.DrawSize;
-                progressRange = new Vector2(Math.Min(Source.progressRange.X, Source.progressRange.Y), Source.progressRange.Y);
+                progressRange = new Vector2(
+                    Math.Min(Source.progressRange.X, Source.progressRange.Y),
+                    Source.progressRange.Y
+                );
                 pathRadius = Source.PathRadius;
                 glowPortion = Source.GlowPortion;
                 barColour = Source.barColour;
@@ -147,11 +148,16 @@ namespace osu.Game.Screens.Play.HUD.ArgonHealthDisplayParts
                 parametersBuffer.Data = new ArgonBarPathParameters
                 {
                     BarColour = new Vector4(barColour.R, barColour.G, barColour.B, barColour.A),
-                    GlowColour = new Vector4(glowColour.R, glowColour.G, glowColour.B, glowColour.A),
+                    GlowColour = new Vector4(
+                        glowColour.R,
+                        glowColour.G,
+                        glowColour.B,
+                        glowColour.A
+                    ),
                     GlowPortion = glowPortion,
                     Size = size,
                     ProgressRange = progressRange,
-                    PathRadius = pathRadius
+                    PathRadius = pathRadius,
                 };
 
                 shader.BindUniformBlock("m_ArgonBarPathParameters", parametersBuffer);

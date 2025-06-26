@@ -22,7 +22,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         public const float NOTE_ACCENT_RATIO = 0.82f;
         public const float CORNER_RADIUS = 3.4f;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
         private readonly IBindable<Color4> accentColour = new Bindable<Color4>();
 
         private readonly Box colouredBox;
@@ -40,7 +41,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                 new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = ColourInfo.GradientVertical(Color4.Black.Opacity(0), Colour4.Black)
+                    Colour = ColourInfo.GradientVertical(Color4.Black.Opacity(0), Colour4.Black),
                 },
                 new Container
                 {
@@ -52,11 +53,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     CornerRadius = CORNER_RADIUS,
                     Children = new Drawable[]
                     {
-                        colouredBox = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        }
-                    }
+                        colouredBox = new Box { RelativeSizeAxes = Axes.Both },
+                    },
                 },
                 new Circle
                 {
@@ -69,17 +67,18 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
             };
         }
 
-        protected virtual Drawable CreateIcon() => new SpriteIcon
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Y = 4,
-            // TODO: replace with a non-squashed version.
-            // The 0.7f height scale should be removed.
-            Icon = FontAwesome.Solid.AngleDown,
-            Size = new Vector2(20),
-            Scale = new Vector2(1, 0.7f)
-        };
+        protected virtual Drawable CreateIcon() =>
+            new SpriteIcon
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Y = 4,
+                // TODO: replace with a non-squashed version.
+                // The 0.7f height scale should be removed.
+                Icon = FontAwesome.Solid.AngleDown,
+                Size = new Vector2(20),
+                Scale = new Vector2(1, 0.7f),
+            };
 
         [BackgroundDependencyLoader(true)]
         private void load(IScrollingInfo scrollingInfo, DrawableHitObject? drawableObject)
@@ -96,9 +95,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            colouredBox.Anchor = colouredBox.Origin = direction.NewValue == ScrollingDirection.Up
-                ? Anchor.TopCentre
-                : Anchor.BottomCentre;
+            colouredBox.Anchor = colouredBox.Origin =
+                direction.NewValue == ScrollingDirection.Up
+                    ? Anchor.TopCentre
+                    : Anchor.BottomCentre;
 
             Scale = new Vector2(1, direction.NewValue == ScrollingDirection.Up ? -1 : 1);
         }

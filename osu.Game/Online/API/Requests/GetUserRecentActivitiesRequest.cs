@@ -44,6 +44,6 @@ namespace osu.Game.Online.API.Requests
         Ranked,
         Approved,
         Qualified,
-        Loved
+        Loved,
     }
 }

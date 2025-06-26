@@ -8,11 +8,11 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Localisation;
+using osu.Game.BellaFiora;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 using osuTK;
-using osu.Game.BellaFiora;
 
 namespace osu.Game.Overlays.Mods
 {
@@ -39,14 +39,12 @@ namespace osu.Game.Overlays.Mods
                 Origin = Anchor.Centre,
                 Active = { BindTarget = Active },
                 Shear = -OsuGame.SHEAR,
-                Scale = new Vector2(HEIGHT / ModSwitchSmall.DEFAULT_SIZE)
+                Scale = new Vector2(HEIGHT / ModSwitchSmall.DEFAULT_SIZE),
             };
         }
 
         public ModPanel(Mod mod)
-            : this(new ModState(mod))
-        {
-        }
+            : this(new ModState(mod)) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -60,21 +58,24 @@ namespace osu.Game.Overlays.Mods
 
             modState.ValidForSelection.BindValueChanged(_ => updateFilterState());
             modState.MatchingTextFilter.BindValueChanged(_ => updateFilterState(), true);
-            modState.Preselected.BindValueChanged(b =>
-            {
-                if (b.NewValue)
+            modState.Preselected.BindValueChanged(
+                b =>
                 {
-                    Content.EdgeEffect = new EdgeEffectParameters
+                    if (b.NewValue)
                     {
-                        Type = EdgeEffectType.Glow,
-                        Colour = AccentColour,
-                        Hollow = true,
-                        Radius = 2,
-                    };
-                }
-                else
-                    Content.EdgeEffect = default;
-            }, true);
+                        Content.EdgeEffect = new EdgeEffectParameters
+                        {
+                            Type = EdgeEffectType.Glow,
+                            Colour = AccentColour,
+                            Hollow = true,
+                            Radius = 2,
+                        };
+                    }
+                    else
+                        Content.EdgeEffect = default;
+                },
+                true
+            );
 
             Triggers.ModPanelLoadComplete(this);
         }
@@ -96,12 +97,8 @@ namespace osu.Game.Overlays.Mods
         /// <seealso cref="ModState.Visible"/>
         public bool Visible => modState.Visible;
 
-        public override IEnumerable<LocalisableString> FilterTerms => new LocalisableString[]
-        {
-            Mod.Name,
-            Mod.Name.Replace(" ", string.Empty),
-            Mod.Acronym,
-        };
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            new LocalisableString[] { Mod.Name, Mod.Name.Replace(" ", string.Empty), Mod.Acronym };
 
         public override bool MatchingFilter
         {

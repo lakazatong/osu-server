@@ -13,7 +13,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneChangelogSupporterPromo : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         public TestSceneChangelogSupporterPromo()
         {
@@ -22,13 +24,9 @@ namespace osu.Game.Tests.Visual.Online
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background4,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
                     new ChangelogSupporterPromo(),
-                }
+                },
             };
         }
     }

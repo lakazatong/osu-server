@@ -21,14 +21,16 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             this.userId = userId;
         }
 
-        protected override APIRequest<MultiplayerScore> CreateScoreRequest() => new ShowPlaylistUserScoreRequest(RoomId, PlaylistItem.ID, userId);
+        protected override APIRequest<MultiplayerScore> CreateScoreRequest() =>
+            new ShowPlaylistUserScoreRequest(RoomId, PlaylistItem.ID, userId);
 
         protected override void OnScoresAdded(ScoreInfo[] scores)
         {
             base.OnScoresAdded(scores);
 
             // Prefer selecting the local user's score, or otherwise default to the first visible score.
-            SelectedScore.Value ??= scores.FirstOrDefault(s => s.UserID == userId) ?? scores.FirstOrDefault();
+            SelectedScore.Value ??=
+                scores.FirstOrDefault(s => s.UserID == userId) ?? scores.FirstOrDefault();
         }
     }
 }

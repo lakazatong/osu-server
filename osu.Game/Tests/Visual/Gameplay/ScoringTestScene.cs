@@ -37,8 +37,15 @@ namespace osu.Game.Tests.Visual.Gameplay
         protected abstract IBeatmap CreateBeatmap(int maxCombo);
 
         protected abstract IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods);
-        protected abstract IScoringAlgorithm CreateScoreV2(int maxCombo, IReadOnlyList<Mod> selectedMods);
-        protected abstract ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> mods);
+        protected abstract IScoringAlgorithm CreateScoreV2(
+            int maxCombo,
+            IReadOnlyList<Mod> selectedMods
+        );
+        protected abstract ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(
+            IBeatmap beatmap,
+            ScoringMode mode,
+            IReadOnlyList<Mod> mods
+        );
 
         protected Bindable<int> MaxCombo => sliderMaxCombo.Current;
         protected BindableList<double> NonPerfectLocations => graphs.NonPerfectLocations;
@@ -72,153 +79,152 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup tests", () =>
-            {
-                OsuTextFlowContainer clickExplainer;
-
-                Children = new Drawable[]
+            AddStep(
+                "setup tests",
+                () =>
                 {
-                    new Box
+                    OsuTextFlowContainer clickExplainer;
+
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Colour4.Black
-                    },
-                    new GridContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        RowDimensions = new[]
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Black },
+                        new GridContainer
                         {
-                            new Dimension(),
-                            new Dimension(GridSizeMode.AutoSize),
-                            new Dimension(GridSizeMode.AutoSize),
-                            new Dimension(GridSizeMode.AutoSize),
-                        },
-                        Content = new[]
-                        {
-                            new Drawable[]
+                            RelativeSizeAxes = Axes.Both,
+                            RowDimensions = new[]
                             {
-                                graphs = new GraphContainer(supportsNonPerfectJudgements)
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                },
+                                new Dimension(),
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(GridSizeMode.AutoSize),
                             },
-                            new Drawable[]
+                            Content = new[]
                             {
-                                legend = new FillFlowContainer<LegendEntry>
+                                new Drawable[]
                                 {
-                                    Padding = new MarginPadding(20),
-                                    Direction = FillDirection.Vertical,
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                },
-                            },
-                            new Drawable[]
-                            {
-                                new Container
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding { Horizontal = 20 },
-                                    Children = new Drawable[]
+                                    graphs = new GraphContainer(supportsNonPerfectJudgements)
                                     {
-                                        new OsuSpriteText
-                                        {
-                                            Text = "Selected mods",
-                                            Anchor = Anchor.CentreLeft,
-                                            Origin = Anchor.CentreLeft,
-                                        },
-                                        new FillFlowContainer
-                                        {
-                                            Anchor = Anchor.TopRight,
-                                            Origin = Anchor.TopRight,
-                                            AutoSizeAxes = Axes.Both,
-                                            Direction = FillDirection.Horizontal,
-                                            Spacing = new Vector2(10),
-                                            Children = new Drawable[]
-                                            {
-                                                changeModsButton = new RoundedButton
-                                                {
-                                                    Text = "Change",
-                                                    Width = 100,
-                                                    Anchor = Anchor.CentreRight,
-                                                    Origin = Anchor.CentreRight,
-                                                },
-                                                modsText = new OsuSpriteText
-                                                {
-                                                    Anchor = Anchor.CentreRight,
-                                                    Origin = Anchor.CentreRight,
-                                                },
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            new Drawable[]
-                            {
-                                new FillFlowContainer
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                },
+                                new Drawable[]
                                 {
-                                    Padding = new MarginPadding(20),
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Direction = FillDirection.Vertical,
-                                    Spacing = new Vector2(10),
-                                    Children = new Drawable[]
+                                    legend = new FillFlowContainer<LegendEntry>
                                     {
-                                        sliderMaxCombo = new SettingsSlider<int>
+                                        Padding = new MarginPadding(20),
+                                        Direction = FillDirection.Vertical,
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                    },
+                                },
+                                new Drawable[]
+                                {
+                                    new Container
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Padding = new MarginPadding { Horizontal = 20 },
+                                        Children = new Drawable[]
                                         {
-                                            TransferValueOnCommit = true,
-                                            Current = new BindableInt(1024)
+                                            new OsuSpriteText
                                             {
-                                                MinValue = 96,
-                                                MaxValue = 8192,
+                                                Text = "Selected mods",
+                                                Anchor = Anchor.CentreLeft,
+                                                Origin = Anchor.CentreLeft,
                                             },
-                                            LabelText = "Max combo",
+                                            new FillFlowContainer
+                                            {
+                                                Anchor = Anchor.TopRight,
+                                                Origin = Anchor.TopRight,
+                                                AutoSizeAxes = Axes.Both,
+                                                Direction = FillDirection.Horizontal,
+                                                Spacing = new Vector2(10),
+                                                Children = new Drawable[]
+                                                {
+                                                    changeModsButton = new RoundedButton
+                                                    {
+                                                        Text = "Change",
+                                                        Width = 100,
+                                                        Anchor = Anchor.CentreRight,
+                                                        Origin = Anchor.CentreRight,
+                                                    },
+                                                    modsText = new OsuSpriteText
+                                                    {
+                                                        Anchor = Anchor.CentreRight,
+                                                        Origin = Anchor.CentreRight,
+                                                    },
+                                                },
+                                            },
                                         },
-                                        scaleToMax = new SettingsCheckbox
+                                    },
+                                },
+                                new Drawable[]
+                                {
+                                    new FillFlowContainer
+                                    {
+                                        Padding = new MarginPadding(20),
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Direction = FillDirection.Vertical,
+                                        Spacing = new Vector2(10),
+                                        Children = new Drawable[]
                                         {
-                                            LabelText = "Rescale plots to 100%",
-                                            Current = { Value = true, Default = true }
+                                            sliderMaxCombo = new SettingsSlider<int>
+                                            {
+                                                TransferValueOnCommit = true,
+                                                Current = new BindableInt(1024)
+                                                {
+                                                    MinValue = 96,
+                                                    MaxValue = 8192,
+                                                },
+                                                LabelText = "Max combo",
+                                            },
+                                            scaleToMax = new SettingsCheckbox
+                                            {
+                                                LabelText = "Rescale plots to 100%",
+                                                Current = { Value = true, Default = true },
+                                            },
+                                            clickExplainer = new OsuTextFlowContainer
+                                            {
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Margin = new MarginPadding { Top = 20 },
+                                            },
                                         },
-                                        clickExplainer = new OsuTextFlowContainer
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            AutoSizeAxes = Axes.Y,
-                                            Margin = new MarginPadding { Top = 20 }
-                                        }
-                                    }
+                                    },
                                 },
                             },
-                        }
-                    },
-                    modSelect = new TestModSelectOverlay
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        SelectedMods = { BindTarget = SelectedMods }
-                    }
-                };
+                        },
+                        modSelect = new TestModSelectOverlay
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            SelectedMods = { BindTarget = SelectedMods },
+                        },
+                    };
 
-                clickExplainer.AddParagraph("Left click to add miss");
-                if (supportsNonPerfectJudgements)
-                    clickExplainer.AddParagraph("Right click to add OK");
+                    clickExplainer.AddParagraph("Left click to add miss");
+                    if (supportsNonPerfectJudgements)
+                        clickExplainer.AddParagraph("Right click to add OK");
 
-                sliderMaxCombo.Current.BindValueChanged(_ => Rerun());
-                scaleToMax.Current.BindValueChanged(_ => Rerun());
+                    sliderMaxCombo.Current.BindValueChanged(_ => Rerun());
+                    scaleToMax.Current.BindValueChanged(_ => Rerun());
 
-                standardisedVisible.BindValueChanged(_ => rescalePlots());
-                classicVisible.BindValueChanged(_ => rescalePlots());
-                scoreV1Visible.BindValueChanged(_ => rescalePlots());
-                scoreV2Visible.BindValueChanged(_ => rescalePlots());
+                    standardisedVisible.BindValueChanged(_ => rescalePlots());
+                    classicVisible.BindValueChanged(_ => rescalePlots());
+                    scoreV1Visible.BindValueChanged(_ => rescalePlots());
+                    scoreV2Visible.BindValueChanged(_ => rescalePlots());
 
-                graphs.MissLocations.BindCollectionChanged((_, __) => Rerun());
-                graphs.NonPerfectLocations.BindCollectionChanged((_, __) => Rerun());
+                    graphs.MissLocations.BindCollectionChanged((_, __) => Rerun());
+                    graphs.NonPerfectLocations.BindCollectionChanged((_, __) => Rerun());
 
-                graphs.MaxCombo.BindTo(sliderMaxCombo.Current);
+                    graphs.MaxCombo.BindTo(sliderMaxCombo.Current);
 
-                changeModsButton.Action = () => modSelect.Show();
-                SelectedMods.BindValueChanged(mods => Rerun());
+                    changeModsButton.Action = () => modSelect.Show();
+                    SelectedMods.BindValueChanged(mods => Rerun());
 
-                Rerun();
-            });
+                    Rerun();
+                }
+            );
         }
 
         protected void Rerun()
@@ -230,23 +236,32 @@ namespace osu.Game.Tests.Visual.Gameplay
                 ? string.Join(", ", SelectedMods.Value.Select(mod => mod.Acronym))
                 : "(none)";
 
-            runForProcessor("lazer-standardised", colours.Green1, ScoringMode.Standardised, standardisedVisible);
+            runForProcessor(
+                "lazer-standardised",
+                colours.Green1,
+                ScoringMode.Standardised,
+                standardisedVisible
+            );
             runForProcessor("lazer-classic", colours.Blue1, ScoringMode.Classic, classicVisible);
 
-            runForAlgorithm(new ScoringAlgorithmInfo
-            {
-                Name = "ScoreV1 (classic)",
-                Colour = colours.Purple1,
-                Algorithm = CreateScoreV1(SelectedMods.Value),
-                Visible = scoreV1Visible
-            });
-            runForAlgorithm(new ScoringAlgorithmInfo
-            {
-                Name = "ScoreV2",
-                Colour = colours.Red1,
-                Algorithm = CreateScoreV2(sliderMaxCombo.Current.Value, SelectedMods.Value),
-                Visible = scoreV2Visible
-            });
+            runForAlgorithm(
+                new ScoringAlgorithmInfo
+                {
+                    Name = "ScoreV1 (classic)",
+                    Colour = colours.Purple1,
+                    Algorithm = CreateScoreV1(SelectedMods.Value),
+                    Visible = scoreV1Visible,
+                }
+            );
+            runForAlgorithm(
+                new ScoringAlgorithmInfo
+                {
+                    Name = "ScoreV2",
+                    Colour = colours.Red1,
+                    Algorithm = CreateScoreV2(sliderMaxCombo.Current.Value, SelectedMods.Value),
+                    Visible = scoreV2Visible,
+                }
+            );
 
             rescalePlots();
         }
@@ -255,7 +270,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             if (!scaleToMax.Current.Value && legend.Any(entry => entry.Visible.Value))
             {
-                long maxScore = legend.Where(entry => entry.Visible.Value).Max(entry => entry.FinalScore);
+                long maxScore = legend
+                    .Where(entry => entry.Visible.Value)
+                    .Max(entry => entry.FinalScore);
 
                 foreach (var graph in graphs)
                     graph.Height = graph.Values.Max() / maxScore;
@@ -267,19 +284,26 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
         }
 
-        private void runForProcessor(string name, Color4 colour, ScoringMode scoringMode, BindableBool visibility)
+        private void runForProcessor(
+            string name,
+            Color4 colour,
+            ScoringMode scoringMode,
+            BindableBool visibility
+        )
         {
             int maxCombo = sliderMaxCombo.Current.Value;
             var beatmap = CreateBeatmap(maxCombo);
             var algorithm = CreateScoreAlgorithm(beatmap, scoringMode, SelectedMods.Value);
 
-            runForAlgorithm(new ScoringAlgorithmInfo
-            {
-                Name = name,
-                Colour = colour,
-                Algorithm = algorithm,
-                Visible = visibility
-            });
+            runForAlgorithm(
+                new ScoringAlgorithmInfo
+                {
+                    Name = name,
+                    Colour = colour,
+                    Algorithm = algorithm,
+                    Visible = visibility,
+                }
+            );
         }
 
         private void runForAlgorithm(ScoringAlgorithmInfo algorithmInfo)
@@ -301,20 +325,21 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
 
             LineGraph graph;
-            graphs.Add(graph = new LineGraph
-            {
-                Name = algorithmInfo.Name,
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                RelativeSizeAxes = Axes.Both,
-                LineColour = algorithmInfo.Colour,
-                Values = results
-            });
+            graphs.Add(
+                graph = new LineGraph
+                {
+                    Name = algorithmInfo.Name,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    LineColour = algorithmInfo.Colour,
+                    Values = results,
+                }
+            );
 
-            legend.Add(new LegendEntry(algorithmInfo, graph)
-            {
-                AccentColour = algorithmInfo.Colour,
-            });
+            legend.Add(
+                new LegendEntry(algorithmInfo, graph) { AccentColour = algorithmInfo.Colour }
+            );
         }
 
         private class ScoringAlgorithmInfo
@@ -344,7 +369,11 @@ namespace osu.Game.Tests.Visual.Gameplay
             private readonly ScoreProcessor scoreProcessor;
             private readonly ScoringMode mode;
 
-            protected ProcessorBasedScoringAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
+            protected ProcessorBasedScoringAlgorithm(
+                IBeatmap beatmap,
+                ScoringMode mode,
+                IReadOnlyList<Mod> selectedMods
+            )
             {
                 this.mode = mode;
                 scoreProcessor = CreateScoreProcessor();
@@ -353,13 +382,18 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
 
             public void ApplyHit() => scoreProcessor.ApplyResult(CreatePerfectJudgementResult());
-            public void ApplyNonPerfect() => scoreProcessor.ApplyResult(CreateNonPerfectJudgementResult());
+
+            public void ApplyNonPerfect() =>
+                scoreProcessor.ApplyResult(CreateNonPerfectJudgementResult());
+
             public void ApplyMiss() => scoreProcessor.ApplyResult(CreateMissJudgementResult());
 
             public long TotalScore => scoreProcessor.GetDisplayScore(mode);
         }
 
-        public partial class GraphContainer : Container<LineGraph>, IHasCustomTooltip<IEnumerable<LineGraph>>
+        public partial class GraphContainer
+            : Container<LineGraph>,
+                IHasCustomTooltip<IEnumerable<LineGraph>>
         {
             private readonly bool supportsNonPerfectJudgements;
 
@@ -368,7 +402,8 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public Bindable<int> MaxCombo = new Bindable<int>();
 
-            protected override Container<LineGraph> Content { get; } = new Container<LineGraph> { RelativeSizeAxes = Axes.Both };
+            protected override Container<LineGraph> Content { get; } =
+                new Container<LineGraph> { RelativeSizeAxes = Axes.Both };
 
             private readonly Box hoverLine;
 
@@ -385,15 +420,8 @@ namespace osu.Game.Tests.Visual.Gameplay
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = OsuColour.Gray(0.1f),
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        verticalGridLines = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = OsuColour.Gray(0.1f), RelativeSizeAxes = Axes.Both },
+                        verticalGridLines = new Container { RelativeSizeAxes = Axes.Both },
                         hoverLine = new Box
                         {
                             Colour = Color4.Yellow,
@@ -402,23 +430,22 @@ namespace osu.Game.Tests.Visual.Gameplay
                             Alpha = 0,
                             Width = 1,
                         },
-                        missLines = new Container
-                        {
-                            Alpha = 0.6f,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        missLines = new Container { Alpha = 0.6f, RelativeSizeAxes = Axes.Both },
                         Content,
-                    }
+                    },
                 };
 
                 MissLocations.BindCollectionChanged((_, _) => updateMissLocations());
                 NonPerfectLocations.BindCollectionChanged((_, _) => updateMissLocations());
 
-                MaxCombo.BindValueChanged(_ =>
-                {
-                    updateMissLocations();
-                    updateVerticalGridLines();
-                }, true);
+                MaxCombo.BindValueChanged(
+                    _ =>
+                    {
+                        updateMissLocations();
+                        updateVerticalGridLines();
+                    },
+                    true
+                );
             }
 
             private void updateVerticalGridLines()
@@ -429,28 +456,30 @@ namespace osu.Game.Tests.Visual.Gameplay
                 {
                     if (i % 100 == 0)
                     {
-                        verticalGridLines.AddRange(new Drawable[]
-                        {
-                            new Box
+                        verticalGridLines.AddRange(
+                            new Drawable[]
                             {
-                                Colour = OsuColour.Gray(0.2f),
-                                Origin = Anchor.TopCentre,
-                                Width = 1,
-                                RelativeSizeAxes = Axes.Y,
-                                RelativePositionAxes = Axes.X,
-                                X = (float)i / MaxCombo.Value,
-                            },
-                            new OsuSpriteText
-                            {
-                                RelativePositionAxes = Axes.X,
-                                X = (float)i / MaxCombo.Value,
-                                Anchor = Anchor.BottomLeft,
-                                Origin = Anchor.BottomLeft,
-                                Text = $"{i:#,0}",
-                                Rotation = -30,
-                                Y = -20,
+                                new Box
+                                {
+                                    Colour = OsuColour.Gray(0.2f),
+                                    Origin = Anchor.TopCentre,
+                                    Width = 1,
+                                    RelativeSizeAxes = Axes.Y,
+                                    RelativePositionAxes = Axes.X,
+                                    X = (float)i / MaxCombo.Value,
+                                },
+                                new OsuSpriteText
+                                {
+                                    RelativePositionAxes = Axes.X,
+                                    X = (float)i / MaxCombo.Value,
+                                    Anchor = Anchor.BottomLeft,
+                                    Origin = Anchor.BottomLeft,
+                                    Text = $"{i:#,0}",
+                                    Rotation = -30,
+                                    Y = -20,
+                                },
                             }
-                        });
+                        );
                     }
                 }
             }
@@ -461,28 +490,32 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                 foreach (int miss in MissLocations)
                 {
-                    missLines.Add(new Box
-                    {
-                        Colour = Color4.Red,
-                        Origin = Anchor.TopCentre,
-                        Width = 1,
-                        RelativeSizeAxes = Axes.Y,
-                        RelativePositionAxes = Axes.X,
-                        X = (float)miss / MaxCombo.Value,
-                    });
+                    missLines.Add(
+                        new Box
+                        {
+                            Colour = Color4.Red,
+                            Origin = Anchor.TopCentre,
+                            Width = 1,
+                            RelativeSizeAxes = Axes.Y,
+                            RelativePositionAxes = Axes.X,
+                            X = (float)miss / MaxCombo.Value,
+                        }
+                    );
                 }
 
                 foreach (int miss in NonPerfectLocations)
                 {
-                    missLines.Add(new Box
-                    {
-                        Colour = Color4.Orange,
-                        Origin = Anchor.TopCentre,
-                        Width = 1,
-                        RelativeSizeAxes = Axes.Y,
-                        RelativePositionAxes = Axes.X,
-                        X = (float)miss / MaxCombo.Value,
-                    });
+                    missLines.Add(
+                        new Box
+                        {
+                            Colour = Color4.Orange,
+                            Origin = Anchor.TopCentre,
+                            Width = 1,
+                            RelativeSizeAxes = Axes.Y,
+                            RelativePositionAxes = Axes.X,
+                            X = (float)miss / MaxCombo.Value,
+                        }
+                    );
                 }
             }
 
@@ -518,7 +551,8 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             private GraphTooltip? tooltip;
 
-            public ITooltip<IEnumerable<LineGraph>> GetCustomTooltip() => tooltip ??= new GraphTooltip(this);
+            public ITooltip<IEnumerable<LineGraph>> GetCustomTooltip() =>
+                tooltip ??= new GraphTooltip(this);
 
             public IEnumerable<LineGraph> TooltipContent => Content;
 
@@ -538,17 +572,13 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                     InternalChildren = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = OsuColour.Gray(0.15f),
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = OsuColour.Gray(0.15f), RelativeSizeAxes = Axes.Both },
                         textFlow = new OsuTextFlowContainer
                         {
                             Colour = Color4.White,
                             AutoSizeAxes = Axes.Both,
                             Padding = new MarginPadding(10),
-                        }
+                        },
                     };
                 }
 
@@ -568,12 +598,16 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                     foreach (var graph in content)
                     {
-                        if (graph.Alpha == 0) continue;
+                        if (graph.Alpha == 0)
+                            continue;
 
                         float valueAtHover = graph.Values.ElementAt(relevantCombo);
                         float ofTotal = valueAtHover / graph.Values.Last();
 
-                        textFlow.AddParagraph($"{graph.Name}: {valueAtHover:#,0} ({ofTotal * 100:N0}% of final)\n", st => st.Colour = graph.LineColour);
+                        textFlow.AddParagraph(
+                            $"{graph.Name}: {valueAtHover:#,0} ({ofTotal * 100:N0}% of final)\n",
+                            st => st.Colour = graph.LineColour
+                        );
                     }
                 }
 
@@ -622,8 +656,8 @@ namespace osu.Game.Tests.Visual.Gameplay
                     {
                         Anchor = Anchor.CentreRight,
                         Origin = Anchor.CentreRight,
-                        Font = OsuFont.Default.With(fixedWidth: true)
-                    }
+                        Font = OsuFont.Default.With(fixedWidth: true),
+                    },
                 };
             }
 
@@ -650,7 +684,8 @@ namespace osu.Game.Tests.Visual.Gameplay
             {
                 Colour = IsHovered ? AccentColour.Lighten(0.2f) : AccentColour;
 
-                descriptionText.Text = $"{(Visible.Value ? FontAwesome.Solid.CheckCircle.Icon : FontAwesome.Solid.Circle.Icon)} {description}";
+                descriptionText.Text =
+                    $"{(Visible.Value ? FontAwesome.Solid.CheckCircle.Icon : FontAwesome.Solid.Circle.Icon)} {description}";
                 finalScoreText.Text = FinalScore.ToString("#,0");
                 lineGraph.Alpha = Visible.Value ? 1 : 0;
             }

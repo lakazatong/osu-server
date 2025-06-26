@@ -13,17 +13,22 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneFirstRunScreenUIScale : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         [Cached(typeof(BeatmapStore))]
         private BeatmapStore beatmapStore = new TestBeatmapStore();
 
         public TestSceneFirstRunScreenUIScale()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new ScreenStack(new ScreenUIScale());
-            });
+            AddStep(
+                "load screen",
+                () =>
+                {
+                    Child = new ScreenStack(new ScreenUIScale());
+                }
+            );
         }
     }
 }

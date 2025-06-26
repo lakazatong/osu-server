@@ -29,7 +29,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestUnsupportedProtocolLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a gopher://really-old-protocol we don't support." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a gopher://really-old-protocol we don't support." }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(0, result.Links.Count);
@@ -38,7 +40,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestFakeProtocolLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a osunotarealprotocol://completely-made-up-protocol we don't support." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "This is a osunotarealprotocol://completely-made-up-protocol we don't support.",
+                }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(0, result.Links.Count);
@@ -47,7 +55,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestSupportedProtocolLinkParsing()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "forgotspacehttps://dev.ppy.sh joinmyosump://12345 jointheosu://chan/#english" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "forgotspacehttps://dev.ppy.sh joinmyosump://12345 jointheosu://chan/#english",
+                }
+            );
 
             Assert.AreEqual("https://dev.ppy.sh", result.Links[0].Url);
             Assert.AreEqual("osump://12345", result.Links[1].Url);
@@ -57,7 +71,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestBareLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a http://www.basic-link.com/?test=test." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a http://www.basic-link.com/?test=test." }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -67,14 +83,34 @@ namespace osu.Game.Tests.Chat
         }
 
         [TestCase(LinkAction.OpenBeatmap, "456", "https://dev.ppy.sh/beatmapsets/123#osu/456")]
-        [TestCase(LinkAction.OpenBeatmap, "456", "https://dev.ppy.sh/beatmapsets/123#osu/456?whatever")]
+        [TestCase(
+            LinkAction.OpenBeatmap,
+            "456",
+            "https://dev.ppy.sh/beatmapsets/123#osu/456?whatever"
+        )]
         [TestCase(LinkAction.OpenBeatmap, "456", "https://dev.ppy.sh/beatmapsets/123/456")]
-        [TestCase(LinkAction.External, "https://dev.ppy.sh/beatmapsets/abc/def", "https://dev.ppy.sh/beatmapsets/abc/def")]
+        [TestCase(
+            LinkAction.External,
+            "https://dev.ppy.sh/beatmapsets/abc/def",
+            "https://dev.ppy.sh/beatmapsets/abc/def"
+        )]
         [TestCase(LinkAction.OpenBeatmapSet, "123", "https://dev.ppy.sh/beatmapsets/123")]
         [TestCase(LinkAction.OpenBeatmapSet, "123", "https://dev.ppy.sh/beatmapsets/123/whatever")]
-        [TestCase(LinkAction.External, "https://dev.ppy.sh/beatmapsets/abc", "https://dev.ppy.sh/beatmapsets/abc")]
-        [TestCase(LinkAction.External, "https://dev.ppy.sh/beatmapsets/discussions", "https://dev.ppy.sh/beatmapsets/discussions")]
-        [TestCase(LinkAction.External, "https://dev.ppy.sh/beatmapsets/discussions/123", "https://dev.ppy.sh/beatmapsets/discussions/123")]
+        [TestCase(
+            LinkAction.External,
+            "https://dev.ppy.sh/beatmapsets/abc",
+            "https://dev.ppy.sh/beatmapsets/abc"
+        )]
+        [TestCase(
+            LinkAction.External,
+            "https://dev.ppy.sh/beatmapsets/discussions",
+            "https://dev.ppy.sh/beatmapsets/discussions"
+        )]
+        [TestCase(
+            LinkAction.External,
+            "https://dev.ppy.sh/beatmapsets/discussions/123",
+            "https://dev.ppy.sh/beatmapsets/discussions/123"
+        )]
         public void TestBeatmapLinks(LinkAction expectedAction, string expectedArg, string link)
         {
             Message result = MessageFormatter.FormatMessage(new Message { Content = link });
@@ -90,10 +126,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMultipleComplexLinks()
         {
-            Message result = MessageFormatter.FormatMessage(new Message
-            {
-                Content = "This is a http://test.io/link#fragment. (see https://twitter.com). Also, This string should not be altered. http://example.com/"
-            });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "This is a http://test.io/link#fragment. (see https://twitter.com). Also, This string should not be altered. http://example.com/",
+                }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(3, result.Links.Count);
@@ -114,7 +153,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestAjaxLinks()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "https://twitter.com/#!/hashbanglinks" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "https://twitter.com/#!/hashbanglinks" }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(result.Content, result.Links[0].Url);
@@ -125,7 +166,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestUnixHomeLinks()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "http://www.chiark.greenend.org.uk/~sgtatham/putty/" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "http://www.chiark.greenend.org.uk/~sgtatham/putty/" }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(result.Content, result.Links[0].Url);
@@ -136,7 +179,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestInsensitiveLinks()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "look: http://puu.sh/7Ggh8xcC6/asf0asd9876.NEF" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "look: http://puu.sh/7Ggh8xcC6/asf0asd9876.NEF" }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(6, result.Links[0].Index);
@@ -146,7 +191,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestWikiLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [[Wiki Link]]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [[Wiki Link]]." }
+            );
 
             Assert.AreEqual("This is a Wiki Link.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -158,7 +205,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMultiWikiLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [[Wiki Link]] [[Wiki:Link]][[Wiki.Link]]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [[Wiki Link]] [[Wiki:Link]][[Wiki.Link]]." }
+            );
 
             Assert.AreEqual("This is a Wiki Link Wiki:LinkWiki.Link.", result.DisplayContent);
             Assert.AreEqual(3, result.Links.Count);
@@ -179,7 +228,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOldFormatLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a (simple test)[https://osu.ppy.sh] of links." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a (simple test)[https://osu.ppy.sh] of links." }
+            );
 
             Assert.AreEqual("This is a simple test of links.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -191,7 +242,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOldFormatLinkWithBalancedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a (tricky (one))[https://osu.ppy.sh]!" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a (tricky (one))[https://osu.ppy.sh]!" }
+            );
 
             Assert.AreEqual("This is a tricky (one)!", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -203,7 +256,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOldFormatLinkWithEscapedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is (another loose bracket \\))[https://osu.ppy.sh]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is (another loose bracket \\))[https://osu.ppy.sh]." }
+            );
 
             Assert.AreEqual("This is another loose bracket ).", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -215,7 +270,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOldFormatWithBackslashes()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This link (should end with a backslash \\)[https://osu.ppy.sh]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "This link (should end with a backslash \\)[https://osu.ppy.sh].",
+                }
+            );
             Assert.AreEqual("This link should end with a backslash \\.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
             Assert.AreEqual("https://osu.ppy.sh", result.Links[0].Url);
@@ -226,7 +286,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOldFormatLinkWithEscapedAndBalancedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a (\\)super\\(\\( tricky (one))[https://osu.ppy.sh]!" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "This is a (\\)super\\(\\( tricky (one))[https://osu.ppy.sh]!",
+                }
+            );
 
             Assert.AreEqual("This is a )super(( tricky (one)!", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -238,7 +303,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestNewFormatLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [https://osu.ppy.sh simple test]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [https://osu.ppy.sh simple test]." }
+            );
 
             Assert.AreEqual("This is a simple test.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -250,9 +317,18 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestNewFormatLinkWithEscapedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [https://osu.ppy.sh nasty link with escaped brackets: \\] and \\[]" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "This is a [https://osu.ppy.sh nasty link with escaped brackets: \\] and \\[]",
+                }
+            );
 
-            Assert.AreEqual("This is a nasty link with escaped brackets: ] and [", result.DisplayContent);
+            Assert.AreEqual(
+                "This is a nasty link with escaped brackets: ] and [",
+                result.DisplayContent
+            );
             Assert.AreEqual(1, result.Links.Count);
             Assert.AreEqual("https://osu.ppy.sh", result.Links[0].Url);
             Assert.AreEqual(10, result.Links[0].Index);
@@ -262,7 +338,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestNewFormatLinkWithBackslashesInside()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [https://osu.ppy.sh link \\ with \\ backslashes \\]" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "This is a [https://osu.ppy.sh link \\ with \\ backslashes \\]",
+                }
+            );
 
             Assert.AreEqual("This is a link \\ with \\ backslashes \\", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -274,9 +355,18 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestNewFormatLinkWithEscapedAndBalancedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [https://osu.ppy.sh [link [with \\] too many brackets \\[ ]]]" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "This is a [https://osu.ppy.sh [link [with \\] too many brackets \\[ ]]]",
+                }
+            );
 
-            Assert.AreEqual("This is a [link [with ] too many brackets [ ]]", result.DisplayContent);
+            Assert.AreEqual(
+                "This is a [link [with ] too many brackets [ ]]",
+                result.DisplayContent
+            );
             Assert.AreEqual(1, result.Links.Count);
             Assert.AreEqual("https://osu.ppy.sh", result.Links[0].Url);
             Assert.AreEqual(10, result.Links[0].Index);
@@ -286,7 +376,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [simple test](https://osu.ppy.sh)." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [simple test](https://osu.ppy.sh)." }
+            );
 
             Assert.AreEqual("This is a simple test.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -298,7 +390,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithBalancedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [tricky [one]](https://osu.ppy.sh)!" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [tricky [one]](https://osu.ppy.sh)!" }
+            );
 
             Assert.AreEqual("This is a tricky [one]!", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -310,7 +404,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithEscapedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is [another loose bracket \\]](https://osu.ppy.sh)." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is [another loose bracket \\]](https://osu.ppy.sh)." }
+            );
 
             Assert.AreEqual("This is another loose bracket ].", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -322,7 +418,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatWithBackslashes()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This link [should end with a backslash \\](https://osu.ppy.sh)." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "This link [should end with a backslash \\](https://osu.ppy.sh).",
+                }
+            );
             Assert.AreEqual("This link should end with a backslash \\.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
             Assert.AreEqual("https://osu.ppy.sh", result.Links[0].Url);
@@ -333,7 +434,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithEscapedAndBalancedBrackets()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [\\]super\\[\\[ tricky [one]](https://osu.ppy.sh)!" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "This is a [\\]super\\[\\[ tricky [one]](https://osu.ppy.sh)!",
+                }
+            );
 
             Assert.AreEqual("This is a ]super[[ tricky [one]!", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -345,7 +451,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithInlineTitle()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "I haven't seen [this link format](https://osu.ppy.sh \"osu!\") before..." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "I haven't seen [this link format](https://osu.ppy.sh \"osu!\") before...",
+                }
+            );
 
             Assert.AreEqual("I haven't seen this link format before...", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -357,7 +469,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithInlineTitleAndEscapedQuotes()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "I haven't seen [this link format](https://osu.ppy.sh \"inner quote \\\" just to confuse \") before..." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "I haven't seen [this link format](https://osu.ppy.sh \"inner quote \\\" just to confuse \") before...",
+                }
+            );
 
             Assert.AreEqual("I haven't seen this link format before...", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -369,7 +487,13 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithUrlInTextAndInlineTitle()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "I haven't seen [https://osu.ppy.sh](https://osu.ppy.sh \"https://osu.ppy.sh\") before..." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "I haven't seen [https://osu.ppy.sh](https://osu.ppy.sh \"https://osu.ppy.sh\") before...",
+                }
+            );
 
             Assert.AreEqual("I haven't seen https://osu.ppy.sh before...", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -381,9 +505,18 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithUrlAndTextInTitle()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "I haven't seen [oh no, text here! https://osu.ppy.sh](https://osu.ppy.sh) before..." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "I haven't seen [oh no, text here! https://osu.ppy.sh](https://osu.ppy.sh) before...",
+                }
+            );
 
-            Assert.AreEqual("I haven't seen oh no, text here! https://osu.ppy.sh before...", result.DisplayContent);
+            Assert.AreEqual(
+                "I haven't seen oh no, text here! https://osu.ppy.sh before...",
+                result.DisplayContent
+            );
             Assert.AreEqual(1, result.Links.Count);
             Assert.AreEqual("https://osu.ppy.sh", result.Links[0].Url);
             Assert.AreEqual(15, result.Links[0].Index);
@@ -393,7 +526,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkWithMisleadingUrlInText()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "I haven't seen [https://google.com](https://osu.ppy.sh) before..." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "I haven't seen [https://google.com](https://osu.ppy.sh) before...",
+                }
+            );
 
             Assert.AreEqual("I haven't seen https://google.com before...", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -405,7 +543,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestMarkdownFormatLinkThatContractsIntoLargerLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "super broken https://[osu.ppy](https://reddit.com).sh/" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "super broken https://[osu.ppy](https://reddit.com).sh/" }
+            );
 
             Assert.AreEqual("super broken https://osu.ppy.sh/", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -418,9 +558,18 @@ namespace osu.Game.Tests.Chat
         public void TestMarkdownFormatLinkDirectlyNextToRawLink()
         {
             // the raw link has a port at the end of it, so that the raw link regex terminates at the port and doesn't consume display text from the formatted one
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "https://localhost:8080[https://osu.ppy.sh](https://osu.ppy.sh) should be two links" });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "https://localhost:8080[https://osu.ppy.sh](https://osu.ppy.sh) should be two links",
+                }
+            );
 
-            Assert.AreEqual("https://localhost:8080https://osu.ppy.sh should be two links", result.DisplayContent);
+            Assert.AreEqual(
+                "https://localhost:8080https://osu.ppy.sh should be two links",
+                result.DisplayContent
+            );
             Assert.AreEqual(2, result.Links.Count);
 
             Assert.AreEqual("https://localhost:8080", result.Links[0].Url);
@@ -435,7 +584,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestChannelLink()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is an #english and #japanese." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is an #english and #japanese." }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(2, result.Links.Count);
@@ -446,7 +597,12 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOsuProtocol()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = $"This is a custom protocol {OsuGameBase.OSU_PROTOCOL}chan/#english." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = $"This is a custom protocol {OsuGameBase.OSU_PROTOCOL}chan/#english.",
+                }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -454,7 +610,13 @@ namespace osu.Game.Tests.Chat
             Assert.AreEqual(26, result.Links[0].Index);
             Assert.AreEqual(19, result.Links[0].Length);
 
-            result = MessageFormatter.FormatMessage(new Message { Content = $"This is a [custom protocol]({OsuGameBase.OSU_PROTOCOL}chan/#english)." });
+            result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        $"This is a [custom protocol]({OsuGameBase.OSU_PROTOCOL}chan/#english).",
+                }
+            );
 
             Assert.AreEqual("This is a custom protocol.", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -467,7 +629,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestOsuMpProtocol()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "Join my multiplayer game osump://12346." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "Join my multiplayer game osump://12346." }
+            );
 
             Assert.AreEqual(result.Content, result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -479,7 +643,9 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestRecursiveBreaking()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "This is a [https://osu.ppy.sh [[simple test]]]." });
+            Message result = MessageFormatter.FormatMessage(
+                new Message { Content = "This is a [https://osu.ppy.sh [[simple test]]]." }
+            );
 
             Assert.AreEqual("This is a [[simple test]].", result.DisplayContent);
             Assert.AreEqual(1, result.Links.Count);
@@ -491,12 +657,18 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestLinkComplex()
         {
-            Message result = MessageFormatter.FormatMessage(new Message
-            {
-                Content = "This is a [http://www.simple-test.com simple test] with some [traps] and [[wiki links]]. Don't forget to visit https://osu.ppy.sh (now!)[http://google.com]\uD83D\uDE12"
-            });
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "This is a [http://www.simple-test.com simple test] with some [traps] and [[wiki links]]. Don't forget to visit https://osu.ppy.sh (now!)[http://google.com]\uD83D\uDE12",
+                }
+            );
 
-            Assert.AreEqual("This is a simple test with some [traps] and wiki links. Don't forget to visit https://osu.ppy.sh now![emoji]", result.DisplayContent);
+            Assert.AreEqual(
+                "This is a simple test with some [traps] and wiki links. Don't forget to visit https://osu.ppy.sh now![emoji]",
+                result.DisplayContent
+            );
             Assert.AreEqual(4, result.Links.Count);
 
             Link f = result.Links.Find(l => l.Url == "https://dev.ppy.sh/wiki/wiki links");
@@ -523,16 +695,33 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestEmoji()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "Hello world\uD83D\uDE12<--This is an emoji,There are more emojis among us:\uD83D\uDE10\uD83D\uDE00,\uD83D\uDE20" });
-            Assert.AreEqual("Hello world[emoji]<--This is an emoji,There are more emojis among us:[emoji][emoji],[emoji]", result.DisplayContent);
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content =
+                        "Hello world\uD83D\uDE12<--This is an emoji,There are more emojis among us:\uD83D\uDE10\uD83D\uDE00,\uD83D\uDE20",
+                }
+            );
+            Assert.AreEqual(
+                "Hello world[emoji]<--This is an emoji,There are more emojis among us:[emoji][emoji],[emoji]",
+                result.DisplayContent
+            );
             Assert.AreEqual(result.Links.Count, 0);
         }
 
         [Test]
         public void TestEmojiWithSuccessiveParens()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "\uD83D\uDE10(let's hope this doesn't accidentally turn into a link)" });
-            Assert.AreEqual("[emoji](let's hope this doesn't accidentally turn into a link)", result.DisplayContent);
+            Message result = MessageFormatter.FormatMessage(
+                new Message
+                {
+                    Content = "\uD83D\uDE10(let's hope this doesn't accidentally turn into a link)",
+                }
+            );
+            Assert.AreEqual(
+                "[emoji](let's hope this doesn't accidentally turn into a link)",
+                result.DisplayContent
+            );
             Assert.AreEqual(result.Links.Count, 0);
         }
 

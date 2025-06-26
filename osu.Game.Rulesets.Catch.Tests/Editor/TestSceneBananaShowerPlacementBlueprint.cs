@@ -20,9 +20,11 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 {
     public partial class TestSceneBananaShowerPlacementBlueprint : CatchPlacementBlueprintTestScene
     {
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableBananaShower((BananaShower)hitObject);
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableBananaShower((BananaShower)hitObject);
 
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new BananaShowerPlacementBlueprint();
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new BananaShowerPlacementBlueprint();
 
         protected override void AddHitObject(DrawableHitObject hitObject)
         {
@@ -43,8 +45,14 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             AddMoveStep(end_time, 0);
             AddClickStep(MouseButton.Right);
             AddAssert("banana shower is placed", () => LastObject is DrawableBananaShower);
-            AddAssert("start time is correct", () => Precision.AlmostEquals(LastObject.HitObject.StartTime, start_time));
-            AddAssert("end time is correct", () => Precision.AlmostEquals(LastObject.HitObject.GetEndTime(), end_time));
+            AddAssert(
+                "start time is correct",
+                () => Precision.AlmostEquals(LastObject.HitObject.StartTime, start_time)
+            );
+            AddAssert(
+                "end time is correct",
+                () => Precision.AlmostEquals(LastObject.HitObject.GetEndTime(), end_time)
+            );
         }
 
         [Test]
@@ -57,11 +65,20 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             AddClickStep(MouseButton.Left);
 
             AddMoveStep(start_time, 0);
-            AddAssert("duration is positive", () => ((BananaShower)CurrentBlueprint.HitObject).Duration > 0);
+            AddAssert(
+                "duration is positive",
+                () => ((BananaShower)CurrentBlueprint.HitObject).Duration > 0
+            );
 
             AddClickStep(MouseButton.Right);
-            AddAssert("start time is correct", () => Precision.AlmostEquals(LastObject.HitObject.StartTime, start_time));
-            AddAssert("end time is correct", () => Precision.AlmostEquals(LastObject.HitObject.GetEndTime(), end_time));
+            AddAssert(
+                "start time is correct",
+                () => Precision.AlmostEquals(LastObject.HitObject.StartTime, start_time)
+            );
+            AddAssert(
+                "end time is correct",
+                () => Precision.AlmostEquals(LastObject.HitObject.GetEndTime(), end_time)
+            );
         }
 
         [Test]
@@ -71,7 +88,10 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             AddClickStep(MouseButton.Left);
             AddClickStep(MouseButton.Right);
             AddAssert("banana shower is not placed", () => LastObject == null);
-            AddAssert("state is waiting", () => CurrentBlueprint?.PlacementActive == PlacementBlueprint.PlacementState.Waiting);
+            AddAssert(
+                "state is waiting",
+                () => CurrentBlueprint?.PlacementActive == PlacementBlueprint.PlacementState.Waiting
+            );
         }
 
         [Test]
@@ -79,13 +99,23 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
         {
             AddMoveStep(100, 0);
             AddClickStep(MouseButton.Left);
-            AddUntilStep("outline is semitransparent", () => Precision.DefinitelyBigger(1, timeSpanOutline.Alpha));
+            AddUntilStep(
+                "outline is semitransparent",
+                () => Precision.DefinitelyBigger(1, timeSpanOutline.Alpha)
+            );
             AddMoveStep(200, 0);
-            AddUntilStep("outline is opaque", () => Precision.AlmostEquals(timeSpanOutline.Alpha, 1));
+            AddUntilStep(
+                "outline is opaque",
+                () => Precision.AlmostEquals(timeSpanOutline.Alpha, 1)
+            );
             AddMoveStep(100, 0);
-            AddUntilStep("outline is semitransparent", () => Precision.DefinitelyBigger(1, timeSpanOutline.Alpha));
+            AddUntilStep(
+                "outline is semitransparent",
+                () => Precision.DefinitelyBigger(1, timeSpanOutline.Alpha)
+            );
         }
 
-        private TimeSpanOutline timeSpanOutline => Content.ChildrenOfType<TimeSpanOutline>().Single();
+        private TimeSpanOutline timeSpanOutline =>
+            Content.ChildrenOfType<TimeSpanOutline>().Single();
     }
 }

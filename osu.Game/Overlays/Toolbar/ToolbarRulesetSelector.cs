@@ -28,8 +28,10 @@ namespace osu.Game.Overlays.Toolbar
         [Resolved]
         private MusicController musicController { get; set; }
 
-        private readonly Dictionary<RulesetInfo, Sample> rulesetSelectionSample = new Dictionary<RulesetInfo, Sample>();
-        private readonly Dictionary<RulesetInfo, SampleChannel> rulesetSelectionChannel = new Dictionary<RulesetInfo, SampleChannel>();
+        private readonly Dictionary<RulesetInfo, Sample> rulesetSelectionSample =
+            new Dictionary<RulesetInfo, Sample>();
+        private readonly Dictionary<RulesetInfo, SampleChannel> rulesetSelectionChannel =
+            new Dictionary<RulesetInfo, SampleChannel>();
         private Sample defaultSelectSample;
 
         public ToolbarRulesetSelector()
@@ -41,30 +43,28 @@ namespace osu.Game.Overlays.Toolbar
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
-            AddRangeInternal(new[]
-            {
-                new OpaqueBackground
+            AddRangeInternal(
+                new[]
                 {
-                    Depth = 1,
-                    Masking = true,
-                },
-                ModeButtonLine = new Container
-                {
-                    Size = new Vector2(Toolbar.HEIGHT, 3),
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Y = -1,
-                    Children = new Drawable[]
+                    new OpaqueBackground { Depth = 1, Masking = true },
+                    ModeButtonLine = new Container
                     {
-                        new Circle
+                        Size = new Vector2(Toolbar.HEIGHT, 3),
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                        Y = -1,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(18, 3),
-                        }
-                    }
-                },
-            });
+                            new Circle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(18, 3),
+                            },
+                        },
+                    },
+                }
+            );
 
             foreach (var r in Rulesets.AvailableRulesets)
                 rulesetSelectionSample[r] = audio.Samples.Get($@"UI/ruleset-select-{r.ShortName}");
@@ -97,7 +97,11 @@ namespace osu.Game.Overlays.Toolbar
         {
             if (SelectedTab != null)
             {
-                ModeButtonLine.MoveToX(SelectedTab.DrawPosition.X, !hasInitialPosition ? 0 : 500, Easing.OutElasticQuarter);
+                ModeButtonLine.MoveToX(
+                    SelectedTab.DrawPosition.X,
+                    !hasInitialPosition ? 0 : 500,
+                    Easing.OutElasticQuarter
+                );
                 hasInitialPosition = true;
             }
         }
@@ -128,20 +132,25 @@ namespace osu.Game.Overlays.Toolbar
             musicController?.DuckMomentarily(unduckDelay, new DuckParameters { DuckDuration = 0 });
         }
 
-        public override bool HandleNonPositionalInput => !Current.Disabled && base.HandleNonPositionalInput;
+        public override bool HandleNonPositionalInput =>
+            !Current.Disabled && base.HandleNonPositionalInput;
 
-        public override bool HandlePositionalInput => !Current.Disabled && base.HandlePositionalInput;
+        public override bool HandlePositionalInput =>
+            !Current.Disabled && base.HandlePositionalInput;
 
-        public override bool PropagatePositionalInputSubTree => !Current.Disabled && base.PropagatePositionalInputSubTree;
+        public override bool PropagatePositionalInputSubTree =>
+            !Current.Disabled && base.PropagatePositionalInputSubTree;
 
-        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) => new ToolbarRulesetTabButton(value);
+        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) =>
+            new ToolbarRulesetTabButton(value);
 
-        protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            RelativeSizeAxes = Axes.Y,
-            AutoSizeAxes = Axes.X,
-            Direction = FillDirection.Horizontal,
-        };
+        protected override TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                RelativeSizeAxes = Axes.Y,
+                AutoSizeAxes = Axes.X,
+                Direction = FillDirection.Horizontal,
+            };
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {

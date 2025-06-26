@@ -15,15 +15,19 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         /// Ensures that a final volume combo of 0 (i.e. "always muted" mode) constantly plays metronome and completely mutes track.
         /// </summary>
         [Test]
-        public void TestZeroFinalCombo() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModMuted
-            {
-                MuteComboCount = { Value = 0 },
-            },
-            PassCondition = () => Beatmap.Value.Track.AggregateVolume.Value == 0.0 &&
-                                  Player.ChildrenOfType<MetronomeBeat>().SingleOrDefault()?.AggregateVolume.Value == 1.0,
-        });
+        public void TestZeroFinalCombo() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModMuted { MuteComboCount = { Value = 0 } },
+                    PassCondition = () =>
+                        Beatmap.Value.Track.AggregateVolume.Value == 0.0
+                        && Player
+                            .ChildrenOfType<MetronomeBeat>()
+                            .SingleOrDefault()
+                            ?.AggregateVolume.Value == 1.0,
+                }
+            );
 
         /// <summary>
         /// Ensures that copying from a normal mod with 0 final combo while originally inversed does not yield incorrect results.
@@ -33,19 +37,33 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         {
             OsuModMuted muted = null!;
 
-            AddStep("create inversed mod", () => muted = new OsuModMuted
-            {
-                MuteComboCount = { Value = 100 },
-                InverseMuting = { Value = true },
-            });
+            AddStep(
+                "create inversed mod",
+                () =>
+                    muted = new OsuModMuted
+                    {
+                        MuteComboCount = { Value = 100 },
+                        InverseMuting = { Value = true },
+                    }
+            );
 
-            AddStep("copy from normal", () => muted.CopyFrom(new OsuModMuted
-            {
-                MuteComboCount = { Value = 0 },
-                InverseMuting = { Value = false },
-            }));
+            AddStep(
+                "copy from normal",
+                () =>
+                    muted.CopyFrom(
+                        new OsuModMuted
+                        {
+                            MuteComboCount = { Value = 0 },
+                            InverseMuting = { Value = false },
+                        }
+                    )
+            );
 
-            AddAssert("mute combo count copied", () => muted.MuteComboCount.Value, () => Is.EqualTo(0));
+            AddAssert(
+                "mute combo count copied",
+                () => muted.MuteComboCount.Value,
+                () => Is.EqualTo(0)
+            );
             AddAssert("inverse muting copied", () => muted.InverseMuting.Value, () => Is.False);
         }
     }

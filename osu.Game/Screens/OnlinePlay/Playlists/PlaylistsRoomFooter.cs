@@ -50,7 +50,7 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Y,
                         Size = new Vector2(600, 1),
-                        Action = () => OnStart?.Invoke()
+                        Action = () => OnStart?.Invoke(),
                     },
                     closeButton = new DangerousRoundedButton
                     {
@@ -61,8 +61,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                         Size = new Vector2(120, 1),
                         Alpha = 0,
                         RelativeSizeAxes = Axes.Y,
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -76,8 +76,7 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
 
         private void hideCloseButton()
         {
-            closeButton.ResizeWidthTo(0, 100, Easing.OutQuint)
-                       .Then().FadeOut().Expire();
+            closeButton.ResizeWidthTo(0, 100, Easing.OutQuint).Then().FadeOut().Expire();
         }
 
         private void onRoomChanged(object? sender, PropertyChangedEventArgs e)
@@ -94,14 +93,17 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
 
         private void updateState()
         {
-            TimeSpan? deletionGracePeriodRemaining = room.StartDate?.AddMinutes(5) - DateTimeOffset.Now;
+            TimeSpan? deletionGracePeriodRemaining =
+                room.StartDate?.AddMinutes(5) - DateTimeOffset.Now;
 
             if (room.Host?.Id == api.LocalUser.Value.Id)
             {
                 if (deletionGracePeriodRemaining > TimeSpan.Zero && !room.HasEnded)
                 {
                     closeButton.FadeIn();
-                    using (BeginDelayedSequence(deletionGracePeriodRemaining.Value.TotalMilliseconds))
+                    using (
+                        BeginDelayedSequence(deletionGracePeriodRemaining.Value.TotalMilliseconds)
+                    )
                         hideCloseButton();
                 }
                 else if (closeButton.Alpha > 0)

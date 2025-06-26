@@ -31,16 +31,31 @@ namespace osu.Game.Screens.Play.HUD
         private readonly SongProgressInfo info;
         private readonly Container content;
 
-        [SettingSource(typeof(SongProgressStrings), nameof(SongProgressStrings.ShowGraph), nameof(SongProgressStrings.ShowGraphDescription))]
+        [SettingSource(
+            typeof(SongProgressStrings),
+            nameof(SongProgressStrings.ShowGraph),
+            nameof(SongProgressStrings.ShowGraphDescription)
+        )]
         public Bindable<bool> ShowGraph { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SongProgressStrings), nameof(SongProgressStrings.ShowTime), nameof(SongProgressStrings.ShowTimeDescription))]
+        [SettingSource(
+            typeof(SongProgressStrings),
+            nameof(SongProgressStrings.ShowTime),
+            nameof(SongProgressStrings.ShowTimeDescription)
+        )]
         public Bindable<bool> ShowTime { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.UseRelativeSize))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.UseRelativeSize)
+        )]
         public BindableBool UseRelativeSize { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.Colour), nameof(SkinnableComponentStrings.ColourDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.Colour),
+            nameof(SkinnableComponentStrings.ColourDescription)
+        )]
         public BindableColour4 AccentColour { get; } = new BindableColour4(Colour4.White);
 
         [Resolved]
@@ -78,7 +93,7 @@ namespace osu.Game.Screens.Play.HUD
                         Origin = Anchor.BottomLeft,
                         OnSeek = time => player?.Seek(time),
                     },
-                }
+                },
             };
         }
 
@@ -89,7 +104,10 @@ namespace osu.Game.Screens.Play.HUD
 
             // see comment in ArgonHealthDisplay.cs regarding RelativeSizeAxes
             float previousWidth = Width;
-            UseRelativeSize.BindValueChanged(v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None, true);
+            UseRelativeSize.BindValueChanged(
+                v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None,
+                true
+            );
             Width = previousWidth;
         }
 
@@ -123,7 +141,8 @@ namespace osu.Game.Screens.Play.HUD
             base.Update();
 
             // to prevent unnecessary invalidations of the song progress graph due to changes in size, apply tolerance when updating the height.
-            float newHeight = bottom_bar_height + graph_height + handle_size.Y + info.Height - graph.Y;
+            float newHeight =
+                bottom_bar_height + graph_height + handle_size.Y + info.Height - graph.Y;
 
             if (!Precision.AlmostEquals(Height, newHeight, 5f))
                 content.Height = newHeight;
@@ -140,7 +159,11 @@ namespace osu.Game.Screens.Play.HUD
         {
             float barHeight = bottom_bar_height + handle_size.Y;
 
-            bar.ResizeHeightTo(ShowGraph.Value ? barHeight + graph_height : barHeight, transition_duration, Easing.In);
+            bar.ResizeHeightTo(
+                ShowGraph.Value ? barHeight + graph_height : barHeight,
+                transition_duration,
+                Easing.In
+            );
             graph.FadeTo(ShowGraph.Value ? 1 : 0, transition_duration, Easing.In);
 
             updateInfoMargin();
@@ -155,8 +178,16 @@ namespace osu.Game.Screens.Play.HUD
 
         private void updateInfoMargin()
         {
-            float finalMargin = bottom_bar_height + (Interactive.Value ? handle_size.Y : 0) + (ShowGraph.Value ? graph_height : 0);
-            info.TransformTo(nameof(info.Margin), new MarginPadding { Bottom = finalMargin }, transition_duration, Easing.In);
+            float finalMargin =
+                bottom_bar_height
+                + (Interactive.Value ? handle_size.Y : 0)
+                + (ShowGraph.Value ? graph_height : 0);
+            info.TransformTo(
+                nameof(info.Margin),
+                new MarginPadding { Bottom = finalMargin },
+                transition_duration,
+                Easing.In
+            );
         }
     }
 }

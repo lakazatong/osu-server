@@ -28,11 +28,20 @@ namespace osu.Game.Tests.NonVisual
             var orderedRulesets = rulesets.OrderBy(r => r);
 
             // Ensure all customs are after official.
-            Assert.That(orderedRulesets.Select(r => r.OnlineID), Is.EqualTo(new[] { 0, 2, -1, -1, -1, -1 }));
+            Assert.That(
+                orderedRulesets.Select(r => r.OnlineID),
+                Is.EqualTo(new[] { 0, 2, -1, -1, -1, -1 })
+            );
 
             // Ensure customs are grouped next to each other (ie. stably sorted).
-            Assert.That(orderedRulesets.SkipWhile(r => r.ShortName != "custom2").Skip(1).First().ShortName, Is.EqualTo("custom2"));
-            Assert.That(orderedRulesets.SkipWhile(r => r.ShortName != "custom3").Skip(1).First().ShortName, Is.EqualTo("custom3"));
+            Assert.That(
+                orderedRulesets.SkipWhile(r => r.ShortName != "custom2").Skip(1).First().ShortName,
+                Is.EqualTo("custom2")
+            );
+            Assert.That(
+                orderedRulesets.SkipWhile(r => r.ShortName != "custom3").Skip(1).First().ShortName,
+                Is.EqualTo("custom3")
+            );
         }
     }
 }

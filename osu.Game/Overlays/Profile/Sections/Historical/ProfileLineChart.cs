@@ -1,19 +1,19 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
 using System;
 using System.Linq;
-using osu.Game.Graphics.Sprites;
-using osu.Framework.Utils;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Game.Graphics;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osuTK;
 using osu.Framework.Localisation;
+using osu.Framework.Utils;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
+using osuTK;
 
 namespace osu.Game.Overlays.Profile.Sections.Historical
 {
@@ -49,16 +49,8 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
             InternalChild = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension()
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(),
-                    new Dimension(GridSizeMode.AutoSize)
-                },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
+                RowDimensions = new[] { new Dimension(), new Dimension(GridSizeMode.AutoSize) },
                 Content = new[]
                 {
                     new Drawable[]
@@ -66,7 +58,7 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
                         rowTicksContainer = new Container<TickText>
                         {
                             RelativeSizeAxes = Axes.Y,
-                            AutoSizeAxes = Axes.X
+                            AutoSizeAxes = Axes.X,
                         },
                         new Container
                         {
@@ -80,20 +72,20 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
                                     {
                                         rowLinesContainer = new Container<TickLine>
                                         {
-                                            RelativeSizeAxes = Axes.Both
+                                            RelativeSizeAxes = Axes.Both,
                                         },
                                         columnLinesContainer = new Container<TickLine>
                                         {
-                                            RelativeSizeAxes = Axes.Both
-                                        }
-                                    }
+                                            RelativeSizeAxes = Axes.Both,
+                                        },
+                                    },
                                 },
                                 graph = new UserHistoryGraph(graphCounterName)
                                 {
-                                    RelativeSizeAxes = Axes.Both
-                                }
-                            }
-                        }
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                            },
+                        },
                     },
                     new[]
                     {
@@ -102,10 +94,10 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding { Top = 10 }
-                        }
-                    }
-                }
+                            Padding = new MarginPadding { Top = 10 },
+                        },
+                    },
+                },
             };
         }
 
@@ -163,50 +155,58 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 
         private void addRowTick(float y, double value)
         {
-            rowTicksContainer.Add(new TickText
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.CentreRight,
-                RelativePositionAxes = Axes.Y,
-                Margin = new MarginPadding { Right = 3 },
-                Text = value.ToLocalisableString("N0"),
-                Font = OsuFont.GetFont(size: 12),
-                Y = y
-            });
+            rowTicksContainer.Add(
+                new TickText
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.CentreRight,
+                    RelativePositionAxes = Axes.Y,
+                    Margin = new MarginPadding { Right = 3 },
+                    Text = value.ToLocalisableString("N0"),
+                    Font = OsuFont.GetFont(size: 12),
+                    Y = y,
+                }
+            );
 
-            rowLinesContainer.Add(new TickLine
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.CentreRight,
-                RelativeSizeAxes = Axes.X,
-                RelativePositionAxes = Axes.Y,
-                Height = 0.1f,
-                EdgeSmoothness = Vector2.One,
-                Y = y
-            });
+            rowLinesContainer.Add(
+                new TickLine
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.CentreRight,
+                    RelativeSizeAxes = Axes.X,
+                    RelativePositionAxes = Axes.Y,
+                    Height = 0.1f,
+                    EdgeSmoothness = Vector2.One,
+                    Y = y,
+                }
+            );
         }
 
         private void addColumnTick(float x, DateTime value)
         {
-            columnTicksContainer.Add(new TickText
-            {
-                Origin = Anchor.CentreLeft,
-                RelativePositionAxes = Axes.X,
-                Text = value.ToLocalisableString("MMM yyyy"),
-                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                Rotation = 45,
-                X = x
-            });
+            columnTicksContainer.Add(
+                new TickText
+                {
+                    Origin = Anchor.CentreLeft,
+                    RelativePositionAxes = Axes.X,
+                    Text = value.ToLocalisableString("MMM yyyy"),
+                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                    Rotation = 45,
+                    X = x,
+                }
+            );
 
-            columnLinesContainer.Add(new TickLine
-            {
-                Origin = Anchor.TopCentre,
-                RelativeSizeAxes = Axes.Y,
-                RelativePositionAxes = Axes.X,
-                Width = 0.1f,
-                EdgeSmoothness = Vector2.One,
-                X = x
-            });
+            columnLinesContainer.Add(
+                new TickLine
+                {
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.Y,
+                    RelativePositionAxes = Axes.X,
+                    Width = 0.1f,
+                    EdgeSmoothness = Vector2.One,
+                    X = x,
+                }
+            );
         }
 
         private long getTickInterval(long range, int maxTicksCount)

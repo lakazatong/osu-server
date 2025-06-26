@@ -29,16 +29,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
         private readonly IBindable<int> pathVersion = new Bindable<int>();
 
-        protected override OsuSkinComponents CirclePieceComponent => OsuSkinComponents.SliderHeadHitCircle;
+        protected override OsuSkinComponents CirclePieceComponent =>
+            OsuSkinComponents.SliderHeadHitCircle;
 
-        public DrawableSliderHead()
-        {
-        }
+        public DrawableSliderHead() { }
 
         public DrawableSliderHead(SliderHeadCircle h)
-            : base(h)
-        {
-        }
+            : base(h) { }
 
         protected override void OnFree()
         {
@@ -58,7 +55,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             pathVersion.BindTo(DrawableSlider.PathVersion);
 
-            CheckHittable = (d, t, r) => DrawableSlider.CheckHittable?.Invoke(d, t, r) ?? ClickAction.Hit;
+            CheckHittable = (d, t, r) =>
+                DrawableSlider.CheckHittable?.Invoke(d, t, r) ?? ClickAction.Hit;
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -77,7 +75,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                 // We can't award a full Great because the true Great judgement is awarded on the Slider itself,
                 // reduced based on number of ticks hit,
                 // so we use the most suitable LargeTick judgement here instead.
-                return base.ResultFor(timeOffset).IsHit() ? HitResult.LargeTickHit : HitResult.LargeTickMiss;
+                return base.ResultFor(timeOffset).IsHit()
+                    ? HitResult.LargeTickHit
+                    : HitResult.LargeTickMiss;
             }
 
             return base.ResultFor(timeOffset);

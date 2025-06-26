@@ -42,58 +42,64 @@ namespace osu.Game.Overlays.Profile.Header.Components
             CornerRadius = 6;
             Y = base_y_offset;
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new GridContainer
-                {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    RowDimensions = new[]
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    new GridContainer
                     {
-                        new Dimension(GridSizeMode.AutoSize),
-                        new Dimension(GridSizeMode.AutoSize)
-                    },
-                    ColumnDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize),
-                        new Dimension()
-                    },
-                    Content = new[]
-                    {
-                        new Drawable[]
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        RowDimensions = new[]
                         {
-                            hoverIcon = new HoverIconContainer(),
-                            header = new OsuSpriteText
-                            {
-                                Anchor = Anchor.BottomLeft,
-                                Origin = Anchor.BottomLeft,
-                                Text = UsersStrings.ShowPreviousUsernames,
-                                Font = OsuFont.GetFont(size: 10, italics: true)
-                            }
+                            new Dimension(GridSizeMode.AutoSize),
+                            new Dimension(GridSizeMode.AutoSize),
                         },
-                        new Drawable[]
+                        ColumnDimensions = new[]
                         {
-                            new Container
+                            new Dimension(GridSizeMode.AutoSize),
+                            new Dimension(),
+                        },
+                        Content = new[]
+                        {
+                            new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.Both,
+                                hoverIcon = new HoverIconContainer(),
+                                header = new OsuSpriteText
+                                {
+                                    Anchor = Anchor.BottomLeft,
+                                    Origin = Anchor.BottomLeft,
+                                    Text = UsersStrings.ShowPreviousUsernames,
+                                    Font = OsuFont.GetFont(size: 10, italics: true),
+                                },
                             },
-                            text = new TextFlowContainer(s => s.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold, italics: true))
+                            new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                // Prevents the tooltip of having a sudden size reduction and flickering when the text is being faded out.
-                                // Also prevents a potential OnHover/HoverLost feedback loop.
-                                AlwaysPresent = true,
-                                Margin = new MarginPadding { Bottom = margin, Top = margin / 2f }
-                            }
-                        }
-                    }
+                                new Container { RelativeSizeAxes = Axes.Both },
+                                text = new TextFlowContainer(s =>
+                                    s.Font = OsuFont.GetFont(
+                                        size: 12,
+                                        weight: FontWeight.Bold,
+                                        italics: true
+                                    )
+                                )
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    // Prevents the tooltip of having a sudden size reduction and flickering when the text is being faded out.
+                                    // Also prevents a potential OnHover/HoverLost feedback loop.
+                                    AlwaysPresent = true,
+                                    Margin = new MarginPadding
+                                    {
+                                        Bottom = margin,
+                                        Top = margin / 2f,
+                                    },
+                                },
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             hoverIcon.ActivateHover += showContent;
             hideContent();
@@ -158,7 +164,12 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 AutoSizeAxes = Axes.Both;
                 Child = new SpriteIcon
                 {
-                    Margin = new MarginPadding { Top = 6, Left = margin, Right = margin * 2 },
+                    Margin = new MarginPadding
+                    {
+                        Top = 6,
+                        Left = margin,
+                        Right = margin * 2,
+                    },
                     Size = new Vector2(15),
                     Icon = FontAwesome.Solid.AddressCard,
                 };

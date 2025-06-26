@@ -12,7 +12,11 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "You have completed this beatmap"
         /// </summary>
-        public static LocalisableString CompletedTooltip => new TranslatableString(getKey(@"completed_tooltip"), @"You have completed this beatmap");
+        public static LocalisableString CompletedTooltip =>
+            new TranslatableString(
+                getKey(@"completed_tooltip"),
+                @"You have completed this beatmap"
+            );
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

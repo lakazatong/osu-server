@@ -37,7 +37,8 @@ namespace osu.Game.Online
         private readonly Bindable<bool> notifyOnFriendPresenceChange = new BindableBool();
 
         private readonly IBindableList<APIRelation> friends = new BindableList<APIRelation>();
-        private readonly IBindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        private readonly IBindableDictionary<int, UserPresence> friendPresences =
+            new BindableDictionary<int, UserPresence>();
 
         private readonly HashSet<APIUser> onlineAlertQueue = new HashSet<APIUser>();
         private readonly HashSet<APIUser> offlineAlertQueue = new HashSet<APIUser>();
@@ -96,7 +97,10 @@ namespace osu.Game.Online
             }
         }
 
-        private void onFriendPresenceChanged(object? sender, NotifyDictionaryChangedEventArgs<int, UserPresence> e)
+        private void onFriendPresenceChanged(
+            object? sender,
+            NotifyDictionaryChangedEventArgs<int, UserPresence> e
+        )
         {
             switch (e.Action)
             {
@@ -196,7 +200,11 @@ namespace osu.Game.Online
             }
 
             [BackgroundDependencyLoader]
-            private void load(OsuColour colours, ChannelManager channelManager, ChatOverlay chatOverlay)
+            private void load(
+                OsuColour colours,
+                ChannelManager channelManager,
+                ChatOverlay chatOverlay
+            )
             {
                 IconColour = colours.GrayD;
                 Activated = () =>

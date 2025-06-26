@@ -28,12 +28,17 @@ namespace osu.Game.Overlays.SkinEditor
             // In the future we'll want this to cover all changes, even to skin's `InstantiationInfo`.
             // We'll also need to consider cases where multiple targets are on screen at the same time.
 
-            firstTarget = targetScreen.ChildrenOfType<ISerialisableDrawableContainer>().FirstOrDefault();
+            firstTarget = targetScreen
+                .ChildrenOfType<ISerialisableDrawableContainer>()
+                .FirstOrDefault();
 
             if (firstTarget == null)
                 return;
 
-            components = new BindableList<ISerialisableDrawable> { BindTarget = firstTarget.Components };
+            components = new BindableList<ISerialisableDrawable>
+            {
+                BindTarget = firstTarget.Components,
+            };
             components.BindCollectionChanged((_, _) => SaveState(), true);
         }
 
@@ -43,7 +48,10 @@ namespace osu.Game.Overlays.SkinEditor
                 return;
 
             var skinnableInfos = firstTarget.CreateSerialisedInfo().ToArray();
-            string json = JsonConvert.SerializeObject(skinnableInfos, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            string json = JsonConvert.SerializeObject(
+                skinnableInfos,
+                new JsonSerializerSettings { Formatting = Formatting.Indented }
+            );
             stream.Write(Encoding.UTF8.GetBytes(json));
         }
 
@@ -52,7 +60,9 @@ namespace osu.Game.Overlays.SkinEditor
             if (firstTarget == null)
                 return;
 
-            var deserializedContent = JsonConvert.DeserializeObject<IEnumerable<SerialisedDrawableInfo>>(Encoding.UTF8.GetString(newState));
+            var deserializedContent = JsonConvert.DeserializeObject<
+                IEnumerable<SerialisedDrawableInfo>
+            >(Encoding.UTF8.GetString(newState));
 
             if (deserializedContent == null)
                 return;
@@ -67,8 +77,16 @@ namespace osu.Game.Overlays.SkinEditor
             {
                 Type lookup = component.GetType();
 
-                if (!componentsPerTypeLookup.TryGetValue(lookup, out Queue<Drawable>? componentsOfSameType))
-                    componentsPerTypeLookup.Add(lookup, componentsOfSameType = new Queue<Drawable>());
+                if (
+                    !componentsPerTypeLookup.TryGetValue(
+                        lookup,
+                        out Queue<Drawable>? componentsOfSameType
+                    )
+                )
+                    componentsPerTypeLookup.Add(
+                        lookup,
+                        componentsOfSameType = new Queue<Drawable>()
+                    );
 
                 componentsOfSameType.Enqueue((Drawable)component);
             }
@@ -80,7 +98,12 @@ namespace osu.Game.Overlays.SkinEditor
             {
                 Type lookup = skinnableInfo.Type;
 
-                if (!componentsPerTypeLookup.TryGetValue(lookup, out Queue<Drawable>? componentsOfSameType))
+                if (
+                    !componentsPerTypeLookup.TryGetValue(
+                        lookup,
+                        out Queue<Drawable>? componentsOfSameType
+                    )
+                )
                 {
                     firstTarget.Add((ISerialisableDrawable)skinnableInfo.CreateInstance());
                     continue;

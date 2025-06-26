@@ -33,50 +33,52 @@ namespace osu.Game.Tests.Visual.Navigation
     [TestFixture]
     public partial class TestSceneOsuGame : OsuGameTestScene
     {
-        private IReadOnlyList<Type> requiredGameDependencies => new[]
-        {
-            typeof(OsuGame),
-            typeof(OsuLogo),
-            typeof(IdleTracker),
-            typeof(OnScreenDisplay),
-            typeof(INotificationOverlay),
-            typeof(BeatmapListingOverlay),
-            typeof(DashboardOverlay),
-            typeof(NewsOverlay),
-            typeof(ChannelManager),
-            typeof(ChatOverlay),
-            typeof(SettingsOverlay),
-            typeof(UserProfileOverlay),
-            typeof(BeatmapSetOverlay),
-            typeof(LoginOverlay),
-            typeof(MusicController),
-            typeof(AccountCreationOverlay),
-            typeof(IDialogOverlay),
-            typeof(ScreenshotManager)
-        };
+        private IReadOnlyList<Type> requiredGameDependencies =>
+            new[]
+            {
+                typeof(OsuGame),
+                typeof(OsuLogo),
+                typeof(IdleTracker),
+                typeof(OnScreenDisplay),
+                typeof(INotificationOverlay),
+                typeof(BeatmapListingOverlay),
+                typeof(DashboardOverlay),
+                typeof(NewsOverlay),
+                typeof(ChannelManager),
+                typeof(ChatOverlay),
+                typeof(SettingsOverlay),
+                typeof(UserProfileOverlay),
+                typeof(BeatmapSetOverlay),
+                typeof(LoginOverlay),
+                typeof(MusicController),
+                typeof(AccountCreationOverlay),
+                typeof(IDialogOverlay),
+                typeof(ScreenshotManager),
+            };
 
-        private IReadOnlyList<Type> requiredGameBaseDependencies => new[]
-        {
-            typeof(OsuGameBase),
-            typeof(Bindable<RulesetInfo>),
-            typeof(IBindable<RulesetInfo>),
-            typeof(Bindable<IReadOnlyList<Mod>>),
-            typeof(IBindable<IReadOnlyList<Mod>>),
-            typeof(LargeTextureStore),
-            typeof(OsuConfigManager),
-            typeof(SkinManager),
-            typeof(ISkinSource),
-            typeof(IAPIProvider),
-            typeof(RulesetStore),
-            typeof(ScoreManager),
-            typeof(BeatmapManager),
-            typeof(IRulesetConfigCache),
-            typeof(OsuColour),
-            typeof(IBindable<WorkingBeatmap>),
-            typeof(Bindable<WorkingBeatmap>),
-            typeof(GlobalActionContainer),
-            typeof(PreviewTrackManager),
-        };
+        private IReadOnlyList<Type> requiredGameBaseDependencies =>
+            new[]
+            {
+                typeof(OsuGameBase),
+                typeof(Bindable<RulesetInfo>),
+                typeof(IBindable<RulesetInfo>),
+                typeof(Bindable<IReadOnlyList<Mod>>),
+                typeof(IBindable<IReadOnlyList<Mod>>),
+                typeof(LargeTextureStore),
+                typeof(OsuConfigManager),
+                typeof(SkinManager),
+                typeof(ISkinSource),
+                typeof(IAPIProvider),
+                typeof(RulesetStore),
+                typeof(ScoreManager),
+                typeof(BeatmapManager),
+                typeof(IRulesetConfigCache),
+                typeof(OsuColour),
+                typeof(IBindable<WorkingBeatmap>),
+                typeof(Bindable<WorkingBeatmap>),
+                typeof(GlobalActionContainer),
+                typeof(PreviewTrackManager),
+            };
 
         [Resolved]
         private OsuGameBase gameBase { get; set; }
@@ -84,12 +86,21 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestCursorHidesWhenIdle()
         {
-            AddStep("move mouse inside game bounds", () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.TopLeft + new Vector2(20)));
+            AddStep(
+                "move mouse inside game bounds",
+                () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.TopLeft + new Vector2(20))
+            );
             AddStep("click mouse", () => InputManager.Click(MouseButton.Left));
             AddUntilStep("wait until idle", () => Game.IsIdle.Value);
-            AddUntilStep("menu cursor hidden", () => Game.GlobalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0);
+            AddUntilStep(
+                "menu cursor hidden",
+                () => Game.GlobalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0
+            );
             AddStep("click mouse", () => InputManager.Click(MouseButton.Left));
-            AddUntilStep("menu cursor shown", () => Game.GlobalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 1);
+            AddUntilStep(
+                "menu cursor shown",
+                () => Game.GlobalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 1
+            );
         }
 
         [Test]
@@ -107,8 +118,22 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestSwitchThreadExecutionMode()
         {
-            AddStep("Change thread mode to multi threaded", () => { Game.Dependencies.Get<FrameworkConfigManager>().SetValue(FrameworkSetting.ExecutionMode, ExecutionMode.MultiThreaded); });
-            AddStep("Change thread mode to single thread", () => { Game.Dependencies.Get<FrameworkConfigManager>().SetValue(FrameworkSetting.ExecutionMode, ExecutionMode.SingleThread); });
+            AddStep(
+                "Change thread mode to multi threaded",
+                () =>
+                {
+                    Game.Dependencies.Get<FrameworkConfigManager>()
+                        .SetValue(FrameworkSetting.ExecutionMode, ExecutionMode.MultiThreaded);
+                }
+            );
+            AddStep(
+                "Change thread mode to single thread",
+                () =>
+                {
+                    Game.Dependencies.Get<FrameworkConfigManager>()
+                        .SetValue(FrameworkSetting.ExecutionMode, ExecutionMode.SingleThread);
+                }
+            );
         }
 
         [Test]
@@ -117,11 +142,10 @@ namespace osu.Game.Tests.Visual.Navigation
             RulesetInfo ruleset = null;
 
             AddStep("store current ruleset", () => ruleset = Ruleset.Value);
-            AddStep("set global ruleset to invalid value", () => Ruleset.Value = new RulesetInfo
-            {
-                Name = "unavailable",
-                Available = false,
-            });
+            AddStep(
+                "set global ruleset to invalid value",
+                () => Ruleset.Value = new RulesetInfo { Name = "unavailable", Available = false }
+            );
 
             AddAssert("ruleset still valid", () => Ruleset.Value.Available);
             AddAssert("ruleset unchanged", () => ReferenceEquals(Ruleset.Value, ruleset));
@@ -130,27 +154,33 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestAvailableDependencies()
         {
-            AddAssert("check OsuGame DI members", () =>
-            {
-                foreach (var type in requiredGameDependencies)
+            AddAssert(
+                "check OsuGame DI members",
+                () =>
                 {
-                    if (Game.Dependencies.Get(type) == null)
-                        throw new InvalidOperationException($"{type} has not been cached");
+                    foreach (var type in requiredGameDependencies)
+                    {
+                        if (Game.Dependencies.Get(type) == null)
+                            throw new InvalidOperationException($"{type} has not been cached");
+                    }
+
+                    return true;
                 }
+            );
 
-                return true;
-            });
-
-            AddAssert("check OsuGameBase DI members", () =>
-            {
-                foreach (var type in requiredGameBaseDependencies)
+            AddAssert(
+                "check OsuGameBase DI members",
+                () =>
                 {
-                    if (gameBase.Dependencies.Get(type) == null)
-                        throw new InvalidOperationException($"{type} has not been cached");
-                }
+                    foreach (var type in requiredGameBaseDependencies)
+                    {
+                        if (gameBase.Dependencies.Get(type) == null)
+                            throw new InvalidOperationException($"{type} has not been cached");
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
     }
 }

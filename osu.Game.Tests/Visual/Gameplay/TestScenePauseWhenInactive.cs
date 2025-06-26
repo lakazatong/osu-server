@@ -33,7 +33,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("resume player", () => Player.GameplayClockContainer.Start());
             AddAssert("ensure not paused", () => !Player.GameplayClockContainer.IsPaused.Value);
 
-            AddStep("progress time to gameplay", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.GameplayStartTime));
+            AddStep(
+                "progress time to gameplay",
+                () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.GameplayStartTime)
+            );
             AddUntilStep("wait for pause", () => Player.GameplayClockContainer.IsPaused.Value);
         }
 
@@ -44,10 +47,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestPauseWhileInCooldown()
         {
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
+            AddStep(
+                "move cursor outside",
+                () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10))
+            );
 
             AddStep("resume player", () => Player.GameplayClockContainer.Start());
-            AddStep("skip to gameplay", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.GameplayStartTime));
+            AddStep(
+                "skip to gameplay",
+                () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.GameplayStartTime)
+            );
 
             AddStep("set inactive", () => ((Bindable<bool>)host.IsActive).Value = false);
             AddUntilStep("wait for pause", () => Player.GameplayClockContainer.IsPaused.Value);
@@ -59,16 +68,20 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             bool pauseCooldownActive = false;
 
-            AddStep("set inactive again", () =>
-            {
-                pauseCooldownActive = Player.PauseCooldownActive;
-                ((Bindable<bool>)host.IsActive).Value = false;
-            });
+            AddStep(
+                "set inactive again",
+                () =>
+                {
+                    pauseCooldownActive = Player.PauseCooldownActive;
+                    ((Bindable<bool>)host.IsActive).Value = false;
+                }
+            );
             AddAssert("pause cooldown active", () => pauseCooldownActive);
             AddUntilStep("wait for pause", () => Player.GameplayClockContainer.IsPaused.Value);
         }
 
-        protected override TestPlayer CreatePlayer(Ruleset ruleset) => new TestPlayer(true, true, true);
+        protected override TestPlayer CreatePlayer(Ruleset ruleset) =>
+            new TestPlayer(true, true, true);
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
@@ -82,7 +95,9 @@ namespace osu.Game.Tests.Visual.Gameplay
             };
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
-            => new TestWorkingBeatmap(beatmap, storyboard, Audio);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) => new TestWorkingBeatmap(beatmap, storyboard, Audio);
     }
 }

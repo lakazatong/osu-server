@@ -23,7 +23,10 @@ namespace osu.Game.Rulesets.Difficulty
         /// </summary>
         /// <param name="performance">Actual gameplay performance.</param>
         /// <param name="perfectPerformance">Performance of a perfect play for comparison.</param>
-        public PerformanceBreakdown(PerformanceAttributes performance, PerformanceAttributes perfectPerformance)
+        public PerformanceBreakdown(
+            PerformanceAttributes performance,
+            PerformanceAttributes perfectPerformance
+        )
         {
             Performance = performance;
             PerfectPerformance = perfectPerformance;

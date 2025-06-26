@@ -51,22 +51,31 @@ namespace osu.Game.Screens.Select.Carousel
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Color4.Black, new Color4(0f, 0f, 0f, 0.9f)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                Color4.Black,
+                                new Color4(0f, 0f, 0f, 0.9f)
+                            ),
                             Width = 0.05f,
                         },
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(new Color4(0f, 0f, 0f, 0.9f), new Color4(0f, 0f, 0f, 0.1f)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                new Color4(0f, 0f, 0f, 0.9f),
+                                new Color4(0f, 0f, 0f, 0.1f)
+                            ),
                             Width = 0.2f,
                         },
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(new Color4(0f, 0f, 0f, 0.1f), new Color4(0, 0, 0, 0)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                new Color4(0f, 0f, 0f, 0.1f),
+                                new Color4(0, 0, 0, 0)
+                            ),
                             Width = 0.05f,
                         },
-                    }
+                    },
                 },
             };
         }

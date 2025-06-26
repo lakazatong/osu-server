@@ -23,7 +23,8 @@ namespace osu.Game.Tests.Visual.Gameplay
     {
         private DependencyProvidingContainer dependencyContainer = null!;
 
-        private readonly Bindable<JudgementResult> lastJudgementResult = new Bindable<JudgementResult>();
+        private readonly Bindable<JudgementResult> lastJudgementResult =
+            new Bindable<JudgementResult>();
         private ScoreProcessor scoreProcessor = null!;
 
         private int iteration;
@@ -32,46 +33,59 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public TestSceneColourHitErrorMeter()
         {
-            AddSliderStep("Judgement spacing", 0, 10, 2, spacing =>
-            {
-                if (colourHitErrorMeter.IsNotNull())
-                    colourHitErrorMeter.JudgementSpacing.Value = spacing;
-            });
+            AddSliderStep(
+                "Judgement spacing",
+                0,
+                10,
+                2,
+                spacing =>
+                {
+                    if (colourHitErrorMeter.IsNotNull())
+                        colourHitErrorMeter.JudgementSpacing.Value = spacing;
+                }
+            );
 
-            AddSliderStep("Judgement count", 1, 50, 5, spacing =>
-            {
-                if (colourHitErrorMeter.IsNotNull())
-                    colourHitErrorMeter.JudgementCount.Value = spacing;
-            });
+            AddSliderStep(
+                "Judgement count",
+                1,
+                50,
+                5,
+                spacing =>
+                {
+                    if (colourHitErrorMeter.IsNotNull())
+                        colourHitErrorMeter.JudgementCount.Value = spacing;
+                }
+            );
         }
 
         [SetUpSteps]
-        public void SetupSteps() => AddStep("Create components", () =>
-        {
-            var ruleset = CreateRuleset();
-
-            Debug.Assert(ruleset != null);
-
-            scoreProcessor = new ScoreProcessor(ruleset);
-            Child = dependencyContainer = new DependencyProvidingContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                CachedDependencies = new (Type, object)[]
+        public void SetupSteps() =>
+            AddStep(
+                "Create components",
+                () =>
                 {
-                    (typeof(ScoreProcessor), scoreProcessor)
+                    var ruleset = CreateRuleset();
+
+                    Debug.Assert(ruleset != null);
+
+                    scoreProcessor = new ScoreProcessor(ruleset);
+                    Child = dependencyContainer = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(ScoreProcessor), scoreProcessor),
+                        },
+                    };
+                    dependencyContainer.Child = colourHitErrorMeter = new ColourHitErrorMeter
+                    {
+                        Margin = new MarginPadding { Top = 100 },
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Scale = new Vector2(2),
+                    };
                 }
-            };
-            dependencyContainer.Child = colourHitErrorMeter = new ColourHitErrorMeter
-            {
-                Margin = new MarginPadding
-                {
-                    Top = 100
-                },
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                Scale = new Vector2(2),
-            };
-        });
+            );
 
         protected override Ruleset CreateRuleset() => new OsuRuleset();
 
@@ -87,7 +101,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestJudgementAmountChange()
         {
             AddRepeatStep("Add judgement", applyOneJudgement, 10);
-            AddStep("Judgement count change to 4", () => colourHitErrorMeter.JudgementCount.Value = 4);
+            AddStep(
+                "Judgement count change to 4",
+                () => colourHitErrorMeter.JudgementCount.Value = 4
+            );
             AddRepeatStep("Add judgement", applyOneJudgement, 8);
         }
 
@@ -95,17 +112,25 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestHitErrorShapeChange()
         {
             AddRepeatStep("Add judgement", applyOneJudgement, 8);
-            AddStep("Change shape square", () => colourHitErrorMeter.JudgementShape.Value = ColourHitErrorMeter.ShapeStyle.Square);
+            AddStep(
+                "Change shape square",
+                () =>
+                    colourHitErrorMeter.JudgementShape.Value = ColourHitErrorMeter.ShapeStyle.Square
+            );
             AddRepeatStep("Add judgement", applyOneJudgement, 10);
-            AddStep("Change shape circle", () => colourHitErrorMeter.JudgementShape.Value = ColourHitErrorMeter.ShapeStyle.Circle);
+            AddStep(
+                "Change shape circle",
+                () =>
+                    colourHitErrorMeter.JudgementShape.Value = ColourHitErrorMeter.ShapeStyle.Circle
+            );
         }
 
         private void applyOneJudgement()
         {
-            lastJudgementResult.Value = new OsuJudgementResult(new HitObject
-            {
-                StartTime = iteration * 10000,
-            }, new OsuJudgement())
+            lastJudgementResult.Value = new OsuJudgementResult(
+                new HitObject { StartTime = iteration * 10000 },
+                new OsuJudgement()
+            )
             {
                 Type = HitResult.Great,
             };

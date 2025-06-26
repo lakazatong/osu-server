@@ -136,7 +136,7 @@ namespace osu.Game.Rulesets.UI
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                         },
-                    }
+                    },
                 },
                 new Container
                 {
@@ -161,14 +161,14 @@ namespace osu.Game.Rulesets.UI
                             Alpha = 0,
                             Font = OsuFont.Numeric.With(size: 22f, weight: FontWeight.Black),
                             UseFullGlyphHeight = false,
-                            Text = mod.Acronym
+                            Text = mod.Acronym,
                         },
                         modIcon = new SpriteIcon
                         {
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
                             Size = new Vector2(45),
-                            Icon = FontAwesome.Solid.Question
+                            Icon = FontAwesome.Solid.Question,
                         },
                         adjustmentMarker = new Container
                         {
@@ -191,10 +191,10 @@ namespace osu.Game.Rulesets.UI
                                     Icon = FontAwesome.Solid.Cog,
                                     RelativeSizeAxes = Axes.Both,
                                     Size = new Vector2(0.6f),
-                                }
-                            }
+                                },
+                            },
                         },
-                    }
+                    },
                 },
             };
         }
@@ -241,7 +241,8 @@ namespace osu.Game.Rulesets.UI
 
         private void updateExtendedInformation()
         {
-            bool showExtended = showExtendedInformation && !string.IsNullOrEmpty(mod.ExtendedIconInformation);
+            bool showExtended =
+                showExtendedInformation && !string.IsNullOrEmpty(mod.ExtendedIconInformation);
 
             extendedContent.Alpha = showExtended ? 1 : 0;
             extendedText.Text = mod.ExtendedIconInformation;
@@ -254,12 +255,28 @@ namespace osu.Game.Rulesets.UI
 
         private void updateColour()
         {
-            modAcronym.Colour = modIcon.Colour = Interpolation.ValueAt<Colour4>(0.1f, Colour4.Black, backgroundColour, 0, 1);
-            cogBackground.Colour = Interpolation.ValueAt<Colour4>(0.1f, Colour4.Black, backgroundColour, 0, 1);
+            modAcronym.Colour = modIcon.Colour = Interpolation.ValueAt<Colour4>(
+                0.1f,
+                Colour4.Black,
+                backgroundColour,
+                0,
+                1
+            );
+            cogBackground.Colour = Interpolation.ValueAt<Colour4>(
+                0.1f,
+                Colour4.Black,
+                backgroundColour,
+                0,
+                1
+            );
             cog.Colour = backgroundColour;
 
-            extendedText.Colour = background.Colour = Selected.Value ? backgroundColour.Lighten(0.2f) : backgroundColour;
-            extendedBackground.Colour = Selected.Value ? backgroundColour.Darken(2.4f) : backgroundColour.Darken(2.8f);
+            extendedText.Colour = background.Colour = Selected.Value
+                ? backgroundColour.Lighten(0.2f)
+                : backgroundColour;
+            extendedBackground.Colour = Selected.Value
+                ? backgroundColour.Darken(2.4f)
+                : backgroundColour.Darken(2.8f);
         }
 
         protected override void Dispose(bool isDisposing)

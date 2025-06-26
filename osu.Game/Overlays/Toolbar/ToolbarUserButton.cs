@@ -40,48 +40,51 @@ namespace osu.Game.Overlays.Toolbar
         [BackgroundDependencyLoader]
         private void load(OsuColour colours, IAPIProvider api, LoginOverlay? login)
         {
-            Flow.Add(new Container
-            {
-                Masking = true,
-                CornerRadius = 4,
-                Size = new Vector2(32),
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                EdgeEffect = new EdgeEffectParameters
+            Flow.Add(
+                new Container
                 {
-                    Type = EdgeEffectType.Shadow,
-                    Radius = 4,
-                    Colour = Color4.Black.Opacity(0.1f),
-                },
-                Children = new Drawable[]
-                {
-                    avatar = new UpdateableAvatar(isInteractive: false)
+                    Masking = true,
+                    CornerRadius = 4,
+                    Size = new Vector2(32),
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    EdgeEffect = new EdgeEffectParameters
                     {
-                        RelativeSizeAxes = Axes.Both,
+                        Type = EdgeEffectType.Shadow,
+                        Radius = 4,
+                        Colour = Color4.Black.Opacity(0.1f),
                     },
-                    spinner = new LoadingLayer(dimBackground: true, withBox: false, blockInput: false)
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    failingIcon = new SpriteIcon
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Alpha = 0,
-                        Size = new Vector2(0.3f),
-                        Icon = FontAwesome.Solid.ExclamationTriangle,
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colours.YellowLight,
+                        avatar = new UpdateableAvatar(isInteractive: false)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                        spinner = new LoadingLayer(
+                            dimBackground: true,
+                            withBox: false,
+                            blockInput: false
+                        )
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                        failingIcon = new SpriteIcon
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Alpha = 0,
+                            Size = new Vector2(0.3f),
+                            Icon = FontAwesome.Solid.ExclamationTriangle,
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colours.YellowLight,
+                        },
                     },
                 }
-            });
+            );
 
-            Flow.Add(new TransientUserStatisticsUpdateDisplay
-            {
-                Alpha = 0
-            });
+            Flow.Add(new TransientUserStatisticsUpdateDisplay { Alpha = 0 });
             Flow.AutoSizeEasing = Easing.OutQuint;
             Flow.AutoSizeDuration = 250;
 
@@ -94,44 +97,53 @@ namespace osu.Game.Overlays.Toolbar
             StateContainer = login;
         }
 
-        private void userChanged(ValueChangedEvent<APIUser> user) => Schedule(() =>
-        {
-            Text = user.NewValue.Username;
-            avatar.User = user.NewValue;
-        });
-
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            failingIcon.FadeTo(state.NewValue == APIState.Failing || state.NewValue == APIState.RequiresSecondFactorAuth ? 1 : 0, 200, Easing.OutQuint);
-
-            switch (state.NewValue)
+        private void userChanged(ValueChangedEvent<APIUser> user) =>
+            Schedule(() =>
             {
-                case APIState.Connecting:
-                    TooltipText = ToolbarStrings.Connecting;
-                    spinner.Show();
-                    break;
+                Text = user.NewValue.Username;
+                avatar.User = user.NewValue;
+            });
 
-                case APIState.Failing:
-                    TooltipText = ToolbarStrings.AttemptingToReconnect;
-                    spinner.Show();
-                    failingIcon.Icon = FontAwesome.Solid.ExclamationTriangle;
-                    break;
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
+            {
+                failingIcon.FadeTo(
+                    state.NewValue == APIState.Failing
+                    || state.NewValue == APIState.RequiresSecondFactorAuth
+                        ? 1
+                        : 0,
+                    200,
+                    Easing.OutQuint
+                );
 
-                case APIState.RequiresSecondFactorAuth:
-                    TooltipText = ToolbarStrings.VerificationRequired;
-                    spinner.Show();
-                    failingIcon.Icon = FontAwesome.Solid.Key;
-                    break;
+                switch (state.NewValue)
+                {
+                    case APIState.Connecting:
+                        TooltipText = ToolbarStrings.Connecting;
+                        spinner.Show();
+                        break;
 
-                case APIState.Offline:
-                case APIState.Online:
-                    TooltipText = string.Empty;
-                    spinner.Hide();
-                    break;
+                    case APIState.Failing:
+                        TooltipText = ToolbarStrings.AttemptingToReconnect;
+                        spinner.Show();
+                        failingIcon.Icon = FontAwesome.Solid.ExclamationTriangle;
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(state.NewValue));
-            }
-        });
+                    case APIState.RequiresSecondFactorAuth:
+                        TooltipText = ToolbarStrings.VerificationRequired;
+                        spinner.Show();
+                        failingIcon.Icon = FontAwesome.Solid.Key;
+                        break;
+
+                    case APIState.Offline:
+                    case APIState.Online:
+                        TooltipText = string.Empty;
+                        spinner.Hide();
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(state.NewValue));
+                }
+            });
     }
 }

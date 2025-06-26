@@ -39,7 +39,7 @@ namespace osu.Game.Screens.Menu
                     Origin = Anchor.BottomRight,
                     X = -250,
                 },
-                sounds = new StarFountainSounds()
+                sounds = new StarFountainSounds(),
             };
         }
 
@@ -51,7 +51,8 @@ namespace osu.Game.Screens.Menu
 
             if (EffectPoint.KiaiMode && !isTriggered)
             {
-                bool isNearEffectPoint = Math.Abs(BeatSyncSource.Clock.CurrentTime - EffectPoint.Time) < 500;
+                bool isNearEffectPoint =
+                    Math.Abs(BeatSyncSource.Clock.CurrentTime - EffectPoint.Time) < 500;
                 if (isNearEffectPoint)
                     Shoot();
             }

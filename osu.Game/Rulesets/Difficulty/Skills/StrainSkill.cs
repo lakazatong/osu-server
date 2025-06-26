@@ -32,9 +32,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         protected readonly List<double> ObjectStrains = new List<double>(); // Store individual strains
 
         protected StrainSkill(Mod[] mods)
-            : base(mods)
-        {
-        }
+            : base(mods) { }
 
         /// <summary>
         /// Returns the strain value at <see cref="DifficultyHitObject"/>. This value is calculated with or without respect to previous objects.
@@ -79,7 +77,9 @@ namespace osu.Game.Rulesets.Difficulty.Skills
                 return ObjectStrains.Count;
 
             // Use a weighted sum of all strains. Constants are arbitrary and give nice values
-            return ObjectStrains.Sum(s => 1.1 / (1 + Math.Exp(-10 * (s / consistentTopStrain - 0.88))));
+            return ObjectStrains.Sum(s =>
+                1.1 / (1 + Math.Exp(-10 * (s / consistentTopStrain - 0.88)))
+            );
         }
 
         /// <summary>
@@ -114,7 +114,8 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         /// Returns a live enumerable of the peak strains for each <see cref="SectionLength"/> section of the beatmap,
         /// including the peak of the current section.
         /// </summary>
-        public IEnumerable<double> GetCurrentStrainPeaks() => strainPeaks.Append(currentSectionPeak);
+        public IEnumerable<double> GetCurrentStrainPeaks() =>
+            strainPeaks.Append(currentSectionPeak);
 
         /// <summary>
         /// Returns the calculated difficulty value representing all <see cref="DifficultyHitObject"/>s that have been processed up to this point.

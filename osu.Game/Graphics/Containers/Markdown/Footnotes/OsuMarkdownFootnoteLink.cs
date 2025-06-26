@@ -41,26 +41,33 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(OsuMarkdownContainer markdownContainer, OverlayScrollContainer? scrollContainer)
+        private void load(
+            OsuMarkdownContainer markdownContainer,
+            OverlayScrollContainer? scrollContainer
+        )
         {
             IdleColour = colourProvider.Light2;
             HoverColour = colourProvider.Light1;
 
             spriteText = parentTextComponent.CreateSpriteText();
 
-            Add(spriteText.With(t =>
-            {
-                float baseSize = t.Font.Size;
-                t.Font = t.Font.With(size: baseSize * 0.58f);
-                t.Margin = new MarginPadding { Bottom = 0.33f * baseSize };
-                t.Text = LocalisableString.Format("[{0}]", FootnoteLink.Index);
-            }));
+            Add(
+                spriteText.With(t =>
+                {
+                    float baseSize = t.Font.Size;
+                    t.Font = t.Font.With(size: baseSize * 0.58f);
+                    t.Margin = new MarginPadding { Bottom = 0.33f * baseSize };
+                    t.Text = LocalisableString.Format("[{0}]", FootnoteLink.Index);
+                })
+            );
 
             if (scrollContainer != null)
             {
                 Action = () =>
                 {
-                    var footnote = markdownContainer.ChildrenOfType<OsuMarkdownFootnote>().Single(footnote => footnote.Footnote.Label == FootnoteLink.Footnote.Label);
+                    var footnote = markdownContainer
+                        .ChildrenOfType<OsuMarkdownFootnote>()
+                        .Single(footnote => footnote.Footnote.Label == FootnoteLink.Footnote.Label);
                     scrollContainer.ScrollIntoView(footnote);
                 };
             }

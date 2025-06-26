@@ -19,16 +19,20 @@ namespace osu.Game.Tests.Visual.OnlinePlay
     /// <summary>
     /// A base test scene for all online play components and screens.
     /// </summary>
-    public abstract partial class OnlinePlayTestScene : ScreenTestScene, IOnlinePlayTestSceneDependencies
+    public abstract partial class OnlinePlayTestScene
+        : ScreenTestScene,
+            IOnlinePlayTestSceneDependencies
     {
-        public OngoingOperationTracker OngoingOperationTracker => OnlinePlayDependencies.OngoingOperationTracker;
+        public OngoingOperationTracker OngoingOperationTracker =>
+            OnlinePlayDependencies.OngoingOperationTracker;
         public TestUserLookupCache UserLookupCache => OnlinePlayDependencies.UserLookupCache;
         public BeatmapLookupCache BeatmapLookupCache => OnlinePlayDependencies.BeatmapLookupCache;
 
         /// <summary>
         /// All dependencies required for online play components and screens.
         /// </summary>
-        protected OnlinePlayTestSceneDependencies OnlinePlayDependencies => dependencies.OnlinePlayDependencies!;
+        protected OnlinePlayTestSceneDependencies OnlinePlayDependencies =>
+            dependencies.OnlinePlayDependencies!;
 
         protected override Container<Drawable> Content => content;
 
@@ -42,49 +46,63 @@ namespace osu.Game.Tests.Visual.OnlinePlay
 
         protected OnlinePlayTestScene()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                drawableDependenciesContainer = new Container { RelativeSizeAxes = Axes.Both },
-                content = new Container { RelativeSizeAxes = Axes.Both },
-            });
+            base.Content.AddRange(
+                new Drawable[]
+                {
+                    drawableDependenciesContainer = new Container { RelativeSizeAxes = Axes.Both },
+                    content = new Container { RelativeSizeAxes = Axes.Both },
+                }
+            );
         }
 
-        protected sealed override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-            => dependencies = new DelegatedDependencyContainer(base.CreateChildDependencies(parent));
+        protected sealed override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) => dependencies = new DelegatedDependencyContainer(base.CreateChildDependencies(parent));
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
 
-            AddStep("setup dependencies", () =>
-            {
-                // Reset the room dependencies to a fresh state.
-                dependencies.OnlinePlayDependencies = CreateOnlinePlayDependencies();
-                drawableDependenciesContainer.Clear();
-                drawableDependenciesContainer.AddRange(dependencies.OnlinePlayDependencies.DrawableComponents);
-
-                var handler = OnlinePlayDependencies.RequestsHandler;
-
-                // Resolving the BeatmapManager in the test scene will inject the game-wide BeatmapManager, while many test scenes cache their own BeatmapManager instead.
-                // To get around this, the BeatmapManager is looked up from the dependencies provided to the children of the test scene instead.
-                var beatmapManager = dependencies.Get<BeatmapManager>();
-
-                ((DummyAPIAccess)API).HandleRequest = request =>
+            AddStep(
+                "setup dependencies",
+                () =>
                 {
-                    try
+                    // Reset the room dependencies to a fresh state.
+                    dependencies.OnlinePlayDependencies = CreateOnlinePlayDependencies();
+                    drawableDependenciesContainer.Clear();
+                    drawableDependenciesContainer.AddRange(
+                        dependencies.OnlinePlayDependencies.DrawableComponents
+                    );
+
+                    var handler = OnlinePlayDependencies.RequestsHandler;
+
+                    // Resolving the BeatmapManager in the test scene will inject the game-wide BeatmapManager, while many test scenes cache their own BeatmapManager instead.
+                    // To get around this, the BeatmapManager is looked up from the dependencies provided to the children of the test scene instead.
+                    var beatmapManager = dependencies.Get<BeatmapManager>();
+
+                    ((DummyAPIAccess)API).HandleRequest = request =>
                     {
-                        return handler.HandleRequest(request, API.LocalUser.Value, beatmapManager);
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // These requests can be fired asynchronously, but potentially arrive after game components
-                        // have been disposed (ie. realm in BeatmapManager).
-                        // This only happens in tests and it's easiest to ignore them for now.
-                        Logger.Log($"Handled {nameof(ObjectDisposedException)} in test request handling");
-                        return true;
-                    }
-                };
-            });
+                        try
+                        {
+                            return handler.HandleRequest(
+                                request,
+                                API.LocalUser.Value,
+                                beatmapManager
+                            );
+                        }
+                        catch (ObjectDisposedException)
+                        {
+                            // These requests can be fired asynchronously, but potentially arrive after game components
+                            // have been disposed (ie. realm in BeatmapManager).
+                            // This only happens in tests and it's easiest to ignore them for now.
+                            Logger.Log(
+                                $"Handled {nameof(ObjectDisposedException)} in test request handling"
+                            );
+                            return true;
+                        }
+                    };
+                }
+            );
         }
 
         /// <summary>
@@ -93,9 +111,15 @@ namespace osu.Game.Tests.Visual.OnlinePlay
         /// <remarks>
         /// Any custom dependencies required for online play sub-classes should be added here.
         /// </remarks>
-        protected virtual OnlinePlayTestSceneDependencies CreateOnlinePlayDependencies() => new OnlinePlayTestSceneDependencies();
+        protected virtual OnlinePlayTestSceneDependencies CreateOnlinePlayDependencies() =>
+            new OnlinePlayTestSceneDependencies();
 
-        protected Room[] GenerateRooms(int count, RulesetInfo? ruleset = null, bool withPassword = false, bool withSpotlightRooms = false)
+        protected Room[] GenerateRooms(
+            int count,
+            RulesetInfo? ruleset = null,
+            bool withPassword = false,
+            bool withSpotlightRooms = false
+        )
         {
             Room[] rooms = new Room[count];
 
@@ -110,10 +134,22 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                     Name = $@"Room {currentRoomId}",
                     Host = new APIUser { Username = @"Host" },
                     Duration = TimeSpan.FromSeconds(10),
-                    Category = withSpotlightRooms && i % 2 == 0 ? RoomCategory.Spotlight : RoomCategory.Normal,
+                    Category =
+                        withSpotlightRooms && i % 2 == 0
+                            ? RoomCategory.Spotlight
+                            : RoomCategory.Normal,
                     Password = withPassword ? @"password" : null,
-                    PlaylistItemStats = new Room.RoomPlaylistItemStats { RulesetIDs = [ruleset.OnlineID] },
-                    Playlist = [new PlaylistItem(new BeatmapInfo { Metadata = new BeatmapMetadata() }) { RulesetID = ruleset.OnlineID }]
+                    PlaylistItemStats = new Room.RoomPlaylistItemStats
+                    {
+                        RulesetIDs = [ruleset.OnlineID],
+                    },
+                    Playlist =
+                    [
+                        new PlaylistItem(new BeatmapInfo { Metadata = new BeatmapMetadata() })
+                        {
+                            RulesetID = ruleset.OnlineID,
+                        },
+                    ],
                 };
             }
 
@@ -143,15 +179,14 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                 injectableDependencies = new DependencyContainer(this);
             }
 
-            public object Get(Type type)
-                => OnlinePlayDependencies?.Get(type) ?? parent.Get(type);
+            public object Get(Type type) => OnlinePlayDependencies?.Get(type) ?? parent.Get(type);
 
-            public object Get(Type type, CacheInfo info)
-                => OnlinePlayDependencies?.Get(type, info) ?? parent.Get(type, info);
+            public object Get(Type type, CacheInfo info) =>
+                OnlinePlayDependencies?.Get(type, info) ?? parent.Get(type, info);
 
             public void Inject<T>(T instance)
-                where T : class, IDependencyInjectionCandidate
-                => injectableDependencies.Inject(instance);
+                where T : class, IDependencyInjectionCandidate =>
+                injectableDependencies.Inject(instance);
         }
     }
 }

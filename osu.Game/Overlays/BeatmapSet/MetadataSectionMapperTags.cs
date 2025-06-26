@@ -10,9 +10,7 @@ namespace osu.Game.Overlays.BeatmapSet
     public partial class MetadataSectionMapperTags : MetadataSection
     {
         public MetadataSectionMapperTags(Action<string>? searchAction = null)
-            : base(MetadataType.MapperTags, searchAction)
-        {
-        }
+            : base(MetadataType.MapperTags, searchAction) { }
 
         protected override void AddMetadata(string metadata, LinkFlowContainer loaded)
         {

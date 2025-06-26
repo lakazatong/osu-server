@@ -13,19 +13,21 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestBasic()
         {
-            AddStep("set up match", () =>
-            {
-                var match = Ladder.CurrentMatch.Value!;
+            AddStep(
+                "set up match",
+                () =>
+                {
+                    var match = Ladder.CurrentMatch.Value!;
 
-                match.Round.Value = Ladder.Rounds.First(g => g.Name.Value == "Quarterfinals");
-                match.Completed.Value = true;
-            });
+                    match.Round.Value = Ladder.Rounds.First(g => g.Name.Value == "Quarterfinals");
+                    match.Completed.Value = true;
+                }
+            );
 
-            AddStep("create screen", () => Add(new TeamWinScreen
-            {
-                FillMode = FillMode.Fit,
-                FillAspectRatio = 16 / 9f
-            }));
+            AddStep(
+                "create screen",
+                () => Add(new TeamWinScreen { FillMode = FillMode.Fit, FillAspectRatio = 16 / 9f })
+            );
         }
     }
 }

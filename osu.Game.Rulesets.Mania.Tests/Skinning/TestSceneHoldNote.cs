@@ -18,26 +18,37 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         [Test]
         public void TestHoldNote()
         {
-            AddToggleStep("toggle hitting", v =>
-            {
-                foreach (var holdNote in CreatedDrawables.SelectMany(d => d.ChildrenOfType<DrawableHoldNote>()))
+            AddToggleStep(
+                "toggle hitting",
+                v =>
                 {
-                    ((Bindable<bool>)holdNote.IsHolding).Value = v;
+                    foreach (
+                        var holdNote in CreatedDrawables.SelectMany(d =>
+                            d.ChildrenOfType<DrawableHoldNote>()
+                        )
+                    )
+                    {
+                        ((Bindable<bool>)holdNote.IsHolding).Value = v;
+                    }
                 }
-            });
+            );
         }
 
         [Test]
         public void TestFadeOnMiss()
         {
-            AddStep("miss tick", () =>
-            {
-                foreach (var holdNote in holdNotes)
-                    holdNote.ChildrenOfType<DrawableHoldNoteHead>().First().MissForcefully();
-            });
+            AddStep(
+                "miss tick",
+                () =>
+                {
+                    foreach (var holdNote in holdNotes)
+                        holdNote.ChildrenOfType<DrawableHoldNoteHead>().First().MissForcefully();
+                }
+            );
         }
 
-        private IEnumerable<DrawableHoldNote> holdNotes => CreatedDrawables.SelectMany(d => d.ChildrenOfType<DrawableHoldNote>());
+        private IEnumerable<DrawableHoldNote> holdNotes =>
+            CreatedDrawables.SelectMany(d => d.ChildrenOfType<DrawableHoldNote>());
 
         protected override DrawableManiaHitObject CreateHitObject()
         {

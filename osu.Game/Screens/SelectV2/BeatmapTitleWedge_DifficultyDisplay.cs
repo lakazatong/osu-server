@@ -91,120 +91,151 @@ namespace osu.Game.Screens.SelectV2
                         Direction = FillDirection.Vertical,
                         Children = new Drawable[]
                         {
-                            new ShearAligningWrapper(ratingAndNameContainer = new GridContainer
-                            {
-                                Shear = -OsuGame.SHEAR,
-                                AlwaysPresent = true,
-                                RelativeSizeAxes = Axes.X,
-                                Height = 20,
-                                Margin = new MarginPadding { Vertical = 5f },
-                                Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN },
-                                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                                ColumnDimensions = new[]
+                            new ShearAligningWrapper(
+                                ratingAndNameContainer = new GridContainer
                                 {
-                                    new Dimension(GridSizeMode.AutoSize),
-                                    new Dimension(GridSizeMode.Absolute, 6),
-                                    new Dimension(),
-                                },
-                                Content = new[]
-                                {
-                                    new[]
-                                    {
-                                        starRatingDisplay = new StarRatingDisplay(default, animated: true)
-                                        {
-                                            Anchor = Anchor.CentreLeft,
-                                            Origin = Anchor.CentreLeft,
-                                        },
-                                        Empty(),
-                                        nameLine = new FillFlowContainer
-                                        {
-                                            Anchor = Anchor.CentreLeft,
-                                            Origin = Anchor.CentreLeft,
-                                            RelativeSizeAxes = Axes.X,
-                                            AutoSizeAxes = Axes.Y,
-                                            Direction = FillDirection.Horizontal,
-                                            Margin = new MarginPadding { Bottom = 2f },
-                                            Children = new Drawable[]
-                                            {
-                                                difficultyText = new TruncatingSpriteText
-                                                {
-                                                    Anchor = Anchor.BottomLeft,
-                                                    Origin = Anchor.BottomLeft,
-                                                    Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
-                                                },
-                                                mappedByText = new OsuSpriteText
-                                                {
-                                                    Anchor = Anchor.BottomLeft,
-                                                    Origin = Anchor.BottomLeft,
-                                                    Text = " mapped by ",
-                                                    Font = OsuFont.Style.Body,
-                                                },
-                                                mapperLink = new MapperLinkContainer
-                                                {
-                                                    AutoSizeAxes = Axes.Both,
-                                                    Anchor = Anchor.BottomLeft,
-                                                    Origin = Anchor.BottomLeft,
-                                                    Child = mapperText = new TruncatingSpriteText
-                                                    {
-                                                        Shadow = true,
-                                                        Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    }
-                                },
-                            }),
-                            new ShearAligningWrapper(new Container
-                            {
-                                Shear = -OsuGame.SHEAR,
-                                RelativeSizeAxes = Axes.X,
-                                Height = 53,
-                                Padding = new MarginPadding { Bottom = border_weight, Right = border_weight },
-                                Child = new Container
-                                {
+                                    Shear = -OsuGame.SHEAR,
+                                    AlwaysPresent = true,
                                     RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Masking = true,
-                                    CornerRadius = 10 - border_weight,
-                                    Shear = OsuGame.SHEAR,
-                                    Children = new Drawable[]
+                                    Height = 20,
+                                    Margin = new MarginPadding { Vertical = 5f },
+                                    Padding = new MarginPadding
                                     {
-                                        new Box
+                                        Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                                    },
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                    ColumnDimensions = new[]
+                                    {
+                                        new Dimension(GridSizeMode.AutoSize),
+                                        new Dimension(GridSizeMode.Absolute, 6),
+                                        new Dimension(),
+                                    },
+                                    Content = new[]
+                                    {
+                                        new[]
                                         {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Colour = colourProvider.Background5.Opacity(0.8f),
-                                        },
-                                        new GridContainer
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            AutoSizeAxes = Axes.Y,
-                                            Padding = new MarginPadding { Left = SongSelect.WEDGE_CONTENT_MARGIN, Right = 20f, Vertical = 7.5f },
-                                            Shear = -OsuGame.SHEAR,
-                                            RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                                            ColumnDimensions = new[]
+                                            starRatingDisplay = new StarRatingDisplay(
+                                                default,
+                                                animated: true
+                                            )
                                             {
-                                                new Dimension(),
-                                                new Dimension(GridSizeMode.Absolute, 30),
-                                                new Dimension(GridSizeMode.AutoSize),
+                                                Anchor = Anchor.CentreLeft,
+                                                Origin = Anchor.CentreLeft,
                                             },
-                                            Content = new[]
+                                            Empty(),
+                                            nameLine = new FillFlowContainer
                                             {
-                                                new[]
+                                                Anchor = Anchor.CentreLeft,
+                                                Origin = Anchor.CentreLeft,
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Direction = FillDirection.Horizontal,
+                                                Margin = new MarginPadding { Bottom = 2f },
+                                                Children = new Drawable[]
                                                 {
-                                                    countStatisticsDisplay = new DifficultyStatisticsDisplay
+                                                    difficultyText = new TruncatingSpriteText
                                                     {
-                                                        RelativeSizeAxes = Axes.X,
+                                                        Anchor = Anchor.BottomLeft,
+                                                        Origin = Anchor.BottomLeft,
+                                                        Font = OsuFont.Style.Body.With(
+                                                            weight: FontWeight.SemiBold
+                                                        ),
                                                     },
-                                                    Empty(),
-                                                    difficultyStatisticsDisplay = new AdjustableDifficultyStatisticsDisplay(autoSize: true),
-                                                }
+                                                    mappedByText = new OsuSpriteText
+                                                    {
+                                                        Anchor = Anchor.BottomLeft,
+                                                        Origin = Anchor.BottomLeft,
+                                                        Text = " mapped by ",
+                                                        Font = OsuFont.Style.Body,
+                                                    },
+                                                    mapperLink = new MapperLinkContainer
+                                                    {
+                                                        AutoSizeAxes = Axes.Both,
+                                                        Anchor = Anchor.BottomLeft,
+                                                        Origin = Anchor.BottomLeft,
+                                                        Child = mapperText =
+                                                            new TruncatingSpriteText
+                                                            {
+                                                                Shadow = true,
+                                                                Font = OsuFont.Style.Body.With(
+                                                                    weight: FontWeight.SemiBold
+                                                                ),
+                                                            },
+                                                    },
+                                                },
                                             },
-                                        }
+                                        },
                                     },
                                 }
-                            }),
-                        }
+                            ),
+                            new ShearAligningWrapper(
+                                new Container
+                                {
+                                    Shear = -OsuGame.SHEAR,
+                                    RelativeSizeAxes = Axes.X,
+                                    Height = 53,
+                                    Padding = new MarginPadding
+                                    {
+                                        Bottom = border_weight,
+                                        Right = border_weight,
+                                    },
+                                    Child = new Container
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Masking = true,
+                                        CornerRadius = 10 - border_weight,
+                                        Shear = OsuGame.SHEAR,
+                                        Children = new Drawable[]
+                                        {
+                                            new Box
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Colour = colourProvider.Background5.Opacity(0.8f),
+                                            },
+                                            new GridContainer
+                                            {
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Padding = new MarginPadding
+                                                {
+                                                    Left = SongSelect.WEDGE_CONTENT_MARGIN,
+                                                    Right = 20f,
+                                                    Vertical = 7.5f,
+                                                },
+                                                Shear = -OsuGame.SHEAR,
+                                                RowDimensions = new[]
+                                                {
+                                                    new Dimension(GridSizeMode.AutoSize),
+                                                },
+                                                ColumnDimensions = new[]
+                                                {
+                                                    new Dimension(),
+                                                    new Dimension(GridSizeMode.Absolute, 30),
+                                                    new Dimension(GridSizeMode.AutoSize),
+                                                },
+                                                Content = new[]
+                                                {
+                                                    new[]
+                                                    {
+                                                        countStatisticsDisplay =
+                                                            new DifficultyStatisticsDisplay
+                                                            {
+                                                                RelativeSizeAxes = Axes.X,
+                                                            },
+                                                        Empty(),
+                                                        difficultyStatisticsDisplay =
+                                                            new AdjustableDifficultyStatisticsDisplay(
+                                                                autoSize: true
+                                                            ),
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                }
+                            ),
+                        },
                     },
                 };
             }
@@ -216,18 +247,22 @@ namespace osu.Game.Screens.SelectV2
                 beatmap.BindValueChanged(_ => updateDisplay());
                 ruleset.BindValueChanged(_ => updateDisplay());
 
-                mods.BindValueChanged(m =>
-                {
-                    settingChangeTracker?.Dispose();
-
-                    updateDifficultyStatistics();
-
-                    if (m.NewValue.Any())
+                mods.BindValueChanged(
+                    m =>
                     {
-                        settingChangeTracker = new ModSettingChangeTracker(m.NewValue);
-                        settingChangeTracker.SettingChanged += _ => updateDifficultyStatistics();
-                    }
-                }, true);
+                        settingChangeTracker?.Dispose();
+
+                        updateDifficultyStatistics();
+
+                        if (m.NewValue.Any())
+                        {
+                            settingChangeTracker = new ModSettingChangeTracker(m.NewValue);
+                            settingChangeTracker.SettingChanged += _ =>
+                                updateDifficultyStatistics();
+                        }
+                    },
+                    true
+                );
 
                 updateDisplay();
             }
@@ -249,11 +284,23 @@ namespace osu.Game.Screens.SelectV2
                 {
                     ratingAndNameContainer.FadeIn(300, Easing.OutQuint);
                     difficultyText.Text = beatmap.Value.BeatmapInfo.DifficultyName;
-                    mapperLink.Action = () => linkHandler?.HandleLink(new LinkDetails(LinkAction.OpenUserProfile, beatmap.Value.Metadata.Author));
+                    mapperLink.Action = () =>
+                        linkHandler?.HandleLink(
+                            new LinkDetails(
+                                LinkAction.OpenUserProfile,
+                                beatmap.Value.Metadata.Author
+                            )
+                        );
                     mapperText.Text = beatmap.Value.Metadata.Author.Username;
                 }
 
-                starRatingDisplay.Current = (Bindable<StarDifficulty>)difficultyCache.GetBindableDifficulty(beatmap.Value.BeatmapInfo, cancellationSource.Token, SongSelect.SELECTION_DEBOUNCE);
+                starRatingDisplay.Current =
+                    (Bindable<StarDifficulty>)
+                        difficultyCache.GetBindableDifficulty(
+                            beatmap.Value.BeatmapInfo,
+                            cancellationSource.Token,
+                            SongSelect.SELECTION_DEBOUNCE
+                        );
 
                 updateCountStatistics(cancellationSource.Token);
                 updateDifficultyStatistics();
@@ -267,86 +314,141 @@ namespace osu.Game.Screens.SelectV2
                     return;
                 }
 
-                Task.Run(() =>
-                {
-                    // This can take time as it is a synchronous task.
-                    // TODO: We're calling `GetPlayableBeatmap` multiple times every map load at song select.
-                    var playableBeatmap = beatmap.Value.GetPlayableBeatmap(ruleset.Value);
-                    var statistics = playableBeatmap.GetStatistics()
-                                                    .Select(s => new StatisticDifficulty.Data(s.Name, s.BarDisplayLength ?? 0, s.BarDisplayLength ?? 0, 1, s.Content))
-                                                    .ToList();
-
-                    Schedule(() =>
+                Task.Run(
+                    () =>
                     {
-                        if (cancellationToken.IsCancellationRequested)
-                            return;
+                        // This can take time as it is a synchronous task.
+                        // TODO: We're calling `GetPlayableBeatmap` multiple times every map load at song select.
+                        var playableBeatmap = beatmap.Value.GetPlayableBeatmap(ruleset.Value);
+                        var statistics = playableBeatmap
+                            .GetStatistics()
+                            .Select(s => new StatisticDifficulty.Data(
+                                s.Name,
+                                s.BarDisplayLength ?? 0,
+                                s.BarDisplayLength ?? 0,
+                                1,
+                                s.Content
+                            ))
+                            .ToList();
 
-                        countStatisticsDisplay.Statistics = statistics;
-                    });
-                }, cancellationToken);
+                        Schedule(() =>
+                        {
+                            if (cancellationToken.IsCancellationRequested)
+                                return;
+
+                            countStatisticsDisplay.Statistics = statistics;
+                        });
+                    },
+                    cancellationToken
+                );
             }
 
-            private void updateDifficultyStatistics() => Scheduler.AddOnce(() =>
-            {
-                if (beatmap.IsDefault || ruleset.Value == null)
+            private void updateDifficultyStatistics() =>
+                Scheduler.AddOnce(() =>
                 {
-                    difficultyStatisticsDisplay.TooltipContent = null;
-                    difficultyStatisticsDisplay.Statistics = Array.Empty<StatisticDifficulty.Data>();
-                    return;
-                }
+                    if (beatmap.IsDefault || ruleset.Value == null)
+                    {
+                        difficultyStatisticsDisplay.TooltipContent = null;
+                        difficultyStatisticsDisplay.Statistics =
+                            Array.Empty<StatisticDifficulty.Data>();
+                        return;
+                    }
 
-                BeatmapDifficulty originalDifficulty = beatmap.Value.BeatmapInfo.Difficulty;
-                BeatmapDifficulty adjustedDifficulty = new BeatmapDifficulty(originalDifficulty);
+                    BeatmapDifficulty originalDifficulty = beatmap.Value.BeatmapInfo.Difficulty;
+                    BeatmapDifficulty adjustedDifficulty = new BeatmapDifficulty(
+                        originalDifficulty
+                    );
 
-                foreach (var mod in mods.Value.OfType<IApplicableToDifficulty>())
-                    mod.ApplyToDifficulty(adjustedDifficulty);
+                    foreach (var mod in mods.Value.OfType<IApplicableToDifficulty>())
+                        mod.ApplyToDifficulty(adjustedDifficulty);
 
-                Ruleset rulesetInstance = ruleset.Value.CreateInstance();
+                    Ruleset rulesetInstance = ruleset.Value.CreateInstance();
 
-                double rate = ModUtils.CalculateRateWithMods(mods.Value);
+                    double rate = ModUtils.CalculateRateWithMods(mods.Value);
 
-                adjustedDifficulty = rulesetInstance.GetRateAdjustedDisplayDifficulty(adjustedDifficulty, rate);
-                difficultyStatisticsDisplay.TooltipContent = new AdjustedAttributesTooltip.Data(originalDifficulty, adjustedDifficulty);
+                    adjustedDifficulty = rulesetInstance.GetRateAdjustedDisplayDifficulty(
+                        adjustedDifficulty,
+                        rate
+                    );
+                    difficultyStatisticsDisplay.TooltipContent = new AdjustedAttributesTooltip.Data(
+                        originalDifficulty,
+                        adjustedDifficulty
+                    );
 
-                StatisticDifficulty.Data firstStatistic;
+                    StatisticDifficulty.Data firstStatistic;
 
-                switch (ruleset.Value.OnlineID)
-                {
-                    case 3:
-                        // Account for mania differences locally for now.
-                        // Eventually this should be handled in a more modular way, allowing rulesets to return arbitrary difficulty attributes.
-                        ILegacyRuleset legacyRuleset = (ILegacyRuleset)rulesetInstance;
+                    switch (ruleset.Value.OnlineID)
+                    {
+                        case 3:
+                            // Account for mania differences locally for now.
+                            // Eventually this should be handled in a more modular way, allowing rulesets to return arbitrary difficulty attributes.
+                            ILegacyRuleset legacyRuleset = (ILegacyRuleset)rulesetInstance;
 
-                        // For the time being, the key count is static no matter what, because:
-                        // - The method doesn't have knowledge of the active keymods. Doing so may require considerations for filtering.
-                        // - Using the difficulty adjustment mod to adjust OD doesn't have an effect on conversion.
-                        int keyCount = legacyRuleset.GetKeyCount(beatmap.Value.BeatmapInfo, mods.Value);
+                            // For the time being, the key count is static no matter what, because:
+                            // - The method doesn't have knowledge of the active keymods. Doing so may require considerations for filtering.
+                            // - Using the difficulty adjustment mod to adjust OD doesn't have an effect on conversion.
+                            int keyCount = legacyRuleset.GetKeyCount(
+                                beatmap.Value.BeatmapInfo,
+                                mods.Value
+                            );
 
-                        firstStatistic = new StatisticDifficulty.Data(BeatmapsetsStrings.ShowStatsCsMania, keyCount, keyCount, 10);
-                        break;
+                            firstStatistic = new StatisticDifficulty.Data(
+                                BeatmapsetsStrings.ShowStatsCsMania,
+                                keyCount,
+                                keyCount,
+                                10
+                            );
+                            break;
 
-                    default:
-                        firstStatistic = new StatisticDifficulty.Data(BeatmapsetsStrings.ShowStatsCs, originalDifficulty.CircleSize, adjustedDifficulty.CircleSize, 10);
-                        break;
-                }
+                        default:
+                            firstStatistic = new StatisticDifficulty.Data(
+                                BeatmapsetsStrings.ShowStatsCs,
+                                originalDifficulty.CircleSize,
+                                adjustedDifficulty.CircleSize,
+                                10
+                            );
+                            break;
+                    }
 
-                difficultyStatisticsDisplay.Statistics = new[]
-                {
-                    firstStatistic,
-                    new StatisticDifficulty.Data(BeatmapsetsStrings.ShowStatsAr, originalDifficulty.ApproachRate, adjustedDifficulty.ApproachRate, 10),
-                    new StatisticDifficulty.Data(BeatmapsetsStrings.ShowStatsAccuracy, originalDifficulty.OverallDifficulty, adjustedDifficulty.OverallDifficulty, 10),
-                    new StatisticDifficulty.Data(BeatmapsetsStrings.ShowStatsDrain, originalDifficulty.DrainRate, adjustedDifficulty.DrainRate, 10),
-                };
-            });
+                    difficultyStatisticsDisplay.Statistics = new[]
+                    {
+                        firstStatistic,
+                        new StatisticDifficulty.Data(
+                            BeatmapsetsStrings.ShowStatsAr,
+                            originalDifficulty.ApproachRate,
+                            adjustedDifficulty.ApproachRate,
+                            10
+                        ),
+                        new StatisticDifficulty.Data(
+                            BeatmapsetsStrings.ShowStatsAccuracy,
+                            originalDifficulty.OverallDifficulty,
+                            adjustedDifficulty.OverallDifficulty,
+                            10
+                        ),
+                        new StatisticDifficulty.Data(
+                            BeatmapsetsStrings.ShowStatsDrain,
+                            originalDifficulty.DrainRate,
+                            adjustedDifficulty.DrainRate,
+                            10
+                        ),
+                    };
+                });
 
             protected override void Update()
             {
                 base.Update();
 
-                difficultyText.MaxWidth = Math.Max(nameLine.DrawWidth - mappedByText.DrawWidth - mapperText.DrawWidth - 20, 0);
+                difficultyText.MaxWidth = Math.Max(
+                    nameLine.DrawWidth - mappedByText.DrawWidth - mapperText.DrawWidth - 20,
+                    0
+                );
 
                 // Use difficulty colour until it gets too dark to be visible against dark backgrounds.
-                Color4 col = starRatingDisplay.DisplayedStars.Value >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF ? colours.Orange1 : starRatingDisplay.DisplayedDifficultyColour;
+                Color4 col =
+                    starRatingDisplay.DisplayedStars.Value
+                    >= OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF
+                        ? colours.Orange1
+                        : starRatingDisplay.DisplayedDifficultyColour;
 
                 difficultyText.Colour = col;
                 mappedByText.Colour = col;
@@ -364,19 +466,20 @@ namespace osu.Game.Screens.SelectV2
                 }
             }
 
-            private partial class AdjustableDifficultyStatisticsDisplay : DifficultyStatisticsDisplay, IHasCustomTooltip<AdjustedAttributesTooltip.Data>
+            private partial class AdjustableDifficultyStatisticsDisplay
+                : DifficultyStatisticsDisplay,
+                    IHasCustomTooltip<AdjustedAttributesTooltip.Data>
             {
                 [Resolved]
                 private OverlayColourProvider colourProvider { get; set; } = null!;
 
-                public ITooltip<AdjustedAttributesTooltip.Data> GetCustomTooltip() => new AdjustedAttributesTooltip(colourProvider);
+                public ITooltip<AdjustedAttributesTooltip.Data> GetCustomTooltip() =>
+                    new AdjustedAttributesTooltip(colourProvider);
 
                 public AdjustedAttributesTooltip.Data? TooltipContent { get; set; }
 
                 public AdjustableDifficultyStatisticsDisplay(bool autoSize)
-                    : base(autoSize)
-                {
-                }
+                    : base(autoSize) { }
             }
         }
     }

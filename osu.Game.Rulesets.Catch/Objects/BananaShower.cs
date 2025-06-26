@@ -39,12 +39,17 @@ namespace osu.Game.Rulesets.Catch.Objects
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                AddNested(new Banana
-                {
-                    StartTime = time,
-                    BananaIndex = count,
-                    Samples = new List<HitSampleInfo> { new Banana.BananaHitSampleInfo(CreateHitSampleInfo().Volume) }
-                });
+                AddNested(
+                    new Banana
+                    {
+                        StartTime = time,
+                        BananaIndex = count,
+                        Samples = new List<HitSampleInfo>
+                        {
+                            new Banana.BananaHitSampleInfo(CreateHitSampleInfo().Volume),
+                        },
+                    }
+                );
 
                 count++;
             }

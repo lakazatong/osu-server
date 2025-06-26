@@ -7,8 +7,8 @@ using osu.Framework.Input;
 using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterfaceV2;
-using osu.Game.Resources.Localisation.Web;
 using osu.Game.Localisation;
+using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Screens.Edit.Setup
 {
@@ -39,13 +39,17 @@ namespace osu.Game.Screens.Edit.Setup
             Children = new[]
             {
                 ArtistTextBox = createTextBox<FormTextBox>(EditorSetupStrings.Artist),
-                RomanisedArtistTextBox = createTextBox<FormRomanisedTextBox>(EditorSetupStrings.RomanisedArtist),
+                RomanisedArtistTextBox = createTextBox<FormRomanisedTextBox>(
+                    EditorSetupStrings.RomanisedArtist
+                ),
                 TitleTextBox = createTextBox<FormTextBox>(EditorSetupStrings.Title),
-                RomanisedTitleTextBox = createTextBox<FormRomanisedTextBox>(EditorSetupStrings.RomanisedTitle),
+                RomanisedTitleTextBox = createTextBox<FormRomanisedTextBox>(
+                    EditorSetupStrings.RomanisedTitle
+                ),
                 creatorTextBox = createTextBox<FormTextBox>(EditorSetupStrings.Creator),
                 difficultyTextBox = createTextBox<FormTextBox>(EditorSetupStrings.DifficultyName),
                 sourceTextBox = createTextBox<FormTextBox>(BeatmapsetsStrings.ShowInfoSource),
-                tagsTextBox = createTextBox<FormTextBox>(BeatmapsetsStrings.ShowInfoMapperTags)
+                tagsTextBox = createTextBox<FormTextBox>(BeatmapsetsStrings.ShowInfoMapperTags),
             };
 
             if (setupScreen != null)
@@ -55,22 +59,24 @@ namespace osu.Game.Screens.Edit.Setup
         }
 
         private TTextBox createTextBox<TTextBox>(LocalisableString label)
-            where TTextBox : FormTextBox, new()
-            => new TTextBox
-            {
-                Caption = label,
-                TabbableContentContainer = this
-            };
+            where TTextBox : FormTextBox, new() =>
+            new TTextBox { Caption = label, TabbableContentContainer = this };
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
             if (string.IsNullOrEmpty(ArtistTextBox.Current.Value))
-                ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(ArtistTextBox));
+                ScheduleAfterChildren(() =>
+                    GetContainingFocusManager()!.ChangeFocus(ArtistTextBox)
+                );
 
-            ArtistTextBox.Current.BindValueChanged(artist => transferIfRomanised(artist.NewValue, RomanisedArtistTextBox));
-            TitleTextBox.Current.BindValueChanged(title => transferIfRomanised(title.NewValue, RomanisedTitleTextBox));
+            ArtistTextBox.Current.BindValueChanged(artist =>
+                transferIfRomanised(artist.NewValue, RomanisedArtistTextBox)
+            );
+            TitleTextBox.Current.BindValueChanged(title =>
+                transferIfRomanised(title.NewValue, RomanisedTitleTextBox)
+            );
 
             foreach (var item in Children.OfType<FormTextBox>())
             {
@@ -100,7 +106,9 @@ namespace osu.Game.Screens.Edit.Setup
 
         private void updateReadOnlyState()
         {
-            RomanisedArtistTextBox.ReadOnly = MetadataUtils.IsRomanised(ArtistTextBox.Current.Value);
+            RomanisedArtistTextBox.ReadOnly = MetadataUtils.IsRomanised(
+                ArtistTextBox.Current.Value
+            );
             RomanisedTitleTextBox.ReadOnly = MetadataUtils.IsRomanised(TitleTextBox.Current.Value);
         }
 
@@ -113,10 +121,18 @@ namespace osu.Game.Screens.Edit.Setup
             RomanisedArtistTextBox.ReadOnly = false;
             RomanisedTitleTextBox.ReadOnly = false;
 
-            ArtistTextBox.Current.Value = !string.IsNullOrEmpty(metadata.ArtistUnicode) ? metadata.ArtistUnicode : metadata.Artist;
-            RomanisedArtistTextBox.Current.Value = !string.IsNullOrEmpty(metadata.Artist) ? metadata.Artist : MetadataUtils.StripNonRomanisedCharacters(metadata.ArtistUnicode);
-            TitleTextBox.Current.Value = !string.IsNullOrEmpty(metadata.TitleUnicode) ? metadata.TitleUnicode : metadata.Title;
-            RomanisedTitleTextBox.Current.Value = !string.IsNullOrEmpty(metadata.Title) ? metadata.Title : MetadataUtils.StripNonRomanisedCharacters(metadata.ArtistUnicode);
+            ArtistTextBox.Current.Value = !string.IsNullOrEmpty(metadata.ArtistUnicode)
+                ? metadata.ArtistUnicode
+                : metadata.Artist;
+            RomanisedArtistTextBox.Current.Value = !string.IsNullOrEmpty(metadata.Artist)
+                ? metadata.Artist
+                : MetadataUtils.StripNonRomanisedCharacters(metadata.ArtistUnicode);
+            TitleTextBox.Current.Value = !string.IsNullOrEmpty(metadata.TitleUnicode)
+                ? metadata.TitleUnicode
+                : metadata.Title;
+            RomanisedTitleTextBox.Current.Value = !string.IsNullOrEmpty(metadata.Title)
+                ? metadata.Title
+                : MetadataUtils.StripNonRomanisedCharacters(metadata.ArtistUnicode);
             creatorTextBox.Current.Value = metadata.Author.Username;
             difficultyTextBox.Current.Value = Beatmap.BeatmapInfo.DifficultyName;
             sourceTextBox.Current.Value = metadata.Source;
@@ -155,8 +171,8 @@ namespace osu.Game.Screens.Edit.Setup
                     InputProperties = new TextInputProperties(TextInputType.Text, false);
                 }
 
-                protected override bool CanAddCharacter(char character)
-                    => MetadataUtils.IsRomanised(character);
+                protected override bool CanAddCharacter(char character) =>
+                    MetadataUtils.IsRomanised(character);
             }
         }
     }

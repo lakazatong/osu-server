@@ -48,9 +48,7 @@ namespace osu.Game.IO
                     File.Delete(testDestinationPath);
                     File.Delete(testSourcePath);
                 }
-                catch
-                {
-                }
+                catch { }
             }
         }
 
@@ -86,7 +84,15 @@ namespace osu.Game.IO
             switch (RuntimeInfo.OS)
             {
                 case RuntimeInfo.Platform.Windows:
-                    SafeFileHandle handle = CreateFile(filePath, FileAccess.Read, FileShare.Read, IntPtr.Zero, FileMode.Open, FileAttributes.Archive, IntPtr.Zero);
+                    SafeFileHandle handle = CreateFile(
+                        filePath,
+                        FileAccess.Read,
+                        FileShare.Read,
+                        IntPtr.Zero,
+                        FileMode.Open,
+                        FileAttributes.Archive,
+                        IntPtr.Zero
+                    );
 
                     ByHandleFileInformation fileInfo;
 
@@ -109,7 +115,11 @@ namespace osu.Game.IO
         #region Windows native methods
 
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+        public static extern bool CreateHardLink(
+            string lpFileName,
+            string lpExistingFileName,
+            IntPtr lpSecurityAttributes
+        );
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern SafeFileHandle CreateFile(
@@ -119,10 +129,14 @@ namespace osu.Game.IO
             IntPtr lpSecurityAttributes,
             [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-            IntPtr hTemplateFile);
+            IntPtr hTemplateFile
+        );
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetFileInformationByHandle(SafeFileHandle handle, out ByHandleFileInformation lpFileInformation);
+        private static extern bool GetFileInformationByHandle(
+            SafeFileHandle handle,
+            out ByHandleFileInformation lpFileInformation
+        );
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

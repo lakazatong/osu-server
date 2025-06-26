@@ -48,11 +48,7 @@ namespace osu.Game.Screens.Edit.Timing
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Background4,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Background4, RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.X,
@@ -64,9 +60,12 @@ namespace osu.Game.Screens.Edit.Timing
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            LabelText = typeof(T).Name.Replace(nameof(Beatmaps.ControlPoints.ControlPoint), string.Empty)
-                        }
-                    }
+                            LabelText = typeof(T).Name.Replace(
+                                nameof(Beatmaps.ControlPoints.ControlPoint),
+                                string.Empty
+                            ),
+                        },
+                    },
                 },
                 content = new Container
                 {
@@ -83,8 +82,8 @@ namespace osu.Game.Screens.Edit.Timing
                             AutoSizeAxes = Axes.Y,
                             Direction = FillDirection.Vertical,
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -92,36 +91,44 @@ namespace osu.Game.Screens.Edit.Timing
         {
             base.LoadComplete();
 
-            checkbox.Current.BindValueChanged(selected =>
-            {
-                if (selected.NewValue)
+            checkbox.Current.BindValueChanged(
+                selected =>
                 {
-                    if (SelectedGroup.Value == null)
+                    if (selected.NewValue)
                     {
-                        checkbox.Current.Value = false;
-                        return;
+                        if (SelectedGroup.Value == null)
+                        {
+                            checkbox.Current.Value = false;
+                            return;
+                        }
+
+                        if (ControlPoint.Value == null)
+                            SelectedGroup.Value.Add(ControlPoint.Value = CreatePoint());
+                    }
+                    else
+                    {
+                        if (ControlPoint.Value != null)
+                        {
+                            SelectedGroup.Value.Remove(ControlPoint.Value);
+                            ControlPoint.Value = null;
+                        }
                     }
 
-                    if (ControlPoint.Value == null)
-                        SelectedGroup.Value.Add(ControlPoint.Value = CreatePoint());
-                }
-                else
+                    content.BypassAutoSizeAxes = selected.NewValue ? Axes.None : Axes.Y;
+                },
+                true
+            );
+
+            SelectedGroup.BindValueChanged(
+                points =>
                 {
-                    if (ControlPoint.Value != null)
-                    {
-                        SelectedGroup.Value.Remove(ControlPoint.Value);
-                        ControlPoint.Value = null;
-                    }
-                }
-
-                content.BypassAutoSizeAxes = selected.NewValue ? Axes.None : Axes.Y;
-            }, true);
-
-            SelectedGroup.BindValueChanged(points =>
-            {
-                ControlPoint.Value = points.NewValue?.ControlPoints.OfType<T>().FirstOrDefault();
-                checkbox.Current.Value = ControlPoint.Value != null;
-            }, true);
+                    ControlPoint.Value = points
+                        .NewValue?.ControlPoints.OfType<T>()
+                        .FirstOrDefault();
+                    checkbox.Current.Value = ControlPoint.Value != null;
+                },
+                true
+            );
 
             ControlPoint.BindValueChanged(OnControlPointChanged, true);
         }

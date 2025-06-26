@@ -50,30 +50,36 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     {
                         RelativeSizeAxes = Axes.Both,
                         AlwaysPresent = true,
-                        Alpha = 0
+                        Alpha = 0,
                     },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
                         Padding = new MarginPadding(border_thickness + padding),
-                        Child = switchContainer = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = switchCircle = new CircularContainer
+                        Child = switchContainer =
+                            new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                FillMode = FillMode.Fit,
-                                Masking = true,
-                                Child = new Box { RelativeSizeAxes = Axes.Both }
-                            }
-                        }
-                    }
-                }
+                                Child = switchCircle =
+                                    new CircularContainer
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        FillMode = FillMode.Fit,
+                                        Masking = true,
+                                        Child = new Box { RelativeSizeAxes = Axes.Both },
+                                    },
+                            },
+                    },
+                },
             };
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(OverlayColourProvider? colourProvider, OsuColour colours, AudioManager audio)
+        private void load(
+            OverlayColourProvider? colourProvider,
+            OsuColour colours,
+            AudioManager audio
+        )
         {
             enabledColour = colourProvider?.Highlight1 ?? colours.BlueDark;
             disabledColour = colourProvider?.Background3 ?? colours.Gray3;
@@ -95,7 +101,11 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateState(ValueChangedEvent<bool> state)
         {
-            switchCircle.MoveToX(state.NewValue ? switchContainer.DrawWidth - switchCircle.DrawWidth : 0, 200, Easing.OutQuint);
+            switchCircle.MoveToX(
+                state.NewValue ? switchContainer.DrawWidth - switchCircle.DrawWidth : 0,
+                200,
+                Easing.OutQuint
+            );
             fill.FadeTo(state.NewValue ? 1 : 0, 250, Easing.OutQuint);
 
             updateBorder();
@@ -125,13 +135,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateBorder()
         {
-            circularContainer.TransformBorderTo((Current.Value ? enabledColour : disabledColour).Lighten(IsHovered ? 0.3f : 0));
+            circularContainer.TransformBorderTo(
+                (Current.Value ? enabledColour : disabledColour).Lighten(IsHovered ? 0.3f : 0)
+            );
         }
 
         private partial class CircularBorderContainer : CircularContainer
         {
-            public void TransformBorderTo(ColourInfo colour)
-                => this.TransformTo(nameof(BorderColour), colour, 250, Easing.OutQuint);
+            public void TransformBorderTo(ColourInfo colour) =>
+                this.TransformTo(nameof(BorderColour), colour, 250, Easing.OutQuint);
         }
     }
 }

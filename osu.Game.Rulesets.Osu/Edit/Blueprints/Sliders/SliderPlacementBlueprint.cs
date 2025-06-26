@@ -56,7 +56,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
         private Bindable<bool> limitedDistanceSnap { get; set; } = null!;
 
-        private readonly IncrementalBSplineBuilder bSplineBuilder = new IncrementalBSplineBuilder { Degree = 4 };
+        private readonly IncrementalBSplineBuilder bSplineBuilder = new IncrementalBSplineBuilder
+        {
+            Degree = 4,
+        };
 
         protected override bool IsValidForPlacement => HitObject.Path.HasValidLengthForPlacement;
 
@@ -65,7 +68,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         {
             RelativeSizeAxes = Axes.Both;
 
-            HitObject.Path.ControlPoints.Add(segmentStart = new PathControlPoint(Vector2.Zero, PathType.LINEAR));
+            HitObject.Path.ControlPoints.Add(
+                segmentStart = new PathControlPoint(Vector2.Zero, PathType.LINEAR)
+            );
             currentSegmentLength = 1;
         }
 
@@ -77,7 +82,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 bodyPiece = new SliderBodyPiece(),
                 headCirclePiece = new HitCirclePiece(),
                 tailCirclePiece = new HitCirclePiece(),
-                controlPointVisualiser = new PathControlPointVisualiser<Slider>(HitObject, false)
+                controlPointVisualiser = new PathControlPointVisualiser<Slider>(HitObject, false),
             };
 
             state = SliderPlacementState.Initial;
@@ -92,33 +97,54 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             if (freehandToolboxGroup != null)
             {
-                freehandToolboxGroup.Tolerance.BindValueChanged(e =>
-                {
-                    bSplineBuilder.Tolerance = e.NewValue;
-                    Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
-                }, true);
+                freehandToolboxGroup.Tolerance.BindValueChanged(
+                    e =>
+                    {
+                        bSplineBuilder.Tolerance = e.NewValue;
+                        Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
+                    },
+                    true
+                );
 
-                freehandToolboxGroup.CornerThreshold.BindValueChanged(e =>
-                {
-                    bSplineBuilder.CornerThreshold = e.NewValue;
-                    Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
-                }, true);
+                freehandToolboxGroup.CornerThreshold.BindValueChanged(
+                    e =>
+                    {
+                        bSplineBuilder.CornerThreshold = e.NewValue;
+                        Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
+                    },
+                    true
+                );
 
-                freehandToolboxGroup.CircleThreshold.BindValueChanged(e =>
-                {
-                    Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
-                }, true);
+                freehandToolboxGroup.CircleThreshold.BindValueChanged(
+                    e =>
+                    {
+                        Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
+                    },
+                    true
+                );
             }
         }
 
         [Resolved]
         private EditorBeatmap editorBeatmap { get; set; } = null!;
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
             var result = composer?.TrySnapToNearbyObjects(screenSpacePosition, fallbackTime);
-            result ??= composer?.TrySnapToDistanceGrid(screenSpacePosition, limitedDistanceSnap.Value && editorClock != null ? editorClock.CurrentTime : null);
-            if (composer?.TrySnapToPositionGrid(result?.ScreenSpacePosition ?? screenSpacePosition, result?.Time ?? fallbackTime) is SnapResult gridSnapResult)
+            result ??= composer?.TrySnapToDistanceGrid(
+                screenSpacePosition,
+                limitedDistanceSnap.Value && editorClock != null ? editorClock.CurrentTime : null
+            );
+            if (
+                composer?.TrySnapToPositionGrid(
+                    result?.ScreenSpacePosition ?? screenSpacePosition,
+                    result?.Time ?? fallbackTime
+                )
+                is SnapResult gridSnapResult
+            )
                 result = gridSnapResult;
             result ??= new SnapResult(screenSpacePosition, fallbackTime);
 
@@ -129,9 +155,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 case SliderPlacementState.Initial:
                     BeginPlacement();
 
-                    double? nearestSliderVelocity = (editorBeatmap
-                                                     .HitObjects
-                                                     .LastOrDefault(h => h is Slider && h.GetEndTime() < HitObject.StartTime) as Slider)?.SliderVelocityMultiplier;
+                    double? nearestSliderVelocity = (
+                        editorBeatmap.HitObjects.LastOrDefault(h =>
+                            h is Slider && h.GetEndTime() < HitObject.StartTime
+                        ) as Slider
+                    )?.SliderVelocityMultiplier;
 
                     HitObject.SliderVelocityMultiplier = nearestSliderVelocity ?? 1;
                     HitObject.Position = ToLocalSpace(result.ScreenSpacePosition);
@@ -173,11 +201,14 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         }
 
         // this allows sliders to be drawn outside compose area (after starting from a point within the compose area).
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => base.ReceivePositionalInputAt(screenSpacePos) || PlacementActive == PlacementState.Active;
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            base.ReceivePositionalInputAt(screenSpacePos)
+            || PlacementActive == PlacementState.Active;
 
         // ReceivePositionalInputAtSubTree generally always returns true when masking is disabled, but we don't want that,
         // otherwise a slider path tooltip will be displayed anywhere in the editor (outside compose area).
-        protected override bool ReceivePositionalInputAtSubTree(Vector2 screenSpacePos) => ReceivePositionalInputAt(screenSpacePos);
+        protected override bool ReceivePositionalInputAtSubTree(Vector2 screenSpacePos) =>
+            ReceivePositionalInputAt(screenSpacePos);
 
         private void beginNewSegment(PathControlPoint lastPoint)
         {
@@ -198,11 +229,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             // Only enter drawing mode if no additional control points have been placed.
             int controlPointCount = HitObject.Path.ControlPoints.Count;
-            if (controlPointCount > 2 || (controlPointCount == 2 && HitObject.Path.ControlPoints.Last() != cursor))
+            if (
+                controlPointCount > 2
+                || (controlPointCount == 2 && HitObject.Path.ControlPoints.Last() != cursor)
+            )
                 return base.OnDragStart(e);
 
             bSplineBuilder.AddLinearPoint(Vector2.Zero);
-            bSplineBuilder.AddLinearPoint(ToLocalSpace(e.ScreenSpaceMouseDownPosition) - HitObject.Position);
+            bSplineBuilder.AddLinearPoint(
+                ToLocalSpace(e.ScreenSpaceMouseDownPosition) - HitObject.Position
+            );
             state = SliderPlacementState.Drawing;
             return true;
         }
@@ -213,7 +249,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             if (state == SliderPlacementState.Drawing)
             {
-                bSplineBuilder.AddLinearPoint(ToLocalSpace(e.ScreenSpaceMousePosition) - HitObject.Position);
+                bSplineBuilder.AddLinearPoint(
+                    ToLocalSpace(e.ScreenSpaceMousePosition) - HitObject.Position
+                );
                 Scheduler.AddOnce(updateSliderPathFromBSplineBuilder);
             }
         }
@@ -287,14 +325,18 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 {
                     usingCustomSegmentType = true;
 
-                    int currentTypeIndex = segmentStart.Type.HasValue ? Array.IndexOf(path_types, segmentStart.Type.Value) : -1;
+                    int currentTypeIndex = segmentStart.Type.HasValue
+                        ? Array.IndexOf(path_types, segmentStart.Type.Value)
+                        : -1;
 
                     if (currentTypeIndex < 0 && e.ShiftPressed)
                         currentTypeIndex = 0;
 
                     do
                     {
-                        currentTypeIndex = (path_types.Length + currentTypeIndex + (e.ShiftPressed ? -1 : 1)) % path_types.Length;
+                        currentTypeIndex =
+                            (path_types.Length + currentTypeIndex + (e.ShiftPressed ? -1 : 1))
+                            % path_types.Length;
                         segmentStart.Type = path_types[currentTypeIndex];
                         controlPointVisualiser.EnsureValidPathTypes();
                     } while (segmentStart.Type != path_types[currentTypeIndex]);
@@ -367,7 +409,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 // The cursor does not overlap a previous control point, so it can be added if not already existing.
                 if (cursor == null)
                 {
-                    HitObject.Path.ControlPoints.Add(cursor = new PathControlPoint { Position = Vector2.Zero });
+                    HitObject.Path.ControlPoints.Add(
+                        cursor = new PathControlPoint { Position = Vector2.Zero }
+                    );
 
                     // The path type should be adjusted in the progression of updatePathType() (LINEAR -> PC -> BEZIER).
                     currentSegmentLength++;
@@ -402,7 +446,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             result ??= composer?.TrySnapToPositionGrid(mousePosition);
 
-            return ToLocalSpace(result?.ScreenSpacePosition ?? inputManager.CurrentState.Mouse.Position) - HitObject.Position;
+            return ToLocalSpace(
+                    result?.ScreenSpacePosition ?? inputManager.CurrentState.Mouse.Position
+                ) - HitObject.Position;
         }
 
         /// <summary>
@@ -419,7 +465,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             lastPoint = last;
             // We may only place a new control point if the cursor is not overlapping with the last control point.
             // If snapping is enabled, the cursor may not hover the last piece while still placing the control point at the same position.
-            return !lastPiece.IsHovered && (last is null || Vector2.DistanceSquared(last.Position, getCursorPosition()) > 1f);
+            return !lastPiece.IsHovered
+                && (
+                    last is null || Vector2.DistanceSquared(last.Position, getCursorPosition()) > 1f
+                );
         }
 
         private void placeNewControlPoint()
@@ -434,7 +483,12 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             if (state == SliderPlacementState.Drawing)
                 HitObject.Path.ExpectedDistance.Value = (float)HitObject.Path.CalculatedDistance;
             else
-                HitObject.Path.ExpectedDistance.Value = distanceSnapProvider?.FindSnappedDistance((float)HitObject.Path.CalculatedDistance, HitObject.StartTime, HitObject) ?? (float)HitObject.Path.CalculatedDistance;
+                HitObject.Path.ExpectedDistance.Value =
+                    distanceSnapProvider?.FindSnappedDistance(
+                        (float)HitObject.Path.CalculatedDistance,
+                        HitObject.StartTime,
+                        HitObject
+                    ) ?? (float)HitObject.Path.CalculatedDistance;
 
             bodyPiece.UpdateFrom(HitObject);
             headCirclePiece.UpdateFrom(HitObject.HeadCircle);
@@ -464,12 +518,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
                 if (circleArcSegment != null)
                 {
-                    HitObject.Path.ControlPoints.Add(new PathControlPoint(circleArcSegment[0], PathType.PERFECT_CURVE));
+                    HitObject.Path.ControlPoints.Add(
+                        new PathControlPoint(circleArcSegment[0], PathType.PERFECT_CURVE)
+                    );
                     HitObject.Path.ControlPoints.Add(new PathControlPoint(circleArcSegment[1]));
                 }
                 else
                 {
-                    HitObject.Path.ControlPoints.Add(new PathControlPoint(segment[0], PathType.BSpline(4)));
+                    HitObject.Path.ControlPoints.Add(
+                        new PathControlPoint(segment[0], PathType.BSpline(4))
+                    );
                     for (int j = 1; j < segment.Count - 1; j++)
                         HitObject.Path.ControlPoints.Add(new PathControlPoint(segment[j]));
                 }
@@ -481,18 +539,24 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
         private Vector2[]? tryCircleArc(List<Vector2> segment)
         {
-            if (segment.Count < 3 || freehandToolboxGroup?.CircleThreshold.Value == 0) return null;
+            if (segment.Count < 3 || freehandToolboxGroup?.CircleThreshold.Value == 0)
+                return null;
 
             // Assume the segment creates a reasonable circular arc and then check if it reasonable
-            var points = PathApproximator.BSplineToPiecewiseLinear(segment.ToArray(), bSplineBuilder.Degree);
+            var points = PathApproximator.BSplineToPiecewiseLinear(
+                segment.ToArray(),
+                bSplineBuilder.Degree
+            );
             var circleArcControlPoints = new[] { points[0], points[points.Count / 2], points[^1] };
             var circleArc = new CircularArcProperties(circleArcControlPoints);
 
-            if (!circleArc.IsValid) return null;
+            if (!circleArc.IsValid)
+                return null;
 
             double length = circleArc.ThetaRange * circleArc.Radius;
 
-            if (length > 1000) return null;
+            if (length > 1000)
+                return null;
 
             double loss = 0;
             Vector2? lastPoint = null;
@@ -554,7 +618,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             loss /= points.Count;
 
-            return loss > freehandToolboxGroup?.CircleThreshold.Value || totalWinding > MathHelper.TwoPi ? null : circleArcControlPoints;
+            return
+                loss > freehandToolboxGroup?.CircleThreshold.Value
+                || totalWinding > MathHelper.TwoPi
+                ? null
+                : circleArcControlPoints;
         }
 
         private enum SliderPlacementState
@@ -562,7 +630,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             Initial,
             ControlPoints,
             Drawing,
-            Finishing
+            Finishing,
         }
     }
 }

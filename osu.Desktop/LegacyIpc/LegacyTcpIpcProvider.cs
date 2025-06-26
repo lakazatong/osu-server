@@ -36,12 +36,12 @@ namespace osu.Desktop.LegacyIpc
 
                     // See explanation in LegacyIpcMessage for why this is done this way.
                     var legacyData = ((JObject)msg.Value).ToObject<LegacyIpcMessage.Data>();
-                    object value = parseObject((JObject)legacyData!.MessageData, legacyData.MessageType);
+                    object value = parseObject(
+                        (JObject)legacyData!.MessageData,
+                        legacyData.MessageType
+                    );
 
-                    return new LegacyIpcMessage
-                    {
-                        Value = onLegacyIpcMessageReceived(value)
-                    };
+                    return new LegacyIpcMessage { Value = onLegacyIpcMessageReceived(value) };
                 }
                 catch (Exception ex)
                 {
@@ -57,11 +57,11 @@ namespace osu.Desktop.LegacyIpc
             {
                 case nameof(LegacyIpcDifficultyCalculationRequest):
                     return value.ToObject<LegacyIpcDifficultyCalculationRequest>()
-                           ?? throw new InvalidOperationException($"Failed to parse request {value}");
+                        ?? throw new InvalidOperationException($"Failed to parse request {value}");
 
                 case nameof(LegacyIpcDifficultyCalculationResponse):
                     return value.ToObject<LegacyIpcDifficultyCalculationResponse>()
-                           ?? throw new InvalidOperationException($"Failed to parse request {value}");
+                        ?? throw new InvalidOperationException($"Failed to parse request {value}");
 
                 default:
                     throw new ArgumentException($"Unsupported object type {type}");
@@ -81,7 +81,10 @@ namespace osu.Desktop.LegacyIpc
 
                         return new LegacyIpcDifficultyCalculationResponse
                         {
-                            StarRating = ruleset.CreateDifficultyCalculator(beatmap).Calculate(mods).StarRating
+                            StarRating = ruleset
+                                .CreateDifficultyCalculator(beatmap)
+                                .Calculate(mods)
+                                .StarRating,
                         };
                     }
                     catch

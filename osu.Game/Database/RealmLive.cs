@@ -14,7 +14,8 @@ namespace osu.Game.Database
     /// Provides a method of working with realm objects over longer application lifetimes.
     /// </summary>
     /// <typeparam name="T">The underlying object type.</typeparam>
-    public class RealmLive<T> : Live<T> where T : RealmObject, IHasGuidPrimaryKey
+    public class RealmLive<T> : Live<T>
+        where T : RealmObject, IHasGuidPrimaryKey
     {
         public override bool IsManaged => data.IsManaged;
 
@@ -88,7 +89,9 @@ namespace osu.Game.Database
                 RealmLiveStatistics.USAGE_ASYNC.Value++;
 
                 if (returnData is RealmObjectBase realmObject && realmObject.IsManaged)
-                    throw new InvalidOperationException(@$"Managed realm objects should not exit the scope of {nameof(PerformRead)}.");
+                    throw new InvalidOperationException(
+                        @$"Managed realm objects should not exit the scope of {nameof(PerformRead)}."
+                    );
 
                 return returnData;
             });
@@ -101,7 +104,9 @@ namespace osu.Game.Database
         public override void PerformWrite(Action<T> perform)
         {
             if (!IsManaged)
-                throw new InvalidOperationException(@"Can't perform writes on a non-managed underlying value");
+                throw new InvalidOperationException(
+                    @"Can't perform writes on a non-managed underlying value"
+                );
 
             PerformRead(t =>
             {
@@ -123,7 +128,9 @@ namespace osu.Game.Database
                     return data;
 
                 if (!ThreadSafety.IsUpdateThread)
-                    throw new InvalidOperationException($"Can't use {nameof(Value)} on managed objects from non-update threads");
+                    throw new InvalidOperationException(
+                        $"Can't use {nameof(Value)} on managed objects from non-update threads"
+                    );
 
                 ensureDataIsFromUpdateThread();
                 return data;
@@ -149,9 +156,17 @@ namespace osu.Game.Database
 
     internal static class RealmLiveStatistics
     {
-        public static readonly GlobalStatistic<int> WRITES = GlobalStatistics.Get<int>(@"Realm", @"Live writes");
-        public static readonly GlobalStatistic<int> USAGE_UPDATE_IMMEDIATE = GlobalStatistics.Get<int>(@"Realm", @"Live update read (fast)");
-        public static readonly GlobalStatistic<int> USAGE_UPDATE_REFETCH = GlobalStatistics.Get<int>(@"Realm", @"Live update read (slow)");
-        public static readonly GlobalStatistic<int> USAGE_ASYNC = GlobalStatistics.Get<int>(@"Realm", @"Live async read");
+        public static readonly GlobalStatistic<int> WRITES = GlobalStatistics.Get<int>(
+            @"Realm",
+            @"Live writes"
+        );
+        public static readonly GlobalStatistic<int> USAGE_UPDATE_IMMEDIATE =
+            GlobalStatistics.Get<int>(@"Realm", @"Live update read (fast)");
+        public static readonly GlobalStatistic<int> USAGE_UPDATE_REFETCH =
+            GlobalStatistics.Get<int>(@"Realm", @"Live update read (slow)");
+        public static readonly GlobalStatistic<int> USAGE_ASYNC = GlobalStatistics.Get<int>(
+            @"Realm",
+            @"Live async read"
+        );
     }
 }

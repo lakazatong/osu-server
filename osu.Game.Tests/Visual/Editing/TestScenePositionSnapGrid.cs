@@ -24,19 +24,17 @@ namespace osu.Game.Tests.Visual.Editing
         [BackgroundDependencyLoader]
         private void load()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                new Box
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.Gray
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding(10),
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Gray },
+                    content = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding(10),
+                    },
                 }
-            });
+            );
         }
 
         private static readonly object[][] test_cases =
@@ -52,22 +50,29 @@ namespace osu.Game.Tests.Visual.Editing
         {
             RectangularPositionSnapGrid grid = null;
 
-            AddStep("create grid", () =>
-            {
-                Child = grid = new RectangularPositionSnapGrid
+            AddStep(
+                "create grid",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
-                grid.StartPosition.Value = position;
-                grid.Spacing.Value = spacing;
-                grid.GridLineRotation.Value = rotation;
-            });
+                    Child = grid = new RectangularPositionSnapGrid { RelativeSizeAxes = Axes.Both };
+                    grid.StartPosition.Value = position;
+                    grid.Spacing.Value = spacing;
+                    grid.GridLineRotation.Value = rotation;
+                }
+            );
 
-            AddStep("add snapping cursor", () => Add(new SnappingCursorContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                GetSnapPosition = pos => grid.GetSnappedPosition(grid.ToLocalSpace(pos))
-            }));
+            AddStep(
+                "add snapping cursor",
+                () =>
+                    Add(
+                        new SnappingCursorContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            GetSnapPosition = pos =>
+                                grid.GetSnappedPosition(grid.ToLocalSpace(pos)),
+                        }
+                    )
+            );
         }
 
         [TestCaseSource(nameof(test_cases))]
@@ -75,22 +80,29 @@ namespace osu.Game.Tests.Visual.Editing
         {
             TriangularPositionSnapGrid grid = null;
 
-            AddStep("create grid", () =>
-            {
-                Child = grid = new TriangularPositionSnapGrid
+            AddStep(
+                "create grid",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
-                grid.StartPosition.Value = position;
-                grid.Spacing.Value = spacing.X;
-                grid.GridLineRotation.Value = rotation;
-            });
+                    Child = grid = new TriangularPositionSnapGrid { RelativeSizeAxes = Axes.Both };
+                    grid.StartPosition.Value = position;
+                    grid.Spacing.Value = spacing.X;
+                    grid.GridLineRotation.Value = rotation;
+                }
+            );
 
-            AddStep("add snapping cursor", () => Add(new SnappingCursorContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                GetSnapPosition = pos => grid.GetSnappedPosition(grid.ToLocalSpace(pos))
-            }));
+            AddStep(
+                "add snapping cursor",
+                () =>
+                    Add(
+                        new SnappingCursorContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            GetSnapPosition = pos =>
+                                grid.GetSnappedPosition(grid.ToLocalSpace(pos)),
+                        }
+                    )
+            );
         }
 
         [TestCaseSource(nameof(test_cases))]
@@ -98,21 +110,28 @@ namespace osu.Game.Tests.Visual.Editing
         {
             CircularPositionSnapGrid grid = null;
 
-            AddStep("create grid", () =>
-            {
-                Child = grid = new CircularPositionSnapGrid
+            AddStep(
+                "create grid",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
-                grid.StartPosition.Value = position;
-                grid.Spacing.Value = spacing.X;
-            });
+                    Child = grid = new CircularPositionSnapGrid { RelativeSizeAxes = Axes.Both };
+                    grid.StartPosition.Value = position;
+                    grid.Spacing.Value = spacing.X;
+                }
+            );
 
-            AddStep("add snapping cursor", () => Add(new SnappingCursorContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                GetSnapPosition = pos => grid.GetSnappedPosition(grid.ToLocalSpace(pos))
-            }));
+            AddStep(
+                "add snapping cursor",
+                () =>
+                    Add(
+                        new SnappingCursorContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            GetSnapPosition = pos =>
+                                grid.GetSnappedPosition(grid.ToLocalSpace(pos)),
+                        }
+                    )
+            );
         }
 
         private partial class SnappingCursorContainer : CompositeDrawable
@@ -129,7 +148,7 @@ namespace osu.Game.Tests.Visual.Editing
                 {
                     Origin = Anchor.Centre,
                     Size = new Vector2(50),
-                    Colour = Color4.Red
+                    Colour = Color4.Red,
                 };
             }
 

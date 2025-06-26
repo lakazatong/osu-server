@@ -10,8 +10,8 @@ using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osu.Game.Graphics.Containers;
 using osu.Game.Screens.Menu;
 using osuTK;
@@ -37,13 +37,22 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Clear facades", () =>
-            {
-                Clear();
-                Add(logo = new OsuLogo { Scale = new Vector2(0.15f), RelativePositionAxes = Axes.Both });
-                trackingContainer = null;
-                transferContainer = null;
-            });
+            AddStep(
+                "Clear facades",
+                () =>
+                {
+                    Clear();
+                    Add(
+                        logo = new OsuLogo
+                        {
+                            Scale = new Vector2(0.15f),
+                            RelativePositionAxes = Axes.Both,
+                        }
+                    );
+                    trackingContainer = null;
+                    transferContainer = null;
+                }
+            );
         }
 
         /// <summary>
@@ -82,12 +91,15 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("Add tracking containers", addFacadeContainers);
             AddStep("Move facade to random position", moveLogoFacade);
             AddStep("Remove facade from FacadeContainer", removeFacade);
-            AddStep("Transfer facade to a new container", () =>
-            {
-                transferContainer.Add(logoFacade);
-                transferContainerBox.Colour = Color4.Tomato;
-                moveLogoFacade();
-            });
+            AddStep(
+                "Transfer facade to a new container",
+                () =>
+                {
+                    transferContainer.Add(logoFacade);
+                    transferContainerBox.Colour = Color4.Tomato;
+                    moveLogoFacade();
+                }
+            );
 
             waitForMove();
             AddAssert("Logo is tracking", () => trackingContainer.IsLogoTracking);
@@ -101,71 +113,87 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             FillFlowContainer flowContainer;
 
-            AddStep("Create new flow container with facade", () =>
-            {
-                Add(trackingContainer = new TestLogoTrackingContainer
+            AddStep(
+                "Create new flow container with facade",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Origin = Anchor.TopCentre,
-                    Anchor = Anchor.TopCentre,
-                    Child = flowContainer = new FillFlowContainer
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre,
-                        Direction = FillDirection.Vertical,
-                    }
-                });
-                flowContainer.Children = new Drawable[]
-                {
-                    new Box
-                    {
-                        Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre,
-                        Colour = Color4.Azure,
-                        Size = new Vector2(visual_box_size)
-                    },
-                    new Container
-                    {
-                        Alpha = 0.35f,
-                        RelativeSizeAxes = Axes.None,
-                        Size = new Vector2(visual_box_size),
-                        Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre,
-                        Children = new Drawable[]
+                    Add(
+                        trackingContainer = new TestLogoTrackingContainer
                         {
-                            visualBox = new Box
-                            {
-                                Colour = Color4.White,
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            trackingContainer.LogoFacade,
+                            AutoSizeAxes = Axes.Both,
+                            Origin = Anchor.TopCentre,
+                            Anchor = Anchor.TopCentre,
+                            Child = flowContainer =
+                                new FillFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
+                                    Direction = FillDirection.Vertical,
+                                },
                         }
-                    },
-                    new Box
+                    );
+                    flowContainer.Children = new Drawable[]
                     {
-                        Origin = Anchor.TopCentre,
-                        Anchor = Anchor.TopCentre,
-                        Colour = Color4.Azure,
-                        Size = new Vector2(visual_box_size)
-                    },
-                };
-            });
+                        new Box
+                        {
+                            Origin = Anchor.TopCentre,
+                            Anchor = Anchor.TopCentre,
+                            Colour = Color4.Azure,
+                            Size = new Vector2(visual_box_size),
+                        },
+                        new Container
+                        {
+                            Alpha = 0.35f,
+                            RelativeSizeAxes = Axes.None,
+                            Size = new Vector2(visual_box_size),
+                            Origin = Anchor.TopCentre,
+                            Anchor = Anchor.TopCentre,
+                            Children = new Drawable[]
+                            {
+                                visualBox = new Box
+                                {
+                                    Colour = Color4.White,
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                                trackingContainer.LogoFacade,
+                            },
+                        },
+                        new Box
+                        {
+                            Origin = Anchor.TopCentre,
+                            Anchor = Anchor.TopCentre,
+                            Colour = Color4.Azure,
+                            Size = new Vector2(visual_box_size),
+                        },
+                    };
+                }
+            );
 
-            AddStep("Perform logo movements", () =>
-            {
-                logoTracking?.Dispose();
-
-                logo.MoveTo(new Vector2(0.5f), 500, Easing.InOutExpo);
-
-                visualBox.Colour = Color4.White;
-
-                Scheduler.AddDelayed(() =>
+            AddStep(
+                "Perform logo movements",
+                () =>
                 {
-                    logoTracking = trackingContainer.StartTracking(logo, 1000, Easing.InOutExpo);
-                    visualBox.Colour = Color4.Tomato;
-                }, 700);
-            });
+                    logoTracking?.Dispose();
+
+                    logo.MoveTo(new Vector2(0.5f), 500, Easing.InOutExpo);
+
+                    visualBox.Colour = Color4.White;
+
+                    Scheduler.AddDelayed(
+                        () =>
+                        {
+                            logoTracking = trackingContainer.StartTracking(
+                                logo,
+                                1000,
+                                Easing.InOutExpo
+                            );
+                            visualBox.Colour = Color4.Tomato;
+                        },
+                        700
+                    );
+                }
+            );
 
             waitForMove(8);
             AddAssert("Logo is tracking", () => trackingContainer.IsLogoTracking);
@@ -176,24 +204,30 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             bool failed = false;
 
-            AddStep("Set up scenario", () =>
-            {
-                failed = false;
-                addFacadeContainers();
-            });
+            AddStep(
+                "Set up scenario",
+                () =>
+                {
+                    failed = false;
+                    addFacadeContainers();
+                }
+            );
 
-            AddStep("Try setting facade size", () =>
-            {
-                try
+            AddStep(
+                "Try setting facade size",
+                () =>
                 {
-                    logoFacade.Size = new Vector2(0, 0);
+                    try
+                    {
+                        logoFacade.Size = new Vector2(0, 0);
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is InvalidOperationException)
+                            failed = true;
+                    }
                 }
-                catch (Exception e)
-                {
-                    if (e is InvalidOperationException)
-                        failed = true;
-                }
-            });
+            );
 
             AddAssert("Exception thrown", () => failed);
         }
@@ -204,63 +238,66 @@ namespace osu.Game.Tests.Visual.UserInterface
             bool failed = false;
             LogoTrackingContainer newContainer = new LogoTrackingContainer();
 
-            AddStep("Set up scenario", () =>
-            {
-                failed = false;
-                newContainer = new LogoTrackingContainer();
-                addFacadeContainers();
-                moveLogoFacade();
-            });
+            AddStep(
+                "Set up scenario",
+                () =>
+                {
+                    failed = false;
+                    newContainer = new LogoTrackingContainer();
+                    addFacadeContainers();
+                    moveLogoFacade();
+                }
+            );
 
-            AddStep("Try tracking new container", () =>
-            {
-                try
+            AddStep(
+                "Try tracking new container",
+                () =>
                 {
-                    newContainer.StartTracking(logo);
+                    try
+                    {
+                        newContainer.StartTracking(logo);
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is InvalidOperationException)
+                            failed = true;
+                    }
                 }
-                catch (Exception e)
-                {
-                    if (e is InvalidOperationException)
-                        failed = true;
-                }
-            });
+            );
 
             AddAssert("Exception thrown", () => failed);
         }
 
         private void addFacadeContainers()
         {
-            AddRange(new Drawable[]
-            {
-                trackingContainer = new TestLogoTrackingContainer
+            AddRange(
+                new Drawable[]
                 {
-                    Alpha = 0.35f,
-                    RelativeSizeAxes = Axes.None,
-                    Size = new Vector2(visual_box_size),
-                    Child = visualBox = new Box
+                    trackingContainer = new TestLogoTrackingContainer
                     {
-                        Colour = Color4.Tomato,
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                },
-                transferContainer = new Container
-                {
-                    Alpha = 0.35f,
-                    RelativeSizeAxes = Axes.None,
-                    Size = new Vector2(visual_box_size),
-                    Child = transferContainerBox = new Box
+                        Alpha = 0.35f,
+                        RelativeSizeAxes = Axes.None,
+                        Size = new Vector2(visual_box_size),
+                        Child = visualBox =
+                            new Box { Colour = Color4.Tomato, RelativeSizeAxes = Axes.Both },
+                    },
+                    transferContainer = new Container
                     {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                },
-            });
+                        Alpha = 0.35f,
+                        RelativeSizeAxes = Axes.None,
+                        Size = new Vector2(visual_box_size),
+                        Child = transferContainerBox =
+                            new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
+                    },
+                }
+            );
 
             trackingContainer.Add(logoFacade = trackingContainer.LogoFacade);
             trackingContainer.StartTracking(logo, 1000);
         }
 
-        private void waitForMove(int count = 5) => AddWaitStep("Wait for transforms to finish", count);
+        private void waitForMove(int count = 5) =>
+            AddWaitStep("Wait for transforms to finish", count);
 
         private void removeFacade()
         {
@@ -274,8 +311,24 @@ namespace osu.Game.Tests.Visual.UserInterface
             if (!logoFacade.Transforms.Any() && !transferContainer.Transforms.Any())
             {
                 Random random = new Random();
-                trackingContainer.Delay(500).MoveTo(new Vector2(random.Next(0, (int)logo.Parent!.DrawWidth), random.Next(0, (int)logo.Parent!.DrawHeight)), 300);
-                transferContainer.Delay(500).MoveTo(new Vector2(random.Next(0, (int)logo.Parent!.DrawWidth), random.Next(0, (int)logo.Parent!.DrawHeight)), 300);
+                trackingContainer
+                    .Delay(500)
+                    .MoveTo(
+                        new Vector2(
+                            random.Next(0, (int)logo.Parent!.DrawWidth),
+                            random.Next(0, (int)logo.Parent!.DrawHeight)
+                        ),
+                        300
+                    );
+                transferContainer
+                    .Delay(500)
+                    .MoveTo(
+                        new Vector2(
+                            random.Next(0, (int)logo.Parent!.DrawWidth),
+                            random.Next(0, (int)logo.Parent!.DrawHeight)
+                        ),
+                        300
+                    );
             }
 
             if (randomPositions)
@@ -287,7 +340,8 @@ namespace osu.Game.Tests.Visual.UserInterface
             /// <summary>
             /// Check that the logo is tracking the position of the facade, with an acceptable precision lenience.
             /// </summary>
-            public bool IsLogoTracking => Precision.AlmostEquals(Logo!.Position, ComputeLogoTrackingPosition());
+            public bool IsLogoTracking =>
+                Precision.AlmostEquals(Logo!.Position, ComputeLogoTrackingPosition());
         }
     }
 }

@@ -16,7 +16,10 @@ namespace osu.Game.Online.API.Requests
             Type = type;
         }
 
-        protected override string Target => Type == BeatmapSetLookupType.SetId ? $@"beatmapsets/{ID}" : $@"beatmapsets/lookup?beatmap_id={ID}";
+        protected override string Target =>
+            Type == BeatmapSetLookupType.SetId
+                ? $@"beatmapsets/{ID}"
+                : $@"beatmapsets/lookup?beatmap_id={ID}";
     }
 
     public enum BeatmapSetLookupType

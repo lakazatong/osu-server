@@ -3,15 +3,15 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics;
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Overlays.Comments
 {
@@ -26,49 +26,51 @@ namespace osu.Game.Overlays.Comments
         {
             RelativeSizeAxes = Axes.X;
             Height = 50;
-            AddInternal(new FillFlowContainer
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Horizontal,
-                Margin = new MarginPadding { Left = WaveOverlayContainer.HORIZONTAL_PADDING },
-                Spacing = new Vector2(5, 0),
-                Children = new Drawable[]
+            AddInternal(
+                new FillFlowContainer
                 {
-                    new OsuSpriteText
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Horizontal,
+                    Margin = new MarginPadding { Left = WaveOverlayContainer.HORIZONTAL_PADDING },
+                    Spacing = new Vector2(5, 0),
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Font = OsuFont.GetFont(size: 20, italics: true),
-                        Colour = colourProvider.Light1,
-                        Text = CommentsStrings.Title
-                    },
-                    new CircularContainer
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        AutoSizeAxes = Axes.Both,
-                        Masking = true,
-                        Children = new Drawable[]
+                        new OsuSpriteText
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = colourProvider.Background6
-                            },
-                            counter = new OsuSpriteText
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Margin = new MarginPadding { Horizontal = 10, Vertical = 5 },
-                                Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold),
-                                Colour = colourProvider.Foreground1
-                            }
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Font = OsuFont.GetFont(size: 20, italics: true),
+                            Colour = colourProvider.Light1,
+                            Text = CommentsStrings.Title,
                         },
-                    }
+                        new CircularContainer
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            AutoSizeAxes = Axes.Both,
+                            Masking = true,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = colourProvider.Background6,
+                                },
+                                counter = new OsuSpriteText
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Margin = new MarginPadding { Horizontal = 10, Vertical = 5 },
+                                    Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold),
+                                    Colour = colourProvider.Foreground1,
+                                },
+                            },
+                        },
+                    },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()

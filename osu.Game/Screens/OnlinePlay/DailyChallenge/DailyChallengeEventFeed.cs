@@ -35,16 +35,17 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Top = 35 },
-                    Child = flow = new DailyChallengeEventFeedFlow
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Origin = Anchor.BottomCentre,
-                        Anchor = Anchor.BottomCentre,
-                        Spacing = new Vector2(5),
-                        Masking = true,
-                    }
-                }
+                    Child = flow =
+                        new DailyChallengeEventFeedFlow
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Origin = Anchor.BottomCentre,
+                            Anchor = Anchor.BottomCentre,
+                            Spacing = new Vector2(5),
+                            Masking = true,
+                        },
+                },
             };
         }
 
@@ -63,19 +64,28 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 
             while (newScores.TryDequeue(out var newScore))
             {
-                flow.Add(new NewScoreEventRow(newScore)
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    PresentScore = PresentScore,
-                });
+                flow.Add(
+                    new NewScoreEventRow(newScore)
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        PresentScore = PresentScore,
+                    }
+                );
             }
 
             for (int i = 0; i < flow.Count; ++i)
             {
                 var row = flow[i];
 
-                row.Alpha = Interpolation.ValueAt(Math.Clamp(row.Y + flow.DrawHeight, 0, flow.DrawHeight), 0f, 1f, 0, flow.DrawHeight, Easing.Out);
+                row.Alpha = Interpolation.ValueAt(
+                    Math.Clamp(row.Y + flow.DrawHeight, 0, flow.DrawHeight),
+                    0f,
+                    1f,
+                    0,
+                    flow.DrawHeight,
+                    Easing.Out
+                );
 
                 if (row.Y < -flow.DrawHeight)
                 {
@@ -135,12 +145,15 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Padding = new MarginPadding { Left = 21 },
-                    }
+                    },
                 };
 
                 text.AddUserLink(newScore.User);
                 text.AddText(" scored ");
-                text.AddLink($"{newScore.TotalScore:N0}", () => PresentScore?.Invoke(newScore.ScoreID));
+                text.AddLink(
+                    $"{newScore.TotalScore:N0}",
+                    () => PresentScore?.Invoke(newScore.ScoreID)
+                );
 
                 if (newScore.NewRank != null)
                     text.AddText($" and achieved rank #{newScore.NewRank.Value:N0}");

@@ -27,13 +27,18 @@ using osuTK.Graphics;
 namespace osu.Game.Screens.Select.Leaderboards
 {
     [LongRunningLoad]
-    public partial class MultiplayerLeaderboardProvider : CompositeComponent, IGameplayLeaderboardProvider
+    public partial class MultiplayerLeaderboardProvider
+        : CompositeComponent,
+            IGameplayLeaderboardProvider
     {
         public IBindableList<GameplayLeaderboardScore> Scores => scores;
-        private readonly BindableList<GameplayLeaderboardScore> scores = new BindableList<GameplayLeaderboardScore>();
+        private readonly BindableList<GameplayLeaderboardScore> scores =
+            new BindableList<GameplayLeaderboardScore>();
 
-        protected readonly Dictionary<int, TrackedUserData> UserScores = new Dictionary<int, TrackedUserData>();
-        public readonly SortedDictionary<int, BindableLong> TeamScores = new SortedDictionary<int, BindableLong>();
+        protected readonly Dictionary<int, TrackedUserData> UserScores =
+            new Dictionary<int, TrackedUserData>();
+        public readonly SortedDictionary<int, BindableLong> TeamScores =
+            new SortedDictionary<int, BindableLong>();
 
         public bool HasTeams => TeamScores.Count > 0;
 
@@ -62,7 +67,11 @@ namespace osu.Game.Screens.Select.Leaderboards
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config, IAPIProvider api, CancellationToken cancellationToken)
+        private void load(
+            OsuConfigManager config,
+            IAPIProvider api,
+            CancellationToken cancellationToken
+        )
         {
             config.BindWith(OsuSetting.ScoreDisplayMode, scoringMode);
 
@@ -80,38 +89,52 @@ namespace osu.Game.Screens.Select.Leaderboards
                     TeamScores.Add(team, new BindableLong());
             }
 
-            userLookupCache.GetUsersAsync(users.Select(u => u.UserID).ToArray(), cancellationToken)
-                           .ContinueWith(task =>
-                           {
-                               Schedule(() =>
-                               {
-                                   var lookedUpUsers = task.GetResultSafely();
+            userLookupCache
+                .GetUsersAsync(users.Select(u => u.UserID).ToArray(), cancellationToken)
+                .ContinueWith(
+                    task =>
+                    {
+                        Schedule(() =>
+                        {
+                            var lookedUpUsers = task.GetResultSafely();
 
-                                   for (int i = 0; i < lookedUpUsers.Length; i++)
-                                   {
-                                       var user = lookedUpUsers[i] ?? new APIUser
-                                       {
-                                           Id = users[i].UserID,
-                                           Username = "Unknown user",
-                                       };
+                            for (int i = 0; i < lookedUpUsers.Length; i++)
+                            {
+                                var user =
+                                    lookedUpUsers[i]
+                                    ?? new APIUser
+                                    {
+                                        Id = users[i].UserID,
+                                        Username = "Unknown user",
+                                    };
 
-                                       var trackedUser = UserScores[user.Id];
+                                var trackedUser = UserScores[user.Id];
 
-                                       var leaderboardScore = new GameplayLeaderboardScore(
-                                           user,
-                                           trackedUser.ScoreProcessor,
-                                           user.Id == api.LocalUser.Value.Id,
-                                           GameplayLeaderboardScore.ComboDisplayMode.Current)
-                                       {
-                                           HasQuit = { BindTarget = trackedUser.UserQuit },
-                                           TeamColour = UserScores[user.OnlineID].Team is int team ? getTeamColour(team) : null,
-                                       };
-                                       leaderboardScore.TotalScore.BindValueChanged(_ => sorting.Invalidate());
-                                       leaderboardScore.DisplayOrder.BindValueChanged(_ => sorting.Invalidate(), true);
-                                       scores.Add(leaderboardScore);
-                                   }
-                               });
-                           }, cancellationToken);
+                                var leaderboardScore = new GameplayLeaderboardScore(
+                                    user,
+                                    trackedUser.ScoreProcessor,
+                                    user.Id == api.LocalUser.Value.Id,
+                                    GameplayLeaderboardScore.ComboDisplayMode.Current
+                                )
+                                {
+                                    HasQuit = { BindTarget = trackedUser.UserQuit },
+                                    TeamColour = UserScores[user.OnlineID].Team is int team
+                                        ? getTeamColour(team)
+                                        : null,
+                                };
+                                leaderboardScore.TotalScore.BindValueChanged(_ =>
+                                    sorting.Invalidate()
+                                );
+                                leaderboardScore.DisplayOrder.BindValueChanged(
+                                    _ => sorting.Invalidate(),
+                                    true
+                                );
+                                scores.Add(leaderboardScore);
+                            }
+                        });
+                    },
+                    cancellationToken
+                );
         }
 
         protected override void LoadComplete()
@@ -124,7 +147,13 @@ namespace osu.Game.Screens.Select.Leaderboards
                 spectatorClient.WatchUser(user.UserID);
 
                 if (!multiplayerClient.CurrentMatchPlayingUserIds.Contains(user.UserID))
-                    playingUsersChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new[] { user.UserID }));
+                    playingUsersChanged(
+                        this,
+                        new NotifyCollectionChangedEventArgs(
+                            NotifyCollectionChangedAction.Remove,
+                            new[] { user.UserID }
+                        )
+                    );
             }
 
             // bind here is to support players leaving the match.
@@ -159,7 +188,8 @@ namespace osu.Game.Screens.Select.Leaderboards
             if (!HasTeams)
                 return;
 
-            foreach (var teamTotal in TeamScores.Values) teamTotal.Value = 0;
+            foreach (var teamTotal in TeamScores.Values)
+                teamTotal.Value = 0;
 
             foreach (var u in UserScores.Values)
             {
@@ -189,9 +219,9 @@ namespace osu.Game.Screens.Select.Leaderboards
                 return;
 
             var orderedByScore = scores
-                                 .OrderByDescending(i => i.TotalScore.Value)
-                                 .ThenBy(i => i.TotalScoreTiebreaker)
-                                 .ToList();
+                .OrderByDescending(i => i.TotalScore.Value)
+                .ThenBy(i => i.TotalScoreTiebreaker)
+                .ToList();
 
             for (int i = 0; i < orderedByScore.Count; i++)
             {

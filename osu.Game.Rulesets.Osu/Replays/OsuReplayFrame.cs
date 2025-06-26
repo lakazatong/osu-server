@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Osu.Replays
         public Vector2 Position;
         public List<OsuAction> Actions = new List<OsuAction>();
 
-        public OsuReplayFrame()
-        {
-        }
+        public OsuReplayFrame() { }
 
         public OsuReplayFrame(double time, Vector2 position, params OsuAction[] actions)
             : base(time)
@@ -27,12 +25,19 @@ namespace osu.Game.Rulesets.Osu.Replays
             Actions.AddRange(actions);
         }
 
-        public void FromLegacy(LegacyReplayFrame currentFrame, IBeatmap beatmap, ReplayFrame? lastFrame = null)
+        public void FromLegacy(
+            LegacyReplayFrame currentFrame,
+            IBeatmap beatmap,
+            ReplayFrame? lastFrame = null
+        )
         {
             Position = currentFrame.Position;
-            if (currentFrame.MouseLeft) Actions.Add(OsuAction.LeftButton);
-            if (currentFrame.MouseRight) Actions.Add(OsuAction.RightButton);
-            if (currentFrame.Smoke) Actions.Add(OsuAction.Smoke);
+            if (currentFrame.MouseLeft)
+                Actions.Add(OsuAction.LeftButton);
+            if (currentFrame.MouseRight)
+                Actions.Add(OsuAction.RightButton);
+            if (currentFrame.Smoke)
+                Actions.Add(OsuAction.Smoke);
         }
 
         public LegacyReplayFrame ToLegacy(IBeatmap beatmap)
@@ -49,7 +54,10 @@ namespace osu.Game.Rulesets.Osu.Replays
             return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is OsuReplayFrame osuFrame && Time == osuFrame.Time && Position == osuFrame.Position && Actions.SequenceEqual(osuFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is OsuReplayFrame osuFrame
+            && Time == osuFrame.Time
+            && Position == osuFrame.Position
+            && Actions.SequenceEqual(osuFrame.Actions);
     }
 }

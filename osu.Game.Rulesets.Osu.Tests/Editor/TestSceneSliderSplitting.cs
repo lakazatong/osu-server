@@ -23,10 +23,11 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         protected override Ruleset CreateEditorRuleset() => new OsuRuleset();
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
-        private ComposeBlueprintContainer blueprintContainer
-            => Editor.ChildrenOfType<ComposeBlueprintContainer>().First();
+        private ComposeBlueprintContainer blueprintContainer =>
+            Editor.ChildrenOfType<ComposeBlueprintContainer>().First();
 
         private Slider? slider;
         private PathControlPointVisualiser<Slider>? visualiser;
@@ -38,58 +39,93 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             double endTime = 0;
 
-            AddStep("add slider", () =>
-            {
-                slider = new Slider
+            AddStep(
+                "add slider",
+                () =>
                 {
-                    Position = new Vector2(0, 50),
-                    Path = new SliderPath(new[]
+                    slider = new Slider
                     {
-                        new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(150, 150)),
-                        new PathControlPoint(new Vector2(300, 0), PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(400, 0)),
-                        new PathControlPoint(new Vector2(400, 150))
-                    })
-                };
+                        Position = new Vector2(0, 50),
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
+                                new PathControlPoint(new Vector2(150, 150)),
+                                new PathControlPoint(new Vector2(300, 0), PathType.PERFECT_CURVE),
+                                new PathControlPoint(new Vector2(400, 0)),
+                                new PathControlPoint(new Vector2(400, 150)),
+                            }
+                        ),
+                    };
 
-                EditorBeatmap.Add(slider);
+                    EditorBeatmap.Add(slider);
 
-                endTime = slider.EndTime;
-            });
+                    endTime = slider.EndTime;
+                }
+            );
 
-            AddStep("select added slider", () =>
-            {
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-                visualiser = blueprintContainer.SelectionBlueprints.First(o => o.Item == slider).ChildrenOfType<PathControlPointVisualiser<Slider>>().First();
-            });
+            AddStep(
+                "select added slider",
+                () =>
+                {
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                    visualiser = blueprintContainer
+                        .SelectionBlueprints.First(o => o.Item == slider)
+                        .ChildrenOfType<PathControlPointVisualiser<Slider>>()
+                        .First();
+                }
+            );
 
             moveMouseToControlPoint(2);
-            AddStep("select control point", () =>
-            {
-                if (visualiser is not null) visualiser.Pieces[2].IsSelected.Value = true;
-            });
+            AddStep(
+                "select control point",
+                () =>
+                {
+                    if (visualiser is not null)
+                        visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
             addContextMenuItemStep("Split control point");
 
-            AddAssert("slider split", () => slider is not null && EditorBeatmap.HitObjects.Count == 2 &&
-                                            sliderCreatedFor((Slider)EditorBeatmap.HitObjects[0], 0, EditorBeatmap.HitObjects[1].StartTime - split_gap,
-                                                (new Vector2(0, 50), PathType.PERFECT_CURVE),
-                                                (new Vector2(150, 200), null),
-                                                (new Vector2(300, 50), null)
-                                            ) && sliderCreatedFor((Slider)EditorBeatmap.HitObjects[1], slider.StartTime, endTime + split_gap,
-                                                (new Vector2(300, 50), PathType.PERFECT_CURVE),
-                                                (new Vector2(400, 50), null),
-                                                (new Vector2(400, 200), null)
-                                            ));
+            AddAssert(
+                "slider split",
+                () =>
+                    slider is not null
+                    && EditorBeatmap.HitObjects.Count == 2
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[0],
+                        0,
+                        EditorBeatmap.HitObjects[1].StartTime - split_gap,
+                        (new Vector2(0, 50), PathType.PERFECT_CURVE),
+                        (new Vector2(150, 200), null),
+                        (new Vector2(300, 50), null)
+                    )
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[1],
+                        slider.StartTime,
+                        endTime + split_gap,
+                        (new Vector2(300, 50), PathType.PERFECT_CURVE),
+                        (new Vector2(400, 50), null),
+                        (new Vector2(400, 200), null)
+                    )
+            );
 
             AddStep("undo", () => Editor.Undo());
-            AddAssert("original slider restored", () => EditorBeatmap.HitObjects.Count == 1 && sliderCreatedFor((Slider)EditorBeatmap.HitObjects[0], 0, endTime,
-                (new Vector2(0, 50), PathType.PERFECT_CURVE),
-                (new Vector2(150, 200), null),
-                (new Vector2(300, 50), PathType.PERFECT_CURVE),
-                (new Vector2(400, 50), null),
-                (new Vector2(400, 200), null)
-            ));
+            AddAssert(
+                "original slider restored",
+                () =>
+                    EditorBeatmap.HitObjects.Count == 1
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[0],
+                        0,
+                        endTime,
+                        (new Vector2(0, 50), PathType.PERFECT_CURVE),
+                        (new Vector2(150, 200), null),
+                        (new Vector2(300, 50), PathType.PERFECT_CURVE),
+                        (new Vector2(400, 50), null),
+                        (new Vector2(400, 200), null)
+                    )
+            );
         }
 
         [Test]
@@ -97,60 +133,95 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             double endTime = 0;
 
-            AddStep("add slider", () =>
-            {
-                slider = new Slider
+            AddStep(
+                "add slider",
+                () =>
                 {
-                    Position = new Vector2(0, 50),
-                    Path = new SliderPath(new[]
+                    slider = new Slider
                     {
-                        new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(150, 150)),
-                        new PathControlPoint(new Vector2(300, 0), PathType.BEZIER),
-                        new PathControlPoint(new Vector2(400, 0)),
-                        new PathControlPoint(new Vector2(400, 150), PathType.CATMULL),
-                        new PathControlPoint(new Vector2(300, 200)),
-                        new PathControlPoint(new Vector2(400, 250))
-                    })
-                };
+                        Position = new Vector2(0, 50),
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
+                                new PathControlPoint(new Vector2(150, 150)),
+                                new PathControlPoint(new Vector2(300, 0), PathType.BEZIER),
+                                new PathControlPoint(new Vector2(400, 0)),
+                                new PathControlPoint(new Vector2(400, 150), PathType.CATMULL),
+                                new PathControlPoint(new Vector2(300, 200)),
+                                new PathControlPoint(new Vector2(400, 250)),
+                            }
+                        ),
+                    };
 
-                EditorBeatmap.Add(slider);
+                    EditorBeatmap.Add(slider);
 
-                endTime = slider.EndTime;
-            });
+                    endTime = slider.EndTime;
+                }
+            );
 
-            AddStep("select added slider", () =>
-            {
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-                visualiser = blueprintContainer.SelectionBlueprints.First(o => o.Item == slider).ChildrenOfType<PathControlPointVisualiser<Slider>>().First();
-            });
+            AddStep(
+                "select added slider",
+                () =>
+                {
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                    visualiser = blueprintContainer
+                        .SelectionBlueprints.First(o => o.Item == slider)
+                        .ChildrenOfType<PathControlPointVisualiser<Slider>>()
+                        .First();
+                }
+            );
 
             moveMouseToControlPoint(2);
-            AddStep("select first control point", () =>
-            {
-                if (visualiser is not null) visualiser.Pieces[2].IsSelected.Value = true;
-            });
+            AddStep(
+                "select first control point",
+                () =>
+                {
+                    if (visualiser is not null)
+                        visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
             moveMouseToControlPoint(4);
-            AddStep("select second control point", () =>
-            {
-                if (visualiser is not null) visualiser.Pieces[4].IsSelected.Value = true;
-            });
+            AddStep(
+                "select second control point",
+                () =>
+                {
+                    if (visualiser is not null)
+                        visualiser.Pieces[4].IsSelected.Value = true;
+                }
+            );
             addContextMenuItemStep("Split 2 control points");
 
-            AddAssert("slider split", () => slider is not null && EditorBeatmap.HitObjects.Count == 3 &&
-                                            sliderCreatedFor((Slider)EditorBeatmap.HitObjects[0], 0, EditorBeatmap.HitObjects[1].StartTime - split_gap,
-                                                (new Vector2(0, 50), PathType.PERFECT_CURVE),
-                                                (new Vector2(150, 200), null),
-                                                (new Vector2(300, 50), null)
-                                            ) && sliderCreatedFor((Slider)EditorBeatmap.HitObjects[1], EditorBeatmap.HitObjects[0].GetEndTime() + split_gap, slider.StartTime - split_gap,
-                                                (new Vector2(300, 50), PathType.BEZIER),
-                                                (new Vector2(400, 50), null),
-                                                (new Vector2(400, 200), null)
-                                            ) && sliderCreatedFor((Slider)EditorBeatmap.HitObjects[2], EditorBeatmap.HitObjects[1].GetEndTime() + split_gap, endTime + split_gap * 2,
-                                                (new Vector2(400, 200), PathType.CATMULL),
-                                                (new Vector2(300, 250), null),
-                                                (new Vector2(400, 300), null)
-                                            ));
+            AddAssert(
+                "slider split",
+                () =>
+                    slider is not null
+                    && EditorBeatmap.HitObjects.Count == 3
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[0],
+                        0,
+                        EditorBeatmap.HitObjects[1].StartTime - split_gap,
+                        (new Vector2(0, 50), PathType.PERFECT_CURVE),
+                        (new Vector2(150, 200), null),
+                        (new Vector2(300, 50), null)
+                    )
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[1],
+                        EditorBeatmap.HitObjects[0].GetEndTime() + split_gap,
+                        slider.StartTime - split_gap,
+                        (new Vector2(300, 50), PathType.BEZIER),
+                        (new Vector2(400, 50), null),
+                        (new Vector2(400, 200), null)
+                    )
+                    && sliderCreatedFor(
+                        (Slider)EditorBeatmap.HitObjects[2],
+                        EditorBeatmap.HitObjects[1].GetEndTime() + split_gap,
+                        endTime + split_gap * 2,
+                        (new Vector2(400, 200), PathType.CATMULL),
+                        (new Vector2(300, 250), null),
+                        (new Vector2(400, 300), null)
+                    )
+            );
         }
 
         [Test]
@@ -158,58 +229,94 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             HitSampleInfo? sample = null;
 
-            AddStep("add slider", () =>
-            {
-                slider = new Slider
+            AddStep(
+                "add slider",
+                () =>
                 {
-                    Position = new Vector2(0, 50),
-                    Path = new SliderPath(new[]
+                    slider = new Slider
                     {
-                        new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(150, 150)),
-                        new PathControlPoint(new Vector2(300, 0), PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(400, 0)),
-                        new PathControlPoint(new Vector2(400, 150))
-                    })
-                };
+                        Position = new Vector2(0, 50),
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
+                                new PathControlPoint(new Vector2(150, 150)),
+                                new PathControlPoint(new Vector2(300, 0), PathType.PERFECT_CURVE),
+                                new PathControlPoint(new Vector2(400, 0)),
+                                new PathControlPoint(new Vector2(400, 150)),
+                            }
+                        ),
+                    };
 
-                EditorBeatmap.Add(slider);
-            });
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
-            AddStep("add hitsounds", () =>
-            {
-                if (slider == null) return;
+            AddStep(
+                "add hitsounds",
+                () =>
+                {
+                    if (slider == null)
+                        return;
 
-                sample = new HitSampleInfo("hitwhistle", HitSampleInfo.BANK_SOFT, volume: 70, editorAutoBank: false);
-                slider.Samples.Add(sample.With());
-            });
+                    sample = new HitSampleInfo(
+                        "hitwhistle",
+                        HitSampleInfo.BANK_SOFT,
+                        volume: 70,
+                        editorAutoBank: false
+                    );
+                    slider.Samples.Add(sample.With());
+                }
+            );
 
-            AddStep("select added slider", () =>
-            {
-                EditorBeatmap.SelectedHitObjects.Add(slider);
-                visualiser = blueprintContainer.SelectionBlueprints.First(o => o.Item == slider).ChildrenOfType<PathControlPointVisualiser<Slider>>().First();
-            });
+            AddStep(
+                "select added slider",
+                () =>
+                {
+                    EditorBeatmap.SelectedHitObjects.Add(slider);
+                    visualiser = blueprintContainer
+                        .SelectionBlueprints.First(o => o.Item == slider)
+                        .ChildrenOfType<PathControlPointVisualiser<Slider>>()
+                        .First();
+                }
+            );
 
             moveMouseToControlPoint(2);
-            AddStep("select control point", () =>
-            {
-                if (visualiser is not null) visualiser.Pieces[2].IsSelected.Value = true;
-            });
+            AddStep(
+                "select control point",
+                () =>
+                {
+                    if (visualiser is not null)
+                        visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
             addContextMenuItemStep("Split control point");
             AddAssert("sliders have hitsounds", hasHitsounds);
 
-            AddStep("select first slider", () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects[0]));
+            AddStep(
+                "select first slider",
+                () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects[0])
+            );
             AddStep("remove first slider", () => EditorBeatmap.RemoveAt(0));
             AddStep("undo", () => Editor.Undo());
             AddAssert("sliders have hitsounds", hasHitsounds);
 
-            bool hasHitsounds() => sample is not null &&
-                                   EditorBeatmap.HitObjects.All(o => o.Samples.Contains(sample));
+            bool hasHitsounds() =>
+                sample is not null && EditorBeatmap.HitObjects.All(o => o.Samples.Contains(sample));
         }
 
-        private bool sliderCreatedFor(Slider s, double startTime, double endTime, params (Vector2 pos, PathType? pathType)[] expectedControlPoints)
+        private bool sliderCreatedFor(
+            Slider s,
+            double startTime,
+            double endTime,
+            params (Vector2 pos, PathType? pathType)[] expectedControlPoints
+        )
         {
-            if (!Precision.AlmostEquals(s.StartTime, startTime, 1) || !Precision.AlmostEquals(s.EndTime, endTime, 1)) return false;
+            if (
+                !Precision.AlmostEquals(s.StartTime, startTime, 1)
+                || !Precision.AlmostEquals(s.EndTime, endTime, 1)
+            )
+                return false;
 
             int i = 0;
 
@@ -217,7 +324,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             {
                 var controlPoint = s.Path.ControlPoints[i++];
 
-                if (!Precision.AlmostEquals(controlPoint.Position + s.Position, pos) || controlPoint.Type != pathType)
+                if (
+                    !Precision.AlmostEquals(controlPoint.Position + s.Position, pos)
+                    || controlPoint.Type != pathType
+                )
                     return false;
             }
 
@@ -226,25 +336,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private void moveMouseToControlPoint(int index)
         {
-            AddStep($"move mouse to control point {index}", () =>
-            {
-                if (slider == null || visualiser == null) return;
+            AddStep(
+                $"move mouse to control point {index}",
+                () =>
+                {
+                    if (slider == null || visualiser == null)
+                        return;
 
-                Vector2 position = slider.Path.ControlPoints[index].Position + slider.Position;
-                InputManager.MoveMouseTo(visualiser.Pieces[0].Parent!.ToScreenSpace(position));
-            });
+                    Vector2 position = slider.Path.ControlPoints[index].Position + slider.Position;
+                    InputManager.MoveMouseTo(visualiser.Pieces[0].Parent!.ToScreenSpace(position));
+                }
+            );
         }
 
         private void addContextMenuItemStep(string contextMenuText)
         {
-            AddStep($"click context menu item \"{contextMenuText}\"", () =>
-            {
-                if (visualiser == null) return;
+            AddStep(
+                $"click context menu item \"{contextMenuText}\"",
+                () =>
+                {
+                    if (visualiser == null)
+                        return;
 
-                MenuItem? item = visualiser.ContextMenuItems?.FirstOrDefault(menuItem => menuItem.Text.Value == contextMenuText);
+                    MenuItem? item = visualiser.ContextMenuItems?.FirstOrDefault(menuItem =>
+                        menuItem.Text.Value == contextMenuText
+                    );
 
-                item?.Action.Value?.Invoke();
-            });
+                    item?.Action.Value?.Invoke();
+                }
+            );
         }
     }
 }

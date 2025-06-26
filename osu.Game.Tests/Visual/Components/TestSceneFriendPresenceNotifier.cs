@@ -27,103 +27,198 @@ namespace osu.Game.Tests.Visual.Components
         private TestMetadataClient metadataClient = null!;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = new DependencyProvidingContainer
+        public void Setup() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                CachedDependencies =
-                [
-                    (typeof(ChannelManager), channelManager = new ChannelManager(API)),
-                    (typeof(INotificationOverlay), notificationOverlay = new NotificationOverlay()),
-                    (typeof(ChatOverlay), chatOverlay = new ChatOverlay()),
-                    (typeof(MetadataClient), metadataClient = new TestMetadataClient()),
-                ],
-                Children = new Drawable[]
+                Child = new DependencyProvidingContainer
                 {
-                    channelManager,
-                    notificationOverlay,
-                    chatOverlay,
-                    metadataClient,
-                    new FriendPresenceNotifier()
-                }
-            };
+                    RelativeSizeAxes = Axes.Both,
+                    CachedDependencies =
+                    [
+                        (typeof(ChannelManager), channelManager = new ChannelManager(API)),
+                        (
+                            typeof(INotificationOverlay),
+                            notificationOverlay = new NotificationOverlay()
+                        ),
+                        (typeof(ChatOverlay), chatOverlay = new ChatOverlay()),
+                        (typeof(MetadataClient), metadataClient = new TestMetadataClient()),
+                    ],
+                    Children = new Drawable[]
+                    {
+                        channelManager,
+                        notificationOverlay,
+                        chatOverlay,
+                        metadataClient,
+                        new FriendPresenceNotifier(),
+                    },
+                };
 
-            for (int i = 1; i <= 100; i++)
-                ((DummyAPIAccess)API).Friends.Add(new APIRelation { TargetID = i, TargetUser = new APIUser { Username = $"Friend {i}" } });
-        });
+                for (int i = 1; i <= 100; i++)
+                    ((DummyAPIAccess)API).Friends.Add(
+                        new APIRelation
+                        {
+                            TargetID = i,
+                            TargetUser = new APIUser { Username = $"Friend {i}" },
+                        }
+                    );
+            });
 
         [Test]
         public void TestNotifications()
         {
-            AddStep("bring friend 1 online", () => metadataClient.FriendPresenceUpdated(1, new UserPresence { Status = UserStatus.Online }));
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(1));
+            AddStep(
+                "bring friend 1 online",
+                () =>
+                    metadataClient.FriendPresenceUpdated(
+                        1,
+                        new UserPresence { Status = UserStatus.Online }
+                    )
+            );
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(1)
+            );
             AddStep("bring friend 1 offline", () => metadataClient.FriendPresenceUpdated(1, null));
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(2));
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(2)
+            );
         }
 
         [Test]
         public void TestSingleUserNotificationOpensChat()
         {
-            AddStep("bring friend 1 online", () => metadataClient.FriendPresenceUpdated(1, new UserPresence { Status = UserStatus.Online }));
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(1));
+            AddStep(
+                "bring friend 1 online",
+                () =>
+                    metadataClient.FriendPresenceUpdated(
+                        1,
+                        new UserPresence { Status = UserStatus.Online }
+                    )
+            );
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("click notification", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Notification>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click notification",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<Notification>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddUntilStep("chat overlay opened", () => chatOverlay.State.Value, () => Is.EqualTo(Visibility.Visible));
-            AddUntilStep("user channel selected", () => channelManager.CurrentChannel.Value.Name, () => Is.EqualTo(((DummyAPIAccess)API).Friends[0].TargetUser!.Username));
+            AddUntilStep(
+                "chat overlay opened",
+                () => chatOverlay.State.Value,
+                () => Is.EqualTo(Visibility.Visible)
+            );
+            AddUntilStep(
+                "user channel selected",
+                () => channelManager.CurrentChannel.Value.Name,
+                () => Is.EqualTo(((DummyAPIAccess)API).Friends[0].TargetUser!.Username)
+            );
         }
 
         [Test]
         public void TestMultipleUserNotificationDoesNotOpenChat()
         {
-            AddStep("bring friends 1 & 2 online", () =>
-            {
-                metadataClient.FriendPresenceUpdated(1, new UserPresence { Status = UserStatus.Online });
-                metadataClient.FriendPresenceUpdated(2, new UserPresence { Status = UserStatus.Online });
-            });
+            AddStep(
+                "bring friends 1 & 2 online",
+                () =>
+                {
+                    metadataClient.FriendPresenceUpdated(
+                        1,
+                        new UserPresence { Status = UserStatus.Online }
+                    );
+                    metadataClient.FriendPresenceUpdated(
+                        2,
+                        new UserPresence { Status = UserStatus.Online }
+                    );
+                }
+            );
 
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(1));
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("click notification", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Notification>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click notification",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<Notification>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("chat overlay not opened", () => chatOverlay.State.Value, () => Is.EqualTo(Visibility.Hidden));
+            AddAssert(
+                "chat overlay not opened",
+                () => chatOverlay.State.Value,
+                () => Is.EqualTo(Visibility.Hidden)
+            );
         }
 
         [Test]
         public void TestNonFriendsDoNotNotify()
         {
-            AddStep("bring non-friend 1000 online", () => metadataClient.UserPresenceUpdated(1000, new UserPresence { Status = UserStatus.Online }));
+            AddStep(
+                "bring non-friend 1000 online",
+                () =>
+                    metadataClient.UserPresenceUpdated(
+                        1000,
+                        new UserPresence { Status = UserStatus.Online }
+                    )
+            );
             AddWaitStep("wait for possible notification", 10);
-            AddAssert("no notification", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
+            AddAssert(
+                "no notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.Zero
+            );
         }
 
         [Test]
         public void TestPostManyDebounced()
         {
-            AddStep("bring friends 1-10 online", () =>
-            {
-                for (int i = 1; i <= 10; i++)
-                    metadataClient.FriendPresenceUpdated(i, new UserPresence { Status = UserStatus.Online });
-            });
+            AddStep(
+                "bring friends 1-10 online",
+                () =>
+                {
+                    for (int i = 1; i <= 10; i++)
+                        metadataClient.FriendPresenceUpdated(
+                            i,
+                            new UserPresence { Status = UserStatus.Online }
+                        );
+                }
+            );
 
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(1));
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("bring friends 1-10 offline", () =>
-            {
-                for (int i = 1; i <= 10; i++)
-                    metadataClient.FriendPresenceUpdated(i, null);
-            });
+            AddStep(
+                "bring friends 1-10 offline",
+                () =>
+                {
+                    for (int i = 1; i <= 10; i++)
+                        metadataClient.FriendPresenceUpdated(i, null);
+                }
+            );
 
-            AddUntilStep("wait for notification", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(2));
+            AddUntilStep(
+                "wait for notification",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(2)
+            );
         }
     }
 }

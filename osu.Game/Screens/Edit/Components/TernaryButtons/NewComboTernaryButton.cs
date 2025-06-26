@@ -35,7 +35,8 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             set => current.Current = value;
         }
 
-        private readonly BindableWithCurrent<TernaryState> current = new BindableWithCurrent<TernaryState>();
+        private readonly BindableWithCurrent<TernaryState> current =
+            new BindableWithCurrent<TernaryState>();
 
         private readonly BindableList<HitObject> selectedHitObjects = new BindableList<HitObject>();
         private readonly BindableList<Colour4> comboColours = new BindableList<Colour4>();
@@ -57,19 +58,20 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Child = mainButton = new DrawableTernaryButton
-                    {
-                        Current = Current,
-                        Description = "New combo",
-                        CreateIcon = () => new SpriteIcon { Icon = OsuIcon.EditorNewComboA },
-                    },
+                    Child = mainButton =
+                        new DrawableTernaryButton
+                        {
+                            Current = Current,
+                            Description = "New combo",
+                            CreateIcon = () => new SpriteIcon { Icon = OsuIcon.EditorNewComboA },
+                        },
                 },
                 pickerButton = new ColourPickerButton
                 {
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
-                    ComboColours = { BindTarget = comboColours }
-                }
+                    ComboColours = { BindTarget = comboColours },
+                },
             };
 
             selectedHitObjects.BindTo(editorBeatmap.SelectedHitObjects);
@@ -92,30 +94,62 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
 
         private void updateState()
         {
-            if (Current.Value == TernaryState.True && selectedHitObjects.Count == 1 && selectedHitObjects.Single() is IHasComboInformation hasCombo && comboColours.Count > 1)
+            if (
+                Current.Value == TernaryState.True
+                && selectedHitObjects.Count == 1
+                && selectedHitObjects.Single() is IHasComboInformation hasCombo
+                && comboColours.Count > 1
+            )
             {
                 float targetPickerButtonWidth = expanded.Value ? 25 : 10;
 
-                pickerButton.ResizeWidthTo(targetPickerButtonWidth, ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
+                pickerButton.ResizeWidthTo(
+                    targetPickerButtonWidth,
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
                 pickerButton.SelectedHitObject.Value = hasCombo;
                 pickerButton.Icon.Alpha = expanded.Value ? 1 : 0;
 
-                mainButtonContainer.TransformTo(nameof(mainButtonContainer.Padding), new MarginPadding { Right = targetPickerButtonWidth + 5 }, ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
-                mainButton.Icon.MoveToX(expanded.Value ? 10 : 2.5f, ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
+                mainButtonContainer.TransformTo(
+                    nameof(mainButtonContainer.Padding),
+                    new MarginPadding { Right = targetPickerButtonWidth + 5 },
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
+                mainButton.Icon.MoveToX(
+                    expanded.Value ? 10 : 2.5f,
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
             }
             else
             {
-                pickerButton.ResizeWidthTo(0, ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
+                pickerButton.ResizeWidthTo(
+                    0,
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
 
-                mainButtonContainer.TransformTo(nameof(mainButtonContainer.Padding), new MarginPadding(), ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
-                mainButton.Icon.MoveToX(10, ExpandingContainer.TRANSITION_DURATION, Easing.OutQuint);
+                mainButtonContainer.TransformTo(
+                    nameof(mainButtonContainer.Padding),
+                    new MarginPadding(),
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
+                mainButton.Icon.MoveToX(
+                    10,
+                    ExpandingContainer.TRANSITION_DURATION,
+                    Easing.OutQuint
+                );
             }
         }
 
         private partial class ColourPickerButton : OsuButton, IHasPopover
         {
             public BindableList<Colour4> ComboColours { get; } = new BindableList<Colour4>();
-            public Bindable<IHasComboInformation?> SelectedHitObject { get; } = new Bindable<IHasComboInformation?>();
+            public Bindable<IHasComboInformation?> SelectedHitObject { get; } =
+                new Bindable<IHasComboInformation?>();
 
             [Resolved]
             private EditorBeatmap editorBeatmap { get; set; } = null!;
@@ -128,13 +162,15 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             [BackgroundDependencyLoader]
             private void load()
             {
-                Add(Icon = new SpriteIcon
-                {
-                    Icon = FontAwesome.Solid.Palette,
-                    Size = new Vector2(16),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                Add(
+                    Icon = new SpriteIcon
+                    {
+                        Icon = FontAwesome.Solid.Palette,
+                        Size = new Vector2(16),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
 
                 Action = this.ShowPopover;
             }
@@ -143,16 +179,21 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             {
                 base.LoadComplete();
                 ComboColours.BindCollectionChanged((_, _) => updateState());
-                SelectedHitObject.BindValueChanged(val =>
-                {
-                    if (val.OldValue != null)
-                        val.OldValue.ComboIndexWithOffsetsBindable.ValueChanged -= onComboIndexChanged;
+                SelectedHitObject.BindValueChanged(
+                    val =>
+                    {
+                        if (val.OldValue != null)
+                            val.OldValue.ComboIndexWithOffsetsBindable.ValueChanged -=
+                                onComboIndexChanged;
 
-                    updateState();
+                        updateState();
 
-                    if (val.NewValue != null)
-                        val.NewValue.ComboIndexWithOffsetsBindable.ValueChanged += onComboIndexChanged;
-                }, true);
+                        if (val.NewValue != null)
+                            val.NewValue.ComboIndexWithOffsetsBindable.ValueChanged +=
+                                onComboIndexChanged;
+                    },
+                    true
+                );
             }
 
             private void onComboIndexChanged(ValueChangedEvent<int> _) => updateState();
@@ -161,7 +202,12 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             {
                 Enabled.Value = SelectedHitObject.Value != null;
 
-                if (SelectedHitObject.Value == null || SelectedHitObject.Value.ComboOffset == 0 || ComboColours.Count <= 1 || !SelectedHitObject.Value.NewCombo)
+                if (
+                    SelectedHitObject.Value == null
+                    || SelectedHitObject.Value.ComboOffset == 0
+                    || ComboColours.Count <= 1
+                    || !SelectedHitObject.Value.NewCombo
+                )
                 {
                     BackgroundColour = colourProvider.Background3;
                     Icon.Colour = BackgroundColour.Darken(0.5f);
@@ -169,13 +215,20 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                 }
                 else
                 {
-                    BackgroundColour = ComboColours[comboIndexFor(SelectedHitObject.Value, ComboColours)];
+                    BackgroundColour = ComboColours[
+                        comboIndexFor(SelectedHitObject.Value, ComboColours)
+                    ];
                     Icon.Colour = OsuColour.ForegroundTextColourFor(BackgroundColour);
                     Icon.Blending = BlendingParameters.Inherit;
                 }
             }
 
-            public Popover GetPopover() => new ComboColourPalettePopover(ComboColours, SelectedHitObject.Value.AsNonNull(), editorBeatmap);
+            public Popover GetPopover() =>
+                new ComboColourPalettePopover(
+                    ComboColours,
+                    SelectedHitObject.Value.AsNonNull(),
+                    editorBeatmap
+                );
         }
 
         private partial class ComboColourPalettePopover : OsuPopover
@@ -184,7 +237,11 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             private readonly IHasComboInformation hasComboInformation;
             private readonly EditorBeatmap editorBeatmap;
 
-            public ComboColourPalettePopover(IReadOnlyList<Colour4> comboColours, IHasComboInformation hasComboInformation, EditorBeatmap editorBeatmap)
+            public ComboColourPalettePopover(
+                IReadOnlyList<Colour4> comboColours,
+                IHasComboInformation hasComboInformation,
+                EditorBeatmap editorBeatmap
+            )
             {
                 this.comboColours = comboColours;
                 this.hasComboInformation = hasComboInformation;
@@ -215,76 +272,99 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
                 {
                     int index = i;
 
-                    if (getPreviousHitObjectWithCombo(editorBeatmap, hitObject) is IHasComboInformation previousHasCombo
+                    if (
+                        getPreviousHitObjectWithCombo(editorBeatmap, hitObject)
+                            is IHasComboInformation previousHasCombo
                         && index == comboIndexFor(previousHasCombo, comboColours)
-                        && !canReuseLastComboColour(editorBeatmap, hitObject))
+                        && !canReuseLastComboColour(editorBeatmap, hitObject)
+                    )
                     {
                         continue;
                     }
 
-                    container.Add(new OsuClickableContainer
-                    {
-                        Size = new Vector2(50),
-                        Masking = true,
-                        CornerRadius = 25,
-                        Children = new[]
+                    container.Add(
+                        new OsuClickableContainer
                         {
-                            new Box
+                            Size = new Vector2(50),
+                            Masking = true,
+                            CornerRadius = 25,
+                            Children = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = comboColours[index],
-                            },
-                            selectedColourIndex == index
-                                ? new SpriteIcon
+                                new Box
                                 {
-                                    Icon = FontAwesome.Solid.Check,
-                                    Size = new Vector2(24),
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Colour = OsuColour.ForegroundTextColourFor(comboColours[index]),
-                                }
-                                : Empty()
-                        },
-                        Action = () =>
-                        {
-                            int comboDifference = index - selectedColourIndex;
-                            if (comboDifference == 0)
-                                return;
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = comboColours[index],
+                                },
+                                selectedColourIndex == index
+                                    ? new SpriteIcon
+                                    {
+                                        Icon = FontAwesome.Solid.Check,
+                                        Size = new Vector2(24),
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        Colour = OsuColour.ForegroundTextColourFor(
+                                            comboColours[index]
+                                        ),
+                                    }
+                                    : Empty(),
+                            },
+                            Action = () =>
+                            {
+                                int comboDifference = index - selectedColourIndex;
+                                if (comboDifference == 0)
+                                    return;
 
-                            int newOffset = hasComboInformation.ComboOffset + comboDifference;
-                            // `newOffset` must be positive to serialise correctly - this implements the true math "modulus" rather than the built-in "remainder" % op
-                            // which can return negative results when the first operand is negative
-                            newOffset -= (int)Math.Floor((double)newOffset / comboColours.Count) * comboColours.Count;
+                                int newOffset = hasComboInformation.ComboOffset + comboDifference;
+                                // `newOffset` must be positive to serialise correctly - this implements the true math "modulus" rather than the built-in "remainder" % op
+                                // which can return negative results when the first operand is negative
+                                newOffset -=
+                                    (int)Math.Floor((double)newOffset / comboColours.Count)
+                                    * comboColours.Count;
 
-                            hasComboInformation.ComboOffset = newOffset;
-                            editorBeatmap.BeginChange();
-                            editorBeatmap.Update((HitObject)hasComboInformation);
-                            editorBeatmap.EndChange();
-                            this.HidePopover();
+                                hasComboInformation.ComboOffset = newOffset;
+                                editorBeatmap.BeginChange();
+                                editorBeatmap.Update((HitObject)hasComboInformation);
+                                editorBeatmap.EndChange();
+                                this.HidePopover();
+                            },
                         }
-                    });
+                    );
                 }
             }
 
-            private static IHasComboInformation? getPreviousHitObjectWithCombo(EditorBeatmap editorBeatmap, HitObject hitObject)
-                => editorBeatmap.HitObjects.TakeWhile(ho => ho != hitObject).LastOrDefault() as IHasComboInformation;
+            private static IHasComboInformation? getPreviousHitObjectWithCombo(
+                EditorBeatmap editorBeatmap,
+                HitObject hitObject
+            ) =>
+                editorBeatmap.HitObjects.TakeWhile(ho => ho != hitObject).LastOrDefault()
+                as IHasComboInformation;
 
-            private static bool canReuseLastComboColour(EditorBeatmap editorBeatmap, HitObject hitObject)
+            private static bool canReuseLastComboColour(
+                EditorBeatmap editorBeatmap,
+                HitObject hitObject
+            )
             {
-                double? closestBreakEnd = editorBeatmap.Breaks.Select(b => b.EndTime)
-                                                       .Where(t => t <= hitObject.StartTime)
-                                                       .OrderBy(t => t)
-                                                       .LastOrDefault();
+                double? closestBreakEnd = editorBeatmap
+                    .Breaks.Select(b => b.EndTime)
+                    .Where(t => t <= hitObject.StartTime)
+                    .OrderBy(t => t)
+                    .LastOrDefault();
 
                 if (closestBreakEnd == null)
                     return false;
 
-                return editorBeatmap.HitObjects.FirstOrDefault(ho => ho.StartTime >= closestBreakEnd) == hitObject;
+                return editorBeatmap.HitObjects.FirstOrDefault(ho =>
+                        ho.StartTime >= closestBreakEnd
+                    ) == hitObject;
             }
         }
 
         // compare `EditorBeatmapSkin.updateColours()` et al. for reasoning behind the off-by-one index rotation
-        private static int comboIndexFor(IHasComboInformation hasComboInformation, IReadOnlyCollection<Colour4> comboColours)
-            => (hasComboInformation.ComboIndexWithOffsets + comboColours.Count - 1) % comboColours.Count;
+        private static int comboIndexFor(
+            IHasComboInformation hasComboInformation,
+            IReadOnlyCollection<Colour4> comboColours
+        ) =>
+            (hasComboInformation.ComboIndexWithOffsets + comboColours.Count - 1)
+            % comboColours.Count;
     }
 }

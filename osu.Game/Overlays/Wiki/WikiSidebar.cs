@@ -19,22 +19,23 @@ namespace osu.Game.Overlays.Wiki
     {
         private WikiTableOfContents tableOfContents;
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            Direction = FillDirection.Vertical,
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                new OsuSpriteText
+                Direction = FillDirection.Vertical,
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Children = new Drawable[]
                 {
-                    Text = WikiStrings.ShowToc.ToUpper(),
-                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
-                    Margin = new MarginPadding { Bottom = 5 },
+                    new OsuSpriteText
+                    {
+                        Text = WikiStrings.ShowToc.ToUpper(),
+                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
+                        Margin = new MarginPadding { Bottom = 5 },
+                    },
+                    tableOfContents = new WikiTableOfContents(),
                 },
-                tableOfContents = new WikiTableOfContents(),
-            },
-        };
+            };
 
         public void AddEntry(HeadingBlock headingBlock, MarkdownHeading heading)
         {
@@ -42,7 +43,11 @@ namespace osu.Game.Overlays.Wiki
             {
                 case 2:
                 case 3:
-                    tableOfContents.AddEntry(getTitle(headingBlock.Inline), heading, headingBlock.Level == 3);
+                    tableOfContents.AddEntry(
+                        getTitle(headingBlock.Inline),
+                        heading,
+                        headingBlock.Level == 3
+                    );
                     break;
             }
         }

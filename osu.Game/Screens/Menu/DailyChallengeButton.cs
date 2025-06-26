@@ -51,51 +51,64 @@ namespace osu.Game.Screens.Menu
         [Resolved]
         private SessionStatics statics { get; set; } = null!;
 
-        public DailyChallengeButton(string sampleName, Color4 colour, Action<MainMenuButton, UIEvent>? clickAction = null, params Key[] triggerKeys)
-            : base(ButtonSystemStrings.DailyChallenge, sampleName, OsuIcon.DailyChallenge, colour, clickAction, triggerKeys)
+        public DailyChallengeButton(
+            string sampleName,
+            Color4 colour,
+            Action<MainMenuButton, UIEvent>? clickAction = null,
+            params Key[] triggerKeys
+        )
+            : base(
+                ButtonSystemStrings.DailyChallenge,
+                sampleName,
+                OsuIcon.DailyChallenge,
+                colour,
+                clickAction,
+                triggerKeys
+            )
         {
             BaseSize = new Vector2(ButtonSystem.BUTTON_WIDTH * 1.3f, ButtonArea.BUTTON_AREA_HEIGHT);
 
-            Content.Add(countdown = new OsuSpriteText
-            {
-                Shadow = true,
-                AllowMultiline = false,
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-                Margin = new MarginPadding
+            Content.Add(
+                countdown = new OsuSpriteText
                 {
-                    Left = -3,
-                    Bottom = 22,
-                },
-                Font = OsuFont.Default.With(size: 12),
-                Alpha = 0,
-            });
+                    Shadow = true,
+                    AllowMultiline = false,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    Margin = new MarginPadding { Left = -3, Bottom = 22 },
+                    Font = OsuFont.Default.With(size: 12),
+                    Alpha = 0,
+                }
+            );
         }
 
-        protected override Drawable CreateBackground(Colour4 accentColour) => new BufferedContainer
-        {
-            Children = new Drawable[]
+        protected override Drawable CreateBackground(Colour4 accentColour) =>
+            new BufferedContainer
             {
-                cover = new UpdateableOnlineBeatmapSetCover(timeBeforeLoad: 0, timeBeforeUnload: 600_000)
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Y,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
+                    cover = new UpdateableOnlineBeatmapSetCover(
+                        timeBeforeLoad: 0,
+                        timeBeforeUnload: 600_000
+                    )
+                    {
+                        RelativeSizeAxes = Axes.Y,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativePositionAxes = Axes.Both,
+                    },
+                    gradientLayer = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = ColourInfo.GradientVertical(
+                            accentColour.Opacity(0.2f),
+                            accentColour
+                        ),
+                        Blending = BlendingParameters.Additive,
+                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = accentColour.Opacity(0.7f) },
                 },
-                gradientLayer = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = ColourInfo.GradientVertical(accentColour.Opacity(0.2f), accentColour),
-                    Blending = BlendingParameters.Additive,
-                },
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = accentColour.Opacity(0.7f)
-                },
-            },
-        };
+            };
 
         [BackgroundDependencyLoader]
         private void load(MetadataClient metadataClient)
@@ -120,16 +133,19 @@ namespace osu.Game.Screens.Menu
 
                 float scale = 1 + RNG.NextSingle();
 
-                cover.ScaleTo(scale, duration, Easing.InOutSine)
-                     .RotateTo(RNG.NextSingle(-4, 4) * (scale - 1), duration, Easing.InOutSine)
-                     .MoveTo(new Vector2(
-                         RNG.NextSingle(-0.5f, 0.5f) * (scale - 1),
-                         RNG.NextSingle(-0.5f, 0.5f) * (scale - 1)
-                     ), duration, Easing.InOutSine);
+                cover
+                    .ScaleTo(scale, duration, Easing.InOutSine)
+                    .RotateTo(RNG.NextSingle(-4, 4) * (scale - 1), duration, Easing.InOutSine)
+                    .MoveTo(
+                        new Vector2(
+                            RNG.NextSingle(-0.5f, 0.5f) * (scale - 1),
+                            RNG.NextSingle(-0.5f, 0.5f) * (scale - 1)
+                        ),
+                        duration,
+                        Easing.InOutSine
+                    );
 
-                gradientLayer.FadeIn(duration / 2)
-                             .Then()
-                             .FadeOut(duration / 2);
+                gradientLayer.FadeIn(duration / 2).Then().FadeOut(duration / 2);
             }
         }
 
@@ -154,7 +170,8 @@ namespace osu.Game.Screens.Menu
                 roomRequest.Success += room =>
                 {
                     Room = room;
-                    cover.OnlineInfo = TooltipContent = room.Playlist.FirstOrDefault()?.Beatmap.BeatmapSet as APIBeatmapSet;
+                    cover.OnlineInfo = TooltipContent =
+                        room.Playlist.FirstOrDefault()?.Beatmap.BeatmapSet as APIBeatmapSet;
 
                     if (room.StartDate != null && room.RoomID != lastDailyChallengeRoomID)
                     {
@@ -164,7 +181,10 @@ namespace osu.Game.Screens.Menu
                         statics.SetValue(Static.DailyChallengeIntroPlayed, false);
 
                         // we only want to notify the user if the new challenge just went live.
-                        if (Math.Abs((DateTimeOffset.Now - room.StartDate.Value).TotalSeconds) < 1800)
+                        if (
+                            Math.Abs((DateTimeOffset.Now - room.StartDate.Value).TotalSeconds)
+                            < 1800
+                        )
                             notificationOverlay?.Post(new NewDailyChallengeNotification(room));
                     }
 

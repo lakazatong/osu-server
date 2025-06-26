@@ -24,12 +24,13 @@ namespace osu.Game.Rulesets.Taiko.UI
 
         public TaikoMascotAnimation(TaikoMascotAnimationState state)
         {
-            InternalChild = textureAnimation = createTextureAnimation(state).With(animation =>
-            {
-                animation.Origin = animation.Anchor = Anchor.BottomLeft;
-                // matches stable (https://github.com/peppy/osu-stable-reference/blob/e53980dd76857ee899f66ce519ba1597e7874f28/osu!/GameModes/Play/Rulesets/Taiko/TaikoMascot.cs#L34)
-                animation.Scale = new Vector2(0.6f);
-            });
+            InternalChild = textureAnimation = createTextureAnimation(state)
+                .With(animation =>
+                {
+                    animation.Origin = animation.Anchor = Anchor.BottomLeft;
+                    // matches stable (https://github.com/peppy/osu-stable-reference/blob/e53980dd76857ee899f66ce519ba1597e7874f28/osu!/GameModes/Play/Rulesets/Taiko/TaikoMascot.cs#L34)
+                    animation.Scale = new Vector2(0.6f);
+                });
 
             RelativeSizeAxes = Axes.Both;
             Origin = Anchor = Anchor.BottomLeft;
@@ -38,7 +39,9 @@ namespace osu.Game.Rulesets.Taiko.UI
             AlwaysPresent = true;
         }
 
-        public bool Completed => !textureAnimation.IsPlaying || textureAnimation.PlaybackPosition >= textureAnimation.Duration;
+        public bool Completed =>
+            !textureAnimation.IsPlaying
+            || textureAnimation.PlaybackPosition >= textureAnimation.Duration;
 
         public override void Show()
         {
@@ -47,7 +50,12 @@ namespace osu.Game.Rulesets.Taiko.UI
             textureAnimation.Seek(0);
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             // assume that if the animation is playing on its own, it's independent from the beat and doesn't need to be touched.
             if (textureAnimation.FrameCount == 0 || textureAnimation.IsPlaying)
@@ -70,7 +78,10 @@ namespace osu.Game.Rulesets.Taiko.UI
                     return new ManualMascotTextureAnimation(state);
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(state), $"Mascot animations for state {state} are not supported");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(state),
+                        $"Mascot animations for state {state} are not supported"
+                    );
             }
         }
 
@@ -90,7 +101,8 @@ namespace osu.Game.Rulesets.Taiko.UI
             {
                 ISkin? skin = source.FindProvider(s => getAnimationFrame(s, state, 0) != null);
 
-                if (skin == null) return;
+                if (skin == null)
+                    return;
 
                 for (int frameIndex = 0; true; frameIndex++)
                 {
@@ -108,7 +120,24 @@ namespace osu.Game.Rulesets.Taiko.UI
         {
             private const float clear_animation_speed = 1000 / 10f;
 
-            private static readonly int[] clear_animation_sequence = { 0, 1, 2, 3, 4, 5, 6, 5, 6, 5, 4, 3, 2, 1, 0 };
+            private static readonly int[] clear_animation_sequence =
+            {
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                5,
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0,
+            };
 
             public ClearMascotTextureAnimation()
             {
@@ -119,13 +148,20 @@ namespace osu.Game.Rulesets.Taiko.UI
             [BackgroundDependencyLoader]
             private void load(ISkinSource source)
             {
-                ISkin? skin = source.FindProvider(s => getAnimationFrame(s, TaikoMascotAnimationState.Clear, 0) != null);
+                ISkin? skin = source.FindProvider(s =>
+                    getAnimationFrame(s, TaikoMascotAnimationState.Clear, 0) != null
+                );
 
-                if (skin == null) return;
+                if (skin == null)
+                    return;
 
                 foreach (int frameIndex in clear_animation_sequence)
                 {
-                    var texture = getAnimationFrame(skin, TaikoMascotAnimationState.Clear, frameIndex);
+                    var texture = getAnimationFrame(
+                        skin,
+                        TaikoMascotAnimationState.Clear,
+                        frameIndex
+                    );
 
                     if (texture == null)
                         // as per https://osu.ppy.sh/help/wiki/Skinning/osu!taiko#pippidon
@@ -136,9 +172,15 @@ namespace osu.Game.Rulesets.Taiko.UI
             }
         }
 
-        private static Texture? getAnimationFrame(ISkin skin, TaikoMascotAnimationState state, int frameIndex)
+        private static Texture? getAnimationFrame(
+            ISkin skin,
+            TaikoMascotAnimationState state,
+            int frameIndex
+        )
         {
-            var texture = skin.GetTexture($"pippidon{state.ToString().ToLowerInvariant()}{frameIndex}");
+            var texture = skin.GetTexture(
+                $"pippidon{state.ToString().ToLowerInvariant()}{frameIndex}"
+            );
 
             if (frameIndex == 0 && texture == null)
                 texture = skin.GetTexture($"pippidon{state.ToString().ToLowerInvariant()}");

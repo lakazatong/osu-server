@@ -13,18 +13,23 @@ namespace osu.Game.Tournament.Tests
         {
             base.LoadComplete();
 
-            BracketLoadTask.ContinueWith(_ => Schedule(() =>
-            {
-                LoadComponentAsync(new Background("Menu/menu-background-0")
+            BracketLoadTask.ContinueWith(_ =>
+                Schedule(() =>
                 {
-                    Colour = OsuColour.Gray(0.5f),
-                    Depth = 10
-                }, Add);
+                    LoadComponentAsync(
+                        new Background("Menu/menu-background-0")
+                        {
+                            Colour = OsuColour.Gray(0.5f),
+                            Depth = 10,
+                        },
+                        Add
+                    );
 
-                // Have to construct this here, rather than in the constructor, because
-                // we depend on some dependencies to be loaded within OsuGameBase.load().
-                Add(new TestBrowser());
-            }));
+                    // Have to construct this here, rather than in the constructor, because
+                    // we depend on some dependencies to be loaded within OsuGameBase.load().
+                    Add(new TestBrowser());
+                })
+            );
         }
     }
 }

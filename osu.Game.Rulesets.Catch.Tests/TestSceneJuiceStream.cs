@@ -20,32 +20,32 @@ namespace osu.Game.Rulesets.Catch.Tests
             AddUntilStep("player is done", () => !Player.ValidForResume);
         }
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap
-        {
-            BeatmapInfo = new BeatmapInfo
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap
             {
-                Difficulty = new BeatmapDifficulty { CircleSize = 5, SliderMultiplier = 2 },
-                Ruleset = ruleset
-            },
-            HitObjects = new List<HitObject>
-            {
-                new JuiceStream
+                BeatmapInfo = new BeatmapInfo
                 {
-                    X = CatchPlayfield.CENTER_X,
-                    Path = new SliderPath(PathType.LINEAR, new[]
-                    {
-                        Vector2.Zero,
-                        new Vector2(0, 100)
-                    }),
-                    StartTime = 200
+                    Difficulty = new BeatmapDifficulty { CircleSize = 5, SliderMultiplier = 2 },
+                    Ruleset = ruleset,
                 },
-                new Banana
+                HitObjects = new List<HitObject>
                 {
-                    X = CatchPlayfield.CENTER_X,
-                    StartTime = 1000,
-                    NewCombo = true
-                }
-            }
-        };
+                    new JuiceStream
+                    {
+                        X = CatchPlayfield.CENTER_X,
+                        Path = new SliderPath(
+                            PathType.LINEAR,
+                            new[] { Vector2.Zero, new Vector2(0, 100) }
+                        ),
+                        StartTime = 200,
+                    },
+                    new Banana
+                    {
+                        X = CatchPlayfield.CENTER_X,
+                        StartTime = 1000,
+                        NewCombo = true,
+                    },
+                },
+            };
     }
 }

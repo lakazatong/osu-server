@@ -35,16 +35,19 @@ namespace osu.Game.Tests.Visual
         /// Then, encodes the <paramref name="replay"/>, decodes the result of encoding, runs the result of decoding against the supplied <paramref name="beatmap"/>,
         /// and checks that the judgement results recorded still match <paramref name="expectedResults"/>.
         /// </summary>
-        protected void RunTest(IBeatmap beatmap, Replay replay, IEnumerable<HitResult> expectedResults)
+        protected void RunTest(
+            IBeatmap beatmap,
+            Replay replay,
+            IEnumerable<HitResult> expectedResults
+        )
         {
             Score originalScore = null!;
             Score decodedScore = null!;
 
-            AddStep(@"create replay", () => originalScore = new Score
-            {
-                Replay = replay,
-                ScoreInfo = new ScoreInfo()
-            });
+            AddStep(
+                @"create replay",
+                () => originalScore = new Score { Replay = replay, ScoreInfo = new ScoreInfo() }
+            );
 
             AddStep(@"set beatmap", () => Beatmap.Value = CreateWorkingBeatmap(beatmap));
             AddStep(@"set ruleset", () => Ruleset.Value = beatmap.BeatmapInfo.Ruleset);
@@ -53,28 +56,39 @@ namespace osu.Game.Tests.Visual
             AddUntilStep(@"wait until player is loaded", () => currentPlayer.IsCurrentScreen());
             skipIntroIfPresent();
             AddUntilStep(@"wait for completion", () => currentPlayer.GameplayState.HasCompleted);
-            AddAssert(@"judgement results before encode are correct", () => results.Select(r => r.Type), () => Is.EquivalentTo(expectedResults));
+            AddAssert(
+                @"judgement results before encode are correct",
+                () => results.Select(r => r.Type),
+                () => Is.EquivalentTo(expectedResults)
+            );
 
             AddStep(@"exit player", () => currentPlayer.Exit());
 
-            AddStep(@"encode and decode score", () =>
-            {
-                var encoder = new LegacyScoreEncoder(originalScore, beatmap);
-
-                using (var stream = new MemoryStream())
+            AddStep(
+                @"encode and decode score",
+                () =>
                 {
-                    encoder.Encode(stream, leaveOpen: true);
-                    stream.Position = 0;
-                    decodedScore = new TestScoreDecoder(Beatmap.Value).Parse(stream);
+                    var encoder = new LegacyScoreEncoder(originalScore, beatmap);
+
+                    using (var stream = new MemoryStream())
+                    {
+                        encoder.Encode(stream, leaveOpen: true);
+                        stream.Position = 0;
+                        decodedScore = new TestScoreDecoder(Beatmap.Value).Parse(stream);
+                    }
                 }
-            });
+            );
 
             AddStep(@"push player", () => pushNewPlayer(decodedScore));
 
             AddUntilStep(@"Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
             skipIntroIfPresent();
             AddUntilStep(@"Wait for completion", () => currentPlayer.GameplayState.HasCompleted);
-            AddAssert(@"judgement results after encode are correct", () => results.Select(r => r.Type), () => Is.EquivalentTo(expectedResults));
+            AddAssert(
+                @"judgement results after encode are correct",
+                () => results.Select(r => r.Type),
+                () => Is.EquivalentTo(expectedResults)
+            );
         }
 
         private void pushNewPlayer(Score score)
@@ -93,11 +107,17 @@ namespace osu.Game.Tests.Visual
         }
 
         private void skipIntroIfPresent() =>
-            AddStep(@"skip intro if present", () =>
-            {
-                if (currentPlayer.ChildrenOfType<GameplayClockContainer>().Single().CurrentTime < 0)
-                    currentPlayer.Seek(0);
-            });
+            AddStep(
+                @"skip intro if present",
+                () =>
+                {
+                    if (
+                        currentPlayer.ChildrenOfType<GameplayClockContainer>().Single().CurrentTime
+                        < 0
+                    )
+                        currentPlayer.Seek(0);
+                }
+            );
 
         private class TestScoreDecoder : LegacyScoreDecoder
         {
@@ -108,7 +128,9 @@ namespace osu.Game.Tests.Visual
                 this.beatmap = beatmap;
             }
 
-            protected override Ruleset GetRuleset(int rulesetId) => beatmap.BeatmapInfo.Ruleset.CreateInstance();
+            protected override Ruleset GetRuleset(int rulesetId) =>
+                beatmap.BeatmapInfo.Ruleset.CreateInstance();
+
             protected override WorkingBeatmap GetBeatmap(string md5Hash) => beatmap;
         }
     }

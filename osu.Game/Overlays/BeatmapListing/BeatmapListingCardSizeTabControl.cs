@@ -30,16 +30,18 @@ namespace osu.Game.Overlays.BeatmapListing
 
         protected override bool AddEnumEntriesAutomatically => false;
 
-        protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(10, 0),
-        };
+        protected override TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(10, 0),
+            };
 
         protected override Dropdown<BeatmapCardSize> CreateDropdown() => null;
 
-        protected override TabItem<BeatmapCardSize> CreateTabItem(BeatmapCardSize value) => new TabItem(value);
+        protected override TabItem<BeatmapCardSize> CreateTabItem(BeatmapCardSize value) =>
+            new TabItem(value);
 
         private partial class TabItem : TabItem<BeatmapCardSize>
         {
@@ -52,9 +54,7 @@ namespace osu.Game.Overlays.BeatmapListing
             private Sample selectSample = null!;
 
             public TabItem(BeatmapCardSize value)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             [BackgroundDependencyLoader]
             private void load(AudioManager audio)
@@ -67,23 +67,20 @@ namespace osu.Game.Overlays.BeatmapListing
                     background = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background3
+                        Colour = colourProvider.Background3,
                     },
                     new Container
                     {
                         AutoSizeAxes = Axes.Both,
-                        Padding = new MarginPadding
-                        {
-                            Horizontal = 10,
-                            Vertical = 5,
-                        },
-                        Child = icon = new SpriteIcon
-                        {
-                            Size = new Vector2(12),
-                            Icon = getIconForCardSize(Value)
-                        }
+                        Padding = new MarginPadding { Horizontal = 10, Vertical = 5 },
+                        Child = icon =
+                            new SpriteIcon
+                            {
+                                Size = new Vector2(12),
+                                Icon = getIconForCardSize(Value),
+                            },
                     },
-                    new HoverSounds(HoverSampleSet.TabSelect)
+                    new HoverSounds(HoverSampleSet.TabSelect),
                 };
 
                 selectSample = audio.Samples.Get(@"UI/tabselect-select");
@@ -100,7 +97,11 @@ namespace osu.Game.Overlays.BeatmapListing
                         return FontAwesome.Solid.ThLarge;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(cardSize), cardSize, "Unsupported card size");
+                        throw new ArgumentOutOfRangeException(
+                            nameof(cardSize),
+                            cardSize,
+                            "Unsupported card size"
+                        );
                 }
             }
 
@@ -142,7 +143,11 @@ namespace osu.Game.Overlays.BeatmapListing
             private void updateState()
             {
                 background.FadeTo(IsHovered || Active.Value ? 1 : 0, fade_time, Easing.OutQuint);
-                icon.FadeColour(Active.Value && !IsHovered ? colourProvider.Light1 : colourProvider.Content1, fade_time, Easing.OutQuint);
+                icon.FadeColour(
+                    Active.Value && !IsHovered ? colourProvider.Light1 : colourProvider.Content1,
+                    fade_time,
+                    Easing.OutQuint
+                );
             }
         }
     }

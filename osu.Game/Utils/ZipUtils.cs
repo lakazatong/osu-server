@@ -19,9 +19,7 @@ namespace osu.Game.Utils
                 {
                     foreach (var entry in arc.Entries)
                     {
-                        using (entry.OpenEntryStream())
-                        {
-                        }
+                        using (entry.OpenEntryStream()) { }
                     }
                 }
 
@@ -48,9 +46,7 @@ namespace osu.Game.Utils
                 {
                     foreach (var entry in arc.Entries)
                     {
-                        using (entry.OpenEntryStream())
-                        {
-                        }
+                        using (entry.OpenEntryStream()) { }
                     }
                 }
 

@@ -28,7 +28,8 @@ namespace osu.Game.Overlays.Changelog
         {
             var currentDate = DateTime.MinValue;
 
-            if (entries == null) return;
+            if (entries == null)
+                return;
 
             foreach (var build in entries)
             {
@@ -36,40 +37,49 @@ namespace osu.Game.Overlays.Changelog
                 {
                     if (Children.Count != 0)
                     {
-                        Add(new Box
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 2,
-                            Colour = colourProvider.Background6,
-                            Margin = new MarginPadding { Top = 30 },
-                        });
+                        Add(
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Height = 2,
+                                Colour = colourProvider.Background6,
+                                Margin = new MarginPadding { Top = 30 },
+                            }
+                        );
                     }
 
-                    Add(new OsuSpriteText
-                    {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Margin = new MarginPadding { Top = 20 },
-                        Text = build.CreatedAt.Date.ToLocalisableString("dd MMMM yyyy"),
-                        Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 24),
-                    });
+                    Add(
+                        new OsuSpriteText
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Margin = new MarginPadding { Top = 20 },
+                            Text = build.CreatedAt.Date.ToLocalisableString("dd MMMM yyyy"),
+                            Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 24),
+                        }
+                    );
 
                     currentDate = build.CreatedAt.Date;
                 }
                 else
                 {
-                    Add(new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 1,
-                        Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING },
-                        Margin = new MarginPadding { Top = 30 },
-                        Child = new Box
+                    Add(
+                        new Container
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colourProvider.Background6,
+                            RelativeSizeAxes = Axes.X,
+                            Height = 1,
+                            Padding = new MarginPadding
+                            {
+                                Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                            },
+                            Margin = new MarginPadding { Top = 30 },
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = colourProvider.Background6,
+                            },
                         }
-                    });
+                    );
                 }
 
                 Add(new ChangelogBuild(build) { SelectBuild = SelectBuild });

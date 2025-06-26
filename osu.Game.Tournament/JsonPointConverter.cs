@@ -21,7 +21,13 @@ namespace osu.Game.Tournament
             serializer.Serialize(writer, new { value.X, value.Y });
         }
 
-        public override Point ReadJson(JsonReader reader, Type objectType, Point existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Point ReadJson(
+            JsonReader reader,
+            Type objectType,
+            Point existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
             if (reader.TokenType != JsonToken.StartObject)
             {
@@ -32,14 +38,20 @@ namespace osu.Game.Tournament
 
                 // Null check suppression is required due to .NET standard expecting a non-null context.
                 // Seems to work fine at a runtime level (and the parameter is nullable in .NET 6+).
-                return new PointConverter().ConvertFromString(null!, CultureInfo.InvariantCulture, str) as Point? ?? new Point();
+                return new PointConverter().ConvertFromString(
+                        null!,
+                        CultureInfo.InvariantCulture,
+                        str
+                    ) as Point?
+                    ?? new Point();
             }
 
             var point = new Point();
 
             while (reader.Read())
             {
-                if (reader.TokenType == JsonToken.EndObject) break;
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
 
                 if (reader.TokenType == JsonToken.PropertyName)
                 {

@@ -13,7 +13,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneRankingsHeader : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         public TestSceneRankingsHeader()
         {
@@ -21,12 +23,14 @@ namespace osu.Game.Tests.Visual.Online
             var ruleset = new Bindable<RulesetInfo>();
             var scope = new Bindable<RankingsScope>();
 
-            Add(new RankingsOverlayHeader
-            {
-                Current = { BindTarget = scope },
-                Country = { BindTarget = countryBindable },
-                Ruleset = { BindTarget = ruleset }
-            });
+            Add(
+                new RankingsOverlayHeader
+                {
+                    Current = { BindTarget = scope },
+                    Country = { BindTarget = countryBindable },
+                    Ruleset = { BindTarget = ruleset },
+                }
+            );
 
             const CountryCode country = CountryCode.BY;
             const CountryCode unknown_country = CountryCode.CK;

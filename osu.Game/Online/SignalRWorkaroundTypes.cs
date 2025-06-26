@@ -17,7 +17,10 @@ namespace osu.Game.Online
     /// <seealso cref="SignalRDerivedTypeWorkaroundJsonConverter"/>
     internal static class SignalRWorkaroundTypes
     {
-        internal static readonly IReadOnlyList<(Type derivedType, Type baseType)> BASE_TYPE_MAPPING = new[]
+        internal static readonly IReadOnlyList<(
+            Type derivedType,
+            Type baseType
+        )> BASE_TYPE_MAPPING = new[]
         {
             // multiplayer
             (typeof(ChangeTeamRequest), typeof(MatchUserRequest)),
@@ -30,7 +33,6 @@ namespace osu.Game.Online
             (typeof(MatchStartCountdown), typeof(MultiplayerCountdown)),
             (typeof(ForceGameplayStartCountdown), typeof(MultiplayerCountdown)),
             (typeof(ServerShuttingDownCountdown), typeof(MultiplayerCountdown)),
-
             // metadata
             (typeof(UserActivity.ChoosingBeatmap), typeof(UserActivity)),
             (typeof(UserActivity.InSoloGame), typeof(UserActivity)),

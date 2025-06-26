@@ -92,12 +92,19 @@ namespace osu.Game.Screens.Edit
 
         private readonly IBeatmapProcessor beatmapProcessor;
 
-        private readonly Dictionary<HitObject, Bindable<double>> startTimeBindables = new Dictionary<HitObject, Bindable<double>>();
+        private readonly Dictionary<HitObject, Bindable<double>> startTimeBindables =
+            new Dictionary<HitObject, Bindable<double>>();
 
-        public EditorBeatmap(IBeatmap playableBeatmap, ISkin beatmapSkin = null, BeatmapInfo beatmapInfo = null)
+        public EditorBeatmap(
+            IBeatmap playableBeatmap,
+            ISkin beatmapSkin = null,
+            BeatmapInfo beatmapInfo = null
+        )
         {
             PlayableBeatmap = playableBeatmap;
-            PlayableBeatmap.ControlPointInfo = ConvertControlPoints(PlayableBeatmap.ControlPointInfo);
+            PlayableBeatmap.ControlPointInfo = ConvertControlPoints(
+                PlayableBeatmap.ControlPointInfo
+            );
 
             this.beatmapInfo = beatmapInfo ?? playableBeatmap.BeatmapInfo;
 
@@ -107,25 +114,32 @@ namespace osu.Game.Screens.Edit
                 BeatmapSkin.BeatmapSkinChanged += SaveState;
             }
 
-            beatmapProcessor = new EditorBeatmapProcessor(this, playableBeatmap.BeatmapInfo.Ruleset.CreateInstance());
+            beatmapProcessor = new EditorBeatmapProcessor(
+                this,
+                playableBeatmap.BeatmapInfo.Ruleset.CreateInstance()
+            );
 
             foreach (var obj in HitObjects)
                 trackStartTime(obj);
 
             Breaks = new BindableList<BreakPeriod>(playableBeatmap.Breaks);
-            Breaks.BindCollectionChanged((_, _) =>
-            {
-                playableBeatmap.Breaks.Clear();
-                playableBeatmap.Breaks.AddRange(Breaks);
-            });
+            Breaks.BindCollectionChanged(
+                (_, _) =>
+                {
+                    playableBeatmap.Breaks.Clear();
+                    playableBeatmap.Breaks.AddRange(Breaks);
+                }
+            );
 
             Bookmarks = new BindableList<int>(playableBeatmap.Bookmarks);
-            Bookmarks.BindCollectionChanged((_, _) =>
-            {
-                BeginChange();
-                playableBeatmap.Bookmarks = Bookmarks.OrderBy(x => x).Distinct().ToArray();
-                EndChange();
-            });
+            Bookmarks.BindCollectionChanged(
+                (_, _) =>
+                {
+                    BeginChange();
+                    playableBeatmap.Bookmarks = Bookmarks.OrderBy(x => x).Distinct().ToArray();
+                    EndChange();
+                }
+            );
 
             PreviewTime = new BindableInt(BeatmapInfo.Metadata.PreviewTime);
             PreviewTime.BindValueChanged(s =>
@@ -174,7 +188,10 @@ namespace osu.Game.Screens.Edit
         public BeatmapInfo BeatmapInfo
         {
             get => beatmapInfo;
-            set => throw new InvalidOperationException($"Can't set {nameof(BeatmapInfo)} on {nameof(EditorBeatmap)}");
+            set =>
+                throw new InvalidOperationException(
+                    $"Can't set {nameof(BeatmapInfo)} on {nameof(EditorBeatmap)}"
+                );
         }
 
         public BeatmapMetadata Metadata => beatmapInfo.Metadata;
@@ -346,7 +363,10 @@ namespace osu.Game.Screens.Edit
         public void Add(HitObject hitObject)
         {
             // Preserve existing sorting order in the beatmap
-            int insertionIndex = findInsertionIndex(PlayableBeatmap.HitObjects, hitObject.StartTime);
+            int insertionIndex = findInsertionIndex(
+                PlayableBeatmap.HitObjects,
+                hitObject.StartTime
+            );
             Insert(insertionIndex + 1, hitObject);
         }
 
@@ -453,12 +473,19 @@ namespace osu.Game.Screens.Edit
             if (batchPendingUpdates.Count > 0)
                 UpdateState();
 
-            hasTiming.Value = !ReferenceEquals(ControlPointInfo.TimingPointAt(editorClock.CurrentTime), TimingControlPoint.DEFAULT);
+            hasTiming.Value = !ReferenceEquals(
+                ControlPointInfo.TimingPointAt(editorClock.CurrentTime),
+                TimingControlPoint.DEFAULT
+            );
         }
 
         protected override void UpdateState()
         {
-            if (batchPendingUpdates.Count == 0 && batchPendingDeletes.Count == 0 && batchPendingInserts.Count == 0)
+            if (
+                batchPendingUpdates.Count == 0
+                && batchPendingDeletes.Count == 0
+                && batchPendingInserts.Count == 0
+            )
                 return;
 
             // if the user is doing edits to this beatmaps via this flow, we better bump the beatmap version
@@ -467,9 +494,12 @@ namespace osu.Game.Screens.Edit
             BeatmapVersion = LegacyBeatmapEncoder.FIRST_LAZER_VERSION;
             beatmapProcessor.PreProcess();
 
-            foreach (var h in batchPendingDeletes) processHitObject(h);
-            foreach (var h in batchPendingInserts) processHitObject(h);
-            foreach (var h in batchPendingUpdates) processHitObject(h);
+            foreach (var h in batchPendingDeletes)
+                processHitObject(h);
+            foreach (var h in batchPendingInserts)
+                processHitObject(h);
+            foreach (var h in batchPendingUpdates)
+                processHitObject(h);
 
             beatmapProcessor.PostProcess();
 
@@ -485,11 +515,15 @@ namespace osu.Game.Screens.Edit
             var updates = batchPendingUpdates.ToArray();
             batchPendingUpdates.Clear();
 
-            foreach (var h in deletes) SelectedHitObjects.Remove(h);
+            foreach (var h in deletes)
+                SelectedHitObjects.Remove(h);
 
-            foreach (var h in deletes) HitObjectRemoved?.Invoke(h);
-            foreach (var h in inserts) HitObjectAdded?.Invoke(h);
-            foreach (var h in updates) HitObjectUpdated?.Invoke(h);
+            foreach (var h in deletes)
+                HitObjectRemoved?.Invoke(h);
+            foreach (var h in inserts)
+                HitObjectAdded?.Invoke(h);
+            foreach (var h in updates)
+                HitObjectUpdated?.Invoke(h);
 
             updateInProgress.Value = false;
         }
@@ -499,7 +533,8 @@ namespace osu.Game.Screens.Edit
         /// </summary>
         public void Clear() => RemoveRange(HitObjects.ToArray());
 
-        private void processHitObject(HitObject hitObject) => hitObject.ApplyDefaults(ControlPointInfo, PlayableBeatmap.Difficulty);
+        private void processHitObject(HitObject hitObject) =>
+            hitObject.ApplyDefaults(ControlPointInfo, PlayableBeatmap.Difficulty);
 
         private void trackStartTime(HitObject hitObject)
         {
@@ -509,7 +544,10 @@ namespace osu.Game.Screens.Edit
                 // For now we'll remove and re-add the hitobject. This is not optimal and can be improved if required.
                 mutableHitObjects.Remove(hitObject);
 
-                int insertionIndex = findInsertionIndex(PlayableBeatmap.HitObjects, hitObject.StartTime);
+                int insertionIndex = findInsertionIndex(
+                    PlayableBeatmap.HitObjects,
+                    hitObject.StartTime
+                );
                 mutableHitObjects.Insert(insertionIndex + 1, hitObject);
 
                 Update(hitObject);
@@ -527,9 +565,11 @@ namespace osu.Game.Screens.Edit
             return list.Count - 1;
         }
 
-        public double SnapTime(double time, double? referenceTime) => ControlPointInfo.GetClosestSnappedTime(time, BeatDivisor, referenceTime);
+        public double SnapTime(double time, double? referenceTime) =>
+            ControlPointInfo.GetClosestSnappedTime(time, BeatDivisor, referenceTime);
 
-        public double GetBeatLengthAtTime(double referenceTime) => ControlPointInfo.TimingPointAt(referenceTime).BeatLength / BeatDivisor;
+        public double GetBeatLengthAtTime(double referenceTime) =>
+            ControlPointInfo.TimingPointAt(referenceTime).BeatLength / BeatDivisor;
 
         public int BeatDivisor => beatDivisor?.Value ?? 1;
     }

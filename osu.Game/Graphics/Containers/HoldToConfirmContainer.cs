@@ -90,11 +90,18 @@ namespace osu.Game.Graphics.Containers
         /// </remarks>
         protected void BeginConfirm()
         {
-            if (confirming || (!AllowMultipleFires && Fired)) return;
+            if (confirming || (!AllowMultipleFires && Fired))
+                return;
 
             confirming = true;
 
-            this.TransformBindableTo(progress, 1, holdActivationDelay.Value * (1 - progress.Value), Easing.Out).OnComplete(_ => Confirm());
+            this.TransformBindableTo(
+                    progress,
+                    1,
+                    holdActivationDelay.Value * (1 - progress.Value),
+                    Easing.Out
+                )
+                .OnComplete(_ => Confirm());
         }
 
         /// <summary>
@@ -102,13 +109,13 @@ namespace osu.Game.Graphics.Containers
         /// </summary>
         protected virtual void AbortConfirm()
         {
-            if (!confirming || (!AllowMultipleFires && Fired)) return;
+            if (!confirming || (!AllowMultipleFires && Fired))
+                return;
 
             confirming = false;
             Fired = false;
 
-            this
-                .TransformBindableTo(progress, progress.Value)
+            this.TransformBindableTo(progress, progress.Value)
                 .Delay(200)
                 .TransformBindableTo(progress, 0, fadeout_delay, Easing.InSine);
         }

@@ -32,15 +32,17 @@ namespace osu.Game.Rulesets.Edit.Checks
         private const int warning_threshold_objects = 4;
         private const int problem_threshold_objects = 16;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Audio, "Few or no hitsounds");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Audio, "Few or no hitsounds");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateLongPeriodProblem(this),
-            new IssueTemplateLongPeriodWarning(this),
-            new IssueTemplateLongPeriodNegligible(this),
-            new IssueTemplateNoHitsounds(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateLongPeriodProblem(this),
+                new IssueTemplateLongPeriodWarning(this),
+                new IssueTemplateLongPeriodNegligible(this),
+                new IssueTemplateNoHitsounds(this),
+            };
 
         private bool mapHasHitsounds;
         private int objectsWithoutHitsounds;
@@ -66,7 +68,9 @@ namespace osu.Game.Rulesets.Edit.Checks
                 hitObjectsIncludingNested.Add(hitObject);
             }
 
-            var hitObjectsByEndTime = hitObjectsIncludingNested.OrderBy(o => o.GetEndTime()).ToList();
+            var hitObjectsByEndTime = hitObjectsIncludingNested
+                .OrderBy(o => o.GetEndTime())
+                .ToList();
             int hitObjectCount = hitObjectsByEndTime.Count;
 
             for (int i = 0; i < hitObjectCount; ++i)
@@ -84,7 +88,10 @@ namespace osu.Game.Rulesets.Edit.Checks
                 yield return new IssueTemplateNoHitsounds(this).Create();
         }
 
-        private IEnumerable<Issue> applyHitsoundUpdate(HitObject hitObject, bool isLastObject = false)
+        private IEnumerable<Issue> applyHitsoundUpdate(
+            HitObject hitObject,
+            bool isLastObject = false
+        )
         {
             double time = hitObject.GetEndTime();
             bool hasHitsound = hitObject.Samples.Any(isHitsound);
@@ -96,12 +103,30 @@ namespace osu.Game.Rulesets.Edit.Checks
             {
                 double timeWithoutHitsounds = time - lastHitsoundTime;
 
-                if (timeWithoutHitsounds > problem_threshold_time && objectsWithoutHitsounds > problem_threshold_objects)
-                    yield return new IssueTemplateLongPeriodProblem(this).Create(lastHitsoundTime, timeWithoutHitsounds);
-                else if (timeWithoutHitsounds > warning_threshold_time && objectsWithoutHitsounds > warning_threshold_objects)
-                    yield return new IssueTemplateLongPeriodWarning(this).Create(lastHitsoundTime, timeWithoutHitsounds);
-                else if (timeWithoutHitsounds > negligible_threshold_time && objectsWithoutHitsounds > warning_threshold_objects)
-                    yield return new IssueTemplateLongPeriodNegligible(this).Create(lastHitsoundTime, timeWithoutHitsounds);
+                if (
+                    timeWithoutHitsounds > problem_threshold_time
+                    && objectsWithoutHitsounds > problem_threshold_objects
+                )
+                    yield return new IssueTemplateLongPeriodProblem(this).Create(
+                        lastHitsoundTime,
+                        timeWithoutHitsounds
+                    );
+                else if (
+                    timeWithoutHitsounds > warning_threshold_time
+                    && objectsWithoutHitsounds > warning_threshold_objects
+                )
+                    yield return new IssueTemplateLongPeriodWarning(this).Create(
+                        lastHitsoundTime,
+                        timeWithoutHitsounds
+                    );
+                else if (
+                    timeWithoutHitsounds > negligible_threshold_time
+                    && objectsWithoutHitsounds > warning_threshold_objects
+                )
+                    yield return new IssueTemplateLongPeriodNegligible(this).Create(
+                        lastHitsoundTime,
+                        timeWithoutHitsounds
+                    );
             }
 
             if (hasHitsound)
@@ -114,49 +139,43 @@ namespace osu.Game.Rulesets.Edit.Checks
                 ++objectsWithoutHitsounds;
         }
 
-        private bool isHitsound(HitSampleInfo sample) => HitSampleInfo.ALL_ADDITIONS.Any(sample.Name.Contains);
-        private bool isHitnormal(HitSampleInfo sample) => sample.Name.Contains(HitSampleInfo.HIT_NORMAL);
+        private bool isHitsound(HitSampleInfo sample) =>
+            HitSampleInfo.ALL_ADDITIONS.Any(sample.Name.Contains);
+
+        private bool isHitnormal(HitSampleInfo sample) =>
+            sample.Name.Contains(HitSampleInfo.HIT_NORMAL);
 
         public abstract class IssueTemplateLongPeriod : IssueTemplate
         {
             protected IssueTemplateLongPeriod(ICheck check, IssueType type)
-                : base(check, type, "Long period without hitsounds ({0:F1} seconds).")
-            {
-            }
+                : base(check, type, "Long period without hitsounds ({0:F1} seconds).") { }
 
-            public Issue Create(double time, double duration) => new Issue(this, duration / 1000f) { Time = time };
+            public Issue Create(double time, double duration) =>
+                new Issue(this, duration / 1000f) { Time = time };
         }
 
         public class IssueTemplateLongPeriodProblem : IssueTemplateLongPeriod
         {
             public IssueTemplateLongPeriodProblem(ICheck check)
-                : base(check, IssueType.Problem)
-            {
-            }
+                : base(check, IssueType.Problem) { }
         }
 
         public class IssueTemplateLongPeriodWarning : IssueTemplateLongPeriod
         {
             public IssueTemplateLongPeriodWarning(ICheck check)
-                : base(check, IssueType.Warning)
-            {
-            }
+                : base(check, IssueType.Warning) { }
         }
 
         public class IssueTemplateLongPeriodNegligible : IssueTemplateLongPeriod
         {
             public IssueTemplateLongPeriodNegligible(ICheck check)
-                : base(check, IssueType.Negligible)
-            {
-            }
+                : base(check, IssueType.Negligible) { }
         }
 
         public class IssueTemplateNoHitsounds : IssueTemplate
         {
             public IssueTemplateNoHitsounds(ICheck check)
-                : base(check, IssueType.Problem, "There are no hitsounds.")
-            {
-            }
+                : base(check, IssueType.Problem, "There are no hitsounds.") { }
 
             public Issue Create() => new Issue(this);
         }

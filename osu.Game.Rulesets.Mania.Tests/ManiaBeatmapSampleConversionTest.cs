@@ -16,7 +16,8 @@ using osu.Game.Tests.Beatmaps;
 namespace osu.Game.Rulesets.Mania.Tests
 {
     [TestFixture]
-    public class ManiaBeatmapSampleConversionTest : BeatmapConversionTest<ConvertMapping<SampleConvertValue>, SampleConvertValue>
+    public class ManiaBeatmapSampleConversionTest
+        : BeatmapConversionTest<ConvertMapping<SampleConvertValue>, SampleConvertValue>
     {
         protected override string ResourceAssembly => "osu.Game.Rulesets.Mania.Tests";
 
@@ -33,16 +34,16 @@ namespace osu.Game.Rulesets.Mania.Tests
                 EndTime = hitObject.GetEndTime(),
                 Column = ((ManiaHitObject)hitObject).Column,
                 Samples = getSampleNames(hitObject.Samples),
-                NodeSamples = getNodeSampleNames((hitObject as HoldNote)?.NodeSamples)
+                NodeSamples = getNodeSampleNames((hitObject as HoldNote)?.NodeSamples),
             };
         }
 
-        private IList<string> getSampleNames(IList<HitSampleInfo> hitSampleInfo)
-            => hitSampleInfo.Select(sample => sample.LookupNames.First()).ToList();
+        private IList<string> getSampleNames(IList<HitSampleInfo> hitSampleInfo) =>
+            hitSampleInfo.Select(sample => sample.LookupNames.First()).ToList();
 
-        private IList<IList<string>> getNodeSampleNames(IList<IList<HitSampleInfo>> hitSampleInfo)
-            => hitSampleInfo?.Select(getSampleNames)
-                            .ToList();
+        private IList<IList<string>> getNodeSampleNames(
+            IList<IList<HitSampleInfo>> hitSampleInfo
+        ) => hitSampleInfo?.Select(getSampleNames).ToList();
 
         protected override Ruleset CreateRuleset() => new ManiaRuleset();
     }
@@ -60,16 +61,21 @@ namespace osu.Game.Rulesets.Mania.Tests
         public IList<string> Samples;
         public IList<IList<string>> NodeSamples;
 
-        public bool Equals(SampleConvertValue other)
-            => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
-               && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
-               && samplesEqual(Samples, other.Samples)
-               && nodeSamplesEqual(NodeSamples, other.NodeSamples);
+        public bool Equals(SampleConvertValue other) =>
+            Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
+            && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
+            && samplesEqual(Samples, other.Samples)
+            && nodeSamplesEqual(NodeSamples, other.NodeSamples);
 
-        private static bool samplesEqual(ICollection<string> firstSampleList, ICollection<string> secondSampleList)
-            => firstSampleList.SequenceEqual(secondSampleList);
+        private static bool samplesEqual(
+            ICollection<string> firstSampleList,
+            ICollection<string> secondSampleList
+        ) => firstSampleList.SequenceEqual(secondSampleList);
 
-        private static bool nodeSamplesEqual(ICollection<IList<string>> firstSampleList, ICollection<IList<string>> secondSampleList)
+        private static bool nodeSamplesEqual(
+            ICollection<IList<string>> firstSampleList,
+            ICollection<IList<string>> secondSampleList
+        )
         {
             if (firstSampleList == null && secondSampleList == null)
                 return true;
@@ -79,9 +85,10 @@ namespace osu.Game.Rulesets.Mania.Tests
                 return false;
 
             return firstSampleList.Count == secondSampleList.Count
-                   // cannot use .Zip() without the selector function as it doesn't compile in android test project
-                   && firstSampleList.Zip(secondSampleList, (first, second) => (first, second))
-                                     .All(samples => samples.first.SequenceEqual(samples.second));
+                // cannot use .Zip() without the selector function as it doesn't compile in android test project
+                && firstSampleList
+                    .Zip(secondSampleList, (first, second) => (first, second))
+                    .All(samples => samples.first.SequenceEqual(samples.second));
         }
     }
 }

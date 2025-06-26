@@ -65,7 +65,9 @@ namespace osu.Game.Screens.Play
                             Spacing = new Vector2(0, 2),
                             Children = new[]
                             {
-                                new TextFlowContainer(t => t.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 17))
+                                new TextFlowContainer(t =>
+                                    t.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 17)
+                                )
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
@@ -76,11 +78,11 @@ namespace osu.Game.Screens.Play
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
                                     Text = content,
-                                }
-                            }
-                        }
-                    }
-                }
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 

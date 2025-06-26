@@ -32,71 +32,93 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestMaximumDistanceTrackingWithoutMovement(
             [Values(0, 5, 10)] float circleSize,
-            [Values(0, 5, 10)] double velocity)
+            [Values(0, 5, 10)] double velocity
+        )
         {
             const double time_slider_start = 1000;
 
-            float circleRadius = OsuHitObject.OBJECT_RADIUS * LegacyRulesetExtensions.CalculateScaleFromCircleSize(circleSize, true);
+            float circleRadius =
+                OsuHitObject.OBJECT_RADIUS
+                * LegacyRulesetExtensions.CalculateScaleFromCircleSize(circleSize, true);
             float followCircleRadius = circleRadius * 1.2f;
 
-            performTest(new Beatmap<OsuHitObject>
-            {
-                HitObjects =
+            performTest(
+                new Beatmap<OsuHitObject>
                 {
-                    new Slider
+                    HitObjects =
                     {
-                        StartTime = time_slider_start,
-                        Position = new Vector2(0, 0),
-                        SliderVelocityMultiplier = velocity,
-                        Path = new SliderPath(PathType.LINEAR, new[]
+                        new Slider
                         {
-                            Vector2.Zero,
-                            new Vector2(followCircleRadius, 0),
-                        }, followCircleRadius),
+                            StartTime = time_slider_start,
+                            Position = new Vector2(0, 0),
+                            SliderVelocityMultiplier = velocity,
+                            Path = new SliderPath(
+                                PathType.LINEAR,
+                                new[] { Vector2.Zero, new Vector2(followCircleRadius, 0) },
+                                followCircleRadius
+                            ),
+                        },
                     },
-                },
-                BeatmapInfo =
-                {
-                    Difficulty = new BeatmapDifficulty
+                    BeatmapInfo =
                     {
-                        CircleSize = circleSize,
-                        SliderTickRate = 1
+                        Difficulty = new BeatmapDifficulty
+                        {
+                            CircleSize = circleSize,
+                            SliderTickRate = 1,
+                        },
+                        Ruleset = new OsuRuleset().RulesetInfo,
                     },
-                    Ruleset = new OsuRuleset().RulesetInfo
                 },
-            }, new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(-circleRadius + 1, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-            });
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(-circleRadius + 1, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                }
+            );
 
             AddAssert("Tracking kept", assertMaxJudge);
         }
 
-        private bool assertMaxJudge() => judgementResults?.Any() == true && judgementResults.All(t => t.Type == t.Judgement.MaxResult);
+        private bool assertMaxJudge() =>
+            judgementResults?.Any() == true
+            && judgementResults.All(t => t.Type == t.Judgement.MaxResult);
 
         private void performTest(Beatmap<OsuHitObject> beatmap, List<ReplayFrame> frames)
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(beatmap);
-
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
-
-                p.OnLoadComplete += _ =>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    p.ScoreProcessor.NewJudgement += result =>
-                    {
-                        if (currentPlayer == p) judgementResults?.Add(result);
-                    };
-                };
+                    Beatmap.Value = CreateWorkingBeatmap(beatmap);
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
+
+                    p.OnLoadComplete += _ =>
+                    {
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults?.Add(result);
+                        };
+                    };
+
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
-            AddUntilStep("Wait for completion", () => currentPlayer?.ScoreProcessor.HasCompleted.Value == true);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer?.ScoreProcessor.HasCompleted.Value == true
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -106,13 +128,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

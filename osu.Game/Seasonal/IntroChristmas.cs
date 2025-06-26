@@ -24,7 +24,8 @@ namespace osu.Game.Seasonal
     public partial class IntroChristmas : IntroScreen
     {
         // nekodex - circle the halls
-        public const string CHRISTMAS_BEATMAP_SET_HASH = "7e26183e72a496f672c3a21292e6b469fdecd084d31c259ea10a31df5b46cd77";
+        public const string CHRISTMAS_BEATMAP_SET_HASH =
+            "7e26183e72a496f672c3a21292e6b469fdecd084d31c259ea10a31df5b46cd77";
 
         protected override string BeatmapHash => CHRISTMAS_BEATMAP_SET_HASH;
 
@@ -38,9 +39,7 @@ namespace osu.Game.Seasonal
         private TrianglesIntroSequence intro = null!;
 
         public IntroChristmas(Func<MainMenu>? createNextScreen = null)
-            : base(createNextScreen)
-        {
-        }
+            : base(createNextScreen) { }
 
         protected override void LogoArriving(OsuLogo logo, bool resuming)
         {
@@ -52,29 +51,32 @@ namespace osu.Game.Seasonal
 
                 var decouplingClock = new DecouplingFramedClock(UsingThemedIntro ? Track : null);
 
-                LoadComponentAsync(intro = new TrianglesIntroSequence(logo, () => FadeInBackground())
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Clock = new InterpolatingFramedClock(decouplingClock),
-                    LoadMenu = LoadMenu
-                }, _ =>
-                {
-                    AddInternal(intro);
+                LoadComponentAsync(
+                    intro = new TrianglesIntroSequence(logo, () => FadeInBackground())
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Clock = new InterpolatingFramedClock(decouplingClock),
+                        LoadMenu = LoadMenu,
+                    },
+                    _ =>
+                    {
+                        AddInternal(intro);
 
-                    // There is a chance that the intro timed out before being displayed, and this scheduled callback could
-                    // happen during the outro rather than intro.
-                    // In such a scenario, we don't want to play the intro sample, nor attempt to start the intro track
-                    // (that may have already been since disposed by MusicController).
-                    if (DidLoadMenu)
-                        return;
+                        // There is a chance that the intro timed out before being displayed, and this scheduled callback could
+                        // happen during the outro rather than intro.
+                        // In such a scenario, we don't want to play the intro sample, nor attempt to start the intro track
+                        // (that may have already been since disposed by MusicController).
+                        if (DidLoadMenu)
+                            return;
 
-                    // If the user has requested no theme, fallback to the same intro voice and delay as IntroCircles.
-                    // The triangles intro voice and theme are combined which makes it impossible to use.
-                    StartTrack();
+                        // If the user has requested no theme, fallback to the same intro voice and delay as IntroCircles.
+                        // The triangles intro voice and theme are combined which makes it impossible to use.
+                        StartTrack();
 
-                    // no-op for the case of themed intro, no harm in calling for both scenarios as a safety measure.
-                    decouplingClock.Start();
-                });
+                        // no-op for the case of themed intro, no harm in calling for both scenarios as a safety measure.
+                        decouplingClock.Start();
+                    }
+                );
             }
         }
 
@@ -127,11 +129,8 @@ namespace osu.Game.Seasonal
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Child = lazerLogo = new LazerLogo
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        }
+                        Child = lazerLogo =
+                            new LazerLogo { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                     },
                     triangles = new CircularContainer
                     {
@@ -140,11 +139,8 @@ namespace osu.Game.Seasonal
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Size = new Vector2(960),
-                        Child = new GlitchingTriangles
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                    }
+                        Child = new GlitchingTriangles { RelativeSizeAxes = Axes.Both },
+                    },
                 };
             }
 
@@ -193,8 +189,16 @@ namespace osu.Game.Seasonal
                         {
                             triangles.FadeIn();
 
-                            lazerLogo.ScaleTo(new Vector2(0.2f + (i + 1) / 8f * 0.3f), beat_length * 1, Easing.OutQuint);
-                            triangles.ScaleTo(new Vector2(0.2f + (i + 1) / 8f * 0.3f), beat_length * 1, Easing.OutQuint);
+                            lazerLogo.ScaleTo(
+                                new Vector2(0.2f + (i + 1) / 8f * 0.3f),
+                                beat_length * 1,
+                                Easing.OutQuint
+                            );
+                            triangles.ScaleTo(
+                                new Vector2(0.2f + (i + 1) / 8f * 0.3f),
+                                beat_length * 1,
+                                Easing.OutQuint
+                            );
                             lazerLogo.FadeTo((i + 1) * 0.06f);
                             lazerLogo.TransformTo(nameof(LazerLogo.Progress), (i + 1) / 10f);
                         }
@@ -238,9 +242,7 @@ namespace osu.Game.Seasonal
                     this.FadeTo(0.5f, beat_length * 2, Easing.In)
                         .OnComplete(_ => FadeInCompleted?.Invoke());
 
-                    this.Delay(beat_length * 2)
-                        .Then()
-                        .FadeOutFromOne(3000, Easing.OutQuint);
+                    this.Delay(beat_length * 2).Then().FadeOutFromOne(3000, Easing.OutQuint);
                 }
             }
 
@@ -289,7 +291,12 @@ namespace osu.Game.Seasonal
             {
                 private int beatsHandled;
 
-                protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+                protected override void OnNewBeat(
+                    int beatIndex,
+                    TimingControlPoint timingPoint,
+                    EffectControlPoint effectPoint,
+                    ChannelAmplitudes amplitudes
+                )
                 {
                     base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
@@ -303,7 +310,9 @@ namespace osu.Game.Seasonal
                         float x = 0.5f + 0.5f * randomRadius * (float)Math.Cos(angle);
                         float y = 0.5f + 0.5f * randomRadius * (float)Math.Sin(angle);
 
-                        Color4 christmasColour = RNG.NextBool() ? SeasonalUIConfig.PRIMARY_COLOUR_1 : SeasonalUIConfig.PRIMARY_COLOUR_2;
+                        Color4 christmasColour = RNG.NextBool()
+                            ? SeasonalUIConfig.PRIMARY_COLOUR_1
+                            : SeasonalUIConfig.PRIMARY_COLOUR_2;
 
                         Drawable triangle = new Triangle
                         {
@@ -311,16 +320,14 @@ namespace osu.Game.Seasonal
                             Origin = Anchor.Centre,
                             RelativePositionAxes = Axes.Both,
                             Position = new Vector2(x, y),
-                            Colour = christmasColour
+                            Colour = christmasColour,
                         };
 
                         if (beatsHandled >= 10)
                             triangle.Blending = BlendingParameters.Additive;
 
                         AddInternal(triangle);
-                        triangle
-                            .ScaleTo(0.9f)
-                            .ScaleTo(1, beat_length / 2, Easing.Out);
+                        triangle.ScaleTo(0.9f).ScaleTo(1, beat_length / 2, Easing.Out);
                         triangle.FadeInFromZero(100, Easing.OutQuint);
                     }
 

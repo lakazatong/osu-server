@@ -19,19 +19,22 @@ namespace osu.Game.Seasonal
 
         private bool hasHat;
 
-        protected override MenuLogoVisualisation CreateMenuLogoVisualisation() => new SeasonalMenuLogoVisualisation();
+        protected override MenuLogoVisualisation CreateMenuLogoVisualisation() =>
+            new SeasonalMenuLogoVisualisation();
 
         [BackgroundDependencyLoader]
         private void load(TextureStore textures, AudioManager audio)
         {
-            LogoElements.Add(hat = new Sprite
-            {
-                BypassAutoSizeAxes = Axes.Both,
-                Alpha = 0,
-                Origin = Anchor.BottomCentre,
-                Scale = new Vector2(-1, 1),
-                Texture = textures.Get(@"Menu/hat"),
-            });
+            LogoElements.Add(
+                hat = new Sprite
+                {
+                    BypassAutoSizeAxes = Axes.Both,
+                    Alpha = 0,
+                    Origin = Anchor.BottomCentre,
+                    Scale = new Vector2(-1, 1),
+                    Texture = textures.Get(@"Menu/hat"),
+                }
+            );
 
             // override base samples with our preferred ones.
             SampleDownbeat = SampleBeat = audio.Samples.Get(@"Menu/osu-logo-heartbeat-bell");
@@ -57,18 +60,18 @@ namespace osu.Game.Seasonal
                 if (hasHat)
                 {
                     hat.Delay(400)
-                       .Then()
-                       .MoveTo(new Vector2(120, 160))
-                       .RotateTo(0)
-                       .RotateTo(-20, 500, Easing.OutQuint)
-                       .FadeIn(250, Easing.OutQuint);
+                        .Then()
+                        .MoveTo(new Vector2(120, 160))
+                        .RotateTo(0)
+                        .RotateTo(-20, 500, Easing.OutQuint)
+                        .FadeIn(250, Easing.OutQuint);
                 }
                 else
                 {
                     hat.Delay(100)
-                       .Then()
-                       .MoveToOffset(new Vector2(0, -5), 500, Easing.OutQuint)
-                       .FadeOut(500, Easing.OutQuint);
+                        .Then()
+                        .MoveToOffset(new Vector2(0, -5), 500, Easing.OutQuint)
+                        .FadeOut(500, Easing.OutQuint);
                 }
             }
         }

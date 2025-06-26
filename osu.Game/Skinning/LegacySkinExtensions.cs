@@ -19,17 +19,57 @@ namespace osu.Game.Skinning
 {
     public static partial class LegacySkinExtensions
     {
-        public static Drawable? GetAnimation(this ISkin? source, string componentName, bool animatable, bool looping, bool applyConfigFrameRate = false, string animationSeparator = "-",
-                                             bool startAtCurrentTime = true, double? frameLength = null, Vector2? maxSize = null)
-            => source.GetAnimation(componentName, default, default, animatable, looping, applyConfigFrameRate, animationSeparator, startAtCurrentTime, frameLength, maxSize);
+        public static Drawable? GetAnimation(
+            this ISkin? source,
+            string componentName,
+            bool animatable,
+            bool looping,
+            bool applyConfigFrameRate = false,
+            string animationSeparator = "-",
+            bool startAtCurrentTime = true,
+            double? frameLength = null,
+            Vector2? maxSize = null
+        ) =>
+            source.GetAnimation(
+                componentName,
+                default,
+                default,
+                animatable,
+                looping,
+                applyConfigFrameRate,
+                animationSeparator,
+                startAtCurrentTime,
+                frameLength,
+                maxSize
+            );
 
-        public static Drawable? GetAnimation(this ISkin? source, string componentName, WrapMode wrapModeS, WrapMode wrapModeT, bool animatable, bool looping, bool applyConfigFrameRate = false,
-                                             string animationSeparator = "-", bool startAtCurrentTime = true, double? frameLength = null, Vector2? maxSize = null)
+        public static Drawable? GetAnimation(
+            this ISkin? source,
+            string componentName,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            bool animatable,
+            bool looping,
+            bool applyConfigFrameRate = false,
+            string animationSeparator = "-",
+            bool startAtCurrentTime = true,
+            double? frameLength = null,
+            Vector2? maxSize = null
+        )
         {
             if (source == null)
                 return null;
 
-            var textures = GetTextures(source, componentName, wrapModeS, wrapModeT, animatable, animationSeparator, maxSize, out var retrievalSource);
+            var textures = GetTextures(
+                source,
+                componentName,
+                wrapModeS,
+                wrapModeT,
+                animatable,
+                animationSeparator,
+                maxSize,
+                out var retrievalSource
+            );
 
             switch (textures.Length)
             {
@@ -44,7 +84,9 @@ namespace osu.Game.Skinning
 
                     var animation = new SkinnableTextureAnimation(startAtCurrentTime)
                     {
-                        DefaultFrameLength = frameLength ?? getFrameLength(retrievalSource, applyConfigFrameRate, textures),
+                        DefaultFrameLength =
+                            frameLength
+                            ?? getFrameLength(retrievalSource, applyConfigFrameRate, textures),
                         Loop = looping,
                     };
 
@@ -55,7 +97,16 @@ namespace osu.Game.Skinning
             }
         }
 
-        public static Texture[] GetTextures(this ISkin? source, string componentName, WrapMode wrapModeS, WrapMode wrapModeT, bool animatable, string animationSeparator, Vector2? maxSize, out ISkin? retrievalSource)
+        public static Texture[] GetTextures(
+            this ISkin? source,
+            string componentName,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            bool animatable,
+            string animationSeparator,
+            Vector2? maxSize,
+            out ISkin? retrievalSource
+        )
         {
             retrievalSource = null;
 
@@ -63,13 +114,14 @@ namespace osu.Game.Skinning
                 return Array.Empty<Texture>();
 
             // find the first source which provides either the animated or non-animated version.
-            retrievalSource = (source as ISkinSource)?.FindProvider(s =>
-            {
-                if (animatable && s.GetTexture(getFrameName(0)) != null)
-                    return true;
+            retrievalSource =
+                (source as ISkinSource)?.FindProvider(s =>
+                {
+                    if (animatable && s.GetTexture(getFrameName(0)) != null)
+                        return true;
 
-                return s.GetTexture(componentName, wrapModeS, wrapModeT) != null;
-            }) ?? source;
+                    return s.GetTexture(componentName, wrapModeS, wrapModeT) != null;
+                }) ?? source;
 
             if (animatable)
             {
@@ -85,9 +137,7 @@ namespace osu.Game.Skinning
             if (singleTexture != null && maxSize != null)
                 singleTexture = singleTexture.WithMaximumSize(maxSize.Value);
 
-            return singleTexture != null
-                ? new[] { singleTexture }
-                : Array.Empty<Texture>();
+            return singleTexture != null ? new[] { singleTexture } : Array.Empty<Texture>();
 
             IEnumerable<Texture> getTextures(ISkin skin)
             {
@@ -105,7 +155,8 @@ namespace osu.Game.Skinning
                 }
             }
 
-            string getFrameName(int frameIndex) => $"{componentName}{animationSeparator}{frameIndex}";
+            string getFrameName(int frameIndex) =>
+                $"{componentName}{animationSeparator}{frameIndex}";
         }
 
         public static Texture WithMaximumSize(this Texture texture, Vector2 maxSize)
@@ -120,12 +171,14 @@ namespace osu.Game.Skinning
             float newWidth = Math.Min(texture.Width, maxSize.X);
             float newHeight = Math.Min(texture.Height, maxSize.Y);
 
-            var croppedTexture = texture.Crop(new RectangleF(
-                texture.Width / 2f - newWidth / 2f,
-                texture.Height / 2f - newHeight / 2f,
-                newWidth,
-                newHeight
-            ));
+            var croppedTexture = texture.Crop(
+                new RectangleF(
+                    texture.Width / 2f - newWidth / 2f,
+                    texture.Height / 2f - newHeight / 2f,
+                    newWidth,
+                    newHeight
+                )
+            );
 
             croppedTexture.ScaleAdjust = texture.ScaleAdjust;
             return croppedTexture;
@@ -141,13 +194,17 @@ namespace osu.Game.Skinning
             switch (font)
             {
                 case LegacyFont.Score:
-                    return source.GetConfig<LegacySetting, string>(LegacySetting.ScorePrefix)?.Value ?? "score";
+                    return source.GetConfig<LegacySetting, string>(LegacySetting.ScorePrefix)?.Value
+                        ?? "score";
 
                 case LegacyFont.Combo:
-                    return source.GetConfig<LegacySetting, string>(LegacySetting.ComboPrefix)?.Value ?? "score";
+                    return source.GetConfig<LegacySetting, string>(LegacySetting.ComboPrefix)?.Value
+                        ?? "score";
 
                 case LegacyFont.HitCircle:
-                    return source.GetConfig<LegacySetting, string>(LegacySetting.HitCirclePrefix)?.Value ?? "default";
+                    return source
+                            .GetConfig<LegacySetting, string>(LegacySetting.HitCirclePrefix)
+                            ?.Value ?? "default";
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(font));
@@ -164,13 +221,17 @@ namespace osu.Game.Skinning
             switch (font)
             {
                 case LegacyFont.Score:
-                    return source.GetConfig<LegacySetting, float>(LegacySetting.ScoreOverlap)?.Value ?? 0f;
+                    return source.GetConfig<LegacySetting, float>(LegacySetting.ScoreOverlap)?.Value
+                        ?? 0f;
 
                 case LegacyFont.Combo:
-                    return source.GetConfig<LegacySetting, float>(LegacySetting.ComboOverlap)?.Value ?? 0f;
+                    return source.GetConfig<LegacySetting, float>(LegacySetting.ComboOverlap)?.Value
+                        ?? 0f;
 
                 case LegacyFont.HitCircle:
-                    return source.GetConfig<LegacySetting, float>(LegacySetting.HitCircleOverlap)?.Value ?? -2f;
+                    return source
+                            .GetConfig<LegacySetting, float>(LegacySetting.HitCircleOverlap)
+                            ?.Value ?? -2f;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(font));
@@ -185,9 +246,7 @@ namespace osu.Game.Skinning
             private readonly Bindable<double> animationStartTime = new BindableDouble();
 
             public SkinnableTextureAnimation(bool startAtCurrentTime = true)
-                : base(startAtCurrentTime)
-            {
-            }
+                : base(startAtCurrentTime) { }
 
             protected override void LoadComplete()
             {
@@ -207,7 +266,8 @@ namespace osu.Game.Skinning
                 if (timeReference == null)
                     return;
 
-                PlaybackPosition = timeReference.Clock.CurrentTime - timeReference.AnimationStartTime.Value;
+                PlaybackPosition =
+                    timeReference.Clock.CurrentTime - timeReference.AnimationStartTime.Value;
             }
         }
 
@@ -217,11 +277,17 @@ namespace osu.Game.Skinning
         /// </summary>
         public const double SIXTY_FRAME_TIME = 1000 / 60d;
 
-        private static double getFrameLength(ISkin source, bool applyConfigFrameRate, Texture[] textures)
+        private static double getFrameLength(
+            ISkin source,
+            bool applyConfigFrameRate,
+            Texture[] textures
+        )
         {
             if (applyConfigFrameRate)
             {
-                var iniRate = source.GetConfig<LegacySetting, int>(LegacySetting.AnimationFramerate);
+                var iniRate = source.GetConfig<LegacySetting, int>(
+                    LegacySetting.AnimationFramerate
+                );
 
                 if (iniRate?.Value > 0)
                     return 1000f / iniRate.Value;

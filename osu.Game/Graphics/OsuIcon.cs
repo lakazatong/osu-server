@@ -414,24 +414,36 @@ namespace osu.Game.Graphics
             public ITexturedCharacterGlyph? Get(string? fontName, char character)
             {
                 if (fontName == FONT_NAME)
-                    return new Glyph(textures.Get($@"{fontName}/{((OsuIconMapping)character).GetDescription()}"));
+                    return new Glyph(
+                        textures.Get($@"{fontName}/{((OsuIconMapping)character).GetDescription()}")
+                    );
 
                 return null;
             }
 
-            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) => Task.Run(() => Get(fontName, character));
+            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) =>
+                Task.Run(() => Get(fontName, character));
 
             public Texture? Get(string name, WrapMode wrapModeS, WrapMode wrapModeT) => null;
 
             public Texture Get(string name) => throw new NotImplementedException();
 
-            public Task<Texture> GetAsync(string name, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+            public Task<Texture> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) => throw new NotImplementedException();
 
             public Stream GetStream(string name) => throw new NotImplementedException();
 
-            public IEnumerable<string> GetAvailableResources() => throw new NotImplementedException();
+            public IEnumerable<string> GetAvailableResources() =>
+                throw new NotImplementedException();
 
-            public Task<Texture?> GetAsync(string name, WrapMode wrapModeS, WrapMode wrapModeT, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+            public Task<Texture?> GetAsync(
+                string name,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT,
+                CancellationToken cancellationToken = default
+            ) => throw new NotImplementedException();
 
             public class Glyph : ITexturedCharacterGlyph
             {
@@ -441,7 +453,8 @@ namespace osu.Game.Graphics
                 public float Baseline => default;
                 public char Character => default;
 
-                public float GetKerning<T>(T lastGlyph) where T : ICharacterGlyph => throw new NotImplementedException();
+                public float GetKerning<T>(T lastGlyph)
+                    where T : ICharacterGlyph => throw new NotImplementedException();
 
                 public Texture Texture { get; }
                 public float Width => Texture.Width;

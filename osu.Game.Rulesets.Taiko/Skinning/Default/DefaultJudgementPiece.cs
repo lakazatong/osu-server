@@ -18,13 +18,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
         {
             if (Result != HitResult.Miss)
             {
-                this
-                    .MoveToY(-0.6f)
-                    .MoveToY(-1.5f, 500);
+                this.MoveToY(-0.6f).MoveToY(-1.5f, 500);
 
-                JudgementText
-                    .ScaleTo(0.9f)
-                    .ScaleTo(1, 500, Easing.OutElastic);
+                JudgementText.ScaleTo(0.9f).ScaleTo(1, 500, Easing.OutElastic);
 
                 this.FadeOutFromOne(800, Easing.OutQuint);
             }

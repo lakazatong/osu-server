@@ -43,7 +43,7 @@ namespace osu.Game.Overlays.News.Displays
             {
                 Vertical = 20,
                 Left = 30,
-                Right = WaveOverlayContainer.HORIZONTAL_PADDING
+                Right = WaveOverlayContainer.HORIZONTAL_PADDING,
             };
 
             InternalChild = new FillFlowContainer
@@ -61,7 +61,7 @@ namespace osu.Game.Overlays.News.Displays
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 10)
+                        Spacing = new Vector2(0, 10),
                     },
                     showMore = new ShowMoreButton
                     {
@@ -69,20 +69,25 @@ namespace osu.Game.Overlays.News.Displays
                         Origin = Anchor.TopCentre,
                         Margin = new MarginPadding { Top = 15 },
                         Action = fetchMorePosts,
-                        Alpha = 0
-                    }
-                }
+                        Alpha = 0,
+                    },
+                },
             };
         }
 
-        public void AddPosts(IEnumerable<APINewsPost> posts, bool morePostsAvailable) => Schedule(() =>
-            LoadComponentsAsync(posts.Select(p => new NewsCard(p)).ToList(), loaded =>
-            {
-                content.AddRange(loaded);
-                showMore.IsLoading = false;
-                showMore.Alpha = morePostsAvailable ? 1 : 0;
-            }, (cancellationToken = new CancellationTokenSource()).Token)
-        );
+        public void AddPosts(IEnumerable<APINewsPost> posts, bool morePostsAvailable) =>
+            Schedule(() =>
+                LoadComponentsAsync(
+                    posts.Select(p => new NewsCard(p)).ToList(),
+                    loaded =>
+                    {
+                        content.AddRange(loaded);
+                        showMore.IsLoading = false;
+                        showMore.Alpha = morePostsAvailable ? 1 : 0;
+                    },
+                    (cancellationToken = new CancellationTokenSource()).Token
+                )
+            );
 
         protected override void Dispose(bool isDisposing)
         {

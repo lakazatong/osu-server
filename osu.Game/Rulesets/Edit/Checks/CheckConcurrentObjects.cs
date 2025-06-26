@@ -12,13 +12,15 @@ namespace osu.Game.Rulesets.Edit.Checks
         // We guarantee that the objects are either treated as concurrent or unsnapped when near the same beat divisor.
         private const double ms_leniency = CheckUnsnappedObjects.UNSNAP_MS_THRESHOLD;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Compose, "Concurrent hitobjects");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Compose, "Concurrent hitobjects");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateConcurrentSame(this),
-            new IssueTemplateConcurrentDifferent(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateConcurrentSame(this),
+                new IssueTemplateConcurrentDifferent(this),
+            };
 
         public virtual IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -38,28 +40,38 @@ namespace osu.Game.Rulesets.Edit.Checks
                         break;
 
                     if (hitobject.GetType() == nextHitobject.GetType())
-                        yield return new IssueTemplateConcurrentSame(this).Create(hitobject, nextHitobject);
+                        yield return new IssueTemplateConcurrentSame(this).Create(
+                            hitobject,
+                            nextHitobject
+                        );
                     else
-                        yield return new IssueTemplateConcurrentDifferent(this).Create(hitobject, nextHitobject);
+                        yield return new IssueTemplateConcurrentDifferent(this).Create(
+                            hitobject,
+                            nextHitobject
+                        );
                 }
             }
         }
 
-        protected bool AreConcurrent(HitObject hitobject, HitObject nextHitobject) => nextHitobject.StartTime <= hitobject.GetEndTime() + ms_leniency;
+        protected bool AreConcurrent(HitObject hitobject, HitObject nextHitobject) =>
+            nextHitobject.StartTime <= hitobject.GetEndTime() + ms_leniency;
 
         public abstract class IssueTemplateConcurrent : IssueTemplate
         {
             protected IssueTemplateConcurrent(ICheck check, string unformattedMessage)
-                : base(check, IssueType.Problem, unformattedMessage)
-            {
-            }
+                : base(check, IssueType.Problem, unformattedMessage) { }
 
             public Issue Create(HitObject hitobject, HitObject nextHitobject)
             {
                 var hitobjects = new List<HitObject> { hitobject, nextHitobject };
-                return new Issue(hitobjects, this, hitobject.GetType().Name, nextHitobject.GetType().Name)
+                return new Issue(
+                    hitobjects,
+                    this,
+                    hitobject.GetType().Name,
+                    nextHitobject.GetType().Name
+                )
                 {
-                    Time = nextHitobject.StartTime
+                    Time = nextHitobject.StartTime,
                 };
             }
         }
@@ -67,17 +79,13 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateConcurrentSame : IssueTemplateConcurrent
         {
             public IssueTemplateConcurrentSame(ICheck check)
-                : base(check, "{0}s are concurrent here.")
-            {
-            }
+                : base(check, "{0}s are concurrent here.") { }
         }
 
         public class IssueTemplateConcurrentDifferent : IssueTemplateConcurrent
         {
             public IssueTemplateConcurrentDifferent(ICheck check)
-                : base(check, "{0} and {1} are concurrent here.")
-            {
-            }
+                : base(check, "{0} and {1} are concurrent here.") { }
         }
     }
 }

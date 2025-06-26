@@ -37,18 +37,17 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
         private MatchSettings settings = null!;
 
         public MultiplayerMatchSettingsOverlay(Room room)
-            : base(room)
-        {
-        }
+            : base(room) { }
 
         protected override void SelectBeatmap() => settings.SelectBeatmap();
 
-        protected override Drawable CreateSettings(Room room) => settings = new MatchSettings(room)
-        {
-            RelativeSizeAxes = Axes.Both,
-            RelativePositionAxes = Axes.Y,
-            SettingsApplied = Hide,
-        };
+        protected override Drawable CreateSettings(Room room) =>
+            settings = new MatchSettings(room)
+            {
+                RelativeSizeAxes = Axes.Both,
+                RelativePositionAxes = Axes.Y,
+                SettingsApplied = Hide,
+            };
 
         protected partial class MatchSettings : CompositeDrawable
         {
@@ -100,11 +99,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             {
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background4
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
                     new GridContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -122,7 +117,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                     Padding = new MarginPadding
                                     {
                                         Horizontal = OsuScreen.HORIZONTAL_OVERFLOW_PADDING,
-                                        Vertical = 10
+                                        Vertical = 10,
                                     },
                                     RelativeSizeAxes = Axes.Both,
                                     Children = new[]
@@ -139,24 +134,34 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                 {
                                                     Anchor = Anchor.TopCentre,
                                                     Origin = Anchor.TopCentre,
-                                                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.WIDTH_PADDING },
+                                                    Padding = new MarginPadding
+                                                    {
+                                                        Horizontal =
+                                                            WaveOverlayContainer.WIDTH_PADDING,
+                                                    },
                                                     RelativeSizeAxes = Axes.X,
                                                     AutoSizeAxes = Axes.Y,
                                                     Children = new Drawable[]
                                                     {
                                                         new SectionContainer
                                                         {
-                                                            Padding = new MarginPadding { Right = FIELD_PADDING / 2 },
+                                                            Padding = new MarginPadding
+                                                            {
+                                                                Right = FIELD_PADDING / 2,
+                                                            },
                                                             Children = new[]
                                                             {
                                                                 new Section("Room name")
                                                                 {
-                                                                    Child = NameField = new OsuTextBox
-                                                                    {
-                                                                        RelativeSizeAxes = Axes.X,
-                                                                        TabbableContentContainer = this,
-                                                                        LengthLimit = 100,
-                                                                    },
+                                                                    Child = NameField =
+                                                                        new OsuTextBox
+                                                                        {
+                                                                            RelativeSizeAxes =
+                                                                                Axes.X,
+                                                                            TabbableContentContainer =
+                                                                                this,
+                                                                            LengthLimit = 100,
+                                                                        },
                                                                 },
                                                                 // new Section("Room visibility")
                                                                 // {
@@ -172,19 +177,27 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                                     {
                                                                         AutoSizeAxes = Axes.Y,
                                                                         RelativeSizeAxes = Axes.X,
-                                                                        Direction = FillDirection.Vertical,
+                                                                        Direction =
+                                                                            FillDirection.Vertical,
                                                                         Spacing = new Vector2(7),
                                                                         Children = new Drawable[]
                                                                         {
-                                                                            TypePicker = new MatchTypePicker
-                                                                            {
-                                                                                RelativeSizeAxes = Axes.X,
-                                                                            },
-                                                                            typeLabel = new OsuSpriteText
-                                                                            {
-                                                                                Font = OsuFont.GetFont(size: 14),
-                                                                                Colour = colours.Yellow
-                                                                            },
+                                                                            TypePicker =
+                                                                                new MatchTypePicker
+                                                                                {
+                                                                                    RelativeSizeAxes =
+                                                                                        Axes.X,
+                                                                                },
+                                                                            typeLabel =
+                                                                                new OsuSpriteText
+                                                                                {
+                                                                                    Font =
+                                                                                        OsuFont.GetFont(
+                                                                                            size: 14
+                                                                                        ),
+                                                                                    Colour =
+                                                                                        colours.Yellow,
+                                                                                },
                                                                         },
                                                                     },
                                                                 },
@@ -194,11 +207,13 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                                     {
                                                                         RelativeSizeAxes = Axes.X,
                                                                         Height = 40,
-                                                                        Child = QueueModeDropdown = new OsuEnumDropdown<QueueMode>
-                                                                        {
-                                                                            RelativeSizeAxes = Axes.X
-                                                                        }
-                                                                    }
+                                                                        Child = QueueModeDropdown =
+                                                                            new OsuEnumDropdown<QueueMode>
+                                                                            {
+                                                                                RelativeSizeAxes =
+                                                                                    Axes.X,
+                                                                            },
+                                                                    },
                                                                 },
                                                                 new Section("Auto start")
                                                                 {
@@ -206,49 +221,62 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                                     {
                                                                         RelativeSizeAxes = Axes.X,
                                                                         Height = 40,
-                                                                        Child = startModeDropdown = new OsuEnumDropdown<StartMode>
-                                                                        {
-                                                                            RelativeSizeAxes = Axes.X
-                                                                        }
-                                                                    }
-                                                                }
+                                                                        Child = startModeDropdown =
+                                                                            new OsuEnumDropdown<StartMode>
+                                                                            {
+                                                                                RelativeSizeAxes =
+                                                                                    Axes.X,
+                                                                            },
+                                                                    },
+                                                                },
                                                             },
                                                         },
                                                         new SectionContainer
                                                         {
                                                             Anchor = Anchor.TopRight,
                                                             Origin = Anchor.TopRight,
-                                                            Padding = new MarginPadding { Left = FIELD_PADDING / 2 },
+                                                            Padding = new MarginPadding
+                                                            {
+                                                                Left = FIELD_PADDING / 2,
+                                                            },
                                                             Children = new[]
                                                             {
                                                                 new Section("Max participants")
                                                                 {
                                                                     Alpha = disabled_alpha,
-                                                                    Child = MaxParticipantsField = new OsuNumberBox
-                                                                    {
-                                                                        RelativeSizeAxes = Axes.X,
-                                                                        TabbableContentContainer = this,
-                                                                        ReadOnly = true,
-                                                                    },
+                                                                    Child = MaxParticipantsField =
+                                                                        new OsuNumberBox
+                                                                        {
+                                                                            RelativeSizeAxes =
+                                                                                Axes.X,
+                                                                            TabbableContentContainer =
+                                                                                this,
+                                                                            ReadOnly = true,
+                                                                        },
                                                                 },
                                                                 new Section("Password (optional)")
                                                                 {
-                                                                    Child = PasswordTextBox = new OsuPasswordTextBox
-                                                                    {
-                                                                        RelativeSizeAxes = Axes.X,
-                                                                        TabbableContentContainer = this,
-                                                                        LengthLimit = 255,
-                                                                    },
+                                                                    Child = PasswordTextBox =
+                                                                        new OsuPasswordTextBox
+                                                                        {
+                                                                            RelativeSizeAxes =
+                                                                                Axes.X,
+                                                                            TabbableContentContainer =
+                                                                                this,
+                                                                            LengthLimit = 255,
+                                                                        },
                                                                 },
                                                                 new Section("Other")
                                                                 {
-                                                                    Child = AutoSkipCheckbox = new OsuCheckbox
-                                                                    {
-                                                                        LabelText = "Automatically skip the beatmap intro"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
+                                                                    Child = AutoSkipCheckbox =
+                                                                        new OsuCheckbox
+                                                                        {
+                                                                            LabelText =
+                                                                                "Automatically skip the beatmap intro",
+                                                                        },
+                                                                },
+                                                            },
+                                                        },
                                                     },
                                                 },
                                                 playlistContainer = new FillFlowContainer
@@ -265,19 +293,21 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                         drawablePlaylist = new DrawableRoomPlaylist
                                                         {
                                                             RelativeSizeAxes = Axes.X,
-                                                            Height = DrawableRoomPlaylistItem.HEIGHT,
+                                                            Height =
+                                                                DrawableRoomPlaylistItem.HEIGHT,
                                                         },
                                                         selectBeatmapButton = new RoundedButton
                                                         {
                                                             RelativeSizeAxes = Axes.X,
                                                             Height = 40,
                                                             Text = "Select beatmap",
-                                                            Action = () => matchSubScreen.ShowSongSelect()
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                                            Action = () =>
+                                                                matchSubScreen.ShowSongSelect(),
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -295,7 +325,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                         new Box
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Colour = colourProvider.Background5
+                                            Colour = colourProvider.Background5,
                                         },
                                         new FillFlowContainer
                                         {
@@ -304,7 +334,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                             Direction = FillDirection.Vertical,
                                             Spacing = new Vector2(0, 20),
                                             Margin = new MarginPadding { Vertical = 20 },
-                                            Padding = new MarginPadding { Horizontal = OsuScreen.HORIZONTAL_OVERFLOW_PADDING },
+                                            Padding = new MarginPadding
+                                            {
+                                                Horizontal = OsuScreen.HORIZONTAL_OVERFLOW_PADDING,
+                                            },
                                             Children = new Drawable[]
                                             {
                                                 ApplyButton = new CreateOrUpdateButton(room)
@@ -321,19 +354,22 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                                                     Origin = Anchor.BottomCentre,
                                                     Alpha = 0,
                                                     Depth = 1,
-                                                    Colour = colours.RedDark
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                                                    Colour = colours.RedDark,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
-                    loadingLayer = new LoadingLayer(true)
+                    loadingLayer = new LoadingLayer(true),
                 };
 
-                TypePicker.Current.BindValueChanged(type => typeLabel.Text = type.NewValue.GetLocalisableDescription(), true);
+                TypePicker.Current.BindValueChanged(
+                    type => typeLabel.Text = type.NewValue.GetLocalisableDescription(),
+                    true
+                );
 
                 operationInProgress.BindTo(ongoingOperationTracker.InProgress);
                 operationInProgress.BindValueChanged(v =>
@@ -399,35 +435,34 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                 }
             }
 
-            private void updateRoomName()
-                => NameField.Text = room.Name;
+            private void updateRoomName() => NameField.Text = room.Name;
 
-            private void updateRoomType()
-                => TypePicker.Current.Value = room.Type;
+            private void updateRoomType() => TypePicker.Current.Value = room.Type;
 
-            private void updateRoomQueueMode()
-                => QueueModeDropdown.Current.Value = room.QueueMode;
+            private void updateRoomQueueMode() => QueueModeDropdown.Current.Value = room.QueueMode;
 
-            private void updateRoomPassword()
-                => PasswordTextBox.Text = room.Password ?? string.Empty;
+            private void updateRoomPassword() =>
+                PasswordTextBox.Text = room.Password ?? string.Empty;
 
-            private void updateRoomAutoSkip()
-                => AutoSkipCheckbox.Current.Value = room.AutoSkip;
+            private void updateRoomAutoSkip() => AutoSkipCheckbox.Current.Value = room.AutoSkip;
 
-            private void updateRoomMaxParticipants()
-                => MaxParticipantsField.Text = room.MaxParticipants?.ToString();
+            private void updateRoomMaxParticipants() =>
+                MaxParticipantsField.Text = room.MaxParticipants?.ToString();
 
-            private void updateRoomAutoStartDuration()
-                => startModeDropdown.Current.Value = (StartMode)room.AutoStartDuration.TotalSeconds;
+            private void updateRoomAutoStartDuration() =>
+                startModeDropdown.Current.Value = (StartMode)room.AutoStartDuration.TotalSeconds;
 
-            private void updateRoomPlaylist()
-                => drawablePlaylist.Items.ReplaceRange(0, drawablePlaylist.Items.Count, room.Playlist);
+            private void updateRoomPlaylist() =>
+                drawablePlaylist.Items.ReplaceRange(0, drawablePlaylist.Items.Count, room.Playlist);
 
             protected override void Update()
             {
                 base.Update();
 
-                ApplyButton.Enabled.Value = room.Playlist.Count > 0 && NameField.Text.Length > 0 && !operationInProgress.Value;
+                ApplyButton.Enabled.Value =
+                    room.Playlist.Count > 0
+                    && NameField.Text.Length > 0
+                    && !operationInProgress.Value;
                 playlistContainer.Alpha = room.RoomID == null ? 1 : 0;
             }
 
@@ -445,20 +480,26 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                 // Otherwise, update the room directly in preparation for it to be submitted to the API on match creation.
                 if (client.Room != null)
                 {
-                    client.ChangeSettings(
-                              name: NameField.Text,
-                              password: PasswordTextBox.Text,
-                              matchType: TypePicker.Current.Value,
-                              queueMode: QueueModeDropdown.Current.Value,
-                              autoStartDuration: TimeSpan.FromSeconds((int)startModeDropdown.Current.Value),
-                              autoSkip: AutoSkipCheckbox.Current.Value)
-                          .ContinueWith(t => Schedule(() =>
-                          {
-                              if (t.IsCompletedSuccessfully)
-                                  onSuccess();
-                              else
-                                  onError(t.Exception, "Error changing settings");
-                          }));
+                    client
+                        .ChangeSettings(
+                            name: NameField.Text,
+                            password: PasswordTextBox.Text,
+                            matchType: TypePicker.Current.Value,
+                            queueMode: QueueModeDropdown.Current.Value,
+                            autoStartDuration: TimeSpan.FromSeconds(
+                                (int)startModeDropdown.Current.Value
+                            ),
+                            autoSkip: AutoSkipCheckbox.Current.Value
+                        )
+                        .ContinueWith(t =>
+                            Schedule(() =>
+                            {
+                                if (t.IsCompletedSuccessfully)
+                                    onSuccess();
+                                else
+                                    onError(t.Exception, "Error changing settings");
+                            })
+                        );
                 }
                 else
                 {
@@ -466,36 +507,44 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                     room.Password = PasswordTextBox.Text;
                     room.Type = TypePicker.Current.Value;
                     room.QueueMode = QueueModeDropdown.Current.Value;
-                    room.AutoStartDuration = TimeSpan.FromSeconds((int)startModeDropdown.Current.Value);
+                    room.AutoStartDuration = TimeSpan.FromSeconds(
+                        (int)startModeDropdown.Current.Value
+                    );
                     room.AutoSkip = AutoSkipCheckbox.Current.Value;
                     room.Playlist = drawablePlaylist.Items.ToArray();
 
-                    client.CreateRoom(room).ContinueWith(t => Schedule(() =>
-                    {
-                        if (t.IsCompletedSuccessfully)
-                            onSuccess();
-                        else
-                            onError(t.Exception, "Error creating room");
-                    }));
+                    client
+                        .CreateRoom(room)
+                        .ContinueWith(t =>
+                            Schedule(() =>
+                            {
+                                if (t.IsCompletedSuccessfully)
+                                    onSuccess();
+                                else
+                                    onError(t.Exception, "Error creating room");
+                            })
+                        );
                 }
             }
 
-            private void onSuccess() => Schedule(() =>
-            {
-                Debug.Assert(applyingSettingsOperation != null);
+            private void onSuccess() =>
+                Schedule(() =>
+                {
+                    Debug.Assert(applyingSettingsOperation != null);
 
-                SettingsApplied?.Invoke();
+                    SettingsApplied?.Invoke();
 
-                applyingSettingsOperation.Dispose();
-                applyingSettingsOperation = null;
-            });
+                    applyingSettingsOperation.Dispose();
+                    applyingSettingsOperation = null;
+                });
 
             private void onError(Exception? exception, string description)
             {
                 if (exception is AggregateException aggregateException)
                     exception = aggregateException.AsSingular();
 
-                string message = exception?.GetHubExceptionMessage() ?? $"{description} ({exception?.Message})";
+                string message =
+                    exception?.GetHubExceptionMessage() ?? $"{description} ({exception?.Message})";
 
                 Schedule(() =>
                 {
@@ -564,7 +613,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             Seconds180 = 180,
 
             [Description("5 minutes")]
-            Seconds300 = 300
+            Seconds300 = 300,
         }
     }
 }

@@ -26,7 +26,8 @@ namespace osu.Game.Graphics.Containers
 
         protected override Container<Drawable> Content => content;
 
-        protected virtual HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverClickSounds(sampleSet) { Enabled = { BindTarget = Enabled } };
+        protected virtual HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverClickSounds(sampleSet) { Enabled = { BindTarget = Enabled } };
 
         public OsuClickableContainer(HoverSampleSet sampleSet = HoverSampleSet.Default)
         {
@@ -44,14 +45,12 @@ namespace osu.Game.Graphics.Containers
                 content.AutoSizeAxes = AutoSizeAxes;
             }
 
-            AddRangeInternal(new Drawable[]
-            {
-                CreateHoverSounds(sampleSet),
-                content,
-            });
+            AddRangeInternal(new Drawable[] { CreateHoverSounds(sampleSet), content });
         }
 
         protected override void ClearInternal(bool disposeChildren = true) =>
-            throw new InvalidOperationException($"Clearing {nameof(InternalChildren)} will cause critical failure. Use {nameof(Clear)} instead.");
+            throw new InvalidOperationException(
+                $"Clearing {nameof(InternalChildren)} will cause critical failure. Use {nameof(Clear)} instead."
+            );
     }
 }

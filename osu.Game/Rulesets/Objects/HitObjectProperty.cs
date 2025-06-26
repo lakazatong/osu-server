@@ -24,7 +24,8 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// The underlying <see cref="Bindable{T}"/>, only initialised on first access.
         /// </summary>
-        public Bindable<T> Bindable => backingBindable ??= new Bindable<T>(defaultValue) { Value = backingValue };
+        public Bindable<T> Bindable =>
+            backingBindable ??= new Bindable<T>(defaultValue) { Value = backingValue };
 
         /// <summary>
         /// The current value, derived from and delegated to <see cref="Bindable"/> if initialised, or a temporary field otherwise.

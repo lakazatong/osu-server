@@ -67,7 +67,7 @@ namespace osu.Game.Screens.Play.HUD.ClicksPerSecond
                         {
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true)
+                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true),
                         },
                         new FillFlowContainer
                         {
@@ -91,10 +91,10 @@ namespace osu.Game.Screens.Play.HUD.ClicksPerSecond
                                     Font = OsuFont.Numeric.With(size: 6, fixedWidth: false),
                                     Text = @"/sec",
                                     Padding = new MarginPadding { Bottom = 3f }, // align baseline better
-                                }
-                            }
-                        }
-                    }
+                                },
+                            },
+                        },
+                    },
                 };
             }
         }

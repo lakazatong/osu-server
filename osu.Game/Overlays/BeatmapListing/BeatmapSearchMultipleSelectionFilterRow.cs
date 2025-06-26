@@ -21,7 +21,8 @@ using FontWeight = osu.Game.Graphics.FontWeight;
 
 namespace osu.Game.Overlays.BeatmapListing
 {
-    public partial class BeatmapSearchMultipleSelectionFilterRow<T> : BeatmapSearchFilterRow<List<T>>
+    public partial class BeatmapSearchMultipleSelectionFilterRow<T>
+        : BeatmapSearchFilterRow<List<T>>
         where T : Enum
     {
         public new readonly BindableList<T> Current = new BindableList<T>();
@@ -29,9 +30,7 @@ namespace osu.Game.Overlays.BeatmapListing
         private MultipleSelectionFilter filter = null!;
 
         public BeatmapSearchMultipleSelectionFilterRow(LocalisableString header)
-            : base(header)
-        {
-        }
+            : base(header) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -39,14 +38,17 @@ namespace osu.Game.Overlays.BeatmapListing
             filter.Current.BindTo(Current);
         }
 
-        protected sealed override Drawable CreateFilter() => filter = CreateMultipleSelectionFilter();
+        protected sealed override Drawable CreateFilter() =>
+            filter = CreateMultipleSelectionFilter();
 
         /// <summary>
         /// Creates a filter control that can be used to simultaneously select multiple values of type <typeparamref name="T"/>.
         /// </summary>
-        protected virtual MultipleSelectionFilter CreateMultipleSelectionFilter() => new MultipleSelectionFilter();
+        protected virtual MultipleSelectionFilter CreateMultipleSelectionFilter() =>
+            new MultipleSelectionFilter();
 
-        protected partial class MultipleSelectionFilter : FillFlowContainer<MultipleSelectionFilterTabItem>
+        protected partial class MultipleSelectionFilter
+            : FillFlowContainer<MultipleSelectionFilterTabItem>
         {
             public readonly BindableList<T> Current = new BindableList<T>();
 
@@ -87,7 +89,8 @@ namespace osu.Game.Overlays.BeatmapListing
             /// <summary>
             /// Creates a <see cref="MultipleSelectionFilterTabItem"/> representing the supplied <paramref name="value"/>.
             /// </summary>
-            protected virtual MultipleSelectionFilterTabItem CreateTabItem(T value) => new MultipleSelectionFilterTabItem(value);
+            protected virtual MultipleSelectionFilterTabItem CreateTabItem(T value) =>
+                new MultipleSelectionFilterTabItem(value);
 
             private void toggleItem(T value, bool active)
             {
@@ -107,9 +110,7 @@ namespace osu.Game.Overlays.BeatmapListing
             private Circle background = null!;
 
             public MultipleSelectionFilterTabItem(T value)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             [BackgroundDependencyLoader]
             private void load()
@@ -119,35 +120,37 @@ namespace osu.Game.Overlays.BeatmapListing
 
                 // This doesn't match any actual design, but should make it easier for the user to understand
                 // that filters are applied until we settle on a final design.
-                AddInternal(activeContent = new Container
-                {
-                    Depth = float.MaxValue,
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0,
-                    Padding = new MarginPadding
+                AddInternal(
+                    activeContent = new Container
                     {
-                        Left = -16,
-                        Right = -4,
-                        Vertical = -2
-                    },
-                    Children = new Drawable[]
-                    {
-                        background = new Circle
+                        Depth = float.MaxValue,
+                        RelativeSizeAxes = Axes.Both,
+                        Alpha = 0,
+                        Padding = new MarginPadding
                         {
-                            Colour = Color4.White,
-                            RelativeSizeAxes = Axes.Both,
+                            Left = -16,
+                            Right = -4,
+                            Vertical = -2,
                         },
-                        new SpriteIcon
+                        Children = new Drawable[]
                         {
-                            Icon = FontAwesome.Solid.TimesCircle,
-                            Size = new Vector2(10),
-                            Colour = ColourProvider.Background4,
-                            Position = new Vector2(3, 0.5f),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                        }
+                            background = new Circle
+                            {
+                                Colour = Color4.White,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            new SpriteIcon
+                            {
+                                Icon = FontAwesome.Solid.TimesCircle,
+                                Size = new Vector2(10),
+                                Colour = ColourProvider.Background4,
+                                Position = new Vector2(3, 0.5f),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                            },
+                        },
                     }
-                });
+                );
             }
 
             protected override Color4 ColourActive => ColourProvider.Light1;

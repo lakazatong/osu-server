@@ -35,7 +35,8 @@ namespace osu.Game.Online.API
         [JsonProperty(@"refresh_token")]
         public string RefreshToken;
 
-        public override string ToString() => $@"{AccessToken}|{AccessTokenExpiry.ToString(NumberFormatInfo.InvariantInfo)}|{RefreshToken}";
+        public override string ToString() =>
+            $@"{AccessToken}|{AccessTokenExpiry.ToString(NumberFormatInfo.InvariantInfo)}|{RefreshToken}";
 
         public static OAuthToken Parse(string value)
         {
@@ -46,12 +47,10 @@ namespace osu.Game.Online.API
                 {
                     AccessToken = parts[0],
                     AccessTokenExpiry = long.Parse(parts[1], NumberFormatInfo.InvariantInfo),
-                    RefreshToken = parts[2]
+                    RefreshToken = parts[2],
                 };
             }
-            catch
-            {
-            }
+            catch { }
 
             return null;
         }

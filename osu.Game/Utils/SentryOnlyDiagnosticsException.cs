@@ -14,8 +14,6 @@ namespace osu.Game.Utils
     internal class SentryOnlyDiagnosticsException : Exception
     {
         public SentryOnlyDiagnosticsException(string message)
-            : base(message)
-        {
-        }
+            : base(message) { }
     }
 }

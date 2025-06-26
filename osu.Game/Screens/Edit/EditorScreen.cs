@@ -38,9 +38,7 @@ namespace osu.Game.Screens.Edit
 
         protected override void PopOut() => this.FadeOut();
 
-        public virtual void OnExiting(ScreenExitEvent e)
-        {
-        }
+        public virtual void OnExiting(ScreenExitEvent e) { }
 
         #region Clipboard operations
 
@@ -52,9 +50,7 @@ namespace osu.Game.Screens.Edit
         /// <remarks>
         /// Implementors are responsible for checking <see cref="CanCut"/> themselves.
         /// </remarks>
-        public virtual void Cut()
-        {
-        }
+        public virtual void Cut() { }
 
         public BindableBool CanCopy { get; } = new BindableBool();
 
@@ -64,9 +60,7 @@ namespace osu.Game.Screens.Edit
         /// <remarks>
         /// Implementors are responsible for checking <see cref="CanCopy"/> themselves.
         /// </remarks>
-        public virtual void Copy()
-        {
-        }
+        public virtual void Copy() { }
 
         public BindableBool CanPaste { get; } = new BindableBool();
 
@@ -76,9 +70,7 @@ namespace osu.Game.Screens.Edit
         /// <remarks>
         /// Implementors are responsible for checking <see cref="CanPaste"/> themselves.
         /// </remarks>
-        public virtual void Paste()
-        {
-        }
+        public virtual void Paste() { }
 
         #endregion
     }

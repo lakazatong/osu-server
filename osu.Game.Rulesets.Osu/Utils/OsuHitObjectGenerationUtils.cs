@@ -3,10 +3,10 @@
 
 using System;
 using System.Linq;
-using osu.Game.Rulesets.Osu.UI;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Osu.Beatmaps;
 using osu.Game.Rulesets.Osu.Objects;
+using osu.Game.Rulesets.Osu.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Utils
@@ -17,8 +17,10 @@ namespace osu.Game.Rulesets.Osu.Utils
         // The closer the hit objects draw to the border, the sharper the turn
         private const float playfield_edge_ratio = 0.375f;
 
-        private static readonly float border_distance_x = OsuPlayfield.BASE_SIZE.X * playfield_edge_ratio;
-        private static readonly float border_distance_y = OsuPlayfield.BASE_SIZE.Y * playfield_edge_ratio;
+        private static readonly float border_distance_x =
+            OsuPlayfield.BASE_SIZE.X * playfield_edge_ratio;
+        private static readonly float border_distance_y =
+            OsuPlayfield.BASE_SIZE.Y * playfield_edge_ratio;
 
         private static readonly Vector2 playfield_middle = OsuPlayfield.BASE_SIZE / 2;
 
@@ -38,7 +40,11 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// 1 means the hit object will be fully rotated towards playfield center when it is originally at playfield edge.
         /// </param>
         /// <returns>The new position of the hit object, relative to the previous one.</returns>
-        public static Vector2 RotateAwayFromEdge(Vector2 prevObjectPos, Vector2 posRelativeToPrev, float rotationRatio = 0.5f)
+        public static Vector2 RotateAwayFromEdge(
+            Vector2 prevObjectPos,
+            Vector2 posRelativeToPrev,
+            float rotationRatio = 0.5f
+        )
         {
             float relativeRotationDistance = 0f;
 
@@ -52,7 +58,8 @@ namespace osu.Game.Rulesets.Osu.Utils
             else
             {
                 relativeRotationDistance = Math.Max(
-                    (prevObjectPos.X - (OsuPlayfield.BASE_SIZE.X - border_distance_x)) / border_distance_x,
+                    (prevObjectPos.X - (OsuPlayfield.BASE_SIZE.X - border_distance_x))
+                        / border_distance_x,
                     relativeRotationDistance
                 );
             }
@@ -67,7 +74,8 @@ namespace osu.Game.Rulesets.Osu.Utils
             else
             {
                 relativeRotationDistance = Math.Max(
-                    (prevObjectPos.Y - (OsuPlayfield.BASE_SIZE.Y - border_distance_y)) / border_distance_y,
+                    (prevObjectPos.Y - (OsuPlayfield.BASE_SIZE.Y - border_distance_y))
+                        / border_distance_y,
                     relativeRotationDistance
                 );
             }
@@ -86,16 +94,22 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="destination">The vector that "initial" should be rotated towards.</param>
         /// <param name="rotationRatio">How much "initial" should be rotated. 0 means no rotation. 1 means "initial" is fully rotated to equal "destination".</param>
         /// <returns>The rotated vector.</returns>
-        public static Vector2 RotateVectorTowardsVector(Vector2 initial, Vector2 destination, float rotationRatio)
+        public static Vector2 RotateVectorTowardsVector(
+            Vector2 initial,
+            Vector2 destination,
+            float rotationRatio
+        )
         {
             float initialAngleRad = MathF.Atan2(initial.Y, initial.X);
             float destAngleRad = MathF.Atan2(destination.Y, destination.X);
 
             float diff = destAngleRad - initialAngleRad;
 
-            while (diff < -MathF.PI) diff += 2 * MathF.PI;
+            while (diff < -MathF.PI)
+                diff += 2 * MathF.PI;
 
-            while (diff > MathF.PI) diff -= 2 * MathF.PI;
+            while (diff > MathF.PI)
+                diff -= 2 * MathF.PI;
 
             float finalAngleRad = initialAngleRad + rotationRatio * diff;
 
@@ -111,12 +125,16 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="osuObject">The object to reflect.</param>
         public static void ReflectHorizontallyAlongPlayfield(OsuHitObject osuObject)
         {
-            osuObject.Position = new Vector2(OsuPlayfield.BASE_SIZE.X - osuObject.X, osuObject.Position.Y);
+            osuObject.Position = new Vector2(
+                OsuPlayfield.BASE_SIZE.X - osuObject.X,
+                osuObject.Position.Y
+            );
 
             if (osuObject is not Slider slider)
                 return;
 
-            static void reflectControlPoint(PathControlPoint point) => point.Position = new Vector2(-point.Position.X, point.Position.Y);
+            static void reflectControlPoint(PathControlPoint point) =>
+                point.Position = new Vector2(-point.Position.X, point.Position.Y);
 
             modifySlider(slider, reflectControlPoint);
         }
@@ -127,12 +145,16 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="osuObject">The object to reflect.</param>
         public static void ReflectVerticallyAlongPlayfield(OsuHitObject osuObject)
         {
-            osuObject.Position = new Vector2(osuObject.Position.X, OsuPlayfield.BASE_SIZE.Y - osuObject.Y);
+            osuObject.Position = new Vector2(
+                osuObject.Position.X,
+                OsuPlayfield.BASE_SIZE.Y - osuObject.Y
+            );
 
             if (osuObject is not Slider slider)
                 return;
 
-            static void reflectControlPoint(PathControlPoint point) => point.Position = new Vector2(point.Position.X, -point.Position.Y);
+            static void reflectControlPoint(PathControlPoint point) =>
+                point.Position = new Vector2(point.Position.X, -point.Position.Y);
 
             modifySlider(slider, reflectControlPoint);
         }
@@ -143,7 +165,8 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="slider">The slider to be flipped.</param>
         public static void FlipSliderInPlaceHorizontally(Slider slider)
         {
-            static void flipControlPoint(PathControlPoint point) => point.Position = new Vector2(-point.Position.X, point.Position.Y);
+            static void flipControlPoint(PathControlPoint point) =>
+                point.Position = new Vector2(-point.Position.X, point.Position.Y);
 
             modifySlider(slider, flipControlPoint);
         }
@@ -155,14 +178,17 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="rotation">The angle, measured in radians, to rotate the slider by.</param>
         public static void RotateSlider(Slider slider, float rotation)
         {
-            void rotateControlPoint(PathControlPoint point) => point.Position = rotateVector(point.Position, rotation);
+            void rotateControlPoint(PathControlPoint point) =>
+                point.Position = rotateVector(point.Position, rotation);
 
             modifySlider(slider, rotateControlPoint);
         }
 
         private static void modifySlider(Slider slider, Action<PathControlPoint> modifyControlPoint)
         {
-            var controlPoints = slider.Path.ControlPoints.Select(p => new PathControlPoint(p.Position, p.Type)).ToArray();
+            var controlPoints = slider
+                .Path.ControlPoints.Select(p => new PathControlPoint(p.Position, p.Type))
+                .ToArray();
             foreach (var point in controlPoints)
                 modifyControlPoint(point);
 
@@ -179,10 +205,7 @@ namespace osu.Game.Rulesets.Osu.Utils
         {
             float angle = MathF.Atan2(vector.Y, vector.X) + rotation;
             float length = vector.Length;
-            return new Vector2(
-                length * MathF.Cos(angle),
-                length * MathF.Sin(angle)
-            );
+            return new Vector2(length * MathF.Cos(angle), length * MathF.Sin(angle));
         }
 
         /// <param name="beatmap">The beatmap hitObject is a part of.</param>
@@ -190,7 +213,11 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="downbeatsOnly">If true, this method only returns true if hitObject is on a downbeat.
         /// If false, it returns true if hitObject is on any beat.</param>
         /// <returns>true if hitObject is on a (down-)beat, false otherwise.</returns>
-        public static bool IsHitObjectOnBeat(OsuBeatmap beatmap, OsuHitObject hitObject, bool downbeatsOnly = false)
+        public static bool IsHitObjectOnBeat(
+            OsuBeatmap beatmap,
+            OsuHitObject hitObject,
+            bool downbeatsOnly = false
+        )
         {
             var timingPoint = beatmap.ControlPointInfo.TimingPointAt(hitObject.StartTime);
 

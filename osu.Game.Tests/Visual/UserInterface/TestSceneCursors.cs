@@ -42,7 +42,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                     cursorBoxes[1] = new CustomCursorBox(Color4.Blue)
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.4f)
+                        Size = new Vector2(0.4f),
                     },
                     // Bottom-right user
                     cursorBoxes[2] = new CustomCursorBox(Color4.Red)
@@ -50,7 +50,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.4f)
+                        Size = new Vector2(0.4f),
                     },
                     // Bottom-left local
                     cursorBoxes[3] = new CustomCursorBox(Color4.Magenta, false)
@@ -58,7 +58,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Anchor = Anchor.BottomLeft,
                         Origin = Anchor.BottomLeft,
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.4f)
+                        Size = new Vector2(0.4f),
                     },
                     // Top-right local
                     cursorBoxes[4] = new CustomCursorBox(Color4.Cyan, false)
@@ -66,7 +66,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.4f)
+                        Size = new Vector2(0.4f),
                     },
                     // Left-local
                     cursorBoxes[5] = new CustomCursorBox(Color4.Yellow, false)
@@ -76,10 +76,13 @@ namespace osu.Game.Tests.Visual.UserInterface
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(0.2f, 1),
                     },
-                }
+                },
             };
 
-            AddToggleStep("Smooth transitions", b => cursorBoxes.ForEach(box => box.SmoothTransition = b));
+            AddToggleStep(
+                "Smooth transitions",
+                b => cursorBoxes.ForEach(box => box.SmoothTransition = b)
+            );
         }
 
         [SetUp]
@@ -98,7 +101,10 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert("Check green cursor at mouse", () => checkAtMouse(cursorBoxes[0].Cursor));
             AddStep("Move out", moveOut);
             AddAssert("Check green cursor invisible", () => !checkVisible(cursorBoxes[0].Cursor));
-            AddAssert("Check global cursor visible", () => checkVisible(globalCursorDisplay.MenuCursor));
+            AddAssert(
+                "Check global cursor visible",
+                () => checkVisible(globalCursorDisplay.MenuCursor)
+            );
         }
 
         /// <summary>
@@ -112,11 +118,20 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("Move to purple area", () => InputManager.MoveMouseTo(cursorBoxes[3]));
             AddAssert("Check purple cursor visible", () => checkVisible(cursorBoxes[3].Cursor));
             AddAssert("Check purple cursor at mouse", () => checkAtMouse(cursorBoxes[3].Cursor));
-            AddAssert("Check global cursor visible", () => checkVisible(globalCursorDisplay.MenuCursor));
-            AddAssert("Check global cursor at mouse", () => checkAtMouse(globalCursorDisplay.MenuCursor));
+            AddAssert(
+                "Check global cursor visible",
+                () => checkVisible(globalCursorDisplay.MenuCursor)
+            );
+            AddAssert(
+                "Check global cursor at mouse",
+                () => checkAtMouse(globalCursorDisplay.MenuCursor)
+            );
             AddStep("Move out", moveOut);
             AddAssert("Check purple cursor visible", () => checkVisible(cursorBoxes[3].Cursor));
-            AddAssert("Check global cursor visible", () => checkVisible(globalCursorDisplay.MenuCursor));
+            AddAssert(
+                "Check global cursor visible",
+                () => checkVisible(globalCursorDisplay.MenuCursor)
+            );
         }
 
         /// <summary>
@@ -127,7 +142,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestUserCursorOverride()
         {
-            AddStep("Move to blue-green boundary", () => InputManager.MoveMouseTo(cursorBoxes[1].ScreenSpaceDrawQuad.BottomRight - new Vector2(10)));
+            AddStep(
+                "Move to blue-green boundary",
+                () =>
+                    InputManager.MoveMouseTo(
+                        cursorBoxes[1].ScreenSpaceDrawQuad.BottomRight - new Vector2(10)
+                    )
+            );
             AddAssert("Check blue cursor visible", () => checkVisible(cursorBoxes[1].Cursor));
             AddAssert("Check green cursor invisible", () => !checkVisible(cursorBoxes[0].Cursor));
             AddAssert("Check blue cursor at mouse", () => checkAtMouse(cursorBoxes[1].Cursor));
@@ -143,7 +164,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestMultipleLocalCursors()
         {
-            AddStep("Move to yellow-purple boundary", () => InputManager.MoveMouseTo(cursorBoxes[5].ScreenSpaceDrawQuad.BottomRight - new Vector2(10)));
+            AddStep(
+                "Move to yellow-purple boundary",
+                () =>
+                    InputManager.MoveMouseTo(
+                        cursorBoxes[5].ScreenSpaceDrawQuad.BottomRight - new Vector2(10)
+                    )
+            );
             AddAssert("Check purple cursor visible", () => checkVisible(cursorBoxes[3].Cursor));
             AddAssert("Check purple cursor at mouse", () => checkAtMouse(cursorBoxes[3].Cursor));
             AddAssert("Check yellow cursor visible", () => checkVisible(cursorBoxes[5].Cursor));
@@ -160,7 +187,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestUserOverrideWithLocal()
         {
-            AddStep("Move to yellow-blue boundary", () => InputManager.MoveMouseTo(cursorBoxes[5].ScreenSpaceDrawQuad.TopRight - new Vector2(10, 0)));
+            AddStep(
+                "Move to yellow-blue boundary",
+                () =>
+                    InputManager.MoveMouseTo(
+                        cursorBoxes[5].ScreenSpaceDrawQuad.TopRight - new Vector2(10, 0)
+                    )
+            );
             AddAssert("Check blue cursor visible", () => checkVisible(cursorBoxes[1].Cursor));
             AddAssert("Check blue cursor at mouse", () => checkAtMouse(cursorBoxes[1].Cursor));
             AddAssert("Check yellow cursor visible", () => checkVisible(cursorBoxes[5].Cursor));
@@ -176,22 +209,52 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestKeyboardLocalCursor([Values] bool clickToShow)
         {
-            AddStep("Enable cursor hiding", () => globalCursorDisplay.MenuCursor.HideCursorOnNonMouseInput = true);
-            AddStep("Move to purple area", () => InputManager.MoveMouseTo(cursorBoxes[3].ScreenSpaceDrawQuad.Centre + new Vector2(10, 0)));
+            AddStep(
+                "Enable cursor hiding",
+                () => globalCursorDisplay.MenuCursor.HideCursorOnNonMouseInput = true
+            );
+            AddStep(
+                "Move to purple area",
+                () =>
+                    InputManager.MoveMouseTo(
+                        cursorBoxes[3].ScreenSpaceDrawQuad.Centre + new Vector2(10, 0)
+                    )
+            );
             AddAssert("Check purple cursor visible", () => checkVisible(cursorBoxes[3].Cursor));
-            AddAssert("Check global cursor alpha is 1", () => globalCursorDisplay.MenuCursor.Alpha == 1);
+            AddAssert(
+                "Check global cursor alpha is 1",
+                () => globalCursorDisplay.MenuCursor.Alpha == 1
+            );
 
             AddStep("Press key", () => InputManager.Key(Key.A));
-            AddAssert("Check purple cursor still visible", () => checkVisible(cursorBoxes[3].Cursor));
-            AddUntilStep("Check global cursor alpha is 0", () => globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0);
+            AddAssert(
+                "Check purple cursor still visible",
+                () => checkVisible(cursorBoxes[3].Cursor)
+            );
+            AddUntilStep(
+                "Check global cursor alpha is 0",
+                () => globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0
+            );
 
             if (clickToShow)
                 AddStep("Click mouse", () => InputManager.Click(MouseButton.Left));
             else
-                AddStep("Move mouse", () => InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + Vector2.One));
+                AddStep(
+                    "Move mouse",
+                    () =>
+                        InputManager.MoveMouseTo(
+                            InputManager.CurrentState.Mouse.Position + Vector2.One
+                        )
+                );
 
-            AddAssert("Check purple cursor still visible", () => checkVisible(cursorBoxes[3].Cursor));
-            AddUntilStep("Check global cursor alpha is 1", () => globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 1);
+            AddAssert(
+                "Check purple cursor still visible",
+                () => checkVisible(cursorBoxes[3].Cursor)
+            );
+            AddUntilStep(
+                "Check global cursor alpha is 1",
+                () => globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 1
+            );
         }
 
         /// <summary>
@@ -200,42 +263,81 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestKeyboardUserCursor([Values] bool clickToShow)
         {
-            AddStep("Enable cursor hiding", () => globalCursorDisplay.MenuCursor.HideCursorOnNonMouseInput = true);
+            AddStep(
+                "Enable cursor hiding",
+                () => globalCursorDisplay.MenuCursor.HideCursorOnNonMouseInput = true
+            );
             AddStep("Move to green area", () => InputManager.MoveMouseTo(cursorBoxes[0]));
             AddAssert("Check green cursor visible", () => checkVisible(cursorBoxes[0].Cursor));
-            AddAssert("Check global cursor alpha is 0", () => !checkVisible(globalCursorDisplay.MenuCursor) && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0);
+            AddAssert(
+                "Check global cursor alpha is 0",
+                () =>
+                    !checkVisible(globalCursorDisplay.MenuCursor)
+                    && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0
+            );
 
             AddStep("Press key", () => InputManager.Key(Key.A));
-            AddAssert("Check green cursor still visible", () => checkVisible(cursorBoxes[0].Cursor));
-            AddAssert("Check global cursor alpha is still 0", () => !checkVisible(globalCursorDisplay.MenuCursor) && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0);
+            AddAssert(
+                "Check green cursor still visible",
+                () => checkVisible(cursorBoxes[0].Cursor)
+            );
+            AddAssert(
+                "Check global cursor alpha is still 0",
+                () =>
+                    !checkVisible(globalCursorDisplay.MenuCursor)
+                    && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0
+            );
 
             if (clickToShow)
                 AddStep("Click mouse", () => InputManager.Click(MouseButton.Left));
             else
-                AddStep("Move mouse", () => InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position + Vector2.One));
+                AddStep(
+                    "Move mouse",
+                    () =>
+                        InputManager.MoveMouseTo(
+                            InputManager.CurrentState.Mouse.Position + Vector2.One
+                        )
+                );
 
-            AddAssert("Check green cursor still visible", () => checkVisible(cursorBoxes[0].Cursor));
-            AddAssert("Check global cursor alpha is still 0", () => !checkVisible(globalCursorDisplay.MenuCursor) && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0);
+            AddAssert(
+                "Check green cursor still visible",
+                () => checkVisible(cursorBoxes[0].Cursor)
+            );
+            AddAssert(
+                "Check global cursor alpha is still 0",
+                () =>
+                    !checkVisible(globalCursorDisplay.MenuCursor)
+                    && globalCursorDisplay.MenuCursor.ActiveCursor.Alpha == 0
+            );
         }
 
         /// <summary>
         /// Moves the cursor to a point not covered by any cursor containers.
         /// </summary>
-        private void moveOut()
-            => InputManager.MoveMouseTo(new Vector2(InputManager.ScreenSpaceDrawQuad.Centre.X, InputManager.ScreenSpaceDrawQuad.TopLeft.Y));
+        private void moveOut() =>
+            InputManager.MoveMouseTo(
+                new Vector2(
+                    InputManager.ScreenSpaceDrawQuad.Centre.X,
+                    InputManager.ScreenSpaceDrawQuad.TopLeft.Y
+                )
+            );
 
         /// <summary>
         /// Checks if a cursor is visible.
         /// </summary>
         /// <param name="cursorContainer">The cursor to check.</param>
-        private bool checkVisible(CursorContainer cursorContainer) => cursorContainer.State.Value == Visibility.Visible;
+        private bool checkVisible(CursorContainer cursorContainer) =>
+            cursorContainer.State.Value == Visibility.Visible;
 
         /// <summary>
         /// Checks if a cursor is at the current inputmanager screen position.
         /// </summary>
         /// <param name="cursorContainer">The cursor to check.</param>
-        private bool checkAtMouse(CursorContainer cursorContainer)
-            => Precision.AlmostEquals(InputManager.CurrentState.Mouse.Position, cursorContainer.ToScreenSpace(cursorContainer.ActiveCursor.DrawPosition));
+        private bool checkAtMouse(CursorContainer cursorContainer) =>
+            Precision.AlmostEquals(
+                InputManager.CurrentState.Mouse.Position,
+                cursorContainer.ToScreenSpace(cursorContainer.ActiveCursor.DrawPosition)
+            );
 
         private partial class CustomCursorBox : Container, IProvideCursor
         {
@@ -244,7 +346,9 @@ namespace osu.Game.Tests.Visual.UserInterface
             public CursorContainer Cursor { get; }
             public bool ProvidingUserCursor { get; }
 
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => base.ReceivePositionalInputAt(screenSpacePos) || (SmoothTransition && !ProvidingUserCursor);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                base.ReceivePositionalInputAt(screenSpacePos)
+                || (SmoothTransition && !ProvidingUserCursor);
 
             private readonly Box background;
 
@@ -257,21 +361,20 @@ namespace osu.Game.Tests.Visual.UserInterface
 
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.1f
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.1f },
                     new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = providesUserCursor ? "User cursor" : "Local cursor"
+                        Text = providesUserCursor ? "User cursor" : "Local cursor",
                     },
                     Cursor = new TestCursorContainer
                     {
-                        State = { Value = providesUserCursor ? Visibility.Hidden : Visibility.Visible },
-                    }
+                        State =
+                        {
+                            Value = providesUserCursor ? Visibility.Hidden : Visibility.Visible,
+                        },
+                    },
                 };
             }
 

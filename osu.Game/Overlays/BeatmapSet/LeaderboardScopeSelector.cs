@@ -1,13 +1,13 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Screens.Select.Leaderboards;
-using osu.Game.Graphics.UserInterface;
 using osu.Framework.Allocation;
-using osuTK.Graphics;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Graphics;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Screens.Select.Leaderboards;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays.BeatmapSet
 {
@@ -15,7 +15,9 @@ namespace osu.Game.Overlays.BeatmapSet
     {
         protected override bool AddEnumEntriesAutomatically => false;
 
-        protected override TabItem<BeatmapLeaderboardScope> CreateTabItem(BeatmapLeaderboardScope value) => new ScopeSelectorTabItem(value);
+        protected override TabItem<BeatmapLeaderboardScope> CreateTabItem(
+            BeatmapLeaderboardScope value
+        ) => new ScopeSelectorTabItem(value);
 
         public LeaderboardScopeSelector()
         {
@@ -35,9 +37,7 @@ namespace osu.Game.Overlays.BeatmapSet
         private partial class ScopeSelectorTabItem : PageTabItem
         {
             public ScopeSelectorTabItem(BeatmapLeaderboardScope value)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             protected override bool OnHover(HoverEvent e)
             {

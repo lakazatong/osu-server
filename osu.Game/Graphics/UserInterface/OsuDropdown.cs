@@ -40,7 +40,8 @@ namespace osu.Game.Graphics.UserInterface
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
-            if (e.Repeat) return false;
+            if (e.Repeat)
+                return false;
 
             if (e.Action == GlobalAction.Back)
                 return Back();
@@ -48,9 +49,7 @@ namespace osu.Game.Graphics.UserInterface
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         #region OsuDropdownMenu
 
@@ -74,7 +73,11 @@ namespace osu.Game.Graphics.UserInterface
             }
 
             [BackgroundDependencyLoader(true)]
-            private void load(OverlayColourProvider? colourProvider, OsuColour colours, AudioManager audio)
+            private void load(
+                OverlayColourProvider? colourProvider,
+                OsuColour colours,
+                AudioManager audio
+            )
             {
                 BackgroundColour = colourProvider?.Background5 ?? Color4.Black;
                 HoverColour = colourProvider?.Light4 ?? colours.PinkDarker;
@@ -147,13 +150,18 @@ namespace osu.Game.Graphics.UserInterface
 
             protected override Menu CreateSubMenu() => new OsuMenu(Direction.Vertical);
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new DrawableOsuDropdownMenuItem(item)
-            {
-                BackgroundColourHover = HoverColour,
-                BackgroundColourSelected = SelectionColour
-            };
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) =>
+                new DrawableOsuDropdownMenuItem(item)
+                {
+                    BackgroundColourHover = HoverColour,
+                    BackgroundColourSelected = SelectionColour,
+                };
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new OsuScrollContainer(direction);
+            protected override ScrollContainer<Drawable> CreateScrollContainer(
+                Direction direction
+            ) => new OsuScrollContainer(direction);
 
             #region DrawableOsuDropdownMenuItem
 
@@ -209,7 +217,11 @@ namespace osu.Game.Graphics.UserInterface
 
                 protected override void UpdateBackgroundColour()
                 {
-                    Background.FadeColour(IsPreSelected ? BackgroundColourHover : BackgroundColourSelected, 100, Easing.OutQuint);
+                    Background.FadeColour(
+                        IsPreSelected ? BackgroundColourHover : BackgroundColourSelected,
+                        100,
+                        Easing.OutQuint
+                    );
 
                     if (IsPreSelected || IsSelected)
                         Background.FadeIn(100, Easing.OutQuint);
@@ -333,10 +345,7 @@ namespace osu.Game.Graphics.UserInterface
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    RowDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize),
-                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                     ColumnDimensions = new[]
                     {
                         new Dimension(),
@@ -359,8 +368,8 @@ namespace osu.Game.Graphics.UserInterface
                                 Origin = Anchor.CentreRight,
                                 Size = new Vector2(16),
                             },
-                        }
-                    }
+                        },
+                    },
                 };
 
                 AddInternal(new HoverClickSounds());
@@ -423,10 +432,8 @@ namespace osu.Game.Graphics.UserInterface
                 Chevron.ScaleTo(open ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
             }
 
-            protected override DropdownSearchBar CreateSearchBar() => new OsuDropdownSearchBar
-            {
-                Padding = new MarginPadding { Right = 26 },
-            };
+            protected override DropdownSearchBar CreateSearchBar() =>
+                new OsuDropdownSearchBar { Padding = new MarginPadding { Right = 26 } };
 
             private partial class OsuDropdownSearchBar : DropdownSearchBar
             {
@@ -434,10 +441,8 @@ namespace osu.Game.Graphics.UserInterface
 
                 protected override void PopOut() => this.FadeOut();
 
-                protected override TextBox CreateTextBox() => new DropdownSearchTextBox
-                {
-                    FontSize = OsuFont.Default.Size,
-                };
+                protected override TextBox CreateTextBox() =>
+                    new DropdownSearchTextBox { FontSize = OsuFont.Default.Size };
 
                 private partial class DropdownSearchTextBox : OsuTextBox
                 {
@@ -449,8 +454,10 @@ namespace osu.Game.Graphics.UserInterface
                     [BackgroundDependencyLoader]
                     private void load(OverlayColourProvider? colourProvider)
                     {
-                        BackgroundUnfocused = colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
-                        BackgroundFocused = colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
+                        BackgroundUnfocused =
+                            colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
+                        BackgroundFocused =
+                            colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
                     }
 
                     protected override void OnFocus(FocusEvent e)

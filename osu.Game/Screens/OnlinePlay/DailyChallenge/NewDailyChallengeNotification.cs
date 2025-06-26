@@ -6,11 +6,11 @@ using osu.Framework.Allocation;
 using osu.Framework.Screens;
 using osu.Game.Beatmaps.Drawables.Cards;
 using osu.Game.Configuration;
+using osu.Game.Localisation;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Rooms;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Screens.Menu;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 {
@@ -29,13 +29,23 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         private void load(OsuGame? game, SessionStatics statics)
         {
             Text = DailyChallengeStrings.ChallengeLiveNotification;
-            Content.Add(card = new BeatmapCardNano((APIBeatmapSet)room.Playlist.Single().Beatmap.BeatmapSet!));
+            Content.Add(
+                card = new BeatmapCardNano(
+                    (APIBeatmapSet)room.Playlist.Single().Beatmap.BeatmapSet!
+                )
+            );
             Activated = () =>
             {
                 if (statics.Get<bool>(Static.DailyChallengeIntroPlayed))
-                    game?.PerformFromScreen(s => s.Push(new DailyChallenge(room)), [typeof(MainMenu)]);
+                    game?.PerformFromScreen(
+                        s => s.Push(new DailyChallenge(room)),
+                        [typeof(MainMenu)]
+                    );
                 else
-                    game?.PerformFromScreen(s => s.Push(new DailyChallengeIntro(room)), [typeof(MainMenu)]);
+                    game?.PerformFromScreen(
+                        s => s.Push(new DailyChallengeIntro(room)),
+                        [typeof(MainMenu)]
+                    );
 
                 return true;
             };

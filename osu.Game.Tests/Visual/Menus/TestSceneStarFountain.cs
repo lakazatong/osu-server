@@ -18,33 +18,40 @@ namespace osu.Game.Tests.Visual.Menus
         [Test]
         public void TestMenu()
         {
-            AddStep("make fountains", () =>
-            {
-                Children = new[]
+            AddStep(
+                "make fountains",
+                () =>
                 {
-                    new StarFountain
+                    Children = new[]
                     {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        X = 200,
-                    },
-                    new StarFountain
-                    {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        X = -200,
-                    },
-                };
-            });
-
-            AddRepeatStep("activate fountains sometimes", () =>
-            {
-                foreach (var fountain in Children.OfType<StarFountain>())
-                {
-                    if (RNG.NextSingle() > 0.8f)
-                        fountain.Shoot(RNG.Next(-1, 2));
+                        new StarFountain
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            X = 200,
+                        },
+                        new StarFountain
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            X = -200,
+                        },
+                    };
                 }
-            }, 150);
+            );
+
+            AddRepeatStep(
+                "activate fountains sometimes",
+                () =>
+                {
+                    foreach (var fountain in Children.OfType<StarFountain>())
+                    {
+                        if (RNG.NextSingle() > 0.8f)
+                            fountain.Shoot(RNG.Next(-1, 2));
+                    }
+                },
+                150
+            );
         }
 
         [Test]
@@ -52,13 +59,13 @@ namespace osu.Game.Tests.Visual.Menus
         {
             KiaiGameplayFountains fountains = null!;
 
-            AddStep("make fountains", () =>
-            {
-                Children = new[]
+            AddStep(
+                "make fountains",
+                () =>
                 {
-                    fountains = new KiaiGameplayFountains(),
-                };
-            });
+                    Children = new[] { fountains = new KiaiGameplayFountains() };
+                }
+            );
 
             AddStep("activate fountains", () => fountains.Shoot());
         }
@@ -68,51 +75,69 @@ namespace osu.Game.Tests.Visual.Menus
         {
             Bindable<bool> starFountainsEnabled = null!;
 
-            AddStep("load configuration", () =>
-            {
-                var config = new OsuConfigManager(LocalStorage);
-                starFountainsEnabled = config.GetBindable<bool>(OsuSetting.StarFountains);
-            });
-
-            AddStep("make fountains", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "load configuration",
+                () =>
                 {
-                    new KiaiGameplayFountains.GameplayStarFountain
+                    var config = new OsuConfigManager(LocalStorage);
+                    starFountainsEnabled = config.GetBindable<bool>(OsuSetting.StarFountains);
+                }
+            );
+
+            AddStep(
+                "make fountains",
+                () =>
+                {
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomLeft,
-                        X = 75,
-                    },
-                    new KiaiGameplayFountains.GameplayStarFountain
-                    {
-                        Anchor = Anchor.BottomRight,
-                        Origin = Anchor.BottomRight,
-                        X = -75,
-                    },
-                };
-            });
+                        new KiaiGameplayFountains.GameplayStarFountain
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomLeft,
+                            X = 75,
+                        },
+                        new KiaiGameplayFountains.GameplayStarFountain
+                        {
+                            Anchor = Anchor.BottomRight,
+                            Origin = Anchor.BottomRight,
+                            X = -75,
+                        },
+                    };
+                }
+            );
 
             AddStep("enable KiaiStarEffects", () => starFountainsEnabled.Value = true);
-            AddRepeatStep("activate fountains (enabled)", () =>
-            {
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
-            }, 100);
+            AddRepeatStep(
+                "activate fountains (enabled)",
+                () =>
+                {
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
+                },
+                100
+            );
 
             AddStep("disable KiaiStarEffects", () => starFountainsEnabled.Value = false);
-            AddRepeatStep("attempt to activate fountains (disabled)", () =>
-            {
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
-            }, 100);
+            AddRepeatStep(
+                "attempt to activate fountains (disabled)",
+                () =>
+                {
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
+                },
+                100
+            );
 
             AddStep("re-enable KiaiStarEffects", () => starFountainsEnabled.Value = true);
-            AddRepeatStep("activate fountains (re-enabled)", () =>
-            {
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
-                ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
-            }, 100);
+            AddRepeatStep(
+                "activate fountains (re-enabled)",
+                () =>
+                {
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[0]).Shoot(1);
+                    ((KiaiGameplayFountains.GameplayStarFountain)Children[1]).Shoot(-1);
+                },
+                100
+            );
         }
     }
 }

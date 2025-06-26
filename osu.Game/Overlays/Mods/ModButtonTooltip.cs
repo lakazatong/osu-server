@@ -26,16 +26,18 @@ namespace osu.Game.Overlays.Mods
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background6,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background6 },
                 Content = new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
                     Direction = FillDirection.Vertical,
-                    Padding = new MarginPadding { Left = 10, Right = 10, Top = 5, Bottom = 5 },
+                    Padding = new MarginPadding
+                    {
+                        Left = 10,
+                        Right = 10,
+                        Top = 5,
+                        Bottom = 5,
+                    },
                     Children = new Drawable[]
                     {
                         descriptionText = new OsuSpriteText
@@ -43,12 +45,13 @@ namespace osu.Game.Overlays.Mods
                             Colour = colourProvider.Content1,
                             Font = OsuFont.GetFont(weight: FontWeight.Regular),
                         },
-                    }
+                    },
                 },
             };
         }
 
         protected override void PopIn() => this.FadeIn(200, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(200, Easing.OutQuint);
 
         private Mod? lastMod;

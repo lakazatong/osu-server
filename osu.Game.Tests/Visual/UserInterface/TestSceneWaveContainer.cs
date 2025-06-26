@@ -21,31 +21,33 @@ namespace osu.Game.Tests.Visual.UserInterface
         private void load(OsuColour colours)
         {
             WaveContainer container;
-            Add(container = new WaveContainer
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(400),
-                FirstWaveColour = colours.Red,
-                SecondWaveColour = colours.Green,
-                ThirdWaveColour = colours.Blue,
-                FourthWaveColour = colours.Pink,
-                Children = new Drawable[]
+            Add(
+                container = new WaveContainer
                 {
-                    new Box
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(400),
+                    FirstWaveColour = colours.Red,
+                    SecondWaveColour = colours.Green,
+                    ThirdWaveColour = colours.Blue,
+                    FourthWaveColour = colours.Pink,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black.Opacity(0.5f),
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.Black.Opacity(0.5f),
+                        },
+                        new OsuSpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Font = OsuFont.GetFont(size: 20),
+                            Text = @"Wave Container",
+                        },
                     },
-                    new OsuSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Font = OsuFont.GetFont(size: 20),
-                        Text = @"Wave Container",
-                    },
-                },
-            });
+                }
+            );
 
             AddStep(@"show", container.Show);
             AddStep(@"hide", container.Hide);

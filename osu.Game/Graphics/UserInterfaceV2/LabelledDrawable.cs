@@ -66,17 +66,18 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Direction = FillDirection.Vertical,
                     Padding = padded
-                        ? new MarginPadding { Horizontal = CONTENT_PADDING_HORIZONTAL, Vertical = CONTENT_PADDING_VERTICAL }
+                        ? new MarginPadding
+                        {
+                            Horizontal = CONTENT_PADDING_HORIZONTAL,
+                            Vertical = CONTENT_PADDING_VERTICAL,
+                        }
                         : new MarginPadding { Left = CONTENT_PADDING_HORIZONTAL },
                     Spacing = new Vector2(0, 12),
                     Children = new Drawable[]
@@ -89,7 +90,9 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             {
                                 new Drawable[]
                                 {
-                                    labelText = new OsuTextFlowContainer(s => s.Font = OsuFont.GetFont(weight: FontWeight.Bold))
+                                    labelText = new OsuTextFlowContainer(s =>
+                                        s.Font = OsuFont.GetFont(weight: FontWeight.Bold)
+                                    )
                                     {
                                         Anchor = Anchor.CentreLeft,
                                         Origin = Anchor.CentreLeft,
@@ -99,8 +102,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                             Right = 20,
                                             // ensure that the label is always vertically padded even if the component itself isn't.
                                             // this may become an issue if the label is taller than the component.
-                                            Vertical = padded ? 0 : CONTENT_PADDING_VERTICAL
-                                        }
+                                            Vertical = padded ? 0 : CONTENT_PADDING_VERTICAL,
+                                        },
                                     },
                                     new Container
                                     {
@@ -109,25 +112,36 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                         Origin = Anchor.TopRight,
                                         RelativeSizeAxes = Axes.X,
                                         AutoSizeAxes = Axes.Y,
-                                        Child = Component = CreateComponent().With(d =>
-                                        {
-                                            d.Anchor = Anchor.CentreRight;
-                                            d.Origin = Anchor.CentreRight;
-                                        })
-                                    }
+                                        Child = Component =
+                                            CreateComponent()
+                                                .With(d =>
+                                                {
+                                                    d.Anchor = Anchor.CentreRight;
+                                                    d.Origin = Anchor.CentreRight;
+                                                }),
+                                    },
                                 },
                             },
                             RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                         },
-                        descriptionText = new OsuTextFlowContainer(s => s.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold, italics: true))
+                        descriptionText = new OsuTextFlowContainer(s =>
+                            s.Font = OsuFont.GetFont(
+                                size: 12,
+                                weight: FontWeight.Bold,
+                                italics: true
+                            )
+                        )
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding { Bottom = padded ? 0 : CONTENT_PADDING_VERTICAL },
+                            Padding = new MarginPadding
+                            {
+                                Bottom = padded ? 0 : CONTENT_PADDING_VERTICAL,
+                            },
                             Alpha = 0,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             updateLabelWidth();
@@ -143,7 +157,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
             }
             else
             {
-                grid.ColumnDimensions = new[] { new Dimension(GridSizeMode.Absolute, fixedLabelWidth.Value) };
+                grid.ColumnDimensions = new[]
+                {
+                    new Dimension(GridSizeMode.Absolute, fixedLabelWidth.Value),
+                };
                 labelText.AutoSizeAxes = Axes.Y;
                 labelText.RelativeSizeAxes = Axes.X;
             }

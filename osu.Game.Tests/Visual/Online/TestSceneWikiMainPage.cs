@@ -13,26 +13,21 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneWikiMainPage : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         public TestSceneWikiMainPage()
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = overlayColour.Background5,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = overlayColour.Background5, RelativeSizeAxes = Axes.Both },
                 new BasicScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding(20),
-                    Child = new WikiMainPage
-                    {
-                        Markdown = main_page_markdown
-                    }
-                }
+                    Child = new WikiMainPage { Markdown = main_page_markdown },
+                },
             };
         }
 

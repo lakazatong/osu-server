@@ -19,11 +19,16 @@ namespace osu.Game.Rulesets.Pippidon
     {
         public override string Description => "gather the osu!coins";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new DrawablePippidonRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        ) => new DrawablePippidonRuleset(this, beatmap, mods);
 
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new PippidonBeatmapConverter(beatmap, this);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+            new PippidonBeatmapConverter(beatmap, this);
 
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new PippidonDifficultyCalculator(RulesetInfo, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            new PippidonDifficultyCalculator(RulesetInfo, beatmap);
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
@@ -39,11 +44,12 @@ namespace osu.Game.Rulesets.Pippidon
 
         public override string ShortName => "pippidon";
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
-        {
-            new KeyBinding(InputKey.W, PippidonAction.MoveUp),
-            new KeyBinding(InputKey.S, PippidonAction.MoveDown),
-        };
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            new[]
+            {
+                new KeyBinding(InputKey.W, PippidonAction.MoveUp),
+                new KeyBinding(InputKey.S, PippidonAction.MoveDown),
+            };
 
         public override Drawable CreateIcon() => new PippidonRulesetIcon(this);
 

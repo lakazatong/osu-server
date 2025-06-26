@@ -73,7 +73,7 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm
             3.0 / 2,
             2.0 / 3,
             5.0 / 4,
-            4.0 / 5
+            4.0 / 5,
         ];
     }
 }

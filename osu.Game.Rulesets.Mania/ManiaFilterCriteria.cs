@@ -18,11 +18,16 @@ namespace osu.Game.Rulesets.Mania
 {
     public class ManiaFilterCriteria : IRulesetFilterCriteria
     {
-        private readonly HashSet<int> includedKeyCounts = Enumerable.Range(1, LegacyBeatmapDecoder.MAX_MANIA_KEY_COUNT).ToHashSet();
+        private readonly HashSet<int> includedKeyCounts = Enumerable
+            .Range(1, LegacyBeatmapDecoder.MAX_MANIA_KEY_COUNT)
+            .ToHashSet();
 
         public bool Matches(BeatmapInfo beatmapInfo, FilterCriteria criteria)
         {
-            int keyCount = ManiaBeatmapConverter.GetColumnCount(LegacyBeatmapConversionDifficultyInfo.FromBeatmapInfo(beatmapInfo), criteria.Mods);
+            int keyCount = ManiaBeatmapConverter.GetColumnCount(
+                LegacyBeatmapConversionDifficultyInfo.FromBeatmapInfo(beatmapInfo),
+                criteria.Mods
+            );
 
             return includedKeyCounts.Contains(keyCount);
         }
@@ -57,25 +62,29 @@ namespace osu.Game.Rulesets.Mania
                             return true;
 
                         case Operator.Less:
-                            if (singleKeyCount == null) return false;
+                            if (singleKeyCount == null)
+                                return false;
 
                             includedKeyCounts.RemoveWhere(k => k >= singleKeyCount.Value);
                             return true;
 
                         case Operator.LessOrEqual:
-                            if (singleKeyCount == null) return false;
+                            if (singleKeyCount == null)
+                                return false;
 
                             includedKeyCounts.RemoveWhere(k => k > singleKeyCount.Value);
                             return true;
 
                         case Operator.Greater:
-                            if (singleKeyCount == null) return false;
+                            if (singleKeyCount == null)
+                                return false;
 
                             includedKeyCounts.RemoveWhere(k => k <= singleKeyCount.Value);
                             return true;
 
                         case Operator.GreaterOrEqual:
-                            if (singleKeyCount == null) return false;
+                            if (singleKeyCount == null)
+                                return false;
 
                             includedKeyCounts.RemoveWhere(k => k < singleKeyCount.Value);
                             return true;
@@ -94,8 +103,14 @@ namespace osu.Game.Rulesets.Mania
             if (includedKeyCounts.Count != LegacyBeatmapDecoder.MAX_MANIA_KEY_COUNT)
             {
                 // Interpreting as the Mod type is required for equality comparison.
-                HashSet<Mod> oldSet = mods.OldValue.OfType<ManiaKeyMod>().AsEnumerable<Mod>().ToHashSet();
-                HashSet<Mod> newSet = mods.NewValue.OfType<ManiaKeyMod>().AsEnumerable<Mod>().ToHashSet();
+                HashSet<Mod> oldSet = mods
+                    .OldValue.OfType<ManiaKeyMod>()
+                    .AsEnumerable<Mod>()
+                    .ToHashSet();
+                HashSet<Mod> newSet = mods
+                    .NewValue.OfType<ManiaKeyMod>()
+                    .AsEnumerable<Mod>()
+                    .ToHashSet();
 
                 if (!oldSet.SetEquals(newSet))
                     return true;

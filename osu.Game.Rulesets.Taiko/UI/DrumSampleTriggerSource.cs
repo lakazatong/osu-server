@@ -14,7 +14,10 @@ namespace osu.Game.Rulesets.Taiko.UI
     {
         private const double stereo_separation = 0.2;
 
-        public DrumSampleTriggerSource(HitObjectContainer hitObjectContainer, SampleBalance balance = SampleBalance.Centre)
+        public DrumSampleTriggerSource(
+            HitObjectContainer hitObjectContainer,
+            SampleBalance balance = SampleBalance.Centre
+        )
             : base(hitObjectContainer)
         {
             switch (balance)
@@ -40,15 +43,23 @@ namespace osu.Game.Rulesets.Taiko.UI
             if (hitObject == null)
                 return;
 
-            var baseSample = hitObject.CreateHitSampleInfo(hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL);
+            var baseSample = hitObject.CreateHitSampleInfo(
+                hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL
+            );
 
             if (strong)
             {
-                PlaySamples(new ISampleInfo[]
-                {
-                    baseSample,
-                    hitObject.CreateHitSampleInfo(hitType == HitType.Rim ? HitSampleInfo.HIT_WHISTLE : HitSampleInfo.HIT_FINISH)
-                });
+                PlaySamples(
+                    new ISampleInfo[]
+                    {
+                        baseSample,
+                        hitObject.CreateHitSampleInfo(
+                            hitType == HitType.Rim
+                                ? HitSampleInfo.HIT_WHISTLE
+                                : HitSampleInfo.HIT_FINISH
+                        ),
+                    }
+                );
             }
             else
             {
@@ -56,7 +67,8 @@ namespace osu.Game.Rulesets.Taiko.UI
             }
         }
 
-        public override void Play() => throw new InvalidOperationException(@"Use override with HitType parameter instead");
+        public override void Play() =>
+            throw new InvalidOperationException(@"Use override with HitType parameter instead");
 
         protected override void ApplySampleInfo(SkinnableSound hitSound, ISampleInfo[] samples)
         {
@@ -70,6 +82,6 @@ namespace osu.Game.Rulesets.Taiko.UI
     {
         Left,
         Centre,
-        Right
+        Right,
     }
 }

@@ -29,9 +29,7 @@ namespace osu.Game.Online.API
 
         [JsonConstructor]
         [SerializationConstructor]
-        public APIMod()
-        {
-        }
+        public APIMod() { }
 
         public APIMod(Mod mod)
         {
@@ -52,7 +50,9 @@ namespace osu.Game.Online.API
 
             if (resultMod == null)
             {
-                Logger.Log($"There is no mod in the ruleset ({ruleset.ShortName}) matching the acronym {Acronym}.");
+                Logger.Log(
+                    $"There is no mod in the ruleset ({ruleset.ShortName}) matching the acronym {Acronym}."
+                );
                 return new UnknownMod(Acronym);
             }
 
@@ -60,16 +60,23 @@ namespace osu.Game.Online.API
             {
                 foreach (var (_, property) in resultMod.GetSettingsSourceProperties())
                 {
-                    if (!Settings.TryGetValue(property.Name.ToSnakeCase(), out object? settingValue))
+                    if (
+                        !Settings.TryGetValue(property.Name.ToSnakeCase(), out object? settingValue)
+                    )
                         continue;
 
                     try
                     {
-                        resultMod.CopyAdjustedSetting((IBindable)property.GetValue(resultMod)!, settingValue);
+                        resultMod.CopyAdjustedSetting(
+                            (IBindable)property.GetValue(resultMod)!,
+                            settingValue
+                        );
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log($"Failed to copy mod setting value '{settingValue}' to \"{property.Name}\": {ex.Message}");
+                        Logger.Log(
+                            $"Failed to copy mod setting value '{settingValue}' to \"{property.Name}\": {ex.Message}"
+                        );
                     }
                 }
             }
@@ -81,10 +88,13 @@ namespace osu.Game.Online.API
 
         public bool Equals(APIMod? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return Acronym == other.Acronym && Settings.SequenceEqual(other.Settings, ModSettingsEqualityComparer.Default);
+            return Acronym == other.Acronym
+                && Settings.SequenceEqual(other.Settings, ModSettingsEqualityComparer.Default);
         }
 
         public override string ToString()
@@ -97,7 +107,8 @@ namespace osu.Game.Online.API
 
         private class ModSettingsEqualityComparer : IEqualityComparer<KeyValuePair<string, object>>
         {
-            public static ModSettingsEqualityComparer Default { get; } = new ModSettingsEqualityComparer();
+            public static ModSettingsEqualityComparer Default { get; } =
+                new ModSettingsEqualityComparer();
 
             public bool Equals(KeyValuePair<string, object> x, KeyValuePair<string, object> y)
             {
@@ -107,7 +118,8 @@ namespace osu.Game.Online.API
                 return x.Key == y.Key && EqualityComparer<object>.Default.Equals(xValue, yValue);
             }
 
-            public int GetHashCode(KeyValuePair<string, object> obj) => HashCode.Combine(obj.Key, obj.Value.GetUnderlyingSettingValue());
+            public int GetHashCode(KeyValuePair<string, object> obj) =>
+                HashCode.Combine(obj.Key, obj.Value.GetUnderlyingSettingValue());
         }
     }
 }

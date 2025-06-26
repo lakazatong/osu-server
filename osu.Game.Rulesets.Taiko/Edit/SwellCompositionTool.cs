@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Taiko.Edit
     public class SwellCompositionTool : CompositionTool
     {
         public SwellCompositionTool()
-            : base(nameof(Swell))
-        {
-        }
+            : base(nameof(Swell)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new SwellPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new SwellPlacementBlueprint();
     }
 }

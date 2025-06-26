@@ -51,7 +51,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             yield return (ATTRIB_ID_MONO_STAMINA_FACTOR, MonoStaminaFactor);
         }
 
-        public override void FromDatabaseAttributes(IReadOnlyDictionary<int, double> values, IBeatmapOnlineInfo onlineInfo)
+        public override void FromDatabaseAttributes(
+            IReadOnlyDictionary<int, double> values,
+            IBeatmapOnlineInfo onlineInfo
+        )
         {
             base.FromDatabaseAttributes(values, onlineInfo);
 

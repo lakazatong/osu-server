@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
     {
         public const float NOTE_HEIGHT = 12;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
         private readonly IBindable<Color4> accentColour = new Bindable<Color4>();
 
         private readonly Box colouredBox;
@@ -36,16 +37,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                new Box { RelativeSizeAxes = Axes.Both },
                 colouredBox = new Box
                 {
                     RelativeSizeAxes = Axes.X,
                     Height = NOTE_HEIGHT / 2,
-                    Alpha = 0.1f
-                }
+                    Alpha = 0.1f,
+                },
             };
         }
 
@@ -64,9 +62,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            colouredBox.Anchor = colouredBox.Origin = direction.NewValue == ScrollingDirection.Up
-                ? Anchor.TopCentre
-                : Anchor.BottomCentre;
+            colouredBox.Anchor = colouredBox.Origin =
+                direction.NewValue == ScrollingDirection.Up
+                    ? Anchor.TopCentre
+                    : Anchor.BottomCentre;
         }
 
         private void onAccentChanged(ValueChangedEvent<Color4> accent)

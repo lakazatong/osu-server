@@ -30,44 +30,53 @@ namespace osu.Game.Rulesets.Mania.Tests
         private readonly StageDefinition stage = new StageDefinition(1);
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new ScrollingTestContainer(ScrollingDirection.Down)
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.X,
-                RelativeSizeAxes = Axes.Y,
-                TimeRange = 2000,
-                Clock = new FramedClock(clock),
-                Child = column = new Column(0, false)
+                Child = new ScrollingTestContainer(ScrollingDirection.Down)
                 {
-                    Action = { Value = ManiaAction.Key1 },
-                    Height = 0.85f,
-                    AccentColour = { Value = Color4.Gray },
-                },
-            };
-        });
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.X,
+                    RelativeSizeAxes = Axes.Y,
+                    TimeRange = 2000,
+                    Clock = new FramedClock(clock),
+                    Child = column =
+                        new Column(0, false)
+                        {
+                            Action = { Value = ManiaAction.Key1 },
+                            Height = 0.85f,
+                            AccentColour = { Value = Color4.Gray },
+                        },
+                };
+            });
 
         [Test]
         public void TestHoldNoteHeadVisibility()
         {
             DrawableHoldNote note = null;
-            AddStep("Add hold note", () =>
-            {
-                var h = new HoldNote
+            AddStep(
+                "Add hold note",
+                () =>
                 {
-                    StartTime = 0,
-                    Duration = 1000
-                };
-                h.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
-                column.Add(note = new DrawableHoldNote(h));
-            });
-            AddStep("Hold key", () =>
-            {
-                clock.CurrentTime = 0;
-                note.OnPressed(new KeyBindingPressEvent<ManiaAction>(GetContainingInputManager()!.CurrentState, ManiaAction.Key1));
-            });
+                    var h = new HoldNote { StartTime = 0, Duration = 1000 };
+                    h.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
+                    column.Add(note = new DrawableHoldNote(h));
+                }
+            );
+            AddStep(
+                "Hold key",
+                () =>
+                {
+                    clock.CurrentTime = 0;
+                    note.OnPressed(
+                        new KeyBindingPressEvent<ManiaAction>(
+                            GetContainingInputManager()!.CurrentState,
+                            ManiaAction.Key1
+                        )
+                    );
+                }
+            );
             AddStep("progress time", () => clock.CurrentTime = 500);
             AddAssert("head is visible", () => note.Head.Alpha == 1);
         }

@@ -31,7 +31,15 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 Vector2 currentPosition = StartPosition.Value + index * step;
                 index++;
 
-                if (!lineDefinitelyIntersectsBox(currentPosition, step.PerpendicularLeft, drawSize, out var p1, out var p2))
+                if (
+                    !lineDefinitelyIntersectsBox(
+                        currentPosition,
+                        step.PerpendicularLeft,
+                        drawSize,
+                        out var p1,
+                        out var p2
+                    )
+                )
                 {
                     if (!isMovingTowardsBox(currentPosition, step, drawSize))
                         break;
@@ -64,8 +72,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         private bool isMovingTowardsBox(Vector2 currentPosition, Vector2 step, Vector2 box)
         {
-            return (currentPosition + step).LengthSquared < currentPosition.LengthSquared ||
-                   (currentPosition + step - box).LengthSquared < (currentPosition - box).LengthSquared;
+            return (currentPosition + step).LengthSquared < currentPosition.LengthSquared
+                || (currentPosition + step - box).LengthSquared
+                    < (currentPosition - box).LengthSquared;
         }
 
         /// <summary>
@@ -78,7 +87,13 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <param name="p1">The first intersection point.</param>
         /// <param name="p2">The second intersection point.</param>
         /// <returns>Whether the line definitely intersects the box.</returns>
-        private bool lineDefinitelyIntersectsBox(Vector2 lineStart, Vector2 lineDir, Vector2 box, out Vector2 p1, out Vector2 p2)
+        private bool lineDefinitelyIntersectsBox(
+            Vector2 lineStart,
+            Vector2 lineDir,
+            Vector2 box,
+            out Vector2 p1,
+            out Vector2 p2
+        )
         {
             p1 = Vector2.Zero;
             p2 = Vector2.Zero;
@@ -86,7 +101,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (Precision.AlmostEquals(lineDir.X, 0))
             {
                 // If the line is vertical, we only need to check if the X coordinate of the line is within the box.
-                if (!Precision.DefinitelyBigger(lineStart.X, 0) || !Precision.DefinitelyBigger(box.X, lineStart.X))
+                if (
+                    !Precision.DefinitelyBigger(lineStart.X, 0)
+                    || !Precision.DefinitelyBigger(box.X, lineStart.X)
+                )
                     return false;
 
                 p1 = new Vector2(lineStart.X, 0);
@@ -97,7 +115,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (Precision.AlmostEquals(lineDir.Y, 0))
             {
                 // If the line is horizontal, we only need to check if the Y coordinate of the line is within the box.
-                if (!Precision.DefinitelyBigger(lineStart.Y, 0) || !Precision.DefinitelyBigger(box.Y, lineStart.Y))
+                if (
+                    !Precision.DefinitelyBigger(lineStart.Y, 0)
+                    || !Precision.DefinitelyBigger(box.Y, lineStart.Y)
+                )
                     return false;
 
                 p1 = new Vector2(0, lineStart.Y);

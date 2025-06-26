@@ -27,7 +27,8 @@ namespace osu.Game.Overlays.SkinEditor
         [Resolved]
         private IEditorChangeHandler? changeHandler { get; set; }
 
-        private BindableList<ISerialisableDrawable> selectedItems { get; } = new BindableList<ISerialisableDrawable>();
+        private BindableList<ISerialisableDrawable> selectedItems { get; } =
+            new BindableList<ISerialisableDrawable>();
 
         [BackgroundDependencyLoader]
         private void load(SkinEditor skinEditor)
@@ -50,7 +51,8 @@ namespace osu.Game.Overlays.SkinEditor
             CanScaleDiagonally.Value = true;
         }
 
-        private bool allSelectedSupportManualSizing(Axes axis) => selectedItems.All(b => (b as CompositeDrawable)?.AutoSizeAxes.HasFlag(axis) == false);
+        private bool allSelectedSupportManualSizing(Axes axis) =>
+            selectedItems.All(b => (b as CompositeDrawable)?.AutoSizeAxes.HasFlag(axis) == false);
 
         private Dictionary<Drawable, OriginalDrawableState>? objectsInScale;
         private Vector2? defaultOrigin;
@@ -61,33 +63,63 @@ namespace osu.Game.Overlays.SkinEditor
         public override void Begin()
         {
             if (objectsInScale != null)
-                throw new InvalidOperationException($"Cannot {nameof(Begin)} a scale operation while another is in progress!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Begin)} a scale operation while another is in progress!"
+                );
 
             changeHandler?.BeginChange();
 
-            objectsInScale = selectedItems.Cast<Drawable>().ToDictionary(d => d, d => new OriginalDrawableState(d));
-            OriginalSurroundingQuad = ToLocalSpace(GeometryUtils.GetSurroundingQuad(objectsInScale.SelectMany(d => d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray())));
-            defaultOrigin = ToLocalSpace(GeometryUtils.MinimumEnclosingCircle(objectsInScale.SelectMany(d => d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray())).Item1);
+            objectsInScale = selectedItems
+                .Cast<Drawable>()
+                .ToDictionary(d => d, d => new OriginalDrawableState(d));
+            OriginalSurroundingQuad = ToLocalSpace(
+                GeometryUtils.GetSurroundingQuad(
+                    objectsInScale.SelectMany(d =>
+                        d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray()
+                    )
+                )
+            );
+            defaultOrigin = ToLocalSpace(
+                GeometryUtils
+                    .MinimumEnclosingCircle(
+                        objectsInScale.SelectMany(d =>
+                            d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray()
+                        )
+                    )
+                    .Item1
+            );
 
             isFlippedX = false;
             isFlippedY = false;
         }
 
-        public override void Update(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both, float axisRotation = 0)
+        public override void Update(
+            Vector2 scale,
+            Vector2? origin = null,
+            Axes adjustAxis = Axes.Both,
+            float axisRotation = 0
+        )
         {
             if (objectsInScale == null)
-                throw new InvalidOperationException($"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!"
+                );
 
             Debug.Assert(defaultOrigin != null && OriginalSurroundingQuad != null);
 
             var actualOrigin = ToScreenSpace(origin ?? defaultOrigin.Value);
 
-            if ((adjustAxis == Axes.Y && !allSelectedSupportManualSizing(Axes.Y)) ||
-                (adjustAxis == Axes.X && !allSelectedSupportManualSizing(Axes.X)))
+            if (
+                (adjustAxis == Axes.Y && !allSelectedSupportManualSizing(Axes.Y))
+                || (adjustAxis == Axes.X && !allSelectedSupportManualSizing(Axes.X))
+            )
                 return;
 
             // If the selection has no area we cannot scale it
-            if (OriginalSurroundingQuad.Value.Width == 0 || OriginalSurroundingQuad.Value.Height == 0)
+            if (
+                OriginalSurroundingQuad.Value.Width == 0
+                || OriginalSurroundingQuad.Value.Height == 0
+            )
                 return;
 
             // for now aspect lock scale adjustments that occur at corners.
@@ -124,7 +156,14 @@ namespace osu.Game.Overlays.SkinEditor
 
             foreach (var (b, originalState) in objectsInScale)
             {
-                UpdatePosition(b, GeometryUtils.GetScaledPosition(scale, actualOrigin, originalState.ScreenSpaceOriginPosition));
+                UpdatePosition(
+                    b,
+                    GeometryUtils.GetScaledPosition(
+                        scale,
+                        actualOrigin,
+                        originalState.ScreenSpaceOriginPosition
+                    )
+                );
 
                 var currentScale = scale;
                 if (Precision.AlmostEquals(MathF.Abs(b.Rotation) % 180, 90))
@@ -150,7 +189,9 @@ namespace osu.Game.Overlays.SkinEditor
         public override void Commit()
         {
             if (objectsInScale == null)
-                throw new InvalidOperationException($"Cannot {nameof(Commit)} a scale operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Commit)} a scale operation without calling {nameof(Begin)} first!"
+                );
 
             changeHandler?.EndChange();
 

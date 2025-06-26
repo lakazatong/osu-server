@@ -26,7 +26,11 @@ namespace osu.Game.Rulesets.Osu.Objects
         /// <summary>
         /// The RPM required to complete the spinner and receive full score at ODs [ 0, 5, 10 ].
         /// </summary>
-        private static readonly DifficultyRange complete_rpm_range = new DifficultyRange(250, 380, 430);
+        private static readonly DifficultyRange complete_rpm_range = new DifficultyRange(
+            250,
+            380,
+            430
+        );
 
         public double EndTime
         {
@@ -58,15 +62,26 @@ namespace osu.Game.Rulesets.Osu.Objects
 
         public override Vector2 StackOffset => Vector2.Zero;
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
             // The average RPS required over the length of the spinner to clear the spinner.
-            double minRps = IBeatmapDifficultyInfo.DifficultyRange(difficulty.OverallDifficulty, clear_rpm_range) / 60;
+            double minRps =
+                IBeatmapDifficultyInfo.DifficultyRange(
+                    difficulty.OverallDifficulty,
+                    clear_rpm_range
+                ) / 60;
 
             // The RPS required over the length of the spinner to receive full score (all normal + bonus ticks).
-            double maxRps = IBeatmapDifficultyInfo.DifficultyRange(difficulty.OverallDifficulty, complete_rpm_range) / 60;
+            double maxRps =
+                IBeatmapDifficultyInfo.DifficultyRange(
+                    difficulty.OverallDifficulty,
+                    complete_rpm_range
+                ) / 60;
 
             double secondsDuration = Duration / 1000;
 
@@ -74,7 +89,10 @@ namespace osu.Game.Rulesets.Osu.Objects
             const double duration_error = 0.0001;
 
             SpinsRequired = (int)(minRps * secondsDuration + duration_error);
-            MaximumBonusSpins = Math.Max(0, (int)(maxRps * secondsDuration + duration_error) - SpinsRequired - bonus_spins_gap);
+            MaximumBonusSpins = Math.Max(
+                0,
+                (int)(maxRps * secondsDuration + duration_error) - SpinsRequired - bonus_spins_gap
+            );
         }
 
         protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
@@ -89,9 +107,16 @@ namespace osu.Game.Rulesets.Osu.Objects
 
                 double startTime = StartTime + (float)(i + 1) / totalSpins * Duration;
 
-                AddNested(i < SpinsRequiredForBonus
-                    ? new SpinnerTick { StartTime = startTime, SpinnerDuration = Duration }
-                    : new SpinnerBonusTick { StartTime = startTime, SpinnerDuration = Duration, Samples = new[] { CreateHitSampleInfo("spinnerbonus") } });
+                AddNested(
+                    i < SpinsRequiredForBonus
+                        ? new SpinnerTick { StartTime = startTime, SpinnerDuration = Duration }
+                        : new SpinnerBonusTick
+                        {
+                            StartTime = startTime,
+                            SpinnerDuration = Duration,
+                            Samples = new[] { CreateHitSampleInfo("spinnerbonus") },
+                        }
+                );
             }
         }
 
@@ -108,10 +133,7 @@ namespace osu.Game.Rulesets.Osu.Objects
             if (referenceSample == null)
                 return Array.Empty<HitSampleInfo>();
 
-            return new[]
-            {
-                referenceSample.With("spinnerspin")
-            };
+            return new[] { referenceSample.With("spinnerspin") };
         }
     }
 }

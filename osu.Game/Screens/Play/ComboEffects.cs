@@ -31,7 +31,9 @@ namespace osu.Game.Screens.Play
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
-            InternalChild = comboBreakSample = new SkinnableSound(new SampleInfo("Gameplay/combobreak"));
+            InternalChild = comboBreakSample = new SkinnableSound(
+                new SampleInfo("Gameplay/combobreak")
+            );
             alwaysPlayFirst = config.GetBindable<bool>(OsuSetting.AlwaysPlayFirstComboBreak);
         }
 
@@ -56,7 +58,10 @@ namespace osu.Game.Screens.Play
             if (gameplayClock.IsRewinding)
                 return;
 
-            if (combo.NewValue == 0 && (combo.OldValue > 20 || (alwaysPlayFirst.Value && firstBreakTime == null)))
+            if (
+                combo.NewValue == 0
+                && (combo.OldValue > 20 || (alwaysPlayFirst.Value && firstBreakTime == null))
+            )
             {
                 firstBreakTime = gameplayClock.CurrentTime;
 

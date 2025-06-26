@@ -34,22 +34,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = Color4.White,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                 breakTracker = new TestBreakTracker(),
                 breakOverlay = new BreakOverlay(new ScoreProcessor(new OsuRuleset()))
                 {
                     ProcessCustomClock = false,
                     BreakTracker = breakTracker,
                 },
-                new LetterboxOverlay
-                {
-                    ProcessCustomClock = false,
-                    BreakTracker = breakTracker,
-                },
+                new LetterboxOverlay { ProcessCustomClock = false, BreakTracker = breakTracker },
             };
         }
 
@@ -105,7 +97,11 @@ namespace osu.Game.Tests.Visual.Gameplay
             loadBreaksStep("multiple breaks", testBreaks);
 
             seekAndAssertBreak("seek to break start", testBreaks[1].StartTime, true);
-            seekAndAssertBreak("seek to break middle", testBreaks[1].StartTime + testBreaks[1].Duration / 2, true);
+            seekAndAssertBreak(
+                "seek to break middle",
+                testBreaks[1].StartTime + testBreaks[1].Duration / 2,
+                true
+            );
             seekAndAssertBreak("seek to break end", testBreaks[1].EndTime, false);
             seekAndAssertBreak("seek to break after end", testBreaks[1].EndTime + 500, false);
         }
@@ -125,18 +121,24 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void addShowBreakStep(double seconds)
         {
-            AddStep($"show '{seconds}s' break", () =>
-            {
-                breakTracker.Breaks = new List<BreakPeriod>
+            AddStep(
+                $"show '{seconds}s' break",
+                () =>
                 {
-                    new BreakPeriod(Clock.CurrentTime, Clock.CurrentTime + seconds * 1000)
-                };
-            });
+                    breakTracker.Breaks = new List<BreakPeriod>
+                    {
+                        new BreakPeriod(Clock.CurrentTime, Clock.CurrentTime + seconds * 1000),
+                    };
+                }
+            );
         }
 
         private void setClock(bool useManual)
         {
-            AddStep($"set {(useManual ? "manual" : "realtime")} clock", () => breakTracker.SwitchClock(useManual));
+            AddStep(
+                $"set {(useManual ? "manual" : "realtime")} clock",
+                () => breakTracker.SwitchClock(useManual)
+            );
         }
 
         private void loadBreaksStep(string breakDescription, IReadOnlyList<BreakPeriod> breaks)
@@ -151,13 +153,21 @@ namespace osu.Game.Tests.Visual.Gameplay
             {
                 seekAndAssertBreak("seek to break after end", b.EndTime + 500, false);
                 seekAndAssertBreak("seek to break end", b.EndTime, false);
-                seekAndAssertBreak("seek to break middle", b.StartTime + b.Duration / 2, b.HasEffect);
+                seekAndAssertBreak(
+                    "seek to break middle",
+                    b.StartTime + b.Duration / 2,
+                    b.HasEffect
+                );
                 seekAndAssertBreak("seek to break start", b.StartTime, b.HasEffect);
             }
             else
             {
                 seekAndAssertBreak("seek to break start", b.StartTime, b.HasEffect);
-                seekAndAssertBreak("seek to break middle", b.StartTime + b.Duration / 2, b.HasEffect);
+                seekAndAssertBreak(
+                    "seek to break middle",
+                    b.StartTime + b.Duration / 2,
+                    b.HasEffect
+                );
                 seekAndAssertBreak("seek to break end", b.EndTime, false);
                 seekAndAssertBreak("seek to break after end", b.EndTime + 500, false);
             }
@@ -166,11 +176,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         private void seekAndAssertBreak(string seekStepDescription, double time, bool shouldBeBreak)
         {
             AddStep(seekStepDescription, () => breakTracker.ManualClockTime = time);
-            AddAssert($"is{(!shouldBeBreak ? " not" : string.Empty)} break time", () =>
-            {
-                breakTracker.ProgressTime();
-                return breakTracker.IsBreakTime.Value == shouldBeBreak;
-            });
+            AddAssert(
+                $"is{(!shouldBeBreak ? " not" : string.Empty)} break time",
+                () =>
+                {
+                    breakTracker.ProgressTime();
+                    return breakTracker.IsBreakTime.Value == shouldBeBreak;
+                }
+            );
         }
 
         private partial class TestBreakTracker : BreakTracker
@@ -199,7 +212,8 @@ namespace osu.Game.Tests.Visual.Gameplay
                 Update();
             }
 
-            public void SwitchClock(bool setManual) => Clock = setManual ? FramedManualClock : originalClock;
+            public void SwitchClock(bool setManual) =>
+                Clock = setManual ? FramedManualClock : originalClock;
 
             protected override void LoadComplete()
             {

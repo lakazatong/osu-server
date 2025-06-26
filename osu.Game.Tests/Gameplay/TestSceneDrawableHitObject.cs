@@ -24,22 +24,26 @@ namespace osu.Game.Tests.Gameplay
         public void TestEntryLifetime()
         {
             TestDrawableHitObject dho = null;
-            var initialHitObject = new HitObject
-            {
-                StartTime = 1000
-            };
-            var entry = new TestLifetimeEntry(new HitObject
-            {
-                StartTime = 2000
-            });
+            var initialHitObject = new HitObject { StartTime = 1000 };
+            var entry = new TestLifetimeEntry(new HitObject { StartTime = 2000 });
 
             AddStep("Create DHO", () => Child = dho = new TestDrawableHitObject(initialHitObject));
 
-            AddAssert("Correct initial lifetime", () => dho.LifetimeStart == initialHitObject.StartTime - TestDrawableHitObject.INITIAL_LIFETIME_OFFSET);
+            AddAssert(
+                "Correct initial lifetime",
+                () =>
+                    dho.LifetimeStart
+                    == initialHitObject.StartTime - TestDrawableHitObject.INITIAL_LIFETIME_OFFSET
+            );
 
             AddStep("Apply entry", () => dho.Apply(entry));
 
-            AddAssert("Correct initial lifetime", () => dho.LifetimeStart == entry.HitObject.StartTime - TestLifetimeEntry.INITIAL_LIFETIME_OFFSET);
+            AddAssert(
+                "Correct initial lifetime",
+                () =>
+                    dho.LifetimeStart
+                    == entry.HitObject.StartTime - TestLifetimeEntry.INITIAL_LIFETIME_OFFSET
+            );
 
             AddStep("Set lifetime", () => dho.LifetimeEnd = 3000);
             AddAssert("Entry lifetime is updated", () => entry.LifetimeEnd == 3000);
@@ -50,50 +54,88 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject dho = null;
             TestLifetimeEntry entry = null;
-            AddStep("Create DHO", () => Child = dho = new TestDrawableHitObject
-            {
-                Entry = entry = new TestLifetimeEntry(new HitObject())
-            });
+            AddStep(
+                "Create DHO",
+                () =>
+                    Child = dho =
+                        new TestDrawableHitObject
+                        {
+                            Entry = entry = new TestLifetimeEntry(new HitObject()),
+                        }
+            );
 
-            AddStep("KeepAlive = true", () =>
-            {
-                entry.LifetimeStart = 0;
-                entry.LifetimeEnd = 1000;
-                entry.KeepAlive = true;
-            });
-            AddAssert("Lifetime is overriden", () => entry.LifetimeStart == double.MinValue && entry.LifetimeEnd == double.MaxValue);
+            AddStep(
+                "KeepAlive = true",
+                () =>
+                {
+                    entry.LifetimeStart = 0;
+                    entry.LifetimeEnd = 1000;
+                    entry.KeepAlive = true;
+                }
+            );
+            AddAssert(
+                "Lifetime is overriden",
+                () => entry.LifetimeStart == double.MinValue && entry.LifetimeEnd == double.MaxValue
+            );
 
             AddStep("Set LifetimeStart", () => dho.LifetimeStart = 500);
             AddStep("KeepAlive = false", () => entry.KeepAlive = false);
-            AddAssert("Lifetime is correct", () => entry.LifetimeStart == 500 && entry.LifetimeEnd == 1000);
+            AddAssert(
+                "Lifetime is correct",
+                () => entry.LifetimeStart == 500 && entry.LifetimeEnd == 1000
+            );
 
-            AddStep("Set LifetimeStart while KeepAlive", () =>
-            {
-                entry.KeepAlive = true;
-                dho.LifetimeStart = double.MinValue;
-                entry.KeepAlive = false;
-            });
-            AddAssert("Lifetime is changed", () => entry.LifetimeStart == double.MinValue && entry.LifetimeEnd == 1000);
+            AddStep(
+                "Set LifetimeStart while KeepAlive",
+                () =>
+                {
+                    entry.KeepAlive = true;
+                    dho.LifetimeStart = double.MinValue;
+                    entry.KeepAlive = false;
+                }
+            );
+            AddAssert(
+                "Lifetime is changed",
+                () => entry.LifetimeStart == double.MinValue && entry.LifetimeEnd == 1000
+            );
         }
 
         [Test]
         public void TestLifetimeUpdatedOnDefaultApplied()
         {
             TestLifetimeEntry entry = null;
-            AddStep("Create entry", () => entry = new TestLifetimeEntry(new HitObject()) { LifetimeStart = 1 });
+            AddStep(
+                "Create entry",
+                () => entry = new TestLifetimeEntry(new HitObject()) { LifetimeStart = 1 }
+            );
             assertJudged(() => entry, false);
-            AddStep("ApplyDefaults", () => entry.HitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty()));
+            AddStep(
+                "ApplyDefaults",
+                () => entry.HitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty())
+            );
             assertJudged(() => entry, false);
-            AddAssert("Lifetime is updated", () => entry.LifetimeStart == -TestLifetimeEntry.INITIAL_LIFETIME_OFFSET);
+            AddAssert(
+                "Lifetime is updated",
+                () => entry.LifetimeStart == -TestLifetimeEntry.INITIAL_LIFETIME_OFFSET
+            );
 
             TestDrawableHitObject dho = null;
-            AddStep("Create DHO", () => Child = dho = new TestDrawableHitObject
-            {
-                Entry = entry,
-                SetLifetimeStartOnApply = true
-            });
-            AddStep("ApplyDefaults", () => entry.HitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty()));
-            AddAssert("Lifetime is correct", () => dho.LifetimeStart == TestDrawableHitObject.LIFETIME_ON_APPLY && entry.LifetimeStart == TestDrawableHitObject.LIFETIME_ON_APPLY);
+            AddStep(
+                "Create DHO",
+                () =>
+                    Child = dho =
+                        new TestDrawableHitObject { Entry = entry, SetLifetimeStartOnApply = true }
+            );
+            AddStep(
+                "ApplyDefaults",
+                () => entry.HitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty())
+            );
+            AddAssert(
+                "Lifetime is correct",
+                () =>
+                    dho.LifetimeStart == TestDrawableHitObject.LIFETIME_ON_APPLY
+                    && entry.LifetimeStart == TestDrawableHitObject.LIFETIME_ON_APPLY
+            );
             assertJudged(() => entry, false);
         }
 
@@ -102,20 +144,34 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject dho = null;
             TestLifetimeEntry entry = null;
-            AddStep("Create DHO", () => Child = dho = new TestDrawableHitObject
-            {
-                Entry = entry = new TestLifetimeEntry(new HitObject())
-            });
+            AddStep(
+                "Create DHO",
+                () =>
+                    Child = dho =
+                        new TestDrawableHitObject
+                        {
+                            Entry = entry = new TestLifetimeEntry(new HitObject()),
+                        }
+            );
 
-            AddStep("Set entry lifetime", () =>
-            {
-                entry.LifetimeStart = 777;
-                entry.LifetimeEnd = 888;
-            });
-            AddAssert("Drawable lifetime is updated", () => dho.LifetimeStart == 777 && dho.LifetimeEnd == 888);
+            AddStep(
+                "Set entry lifetime",
+                () =>
+                {
+                    entry.LifetimeStart = 777;
+                    entry.LifetimeEnd = 888;
+                }
+            );
+            AddAssert(
+                "Drawable lifetime is updated",
+                () => dho.LifetimeStart == 777 && dho.LifetimeEnd == 888
+            );
 
             AddStep("KeepAlive = true", () => entry.KeepAlive = true);
-            AddAssert("Drawable lifetime is updated", () => dho.LifetimeStart == double.MinValue && dho.LifetimeEnd == double.MaxValue);
+            AddAssert(
+                "Drawable lifetime is updated",
+                () => dho.LifetimeStart == double.MinValue && dho.LifetimeEnd == double.MaxValue
+            );
 
             AddStep("Modify start time", () => entry.HitObject.StartTime = 100);
             AddAssert("Drawable lifetime is correct", () => dho.LifetimeStart == double.MinValue);
@@ -127,18 +183,26 @@ namespace osu.Game.Tests.Gameplay
             AddAssert("Lifetime change is blocked", () => dho.LifetimeEnd == double.MaxValue);
 
             AddStep("KeepAlive = false", () => entry.KeepAlive = false);
-            AddAssert("Drawable lifetime is restored", () => dho.LifetimeStart == 666 && dho.LifetimeEnd == 999);
+            AddAssert(
+                "Drawable lifetime is restored",
+                () => dho.LifetimeStart == 666 && dho.LifetimeEnd == 999
+            );
         }
 
         [Test]
         public void TestStateChangeBeforeLoadComplete()
         {
             TestDrawableHitObject dho = null;
-            AddStep("Add DHO and apply result", () =>
-            {
-                Child = dho = new TestDrawableHitObject(new HitObject { StartTime = Time.Current });
-                dho.MissForcefully();
-            });
+            AddStep(
+                "Add DHO and apply result",
+                () =>
+                {
+                    Child = dho = new TestDrawableHitObject(
+                        new HitObject { StartTime = Time.Current }
+                    );
+                    dho.MissForcefully();
+                }
+            );
             AddAssert("DHO state is correct", () => dho.State.Value == ArmedState.Miss);
         }
 
@@ -148,15 +212,24 @@ namespace osu.Game.Tests.Gameplay
             TestDrawableHitObject dho = null;
             HitObjectLifetimeEntry lifetimeEntry = null;
 
-            AddStep("Create lifetime entry", () => lifetimeEntry = new HitObjectLifetimeEntry(new HitObject { StartTime = Time.Current }));
+            AddStep(
+                "Create lifetime entry",
+                () =>
+                    lifetimeEntry = new HitObjectLifetimeEntry(
+                        new HitObject { StartTime = Time.Current }
+                    )
+            );
 
             assertJudged(() => lifetimeEntry, false);
 
-            AddStep("Create DHO and apply entry", () =>
-            {
-                Child = dho = new TestDrawableHitObject();
-                dho.Apply(lifetimeEntry);
-            });
+            AddStep(
+                "Create DHO and apply entry",
+                () =>
+                {
+                    Child = dho = new TestDrawableHitObject();
+                    dho.Apply(lifetimeEntry);
+                }
+            );
 
             assertJudged(() => lifetimeEntry, false);
 
@@ -170,30 +243,44 @@ namespace osu.Game.Tests.Gameplay
         {
             TestDrawableHitObject dho = null;
             HitObjectLifetimeEntry lifetimeEntry = null;
-            AddStep("Create lifetime entry", () =>
-            {
-                var hitObject = new HitObject { StartTime = Time.Current };
-                lifetimeEntry = new HitObjectLifetimeEntry(hitObject)
+            AddStep(
+                "Create lifetime entry",
+                () =>
                 {
-                    Result = new JudgementResult(hitObject, hitObject.Judgement)
+                    var hitObject = new HitObject { StartTime = Time.Current };
+                    lifetimeEntry = new HitObjectLifetimeEntry(hitObject)
                     {
-                        Type = HitResult.Great
-                    }
-                };
-            });
+                        Result = new JudgementResult(hitObject, hitObject.Judgement)
+                        {
+                            Type = HitResult.Great,
+                        },
+                    };
+                }
+            );
             assertJudged(() => lifetimeEntry, true);
-            AddStep("Create DHO and apply entry", () =>
-            {
-                dho = new TestDrawableHitObject();
-                dho.Apply(lifetimeEntry);
-                Child = dho;
-            });
+            AddStep(
+                "Create DHO and apply entry",
+                () =>
+                {
+                    dho = new TestDrawableHitObject();
+                    dho.Apply(lifetimeEntry);
+                    Child = dho;
+                }
+            );
             assertJudged(() => lifetimeEntry, true);
-            AddAssert("DHO state is correct", () => dho.State.Value, () => Is.EqualTo(ArmedState.Hit));
+            AddAssert(
+                "DHO state is correct",
+                () => dho.State.Value,
+                () => Is.EqualTo(ArmedState.Hit)
+            );
         }
 
         private void assertJudged(Func<HitObjectLifetimeEntry> entry, bool val) =>
-            AddAssert(val ? "Is judged" : "Not judged", () => entry().Judged, () => Is.EqualTo(val));
+            AddAssert(
+                val ? "Is judged" : "Not judged",
+                () => entry().Judged,
+                () => Is.EqualTo(val)
+            );
 
         private partial class TestDrawableHitObject : DrawableHitObject
         {
@@ -204,9 +291,7 @@ namespace osu.Game.Tests.Gameplay
             public bool SetLifetimeStartOnApply;
 
             public TestDrawableHitObject(HitObject hitObject = null)
-                : base(hitObject)
-            {
-            }
+                : base(hitObject) { }
 
             protected override void OnApply()
             {
@@ -236,9 +321,7 @@ namespace osu.Game.Tests.Gameplay
             protected override double InitialLifetimeOffset => INITIAL_LIFETIME_OFFSET;
 
             public TestLifetimeEntry(HitObject hitObject)
-                : base(hitObject)
-            {
-            }
+                : base(hitObject) { }
         }
     }
 }

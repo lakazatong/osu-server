@@ -14,13 +14,13 @@ namespace osu.Game.Rulesets.Catch.Scoring
     public partial class CatchHealthProcessor : LegacyDrainingHealthProcessor
     {
         public CatchHealthProcessor(double drainStartTime)
-            : base(drainStartTime)
-        {
-        }
+            : base(drainStartTime) { }
 
-        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() => EnumerateHitObjects(Beatmap).Where(h => h is Fruit || h is Droplet || h is Banana);
+        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() =>
+            EnumerateHitObjects(Beatmap).Where(h => h is Fruit || h is Droplet || h is Banana);
 
-        protected override IEnumerable<HitObject> EnumerateNestedHitObjects(HitObject hitObject) => Enumerable.Empty<HitObject>();
+        protected override IEnumerable<HitObject> EnumerateNestedHitObjects(HitObject hitObject) =>
+            Enumerable.Empty<HitObject>();
 
         protected override bool CheckDefaultFailCondition(JudgementResult result)
         {
@@ -50,7 +50,12 @@ namespace osu.Game.Rulesets.Catch.Scoring
 
                 case HitResult.LargeTickMiss:
                 case HitResult.Miss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.03, -0.125, -0.2);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.03,
+                        -0.125,
+                        -0.2
+                    );
 
                 case HitResult.SmallTickHit:
                     increase = 0.0015;

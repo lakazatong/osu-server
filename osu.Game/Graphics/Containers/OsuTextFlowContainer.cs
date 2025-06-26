@@ -15,19 +15,20 @@ namespace osu.Game.Graphics.Containers
     public partial class OsuTextFlowContainer : TextFlowContainer
     {
         public OsuTextFlowContainer(Action<SpriteText> defaultCreationParameters = null)
-            : base(defaultCreationParameters)
-        {
-        }
+            : base(defaultCreationParameters) { }
 
         protected override SpriteText CreateSpriteText() => new OsuSpriteText();
 
-        public ITextPart AddArbitraryDrawable(Drawable drawable) => AddPart(new TextPartManual(new ArbitraryDrawableWrapper { Child = drawable }.Yield()));
+        public ITextPart AddArbitraryDrawable(Drawable drawable) =>
+            AddPart(new TextPartManual(new ArbitraryDrawableWrapper { Child = drawable }.Yield()));
 
-        public ITextPart AddIcon(IconUsage icon, Action<SpriteText> creationParameters = null) => AddText(icon.Icon.ToString(), creationParameters);
+        public ITextPart AddIcon(IconUsage icon, Action<SpriteText> creationParameters = null) =>
+            AddText(icon.Icon.ToString(), creationParameters);
 
         private partial class ArbitraryDrawableWrapper : Container, IHasLineBaseHeight
         {
-            public float LineBaseHeight => (Child as IHasLineBaseHeight)?.LineBaseHeight ?? DrawHeight;
+            public float LineBaseHeight =>
+                (Child as IHasLineBaseHeight)?.LineBaseHeight ?? DrawHeight;
 
             public ArbitraryDrawableWrapper()
             {

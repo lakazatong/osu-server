@@ -41,7 +41,10 @@ namespace osu.Game.Input
                     if (e.CurrentState.Mouse.LastSource is not ISourcedFromTouch)
                     {
                         if (touchInputWasActive)
-                            Logger.Log($@"Touch input deactivated due to received {e.GetType().ReadableName()}", LoggingTarget.Input);
+                            Logger.Log(
+                                $@"Touch input deactivated due to received {e.GetType().ReadableName()}",
+                                LoggingTarget.Input
+                            );
                         touchInputActive.Value = false;
                     }
 
@@ -49,7 +52,10 @@ namespace osu.Game.Input
 
                 case TouchEvent:
                     if (!touchInputWasActive)
-                        Logger.Log($@"Touch input activated due to received {e.GetType().ReadableName()}", LoggingTarget.Input);
+                        Logger.Log(
+                            $@"Touch input activated due to received {e.GetType().ReadableName()}",
+                            LoggingTarget.Input
+                        );
                     touchInputActive.Value = true;
                     break;
 
@@ -65,7 +71,11 @@ namespace osu.Game.Input
         [Conditional("TOUCH_INPUT_DEBUG")]
         private void debugToggleTouchInputActive()
         {
-            Logger.Log($@"Debug-toggling touch input to {(touchInputActive.Value ? @"inactive" : @"active")}", LoggingTarget.Information, LogLevel.Important);
+            Logger.Log(
+                $@"Debug-toggling touch input to {(touchInputActive.Value ? @"inactive" : @"active")}",
+                LoggingTarget.Information,
+                LogLevel.Important
+            );
             touchInputActive.Toggle();
         }
     }

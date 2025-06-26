@@ -8,10 +8,14 @@ namespace osu.Game.Storyboards.Commands
 {
     public class StoryboardBlendingParametersCommand : StoryboardCommand<BlendingParameters>
     {
-        public StoryboardBlendingParametersCommand(Easing easing, double startTime, double endTime, BlendingParameters startValue, BlendingParameters endValue)
-            : base(easing, startTime, endTime, startValue, endValue)
-        {
-        }
+        public StoryboardBlendingParametersCommand(
+            Easing easing,
+            double startTime,
+            double endTime,
+            BlendingParameters startValue,
+            BlendingParameters endValue
+        )
+            : base(easing, startTime, endTime, startValue, endValue) { }
 
         public override string PropertyName => nameof(Drawable.Blending);
 
@@ -21,8 +25,9 @@ namespace osu.Game.Storyboards.Commands
                 d.Blending = StartValue;
         }
 
-        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d)
-            => d.TransformTo(nameof(d.Blending), StartValue).Delay(Duration)
+        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d) =>
+            d.TransformTo(nameof(d.Blending), StartValue)
+                .Delay(Duration)
                 .TransformTo(nameof(d.Blending), EndValue);
     }
 }

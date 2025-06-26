@@ -47,7 +47,8 @@ namespace osu.Game.Storyboards.Drawables
 
         protected override void SamplePlaybackDisabledChanged(ValueChangedEvent<bool> disabled)
         {
-            if (!RequestedPlaying) return;
+            if (!RequestedPlaying)
+                return;
 
             if (!Looping && disabled.NewValue)
             {

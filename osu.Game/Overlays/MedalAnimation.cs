@@ -1,26 +1,26 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
+using System;
+using System.Diagnostics;
+using osu.Framework.Allocation;
+using osu.Framework.Audio;
+using osu.Framework.Audio.Sample;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Game.Users;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Utils;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Backgrounds;
 using osu.Game.Overlays.MedalSplash;
-using osu.Framework.Allocation;
-using osu.Framework.Audio.Sample;
-using osu.Framework.Audio;
-using osu.Framework.Graphics.Textures;
-using osu.Framework.Graphics.Shapes;
-using System;
-using System.Diagnostics;
-using osu.Framework.Graphics.Effects;
-using osu.Framework.Utils;
+using osu.Game.Users;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -33,10 +33,13 @@ namespace osu.Game.Overlays
         public readonly Medal Medal;
 
         private readonly Box background;
-        private readonly Container backgroundStrip, particleContainer;
-        private readonly BackgroundStrip leftStrip, rightStrip;
+        private readonly Container backgroundStrip,
+            particleContainer;
+        private readonly BackgroundStrip leftStrip,
+            rightStrip;
         private readonly CircularContainer disc;
-        private readonly Sprite innerSpin, outerSpin;
+        private readonly Sprite innerSpin,
+            outerSpin;
 
         private DrawableMedal? drawableMedal;
         private Sample? getSample;
@@ -98,18 +101,11 @@ namespace osu.Game.Overlays
                                 Origin = Anchor.CentreLeft,
                                 Width = 0.5f,
                                 Padding = new MarginPadding { Left = DISC_SIZE / 2 },
-                                Children = new[]
-                                {
-                                    rightStrip = new BackgroundStrip(1f, 0f),
-                                },
+                                Children = new[] { rightStrip = new BackgroundStrip(1f, 0f) },
                             },
                         },
                     },
-                    particleContainer = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0f,
-                    },
+                    particleContainer = new Container { RelativeSizeAxes = Axes.Both, Alpha = 0f },
                     disc = new CircularContainer
                     {
                         Anchor = Anchor.Centre,
@@ -145,7 +141,7 @@ namespace osu.Game.Overlays
                             },
                         },
                     },
-                }
+                },
             };
 
             Show();
@@ -157,28 +153,34 @@ namespace osu.Game.Overlays
             getSample = audio.Samples.Get(@"MedalSplash/medal-get");
             innerSpin.Texture = outerSpin.Texture = textures.Get(@"MedalSplash/disc-spin");
 
-            disc.EdgeEffect = leftStrip.EdgeEffect = rightStrip.EdgeEffect = new EdgeEffectParameters
-            {
-                Type = EdgeEffectType.Glow,
-                Colour = colours.Blue.Opacity(0.5f),
-                Radius = 50,
-            };
+            disc.EdgeEffect =
+                leftStrip.EdgeEffect =
+                rightStrip.EdgeEffect =
+                    new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = colours.Blue.Opacity(0.5f),
+                        Radius = 50,
+                    };
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            LoadComponentAsync(drawableMedal = new DrawableMedal(Medal)
-            {
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                RelativeSizeAxes = Axes.Both,
-            }, loaded =>
-            {
-                disc.Add(loaded);
-                startAnimation();
-            });
+            LoadComponentAsync(
+                drawableMedal = new DrawableMedal(Medal)
+                {
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.Both,
+                },
+                loaded =>
+                {
+                    disc.Add(loaded);
+                    startAnimation();
+                }
+            );
         }
 
         protected override void Update()
@@ -204,8 +206,7 @@ namespace osu.Game.Overlays
 
             using (BeginDelayedSequence(200))
             {
-                disc.FadeIn(initial_duration)
-                    .ScaleTo(1f, initial_duration * 2, Easing.OutElastic);
+                disc.FadeIn(initial_duration).ScaleTo(1f, initial_duration * 2, Easing.OutElastic);
 
                 particleContainer.FadeIn(initial_duration);
                 outerSpin.FadeTo(0.1f, initial_duration * 2);
@@ -218,19 +219,24 @@ namespace osu.Game.Overlays
 
                     Debug.Assert(drawableMedal != null);
 
-                    this.Animate().Schedule(() =>
-                    {
-                        if (drawableMedal.State != DisplayState.Full)
-                            drawableMedal.State = DisplayState.Icon;
-                    }).Delay(step_duration).Schedule(() =>
-                    {
-                        if (drawableMedal.State != DisplayState.Full)
-                            drawableMedal.State = DisplayState.MedalUnlocked;
-                    }).Delay(step_duration).Schedule(() =>
-                    {
-                        if (drawableMedal.State != DisplayState.Full)
-                            drawableMedal.State = DisplayState.Full;
-                    });
+                    this.Animate()
+                        .Schedule(() =>
+                        {
+                            if (drawableMedal.State != DisplayState.Full)
+                                drawableMedal.State = DisplayState.Icon;
+                        })
+                        .Delay(step_duration)
+                        .Schedule(() =>
+                        {
+                            if (drawableMedal.State != DisplayState.Full)
+                                drawableMedal.State = DisplayState.MedalUnlocked;
+                        })
+                        .Delay(step_duration)
+                        .Schedule(() =>
+                        {
+                            if (drawableMedal.State != DisplayState.Full)
+                                drawableMedal.State = DisplayState.Full;
+                        });
                 }
             }
         }
@@ -266,16 +272,15 @@ namespace osu.Game.Overlays
             {
                 RelativeSizeAxes = Axes.Both;
                 Width = 0f;
-                Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(start), Color4.White.Opacity(end));
+                Colour = ColourInfo.GradientHorizontal(
+                    Color4.White.Opacity(start),
+                    Color4.White.Opacity(end)
+                );
                 Masking = true;
 
                 Children = new[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.White,
-                    }
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.White },
                 };
             }
         }
@@ -284,7 +289,11 @@ namespace osu.Game.Overlays
         {
             private readonly float direction;
 
-            private Vector2 positionForOffset(float offset) => new Vector2((float)(offset * Math.Sin(direction)), (float)(offset * Math.Cos(direction)));
+            private Vector2 positionForOffset(float offset) =>
+                new Vector2(
+                    (float)(offset * Math.Sin(direction)),
+                    (float)(offset * Math.Cos(direction))
+                );
 
             public MedalParticle(float direction)
             {

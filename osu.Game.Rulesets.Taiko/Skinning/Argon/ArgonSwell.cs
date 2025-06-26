@@ -10,11 +10,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
     {
         protected override Drawable CreateCentreCircle()
         {
-            return new ArgonSwellCirclePiece
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
+            return new ArgonSwellCirclePiece { Anchor = Anchor.Centre, Origin = Anchor.Centre };
         }
     }
 }

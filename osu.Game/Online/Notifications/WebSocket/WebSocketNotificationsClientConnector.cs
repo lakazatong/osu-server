@@ -14,7 +14,9 @@ namespace osu.Game.Online.Notifications.WebSocket
     /// <summary>
     /// A connector for <see cref="WebSocketNotificationsClient"/>s that receive events via a websocket.
     /// </summary>
-    public class WebSocketNotificationsClientConnector : PersistentEndpointClientConnector, INotificationsClient
+    public class WebSocketNotificationsClientConnector
+        : PersistentEndpointClientConnector,
+            INotificationsClient
     {
         public event Action<SocketMessage>? MessageReceived;
 
@@ -27,7 +29,9 @@ namespace osu.Game.Online.Notifications.WebSocket
             Start();
         }
 
-        protected override async Task<PersistentEndpointClient> BuildConnectionAsync(CancellationToken cancellationToken)
+        protected override async Task<PersistentEndpointClient> BuildConnectionAsync(
+            CancellationToken cancellationToken
+        )
         {
             var req = new GetNotificationsRequest();
             // must use `PerformAsync()`, since we may not be fully online yet

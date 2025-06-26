@@ -12,43 +12,59 @@ namespace osu.Game.Localisation.SkinComponents
         /// <summary>
         /// "Show extended information"
         /// </summary>
-        public static LocalisableString ShowExtendedInformation => new TranslatableString(getKey(@"show_extended_information"), @"Show extended information");
+        public static LocalisableString ShowExtendedInformation =>
+            new TranslatableString(
+                getKey(@"show_extended_information"),
+                @"Show extended information"
+            );
 
         /// <summary>
         /// "Whether to show extended information for each mod."
         /// </summary>
         public static LocalisableString ShowExtendedInformationDescription =>
-            new TranslatableString(getKey(@"whether_to_show_extended_information"), @"Whether to show extended information for each mod.");
+            new TranslatableString(
+                getKey(@"whether_to_show_extended_information"),
+                @"Whether to show extended information for each mod."
+            );
 
         /// <summary>
         /// "Display direction"
         /// </summary>
-        public static LocalisableString DisplayDirection => new TranslatableString(getKey(@"display_direction"), "Display direction");
+        public static LocalisableString DisplayDirection =>
+            new TranslatableString(getKey(@"display_direction"), "Display direction");
 
         /// <summary>
         /// "Expansion mode"
         /// </summary>
-        public static LocalisableString ExpansionMode => new TranslatableString(getKey(@"expansion_mode"), @"Expansion mode");
+        public static LocalisableString ExpansionMode =>
+            new TranslatableString(getKey(@"expansion_mode"), @"Expansion mode");
 
         /// <summary>
         /// "How the mod display expands when interacted with."
         /// </summary>
-        public static LocalisableString ExpansionModeDescription => new TranslatableString(getKey(@"how_the_mod_display_expands"), @"How the mod display expands when interacted with.");
+        public static LocalisableString ExpansionModeDescription =>
+            new TranslatableString(
+                getKey(@"how_the_mod_display_expands"),
+                @"How the mod display expands when interacted with."
+            );
 
         /// <summary>
         /// "Expand on hover"
         /// </summary>
-        public static LocalisableString ExpandOnHover => new TranslatableString(getKey(@"expand_on_hover"), @"Expand on hover");
+        public static LocalisableString ExpandOnHover =>
+            new TranslatableString(getKey(@"expand_on_hover"), @"Expand on hover");
 
         /// <summary>
         /// "Always contracted"
         /// </summary>
-        public static LocalisableString AlwaysContracted => new TranslatableString(getKey(@"always_contracted"), @"Always contracted");
+        public static LocalisableString AlwaysContracted =>
+            new TranslatableString(getKey(@"always_contracted"), @"Always contracted");
 
         /// <summary>
         /// "Always expanded"
         /// </summary>
-        public static LocalisableString AlwaysExpanded => new TranslatableString(getKey(@"always_expanded"), @"Always expanded");
+        public static LocalisableString AlwaysExpanded =>
+            new TranslatableString(getKey(@"always_expanded"), @"Always expanded");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

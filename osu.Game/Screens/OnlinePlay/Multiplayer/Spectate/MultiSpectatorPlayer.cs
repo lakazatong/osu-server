@@ -62,19 +62,29 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             base.UpdateAfterChildren();
 
             // This is required because the frame stable clock is set to WaitingOnFrames = false for one frame.
-            spectatorPlayerClock.WaitingOnFrames = DrawableRuleset.FrameStableClock.WaitingOnFrames.Value || Score.Replay.Frames.Count == 0;
+            spectatorPlayerClock.WaitingOnFrames =
+                DrawableRuleset.FrameStableClock.WaitingOnFrames.Value
+                || Score.Replay.Frames.Count == 0;
         }
 
-        protected override GameplayClockContainer CreateGameplayClockContainer(WorkingBeatmap beatmap, double gameplayStart)
+        protected override GameplayClockContainer CreateGameplayClockContainer(
+            WorkingBeatmap beatmap,
+            double gameplayStart
+        )
         {
             // Importantly, we don't want to apply decoupling because SpectatorPlayerClock updates its IsRunning directly.
             // If we applied decoupling, this state change wouldn't actually cause the clock to stop.
             // TODO: Can we just use Start/Stop rather than this workaround, now that DecouplingClock is more sane?
-            var gameplayClockContainer = new GameplayClockContainer(spectatorPlayerClock, applyOffsets: false, requireDecoupling: false);
+            var gameplayClockContainer = new GameplayClockContainer(
+                spectatorPlayerClock,
+                applyOffsets: false,
+                requireDecoupling: false
+            );
             clockAdjustmentsFromMods.BindAdjustments(gameplayClockContainer.AdjustmentsFromMods);
             return gameplayClockContainer;
         }
 
-        protected override ResultsScreen CreateResults(ScoreInfo score) => new MultiSpectatorResultsScreen(score);
+        protected override ResultsScreen CreateResults(ScoreInfo score) =>
+            new MultiSpectatorResultsScreen(score);
     }
 }

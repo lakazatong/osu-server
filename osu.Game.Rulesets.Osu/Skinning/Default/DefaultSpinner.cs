@@ -38,48 +38,50 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             drawableSpinner = (DrawableSpinner)drawableHitObject;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new DefaultSpinnerDisc
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                bonusCounter = new OsuSpriteText
-                {
-                    Alpha = 0,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Font = OsuFont.Numeric.With(size: 24),
-                    Y = -120,
-                },
-                spmContainer = new Container
-                {
-                    Alpha = 0f,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Y = 120,
-                    Children = new[]
+                    new DefaultSpinnerDisc
                     {
-                        spmCounter = new OsuSpriteText
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    },
+                    bonusCounter = new OsuSpriteText
+                    {
+                        Alpha = 0,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Font = OsuFont.Numeric.With(size: 24),
+                        Y = -120,
+                    },
+                    spmContainer = new Container
+                    {
+                        Alpha = 0f,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Y = 120,
+                        Children = new[]
                         {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Text = @"0",
-                            Font = OsuFont.Numeric.With(size: 24)
+                            spmCounter = new OsuSpriteText
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Text = @"0",
+                                Font = OsuFont.Numeric.With(size: 24),
+                            },
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Text = @"SPINS PER MINUTE",
+                                Font = OsuFont.Numeric.With(size: 12),
+                                Y = 30,
+                            },
                         },
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Text = @"SPINS PER MINUTE",
-                            Font = OsuFont.Numeric.With(size: 12),
-                            Y = 30
-                        }
-                    }
+                    },
                 }
-            });
+            );
         }
 
         private IBindable<int> completedSpins = null!;
@@ -105,17 +107,22 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 }
                 else
                 {
-                    bonusCounter.Text = drawableSpinner.CurrentBonusScore.ToString(NumberFormatInfo.InvariantInfo);
+                    bonusCounter.Text = drawableSpinner.CurrentBonusScore.ToString(
+                        NumberFormatInfo.InvariantInfo
+                    );
                     bonusCounter.FadeOutFromOne(1500);
                     bonusCounter.ScaleTo(1.5f).Then().ScaleTo(1f, 1000, Easing.OutQuint);
                 }
             });
 
             spinsPerMinute = drawableSpinner.SpinsPerMinute.GetBoundCopy();
-            spinsPerMinute.BindValueChanged(spm =>
-            {
-                spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
-            }, true);
+            spinsPerMinute.BindValueChanged(
+                spm =>
+                {
+                    spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
+                },
+                true
+            );
         }
 
         protected override void Update()
@@ -128,7 +135,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         private void updateSpmAlpha()
         {
             if (drawableSpinner.Result?.TimeStarted is double startTime)
-                spmContainer.Alpha = (float)Math.Clamp((Clock.CurrentTime - startTime) / drawableSpinner.HitObject.TimeFadeIn, 0, 1);
+                spmContainer.Alpha = (float)
+                    Math.Clamp(
+                        (Clock.CurrentTime - startTime) / drawableSpinner.HitObject.TimeFadeIn,
+                        0,
+                        1
+                    );
             else
                 spmContainer.Alpha = 0;
         }

@@ -1,20 +1,20 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Input.Events;
-using osu.Game.Graphics.UserInterface;
-using osu.Game.Rulesets;
-using osuTK.Graphics;
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Rulesets;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -48,23 +48,26 @@ namespace osu.Game.Overlays
         {
             AutoSizeAxes = Axes.Both;
 
-            AddRangeInternal(new Drawable[]
-            {
-                Content = new FillFlowContainer
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(4, 0),
-                    Child = icon = new ConstrainedIconContainer
+                    Content = new FillFlowContainer
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(20f),
-                        Icon = value.CreateInstance().CreateIcon(),
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(4, 0),
+                        Child = icon =
+                            new ConstrainedIconContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(20f),
+                                Icon = value.CreateInstance().CreateIcon(),
+                            },
                     },
-                },
-                new HoverSounds(HoverSampleSet.TabSelect)
-            });
+                    new HoverSounds(HoverSampleSet.TabSelect),
+                }
+            );
 
             Enabled.Value = true;
         }
@@ -81,7 +84,8 @@ namespace osu.Game.Overlays
             Enabled.BindValueChanged(_ => updateState(), true);
         }
 
-        public override bool PropagatePositionalInputSubTree => Enabled.Value && base.PropagatePositionalInputSubTree;
+        public override bool PropagatePositionalInputSubTree =>
+            Enabled.Value && base.PropagatePositionalInputSubTree;
 
         protected override bool OnHover(HoverEvent e)
         {
@@ -107,6 +111,7 @@ namespace osu.Game.Overlays
             AccentColour = Enabled.Value ? getActiveColour() : colourProvider.Foreground1;
         }
 
-        private Color4 getActiveColour() => IsHovered || Active.Value ? Color4.White : colourProvider.Highlight1;
+        private Color4 getActiveColour() =>
+            IsHovered || Active.Value ? Color4.White : colourProvider.Highlight1;
     }
 }

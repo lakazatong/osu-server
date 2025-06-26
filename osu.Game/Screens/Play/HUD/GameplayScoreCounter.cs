@@ -18,9 +18,7 @@ namespace osu.Game.Screens.Play.HUD
         private Bindable<long> totalScoreBindable = null!;
 
         protected GameplayScoreCounter()
-            : base(6)
-        {
-        }
+            : base(6) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config, ScoreProcessor scoreProcessor)
@@ -29,26 +27,30 @@ namespace osu.Game.Screens.Play.HUD
             totalScoreBindable.BindValueChanged(_ => updateDisplayScore());
 
             scoreDisplayMode = config.GetBindable<ScoringMode>(OsuSetting.ScoreDisplayMode);
-            scoreDisplayMode.BindValueChanged(scoreMode =>
-            {
-                switch (scoreMode.NewValue)
+            scoreDisplayMode.BindValueChanged(
+                scoreMode =>
                 {
-                    case ScoringMode.Standardised:
-                        RequiredDisplayDigits.Value = 6;
-                        break;
+                    switch (scoreMode.NewValue)
+                    {
+                        case ScoringMode.Standardised:
+                            RequiredDisplayDigits.Value = 6;
+                            break;
 
-                    case ScoringMode.Classic:
-                        RequiredDisplayDigits.Value = 8;
-                        break;
+                        case ScoringMode.Classic:
+                            RequiredDisplayDigits.Value = 8;
+                            break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(scoreMode));
-                }
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(scoreMode));
+                    }
 
-                updateDisplayScore();
-            }, true);
+                    updateDisplayScore();
+                },
+                true
+            );
 
-            void updateDisplayScore() => Current.Value = scoreProcessor.GetDisplayScore(scoreDisplayMode.Value);
+            void updateDisplayScore() =>
+                Current.Value = scoreProcessor.GetDisplayScore(scoreDisplayMode.Value);
         }
     }
 }

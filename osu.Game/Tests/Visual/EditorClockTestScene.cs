@@ -22,7 +22,9 @@ namespace osu.Game.Tests.Visual
     public abstract partial class EditorClockTestScene : OsuManualInputManagerTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         protected readonly BindableBeatDivisor BeatDivisor = new BindableBeatDivisor();
 
@@ -35,19 +37,26 @@ namespace osu.Game.Tests.Visual
 
         protected override Container<Drawable> Content => content;
 
-        private readonly Container<Drawable> content = new Container { RelativeSizeAxes = Axes.Both };
+        private readonly Container<Drawable> content = new Container
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
             editorClockBeatmap = CreateEditorClockBeatmap();
 
-            base.Content.AddRange(new Drawable[]
-            {
-                EditorClock = new EditorClock(editorClockBeatmap, BeatDivisor),
-                content
-            });
+            base.Content.AddRange(
+                new Drawable[]
+                {
+                    EditorClock = new EditorClock(editorClockBeatmap, BeatDivisor),
+                    content,
+                }
+            );
 
             dependencies.Cache(BeatDivisor);
             dependencies.CacheAs(EditorClock);

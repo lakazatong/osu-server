@@ -22,21 +22,21 @@ namespace osu.Game.Graphics.UserInterface
         private SpriteIcon checkmark;
 
         public DownloadButton()
-            : base(FontAwesome.Solid.Download)
-        {
-        }
+            : base(FontAwesome.Solid.Download) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(checkmark = new SpriteIcon
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                X = 8,
-                Size = Vector2.Zero,
-                Icon = FontAwesome.Solid.Check,
-            });
+            Add(
+                checkmark = new SpriteIcon
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    X = 8,
+                    Size = Vector2.Zero,
+                    Icon = FontAwesome.Solid.Check,
+                }
+            );
 
             State.BindValueChanged(updateState, true);
         }

@@ -13,17 +13,31 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         protected override void OnDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
             // Invert the direction
-            base.OnDirectionChanged(direction.NewValue == ScrollingDirection.Up
-                ? new ValueChangedEvent<ScrollingDirection>(ScrollingDirection.Down, ScrollingDirection.Down)
-                : new ValueChangedEvent<ScrollingDirection>(ScrollingDirection.Up, ScrollingDirection.Up));
+            base.OnDirectionChanged(
+                direction.NewValue == ScrollingDirection.Up
+                    ? new ValueChangedEvent<ScrollingDirection>(
+                        ScrollingDirection.Down,
+                        ScrollingDirection.Down
+                    )
+                    : new ValueChangedEvent<ScrollingDirection>(
+                        ScrollingDirection.Up,
+                        ScrollingDirection.Up
+                    )
+            );
         }
 
         protected override Drawable? GetAnimation(ISkinSource skin)
         {
             // TODO: Should fallback to the head from default legacy skin instead of note.
-            return GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.HoldNoteTailImage)
-                   ?? GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.HoldNoteHeadImage)
-                   ?? GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.NoteImage);
+            return GetAnimationFromLookup(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.HoldNoteTailImage
+                )
+                ?? GetAnimationFromLookup(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.HoldNoteHeadImage
+                )
+                ?? GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.NoteImage);
         }
     }
 }

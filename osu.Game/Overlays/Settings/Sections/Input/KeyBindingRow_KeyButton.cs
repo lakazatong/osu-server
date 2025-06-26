@@ -45,7 +45,8 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 get => isBinding;
                 set
                 {
-                    if (value == isBinding) return;
+                    if (value == isBinding)
+                        return;
 
                     isBinding = value;
 
@@ -71,10 +72,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                         Width = 80,
                         Height = height,
                     },
-                    box = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    box = new Box { RelativeSizeAxes = Axes.Both },
                     Text = new OsuSpriteText
                     {
                         Font = OsuFont.Numeric.With(size: 10),
@@ -82,7 +80,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                     },
-                    new HoverSounds()
+                    new HoverSounds(),
                 };
             }
 
@@ -93,7 +91,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 KeyBinding.BindValueChanged(_ =>
                 {
                     if (KeyBinding.Value.IsManaged)
-                        throw new ArgumentException("Key binding should not be attached as we make temporary changes", nameof(KeyBinding));
+                        throw new ArgumentException(
+                            "Key binding should not be attached as we make temporary changes",
+                            nameof(KeyBinding)
+                        );
 
                     updateKeyCombinationText();
                 });
@@ -129,8 +130,16 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 }
                 else
                 {
-                    box.FadeColour(IsHovered ? colourProvider.Light4 : colourProvider.Background6, transition_time, Easing.OutQuint);
-                    Text.FadeColour(IsHovered ? Color4.Black : Color4.White, transition_time, Easing.OutQuint);
+                    box.FadeColour(
+                        IsHovered ? colourProvider.Light4 : colourProvider.Background6,
+                        transition_time,
+                        Easing.OutQuint
+                    );
+                    Text.FadeColour(
+                        IsHovered ? Color4.Black : Color4.White,
+                        transition_time,
+                        Easing.OutQuint
+                    );
                 }
             }
 
@@ -141,11 +150,22 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             /// <param name="triggerKey">The key which triggered this update, and should be used as the binding.</param>
             public void UpdateKeyCombination(KeyCombination fullState, InputKey triggerKey) =>
                 // TODO: Distinct() can be removed after https://github.com/ppy/osu-framework/pull/6130 is merged.
-                UpdateKeyCombination(new KeyCombination(fullState.Keys.Where(KeyCombination.IsModifierKey).Append(triggerKey).Distinct().ToArray()));
+                UpdateKeyCombination(
+                    new KeyCombination(
+                        fullState
+                            .Keys.Where(KeyCombination.IsModifierKey)
+                            .Append(triggerKey)
+                            .Distinct()
+                            .ToArray()
+                    )
+                );
 
             public void UpdateKeyCombination(KeyCombination newCombination)
             {
-                if (KeyBinding.Value.RulesetName != null && !RealmKeyBindingStore.CheckValidForGameplay(newCombination))
+                if (
+                    KeyBinding.Value.RulesetName != null
+                    && !RealmKeyBindingStore.CheckValidForGameplay(newCombination)
+                )
                     return;
 
                 KeyBinding.Value.KeyCombination = newCombination;
@@ -158,7 +178,8 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
                 void updateText()
                 {
-                    LocalisableString keyCombinationString = keyCombinationProvider.GetReadableString(KeyBinding.Value.KeyCombination);
+                    LocalisableString keyCombinationString =
+                        keyCombinationProvider.GetReadableString(KeyBinding.Value.KeyCombination);
                     float alpha = 1;
 
                     if (LocalisableString.IsNullOrEmpty(keyCombinationString))

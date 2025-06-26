@@ -19,14 +19,26 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             base.SetUpSteps();
 
-            AddUntilStep("Wait for first-run setup", () => Game.FirstRunOverlay.State.Value == Visibility.Visible);
+            AddUntilStep(
+                "Wait for first-run setup",
+                () => Game.FirstRunOverlay.State.Value == Visibility.Visible
+            );
         }
 
         [Test]
         public void TestImportantNotificationDoesntInterruptSetup()
         {
-            AddStep("post important notification", () => Game.Notifications.Post(new SimpleNotification { Text = "Important notification" }));
-            AddAssert("first-run setup still visible", () => Game.FirstRunOverlay.State.Value == Visibility.Visible);
+            AddStep(
+                "post important notification",
+                () =>
+                    Game.Notifications.Post(
+                        new SimpleNotification { Text = "Important notification" }
+                    )
+            );
+            AddAssert(
+                "first-run setup still visible",
+                () => Game.FirstRunOverlay.State.Value == Visibility.Visible
+            );
             AddAssert("notification posted", () => Game.Notifications.UnreadCount.Value == 1);
         }
 
@@ -35,9 +47,7 @@ namespace osu.Game.Tests.Visual.Navigation
         private partial class FirstRunGame : TestOsuGame
         {
             public FirstRunGame(Storage storage, IAPIProvider api, string[] args = null)
-                : base(storage, api, args)
-            {
-            }
+                : base(storage, api, args) { }
 
             protected override void LoadComplete()
             {

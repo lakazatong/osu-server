@@ -39,25 +39,31 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         {
             scrollingInfo = ((ScrollingTestContainer)HitObjectContainer).ScrollingInfo;
 
-            Add(column = new Column(0, false)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AccentColour = { Value = Color4.OrangeRed },
-                Clock = new FramedClock(new StopwatchClock()), // No scroll
-            });
+            Add(
+                column = new Column(0, false)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AccentColour = { Value = Color4.OrangeRed },
+                    Clock = new FramedClock(new StopwatchClock()), // No scroll
+                }
+            );
         }
 
         protected override void UpdatePlacementTimeAndPosition()
         {
-            double time = column.TimeAtScreenSpacePosition(InputManager.CurrentState.Mouse.Position);
+            double time = column.TimeAtScreenSpacePosition(
+                InputManager.CurrentState.Mouse.Position
+            );
             var pos = column.ScreenSpacePositionAtTime(time);
             CurrentBlueprint.UpdateTimeAndPosition(pos, time);
         }
 
-        protected override Container CreateHitObjectContainer() => new ScrollingTestContainer(ScrollingDirection.Down) { RelativeSizeAxes = Axes.Both };
+        protected override Container CreateHitObjectContainer() =>
+            new ScrollingTestContainer(ScrollingDirection.Down) { RelativeSizeAxes = Axes.Both };
 
-        protected override void AddHitObject(DrawableHitObject hitObject) => column.Add((DrawableManiaHitObject)hitObject);
+        protected override void AddHitObject(DrawableHitObject hitObject) =>
+            column.Add((DrawableManiaHitObject)hitObject);
 
         public ManiaPlayfield Playfield => null;
     }

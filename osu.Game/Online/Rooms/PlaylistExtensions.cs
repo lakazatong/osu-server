@@ -15,14 +15,16 @@ namespace osu.Game.Online.Rooms
         /// <summary>
         /// Returns all historical/expired items from the <paramref name="playlist"/>, in the order in which they were played.
         /// </summary>
-        public static IEnumerable<PlaylistItem> GetHistoricalItems(this IEnumerable<PlaylistItem> playlist)
-            => playlist.Where(item => item.Expired).OrderBy(item => item.PlayedAt);
+        public static IEnumerable<PlaylistItem> GetHistoricalItems(
+            this IEnumerable<PlaylistItem> playlist
+        ) => playlist.Where(item => item.Expired).OrderBy(item => item.PlayedAt);
 
         /// <summary>
         /// Returns all non-expired items from the <paramref name="playlist"/>, in the order in which they are to be played.
         /// </summary>
-        public static IEnumerable<PlaylistItem> GetUpcomingItems(this IEnumerable<PlaylistItem> playlist)
-            => playlist.Where(item => !item.Expired).OrderBy(item => item.PlaylistOrder);
+        public static IEnumerable<PlaylistItem> GetUpcomingItems(
+            this IEnumerable<PlaylistItem> playlist
+        ) => playlist.Where(item => !item.Expired).OrderBy(item => item.PlaylistOrder);
 
         /// <summary>
         /// Returns the first non-expired <see cref="PlaylistItem"/> in playlist order from the supplied <paramref name="playlist"/>,
@@ -42,18 +44,27 @@ namespace osu.Game.Online.Rooms
         /// <summary>
         /// Returns the total duration from the <see cref="PlaylistItem"/> in playlist order from the supplied <paramref name="playlist"/>,
         /// </summary>
-        public static string GetTotalDuration(this IReadOnlyList<PlaylistItem> playlist, RulesetStore rulesetStore) =>
-            playlist.Select(p =>
-            {
-                double rate = 1;
-
-                if (p.RequiredMods.Length > 0)
+        public static string GetTotalDuration(
+            this IReadOnlyList<PlaylistItem> playlist,
+            RulesetStore rulesetStore
+        ) =>
+            playlist
+                .Select(p =>
                 {
-                    var ruleset = rulesetStore.GetRuleset(p.RulesetID)!.CreateInstance();
-                    rate = ModUtils.CalculateRateWithMods(p.RequiredMods.Select(mod => mod.ToMod(ruleset)));
-                }
+                    double rate = 1;
 
-                return p.Beatmap.Length / rate;
-            }).Sum().Milliseconds().Humanize(minUnit: TimeUnit.Second, maxUnit: TimeUnit.Hour, precision: 2);
+                    if (p.RequiredMods.Length > 0)
+                    {
+                        var ruleset = rulesetStore.GetRuleset(p.RulesetID)!.CreateInstance();
+                        rate = ModUtils.CalculateRateWithMods(
+                            p.RequiredMods.Select(mod => mod.ToMod(ruleset))
+                        );
+                    }
+
+                    return p.Beatmap.Length / rate;
+                })
+                .Sum()
+                .Milliseconds()
+                .Humanize(minUnit: TimeUnit.Second, maxUnit: TimeUnit.Hour, precision: 2);
     }
 }

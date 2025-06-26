@@ -16,9 +16,7 @@ namespace osu.Game.Overlays.Settings
         protected OverlayColourProvider ColourProvider { get; private set; } = null!;
 
         protected SidebarButton(HoverSampleSet? hoverSounds = HoverSampleSet.ButtonSidebar)
-            : base(hoverSounds)
-        {
-        }
+            : base(hoverSounds) { }
 
         [BackgroundDependencyLoader]
         private void load()

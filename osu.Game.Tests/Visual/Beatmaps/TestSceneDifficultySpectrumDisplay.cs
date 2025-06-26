@@ -18,12 +18,17 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create spectrum display", () => Child = display = new DifficultySpectrumDisplay
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(3)
-            });
+            AddStep(
+                "create spectrum display",
+                () =>
+                    Child = display =
+                        new DifficultySpectrumDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Scale = new Vector2(3),
+                        }
+            );
         }
 
         [Test]
@@ -32,7 +37,8 @@ namespace osu.Game.Tests.Visual.Beatmaps
             var beatmapSet = createBeatmapSetWith(
                 (rulesetId: 0, stars: 2.0),
                 (rulesetId: 0, stars: 3.2),
-                (rulesetId: 0, stars: 5.6));
+                (rulesetId: 0, stars: 5.6)
+            );
 
             AddStep("set beatmap to display", () => display.BeatmapSet = beatmapSet);
         }
@@ -45,7 +51,8 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 (rulesetId: 3, stars: 2.3),
                 (rulesetId: 0, stars: 3.2),
                 (rulesetId: 1, stars: 4.3),
-                (rulesetId: 0, stars: 5.6));
+                (rulesetId: 0, stars: 5.6)
+            );
 
             AddStep("set beatmap to display", () => display.BeatmapSet = beatmapSet);
         }
@@ -59,7 +66,8 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 (rulesetId: 0, stars: 3.2),
                 (rulesetId: 1, stars: 4.3),
                 (rulesetId: 0, stars: 5.6),
-                (rulesetId: 15, stars: 7.8));
+                (rulesetId: 15, stars: 7.8)
+            );
 
             AddStep("set beatmap to display", () => display.BeatmapSet = beatmapSet);
         }
@@ -67,24 +75,39 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [Test]
         public void TestMaximumUncollapsed()
         {
-            var beatmapSet = createBeatmapSetWith(Enumerable.Range(0, 12).Select(i => (rulesetId: i % 4, stars: 2.5 + i * 0.25)).ToArray());
+            var beatmapSet = createBeatmapSetWith(
+                Enumerable
+                    .Range(0, 12)
+                    .Select(i => (rulesetId: i % 4, stars: 2.5 + i * 0.25))
+                    .ToArray()
+            );
             AddStep("set beatmap to display", () => display.BeatmapSet = beatmapSet);
         }
 
         [Test]
         public void TestMinimumCollapsed()
         {
-            var beatmapSet = createBeatmapSetWith(Enumerable.Range(0, 13).Select(i => (rulesetId: i % 4, stars: 2.5 + i * 0.25)).ToArray());
+            var beatmapSet = createBeatmapSetWith(
+                Enumerable
+                    .Range(0, 13)
+                    .Select(i => (rulesetId: i % 4, stars: 2.5 + i * 0.25))
+                    .ToArray()
+            );
             AddStep("set beatmap to display", () => display.BeatmapSet = beatmapSet);
         }
 
-        private static APIBeatmapSet createBeatmapSetWith(params (int rulesetId, double stars)[] difficulties) => new APIBeatmapSet
-        {
-            Beatmaps = difficulties.Select(difficulty => new APIBeatmap
+        private static APIBeatmapSet createBeatmapSetWith(
+            params (int rulesetId, double stars)[] difficulties
+        ) =>
+            new APIBeatmapSet
             {
-                RulesetID = difficulty.rulesetId,
-                StarRating = difficulty.stars
-            }).ToArray()
-        };
+                Beatmaps = difficulties
+                    .Select(difficulty => new APIBeatmap
+                    {
+                        RulesetID = difficulty.rulesetId,
+                        StarRating = difficulty.stars,
+                    })
+                    .ToArray(),
+            };
     }
 }

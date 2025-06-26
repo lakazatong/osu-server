@@ -25,8 +25,10 @@ namespace osu.Game.Online.Spectator
 
         public bool Equals(SpectatorUser? other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return OnlineID == other.OnlineID;
         }

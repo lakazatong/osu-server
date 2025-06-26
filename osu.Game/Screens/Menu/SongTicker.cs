@@ -2,17 +2,17 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.Sprites;
-using osuTK;
-using osu.Game.Graphics;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osuTK;
 
 namespace osu.Game.Screens.Menu
 {
@@ -23,7 +23,8 @@ namespace osu.Game.Screens.Menu
         [Resolved]
         private Bindable<WorkingBeatmap> beatmap { get; set; } = null!;
 
-        private readonly OsuSpriteText title, artist;
+        private readonly OsuSpriteText title,
+            artist;
 
         public override bool IsPresent => base.IsPresent || Scheduler.HasPendingTasks;
 
@@ -59,9 +60,9 @@ namespace osu.Game.Screens.Menu
                                     AlwaysPresent = true,
                                     Alpha = 0,
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
                 new FillFlowContainer
                 {
@@ -74,15 +75,19 @@ namespace osu.Game.Screens.Menu
                         {
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
-                            Font = OsuFont.GetFont(size: 24, weight: FontWeight.Light, italics: true)
+                            Font = OsuFont.GetFont(
+                                size: 24,
+                                weight: FontWeight.Light,
+                                italics: true
+                            ),
                         },
                         artist = new OsuSpriteText
                         {
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
-                            Font = OsuFont.GetFont(size: 16)
-                        }
-                    }
+                            Font = OsuFont.GetFont(size: 16),
+                        },
+                    },
                 },
             };
         }
@@ -101,9 +106,7 @@ namespace osu.Game.Screens.Menu
             title.Text = new RomanisableString(metadata.TitleUnicode, metadata.Title);
             artist.Text = new RomanisableString(metadata.ArtistUnicode, metadata.Artist);
 
-            this.FadeInFromZero(fade_duration / 2f)
-                .Delay(4000)
-                .Then().FadeOut(fade_duration);
+            this.FadeInFromZero(fade_duration / 2f).Delay(4000).Then().FadeOut(fade_duration);
         }
     }
 }

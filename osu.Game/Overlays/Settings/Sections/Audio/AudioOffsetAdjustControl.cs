@@ -45,9 +45,11 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                 set => current.Current = value;
             }
 
-            private readonly BindableNumberWithCurrent<double> current = new BindableNumberWithCurrent<double>();
+            private readonly BindableNumberWithCurrent<double> current =
+                new BindableNumberWithCurrent<double>();
 
-            private readonly IBindableList<SessionAverageHitErrorTracker.DataPoint> averageHitErrorHistory = new BindableList<SessionAverageHitErrorTracker.DataPoint>();
+            private readonly IBindableList<SessionAverageHitErrorTracker.DataPoint> averageHitErrorHistory =
+                new BindableList<SessionAverageHitErrorTracker.DataPoint>();
 
             public readonly Bindable<double?> SuggestedOffset = new Bindable<double?>();
 
@@ -80,11 +82,16 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                         {
                             RelativeSizeAxes = Axes.X,
                             Height = 10,
-                            Padding = new MarginPadding { Horizontal = Nub.DEFAULT_EXPANDED_SIZE / 2 },
+                            Padding = new MarginPadding
+                            {
+                                Horizontal = Nub.DEFAULT_EXPANDED_SIZE / 2,
+                            },
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                         },
-                        hintText = new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(size: 16))
+                        hintText = new OsuTextFlowContainer(t =>
+                            t.Font = OsuFont.Default.With(size: 16)
+                        )
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
@@ -98,9 +105,9 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                                 if (SuggestedOffset.Value.HasValue)
                                     current.Value = SuggestedOffset.Value.Value;
                                 hitErrorTracker.ClearHistory();
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 
@@ -121,15 +128,17 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                         foreach (SessionAverageHitErrorTracker.DataPoint dataPoint in e.NewItems!)
                         {
                             notchContainer.ForEach(n => n.Alpha *= 0.95f);
-                            notchContainer.Add(new Box
-                            {
-                                RelativeSizeAxes = Axes.Y,
-                                Width = 2,
-                                RelativePositionAxes = Axes.X,
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                X = getXPositionForOffset(dataPoint.SuggestedGlobalAudioOffset)
-                            });
+                            notchContainer.Add(
+                                new Box
+                                {
+                                    RelativeSizeAxes = Axes.Y,
+                                    Width = 2,
+                                    RelativePositionAxes = Axes.X,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    X = getXPositionForOffset(dataPoint.SuggestedGlobalAudioOffset),
+                                }
+                            );
                         }
 
                         break;
@@ -137,7 +146,9 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                     case NotifyCollectionChangedAction.Remove:
                         foreach (SessionAverageHitErrorTracker.DataPoint dataPoint in e.OldItems!)
                         {
-                            var notch = notchContainer.FirstOrDefault(n => n.X == getXPositionForOffset(dataPoint.SuggestedGlobalAudioOffset));
+                            var notch = notchContainer.FirstOrDefault(n =>
+                                n.X == getXPositionForOffset(dataPoint.SuggestedGlobalAudioOffset)
+                            );
                             Debug.Assert(notch != null);
                             notchContainer.Remove(notch, true);
                         }
@@ -149,10 +160,19 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                         break;
                 }
 
-                SuggestedOffset.Value = averageHitErrorHistory.Any() ? Math.Round(averageHitErrorHistory.Average(dataPoint => dataPoint.SuggestedGlobalAudioOffset)) : null;
+                SuggestedOffset.Value = averageHitErrorHistory.Any()
+                    ? Math.Round(
+                        averageHitErrorHistory.Average(dataPoint =>
+                            dataPoint.SuggestedGlobalAudioOffset
+                        )
+                    )
+                    : null;
             }
 
-            private float getXPositionForOffset(double offset) => (float)(Math.Clamp(offset, current.MinValue, current.MaxValue) / (2 * current.MaxValue));
+            private float getXPositionForOffset(double offset) =>
+                (float)(
+                    Math.Clamp(offset, current.MinValue, current.MaxValue) / (2 * current.MaxValue)
+                );
 
             private void updateHintText()
             {
@@ -164,18 +184,24 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                 else if (Math.Abs(SuggestedOffset.Value.Value - current.Value) < 1)
                 {
                     applySuggestion.Enabled.Value = false;
-                    hintText.Text = AudioSettingsStrings.SuggestedOffsetCorrect(averageHitErrorHistory.Count);
+                    hintText.Text = AudioSettingsStrings.SuggestedOffsetCorrect(
+                        averageHitErrorHistory.Count
+                    );
                 }
                 else
                 {
                     applySuggestion.Enabled.Value = true;
-                    hintText.Text = AudioSettingsStrings.SuggestedOffsetValueReceived(averageHitErrorHistory.Count, SuggestedOffset.Value.Value.ToStandardFormattedString(0, false));
+                    hintText.Text = AudioSettingsStrings.SuggestedOffsetValueReceived(
+                        averageHitErrorHistory.Count,
+                        SuggestedOffset.Value.Value.ToStandardFormattedString(0, false)
+                    );
                 }
             }
 
             private partial class OffsetSliderBar : RoundedSliderBar<double>
             {
-                public override LocalisableString TooltipText => BeatmapOffsetControl.GetOffsetExplanatoryText(Current.Value);
+                public override LocalisableString TooltipText =>
+                    BeatmapOffsetControl.GetOffsetExplanatoryText(Current.Value);
             }
         }
     }

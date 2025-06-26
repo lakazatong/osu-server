@@ -35,35 +35,63 @@ namespace osu.Game.Rulesets
             {
                 var rulesets = realm.All<RulesetInfo>();
 
-                List<Ruleset> instances = LoadedAssemblies.Values
-                                                          .Select(r => Activator.CreateInstance(r) as Ruleset)
-                                                          .Where(r => r != null)
-                                                          .Select(r => r.AsNonNull())
-                                                          .ToList();
+                List<Ruleset> instances = LoadedAssemblies
+                    .Values.Select(r => Activator.CreateInstance(r) as Ruleset)
+                    .Where(r => r != null)
+                    .Select(r => r.AsNonNull())
+                    .ToList();
 
                 // add all legacy rulesets first to ensure they have exclusive choice of primary key.
                 foreach (var r in instances.Where(r => r is ILegacyRuleset))
                 {
-                    if (realm.All<RulesetInfo>().FirstOrDefault(rr => rr.OnlineID == r.RulesetInfo.OnlineID) == null)
-                        realm.Add(new RulesetInfo(r.RulesetInfo.ShortName, r.RulesetInfo.Name, r.RulesetInfo.InstantiationInfo, r.RulesetInfo.OnlineID));
+                    if (
+                        realm
+                            .All<RulesetInfo>()
+                            .FirstOrDefault(rr => rr.OnlineID == r.RulesetInfo.OnlineID) == null
+                    )
+                        realm.Add(
+                            new RulesetInfo(
+                                r.RulesetInfo.ShortName,
+                                r.RulesetInfo.Name,
+                                r.RulesetInfo.InstantiationInfo,
+                                r.RulesetInfo.OnlineID
+                            )
+                        );
                 }
 
                 // add any other rulesets which have assemblies present but are not yet in the database.
                 foreach (var r in instances.Where(r => !(r is ILegacyRuleset)))
                 {
-                    if (rulesets.FirstOrDefault(ri => ri.InstantiationInfo.Equals(r.RulesetInfo.InstantiationInfo, StringComparison.Ordinal)) == null)
+                    if (
+                        rulesets.FirstOrDefault(ri =>
+                            ri.InstantiationInfo.Equals(
+                                r.RulesetInfo.InstantiationInfo,
+                                StringComparison.Ordinal
+                            )
+                        ) == null
+                    )
                     {
-                        var existingSameShortName = rulesets.FirstOrDefault(ri => ri.ShortName == r.RulesetInfo.ShortName);
+                        var existingSameShortName = rulesets.FirstOrDefault(ri =>
+                            ri.ShortName == r.RulesetInfo.ShortName
+                        );
 
                         if (existingSameShortName != null)
                         {
                             // even if a matching InstantiationInfo was not found, there may be an existing ruleset with the same ShortName.
                             // this generally means the user or ruleset provider has renamed their dll but the underlying ruleset is *likely* the same one.
                             // in such cases, update the instantiation info of the existing entry to point to the new one.
-                            existingSameShortName.InstantiationInfo = r.RulesetInfo.InstantiationInfo;
+                            existingSameShortName.InstantiationInfo =
+                                r.RulesetInfo.InstantiationInfo;
                         }
                         else
-                            realm.Add(new RulesetInfo(r.RulesetInfo.ShortName, r.RulesetInfo.Name, r.RulesetInfo.InstantiationInfo, r.RulesetInfo.OnlineID));
+                            realm.Add(
+                                new RulesetInfo(
+                                    r.RulesetInfo.ShortName,
+                                    r.RulesetInfo.Name,
+                                    r.RulesetInfo.InstantiationInfo,
+                                    r.RulesetInfo.OnlineID
+                                )
+                            );
                     }
                 }
 
@@ -84,13 +112,16 @@ namespace osu.Game.Rulesets
                         }
 
                         var instance = (Activator.CreateInstance(resolvedType) as Ruleset);
-                        var instanceInfo = instance?.RulesetInfo
-                                           ?? throw new RulesetLoadException(@"Instantiation failure");
+                        var instanceInfo =
+                            instance?.RulesetInfo
+                            ?? throw new RulesetLoadException(@"Instantiation failure");
 
                         if (!checkRulesetUpToDate(instance))
                         {
-                            throw new ArgumentOutOfRangeException(nameof(instance.RulesetAPIVersionSupported),
-                                $"Ruleset API version is too old (was {instance.RulesetAPIVersionSupported}, expected {Ruleset.CURRENT_RULESET_API_VERSION})");
+                            throw new ArgumentOutOfRangeException(
+                                nameof(instance.RulesetAPIVersionSupported),
+                                $"Ruleset API version is too old (was {instance.RulesetAPIVersionSupported}, expected {Ruleset.CURRENT_RULESET_API_VERSION})"
+                            );
                         }
 
                         // If a ruleset isn't up-to-date with the API, it could cause a crash at an arbitrary point of execution.
@@ -157,8 +188,11 @@ namespace osu.Game.Rulesets
 
             foreach (string brokenRulesetDll in RulesetStorage.GetFiles(@".", @"*.dll.broken"))
             {
-                Logger.Log($"Ruleset '{Path.GetFileNameWithoutExtension(brokenRulesetDll)}' has been disabled due to causing a crash.\n\n"
-                           + "Please update the ruleset or report the issue to the developers of the ruleset if no updates are available.", level: LogLevel.Important);
+                Logger.Log(
+                    $"Ruleset '{Path.GetFileNameWithoutExtension(brokenRulesetDll)}' has been disabled due to causing a crash.\n\n"
+                        + "Please update the ruleset or report the issue to the developers of the ruleset if no updates are available.",
+                    level: LogLevel.Important
+                );
             }
         }
 
@@ -177,11 +211,16 @@ namespace osu.Game.Rulesets
                     if (UserRulesetAssemblies.Contains(declaringAssembly))
                     {
                         string sourceLocation = declaringAssembly.Location;
-                        string destinationLocation = Path.ChangeExtension(sourceLocation, @".dll.broken");
+                        string destinationLocation = Path.ChangeExtension(
+                            sourceLocation,
+                            @".dll.broken"
+                        );
 
                         if (File.Exists(sourceLocation))
                         {
-                            Logger.Log($"Unhandled exception traced back to custom ruleset {Path.GetFileNameWithoutExtension(sourceLocation)}. Marking as broken.");
+                            Logger.Log(
+                                $"Unhandled exception traced back to custom ruleset {Path.GetFileNameWithoutExtension(sourceLocation)}. Marking as broken."
+                            );
                             File.Move(sourceLocation, destinationLocation);
                         }
                     }

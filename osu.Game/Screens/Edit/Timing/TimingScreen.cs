@@ -14,38 +14,39 @@ namespace osu.Game.Screens.Edit.Timing
     public partial class TimingScreen : EditorScreenWithTimeline
     {
         [Cached]
-        public readonly Bindable<ControlPointGroup> SelectedGroup = new Bindable<ControlPointGroup>();
+        public readonly Bindable<ControlPointGroup> SelectedGroup =
+            new Bindable<ControlPointGroup>();
 
-        private readonly Bindable<EditorScreenMode> currentEditorMode = new Bindable<EditorScreenMode>();
+        private readonly Bindable<EditorScreenMode> currentEditorMode =
+            new Bindable<EditorScreenMode>();
 
         [Resolved]
         private EditorClock? editorClock { get; set; }
 
         public TimingScreen()
-            : base(EditorScreenMode.Timing)
-        {
-        }
+            : base(EditorScreenMode.Timing) { }
 
-        protected override Drawable CreateMainContent() => new GridContainer
-        {
-            RelativeSizeAxes = Axes.Both,
-            ColumnDimensions = new[]
+        protected override Drawable CreateMainContent() =>
+            new GridContainer
             {
-                new Dimension(),
-                new Dimension(GridSizeMode.Absolute, 350),
-            },
-            Content = new[]
-            {
-                new Drawable[]
+                RelativeSizeAxes = Axes.Both,
+                ColumnDimensions = new[]
                 {
-                    new ControlPointList
-                    {
-                        SelectClosestTimingPoint = selectClosestTimingPoint,
-                    },
-                    new ControlPointSettings(),
+                    new Dimension(),
+                    new Dimension(GridSizeMode.Absolute, 350),
                 },
-            }
-        };
+                Content = new[]
+                {
+                    new Drawable[]
+                    {
+                        new ControlPointList
+                        {
+                            SelectClosestTimingPoint = selectClosestTimingPoint,
+                        },
+                        new ControlPointSettings(),
+                    },
+                },
+            };
 
         [BackgroundDependencyLoader]
         private void load(Editor? editor)
@@ -80,7 +81,9 @@ namespace osu.Game.Screens.Edit.Timing
             var activeEffectPoint = EditorBeatmap.ControlPointInfo.EffectPointAt(accurateTime);
 
             if (activeEffectPoint.Equals(EffectControlPoint.DEFAULT))
-                SelectedGroup.Value = EditorBeatmap.ControlPointInfo.GroupAt(activeTimingPoint.Time);
+                SelectedGroup.Value = EditorBeatmap.ControlPointInfo.GroupAt(
+                    activeTimingPoint.Time
+                );
             else
             {
                 double latestActiveTime = Math.Max(activeTimingPoint.Time, activeEffectPoint.Time);

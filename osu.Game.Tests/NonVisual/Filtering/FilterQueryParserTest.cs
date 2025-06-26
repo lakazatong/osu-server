@@ -38,19 +38,34 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual(5, filterCriteria.SearchTerms.Length);
 
             Assert.That(filterCriteria.SearchTerms[0].SearchTerm, Is.EqualTo("a beatmap"));
-            Assert.That(filterCriteria.SearchTerms[0].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.FullPhrase));
+            Assert.That(
+                filterCriteria.SearchTerms[0].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.FullPhrase)
+            );
 
             Assert.That(filterCriteria.SearchTerms[1].SearchTerm, Is.EqualTo("this"));
-            Assert.That(filterCriteria.SearchTerms[1].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase));
+            Assert.That(
+                filterCriteria.SearchTerms[1].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase)
+            );
 
             Assert.That(filterCriteria.SearchTerms[2].SearchTerm, Is.EqualTo("looking"));
-            Assert.That(filterCriteria.SearchTerms[2].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.SearchTerms[2].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
 
             Assert.That(filterCriteria.SearchTerms[3].SearchTerm, Is.EqualTo("for"));
-            Assert.That(filterCriteria.SearchTerms[3].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.SearchTerms[3].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
 
             Assert.That(filterCriteria.SearchTerms[4].SearchTerm, Is.EqualTo("like"));
-            Assert.That(filterCriteria.SearchTerms[4].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.SearchTerms[4].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
         }
 
         [Test]
@@ -63,13 +78,22 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual(3, filterCriteria.SearchTerms.Length);
 
             Assert.That(filterCriteria.SearchTerms[0].SearchTerm, Is.EqualTo("circles!"));
-            Assert.That(filterCriteria.SearchTerms[0].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.FullPhrase));
+            Assert.That(
+                filterCriteria.SearchTerms[0].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.FullPhrase)
+            );
 
             Assert.That(filterCriteria.SearchTerms[1].SearchTerm, Is.EqualTo("looking"));
-            Assert.That(filterCriteria.SearchTerms[1].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.SearchTerms[1].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
 
             Assert.That(filterCriteria.SearchTerms[2].SearchTerm, Is.EqualTo("for"));
-            Assert.That(filterCriteria.SearchTerms[2].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.SearchTerms[2].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
         }
 
         [Test]
@@ -82,7 +106,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual(1, filterCriteria.SearchTerms.Length);
 
             Assert.That(filterCriteria.SearchTerms[0].SearchTerm, Is.EqualTo("!"));
-            Assert.That(filterCriteria.SearchTerms[0].MatchMode, Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase));
+            Assert.That(
+                filterCriteria.SearchTerms[0].MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase)
+            );
         }
 
         [TestCase("star")]
@@ -215,15 +242,25 @@ namespace osu.Game.Tests.NonVisual.Filtering
 
         [Test]
         [TestCaseSource(nameof(correct_length_query_examples))]
-        public void TestApplyLengthQueries(string lengthQuery, TimeSpan expectedLength, TimeSpan scale)
+        public void TestApplyLengthQueries(
+            string lengthQuery,
+            TimeSpan expectedLength,
+            TimeSpan scale
+        )
         {
             string query = $"length={lengthQuery} time";
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.AreEqual("time", filterCriteria.SearchText.Trim());
             Assert.AreEqual(1, filterCriteria.SearchTerms.Length);
-            Assert.AreEqual(expectedLength.TotalMilliseconds - scale.TotalMilliseconds / 2.0, filterCriteria.Length.Min);
-            Assert.AreEqual(expectedLength.TotalMilliseconds + scale.TotalMilliseconds / 2.0, filterCriteria.Length.Max);
+            Assert.AreEqual(
+                expectedLength.TotalMilliseconds - scale.TotalMilliseconds / 2.0,
+                filterCriteria.Length.Min
+            );
+            Assert.AreEqual(
+                expectedLength.TotalMilliseconds + scale.TotalMilliseconds / 2.0,
+                filterCriteria.Length.Max
+            );
         }
 
         private static readonly object[] incorrect_length_query_examples =
@@ -270,7 +307,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.IsNotEmpty(filterCriteria.OnlineStatus.Values);
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Ranked));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Ranked)
+            );
         }
 
         [Test]
@@ -282,7 +322,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual("I want the pp", filterCriteria.SearchText.Trim());
             Assert.AreEqual(4, filterCriteria.SearchTerms.Length);
             Assert.IsNotEmpty(filterCriteria.OnlineStatus.Values);
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Ranked));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Ranked)
+            );
         }
 
         [Test]
@@ -301,8 +344,14 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.That(filterCriteria.OnlineStatus.Values, Is.Not.Empty);
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Ranked));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Loved));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Ranked)
+            );
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Loved)
+            );
         }
 
         [Test]
@@ -312,10 +361,22 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.That(filterCriteria.OnlineStatus.Values, Has.Count.EqualTo(4));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Ranked));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Approved));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Qualified));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Loved));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Ranked)
+            );
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Approved)
+            );
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Qualified)
+            );
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Loved)
+            );
         }
 
         [Test]
@@ -324,7 +385,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             const string query = "status>=r,l";
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
-            Assert.That(filterCriteria.OnlineStatus.Values, Is.EquivalentTo(Enum.GetValues<BeatmapOnlineStatus>()));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Is.EquivalentTo(Enum.GetValues<BeatmapOnlineStatus>())
+            );
         }
 
         [Test]
@@ -334,8 +398,14 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.That(filterCriteria.OnlineStatus.Values, Has.Count.EqualTo(2));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Approved));
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Qualified));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Approved)
+            );
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Qualified)
+            );
         }
 
         [Test]
@@ -345,7 +415,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.That(filterCriteria.OnlineStatus.Values, Is.Not.Empty);
-            Assert.That(filterCriteria.OnlineStatus.Values, Contains.Item(BeatmapOnlineStatus.Loved));
+            Assert.That(
+                filterCriteria.OnlineStatus.Values,
+                Contains.Item(BeatmapOnlineStatus.Loved)
+            );
         }
 
         [TestCase("creator")]
@@ -370,7 +443,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual("find me songs with  please", filterCriteria.SearchText.Trim());
             Assert.AreEqual(5, filterCriteria.SearchTerms.Length);
             Assert.AreEqual("a certain title", filterCriteria.Title.SearchTerm);
-            Assert.That(filterCriteria.Title.MatchMode, Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase));
+            Assert.That(
+                filterCriteria.Title.MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase)
+            );
         }
 
         [Test]
@@ -382,7 +458,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual("find me songs by  please", filterCriteria.SearchText.Trim());
             Assert.AreEqual(5, filterCriteria.SearchTerms.Length);
             Assert.AreEqual("singer", filterCriteria.Artist.SearchTerm);
-            Assert.That(filterCriteria.Artist.MatchMode, Is.EqualTo(FilterCriteria.MatchMode.Substring));
+            Assert.That(
+                filterCriteria.Artist.MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.Substring)
+            );
         }
 
         [Test]
@@ -394,7 +473,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual("really like  yes", filterCriteria.SearchText.Trim());
             Assert.AreEqual(3, filterCriteria.SearchTerms.Length);
             Assert.AreEqual("name with space", filterCriteria.Artist.SearchTerm);
-            Assert.That(filterCriteria.Artist.MatchMode, Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase));
+            Assert.That(
+                filterCriteria.Artist.MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase)
+            );
         }
 
         [Test]
@@ -406,7 +488,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.That(filterCriteria.SearchText.Trim(), Is.Empty);
             Assert.AreEqual(0, filterCriteria.SearchTerms.Length);
             Assert.AreEqual("The Only One", filterCriteria.Artist.SearchTerm);
-            Assert.That(filterCriteria.Artist.MatchMode, Is.EqualTo(FilterCriteria.MatchMode.FullPhrase));
+            Assert.That(
+                filterCriteria.Artist.MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.FullPhrase)
+            );
         }
 
         [Test]
@@ -481,23 +566,27 @@ namespace osu.Game.Tests.NonVisual.Filtering
         [TestCase("diff=!\"Diff\"", new int[] { })]
         public void TestDifficultySearch(string query, int[] expectedBeatmapIndexes)
         {
-            var carouselBeatmaps = (((string title, string difficultyName)[])new[]
-            {
-                ("Title1", "Diff1"),
-                ("Title1", "Diff2"),
-                ("My[Favourite]Song", "Expert"),
-                ("Title", "My Favourite Diff"),
-                ("Another One", "diff ]with [[ brackets]]]"),
-                ("Diff in title", "a"),
-                ("a", "Diff in diff"),
-            }).Select(info => new CarouselBeatmap(new BeatmapInfo
-            {
-                Metadata = new BeatmapMetadata
-                {
-                    Title = info.title
-                },
-                DifficultyName = info.difficultyName
-            })).ToList();
+            var carouselBeatmaps = (
+                ((string title, string difficultyName)[])
+                    new[]
+                    {
+                        ("Title1", "Diff1"),
+                        ("Title1", "Diff2"),
+                        ("My[Favourite]Song", "Expert"),
+                        ("Title", "My Favourite Diff"),
+                        ("Another One", "diff ]with [[ brackets]]]"),
+                        ("Diff in title", "a"),
+                        ("a", "Diff in diff"),
+                    }
+            )
+                .Select(info => new CarouselBeatmap(
+                    new BeatmapInfo
+                    {
+                        Metadata = new BeatmapMetadata { Title = info.title },
+                        DifficultyName = info.difficultyName,
+                    }
+                ))
+                .ToList();
 
             var criteria = new FilterCriteria();
 
@@ -505,8 +594,9 @@ namespace osu.Game.Tests.NonVisual.Filtering
             carouselBeatmaps.ForEach(b => b.Filter(criteria));
 
             int[] visibleBeatmaps = carouselBeatmaps
-                                    .Where(b => !b.Filtered.Value)
-                                    .Select(b => carouselBeatmaps.IndexOf(b)).ToArray();
+                .Where(b => !b.Filtered.Value)
+                .Select(b => carouselBeatmaps.IndexOf(b))
+                .ToArray();
 
             Assert.That(visibleBeatmaps, Is.EqualTo(expectedBeatmapIndexes));
         }
@@ -520,7 +610,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.AreEqual("find me songs with  please", filterCriteria.SearchText.Trim());
             Assert.AreEqual(5, filterCriteria.SearchTerms.Length);
             Assert.AreEqual("unit tests", filterCriteria.Source.SearchTerm);
-            Assert.That(filterCriteria.Source.MatchMode, Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase));
+            Assert.That(
+                filterCriteria.Source.MatchMode,
+                Is.EqualTo(FilterCriteria.MatchMode.IsolatedPhrase)
+            );
         }
 
         private class CustomFilterCriteria : IRulesetFilterCriteria
@@ -540,7 +633,8 @@ namespace osu.Game.Tests.NonVisual.Filtering
                 return false;
             }
 
-            public bool FilterMayChangeFromMods(ValueChangedEvent<IReadOnlyList<Mod>> mods) => false;
+            public bool FilterMayChangeFromMods(ValueChangedEvent<IReadOnlyList<Mod>> mods) =>
+                false;
         }
 
         private static readonly object[] correct_date_query_examples =
@@ -552,7 +646,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             new object[] { "10y24M" },
             new object[] { "10y60d120s" },
             new object[] { "0y0M2d" },
-            new object[] { "1y1M2d" }
+            new object[] { "1y1M2d" },
         };
 
         [Test]
@@ -577,7 +671,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             new object[] { "\"three days\"" },
             new object[] { "0.1y0.1M2d" },
             new object[] { "0.99y0.99M2d" },
-            new object[] { string.Empty }
+            new object[] { string.Empty },
         };
 
         [Test]
@@ -600,7 +694,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.That(filterCriteria.LastPlayed.Min, Is.Null);
             // the parser internally references `DateTimeOffset.Now`, so to not make things too annoying for tests, just assume some tolerance
             // (irrelevant in proportion to the actual filter proscribed).
-            Assert.That(filterCriteria.LastPlayed.Max, Is.EqualTo(DateTimeOffset.Now.AddDays(-50)).Within(TimeSpan.FromSeconds(5)));
+            Assert.That(
+                filterCriteria.LastPlayed.Max,
+                Is.EqualTo(DateTimeOffset.Now.AddDays(-50)).Within(TimeSpan.FromSeconds(5))
+            );
         }
 
         [Test]
@@ -613,7 +710,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.That(filterCriteria.LastPlayed.Min, Is.Not.Null);
             // the parser internally references `DateTimeOffset.Now`, so to not make things too annoying for tests, just assume some tolerance
             // (irrelevant in proportion to the actual filter proscribed).
-            Assert.That(filterCriteria.LastPlayed.Min, Is.EqualTo(DateTimeOffset.Now.AddDays(-50)).Within(TimeSpan.FromSeconds(5)));
+            Assert.That(
+                filterCriteria.LastPlayed.Min,
+                Is.EqualTo(DateTimeOffset.Now.AddDays(-50)).Within(TimeSpan.FromSeconds(5))
+            );
         }
 
         [Test]
@@ -626,8 +726,15 @@ namespace osu.Game.Tests.NonVisual.Filtering
             Assert.That(filterCriteria.LastPlayed.Max, Is.Not.Null);
             // the parser internally references `DateTimeOffset.Now`, so to not make things too annoying for tests, just assume some tolerance
             // (irrelevant in proportion to the actual filter proscribed).
-            Assert.That(filterCriteria.LastPlayed.Min, Is.EqualTo(DateTimeOffset.Now.AddMonths(-6).AddYears(-1)).Within(TimeSpan.FromSeconds(5)));
-            Assert.That(filterCriteria.LastPlayed.Max, Is.EqualTo(DateTimeOffset.Now.AddMonths(-3)).Within(TimeSpan.FromSeconds(5)));
+            Assert.That(
+                filterCriteria.LastPlayed.Min,
+                Is.EqualTo(DateTimeOffset.Now.AddMonths(-6).AddYears(-1))
+                    .Within(TimeSpan.FromSeconds(5))
+            );
+            Assert.That(
+                filterCriteria.LastPlayed.Max,
+                Is.EqualTo(DateTimeOffset.Now.AddMonths(-3)).Within(TimeSpan.FromSeconds(5))
+            );
         }
 
         [Test]
@@ -646,7 +753,10 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
             Assert.AreEqual(true, filterCriteria.LastPlayed.HasFilter);
-            Assert.AreEqual(DateTimeOffset.MinValue.AddMilliseconds(1), filterCriteria.LastPlayed.Min);
+            Assert.AreEqual(
+                DateTimeOffset.MinValue.AddMilliseconds(1),
+                filterCriteria.LastPlayed.Min
+            );
         }
 
         private static DateTimeOffset dateTimeOffsetFromDateOnly(int year, int month, int day) =>
@@ -654,37 +764,147 @@ namespace osu.Game.Tests.NonVisual.Filtering
 
         private static readonly object[] ranked_date_valid_test_cases =
         {
-            new object[] { "ranked<2012", dateTimeOffsetFromDateOnly(2012, 1, 1), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<2012.03", dateTimeOffsetFromDateOnly(2012, 3, 1), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<2012/03/05", dateTimeOffsetFromDateOnly(2012, 3, 5), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<2012-3-5", dateTimeOffsetFromDateOnly(2012, 3, 5), (FilterCriteria x) => x.DateRanked.Max },
-
-            new object[] { "ranked<=2012", dateTimeOffsetFromDateOnly(2013, 1, 1), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<=2012.03", dateTimeOffsetFromDateOnly(2012, 4, 1), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<=2012/03/05", dateTimeOffsetFromDateOnly(2012, 3, 6), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked<=2012-3-5", dateTimeOffsetFromDateOnly(2012, 3, 6), (FilterCriteria x) => x.DateRanked.Max },
-
-            new object[] { "ranked>2012", dateTimeOffsetFromDateOnly(2013, 1, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>2012.03", dateTimeOffsetFromDateOnly(2012, 4, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>2012/03/05", dateTimeOffsetFromDateOnly(2012, 3, 6), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>2012-3-5", dateTimeOffsetFromDateOnly(2012, 3, 6), (FilterCriteria x) => x.DateRanked.Min },
-
-            new object[] { "ranked>=2012", dateTimeOffsetFromDateOnly(2012, 1, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>=2012.03", dateTimeOffsetFromDateOnly(2012, 3, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>=2012/03/05", dateTimeOffsetFromDateOnly(2012, 3, 5), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked>=2012-3-5", dateTimeOffsetFromDateOnly(2012, 3, 5), (FilterCriteria x) => x.DateRanked.Min },
-
-            new object[] { "ranked=2012", dateTimeOffsetFromDateOnly(2012, 1, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked=2012", dateTimeOffsetFromDateOnly(2012, 1, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked=2012-03", dateTimeOffsetFromDateOnly(2012, 3, 1), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked=2012-03", dateTimeOffsetFromDateOnly(2012, 4, 1), (FilterCriteria x) => x.DateRanked.Max },
-            new object[] { "ranked=2012-03-05", dateTimeOffsetFromDateOnly(2012, 3, 5), (FilterCriteria x) => x.DateRanked.Min },
-            new object[] { "ranked=2012-03-05", dateTimeOffsetFromDateOnly(2012, 3, 6), (FilterCriteria x) => x.DateRanked.Max },
+            new object[]
+            {
+                "ranked<2012",
+                dateTimeOffsetFromDateOnly(2012, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<2012.03",
+                dateTimeOffsetFromDateOnly(2012, 3, 1),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<2012/03/05",
+                dateTimeOffsetFromDateOnly(2012, 3, 5),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<2012-3-5",
+                dateTimeOffsetFromDateOnly(2012, 3, 5),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<=2012",
+                dateTimeOffsetFromDateOnly(2013, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<=2012.03",
+                dateTimeOffsetFromDateOnly(2012, 4, 1),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<=2012/03/05",
+                dateTimeOffsetFromDateOnly(2012, 3, 6),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked<=2012-3-5",
+                dateTimeOffsetFromDateOnly(2012, 3, 6),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked>2012",
+                dateTimeOffsetFromDateOnly(2013, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>2012.03",
+                dateTimeOffsetFromDateOnly(2012, 4, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>2012/03/05",
+                dateTimeOffsetFromDateOnly(2012, 3, 6),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>2012-3-5",
+                dateTimeOffsetFromDateOnly(2012, 3, 6),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>=2012",
+                dateTimeOffsetFromDateOnly(2012, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>=2012.03",
+                dateTimeOffsetFromDateOnly(2012, 3, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>=2012/03/05",
+                dateTimeOffsetFromDateOnly(2012, 3, 5),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked>=2012-3-5",
+                dateTimeOffsetFromDateOnly(2012, 3, 5),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked=2012",
+                dateTimeOffsetFromDateOnly(2012, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked=2012",
+                dateTimeOffsetFromDateOnly(2012, 1, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked=2012-03",
+                dateTimeOffsetFromDateOnly(2012, 3, 1),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked=2012-03",
+                dateTimeOffsetFromDateOnly(2012, 4, 1),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
+            new object[]
+            {
+                "ranked=2012-03-05",
+                dateTimeOffsetFromDateOnly(2012, 3, 5),
+                (FilterCriteria x) => x.DateRanked.Min,
+            },
+            new object[]
+            {
+                "ranked=2012-03-05",
+                dateTimeOffsetFromDateOnly(2012, 3, 6),
+                (FilterCriteria x) => x.DateRanked.Max,
+            },
         };
 
         [Test]
         [TestCaseSource(nameof(ranked_date_valid_test_cases))]
-        public void TestValidRankedDateQueries(string query, DateTimeOffset expected, Func<FilterCriteria, DateTimeOffset?> f)
+        public void TestValidRankedDateQueries(
+            string query,
+            DateTimeOffset expected,
+            Func<FilterCriteria, DateTimeOffset?> f
+        )
         {
             var filterCriteria = new FilterCriteria();
             FilterQueryParser.ApplyQueries(filterCriteria, query);
@@ -714,7 +934,6 @@ namespace osu.Game.Tests.NonVisual.Filtering
             new object[] { "submitted<2012.03", true },
             new object[] { "submitted<2012/03/05", true },
             new object[] { "submitted<2012-3-5", true },
-
             new object[] { "submitted<0", false },
             new object[] { "submitted=99999", false },
             new object[] { "submitted>=2012-03-05-04", false },
@@ -738,7 +957,6 @@ namespace osu.Game.Tests.NonVisual.Filtering
             new object[] { "false", DateTimeOffset.Now, false },
             new object[] { "no", DateTimeOffset.MinValue, true },
             new object[] { "no", DateTimeOffset.Now, false },
-
             new object[] { "1", DateTimeOffset.MinValue, false },
             new object[] { "1", DateTimeOffset.Now, true },
             new object[] { "true", DateTimeOffset.MinValue, false },

@@ -33,9 +33,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files = { CheckTestHelpers.CreateMockFile("wav") }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("wav") },
+                    },
+                },
             };
 
             // 0 = No output device. This still allows decoding.
@@ -82,7 +82,9 @@ namespace osu.Game.Tests.Editing.Checks
                 var issues = check.Run(getContext(resourceStream)).ToList();
 
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckTooShortAudioFiles.IssueTemplateTooShort);
+                Assert.That(
+                    issues.Single().Template is CheckTooShortAudioFiles.IssueTemplateTooShort
+                );
             }
         }
 

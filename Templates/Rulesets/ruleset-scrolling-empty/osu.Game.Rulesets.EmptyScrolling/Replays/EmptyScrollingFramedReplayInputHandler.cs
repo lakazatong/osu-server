@@ -9,21 +9,22 @@ using osu.Game.Rulesets.Replays;
 
 namespace osu.Game.Rulesets.EmptyScrolling.Replays
 {
-    public class EmptyScrollingFramedReplayInputHandler : FramedReplayInputHandler<EmptyScrollingReplayFrame>
+    public class EmptyScrollingFramedReplayInputHandler
+        : FramedReplayInputHandler<EmptyScrollingReplayFrame>
     {
         public EmptyScrollingFramedReplayInputHandler(Replay replay)
-            : base(replay)
-        {
-        }
+            : base(replay) { }
 
         protected override bool IsImportant(EmptyScrollingReplayFrame frame) => frame.Actions.Any();
 
         protected override void CollectReplayInputs(List<IInput> inputs)
         {
-            inputs.Add(new ReplayState<EmptyScrollingAction>
-            {
-                PressedActions = CurrentFrame?.Actions ?? new List<EmptyScrollingAction>(),
-            });
+            inputs.Add(
+                new ReplayState<EmptyScrollingAction>
+                {
+                    PressedActions = CurrentFrame?.Actions ?? new List<EmptyScrollingAction>(),
+                }
+            );
         }
     }
 }

@@ -28,25 +28,29 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             base.SetUpSteps();
 
-            AddStep("create container", () =>
-            {
-                rooms = new BindableList<Room>();
-                selectedRoom = new Bindable<Room?>();
-
-                Child = new PopoverContainer
+            AddStep(
+                "create container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 0.5f,
-                    Child = container = new RoomListing
+                    rooms = new BindableList<Room>();
+                    selectedRoom = new Bindable<Room?>();
+
+                    Child = new PopoverContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Rooms = { BindTarget = rooms },
-                        SelectedRoom = { BindTarget = selectedRoom }
-                    }
-                };
-            });
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 0.5f,
+                        Child = container =
+                            new RoomListing
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Rooms = { BindTarget = rooms },
+                                SelectedRoom = { BindTarget = selectedRoom },
+                            },
+                    };
+                }
+            );
         }
 
         [Test]
@@ -56,21 +60,37 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             AddAssert("has 5 rooms", () => container.DrawableRooms.Count == 5);
 
-            AddAssert("all spotlights at top", () => container.DrawableRooms
-                                                              .SkipWhile(r => r.Room.Category == RoomCategory.Spotlight)
-                                                              .All(r => r.Room.Category == RoomCategory.Normal));
+            AddAssert(
+                "all spotlights at top",
+                () =>
+                    container
+                        .DrawableRooms.SkipWhile(r => r.Room.Category == RoomCategory.Spotlight)
+                        .All(r => r.Room.Category == RoomCategory.Normal)
+            );
 
             AddStep("remove first room", () => rooms.RemoveAt(0));
             AddAssert("has 4 rooms", () => container.DrawableRooms.Count == 4);
-            AddAssert("first room removed", () => container.DrawableRooms.All(r => r.Room.RoomID != 0));
+            AddAssert(
+                "first room removed",
+                () => container.DrawableRooms.All(r => r.Room.RoomID != 0)
+            );
 
             AddStep("select first room", () => container.DrawableRooms.First().TriggerClick());
-            AddAssert("first spotlight selected", () => checkRoomSelected(rooms.First(r => r.Category == RoomCategory.Spotlight)));
+            AddAssert(
+                "first spotlight selected",
+                () => checkRoomSelected(rooms.First(r => r.Category == RoomCategory.Spotlight))
+            );
 
             AddStep("remove last room", () => rooms.RemoveAt(rooms.Count - 1));
-            AddAssert("first spotlight still selected", () => checkRoomSelected(rooms.First(r => r.Category == RoomCategory.Spotlight)));
+            AddAssert(
+                "first spotlight still selected",
+                () => checkRoomSelected(rooms.First(r => r.Category == RoomCategory.Spotlight))
+            );
 
-            AddStep("remove spotlight room", () => rooms.RemoveAll(r => r.Category == RoomCategory.Spotlight));
+            AddStep(
+                "remove spotlight room",
+                () => rooms.RemoveAll(r => r.Category == RoomCategory.Spotlight)
+            );
             AddAssert("selection vacated", () => checkRoomSelected(null));
         }
 
@@ -82,14 +102,23 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddAssert("no selection", () => checkRoomSelected(null));
 
             press(Key.Down);
-            AddAssert("first room selected", () => checkRoomSelected(container.DrawableRooms.First().Room));
+            AddAssert(
+                "first room selected",
+                () => checkRoomSelected(container.DrawableRooms.First().Room)
+            );
 
             press(Key.Up);
-            AddAssert("first room selected", () => checkRoomSelected(container.DrawableRooms.First().Room));
+            AddAssert(
+                "first room selected",
+                () => checkRoomSelected(container.DrawableRooms.First().Room)
+            );
 
             press(Key.Down);
             press(Key.Down);
-            AddAssert("last room selected", () => checkRoomSelected(container.DrawableRooms.Last().Room));
+            AddAssert(
+                "last room selected",
+                () => checkRoomSelected(container.DrawableRooms.Last().Room)
+            );
         }
 
         [Test]
@@ -97,14 +126,17 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             AddStep("add rooms", () => rooms.AddRange(GenerateRooms(3)));
 
-            AddStep("reorder rooms", () =>
-            {
-                var room = rooms[1];
-                rooms.Remove(room);
+            AddStep(
+                "reorder rooms",
+                () =>
+                {
+                    var room = rooms[1];
+                    rooms.Remove(room);
 
-                room.RoomID += 3;
-                rooms.Add(room);
-            });
+                    room.RoomID += 3;
+                    rooms.Add(room);
+                }
+            );
 
             AddAssert("no selection", () => checkRoomSelected(null));
 
@@ -126,7 +158,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddAssert("no selection", () => checkRoomSelected(null));
 
             press(Key.Down);
-            AddAssert("first room selected", () => checkRoomSelected(container.DrawableRooms.First().Room));
+            AddAssert(
+                "first room selected",
+                () => checkRoomSelected(container.DrawableRooms.First().Room)
+            );
 
             AddStep("click away", () => InputManager.Click(MouseButton.Left));
             AddAssert("no selection", () => checkRoomSelected(null));
@@ -142,54 +177,128 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             AddStep("add rooms", () => rooms.AddRange(GenerateRooms(4)));
 
-            AddUntilStep("4 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 4);
+            AddUntilStep(
+                "4 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 4
+            );
 
-            AddStep("filter one room", () => container.Filter.Value = new FilterCriteria { SearchString = rooms.First().Name });
+            AddStep(
+                "filter one room",
+                () =>
+                    container.Filter.Value = new FilterCriteria
+                    {
+                        SearchString = rooms.First().Name,
+                    }
+            );
 
-            AddUntilStep("1 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 1);
+            AddUntilStep(
+                "1 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 1
+            );
 
             AddStep("remove filter", () => container.Filter.Value = null);
 
-            AddUntilStep("4 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 4);
+            AddUntilStep(
+                "4 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 4
+            );
         }
 
         [Test]
         public void TestRulesetFiltering()
         {
-            AddStep("add rooms", () => rooms.AddRange(GenerateRooms(2, new OsuRuleset().RulesetInfo)));
-            AddStep("add rooms", () => rooms.AddRange(GenerateRooms(3, new CatchRuleset().RulesetInfo)));
+            AddStep(
+                "add rooms",
+                () => rooms.AddRange(GenerateRooms(2, new OsuRuleset().RulesetInfo))
+            );
+            AddStep(
+                "add rooms",
+                () => rooms.AddRange(GenerateRooms(3, new CatchRuleset().RulesetInfo))
+            );
 
             // Todo: What even is this case...?
-            AddStep("set empty filter criteria", () => container.Filter.Value = new FilterCriteria());
-            AddUntilStep("5 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 5);
+            AddStep(
+                "set empty filter criteria",
+                () => container.Filter.Value = new FilterCriteria()
+            );
+            AddUntilStep(
+                "5 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 5
+            );
 
-            AddStep("filter osu! rooms", () => container.Filter.Value = new FilterCriteria { Ruleset = new OsuRuleset().RulesetInfo });
-            AddUntilStep("2 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 2);
+            AddStep(
+                "filter osu! rooms",
+                () =>
+                    container.Filter.Value = new FilterCriteria
+                    {
+                        Ruleset = new OsuRuleset().RulesetInfo,
+                    }
+            );
+            AddUntilStep(
+                "2 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 2
+            );
 
-            AddStep("filter catch rooms", () => container.Filter.Value = new FilterCriteria { Ruleset = new CatchRuleset().RulesetInfo });
-            AddUntilStep("3 rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 3);
+            AddStep(
+                "filter catch rooms",
+                () =>
+                    container.Filter.Value = new FilterCriteria
+                    {
+                        Ruleset = new CatchRuleset().RulesetInfo,
+                    }
+            );
+            AddUntilStep(
+                "3 rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 3
+            );
         }
 
         [Test]
         public void TestAccessTypeFiltering()
         {
-            AddStep("add rooms", () =>
-            {
-                rooms.AddRange(GenerateRooms(1, withPassword: true));
-                rooms.AddRange(GenerateRooms(1, withPassword: false));
-            });
+            AddStep(
+                "add rooms",
+                () =>
+                {
+                    rooms.AddRange(GenerateRooms(1, withPassword: true));
+                    rooms.AddRange(GenerateRooms(1, withPassword: false));
+                }
+            );
 
             AddStep("apply default filter", () => container.Filter.SetDefault());
 
-            AddUntilStep("both rooms visible", () => container.DrawableRooms.Count(r => r.IsPresent) == 2);
+            AddUntilStep(
+                "both rooms visible",
+                () => container.DrawableRooms.Count(r => r.IsPresent) == 2
+            );
 
-            AddStep("filter public rooms", () => container.Filter.Value = new FilterCriteria { Permissions = RoomPermissionsFilter.Public });
+            AddStep(
+                "filter public rooms",
+                () =>
+                    container.Filter.Value = new FilterCriteria
+                    {
+                        Permissions = RoomPermissionsFilter.Public,
+                    }
+            );
 
-            AddUntilStep("private room hidden", () => container.DrawableRooms.All(r => !r.Room.HasPassword));
+            AddUntilStep(
+                "private room hidden",
+                () => container.DrawableRooms.All(r => !r.Room.HasPassword)
+            );
 
-            AddStep("filter private rooms", () => container.Filter.Value = new FilterCriteria { Permissions = RoomPermissionsFilter.Private });
+            AddStep(
+                "filter private rooms",
+                () =>
+                    container.Filter.Value = new FilterCriteria
+                    {
+                        Permissions = RoomPermissionsFilter.Private,
+                    }
+            );
 
-            AddUntilStep("public room hidden", () => container.DrawableRooms.All(r => r.Room.HasPassword));
+            AddUntilStep(
+                "public room hidden",
+                () => container.DrawableRooms.All(r => r.Room.HasPassword)
+            );
         }
 
         [Test]
@@ -201,6 +310,11 @@ namespace osu.Game.Tests.Visual.Multiplayer
         private bool checkRoomSelected(Room? room) => selectedRoom.Value == room;
 
         private Room? getRoomInFlow(int index) =>
-            (container.ChildrenOfType<FillFlowContainer<LoungeRoomPanel>>().First().FlowingChildren.ElementAt(index) as RoomPanel)?.Room;
+            (
+                container
+                    .ChildrenOfType<FillFlowContainer<LoungeRoomPanel>>()
+                    .First()
+                    .FlowingChildren.ElementAt(index) as RoomPanel
+            )?.Room;
     }
 }

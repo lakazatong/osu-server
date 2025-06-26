@@ -25,43 +25,51 @@ namespace osu.Game.Tests.Visual.Editing
     {
         protected override Ruleset CreateEditorRuleset() => new OsuRuleset();
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
 
-            AddStep("add test objects", () =>
-            {
-                EditorBeatmap.Add(new Slider
+            AddStep(
+                "add test objects",
+                () =>
                 {
-                    StartTime = 0,
-                    Position = (OsuPlayfield.BASE_SIZE - new Vector2(0, 100)) / 2,
-                    Path = new SliderPath
-                    {
-                        ControlPoints =
+                    EditorBeatmap.Add(
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0)),
-                            new PathControlPoint(new Vector2(0, 100))
+                            StartTime = 0,
+                            Position = (OsuPlayfield.BASE_SIZE - new Vector2(0, 100)) / 2,
+                            Path = new SliderPath
+                            {
+                                ControlPoints =
+                                {
+                                    new PathControlPoint(new Vector2(0, 0)),
+                                    new PathControlPoint(new Vector2(0, 100)),
+                                },
+                            },
                         }
-                    }
-                });
+                    );
 
-                EditorBeatmap.Add(new Slider
-                {
-                    StartTime = 500,
-                    Position = (OsuPlayfield.BASE_SIZE - new Vector2(100, 0)) / 2,
-                    Path = new SliderPath
-                    {
-                        ControlPoints =
+                    EditorBeatmap.Add(
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0)),
-                            new PathControlPoint(new Vector2(100, 0))
+                            StartTime = 500,
+                            Position = (OsuPlayfield.BASE_SIZE - new Vector2(100, 0)) / 2,
+                            Path = new SliderPath
+                            {
+                                ControlPoints =
+                                {
+                                    new PathControlPoint(new Vector2(0, 0)),
+                                    new PathControlPoint(new Vector2(100, 0)),
+                                },
+                            },
+                            SliderVelocityMultiplier = 2,
                         }
-                    },
-                    SliderVelocityMultiplier = 2
-                });
-            });
+                    );
+                }
+            );
         }
 
         [Test]
@@ -81,7 +89,10 @@ namespace osu.Game.Tests.Visual.Editing
 
             // select first object to ensure that difficulty pieces for unselected objects
             // work independently from selection state.
-            AddStep("select first object", () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects.First()));
+            AddStep(
+                "select first object",
+                () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects.First())
+            );
 
             clickDifficultyPiece(1);
             velocityPopoverHasSingleValue(2);
@@ -107,13 +118,19 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestMultipleSelectionWithSameSliderVelocity()
         {
-            AddStep("unify slider velocity", () =>
-            {
-                foreach (var h in EditorBeatmap.HitObjects.OfType<IHasSliderVelocity>())
-                    h.SliderVelocityMultiplier = 1.5;
-            });
+            AddStep(
+                "unify slider velocity",
+                () =>
+                {
+                    foreach (var h in EditorBeatmap.HitObjects.OfType<IHasSliderVelocity>())
+                        h.SliderVelocityMultiplier = 1.5;
+                }
+            );
 
-            AddStep("select both objects", () => EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects));
+            AddStep(
+                "select both objects",
+                () => EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects)
+            );
             clickDifficultyPiece(0);
             velocityPopoverHasSingleValue(1.5);
 
@@ -130,7 +147,10 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestMultipleSelectionWithDifferentSliderVelocity()
         {
-            AddStep("select both objects", () => EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects));
+            AddStep(
+                "select both objects",
+                () => EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects)
+            );
             clickDifficultyPiece(0);
             velocityPopoverHasIndeterminateValue();
 
@@ -144,57 +164,102 @@ namespace osu.Game.Tests.Visual.Editing
             hitObjectHasVelocity(1, 3);
         }
 
-        private void clickDifficultyPiece(int objectIndex) => AddStep($"click {objectIndex.ToOrdinalWords()} difficulty piece", () =>
-        {
-            var difficultyPiece = this.ChildrenOfType<DifficultyPointPiece>().Single(piece => piece.HitObject == EditorBeatmap.HitObjects.ElementAt(objectIndex));
+        private void clickDifficultyPiece(int objectIndex) =>
+            AddStep(
+                $"click {objectIndex.ToOrdinalWords()} difficulty piece",
+                () =>
+                {
+                    var difficultyPiece = this.ChildrenOfType<DifficultyPointPiece>()
+                        .Single(piece =>
+                            piece.HitObject == EditorBeatmap.HitObjects.ElementAt(objectIndex)
+                        );
 
-            InputManager.MoveMouseTo(difficultyPiece);
-            InputManager.Click(MouseButton.Left);
-        });
+                    InputManager.MoveMouseTo(difficultyPiece);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-        private void velocityPopoverHasFocus() => AddUntilStep("velocity popover textbox focused", () =>
-        {
-            var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().SingleOrDefault();
-            var slider = popover?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().Single();
-            var textbox = slider?.ChildrenOfType<OsuTextBox>().Single();
+        private void velocityPopoverHasFocus() =>
+            AddUntilStep(
+                "velocity popover textbox focused",
+                () =>
+                {
+                    var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>()
+                        .SingleOrDefault();
+                    var slider = popover
+                        ?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>()
+                        .Single();
+                    var textbox = slider?.ChildrenOfType<OsuTextBox>().Single();
 
-            return textbox?.HasFocus == true;
-        });
+                    return textbox?.HasFocus == true;
+                }
+            );
 
-        private void velocityPopoverHasSingleValue(double velocity) => AddUntilStep($"velocity popover has {velocity}", () =>
-        {
-            var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().SingleOrDefault();
-            var slider = popover?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().Single();
+        private void velocityPopoverHasSingleValue(double velocity) =>
+            AddUntilStep(
+                $"velocity popover has {velocity}",
+                () =>
+                {
+                    var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>()
+                        .SingleOrDefault();
+                    var slider = popover
+                        ?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>()
+                        .Single();
 
-            return slider?.Current.Value == velocity;
-        });
+                    return slider?.Current.Value == velocity;
+                }
+            );
 
-        private void velocityPopoverHasIndeterminateValue() => AddUntilStep("velocity popover has indeterminate value", () =>
-        {
-            var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().SingleOrDefault();
-            var slider = popover?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().Single();
+        private void velocityPopoverHasIndeterminateValue() =>
+            AddUntilStep(
+                "velocity popover has indeterminate value",
+                () =>
+                {
+                    var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>()
+                        .SingleOrDefault();
+                    var slider = popover
+                        ?.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>()
+                        .Single();
 
-            return slider != null && slider.Current.Value == null;
-        });
+                    return slider != null && slider.Current.Value == null;
+                }
+            );
 
         private void dismissPopover()
         {
             AddStep("unfocus textbox", () => InputManager.Key(Key.Escape));
             AddStep("dismiss popover", () => InputManager.Key(Key.Escape));
-            AddUntilStep("wait for dismiss", () => !this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().Any(popover => popover.IsPresent));
+            AddUntilStep(
+                "wait for dismiss",
+                () =>
+                    !this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>()
+                        .Any(popover => popover.IsPresent)
+            );
         }
 
-        private void setVelocityViaPopover(double velocity) => AddStep($"set {velocity} via popover", () =>
-        {
-            var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().Single();
-            var slider = popover.ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().Single();
-            slider.Current.Value = velocity;
-        });
+        private void setVelocityViaPopover(double velocity) =>
+            AddStep(
+                $"set {velocity} via popover",
+                () =>
+                {
+                    var popover = this.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>()
+                        .Single();
+                    var slider = popover
+                        .ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>()
+                        .Single();
+                    slider.Current.Value = velocity;
+                }
+            );
 
-        private void hitObjectHasVelocity(int objectIndex, double velocity) => AddAssert($"{objectIndex.ToOrdinalWords()} has velocity {velocity}", () =>
-        {
-            var h = EditorBeatmap.HitObjects.ElementAt(objectIndex);
-            return h is IHasSliderVelocity hasSliderVelocity && hasSliderVelocity.SliderVelocityMultiplier == velocity;
-        });
+        private void hitObjectHasVelocity(int objectIndex, double velocity) =>
+            AddAssert(
+                $"{objectIndex.ToOrdinalWords()} has velocity {velocity}",
+                () =>
+                {
+                    var h = EditorBeatmap.HitObjects.ElementAt(objectIndex);
+                    return h is IHasSliderVelocity hasSliderVelocity
+                        && hasSliderVelocity.SliderVelocityMultiplier == velocity;
+                }
+            );
     }
 }

@@ -15,7 +15,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
     /// A visualisation of the lines between <see cref="PathControlPointPiece{T}"/>s.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="OsuHitObject"/> which this <see cref="PathControlPointConnection{T}"/> visualises.</typeparam>
-    public partial class PathControlPointConnection<T> : SmoothPath where T : OsuHitObject, IHasPath
+    public partial class PathControlPointConnection<T> : SmoothPath
+        where T : OsuHitObject, IHasPath
     {
         private readonly T hitObject;
 

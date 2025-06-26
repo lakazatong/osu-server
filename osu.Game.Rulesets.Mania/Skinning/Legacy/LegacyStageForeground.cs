@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public partial class LegacyStageForeground : CompositeDrawable
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Drawable? sprite;
 
@@ -25,10 +26,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            string bottomImage = skin.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.BottomStageImage)?.Value
-                                 ?? "mania-stage-bottom";
+            string bottomImage =
+                skin.GetManiaSkinConfig<string>(
+                    LegacyManiaSkinConfigurationLookups.BottomStageImage
+                )?.Value ?? "mania-stage-bottom";
 
-            sprite = skin.GetAnimation(bottomImage, true, true)?.With(d => d.Scale = new Vector2(1.6f));
+            sprite = skin.GetAnimation(bottomImage, true, true)
+                ?.With(d => d.Scale = new Vector2(1.6f));
 
             if (sprite != null)
                 InternalChild = sprite;

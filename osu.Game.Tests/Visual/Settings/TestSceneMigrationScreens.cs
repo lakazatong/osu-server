@@ -25,7 +25,7 @@ namespace osu.Game.Tests.Visual.Settings
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                }
+                },
             };
         }
 
@@ -50,7 +50,8 @@ namespace osu.Game.Tests.Visual.Settings
                 this.deleteSuccess = deleteSuccess;
             }
 
-            protected override void BeginMigration(DirectoryInfo target) => this.Push(new TestMigrationRunScreen(deleteSuccess));
+            protected override void BeginMigration(DirectoryInfo target) =>
+                this.Push(new TestMigrationRunScreen(deleteSuccess));
 
             private partial class TestMigrationRunScreen : MigrationRunScreen
             {

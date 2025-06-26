@@ -40,7 +40,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
-            if (e.Repeat) return false;
+            if (e.Repeat)
+                return false;
 
             if (e.Action == GlobalAction.Back)
                 return Back();
@@ -48,9 +49,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         protected partial class ShearedDropdownMenu : OsuDropdown<T>.OsuDropdownMenu
         {
@@ -58,18 +57,17 @@ namespace osu.Game.Graphics.UserInterfaceV2
             {
                 Shear = OsuGame.SHEAR;
                 Margin = new MarginPadding { Top = 5f };
-                Padding = new MarginPadding
-                {
-                    Left = -6f,
-                    Right = 6f
-                };
+                Padding = new MarginPadding { Left = -6f, Right = 6f };
             }
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new ShearedMenuItem(item)
-            {
-                BackgroundColourHover = HoverColour,
-                BackgroundColourSelected = SelectionColour
-            };
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) =>
+                new ShearedMenuItem(item)
+                {
+                    BackgroundColourHover = HoverColour,
+                    BackgroundColourSelected = SelectionColour,
+                };
 
             public partial class ShearedMenuItem : DrawableOsuDropdownMenuItem
             {
@@ -129,7 +127,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         ColumnDimensions = new[]
                         {
                             new Dimension(GridSizeMode.AutoSize),
-                            new Dimension()
+                            new Dimension(),
                         },
                         Content = new[]
                         {
@@ -143,19 +141,18 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                     AutoSizeAxes = Axes.Both,
                                     Children = new Drawable[]
                                     {
-                                        labelBox = new Box
-                                        {
-                                            RelativeSizeAxes = Axes.Both
-                                        },
+                                        labelBox = new Box { RelativeSizeAxes = Axes.Both },
                                         labelText = new OsuSpriteText
                                         {
                                             Margin = new MarginPadding
                                             {
                                                 Horizontal = 10f,
                                                 // Chosen specifically so the height of these dropdowns matches ShearedToggleButton (30).
-                                                Vertical = 7f
+                                                Vertical = 7f,
                                             },
-                                            Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
+                                            Font = OsuFont.Style.Body.With(
+                                                weight: FontWeight.SemiBold
+                                            ),
                                             Shear = -OsuGame.SHEAR,
                                         },
                                     },
@@ -185,11 +182,11 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                             Y = 1f,
                                             Icon = FontAwesome.Solid.ChevronDown,
                                             Size = new Vector2(10f),
-                                        }
+                                        },
                                     },
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                 };
             }
@@ -216,7 +213,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 searchBar.Padding = new MarginPadding { Left = LabelContainer.DrawWidth };
 
                 // By limiting the width we avoid this box showing up as an outline around the drawables that are on top of it.
-                Background.Padding = new MarginPadding { Left = LabelContainer.DrawWidth - ShearedButton.CORNER_RADIUS };
+                Background.Padding = new MarginPadding
+                {
+                    Left = LabelContainer.DrawWidth - ShearedButton.CORNER_RADIUS,
+                };
             }
 
             protected override bool OnHover(HoverEvent e)
@@ -258,7 +258,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 chevron.ScaleTo(open ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
             }
 
-            protected override DropdownSearchBar CreateSearchBar() => searchBar = new ShearedDropdownSearchBar();
+            protected override DropdownSearchBar CreateSearchBar() =>
+                searchBar = new ShearedDropdownSearchBar();
 
             private partial class ShearedDropdownSearchBar : DropdownSearchBar
             {
@@ -266,10 +267,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 protected override void PopOut() => this.FadeOut();
 
-                protected override TextBox CreateTextBox() => new DropdownSearchTextBox
-                {
-                    FontSize = OsuFont.Default.Size,
-                };
+                protected override TextBox CreateTextBox() =>
+                    new DropdownSearchTextBox { FontSize = OsuFont.Default.Size };
 
                 private partial class DropdownSearchTextBox : OsuTextBox
                 {
@@ -277,8 +276,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     private void load(OverlayColourProvider? colourProvider)
                     {
                         TextContainer.Shear = -OsuGame.SHEAR;
-                        BackgroundUnfocused = colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
-                        BackgroundFocused = colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
+                        BackgroundUnfocused =
+                            colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
+                        BackgroundFocused =
+                            colourProvider?.Background5 ?? new Color4(10, 10, 10, 255);
                     }
 
                     protected override void OnFocus(FocusEvent e)

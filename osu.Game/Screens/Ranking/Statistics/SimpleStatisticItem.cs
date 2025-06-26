@@ -35,22 +35,27 @@ namespace osu.Game.Screens.Ranking.Statistics
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
 
-            AddRange(new[]
-            {
-                new OsuSpriteText
+            AddRange(
+                new[]
                 {
-                    Text = Name,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Font = OsuFont.GetFont(size: StatisticItem.FONT_SIZE)
-                },
-                value = new OsuSpriteText
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Font = OsuFont.GetFont(size: StatisticItem.FONT_SIZE, weight: FontWeight.Bold)
+                    new OsuSpriteText
+                    {
+                        Text = Name,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Font = OsuFont.GetFont(size: StatisticItem.FONT_SIZE),
+                    },
+                    value = new OsuSpriteText
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        Font = OsuFont.GetFont(
+                            size: StatisticItem.FONT_SIZE,
+                            weight: FontWeight.Bold
+                        ),
+                    },
                 }
-            });
+            );
         }
     }
 
@@ -81,8 +86,6 @@ namespace osu.Game.Screens.Ranking.Statistics
         protected virtual string DisplayValue(TValue value) => value!.ToString() ?? string.Empty;
 
         public SimpleStatisticItem(string name)
-            : base(name)
-        {
-        }
+            : base(name) { }
     }
 }

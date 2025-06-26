@@ -115,9 +115,18 @@ namespace osu.Game.Tests.NonVisual
             Assert.IsFalse(beatmap1.AudioEquals(beatmap2));
         }
 
-        private static void addAudioFile(BeatmapSetInfo beatmapSetInfo, string hash = null, string filename = null)
+        private static void addAudioFile(
+            BeatmapSetInfo beatmapSetInfo,
+            string hash = null,
+            string filename = null
+        )
         {
-            beatmapSetInfo.Files.Add(new RealmNamedFileUsage(new RealmFile { Hash = hash ?? Guid.NewGuid().ToString() }, filename ?? "audio.mp3"));
+            beatmapSetInfo.Files.Add(
+                new RealmNamedFileUsage(
+                    new RealmFile { Hash = hash ?? Guid.NewGuid().ToString() },
+                    filename ?? "audio.mp3"
+                )
+            );
         }
 
         [Test]

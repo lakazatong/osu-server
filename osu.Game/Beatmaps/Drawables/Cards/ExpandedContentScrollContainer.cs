@@ -13,7 +13,8 @@ namespace osu.Game.Beatmaps.Drawables.Cards
     {
         public const float HEIGHT = 200;
 
-        protected override ScrollbarContainer CreateScrollbar(Direction direction) => new ExpandedContentScrollbar(direction);
+        protected override ScrollbarContainer CreateScrollbar(Direction direction) =>
+            new ExpandedContentScrollbar(direction);
 
         protected override void Update()
         {
@@ -62,9 +63,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
         private partial class ExpandedContentScrollbar : OsuScrollbar
         {
             public ExpandedContentScrollbar(Direction scrollDir)
-                : base(scrollDir)
-            {
-            }
+                : base(scrollDir) { }
 
             protected override bool OnHover(HoverEvent e)
             {

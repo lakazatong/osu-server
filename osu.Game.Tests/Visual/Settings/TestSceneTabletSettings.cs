@@ -26,30 +26,36 @@ namespace osu.Game.Tests.Visual.Settings
         private TabletSettings settings;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create settings", () =>
-            {
-                tabletHandler = new TestTabletHandler();
-
-                Children = new Drawable[]
+            AddStep(
+                "create settings",
+                () =>
                 {
-                    new OsuScrollContainer(Direction.Vertical)
+                    tabletHandler = new TestTabletHandler();
+
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Child = settings = new TabletSettings(tabletHandler)
+                        new OsuScrollContainer(Direction.Vertical)
                         {
-                            RelativeSizeAxes = Axes.None,
-                            Width = SettingsPanel.PANEL_WIDTH,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                        }
-                    }
-                };
-            });
+                            RelativeSizeAxes = Axes.Both,
+                            Child = settings =
+                                new TabletSettings(tabletHandler)
+                                {
+                                    RelativeSizeAxes = Axes.None,
+                                    Width = SettingsPanel.PANEL_WIDTH,
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                },
+                        },
+                    };
+                }
+            );
 
             AddStep("set square size", () => tabletHandler.SetTabletSize(new Vector2(100, 100)));
         }
@@ -57,19 +63,37 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestVariousTabletSizes()
         {
-            AddStep("Test with wide tablet", () => tabletHandler.SetTabletSize(new Vector2(160, 100)));
-            AddStep("Test with square tablet", () => tabletHandler.SetTabletSize(new Vector2(300, 300)));
-            AddStep("Test with tall tablet", () => tabletHandler.SetTabletSize(new Vector2(100, 300)));
-            AddStep("Test with very tall tablet", () => tabletHandler.SetTabletSize(new Vector2(100, 700)));
+            AddStep(
+                "Test with wide tablet",
+                () => tabletHandler.SetTabletSize(new Vector2(160, 100))
+            );
+            AddStep(
+                "Test with square tablet",
+                () => tabletHandler.SetTabletSize(new Vector2(300, 300))
+            );
+            AddStep(
+                "Test with tall tablet",
+                () => tabletHandler.SetTabletSize(new Vector2(100, 300))
+            );
+            AddStep(
+                "Test with very tall tablet",
+                () => tabletHandler.SetTabletSize(new Vector2(100, 700))
+            );
             AddStep("Test no tablet present", () => tabletHandler.SetTabletSize(Vector2.Zero));
         }
 
         [Test]
         public void TestWideAspectRatioValidity()
         {
-            AddStep("Test with wide tablet", () => tabletHandler.SetTabletSize(new Vector2(160, 100)));
+            AddStep(
+                "Test with wide tablet",
+                () => tabletHandler.SetTabletSize(new Vector2(160, 100))
+            );
 
-            AddStep("Reset to full area", () => settings.ChildrenOfType<DangerousSettingsButton>().First().TriggerClick());
+            AddStep(
+                "Reset to full area",
+                () => settings.ChildrenOfType<DangerousSettingsButton>().First().TriggerClick()
+            );
             ensureValid();
 
             AddStep("rotate 10", () => tabletHandler.Rotation.Value = 10);
@@ -121,13 +145,18 @@ namespace osu.Game.Tests.Visual.Settings
             ensureValid();
             AddStep("move right", () => tabletHandler.AreaOffset.Value = Vector2.Zero);
             ensureInvalid();
-            AddStep("move back", () => tabletHandler.AreaOffset.Value = tabletHandler.AreaSize.Value / 2);
+            AddStep(
+                "move back",
+                () => tabletHandler.AreaOffset.Value = tabletHandler.AreaSize.Value / 2
+            );
             ensureValid();
         }
 
-        private void ensureValid() => AddAssert("area valid", () => settings.AreaSelection.IsWithinBounds);
+        private void ensureValid() =>
+            AddAssert("area valid", () => settings.AreaSelection.IsWithinBounds);
 
-        private void ensureInvalid() => AddAssert("area invalid", () => !settings.AreaSelection.IsWithinBounds);
+        private void ensureInvalid() =>
+            AddAssert("area invalid", () => !settings.AreaSelection.IsWithinBounds);
 
         public class TestTabletHandler : ITabletHandler
         {
@@ -136,12 +165,13 @@ namespace osu.Game.Tests.Visual.Settings
 
             public Bindable<float> Rotation { get; } = new Bindable<float>();
 
-            public BindableFloat PressureThreshold { get; } = new BindableFloat
-            {
-                MinValue = 0f,
-                MaxValue = 1f,
-                Precision = 0.005f,
-            };
+            public BindableFloat PressureThreshold { get; } =
+                new BindableFloat
+                {
+                    MinValue = 0f,
+                    MaxValue = 1f,
+                    Precision = 0.005f,
+                };
 
             public IBindable<TabletInfo> Tablet => tablet;
 
@@ -151,7 +181,10 @@ namespace osu.Game.Tests.Visual.Settings
 
             public void SetTabletSize(Vector2 size)
             {
-                tablet.Value = size != Vector2.Zero ? new TabletInfo($"test tablet T-{RNG.Next(999):000}", size) : null;
+                tablet.Value =
+                    size != Vector2.Zero
+                        ? new TabletInfo($"test tablet T-{RNG.Next(999):000}", size)
+                        : null;
 
                 AreaSize.Default = new Vector2(size.X, size.Y);
 

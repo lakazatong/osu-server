@@ -38,19 +38,33 @@ namespace osu.Game.Tests.Visual.Editing
 
         public override void SetUpSteps()
         {
-            AddStep("import test beatmap", () => importedBeatmapSet = BeatmapImportHelper.LoadOszIntoOsu(game, virtualTrack: true).GetResultSafely());
+            AddStep(
+                "import test beatmap",
+                () =>
+                    importedBeatmapSet = BeatmapImportHelper
+                        .LoadOszIntoOsu(game, virtualTrack: true)
+                        .GetResultSafely()
+            );
             base.SetUpSteps();
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
-            => beatmaps.GetWorkingBeatmap(importedBeatmapSet.Beatmaps.First());
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) => beatmaps.GetWorkingBeatmap(importedBeatmapSet.Beatmaps.First());
 
         [Test]
         public void TestBasicSwitch()
         {
             BeatmapInfo targetDifficulty = null;
 
-            AddStep("set target difficulty", () => targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo)));
+            AddStep(
+                "set target difficulty",
+                () =>
+                    targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap =>
+                        !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                    )
+            );
             switchToDifficulty(() => targetDifficulty);
             confirmEditingBeatmap(() => targetDifficulty);
 
@@ -65,7 +79,13 @@ namespace osu.Game.Tests.Visual.Editing
             BeatmapInfo targetDifficulty = null;
             AddStep("seek editor to 00:05:00", () => EditorClock.Seek(5000));
 
-            AddStep("set target difficulty", () => targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo)));
+            AddStep(
+                "set target difficulty",
+                () =>
+                    targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap =>
+                        !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                    )
+            );
             switchToDifficulty(() => targetDifficulty);
             confirmEditingBeatmap(() => targetDifficulty);
             AddAssert("editor clock at 00:05:00", () => EditorClock.CurrentTime == 5000);
@@ -80,20 +100,37 @@ namespace osu.Game.Tests.Visual.Editing
         {
             BeatmapInfo targetDifficulty = null;
 
-            AddStep("select first object", () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects.First()));
+            AddStep(
+                "select first object",
+                () => EditorBeatmap.SelectedHitObjects.Add(EditorBeatmap.HitObjects.First())
+            );
             AddStep("copy object", () => Editor.Copy());
 
-            AddStep("set target difficulty", () =>
-            {
-                targetDifficulty = sameRuleset
-                    ? importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo) && beatmap.Ruleset.ShortName == Beatmap.Value.BeatmapInfo.Ruleset.ShortName)
-                    : importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo) && beatmap.Ruleset.ShortName != Beatmap.Value.BeatmapInfo.Ruleset.ShortName);
-            });
+            AddStep(
+                "set target difficulty",
+                () =>
+                {
+                    targetDifficulty = sameRuleset
+                        ? importedBeatmapSet.Beatmaps.Last(beatmap =>
+                            !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                            && beatmap.Ruleset.ShortName
+                                == Beatmap.Value.BeatmapInfo.Ruleset.ShortName
+                        )
+                        : importedBeatmapSet.Beatmaps.Last(beatmap =>
+                            !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                            && beatmap.Ruleset.ShortName
+                                != Beatmap.Value.BeatmapInfo.Ruleset.ShortName
+                        );
+                }
+            );
             switchToDifficulty(() => targetDifficulty);
             confirmEditingBeatmap(() => targetDifficulty);
 
             AddAssert("no objects selected", () => !EditorBeatmap.SelectedHitObjects.Any());
-            AddUntilStep("wait for drawable ruleset", () => Editor.ChildrenOfType<DrawableRuleset>().SingleOrDefault()?.IsLoaded == true);
+            AddUntilStep(
+                "wait for drawable ruleset",
+                () => Editor.ChildrenOfType<DrawableRuleset>().SingleOrDefault()?.IsLoaded == true
+            );
             AddStep("paste object", () => Editor.Paste());
 
             if (sameRuleset)
@@ -105,8 +142,14 @@ namespace osu.Game.Tests.Visual.Editing
 
             if (sameRuleset)
             {
-                AddUntilStep("prompt for save dialog shown", () => DialogOverlay.CurrentDialog is PromptForSaveDialog);
-                AddStep("discard changes", () => ((PromptForSaveDialog)DialogOverlay.CurrentDialog)?.PerformOkAction());
+                AddUntilStep(
+                    "prompt for save dialog shown",
+                    () => DialogOverlay.CurrentDialog is PromptForSaveDialog
+                );
+                AddStep(
+                    "discard changes",
+                    () => ((PromptForSaveDialog)DialogOverlay.CurrentDialog)?.PerformOkAction()
+                );
             }
 
             // ensure editor loader didn't resume.
@@ -121,19 +164,33 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddStep("remove first hitobject", () => EditorBeatmap.RemoveAt(0));
 
-            AddStep("set target difficulty", () => targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo)));
+            AddStep(
+                "set target difficulty",
+                () =>
+                    targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap =>
+                        !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                    )
+            );
             switchToDifficulty(() => targetDifficulty);
 
-            AddUntilStep("prompt for save dialog shown", () =>
-            {
-                saveDialog = this.ChildrenOfType<PromptForSaveDialog>().Single();
-                return saveDialog != null;
-            });
-            AddStep("continue editing", () =>
-            {
-                var continueButton = saveDialog.ChildrenOfType<PopupDialogCancelButton>().Last();
-                continueButton.TriggerClick();
-            });
+            AddUntilStep(
+                "prompt for save dialog shown",
+                () =>
+                {
+                    saveDialog = this.ChildrenOfType<PromptForSaveDialog>().Single();
+                    return saveDialog != null;
+                }
+            );
+            AddStep(
+                "continue editing",
+                () =>
+                {
+                    var continueButton = saveDialog
+                        .ChildrenOfType<PopupDialogCancelButton>()
+                        .Last();
+                    continueButton.TriggerClick();
+                }
+            );
 
             confirmEditingBeatmap(() => importedBeatmapSet.Beatmaps.First());
 
@@ -150,19 +207,31 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddStep("remove first hitobject", () => EditorBeatmap.RemoveAt(0));
 
-            AddStep("set target difficulty", () => targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap => !beatmap.Equals(Beatmap.Value.BeatmapInfo)));
+            AddStep(
+                "set target difficulty",
+                () =>
+                    targetDifficulty = importedBeatmapSet.Beatmaps.Last(beatmap =>
+                        !beatmap.Equals(Beatmap.Value.BeatmapInfo)
+                    )
+            );
             switchToDifficulty(() => targetDifficulty);
 
-            AddUntilStep("prompt for save dialog shown", () =>
-            {
-                saveDialog = this.ChildrenOfType<PromptForSaveDialog>().Single();
-                return saveDialog != null;
-            });
-            AddStep("discard changes", () =>
-            {
-                var continueButton = saveDialog.ChildrenOfType<PopupDialogOkButton>().Single();
-                continueButton.TriggerClick();
-            });
+            AddUntilStep(
+                "prompt for save dialog shown",
+                () =>
+                {
+                    saveDialog = this.ChildrenOfType<PromptForSaveDialog>().Single();
+                    return saveDialog != null;
+                }
+            );
+            AddStep(
+                "discard changes",
+                () =>
+                {
+                    var continueButton = saveDialog.ChildrenOfType<PopupDialogOkButton>().Single();
+                    continueButton.TriggerClick();
+                }
+            );
 
             confirmEditingBeatmap(() => targetDifficulty);
 
@@ -178,23 +247,39 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddAssert("ruleset is catch", () => Ruleset.Value.CreateInstance() is CatchRuleset);
 
-            AddStep("set taiko difficulty", () => targetDifficulty = importedBeatmapSet.Beatmaps.First(b => b.Ruleset.OnlineID == 1));
+            AddStep(
+                "set taiko difficulty",
+                () =>
+                    targetDifficulty = importedBeatmapSet.Beatmaps.First(b =>
+                        b.Ruleset.OnlineID == 1
+                    )
+            );
             switchToDifficulty(() => targetDifficulty);
             confirmEditingBeatmap(() => targetDifficulty);
 
-            AddAssert("ruleset switched to taiko", () => Ruleset.Value.CreateInstance() is TaikoRuleset);
+            AddAssert(
+                "ruleset switched to taiko",
+                () => Ruleset.Value.CreateInstance() is TaikoRuleset
+            );
 
             AddStep("exit editor forcefully", () => Stack.Exit());
             // ensure editor loader didn't resume.
             AddAssert("stack empty", () => Stack.CurrentScreen == null);
         }
 
-        private void switchToDifficulty(Func<BeatmapInfo> difficulty) => AddStep("switch to difficulty", () => Editor.SwitchToDifficulty(difficulty.Invoke()));
+        private void switchToDifficulty(Func<BeatmapInfo> difficulty) =>
+            AddStep("switch to difficulty", () => Editor.SwitchToDifficulty(difficulty.Invoke()));
 
         private void confirmEditingBeatmap(Func<BeatmapInfo> targetDifficulty)
         {
-            AddUntilStep("current beatmap is correct", () => Beatmap.Value.BeatmapInfo.Equals(targetDifficulty.Invoke()));
-            AddUntilStep("current screen is editor", () => Stack.CurrentScreen == Editor && Editor?.IsLoaded == true);
+            AddUntilStep(
+                "current beatmap is correct",
+                () => Beatmap.Value.BeatmapInfo.Equals(targetDifficulty.Invoke())
+            );
+            AddUntilStep(
+                "current screen is editor",
+                () => Stack.CurrentScreen == Editor && Editor?.IsLoaded == true
+            );
         }
     }
 }

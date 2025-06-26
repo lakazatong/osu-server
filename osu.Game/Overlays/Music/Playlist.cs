@@ -18,10 +18,9 @@ namespace osu.Game.Overlays.Music
         }
 
         public Playlist()
-            : base(20, 50)
-        {
-        }
+            : base(20, 50) { }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new OsuScrollContainer();
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new OsuScrollContainer();
     }
 }

@@ -28,9 +28,7 @@ namespace osu.Game.Tests
         private readonly ITrackStore trackStore;
 
         public WaveformTestBeatmap(AudioManager audioManager, RulesetInfo rulesetInfo = null)
-            : this(audioManager, new TestBeatmap(rulesetInfo ?? new OsuRuleset().RulesetInfo))
-        {
-        }
+            : this(audioManager, new TestBeatmap(rulesetInfo ?? new OsuRuleset().RulesetInfo)) { }
 
         public WaveformTestBeatmap(AudioManager audioManager, Beatmap beatmap)
             : base(beatmap.BeatmapInfo, audioManager)
@@ -47,7 +45,8 @@ namespace osu.Game.Tests
 
         public override Texture GetBackground() => null;
 
-        protected override Waveform GetWaveform() => new Waveform(trackStore.GetStream(firstAudioFile));
+        protected override Waveform GetWaveform() =>
+            new Waveform(trackStore.GetStream(firstAudioFile));
 
         protected internal override ISkin GetSkin() => null;
 
@@ -67,7 +66,9 @@ namespace osu.Game.Tests
             get
             {
                 using (var reader = getZipReader())
-                    return reader.Filenames.First(f => f.EndsWith(".mp3", StringComparison.Ordinal));
+                    return reader.Filenames.First(f =>
+                        f.EndsWith(".mp3", StringComparison.Ordinal)
+                    );
             }
         }
     }

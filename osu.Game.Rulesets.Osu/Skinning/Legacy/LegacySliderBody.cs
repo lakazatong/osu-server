@@ -15,12 +15,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
     {
         protected override DrawableSliderPath CreateSliderPath() => new LegacyDrawableSliderPath();
 
-        protected override Color4 GetBorderColour(ISkinSource skin)
-            => skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderBorder)?.Value ?? Color4.White;
+        protected override Color4 GetBorderColour(ISkinSource skin) =>
+            skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderBorder)?.Value
+            ?? Color4.White;
 
-        protected override Color4 GetBodyAccentColour(ISkinSource skin, Color4 hitObjectAccentColour)
+        protected override Color4 GetBodyAccentColour(
+            ISkinSource skin,
+            Color4 hitObjectAccentColour
+        )
             // legacy skins use a constant value for slider track alpha, regardless of the source colour.
-            => (skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderTrackOverride)?.Value ?? hitObjectAccentColour).Opacity(0.7f);
+            =>
+            (
+                skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderTrackOverride)?.Value
+                ?? hitObjectAccentColour
+            ).Opacity(0.7f);
 
         private partial class LegacyDrawableSliderPath : DrawableSliderPath
         {
@@ -37,22 +45,48 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 Color4 innerColour = lighten(AccentColour, 0.5f);
 
                 // https://github.com/peppy/osu-stable-reference/blob/3ea48705eb67172c430371dcfc8a16a002ed0d3d/osu!/Graphics/Renderers/MmSliderRendererGL.cs#L59-L70
-                const float shadow_portion = 1 - (OsuLegacySkinTransformer.LEGACY_CIRCLE_RADIUS / OsuHitObject.OBJECT_RADIUS);
+                const float shadow_portion =
+                    1
+                    - (OsuLegacySkinTransformer.LEGACY_CIRCLE_RADIUS / OsuHitObject.OBJECT_RADIUS);
                 const float border_portion = 0.1875f;
 
                 if (position <= shadow_portion - aa_width)
-                    return LegacyUtils.InterpolateNonLinear(position, Color4.Black.Opacity(0f), shadow, 0, shadow_portion - aa_width);
+                    return LegacyUtils.InterpolateNonLinear(
+                        position,
+                        Color4.Black.Opacity(0f),
+                        shadow,
+                        0,
+                        shadow_portion - aa_width
+                    );
 
                 if (position <= shadow_portion + aa_width)
-                    return LegacyUtils.InterpolateNonLinear(position, shadow, BorderColour, shadow_portion - aa_width, shadow_portion + aa_width);
+                    return LegacyUtils.InterpolateNonLinear(
+                        position,
+                        shadow,
+                        BorderColour,
+                        shadow_portion - aa_width,
+                        shadow_portion + aa_width
+                    );
 
                 if (position <= border_portion - aa_width)
                     return BorderColour;
 
                 if (position <= border_portion + aa_width)
-                    return LegacyUtils.InterpolateNonLinear(position, BorderColour, outerColour, border_portion - aa_width, border_portion + aa_width);
+                    return LegacyUtils.InterpolateNonLinear(
+                        position,
+                        BorderColour,
+                        outerColour,
+                        border_portion - aa_width,
+                        border_portion + aa_width
+                    );
 
-                return LegacyUtils.InterpolateNonLinear(position, outerColour, innerColour, border_portion + aa_width, 1);
+                return LegacyUtils.InterpolateNonLinear(
+                    position,
+                    outerColour,
+                    innerColour,
+                    border_portion + aa_width,
+                    1
+                );
             }
 
             /// <summary>
@@ -65,7 +99,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                     Math.Min(1, color.R * (1 + 0.5f * amount) + 1 * amount),
                     Math.Min(1, color.G * (1 + 0.5f * amount) + 1 * amount),
                     Math.Min(1, color.B * (1 + 0.5f * amount) + 1 * amount),
-                    color.A);
+                    color.A
+                );
             }
         }
     }

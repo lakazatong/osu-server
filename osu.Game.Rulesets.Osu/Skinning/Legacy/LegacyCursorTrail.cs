@@ -34,7 +34,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         private void load(OsuConfigManager config, ISkinSource skinSource)
         {
             cursorSize = config.GetBindable<float>(OsuSetting.GameplayCursorSize).GetBoundCopy();
-            AllowPartRotation = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorTrailRotate)?.Value ?? true;
+            AllowPartRotation =
+                skin.GetConfig<OsuSkinConfiguration, bool>(
+                    OsuSkinConfiguration.CursorTrailRotate
+                )?.Value ?? true;
 
             Texture = skin.GetTexture("cursortrail");
 
@@ -46,7 +49,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             if (DisjointTrail)
             {
-                bool centre = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorCentre)?.Value ?? true;
+                bool centre =
+                    skin.GetConfig<OsuSkinConfiguration, bool>(
+                        OsuSkinConfiguration.CursorCentre
+                    )?.Value ?? true;
 
                 TrailOrigin = centre ? Anchor.Centre : Anchor.TopLeft;
                 Blending = BlendingParameters.Inherit;

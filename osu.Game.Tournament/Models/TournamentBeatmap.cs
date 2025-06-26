@@ -31,9 +31,7 @@ namespace osu.Game.Tournament.Models
 
         public BeatmapSetOnlineCovers Covers { get; set; }
 
-        public TournamentBeatmap()
-        {
-        }
+        public TournamentBeatmap() { }
 
         public TournamentBeatmap(APIBeatmap beatmap)
         {
@@ -49,7 +47,8 @@ namespace osu.Game.Tournament.Models
             TotalObjectCount = beatmap.TotalObjectCount;
         }
 
-        public bool Equals(IBeatmapInfo? other) => other is TournamentBeatmap b && this.MatchesOnlineID(b);
+        public bool Equals(IBeatmapInfo? other) =>
+            other is TournamentBeatmap b && this.MatchesOnlineID(b);
 
         #region IBeatmapInfo/IBeatmapSetOnlineInfo explicit implementation
 
@@ -65,19 +64,23 @@ namespace osu.Game.Tournament.Models
 
         bool IBeatmapSetOnlineInfo.HasFavourited => throw new NotImplementedException();
 
-        BeatmapSetOnlineAvailability IBeatmapSetOnlineInfo.Availability => throw new NotImplementedException();
+        BeatmapSetOnlineAvailability IBeatmapSetOnlineInfo.Availability =>
+            throw new NotImplementedException();
 
         BeatmapSetOnlineGenre IBeatmapSetOnlineInfo.Genre => throw new NotImplementedException();
 
-        BeatmapSetOnlineLanguage IBeatmapSetOnlineInfo.Language => throw new NotImplementedException();
+        BeatmapSetOnlineLanguage IBeatmapSetOnlineInfo.Language =>
+            throw new NotImplementedException();
 
         int? IBeatmapSetOnlineInfo.TrackId => throw new NotImplementedException();
 
         int[] IBeatmapSetOnlineInfo.Ratings => throw new NotImplementedException();
 
-        BeatmapSetHypeStatus IBeatmapSetOnlineInfo.HypeStatus => throw new NotImplementedException();
+        BeatmapSetHypeStatus IBeatmapSetOnlineInfo.HypeStatus =>
+            throw new NotImplementedException();
 
-        BeatmapSetNominationStatus IBeatmapSetOnlineInfo.NominationStatus => throw new NotImplementedException();
+        BeatmapSetNominationStatus IBeatmapSetOnlineInfo.NominationStatus =>
+            throw new NotImplementedException();
 
         string IBeatmapInfo.Hash => throw new NotImplementedException();
 

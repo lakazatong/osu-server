@@ -25,13 +25,11 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         [Cached(typeof(IGameplayLeaderboardProvider))]
         private readonly PlaylistsGameplayLeaderboardProvider leaderboardProvider;
 
-        protected override UserActivity InitialActivity => new UserActivity.InPlaylistGame(Beatmap.Value.BeatmapInfo, Ruleset.Value);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.InPlaylistGame(Beatmap.Value.BeatmapInfo, Ruleset.Value);
 
         public PlaylistsPlayer(Room room, PlaylistItem playlistItem)
-            : base(room, playlistItem, new PlayerConfiguration
-            {
-                ShowLeaderboard = true,
-            })
+            : base(room, playlistItem, new PlayerConfiguration { ShowLeaderboard = true })
         {
             leaderboardProvider = new PlaylistsGameplayLeaderboardProvider(room, playlistItem);
         }
@@ -41,14 +39,22 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         {
             // Sanity checks to ensure that PlaylistsPlayer matches the settings for the current PlaylistItem
             if (!Beatmap.Value.BeatmapInfo.MatchesOnlineID(PlaylistItem.Beatmap))
-                throw new InvalidOperationException("Current Beatmap does not match PlaylistItem's Beatmap");
+                throw new InvalidOperationException(
+                    "Current Beatmap does not match PlaylistItem's Beatmap"
+                );
 
             if (ruleset.Value.OnlineID != PlaylistItem.RulesetID)
-                throw new InvalidOperationException("Current Ruleset does not match PlaylistItem's Ruleset");
+                throw new InvalidOperationException(
+                    "Current Ruleset does not match PlaylistItem's Ruleset"
+                );
 
-            var requiredLocalMods = PlaylistItem.RequiredMods.Select(m => m.ToMod(GameplayState.Ruleset));
+            var requiredLocalMods = PlaylistItem.RequiredMods.Select(m =>
+                m.ToMod(GameplayState.Ruleset)
+            );
             if (!requiredLocalMods.All(m => Mods.Value.Any(m.Equals)))
-                throw new InvalidOperationException("Current Mods do not match PlaylistItem's RequiredMods");
+                throw new InvalidOperationException(
+                    "Current Mods do not match PlaylistItem's RequiredMods"
+                );
 
             LoadComponentAsync(leaderboardProvider, AddInternal);
         }

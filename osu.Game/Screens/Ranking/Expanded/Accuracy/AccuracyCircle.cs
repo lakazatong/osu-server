@@ -31,7 +31,8 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
         /// <summary>
         /// The total duration of the animation.
         /// </summary>
-        public const double TOTAL_DURATION = APPEAR_DURATION + ACCURACY_TRANSFORM_DELAY + ACCURACY_TRANSFORM_DURATION;
+        public const double TOTAL_DURATION =
+            APPEAR_DURATION + ACCURACY_TRANSFORM_DELAY + ACCURACY_TRANSFORM_DURATION;
 
         /// <summary>
         /// Duration for the transforms causing this component to appear.
@@ -159,7 +160,10 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
-                    Colour = ColourInfo.GradientVertical(Color4Extensions.FromHex("#7CF6FF"), Color4Extensions.FromHex("#BAFFA9")),
+                    Colour = ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex("#7CF6FF"),
+                        Color4Extensions.FromHex("#BAFFA9")
+                    ),
                     InnerRadius = accuracy_circle_radius,
                 },
                 new Container
@@ -169,10 +173,11 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.8f),
                     Padding = new MarginPadding(2.5f),
-                    Child = gradedCircles = new GradedCircles(accuracyC, accuracyB, accuracyA, accuracyS, accuracyX)
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    Child = gradedCircles =
+                        new GradedCircles(accuracyC, accuracyB, accuracyA, accuracyS, accuracyX)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        },
                 },
                 badges = new Container<RankBadge>
                 {
@@ -181,16 +186,40 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                     Padding = new MarginPadding { Vertical = -15, Horizontal = -20 },
                     Children = new[]
                     {
-                        new RankBadge(accuracyD, Interpolation.Lerp(accuracyD, accuracyC, 0.5), getRank(ScoreRank.D)),
-                        new RankBadge(accuracyC, Interpolation.Lerp(accuracyC, accuracyB, 0.5), getRank(ScoreRank.C)),
-                        new RankBadge(accuracyB, Interpolation.Lerp(accuracyB, accuracyA, 0.5), getRank(ScoreRank.B)),
+                        new RankBadge(
+                            accuracyD,
+                            Interpolation.Lerp(accuracyD, accuracyC, 0.5),
+                            getRank(ScoreRank.D)
+                        ),
+                        new RankBadge(
+                            accuracyC,
+                            Interpolation.Lerp(accuracyC, accuracyB, 0.5),
+                            getRank(ScoreRank.C)
+                        ),
+                        new RankBadge(
+                            accuracyB,
+                            Interpolation.Lerp(accuracyB, accuracyA, 0.5),
+                            getRank(ScoreRank.B)
+                        ),
                         // The S and A badges are moved down slightly to prevent collision with the SS badge.
-                        new RankBadge(accuracyA, Interpolation.Lerp(accuracyA, accuracyS, 0.25), getRank(ScoreRank.A)),
-                        new RankBadge(accuracyS, Interpolation.Lerp(accuracyS, (accuracyX - VIRTUAL_SS_PERCENTAGE), 0.25), getRank(ScoreRank.S)),
+                        new RankBadge(
+                            accuracyA,
+                            Interpolation.Lerp(accuracyA, accuracyS, 0.25),
+                            getRank(ScoreRank.A)
+                        ),
+                        new RankBadge(
+                            accuracyS,
+                            Interpolation.Lerp(
+                                accuracyS,
+                                (accuracyX - VIRTUAL_SS_PERCENTAGE),
+                                0.25
+                            ),
+                            getRank(ScoreRank.S)
+                        ),
                         new RankBadge(accuracyX, accuracyX, getRank(ScoreRank.X)),
-                    }
+                    },
                 },
-                rankText = new RankText(score.Rank)
+                rankText = new RankText(score.Rank),
             };
 
             if (isFailedSDueToMisses)
@@ -198,14 +227,26 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
 
             if (withFlair)
             {
-                AddRangeInternal(new Drawable[]
-                {
-                    rankImpactSound = new PoolableSkinnableSample(new SampleInfo(impactSampleName)),
-                    scoreTickSound = new PoolableSkinnableSample(new SampleInfo(@"Results/score-tick")),
-                    badgeTickSound = new PoolableSkinnableSample(new SampleInfo(@"Results/badge-dink")),
-                    badgeMaxSound = new PoolableSkinnableSample(new SampleInfo(@"Results/badge-dink-max")),
-                    swooshUpSound = new PoolableSkinnableSample(new SampleInfo(@"Results/swoosh-up")),
-                });
+                AddRangeInternal(
+                    new Drawable[]
+                    {
+                        rankImpactSound = new PoolableSkinnableSample(
+                            new SampleInfo(impactSampleName)
+                        ),
+                        scoreTickSound = new PoolableSkinnableSample(
+                            new SampleInfo(@"Results/score-tick")
+                        ),
+                        badgeTickSound = new PoolableSkinnableSample(
+                            new SampleInfo(@"Results/badge-dink")
+                        ),
+                        badgeMaxSound = new PoolableSkinnableSample(
+                            new SampleInfo(@"Results/badge-dink-max")
+                        ),
+                        swooshUpSound = new PoolableSkinnableSample(
+                            new SampleInfo(@"Results/swoosh-up")
+                        ),
+                    }
+                );
             }
         }
 
@@ -220,26 +261,26 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                 const double swoosh_pre_delay = 443f;
                 const double swoosh_volume = 0.4f;
 
-                this.Delay(swoosh_pre_delay).Schedule(() =>
-                {
-                    swooshUpSound!.VolumeTo(swoosh_volume);
-                    swooshUpSound!.Play();
-                });
+                this.Delay(swoosh_pre_delay)
+                    .Schedule(() =>
+                    {
+                        swooshUpSound!.VolumeTo(swoosh_volume);
+                        swooshUpSound!.Play();
+                    });
             }
 
             using (BeginDelayedSequence(RANK_CIRCLE_TRANSFORM_DELAY))
-                gradedCircles.TransformTo(nameof(GradedCircles.Progress), 1.0, RANK_CIRCLE_TRANSFORM_DURATION, ACCURACY_TRANSFORM_EASING);
+                gradedCircles.TransformTo(
+                    nameof(GradedCircles.Progress),
+                    1.0,
+                    RANK_CIRCLE_TRANSFORM_DURATION,
+                    ACCURACY_TRANSFORM_EASING
+                );
 
             using (BeginDelayedSequence(ACCURACY_TRANSFORM_DELAY))
             {
                 double targetAccuracy = score.Accuracy;
-                double[] notchPercentages =
-                {
-                    accuracyS,
-                    accuracyA,
-                    accuracyB,
-                    accuracyC,
-                };
+                double[] notchPercentages = { accuracyS, accuracyA, accuracyB, accuracyC };
 
                 // Ensure the gauge overshoots or undershoots a bit so it doesn't land in the gaps of the inner graded circle (caused by `RankNotch`es),
                 // to prevent ambiguity on what grade it's pointing at.
@@ -257,7 +298,10 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                 if (score.Rank == ScoreRank.X || score.Rank == ScoreRank.XH)
                     targetAccuracy = 1;
                 else
-                    targetAccuracy = Math.Min(accuracyX - VIRTUAL_SS_PERCENTAGE - GRADE_SPACING_PERCENTAGE / 2, targetAccuracy);
+                    targetAccuracy = Math.Min(
+                        accuracyX - VIRTUAL_SS_PERCENTAGE - GRADE_SPACING_PERCENTAGE / 2,
+                        targetAccuracy
+                    );
 
                 // The accuracy circle gauge visually fills up a bit too much.
                 // This wouldn't normally matter but we want it to align properly with the inner graded circle in the above cases.
@@ -266,7 +310,11 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                 if (targetAccuracy < 1 && targetAccuracy >= visual_alignment_offset)
                     targetAccuracy -= visual_alignment_offset;
 
-                accuracyCircle.ProgressTo(targetAccuracy, ACCURACY_TRANSFORM_DURATION, ACCURACY_TRANSFORM_EASING);
+                accuracyCircle.ProgressTo(
+                    targetAccuracy,
+                    ACCURACY_TRANSFORM_DURATION,
+                    ACCURACY_TRANSFORM_EASING
+                );
 
                 if (withFlair)
                 {
@@ -278,10 +326,26 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                         const double score_tick_volume_end = 1.0f;
 
                         this.TransformBindableTo(tickPlaybackRate, score_tick_debounce_rate_start);
-                        this.TransformBindableTo(tickPlaybackRate, score_tick_debounce_rate_end, ACCURACY_TRANSFORM_DURATION, Easing.OutSine);
+                        this.TransformBindableTo(
+                            tickPlaybackRate,
+                            score_tick_debounce_rate_end,
+                            ACCURACY_TRANSFORM_DURATION,
+                            Easing.OutSine
+                        );
 
-                        scoreTickSound!.FrequencyTo(1 + targetAccuracy, ACCURACY_TRANSFORM_DURATION, Easing.OutSine);
-                        scoreTickSound!.VolumeTo(score_tick_volume_start).Then().VolumeTo(score_tick_volume_end, ACCURACY_TRANSFORM_DURATION, Easing.OutSine);
+                        scoreTickSound!.FrequencyTo(
+                            1 + targetAccuracy,
+                            ACCURACY_TRANSFORM_DURATION,
+                            Easing.OutSine
+                        );
+                        scoreTickSound!
+                            .VolumeTo(score_tick_volume_start)
+                            .Then()
+                            .VolumeTo(
+                                score_tick_volume_end,
+                                ACCURACY_TRANSFORM_DURATION,
+                                Easing.OutSine
+                            );
 
                         isTicking = true;
                     });
@@ -296,8 +360,15 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                         if (badge.Rank > score.Rank)
                             continue;
 
-                        using (BeginDelayedSequence(
-                                   inverseEasing(ACCURACY_TRANSFORM_EASING, Math.Min(accuracyX - VIRTUAL_SS_PERCENTAGE, badge.Accuracy) / targetAccuracy) * ACCURACY_TRANSFORM_DURATION))
+                        using (
+                            BeginDelayedSequence(
+                                inverseEasing(
+                                    ACCURACY_TRANSFORM_EASING,
+                                    Math.Min(accuracyX - VIRTUAL_SS_PERCENTAGE, badge.Accuracy)
+                                        / targetAccuracy
+                                ) * ACCURACY_TRANSFORM_DURATION
+                            )
+                        )
                         {
                             badge.Appear();
 
@@ -305,7 +376,10 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                             {
                                 Schedule(() =>
                                 {
-                                    var dink = badgeNum < badges.Count - 1 ? badgeTickSound : badgeMaxSound;
+                                    var dink =
+                                        badgeNum < badges.Count - 1
+                                            ? badgeTickSound
+                                            : badgeMaxSound;
 
                                     dink!.FrequencyTo(1 + badgeNum++ * 0.05);
                                     dink!.Play();
@@ -350,11 +424,15 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                                 .MoveToY(100, 1000, Easing.In)
                                 .FadeOut(800, Easing.Out);
 
-                            accuracyCircle
-                                .ProgressTo(accuracyS - GRADE_SPACING_PERCENTAGE / 2 - visual_alignment_offset, 70, Easing.OutQuint);
+                            accuracyCircle.ProgressTo(
+                                accuracyS - GRADE_SPACING_PERCENTAGE / 2 - visual_alignment_offset,
+                                70,
+                                Easing.OutQuint
+                            );
 
-                            badges.Single(b => b.Rank == getRank(ScoreRank.S))
-                                  .FadeOut(70, Easing.OutQuint);
+                            badges
+                                .Single(b => b.Rank == getRank(ScoreRank.S))
+                                .FadeOut(70, Easing.OutQuint);
                         }
                     }
                 }

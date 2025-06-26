@@ -69,7 +69,9 @@ namespace osu.Game.Online.API
         private BindableList<APIRelation> friends { get; } = new BindableList<APIRelation>();
         private BindableList<APIRelation> blocks { get; } = new BindableList<APIRelation>();
 
-        protected bool HasLogin => authentication.Token.Value != null || (!string.IsNullOrEmpty(ProvidedUsername) && !string.IsNullOrEmpty(password));
+        protected bool HasLogin =>
+            authentication.Token.Value != null
+            || (!string.IsNullOrEmpty(ProvidedUsername) && !string.IsNullOrEmpty(password));
 
         private readonly Bindable<UserStatus> configStatus = new Bindable<UserStatus>();
         private readonly Bindable<bool> configSupporter = new Bindable<bool>();
@@ -77,7 +79,12 @@ namespace osu.Game.Online.API
         private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
         private readonly Logger log;
 
-        public APIAccess(OsuGameBase game, OsuConfigManager config, EndpointConfiguration endpoints, string versionHash)
+        public APIAccess(
+            OsuGameBase game,
+            OsuConfigManager config,
+            EndpointConfiguration endpoints,
+            string versionHash
+        )
         {
             this.game = game;
             this.config = config;
@@ -94,7 +101,11 @@ namespace osu.Game.Online.API
             Endpoints = endpoints;
             NotificationsClient = setUpNotificationsClient();
 
-            authentication = new OAuth(endpoints.APIClientID, endpoints.APIClientSecret, Endpoints.APIUrl);
+            authentication = new OAuth(
+                endpoints.APIClientID,
+                endpoints.APIClientSecret,
+                Endpoints.APIUrl
+            );
 
             log = Logger.GetLogger(LoggingTarget.Network);
             log.Add($@"API endpoint root: {Endpoints.APIUrl}");
@@ -117,11 +128,7 @@ namespace osu.Game.Online.API
                 state.Value = APIState.Connecting;
             }
 
-            var thread = new Thread(run)
-            {
-                Name = "APIAccess",
-                IsBackground = true
-            };
+            var thread = new Thread(run) { Name = "APIAccess", IsBackground = true };
 
             thread.Start();
         }
@@ -150,7 +157,13 @@ namespace osu.Game.Online.API
             return connector;
         }
 
-        private void onTokenChanged(ValueChangedEvent<OAuthToken> e) => config.SetValue(OsuSetting.Token, config.Get<bool>(OsuSetting.SavePassword) ? authentication.TokenString : string.Empty);
+        private void onTokenChanged(ValueChangedEvent<OAuthToken> e) =>
+            config.SetValue(
+                OsuSetting.Token,
+                config.Get<bool>(OsuSetting.SavePassword)
+                    ? authentication.TokenString
+                    : string.Empty
+            );
 
         void IAPIProvider.Schedule(Action action) => base.Schedule(action);
 
@@ -174,7 +187,9 @@ namespace osu.Game.Online.API
                 {
                     // To recover from a failing state, falling through and running the full reconnection process seems safest for now.
                     // This could probably be replaced with a ping-style request if we want to avoid the reconnection overheads.
-                    log.Add($@"{nameof(APIAccess)} is in a failing state, waiting a bit before we try again...");
+                    log.Add(
+                        $@"{nameof(APIAccess)} is in a failing state, waiting a bit before we try again..."
+                    );
                     Thread.Sleep(5000);
                 }
 
@@ -224,7 +239,8 @@ namespace osu.Game.Online.API
 
                 lock (queue)
                 {
-                    if (queue.Count == 0) return;
+                    if (queue.Count == 0)
+                        return;
 
                     req = queue.Dequeue();
                 }
@@ -250,7 +266,10 @@ namespace osu.Game.Online.API
                 Scheduler.Add(setPlaceholderLocalUser, false);
 
             // save the username at this point, if the user requested for it to be.
-            config.SetValue(OsuSetting.Username, config.Get<bool>(OsuSetting.SaveUsername) ? ProvidedUsername : string.Empty);
+            config.SetValue(
+                OsuSetting.Username,
+                config.Get<bool>(OsuSetting.SaveUsername) ? ProvidedUsername : string.Empty
+            );
 
             if (!authentication.HasValidAccessToken && HasLogin)
             {
@@ -269,7 +288,9 @@ namespace osu.Game.Online.API
                 {
                     //todo: this fails even on network-related issues. we should probably handle those differently.
                     LastLoginError = e;
-                    log.Add($@"Login failed for username {ProvidedUsername} ({LastLoginError.Message})!");
+                    log.Add(
+                        $@"Login failed for username {ProvidedUsername} ({LastLoginError.Message})!"
+                    );
 
                     Logout();
                     return;
@@ -317,10 +338,15 @@ namespace osu.Game.Online.API
                         if (ex is APIException)
                         {
                             LastLoginError = ex;
-                            log.Add($@"Login failed for username {ProvidedUsername} on user retrieval ({LastLoginError.Message})!");
+                            log.Add(
+                                $@"Login failed for username {ProvidedUsername} on user retrieval ({LastLoginError.Message})!"
+                            );
                             Logout();
                         }
-                        else if (ex is WebException webException && webException.Message == @"Unauthorized")
+                        else if (
+                            ex is WebException webException
+                            && webException.Message == @"Unauthorized"
+                        )
                         {
                             log.Add(@"Login no longer valid");
                             Logout();
@@ -337,7 +363,9 @@ namespace osu.Game.Online.API
 
                         localUser.Value = me;
                         configSupporter.Value = me.IsSupporter;
-                        state.Value = me.SessionVerified ? APIState.Online : APIState.RequiresSecondFactorAuth;
+                        state.Value = me.SessionVerified
+                            ? APIState.Online
+                            : APIState.RequiresSecondFactorAuth;
                         failureCount = 0;
                     };
 
@@ -409,12 +437,19 @@ namespace osu.Game.Online.API
             SecondFactorCode = code;
         }
 
-        public IHubClientConnector GetHubConnector(string clientName, string endpoint, bool preferMessagePack) =>
-            new HubClientConnector(clientName, endpoint, this, versionHash, preferMessagePack);
+        public IHubClientConnector GetHubConnector(
+            string clientName,
+            string endpoint,
+            bool preferMessagePack
+        ) => new HubClientConnector(clientName, endpoint, this, versionHash, preferMessagePack);
 
         public IChatClient GetChatClient() => new WebSocketChatClient(this);
 
-        public RegistrationRequest.RegistrationRequestErrors CreateAccount(string email, string username, string password)
+        public RegistrationRequest.RegistrationRequestErrors CreateAccount(
+            string email,
+            string username,
+            string password
+        )
         {
             Debug.Assert(State.Value == APIState.Offline);
 
@@ -424,7 +459,7 @@ namespace osu.Game.Online.API
                 Method = HttpMethod.Post,
                 Username = username,
                 Email = email,
-                Password = password
+                Password = password,
             };
 
             try
@@ -435,7 +470,11 @@ namespace osu.Game.Online.API
             {
                 try
                 {
-                    return JObject.Parse(req.GetResponseString().AsNonNull()).SelectToken(@"form_error", true).AsNonNull().ToObject<RegistrationRequest.RegistrationRequestErrors>();
+                    return JObject
+                        .Parse(req.GetResponseString().AsNonNull())
+                        .SelectToken(@"form_error", true)
+                        .AsNonNull()
+                        .ToObject<RegistrationRequest.RegistrationRequestErrors>();
                 }
                 catch
                 {
@@ -492,7 +531,9 @@ namespace osu.Game.Online.API
             }
             catch (HttpRequestException re)
             {
-                log.Add($"{nameof(HttpRequestException)} while performing request {req}: {re.Message}");
+                log.Add(
+                    $"{nameof(HttpRequestException)} while performing request {req}: {re.Message}"
+                );
                 handleFailure();
                 return false;
             }
@@ -529,8 +570,13 @@ namespace osu.Game.Online.API
 
         private void handleWebException(WebException we)
         {
-            HttpStatusCode statusCode = (we.Response as HttpWebResponse)?.StatusCode
-                                        ?? (we.Status == WebExceptionStatus.UnknownError ? HttpStatusCode.NotAcceptable : HttpStatusCode.RequestTimeout);
+            HttpStatusCode statusCode =
+                (we.Response as HttpWebResponse)?.StatusCode
+                ?? (
+                    we.Status == WebExceptionStatus.UnknownError
+                        ? HttpStatusCode.NotAcceptable
+                        : HttpStatusCode.RequestTimeout
+                );
 
             // special cases for un-typed but useful message responses.
             switch (we.Message)
@@ -688,9 +734,7 @@ namespace osu.Game.Online.API
         private class WebRequestFlushedException : Exception
         {
             public WebRequestFlushedException(APIState state)
-                : base($@"Request failed from flush operation (state {state})")
-            {
-            }
+                : base($@"Request failed from flush operation (state {state})") { }
         }
     }
 
@@ -728,6 +772,6 @@ namespace osu.Game.Online.API
         /// <summary>
         /// We are online.
         /// </summary>
-        Online
+        Online,
     }
 }

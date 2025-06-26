@@ -30,7 +30,8 @@ namespace osu.Game.Skinning
 
         public IBindableList<ISerialisableDrawable> Components => components;
 
-        private readonly BindableList<ISerialisableDrawable> components = new BindableList<ISerialisableDrawable>();
+        private readonly BindableList<ISerialisableDrawable> components =
+            new BindableList<ISerialisableDrawable>();
 
         public override bool IsPresent => base.IsPresent || Scheduler.HasPendingTasks; // ensure that components are loaded even if the target container is hidden (ie. due to user toggle).
 
@@ -43,10 +44,13 @@ namespace osu.Game.Skinning
             Lookup = lookup;
         }
 
-        public void Reload() => Reload((
-                CurrentSkin.GetDrawableComponent(new UserSkinComponentLookup(Lookup))
-                ?? CurrentSkin.GetDrawableComponent(Lookup))
-            as Container);
+        public void Reload() =>
+            Reload(
+                (
+                    CurrentSkin.GetDrawableComponent(new UserSkinComponentLookup(Lookup))
+                    ?? CurrentSkin.GetDrawableComponent(Lookup)
+                ) as Container
+            );
 
         public void Reload(Container? componentsContainer)
         {
@@ -54,20 +58,21 @@ namespace osu.Game.Skinning
             components.Clear();
             ComponentsLoaded = false;
 
-            content = componentsContainer ?? new Container
-            {
-                RelativeSizeAxes = Axes.Both
-            };
+            content = componentsContainer ?? new Container { RelativeSizeAxes = Axes.Both };
 
             cancellationSource?.Cancel();
             cancellationSource = null;
 
-            LoadComponentAsync(content, wrapper =>
-            {
-                AddInternal(wrapper);
-                components.AddRange(wrapper.Children.OfType<ISerialisableDrawable>());
-                ComponentsLoaded = true;
-            }, (cancellationSource = new CancellationTokenSource()).Token);
+            LoadComponentAsync(
+                content,
+                wrapper =>
+                {
+                    AddInternal(wrapper);
+                    components.AddRange(wrapper.Children.OfType<ISerialisableDrawable>());
+                    ComponentsLoaded = true;
+                },
+                (cancellationSource = new CancellationTokenSource()).Token
+            );
         }
 
         /// <inheritdoc cref="ISerialisableDrawableContainer"/>
@@ -76,10 +81,15 @@ namespace osu.Game.Skinning
         public void Add(ISerialisableDrawable component)
         {
             if (content == null)
-                throw new NotSupportedException("Attempting to add a new component to a target container which is not supported by the current skin.");
+                throw new NotSupportedException(
+                    "Attempting to add a new component to a target container which is not supported by the current skin."
+                );
 
             if (!(component is Drawable drawable))
-                throw new ArgumentException($"Provided argument must be of type {nameof(Drawable)}.", nameof(component));
+                throw new ArgumentException(
+                    $"Provided argument must be of type {nameof(Drawable)}.",
+                    nameof(component)
+                );
 
             content.Add(drawable);
             components.Add(component);
@@ -91,10 +101,15 @@ namespace osu.Game.Skinning
         public void Remove(ISerialisableDrawable component, bool disposeImmediately)
         {
             if (content == null)
-                throw new NotSupportedException("Attempting to remove a new component from a target container which is not supported by the current skin.");
+                throw new NotSupportedException(
+                    "Attempting to remove a new component from a target container which is not supported by the current skin."
+                );
 
             if (!(component is Drawable drawable))
-                throw new ArgumentException($"Provided argument must be of type {nameof(Drawable)}.", nameof(component));
+                throw new ArgumentException(
+                    $"Provided argument must be of type {nameof(Drawable)}.",
+                    nameof(component)
+                );
 
             content.Remove(drawable, disposeImmediately);
             components.Remove(component);

@@ -4,21 +4,23 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
 
 namespace osu.Game.Tests.Visual.UserInterface
 {
     public partial class TestSceneSizePreservingSpriteText : OsuGridTestScene
     {
         private readonly List<Container> parentContainers = new List<Container>();
-        private readonly List<UprightAspectMaintainingContainer> childContainers = new List<UprightAspectMaintainingContainer>();
+        private readonly List<UprightAspectMaintainingContainer> childContainers =
+            new List<UprightAspectMaintainingContainer>();
         private readonly OsuSpriteText osuSpriteText = new OsuSpriteText();
-        private readonly SizePreservingSpriteText sizePreservingSpriteText = new SizePreservingSpriteText();
+        private readonly SizePreservingSpriteText sizePreservingSpriteText =
+            new SizePreservingSpriteText();
 
         public TestSceneSizePreservingSpriteText()
             : base(1, 2)
@@ -35,11 +37,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                     Y = -200,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Colour4.Red,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Red },
                         childContainer = new UprightAspectMaintainingContainer
                         {
                             AutoSizeAxes = Axes.Both,
@@ -47,24 +45,17 @@ namespace osu.Game.Tests.Visual.UserInterface
                             Origin = Anchor.Centre,
                             Children = new Drawable[]
                             {
-                                new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = Colour4.Blue,
-                                },
-                            }
+                                new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Blue },
+                            },
                         },
-                    }
+                    },
                 };
 
                 Container cellInfo = new Container
                 {
                     Origin = Anchor.TopCentre,
                     Anchor = Anchor.TopCentre,
-                    Margin = new MarginPadding
-                    {
-                        Top = 100,
-                    },
+                    Margin = new MarginPadding { Top = 100 },
                     Child = new OsuSpriteText
                     {
                         Text = (i == 0) ? "OsuSpriteText" : "SizePreservingSpriteText",
@@ -82,13 +73,19 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             childContainers[0].Add(osuSpriteText);
             childContainers[1].Add(sizePreservingSpriteText);
-            osuSpriteText.Font = sizePreservingSpriteText.Font = OsuFont.GetFont(Typeface.Venera, weight: FontWeight.Bold, size: 20);
+            osuSpriteText.Font = sizePreservingSpriteText.Font = OsuFont.GetFont(
+                Typeface.Venera,
+                weight: FontWeight.Bold,
+                size: 20
+            );
         }
 
         protected override void Update()
         {
             base.Update();
-            osuSpriteText.Text = sizePreservingSpriteText.Text = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            osuSpriteText.Text = sizePreservingSpriteText.Text = DateTime.Now.ToString(
+                CultureInfo.InvariantCulture
+            );
         }
     }
 }

@@ -39,7 +39,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         /// </summary>
         public KeyBindingUpdated? BindingUpdated { get; set; }
 
-        public delegate void KeyBindingUpdated(KeyBindingRow sender, KeyBindingUpdatedEventArgs args);
+        public delegate void KeyBindingUpdated(
+            KeyBindingRow sender,
+            KeyBindingUpdatedEventArgs args
+        );
 
         public Func<List<RealmKeyBinding>> GetAllSectionBindings { get; set; } = null!;
 
@@ -51,7 +54,8 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         /// <summary>
         /// The bindings to display in this row.
         /// </summary>
-        public BindableList<RealmKeyBinding> KeyBindings { get; } = new BindableList<RealmKeyBinding>();
+        public BindableList<RealmKeyBinding> KeyBindings { get; } =
+            new BindableList<RealmKeyBinding>();
 
         /// <summary>
         /// The default key bindings for this row.
@@ -74,7 +78,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
         public bool FilteringActive { get; set; }
 
-        public IEnumerable<LocalisableString> FilterTerms => KeyBindings.Select(b => (LocalisableString)keyCombinationProvider.GetReadableString(b.KeyCombination)).Prepend(text.Text);
+        public IEnumerable<LocalisableString> FilterTerms =>
+            KeyBindings
+                .Select(b =>
+                    (LocalisableString)keyCombinationProvider.GetReadableString(b.KeyCombination)
+                )
+                .Prepend(text.Text);
 
         #endregion
 
@@ -141,7 +150,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                         Action = RestoreDefaults,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
+                    },
                 },
                 new Container
                 {
@@ -179,12 +188,15 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight
+                                    Origin = Anchor.TopRight,
                                 },
                                 cancelAndClearButtons = new FillFlowContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding(padding) { Top = height + padding * 2 },
+                                    Padding = new MarginPadding(padding)
+                                    {
+                                        Top = height + padding * 2,
+                                    },
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Alpha = 0,
@@ -195,18 +207,21 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                         new ClearButton { Action = clear },
                                     },
                                 },
-                                new HoverClickSounds()
-                            }
-                        }
-                    }
-                }
+                                new HoverClickSounds(),
+                            },
+                        },
+                    },
+                },
             };
 
-            KeyBindings.BindCollectionChanged((_, _) =>
-            {
-                Scheduler.AddOnce(updateButtons);
-                updateIsDefaultValue();
-            }, true);
+            KeyBindings.BindCollectionChanged(
+                (_, _) =>
+                {
+                    Scheduler.AddOnce(updateButtons);
+                    updateIsDefaultValue();
+                },
+                true
+            );
 
             keypressSamples = new Sample[4];
             for (int i = 0; i < keypressSamples.Length; i++)
@@ -222,7 +237,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 var button = buttons[i++];
                 button.UpdateKeyCombination(d);
 
-                tryPersistKeyBinding(button.KeyBinding.Value, advanceToNextBinding: false, restoringDefaults: true);
+                tryPersistKeyBinding(
+                    button.KeyBinding.Value,
+                    advanceToNextBinding: false,
+                    restoringDefaults: true
+                );
             }
 
             isDefault.Value = true;
@@ -264,7 +283,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 }
             }
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromMouseButton(e.Button));
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromMouseButton(e.Button)
+            );
             return true;
         }
 
@@ -294,7 +316,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
                 if (bindTarget.IsHovered)
                 {
-                    bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState, e.ScrollDelta), KeyCombination.FromScrollDelta(e.ScrollDelta).First());
+                    bindTarget.UpdateKeyCombination(
+                        KeyCombination.FromInputState(e.CurrentState, e.ScrollDelta),
+                        KeyCombination.FromScrollDelta(e.ScrollDelta).First()
+                    );
                     finalise();
                     return true;
                 }
@@ -312,8 +337,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             keypressSamples?[RNG.Next(0, keypressSamples.Length)]?.Play();
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromKey(e.Key));
-            if (!isModifier(e.Key)) finalise();
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromKey(e.Key)
+            );
+            if (!isModifier(e.Key))
+                finalise();
 
             return true;
 
@@ -338,7 +367,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             Debug.Assert(bindTarget != null);
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromJoystickButton(e.Button));
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromJoystickButton(e.Button)
+            );
             finalise();
 
             return true;
@@ -362,7 +394,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             Debug.Assert(bindTarget != null);
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromMidiKey(e.Key));
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromMidiKey(e.Key)
+            );
             finalise();
 
             return true;
@@ -386,7 +421,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             Debug.Assert(bindTarget != null);
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromTabletAuxiliaryButton(e.Button));
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromTabletAuxiliaryButton(e.Button)
+            );
             finalise();
 
             return true;
@@ -410,7 +448,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             Debug.Assert(bindTarget != null);
 
-            bindTarget.UpdateKeyCombination(KeyCombination.FromInputState(e.CurrentState), KeyCombination.FromTabletPenButton(e.Button));
+            bindTarget.UpdateKeyCombination(
+                KeyCombination.FromInputState(e.CurrentState),
+                KeyCombination.FromTabletPenButton(e.Button)
+            );
             finalise();
 
             return true;
@@ -489,7 +530,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             base.OnFocusLost(e);
         }
 
-        private bool isConflictingBinding(RealmKeyBinding first, RealmKeyBinding second, bool restoringDefaults)
+        private bool isConflictingBinding(
+            RealmKeyBinding first,
+            RealmKeyBinding second,
+            bool restoringDefaults
+        )
         {
             if (first.ID == second.ID)
                 return false;
@@ -502,17 +547,34 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             return first.KeyCombination.Equals(second.KeyCombination);
         }
 
-        private void tryPersistKeyBinding(RealmKeyBinding keyBinding, bool advanceToNextBinding, bool restoringDefaults = false)
+        private void tryPersistKeyBinding(
+            RealmKeyBinding keyBinding,
+            bool advanceToNextBinding,
+            bool restoringDefaults = false
+        )
         {
             List<RealmKeyBinding> bindings = GetAllSectionBindings();
-            RealmKeyBinding? existingBinding = keyBinding.KeyCombination.Equals(new KeyCombination(InputKey.None))
+            RealmKeyBinding? existingBinding = keyBinding.KeyCombination.Equals(
+                new KeyCombination(InputKey.None)
+            )
                 ? null
-                : bindings.FirstOrDefault(other => isConflictingBinding(keyBinding, other, restoringDefaults));
+                : bindings.FirstOrDefault(other =>
+                    isConflictingBinding(keyBinding, other, restoringDefaults)
+                );
 
             if (existingBinding == null)
             {
-                realm.Write(r => r.Find<RealmKeyBinding>(keyBinding.ID)!.KeyCombinationString = keyBinding.KeyCombination.ToString());
-                BindingUpdated?.Invoke(this, new KeyBindingUpdatedEventArgs(bindingConflictResolved: false, advanceToNextBinding));
+                realm.Write(r =>
+                    r.Find<RealmKeyBinding>(keyBinding.ID)!.KeyCombinationString =
+                        keyBinding.KeyCombination.ToString()
+                );
+                BindingUpdated?.Invoke(
+                    this,
+                    new KeyBindingUpdatedEventArgs(
+                        bindingConflictResolved: false,
+                        advanceToNextBinding
+                    )
+                );
                 return;
             }
 
@@ -520,8 +582,20 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             showBindingConflictPopover(
                 new KeyBindingConflictInfo(
-                    new ConflictingKeyBinding(existingBinding.ID, existingBinding.GetAction(rulesets), existingBinding.KeyCombination, new KeyCombination(InputKey.None)),
-                    new ConflictingKeyBinding(keyBindingBeforeUpdate.ID, Action, keyBinding.KeyCombination, keyBindingBeforeUpdate.KeyCombination)));
+                    new ConflictingKeyBinding(
+                        existingBinding.ID,
+                        existingBinding.GetAction(rulesets),
+                        existingBinding.KeyCombination,
+                        new KeyCombination(InputKey.None)
+                    ),
+                    new ConflictingKeyBinding(
+                        keyBindingBeforeUpdate.ID,
+                        Action,
+                        keyBinding.KeyCombination,
+                        keyBindingBeforeUpdate.KeyCombination
+                    )
+                )
+            );
         }
 
         /// <summary>
@@ -529,9 +603,11 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         /// </summary>
         private void updateBindTarget()
         {
-            if (bindTarget != null) bindTarget.IsBinding = false;
+            if (bindTarget != null)
+                bindTarget.IsBinding = false;
             bindTarget = buttons.FirstOrDefault(b => b.IsHovered) ?? buttons.FirstOrDefault();
-            if (bindTarget != null) bindTarget.IsBinding = true;
+            if (bindTarget != null)
+                bindTarget.IsBinding = true;
         }
 
         private void updateIsDefaultValue()

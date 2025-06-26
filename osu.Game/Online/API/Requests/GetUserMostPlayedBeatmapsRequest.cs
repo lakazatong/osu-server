@@ -6,7 +6,8 @@ using osu.Game.Online.API.Requests.Responses;
 
 namespace osu.Game.Online.API.Requests
 {
-    public class GetUserMostPlayedBeatmapsRequest : PaginatedAPIRequest<List<APIUserMostPlayedBeatmap>>
+    public class GetUserMostPlayedBeatmapsRequest
+        : PaginatedAPIRequest<List<APIUserMostPlayedBeatmap>>
     {
         private readonly long userId;
 

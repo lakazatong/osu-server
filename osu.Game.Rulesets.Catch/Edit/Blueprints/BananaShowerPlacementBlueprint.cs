@@ -19,7 +19,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
         private double placementStartTime;
         private double placementEndTime;
 
-        protected override bool IsValidForPlacement => Precision.DefinitelyBigger(HitObject.Duration, 0);
+        protected override bool IsValidForPlacement =>
+            Precision.DefinitelyBigger(HitObject.Duration, 0);
 
         public BananaShowerPlacementBlueprint()
         {
@@ -45,13 +46,15 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             switch (PlacementActive)
             {
                 case PlacementState.Waiting:
-                    if (e.Button != MouseButton.Left) break;
+                    if (e.Button != MouseButton.Left)
+                        break;
 
                     BeginPlacement(true);
                     return true;
 
                 case PlacementState.Active:
-                    if (e.Button != MouseButton.Right) break;
+                    if (e.Button != MouseButton.Right)
+                        break;
 
                     EndPlacement(true);
                     return true;
@@ -60,13 +63,19 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             return base.OnMouseDown(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
-            var result = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var result =
+                Composer?.FindSnappedPositionAndTime(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
 
             base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
 
-            if (!(result.Time is double time)) return result;
+            if (!(result.Time is double time))
+                return result;
 
             switch (PlacementActive)
             {

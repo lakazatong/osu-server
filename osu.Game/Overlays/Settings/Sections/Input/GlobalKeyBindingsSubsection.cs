@@ -25,11 +25,15 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
         protected override IEnumerable<RealmKeyBinding> GetKeyBindings(Realm realm)
         {
-            var bindings = realm.All<RealmKeyBinding>()
-                                .Where(b => b.RulesetName == null && b.Variant == null)
-                                .Detach();
+            var bindings = realm
+                .All<RealmKeyBinding>()
+                .Where(b => b.RulesetName == null && b.Variant == null)
+                .Detach();
 
-            var actionsInSection = GlobalActionContainer.GetGlobalActionsFor(category).Cast<int>().ToHashSet();
+            var actionsInSection = GlobalActionContainer
+                .GetGlobalActionsFor(category)
+                .Cast<int>()
+                .ToHashSet();
             return bindings.Where(kb => actionsInSection.Contains(kb.ActionInt));
         }
     }

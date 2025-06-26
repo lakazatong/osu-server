@@ -24,15 +24,16 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         private PeriodTracker spinnerPeriods = null!;
 
-        public override BindableInt HiddenComboCount { get; } = new BindableInt(10)
-        {
-            MinValue = 0,
-            MaxValue = 50,
-        };
+        public override BindableInt HiddenComboCount { get; } =
+            new BindableInt(10) { MinValue = 0, MaxValue = 50 };
 
         public void ApplyToBeatmap(IBeatmap beatmap)
         {
-            spinnerPeriods = new PeriodTracker(beatmap.HitObjects.OfType<Spinner>().Select(b => new Period(b.StartTime - TRANSITION_DURATION, b.EndTime)));
+            spinnerPeriods = new PeriodTracker(
+                beatmap
+                    .HitObjects.OfType<Spinner>()
+                    .Select(b => new Period(b.StartTime - TRANSITION_DURATION, b.EndTime))
+            );
         }
 
         public void Update(Playfield playfield)
@@ -40,9 +41,15 @@ namespace osu.Game.Rulesets.Osu.Mods
             var osuPlayfield = (OsuPlayfield)playfield;
             Debug.Assert(osuPlayfield.Cursor != null);
 
-            bool shouldAlwaysShowCursor = IsBreakTime.Value || spinnerPeriods.IsInAny(osuPlayfield.Clock.CurrentTime);
+            bool shouldAlwaysShowCursor =
+                IsBreakTime.Value || spinnerPeriods.IsInAny(osuPlayfield.Clock.CurrentTime);
             float targetAlpha = shouldAlwaysShowCursor ? 1 : ComboBasedAlpha;
-            float currentAlpha = (float)Interpolation.Lerp(osuPlayfield.Cursor.Alpha, targetAlpha, Math.Clamp(osuPlayfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
+            float currentAlpha = (float)
+                Interpolation.Lerp(
+                    osuPlayfield.Cursor.Alpha,
+                    targetAlpha,
+                    Math.Clamp(osuPlayfield.Time.Elapsed / TRANSITION_DURATION, 0, 1)
+                );
 
             osuPlayfield.Cursor.Alpha = currentAlpha;
             osuPlayfield.Smoke.Alpha = currentAlpha;

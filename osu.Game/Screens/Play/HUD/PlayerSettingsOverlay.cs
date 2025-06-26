@@ -32,6 +32,7 @@ namespace osu.Game.Screens.Play.HUD
         private const int fade_duration = 200;
 
         public override void Show() => this.FadeIn(fade_duration);
+
         public override void Hide() => this.FadeOut(fade_duration);
 
         // we'll handle this ourselves because we have slightly custom logic.
@@ -60,39 +61,48 @@ namespace osu.Game.Screens.Play.HUD
             Origin = Anchor.TopRight;
             Anchor = Anchor.TopRight;
 
-            base.Content.Add(content = new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(0, 20),
-                Margin = new MarginPadding(padding),
-                Children = new PlayerSettingsGroup[]
+            base.Content.Add(
+                content = new FillFlowContainer
                 {
-                    VisualSettings = new VisualSettings { Expanded = { Value = false } },
-                    new AudioSettings { Expanded = { Value = false } }
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(0, 20),
+                    Margin = new MarginPadding(padding),
+                    Children = new PlayerSettingsGroup[]
+                    {
+                        VisualSettings = new VisualSettings { Expanded = { Value = false } },
+                        new AudioSettings { Expanded = { Value = false } },
+                    },
                 }
-            });
+            );
 
             // For future consideration, this icon should probably not exist.
             //
             // If we remove it, the following needs attention:
             // - Mobile support (swipe from side of screen?)
             // - Consolidating this overlay with the one at player loader (to have the animation hint at its presence)
-            AddInternal(button = new IconButton
-            {
-                Icon = FontAwesome.Solid.Cog,
-                Origin = Anchor.TopRight,
-                Anchor = Anchor.TopLeft,
-                Margin = new MarginPadding(5),
-                Action = () => Expanded.Toggle()
-            });
+            AddInternal(
+                button = new IconButton
+                {
+                    Icon = FontAwesome.Solid.Cog,
+                    Origin = Anchor.TopRight,
+                    Anchor = Anchor.TopLeft,
+                    Margin = new MarginPadding(5),
+                    Action = () => Expanded.Toggle(),
+                }
+            );
 
-            AddInternal(new Box
-            {
-                Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0), Color4.Black.Opacity(0.8f)),
-                Depth = float.MaxValue,
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(
+                new Box
+                {
+                    Colour = ColourInfo.GradientHorizontal(
+                        Color4.Black.Opacity(0),
+                        Color4.Black.Opacity(0.8f)
+                    ),
+                    Depth = float.MaxValue,
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -116,7 +126,9 @@ namespace osu.Game.Screens.Play.HUD
             base.Update();
 
             if (hudOverlay != null)
-                button.Y = ToLocalSpace(hudOverlay.TopRightElements.ScreenSpaceDrawQuad.BottomRight).Y;
+                button.Y = ToLocalSpace(
+                    hudOverlay.TopRightElements.ScreenSpaceDrawQuad.BottomRight
+                ).Y;
 
             // Only check expanded if already expanded.
             // This is because if we are always checking, it would bypass blocking overlays.
@@ -130,7 +142,10 @@ namespace osu.Game.Screens.Play.HUD
             float screenMouseX = inputManager.CurrentState.Mouse.Position.X;
 
             Expanded.Value =
-                (screenMouseX >= button.ScreenSpaceDrawQuad.TopLeft.X && screenMouseX <= ToScreenSpace(new Vector2(DrawWidth + EXPANDED_WIDTH, 0)).X)
+                (
+                    screenMouseX >= button.ScreenSpaceDrawQuad.TopLeft.X
+                    && screenMouseX <= ToScreenSpace(new Vector2(DrawWidth + EXPANDED_WIDTH, 0)).X
+                )
                 // Stay expanded if the user is dragging a slider.
                 || inputManager.DraggedDrawable != null;
         }

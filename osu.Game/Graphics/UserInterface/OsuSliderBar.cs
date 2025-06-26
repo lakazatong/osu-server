@@ -46,7 +46,10 @@ namespace osu.Game.Graphics.UserInterface
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            CurrentNumber.BindValueChanged(current => TooltipText = GetDisplayableValue(current.NewValue), true);
+            CurrentNumber.BindValueChanged(
+                current => TooltipText = GetDisplayableValue(current.NewValue),
+                true
+            );
         }
 
         protected override void OnUserChange(T value)
@@ -83,6 +86,7 @@ namespace osu.Game.Graphics.UserInterface
             channel.Play();
         }
 
-        public LocalisableString GetDisplayableValue(T value) => value.ToStandardFormattedString(max_decimal_digits, DisplayAsPercentage);
+        public LocalisableString GetDisplayableValue(T value) =>
+            value.ToStandardFormattedString(max_decimal_digits, DisplayAsPercentage);
     }
 }

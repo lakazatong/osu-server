@@ -63,15 +63,14 @@ namespace osu.Game.Beatmaps
 
         protected virtual Waveform GetWaveform() => new Waveform(null);
 
-        protected virtual Storyboard GetStoryboard() => new Storyboard
-        {
-            BeatmapInfo = BeatmapInfo,
-            Beatmap = Beatmap,
-        };
+        protected virtual Storyboard GetStoryboard() =>
+            new Storyboard { BeatmapInfo = BeatmapInfo, Beatmap = Beatmap };
 
         protected abstract IBeatmap GetBeatmap();
         public abstract Texture GetBackground();
+
         public virtual Texture GetPanelBackground() => GetBackground();
+
         protected abstract Track GetBeatmapTrack();
 
         /// <summary>
@@ -133,7 +132,11 @@ namespace osu.Game.Beatmaps
             if (Track.RestartPoint < 0 || Track.RestartPoint > Track.Length)
                 Track.RestartPoint = 0.4f * Track.Length;
 
-            Track.RestartPoint = Math.Clamp(Track.RestartPoint + offsetFromPreviewPoint, 0, Track.Length);
+            Track.RestartPoint = Math.Clamp(
+                Track.RestartPoint + offsetFromPreviewPoint,
+                0,
+                Track.Length
+            );
         }
 
         /// <summary>
@@ -161,7 +164,9 @@ namespace osu.Game.Beatmaps
             get
             {
                 if (!TrackLoaded)
-                    throw new InvalidOperationException($"Cannot access {nameof(Track)} without first calling {nameof(LoadTrack)}.");
+                    throw new InvalidOperationException(
+                        $"Cannot access {nameof(Track)} without first calling {nameof(LoadTrack)}."
+                    );
 
                 return track;
             }
@@ -228,26 +233,31 @@ namespace osu.Game.Beatmaps
         {
             lock (beatmapFetchLock)
             {
-                return beatmapLoadTask ??= Task.Factory.StartNew(() =>
-                {
-                    // Todo: Handle cancellation during beatmap parsing
-                    var b = GetBeatmap() ?? new Beatmap();
+                return beatmapLoadTask ??= Task.Factory.StartNew(
+                    () =>
+                    {
+                        // Todo: Handle cancellation during beatmap parsing
+                        var b = GetBeatmap() ?? new Beatmap();
 
-                    // Copy across values of key properties for which the database-backed model has data that the decoded beatmap isn't going to.
-                    b.BeatmapInfo.ID = BeatmapInfo.ID;
-                    b.BeatmapInfo.UserSettings = BeatmapInfo.UserSettings;
-                    b.BeatmapInfo.BeatmapSet = BeatmapInfo.BeatmapSet;
-                    b.BeatmapInfo.Status = BeatmapInfo.Status;
-                    b.BeatmapInfo.OnlineID = BeatmapInfo.OnlineID;
-                    b.BeatmapInfo.OnlineMD5Hash = BeatmapInfo.OnlineMD5Hash;
-                    b.BeatmapInfo.LastLocalUpdate = BeatmapInfo.LastLocalUpdate;
-                    b.BeatmapInfo.LastOnlineUpdate = BeatmapInfo.LastOnlineUpdate;
-                    b.BeatmapInfo.LastPlayed = BeatmapInfo.LastPlayed;
-                    b.BeatmapInfo.EditorTimestamp = BeatmapInfo.EditorTimestamp;
-                    b.BeatmapInfo.StarRating = BeatmapInfo.StarRating; // this could be recomputed in the decoding process but it's a bit annoying to do.
+                        // Copy across values of key properties for which the database-backed model has data that the decoded beatmap isn't going to.
+                        b.BeatmapInfo.ID = BeatmapInfo.ID;
+                        b.BeatmapInfo.UserSettings = BeatmapInfo.UserSettings;
+                        b.BeatmapInfo.BeatmapSet = BeatmapInfo.BeatmapSet;
+                        b.BeatmapInfo.Status = BeatmapInfo.Status;
+                        b.BeatmapInfo.OnlineID = BeatmapInfo.OnlineID;
+                        b.BeatmapInfo.OnlineMD5Hash = BeatmapInfo.OnlineMD5Hash;
+                        b.BeatmapInfo.LastLocalUpdate = BeatmapInfo.LastLocalUpdate;
+                        b.BeatmapInfo.LastOnlineUpdate = BeatmapInfo.LastOnlineUpdate;
+                        b.BeatmapInfo.LastPlayed = BeatmapInfo.LastPlayed;
+                        b.BeatmapInfo.EditorTimestamp = BeatmapInfo.EditorTimestamp;
+                        b.BeatmapInfo.StarRating = BeatmapInfo.StarRating; // this could be recomputed in the decoding process but it's a bit annoying to do.
 
-                    return b;
-                }, loadCancellationSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                        return b;
+                    },
+                    loadCancellationSource.Token,
+                    TaskCreationOptions.LongRunning,
+                    TaskScheduler.Default
+                );
             }
         }
 
@@ -262,7 +272,13 @@ namespace osu.Game.Beatmaps
                 using (var cancellationTokenSource = new CancellationTokenSource(10_000))
                 {
                     // don't apply the default timeout when debugger is attached (may be breakpointing / debugging).
-                    return GetPlayableBeatmap(ruleset, mods ?? Array.Empty<Mod>(), Debugger.IsAttached ? new CancellationToken() : cancellationTokenSource.Token);
+                    return GetPlayableBeatmap(
+                        ruleset,
+                        mods ?? Array.Empty<Mod>(),
+                        Debugger.IsAttached
+                            ? new CancellationToken()
+                            : cancellationTokenSource.Token
+                    );
                 }
             }
             catch (OperationCanceledException)
@@ -271,18 +287,26 @@ namespace osu.Game.Beatmaps
             }
         }
 
-        public virtual IBeatmap GetPlayableBeatmap(IRulesetInfo ruleset, IReadOnlyList<Mod> mods, CancellationToken token)
+        public virtual IBeatmap GetPlayableBeatmap(
+            IRulesetInfo ruleset,
+            IReadOnlyList<Mod> mods,
+            CancellationToken token
+        )
         {
             var rulesetInstance = ruleset.CreateInstance();
 
             if (rulesetInstance == null)
-                throw new RulesetLoadException("Creating ruleset instance failed when attempting to create playable beatmap.");
+                throw new RulesetLoadException(
+                    "Creating ruleset instance failed when attempting to create playable beatmap."
+                );
 
             IBeatmapConverter converter = CreateBeatmapConverter(Beatmap, rulesetInstance);
 
             // Check if the beatmap can be converted
             if (Beatmap.HitObjects.Count > 0 && !converter.CanConvert())
-                throw new BeatmapInvalidForRulesetException($"{nameof(Beatmaps.Beatmap)} can not be converted for the ruleset (ruleset: {ruleset.InstantiationInfo}, converter: {converter}).");
+                throw new BeatmapInvalidForRulesetException(
+                    $"{nameof(Beatmaps.Beatmap)} can not be converted for the ruleset (ruleset: {ruleset.InstantiationInfo}, converter: {converter})."
+                );
 
             // Apply conversion mods
             foreach (var mod in mods.OfType<IApplicableToBeatmapConverter>())
@@ -354,7 +378,10 @@ namespace osu.Game.Beatmaps
         /// <param name="beatmap">The <see cref="IBeatmap"/> to be converted.</param>
         /// <param name="ruleset">The <see cref="Ruleset"/> for which <paramref name="beatmap"/> should be converted.</param>
         /// <returns>The applicable <see cref="IBeatmapConverter"/>.</returns>
-        protected virtual IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap, Ruleset ruleset) => ruleset.CreateBeatmapConverter(beatmap);
+        protected virtual IBeatmapConverter CreateBeatmapConverter(
+            IBeatmap beatmap,
+            Ruleset ruleset
+        ) => ruleset.CreateBeatmapConverter(beatmap);
 
         #endregion
 
@@ -367,9 +394,7 @@ namespace osu.Game.Beatmaps
         private class BeatmapLoadTimeoutException : TimeoutException
         {
             public BeatmapLoadTimeoutException(BeatmapInfo beatmapInfo)
-                : base($"Timed out while loading beatmap ({beatmapInfo}).")
-            {
-            }
+                : base($"Timed out while loading beatmap ({beatmapInfo}).") { }
         }
     }
 }

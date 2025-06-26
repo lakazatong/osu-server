@@ -26,12 +26,14 @@ namespace osu.Game.Overlays
     {
         public override bool IsPresent => toastContentBackground.Height > 0 || toastFlow.Count > 0;
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => toastFlow.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            toastFlow.ReceivePositionalInputAt(screenSpacePos);
 
         /// <summary>
         /// All notifications currently being displayed by the toast tray.
         /// </summary>
-        public IEnumerable<Notification> Notifications => toastFlow.Concat(InternalChildren.OfType<Notification>());
+        public IEnumerable<Notification> Notifications =>
+            toastFlow.Concat(InternalChildren.OfType<Notification>());
 
         public bool IsDisplayingToasts => toastFlow.Count > 0;
 
@@ -56,26 +58,27 @@ namespace osu.Game.Overlays
 
             InternalChildren = new Drawable[]
             {
-                toastContentBackground = (new Box
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    Colour = ColourInfo.GradientVertical(
-                        colourProvider.Background6.Opacity(0.7f),
-                        colourProvider.Background6.Opacity(0.5f)),
-                    RelativeSizeAxes = Axes.Both,
-                    Height = 0,
-                }.WithEffect(new BlurEffect
-                {
-                    PadExtent = true,
-                    Sigma = new Vector2(20),
-                }).With(postEffectDrawable =>
-                {
-                    postEffectDrawable.Scale = new Vector2(1.5f, 1);
-                    postEffectDrawable.Position += new Vector2(70, -50);
-                    postEffectDrawable.AutoSizeAxes = Axes.None;
-                    postEffectDrawable.RelativeSizeAxes = Axes.X;
-                })),
+                toastContentBackground = (
+                    new Box
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Colour = ColourInfo.GradientVertical(
+                            colourProvider.Background6.Opacity(0.7f),
+                            colourProvider.Background6.Opacity(0.5f)
+                        ),
+                        RelativeSizeAxes = Axes.Both,
+                        Height = 0,
+                    }
+                        .WithEffect(new BlurEffect { PadExtent = true, Sigma = new Vector2(20) })
+                        .With(postEffectDrawable =>
+                        {
+                            postEffectDrawable.Scale = new Vector2(1.5f, 1);
+                            postEffectDrawable.Position += new Vector2(70, -50);
+                            postEffectDrawable.AutoSizeAxes = Axes.None;
+                            postEffectDrawable.RelativeSizeAxes = Axes.X;
+                        })
+                ),
                 toastFlow = new FillFlowContainer<Notification>
                 {
                     LayoutDuration = 150,
@@ -106,26 +109,30 @@ namespace osu.Game.Overlays
 
             scheduleDismissal();
 
-            void scheduleDismissal() => Scheduler.AddDelayed(() =>
-            {
-                // Notification dismissed by user.
-                if (notification.WasClosed)
-                    return;
+            void scheduleDismissal() =>
+                Scheduler.AddDelayed(
+                    () =>
+                    {
+                        // Notification dismissed by user.
+                        if (notification.WasClosed)
+                            return;
 
-                // Notification forwarded away.
-                if (notification.Parent != toastFlow)
-                    return;
+                        // Notification forwarded away.
+                        if (notification.Parent != toastFlow)
+                            return;
 
-                // Notification hovered; delay dismissal.
-                if (notification.IsHovered || notification.IsDragged)
-                {
-                    scheduleDismissal();
-                    return;
-                }
+                        // Notification hovered; delay dismissal.
+                        if (notification.IsHovered || notification.IsDragged)
+                        {
+                            scheduleDismissal();
+                            return;
+                        }
 
-                // All looks good, forward away!
-                forwardNotification(notification);
-            }, notification.IsImportant ? 12000 : 2500);
+                        // All looks good, forward away!
+                        forwardNotification(notification);
+                    },
+                    notification.IsImportant ? 12000 : 2500
+                );
         }
 
         private void forwardNotification(Notification notification)
@@ -139,21 +146,27 @@ namespace osu.Game.Overlays
             toastFlow.Remove(notification, false);
             AddInternal(notification);
 
-            notification.MoveToOffset(new Vector2(400, 0), NotificationOverlay.TRANSITION_LENGTH, Easing.OutQuint);
-            notification.FadeOut(NotificationOverlay.TRANSITION_LENGTH, Easing.OutQuint).OnComplete(_ =>
-            {
-                if (notification.Transient)
+            notification.MoveToOffset(
+                new Vector2(400, 0),
+                NotificationOverlay.TRANSITION_LENGTH,
+                Easing.OutQuint
+            );
+            notification
+                .FadeOut(NotificationOverlay.TRANSITION_LENGTH, Easing.OutQuint)
+                .OnComplete(_ =>
                 {
-                    notification.IsInToastTray = false;
-                    notification.Close(false);
-                    return;
-                }
+                    if (notification.Transient)
+                    {
+                        notification.IsInToastTray = false;
+                        notification.Close(false);
+                        return;
+                    }
 
-                RemoveInternal(notification, false);
-                ForwardNotificationToPermanentStore(notification);
+                    RemoveInternal(notification, false);
+                    ForwardNotificationToPermanentStore(notification);
 
-                notification.FadeIn(300, Easing.OutQuint);
-            });
+                    notification.FadeIn(300, Easing.OutQuint);
+                });
         }
 
         protected override void Update()
@@ -177,8 +190,20 @@ namespace osu.Game.Overlays
                 alpha = Math.Clamp(toastFlow.DrawHeight / 41, 0, 1) * maxNotificationAlpha;
             }
 
-            toastContentBackground.Height = (float)Interpolation.DampContinuously(toastContentBackground.Height, height, 10, Clock.ElapsedFrameTime);
-            toastContentBackground.Alpha = (float)Interpolation.DampContinuously(toastContentBackground.Alpha, alpha, 10, Clock.ElapsedFrameTime);
+            toastContentBackground.Height = (float)
+                Interpolation.DampContinuously(
+                    toastContentBackground.Height,
+                    height,
+                    10,
+                    Clock.ElapsedFrameTime
+                );
+            toastContentBackground.Alpha = (float)
+                Interpolation.DampContinuously(
+                    toastContentBackground.Alpha,
+                    alpha,
+                    10,
+                    Clock.ElapsedFrameTime
+                );
         }
     }
 }

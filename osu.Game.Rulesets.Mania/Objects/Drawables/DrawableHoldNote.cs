@@ -27,7 +27,9 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
     /// <summary>
     /// Visualises a <see cref="HoldNote"/> hit object.
     /// </summary>
-    public partial class DrawableHoldNote : DrawableManiaHitObject<HoldNote>, IKeyBindingHandler<ManiaAction>
+    public partial class DrawableHoldNote
+        : DrawableManiaHitObject<HoldNote>,
+            IKeyBindingHandler<ManiaAction>
     {
         public override bool DisplayResult => false;
 
@@ -58,60 +60,60 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         private SkinnableDrawable bodyPiece;
 
         public DrawableHoldNote()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHoldNote(HoldNote hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             Container maskedContents;
 
-            AddRangeInternal(new Drawable[]
-            {
-                sizingContainer = new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    sizingContainer = new Container
                     {
-                        maskingContainer = new Container
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = maskedContents = new Container
+                            maskingContainer = new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Masking = true,
-                            }
+                                Child = maskedContents =
+                                    new Container { RelativeSizeAxes = Axes.Both, Masking = true },
+                            },
+                            headContainer = new Container<DrawableHoldNoteHead>
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
                         },
-                        headContainer = new Container<DrawableHoldNoteHead> { RelativeSizeAxes = Axes.Both }
-                    }
-                },
-                bodyContainer = new Container<DrawableHoldNoteBody> { RelativeSizeAxes = Axes.Both },
-                bodyPiece = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.HoldNoteBody), _ => new DefaultBodyPiece
-                {
-                    RelativeSizeAxes = Axes.Both,
-                })
-                {
-                    RelativeSizeAxes = Axes.X
-                },
-                tailContainer = new Container<DrawableHoldNoteTail> { RelativeSizeAxes = Axes.Both },
-                slidingSample = new PausableSkinnableSound
-                {
-                    Looping = true,
-                    MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                    },
+                    bodyContainer = new Container<DrawableHoldNoteBody>
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    bodyPiece = new SkinnableDrawable(
+                        new ManiaSkinComponentLookup(ManiaSkinComponents.HoldNoteBody),
+                        _ => new DefaultBodyPiece { RelativeSizeAxes = Axes.Both }
+                    )
+                    {
+                        RelativeSizeAxes = Axes.X,
+                    },
+                    tailContainer = new Container<DrawableHoldNoteTail>
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    slidingSample = new PausableSkinnableSound
+                    {
+                        Looping = true,
+                        MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                    },
                 }
-            });
+            );
 
-            maskedContents.AddRange(new[]
-            {
-                bodyPiece.CreateProxy(),
-                tailContainer.CreateProxy(),
-            });
+            maskedContents.AddRange(new[] { bodyPiece.CreateProxy(), tailContainer.CreateProxy() });
         }
 
         protected override void LoadComplete()
@@ -251,7 +253,8 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
                 sizingContainer.Height = 1;
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new HoldNoteJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new HoldNoteJudgementResult(HitObject, judgement);
 
         public new HoldNoteJudgementResult Result => (HoldNoteJudgementResult)base.Result;
 
@@ -299,7 +302,10 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
             // The tail has a lenience applied to it which is factored into the miss window (i.e. the miss judgement will be delayed).
             // But the hold cannot ever be started within the late-lenience window, so we should skip trying to begin the hold during that time.
             // Note: Unlike below, we use the tail's start time to determine the time offset.
-            if (Time.Current > Tail.HitObject.StartTime && !Tail.HitObject.HitWindows.CanBeHit(Time.Current - Tail.HitObject.StartTime))
+            if (
+                Time.Current > Tail.HitObject.StartTime
+                && !Tail.HitObject.HitWindows.CanBeHit(Time.Current - Tail.HitObject.StartTime)
+            )
                 return false;
 
             beginHoldAt(Time.Current - Head.HitObject.StartTime);

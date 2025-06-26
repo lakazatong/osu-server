@@ -44,7 +44,9 @@ namespace osu.Game.Screens.Utility.SampleComponents
 
             protected override void UpdateAtLimitedRate(InputState inputState)
             {
-                Colour = inputState.Mouse.IsPressed(MouseButton.Left) ? OverlayColourProvider.Content1 : OverlayColourProvider.Colour2;
+                Colour = inputState.Mouse.IsPressed(MouseButton.Left)
+                    ? OverlayColourProvider.Content1
+                    : OverlayColourProvider.Colour2;
             }
         }
     }

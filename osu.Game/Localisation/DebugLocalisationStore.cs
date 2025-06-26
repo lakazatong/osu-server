@@ -15,7 +15,10 @@ namespace osu.Game.Localisation
     {
         public string Get(string lookup) => $@"[[{lookup.Substring(lookup.LastIndexOf('.') + 1)}]]";
 
-        public Task<string> GetAsync(string lookup, CancellationToken cancellationToken = default) => Task.FromResult(Get(lookup));
+        public Task<string> GetAsync(
+            string lookup,
+            CancellationToken cancellationToken = default
+        ) => Task.FromResult(Get(lookup));
 
         public Stream GetStream(string name) => throw new NotImplementedException();
 
@@ -23,8 +26,6 @@ namespace osu.Game.Localisation
 
         public CultureInfo EffectiveCulture { get; } = CultureInfo.CurrentCulture;
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

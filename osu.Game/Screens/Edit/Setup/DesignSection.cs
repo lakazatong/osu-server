@@ -10,8 +10,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterfaceV2;
-using osuTK;
 using osu.Game.Localisation;
+using osuTK;
 
 namespace osu.Game.Screens.Edit.Setup
 {
@@ -52,8 +52,15 @@ namespace osu.Game.Screens.Edit.Setup
                         CountdownSpeed = new FormEnumDropdown<CountdownType>
                         {
                             Caption = EditorSetupStrings.CountdownSpeed,
-                            Current = { Value = Beatmap.Countdown != CountdownType.None ? Beatmap.Countdown : CountdownType.Normal },
-                            Items = Enum.GetValues<CountdownType>().Where(type => type != CountdownType.None)
+                            Current =
+                            {
+                                Value =
+                                    Beatmap.Countdown != CountdownType.None
+                                        ? Beatmap.Countdown
+                                        : CountdownType.Normal,
+                            },
+                            Items = Enum.GetValues<CountdownType>()
+                                .Where(type => type != CountdownType.None),
                         },
                         CountdownOffset = new FormNumberBox
                         {
@@ -61,33 +68,33 @@ namespace osu.Game.Screens.Edit.Setup
                             HintText = EditorSetupStrings.CountdownOffsetDescription,
                             Current = { Value = Beatmap.CountdownOffset.ToString() },
                             TabbableContentContainer = this,
-                        }
-                    }
+                        },
+                    },
                 },
                 widescreenSupport = new FormCheckBox
                 {
                     Caption = EditorSetupStrings.WidescreenSupport,
                     HintText = EditorSetupStrings.WidescreenSupportDescription,
-                    Current = { Value = Beatmap.WidescreenStoryboard }
+                    Current = { Value = Beatmap.WidescreenStoryboard },
                 },
                 epilepsyWarning = new FormCheckBox
                 {
                     Caption = EditorSetupStrings.EpilepsyWarning,
                     HintText = EditorSetupStrings.EpilepsyWarningDescription,
-                    Current = { Value = Beatmap.EpilepsyWarning }
+                    Current = { Value = Beatmap.EpilepsyWarning },
                 },
                 letterboxDuringBreaks = new FormCheckBox
                 {
                     Caption = EditorSetupStrings.LetterboxDuringBreaks,
                     HintText = EditorSetupStrings.LetterboxDuringBreaksDescription,
-                    Current = { Value = Beatmap.LetterboxInBreaks }
+                    Current = { Value = Beatmap.LetterboxInBreaks },
                 },
                 samplesMatchPlaybackRate = new FormCheckBox
                 {
                     Caption = EditorSetupStrings.SamplesMatchPlaybackRate,
                     HintText = EditorSetupStrings.SamplesMatchPlaybackRateDescription,
-                    Current = { Value = Beatmap.SamplesMatchPlaybackRate }
-                }
+                    Current = { Value = Beatmap.SamplesMatchPlaybackRate },
+                },
             };
         }
 
@@ -95,7 +102,10 @@ namespace osu.Game.Screens.Edit.Setup
         {
             base.LoadComplete();
 
-            EnableCountdown.Current.BindValueChanged(_ => updateCountdownSettingsVisibility(), true);
+            EnableCountdown.Current.BindValueChanged(
+                _ => updateCountdownSettingsVisibility(),
+                true
+            );
 
             EnableCountdown.Current.BindValueChanged(_ => updateBeatmap());
             CountdownSpeed.Current.BindValueChanged(_ => updateBeatmap());
@@ -107,19 +117,31 @@ namespace osu.Game.Screens.Edit.Setup
             samplesMatchPlaybackRate.Current.BindValueChanged(_ => updateBeatmap());
         }
 
-        private void updateCountdownSettingsVisibility() => CountdownSettings.FadeTo(EnableCountdown.Current.Value ? 1 : 0);
+        private void updateCountdownSettingsVisibility() =>
+            CountdownSettings.FadeTo(EnableCountdown.Current.Value ? 1 : 0);
 
         private void onOffsetCommitted()
         {
             updateBeatmap();
             // update displayed text to ensure parsed value matches display (i.e. if empty string was provided).
-            CountdownOffset.Current.Value = Beatmap.CountdownOffset.ToString(CultureInfo.InvariantCulture);
+            CountdownOffset.Current.Value = Beatmap.CountdownOffset.ToString(
+                CultureInfo.InvariantCulture
+            );
         }
 
         private void updateBeatmap()
         {
-            Beatmap.Countdown = EnableCountdown.Current.Value ? CountdownSpeed.Current.Value : CountdownType.None;
-            Beatmap.CountdownOffset = int.TryParse(CountdownOffset.Current.Value, NumberStyles.None, CultureInfo.InvariantCulture, out int offset) ? offset : 0;
+            Beatmap.Countdown = EnableCountdown.Current.Value
+                ? CountdownSpeed.Current.Value
+                : CountdownType.None;
+            Beatmap.CountdownOffset = int.TryParse(
+                CountdownOffset.Current.Value,
+                NumberStyles.None,
+                CultureInfo.InvariantCulture,
+                out int offset
+            )
+                ? offset
+                : 0;
 
             Beatmap.WidescreenStoryboard = widescreenSupport.Current.Value;
             Beatmap.EpilepsyWarning = epilepsyWarning.Current.Value;

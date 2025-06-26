@@ -36,9 +36,9 @@ namespace osu.Game.Graphics.UserInterface
                 linkIcon = new SpriteIcon
                 {
                     Icon = FontAwesome.Solid.ExternalLinkAlt,
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
-                new HoverClickSounds()
+                new HoverClickSounds(),
             };
         }
 
@@ -77,8 +77,16 @@ namespace osu.Game.Graphics.UserInterface
 
                 if (Link != null)
                 {
-                    items.Add(new OsuMenuItem("Open", MenuItemType.Highlighted, () => game?.OpenUrlExternally(Link)));
-                    items.Add(new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, copyUrl));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Open",
+                            MenuItemType.Highlighted,
+                            () => game?.OpenUrlExternally(Link)
+                        )
+                    );
+                    items.Add(
+                        new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, copyUrl)
+                    );
                 }
 
                 return items.ToArray();
@@ -87,7 +95,8 @@ namespace osu.Game.Graphics.UserInterface
 
         private void copyUrl()
         {
-            if (Link == null) return;
+            if (Link == null)
+                return;
 
             game?.CopyToClipboard(Link);
         }

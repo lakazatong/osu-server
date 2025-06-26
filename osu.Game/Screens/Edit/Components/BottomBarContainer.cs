@@ -28,16 +28,12 @@ namespace osu.Game.Screens.Edit.Components
 
             InternalChildren = new[]
             {
-                Background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Transparent,
-                },
+                Background = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Transparent },
                 content = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Horizontal = contents_padding },
-                }
+                },
             };
         }
 

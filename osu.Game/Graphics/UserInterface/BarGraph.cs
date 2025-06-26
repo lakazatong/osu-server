@@ -1,17 +1,17 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osu.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
-using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Graphics.Primitives;
 using osu.Framework.Utils;
-using System;
+using osuTK;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -58,7 +58,9 @@ namespace osu.Game.Graphics.UserInterface
 
                 float maxLength = MaxValue ?? value.Max();
 
-                bars.SetLengths(value.Select(v => maxLength == 0 ? 0 : Math.Max(0f, v / maxLength)).ToArray());
+                bars.SetLengths(
+                    value.Select(v => maxLength == 0 ? 0 : Math.Max(0f, v / maxLength)).ToArray()
+                );
 
                 animationStartTime = Clock.CurrentTime;
                 animationComplete = false;
@@ -75,7 +77,10 @@ namespace osu.Game.Graphics.UserInterface
         private void load(IRenderer renderer, ShaderManager shaders)
         {
             texture = renderer.WhitePixel;
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            shader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         protected override void Update()
@@ -108,9 +113,7 @@ namespace osu.Game.Graphics.UserInterface
             public new BarGraph Source => (BarGraph)base.Source;
 
             public BarGraphDrawNode(BarGraph source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private IShader shader = null!;
             private Texture texture = null!;
@@ -142,8 +145,26 @@ namespace osu.Game.Graphics.UserInterface
 
                 for (int i = 0; i < lengths.Count; i++)
                 {
-                    float barHeight = drawSize.Y * ((direction == BarDirection.TopToBottom || direction == BarDirection.BottomToTop) ? lengths[i] : barBreadth);
-                    float barWidth = drawSize.X * ((direction == BarDirection.LeftToRight || direction == BarDirection.RightToLeft) ? lengths[i] : barBreadth);
+                    float barHeight =
+                        drawSize.Y
+                        * (
+                            (
+                                direction == BarDirection.TopToBottom
+                                || direction == BarDirection.BottomToTop
+                            )
+                                ? lengths[i]
+                                : barBreadth
+                        );
+                    float barWidth =
+                        drawSize.X
+                        * (
+                            (
+                                direction == BarDirection.LeftToRight
+                                || direction == BarDirection.RightToLeft
+                            )
+                                ? lengths[i]
+                                : barBreadth
+                        );
 
                     if (barHeight == 0 || barWidth == 0)
                         continue;
@@ -178,11 +199,21 @@ namespace osu.Game.Graphics.UserInterface
                         texture,
                         new Quad(
                             Vector2Extensions.Transform(topLeft, DrawInfo.Matrix),
-                            Vector2Extensions.Transform(topLeft + new Vector2(barWidth, 0), DrawInfo.Matrix),
-                            Vector2Extensions.Transform(topLeft + new Vector2(0, barHeight), DrawInfo.Matrix),
-                            Vector2Extensions.Transform(topLeft + new Vector2(barWidth, barHeight), DrawInfo.Matrix)
+                            Vector2Extensions.Transform(
+                                topLeft + new Vector2(barWidth, 0),
+                                DrawInfo.Matrix
+                            ),
+                            Vector2Extensions.Transform(
+                                topLeft + new Vector2(0, barHeight),
+                                DrawInfo.Matrix
+                            ),
+                            Vector2Extensions.Transform(
+                                topLeft + new Vector2(barWidth, barHeight),
+                                DrawInfo.Matrix
+                            )
                         ),
-                        DrawColourInfo.Colour);
+                        DrawColourInfo.Colour
+                    );
                 }
 
                 shader.Unbind();
@@ -242,7 +273,14 @@ namespace osu.Game.Graphics.UserInterface
             public void Animate(double animationStartTime, double currentTime)
             {
                 for (int i = 0; i < Count; i++)
-                    InstantaneousLengths[i] = Interpolation.ValueAt(currentTime, initialLengths[i], finalLengths[i], animationStartTime, animationStartTime + resize_duration, easing);
+                    InstantaneousLengths[i] = Interpolation.ValueAt(
+                        currentTime,
+                        initialLengths[i],
+                        finalLengths[i],
+                        animationStartTime,
+                        animationStartTime + resize_duration,
+                        easing
+                    );
             }
 
             public void FinishAnimation()

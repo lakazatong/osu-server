@@ -12,12 +12,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Import files"
         /// </summary>
-        public static LocalisableString ImportFiles => new TranslatableString(getKey(@"import_files"), @"Import files");
+        public static LocalisableString ImportFiles =>
+            new TranslatableString(getKey(@"import_files"), @"Import files");
 
         /// <summary>
         /// "Run latency certifier"
         /// </summary>
-        public static LocalisableString RunLatencyCertifier => new TranslatableString(getKey(@"run_latency_certifier"), @"Run latency certifier");
+        public static LocalisableString RunLatencyCertifier =>
+            new TranslatableString(getKey(@"run_latency_certifier"), @"Run latency certifier");
 
         private static string getKey(string key) => $"{prefix}:{key}";
     }

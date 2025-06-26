@@ -17,11 +17,14 @@ namespace osu.Game.Rulesets.Catch.Replays
         public float Position;
         public bool Dashing;
 
-        public CatchReplayFrame()
-        {
-        }
+        public CatchReplayFrame() { }
 
-        public CatchReplayFrame(double time, float? position = null, bool dashing = false, CatchReplayFrame? lastFrame = null)
+        public CatchReplayFrame(
+            double time,
+            float? position = null,
+            bool dashing = false,
+            CatchReplayFrame? lastFrame = null
+        )
             : base(time)
         {
             Position = position ?? -1;
@@ -39,7 +42,11 @@ namespace osu.Game.Rulesets.Catch.Replays
             }
         }
 
-        public void FromLegacy(LegacyReplayFrame currentFrame, IBeatmap beatmap, ReplayFrame? lastFrame = null)
+        public void FromLegacy(
+            LegacyReplayFrame currentFrame,
+            IBeatmap beatmap,
+            ReplayFrame? lastFrame = null
+        )
         {
             Position = currentFrame.Position.X;
             Dashing = currentFrame.ButtonState == ReplayButtonState.Left1;
@@ -61,16 +68,17 @@ namespace osu.Game.Rulesets.Catch.Replays
         {
             ReplayButtonState state = ReplayButtonState.None;
 
-            if (Actions.Contains(CatchAction.Dash)) state |= ReplayButtonState.Left1;
+            if (Actions.Contains(CatchAction.Dash))
+                state |= ReplayButtonState.Left1;
 
             return new LegacyReplayFrame(Time, Position, null, state);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is CatchReplayFrame catchFrame
-               && Time == catchFrame.Time
-               && Position == catchFrame.Position
-               && Dashing == catchFrame.Dashing
-               && Actions.SequenceEqual(catchFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is CatchReplayFrame catchFrame
+            && Time == catchFrame.Time
+            && Position == catchFrame.Position
+            && Dashing == catchFrame.Dashing
+            && Actions.SequenceEqual(catchFrame.Actions);
     }
 }

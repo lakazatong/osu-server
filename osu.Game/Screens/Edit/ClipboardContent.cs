@@ -16,9 +16,7 @@ namespace osu.Game.Screens.Edit
         [JsonConverter(typeof(TypedListConverter<HitObject>))]
         public IList<HitObject> HitObjects;
 
-        public ClipboardContent()
-        {
-        }
+        public ClipboardContent() { }
 
         public ClipboardContent(EditorBeatmap editorBeatmap)
         {

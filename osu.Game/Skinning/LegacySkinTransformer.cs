@@ -19,16 +19,16 @@ namespace osu.Game.Skinning
         public virtual bool IsProvidingLegacyResources => this.HasFont(LegacyFont.Combo);
 
         protected LegacySkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override ISample? GetSample(ISampleInfo sampleInfo)
         {
             if (!(sampleInfo is ConvertHitObjectParser.LegacyHitSampleInfo legacySample))
                 return Skin.GetSample(sampleInfo);
 
-            var playLayeredHitSounds = GetConfig<LegacySetting, bool>(LegacySetting.LayeredHitSounds);
+            var playLayeredHitSounds = GetConfig<LegacySetting, bool>(
+                LegacySetting.LayeredHitSounds
+            );
             if (legacySample.IsLayered && playLayeredHitSounds?.Value == false)
                 return new SampleVirtual();
 

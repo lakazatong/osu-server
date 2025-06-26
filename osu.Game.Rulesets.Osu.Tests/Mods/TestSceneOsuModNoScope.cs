@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Extensions.ObjectExtensions;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Timing;
 using osu.Game.Rulesets.Objects;
@@ -23,35 +23,32 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestVisibleDuringBreak()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 0 },
-                },
-                Autoplay = true,
-                PassCondition = () => true,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new HitCircle
+                    Mod = new OsuModNoScope { HiddenComboCount = { Value = 0 } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            Position = new Vector2(300, 192),
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new HitCircle
+                                {
+                                    Position = new Vector2(300, 192),
+                                    StartTime = 1000,
+                                },
+                                new HitCircle
+                                {
+                                    Position = new Vector2(300, 192),
+                                    StartTime = 5000,
+                                },
+                            },
+                            Breaks = { new BreakPeriod(2000, 4000) },
                         },
-                        new HitCircle
-                        {
-                            Position = new Vector2(300, 192),
-                            StartTime = 5000,
-                        }
-                    },
-                    Breaks =
-                    {
-                        new BreakPeriod(2000, 4000),
-                    }
                 }
-            });
+            );
 
             AddUntilStep("wait for cursor to hide", () => cursorAlphaAlmostEquals(0));
             AddUntilStep("wait for start of break", isBreak);
@@ -63,37 +60,37 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestVisibleDuringSpinner()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 0 },
-                },
-                Autoplay = true,
-                PassCondition = () => true,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new HitCircle
+                    Mod = new OsuModNoScope { HiddenComboCount = { Value = 0 } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            Position = new Vector2(300, 192),
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new HitCircle
+                                {
+                                    Position = new Vector2(300, 192),
+                                    StartTime = 1000,
+                                },
+                                new Spinner
+                                {
+                                    Position = new Vector2(256, 192),
+                                    StartTime = 2000,
+                                    Duration = 2000,
+                                },
+                                new HitCircle
+                                {
+                                    Position = new Vector2(300, 192),
+                                    StartTime = 5000,
+                                },
+                            },
                         },
-                        new Spinner
-                        {
-                            Position = new Vector2(256, 192),
-                            StartTime = 2000,
-                            Duration = 2000,
-                        },
-                        new HitCircle
-                        {
-                            Position = new Vector2(300, 192),
-                            StartTime = 5000,
-                        }
-                    }
                 }
-            });
+            );
 
             AddUntilStep("wait for cursor to hide", () => cursorAlphaAlmostEquals(0));
             AddUntilStep("wait for start of spinner", isSpinning);
@@ -105,36 +102,36 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestVisibleAfterComboBreak()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 2 },
-                },
-                Autoplay = true,
-                PassCondition = () => true,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new HitCircle
+                    Mod = new OsuModNoScope { HiddenComboCount = { Value = 2 } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            Position = new Vector2(100, 192),
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new HitCircle
+                                {
+                                    Position = new Vector2(100, 192),
+                                    StartTime = 1000,
+                                },
+                                new HitCircle
+                                {
+                                    Position = new Vector2(150, 192),
+                                    StartTime = 3000,
+                                },
+                                new HitCircle
+                                {
+                                    Position = new Vector2(200, 192),
+                                    StartTime = 5000,
+                                },
+                            },
                         },
-                        new HitCircle
-                        {
-                            Position = new Vector2(150, 192),
-                            StartTime = 3000,
-                        },
-                        new HitCircle
-                        {
-                            Position = new Vector2(200, 192),
-                            StartTime = 5000,
-                        },
-                    }
                 }
-            });
+            );
 
             AddAssert("cursor must start visible", () => cursorAlphaAlmostEquals(1));
             AddUntilStep("wait for combo", () => Player.ScoreProcessor.Combo.Value >= 2);
@@ -143,14 +140,15 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             AddUntilStep("wait for cursor to show", () => cursorAlphaAlmostEquals(1));
         }
 
-        private bool isSpinning() => Player.ChildrenOfType<DrawableSpinner>().SingleOrDefault()?.Progress > 0;
+        private bool isSpinning() =>
+            Player.ChildrenOfType<DrawableSpinner>().SingleOrDefault()?.Progress > 0;
 
         private bool isBreak() => Player.IsBreakTime.Value;
 
         private OsuPlayfield playfield => (OsuPlayfield)Player.DrawableRuleset.Playfield;
 
         private bool cursorAlphaAlmostEquals(float alpha) =>
-            Precision.AlmostEquals(playfield.Cursor.AsNonNull().Alpha, alpha, 0.1f) &&
-            Precision.AlmostEquals(playfield.Smoke.Alpha, alpha, 0.1f);
+            Precision.AlmostEquals(playfield.Cursor.AsNonNull().Alpha, alpha, 0.1f)
+            && Precision.AlmostEquals(playfield.Smoke.Alpha, alpha, 0.1f);
     }
 }

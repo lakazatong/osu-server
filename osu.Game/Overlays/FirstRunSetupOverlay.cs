@@ -29,9 +29,7 @@ namespace osu.Game.Overlays
         private readonly Bindable<bool> showFirstRunSetup = new Bindable<bool>();
 
         public FirstRunSetupOverlay()
-            : base(OverlayColourScheme.Purple)
-        {
-        }
+            : base(OverlayColourScheme.Purple) { }
 
         [BackgroundDependencyLoader(permitNulls: true)]
         private void load(LegacyImportManager? legacyImportManager)
@@ -53,20 +51,24 @@ namespace osu.Game.Overlays
 
             config.BindWith(OsuSetting.ShowFirstRunSetup, showFirstRunSetup);
 
-            if (showFirstRunSetup.Value) Show();
+            if (showFirstRunSetup.Value)
+                Show();
         }
 
         public override void Show()
         {
             // if we are valid for display, only do so after reaching the main menu.
-            performer.PerformFromScreen(screen =>
-            {
-                // Hides the toolbar for us.
-                if (screen is MainMenu menu)
-                    menu.ReturnToOsuLogo();
+            performer.PerformFromScreen(
+                screen =>
+                {
+                    // Hides the toolbar for us.
+                    if (screen is MainMenu menu)
+                        menu.ReturnToOsuLogo();
 
-                base.Show();
-            }, new[] { typeof(MainMenu) });
+                    base.Show();
+                },
+                new[] { typeof(MainMenu) }
+            );
         }
 
         protected override void PopOut()
@@ -75,16 +77,18 @@ namespace osu.Game.Overlays
 
             if (CurrentStepIndex != null)
             {
-                notificationOverlay.Post(new SimpleNotification
-                {
-                    Text = FirstRunSetupOverlayStrings.ClickToResumeFirstRunSetupAtAnyPoint,
-                    Icon = FontAwesome.Solid.Redo,
-                    Activated = () =>
+                notificationOverlay.Post(
+                    new SimpleNotification
                     {
-                        Show();
-                        return true;
-                    },
-                });
+                        Text = FirstRunSetupOverlayStrings.ClickToResumeFirstRunSetupAtAnyPoint,
+                        Icon = FontAwesome.Solid.Redo,
+                        Activated = () =>
+                        {
+                            Show();
+                            return true;
+                        },
+                    }
+                );
             }
         }
 

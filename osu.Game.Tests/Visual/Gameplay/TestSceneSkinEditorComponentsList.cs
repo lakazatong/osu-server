@@ -15,19 +15,27 @@ namespace osu.Game.Tests.Visual.Gameplay
     public partial class TestSceneSkinEditorComponentsList : SkinnableTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [Test]
         public void TestToggleEditor()
         {
-            var skinComponentsContainer = new SkinnableContainer(new GlobalSkinnableContainerLookup(GlobalSkinnableContainers.SongSelect));
+            var skinComponentsContainer = new SkinnableContainer(
+                new GlobalSkinnableContainerLookup(GlobalSkinnableContainers.SongSelect)
+            );
 
-            AddStep("show available components", () => SetContents(_ => new SkinComponentToolbox(skinComponentsContainer, null)
-            {
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-                Width = 0.6f,
-            }));
+            AddStep(
+                "show available components",
+                () =>
+                    SetContents(_ => new SkinComponentToolbox(skinComponentsContainer, null)
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Width = 0.6f,
+                    })
+            );
         }
 
         protected override Ruleset CreateRulesetForSkinProvider() => new OsuRuleset();

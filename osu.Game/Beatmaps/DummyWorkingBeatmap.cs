@@ -26,23 +26,26 @@ namespace osu.Game.Beatmaps
         private readonly TextureStore textures;
 
         public DummyWorkingBeatmap([NotNull] AudioManager audio, TextureStore textures)
-            : base(new BeatmapInfo
-            {
-                Metadata = new BeatmapMetadata
+            : base(
+                new BeatmapInfo
                 {
-                    Artist = "please select or load a beatmap!",
-                    Title = "no beatmap selected!"
+                    Metadata = new BeatmapMetadata
+                    {
+                        Artist = "please select or load a beatmap!",
+                        Title = "no beatmap selected!",
+                    },
+                    BeatmapSet = new BeatmapSetInfo(),
+                    Difficulty = new BeatmapDifficulty
+                    {
+                        CircleSize = 0,
+                        DrainRate = 0,
+                        OverallDifficulty = 0,
+                        ApproachRate = 0,
+                    },
+                    Ruleset = new DummyRuleset().RulesetInfo,
                 },
-                BeatmapSet = new BeatmapSetInfo(),
-                Difficulty = new BeatmapDifficulty
-                {
-                    CircleSize = 0,
-                    DrainRate = 0,
-                    OverallDifficulty = 0,
-                    ApproachRate = 0,
-                },
-                Ruleset = new DummyRuleset().RulesetInfo
-            }, audio)
+                audio
+            )
         {
             this.textures = textures;
 
@@ -65,14 +68,20 @@ namespace osu.Game.Beatmaps
         {
             public override IEnumerable<Mod> GetModsFor(ModType type) => Array.Empty<Mod>();
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod> mods = null
+            )
             {
                 throw new NotImplementedException();
             }
 
-            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new DummyBeatmapConverter(beatmap);
+            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+                new DummyBeatmapConverter(beatmap);
 
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => throw new NotImplementedException();
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => throw new NotImplementedException();
 
             public override string Description => "dummy";
 

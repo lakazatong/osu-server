@@ -32,55 +32,67 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource source)
         {
-            spinnerBlink = source.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.SpinnerNoBlink)?.Value != true;
+            spinnerBlink =
+                source
+                    .GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.SpinnerNoBlink)
+                    ?.Value != true;
 
-            AddRangeInternal(new[]
-            {
-                new Sprite
+            AddRangeInternal(
+                new[]
                 {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    Texture = source.GetTexture("spinner-background"),
-                    Colour = source.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SpinnerBackground)?.Value ?? new Color4(100, 100, 100, 255),
-                    Scale = new Vector2(SPRITE_SCALE),
-                    Y = SPINNER_Y_CENTRE,
-                },
-                disc = new Sprite
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    Texture = source.GetTexture("spinner-circle"),
-                    Scale = new Vector2(SPRITE_SCALE),
-                    Y = SPINNER_Y_CENTRE,
-                },
-                metre = new Container
-                {
-                    AutoSizeAxes = Axes.Both,
-                    // this anchor makes no sense, but that's what stable uses.
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                    Margin = new MarginPadding { Top = SPINNER_TOP_OFFSET },
-                    Masking = true,
-                    Child = metreSprite = new Sprite
+                    new Sprite
                     {
-                        Texture = source.GetTexture("spinner-metre"),
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.Centre,
+                        Texture = source.GetTexture("spinner-background"),
+                        Colour =
+                            source
+                                .GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SpinnerBackground)
+                                ?.Value ?? new Color4(100, 100, 100, 255),
+                        Scale = new Vector2(SPRITE_SCALE),
+                        Y = SPINNER_Y_CENTRE,
+                    },
+                    disc = new Sprite
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.Centre,
+                        Texture = source.GetTexture("spinner-circle"),
+                        Scale = new Vector2(SPRITE_SCALE),
+                        Y = SPINNER_Y_CENTRE,
+                    },
+                    metre = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        // this anchor makes no sense, but that's what stable uses.
                         Anchor = Anchor.TopLeft,
                         Origin = Anchor.TopLeft,
-                        Scale = new Vector2(SPRITE_SCALE)
-                    }
-                },
-                ApproachCircle = new Sprite
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    Texture = source.GetTexture("spinner-approachcircle"),
-                    Scale = new Vector2(SPRITE_SCALE * 1.86f),
-                    Y = SPINNER_Y_CENTRE,
+                        Margin = new MarginPadding { Top = SPINNER_TOP_OFFSET },
+                        Masking = true,
+                        Child = metreSprite =
+                            new Sprite
+                            {
+                                Texture = source.GetTexture("spinner-metre"),
+                                Anchor = Anchor.TopLeft,
+                                Origin = Anchor.TopLeft,
+                                Scale = new Vector2(SPRITE_SCALE),
+                            },
+                    },
+                    ApproachCircle = new Sprite
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.Centre,
+                        Texture = source.GetTexture("spinner-approachcircle"),
+                        Scale = new Vector2(SPRITE_SCALE * 1.86f),
+                        Y = SPINNER_Y_CENTRE,
+                    },
                 }
-            });
+            );
         }
 
-        protected override void UpdateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)
+        protected override void UpdateStateTransforms(
+            DrawableHitObject drawableHitObject,
+            ArmedState state
+        )
         {
             base.UpdateStateTransforms(drawableHitObject, state);
 

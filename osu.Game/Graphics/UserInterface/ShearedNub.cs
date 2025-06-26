@@ -50,7 +50,7 @@ namespace osu.Game.Graphics.UserInterface
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0,
                         AlwaysPresent = true,
-                    }
+                    },
                 },
                 main = new Container
                 {
@@ -62,12 +62,13 @@ namespace osu.Game.Graphics.UserInterface
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    Child = fill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                        AlwaysPresent = true,
-                    }
+                    Child = fill =
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Alpha = 0,
+                            AlwaysPresent = true,
+                        },
                 },
             };
         }

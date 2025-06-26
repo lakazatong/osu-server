@@ -23,42 +23,50 @@ namespace osu.Game.Tests.Visual.UserInterface
         private ButtonSystem buttons;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public void SetUp() =>
+            Schedule(() =>
             {
-                new Box
+                Children = new Drawable[]
                 {
-                    Colour = ColourInfo.GradientVertical(Color4.Gray, Color4.WhiteSmoke),
-                    RelativeSizeAxes = Axes.Both,
-                },
-                buttons = new ButtonSystem(),
-                logo = new OsuLogo
-                {
-                    RelativePositionAxes = Axes.Both,
-                    Position = new Vector2(0.5f)
-                }
-            };
+                    new Box
+                    {
+                        Colour = ColourInfo.GradientVertical(Color4.Gray, Color4.WhiteSmoke),
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    buttons = new ButtonSystem(),
+                    logo = new OsuLogo
+                    {
+                        RelativePositionAxes = Axes.Both,
+                        Position = new Vector2(0.5f),
+                    },
+                };
 
-            buttons.SetOsuLogo(logo);
-        });
+                buttons.SetOsuLogo(logo);
+            });
 
         [Test]
         public void TestAllStates()
         {
-            foreach (var s in Enum.GetValues(typeof(ButtonSystemState)).OfType<ButtonSystemState>().Skip(1))
+            foreach (
+                var s in Enum.GetValues(typeof(ButtonSystemState))
+                    .OfType<ButtonSystemState>()
+                    .Skip(1)
+            )
                 AddStep($"State to {s}", () => buttons.State = s);
 
             AddStep("Enter mode", performEnterMode);
 
-            AddStep("Return to menu", () =>
-            {
-                buttons.State = ButtonSystemState.Play;
-                buttons.FadeIn(MainMenu.FADE_IN_DURATION, Easing.OutQuint);
-                buttons.MoveTo(new Vector2(0), MainMenu.FADE_IN_DURATION, Easing.OutQuint);
-                logo.FadeColour(Color4.White, 100, Easing.OutQuint);
-                logo.FadeIn(100, Easing.OutQuint);
-            });
+            AddStep(
+                "Return to menu",
+                () =>
+                {
+                    buttons.State = ButtonSystemState.Play;
+                    buttons.FadeIn(MainMenu.FADE_IN_DURATION, Easing.OutQuint);
+                    buttons.MoveTo(new Vector2(0), MainMenu.FADE_IN_DURATION, Easing.OutQuint);
+                    logo.FadeColour(Color4.White, 100, Easing.OutQuint);
+                    logo.FadeIn(100, Easing.OutQuint);
+                }
+            );
         }
 
         [Test]
@@ -78,46 +86,49 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestShortcutKeys(Key key, Key? subMenuEnterKey)
         {
             int activationCount = -1;
-            AddStep("set up action", () =>
-            {
-                activationCount = 0;
-                void action() => activationCount++;
-
-                switch (key)
+            AddStep(
+                "set up action",
+                () =>
                 {
-                    case Key.P:
-                        buttons.OnSolo = action;
-                        break;
+                    activationCount = 0;
+                    void action() => activationCount++;
 
-                    case Key.M:
-                        buttons.OnMultiplayer = action;
-                        break;
+                    switch (key)
+                    {
+                        case Key.P:
+                            buttons.OnSolo = action;
+                            break;
 
-                    case Key.L:
-                        buttons.OnPlaylists = action;
-                        break;
+                        case Key.M:
+                            buttons.OnMultiplayer = action;
+                            break;
 
-                    case Key.B:
-                        buttons.OnEditBeatmap = action;
-                        break;
+                        case Key.L:
+                            buttons.OnPlaylists = action;
+                            break;
 
-                    case Key.S:
-                        buttons.OnEditSkin = action;
-                        break;
+                        case Key.B:
+                            buttons.OnEditBeatmap = action;
+                            break;
 
-                    case Key.D:
-                        buttons.OnBeatmapListing = action;
-                        break;
+                        case Key.S:
+                            buttons.OnEditSkin = action;
+                            break;
 
-                    case Key.Q:
-                        buttons.OnExit = _ => action();
-                        break;
+                        case Key.D:
+                            buttons.OnBeatmapListing = action;
+                            break;
 
-                    case Key.O:
-                        buttons.OnSettings = action;
-                        break;
+                        case Key.Q:
+                            buttons.OnExit = _ => action();
+                            break;
+
+                        case Key.O:
+                            buttons.OnSettings = action;
+                            break;
+                    }
                 }
-            });
+            );
 
             AddStep($"press {key}", () => InputManager.Key(key));
             AddAssert("state is top level", () => buttons.State == ButtonSystemState.TopLevel);
@@ -125,7 +136,10 @@ namespace osu.Game.Tests.Visual.UserInterface
             if (subMenuEnterKey != null)
             {
                 AddStep($"press {subMenuEnterKey}", () => InputManager.Key(subMenuEnterKey.Value));
-                AddAssert("state is not top menu", () => buttons.State != ButtonSystemState.TopLevel);
+                AddAssert(
+                    "state is not top menu",
+                    () => buttons.State != ButtonSystemState.TopLevel
+                );
             }
 
             AddStep($"press {key}", () => InputManager.Key(key));
@@ -137,8 +151,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             buttons.State = ButtonSystemState.EnteringMode;
             buttons.FadeOut(MainMenu.FADE_OUT_DURATION, Easing.InSine);
             buttons.MoveTo(new Vector2(-800, 0), MainMenu.FADE_OUT_DURATION, Easing.InSine);
-            logo.FadeOut(300, Easing.InSine)
-                .ScaleTo(0.2f, 300, Easing.InSine);
+            logo.FadeOut(300, Easing.InSine).ScaleTo(0.2f, 300, Easing.InSine);
         }
     }
 }

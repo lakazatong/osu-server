@@ -11,16 +11,18 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     public partial class GlobalRankChangeRow : RankingChangeRow<int?>
     {
         public GlobalRankChangeRow()
-            : base(stats => stats.GlobalRank)
-        {
-        }
+            : base(stats => stats.GlobalRank) { }
 
         protected override LocalisableString Label => UsersStrings.ShowRankGlobalSimple;
 
-        protected override LocalisableString FormatCurrentValue(int? current)
-            => current?.ToLocalisableString(@"N0") ?? string.Empty;
+        protected override LocalisableString FormatCurrentValue(int? current) =>
+            current?.ToLocalisableString(@"N0") ?? string.Empty;
 
-        protected override int CalculateDifference(int? previous, int? current, out LocalisableString formattedDifference)
+        protected override int CalculateDifference(
+            int? previous,
+            int? current,
+            out LocalisableString formattedDifference
+        )
         {
             if (previous == null && current == null)
             {

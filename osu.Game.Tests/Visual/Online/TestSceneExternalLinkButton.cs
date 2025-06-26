@@ -20,7 +20,7 @@ namespace osu.Game.Tests.Visual.Online
                     Size = new Vector2(50),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                }
+                },
             };
         }
     }

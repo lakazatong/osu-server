@@ -34,14 +34,25 @@ namespace osu.Game.Online.Rooms
             DownloadProgress = downloadProgress;
         }
 
-        public static BeatmapAvailability Unknown() => new BeatmapAvailability(DownloadState.Unknown);
-        public static BeatmapAvailability NotDownloaded() => new BeatmapAvailability(DownloadState.NotDownloaded);
-        public static BeatmapAvailability Downloading(float progress) => new BeatmapAvailability(DownloadState.Downloading, progress);
-        public static BeatmapAvailability Importing() => new BeatmapAvailability(DownloadState.Importing);
-        public static BeatmapAvailability LocallyAvailable() => new BeatmapAvailability(DownloadState.LocallyAvailable);
+        public static BeatmapAvailability Unknown() =>
+            new BeatmapAvailability(DownloadState.Unknown);
 
-        public bool Equals(BeatmapAvailability other) => other != null && State == other.State && DownloadProgress == other.DownloadProgress;
+        public static BeatmapAvailability NotDownloaded() =>
+            new BeatmapAvailability(DownloadState.NotDownloaded);
 
-        public override string ToString() => $"{string.Join(", ", State, $"{DownloadProgress:0.00%}")}";
+        public static BeatmapAvailability Downloading(float progress) =>
+            new BeatmapAvailability(DownloadState.Downloading, progress);
+
+        public static BeatmapAvailability Importing() =>
+            new BeatmapAvailability(DownloadState.Importing);
+
+        public static BeatmapAvailability LocallyAvailable() =>
+            new BeatmapAvailability(DownloadState.LocallyAvailable);
+
+        public bool Equals(BeatmapAvailability other) =>
+            other != null && State == other.State && DownloadProgress == other.DownloadProgress;
+
+        public override string ToString() =>
+            $"{string.Join(", ", State, $"{DownloadProgress:0.00%}")}";
     }
 }

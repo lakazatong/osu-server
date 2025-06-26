@@ -46,19 +46,23 @@ namespace osu.Game.Skinning
 
             if (isNewStyle)
             {
-                AddRangeInternal(new[]
-                {
-                    fill = new LegacyNewStyleFill(skin),
-                    marker = new LegacyNewStyleMarker(skin),
-                });
+                AddRangeInternal(
+                    new[]
+                    {
+                        fill = new LegacyNewStyleFill(skin),
+                        marker = new LegacyNewStyleMarker(skin),
+                    }
+                );
             }
             else
             {
-                AddRangeInternal(new[]
-                {
-                    fill = new LegacyOldStyleFill(skin),
-                    marker = new LegacyOldStyleMarker(skin),
-                });
+                AddRangeInternal(
+                    new[]
+                    {
+                        fill = new LegacyOldStyleFill(skin),
+                        marker = new LegacyOldStyleMarker(skin),
+                    }
+                );
             }
 
             fill.Current.BindTo(Current);
@@ -74,9 +78,15 @@ namespace osu.Game.Skinning
 
             fill.Width = Interpolation.ValueAt(
                 Math.Clamp(Clock.ElapsedFrameTime, 0, 200),
-                fill.Width, (float)Current.Value * maxFillWidth, 0, 200, Easing.OutQuint);
+                fill.Width,
+                (float)Current.Value * maxFillWidth,
+                0,
+                200,
+                Easing.OutQuint
+            );
 
-            marker.Position = fill.Position + new Vector2(fill.DrawWidth, isNewStyle ? fill.DrawHeight / 2 : 0);
+            marker.Position =
+                fill.Position + new Vector2(fill.DrawWidth, isNewStyle ? fill.DrawHeight / 2 : 0);
         }
 
         protected override void HealthChanged(bool increase)
@@ -88,7 +98,8 @@ namespace osu.Game.Skinning
 
         protected override void Flash() => marker.Flash(Current.Value >= epic_cutoff);
 
-        private static Texture getTexture(ISkin skin, string name) => skin?.GetTexture($"scorebar-{name}");
+        private static Texture getTexture(ISkin skin, string name) =>
+            skin?.GetTexture($"scorebar-{name}");
 
         private static Color4 getFillColour(double hp)
         {
@@ -96,7 +107,13 @@ namespace osu.Game.Skinning
                 return LegacyUtils.InterpolateNonLinear(0.2 - hp, Color4.Black, Color4.Red, 0, 0.2);
 
             if (hp < epic_cutoff)
-                return LegacyUtils.InterpolateNonLinear(0.5 - hp, Color4.White, Color4.Black, 0, 0.5);
+                return LegacyUtils.InterpolateNonLinear(
+                    0.5 - hp,
+                    Color4.White,
+                    Color4.Black,
+                    0,
+                    0.5
+                );
 
             return Color4.White;
         }
@@ -114,11 +131,8 @@ namespace osu.Game.Skinning
                 superDangerTexture = getTexture(skin, "kidanger2");
             }
 
-            public override Sprite CreateSprite() => new Sprite
-            {
-                Texture = normalTexture,
-                Origin = Anchor.Centre,
-            };
+            public override Sprite CreateSprite() =>
+                new Sprite { Texture = normalTexture, Origin = Anchor.Centre };
 
             protected override void Update()
             {
@@ -142,18 +156,18 @@ namespace osu.Game.Skinning
                 this.skin = skin;
             }
 
-            public override Sprite CreateSprite() => new Sprite
-            {
-                Texture = getTexture(skin, "marker"),
-                Origin = Anchor.Centre,
-            };
+            public override Sprite CreateSprite() =>
+                new Sprite { Texture = getTexture(skin, "marker"), Origin = Anchor.Centre };
 
             protected override void Update()
             {
                 base.Update();
 
                 Main.Colour = getFillColour(Current.Value);
-                Main.Blending = Current.Value < epic_cutoff ? BlendingParameters.Inherit : BlendingParameters.Additive;
+                Main.Blending =
+                    Current.Value < epic_cutoff
+                        ? BlendingParameters.Inherit
+                        : BlendingParameters.Additive;
             }
         }
 
@@ -171,7 +185,14 @@ namespace osu.Game.Skinning
                 }
                 else
                 {
-                    InternalChild = skin.GetAnimation("scorebar-colour", true, true, startAtCurrentTime: false, applyConfigFrameRate: true) ?? Empty();
+                    InternalChild =
+                        skin.GetAnimation(
+                            "scorebar-colour",
+                            true,
+                            true,
+                            startAtCurrentTime: false,
+                            applyConfigFrameRate: true
+                        ) ?? Empty();
                     Size = new Vector2(firstFrame.DisplayWidth, firstFrame.DisplayHeight);
                 }
 
@@ -220,11 +241,12 @@ namespace osu.Game.Skinning
                 InternalChildren = new Drawable[]
                 {
                     Main = CreateSprite(),
-                    explode = CreateSprite().With(s =>
-                    {
-                        s.Alpha = 0;
-                        s.Blending = BlendingParameters.Additive;
-                    }),
+                    explode = CreateSprite()
+                        .With(s =>
+                        {
+                            s.Alpha = 0;
+                            s.Blending = BlendingParameters.Additive;
+                        }),
                 };
             }
 
@@ -233,7 +255,9 @@ namespace osu.Game.Skinning
             public override void Flash(bool isEpic)
             {
                 Bulge();
-                explode.Blending = isEpic ? BlendingParameters.Additive : BlendingParameters.Inherit;
+                explode.Blending = isEpic
+                    ? BlendingParameters.Additive
+                    : BlendingParameters.Inherit;
                 explode.ScaleTo(1).Then().ScaleTo(isEpic ? 2 : 1.6f, 120, Easing.Out);
                 explode.FadeOutFromOne(120, Easing.Out);
             }
@@ -249,13 +273,9 @@ namespace osu.Game.Skinning
         {
             public Bindable<double> Current { get; } = new Bindable<double>();
 
-            public virtual void Bulge()
-            {
-            }
+            public virtual void Bulge() { }
 
-            public virtual void Flash(bool isEpic)
-            {
-            }
+            public virtual void Flash(bool isEpic) { }
         }
     }
 }

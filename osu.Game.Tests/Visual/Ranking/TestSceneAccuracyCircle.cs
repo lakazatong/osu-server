@@ -76,34 +76,46 @@ namespace osu.Game.Tests.Visual.Ranking
             addCircleStep(createScore(1, new CatchRuleset()));
         }
 
-        private void addCircleStep(ScoreInfo score) => AddStep($"add panel ({score.DisplayAccuracy}, {score.Statistics.GetValueOrDefault(HitResult.Miss)} miss)", () =>
-        {
-            Children = new Drawable[]
-            {
-                new Container
+        private void addCircleStep(ScoreInfo score) =>
+            AddStep(
+                $"add panel ({score.DisplayAccuracy}, {score.Statistics.GetValueOrDefault(HitResult.Miss)} miss)",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(500, 700),
                     Children = new Drawable[]
                     {
-                        new Box
+                        new Container
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientVertical(Color4Extensions.FromHex("#555"), Color4Extensions.FromHex("#333"))
-                        }
-                    }
-                },
-                new AccuracyCircle(score, true)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(230)
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(500, 700),
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = ColourInfo.GradientVertical(
+                                        Color4Extensions.FromHex("#555"),
+                                        Color4Extensions.FromHex("#333")
+                                    ),
+                                },
+                            },
+                        },
+                        new AccuracyCircle(score, true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(230),
+                        },
+                    };
                 }
-            };
-        });
+            );
 
-        private ScoreInfo createScore(double accuracy, Ruleset ruleset, int missCount = 0, bool hidden = false)
+        private ScoreInfo createScore(
+            double accuracy,
+            Ruleset ruleset,
+            int missCount = 0,
+            bool hidden = false
+        )
         {
             var scoreProcessor = ruleset.CreateScoreProcessor();
 
@@ -121,11 +133,7 @@ namespace osu.Game.Tests.Visual.Ranking
 
             return new ScoreInfo
             {
-                User = new APIUser
-                {
-                    Id = 2,
-                    Username = "peppy",
-                },
+                User = new APIUser { Id = 2, Username = "peppy" },
                 BeatmapInfo = new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo,
                 Ruleset = ruleset.RulesetInfo,
                 Mods = mods,

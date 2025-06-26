@@ -15,7 +15,8 @@ namespace osu.Game.Database
     {
         protected override string ImportFromStablePath => ".";
 
-        protected override Storage PrepareStableStorage(StableStorage stableStorage) => stableStorage.GetSongStorage();
+        protected override Storage PrepareStableStorage(StableStorage stableStorage) =>
+            stableStorage.GetSongStorage();
 
         protected override IEnumerable<string> GetStableImportPaths(Storage storage)
         {
@@ -46,22 +47,24 @@ namespace osu.Game.Database
                     catch (Exception e)
                     {
                         // Catch any errors when enumerating files
-                        Logger.Log($"Error when enumerating files in {directoryStorage.GetFullPath(string.Empty)}: {e}");
+                        Logger.Log(
+                            $"Error when enumerating files in {directoryStorage.GetFullPath(string.Empty)}: {e}"
+                        );
                     }
                 }
             }
             catch (Exception e)
             {
                 // Catch any errors when enumerating directories
-                Logger.Log($"Error when enumerating directories in {storage.GetFullPath(string.Empty)}: {e}");
+                Logger.Log(
+                    $"Error when enumerating directories in {storage.GetFullPath(string.Empty)}: {e}"
+                );
             }
 
             return paths;
         }
 
         public LegacyBeatmapImporter(IModelImporter<BeatmapSetInfo> importer)
-            : base(importer)
-        {
-        }
+            : base(importer) { }
     }
 }

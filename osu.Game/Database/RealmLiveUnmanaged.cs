@@ -11,7 +11,8 @@ namespace osu.Game.Database
     /// Usually used for testing purposes where the instance is never required to be managed.
     /// </summary>
     /// <typeparam name="T">The underlying object type.</typeparam>
-    public class RealmLiveUnmanaged<T> : Live<T> where T : RealmObjectBase, IHasGuidPrimaryKey
+    public class RealmLiveUnmanaged<T> : Live<T>
+        where T : RealmObjectBase, IHasGuidPrimaryKey
     {
         /// <summary>
         /// The original live data used to create this instance.
@@ -26,7 +27,9 @@ namespace osu.Game.Database
             : base(data.ID)
         {
             if (data.IsManaged)
-                throw new InvalidOperationException($"Cannot use {nameof(RealmLiveUnmanaged<T>)} with managed instances");
+                throw new InvalidOperationException(
+                    $"Cannot use {nameof(RealmLiveUnmanaged<T>)} with managed instances"
+                );
 
             Value = data;
         }
@@ -35,7 +38,10 @@ namespace osu.Game.Database
 
         public override TReturn PerformRead<TReturn>(Func<T, TReturn> perform) => perform(Value);
 
-        public override void PerformWrite(Action<T> perform) => throw new InvalidOperationException(@"Can't perform writes on a non-managed underlying value");
+        public override void PerformWrite(Action<T> perform) =>
+            throw new InvalidOperationException(
+                @"Can't perform writes on a non-managed underlying value"
+            );
 
         public override bool IsManaged => false;
     }

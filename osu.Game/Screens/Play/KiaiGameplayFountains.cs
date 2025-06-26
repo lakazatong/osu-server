@@ -57,7 +57,8 @@ namespace osu.Game.Screens.Play
 
             if (EffectPoint.KiaiMode && !isTriggered)
             {
-                bool isNearEffectPoint = Math.Abs(BeatSyncSource.Clock.CurrentTime - EffectPoint.Time) < 500;
+                bool isNearEffectPoint =
+                    Math.Abs(BeatSyncSource.Clock.CurrentTime - EffectPoint.Time) < 500;
                 if (isNearEffectPoint)
                     Shoot();
             }
@@ -75,23 +76,23 @@ namespace osu.Game.Screens.Play
 
         public partial class GameplayStarFountain : StarFountain
         {
-            protected override StarFountainSpewer CreateSpewer() => new GameplayStarFountainSpewer();
+            protected override StarFountainSpewer CreateSpewer() =>
+                new GameplayStarFountainSpewer();
 
             private partial class GameplayStarFountainSpewer : StarFountainSpewer
             {
                 protected override double ShootDuration => 400;
 
                 public GameplayStarFountainSpewer()
-                    : base(perSecond: 180)
-                {
-                }
+                    : base(perSecond: 180) { }
 
                 protected override float GetCurrentAngle()
                 {
                     const float x_velocity_from_direction = 450;
                     const float x_velocity_to_direction = 600;
 
-                    return LastShootDirection * RNG.NextSingle(x_velocity_from_direction, x_velocity_to_direction);
+                    return LastShootDirection
+                        * RNG.NextSingle(x_velocity_from_direction, x_velocity_to_direction);
                 }
             }
         }

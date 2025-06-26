@@ -13,33 +13,44 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneShearedOverlayHeader : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         [Test]
         public void TestShearedOverlayHeader()
         {
-            AddStep("create content", () =>
-            {
-                Child = new ShearedOverlayHeader
+            AddStep(
+                "create content",
+                () =>
                 {
-                    Title = "Sheared overlay header",
-                    Description = string.Join(" ", Enumerable.Repeat("This is a description.", 20)),
-                    Close = () => { }
-                };
-            });
+                    Child = new ShearedOverlayHeader
+                    {
+                        Title = "Sheared overlay header",
+                        Description = string.Join(
+                            " ",
+                            Enumerable.Repeat("This is a description.", 20)
+                        ),
+                        Close = () => { },
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestDisabledExit()
         {
-            AddStep("create content", () =>
-            {
-                Child = new ShearedOverlayHeader
+            AddStep(
+                "create content",
+                () =>
                 {
-                    Title = "Sheared overlay header",
-                    Description = "This is a description."
-                };
-            });
+                    Child = new ShearedOverlayHeader
+                    {
+                        Title = "Sheared overlay header",
+                        Description = "This is a description.",
+                    };
+                }
+            );
         }
     }
 }

@@ -25,11 +25,13 @@ namespace osu.Game.Tournament.Tests.Screens
                 writer.WriteLine("JP : Japan : JPN");
             }
 
-            Add(new OsuContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = new DrawingsScreen()
-            });
+            Add(
+                new OsuContextMenuContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = new DrawingsScreen(),
+                }
+            );
         }
     }
 }

@@ -18,21 +18,27 @@ using osu.Game.Screens.Edit.Compose;
 
 namespace osu.Game.Tests.Visual
 {
-    public abstract partial class PlacementBlueprintTestScene : OsuManualInputManagerTestScene, IPlacementHandler
+    public abstract partial class PlacementBlueprintTestScene
+        : OsuManualInputManagerTestScene,
+            IPlacementHandler
     {
         protected readonly Container HitObjectContainer;
         protected HitObjectPlacementBlueprint CurrentBlueprint { get; private set; }
 
         protected PlacementBlueprintTestScene()
         {
-            base.Content.Add(HitObjectContainer = CreateHitObjectContainer().With(c => c.Clock = new FramedClock(new StopwatchClock())));
-            base.Content.Add(new MouseMovementInterceptor
-            {
-                MouseMoved = UpdatePlacementTimeAndPosition,
-            });
+            base.Content.Add(
+                HitObjectContainer = CreateHitObjectContainer()
+                    .With(c => c.Clock = new FramedClock(new StopwatchClock()))
+            );
+            base.Content.Add(
+                new MouseMovementInterceptor { MouseMoved = UpdatePlacementTimeAndPosition }
+            );
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
@@ -64,13 +70,9 @@ namespace osu.Game.Tests.Visual
             ResetPlacement();
         }
 
-        public void ShowPlacement(HitObject hitObject)
-        {
-        }
+        public void ShowPlacement(HitObject hitObject) { }
 
-        public void HidePlacement()
-        {
-        }
+        public void HidePlacement() { }
 
         public void CommitPlacement(HitObject hitObject)
         {
@@ -84,9 +86,7 @@ namespace osu.Game.Tests.Visual
             Add(CurrentBlueprint = CreateBlueprint());
         }
 
-        public void Delete(HitObject hitObject)
-        {
-        }
+        public void Delete(HitObject hitObject) { }
 
         protected override void Update()
         {
@@ -98,7 +98,8 @@ namespace osu.Game.Tests.Visual
             UpdatePlacementTimeAndPosition();
         }
 
-        protected virtual void UpdatePlacementTimeAndPosition() => CurrentBlueprint.UpdateTimeAndPosition(InputManager.CurrentState.Mouse.Position, 0);
+        protected virtual void UpdatePlacementTimeAndPosition() =>
+            CurrentBlueprint.UpdateTimeAndPosition(InputManager.CurrentState.Mouse.Position, 0);
 
         public override void Add(Drawable drawable)
         {
@@ -111,9 +112,11 @@ namespace osu.Game.Tests.Visual
             }
         }
 
-        protected virtual void AddHitObject(DrawableHitObject hitObject) => HitObjectContainer.Add(hitObject);
+        protected virtual void AddHitObject(DrawableHitObject hitObject) =>
+            HitObjectContainer.Add(hitObject);
 
-        protected virtual Container CreateHitObjectContainer() => new Container { RelativeSizeAxes = Axes.Both };
+        protected virtual Container CreateHitObjectContainer() =>
+            new Container { RelativeSizeAxes = Axes.Both };
 
         protected abstract DrawableHitObject CreateHitObject(HitObject hitObject);
         protected abstract HitObjectPlacementBlueprint CreateBlueprint();

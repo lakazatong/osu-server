@@ -13,7 +13,8 @@ namespace osu.Game.Screens.Edit
     {
         private readonly Bindable<float> backgroundDim;
 
-        private readonly Dictionary<float, TernaryStateRadioMenuItem> menuItemLookup = new Dictionary<float, TernaryStateRadioMenuItem>();
+        private readonly Dictionary<float, TernaryStateRadioMenuItem> menuItemLookup =
+            new Dictionary<float, TernaryStateRadioMenuItem>();
 
         public BackgroundDimMenuItem(Bindable<float> backgroundDim)
             : base(GameplaySettingsStrings.BackgroundDim)
@@ -27,16 +28,24 @@ namespace osu.Game.Screens.Edit
             };
 
             this.backgroundDim = backgroundDim;
-            backgroundDim.BindValueChanged(dim =>
-            {
-                foreach (var kvp in menuItemLookup)
-                    kvp.Value.State.Value = kvp.Key == dim.NewValue ? TernaryState.True : TernaryState.False;
-            }, true);
+            backgroundDim.BindValueChanged(
+                dim =>
+                {
+                    foreach (var kvp in menuItemLookup)
+                        kvp.Value.State.Value =
+                            kvp.Key == dim.NewValue ? TernaryState.True : TernaryState.False;
+                },
+                true
+            );
         }
 
         private TernaryStateRadioMenuItem createMenuItem(float dim)
         {
-            var item = new TernaryStateRadioMenuItem($"{dim * 100}%", MenuItemType.Standard, _ => updateOpacity(dim));
+            var item = new TernaryStateRadioMenuItem(
+                $"{dim * 100}%",
+                MenuItemType.Standard,
+                _ => updateOpacity(dim)
+            );
             menuItemLookup[dim] = item;
             return item;
         }

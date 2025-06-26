@@ -27,90 +27,104 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestCursorPositionStoredToJudgement()
         {
-            CreateModTest(new ModTestData
-            {
-                Autoplay = true,
-                PassCondition = () =>
-                    Player.ScoreProcessor.JudgedHits >= 1
-                    && Player.ScoreProcessor.HitEvents.Any(e => e.Position != null)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Autoplay = true,
+                    PassCondition = () =>
+                        Player.ScoreProcessor.JudgedHits >= 1
+                        && Player.ScoreProcessor.HitEvents.Any(e => e.Position != null),
+                }
+            );
         }
 
         [Test]
-        public void TestSpmUnaffectedByRateAdjust()
-            => runSpmTest(new OsuModDaycore
-            {
-                SpeedChange = { Value = 0.88 }
-            });
+        public void TestSpmUnaffectedByRateAdjust() =>
+            runSpmTest(new OsuModDaycore { SpeedChange = { Value = 0.88 } });
 
         [Test]
-        public void TestSpmUnaffectedByTimeRamp()
-            => runSpmTest(new ModWindUp
-            {
-                InitialRate = { Value = 0.7 },
-                FinalRate = { Value = 1.3 }
-            });
+        public void TestSpmUnaffectedByTimeRamp() =>
+            runSpmTest(
+                new ModWindUp { InitialRate = { Value = 0.7 }, FinalRate = { Value = 1.3 } }
+            );
 
         [TestCase(6.25f)]
         [TestCase(20)]
         public void TestPerfectScoreOnShortSliderWithRepeat(float pathLength)
         {
-            AddStep("set score to standardised", () => LocalConfig.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Standardised));
+            AddStep(
+                "set score to standardised",
+                () => LocalConfig.SetValue(OsuSetting.ScoreDisplayMode, ScoringMode.Standardised)
+            );
 
-            CreateModTest(new ModTestData
-            {
-                Autoplay = true,
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = new List<HitObject>
-                    {
-                        new Slider
+                    Autoplay = true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            StartTime = 500,
-                            Position = new Vector2(256, 192),
-                            Path = new SliderPath(new[]
+                            HitObjects = new List<HitObject>
                             {
-                                new PathControlPoint(),
-                                new PathControlPoint(new Vector2(0, pathLength))
-                            }),
-                            RepeatCount = 1,
-                            SliderVelocityMultiplier = 10
-                        }
-                    }
-                },
-                PassCondition = () => Player.ScoreProcessor.TotalScore.Value == 1_000_000
-            });
+                                new Slider
+                                {
+                                    StartTime = 500,
+                                    Position = new Vector2(256, 192),
+                                    Path = new SliderPath(
+                                        new[]
+                                        {
+                                            new PathControlPoint(),
+                                            new PathControlPoint(new Vector2(0, pathLength)),
+                                        }
+                                    ),
+                                    RepeatCount = 1,
+                                    SliderVelocityMultiplier = 10,
+                                },
+                            },
+                        },
+                    PassCondition = () => Player.ScoreProcessor.TotalScore.Value == 1_000_000,
+                }
+            );
         }
 
         private void runSpmTest(Mod mod)
         {
             SpinnerSpmCalculator? spmCalculator = null;
 
-            CreateModTest(new ModTestData
-            {
-                Autoplay = true,
-                Mod = mod,
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects =
-                    {
-                        new Spinner
+                    Autoplay = true,
+                    Mod = mod,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            Duration = 6000,
-                            Position = OsuPlayfield.BASE_SIZE / 2,
-                        }
-                    }
-                },
-                PassCondition = () => Player.ScoreProcessor.JudgedHits >= 1
-            });
+                            HitObjects =
+                            {
+                                new Spinner
+                                {
+                                    Duration = 6000,
+                                    Position = OsuPlayfield.BASE_SIZE / 2,
+                                },
+                            },
+                        },
+                    PassCondition = () => Player.ScoreProcessor.JudgedHits >= 1,
+                }
+            );
 
-            AddUntilStep("fetch SPM calculator", () =>
-            {
-                spmCalculator = this.ChildrenOfType<SpinnerSpmCalculator>().SingleOrDefault();
-                return spmCalculator != null;
-            });
+            AddUntilStep(
+                "fetch SPM calculator",
+                () =>
+                {
+                    spmCalculator = this.ChildrenOfType<SpinnerSpmCalculator>().SingleOrDefault();
+                    return spmCalculator != null;
+                }
+            );
 
-            AddUntilStep("SPM is correct", () => Precision.AlmostEquals(spmCalculator.AsNonNull().Result.Value, 477, 5));
+            AddUntilStep(
+                "SPM is correct",
+                () => Precision.AlmostEquals(spmCalculator.AsNonNull().Result.Value, 477, 5)
+            );
         }
     }
 }

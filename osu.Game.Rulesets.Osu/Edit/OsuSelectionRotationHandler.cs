@@ -53,7 +53,9 @@ namespace osu.Game.Rulesets.Osu.Edit
         public override void Begin()
         {
             if (OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Begin)} a rotate operation while another is in progress!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Begin)} a rotate operation while another is in progress!"
+                );
 
             base.Begin();
 
@@ -62,30 +64,49 @@ namespace osu.Game.Rulesets.Osu.Edit
             objectsInRotation = selectedMovableObjects.ToArray();
             DefaultOrigin = GeometryUtils.MinimumEnclosingCircle(objectsInRotation).Item1;
             originalPositions = objectsInRotation.ToDictionary(obj => obj, obj => obj.Position);
-            originalPathControlPointPositions = objectsInRotation.OfType<IHasPath>().ToDictionary(
-                obj => obj,
-                obj => obj.Path.ControlPoints.Select(point => point.Position).ToArray());
+            originalPathControlPointPositions = objectsInRotation
+                .OfType<IHasPath>()
+                .ToDictionary(
+                    obj => obj,
+                    obj => obj.Path.ControlPoints.Select(point => point.Position).ToArray()
+                );
         }
 
         public override void Update(float rotation, Vector2? origin = null)
         {
             if (!OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!"
+                );
 
-            Debug.Assert(objectsInRotation != null && originalPositions != null && originalPathControlPointPositions != null && DefaultOrigin != null);
+            Debug.Assert(
+                objectsInRotation != null
+                    && originalPositions != null
+                    && originalPathControlPointPositions != null
+                    && DefaultOrigin != null
+            );
 
             Vector2 actualOrigin = origin ?? DefaultOrigin.Value;
 
             foreach (var ho in objectsInRotation)
             {
-                ho.Position = GeometryUtils.RotatePointAroundOrigin(originalPositions[ho], actualOrigin, rotation);
+                ho.Position = GeometryUtils.RotatePointAroundOrigin(
+                    originalPositions[ho],
+                    actualOrigin,
+                    rotation
+                );
 
                 if (ho is IHasPath withPath)
                 {
                     var originalPath = originalPathControlPointPositions[withPath];
 
                     for (int i = 0; i < withPath.Path.ControlPoints.Count; ++i)
-                        withPath.Path.ControlPoints[i].Position = GeometryUtils.RotatePointAroundOrigin(originalPath[i], Vector2.Zero, rotation);
+                        withPath.Path.ControlPoints[i].Position =
+                            GeometryUtils.RotatePointAroundOrigin(
+                                originalPath[i],
+                                Vector2.Zero,
+                                rotation
+                            );
                 }
             }
         }
@@ -93,7 +114,9 @@ namespace osu.Game.Rulesets.Osu.Edit
         public override void Commit()
         {
             if (!OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!"
+                );
 
             changeHandler?.EndChange();
 
@@ -105,7 +128,7 @@ namespace osu.Game.Rulesets.Osu.Edit
             DefaultOrigin = null;
         }
 
-        private IEnumerable<OsuHitObject> selectedMovableObjects => selectedItems.Cast<OsuHitObject>()
-                                                                                 .Where(h => h is not Spinner);
+        private IEnumerable<OsuHitObject> selectedMovableObjects =>
+            selectedItems.Cast<OsuHitObject>().Where(h => h is not Spinner);
     }
 }

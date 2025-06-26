@@ -39,39 +39,29 @@ namespace osu.Game.Users
             {
                 RelativeSizeAxes = Axes.Both,
                 Padding = new MarginPadding(margin),
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension()
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension()
-                },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 Content = new[]
                 {
                     new Drawable[]
                     {
-                        CreateAvatar().With(avatar =>
-                        {
-                            avatar.Size = new Vector2(60);
-                            avatar.Masking = true;
-                            avatar.CornerRadius = 6;
-                            avatar.Margin = new MarginPadding { Bottom = margin };
-                        }),
+                        CreateAvatar()
+                            .With(avatar =>
+                            {
+                                avatar.Size = new Vector2(60);
+                                avatar.Masking = true;
+                                avatar.CornerRadius = 6;
+                                avatar.Margin = new MarginPadding { Bottom = margin };
+                            }),
                         new GridContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Padding = new MarginPadding { Left = margin, Bottom = margin },
-                            ColumnDimensions = new[]
-                            {
-                                new Dimension()
-                            },
+                            ColumnDimensions = new[] { new Dimension() },
                             RowDimensions = new[]
                             {
                                 new Dimension(GridSizeMode.AutoSize),
-                                new Dimension()
+                                new Dimension(),
                             },
                             Content = new[]
                             {
@@ -87,44 +77,43 @@ namespace osu.Game.Users
                                             CreateFlag(),
                                             CreateTeamLogo(),
                                             // supporter icon is being added later
-                                        }
-                                    }
+                                        },
+                                    },
                                 },
                                 new Drawable[]
                                 {
-                                    CreateUsername().With(username =>
-                                    {
-                                        username.Anchor = Anchor.CentreLeft;
-                                        username.Origin = Anchor.CentreLeft;
-                                    })
-                                }
-                            }
-                        }
+                                    CreateUsername()
+                                        .With(username =>
+                                        {
+                                            username.Anchor = Anchor.CentreLeft;
+                                            username.Origin = Anchor.CentreLeft;
+                                        }),
+                                },
+                            },
+                        },
                     },
                     new Drawable[]
                     {
-                        CreateStatusIcon().With(icon =>
-                        {
-                            icon.Anchor = Anchor.Centre;
-                            icon.Origin = Anchor.Centre;
-                        }),
-                        CreateStatusMessage(false).With(message =>
-                        {
-                            message.Anchor = Anchor.CentreLeft;
-                            message.Origin = Anchor.CentreLeft;
-                            message.Margin = new MarginPadding { Left = margin };
-                        })
-                    }
-                }
+                        CreateStatusIcon()
+                            .With(icon =>
+                            {
+                                icon.Anchor = Anchor.Centre;
+                                icon.Origin = Anchor.Centre;
+                            }),
+                        CreateStatusMessage(false)
+                            .With(message =>
+                            {
+                                message.Anchor = Anchor.CentreLeft;
+                                message.Origin = Anchor.CentreLeft;
+                                message.Margin = new MarginPadding { Left = margin };
+                            }),
+                    },
+                },
             };
 
             if (User.IsSupporter)
             {
-                details.Add(new SupporterIcon
-                {
-                    Height = 26,
-                    SupportLevel = User.SupportLevel
-                });
+                details.Add(new SupporterIcon { Height = 26, SupportLevel = User.SupportLevel });
             }
 
             return layout;

@@ -48,7 +48,10 @@ namespace osu.Game.Tests.Gameplay
             ISample channel = null;
 
             AddStep("create skin", () => skin = new TestSkin("test-sample", this));
-            AddStep("retrieve sample", () => channel = skin.GetSample(new SampleInfo("test-sample")));
+            AddStep(
+                "retrieve sample",
+                () => channel = skin.GetSample(new SampleInfo("test-sample"))
+            );
 
             AddAssert("sample is non-null", () => channel != null);
         }
@@ -60,7 +63,10 @@ namespace osu.Game.Tests.Gameplay
             ISample channel = null;
 
             AddStep("create skin", () => skin = new TestSkin("folder/test-sample", this));
-            AddStep("retrieve sample", () => channel = skin.GetSample(new SampleInfo("folder/test-sample")));
+            AddStep(
+                "retrieve sample",
+                () => channel = skin.GetSample(new SampleInfo("folder/test-sample"))
+            );
 
             AddAssert("sample is non-null", () => channel != null);
         }
@@ -71,18 +77,26 @@ namespace osu.Game.Tests.Gameplay
             GameplayClockContainer gameplayContainer = null;
             DrawableStoryboardSample sample = null;
 
-            AddStep("create container", () =>
-            {
-                var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-
-                Add(gameplayContainer = new MasterGameplayClockContainer(working, 0)
+            AddStep(
+                "create container",
+                () =>
                 {
-                    Child = new FrameStabilityContainer
-                    {
-                        Child = sample = new DrawableStoryboardSample(new StoryboardSampleInfo(string.Empty, 0, 1))
-                    }
-                });
-            });
+                    var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
+
+                    Add(
+                        gameplayContainer = new MasterGameplayClockContainer(working, 0)
+                        {
+                            Child = new FrameStabilityContainer
+                            {
+                                Child = sample =
+                                    new DrawableStoryboardSample(
+                                        new StoryboardSampleInfo(string.Empty, 0, 1)
+                                    ),
+                            },
+                        }
+                    );
+                }
+            );
 
             AddStep("reset clock", () => gameplayContainer.Reset(startClock: true));
 
@@ -99,22 +113,30 @@ namespace osu.Game.Tests.Gameplay
             MasterGameplayClockContainer gameplayContainer = null;
             DrawableStoryboardSample sample = null;
 
-            AddStep("create container", () =>
-            {
-                var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-
-                const double start_time = 1000;
-
-                Add(gameplayContainer = new MasterGameplayClockContainer(working, start_time)
+            AddStep(
+                "create container",
+                () =>
                 {
-                    Child = new FrameStabilityContainer
-                    {
-                        Child = sample = new DrawableStoryboardSample(new StoryboardSampleInfo(string.Empty, 0, 1))
-                    }
-                });
+                    var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
 
-                gameplayContainer.Reset(start_time);
-            });
+                    const double start_time = 1000;
+
+                    Add(
+                        gameplayContainer = new MasterGameplayClockContainer(working, start_time)
+                        {
+                            Child = new FrameStabilityContainer
+                            {
+                                Child = sample =
+                                    new DrawableStoryboardSample(
+                                        new StoryboardSampleInfo(string.Empty, 0, 1)
+                                    ),
+                            },
+                        }
+                    );
+
+                    gameplayContainer.Reset(start_time);
+                }
+            );
 
             AddStep("start time", () => gameplayContainer.Start());
 
@@ -128,39 +150,61 @@ namespace osu.Game.Tests.Gameplay
             GameplayClockContainer gameplayContainer = null;
             DrawableStoryboardSample sample = null;
 
-            AddStep("disable beatmap hitsounds", () => config.SetValue(OsuSetting.BeatmapHitsounds, false));
+            AddStep(
+                "disable beatmap hitsounds",
+                () => config.SetValue(OsuSetting.BeatmapHitsounds, false)
+            );
 
-            AddStep("setup storyboard sample", () =>
-            {
-                Beatmap.Value = new TestCustomSkinWorkingBeatmap(new OsuRuleset().RulesetInfo, this);
-
-                var beatmapSkinSourceContainer = new BeatmapSkinProvidingContainer(Beatmap.Value.Skin);
-
-                Add(gameplayContainer = new MasterGameplayClockContainer(Beatmap.Value, 0)
+            AddStep(
+                "setup storyboard sample",
+                () =>
                 {
-                    Child = beatmapSkinSourceContainer
-                });
+                    Beatmap.Value = new TestCustomSkinWorkingBeatmap(
+                        new OsuRuleset().RulesetInfo,
+                        this
+                    );
 
-                beatmapSkinSourceContainer.Add(sample = new DrawableStoryboardSample(new StoryboardSampleInfo("test-sample", 1, 1))
-                {
-                    Clock = gameplayContainer
-                });
-            });
+                    var beatmapSkinSourceContainer = new BeatmapSkinProvidingContainer(
+                        Beatmap.Value.Skin
+                    );
+
+                    Add(
+                        gameplayContainer = new MasterGameplayClockContainer(Beatmap.Value, 0)
+                        {
+                            Child = beatmapSkinSourceContainer,
+                        }
+                    );
+
+                    beatmapSkinSourceContainer.Add(
+                        sample = new DrawableStoryboardSample(
+                            new StoryboardSampleInfo("test-sample", 1, 1)
+                        )
+                        {
+                            Clock = gameplayContainer,
+                        }
+                    );
+                }
+            );
 
             AddStep("reset clock", () => gameplayContainer.Reset(startClock: true));
 
             AddUntilStep("sample played", () => sample.IsPlayed);
             AddUntilStep("sample has lifetime end", () => sample.LifetimeEnd < double.MaxValue);
 
-            AddStep("restore default", () => config.GetBindable<bool>(OsuSetting.BeatmapHitsounds).SetDefault());
+            AddStep(
+                "restore default",
+                () => config.GetBindable<bool>(OsuSetting.BeatmapHitsounds).SetDefault()
+            );
         }
 
         private class TestSkin : LegacySkin
         {
             public TestSkin(string resourceName, IStorageResourceProvider resources)
-                : base(DefaultLegacySkin.CreateInfo(), resources, new TestResourceStore(resourceName))
-            {
-            }
+                : base(
+                    DefaultLegacySkin.CreateInfo(),
+                    resources,
+                    new TestResourceStore(resourceName)
+                ) { }
         }
 
         private class TestResourceStore : IResourceStore<byte[]>
@@ -172,25 +216,39 @@ namespace osu.Game.Tests.Gameplay
                 this.resourceName = resourceName;
             }
 
-            public byte[] Get(string name) => name == resourceName ? TestResources.GetStore().Get("Resources/Samples/test-sample.mp3") : null;
+            public byte[] Get(string name) =>
+                name == resourceName
+                    ? TestResources.GetStore().Get("Resources/Samples/test-sample.mp3")
+                    : null;
 
-            public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default)
-                => name == resourceName ? TestResources.GetStore().GetAsync("Resources/Samples/test-sample.mp3", cancellationToken) : null;
+            public Task<byte[]> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) =>
+                name == resourceName
+                    ? TestResources
+                        .GetStore()
+                        .GetAsync("Resources/Samples/test-sample.mp3", cancellationToken)
+                    : null;
 
-            public Stream GetStream(string name) => name == resourceName ? TestResources.GetStore().GetStream("Resources/Samples/test-sample.mp3") : null;
+            public Stream GetStream(string name) =>
+                name == resourceName
+                    ? TestResources.GetStore().GetStream("Resources/Samples/test-sample.mp3")
+                    : null;
 
             public IEnumerable<string> GetAvailableResources() => new[] { resourceName };
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
 
         private class TestCustomSkinWorkingBeatmap : ClockBackedTestWorkingBeatmap
         {
             private readonly IStorageResourceProvider resources;
 
-            public TestCustomSkinWorkingBeatmap(RulesetInfo ruleset, IStorageResourceProvider resources)
+            public TestCustomSkinWorkingBeatmap(
+                RulesetInfo ruleset,
+                IStorageResourceProvider resources
+            )
                 : base(ruleset, null, resources.AudioManager)
             {
                 this.resources = resources;
@@ -206,7 +264,10 @@ namespace osu.Game.Tests.Gameplay
         public IResourceStore<byte[]> Files => null!;
         public new IResourceStore<byte[]> Resources => base.Resources;
         public RealmAccess RealmAccess => null!;
-        public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => null;
+
+        public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => null;
 
         #endregion
     }

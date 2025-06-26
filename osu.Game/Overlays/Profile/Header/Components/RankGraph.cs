@@ -25,13 +25,15 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
         public RankGraph()
         {
-            Add(placeholder = new OsuSpriteText
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Text = UsersStrings.ShowExtraUnranked,
-                Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular)
-            });
+            Add(
+                placeholder = new OsuSpriteText
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Text = UsersStrings.ShowExtraUnranked,
+                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular),
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -45,7 +47,10 @@ namespace osu.Game.Overlays.Profile.Header.Components
             // checking both IsRanked and RankHistory is required.
             // see https://github.com/ppy/osu-web/blob/154ceafba0f35a1dd935df53ec98ae2ea5615f9f/resources/assets/lib/profile-page/rank-chart.tsx#L46
             int[]? userRanks = statistics?.IsRanked == true ? statistics.RankHistory?.Data : null;
-            Data = userRanks?.Select((x, index) => new KeyValuePair<int, int>(index, x)).Where(x => x.Value != 0).ToArray();
+            Data = userRanks
+                ?.Select((x, index) => new KeyValuePair<int, int>(index, x))
+                .Where(x => x.Value != 0)
+                .ToArray();
         }
 
         protected override float GetDataPointHeight(int rank) => -MathF.Log(rank);

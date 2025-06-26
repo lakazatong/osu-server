@@ -26,7 +26,10 @@ namespace osu.Game.Utils
         public Task Add(Action action, CancellationToken cancellationToken = default)
         {
             lock (taskLock)
-                return lastTaskInChain = lastTaskInChain.ContinueWithSequential(action, cancellationToken);
+                return lastTaskInChain = lastTaskInChain.ContinueWithSequential(
+                    action,
+                    cancellationToken
+                );
         }
 
         /// <summary>
@@ -38,7 +41,10 @@ namespace osu.Game.Utils
         public Task Add(Func<Task> task, CancellationToken cancellationToken = default)
         {
             lock (taskLock)
-                return lastTaskInChain = lastTaskInChain.ContinueWithSequential(task, cancellationToken);
+                return lastTaskInChain = lastTaskInChain.ContinueWithSequential(
+                    task,
+                    cancellationToken
+                );
         }
     }
 }

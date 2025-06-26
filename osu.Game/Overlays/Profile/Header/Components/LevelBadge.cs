@@ -20,7 +20,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
 {
     public partial class LevelBadge : CompositeDrawable, IHasTooltip
     {
-        public readonly Bindable<UserStatistics.LevelInfo?> LevelInfo = new Bindable<UserStatistics.LevelInfo?>();
+        public readonly Bindable<UserStatistics.LevelInfo?> LevelInfo =
+            new Bindable<UserStatistics.LevelInfo?>();
 
         public LocalisableString TooltipText { get; private set; }
 
@@ -50,8 +51,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font = OsuFont.GetFont(size: 20)
-                }
+                    Font = OsuFont.GetFont(size: 20),
+                },
             };
         }
 

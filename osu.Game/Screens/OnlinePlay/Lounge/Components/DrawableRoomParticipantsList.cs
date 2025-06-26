@@ -55,11 +55,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                     Masking = true,
                     CornerRadius = 10,
                     Shear = shear,
-                    Child = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colours.Background4,
-                    }
+                    Child = new Box { RelativeSizeAxes = Axes.Both, Colour = colours.Background4 },
                 },
                 new FillFlowContainer
                 {
@@ -72,11 +68,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                             RelativeSizeAxes = Axes.Y,
                             AutoSizeAxes = Axes.X,
                             Spacing = new Vector2(8),
-                            Padding = new MarginPadding
-                            {
-                                Left = 8,
-                                Right = 16
-                            },
+                            Padding = new MarginPadding { Left = 8, Right = 16 },
                             Children = new Drawable[]
                             {
                                 hostAvatar = new CircularAvatar
@@ -88,9 +80,9 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                                 {
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                    AutoSizeAxes = Axes.Both
-                                }
-                            }
+                                    AutoSizeAxes = Axes.Both,
+                                },
+                            },
                         },
                         new Container
                         {
@@ -108,7 +100,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                                     {
                                         RelativeSizeAxes = Axes.Both,
                                         Colour = colours.Background3,
-                                    }
+                                    },
                                 },
                                 new FillFlowContainer
                                 {
@@ -117,11 +109,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                                     AutoSizeAxes = Axes.Both,
                                     Direction = FillDirection.Horizontal,
                                     Spacing = new Vector2(4),
-                                    Padding = new MarginPadding
-                                    {
-                                        Left = 8,
-                                        Right = 16
-                                    },
+                                    Padding = new MarginPadding { Left = 8, Right = 16 },
                                     Children = new Drawable[]
                                     {
                                         new SpriteIcon
@@ -150,13 +138,13 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                                         {
                                             Anchor = Anchor.CentreLeft,
                                             Origin = Anchor.CentreLeft,
-                                        }
-                                    }
-                                }
-                            }
+                                        },
+                                    },
+                                },
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -199,23 +187,26 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
         {
             HashSet<APIUser> newUsers = room.RecentParticipants.ToHashSet();
 
-            avatarFlow.RemoveAll(a =>
-            {
-                // Avatar with no user. Really shouldn't ever be the case but asserting it correctly is difficult.
-                if (a.User == null)
-                    return false;
-
-                // User was previously and still is a participant. Keep them around but remove them from the new set.
-                // This will be useful when we add all remaining users (now just the new participants) to the flow.
-                if (newUsers.Contains(a.User))
+            avatarFlow.RemoveAll(
+                a =>
                 {
-                    newUsers.Remove(a.User);
-                    return false;
-                }
+                    // Avatar with no user. Really shouldn't ever be the case but asserting it correctly is difficult.
+                    if (a.User == null)
+                        return false;
 
-                // User is no longer a participant. Remove them from the flow.
-                return true;
-            }, true);
+                    // User was previously and still is a participant. Keep them around but remove them from the new set.
+                    // This will be useful when we add all remaining users (now just the new participants) to the flow.
+                    if (newUsers.Contains(a.User))
+                    {
+                        newUsers.Remove(a.User);
+                        return false;
+                    }
+
+                    // User is no longer a participant. Remove them from the flow.
+                    return true;
+                },
+                true
+            );
 
             // Add all remaining users to the flow.
             foreach (var u in newUsers)
@@ -250,8 +241,11 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 avatarFlow.Remove(avatarFlow.Last(), true);
             else if (displayedCircles < NumberOfCircles)
             {
-                var nextUser = room.RecentParticipants.FirstOrDefault(u => avatarFlow.All(a => a.User != u));
-                if (nextUser != null) addUser(nextUser);
+                var nextUser = room.RecentParticipants.FirstOrDefault(u =>
+                    avatarFlow.All(a => a.User != u)
+                );
+                if (nextUser != null)
+                    addUser(nextUser);
             }
         }
 
@@ -305,7 +299,12 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 set => avatar.User = value;
             }
 
-            private readonly UpdateableAvatar avatar = new UpdateableAvatar(showUserPanelOnHover: true) { RelativeSizeAxes = Axes.Both };
+            private readonly UpdateableAvatar avatar = new UpdateableAvatar(
+                showUserPanelOnHover: true
+            )
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
 
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colours)
@@ -318,13 +317,9 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = colours.Background5,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        avatar
-                    }
+                        new Box { Colour = colours.Background5, RelativeSizeAxes = Axes.Both },
+                        avatar,
+                    },
                 };
             }
         }
@@ -367,13 +362,9 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colours.Background5,
-                        },
-                        countText
-                    }
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = colours.Background5 },
+                        countText,
+                    },
                 };
             }
         }

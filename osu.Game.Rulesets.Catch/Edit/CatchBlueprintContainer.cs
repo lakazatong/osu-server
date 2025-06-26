@@ -18,13 +18,14 @@ namespace osu.Game.Rulesets.Catch.Edit
         public new CatchHitObjectComposer Composer => (CatchHitObjectComposer)base.Composer;
 
         public CatchBlueprintContainer(CatchHitObjectComposer composer)
-            : base(composer)
-        {
-        }
+            : base(composer) { }
 
-        protected override SelectionHandler<HitObject> CreateSelectionHandler() => new CatchSelectionHandler();
+        protected override SelectionHandler<HitObject> CreateSelectionHandler() =>
+            new CatchSelectionHandler();
 
-        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(HitObject hitObject)
+        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(
+            HitObject hitObject
+        )
         {
             switch (hitObject)
             {
@@ -41,26 +42,44 @@ namespace osu.Game.Rulesets.Catch.Edit
             return base.CreateHitObjectBlueprintFor(hitObject);
         }
 
-        protected sealed override DragBox CreateDragBox() => new ScrollingDragBox(Composer.Playfield);
+        protected sealed override DragBox CreateDragBox() =>
+            new ScrollingDragBox(Composer.Playfield);
 
-        protected override bool TryMoveBlueprints(DragEvent e, IList<(SelectionBlueprint<HitObject> blueprint, Vector2[] originalSnapPositions)> blueprints)
+        protected override bool TryMoveBlueprints(
+            DragEvent e,
+            IList<(
+                SelectionBlueprint<HitObject> blueprint,
+                Vector2[] originalSnapPositions
+            )> blueprints
+        )
         {
             Vector2 distanceTravelled = e.ScreenSpaceMousePosition - e.ScreenSpaceMouseDownPosition;
 
             // The final movement position, relative to movementBlueprintOriginalPosition.
-            Vector2 movePosition = blueprints.First().originalSnapPositions.First() + distanceTravelled;
+            Vector2 movePosition =
+                blueprints.First().originalSnapPositions.First() + distanceTravelled;
 
             // Retrieve a snapped position.
             var gridSnapResult = Composer.FindSnappedPositionAndTime(movePosition);
             gridSnapResult.ScreenSpacePosition.X = movePosition.X;
             var distanceSnapResult = Composer.TryDistanceSnap(gridSnapResult.ScreenSpacePosition);
 
-            var result = distanceSnapResult != null && Vector2.Distance(gridSnapResult.ScreenSpacePosition, distanceSnapResult.ScreenSpacePosition) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
-                ? distanceSnapResult
-                : gridSnapResult;
+            var result =
+                distanceSnapResult != null
+                && Vector2.Distance(
+                    gridSnapResult.ScreenSpacePosition,
+                    distanceSnapResult.ScreenSpacePosition
+                ) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
+                    ? distanceSnapResult
+                    : gridSnapResult;
 
             var referenceBlueprint = blueprints.First().blueprint;
-            bool moved = SelectionHandler.HandleMovement(new MoveSelectionEvent<HitObject>(referenceBlueprint, result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint));
+            bool moved = SelectionHandler.HandleMovement(
+                new MoveSelectionEvent<HitObject>(
+                    referenceBlueprint,
+                    result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint
+                )
+            );
             if (moved)
                 ApplySnapResultTime(result, referenceBlueprint.Item.StartTime);
             return moved;

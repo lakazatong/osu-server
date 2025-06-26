@@ -17,9 +17,7 @@ namespace osu.Game.Overlays
     public partial class KudosuTable : RankingsTable<APIUser>
     {
         public KudosuTable(int page, List<APIUser> users)
-            : base(page, users)
-        {
-        }
+            : base(page, users) { }
 
         protected override Drawable CreateRowBackground(APIUser item)
         {
@@ -51,9 +49,22 @@ namespace osu.Game.Overlays
             const int min_width = 120;
             return new[]
             {
-                new RankingsTableColumn(RankingsStrings.KudosuTotal, Anchor.Centre, new Dimension(GridSizeMode.AutoSize, minSize: min_width), true),
-                new RankingsTableColumn(RankingsStrings.KudosuAvailable, Anchor.Centre, new Dimension(GridSizeMode.AutoSize, minSize: min_width)),
-                new RankingsTableColumn(RankingsStrings.KudosuUsed, Anchor.Centre, new Dimension(GridSizeMode.AutoSize, minSize: min_width)),
+                new RankingsTableColumn(
+                    RankingsStrings.KudosuTotal,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.AutoSize, minSize: min_width),
+                    true
+                ),
+                new RankingsTableColumn(
+                    RankingsStrings.KudosuAvailable,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.AutoSize, minSize: min_width)
+                ),
+                new RankingsTableColumn(
+                    RankingsStrings.KudosuUsed,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.AutoSize, minSize: min_width)
+                ),
             };
         }
 
@@ -63,17 +74,11 @@ namespace osu.Game.Overlays
             int kudosuAvailable = item.Kudosu.Available;
             return new Drawable[]
             {
-                new RowText
-                {
-                    Text = kudosuTotal.ToLocalisableString(@"N0")
-                },
+                new RowText { Text = kudosuTotal.ToLocalisableString(@"N0") },
+                new ColouredRowText { Text = kudosuAvailable.ToLocalisableString(@"N0") },
                 new ColouredRowText
                 {
-                    Text = kudosuAvailable.ToLocalisableString(@"N0")
-                },
-                new ColouredRowText
-                {
-                    Text = (kudosuTotal - kudosuAvailable).ToLocalisableString(@"N0")
+                    Text = (kudosuTotal - kudosuAvailable).ToLocalisableString(@"N0"),
                 },
             };
         }
@@ -82,11 +87,13 @@ namespace osu.Game.Overlays
 
         protected override Drawable[] CreateFlagContent(APIUser item)
         {
-            var username = new LinkFlowContainer(t => t.Font = OsuFont.GetFont(size: TEXT_SIZE, italics: true))
+            var username = new LinkFlowContainer(t =>
+                t.Font = OsuFont.GetFont(size: TEXT_SIZE, italics: true)
+            )
             {
                 AutoSizeAxes = Axes.X,
                 RelativeSizeAxes = Axes.Y,
-                TextAnchor = Anchor.CentreLeft
+                TextAnchor = Anchor.CentreLeft,
             };
             username.AddUserLink(item);
             return [username];

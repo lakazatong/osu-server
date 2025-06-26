@@ -30,7 +30,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             return beatmap;
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        )
         {
             return base.CreateWorkingBeatmap(beatmap, createStoryboard(storyboardStartTime));
         }
@@ -51,8 +54,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-            AddStep("enable storyboard", () => LocalConfig.SetValue(OsuSetting.ShowStoryboard, true));
-            AddStep("set dim level to 0", () => LocalConfig.SetValue<double>(OsuSetting.DimLevel, 0));
+            AddStep(
+                "enable storyboard",
+                () => LocalConfig.SetValue(OsuSetting.ShowStoryboard, true)
+            );
+            AddStep(
+                "set dim level to 0",
+                () => LocalConfig.SetValue<double>(OsuSetting.DimLevel, 0)
+            );
             AddStep("reset first hitobject time", () => firstObjectStartTime = 0);
             AddStep("reset storyboard start time", () => storyboardStartTime = 0);
         }
@@ -61,13 +70,26 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(-5000, 30000)]
         public void TestStoryboardSingleSkip(double storyboardStart, double firstObject)
         {
-            AddStep($"set storyboard start time to {storyboardStart}", () => storyboardStartTime = storyboardStart);
-            AddStep($"set first object start time to {firstObject}", () => firstObjectStartTime = firstObject);
+            AddStep(
+                $"set storyboard start time to {storyboardStart}",
+                () => storyboardStartTime = storyboardStart
+            );
+            AddStep(
+                $"set first object start time to {firstObject}",
+                () => firstObjectStartTime = firstObject
+            );
             CreateTest();
 
             AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
-            AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1));
-            AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(firstObject - 2000));
+            AddAssert(
+                "skip performed",
+                () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1)
+            );
+            AddUntilStep(
+                "gameplay clock advanced",
+                () => Player.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(firstObject - 2000)
+            );
         }
 
         [Test]
@@ -78,12 +100,26 @@ namespace osu.Game.Tests.Visual.Gameplay
             CreateTest();
 
             AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
-            AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1));
-            AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(0));
+            AddAssert(
+                "skip performed",
+                () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1)
+            );
+            AddUntilStep(
+                "gameplay clock advanced",
+                () => Player.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(0)
+            );
 
             AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
-            AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 2));
-            AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(9000));
+            AddAssert(
+                "skip performed",
+                () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 2)
+            );
+            AddUntilStep(
+                "gameplay clock advanced",
+                () => Player.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(9000)
+            );
         }
     }
 }

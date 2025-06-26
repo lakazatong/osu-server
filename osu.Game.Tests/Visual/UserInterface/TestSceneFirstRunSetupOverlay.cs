@@ -35,9 +35,11 @@ namespace osu.Game.Tests.Visual.UserInterface
         private FirstRunSetupOverlay overlay;
         private ScreenFooter footer;
 
-        private readonly Mock<TestPerformerFromScreenRunner> performer = new Mock<TestPerformerFromScreenRunner>();
+        private readonly Mock<TestPerformerFromScreenRunner> performer =
+            new Mock<TestPerformerFromScreenRunner>();
 
-        private readonly Mock<TestNotificationOverlay> notificationOverlay = new Mock<TestNotificationOverlay>();
+        private readonly Mock<TestNotificationOverlay> notificationOverlay =
+            new Mock<TestNotificationOverlay>();
 
         private Notification lastNotification;
 
@@ -55,17 +57,27 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup dependencies", () =>
-            {
-                performer.Reset();
-                notificationOverlay.Reset();
+            AddStep(
+                "setup dependencies",
+                () =>
+                {
+                    performer.Reset();
+                    notificationOverlay.Reset();
 
-                performer.Setup(g => g.PerformFromScreen(It.IsAny<Action<IScreen>>(), It.IsAny<IEnumerable<Type>>()))
-                         .Callback((Action<IScreen> action, IEnumerable<Type> _) => action(null));
+                    performer
+                        .Setup(g =>
+                            g.PerformFromScreen(
+                                It.IsAny<Action<IScreen>>(),
+                                It.IsAny<IEnumerable<Type>>()
+                            )
+                        )
+                        .Callback((Action<IScreen> action, IEnumerable<Type> _) => action(null));
 
-                notificationOverlay.Setup(n => n.Post(It.IsAny<Notification>()))
-                                   .Callback((Notification n) => lastNotification = n);
-            });
+                    notificationOverlay
+                        .Setup(n => n.Post(It.IsAny<Notification>()))
+                        .Callback((Notification n) => lastNotification = n);
+                }
+            );
 
             createOverlay();
 
@@ -82,15 +94,25 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestDoesntOpenOnSecondRun()
         {
-            AddStep("set first run", () => LocalConfig.SetValue(OsuSetting.ShowFirstRunSetup, true));
+            AddStep(
+                "set first run",
+                () => LocalConfig.SetValue(OsuSetting.ShowFirstRunSetup, true)
+            );
 
-            AddUntilStep("step through", () =>
-            {
-                if (overlay.CurrentScreen?.IsLoaded != false) overlay.NextButton.AsNonNull().TriggerClick();
-                return overlay.State.Value == Visibility.Hidden;
-            });
+            AddUntilStep(
+                "step through",
+                () =>
+                {
+                    if (overlay.CurrentScreen?.IsLoaded != false)
+                        overlay.NextButton.AsNonNull().TriggerClick();
+                    return overlay.State.Value == Visibility.Hidden;
+                }
+            );
 
-            AddAssert("first run false", () => !LocalConfig.Get<bool>(OsuSetting.ShowFirstRunSetup));
+            AddAssert(
+                "first run false",
+                () => !LocalConfig.Get<bool>(OsuSetting.ShowFirstRunSetup)
+            );
 
             createOverlay();
 
@@ -103,18 +125,21 @@ namespace osu.Game.Tests.Visual.UserInterface
         [TestCase(true)]
         public void TestOverlayRunsToFinish(bool keyboard)
         {
-            AddUntilStep("step through", () =>
-            {
-                if (overlay.CurrentScreen?.IsLoaded != false)
+            AddUntilStep(
+                "step through",
+                () =>
                 {
-                    if (keyboard)
-                        InputManager.Key(Key.Enter);
-                    else
-                        overlay.NextButton.AsNonNull().TriggerClick();
-                }
+                    if (overlay.CurrentScreen?.IsLoaded != false)
+                    {
+                        if (keyboard)
+                            InputManager.Key(Key.Enter);
+                        else
+                            overlay.NextButton.AsNonNull().TriggerClick();
+                    }
 
-                return overlay.State.Value == Visibility.Hidden;
-            });
+                    return overlay.State.Value == Visibility.Hidden;
+                }
+            );
 
             AddUntilStep("wait for screens removed", () => !overlay.ChildrenOfType<Screen>().Any());
 
@@ -129,28 +154,37 @@ namespace osu.Game.Tests.Visual.UserInterface
         [TestCase(true)]
         public void TestBackButton(bool keyboard)
         {
-            AddUntilStep("step to last", () =>
-            {
-                var nextButton = overlay.NextButton.AsNonNull();
-
-                if (overlay.CurrentScreen?.IsLoaded != false)
-                    nextButton.TriggerClick();
-
-                return nextButton.Text == CommonStrings.Finish;
-            });
-
-            AddUntilStep("step back to start", () =>
-            {
-                if (overlay.CurrentScreen?.IsLoaded != false && !(overlay.CurrentScreen is ScreenWelcome))
+            AddUntilStep(
+                "step to last",
+                () =>
                 {
-                    if (keyboard)
-                        InputManager.Key(Key.Escape);
-                    else
-                        footer.BackButton.TriggerClick();
-                }
+                    var nextButton = overlay.NextButton.AsNonNull();
 
-                return overlay.CurrentScreen is ScreenWelcome;
-            });
+                    if (overlay.CurrentScreen?.IsLoaded != false)
+                        nextButton.TriggerClick();
+
+                    return nextButton.Text == CommonStrings.Finish;
+                }
+            );
+
+            AddUntilStep(
+                "step back to start",
+                () =>
+                {
+                    if (
+                        overlay.CurrentScreen?.IsLoaded != false
+                        && !(overlay.CurrentScreen is ScreenWelcome)
+                    )
+                    {
+                        if (keyboard)
+                            InputManager.Key(Key.Escape);
+                        else
+                            footer.BackButton.TriggerClick();
+                    }
+
+                    return overlay.CurrentScreen is ScreenWelcome;
+                }
+            );
 
             AddAssert("overlay not dismissed", () => overlay.State.Value == Visibility.Visible);
 
@@ -169,19 +203,30 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestClickAwayToExit()
         {
-            AddStep("click inside content", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click inside content",
+                () =>
+                {
+                    InputManager.MoveMouseTo(overlay.ScreenSpaceDrawQuad.Centre);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("overlay not dismissed", () => overlay.State.Value == Visibility.Visible);
 
-            AddStep("click outside content", () =>
-            {
-                InputManager.MoveMouseTo(new Vector2(overlay.ScreenSpaceDrawQuad.TopLeft.X, overlay.ScreenSpaceDrawQuad.Centre.Y));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click outside content",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        new Vector2(
+                            overlay.ScreenSpaceDrawQuad.TopLeft.X,
+                            overlay.ScreenSpaceDrawQuad.Centre.Y
+                        )
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("overlay dismissed", () => overlay.State.Value == Visibility.Hidden);
         }
@@ -196,7 +241,10 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("hide", () => overlay.Hide());
             AddAssert("overlay hidden", () => overlay.State.Value == Visibility.Hidden);
 
-            AddStep("notification arrived", () => notificationOverlay.Verify(n => n.Post(It.IsAny<Notification>()), Times.Once));
+            AddStep(
+                "notification arrived",
+                () => notificationOverlay.Verify(n => n.Post(It.IsAny<Notification>()), Times.Once)
+            );
 
             AddStep("run notification action", () => lastNotification.Activated?.Invoke());
 
@@ -206,23 +254,26 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void createOverlay()
         {
-            AddStep("add overlay", () =>
-            {
-                var receptor = new ScreenFooter.BackReceptor();
-                footer = new ScreenFooter(receptor);
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "add overlay",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new[] { (typeof(ScreenFooter), (object)footer) },
-                    Children = new Drawable[]
+                    var receptor = new ScreenFooter.BackReceptor();
+                    footer = new ScreenFooter(receptor);
+
+                    Child = new DependencyProvidingContainer
                     {
-                        receptor,
-                        overlay = new FirstRunSetupOverlay(),
-                        footer,
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new[] { (typeof(ScreenFooter), (object)footer) },
+                        Children = new Drawable[]
+                        {
+                            receptor,
+                            overlay = new FirstRunSetupOverlay(),
+                            footer,
+                        },
+                    };
+                }
+            );
         }
 
         // interface mocks break hot reload, mocking this stub implementation instead works around it.
@@ -230,13 +281,9 @@ namespace osu.Game.Tests.Visual.UserInterface
         [UsedImplicitly]
         public class TestNotificationOverlay : INotificationOverlay
         {
-            public virtual void Post(Notification notification)
-            {
-            }
+            public virtual void Post(Notification notification) { }
 
-            public virtual void Hide()
-            {
-            }
+            public virtual void Hide() { }
 
             public virtual IBindable<int> UnreadCount { get; } = new Bindable<int>();
 
@@ -248,9 +295,10 @@ namespace osu.Game.Tests.Visual.UserInterface
         [UsedImplicitly]
         public class TestPerformerFromScreenRunner : IPerformFromScreenRunner
         {
-            public virtual void PerformFromScreen(Action<IScreen> action, IEnumerable<Type> validScreens = null)
-            {
-            }
+            public virtual void PerformFromScreen(
+                Action<IScreen> action,
+                IEnumerable<Type> validScreens = null
+            ) { }
         }
     }
 }

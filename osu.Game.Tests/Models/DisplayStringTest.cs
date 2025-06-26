@@ -53,7 +53,10 @@ namespace osu.Game.Tests.Models
 
             mock.Setup(m => m.Metadata).Returns(new BeatmapMetadata());
 
-            Assert.That(mock.Object.GetDisplayString(), Is.EqualTo("unknown artist - unknown title"));
+            Assert.That(
+                mock.Object.GetDisplayString(),
+                Is.EqualTo("unknown artist - unknown title")
+            );
         }
 
         [Test]
@@ -66,7 +69,10 @@ namespace osu.Game.Tests.Models
             mock.Setup(m => m.Metadata.Author.Username).Returns("author");
             mock.Setup(m => m.DifficultyName).Returns("difficulty");
 
-            Assert.That(mock.Object.GetDisplayString(), Is.EqualTo("artist - title (author) [difficulty]"));
+            Assert.That(
+                mock.Object.GetDisplayString(),
+                Is.EqualTo("artist - title (author) [difficulty]")
+            );
         }
 
         [Test]
@@ -92,7 +98,10 @@ namespace osu.Game.Tests.Models
             mock.Setup(m => m.Beatmap!.Metadata.Author.Username).Returns("author");
             mock.Setup(m => m.Beatmap!.DifficultyName).Returns("difficulty");
 
-            Assert.That(mock.Object.GetDisplayString(), Is.EqualTo("user playing artist - title (author) [difficulty]"));
+            Assert.That(
+                mock.Object.GetDisplayString(),
+                Is.EqualTo("user playing artist - title (author) [difficulty]")
+            );
         }
 
         [Test]

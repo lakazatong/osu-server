@@ -95,15 +95,16 @@ namespace osu.Game.Overlays.Mods
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Padding = new MarginPadding(7),
-                                Child = scrollContent = new FillFlowContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding(7),
-                                    Spacing = new Vector2(7),
-                                }
+                                Child = scrollContent =
+                                    new FillFlowContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Padding = new MarginPadding(7),
+                                        Spacing = new Vector2(7),
+                                    },
                             },
-                        }
+                        },
                     },
                     new FillFlowContainer
                     {
@@ -136,19 +137,22 @@ namespace osu.Game.Overlays.Mods
                                 TextColour = colourProvider.Background6,
                                 Action = save,
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             Body.BorderThickness = 3;
             Body.BorderColour = colours.Orange1;
 
             selectedMods.BindValueChanged(_ => updateState(), true);
-            nameTextBox.Current.BindValueChanged(s =>
-            {
-                saveButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
-            }, true);
+            nameTextBox.Current.BindValueChanged(
+                s =>
+                {
+                    saveButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
+                },
+                true
+            );
         }
 
         protected override void LoadComplete()
@@ -178,7 +182,9 @@ namespace osu.Game.Overlays.Mods
 
         private void updateState()
         {
-            scrollContent.ChildrenEnumerable = saveableMods.AsOrdered().Select(mod => new ModPresetRow(mod));
+            scrollContent.ChildrenEnumerable = saveableMods
+                .AsOrdered()
+                .Select(mod => new ModPresetRow(mod));
             useCurrentModsButton.Enabled.Value = checkSelectedModsDiffersFromSaved();
         }
 
@@ -187,7 +193,9 @@ namespace osu.Game.Overlays.Mods
             if (!selectedMods.Value.Any())
                 return false;
 
-            return !saveableMods.SetEquals(selectedMods.Value.Where(mod => mod.Type != ModType.System));
+            return !saveableMods.SetEquals(
+                selectedMods.Value.Where(mod => mod.Type != ModType.System)
+            );
         }
 
         private void save()

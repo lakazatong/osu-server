@@ -22,10 +22,12 @@ namespace osu.Game.Screens.OnlinePlay.Components
             OsuScrollContainer scroll;
             ParticipantsList list;
 
-            AddInternal(scroll = new OsuScrollContainer(direction)
-            {
-                Child = list = new ParticipantsList(room)
-            });
+            AddInternal(
+                scroll = new OsuScrollContainer(direction)
+                {
+                    Child = list = new ParticipantsList(room),
+                }
+            );
 
             switch (direction)
             {
@@ -34,7 +36,10 @@ namespace osu.Game.Screens.OnlinePlay.Components
                     RelativeSizeAxes = Axes.X;
 
                     scroll.RelativeSizeAxes = Axes.X;
-                    scroll.Height = ParticipantsList.TILE_SIZE + OsuScrollContainer.SCROLL_BAR_WIDTH + OsuScrollContainer.SCROLL_BAR_PADDING * 2;
+                    scroll.Height =
+                        ParticipantsList.TILE_SIZE
+                        + OsuScrollContainer.SCROLL_BAR_WIDTH
+                        + OsuScrollContainer.SCROLL_BAR_PADDING * 2;
 
                     list.RelativeSizeAxes = Axes.Y;
                     list.AutoSizeAxes = Axes.X;
@@ -70,8 +75,11 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
         }
 
-        private void updateRoomParticipantCount()
-            => Details.Value = room.MaxParticipants != null ? $"{room.ParticipantCount}/{room.MaxParticipants}" : room.ParticipantCount.ToString();
+        private void updateRoomParticipantCount() =>
+            Details.Value =
+                room.MaxParticipants != null
+                    ? $"{room.ParticipantCount}/{room.MaxParticipants}"
+                    : room.ParticipantCount.ToString();
 
         protected override void Dispose(bool isDisposing)
         {

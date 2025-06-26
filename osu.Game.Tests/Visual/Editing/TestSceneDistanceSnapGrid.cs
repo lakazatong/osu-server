@@ -37,30 +37,26 @@ namespace osu.Game.Tests.Visual.Editing
 
         public TestSceneDistanceSnapGrid()
         {
-            editorBeatmap = new EditorBeatmap(new OsuBeatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo
-                }
-            });
-            editorBeatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = beat_length });
+            editorBeatmap = new EditorBeatmap(
+                new OsuBeatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+            );
+            editorBeatmap.ControlPointInfo.Add(
+                0,
+                new TimingControlPoint { BeatLength = beat_length }
+            );
             editorBeatmap.Difficulty.SliderMultiplier = 1;
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public void Setup() =>
+            Schedule(() =>
             {
-                new Box
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.SlateGray
-                },
-                grid = new TestDistanceSnapGrid()
-            };
-        });
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.SlateGray },
+                    grid = new TestDistanceSnapGrid(),
+                };
+            });
 
         [TestCase(1)]
         [TestCase(2)]
@@ -80,8 +76,14 @@ namespace osu.Game.Tests.Visual.Editing
         [TestCase(0.5)]
         public void TestDistanceSpacing(double multiplier)
         {
-            AddStep($"set distance spacing = {multiplier}", () => snapProvider.DistanceSpacingMultiplier.Value = multiplier);
-            AddAssert("distance spacing matches multiplier", () => grid.DistanceBetweenTicks == beat_snap_distance * multiplier);
+            AddStep(
+                $"set distance spacing = {multiplier}",
+                () => snapProvider.DistanceSpacingMultiplier.Value = multiplier
+            );
+            AddAssert(
+                "distance spacing matches multiplier",
+                () => grid.DistanceBetweenTicks == beat_snap_distance * multiplier
+            );
         }
 
         [TestCase(1.0)]
@@ -91,21 +93,30 @@ namespace osu.Game.Tests.Visual.Editing
         {
             const int end_time = 100;
 
-            AddStep("create limited grid", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create limited grid",
+                () =>
                 {
-                    new Box
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.SlateGray
-                    },
-                    grid = new TestDistanceSnapGrid(end_time)
-                };
-            });
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.SlateGray },
+                        grid = new TestDistanceSnapGrid(end_time),
+                    };
+                }
+            );
 
-            AddStep($"set distance spacing = {multiplier}", () => snapProvider.DistanceSpacingMultiplier.Value = multiplier);
-            AddStep("check correct interval count", () => Assert.That((end_time / grid.DistanceBetweenTicks) * multiplier, Is.EqualTo(grid.MaxIntervals)));
+            AddStep(
+                $"set distance spacing = {multiplier}",
+                () => snapProvider.DistanceSpacingMultiplier.Value = multiplier
+            );
+            AddStep(
+                "check correct interval count",
+                () =>
+                    Assert.That(
+                        (end_time / grid.DistanceBetweenTicks) * multiplier,
+                        Is.EqualTo(grid.MaxIntervals)
+                    )
+            );
         }
 
         private partial class TestDistanceSnapGrid : DistanceSnapGrid
@@ -115,89 +126,129 @@ namespace osu.Game.Tests.Visual.Editing
             public new int MaxIntervals => base.MaxIntervals;
 
             public TestDistanceSnapGrid(double? endTime = null)
-                : base(grid_position, 0, endTime)
-            {
-            }
+                : base(grid_position, 0, endTime) { }
 
             protected override void CreateContent()
             {
-                AddInternal(new Circle
-                {
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(5),
-                    Position = StartPosition
-                });
+                AddInternal(
+                    new Circle
+                    {
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(5),
+                        Position = StartPosition,
+                    }
+                );
 
                 int indexFromPlacement = 0;
 
-                for (float s = StartPosition.X + DistanceBetweenTicks; s <= DrawWidth && indexFromPlacement < MaxIntervals; s += DistanceBetweenTicks, indexFromPlacement++)
+                for (
+                    float s = StartPosition.X + DistanceBetweenTicks;
+                    s <= DrawWidth && indexFromPlacement < MaxIntervals;
+                    s += DistanceBetweenTicks, indexFromPlacement++
+                )
                 {
-                    AddInternal(new Circle
-                    {
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(5, 10),
-                        Position = new Vector2(s, StartPosition.Y),
-                        Colour = GetColourForIndexFromPlacement(indexFromPlacement)
-                    });
+                    AddInternal(
+                        new Circle
+                        {
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(5, 10),
+                            Position = new Vector2(s, StartPosition.Y),
+                            Colour = GetColourForIndexFromPlacement(indexFromPlacement),
+                        }
+                    );
                 }
 
                 indexFromPlacement = 0;
 
-                for (float s = StartPosition.X - DistanceBetweenTicks; s >= 0 && indexFromPlacement < MaxIntervals; s -= DistanceBetweenTicks, indexFromPlacement++)
+                for (
+                    float s = StartPosition.X - DistanceBetweenTicks;
+                    s >= 0 && indexFromPlacement < MaxIntervals;
+                    s -= DistanceBetweenTicks, indexFromPlacement++
+                )
                 {
-                    AddInternal(new Circle
-                    {
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(5, 10),
-                        Position = new Vector2(s, StartPosition.Y),
-                        Colour = GetColourForIndexFromPlacement(indexFromPlacement)
-                    });
+                    AddInternal(
+                        new Circle
+                        {
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(5, 10),
+                            Position = new Vector2(s, StartPosition.Y),
+                            Colour = GetColourForIndexFromPlacement(indexFromPlacement),
+                        }
+                    );
                 }
 
                 indexFromPlacement = 0;
 
-                for (float s = StartPosition.Y + DistanceBetweenTicks; s <= DrawHeight && indexFromPlacement < MaxIntervals; s += DistanceBetweenTicks, indexFromPlacement++)
+                for (
+                    float s = StartPosition.Y + DistanceBetweenTicks;
+                    s <= DrawHeight && indexFromPlacement < MaxIntervals;
+                    s += DistanceBetweenTicks, indexFromPlacement++
+                )
                 {
-                    AddInternal(new Circle
-                    {
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(10, 5),
-                        Position = new Vector2(StartPosition.X, s),
-                        Colour = GetColourForIndexFromPlacement(indexFromPlacement)
-                    });
+                    AddInternal(
+                        new Circle
+                        {
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(10, 5),
+                            Position = new Vector2(StartPosition.X, s),
+                            Colour = GetColourForIndexFromPlacement(indexFromPlacement),
+                        }
+                    );
                 }
 
                 indexFromPlacement = 0;
 
-                for (float s = StartPosition.Y - DistanceBetweenTicks; s >= 0 && indexFromPlacement < MaxIntervals; s -= DistanceBetweenTicks, indexFromPlacement++)
+                for (
+                    float s = StartPosition.Y - DistanceBetweenTicks;
+                    s >= 0 && indexFromPlacement < MaxIntervals;
+                    s -= DistanceBetweenTicks, indexFromPlacement++
+                )
                 {
-                    AddInternal(new Circle
-                    {
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(10, 5),
-                        Position = new Vector2(StartPosition.X, s),
-                        Colour = GetColourForIndexFromPlacement(indexFromPlacement)
-                    });
+                    AddInternal(
+                        new Circle
+                        {
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(10, 5),
+                            Position = new Vector2(StartPosition.X, s),
+                            Colour = GetColourForIndexFromPlacement(indexFromPlacement),
+                        }
+                    );
                 }
             }
 
-            public override (Vector2 position, double time) GetSnappedPosition(Vector2 screenSpacePosition, double? fixedTime = null)
-                => (Vector2.Zero, 0);
+            public override (Vector2 position, double time) GetSnappedPosition(
+                Vector2 screenSpacePosition,
+                double? fixedTime = null
+            ) => (Vector2.Zero, 0);
         }
 
         private class SnapProvider : IDistanceSnapProvider
         {
             public Bindable<double> DistanceSpacingMultiplier { get; } = new BindableDouble(1);
 
-            Bindable<double> IDistanceSnapProvider.DistanceSpacingMultiplier => DistanceSpacingMultiplier;
+            Bindable<double> IDistanceSnapProvider.DistanceSpacingMultiplier =>
+                DistanceSpacingMultiplier;
 
-            public float GetBeatSnapDistance(IHasSliderVelocity withVelocity = null) => beat_snap_distance;
+            public float GetBeatSnapDistance(IHasSliderVelocity withVelocity = null) =>
+                beat_snap_distance;
 
-            public float DurationToDistance(double duration, double timingReference, IHasSliderVelocity withVelocity = null) => (float)duration;
+            public float DurationToDistance(
+                double duration,
+                double timingReference,
+                IHasSliderVelocity withVelocity = null
+            ) => (float)duration;
 
-            public double DistanceToDuration(float distance, double timingReference, IHasSliderVelocity withVelocity = null) => distance;
+            public double DistanceToDuration(
+                float distance,
+                double timingReference,
+                IHasSliderVelocity withVelocity = null
+            ) => distance;
 
-            public float FindSnappedDistance(float distance, double snapReferenceTime, IHasSliderVelocity withVelocity = null) => 0;
+            public float FindSnappedDistance(
+                float distance,
+                double snapReferenceTime,
+                IHasSliderVelocity withVelocity = null
+            ) => 0;
         }
     }
 }

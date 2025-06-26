@@ -77,10 +77,16 @@ namespace osu.Game.Rulesets.UI
         {
             var last = target.Replay.Frames.LastOrDefault();
 
-            if (!important && last != null && Time.Current - last.Time < (1000d / RecordFrameRate) * Clock.Rate)
+            if (
+                !important
+                && last != null
+                && Time.Current - last.Time < (1000d / RecordFrameRate) * Clock.Rate
+            )
                 return;
 
-            var position = ScreenSpaceToGamefield?.Invoke(inputManager.CurrentState.Mouse.Position) ?? inputManager.CurrentState.Mouse.Position;
+            var position =
+                ScreenSpaceToGamefield?.Invoke(inputManager.CurrentState.Mouse.Position)
+                ?? inputManager.CurrentState.Mouse.Position;
 
             var frame = HandleFrame(position, pressedActions, last);
 
@@ -98,7 +104,11 @@ namespace osu.Game.Rulesets.UI
             }
         }
 
-        protected abstract ReplayFrame HandleFrame(Vector2 mousePosition, List<T> actions, ReplayFrame previousFrame);
+        protected abstract ReplayFrame HandleFrame(
+            Vector2 mousePosition,
+            List<T> actions,
+            ReplayFrame previousFrame
+        );
     }
 
     public abstract partial class ReplayRecorder : Component

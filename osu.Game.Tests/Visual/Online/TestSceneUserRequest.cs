@@ -6,15 +6,15 @@
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Online.API;
-using osu.Game.Online.API.Requests;
-using osu.Game.Rulesets;
-using osu.Game.Rulesets.Mania;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Online.API;
+using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Rulesets;
+using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Taiko;
 
 namespace osu.Game.Tests.Visual.Online
@@ -31,20 +31,19 @@ namespace osu.Game.Tests.Visual.Online
 
         public TestSceneUserRequest()
         {
-            Add(new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new Container
                 {
-                    new UserTestContainer
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        User = { BindTarget = user }
+                        new UserTestContainer { User = { BindTarget = user } },
+                        loading = new LoadingLayer(),
                     },
-                    loading = new LoadingLayer()
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -52,9 +51,15 @@ namespace osu.Game.Tests.Visual.Online
             base.LoadComplete();
 
             AddStep(@"local user", () => getUser());
-            AddStep(@"local user with taiko ruleset", () => getUser(ruleset: new TaikoRuleset().RulesetInfo));
+            AddStep(
+                @"local user with taiko ruleset",
+                () => getUser(ruleset: new TaikoRuleset().RulesetInfo)
+            );
             AddStep(@"cookiezi", () => getUser(124493));
-            AddStep(@"cookiezi with mania ruleset", () => getUser(124493, new ManiaRuleset().RulesetInfo));
+            AddStep(
+                @"cookiezi with mania ruleset",
+                () => getUser(124493, new ManiaRuleset().RulesetInfo)
+            );
         }
 
         private void getUser(long? userId = null, RulesetInfo ruleset = null)
@@ -91,17 +96,16 @@ namespace osu.Game.Tests.Visual.Online
             {
                 Clear();
 
-                AddRange(new Drawable[]
-                {
-                    new OsuSpriteText
+                AddRange(
+                    new Drawable[]
                     {
-                        Text = $@"Username: {user.NewValue?.Username}"
-                    },
-                    new OsuSpriteText
-                    {
-                        Text = $@"RankedScore: {user.NewValue?.Statistics.RankedScore}"
-                    },
-                });
+                        new OsuSpriteText { Text = $@"Username: {user.NewValue?.Username}" },
+                        new OsuSpriteText
+                        {
+                            Text = $@"RankedScore: {user.NewValue?.Statistics.RankedScore}",
+                        },
+                    }
+                );
             }
         }
     }

@@ -22,13 +22,31 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override ModType Type => ModType.Fun;
         public override LocalisableString Description => "Everything rotates. EVERYTHING.";
         public override double ScoreMultiplier => 1;
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(OsuModWiggle), typeof(OsuModMagnetised), typeof(OsuModRepel), typeof(OsuModFreezeFrame), typeof(OsuModDepth) }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(
+                    new[]
+                    {
+                        typeof(OsuModWiggle),
+                        typeof(OsuModMagnetised),
+                        typeof(OsuModRepel),
+                        typeof(OsuModFreezeFrame),
+                        typeof(OsuModDepth),
+                    }
+                )
+                .ToArray();
 
         private float theta;
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyTransform(hitObject, state);
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyTransform(hitObject, state);
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyTransform(hitObject, state);
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyTransform(hitObject, state);
 
         private void applyTransform(DrawableHitObject drawable, ArmedState state)
         {
@@ -43,10 +61,12 @@ namespace osu.Game.Rulesets.Osu.Mods
                 default:
                     var hitObject = (OsuHitObject)drawable.HitObject;
 
-                    float appearDistance = (float)(hitObject.TimePreempt - hitObject.TimeFadeIn) / 2;
+                    float appearDistance =
+                        (float)(hitObject.TimePreempt - hitObject.TimeFadeIn) / 2;
 
                     Vector2 originalPosition = drawable.Position;
-                    Vector2 appearOffset = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * appearDistance;
+                    Vector2 appearOffset =
+                        new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * appearDistance;
 
                     // the - 1 and + 1 prevents the hit objects to appear in the wrong position.
                     double appearTime = hitObject.StartTime - hitObject.TimePreempt - 1;

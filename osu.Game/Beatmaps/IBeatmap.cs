@@ -158,17 +158,20 @@ namespace osu.Game.Beatmaps
         /// <remarks>
         /// This is cached to <see cref="BeatmapInfo.Length"/>, so using that is preferable when available.
         /// </remarks>
-        public static double CalculatePlayableLength(this IBeatmap beatmap) => CalculatePlayableLength(beatmap.HitObjects);
+        public static double CalculatePlayableLength(this IBeatmap beatmap) =>
+            CalculatePlayableLength(beatmap.HitObjects);
 
         /// <summary>
         /// Find the total milliseconds between the first and last hittable objects, excluding any break time.
         /// </summary>
-        public static double CalculateDrainLength(this IBeatmap beatmap) => Math.Max(CalculatePlayableLength(beatmap.HitObjects) - beatmap.TotalBreakTime, 0);
+        public static double CalculateDrainLength(this IBeatmap beatmap) =>
+            Math.Max(CalculatePlayableLength(beatmap.HitObjects) - beatmap.TotalBreakTime, 0);
 
         /// <summary>
         /// Find the timestamps in milliseconds of the start and end of the playable region.
         /// </summary>
-        public static (double start, double end) CalculatePlayableBounds(this IBeatmap beatmap) => CalculatePlayableBounds(beatmap.HitObjects);
+        public static (double start, double end) CalculatePlayableBounds(this IBeatmap beatmap) =>
+            CalculatePlayableBounds(beatmap.HitObjects);
 
         /// <summary>
         /// Find the absolute end time of the latest <see cref="HitObject"/> in a beatmap. Will throw if beatmap contains no objects.
@@ -180,7 +183,8 @@ namespace osu.Game.Beatmaps
         /// It's not super efficient so calls should be kept to a minimum.
         /// </remarks>
         /// <exception cref="InvalidOperationException">If <paramref name="beatmap"/> has no objects.</exception>
-        public static double GetLastObjectTime(this IBeatmap beatmap) => beatmap.HitObjects.Max(h => h.GetEndTime());
+        public static double GetLastObjectTime(this IBeatmap beatmap) =>
+            beatmap.HitObjects.Max(h => h.GetEndTime());
 
         #region Helper methods
 
@@ -200,7 +204,9 @@ namespace osu.Game.Beatmaps
         /// <summary>
         /// Find the timestamps in milliseconds of the start and end of the playable region.
         /// </summary>
-        public static (double start, double end) CalculatePlayableBounds(IEnumerable<HitObject> objects)
+        public static (double start, double end) CalculatePlayableBounds(
+            IEnumerable<HitObject> objects
+        )
         {
             if (!objects.Any())
                 return (0, 0);

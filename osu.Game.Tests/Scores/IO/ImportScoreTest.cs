@@ -39,7 +39,9 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -52,7 +54,7 @@ namespace osu.Game.Tests.Scores.IO
                         Date = DateTimeOffset.Now,
                         OnlineID = 12345,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmap.Beatmaps.First()
+                        BeatmapInfo = beatmap.Beatmaps.First(),
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -85,7 +87,9 @@ namespace osu.Game.Tests.Scores.IO
                     if (!isLocalUser)
                         osu.API.Logout();
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
                     var beatmapInfo = beatmap.Beatmaps.First();
 
                     DateTimeOffset replayDate = DateTimeOffset.Now;
@@ -105,7 +109,7 @@ namespace osu.Game.Tests.Scores.IO
                         Date = replayDate,
                         OnlineID = 12345,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmapInfo
+                        BeatmapInfo = beatmapInfo,
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -139,11 +143,23 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
                     var beatmapInfo = beatmap.Beatmaps.First();
 
                     var realmAccess = osu.Dependencies.Get<RealmAccess>();
-                    realmAccess.Write(r => r.Find<BeatmapInfo>(beatmapInfo.ID)!.LastPlayed = new DateTimeOffset(2023, 10, 30, 0, 0, 0, TimeSpan.Zero));
+                    realmAccess.Write(r =>
+                        r.Find<BeatmapInfo>(beatmapInfo.ID)!.LastPlayed = new DateTimeOffset(
+                            2023,
+                            10,
+                            30,
+                            0,
+                            0,
+                            0,
+                            TimeSpan.Zero
+                        )
+                    );
 
                     var toImport = new ScoreInfo
                     {
@@ -160,7 +176,7 @@ namespace osu.Game.Tests.Scores.IO
                         Date = new DateTimeOffset(2023, 10, 27, 0, 0, 0, TimeSpan.Zero),
                         OnlineID = 12345,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmapInfo
+                        BeatmapInfo = beatmapInfo,
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -173,7 +189,10 @@ namespace osu.Game.Tests.Scores.IO
                     Assert.AreEqual(toImport.Date, imported.Date);
                     Assert.AreEqual(toImport.OnlineID, imported.OnlineID);
 
-                    Assert.That(imported.BeatmapInfo!.LastPlayed, Is.EqualTo(new DateTimeOffset(2023, 10, 30, 0, 0, 0, TimeSpan.Zero)));
+                    Assert.That(
+                        imported.BeatmapInfo!.LastPlayed,
+                        Is.EqualTo(new DateTimeOffset(2023, 10, 30, 0, 0, 0, TimeSpan.Zero))
+                    );
                 }
                 finally
                 {
@@ -191,7 +210,9 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -224,7 +245,9 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -253,7 +276,9 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -263,14 +288,20 @@ namespace osu.Game.Tests.Scores.IO
                         Statistics = new Dictionary<HitResult, int>
                         {
                             { HitResult.Perfect, 100 },
-                            { HitResult.Miss, 50 }
-                        }
+                            { HitResult.Miss, 50 },
+                        },
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
 
-                    Assert.AreEqual(toImport.Statistics[HitResult.Perfect], imported.Statistics[HitResult.Perfect]);
-                    Assert.AreEqual(toImport.Statistics[HitResult.Miss], imported.Statistics[HitResult.Miss]);
+                    Assert.AreEqual(
+                        toImport.Statistics[HitResult.Perfect],
+                        imported.Statistics[HitResult.Perfect]
+                    );
+                    Assert.AreEqual(
+                        toImport.Statistics[HitResult.Miss],
+                        imported.Statistics[HitResult.Miss]
+                    );
                 }
                 finally
                 {
@@ -288,25 +319,35 @@ namespace osu.Game.Tests.Scores.IO
                 {
                     var osu = LoadOsuIntoHost(host, true);
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
-                    LoadScoreIntoOsu(osu, new ScoreInfo
-                    {
-                        User = new APIUser { Username = "Test user" },
-                        BeatmapInfo = beatmap.Beatmaps.First(),
-                        Ruleset = new OsuRuleset().RulesetInfo,
-                        OnlineID = 2
-                    }, new TestArchiveReader());
+                    LoadScoreIntoOsu(
+                        osu,
+                        new ScoreInfo
+                        {
+                            User = new APIUser { Username = "Test user" },
+                            BeatmapInfo = beatmap.Beatmaps.First(),
+                            Ruleset = new OsuRuleset().RulesetInfo,
+                            OnlineID = 2,
+                        },
+                        new TestArchiveReader()
+                    );
 
                     var scoreManager = osu.Dependencies.Get<ScoreManager>();
 
                     // Note: A new score reference is used here since the import process mutates the original object to set an ID
-                    Assert.That(scoreManager.IsAvailableLocally(new ScoreInfo
-                    {
-                        User = new APIUser { Username = "Test user" },
-                        BeatmapInfo = beatmap.Beatmaps.First(),
-                        OnlineID = 2
-                    }));
+                    Assert.That(
+                        scoreManager.IsAvailableLocally(
+                            new ScoreInfo
+                            {
+                                User = new APIUser { Username = "Test user" },
+                                BeatmapInfo = beatmap.Beatmaps.First(),
+                                OnlineID = 2,
+                            }
+                        )
+                    );
                 }
                 finally
                 {
@@ -333,12 +374,14 @@ namespace osu.Game.Tests.Scores.IO
                                 if (userRequest.Lookup != "Test user")
                                     return false;
 
-                                userRequest.TriggerSuccess(new APIUser
-                                {
-                                    Username = "Test user",
-                                    CountryCode = CountryCode.JP,
-                                    Id = 1234
-                                });
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Username = "Test user",
+                                        CountryCode = CountryCode.JP,
+                                        Id = 1234,
+                                    }
+                                );
                                 return true;
 
                             default:
@@ -346,7 +389,9 @@ namespace osu.Game.Tests.Scores.IO
                         }
                     };
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -359,7 +404,7 @@ namespace osu.Game.Tests.Scores.IO
                         Date = DateTimeOffset.Now,
                         OnlineID = 12345,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmap.Beatmaps.First()
+                        BeatmapInfo = beatmap.Beatmaps.First(),
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -399,12 +444,14 @@ namespace osu.Game.Tests.Scores.IO
                                 if (userRequest.Lookup != "Test user")
                                     return false;
 
-                                userRequest.TriggerSuccess(new APIUser
-                                {
-                                    Username = "Test user",
-                                    CountryCode = CountryCode.JP,
-                                    Id = 1234
-                                });
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Username = "Test user",
+                                        CountryCode = CountryCode.JP,
+                                        Id = 1234,
+                                    }
+                                );
                                 return true;
 
                             default:
@@ -412,7 +459,9 @@ namespace osu.Game.Tests.Scores.IO
                         }
                     };
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -425,7 +474,7 @@ namespace osu.Game.Tests.Scores.IO
                         Date = DateTimeOffset.Now,
                         LegacyOnlineID = 12345,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmap.Beatmaps.First()
+                        BeatmapInfo = beatmap.Beatmaps.First(),
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -465,12 +514,14 @@ namespace osu.Game.Tests.Scores.IO
                                 if (userRequest.Lookup != "Test user")
                                     return false;
 
-                                userRequest.TriggerSuccess(new APIUser
-                                {
-                                    Username = "Test user",
-                                    CountryCode = CountryCode.JP,
-                                    Id = 1234
-                                });
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Username = "Test user",
+                                        CountryCode = CountryCode.JP,
+                                        Id = 1234,
+                                    }
+                                );
                                 return true;
 
                             default:
@@ -478,7 +529,9 @@ namespace osu.Game.Tests.Scores.IO
                         }
                     };
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -492,7 +545,7 @@ namespace osu.Game.Tests.Scores.IO
                         OnlineID = -1,
                         LegacyOnlineID = -1,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmap.Beatmaps.First()
+                        BeatmapInfo = beatmap.Beatmaps.First(),
                     };
 
                     var imported = LoadScoreIntoOsu(osu, toImport);
@@ -532,12 +585,14 @@ namespace osu.Game.Tests.Scores.IO
                                 if (userRequest.Lookup != "5555")
                                     return false;
 
-                                userRequest.TriggerSuccess(new APIUser
-                                {
-                                    Username = "Some other guy",
-                                    CountryCode = CountryCode.DE,
-                                    Id = 5555
-                                });
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Username = "Some other guy",
+                                        CountryCode = CountryCode.DE,
+                                        Id = 5555,
+                                    }
+                                );
                                 return true;
 
                             default:
@@ -545,7 +600,9 @@ namespace osu.Game.Tests.Scores.IO
                         }
                     };
 
-                    var beatmap = BeatmapImportHelper.LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport()).GetResultSafely();
+                    var beatmap = BeatmapImportHelper
+                        .LoadOszIntoOsu(osu, TestResources.GetQuickTestBeatmapForImport())
+                        .GetResultSafely();
 
                     var toImport = new ScoreInfo
                     {
@@ -557,7 +614,7 @@ namespace osu.Game.Tests.Scores.IO
                         User = new APIUser { Id = 5555 },
                         Date = DateTimeOffset.Now,
                         Ruleset = new OsuRuleset().RulesetInfo,
-                        BeatmapInfo = beatmap.Beatmaps.First()
+                        BeatmapInfo = beatmap.Beatmaps.First(),
                     };
                     if (isOnlineScore)
                         toImport.OnlineID = 12345;
@@ -581,7 +638,11 @@ namespace osu.Game.Tests.Scores.IO
             }
         }
 
-        public static ScoreInfo LoadScoreIntoOsu(OsuGameBase osu, ScoreInfo score, ArchiveReader archive = null)
+        public static ScoreInfo LoadScoreIntoOsu(
+            OsuGameBase osu,
+            ScoreInfo score,
+            ArchiveReader archive = null
+        )
         {
             // clone to avoid attaching the input score to realm.
             score = score.DeepClone();
@@ -596,15 +657,11 @@ namespace osu.Game.Tests.Scores.IO
         internal class TestArchiveReader : ArchiveReader
         {
             public TestArchiveReader()
-                : base("test_archive")
-            {
-            }
+                : base("test_archive") { }
 
             public override Stream GetStream(string name) => new MemoryStream();
 
-            public override void Dispose()
-            {
-            }
+            public override void Dispose() { }
 
             public override IEnumerable<string> Filenames => new[] { "test_file.osr" };
         }

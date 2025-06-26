@@ -32,195 +32,215 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
         [Test]
         public void TestCircleInCenter()
         {
-            assertOk(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOk(
+                new Beatmap<HitObject>
                 {
-                    new HitCircle
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = playfield_centre
-                    }
+                        new HitCircle { StartTime = 3000, Position = playfield_centre },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestCircleNearEdge()
         {
-            assertOk(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOk(
+                new Beatmap<HitObject>
                 {
-                    new HitCircle
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = new Vector2(5, 5)
-                    }
+                        new HitCircle { StartTime = 3000, Position = new Vector2(5, 5) },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestCircleNearEdgeStackedOffscreen()
         {
-            assertOffscreenCircle(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenCircle(
+                new Beatmap<HitObject>
                 {
-                    new HitCircle
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = new Vector2(5, 5),
-                        StackHeight = 5
-                    }
+                        new HitCircle
+                        {
+                            StartTime = 3000,
+                            Position = new Vector2(5, 5),
+                            StackHeight = 5,
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestCircleOffscreen()
         {
-            assertOffscreenCircle(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenCircle(
+                new Beatmap<HitObject>
                 {
-                    new HitCircle
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = new Vector2(0, 0)
-                    }
+                        new HitCircle { StartTime = 3000, Position = new Vector2(0, 0) },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderInCenter()
         {
-            assertOk(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOk(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = new Vector2(420, 240),
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
-                            new PathControlPoint(new Vector2(-100, 0))
-                        }),
-                    }
+                            StartTime = 3000,
+                            Position = new Vector2(420, 240),
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
+                                    new PathControlPoint(new Vector2(-100, 0)),
+                                }
+                            ),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderNearEdge()
         {
-            assertOk(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOk(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = playfield_centre,
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
-                            new PathControlPoint(new Vector2(0, -playfield_centre.Y + 5))
-                        }),
-                    }
+                            StartTime = 3000,
+                            Position = playfield_centre,
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
+                                    new PathControlPoint(new Vector2(0, -playfield_centre.Y + 5)),
+                                }
+                            ),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderNearEdgeStackedOffscreen()
         {
-            assertOffscreenSlider(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenSlider(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = playfield_centre,
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
-                            new PathControlPoint(new Vector2(0, -playfield_centre.Y + 5))
-                        }),
-                        StackHeight = 5
-                    }
+                            StartTime = 3000,
+                            Position = playfield_centre,
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
+                                    new PathControlPoint(new Vector2(0, -playfield_centre.Y + 5)),
+                                }
+                            ),
+                            StackHeight = 5,
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderOffscreenStart()
         {
-            assertOffscreenSlider(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenSlider(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = new Vector2(0, 0),
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
-                            new PathControlPoint(playfield_centre)
-                        }),
-                    }
+                            StartTime = 3000,
+                            Position = new Vector2(0, 0),
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
+                                    new PathControlPoint(playfield_centre),
+                                }
+                            ),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderOffscreenEnd()
         {
-            assertOffscreenSlider(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenSlider(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = playfield_centre,
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
-                            new PathControlPoint(-playfield_centre)
-                        }),
-                    }
+                            StartTime = 3000,
+                            Position = playfield_centre,
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0), PathType.LINEAR),
+                                    new PathControlPoint(-playfield_centre),
+                                }
+                            ),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [Test]
         public void TestSliderOffscreenPath()
         {
-            assertOffscreenSlider(new Beatmap<HitObject>
-            {
-                HitObjects = new List<HitObject>
+            assertOffscreenSlider(
+                new Beatmap<HitObject>
                 {
-                    new Slider
+                    HitObjects = new List<HitObject>
                     {
-                        StartTime = 3000,
-                        Position = playfield_centre,
-                        Path = new SliderPath(new[]
+                        new Slider
                         {
-                            // Circular arc shoots over the top of the screen.
-                            new PathControlPoint(new Vector2(0, 0), PathType.PERFECT_CURVE),
-                            new PathControlPoint(new Vector2(-100, -200)),
-                            new PathControlPoint(new Vector2(100, -200))
-                        }),
-                    }
+                            StartTime = 3000,
+                            Position = playfield_centre,
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    // Circular arc shoots over the top of the screen.
+                                    new PathControlPoint(new Vector2(0, 0), PathType.PERFECT_CURVE),
+                                    new PathControlPoint(new Vector2(-100, -200)),
+                                    new PathControlPoint(new Vector2(100, -200)),
+                                }
+                            ),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         private void assertOk(IBeatmap beatmap)
@@ -235,7 +255,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckOffscreenObjects.IssueTemplateOffscreenCircle);
+            Assert.That(
+                issues.Single().Template is CheckOffscreenObjects.IssueTemplateOffscreenCircle
+            );
         }
 
         private void assertOffscreenSlider(IBeatmap beatmap)
@@ -244,7 +266,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckOffscreenObjects.IssueTemplateOffscreenSlider);
+            Assert.That(
+                issues.Single().Template is CheckOffscreenObjects.IssueTemplateOffscreenSlider
+            );
         }
     }
 }

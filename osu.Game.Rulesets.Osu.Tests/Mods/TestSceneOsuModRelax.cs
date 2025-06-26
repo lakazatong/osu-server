@@ -33,46 +33,52 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             {
                 StartTime = 1000,
                 Position = new Vector2(100, 100),
-                HitWindows = hitWindows
+                HitWindows = hitWindows,
             };
         }
 
-        protected override TestPlayer CreateModPlayer(Ruleset ruleset) => new ModRelaxTestPlayer(CurrentTestData, AllowFail);
+        protected override TestPlayer CreateModPlayer(Ruleset ruleset) =>
+            new ModRelaxTestPlayer(CurrentTestData, AllowFail);
 
         [Test]
-        public void TestRelax() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModRelax(),
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject> { hitObject }
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new OsuReplayFrame(0, new Vector2()),
-                new OsuReplayFrame(hitObject.StartTime, hitObject.Position),
-            },
-            PassCondition = () => Player.ScoreProcessor.Combo.Value == 1
-        });
+        public void TestRelax() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModRelax(),
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap { HitObjects = new List<HitObject> { hitObject } },
+                    ReplayFrames = new List<ReplayFrame>
+                    {
+                        new OsuReplayFrame(0, new Vector2()),
+                        new OsuReplayFrame(hitObject.StartTime, hitObject.Position),
+                    },
+                    PassCondition = () => Player.ScoreProcessor.Combo.Value == 1,
+                }
+            );
 
         [Test]
-        public void TestRelaxLeniency() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModRelax(),
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject> { hitObject }
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new OsuReplayFrame(0, new Vector2(hitObject.X - 22, hitObject.Y - 22)), // must be an edge hit for the cursor to not stay on the object for too long
-                new OsuReplayFrame(hitObject.StartTime - OsuModRelax.RELAX_LENIENCY, new Vector2(hitObject.X - 22, hitObject.Y - 22)),
-                new OsuReplayFrame(hitObject.StartTime, new Vector2(0)),
-            },
-            PassCondition = () => Player.ScoreProcessor.Combo.Value == 1
-        });
+        public void TestRelaxLeniency() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModRelax(),
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap { HitObjects = new List<HitObject> { hitObject } },
+                    ReplayFrames = new List<ReplayFrame>
+                    {
+                        new OsuReplayFrame(0, new Vector2(hitObject.X - 22, hitObject.Y - 22)), // must be an edge hit for the cursor to not stay on the object for too long
+                        new OsuReplayFrame(
+                            hitObject.StartTime - OsuModRelax.RELAX_LENIENCY,
+                            new Vector2(hitObject.X - 22, hitObject.Y - 22)
+                        ),
+                        new OsuReplayFrame(hitObject.StartTime, new Vector2(0)),
+                    },
+                    PassCondition = () => Player.ScoreProcessor.Combo.Value == 1,
+                }
+            );
 
         protected partial class ModRelaxTestPlayer : ModTestPlayer
         {
@@ -87,11 +93,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             protected override void PrepareReplay()
             {
                 // We need to set IsLegacyScore to true otherwise the mod assumes that presses are already embedded into the replay
-                DrawableRuleset?.SetReplayScore(new Score
-                {
-                    Replay = new Replay { Frames = currentTestData.ReplayFrames! },
-                    ScoreInfo = new ScoreInfo { User = new APIUser { Username = @"Test" }, IsLegacyScore = true, Mods = new Mod[] { new OsuModRelax() } },
-                });
+                DrawableRuleset?.SetReplayScore(
+                    new Score
+                    {
+                        Replay = new Replay { Frames = currentTestData.ReplayFrames! },
+                        ScoreInfo = new ScoreInfo
+                        {
+                            User = new APIUser { Username = @"Test" },
+                            IsLegacyScore = true,
+                            Mods = new Mod[] { new OsuModRelax() },
+                        },
+                    }
+                );
 
                 DrawableRuleset?.SetRecordTarget(Score);
             }

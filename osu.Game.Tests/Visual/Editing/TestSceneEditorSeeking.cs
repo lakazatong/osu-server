@@ -102,13 +102,16 @@ namespace osu.Game.Tests.Visual.Editing
             pressAndCheckTime(Key.Right, 2500);
             pressAndCheckTime(Key.Right, 3000);
 
-            AddStep("remove 2nd timing point", () =>
-            {
-                EditorBeatmap.BeginChange();
-                var group = EditorBeatmap.ControlPointInfo.GroupAt(2000);
-                EditorBeatmap.ControlPointInfo.RemoveGroup(group);
-                EditorBeatmap.EndChange();
-            });
+            AddStep(
+                "remove 2nd timing point",
+                () =>
+                {
+                    EditorBeatmap.BeginChange();
+                    var group = EditorBeatmap.ControlPointInfo.GroupAt(2000);
+                    EditorBeatmap.ControlPointInfo.RemoveGroup(group);
+                    EditorBeatmap.EndChange();
+                }
+            );
 
             pressAndCheckTime(Key.Left, 2000);
             pressAndCheckTime(Key.Left, 1000);
@@ -140,16 +143,21 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestSeekBetweenObjects()
         {
-            AddStep("add objects", () =>
-            {
-                EditorBeatmap.Clear();
-                EditorBeatmap.AddRange(new[]
+            AddStep(
+                "add objects",
+                () =>
                 {
-                    new HitCircle { StartTime = 1000, },
-                    new HitCircle { StartTime = 2250, },
-                    new HitCircle { StartTime = 3600, },
-                });
-            });
+                    EditorBeatmap.Clear();
+                    EditorBeatmap.AddRange(
+                        new[]
+                        {
+                            new HitCircle { StartTime = 1000 },
+                            new HitCircle { StartTime = 2250 },
+                            new HitCircle { StartTime = 3600 },
+                        }
+                    );
+                }
+            );
             AddStep("seek to 0", () => EditorClock.Seek(0));
 
             pressAndCheckTime(Key.Right, 1000, Key.ControlLeft);
@@ -163,17 +171,24 @@ namespace osu.Game.Tests.Visual.Editing
 
         private void pressAndCheckTime(Key key, double expectedTime, params Key[] modifiers)
         {
-            AddStep($"press {key} with {(modifiers.Any() ? string.Join(',', modifiers) : "no modifiers")}", () =>
-            {
-                foreach (var modifier in modifiers)
-                    InputManager.PressKey(modifier);
+            AddStep(
+                $"press {key} with {(modifiers.Any() ? string.Join(',', modifiers) : "no modifiers")}",
+                () =>
+                {
+                    foreach (var modifier in modifiers)
+                        InputManager.PressKey(modifier);
 
-                InputManager.Key(key);
+                    InputManager.Key(key);
 
-                foreach (var modifier in modifiers)
-                    InputManager.ReleaseKey(modifier);
-            });
-            AddUntilStep($"time is {expectedTime}", () => EditorClock.CurrentTime, () => Is.EqualTo(expectedTime).Within(1));
+                    foreach (var modifier in modifiers)
+                        InputManager.ReleaseKey(modifier);
+                }
+            );
+            AddUntilStep(
+                $"time is {expectedTime}",
+                () => EditorClock.CurrentTime,
+                () => Is.EqualTo(expectedTime).Within(1)
+            );
         }
     }
 }

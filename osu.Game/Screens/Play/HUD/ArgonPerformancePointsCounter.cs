@@ -13,7 +13,9 @@ using osu.Game.Skinning;
 
 namespace osu.Game.Screens.Play.HUD
 {
-    public partial class ArgonPerformancePointsCounter : PerformancePointsCounter, ISerialisableDrawable
+    public partial class ArgonPerformancePointsCounter
+        : PerformancePointsCounter,
+            ISerialisableDrawable
     {
         private ArgonCounterTextComponent text = null!;
 
@@ -21,15 +23,23 @@ namespace osu.Game.Screens.Play.HUD
 
         private const float alpha_when_invalid = 0.3f;
 
-        [SettingSource("Wireframe opacity", "Controls the opacity of the wireframes behind the digits.")]
-        public BindableFloat WireframeOpacity { get; } = new BindableFloat(0.25f)
-        {
-            Precision = 0.01f,
-            MinValue = 0,
-            MaxValue = 1,
-        };
+        [SettingSource(
+            "Wireframe opacity",
+            "Controls the opacity of the wireframes behind the digits."
+        )]
+        public BindableFloat WireframeOpacity { get; } =
+            new BindableFloat(0.25f)
+            {
+                Precision = 0.01f,
+                MinValue = 0,
+                MaxValue = 1,
+            };
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.ShowLabel), nameof(SkinnableComponentStrings.ShowLabelDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.ShowLabel),
+            nameof(SkinnableComponentStrings.ShowLabelDescription)
+        )]
         public Bindable<bool> ShowLabel { get; } = new BindableBool(true);
 
         public override bool IsValid
@@ -72,10 +82,14 @@ namespace osu.Game.Screens.Play.HUD
             return digitsRequired;
         }
 
-        protected override IHasText CreateText() => text = new ArgonCounterTextComponent(Anchor.TopRight, BeatmapsetsStrings.ShowScoreboardHeaderspp.ToUpper())
-        {
-            WireframeOpacity = { BindTarget = WireframeOpacity },
-            ShowLabel = { BindTarget = ShowLabel },
-        };
+        protected override IHasText CreateText() =>
+            text = new ArgonCounterTextComponent(
+                Anchor.TopRight,
+                BeatmapsetsStrings.ShowScoreboardHeaderspp.ToUpper()
+            )
+            {
+                WireframeOpacity = { BindTarget = WireframeOpacity },
+                ShowLabel = { BindTarget = ShowLabel },
+            };
     }
 }

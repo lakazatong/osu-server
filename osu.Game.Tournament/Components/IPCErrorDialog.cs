@@ -15,11 +15,7 @@ namespace osu.Game.Tournament.Components
             BodyText = bodyText;
             Buttons = new PopupDialogButton[]
             {
-                new PopupDialogOkButton
-                {
-                    Text = @"Alright.",
-                    Action = () => Expire()
-                }
+                new PopupDialogOkButton { Text = @"Alright.", Action = () => Expire() },
             };
         }
     }

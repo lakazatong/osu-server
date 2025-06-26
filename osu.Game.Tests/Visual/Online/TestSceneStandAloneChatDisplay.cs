@@ -3,19 +3,19 @@
 
 #nullable disable
 
-using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Game.Online.Chat;
-using osuTK;
 using System;
 using System.Linq;
 using NUnit.Framework;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
 using osu.Framework.Utils;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Online.Chat;
 using osu.Game.Overlays.Chat;
+using osuTK;
 using osuTK.Input;
 
 namespace osu.Game.Tests.Visual.Online
@@ -26,20 +26,12 @@ namespace osu.Game.Tests.Visual.Online
         {
             Username = "HappyStick",
             Id = 2,
-            Colour = "f2ca34"
+            Colour = "f2ca34",
         };
 
-        private readonly APIUser redUser = new APIUser
-        {
-            Username = "BanchoBot",
-            Id = 3,
-        };
+        private readonly APIUser redUser = new APIUser { Username = "BanchoBot", Id = 3 };
 
-        private readonly APIUser blueUser = new APIUser
-        {
-            Username = "Zallius",
-            Id = 4,
-        };
+        private readonly APIUser blueUser = new APIUser { Username = "Zallius", Id = 4 };
 
         private readonly APIUser longUsernameUser = new APIUser
         {
@@ -56,7 +48,9 @@ namespace osu.Game.Tests.Visual.Online
 
         private Channel testChannel;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var api = parent.Get<IAPIProvider>();
 
@@ -70,13 +64,14 @@ namespace osu.Game.Tests.Visual.Online
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            messageIdSequence = 0;
-            channelManager.CurrentChannel.Value = testChannel = new Channel();
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                messageIdSequence = 0;
+                channelManager.CurrentChannel.Value = testChannel = new Channel();
 
-            reinitialiseDrawableDisplay();
-        });
+                reinitialiseDrawableDisplay();
+            });
 
         private void reinitialiseDrawableDisplay()
         {
@@ -111,8 +106,8 @@ namespace osu.Game.Tests.Visual.Online
                             Size = new Vector2(400, 150),
                             Channel = { Value = testChannel },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -123,7 +118,7 @@ namespace osu.Game.Tests.Visual.Online
             {
                 Timestamp = DateTimeOffset.Now,
                 Sender = admin,
-                Content = "I am a wang!"
+                Content = "I am a wang!",
             };
 
             var infoMessage1 = new InfoMessage($"the system is calling {messageIdSequence++}");
@@ -133,7 +128,7 @@ namespace osu.Game.Tests.Visual.Online
             {
                 Timestamp = DateTimeOffset.Now,
                 Sender = admin,
-                Content = "I am a wang!"
+                Content = "I am a wang!",
             };
 
             AddStep("message from admin", () => testChannel.AddNewMessages(standardMessage));
@@ -143,31 +138,34 @@ namespace osu.Game.Tests.Visual.Online
 
             AddAssert("count is correct", () => testChannel.Messages.Count, () => Is.EqualTo(4));
 
-            AddAssert("message order is correct", () => testChannel.Messages, () => Is.EqualTo(new[]
-            {
-                standardMessage,
-                infoMessage1,
-                infoMessage2,
-                standardMessage2
-            }));
+            AddAssert(
+                "message order is correct",
+                () => testChannel.Messages,
+                () =>
+                    Is.EqualTo(
+                        new[] { standardMessage, infoMessage1, infoMessage2, standardMessage2 }
+                    )
+            );
 
-            AddAssert("displayed order is correct", () => chatDisplay.DrawableChannel.ChildrenOfType<ChatLine>().Select(c => c.Message), () => Is.EqualTo(new[]
-            {
-                standardMessage,
-                infoMessage1,
-                infoMessage2,
-                standardMessage2
-            }));
+            AddAssert(
+                "displayed order is correct",
+                () => chatDisplay.DrawableChannel.ChildrenOfType<ChatLine>().Select(c => c.Message),
+                () =>
+                    Is.EqualTo(
+                        new[] { standardMessage, infoMessage1, infoMessage2, standardMessage2 }
+                    )
+            );
 
             AddStep("reinit drawable channel", reinitialiseDrawableDisplay);
 
-            AddAssert("displayed order is still correct", () => chatDisplay.DrawableChannel.ChildrenOfType<ChatLine>().Select(c => c.Message), () => Is.EqualTo(new[]
-            {
-                standardMessage,
-                infoMessage1,
-                infoMessage2,
-                standardMessage2
-            }));
+            AddAssert(
+                "displayed order is still correct",
+                () => chatDisplay.DrawableChannel.ChildrenOfType<ChatLine>().Select(c => c.Message),
+                () =>
+                    Is.EqualTo(
+                        new[] { standardMessage, infoMessage1, infoMessage2, standardMessage2 }
+                    )
+            );
         }
 
         [Test]
@@ -177,31 +175,45 @@ namespace osu.Game.Tests.Visual.Online
             checkScrolledToBottom();
 
             const int messages_per_call = 10;
-            AddRepeatStep("add many messages", () =>
-            {
-                for (int i = 0; i < messages_per_call; i++)
+            AddRepeatStep(
+                "add many messages",
+                () =>
                 {
-                    testChannel.AddNewMessages(new Message(messageIdSequence++)
+                    for (int i = 0; i < messages_per_call; i++)
                     {
-                        Sender = longUsernameUser,
-                        Content = "Many messages! " + Guid.NewGuid(),
-                        Timestamp = DateTimeOffset.Now
-                    });
-                }
-            }, Channel.MAX_HISTORY / messages_per_call + 5);
+                        testChannel.AddNewMessages(
+                            new Message(messageIdSequence++)
+                            {
+                                Sender = longUsernameUser,
+                                Content = "Many messages! " + Guid.NewGuid(),
+                                Timestamp = DateTimeOffset.Now,
+                            }
+                        );
+                    }
+                },
+                Channel.MAX_HISTORY / messages_per_call + 5
+            );
 
-            AddAssert("Ensure no adjacent day separators", () =>
-            {
-                var indices = chatDisplay.FillFlow.OfType<DaySeparator>().Select(ds => chatDisplay.FillFlow.IndexOf(ds));
-
-                foreach (int i in indices)
+            AddAssert(
+                "Ensure no adjacent day separators",
+                () =>
                 {
-                    if (i < chatDisplay.FillFlow.Count && chatDisplay.FillFlow[i + 1] is DaySeparator)
-                        return false;
-                }
+                    var indices = chatDisplay
+                        .FillFlow.OfType<DaySeparator>()
+                        .Select(ds => chatDisplay.FillFlow.IndexOf(ds));
 
-                return true;
-            });
+                    foreach (int i in indices)
+                    {
+                        if (
+                            i < chatDisplay.FillFlow.Count
+                            && chatDisplay.FillFlow[i + 1] is DaySeparator
+                        )
+                            return false;
+                    }
+
+                    return true;
+                }
+            );
 
             checkScrolledToBottom();
         }
@@ -213,41 +225,65 @@ namespace osu.Game.Tests.Visual.Online
 
             sendRegularMessages();
 
-            AddStep("highlight first message", () =>
-            {
-                highlighted = testChannel.Messages[0];
-                testChannel.HighlightedMessage.Value = highlighted;
-            });
+            AddStep(
+                "highlight first message",
+                () =>
+                {
+                    highlighted = testChannel.Messages[0];
+                    testChannel.HighlightedMessage.Value = highlighted;
+                }
+            );
 
-            AddUntilStep("chat scrolled to first message", () =>
-            {
-                var line = chatDisplay.ChildrenOfType<ChatLine>().Single(c => c.Message == highlighted);
-                return chatDisplay.ScrollContainer.ScreenSpaceDrawQuad.Contains(line.ScreenSpaceDrawQuad.Centre);
-            });
+            AddUntilStep(
+                "chat scrolled to first message",
+                () =>
+                {
+                    var line = chatDisplay
+                        .ChildrenOfType<ChatLine>()
+                        .Single(c => c.Message == highlighted);
+                    return chatDisplay.ScrollContainer.ScreenSpaceDrawQuad.Contains(
+                        line.ScreenSpaceDrawQuad.Centre
+                    );
+                }
+            );
 
             sendMessage();
             checkNotScrolledToBottom();
 
-            AddStep("highlight last message", () =>
-            {
-                highlighted = testChannel.Messages[^1];
-                testChannel.HighlightedMessage.Value = highlighted;
-            });
+            AddStep(
+                "highlight last message",
+                () =>
+                {
+                    highlighted = testChannel.Messages[^1];
+                    testChannel.HighlightedMessage.Value = highlighted;
+                }
+            );
 
-            AddUntilStep("chat scrolled to last message", () =>
-            {
-                var line = chatDisplay.ChildrenOfType<ChatLine>().Single(c => c.Message == highlighted);
-                return chatDisplay.ScrollContainer.ScreenSpaceDrawQuad.Contains(line.ScreenSpaceDrawQuad.Centre);
-            });
+            AddUntilStep(
+                "chat scrolled to last message",
+                () =>
+                {
+                    var line = chatDisplay
+                        .ChildrenOfType<ChatLine>()
+                        .Single(c => c.Message == highlighted);
+                    return chatDisplay.ScrollContainer.ScreenSpaceDrawQuad.Contains(
+                        line.ScreenSpaceDrawQuad.Centre
+                    );
+                }
+            );
 
             sendMessage();
             checkScrolledToBottom();
 
-            AddRepeatStep("highlight other random messages", () =>
-            {
-                highlighted = testChannel.Messages[RNG.Next(0, testChannel.Messages.Count - 1)];
-                testChannel.HighlightedMessage.Value = highlighted;
-            }, 10);
+            AddRepeatStep(
+                "highlight other random messages",
+                () =>
+                {
+                    highlighted = testChannel.Messages[RNG.Next(0, testChannel.Messages.Count - 1)];
+                    testChannel.HighlightedMessage.Value = highlighted;
+                },
+                10
+            );
         }
 
         [Test]
@@ -257,11 +293,39 @@ namespace osu.Game.Tests.Visual.Online
 
             fillChat(100);
 
-            AddStep("highlight first message", () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = 0]);
-            AddStep("highlight next message", () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = Math.Min(index + 1, testChannel.Messages.Count - 1)]);
-            AddStep("highlight last message", () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = testChannel.Messages.Count - 1]);
-            AddStep("highlight previous message", () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = Math.Max(index - 1, 0)]);
-            AddRepeatStep("highlight random messages", () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = RNG.Next(0, testChannel.Messages.Count - 1)], 10);
+            AddStep(
+                "highlight first message",
+                () => testChannel.HighlightedMessage.Value = testChannel.Messages[index = 0]
+            );
+            AddStep(
+                "highlight next message",
+                () =>
+                    testChannel.HighlightedMessage.Value = testChannel.Messages[
+                        index = Math.Min(index + 1, testChannel.Messages.Count - 1)
+                    ]
+            );
+            AddStep(
+                "highlight last message",
+                () =>
+                    testChannel.HighlightedMessage.Value = testChannel.Messages[
+                        index = testChannel.Messages.Count - 1
+                    ]
+            );
+            AddStep(
+                "highlight previous message",
+                () =>
+                    testChannel.HighlightedMessage.Value = testChannel.Messages[
+                        index = Math.Max(index - 1, 0)
+                    ]
+            );
+            AddRepeatStep(
+                "highlight random messages",
+                () =>
+                    testChannel.HighlightedMessage.Value = testChannel.Messages[
+                        index = RNG.Next(0, testChannel.Messages.Count - 1)
+                    ],
+                10
+            );
         }
 
         /// <summary>
@@ -278,11 +342,17 @@ namespace osu.Game.Tests.Visual.Online
             AddStep("contract chat", () => chatDisplay.Width -= 100);
             checkScrolledToBottom();
 
-            AddStep("send another message", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = admin,
-                Content = "As we were saying...",
-            }));
+            AddStep(
+                "send another message",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = admin,
+                            Content = "As we were saying...",
+                        }
+                    )
+            );
 
             checkScrolledToBottom();
         }
@@ -316,25 +386,38 @@ namespace osu.Game.Tests.Visual.Online
             sendMessage();
             checkScrolledToBottom();
 
-            AddStep("User scroll up", () =>
-            {
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre + new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height));
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "User scroll up",
+                () =>
+                {
+                    InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        chatDisplay.ScreenSpaceDrawQuad.Centre
+                            + new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
 
             checkNotScrolledToBottom();
             sendMessage();
             checkNotScrolledToBottom();
 
-            AddRepeatStep("User scroll to bottom", () =>
-            {
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre - new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height));
-                InputManager.ReleaseButton(MouseButton.Left);
-            }, 5);
+            AddRepeatStep(
+                "User scroll to bottom",
+                () =>
+                {
+                    InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        chatDisplay.ScreenSpaceDrawQuad.Centre
+                            - new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                },
+                5
+            );
 
             checkScrolledToBottom();
             sendMessage();
@@ -349,13 +432,19 @@ namespace osu.Game.Tests.Visual.Online
             sendMessage();
             checkScrolledToBottom();
 
-            AddStep("User scroll up", () =>
-            {
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre + new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height));
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "User scroll up",
+                () =>
+                {
+                    InputManager.MoveMouseTo(chatDisplay.ScreenSpaceDrawQuad.Centre);
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        chatDisplay.ScreenSpaceDrawQuad.Centre
+                            + new Vector2(0, chatDisplay.ScreenSpaceDrawQuad.Height)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
 
             checkNotScrolledToBottom();
             sendMessage();
@@ -371,89 +460,164 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestTextBoxSync()
         {
-            AddStep("type 'hello' to text box 1", () => chatWithTextBox.ChildrenOfType<StandAloneChatDisplay.ChatTextBox>().Single().Text = "hello");
-            AddAssert("text box 2 contains 'hello'", () => chatWithTextBox2.ChildrenOfType<StandAloneChatDisplay.ChatTextBox>().Single().Text == "hello");
+            AddStep(
+                "type 'hello' to text box 1",
+                () =>
+                    chatWithTextBox
+                        .ChildrenOfType<StandAloneChatDisplay.ChatTextBox>()
+                        .Single()
+                        .Text = "hello"
+            );
+            AddAssert(
+                "text box 2 contains 'hello'",
+                () =>
+                    chatWithTextBox2
+                        .ChildrenOfType<StandAloneChatDisplay.ChatTextBox>()
+                        .Single()
+                        .Text == "hello"
+            );
         }
 
         private void fillChat(int count = 10)
         {
-            AddStep("fill chat", () =>
-            {
-                for (int i = 0; i < count; i++)
+            AddStep(
+                "fill chat",
+                () =>
                 {
-                    testChannel.AddNewMessages(new Message(messageIdSequence++)
+                    for (int i = 0; i < count; i++)
                     {
-                        Sender = longUsernameUser,
-                        Content = $"some stuff {Guid.NewGuid()}",
-                    });
+                        testChannel.AddNewMessages(
+                            new Message(messageIdSequence++)
+                            {
+                                Sender = longUsernameUser,
+                                Content = $"some stuff {Guid.NewGuid()}",
+                            }
+                        );
+                    }
                 }
-            });
+            );
 
             checkScrolledToBottom();
         }
 
         private void sendMessage()
         {
-            AddStep("send lorem ipsum", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = longUsernameUser,
-                Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et bibendum velit.",
-            }));
+            AddStep(
+                "send lorem ipsum",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = longUsernameUser,
+                            Content =
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et bibendum velit.",
+                        }
+                    )
+            );
         }
 
         private void sendLocalMessage()
         {
-            AddStep("send local echo", () => testChannel.AddLocalEcho(new LocalEchoMessage
-            {
-                Sender = longUsernameUser,
-                Content = "This is a local echo message.",
-            }));
+            AddStep(
+                "send local echo",
+                () =>
+                    testChannel.AddLocalEcho(
+                        new LocalEchoMessage
+                        {
+                            Sender = longUsernameUser,
+                            Content = "This is a local echo message.",
+                        }
+                    )
+            );
         }
 
         private void sendRegularMessages()
         {
-            AddStep("message from admin", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = admin,
-                Content = "I am a wang!"
-            }));
+            AddStep(
+                "message from admin",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = admin,
+                            Content = "I am a wang!",
+                        }
+                    )
+            );
 
-            AddStep("message from team red", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = redUser,
-                Content = "I am team red."
-            }));
+            AddStep(
+                "message from team red",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = redUser,
+                            Content = "I am team red.",
+                        }
+                    )
+            );
 
-            AddStep("message from team red", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = redUser,
-                Content = "I plan to win!"
-            }));
+            AddStep(
+                "message from team red",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = redUser,
+                            Content = "I plan to win!",
+                        }
+                    )
+            );
 
-            AddStep("message from team blue", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = blueUser,
-                Content = "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand."
-            }));
+            AddStep(
+                "message from team blue",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = blueUser,
+                            Content =
+                                "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand.",
+                        }
+                    )
+            );
 
-            AddStep("message from admin", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = admin,
-                Content = "Okay okay, calm down guys. Let's do this!"
-            }));
+            AddStep(
+                "message from admin",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = admin,
+                            Content = "Okay okay, calm down guys. Let's do this!",
+                        }
+                    )
+            );
 
-            AddStep("message from long username", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = longUsernameUser,
-                Content = "Hi guys, my new username is lit!"
-            }));
+            AddStep(
+                "message from long username",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = longUsernameUser,
+                            Content = "Hi guys, my new username is lit!",
+                        }
+                    )
+            );
 
-            AddStep("message with new date", () => testChannel.AddNewMessages(new Message(messageIdSequence++)
-            {
-                Sender = longUsernameUser,
-                Content = "Message from the future!",
-                Timestamp = DateTimeOffset.Now
-            }));
+            AddStep(
+                "message with new date",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(messageIdSequence++)
+                        {
+                            Sender = longUsernameUser,
+                            Content = "Message from the future!",
+                            Timestamp = DateTimeOffset.Now,
+                        }
+                    )
+            );
         }
 
         private void checkScrolledToBottom() =>
@@ -465,13 +629,13 @@ namespace osu.Game.Tests.Visual.Online
         private partial class TestStandAloneChatDisplay : StandAloneChatDisplay
         {
             public TestStandAloneChatDisplay(bool textBox = false)
-                : base(textBox)
-            {
-            }
+                : base(textBox) { }
 
-            public DrawableChannel DrawableChannel => InternalChildren.OfType<DrawableChannel>().First();
+            public DrawableChannel DrawableChannel =>
+                InternalChildren.OfType<DrawableChannel>().First();
 
-            public ChannelScrollContainer ScrollContainer => (ChannelScrollContainer)((Container)DrawableChannel.Child).Child;
+            public ChannelScrollContainer ScrollContainer =>
+                (ChannelScrollContainer)((Container)DrawableChannel.Child).Child;
 
             public FillFlowContainer FillFlow => (FillFlowContainer)ScrollContainer.Child;
 

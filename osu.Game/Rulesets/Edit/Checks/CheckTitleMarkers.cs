@@ -10,12 +10,14 @@ namespace osu.Game.Rulesets.Edit.Checks
 {
     public class CheckTitleMarkers : ICheck
     {
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Metadata, "Checks for incorrect formats of (TV Size) / (Game Ver.) / (Short Ver.) / (Cut Ver.) / (Sped Up Ver.) / etc in title.");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(
+                CheckCategory.Metadata,
+                "Checks for incorrect formats of (TV Size) / (Game Ver.) / (Short Ver.) / (Cut Ver.) / (Sped Up Ver.) / etc in title."
+            );
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateIncorrectMarker(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateIncorrectMarker(this) };
 
         private readonly IEnumerable<MarkerCheck> markerChecks =
         [
@@ -25,8 +27,14 @@ namespace osu.Game.Rulesets.Edit.Checks
             new MarkerCheck(@"(Cut Ver.)", @"(?i)(?<!& )(cut (size|ver))"),
             new MarkerCheck(@"(Sped Up Ver.)", @"(?i)(?<!& )(sped|speed) ?up ver"),
             new MarkerCheck(@"(Nightcore Mix)", @"(?i)(?<!& )(nightcore|night core) (ver|mix)"),
-            new MarkerCheck(@"(Sped Up & Cut Ver.)", @"(?i)(sped|speed) ?up (ver)? ?& cut (size|ver)"),
-            new MarkerCheck(@"(Nightcore & Cut Ver.)", @"(?i)(nightcore|night core) (ver|mix)? ?& cut (size|ver)"),
+            new MarkerCheck(
+                @"(Sped Up & Cut Ver.)",
+                @"(?i)(sped|speed) ?up (ver)? ?& cut (size|ver)"
+            ),
+            new MarkerCheck(
+                @"(Nightcore & Cut Ver.)",
+                @"(?i)(nightcore|night core) (ver|mix)? ?& cut (size|ver)"
+            ),
         ];
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
@@ -38,11 +46,24 @@ namespace osu.Game.Rulesets.Edit.Checks
             {
                 bool hasRomanisedTitle = unicodeTitle != romanisedTitle;
 
-                if (check.AnyRegex.IsMatch(unicodeTitle) && !unicodeTitle.Contains(check.CorrectMarkerFormat, StringComparison.Ordinal))
-                    yield return new IssueTemplateIncorrectMarker(this).Create("Title", check.CorrectMarkerFormat);
+                if (
+                    check.AnyRegex.IsMatch(unicodeTitle)
+                    && !unicodeTitle.Contains(check.CorrectMarkerFormat, StringComparison.Ordinal)
+                )
+                    yield return new IssueTemplateIncorrectMarker(this).Create(
+                        "Title",
+                        check.CorrectMarkerFormat
+                    );
 
-                if (hasRomanisedTitle && check.AnyRegex.IsMatch(romanisedTitle) && !romanisedTitle.Contains(check.CorrectMarkerFormat, StringComparison.Ordinal))
-                    yield return new IssueTemplateIncorrectMarker(this).Create("Romanised title", check.CorrectMarkerFormat);
+                if (
+                    hasRomanisedTitle
+                    && check.AnyRegex.IsMatch(romanisedTitle)
+                    && !romanisedTitle.Contains(check.CorrectMarkerFormat, StringComparison.Ordinal)
+                )
+                    yield return new IssueTemplateIncorrectMarker(this).Create(
+                        "Romanised title",
+                        check.CorrectMarkerFormat
+                    );
             }
         }
 
@@ -62,10 +83,10 @@ namespace osu.Game.Rulesets.Edit.Checks
         {
             public IssueTemplateIncorrectMarker(ICheck check)
                 : base(check, IssueType.Problem, "{0} field has an incorrect format of marker {1}")
-            {
-            }
+            { }
 
-            public Issue Create(string titleField, string correctMarkerFormat) => new Issue(this, titleField, correctMarkerFormat);
+            public Issue Create(string titleField, string correctMarkerFormat) =>
+                new Issue(this, titleField, correctMarkerFormat);
         }
     }
 }

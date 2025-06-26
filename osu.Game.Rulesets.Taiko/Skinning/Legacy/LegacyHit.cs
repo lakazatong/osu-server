@@ -22,7 +22,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             AccentColour = LegacyColourCompatibility.DisallowZeroAlpha(
                 component == TaikoSkinComponents.CentreHit
                     ? new Color4(235, 69, 44, 255)
-                    : new Color4(67, 142, 172, 255));
+                    : new Color4(67, 142, 172, 255)
+            );
         }
     }
 }

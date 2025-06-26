@@ -11,17 +11,15 @@ using osu.Game.Screens.Select.Leaderboards;
 
 namespace osu.Game.Tests.Visual.Multiplayer
 {
-    public partial class TestSceneMultiplayerGameplayLeaderboardTeams : MultiplayerGameplayLeaderboardTestScene
+    public partial class TestSceneMultiplayerGameplayLeaderboardTeams
+        : MultiplayerGameplayLeaderboardTestScene
     {
         private int team;
 
         protected override MultiplayerRoomUser CreateUser(int userId)
         {
             var user = base.CreateUser(userId);
-            user.MatchState = new TeamVersusUserState
-            {
-                TeamID = team++ % 2
-            };
+            user.MatchState = new TeamVersusUserState { TeamID = team++ % 2 };
             return user;
         }
 
@@ -36,25 +34,36 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             base.SetUpSteps();
 
-            AddStep("Add external display components", () =>
-            {
-                LoadComponentAsync(new MatchScoreDisplay
+            AddStep(
+                "Add external display components",
+                () =>
                 {
-                    Team1Score = { BindTarget = LeaderboardProvider!.TeamScores[0] },
-                    Team2Score = { BindTarget = LeaderboardProvider.TeamScores[1] }
-                }, Add);
+                    LoadComponentAsync(
+                        new MatchScoreDisplay
+                        {
+                            Team1Score = { BindTarget = LeaderboardProvider!.TeamScores[0] },
+                            Team2Score = { BindTarget = LeaderboardProvider.TeamScores[1] },
+                        },
+                        Add
+                    );
 
-                GameplayMatchScoreDisplay matchScoreDisplay;
-                LoadComponentAsync(matchScoreDisplay = new GameplayMatchScoreDisplay
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Team1Score = { BindTarget = LeaderboardProvider.TeamScores[0] },
-                    Team2Score = { BindTarget = LeaderboardProvider.TeamScores[1] },
-                }, Add);
+                    GameplayMatchScoreDisplay matchScoreDisplay;
+                    LoadComponentAsync(
+                        matchScoreDisplay = new GameplayMatchScoreDisplay
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            Team1Score = { BindTarget = LeaderboardProvider.TeamScores[0] },
+                            Team2Score = { BindTarget = LeaderboardProvider.TeamScores[1] },
+                        },
+                        Add
+                    );
 
-                Leaderboard!.CollapseDuringGameplay.BindValueChanged(_ => matchScoreDisplay.Expanded.Value = !Leaderboard.CollapseDuringGameplay.Value);
-            });
+                    Leaderboard!.CollapseDuringGameplay.BindValueChanged(_ =>
+                        matchScoreDisplay.Expanded.Value = !Leaderboard.CollapseDuringGameplay.Value
+                    );
+                }
+            );
         }
     }
 }

@@ -26,7 +26,11 @@ namespace osu.Game.Graphics.Containers.Markdown
             LineSpacing = 21;
         }
 
-        protected override void AddMarkdownComponent(IMarkdownObject markdownObject, FillFlowContainer container, int level)
+        protected override void AddMarkdownComponent(
+            IMarkdownObject markdownObject,
+            FillFlowContainer container,
+            int level
+        )
         {
             switch (markdownObject)
             {
@@ -44,7 +48,11 @@ namespace osu.Game.Graphics.Containers.Markdown
                     // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
                     bool isOrdered = ((ListBlock)listItemBlock.Parent)?.IsOrdered == true;
 
-                    OsuMarkdownListItem childContainer = CreateListItem(listItemBlock, level, isOrdered);
+                    OsuMarkdownListItem childContainer = CreateListItem(
+                        listItemBlock,
+                        level,
+                        isOrdered
+                    );
 
                     container.Add(childContainer);
 
@@ -58,29 +66,37 @@ namespace osu.Game.Graphics.Containers.Markdown
             }
         }
 
-        public override SpriteText CreateSpriteText() => new OsuSpriteText
-        {
-            Font = OsuFont.GetFont(Typeface.Inter, size: 14, weight: FontWeight.Regular),
-        };
+        public override SpriteText CreateSpriteText() =>
+            new OsuSpriteText
+            {
+                Font = OsuFont.GetFont(Typeface.Inter, size: 14, weight: FontWeight.Regular),
+            };
 
-        public override OsuMarkdownTextFlowContainer CreateTextFlow() => new OsuMarkdownTextFlowContainer();
+        public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+            new OsuMarkdownTextFlowContainer();
 
-        protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) => new OsuMarkdownHeading(headingBlock);
+        protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) =>
+            new OsuMarkdownHeading(headingBlock);
 
-        protected override MarkdownCodeBlock CreateCodeBlock(CodeBlock codeBlock) => new OsuMarkdownCodeBlock(codeBlock);
+        protected override MarkdownCodeBlock CreateCodeBlock(CodeBlock codeBlock) =>
+            new OsuMarkdownCodeBlock(codeBlock);
 
-        protected override MarkdownSeparator CreateSeparator(ThematicBreakBlock thematicBlock) => new OsuMarkdownSeparator();
+        protected override MarkdownSeparator CreateSeparator(ThematicBreakBlock thematicBlock) =>
+            new OsuMarkdownSeparator();
 
-        protected override MarkdownQuoteBlock CreateQuoteBlock(QuoteBlock quoteBlock) => new OsuMarkdownQuoteBlock(quoteBlock);
+        protected override MarkdownQuoteBlock CreateQuoteBlock(QuoteBlock quoteBlock) =>
+            new OsuMarkdownQuoteBlock(quoteBlock);
 
         protected override MarkdownTable CreateTable(Table table) => new OsuMarkdownTable(table);
 
-        protected override MarkdownList CreateList(ListBlock listBlock) => new MarkdownList
-        {
-            Padding = new MarginPadding(0)
-        };
+        protected override MarkdownList CreateList(ListBlock listBlock) =>
+            new MarkdownList { Padding = new MarginPadding(0) };
 
-        protected virtual OsuMarkdownListItem CreateListItem(ListItemBlock listItemBlock, int level, bool isOrdered)
+        protected virtual OsuMarkdownListItem CreateListItem(
+            ListItemBlock listItemBlock,
+            int level,
+            bool isOrdered
+        )
         {
             if (isOrdered)
                 return new OsuMarkdownOrderedListItem(listItemBlock.Order);
@@ -88,12 +104,13 @@ namespace osu.Game.Graphics.Containers.Markdown
             return new OsuMarkdownUnorderedListItem(level);
         }
 
-        protected override MarkdownFootnoteGroup CreateFootnoteGroup(FootnoteGroup footnoteGroup) => base.CreateFootnoteGroup(footnoteGroup).With(g => g.Spacing = new Vector2(5));
+        protected override MarkdownFootnoteGroup CreateFootnoteGroup(FootnoteGroup footnoteGroup) =>
+            base.CreateFootnoteGroup(footnoteGroup).With(g => g.Spacing = new Vector2(5));
 
-        protected override MarkdownFootnote CreateFootnote(Footnote footnote) => new OsuMarkdownFootnote(footnote);
+        protected override MarkdownFootnote CreateFootnote(Footnote footnote) =>
+            new OsuMarkdownFootnote(footnote);
 
-        protected sealed override MarkdownPipeline CreateBuilder()
-            => Options.BuildPipeline();
+        protected sealed override MarkdownPipeline CreateBuilder() => Options.BuildPipeline();
 
         /// <summary>
         /// Creates a <see cref="OsuMarkdownContainerOptions"/> instance which is used to determine

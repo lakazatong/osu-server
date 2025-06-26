@@ -28,11 +28,7 @@ namespace osu.Game.Overlays.Profile.Header
         {
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background3
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background3 },
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.X,
@@ -43,23 +39,11 @@ namespace osu.Game.Overlays.Profile.Header
                     Spacing = new Vector2(10, 0),
                     Children = new Drawable[]
                     {
-                        new FollowersButton
-                        {
-                            User = { BindTarget = User }
-                        },
-                        new MappingSubscribersButton
-                        {
-                            User = { BindTarget = User }
-                        },
-                        new MessageUserButton
-                        {
-                            User = { BindTarget = User }
-                        },
-                        new UserActionsButton
-                        {
-                            User = { BindTarget = User }
-                        }
-                    }
+                        new FollowersButton { User = { BindTarget = User } },
+                        new MappingSubscribersButton { User = { BindTarget = User } },
+                        new MessageUserButton { User = { BindTarget = User } },
+                        new UserActionsButton { User = { BindTarget = User } },
+                    },
                 },
                 new Container
                 {
@@ -73,7 +57,7 @@ namespace osu.Game.Overlays.Profile.Header
                         {
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
-                            Size = new Vector2(40)
+                            Size = new Vector2(40),
                         },
                         new Container
                         {
@@ -81,15 +65,18 @@ namespace osu.Game.Overlays.Profile.Header
                             Origin = Anchor.CentreRight,
                             Width = 200,
                             Height = 6,
-                            Margin = new MarginPadding { Right = WaveOverlayContainer.HORIZONTAL_PADDING },
+                            Margin = new MarginPadding
+                            {
+                                Right = WaveOverlayContainer.HORIZONTAL_PADDING,
+                            },
                             Child = new LevelProgressBar
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                User = { BindTarget = User }
-                            }
+                                User = { BindTarget = User },
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 

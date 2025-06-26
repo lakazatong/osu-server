@@ -18,7 +18,10 @@ namespace osu.Game.Models
         [Ignored]
         public CountryCode CountryCode
         {
-            get => Enum.TryParse(CountryString, out CountryCode country) ? country : CountryCode.Unknown;
+            get =>
+                Enum.TryParse(CountryString, out CountryCode country)
+                    ? country
+                    : CountryCode.Unknown;
             set => CountryString = value.ToString();
         }
 
@@ -29,8 +32,10 @@ namespace osu.Game.Models
 
         public bool Equals(RealmUser? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return OnlineID == other.OnlineID && Username == other.Username;
         }

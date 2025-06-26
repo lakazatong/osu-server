@@ -39,73 +39,71 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
 
-            Content.Add(bodyContainer = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Depth = 1,
-                Children = new[]
+            Content.Add(
+                bodyContainer = new Container
                 {
-                    expandingRing = new CircularContainer
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = 1,
+                    Children = new[]
                     {
-                        Name = "Expanding ring",
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Alpha = 0,
-                        RelativeSizeAxes = Axes.Both,
-                        Blending = BlendingParameters.Additive,
-                        Masking = true,
-                        Children = new[]
+                        expandingRing = new CircularContainer
                         {
-                            new Box
+                            Name = "Expanding ring",
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Alpha = 0,
+                            RelativeSizeAxes = Axes.Both,
+                            Blending = BlendingParameters.Additive,
+                            Masking = true,
+                            Children = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Alpha = inner_ring_alpha,
-                            }
-                        }
-                    },
-                    targetRing = new CircularContainer
-                    {
-                        Name = "Target ring (thick border)",
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        Masking = true,
-                        BorderThickness = target_ring_thick_border,
-                        Blending = BlendingParameters.Additive,
-                        Children = new Drawable[]
-                        {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Alpha = 0,
-                                AlwaysPresent = true
+                                new Box { RelativeSizeAxes = Axes.Both, Alpha = inner_ring_alpha },
                             },
-                            new CircularContainer
+                        },
+                        targetRing = new CircularContainer
+                        {
+                            Name = "Target ring (thick border)",
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Masking = true,
+                            BorderThickness = target_ring_thick_border,
+                            Blending = BlendingParameters.Additive,
+                            Children = new Drawable[]
                             {
-                                Name = "Target ring (thin border)",
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativeSizeAxes = Axes.Both,
-                                Masking = true,
-                                BorderThickness = target_ring_thin_border,
-                                BorderColour = Color4.White,
-                                Children = new[]
+                                new Box
                                 {
-                                    new Box
+                                    RelativeSizeAxes = Axes.Both,
+                                    Alpha = 0,
+                                    AlwaysPresent = true,
+                                },
+                                new CircularContainer
+                                {
+                                    Name = "Target ring (thin border)",
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Masking = true,
+                                    BorderThickness = target_ring_thin_border,
+                                    BorderColour = Color4.White,
+                                    Children = new[]
                                     {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Alpha = 0,
-                                        AlwaysPresent = true
-                                    }
-                                }
-                            }
-                        }
+                                        new Box
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Alpha = 0,
+                                            AlwaysPresent = true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        centreCircle = CreateCentreCircle(),
                     },
-                    centreCircle = CreateCentreCircle(),
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -121,11 +119,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
 
         protected virtual Drawable CreateCentreCircle()
         {
-            return new SwellCirclePiece
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
+            return new SwellCirclePiece { Anchor = Anchor.Centre, Origin = Anchor.Centre };
         }
 
         private void animateSwellProgress(int numHits)
@@ -142,11 +136,33 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
 
             float completion = (float)numHits / drawableSwell.HitObject.RequiredHits;
 
-            centreCircle.Rotation = (float)Interpolation.DampContinuously(centreCircle.Rotation,
-                (float)(completion * drawableSwell.HitObject.Duration / 8), 500, Math.Abs(Time.Elapsed));
-            expandingRing.Scale = new Vector2((float)Interpolation.DampContinuously(expandingRing.Scale.X,
-                1f + Math.Min(target_ring_scale - 1f, (target_ring_scale - 1f) * completion * 1.3f), 35, Math.Abs(Time.Elapsed)));
-            expandingRing.Alpha = (float)Interpolation.DampContinuously(expandingRing.Alpha, completion / 16, 250, Math.Abs(Time.Elapsed));
+            centreCircle.Rotation = (float)
+                Interpolation.DampContinuously(
+                    centreCircle.Rotation,
+                    (float)(completion * drawableSwell.HitObject.Duration / 8),
+                    500,
+                    Math.Abs(Time.Elapsed)
+                );
+            expandingRing.Scale = new Vector2(
+                (float)
+                    Interpolation.DampContinuously(
+                        expandingRing.Scale.X,
+                        1f
+                            + Math.Min(
+                                target_ring_scale - 1f,
+                                (target_ring_scale - 1f) * completion * 1.3f
+                            ),
+                        35,
+                        Math.Abs(Time.Elapsed)
+                    )
+            );
+            expandingRing.Alpha = (float)
+                Interpolation.DampContinuously(
+                    expandingRing.Alpha,
+                    completion / 16,
+                    250,
+                    Math.Abs(Time.Elapsed)
+                );
         }
 
         private void updateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)
@@ -163,7 +179,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
 
                 const double ring_appear_offset = 100;
 
-                targetRing.Delay(ring_appear_offset).ScaleTo(target_ring_scale, 400, Easing.OutQuint);
+                targetRing
+                    .Delay(ring_appear_offset)
+                    .ScaleTo(target_ring_scale, 400, Easing.OutQuint);
             }
 
             using (BeginAbsoluteSequence(drawableSwell.HitStateUpdateTime))

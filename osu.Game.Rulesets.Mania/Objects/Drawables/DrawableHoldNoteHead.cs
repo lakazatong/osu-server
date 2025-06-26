@@ -17,9 +17,7 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         protected override ManiaSkinComponents Component => ManiaSkinComponents.HoldNoteHead;
 
         public DrawableHoldNoteHead()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHoldNoteHead(HeadNote headNote)
             : base(headNote)
@@ -43,8 +41,6 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
 
         public override bool OnPressed(KeyBindingPressEvent<ManiaAction> e) => false; // Handled by the hold note
 
-        public override void OnReleased(KeyBindingReleaseEvent<ManiaAction> e)
-        {
-        }
+        public override void OnReleased(KeyBindingReleaseEvent<ManiaAction> e) { }
     }
 }

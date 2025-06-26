@@ -19,18 +19,24 @@ namespace osu.Game.Tests.Visual.Navigation
             // Headless tests are always at minimum volume. This covers interactive tests, matching that initial value.
             AddStep("Set volume to min", () => Game.Audio.Volume.Value = 0);
             AddAssert("Volume is min", () => Game.Audio.AggregateVolume.Value == 0);
-            AddStep("Move mouse to centre", () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move mouse to centre",
+                () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre)
+            );
         }
 
         [Test]
         public void TestAdjustVolumeFromMainMenu()
         {
             // First scroll makes volume controls appear, second adjusts volume.
-            AddUntilStep("Adjust volume using mouse wheel", () =>
-            {
-                InputManager.ScrollVerticalBy(5);
-                return Game.Audio.AggregateVolume.Value > 0;
-            });
+            AddUntilStep(
+                "Adjust volume using mouse wheel",
+                () =>
+                {
+                    InputManager.ScrollVerticalBy(5);
+                    return Game.Audio.AggregateVolume.Value > 0;
+                }
+            );
         }
 
         [Test]
@@ -39,45 +45,65 @@ namespace osu.Game.Tests.Visual.Navigation
             loadToPlayerNonBreakTime();
 
             // First scroll makes volume controls appear, second adjusts volume.
-            AddUntilStep("Adjust volume using mouse wheel", () =>
-            {
-                InputManager.ScrollVerticalBy(5);
-                return Game.Audio.AggregateVolume.Value > 0;
-            });
+            AddUntilStep(
+                "Adjust volume using mouse wheel",
+                () =>
+                {
+                    InputManager.ScrollVerticalBy(5);
+                    return Game.Audio.AggregateVolume.Value > 0;
+                }
+            );
             AddAssert("Volume is above zero", () => Game.Audio.Volume.Value > 0);
         }
 
         [Test]
         public void TestAdjustVolumeFromPlayerWheelDisabled()
         {
-            AddStep("disable wheel volume adjust", () => Game.LocalConfig.SetValue(OsuSetting.MouseDisableWheel, true));
+            AddStep(
+                "disable wheel volume adjust",
+                () => Game.LocalConfig.SetValue(OsuSetting.MouseDisableWheel, true)
+            );
 
             loadToPlayerNonBreakTime();
 
             // First scroll makes volume controls appear, second adjusts volume.
-            AddRepeatStep("Adjust volume using mouse wheel", () => InputManager.ScrollVerticalBy(5), 10);
+            AddRepeatStep(
+                "Adjust volume using mouse wheel",
+                () => InputManager.ScrollVerticalBy(5),
+                10
+            );
             AddAssert("Volume is still zero", () => Game.Audio.Volume.Value, () => Is.Zero);
 
             AddStep("Pause", () => InputManager.PressKey(Key.Escape));
-            AddRepeatStep("Adjust volume using mouse wheel", () => InputManager.ScrollVerticalBy(5), 10);
+            AddRepeatStep(
+                "Adjust volume using mouse wheel",
+                () => InputManager.ScrollVerticalBy(5),
+                10
+            );
             AddAssert("Volume is above zero", () => Game.Audio.Volume.Value > 0);
         }
 
         [Test]
         public void TestAdjustVolumeFromPlayerWheelDisabledHoldingAlt()
         {
-            AddStep("disable wheel volume adjust", () => Game.LocalConfig.SetValue(OsuSetting.MouseDisableWheel, true));
+            AddStep(
+                "disable wheel volume adjust",
+                () => Game.LocalConfig.SetValue(OsuSetting.MouseDisableWheel, true)
+            );
 
             loadToPlayerNonBreakTime();
 
             // First scroll makes volume controls appear, second adjusts volume.
-            AddUntilStep("Adjust volume using mouse wheel holding alt", () =>
-            {
-                InputManager.PressKey(Key.AltLeft);
-                InputManager.ScrollVerticalBy(5);
-                InputManager.ReleaseKey(Key.AltLeft);
-                return Game.Audio.AggregateVolume.Value > 0;
-            });
+            AddUntilStep(
+                "Adjust volume using mouse wheel holding alt",
+                () =>
+                {
+                    InputManager.PressKey(Key.AltLeft);
+                    InputManager.ScrollVerticalBy(5);
+                    InputManager.ReleaseKey(Key.AltLeft);
+                    return Game.Audio.AggregateVolume.Value > 0;
+                }
+            );
         }
 
         private void loadToPlayerNonBreakTime()
@@ -87,17 +113,27 @@ namespace osu.Game.Tests.Visual.Navigation
             PushAndConfirm(() => songSelect = new TestSceneScreenNavigation.TestPlaySongSelect());
             AddUntilStep("wait for song select", () => songSelect.BeatmapSetsLoaded);
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely()
+            );
             AddUntilStep("wait for selected", () => !Game.Beatmap.IsDefault);
             AddStep("press enter", () => InputManager.Key(Key.Enter));
 
-            AddUntilStep("wait for player", () =>
-            {
-                DismissAnyNotifications();
-                return (player = Game.ScreenStack.CurrentScreen as Player) != null;
-            });
+            AddUntilStep(
+                "wait for player",
+                () =>
+                {
+                    DismissAnyNotifications();
+                    return (player = Game.ScreenStack.CurrentScreen as Player) != null;
+                }
+            );
 
-            AddUntilStep("wait for play time active", () => player!.IsBreakTime.Value, () => Is.False);
+            AddUntilStep(
+                "wait for play time active",
+                () => player!.IsBreakTime.Value,
+                () => Is.False
+            );
         }
     }
 }

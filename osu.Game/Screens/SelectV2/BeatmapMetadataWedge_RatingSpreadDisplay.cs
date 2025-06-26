@@ -41,7 +41,18 @@ namespace osu.Game.Screens.SelectV2
                         int maxRating = usableRange.Max();
 
                         for (int i = 0; i < graph.Length; i++)
-                            graph[i].ResizeHeightTo(min_height + (max_height - min_height) * (maxRating == 0 ? 0 : usableRange.ElementAt(i) / (float)maxRating), 300, Easing.OutQuint);
+                            graph[i]
+                                .ResizeHeightTo(
+                                    min_height
+                                        + (max_height - min_height)
+                                            * (
+                                                maxRating == 0
+                                                    ? 0
+                                                    : usableRange.ElementAt(i) / (float)maxRating
+                                            ),
+                                    300,
+                                    Easing.OutQuint
+                                );
                     }
                 }
             }
@@ -72,23 +83,34 @@ namespace osu.Game.Screens.SelectV2
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                RowDimensions = new[] { new Dimension(GridSizeMode.Absolute, max_height) },
-                                ColumnDimensions = graph.SkipLast(1).Select(_ => new[]
+                                RowDimensions = new[]
                                 {
-                                    new Dimension(),
-                                    new Dimension(GridSizeMode.Absolute, 1f),
-                                }).SelectMany(d => d).Append(new Dimension()).ToArray(),
+                                    new Dimension(GridSizeMode.Absolute, max_height),
+                                },
+                                ColumnDimensions = graph
+                                    .SkipLast(1)
+                                    .Select(_ =>
+                                        new[]
+                                        {
+                                            new Dimension(),
+                                            new Dimension(GridSizeMode.Absolute, 1f),
+                                        }
+                                    )
+                                    .SelectMany(d => d)
+                                    .Append(new Dimension())
+                                    .ToArray(),
                                 Content = new[]
                                 {
-                                    graph.SkipLast(1).Select(g => new[]
-                                    {
-                                        g,
-                                        Empty()
-                                    }).SelectMany(g => g).Append(graph[^1]).ToArray()
+                                    graph
+                                        .SkipLast(1)
+                                        .Select(g => new[] { g, Empty() })
+                                        .SelectMany(g => g)
+                                        .Append(graph[^1])
+                                        .ToArray(),
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 };
             }
 

@@ -47,9 +47,18 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    team1Dropdown = new SettingsTeamDropdown(ladderInfo.Teams) { LabelText = "Team 1" },
-                    team2Dropdown = new SettingsTeamDropdown(ladderInfo.Teams) { LabelText = "Team 2" },
-                    roundDropdown = new SettingsRoundDropdown(ladderInfo.Rounds) { LabelText = "Round" },
+                    team1Dropdown = new SettingsTeamDropdown(ladderInfo.Teams)
+                    {
+                        LabelText = "Team 1",
+                    },
+                    team2Dropdown = new SettingsTeamDropdown(ladderInfo.Teams)
+                    {
+                        LabelText = "Team 2",
+                    },
+                    roundDropdown = new SettingsRoundDropdown(ladderInfo.Rounds)
+                    {
+                        LabelText = "Round",
+                    },
                     losersCheckbox = new PlayerCheckbox { LabelText = "Losers Bracket" },
                     dateTimeBox = new DateTextBox { LabelText = "Match Time" },
                 },
@@ -95,9 +104,7 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
             return false;
         }
 
-        protected override void OnHoverLost(HoverLostEvent e)
-        {
-        }
+        protected override void OnHoverLost(HoverLostEvent e) { }
 
         private partial class SettingsRoundDropdown : SettingsDropdown<TournamentRound?>
         {
@@ -121,7 +128,8 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                         case NotifyCollectionChangedAction.Remove:
                             Debug.Assert(args.OldItems != null);
 
-                            args.OldItems.Cast<TournamentRound>().ForEach(i => Control.RemoveDropdownItem(i));
+                            args.OldItems.Cast<TournamentRound>()
+                                .ForEach(i => Control.RemoveDropdownItem(i));
                             break;
                     }
                 };
@@ -140,11 +148,12 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
             private void add(TournamentRound round)
             {
                 Control.AddDropdownItem(round);
-                boundReference(round.Name).BindValueChanged(_ =>
-                {
-                    Control.RemoveDropdownItem(round);
-                    Control.AddDropdownItem(round);
-                });
+                boundReference(round.Name)
+                    .BindValueChanged(_ =>
+                    {
+                        Control.RemoveDropdownItem(round);
+                        Control.AddDropdownItem(round);
+                    });
             }
         }
     }

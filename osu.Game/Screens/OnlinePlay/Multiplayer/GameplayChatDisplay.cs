@@ -22,9 +22,11 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
 
         protected new ChatTextBox TextBox => base.TextBox!;
 
-        private readonly IBindable<LocalUserPlayingState> localUserPlaying = new Bindable<LocalUserPlayingState>();
+        private readonly IBindable<LocalUserPlayingState> localUserPlaying =
+            new Bindable<LocalUserPlayingState>();
 
-        public override bool PropagatePositionalInputSubTree => localUserPlaying.Value != LocalUserPlayingState.Playing;
+        public override bool PropagatePositionalInputSubTree =>
+            localUserPlaying.Value != LocalUserPlayingState.Playing;
 
         public Bindable<bool> Expanded = new Bindable<bool>();
 
@@ -53,7 +55,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 expandedFromTextBoxFocus.Value = false;
             };
 
-            void resetPlaceholderText() => TextBox.PlaceholderText = Localisation.ChatStrings.InGameInputPlaceholder(keyBindingStore.GetBindingsStringFor(GlobalAction.ToggleChatFocus));
+            void resetPlaceholderText() =>
+                TextBox.PlaceholderText = Localisation.ChatStrings.InGameInputPlaceholder(
+                    keyBindingStore.GetBindingsStringFor(GlobalAction.ToggleChatFocus)
+                );
         }
 
         protected override bool OnHover(HoverEvent e) => true; // use UI mouse cursor.
@@ -65,28 +70,35 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             if (localUserInfo != null)
                 localUserPlaying.BindTo(localUserInfo.PlayingState);
 
-            localUserPlaying.BindValueChanged(playing =>
-            {
-                // for now let's never hold focus. this avoids misdirected gameplay keys entering chat.
-                // note that this is done within this callback as it triggers an un-focus as well.
-                TextBox.HoldFocus = false;
+            localUserPlaying.BindValueChanged(
+                playing =>
+                {
+                    // for now let's never hold focus. this avoids misdirected gameplay keys entering chat.
+                    // note that this is done within this callback as it triggers an un-focus as well.
+                    TextBox.HoldFocus = false;
 
-                // only hold focus (after sending a message) during breaks
-                TextBox.ReleaseFocusOnCommit = playing.NewValue == LocalUserPlayingState.Playing;
-            }, true);
+                    // only hold focus (after sending a message) during breaks
+                    TextBox.ReleaseFocusOnCommit =
+                        playing.NewValue == LocalUserPlayingState.Playing;
+                },
+                true
+            );
 
             Expanded.BindValueChanged(_ => updateExpandedState(), true);
-            expandedFromTextBoxFocus.BindValueChanged(focus =>
-            {
-                if (focus.NewValue)
-                    updateExpandedState();
-                else
+            expandedFromTextBoxFocus.BindValueChanged(
+                focus =>
                 {
-                    // on finishing typing a message there should be a brief delay before hiding.
-                    using (BeginDelayedSequence(600))
+                    if (focus.NewValue)
                         updateExpandedState();
-                }
-            }, true);
+                    else
+                    {
+                        // on finishing typing a message there should be a brief delay before hiding.
+                        using (BeginDelayedSequence(600))
+                            updateExpandedState();
+                    }
+                },
+                true
+            );
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
@@ -121,9 +133,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void updateExpandedState()
         {

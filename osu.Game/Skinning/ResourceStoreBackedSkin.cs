@@ -21,15 +21,27 @@ namespace osu.Game.Skinning
         private readonly TextureStore textures;
         private readonly ISampleStore samples;
 
-        public ResourceStoreBackedSkin(IResourceStore<byte[]> resources, GameHost host, AudioManager audio)
+        public ResourceStoreBackedSkin(
+            IResourceStore<byte[]> resources,
+            GameHost host,
+            AudioManager audio
+        )
         {
-            textures = new TextureStore(host.Renderer, host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(resources, @"Textures")));
-            samples = audio.GetSampleStore(new NamespacedResourceStore<byte[]>(resources, @"Samples"));
+            textures = new TextureStore(
+                host.Renderer,
+                host.CreateTextureLoaderStore(
+                    new NamespacedResourceStore<byte[]>(resources, @"Textures")
+                )
+            );
+            samples = audio.GetSampleStore(
+                new NamespacedResourceStore<byte[]>(resources, @"Samples")
+            );
         }
 
         public Drawable? GetDrawableComponent(ISkinComponentLookup lookup) => null;
 
-        public Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => textures.Get(componentName, wrapModeS, wrapModeT);
+        public Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) =>
+            textures.Get(componentName, wrapModeS, wrapModeT);
 
         public ISample? GetSample(ISampleInfo sampleInfo)
         {

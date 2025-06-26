@@ -58,11 +58,7 @@ namespace osu.Game.Screens.Select
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Gray2,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Gray2, RelativeSizeAxes = Axes.Both },
                 new SpriteIcon
                 {
                     Icon = FontAwesome.Regular.SadTear,
@@ -78,7 +74,7 @@ namespace osu.Game.Screens.Select
                     TextAnchor = Anchor.TopCentre,
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                }
+                },
             };
         }
 
@@ -99,8 +95,7 @@ namespace osu.Game.Screens.Select
             // TODO: Refresh this text when new beatmaps are imported. Right now it won't get up-to-date suggestions.
 
             // Bounce should play every time the filter criteria is updated.
-            this.ScaleTo(0.9f)
-                .ScaleTo(1f, 1000, Easing.OutElastic);
+            this.ScaleTo(0.9f).ScaleTo(1f, 1000, Easing.OutElastic);
 
             textFlow.Clear();
 
@@ -110,7 +105,10 @@ namespace osu.Game.Screens.Select
                 textFlow.AddParagraph(string.Empty);
 
                 textFlow.AddParagraph("- Consider running the \"");
-                textFlow.AddLink(FirstRunSetupOverlayStrings.FirstRunSetupTitle, () => firstRunSetupOverlay?.Show());
+                textFlow.AddLink(
+                    FirstRunSetupOverlayStrings.FirstRunSetupTitle,
+                    () => firstRunSetupOverlay?.Show()
+                );
                 textFlow.AddText("\" to download or import some beatmaps!");
             }
             else
@@ -121,14 +119,20 @@ namespace osu.Game.Screens.Select
                 if (filter?.UserStarDifficulty.HasFilter == true)
                 {
                     textFlow.AddParagraph("- Try ");
-                    textFlow.AddLink("removing", () =>
-                    {
-                        config.SetValue(OsuSetting.DisplayStarsMinimum, 0.0);
-                        config.SetValue(OsuSetting.DisplayStarsMaximum, 10.1);
-                    });
+                    textFlow.AddLink(
+                        "removing",
+                        () =>
+                        {
+                            config.SetValue(OsuSetting.DisplayStarsMinimum, 0.0);
+                            config.SetValue(OsuSetting.DisplayStarsMaximum, 10.1);
+                        }
+                    );
 
                     string lowerStar = $"{filter.UserStarDifficulty.Min ?? 0:N1}";
-                    string upperStar = filter.UserStarDifficulty.Max == null ? "∞" : $"{filter.UserStarDifficulty.Max:N1}";
+                    string upperStar =
+                        filter.UserStarDifficulty.Max == null
+                            ? "∞"
+                            : $"{filter.UserStarDifficulty.Max:N1}";
 
                     textFlow.AddText($" the {lowerStar} - {upperStar} star difficulty filter.");
                 }
@@ -138,7 +142,10 @@ namespace osu.Game.Screens.Select
                 if (filter?.Ruleset?.OnlineID != 0 && filter?.AllowConvertedBeatmaps == false)
                 {
                     textFlow.AddParagraph("- Try ");
-                    textFlow.AddLink("enabling ", () => config.SetValue(OsuSetting.ShowConvertedBeatmaps, true));
+                    textFlow.AddLink(
+                        "enabling ",
+                        () => config.SetValue(OsuSetting.ShowConvertedBeatmaps, true)
+                    );
                     textFlow.AddText("automatic conversion!");
                 }
             }
@@ -146,7 +153,11 @@ namespace osu.Game.Screens.Select
             if (!string.IsNullOrEmpty(filter?.SearchText))
             {
                 textFlow.AddParagraph("- Try ");
-                textFlow.AddLink("searching online", LinkAction.SearchBeatmapSet, filter.SearchText);
+                textFlow.AddLink(
+                    "searching online",
+                    LinkAction.SearchBeatmapSet,
+                    filter.SearchText
+                );
                 textFlow.AddText($" for \"{filter.SearchText}\".");
             }
             // TODO: add clickable link to reset criteria.

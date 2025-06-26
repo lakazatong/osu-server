@@ -20,20 +20,18 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             MinValue = 0,
             MaxValue = 10,
-            Precision = 0.1f
+            Precision = 0.1f,
         };
 
         private readonly BindableNumber<double> customEnd = new BindableNumber<double>(10)
         {
             MinValue = 0,
             MaxValue = 10,
-            Precision = 0.1f
+            Precision = 0.1f,
         };
 
         public TestSceneDifficultyRangeSlider()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         protected override void LoadComplete()
         {
@@ -41,28 +39,25 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             CreateThemedContent(OverlayColourScheme.Aquamarine);
         }
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.Both,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                new Box
+                RelativeSizeAxes = Axes.Both,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black.Opacity(0.5f),
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black.Opacity(0.5f) },
+                    new FilterControl.DifficultyRangeSlider
+                    {
+                        Width = 600,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(1),
+                        LowerBound = customStart,
+                        UpperBound = customEnd,
+                        NubWidth = 32,
+                        MinRange = 0.1f,
+                    },
                 },
-                new FilterControl.DifficultyRangeSlider
-                {
-                    Width = 600,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(1),
-                    LowerBound = customStart,
-                    UpperBound = customEnd,
-                    NubWidth = 32,
-                    MinRange = 0.1f,
-                }
-            }
-        };
+            };
     }
 }

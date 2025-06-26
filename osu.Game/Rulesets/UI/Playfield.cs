@@ -11,26 +11,29 @@ using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
+using osu.Framework.Graphics.Primitives;
 using osu.Game.Audio;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Objects.Pooling;
 using osu.Game.Skinning;
 using osuTK;
-using osu.Game.Rulesets.Objects.Pooling;
-using osu.Framework.Extensions.ObjectExtensions;
-using osu.Framework.Graphics.Primitives;
 
 namespace osu.Game.Rulesets.UI
 {
     [Cached(typeof(IPooledHitObjectProvider))]
     [Cached(typeof(IPooledSampleProvider))]
     [Cached]
-    public abstract partial class Playfield : CompositeDrawable, IPooledHitObjectProvider, IPooledSampleProvider
+    public abstract partial class Playfield
+        : CompositeDrawable,
+            IPooledHitObjectProvider,
+            IPooledSampleProvider
     {
         /// <summary>
         /// Invoked when a <see cref="DrawableHitObject"/> is judged.
@@ -72,7 +75,9 @@ namespace osu.Game.Rulesets.UI
                 var enumerable = HitObjectContainer.Objects;
 
                 if (nestedPlayfields.Count != 0)
-                    enumerable = enumerable.Concat(NestedPlayfields.SelectMany(p => p.AllHitObjects));
+                    enumerable = enumerable.Concat(
+                        NestedPlayfields.SelectMany(p => p.AllHitObjects)
+                    );
 
                 return enumerable;
             }
@@ -120,12 +125,15 @@ namespace osu.Game.Rulesets.UI
         {
             RelativeSizeAxes = Axes.Both;
 
-            hitObjectContainerLazy = new Lazy<HitObjectContainer>(() => CreateHitObjectContainer().With(h =>
-            {
-                h.NewResult += onNewResult;
-                h.HitObjectUsageBegan += o => HitObjectUsageBegan?.Invoke(o);
-                h.HitObjectUsageFinished += o => HitObjectUsageFinished?.Invoke(o);
-            }));
+            hitObjectContainerLazy = new Lazy<HitObjectContainer>(() =>
+                CreateHitObjectContainer()
+                    .With(h =>
+                    {
+                        h.NewResult += onNewResult;
+                        h.HitObjectUsageBegan += o => HitObjectUsageBegan?.Invoke(o);
+                        h.HitObjectUsageFinished += o => HitObjectUsageFinished?.Invoke(o);
+                    })
+            );
 
             entryManager.OnEntryAdded += onEntryAdded;
             entryManager.OnEntryRemoved += onEntryRemoved;
@@ -201,9 +209,7 @@ namespace osu.Game.Rulesets.UI
         /// Invoked when a <see cref="HitObject"/> is removed from this <see cref="Playfield"/>.
         /// </summary>
         /// <param name="hitObject">The removed <see cref="HitObject"/>.</param>
-        protected virtual void OnHitObjectRemoved(HitObject hitObject)
-        {
-        }
+        protected virtual void OnHitObjectRemoved(HitObject hitObject) { }
 
         /// <summary>
         /// Invoked before a new <see cref="DrawableHitObject"/> is added to this <see cref="Playfield"/>.
@@ -212,9 +218,7 @@ namespace osu.Game.Rulesets.UI
         /// <remarks>
         /// This is also invoked for nested <see cref="DrawableHitObject"/>s.
         /// </remarks>
-        protected virtual void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
-        {
-        }
+        protected virtual void OnNewDrawableHitObject(DrawableHitObject drawableHitObject) { }
 
         /// <summary>
         /// The cursor currently being used by this <see cref="Playfield"/>. May be null if no cursor is provided.
@@ -293,7 +297,8 @@ namespace osu.Game.Rulesets.UI
 
         #region Pooling support
 
-        private readonly Dictionary<Type, IDrawablePool> pools = new Dictionary<Type, IDrawablePool>();
+        private readonly Dictionary<Type, IDrawablePool> pools =
+            new Dictionary<Type, IDrawablePool>();
 
         /// <summary>
         /// Adds a <see cref="HitObjectLifetimeEntry"/> for a pooled <see cref="HitObject"/> to this <see cref="Playfield"/>.
@@ -334,17 +339,25 @@ namespace osu.Game.Rulesets.UI
             return nestedPlayfields.Any(p => p.Remove(hitObject));
         }
 
-        private void onEntryAdded(HitObjectLifetimeEntry entry, [CanBeNull] HitObject parentHitObject)
+        private void onEntryAdded(
+            HitObjectLifetimeEntry entry,
+            [CanBeNull] HitObject parentHitObject
+        )
         {
-            if (parentHitObject != null) return;
+            if (parentHitObject != null)
+                return;
 
             HitObjectContainer.Add(entry);
             OnHitObjectAdded(entry.HitObject);
         }
 
-        private void onEntryRemoved(HitObjectLifetimeEntry entry, [CanBeNull] HitObject parentHitObject)
+        private void onEntryRemoved(
+            HitObjectLifetimeEntry entry,
+            [CanBeNull] HitObject parentHitObject
+        )
         {
-            if (parentHitObject != null) return;
+            if (parentHitObject != null)
+                return;
 
             HitObjectContainer.Remove(entry);
             OnHitObjectRemoved(entry.HitObject);
@@ -359,7 +372,9 @@ namespace osu.Game.Rulesets.UI
         /// <param name="hitObject">The <see cref="HitObject"/> to create the entry for.</param>
         /// <returns>The <see cref="HitObjectLifetimeEntry"/>.</returns>
         [NotNull]
-        protected virtual HitObjectLifetimeEntry CreateLifetimeEntry([NotNull] HitObject hitObject) => new HitObjectLifetimeEntry(hitObject);
+        protected virtual HitObjectLifetimeEntry CreateLifetimeEntry(
+            [NotNull] HitObject hitObject
+        ) => new HitObjectLifetimeEntry(hitObject);
 
         /// <summary>
         /// Registers a default <see cref="DrawableHitObject"/> pool with this <see cref="DrawableRuleset"/> which is to be used whenever
@@ -375,8 +390,8 @@ namespace osu.Game.Rulesets.UI
         /// <typeparam name="TDrawable">The <see cref="DrawableHitObject"/> receiver for <typeparamref name="TObject"/>s.</typeparam>
         public void RegisterPool<TObject, TDrawable>(int initialSize, int? maximumSize = null)
             where TObject : HitObject
-            where TDrawable : DrawableHitObject, new()
-            => RegisterPool<TObject, TDrawable>(new DrawablePool<TDrawable>(initialSize, maximumSize));
+            where TDrawable : DrawableHitObject, new() =>
+            RegisterPool<TObject, TDrawable>(new DrawablePool<TDrawable>(initialSize, maximumSize));
 
         /// <summary>
         /// Registers a custom <see cref="DrawableHitObject"/> pool with this <see cref="DrawableRuleset"/> which is to be used whenever
@@ -393,39 +408,43 @@ namespace osu.Game.Rulesets.UI
             AddInternal(pool);
         }
 
-        DrawableHitObject IPooledHitObjectProvider.GetPooledDrawableRepresentation(HitObject hitObject, DrawableHitObject parent)
+        DrawableHitObject IPooledHitObjectProvider.GetPooledDrawableRepresentation(
+            HitObject hitObject,
+            DrawableHitObject parent
+        )
         {
             var pool = prepareDrawableHitObjectPool(hitObject);
 
-            return (DrawableHitObject)pool?.Get(d =>
-            {
-                var dho = (DrawableHitObject)d;
-
-                if (!dho.IsInitialized)
+            return (DrawableHitObject)
+                pool?.Get(d =>
                 {
-                    onNewDrawableHitObject(dho);
+                    var dho = (DrawableHitObject)d;
 
-                    // If this is the first time this DHO is being used, then apply the DHO mods.
-                    // This is done before Apply() so that the state is updated once when the hitobject is applied.
-                    if (mods != null)
+                    if (!dho.IsInitialized)
                     {
-                        foreach (Mod mod in mods)
+                        onNewDrawableHitObject(dho);
+
+                        // If this is the first time this DHO is being used, then apply the DHO mods.
+                        // This is done before Apply() so that the state is updated once when the hitobject is applied.
+                        if (mods != null)
                         {
-                            if (mod is IApplicableToDrawableHitObject applicable)
-                                applicable.ApplyToDrawableHitObject(dho);
+                            foreach (Mod mod in mods)
+                            {
+                                if (mod is IApplicableToDrawableHitObject applicable)
+                                    applicable.ApplyToDrawableHitObject(dho);
+                            }
                         }
                     }
-                }
 
-                if (!entryManager.TryGet(hitObject, out var entry))
-                {
-                    entry = CreateLifetimeEntry(hitObject);
-                    entryManager.Add(entry, parent?.HitObject);
-                }
+                    if (!entryManager.TryGet(hitObject, out var entry))
+                    {
+                        entry = CreateLifetimeEntry(hitObject);
+                        entryManager.Add(entry, parent?.HitObject);
+                    }
 
-                dho.ParentHitObject = parent;
-                dho.Apply(entry);
-            });
+                    dho.ParentHitObject = parent;
+                    dho.Apply(entry);
+                });
         }
 
         private IDrawablePool prepareDrawableHitObjectPool(HitObject hitObject)
@@ -450,13 +469,18 @@ namespace osu.Game.Rulesets.UI
             return pool;
         }
 
-        private readonly Dictionary<ISampleInfo, DrawablePool<PoolableSkinnableSample>> samplePools = new Dictionary<ISampleInfo, DrawablePool<PoolableSkinnableSample>>();
+        private readonly Dictionary<
+            ISampleInfo,
+            DrawablePool<PoolableSkinnableSample>
+        > samplePools = new Dictionary<ISampleInfo, DrawablePool<PoolableSkinnableSample>>();
 
-        public PoolableSkinnableSample GetPooledSample(ISampleInfo sampleInfo) => prepareSamplePool(sampleInfo).Get();
+        public PoolableSkinnableSample GetPooledSample(ISampleInfo sampleInfo) =>
+            prepareSamplePool(sampleInfo).Get();
 
         private DrawablePool<PoolableSkinnableSample> prepareSamplePool(ISampleInfo sampleInfo)
         {
-            if (samplePools.TryGetValue(sampleInfo, out var pool)) return pool;
+            if (samplePools.TryGetValue(sampleInfo, out var pool))
+                return pool;
 
             AddInternal(samplePools[sampleInfo] = pool = new DrawableSamplePool(sampleInfo, 1));
 
@@ -467,20 +491,27 @@ namespace osu.Game.Rulesets.UI
         {
             private readonly ISampleInfo sampleInfo;
 
-            public DrawableSamplePool(ISampleInfo sampleInfo, int initialSize, int? maximumSize = null)
+            public DrawableSamplePool(
+                ISampleInfo sampleInfo,
+                int initialSize,
+                int? maximumSize = null
+            )
                 : base(initialSize, maximumSize)
             {
                 this.sampleInfo = sampleInfo;
             }
 
-            protected override PoolableSkinnableSample CreateNewDrawable() => base.CreateNewDrawable().With(d => d.Apply(sampleInfo));
+            protected override PoolableSkinnableSample CreateNewDrawable() =>
+                base.CreateNewDrawable().With(d => d.Apply(sampleInfo));
         }
 
         #endregion
 
         private void onNewResult(DrawableHitObject drawable, JudgementResult result)
         {
-            Debug.Assert(result != null && drawable.Entry?.Result == result && result.RawTime != null);
+            Debug.Assert(
+                result != null && drawable.Entry?.Result == result && result.RawTime != null
+            );
             judgedEntries.Push(drawable.Entry.AsNonNull());
 
             NewResult?.Invoke(drawable, result);

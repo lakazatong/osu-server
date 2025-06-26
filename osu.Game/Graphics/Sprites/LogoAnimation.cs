@@ -33,7 +33,8 @@ namespace osu.Game.Graphics.Sprites
             get => animationProgress;
             set
             {
-                if (animationProgress == value) return;
+                if (animationProgress == value)
+                    return;
 
                 animationProgress = value;
                 Invalidate(Invalidation.DrawInfo);
@@ -57,12 +58,14 @@ namespace osu.Game.Graphics.Sprites
             {
                 addVertexAction = v =>
                 {
-                    animationVertexBatch!.Add(new LogoAnimationVertex
-                    {
-                        Position = v.Position,
-                        Colour = v.Colour,
-                        TexturePosition = v.TexturePosition,
-                    });
+                    animationVertexBatch!.Add(
+                        new LogoAnimationVertex
+                        {
+                            Position = v.Position,
+                            Colour = v.Colour,
+                            TexturePosition = v.TexturePosition,
+                        }
+                    );
                 };
             }
 
@@ -99,9 +102,13 @@ namespace osu.Game.Graphics.Sprites
                     Texture,
                     ScreenSpaceDrawQuad,
                     DrawColourInfo.Colour,
-                    inflationPercentage: new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height),
+                    inflationPercentage: new Vector2(
+                        InflationAmount.X / DrawRectangle.Width,
+                        InflationAmount.Y / DrawRectangle.Height
+                    ),
                     textureCoords: TextureCoords,
-                    vertexAction: addVertexAction);
+                    vertexAction: addVertexAction
+                );
             }
 
             protected override bool CanDrawOpaqueInterior => false;

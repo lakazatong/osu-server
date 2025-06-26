@@ -5,8 +5,6 @@
 
 using System;
 using System.Linq;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -21,6 +19,8 @@ using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Framework.Utils;
 using osu.Game.Graphics.Sprites;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -50,7 +50,9 @@ namespace osu.Game.Graphics.UserInterface
 
         protected override TabItem<T> CreateTabItem(T value) => new OsuTabItem(value);
 
-        protected virtual float StripWidth => TabContainer.Sum(c => c.IsPresent ? c.DrawWidth + TabContainer.Spacing.X : 0) - TabContainer.Spacing.X;
+        protected virtual float StripWidth =>
+            TabContainer.Sum(c => c.IsPresent ? c.DrawWidth + TabContainer.Spacing.X : 0)
+            - TabContainer.Spacing.X;
 
         /// <summary>
         /// Whether entries should be automatically populated if <typeparamref name="T"/> is an <see cref="Enum"/> type.
@@ -63,13 +65,15 @@ namespace osu.Game.Graphics.UserInterface
         {
             TabContainer.Spacing = new Vector2(HORIZONTAL_SPACING, 0f);
 
-            AddInternal(strip = new Box
-            {
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                Height = 1,
-                Colour = Color4.White.Opacity(0),
-            });
+            AddInternal(
+                strip = new Box
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Height = 1,
+                    Colour = Color4.White.Opacity(0),
+                }
+            );
 
             if (isEnumType && AddEnumEntriesAutomatically)
             {
@@ -97,7 +101,14 @@ namespace osu.Game.Graphics.UserInterface
 
             // dont bother calculating if the strip is invisible
             if (strip.Colour.MaxAlpha > 0)
-                strip.Width = Interpolation.ValueAt(Math.Clamp(Clock.ElapsedFrameTime, 0, 1000), strip.Width, StripWidth, 0, 500, Easing.OutQuint);
+                strip.Width = Interpolation.ValueAt(
+                    Math.Clamp(Clock.ElapsedFrameTime, 0, 1000),
+                    strip.Width,
+                    StripWidth,
+                    0,
+                    500,
+                    Easing.OutQuint
+                );
         }
 
         public partial class OsuTabItem : TabItem<T>, IHasAccentColour
@@ -129,7 +140,11 @@ namespace osu.Game.Graphics.UserInterface
             protected virtual void FadeUnhovered()
             {
                 Bar.FadeTo(IsHovered ? 1 : 0, TRANSITION_LENGTH, Easing.OutQuint);
-                Text.FadeColour(IsHovered ? Color4.White : AccentColour, TRANSITION_LENGTH, Easing.OutQuint);
+                Text.FadeColour(
+                    IsHovered ? Color4.White : AccentColour,
+                    TRANSITION_LENGTH,
+                    Easing.OutQuint
+                );
             }
 
             protected override bool OnHover(HoverEvent e)
@@ -180,7 +195,7 @@ namespace osu.Game.Graphics.UserInterface
                         Origin = Anchor.BottomLeft,
                         Anchor = Anchor.BottomLeft,
                         Text = text,
-                        Font = OsuFont.GetFont(size: 14)
+                        Font = OsuFont.GetFont(size: 14),
                     },
                     Bar = new Box
                     {
@@ -191,7 +206,7 @@ namespace osu.Game.Graphics.UserInterface
                         Origin = Anchor.BottomLeft,
                         Anchor = Anchor.BottomLeft,
                     },
-                    new HoverSounds(HoverSampleSet.TabSelect)
+                    new HoverSounds(HoverSampleSet.TabSelect),
                 };
             }
 

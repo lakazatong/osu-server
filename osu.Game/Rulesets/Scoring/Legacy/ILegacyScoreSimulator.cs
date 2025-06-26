@@ -25,6 +25,9 @@ namespace osu.Game.Rulesets.Scoring.Legacy
         /// <param name="mods">The mods.</param>
         /// <param name="difficulty">Extra difficulty parameters.</param>
         /// <returns>The legacy multiplier.</returns>
-        double GetLegacyScoreMultiplier(IReadOnlyList<Mod> mods, LegacyBeatmapConversionDifficultyInfo difficulty);
+        double GetLegacyScoreMultiplier(
+            IReadOnlyList<Mod> mods,
+            LegacyBeatmapConversionDifficultyInfo difficulty
+        );
     }
 }

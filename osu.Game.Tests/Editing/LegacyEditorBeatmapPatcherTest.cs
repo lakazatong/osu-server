@@ -30,13 +30,11 @@ namespace osu.Game.Tests.Editing
         [SetUp]
         public void Setup()
         {
-            patcher = new LegacyEditorBeatmapPatcher(current = new EditorBeatmap(new OsuBeatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo
-                }
-            }));
+            patcher = new LegacyEditorBeatmapPatcher(
+                current = new EditorBeatmap(
+                    new OsuBeatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+                )
+            );
         }
 
         [Test]
@@ -52,8 +50,8 @@ namespace osu.Game.Tests.Editing
             {
                 HitObjects =
                 {
-                    new HitCircle { StartTime = 1000, NewCombo = true }
-                }
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                },
             };
 
             runTest(patch);
@@ -62,11 +60,13 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestInsertHitObject()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new HitCircle { StartTime = 3000 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -75,7 +75,7 @@ namespace osu.Game.Tests.Editing
                     (OsuHitObject)current.HitObjects[0],
                     new HitCircle { StartTime = 2000 },
                     (OsuHitObject)current.HitObjects[1],
-                }
+                },
             };
 
             runTest(patch);
@@ -84,12 +84,14 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestDeleteHitObject()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 3000 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -97,7 +99,7 @@ namespace osu.Game.Tests.Editing
                 {
                     (OsuHitObject)current.HitObjects[0],
                     (OsuHitObject)current.HitObjects[2],
-                }
+                },
             };
 
             runTest(patch);
@@ -106,12 +108,14 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestChangeStartTime()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 3000 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -120,7 +124,7 @@ namespace osu.Game.Tests.Editing
                     new HitCircle { StartTime = 500, NewCombo = true },
                     (OsuHitObject)current.HitObjects[1],
                     (OsuHitObject)current.HitObjects[2],
-                }
+                },
             };
 
             runTest(patch);
@@ -129,21 +133,27 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestChangeSample()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 3000 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
                 HitObjects =
                 {
                     (OsuHitObject)current.HitObjects[0],
-                    new HitCircle { StartTime = 2000, Samples = { new HitSampleInfo(HitSampleInfo.HIT_FINISH) } },
+                    new HitCircle
+                    {
+                        StartTime = 2000,
+                        Samples = { new HitSampleInfo(HitSampleInfo.HIT_FINISH) },
+                    },
                     (OsuHitObject)current.HitObjects[2],
-                }
+                },
             };
 
             runTest(patch);
@@ -152,22 +162,27 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestChangeSliderPath()
         {
-            current.AddRange(new OsuHitObject[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new Slider
+            current.AddRange(
+                new OsuHitObject[]
                 {
-                    StartTime = 2000,
-                    Path = new SliderPath(new[]
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new Slider
                     {
-                        new PathControlPoint(Vector2.Zero),
-                        new PathControlPoint(Vector2.One),
-                        new PathControlPoint(new Vector2(2), PathType.BEZIER),
-                        new PathControlPoint(new Vector2(3)),
-                    }, 50)
-                },
-                new HitCircle { StartTime = 3000 },
-            });
+                        StartTime = 2000,
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero),
+                                new PathControlPoint(Vector2.One),
+                                new PathControlPoint(new Vector2(2), PathType.BEZIER),
+                                new PathControlPoint(new Vector2(3)),
+                            },
+                            50
+                        ),
+                    },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -177,15 +192,18 @@ namespace osu.Game.Tests.Editing
                     new Slider
                     {
                         StartTime = 2000,
-                        Path = new SliderPath(new[]
-                        {
-                            new PathControlPoint(Vector2.Zero, PathType.BEZIER),
-                            new PathControlPoint(new Vector2(4)),
-                            new PathControlPoint(new Vector2(5)),
-                        }, 100)
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.BEZIER),
+                                new PathControlPoint(new Vector2(4)),
+                                new PathControlPoint(new Vector2(5)),
+                            },
+                            100
+                        ),
                     },
                     (OsuHitObject)current.HitObjects[2],
-                }
+                },
             };
 
             runTest(patch);
@@ -194,12 +212,14 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestAddMultipleHitObjects()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 1000, NewCombo = true },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 3000 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 1000, NewCombo = true },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 3000 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -213,7 +233,7 @@ namespace osu.Game.Tests.Editing
                     new HitCircle { StartTime = 2500 },
                     (OsuHitObject)current.HitObjects[2],
                     new HitCircle { StartTime = 3500 },
-                }
+                },
             };
 
             runTest(patch);
@@ -222,17 +242,19 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestDeleteMultipleHitObjects()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 500, NewCombo = true },
-                new HitCircle { StartTime = 1000 },
-                new HitCircle { StartTime = 1500 },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 2250 },
-                new HitCircle { StartTime = 2500 },
-                new HitCircle { StartTime = 3000 },
-                new HitCircle { StartTime = 3500 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 500, NewCombo = true },
+                    new HitCircle { StartTime = 1000 },
+                    new HitCircle { StartTime = 1500 },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 2250 },
+                    new HitCircle { StartTime = 2500 },
+                    new HitCircle { StartTime = 3000 },
+                    new HitCircle { StartTime = 3500 },
+                }
+            );
 
             var patchedFirst = (HitCircle)current.HitObjects[1];
             patchedFirst.NewCombo = true;
@@ -244,7 +266,7 @@ namespace osu.Game.Tests.Editing
                     (OsuHitObject)current.HitObjects[1],
                     (OsuHitObject)current.HitObjects[3],
                     (OsuHitObject)current.HitObjects[6],
-                }
+                },
             };
 
             runTest(patch);
@@ -253,31 +275,45 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestChangeSamplesOfMultipleHitObjects()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 500, NewCombo = true },
-                new HitCircle { StartTime = 1000 },
-                new HitCircle { StartTime = 1500 },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 2250 },
-                new HitCircle { StartTime = 2500 },
-                new HitCircle { StartTime = 3000 },
-                new HitCircle { StartTime = 3500 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 500, NewCombo = true },
+                    new HitCircle { StartTime = 1000 },
+                    new HitCircle { StartTime = 1500 },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 2250 },
+                    new HitCircle { StartTime = 2500 },
+                    new HitCircle { StartTime = 3000 },
+                    new HitCircle { StartTime = 3500 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
                 HitObjects =
                 {
                     (OsuHitObject)current.HitObjects[0],
-                    new HitCircle { StartTime = 1000, Samples = { new HitSampleInfo(HitSampleInfo.HIT_FINISH) } },
+                    new HitCircle
+                    {
+                        StartTime = 1000,
+                        Samples = { new HitSampleInfo(HitSampleInfo.HIT_FINISH) },
+                    },
                     (OsuHitObject)current.HitObjects[2],
                     (OsuHitObject)current.HitObjects[3],
-                    new HitCircle { StartTime = 2250, Samples = { new HitSampleInfo(HitSampleInfo.HIT_WHISTLE) } },
+                    new HitCircle
+                    {
+                        StartTime = 2250,
+                        Samples = { new HitSampleInfo(HitSampleInfo.HIT_WHISTLE) },
+                    },
                     (OsuHitObject)current.HitObjects[5],
-                    new HitCircle { StartTime = 3000, Samples = { new HitSampleInfo(HitSampleInfo.HIT_CLAP) } },
+                    new HitCircle
+                    {
+                        StartTime = 3000,
+                        Samples = { new HitSampleInfo(HitSampleInfo.HIT_CLAP) },
+                    },
                     (OsuHitObject)current.HitObjects[7],
-                }
+                },
             };
 
             runTest(patch);
@@ -286,17 +322,19 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestAddAndDeleteHitObjects()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 500, NewCombo = true },
-                new HitCircle { StartTime = 1000 },
-                new HitCircle { StartTime = 1500 },
-                new HitCircle { StartTime = 2000 },
-                new HitCircle { StartTime = 2250 },
-                new HitCircle { StartTime = 2500 },
-                new HitCircle { StartTime = 3000 },
-                new HitCircle { StartTime = 3500 },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle { StartTime = 500, NewCombo = true },
+                    new HitCircle { StartTime = 1000 },
+                    new HitCircle { StartTime = 1500 },
+                    new HitCircle { StartTime = 2000 },
+                    new HitCircle { StartTime = 2250 },
+                    new HitCircle { StartTime = 2500 },
+                    new HitCircle { StartTime = 3000 },
+                    new HitCircle { StartTime = 3500 },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
@@ -309,7 +347,7 @@ namespace osu.Game.Tests.Editing
                     new HitCircle { StartTime = 2650 },
                     new HitCircle { StartTime = 2750 },
                     new HitCircle { StartTime = 4000 },
-                }
+                },
             };
 
             runTest(patch);
@@ -318,23 +356,65 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestChangeHitObjectAtSameTime()
         {
-            current.AddRange(new[]
-            {
-                new HitCircle { StartTime = 500, Position = new Vector2(50), NewCombo = true },
-                new HitCircle { StartTime = 500, Position = new Vector2(100), NewCombo = true },
-                new HitCircle { StartTime = 500, Position = new Vector2(150), NewCombo = true },
-                new HitCircle { StartTime = 500, Position = new Vector2(200), NewCombo = true },
-            });
+            current.AddRange(
+                new[]
+                {
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(50),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(100),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(150),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(200),
+                        NewCombo = true,
+                    },
+                }
+            );
 
             var patch = new OsuBeatmap
             {
                 HitObjects =
                 {
-                    new HitCircle { StartTime = 500, Position = new Vector2(150), NewCombo = true },
-                    new HitCircle { StartTime = 500, Position = new Vector2(100), NewCombo = true },
-                    new HitCircle { StartTime = 500, Position = new Vector2(50), NewCombo = true },
-                    new HitCircle { StartTime = 500, Position = new Vector2(200), NewCombo = true },
-                }
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(150),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(100),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(50),
+                        NewCombo = true,
+                    },
+                    new HitCircle
+                    {
+                        StartTime = 500,
+                        Position = new Vector2(200),
+                        NewCombo = true,
+                    },
+                },
             };
 
             runTest(patch);

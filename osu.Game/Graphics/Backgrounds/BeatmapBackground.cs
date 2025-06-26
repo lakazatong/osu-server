@@ -15,7 +15,10 @@ namespace osu.Game.Graphics.Backgrounds
 
         private readonly string fallbackTextureName;
 
-        public BeatmapBackground(WorkingBeatmap beatmap, string fallbackTextureName = @"Backgrounds/bg1")
+        public BeatmapBackground(
+            WorkingBeatmap beatmap,
+            string fallbackTextureName = @"Backgrounds/bg1"
+        )
         {
             Beatmap = beatmap;
             this.fallbackTextureName = fallbackTextureName;
@@ -29,11 +32,12 @@ namespace osu.Game.Graphics.Backgrounds
 
         public override bool Equals(Background other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return other.GetType() == GetType()
-                   && ((BeatmapBackground)other).Beatmap == Beatmap;
+            return other.GetType() == GetType() && ((BeatmapBackground)other).Beatmap == Beatmap;
         }
     }
 }

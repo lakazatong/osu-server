@@ -14,19 +14,17 @@ namespace osu.Game.Rulesets.Taiko.Tests
         {
             DrawableBarLine barLine = new DrawableBarLine();
 
-            AddStep("apply new bar line", () => barLine.Apply(PrepareObject(new BarLine
-            {
-                StartTime = 400,
-                Major = true
-            })));
+            AddStep(
+                "apply new bar line",
+                () => barLine.Apply(PrepareObject(new BarLine { StartTime = 400, Major = true }))
+            );
             AddHitObject(barLine);
             RemoveHitObject(barLine);
 
-            AddStep("apply new bar line", () => barLine.Apply(PrepareObject(new BarLine
-            {
-                StartTime = 200,
-                Major = false
-            })));
+            AddStep(
+                "apply new bar line",
+                () => barLine.Apply(PrepareObject(new BarLine { StartTime = 200, Major = false }))
+            );
             AddHitObject(barLine);
         }
     }

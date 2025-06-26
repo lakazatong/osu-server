@@ -14,7 +14,9 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// <summary>
         /// The time signature at this control point.
         /// </summary>
-        public readonly Bindable<TimeSignature> TimeSignatureBindable = new Bindable<TimeSignature>(TimeSignature.SimpleQuadruple);
+        public readonly Bindable<TimeSignature> TimeSignatureBindable = new Bindable<TimeSignature>(
+            TimeSignature.SimpleQuadruple
+        );
 
         /// <summary>
         /// Whether the first bar line of this control point is ignored.
@@ -30,13 +32,9 @@ namespace osu.Game.Beatmaps.ControlPoints
 
         public static readonly TimingControlPoint DEFAULT = new TimingControlPoint
         {
-            BeatLengthBindable =
-            {
-                Value = default_beat_length,
-                Disabled = true
-            },
+            BeatLengthBindable = { Value = default_beat_length, Disabled = true },
             OmitFirstBarLineBindable = { Disabled = true },
-            TimeSignatureBindable = { Disabled = true }
+            TimeSignatureBindable = { Disabled = true },
         };
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace osu.Game.Beatmaps.ControlPoints
         public readonly BindableDouble BeatLengthBindable = new BindableDouble(DEFAULT_BEAT_LENGTH)
         {
             MinValue = 6,
-            MaxValue = 60000
+            MaxValue = 60000,
         };
 
         /// <summary>
@@ -101,16 +99,16 @@ namespace osu.Game.Beatmaps.ControlPoints
             base.CopyFrom(other);
         }
 
-        public override bool Equals(ControlPoint? other)
-            => other is TimingControlPoint otherTimingControlPoint
-               && Equals(otherTimingControlPoint);
+        public override bool Equals(ControlPoint? other) =>
+            other is TimingControlPoint otherTimingControlPoint && Equals(otherTimingControlPoint);
 
-        public bool Equals(TimingControlPoint? other)
-            => base.Equals(other)
-               && TimeSignature.Equals(other.TimeSignature)
-               && OmitFirstBarLine == other.OmitFirstBarLine
-               && BeatLength.Equals(other.BeatLength);
+        public bool Equals(TimingControlPoint? other) =>
+            base.Equals(other)
+            && TimeSignature.Equals(other.TimeSignature)
+            && OmitFirstBarLine == other.OmitFirstBarLine
+            && BeatLength.Equals(other.BeatLength);
 
-        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), TimeSignature, BeatLength, OmitFirstBarLine);
+        public override int GetHashCode() =>
+            HashCode.Combine(base.GetHashCode(), TimeSignature, BeatLength, OmitFirstBarLine);
     }
 }

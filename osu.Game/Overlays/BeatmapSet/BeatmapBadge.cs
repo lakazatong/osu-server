@@ -43,16 +43,13 @@ namespace osu.Game.Overlays.BeatmapSet
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     badgeLabel = new OsuSpriteText
                     {
                         Font = OsuFont.GetFont(size: 10, weight: FontWeight.SemiBold),
                         Margin = new MarginPadding { Horizontal = 10, Vertical = 2 },
-                    }
-                }
+                    },
+                },
             };
         }
 

@@ -52,10 +52,7 @@ namespace osu.Game.Overlays.Rankings
                 Direction = FillDirection.Vertical,
                 Children = new Drawable[]
                 {
-                    selector = new SpotlightSelector
-                    {
-                        Current = selectedSpotlight,
-                    },
+                    selector = new SpotlightSelector { Current = selectedSpotlight },
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,
@@ -66,12 +63,12 @@ namespace osu.Game.Overlays.Rankings
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                Margin = new MarginPadding { Vertical = 10 }
+                                Margin = new MarginPadding { Vertical = 10 },
                             },
-                            loading = new LoadingLayer(true)
-                        }
-                    }
-                }
+                            loading = new LoadingLayer(true),
+                        },
+                    },
+                },
             };
 
             sort.BindTo(selector.Sort);
@@ -91,7 +88,8 @@ namespace osu.Game.Overlays.Rankings
         private void getSpotlights()
         {
             spotlightsRequest = new GetSpotlightsRequest();
-            spotlightsRequest.Success += response => Schedule(() => selector.Spotlights = response.Spotlights);
+            spotlightsRequest.Success += response =>
+                Schedule(() => selector.Spotlights = response.Spotlights);
             api.Queue(spotlightsRequest);
         }
 
@@ -110,48 +108,62 @@ namespace osu.Game.Overlays.Rankings
             cancellationToken?.Cancel();
             getRankingsRequest?.Cancel();
 
-            getRankingsRequest = new GetSpotlightRankingsRequest(Ruleset.Value, selectedSpotlight.Value.Id, sort.Value);
+            getRankingsRequest = new GetSpotlightRankingsRequest(
+                Ruleset.Value,
+                selectedSpotlight.Value.Id,
+                sort.Value
+            );
             getRankingsRequest.Success += onSuccess;
             api.Queue(getRankingsRequest);
         }
 
         private void onSuccess(GetSpotlightRankingsResponse response)
         {
-            LoadComponentAsync(createContent(response), loaded =>
-            {
-                selector.ShowInfo(response);
+            LoadComponentAsync(
+                createContent(response),
+                loaded =>
+                {
+                    selector.ShowInfo(response);
 
-                content.Clear();
-                content.Add(loaded);
+                    content.Clear();
+                    content.Add(loaded);
 
-                loading.Hide();
-            }, (cancellationToken = new CancellationTokenSource()).Token);
+                    loading.Hide();
+                },
+                (cancellationToken = new CancellationTokenSource()).Token
+            );
         }
 
-        private Drawable createContent(GetSpotlightRankingsResponse response) => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Y,
-            RelativeSizeAxes = Axes.X,
-            Direction = FillDirection.Vertical,
-            Spacing = new Vector2(0, 20),
-            Children = new Drawable[]
+        private Drawable createContent(GetSpotlightRankingsResponse response) =>
+            new FillFlowContainer
             {
-                new ScoresTable(1, response.Users),
-                // reverse ID flow is required for correct Z-ordering of the cards' expandable content (last card should be front-most).
-                new ReverseChildIDFillFlowContainer<BeatmapCardNormal>
+                AutoSizeAxes = Axes.Y,
+                RelativeSizeAxes = Axes.X,
+                Direction = FillDirection.Vertical,
+                Spacing = new Vector2(0, 20),
+                Children = new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Margin = new MarginPadding { Bottom = ExpandedContentScrollContainer.HEIGHT },
-                    Spacing = new Vector2(10),
-                    Children = response.BeatmapSets.Select(b => new BeatmapCardNormal(b)
+                    new ScoresTable(1, response.Users),
+                    // reverse ID flow is required for correct Z-ordering of the cards' expandable content (last card should be front-most).
+                    new ReverseChildIDFillFlowContainer<BeatmapCardNormal>
                     {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                    }).ToList()
-                }
-            }
-        };
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Margin = new MarginPadding
+                        {
+                            Bottom = ExpandedContentScrollContainer.HEIGHT,
+                        },
+                        Spacing = new Vector2(10),
+                        Children = response
+                            .BeatmapSets.Select(b => new BeatmapCardNormal(b)
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                            })
+                            .ToList(),
+                    },
+                },
+            };
 
         protected override void Dispose(bool isDisposing)
         {

@@ -44,18 +44,15 @@ namespace osu.Game.Screens.Edit.Setup
                 Direction = FillDirection.Vertical,
                 Children = new Drawable[]
                 {
-                    new SectionHeader(Title)
-                    {
-                        Margin = new MarginPadding { Left = 9, },
-                    },
+                    new SectionHeader(Title) { Margin = new MarginPadding { Left = 9 } },
                     flow = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Spacing = new Vector2(5),
                         Direction = FillDirection.Vertical,
-                    }
-                }
+                    },
+                },
             };
         }
     }

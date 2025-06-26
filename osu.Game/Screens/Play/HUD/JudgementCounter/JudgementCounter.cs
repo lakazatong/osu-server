@@ -39,47 +39,68 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    counter = new JudgementRollingCounter
-                    {
-                        Current = Result.ResultCount
-                    },
+                    counter = new JudgementRollingCounter { Current = Result.ResultCount },
                     ResultName = new OsuSpriteText
                     {
                         Alpha = 0,
                         Font = OsuFont.Numeric.With(size: 8),
                         Text = Result.DisplayName,
-                    }
-                }
+                    },
+                },
             };
 
             var result = Result.Types.First();
 
-            Colour = result.IsBasic() ? colours.ForHitResult(result) : !result.IsBonus() ? colours.PurpleLight : colours.PurpleLighter;
+            Colour =
+                result.IsBasic() ? colours.ForHitResult(result)
+                : !result.IsBonus() ? colours.PurpleLight
+                : colours.PurpleLighter;
         }
 
         protected override void LoadComplete()
         {
-            ShowName.BindValueChanged(value =>
-                ResultName.FadeTo(value.NewValue ? 1 : 0, JudgementCounterDisplay.TRANSFORM_DURATION, Easing.OutQuint), true);
+            ShowName.BindValueChanged(
+                value =>
+                    ResultName.FadeTo(
+                        value.NewValue ? 1 : 0,
+                        JudgementCounterDisplay.TRANSFORM_DURATION,
+                        Easing.OutQuint
+                    ),
+                true
+            );
 
-            Direction.BindValueChanged(direction =>
-            {
-                flowContainer.Direction = direction.NewValue;
-                changeAnchor(direction.NewValue == FillDirection.Vertical ? Anchor.TopLeft : Anchor.BottomLeft);
+            Direction.BindValueChanged(
+                direction =>
+                {
+                    flowContainer.Direction = direction.NewValue;
+                    changeAnchor(
+                        direction.NewValue == FillDirection.Vertical
+                            ? Anchor.TopLeft
+                            : Anchor.BottomLeft
+                    );
 
-                void changeAnchor(Anchor anchor) => counter.Anchor = ResultName.Anchor = counter.Origin = ResultName.Origin = anchor;
-            }, true);
+                    void changeAnchor(Anchor anchor) =>
+                        counter.Anchor =
+                            ResultName.Anchor =
+                            counter.Origin =
+                            ResultName.Origin =
+                                anchor;
+                },
+                true
+            );
 
             base.LoadComplete();
         }
 
-        protected override void PopIn() => this.FadeIn(JudgementCounterDisplay.TRANSFORM_DURATION, Easing.OutQuint);
+        protected override void PopIn() =>
+            this.FadeIn(JudgementCounterDisplay.TRANSFORM_DURATION, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(100);
 
         private sealed partial class JudgementRollingCounter : RollingCounter<int>
         {
-            protected override OsuSpriteText CreateSpriteText()
-                => base.CreateSpriteText().With(s => s.Font = s.Font.With(fixedWidth: true, size: 16));
+            protected override OsuSpriteText CreateSpriteText() =>
+                base.CreateSpriteText().With(s => s.Font = s.Font.With(fixedWidth: true, size: 16));
         }
     }
 }

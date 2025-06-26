@@ -24,8 +24,20 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             Add(new ModNightcore<HitObject>.NightcoreBeatContainer());
 
-            AddStep("change signature to quadruple", () => Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.ForEach(p => p.TimeSignature = TimeSignature.SimpleQuadruple));
-            AddStep("change signature to triple", () => Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.ForEach(p => p.TimeSignature = TimeSignature.SimpleTriple));
+            AddStep(
+                "change signature to quadruple",
+                () =>
+                    Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.ForEach(p =>
+                        p.TimeSignature = TimeSignature.SimpleQuadruple
+                    )
+            );
+            AddStep(
+                "change signature to triple",
+                () =>
+                    Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.ForEach(p =>
+                        p.TimeSignature = TimeSignature.SimpleTriple
+                    )
+            );
         }
     }
 }

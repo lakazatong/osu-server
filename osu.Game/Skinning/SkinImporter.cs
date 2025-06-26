@@ -25,7 +25,11 @@ namespace osu.Game.Skinning
 
         private readonly ModelManager<SkinInfo> modelManager;
 
-        public SkinImporter(Storage storage, RealmAccess realm, IStorageResourceProvider skinResources)
+        public SkinImporter(
+            Storage storage,
+            RealmAccess realm,
+            IStorageResourceProvider skinResources
+        )
             : base(storage, realm)
         {
             this.skinResources = skinResources;
@@ -37,13 +41,22 @@ namespace osu.Game.Skinning
 
         protected override string[] HashableFileTypes => new[] { ".ini", ".json" };
 
-        protected override bool ShouldDeleteArchive(string path) => string.Equals(Path.GetExtension(path), @".osk", StringComparison.OrdinalIgnoreCase);
+        protected override bool ShouldDeleteArchive(string path) =>
+            string.Equals(Path.GetExtension(path), @".osk", StringComparison.OrdinalIgnoreCase);
 
-        protected override SkinInfo CreateModel(ArchiveReader archive, ImportParameters parameters) => new SkinInfo { Name = archive.Name ?? @"No name" };
+        protected override SkinInfo CreateModel(
+            ArchiveReader archive,
+            ImportParameters parameters
+        ) => new SkinInfo { Name = archive.Name ?? @"No name" };
 
         private const string unknown_creator_string = @"Unknown";
 
-        protected override void Populate(SkinInfo model, ArchiveReader? archive, Realm realm, CancellationToken cancellationToken = default)
+        protected override void Populate(
+            SkinInfo model,
+            ArchiveReader? archive,
+            Realm realm,
+            CancellationToken cancellationToken = default
+        )
         {
             var skinInfoFile = model.GetFile(skin_info_file);
 
@@ -51,10 +64,16 @@ namespace osu.Game.Skinning
             {
                 try
                 {
-                    using (var existingStream = Files.Storage.GetStream(skinInfoFile.File.GetStoragePath()))
+                    using (
+                        var existingStream = Files.Storage.GetStream(
+                            skinInfoFile.File.GetStoragePath()
+                        )
+                    )
                     using (var reader = new StreamReader(existingStream))
                     {
-                        var deserialisedSkinInfo = JsonConvert.DeserializeObject<SkinInfo>(reader.ReadToEnd());
+                        var deserialisedSkinInfo = JsonConvert.DeserializeObject<SkinInfo>(
+                            reader.ReadToEnd()
+                        );
 
                         if (deserialisedSkinInfo != null)
                         {
@@ -66,7 +85,11 @@ namespace osu.Game.Skinning
                 }
                 catch (Exception e)
                 {
-                    LogForModel(model, $"Error during {skin_info_file} parsing, falling back to default", e);
+                    LogForModel(
+                        model,
+                        $"Error during {skin_info_file} parsing, falling back to default",
+                        e
+                    );
 
                     // Not sure if we should still run the import in the case of failure here, but let's do so for now.
                     model.InstantiationInfo = string.Empty;
@@ -74,7 +97,9 @@ namespace osu.Game.Skinning
             }
 
             // Always rewrite instantiation info (even after parsing in from the skin json) for sanity.
-            model.InstantiationInfo = createInstance(model).GetType().GetInvariantInstantiationInfo();
+            model.InstantiationInfo = createInstance(model)
+                .GetType()
+                .GetInvariantInstantiationInfo();
 
             checkSkinIniMetadata(model, realm);
         }
@@ -87,22 +112,32 @@ namespace osu.Game.Skinning
             // `Skin` will parse the skin.ini and populate `Skin.Configuration` during construction above.
             string skinIniSourcedName = instance.Configuration.SkinInfo.Name;
             string skinIniSourcedCreator = instance.Configuration.SkinInfo.Creator;
-            string archiveName = item.Name.Replace(@".osk", string.Empty, StringComparison.OrdinalIgnoreCase);
+            string archiveName = item.Name.Replace(
+                @".osk",
+                string.Empty,
+                StringComparison.OrdinalIgnoreCase
+            );
 
             bool isImport = !item.IsManaged;
 
             if (isImport)
             {
-                item.Name = !string.IsNullOrEmpty(skinIniSourcedName) ? skinIniSourcedName : archiveName;
-                item.Creator = !string.IsNullOrEmpty(skinIniSourcedCreator) ? skinIniSourcedCreator : unknown_creator_string;
+                item.Name = !string.IsNullOrEmpty(skinIniSourcedName)
+                    ? skinIniSourcedName
+                    : archiveName;
+                item.Creator = !string.IsNullOrEmpty(skinIniSourcedCreator)
+                    ? skinIniSourcedCreator
+                    : unknown_creator_string;
 
                 // For imports, we want to use the archive or folder name as part of the metadata, in addition to any existing skin.ini metadata.
                 // In an ideal world, skin.ini would be the only source of metadata, but a lot of skin creators and users don't update it when making modifications.
                 // In both of these cases, the expectation from the user is that the filename or folder name is displayed somewhere to identify the skin.
-                if (archiveName != item.Name
+                if (
+                    archiveName != item.Name
                     // lazer exports use this format
                     // GetValidFilename accounts for skins with non-ASCII characters in the name that have been exported by lazer.
-                    && archiveName != item.GetDisplayString().GetValidFilename())
+                    && archiveName != item.GetDisplayString().GetValidFilename()
+                )
                     item.Name = @$"{item.Name} [{archiveName}]";
             }
 
@@ -132,7 +167,9 @@ namespace osu.Game.Skinning
             {
                 // skins without a skin.ini are supposed to import using the "latest version" spec.
                 // see https://github.com/peppy/osu-stable-reference/blob/1531237b63392e82c003c712faa028406073aa8f/osu!/Graphics/Skinning/SkinManager.cs#L297-L298
-                newLines.Add(FormattableString.Invariant($"Version: {SkinConfiguration.LATEST_VERSION}"));
+                newLines.Add(
+                    FormattableString.Invariant($"Version: {SkinConfiguration.LATEST_VERSION}")
+                );
 
                 // In the case a skin doesn't have a skin.ini yet, let's create one.
                 writeNewSkinIni();
@@ -143,7 +180,11 @@ namespace osu.Game.Skinning
                 {
                     using (var sw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
                     {
-                        using (var existingStream = Files.Storage.GetStream(existingFile.File.GetStoragePath()))
+                        using (
+                            var existingStream = Files.Storage.GetStream(
+                                existingFile.File.GetStoragePath()
+                            )
+                        )
                         using (var sr = new StreamReader(existingStream))
                         {
                             string? line;
@@ -198,7 +239,10 @@ namespace osu.Game.Skinning
                 s.InstantiationInfo = skin.GetType().GetInvariantInstantiationInfo();
 
                 // Serialise out the SkinInfo itself.
-                string skinInfoJson = JsonConvert.SerializeObject(s, new JsonSerializerSettings { Formatting = Formatting.Indented });
+                string skinInfoJson = JsonConvert.SerializeObject(
+                    s,
+                    new JsonSerializerSettings { Formatting = Formatting.Indented }
+                );
 
                 using (var streamContent = new MemoryStream(Encoding.UTF8.GetBytes(skinInfoJson)))
                 {
@@ -208,7 +252,10 @@ namespace osu.Game.Skinning
                 // Then serialise each of the drawable component groups into respective files.
                 foreach (var drawableInfo in skin.LayoutInfos)
                 {
-                    string json = JsonConvert.SerializeObject(drawableInfo.Value, new JsonSerializerSettings { Formatting = Formatting.Indented });
+                    string json = JsonConvert.SerializeObject(
+                        drawableInfo.Value,
+                        new JsonSerializerSettings { Formatting = Formatting.Indented }
+                    );
 
                     using (var streamContent = new MemoryStream(Encoding.UTF8.GetBytes(json)))
                     {

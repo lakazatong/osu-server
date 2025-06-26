@@ -20,12 +20,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// Whether rotation anchored by the selection origin can currently be performed.
         /// </summary>
-        public Bindable<bool> CanRotateAroundSelectionOrigin { get; private set; } = new BindableBool();
+        public Bindable<bool> CanRotateAroundSelectionOrigin { get; private set; } =
+            new BindableBool();
 
         /// <summary>
         /// Whether rotation anchored by the center of the playfield can currently be performed.
         /// </summary>
-        public Bindable<bool> CanRotateAroundPlayfieldOrigin { get; private set; } = new BindableBool();
+        public Bindable<bool> CanRotateAroundPlayfieldOrigin { get; private set; } =
+            new BindableBool();
 
         /// <summary>
         /// Implementation-defined origin point to rotate around when no explicit origin is provided.
@@ -85,9 +87,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// The origin point to rotate around.
         /// If the default <see langword="null"/> value is supplied, a sane implementation-defined default will be used.
         /// </param>
-        public virtual void Update(float rotation, Vector2? origin = null)
-        {
-        }
+        public virtual void Update(float rotation, Vector2? origin = null) { }
 
         /// <summary>
         /// Ends a continuous rotation operation.

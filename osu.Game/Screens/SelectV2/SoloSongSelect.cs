@@ -60,17 +60,39 @@ namespace osu.Game.Screens.SelectV2
 
         public override IEnumerable<OsuMenuItem> GetForwardActions(BeatmapInfo beatmap)
         {
-            yield return new OsuMenuItem(ButtonSystemStrings.Play.ToSentence(), MenuItemType.Highlighted, () => SelectAndRun(beatmap, OnStart)) { Icon = FontAwesome.Solid.Check };
-            yield return new OsuMenuItem(ButtonSystemStrings.Edit.ToSentence(), MenuItemType.Standard, () => edit(beatmap)) { Icon = FontAwesome.Solid.PencilAlt };
+            yield return new OsuMenuItem(
+                ButtonSystemStrings.Play.ToSentence(),
+                MenuItemType.Highlighted,
+                () => SelectAndRun(beatmap, OnStart)
+            )
+            {
+                Icon = FontAwesome.Solid.Check,
+            };
+            yield return new OsuMenuItem(
+                ButtonSystemStrings.Edit.ToSentence(),
+                MenuItemType.Standard,
+                () => edit(beatmap)
+            )
+            {
+                Icon = FontAwesome.Solid.PencilAlt,
+            };
 
             yield return new OsuMenuItemSpacer();
 
             if (beatmap.OnlineID > 0)
             {
-                yield return new OsuMenuItem("Details...", MenuItemType.Standard, () => beatmapOverlay?.FetchAndShowBeatmap(beatmap.OnlineID));
+                yield return new OsuMenuItem(
+                    "Details...",
+                    MenuItemType.Standard,
+                    () => beatmapOverlay?.FetchAndShowBeatmap(beatmap.OnlineID)
+                );
 
                 if (beatmap.GetOnlineURL(api, Ruleset.Value) is string url)
-                    yield return new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, () => game?.CopyToClipboard(url));
+                    yield return new OsuMenuItem(
+                        CommonStrings.CopyLink,
+                        MenuItemType.Standard,
+                        () => game?.CopyToClipboard(url)
+                    );
 
                 yield return new OsuMenuItemSpacer();
             }
@@ -79,17 +101,33 @@ namespace osu.Game.Screens.SelectV2
                 yield return i;
 
             // TODO: replace with "remove from played" button when beatmap is already played.
-            yield return new OsuMenuItem(SongSelectStrings.MarkAsPlayed, MenuItemType.Standard, () => beatmaps.MarkPlayed(beatmap)) { Icon = FontAwesome.Solid.TimesCircle };
-            yield return new OsuMenuItem(SongSelectStrings.ClearAllLocalScores, MenuItemType.Standard, () => dialogOverlay?.Push(new BeatmapClearScoresDialog(beatmap)))
+            yield return new OsuMenuItem(
+                SongSelectStrings.MarkAsPlayed,
+                MenuItemType.Standard,
+                () => beatmaps.MarkPlayed(beatmap)
+            )
             {
-                Icon = FontAwesome.Solid.Eraser
+                Icon = FontAwesome.Solid.TimesCircle,
             };
-            yield return new OsuMenuItem(WebCommonStrings.ButtonsHide.ToSentence(), MenuItemType.Destructive, () => beatmaps.Hide(beatmap));
+            yield return new OsuMenuItem(
+                SongSelectStrings.ClearAllLocalScores,
+                MenuItemType.Standard,
+                () => dialogOverlay?.Push(new BeatmapClearScoresDialog(beatmap))
+            )
+            {
+                Icon = FontAwesome.Solid.Eraser,
+            };
+            yield return new OsuMenuItem(
+                WebCommonStrings.ButtonsHide.ToSentence(),
+                MenuItemType.Destructive,
+                () => beatmaps.Hide(beatmap)
+            );
         }
 
         protected override void OnStart()
         {
-            if (playerLoader != null) return;
+            if (playerLoader != null)
+                return;
 
             modsAtGameplayStart = Mods.Value.Select(m => m.DeepClone()).ToArray();
 
@@ -100,10 +138,9 @@ namespace osu.Game.Screens.SelectV2
 
                 if (autoInstance == null)
                 {
-                    notifications?.Post(new SimpleNotification
-                    {
-                        Text = NotificationsStrings.NoAutoplayMod
-                    });
+                    notifications?.Post(
+                        new SimpleNotification { Text = NotificationsStrings.NoAutoplayMod }
+                    );
                     return;
                 }
 
@@ -127,7 +164,10 @@ namespace osu.Game.Screens.SelectV2
 
                 if (replayGeneratingMod != null)
                 {
-                    player = new ReplayPlayer((beatmap, mods) => replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods));
+                    player = new ReplayPlayer(
+                        (beatmap, mods) =>
+                            replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods)
+                    );
                 }
                 else
                 {
@@ -165,7 +205,8 @@ namespace osu.Game.Screens.SelectV2
 
         private void revertMods()
         {
-            if (playerLoader == null) return;
+            if (playerLoader == null)
+                return;
 
             Mods.Value = modsAtGameplayStart;
             playerLoader = null;
@@ -176,9 +217,7 @@ namespace osu.Game.Screens.SelectV2
             public override bool ShowFooter => true;
 
             public PlayerLoader(Func<Player> createPlayer)
-                : base(createPlayer)
-            {
-            }
+                : base(createPlayer) { }
         }
     }
 }

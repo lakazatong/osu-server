@@ -48,84 +48,85 @@ namespace osu.Game.Tests.Visual
             {
                 var cursorDisplay = new GlobalCursorDisplay { RelativeSizeAxes = Axes.Both };
 
-                cursorDisplay.Add(content = new OsuTooltipContainer(cursorDisplay.MenuCursor)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                });
+                cursorDisplay.Add(
+                    content = new OsuTooltipContainer(cursorDisplay.MenuCursor)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    }
+                );
 
                 mainContent.Add(cursorDisplay);
             }
 
             if (CreateNestedActionContainer)
             {
-                var globalActionContainer = new GlobalActionContainer(null)
-                {
-                    Child = mainContent
-                };
+                var globalActionContainer = new GlobalActionContainer(null) { Child = mainContent };
                 mainContent = globalActionContainer;
             }
 
-            base.Content.AddRange(new Drawable[]
-            {
-                InputManager = new ManualInputManager
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    UseParentInput = true,
-                    Child = mainContent
-                },
-                takeControlOverlay = new Container
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Margin = new MarginPadding(40),
-                    CornerRadius = 5,
-                    Masking = true,
-                    Children = new Drawable[]
+                    InputManager = new ManualInputManager
                     {
-                        new Box
+                        UseParentInput = true,
+                        Child = mainContent,
+                    },
+                    takeControlOverlay = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Margin = new MarginPadding(40),
+                        CornerRadius = 5,
+                        Masking = true,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0.4f,
-                        },
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Margin = new MarginPadding(10),
-                            Spacing = new Vector2(10),
-                            Children = new Drawable[]
+                            new Box
                             {
-                                new OsuSpriteText
+                                Colour = Color4.Black,
+                                RelativeSizeAxes = Axes.Both,
+                                Alpha = 0.4f,
+                            },
+                            new FillFlowContainer
+                            {
+                                AutoSizeAxes = Axes.Both,
+                                Direction = FillDirection.Vertical,
+                                Margin = new MarginPadding(10),
+                                Spacing = new Vector2(10),
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Font = OsuFont.Default.With(weight: FontWeight.Bold),
-                                    Text = "The test is currently overriding local input",
-                                },
-                                new FillFlowContainer
-                                {
-                                    AutoSizeAxes = Axes.Both,
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Spacing = new Vector2(5),
-                                    Direction = FillDirection.Horizontal,
-
-                                    Children = new Drawable[]
+                                    new OsuSpriteText
                                     {
-                                        new RoundedButton
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Font = OsuFont.Default.With(weight: FontWeight.Bold),
+                                        Text = "The test is currently overriding local input",
+                                    },
+                                    new FillFlowContainer
+                                    {
+                                        AutoSizeAxes = Axes.Both,
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Spacing = new Vector2(5),
+                                        Direction = FillDirection.Horizontal,
+
+                                        Children = new Drawable[]
                                         {
-                                            Text = "Take control back",
-                                            Size = new Vector2(180, 30),
-                                            Action = () => InputManager.UseParentInput = true
+                                            new RoundedButton
+                                            {
+                                                Text = "Take control back",
+                                                Size = new Vector2(180, 30),
+                                                Action = () => InputManager.UseParentInput = true,
+                                            },
                                         },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
-                    }
-                },
-            });
+                    },
+                }
+            );
         }
 
         protected override void Update()
@@ -143,15 +144,31 @@ namespace osu.Game.Tests.Visual
             where T : Drawable
         {
             if (typeof(T) == typeof(Button))
-                AddUntilStep($"wait for {typeof(T).Name} enabled", () => (this.ChildrenOfType<T>().Single() as ClickableContainer)?.Enabled.Value == true);
+                AddUntilStep(
+                    $"wait for {typeof(T).Name} enabled",
+                    () =>
+                        (this.ChildrenOfType<T>().Single() as ClickableContainer)?.Enabled.Value
+                        == true
+                );
             else
-                AddUntilStep($"wait for {typeof(T).Name} enabled", () => this.ChildrenOfType<T>().Single().ChildrenOfType<ClickableContainer>().Single().Enabled.Value);
+                AddUntilStep(
+                    $"wait for {typeof(T).Name} enabled",
+                    () =>
+                        this.ChildrenOfType<T>()
+                            .Single()
+                            .ChildrenOfType<ClickableContainer>()
+                            .Single()
+                            .Enabled.Value
+                );
 
-            AddStep($"click {typeof(T).Name}", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<T>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                $"click {typeof(T).Name}",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<T>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
         }
     }
 }

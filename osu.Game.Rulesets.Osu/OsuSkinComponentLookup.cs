@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Osu
     public class OsuSkinComponentLookup : SkinComponentLookup<OsuSkinComponents>
     {
         public OsuSkinComponentLookup(OsuSkinComponents component)
-            : base(component)
-        {
-        }
+            : base(component) { }
     }
 }

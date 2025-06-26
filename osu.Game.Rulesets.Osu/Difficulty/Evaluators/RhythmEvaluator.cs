@@ -45,11 +45,15 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
 
             int rhythmStart = 0;
 
-            while (rhythmStart < historicalNoteCount - 2 && current.StartTime - current.Previous(rhythmStart).StartTime < history_time_max)
+            while (
+                rhythmStart < historicalNoteCount - 2
+                && current.StartTime - current.Previous(rhythmStart).StartTime < history_time_max
+            )
                 rhythmStart++;
 
             OsuDifficultyHitObject prevObj = (OsuDifficultyHitObject)current.Previous(rhythmStart);
-            OsuDifficultyHitObject lastObj = (OsuDifficultyHitObject)current.Previous(rhythmStart + 1);
+            OsuDifficultyHitObject lastObj = (OsuDifficultyHitObject)
+                current.Previous(rhythmStart + 1);
 
             // we go from the furthest object back to the current one
             for (int i = rhythmStart; i > 0; i--)
@@ -57,7 +61,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                 OsuDifficultyHitObject currObj = (OsuDifficultyHitObject)current.Previous(i - 1);
 
                 // scales note 0 to 1 from history to now
-                double timeDecay = (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max;
+                double timeDecay =
+                    (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max;
                 double noteDecay = (double)(historicalNoteCount - i) / historicalNoteCount;
 
                 double currHistoricalDecay = Math.Min(noteDecay, timeDecay); // either we're limited by time or limited by object count.
@@ -68,14 +73,22 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
 
                 // calculate how much current delta difference deserves a rhythm bonus
                 // this function is meant to reduce rhythm bonus for deltas that are multiples of each other (i.e 100 and 200)
-                double deltaDifferenceRatio = Math.Min(prevDelta, currDelta) / Math.Max(prevDelta, currDelta);
-                double currRatio = 1.0 + rhythm_ratio_multiplier * Math.Min(0.5, Math.Pow(Math.Sin(Math.PI / deltaDifferenceRatio), 2));
+                double deltaDifferenceRatio =
+                    Math.Min(prevDelta, currDelta) / Math.Max(prevDelta, currDelta);
+                double currRatio =
+                    1.0
+                    + rhythm_ratio_multiplier
+                        * Math.Min(0.5, Math.Pow(Math.Sin(Math.PI / deltaDifferenceRatio), 2));
 
                 // reduce ratio bonus if delta difference is too big
                 double fraction = Math.Max(prevDelta / currDelta, currDelta / prevDelta);
                 double fractionMultiplier = Math.Clamp(2.0 - fraction / 8.0, 0.0, 1.0);
 
-                double windowPenalty = Math.Min(1, Math.Max(0, Math.Abs(prevDelta - currDelta) - deltaDifferenceEpsilon) / deltaDifferenceEpsilon);
+                double windowPenalty = Math.Min(
+                    1,
+                    Math.Max(0, Math.Abs(prevDelta - currDelta) - deltaDifferenceEpsilon)
+                        / deltaDifferenceEpsilon
+                );
 
                 double effectiveRatio = windowPenalty * currRatio * fractionMultiplier;
 
@@ -102,7 +115,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                             effectiveRatio *= 0.5;
 
                         // previous increase happened a note ago, 1/1->1/2-1/4, dont want to buff this.
-                        if (lastDelta > prevDelta + deltaDifferenceEpsilon && prevDelta > currDelta + deltaDifferenceEpsilon)
+                        if (
+                            lastDelta > prevDelta + deltaDifferenceEpsilon
+                            && prevDelta > currDelta + deltaDifferenceEpsilon
+                        )
                             effectiveRatio *= 0.125;
 
                         // repeated island size (ex: triplet -> triplet)
@@ -121,8 +137,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                                 islandCount.Count++;
 
                             // repeated island (ex: triplet -> triplet)
-                            double power = DifficultyCalculationUtils.Logistic(island.Delta, maxValue: 2.75, multiplier: 0.24, midpointOffset: 58.33);
-                            effectiveRatio *= Math.Min(3.0 / islandCount.Count, Math.Pow(1.0 / islandCount.Count, power));
+                            double power = DifficultyCalculationUtils.Logistic(
+                                island.Delta,
+                                maxValue: 2.75,
+                                multiplier: 0.24,
+                                midpointOffset: 58.33
+                            );
+                            effectiveRatio *= Math.Min(
+                                3.0 / islandCount.Count,
+                                Math.Pow(1.0 / islandCount.Count, power)
+                            );
 
                             islandCounts[countIndex] = (islandCount.Island, islandCount.Count);
                         }
@@ -135,7 +159,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                         double doubletapness = prevObj.GetDoubletapness(currObj);
                         effectiveRatio *= 1 - doubletapness * 0.75;
 
-                        rhythmComplexitySum += Math.Sqrt(effectiveRatio * startRatio) * currHistoricalDecay;
+                        rhythmComplexitySum +=
+                            Math.Sqrt(effectiveRatio * startRatio) * currHistoricalDecay;
 
                         startRatio = effectiveRatio;
 
@@ -212,8 +237,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                 if (other == null)
                     return false;
 
-                return Math.Abs(Delta - other.Delta) < deltaDifferenceEpsilon &&
-                       DeltaCount == other.DeltaCount;
+                return Math.Abs(Delta - other.Delta) < deltaDifferenceEpsilon
+                    && DeltaCount == other.DeltaCount;
             }
 
             public override string ToString()

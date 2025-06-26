@@ -35,9 +35,7 @@ namespace osu.Game.Online.Multiplayer
         [IgnoreMember]
         public bool AutoStartEnabled => AutoStartDuration != TimeSpan.Zero;
 
-        public MultiplayerRoomSettings()
-        {
-        }
+        public MultiplayerRoomSettings() { }
 
         public MultiplayerRoomSettings(Room room)
         {
@@ -51,24 +49,27 @@ namespace osu.Game.Online.Multiplayer
 
         public bool Equals(MultiplayerRoomSettings? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other == null) return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
 
             return Password.Equals(other.Password, StringComparison.Ordinal)
-                   && Name.Equals(other.Name, StringComparison.Ordinal)
-                   && PlaylistItemId == other.PlaylistItemId
-                   && MatchType == other.MatchType
-                   && QueueMode == other.QueueMode
-                   && AutoStartDuration == other.AutoStartDuration
-                   && AutoSkip == other.AutoSkip;
+                && Name.Equals(other.Name, StringComparison.Ordinal)
+                && PlaylistItemId == other.PlaylistItemId
+                && MatchType == other.MatchType
+                && QueueMode == other.QueueMode
+                && AutoStartDuration == other.AutoStartDuration
+                && AutoSkip == other.AutoSkip;
         }
 
-        public override string ToString() => $"Name:{Name}"
-                                             + $" Password:{(string.IsNullOrEmpty(Password) ? "no" : "yes")}"
-                                             + $" Type:{MatchType}"
-                                             + $" Item:{PlaylistItemId}"
-                                             + $" Queue:{QueueMode}"
-                                             + $" Start:{AutoStartDuration}"
-                                             + $" AutoSkip:{AutoSkip}";
+        public override string ToString() =>
+            $"Name:{Name}"
+            + $" Password:{(string.IsNullOrEmpty(Password) ? "no" : "yes")}"
+            + $" Type:{MatchType}"
+            + $" Item:{PlaylistItemId}"
+            + $" Queue:{QueueMode}"
+            + $" Start:{AutoStartDuration}"
+            + $" AutoSkip:{AutoSkip}";
     }
 }

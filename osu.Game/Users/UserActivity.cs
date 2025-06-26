@@ -40,6 +40,7 @@ namespace osu.Game.Users
     public abstract class UserActivity
     {
         public abstract string GetStatus(bool hideIdentifiableInformation = false);
+
         public virtual string? GetDetails(bool hideIdentifiableInformation = false) => null;
 
         public virtual Color4 GetAppropriateColour(OsuColour colours) => colours.GreenDarker;
@@ -53,7 +54,8 @@ namespace osu.Game.Users
         [MessagePackObject]
         public class ChoosingBeatmap : UserActivity
         {
-            public override string GetStatus(bool hideIdentifiableInformation = false) => "Choosing a beatmap";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                "Choosing a beatmap";
         }
 
         [MessagePackObject]
@@ -88,18 +90,21 @@ namespace osu.Game.Users
             [SerializationConstructor]
             protected InGame() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => RulesetPlayingVerb;
-            public override string GetDetails(bool hideIdentifiableInformation = false) => BeatmapDisplayTitle;
-            public override int? GetBeatmapID(bool hideIdentifiableInformation = false) => BeatmapID;
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                RulesetPlayingVerb;
+
+            public override string GetDetails(bool hideIdentifiableInformation = false) =>
+                BeatmapDisplayTitle;
+
+            public override int? GetBeatmapID(bool hideIdentifiableInformation = false) =>
+                BeatmapID;
         }
 
         [MessagePackObject]
         public class InSoloGame : InGame
         {
             public InSoloGame(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset)
-                : base(beatmapInfo, ruleset)
-            {
-            }
+                : base(beatmapInfo, ruleset) { }
 
             [SerializationConstructor]
             public InSoloGame() { }
@@ -109,25 +114,20 @@ namespace osu.Game.Users
         public class InMultiplayerGame : InGame
         {
             public InMultiplayerGame(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset)
-                : base(beatmapInfo, ruleset)
-            {
-            }
+                : base(beatmapInfo, ruleset) { }
 
             [SerializationConstructor]
-            public InMultiplayerGame()
-            {
-            }
+            public InMultiplayerGame() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => $@"{base.GetStatus(hideIdentifiableInformation)} with others";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                $@"{base.GetStatus(hideIdentifiableInformation)} with others";
         }
 
         [MessagePackObject]
         public class InPlaylistGame : InGame
         {
             public InPlaylistGame(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset)
-                : base(beatmapInfo, ruleset)
-            {
-            }
+                : base(beatmapInfo, ruleset) { }
 
             [SerializationConstructor]
             public InPlaylistGame() { }
@@ -137,14 +137,13 @@ namespace osu.Game.Users
         public class TestingBeatmap : EditingBeatmap
         {
             public TestingBeatmap(IBeatmapInfo beatmapInfo)
-                : base(beatmapInfo)
-            {
-            }
+                : base(beatmapInfo) { }
 
             [SerializationConstructor]
             public TestingBeatmap() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => "Testing a beatmap";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                "Testing a beatmap";
         }
 
         [MessagePackObject]
@@ -165,31 +164,34 @@ namespace osu.Game.Users
             [SerializationConstructor]
             public EditingBeatmap() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @"Editing a beatmap";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @"Editing a beatmap";
 
-            public override string GetDetails(bool hideIdentifiableInformation = false) => hideIdentifiableInformation
-                // For now let's assume that showing the beatmap a user is editing could reveal unwanted information.
-                ? string.Empty
-                : BeatmapDisplayTitle;
+            public override string GetDetails(bool hideIdentifiableInformation = false) =>
+                hideIdentifiableInformation
+                    // For now let's assume that showing the beatmap a user is editing could reveal unwanted information.
+                    ? string.Empty
+                    : BeatmapDisplayTitle;
 
-            public override int? GetBeatmapID(bool hideIdentifiableInformation = false) => hideIdentifiableInformation
-                // For now let's assume that showing the beatmap a user is editing could reveal unwanted information.
-                ? null
-                : BeatmapID;
+            public override int? GetBeatmapID(bool hideIdentifiableInformation = false) =>
+                hideIdentifiableInformation
+                    // For now let's assume that showing the beatmap a user is editing could reveal unwanted information.
+                    ? null
+                    : BeatmapID;
         }
 
         [MessagePackObject]
         public class ModdingBeatmap : EditingBeatmap
         {
             public ModdingBeatmap(IBeatmapInfo info)
-                : base(info)
-            {
-            }
+                : base(info) { }
 
             [SerializationConstructor]
             public ModdingBeatmap() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => "Modding a beatmap";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                "Modding a beatmap";
+
             public override Color4 GetAppropriateColour(OsuColour colours) => colours.PurpleDark;
         }
 
@@ -219,42 +221,46 @@ namespace osu.Game.Users
             [SerializationConstructor]
             public WatchingReplay() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => hideIdentifiableInformation ? @"Watching a replay" : $@"Watching {PlayerName}'s replay";
-            public override string? GetDetails(bool hideIdentifiableInformation = false) => BeatmapDisplayTitle;
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                hideIdentifiableInformation
+                    ? @"Watching a replay"
+                    : $@"Watching {PlayerName}'s replay";
+
+            public override string? GetDetails(bool hideIdentifiableInformation = false) =>
+                BeatmapDisplayTitle;
         }
 
         [MessagePackObject]
         public class SpectatingUser : WatchingReplay
         {
             public SpectatingUser(ScoreInfo score)
-                : base(score)
-            {
-            }
+                : base(score) { }
 
             [SerializationConstructor]
             public SpectatingUser() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => hideIdentifiableInformation ? @"Spectating a user" : $@"Spectating {PlayerName}";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                hideIdentifiableInformation ? @"Spectating a user" : $@"Spectating {PlayerName}";
         }
 
         [MessagePackObject]
         public class SpectatingMultiplayerGame : InGame
         {
             public SpectatingMultiplayerGame(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset)
-                : base(beatmapInfo, ruleset)
-            {
-            }
+                : base(beatmapInfo, ruleset) { }
 
             [SerializationConstructor]
             public SpectatingMultiplayerGame() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @"Spectating a multiplayer game";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @"Spectating a multiplayer game";
         }
 
         [MessagePackObject]
         public class SearchingForLobby : UserActivity
         {
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @"Looking for a lobby";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @"Looking for a lobby";
         }
 
         [MessagePackObject]
@@ -281,11 +287,11 @@ namespace osu.Game.Users
             [SerializationConstructor]
             public InLobby() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @"In a lobby";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @"In a lobby";
 
-            public override string? GetDetails(bool hideIdentifiableInformation = false) => hideIdentifiableInformation
-                ? null
-                : RoomName;
+            public override string? GetDetails(bool hideIdentifiableInformation = false) =>
+                hideIdentifiableInformation ? null : RoomName;
         }
 
         [MessagePackObject]
@@ -294,23 +300,21 @@ namespace osu.Game.Users
             [SerializationConstructor]
             public InDailyChallengeLobby() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @"In daily challenge lobby";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @"In daily challenge lobby";
         }
 
         [MessagePackObject]
         public class PlayingDailyChallenge : InGame
         {
             public PlayingDailyChallenge(IBeatmapInfo beatmapInfo, IRulesetInfo ruleset)
-                : base(beatmapInfo, ruleset)
-            {
-            }
+                : base(beatmapInfo, ruleset) { }
 
             [SerializationConstructor]
-            public PlayingDailyChallenge()
-            {
-            }
+            public PlayingDailyChallenge() { }
 
-            public override string GetStatus(bool hideIdentifiableInformation = false) => @$"{RulesetPlayingVerb} in daily challenge";
+            public override string GetStatus(bool hideIdentifiableInformation = false) =>
+                @$"{RulesetPlayingVerb} in daily challenge";
         }
     }
 }

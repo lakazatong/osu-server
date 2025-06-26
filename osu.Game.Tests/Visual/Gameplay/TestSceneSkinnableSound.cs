@@ -28,26 +28,34 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup hierarchy", () =>
-            {
-                Child = skinSource = new TestSkinSourceContainer
+            AddStep(
+                "setup hierarchy",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
+                    Child = skinSource = new TestSkinSourceContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    };
 
-                // has to be added after the hierarchy above else the `ISkinSource` dependency won't be cached.
-                skinSource.Add(skinnableSound = new PausableSkinnableSound(new SampleInfo(sample_lookup)));
-            });
+                    // has to be added after the hierarchy above else the `ISkinSource` dependency won't be cached.
+                    skinSource.Add(
+                        skinnableSound = new PausableSkinnableSound(new SampleInfo(sample_lookup))
+                    );
+                }
+            );
         }
 
         [Test]
         public void TestStoppedSoundDoesntResumeAfterPause()
         {
-            AddStep("start sample with looping", () =>
-            {
-                skinnableSound.Looping = true;
-                skinnableSound.Play();
-            });
+            AddStep(
+                "start sample with looping",
+                () =>
+                {
+                    skinnableSound.Looping = true;
+                    skinnableSound.Play();
+                }
+            );
 
             AddUntilStep("wait for sample to start playing", () => skinnableSound.IsPlaying);
 
@@ -55,9 +63,15 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for sample to stop playing", () => !skinnableSound.IsPlaying);
 
-            AddStep("disable sample playback", () => skinSource.SamplePlaybackDisabled.Value = true);
+            AddStep(
+                "disable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = true
+            );
 
-            AddStep("enable sample playback", () => skinSource.SamplePlaybackDisabled.Value = false);
+            AddStep(
+                "enable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = false
+            );
 
             AddWaitStep("wait a bit", 5);
             AddAssert("sample not playing", () => !skinnableSound.IsPlaying);
@@ -66,18 +80,27 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestLoopingSoundResumesAfterPause()
         {
-            AddStep("start sample with looping", () =>
-            {
-                skinnableSound.Looping = true;
-                skinnableSound.Play();
-            });
+            AddStep(
+                "start sample with looping",
+                () =>
+                {
+                    skinnableSound.Looping = true;
+                    skinnableSound.Play();
+                }
+            );
 
             AddUntilStep("wait for sample to start playing", () => skinnableSound.IsPlaying);
 
-            AddStep("disable sample playback", () => skinSource.SamplePlaybackDisabled.Value = true);
+            AddStep(
+                "disable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = true
+            );
             AddUntilStep("wait for sample to stop playing", () => !skinnableSound.IsPlaying);
 
-            AddStep("enable sample playback", () => skinSource.SamplePlaybackDisabled.Value = false);
+            AddStep(
+                "enable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = false
+            );
             AddUntilStep("wait for sample to start playing", () => skinnableSound.IsPlaying);
         }
 
@@ -88,11 +111,17 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddAssert("sample playing", () => skinnableSound.IsPlaying);
 
-            AddStep("disable sample playback", () => skinSource.SamplePlaybackDisabled.Value = true);
+            AddStep(
+                "disable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = true
+            );
 
             AddUntilStep("sample not playing", () => !skinnableSound.IsPlaying);
 
-            AddStep("enable sample playback", () => skinSource.SamplePlaybackDisabled.Value = false);
+            AddStep(
+                "enable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = false
+            );
 
             AddAssert("sample not playing", () => !skinnableSound.IsPlaying);
             AddAssert("sample not playing", () => !skinnableSound.IsPlaying);
@@ -105,51 +134,77 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("make sample non-present", () => skinnableSound.Hide());
             AddUntilStep("ensure not present", () => skinnableSound.IsPresent, () => Is.False);
 
-            AddUntilStep("ensure sample loaded", () => skinnableSound.ChildrenOfType<DrawableSample>().Single().Name, () => Is.EqualTo(sample_lookup));
+            AddUntilStep(
+                "ensure sample loaded",
+                () => skinnableSound.ChildrenOfType<DrawableSample>().Single().Name,
+                () => Is.EqualTo(sample_lookup)
+            );
 
-            AddStep("change source", () =>
-            {
-                skinSource.OverridingSample = new SampleVirtual("new skin");
-                skinSource.TriggerSourceChanged();
-            });
+            AddStep(
+                "change source",
+                () =>
+                {
+                    skinSource.OverridingSample = new SampleVirtual("new skin");
+                    skinSource.TriggerSourceChanged();
+                }
+            );
 
             AddStep("start sample", () => skinnableSound.Play());
-            AddUntilStep("sample updated", () => skinnableSound.ChildrenOfType<DrawableSample>().Single().Name, () => Is.EqualTo("new skin"));
+            AddUntilStep(
+                "sample updated",
+                () => skinnableSound.ChildrenOfType<DrawableSample>().Single().Name,
+                () => Is.EqualTo("new skin")
+            );
         }
 
         [Test]
         public void TestSkinChangeDoesntPlayOnPause()
         {
             DrawableSample? sample = null;
-            AddStep("start sample", () =>
-            {
-                skinnableSound.Play();
-                sample = skinnableSound.ChildrenOfType<DrawableSample>().Single();
-            });
+            AddStep(
+                "start sample",
+                () =>
+                {
+                    skinnableSound.Play();
+                    sample = skinnableSound.ChildrenOfType<DrawableSample>().Single();
+                }
+            );
 
             AddAssert("sample playing", () => skinnableSound.IsPlaying);
 
-            AddStep("disable sample playback", () => skinSource.SamplePlaybackDisabled.Value = true);
+            AddStep(
+                "disable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = true
+            );
             AddUntilStep("wait for sample to stop playing", () => !skinnableSound.IsPlaying);
 
             AddStep("trigger skin change", () => skinSource.TriggerSourceChanged());
 
-            AddAssert("retrieve and ensure current sample is different", () =>
-            {
-                DrawableSample? oldSample = sample;
-                sample = skinnableSound.ChildrenOfType<DrawableSample>().Single();
-                return sample != oldSample;
-            });
+            AddAssert(
+                "retrieve and ensure current sample is different",
+                () =>
+                {
+                    DrawableSample? oldSample = sample;
+                    sample = skinnableSound.ChildrenOfType<DrawableSample>().Single();
+                    return sample != oldSample;
+                }
+            );
 
             AddAssert("new sample stopped", () => !skinnableSound.IsPlaying);
-            AddStep("enable sample playback", () => skinSource.SamplePlaybackDisabled.Value = false);
+            AddStep(
+                "enable sample playback",
+                () => skinSource.SamplePlaybackDisabled.Value = false
+            );
 
             AddWaitStep("wait a bit", 5);
             AddAssert("new sample not played", () => !skinnableSound.IsPlaying);
         }
 
         [Cached(typeof(ISkinSource))]
-        private partial class TestSkinSourceContainer : Container, ISkinSource, ISamplePlaybackDisabler
+        private partial class TestSkinSourceContainer
+            : Container,
+                ISkinSource,
+                ISamplePlaybackDisabler
         {
             [Resolved]
             private ISkinSource source { get; set; } = null!;
@@ -160,11 +215,20 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public ISample? OverridingSample;
 
-            IBindable<bool> ISamplePlaybackDisabler.SamplePlaybackDisabled => SamplePlaybackDisabled;
+            IBindable<bool> ISamplePlaybackDisabler.SamplePlaybackDisabled =>
+                SamplePlaybackDisabled;
 
-            public Drawable? GetDrawableComponent(ISkinComponentLookup lookup) => source.GetDrawableComponent(lookup);
-            public Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => source.GetTexture(componentName, wrapModeS, wrapModeT);
-            public ISample? GetSample(ISampleInfo sampleInfo) => OverridingSample ?? source.GetSample(sampleInfo);
+            public Drawable? GetDrawableComponent(ISkinComponentLookup lookup) =>
+                source.GetDrawableComponent(lookup);
+
+            public Texture? GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => source.GetTexture(componentName, wrapModeS, wrapModeT);
+
+            public ISample? GetSample(ISampleInfo sampleInfo) =>
+                OverridingSample ?? source.GetSample(sampleInfo);
 
             public IBindable<TValue>? GetConfig<TLookup, TValue>(TLookup lookup)
                 where TLookup : notnull
@@ -173,7 +237,9 @@ namespace osu.Game.Tests.Visual.Gameplay
                 return source.GetConfig<TLookup, TValue>(lookup);
             }
 
-            public ISkin? FindProvider(Func<ISkin, bool> lookupFunction) => lookupFunction(this) ? this : source.FindProvider(lookupFunction);
+            public ISkin? FindProvider(Func<ISkin, bool> lookupFunction) =>
+                lookupFunction(this) ? this : source.FindProvider(lookupFunction);
+
             public IEnumerable<ISkin> AllSources => new[] { this }.Concat(source.AllSources);
 
             public void TriggerSourceChanged()

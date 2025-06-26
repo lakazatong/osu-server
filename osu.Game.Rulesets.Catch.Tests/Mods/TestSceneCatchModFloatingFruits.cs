@@ -12,10 +12,9 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new CatchRuleset();
 
         [Test]
-        public void TestFloating() => CreateModTest(new ModTestData
-        {
-            Mod = new CatchModFloatingFruits(),
-            PassCondition = () => true
-        });
+        public void TestFloating() =>
+            CreateModTest(
+                new ModTestData { Mod = new CatchModFloatingFruits(), PassCondition = () => true }
+            );
     }
 }

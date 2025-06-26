@@ -16,25 +16,25 @@ namespace osu.Game.Tournament.Tests.Components
 
         public TestSceneMatchScoreDisplay()
         {
-            Add(new TournamentMatchScoreDisplay
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            Add(new TournamentMatchScoreDisplay { Anchor = Anchor.Centre, Origin = Anchor.Centre });
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            Scheduler.AddDelayed(() =>
-            {
-                int amount = (int)((RNG.NextDouble() - 0.5) * 10000);
-                if (amount < 0)
-                    matchInfo.Score1.Value -= amount;
-                else
-                    matchInfo.Score2.Value += amount;
-            }, 100, true);
+            Scheduler.AddDelayed(
+                () =>
+                {
+                    int amount = (int)((RNG.NextDouble() - 0.5) * 10000);
+                    if (amount < 0)
+                        matchInfo.Score1.Value -= amount;
+                    else
+                        matchInfo.Score2.Value += amount;
+                },
+                100,
+                true
+            );
         }
     }
 }

@@ -60,7 +60,11 @@ namespace osu.Game.Rulesets.Mania.UI
 
         private ISkinSource currentSkin = null!;
 
-        public Stage(int firstColumnIndex, StageDefinition definition, ref ManiaAction columnStartAction)
+        public Stage(
+            int firstColumnIndex,
+            StageDefinition definition,
+            ref ManiaAction columnStartAction
+        )
         {
             this.firstColumnIndex = firstColumnIndex;
             Definition = definition;
@@ -85,9 +89,12 @@ namespace osu.Game.Rulesets.Mania.UI
                     AutoSizeAxes = Axes.X,
                     Children = new Drawable[]
                     {
-                        new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.StageBackground), _ => new DefaultStageBackground())
+                        new SkinnableDrawable(
+                            new ManiaSkinComponentLookup(ManiaSkinComponents.StageBackground),
+                            _ => new DefaultStageBackground()
+                        )
                         {
-                            RelativeSizeAxes = Axes.Both
+                            RelativeSizeAxes = Axes.Both,
                         },
                         columnBackgrounds = new Container
                         {
@@ -103,34 +110,38 @@ namespace osu.Game.Rulesets.Mania.UI
                             Width = 1366, // Bar lines should only be masked on the vertical axis
                             BypassAutoSizeAxes = Axes.Both,
                             Masking = true,
-                            Child = barLineContainer = new HitPositionPaddedContainer
-                            {
-                                Name = "Bar lines",
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                RelativeSizeAxes = Axes.Y,
-                                Child = HitObjectContainer,
-                            }
+                            Child = barLineContainer =
+                                new HitPositionPaddedContainer
+                                {
+                                    Name = "Bar lines",
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    RelativeSizeAxes = Axes.Y,
+                                    Child = HitObjectContainer,
+                                },
                         },
                         columnFlow = new ColumnFlow<Column>(definition)
                         {
                             RelativeSizeAxes = Axes.Y,
                         },
-                        new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.StageForeground))
+                        new SkinnableDrawable(
+                            new ManiaSkinComponentLookup(ManiaSkinComponents.StageForeground)
+                        )
                         {
-                            RelativeSizeAxes = Axes.Both
+                            RelativeSizeAxes = Axes.Both,
                         },
                         new HitPositionPaddedContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = judgements = new JudgementContainer<DrawableManiaJudgement>
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
+                            Child = judgements =
+                                new JudgementContainer<DrawableManiaJudgement>
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                },
                         },
-                        topLevelContainer = new Container { RelativeSizeAxes = Axes.Both }
-                    }
-                }
+                        topLevelContainer = new Container { RelativeSizeAxes = Axes.Both },
+                    },
+                },
             };
 
             for (int i = 0; i < definition.Columns; i++)
@@ -139,12 +150,13 @@ namespace osu.Game.Rulesets.Mania.UI
 
                 var action = columnStartAction;
                 columnStartAction++;
-                var column = CreateColumn(firstColumnIndex + i, isSpecial).With(c =>
-                {
-                    c.RelativeSizeAxes = Axes.Both;
-                    c.Width = 1;
-                    c.Action.Value = action;
-                });
+                var column = CreateColumn(firstColumnIndex + i, isSpecial)
+                    .With(c =>
+                    {
+                        c.RelativeSizeAxes = Axes.Both;
+                        c.Width = 1;
+                        c.Action.Value = action;
+                    });
 
                 topLevelContainer.Add(column.TopLevelContainer.CreateProxy());
                 columnBackgrounds.Add(column.BackgroundContainer.CreateProxy());
@@ -154,13 +166,18 @@ namespace osu.Game.Rulesets.Mania.UI
 
             var hitWindows = new ManiaHitWindows();
 
-            AddInternal(judgementPooler = new JudgementPooler<DrawableManiaJudgement>(Enum.GetValues<HitResult>().Where(r => hitWindows.IsHitResultAllowed(r))));
+            AddInternal(
+                judgementPooler = new JudgementPooler<DrawableManiaJudgement>(
+                    Enum.GetValues<HitResult>().Where(r => hitWindows.IsHitResultAllowed(r))
+                )
+            );
 
             RegisterPool<BarLine, DrawableBarLine>(50, 200);
         }
 
         [Pure]
-        protected virtual Column CreateColumn(int index, bool isSpecial) => new Column(index, isSpecial);
+        protected virtual Column CreateColumn(int index, bool isSpecial) =>
+            new Column(index, isSpecial);
 
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin)
@@ -173,14 +190,24 @@ namespace osu.Game.Rulesets.Mania.UI
 
         private void onSkinChanged()
         {
-            float paddingTop = currentSkin.GetConfig<ManiaSkinConfigurationLookup, float>(new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.StagePaddingTop))?.Value ?? 0;
-            float paddingBottom = currentSkin.GetConfig<ManiaSkinConfigurationLookup, float>(new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.StagePaddingBottom))?.Value ?? 0;
+            float paddingTop =
+                currentSkin
+                    .GetConfig<ManiaSkinConfigurationLookup, float>(
+                        new ManiaSkinConfigurationLookup(
+                            LegacyManiaSkinConfigurationLookups.StagePaddingTop
+                        )
+                    )
+                    ?.Value ?? 0;
+            float paddingBottom =
+                currentSkin
+                    .GetConfig<ManiaSkinConfigurationLookup, float>(
+                        new ManiaSkinConfigurationLookup(
+                            LegacyManiaSkinConfigurationLookups.StagePaddingBottom
+                        )
+                    )
+                    ?.Value ?? 0;
 
-            Padding = new MarginPadding
-            {
-                Top = paddingTop,
-                Bottom = paddingBottom,
-            };
+            Padding = new MarginPadding { Top = paddingTop, Bottom = paddingBottom };
         }
 
         protected override void Dispose(bool isDisposing)
@@ -200,13 +227,17 @@ namespace osu.Game.Rulesets.Mania.UI
             NewResult += OnNewResult;
         }
 
-        public override void Add(HitObject hitObject) => Columns[((ManiaHitObject)hitObject).Column - firstColumnIndex].Add(hitObject);
+        public override void Add(HitObject hitObject) =>
+            Columns[((ManiaHitObject)hitObject).Column - firstColumnIndex].Add(hitObject);
 
-        public override bool Remove(HitObject hitObject) => Columns[((ManiaHitObject)hitObject).Column - firstColumnIndex].Remove(hitObject);
+        public override bool Remove(HitObject hitObject) =>
+            Columns[((ManiaHitObject)hitObject).Column - firstColumnIndex].Remove(hitObject);
 
-        public override void Add(DrawableHitObject h) => Columns[((ManiaHitObject)h.HitObject).Column - firstColumnIndex].Add(h);
+        public override void Add(DrawableHitObject h) =>
+            Columns[((ManiaHitObject)h.HitObject).Column - firstColumnIndex].Add(h);
 
-        public override bool Remove(DrawableHitObject h) => Columns[((ManiaHitObject)h.HitObject).Column - firstColumnIndex].Remove(h);
+        public override bool Remove(DrawableHitObject h) =>
+            Columns[((ManiaHitObject)h.HitObject).Column - firstColumnIndex].Remove(h);
 
         public void Add(BarLine barLine) => base.Add(barLine);
 

@@ -64,8 +64,8 @@ namespace osu.Game.Screens.Ranking.Expanded
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                    }
-                }
+                    },
+                },
             };
         }
 

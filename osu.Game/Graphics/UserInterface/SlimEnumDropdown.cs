@@ -17,7 +17,13 @@ namespace osu.Game.Graphics.UserInterface
             public SlimDropdownHeader()
             {
                 Height = 25;
-                Foreground.Padding = new MarginPadding { Top = 4, Bottom = 4, Left = 8, Right = 4 };
+                Foreground.Padding = new MarginPadding
+                {
+                    Top = 4,
+                    Bottom = 4,
+                    Left = 8,
+                    Right = 4,
+                };
             }
         }
     }

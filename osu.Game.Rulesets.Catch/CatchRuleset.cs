@@ -39,29 +39,36 @@ namespace osu.Game.Rulesets.Catch
 {
     public class CatchRuleset : Ruleset, ILegacyRuleset
     {
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => new DrawableCatchRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        ) => new DrawableCatchRuleset(this, beatmap, mods);
 
         public override ScoreProcessor CreateScoreProcessor() => new CatchScoreProcessor();
 
-        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new CatchHealthProcessor(drainStartTime);
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime) =>
+            new CatchHealthProcessor(drainStartTime);
 
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new CatchBeatmapConverter(beatmap, this);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+            new CatchBeatmapConverter(beatmap, this);
 
-        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new CatchBeatmapProcessor(beatmap);
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) =>
+            new CatchBeatmapProcessor(beatmap);
 
         public const string SHORT_NAME = "fruits";
 
         public override string RulesetAPIVersionSupported => CURRENT_RULESET_API_VERSION;
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
-        {
-            new KeyBinding(InputKey.Z, CatchAction.MoveLeft),
-            new KeyBinding(InputKey.Left, CatchAction.MoveLeft),
-            new KeyBinding(InputKey.X, CatchAction.MoveRight),
-            new KeyBinding(InputKey.Right, CatchAction.MoveRight),
-            new KeyBinding(InputKey.Shift, CatchAction.Dash),
-            new KeyBinding(InputKey.MouseLeft, CatchAction.Dash),
-        };
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            new[]
+            {
+                new KeyBinding(InputKey.Z, CatchAction.MoveLeft),
+                new KeyBinding(InputKey.Left, CatchAction.MoveLeft),
+                new KeyBinding(InputKey.X, CatchAction.MoveRight),
+                new KeyBinding(InputKey.Right, CatchAction.MoveRight),
+                new KeyBinding(InputKey.Shift, CatchAction.Dash),
+                new KeyBinding(InputKey.MouseLeft, CatchAction.Dash),
+            };
 
         public override IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods)
         {
@@ -114,7 +121,7 @@ namespace osu.Game.Rulesets.Catch
                     {
                         new CatchModEasy(),
                         new CatchModNoFail(),
-                        new MultiMod(new CatchModHalfTime(), new CatchModDaycore())
+                        new MultiMod(new CatchModHalfTime(), new CatchModDaycore()),
                     };
 
                 case ModType.DifficultyIncrease:
@@ -153,10 +160,7 @@ namespace osu.Game.Rulesets.Catch
                     };
 
                 case ModType.System:
-                    return new Mod[]
-                    {
-                        new ModScoreV2(),
-                    };
+                    return new Mod[] { new ModScoreV2() };
 
                 default:
                     return Array.Empty<Mod>();
@@ -176,7 +180,6 @@ namespace osu.Game.Rulesets.Catch
             return new[]
             {
                 HitResult.Great,
-
                 HitResult.LargeTickHit,
                 HitResult.SmallTickHit,
                 HitResult.LargeBonus,
@@ -200,7 +203,8 @@ namespace osu.Game.Rulesets.Catch
             return base.GetDisplayNameForHitResult(result);
         }
 
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new CatchDifficultyCalculator(RulesetInfo, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            new CatchDifficultyCalculator(RulesetInfo, beatmap);
 
         public override ISkin? CreateSkinTransformer(ISkin skin, IBeatmap beatmap)
         {
@@ -216,62 +220,81 @@ namespace osu.Game.Rulesets.Catch
             return null;
         }
 
-        public override PerformanceCalculator CreatePerformanceCalculator() => new CatchPerformanceCalculator();
+        public override PerformanceCalculator CreatePerformanceCalculator() =>
+            new CatchPerformanceCalculator();
 
         public int LegacyID => 2;
 
-        public ILegacyScoreSimulator CreateLegacyScoreSimulator() => new CatchLegacyScoreSimulator();
+        public ILegacyScoreSimulator CreateLegacyScoreSimulator() =>
+            new CatchLegacyScoreSimulator();
 
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new CatchReplayFrame();
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() =>
+            new CatchReplayFrame();
 
-        public override HitObjectComposer CreateHitObjectComposer() => new CatchHitObjectComposer(this);
+        public override HitObjectComposer CreateHitObjectComposer() =>
+            new CatchHitObjectComposer(this);
 
         public override IEnumerable<Drawable> CreateEditorSetupSections() =>
-        [
-            new MetadataSection(),
-            new CatchDifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(SetupScreen.SPACING),
-                Children = new Drawable[]
+            [
+                new MetadataSection(),
+                new CatchDifficultySection(),
+                new FillFlowContainer
                 {
-                    new ResourcesSection
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(SetupScreen.SPACING),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
+                        new ResourcesSection { RelativeSizeAxes = Axes.X },
+                        new ColoursSection { RelativeSizeAxes = Axes.X },
                     },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
-        ];
+                },
+                new DesignSection(),
+            ];
 
         public override IBeatmapVerifier CreateBeatmapVerifier() => new CatchBeatmapVerifier();
 
-        public override StatisticItem[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap)
+        public override StatisticItem[] CreateStatisticsForScore(
+            ScoreInfo score,
+            IBeatmap playableBeatmap
+        )
         {
             return new[]
             {
-                new StatisticItem("Performance Breakdown", () => new PerformanceBreakdownChart(score, playableBeatmap)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
-                }),
+                new StatisticItem(
+                    "Performance Breakdown",
+                    () =>
+                        new PerformanceBreakdownChart(score, playableBeatmap)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                        }
+                ),
             };
         }
 
         /// <seealso cref="CatchHitObject.ApplyDefaultsToSelf"/>
-        public override BeatmapDifficulty GetRateAdjustedDisplayDifficulty(IBeatmapDifficultyInfo difficulty, double rate)
+        public override BeatmapDifficulty GetRateAdjustedDisplayDifficulty(
+            IBeatmapDifficultyInfo difficulty,
+            double rate
+        )
         {
             BeatmapDifficulty adjustedDifficulty = new BeatmapDifficulty(difficulty);
 
-            double preempt = IBeatmapDifficultyInfo.DifficultyRange(adjustedDifficulty.ApproachRate, CatchHitObject.PREEMPT_MAX, CatchHitObject.PREEMPT_MID, CatchHitObject.PREEMPT_MIN);
+            double preempt = IBeatmapDifficultyInfo.DifficultyRange(
+                adjustedDifficulty.ApproachRate,
+                CatchHitObject.PREEMPT_MAX,
+                CatchHitObject.PREEMPT_MID,
+                CatchHitObject.PREEMPT_MIN
+            );
             preempt /= rate;
-            adjustedDifficulty.ApproachRate = (float)IBeatmapDifficultyInfo.InverseDifficultyRange(preempt, CatchHitObject.PREEMPT_MAX, CatchHitObject.PREEMPT_MID, CatchHitObject.PREEMPT_MIN);
+            adjustedDifficulty.ApproachRate = (float)
+                IBeatmapDifficultyInfo.InverseDifficultyRange(
+                    preempt,
+                    CatchHitObject.PREEMPT_MAX,
+                    CatchHitObject.PREEMPT_MID,
+                    CatchHitObject.PREEMPT_MIN
+                );
 
             return adjustedDifficulty;
         }

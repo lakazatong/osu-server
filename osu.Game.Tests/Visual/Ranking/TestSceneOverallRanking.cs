@@ -13,7 +13,8 @@ namespace osu.Game.Tests.Visual.Ranking
 {
     public partial class TestSceneOverallRanking : OsuTestScene
     {
-        private readonly Bindable<ScoreBasedUserStatisticsUpdate?> statisticsUpdate = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        private readonly Bindable<ScoreBasedUserStatisticsUpdate?> statisticsUpdate =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
 
         [Test]
         public void TestUpdatePending()
@@ -33,7 +34,7 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_072
+                    PP = 5_072,
                 },
                 new UserStatistics
                 {
@@ -42,8 +43,9 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_352,
                     RankedScore = 23_124_231_435,
                     TotalScore = 123_124_231_435,
-                    PP = 5_434
-                });
+                    PP = 5_434,
+                }
+            );
         }
 
         // cross-reference: `TestSceneToolbarUserButton.TestTransientUserStatisticsDisplay()`, "Test rounding treatment" step.
@@ -59,7 +61,7 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_071.495M
+                    PP = 5_071.495M,
                 },
                 new UserStatistics
                 {
@@ -68,8 +70,9 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_072.99M
-                });
+                    PP = 5_072.99M,
+                }
+            );
         }
 
         [Test]
@@ -84,7 +87,7 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_352,
                     RankedScore = 23_124_231_435,
                     TotalScore = 123_124_231_435,
-                    PP = 5_434
+                    PP = 5_434,
                 },
                 new UserStatistics
                 {
@@ -93,8 +96,9 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_072
-                });
+                    PP = 5_072,
+                }
+            );
         }
 
         [Test]
@@ -107,7 +111,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 MaxCombo = 2_322,
                 RankedScore = 23_123_543_456,
                 TotalScore = 123_123_543_456,
-                PP = 5_072
+                PP = 5_072,
             };
 
             createDisplay();
@@ -124,7 +128,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 MaxCombo = 2_322,
                 RankedScore = 23_123_543_456,
                 TotalScore = 123_123_543_456,
-                PP = null
+                PP = null,
             };
 
             createDisplay();
@@ -144,8 +148,9 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_072
-                });
+                    PP = 5_072,
+                }
+            );
         }
 
         [Test]
@@ -160,24 +165,37 @@ namespace osu.Game.Tests.Visual.Ranking
                     MaxCombo = 2_322,
                     RankedScore = 23_123_543_456,
                     TotalScore = 123_123_543_456,
-                    PP = 5_072
+                    PP = 5_072,
                 },
-                new UserStatistics());
+                new UserStatistics()
+            );
         }
 
-        private void createDisplay() => AddStep("create display", () =>
-        {
-            statisticsUpdate.Value = null;
-            Child = new OverallRanking(new ScoreInfo())
-            {
-                Width = 400,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                DisplayedUpdate = { BindTarget = statisticsUpdate }
-            };
-        });
+        private void createDisplay() =>
+            AddStep(
+                "create display",
+                () =>
+                {
+                    statisticsUpdate.Value = null;
+                    Child = new OverallRanking(new ScoreInfo())
+                    {
+                        Width = 400,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        DisplayedUpdate = { BindTarget = statisticsUpdate },
+                    };
+                }
+            );
 
         private void displayUpdate(UserStatistics before, UserStatistics after) =>
-            AddStep("display update", () => statisticsUpdate.Value = new ScoreBasedUserStatisticsUpdate(new ScoreInfo(), before, after));
+            AddStep(
+                "display update",
+                () =>
+                    statisticsUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        before,
+                        after
+                    )
+            );
     }
 }

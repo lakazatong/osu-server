@@ -11,11 +11,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Database;
-using osu.Game.Scoring;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
 using osu.Game.Online;
 using osu.Game.Online.Multiplayer;
+using osu.Game.Scoring;
 using osuTK;
 
 namespace osu.Game.Screens.Play
@@ -63,44 +63,61 @@ namespace osu.Game.Screens.Play
 
                             if (importFailedScore != null)
                             {
-                                Task.Run(importFailedScore).ContinueWith(t =>
-                                {
-                                    importedScore = realm.Run<Live<ScoreInfo>?>(r => r.Find<ScoreInfo>(t.GetResultSafely().ID)?.ToLive(realm));
-                                    Schedule(() => state.Value = importedScore != null ? DownloadState.LocallyAvailable : DownloadState.NotDownloaded);
-                                }).FireAndForget();
+                                Task.Run(importFailedScore)
+                                    .ContinueWith(t =>
+                                    {
+                                        importedScore = realm.Run<Live<ScoreInfo>?>(r =>
+                                            r.Find<ScoreInfo>(t.GetResultSafely().ID)?.ToLive(realm)
+                                        );
+                                        Schedule(() =>
+                                            state.Value =
+                                                importedScore != null
+                                                    ? DownloadState.LocallyAvailable
+                                                    : DownloadState.NotDownloaded
+                                        );
+                                    })
+                                    .FireAndForget();
                             }
 
                             break;
                     }
-                }
+                },
             };
 
             if (player != null)
             {
-                importedScore = realm.Run(r => r.Find<ScoreInfo>(player.Score.ScoreInfo.ID)?.ToLive(realm));
-                state.Value = importedScore != null ? DownloadState.LocallyAvailable : DownloadState.NotDownloaded;
+                importedScore = realm.Run(r =>
+                    r.Find<ScoreInfo>(player.Score.ScoreInfo.ID)?.ToLive(realm)
+                );
+                state.Value =
+                    importedScore != null
+                        ? DownloadState.LocallyAvailable
+                        : DownloadState.NotDownloaded;
             }
 
-            state.BindValueChanged(state =>
-            {
-                switch (state.NewValue)
+            state.BindValueChanged(
+                state =>
                 {
-                    case DownloadState.LocallyAvailable:
-                        button.TooltipText = @"watch replay";
-                        button.Enabled.Value = true;
-                        break;
+                    switch (state.NewValue)
+                    {
+                        case DownloadState.LocallyAvailable:
+                            button.TooltipText = @"watch replay";
+                            button.Enabled.Value = true;
+                            break;
 
-                    case DownloadState.Importing:
-                        button.TooltipText = @"importing score";
-                        button.Enabled.Value = false;
-                        break;
+                        case DownloadState.Importing:
+                            button.TooltipText = @"importing score";
+                            button.Enabled.Value = false;
+                            break;
 
-                    default:
-                        button.TooltipText = @"save score";
-                        button.Enabled.Value = true;
-                        break;
-                }
-            }, true);
+                        default:
+                            button.TooltipText = @"save score";
+                            button.Enabled.Value = true;
+                            break;
+                    }
+                },
+                true
+            );
         }
 
         #region Export via hotkey logic (also in ReplayDownloadButton)
@@ -129,15 +146,15 @@ namespace osu.Game.Screens.Play
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void exportWhenReady(ValueChangedEvent<DownloadState> state)
         {
-            if (state.NewValue != DownloadState.LocallyAvailable) return;
+            if (state.NewValue != DownloadState.LocallyAvailable)
+                return;
 
-            if (importedScore != null) scoreManager.Export(importedScore.Value);
+            if (importedScore != null)
+                scoreManager.Export(importedScore.Value);
 
             this.state.ValueChanged -= exportWhenReady;
         }

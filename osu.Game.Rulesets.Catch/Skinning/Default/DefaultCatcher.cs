@@ -15,11 +15,13 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
 {
     public partial class DefaultCatcher : CompositeDrawable
     {
-        public Bindable<CatcherAnimationState> CurrentState { get; } = new Bindable<CatcherAnimationState>();
+        public Bindable<CatcherAnimationState> CurrentState { get; } =
+            new Bindable<CatcherAnimationState>();
 
         private readonly Sprite sprite;
 
-        private readonly Dictionary<CatcherAnimationState, Texture> textures = new Dictionary<CatcherAnimationState, Texture>();
+        private readonly Dictionary<CatcherAnimationState, Texture> textures =
+            new Dictionary<CatcherAnimationState, Texture>();
 
         public DefaultCatcher()
         {
@@ -30,7 +32,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.TopCentre,
                 RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fit
+                FillMode = FillMode.Fit,
             };
         }
 

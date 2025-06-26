@@ -23,86 +23,106 @@ namespace osu.Game.Tests.Visual.Editing
     public partial class TestSceneMetadataSection : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [Cached]
-        private EditorBeatmap editorBeatmap = new EditorBeatmap(new Beatmap
-        {
-            BeatmapInfo =
-            {
-                Ruleset = new OsuRuleset().RulesetInfo
-            },
-        });
+        private EditorBeatmap editorBeatmap = new EditorBeatmap(
+            new Beatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+        );
 
         private TestMetadataSection metadataSection;
 
         [Test]
         public void TestUpdateViaTextBoxOnFocusLoss()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.Artist = "Example Artist";
-                editorBeatmap.Metadata.ArtistUnicode = string.Empty;
-            });
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.Artist = "Example Artist";
+                    editorBeatmap.Metadata.ArtistUnicode = string.Empty;
+                }
+            );
 
             createSection();
 
             TextBox textbox;
 
-            AddStep("focus first textbox", () =>
-            {
-                textbox = metadataSection.ChildrenOfType<TextBox>().First();
-                InputManager.MoveMouseTo(textbox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus first textbox",
+                () =>
+                {
+                    textbox = metadataSection.ChildrenOfType<TextBox>().First();
+                    InputManager.MoveMouseTo(textbox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("simulate changing textbox", () =>
-            {
-                // Can't simulate text input but this should work.
-                InputManager.Keys(PlatformAction.SelectAll);
-                InputManager.Keys(PlatformAction.Copy);
-                InputManager.Keys(PlatformAction.Paste);
-                InputManager.Keys(PlatformAction.Paste);
-            });
+            AddStep(
+                "simulate changing textbox",
+                () =>
+                {
+                    // Can't simulate text input but this should work.
+                    InputManager.Keys(PlatformAction.SelectAll);
+                    InputManager.Keys(PlatformAction.Copy);
+                    InputManager.Keys(PlatformAction.Paste);
+                    InputManager.Keys(PlatformAction.Paste);
+                }
+            );
 
             assertArtistMetadata("Example ArtistExample Artist");
 
             // It's important values are committed immediately on focus loss so the editor exit sequence detects them.
-            AddAssert("value still changed after focus loss", () =>
-            {
-                ((IFocusManager)InputManager).TriggerFocusContention(metadataSection);
-                return editorBeatmap.Metadata.Artist;
-            }, () => Is.EqualTo("Example ArtistExample Artist"));
+            AddAssert(
+                "value still changed after focus loss",
+                () =>
+                {
+                    ((IFocusManager)InputManager).TriggerFocusContention(metadataSection);
+                    return editorBeatmap.Metadata.Artist;
+                },
+                () => Is.EqualTo("Example ArtistExample Artist")
+            );
         }
 
         [Test]
         public void TestUpdateViaTextBoxOnCommit()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.Artist = "Example Artist";
-                editorBeatmap.Metadata.ArtistUnicode = string.Empty;
-            });
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.Artist = "Example Artist";
+                    editorBeatmap.Metadata.ArtistUnicode = string.Empty;
+                }
+            );
 
             createSection();
 
             TextBox textbox;
 
-            AddStep("focus first textbox", () =>
-            {
-                textbox = metadataSection.ChildrenOfType<TextBox>().First();
-                InputManager.MoveMouseTo(textbox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus first textbox",
+                () =>
+                {
+                    textbox = metadataSection.ChildrenOfType<TextBox>().First();
+                    InputManager.MoveMouseTo(textbox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("simulate changing textbox", () =>
-            {
-                // Can't simulate text input but this should work.
-                InputManager.Keys(PlatformAction.SelectAll);
-                InputManager.Keys(PlatformAction.Copy);
-                InputManager.Keys(PlatformAction.Paste);
-                InputManager.Keys(PlatformAction.Paste);
-            });
+            AddStep(
+                "simulate changing textbox",
+                () =>
+                {
+                    // Can't simulate text input but this should work.
+                    InputManager.Keys(PlatformAction.SelectAll);
+                    InputManager.Keys(PlatformAction.Copy);
+                    InputManager.Keys(PlatformAction.Paste);
+                    InputManager.Keys(PlatformAction.Paste);
+                }
+            );
 
             assertArtistMetadata("Example ArtistExample Artist");
 
@@ -114,14 +134,17 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestMinimalMetadata()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.Artist = "Example Artist";
-                editorBeatmap.Metadata.ArtistUnicode = string.Empty;
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.Artist = "Example Artist";
+                    editorBeatmap.Metadata.ArtistUnicode = string.Empty;
 
-                editorBeatmap.Metadata.Title = "Example Title";
-                editorBeatmap.Metadata.TitleUnicode = string.Empty;
-            });
+                    editorBeatmap.Metadata.Title = "Example Title";
+                    editorBeatmap.Metadata.TitleUnicode = string.Empty;
+                }
+            );
 
             createSection();
 
@@ -135,14 +158,17 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestInitialisationFromNonRomanisedVariant()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
-                editorBeatmap.Metadata.Artist = string.Empty;
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
+                    editorBeatmap.Metadata.Artist = string.Empty;
 
-                editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
-                editorBeatmap.Metadata.Title = string.Empty;
-            });
+                    editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
+                    editorBeatmap.Metadata.Title = string.Empty;
+                }
+            );
 
             createSection();
 
@@ -156,14 +182,17 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestInitialisationPreservesOriginalValues()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
-                editorBeatmap.Metadata.Artist = "*namirin";
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
+                    editorBeatmap.Metadata.Artist = "*namirin";
 
-                editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
-                editorBeatmap.Metadata.Title = "Koishiteiku Planet";
-            });
+                    editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
+                    editorBeatmap.Metadata.Title = "Koishiteiku Planet";
+                }
+            );
 
             createSection();
 
@@ -177,56 +206,101 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestValueTransfer()
         {
-            AddStep("set metadata", () =>
-            {
-                editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
-                editorBeatmap.Metadata.Artist = string.Empty;
+            AddStep(
+                "set metadata",
+                () =>
+                {
+                    editorBeatmap.Metadata.ArtistUnicode = "＊なみりん";
+                    editorBeatmap.Metadata.Artist = string.Empty;
 
-                editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
-                editorBeatmap.Metadata.Title = string.Empty;
-            });
+                    editorBeatmap.Metadata.TitleUnicode = "コイシテイク・プラネット";
+                    editorBeatmap.Metadata.Title = string.Empty;
+                }
+            );
 
             createSection();
 
-            AddStep("set romanised artist name", () => metadataSection.ArtistTextBox.Current.Value = "*namirin");
+            AddStep(
+                "set romanised artist name",
+                () => metadataSection.ArtistTextBox.Current.Value = "*namirin"
+            );
             assertArtistTextBox("*namirin");
             assertRomanisedArtist("*namirin", false);
 
-            AddStep("set native artist name", () => metadataSection.ArtistTextBox.Current.Value = "＊なみりん");
+            AddStep(
+                "set native artist name",
+                () => metadataSection.ArtistTextBox.Current.Value = "＊なみりん"
+            );
             assertArtistTextBox("＊なみりん");
             assertRomanisedArtist("*namirin", true);
 
-            AddStep("set romanised title", () => metadataSection.TitleTextBox.Current.Value = "Hitokoto no kyori");
+            AddStep(
+                "set romanised title",
+                () => metadataSection.TitleTextBox.Current.Value = "Hitokoto no kyori"
+            );
             assertTitle("Hitokoto no kyori");
             assertRomanisedTitle("Hitokoto no kyori", false);
 
-            AddStep("set native title", () => metadataSection.TitleTextBox.Current.Value = "ヒトコトの距離");
+            AddStep(
+                "set native title",
+                () => metadataSection.TitleTextBox.Current.Value = "ヒトコトの距離"
+            );
             assertTitle("ヒトコトの距離");
             assertRomanisedTitle("Hitokoto no kyori", true);
         }
 
-        private void createSection()
-            => AddStep("create metadata section", () => Child = metadataSection = new TestMetadataSection { RelativeSizeAxes = Axes.X });
+        private void createSection() =>
+            AddStep(
+                "create metadata section",
+                () =>
+                    Child = metadataSection = new TestMetadataSection { RelativeSizeAxes = Axes.X }
+            );
 
-        private void assertArtistMetadata(string expected)
-            => AddAssert($"artist metadata is {expected}", () => editorBeatmap.Metadata.Artist, () => Is.EqualTo(expected));
+        private void assertArtistMetadata(string expected) =>
+            AddAssert(
+                $"artist metadata is {expected}",
+                () => editorBeatmap.Metadata.Artist,
+                () => Is.EqualTo(expected)
+            );
 
-        private void assertArtistTextBox(string expected)
-            => AddAssert($"artist textbox is {expected}", () => metadataSection.ArtistTextBox.Current.Value, () => Is.EqualTo(expected));
+        private void assertArtistTextBox(string expected) =>
+            AddAssert(
+                $"artist textbox is {expected}",
+                () => metadataSection.ArtistTextBox.Current.Value,
+                () => Is.EqualTo(expected)
+            );
 
         private void assertRomanisedArtist(string expected, bool editable)
         {
-            AddAssert($"romanised artist is {expected}", () => metadataSection.RomanisedArtistTextBox.Current.Value, () => Is.EqualTo(expected));
-            AddAssert($"romanised artist is {(editable ? "" : "not ")}editable", () => metadataSection.RomanisedArtistTextBox.ReadOnly == !editable);
+            AddAssert(
+                $"romanised artist is {expected}",
+                () => metadataSection.RomanisedArtistTextBox.Current.Value,
+                () => Is.EqualTo(expected)
+            );
+            AddAssert(
+                $"romanised artist is {(editable ? "" : "not ")}editable",
+                () => metadataSection.RomanisedArtistTextBox.ReadOnly == !editable
+            );
         }
 
-        private void assertTitle(string expected)
-            => AddAssert($"title is {expected}", () => metadataSection.TitleTextBox.Current.Value, () => Is.EqualTo(expected));
+        private void assertTitle(string expected) =>
+            AddAssert(
+                $"title is {expected}",
+                () => metadataSection.TitleTextBox.Current.Value,
+                () => Is.EqualTo(expected)
+            );
 
         private void assertRomanisedTitle(string expected, bool editable)
         {
-            AddAssert($"romanised title is {expected}", () => metadataSection.RomanisedTitleTextBox.Current.Value, () => Is.EqualTo(expected));
-            AddAssert($"romanised title is {(editable ? "" : "not ")}editable", () => metadataSection.RomanisedTitleTextBox.ReadOnly == !editable);
+            AddAssert(
+                $"romanised title is {expected}",
+                () => metadataSection.RomanisedTitleTextBox.Current.Value,
+                () => Is.EqualTo(expected)
+            );
+            AddAssert(
+                $"romanised title is {(editable ? "" : "not ")}editable",
+                () => metadataSection.RomanisedTitleTextBox.ReadOnly == !editable
+            );
         }
 
         private partial class TestMetadataSection : MetadataSection

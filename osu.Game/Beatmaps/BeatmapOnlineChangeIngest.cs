@@ -17,7 +17,11 @@ namespace osu.Game.Beatmaps
         private readonly RealmAccess realm;
         private readonly MetadataClient metadataClient;
 
-        public BeatmapOnlineChangeIngest(IBeatmapUpdater beatmapUpdater, RealmAccess realm, MetadataClient metadataClient)
+        public BeatmapOnlineChangeIngest(
+            IBeatmapUpdater beatmapUpdater,
+            RealmAccess realm,
+            MetadataClient metadataClient
+        )
         {
             this.beatmapUpdater = beatmapUpdater;
             this.realm = realm;
@@ -36,7 +40,10 @@ namespace osu.Game.Beatmaps
                     var matchingSet = r.All<BeatmapSetInfo>().FirstOrDefault(s => s.OnlineID == id);
 
                     if (matchingSet != null)
-                        beatmapUpdater.Queue(matchingSet.ToLive(realm), MetadataLookupScope.OnlineFirst);
+                        beatmapUpdater.Queue(
+                            matchingSet.ToLive(realm),
+                            MetadataLookupScope.OnlineFirst
+                        );
                 }
             });
         }

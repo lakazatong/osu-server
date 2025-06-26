@@ -30,7 +30,10 @@ namespace osu.Game.Screens.OnlinePlay
 
         public new Action Action
         {
-            set => throw new NotSupportedException("The click action is handled by the button itself.");
+            set =>
+                throw new NotSupportedException(
+                    "The click action is handled by the button itself."
+                );
         }
 
         private OsuSpriteText count = null!;
@@ -52,41 +55,43 @@ namespace osu.Game.Screens.OnlinePlay
         [BackgroundDependencyLoader]
         private void load()
         {
-            ButtonContentContainer.AddRange(new[]
-            {
-                new Container
+            ButtonContentContainer.AddRange(
+                new[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    new Container
                     {
-                        circle = new Circle
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Colour = colours.YellowDark,
-                            RelativeSizeAxes = Axes.Both,
+                            circle = new Circle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Colour = colours.YellowDark,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            count = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Padding = new MarginPadding(5),
+                                UseFullGlyphHeight = false,
+                            },
                         },
-                        count = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Padding = new MarginPadding(5),
-                            UseFullGlyphHeight = false,
-                        }
-                    }
-                },
-                new IconButton
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(0.8f),
-                    Icon = FontAwesome.Solid.Bars,
-                    Enabled = { BindTarget = Enabled },
-                    Action = () => freeModSelectOverlay.ToggleVisibility()
+                    },
+                    new IconButton
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(0.8f),
+                        Icon = FontAwesome.Solid.Bars,
+                        Enabled = { BindTarget = Enabled },
+                        Action = () => freeModSelectOverlay.ToggleVisibility(),
+                    },
                 }
-            });
+            );
 
             SelectedColour = colours.Yellow;
             DeselectedColour = SelectedColour.Opacity(0.5f);
@@ -110,9 +115,8 @@ namespace osu.Game.Screens.OnlinePlay
         {
             var availableMods = allAvailableAndValidMods.ToArray();
 
-            FreeMods.Value = FreeMods.Value.Count == availableMods.Length
-                ? Array.Empty<Mod>()
-                : availableMods;
+            FreeMods.Value =
+                FreeMods.Value.Count == availableMods.Length ? Array.Empty<Mod>() : availableMods;
         }
 
         private void updateModDisplay()
@@ -139,8 +143,9 @@ namespace osu.Game.Screens.OnlinePlay
             }
         }
 
-        private IEnumerable<Mod> allAvailableAndValidMods => freeModSelectOverlay.AllAvailableMods
-                                                                                 .Where(state => state.ValidForSelection.Value)
-                                                                                 .Select(state => state.Mod);
+        private IEnumerable<Mod> allAvailableAndValidMods =>
+            freeModSelectOverlay
+                .AllAvailableMods.Where(state => state.ValidForSelection.Value)
+                .Select(state => state.Mod);
     }
 }

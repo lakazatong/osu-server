@@ -1,8 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Graphics;
 using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 
@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Mods
         public override ModType Type => ModType.DifficultyIncrease;
         public override bool Ranked => UsesDefaultConfiguration;
 
-        public virtual void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
-        {
-        }
+        public virtual void ApplyToScoreProcessor(ScoreProcessor scoreProcessor) { }
 
         public virtual ScoreRank AdjustRank(ScoreRank rank, double accuracy)
         {

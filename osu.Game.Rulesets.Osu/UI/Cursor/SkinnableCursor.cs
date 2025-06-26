@@ -13,8 +13,9 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
         public virtual void Expand()
         {
-            ExpandTarget?.ScaleTo(released_scale)
-                        .ScaleTo(pressed_scale, 400, Easing.OutElasticHalf);
+            ExpandTarget
+                ?.ScaleTo(released_scale)
+                .ScaleTo(pressed_scale, 400, Easing.OutElasticHalf);
         }
 
         public virtual void Contract()

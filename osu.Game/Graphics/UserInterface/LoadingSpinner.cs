@@ -75,7 +75,7 @@ namespace osu.Game.Graphics.UserInterface
                             Alpha = 0.2f,
                             ScaleAdjust = 0.4f,
                             Velocity = 0.8f,
-                            SpawnRatio = 2
+                            SpawnRatio = 2,
                         },
                         spinner = new SpriteIcon
                         {
@@ -84,9 +84,9 @@ namespace osu.Game.Graphics.UserInterface
                             Colour = inverted ? Color4.Black : Color4.White,
                             Scale = new Vector2(0.6f),
                             RelativeSizeAxes = Axes.Both,
-                            Icon = FontAwesome.Solid.CircleNotch
-                        }
-                    }
+                            Icon = FontAwesome.Solid.CircleNotch,
+                        },
+                    },
                 };
             }
             else
@@ -106,9 +106,9 @@ namespace osu.Game.Graphics.UserInterface
                                 Origin = Anchor.Centre,
                                 Colour = inverted ? Color4.Black : Color4.White,
                                 RelativeSizeAxes = Axes.Both,
-                                Icon = FontAwesome.Solid.CircleNotch
-                            }
-                        }
+                                Icon = FontAwesome.Solid.CircleNotch,
+                            },
+                        },
                     },
                     trianglesMasking = new Container
                     {
@@ -127,12 +127,13 @@ namespace osu.Game.Graphics.UserInterface
                                 Alpha = 0.4f,
                                 Colour = ColourInfo.GradientVertical(
                                     inverted ? Color4.Black.Opacity(0) : Color4.White.Opacity(0),
-                                    inverted ? Color4.Black : Color4.White),
+                                    inverted ? Color4.Black : Color4.White
+                                ),
                                 RelativeSizeAxes = Axes.Both,
                                 ScaleAdjust = 0.4f,
                                 SpawnRatio = 4,
                             },
-                        }
+                        },
                     },
                 };
             }
@@ -181,12 +182,18 @@ namespace osu.Game.Graphics.UserInterface
         {
             spinner.Spin(spin_duration * 3.5f, RotationDirection.Clockwise);
 
-            MainContents.RotateTo(0).Then()
-                        .RotateTo(90, spin_duration, Easing.InOutQuart).Then()
-                        .RotateTo(180, spin_duration, Easing.InOutQuart).Then()
-                        .RotateTo(270, spin_duration, Easing.InOutQuart).Then()
-                        .RotateTo(360, spin_duration, Easing.InOutQuart).Then()
-                        .Loop();
+            MainContents
+                .RotateTo(0)
+                .Then()
+                .RotateTo(90, spin_duration, Easing.InOutQuart)
+                .Then()
+                .RotateTo(180, spin_duration, Easing.InOutQuart)
+                .Then()
+                .RotateTo(270, spin_duration, Easing.InOutQuart)
+                .Then()
+                .RotateTo(360, spin_duration, Easing.InOutQuart)
+                .Then()
+                .Loop();
         }
     }
 }

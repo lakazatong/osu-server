@@ -21,11 +21,12 @@ namespace osu.Game.Skinning
             Margin = new MarginPadding { Vertical = 9, Horizontal = 17 };
         }
 
-        protected sealed override OsuSpriteText CreateSpriteText() => new LegacySpriteText(LegacyFont.Score)
-        {
-            Anchor = Anchor.TopRight,
-            Origin = Anchor.TopRight,
-            FixedWidth = true,
-        };
+        protected sealed override OsuSpriteText CreateSpriteText() =>
+            new LegacySpriteText(LegacyFont.Score)
+            {
+                Anchor = Anchor.TopRight,
+                Origin = Anchor.TopRight,
+                FixedWidth = true,
+            };
     }
 }

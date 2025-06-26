@@ -16,47 +16,85 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.SetUpSteps();
 
-            AddUntilStep("gameplay has started",
-                () => Player.GameplayClockContainer.CurrentTime > Player.DrawableRuleset.GameplayStartTime);
+            AddUntilStep(
+                "gameplay has started",
+                () =>
+                    Player.GameplayClockContainer.CurrentTime
+                    > Player.DrawableRuleset.GameplayStartTime
+            );
         }
 
         [Test]
         public void TestGameplayOverlayActivation()
         {
             AddAssert("local user playing", () => Player.LocalUserPlaying.Value);
-            AddAssert("activation mode is disabled", () => Player.OverlayActivationMode == OverlayActivation.Disabled);
+            AddAssert(
+                "activation mode is disabled",
+                () => Player.OverlayActivationMode == OverlayActivation.Disabled
+            );
         }
 
         [Test]
         public void TestGameplayOverlayActivationPaused()
         {
             AddAssert("local user playing", () => Player.LocalUserPlaying.Value);
-            AddAssert("activation mode is disabled", () => Player.OverlayActivationMode == OverlayActivation.Disabled);
+            AddAssert(
+                "activation mode is disabled",
+                () => Player.OverlayActivationMode == OverlayActivation.Disabled
+            );
             AddStep("pause gameplay", () => Player.Pause());
             AddAssert("local user not playing", () => !Player.LocalUserPlaying.Value);
-            AddUntilStep("activation mode is user triggered", () => Player.OverlayActivationMode == OverlayActivation.UserTriggered);
+            AddUntilStep(
+                "activation mode is user triggered",
+                () => Player.OverlayActivationMode == OverlayActivation.UserTriggered
+            );
         }
 
         [Test]
         public void TestGameplayOverlayActivationReplayLoaded()
         {
             AddAssert("local user playing", () => Player.LocalUserPlaying.Value);
-            AddAssert("activation mode is disabled", () => Player.OverlayActivationMode == OverlayActivation.Disabled);
+            AddAssert(
+                "activation mode is disabled",
+                () => Player.OverlayActivationMode == OverlayActivation.Disabled
+            );
             AddStep("load a replay", () => Player.DrawableRuleset.HasReplayLoaded.Value = true);
             AddAssert("local user not playing", () => !Player.LocalUserPlaying.Value);
-            AddAssert("activation mode is user triggered", () => Player.OverlayActivationMode == OverlayActivation.UserTriggered);
+            AddAssert(
+                "activation mode is user triggered",
+                () => Player.OverlayActivationMode == OverlayActivation.UserTriggered
+            );
         }
 
         [Test]
         public void TestGameplayOverlayActivationBreaks()
         {
             AddAssert("local user playing", () => Player.LocalUserPlaying.Value);
-            AddAssert("activation mode is disabled", () => Player.OverlayActivationMode == OverlayActivation.Disabled);
-            AddStep("seek to break", () => Player.GameplayClockContainer.Seek(Beatmap.Value.Beatmap.Breaks.First().StartTime));
-            AddUntilStep("activation mode is user triggered", () => Player.OverlayActivationMode == OverlayActivation.UserTriggered);
+            AddAssert(
+                "activation mode is disabled",
+                () => Player.OverlayActivationMode == OverlayActivation.Disabled
+            );
+            AddStep(
+                "seek to break",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Beatmap.Value.Beatmap.Breaks.First().StartTime
+                    )
+            );
+            AddUntilStep(
+                "activation mode is user triggered",
+                () => Player.OverlayActivationMode == OverlayActivation.UserTriggered
+            );
             AddAssert("local user not playing", () => !Player.LocalUserPlaying.Value);
-            AddStep("seek to break end", () => Player.GameplayClockContainer.Seek(Beatmap.Value.Beatmap.Breaks.First().EndTime));
-            AddUntilStep("activation mode is disabled", () => Player.OverlayActivationMode == OverlayActivation.Disabled);
+            AddStep(
+                "seek to break end",
+                () =>
+                    Player.GameplayClockContainer.Seek(Beatmap.Value.Beatmap.Breaks.First().EndTime)
+            );
+            AddUntilStep(
+                "activation mode is disabled",
+                () => Player.OverlayActivationMode == OverlayActivation.Disabled
+            );
             AddAssert("local user playing", () => Player.LocalUserPlaying.Value);
         }
 

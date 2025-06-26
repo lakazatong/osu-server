@@ -37,24 +37,27 @@ namespace osu.Game.Rulesets.Mania.Tests
                         Duration = 2000,
                         Column = 0,
                     },
-                    new Note
-                    {
-                        StartTime = 2000,
-                        Column = 1
-                    }
+                    new Note { StartTime = 2000, Column = 1 },
                 },
                 new List<ReplayFrame>
                 {
                     new ManiaReplayFrame(1000, ManiaAction.Key1),
                     new ManiaReplayFrame(2000, ManiaAction.Key1, ManiaAction.Key2),
                     new ManiaReplayFrame(2001, ManiaAction.Key1),
-                    new ManiaReplayFrame(3000)
-                });
+                    new ManiaReplayFrame(3000),
+                }
+            );
 
-            AddAssert("all objects perfectly judged",
+            AddAssert(
+                "all objects perfectly judged",
                 () => judgementResults.Select(result => result.Type),
-                () => Is.EquivalentTo(judgementResults.Select(result => result.Judgement.MaxResult)));
-            AddAssert("score is correct", () => currentPlayer.ScoreProcessor.TotalScore.Value, () => Is.EqualTo(1_000_000));
+                () => Is.EquivalentTo(judgementResults.Select(result => result.Judgement.MaxResult))
+            );
+            AddAssert(
+                "score is correct",
+                () => currentPlayer.ScoreProcessor.TotalScore.Value,
+                () => Is.EqualTo(1_000_000)
+            );
         }
 
         [Test]
@@ -73,21 +76,28 @@ namespace osu.Game.Rulesets.Mania.Tests
                     {
                         StartTime = 2000,
                         Duration = 2000,
-                        Column = 1
-                    }
+                        Column = 1,
+                    },
                 },
                 new List<ReplayFrame>
                 {
                     new ManiaReplayFrame(1000, ManiaAction.Key1),
                     new ManiaReplayFrame(2000, ManiaAction.Key1, ManiaAction.Key2),
                     new ManiaReplayFrame(3000, ManiaAction.Key2),
-                    new ManiaReplayFrame(4000)
-                });
+                    new ManiaReplayFrame(4000),
+                }
+            );
 
-            AddAssert("all objects perfectly judged",
+            AddAssert(
+                "all objects perfectly judged",
                 () => judgementResults.Select(result => result.Type),
-                () => Is.EquivalentTo(judgementResults.Select(result => result.Judgement.MaxResult)));
-            AddAssert("score is correct", () => currentPlayer.ScoreProcessor.TotalScore.Value, () => Is.EqualTo(1_000_000));
+                () => Is.EquivalentTo(judgementResults.Select(result => result.Judgement.MaxResult))
+            );
+            AddAssert(
+                "score is correct",
+                () => currentPlayer.ScoreProcessor.TotalScore.Value,
+                () => Is.EqualTo(1_000_000)
+            );
         }
 
         private void performTest(List<ManiaHitObject> hitObjects, List<ReplayFrame> frames)
@@ -98,34 +108,43 @@ namespace osu.Game.Rulesets.Mania.Tests
                 BeatmapInfo =
                 {
                     Difficulty = new BeatmapDifficulty { SliderTickRate = 4 },
-                    Ruleset = new ManiaRuleset().RulesetInfo
+                    Ruleset = new ManiaRuleset().RulesetInfo,
                 },
             };
 
             beatmap.ControlPointInfo.Add(0, new EffectControlPoint { ScrollSpeed = 0.1f });
 
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(beatmap);
-
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
-
-                p.OnLoadComplete += _ =>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    p.ScoreProcessor.NewJudgement += result =>
-                    {
-                        if (currentPlayer == p) judgementResults.Add(result);
-                    };
-                };
+                    Beatmap.Value = CreateWorkingBeatmap(beatmap);
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
+
+                    p.OnLoadComplete += _ =>
+                    {
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
+                    };
+
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
 
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -135,13 +154,8 @@ namespace osu.Game.Rulesets.Mania.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

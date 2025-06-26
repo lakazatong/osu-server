@@ -11,9 +11,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
     public class ManiaClassicSkinTransformer : ManiaLegacySkinTransformer
     {
         public ManiaClassicSkinTransformer(ISkin skin, IBeatmap beatmap)
-            : base(skin, beatmap)
-        {
-        }
+            : base(skin, beatmap) { }
 
         public override IBindable<TValue>? GetConfig<TLookup, TValue>(TLookup lookup)
         {

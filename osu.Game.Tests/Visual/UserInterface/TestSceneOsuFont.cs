@@ -49,9 +49,18 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestTorusAlternates()
         {
-            AddStep("set all ASCII letters", () => spriteText.Text = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ
-abcdefghijklmnopqrstuvwxyz");
-            AddStep("set all alternates", () => spriteText.Text = @"A Á Ă Â Ä À Ā Ą Å Ã
+            AddStep(
+                "set all ASCII letters",
+                () =>
+                    spriteText.Text =
+                        @"ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz"
+            );
+            AddStep(
+                "set all alternates",
+                () =>
+                    spriteText.Text =
+                        @"A Á Ă Â Ä À Ā Ą Å Ã
 Æ B D Ð Ď Đ E É Ě Ê
 Ë Ė È Ē Ę F G Ğ Ģ Ġ
 H I Í Î Ï İ Ì Ī Į K
@@ -64,7 +73,8 @@ T Ŧ Ť Ţ Ț V W Ẃ Ŵ Ẅ
 ń ň ņ ŋ ñ o œ p þ q
 t ŧ ť ţ ț u ú û ü ù
 ű ū ų ů w ẃ ŵ ẅ ẁ x
-y ý ŷ ÿ ỳ");
+y ý ŷ ÿ ỳ"
+            );
 
             AddToggleStep("toggle alternates", alternates => useAlternates.Value = alternates);
 
@@ -73,7 +83,8 @@ y ý ŷ ÿ ỳ");
             addSetWeightStep(FontWeight.SemiBold);
             addSetWeightStep(FontWeight.Bold);
 
-            void addSetWeightStep(FontWeight newWeight) => AddStep($"set weight {newWeight}", () => weight.Value = newWeight);
+            void addSetWeightStep(FontWeight newWeight) =>
+                AddStep($"set weight {newWeight}", () => weight.Value = newWeight);
         }
     }
 }

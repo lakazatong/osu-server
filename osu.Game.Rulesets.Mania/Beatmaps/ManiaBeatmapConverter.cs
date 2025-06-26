@@ -1,19 +1,19 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Rulesets.Mania.Objects;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Legacy;
-using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Mania.Beatmaps.Patterns;
 using osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy;
+using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Legacy;
+using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring.Legacy;
 using osu.Game.Utils;
 using osuTK;
@@ -53,15 +53,21 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
         private Pattern lastPattern = new Pattern();
 
         public ManiaBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
-            : this(beatmap, LegacyBeatmapConversionDifficultyInfo.FromBeatmap(beatmap), ruleset)
-        {
-        }
+            : this(beatmap, LegacyBeatmapConversionDifficultyInfo.FromBeatmap(beatmap), ruleset) { }
 
-        private ManiaBeatmapConverter(IBeatmap? beatmap, LegacyBeatmapConversionDifficultyInfo difficulty, Ruleset ruleset)
+        private ManiaBeatmapConverter(
+            IBeatmap? beatmap,
+            LegacyBeatmapConversionDifficultyInfo difficulty,
+            Ruleset ruleset
+        )
             : base(beatmap!, ruleset)
         {
             IsForCurrentRuleset = difficulty.SourceRuleset.Equals(ruleset.RulesetInfo);
-            Random = new LegacyRandom((int)MathF.Round(difficulty.DrainRate + difficulty.CircleSize) * 20 + (int)(difficulty.OverallDifficulty * 41.2) + (int)MathF.Round(difficulty.ApproachRate));
+            Random = new LegacyRandom(
+                (int)MathF.Round(difficulty.DrainRate + difficulty.CircleSize) * 20
+                    + (int)(difficulty.OverallDifficulty * 41.2)
+                    + (int)MathF.Round(difficulty.ApproachRate)
+            );
             TargetColumns = getColumnCount(difficulty);
 
             if (IsForCurrentRuleset && TargetColumns > ManiaRuleset.MAX_STAGE_KEYS)
@@ -85,7 +91,8 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
 
                     // In osu!stable, this division appears as if it happens on floats, but due to release-mode
                     // optimisations, it actually ends up happening on doubles.
-                    double percentSpecialObjects = (double)countSliderOrSpinner / difficulty.TotalObjectCount;
+                    double percentSpecialObjects =
+                        (double)countSliderOrSpinner / difficulty.TotalObjectCount;
 
                     if (percentSpecialObjects < 0.2)
                         return 7;
@@ -99,7 +106,10 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
             }
         }
 
-        public static int GetColumnCount(LegacyBeatmapConversionDifficultyInfo difficulty, IReadOnlyList<Mod>? mods = null)
+        public static int GetColumnCount(
+            LegacyBeatmapConversionDifficultyInfo difficulty,
+            IReadOnlyList<Mod>? mods = null
+        )
         {
             var converter = new ManiaBeatmapConverter(null, difficulty, new ManiaRuleset());
 
@@ -124,7 +134,11 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
             return beatmap;
         }
 
-        protected override IEnumerable<ManiaHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
+        protected override IEnumerable<ManiaHitObject> ConvertHitObject(
+            HitObject original,
+            IBeatmap beatmap,
+            CancellationToken cancellationToken
+        )
         {
             LegacyHitObjectType legacyType;
 
@@ -165,14 +179,30 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                 case LegacyHitObjectType.Circle:
                     if (IsForCurrentRuleset)
                     {
-                        conversion = new PassThroughPatternGenerator(Random, original, beatmap, TotalColumns, lastPattern);
+                        conversion = new PassThroughPatternGenerator(
+                            Random,
+                            original,
+                            beatmap,
+                            TotalColumns,
+                            lastPattern
+                        );
                         recordNote(startTime, position);
                     }
                     else
                     {
                         // Note: The density is used during the pattern generator constructor, and intentionally computed first.
                         computeDensity(startTime);
-                        conversion = new HitCirclePatternGenerator(Random, original, beatmap, TotalColumns, lastPattern, lastTime, lastPosition, density, lastStair);
+                        conversion = new HitCirclePatternGenerator(
+                            Random,
+                            original,
+                            beatmap,
+                            TotalColumns,
+                            lastPattern,
+                            lastTime,
+                            lastPosition,
+                            density,
+                            lastStair
+                        );
                         recordNote(startTime, position);
                     }
 
@@ -181,12 +211,24 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                 case LegacyHitObjectType.Slider:
                     if (IsForCurrentRuleset)
                     {
-                        conversion = new PassThroughPatternGenerator(Random, original, beatmap, TotalColumns, lastPattern);
+                        conversion = new PassThroughPatternGenerator(
+                            Random,
+                            original,
+                            beatmap,
+                            TotalColumns,
+                            lastPattern
+                        );
                         recordNote(original.StartTime, position);
                     }
                     else
                     {
-                        var generator = new SliderPatternGenerator(Random, original, beatmap, TotalColumns, lastPattern);
+                        var generator = new SliderPatternGenerator(
+                            Random,
+                            original,
+                            beatmap,
+                            TotalColumns,
+                            lastPattern
+                        );
                         conversion = generator;
 
                         for (int i = 0; i <= generator.SpanCount; i++)
@@ -203,19 +245,34 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                 case LegacyHitObjectType.Spinner:
                     // Note: Some older mania-specific beatmaps can have spinners that are converted rather than passed through.
                     //       Newer beatmaps will usually use the "hold" hitobject type below.
-                    conversion = new SpinnerPatternGenerator(Random, original, beatmap, TotalColumns, lastPattern);
+                    conversion = new SpinnerPatternGenerator(
+                        Random,
+                        original,
+                        beatmap,
+                        TotalColumns,
+                        lastPattern
+                    );
                     recordNote(endTime, new Vector2(256, 192));
                     computeDensity(endTime);
                     break;
 
                 case LegacyHitObjectType.Hold:
-                    conversion = new PassThroughPatternGenerator(Random, original, beatmap, TotalColumns, lastPattern);
+                    conversion = new PassThroughPatternGenerator(
+                        Random,
+                        original,
+                        beatmap,
+                        TotalColumns,
+                        lastPattern
+                    );
                     recordNote(endTime, position);
                     computeDensity(endTime);
                     break;
 
                 default:
-                    throw new ArgumentException($"Invalid legacy object type: {legacyType}", nameof(original));
+                    throw new ArgumentException(
+                        $"Invalid legacy object type: {legacyType}",
+                        nameof(original)
+                    );
             }
 
             foreach (var newPattern in conversion.Generate())
@@ -231,7 +288,8 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
             }
         }
 
-        private readonly LimitedCapacityQueue<double> prevNoteTimes = new LimitedCapacityQueue<double>(max_notes_for_density);
+        private readonly LimitedCapacityQueue<double> prevNoteTimes =
+            new LimitedCapacityQueue<double>(max_notes_for_density);
         private double density = int.MaxValue;
 
         private void computeDensity(double newNoteTime)

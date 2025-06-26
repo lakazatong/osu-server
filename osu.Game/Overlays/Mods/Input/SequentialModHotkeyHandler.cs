@@ -22,16 +22,38 @@ namespace osu.Game.Overlays.Mods.Input
             switch (modType)
             {
                 case ModType.DifficultyReduction:
-                    return new SequentialModHotkeyHandler(new[] { Key.Q, Key.W, Key.E, Key.R, Key.T, Key.Y, Key.U, Key.I, Key.O, Key.P });
+                    return new SequentialModHotkeyHandler(
+                        new[]
+                        {
+                            Key.Q,
+                            Key.W,
+                            Key.E,
+                            Key.R,
+                            Key.T,
+                            Key.Y,
+                            Key.U,
+                            Key.I,
+                            Key.O,
+                            Key.P,
+                        }
+                    );
 
                 case ModType.DifficultyIncrease:
-                    return new SequentialModHotkeyHandler(new[] { Key.A, Key.S, Key.D, Key.F, Key.G, Key.H, Key.J, Key.K, Key.L });
+                    return new SequentialModHotkeyHandler(
+                        new[] { Key.A, Key.S, Key.D, Key.F, Key.G, Key.H, Key.J, Key.K, Key.L }
+                    );
 
                 case ModType.Automation:
-                    return new SequentialModHotkeyHandler(new[] { Key.Z, Key.X, Key.C, Key.V, Key.B, Key.N, Key.M });
+                    return new SequentialModHotkeyHandler(
+                        new[] { Key.Z, Key.X, Key.C, Key.V, Key.B, Key.N, Key.M }
+                    );
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(modType), modType, $"Cannot create {nameof(SequentialModHotkeyHandler)} for provided mod type");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(modType),
+                        modType,
+                        $"Cannot create {nameof(SequentialModHotkeyHandler)} for provided mod type"
+                    );
             }
         }
 
@@ -48,7 +70,9 @@ namespace osu.Game.Overlays.Mods.Input
             if (index < 0)
                 return false;
 
-            var modState = availableMods.Where(modState => modState.Visible).ElementAtOrDefault(index);
+            var modState = availableMods
+                .Where(modState => modState.Visible)
+                .ElementAtOrDefault(index);
             if (modState == null)
                 return false;
 

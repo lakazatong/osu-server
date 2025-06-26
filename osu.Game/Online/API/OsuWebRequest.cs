@@ -8,13 +8,9 @@ namespace osu.Game.Online.API
     public class OsuWebRequest : WebRequest
     {
         public OsuWebRequest(string uri)
-            : base(uri)
-        {
-        }
+            : base(uri) { }
 
-        public OsuWebRequest()
-        {
-        }
+        public OsuWebRequest() { }
 
         protected override string UserAgent => "osu!";
     }

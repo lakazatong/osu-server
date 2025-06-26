@@ -39,11 +39,16 @@ namespace osu.Game.Skinning
                     d.Origin = Anchor.Centre;
                     d.Alpha = 0;
                     d.Blending = BlendingParameters.Additive;
-                })
+                }),
             };
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (!effectPoint.KiaiMode)
                 return;

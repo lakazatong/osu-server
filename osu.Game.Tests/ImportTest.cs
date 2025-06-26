@@ -21,14 +21,22 @@ namespace osu.Game.Tests
         {
             var osu = new TestOsuGameBase(withBeatmap);
             Task.Factory.StartNew(() => host.Run(osu), TaskCreationOptions.LongRunning)
-                .ContinueWith(t => Assert.Fail($"Host threw exception {t.Exception}"), TaskContinuationOptions.OnlyOnFaulted);
+                .ContinueWith(
+                    t => Assert.Fail($"Host threw exception {t.Exception}"),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
 
-            waitForOrAssert(() => osu.IsLoaded, @"osu! failed to start in a reasonable amount of time");
+            waitForOrAssert(
+                () => osu.IsLoaded,
+                @"osu! failed to start in a reasonable amount of time"
+            );
 
             bool ready = false;
             // wait for two update frames to be executed. this ensures that all components have had a change to run LoadComplete and hopefully avoid
             // database access (GlobalActionContainer is one to do this).
-            host.UpdateThread.Scheduler.Add(() => host.UpdateThread.Scheduler.Add(() => ready = true));
+            host.UpdateThread.Scheduler.Add(() =>
+                host.UpdateThread.Scheduler.Add(() => ready = true)
+            );
 
             waitForOrAssert(() => ready, @"osu! failed to start in a reasonable amount of time");
 
@@ -39,7 +47,8 @@ namespace osu.Game.Tests
         {
             Task task = Task.Run(() =>
             {
-                while (!result()) Thread.Sleep(200);
+                while (!result())
+                    Thread.Sleep(200);
             });
 
             Assert.IsTrue(task.Wait(timeout), failureMessage);

@@ -24,13 +24,16 @@ namespace osu.Game.Online.Metadata
         private UserPresence localUserPresence;
 
         public override IBindableDictionary<int, UserPresence> UserPresences => userPresences;
-        private readonly BindableDictionary<int, UserPresence> userPresences = new BindableDictionary<int, UserPresence>();
+        private readonly BindableDictionary<int, UserPresence> userPresences =
+            new BindableDictionary<int, UserPresence>();
 
         public override IBindableDictionary<int, UserPresence> FriendPresences => friendPresences;
-        private readonly BindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        private readonly BindableDictionary<int, UserPresence> friendPresences =
+            new BindableDictionary<int, UserPresence>();
 
         public override IBindable<DailyChallengeInfo?> DailyChallengeInfo => dailyChallengeInfo;
-        private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo = new Bindable<DailyChallengeInfo?>();
+        private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo =
+            new Bindable<DailyChallengeInfo?>();
 
         private readonly string endpoint;
 
@@ -63,12 +66,30 @@ namespace osu.Game.Online.Metadata
                 {
                     // this is kind of SILLY
                     // https://github.com/dotnet/aspnetcore/issues/15198
-                    connection.On<BeatmapUpdates>(nameof(IMetadataClient.BeatmapSetsUpdated), ((IMetadataClient)this).BeatmapSetsUpdated);
-                    connection.On<int, UserPresence?>(nameof(IMetadataClient.UserPresenceUpdated), ((IMetadataClient)this).UserPresenceUpdated);
-                    connection.On<int, UserPresence?>(nameof(IMetadataClient.FriendPresenceUpdated), ((IMetadataClient)this).FriendPresenceUpdated);
-                    connection.On<DailyChallengeInfo?>(nameof(IMetadataClient.DailyChallengeUpdated), ((IMetadataClient)this).DailyChallengeUpdated);
-                    connection.On<MultiplayerRoomScoreSetEvent>(nameof(IMetadataClient.MultiplayerRoomScoreSet), ((IMetadataClient)this).MultiplayerRoomScoreSet);
-                    connection.On(nameof(IStatefulUserHubClient.DisconnectRequested), ((IMetadataClient)this).DisconnectRequested);
+                    connection.On<BeatmapUpdates>(
+                        nameof(IMetadataClient.BeatmapSetsUpdated),
+                        ((IMetadataClient)this).BeatmapSetsUpdated
+                    );
+                    connection.On<int, UserPresence?>(
+                        nameof(IMetadataClient.UserPresenceUpdated),
+                        ((IMetadataClient)this).UserPresenceUpdated
+                    );
+                    connection.On<int, UserPresence?>(
+                        nameof(IMetadataClient.FriendPresenceUpdated),
+                        ((IMetadataClient)this).FriendPresenceUpdated
+                    );
+                    connection.On<DailyChallengeInfo?>(
+                        nameof(IMetadataClient.DailyChallengeUpdated),
+                        ((IMetadataClient)this).DailyChallengeUpdated
+                    );
+                    connection.On<MultiplayerRoomScoreSetEvent>(
+                        nameof(IMetadataClient.MultiplayerRoomScoreSet),
+                        ((IMetadataClient)this).MultiplayerRoomScoreSet
+                    );
+                    connection.On(
+                        nameof(IStatefulUserHubClient.DisconnectRequested),
+                        ((IMetadataClient)this).DisconnectRequested
+                    );
                 };
 
                 IsConnected.BindTo(connector.IsConnected);
@@ -85,17 +106,23 @@ namespace osu.Game.Online.Metadata
         {
             base.LoadComplete();
 
-            userStatus.BindValueChanged(status =>
-            {
-                if (localUser.Value is not GuestUser)
-                    UpdateStatus(status.NewValue);
-            }, true);
+            userStatus.BindValueChanged(
+                status =>
+                {
+                    if (localUser.Value is not GuestUser)
+                        UpdateStatus(status.NewValue);
+                },
+                true
+            );
 
-            userActivity.BindValueChanged(activity =>
-            {
-                if (localUser.Value is not GuestUser)
-                    UpdateActivity(activity.NewValue);
-            }, true);
+            userActivity.BindValueChanged(
+                activity =>
+                {
+                    if (localUser.Value is not GuestUser)
+                        UpdateActivity(activity.NewValue);
+                },
+                true
+            );
         }
 
         private bool catchingUp;
@@ -135,7 +162,8 @@ namespace osu.Game.Online.Metadata
                         while (true)
                         {
                             Logger.Log($"Requesting catch-up from {lastQueueId.Value}");
-                            var catchUpChanges = await GetChangesSince(lastQueueId.Value).ConfigureAwait(true);
+                            var catchUpChanges = await GetChangesSince(lastQueueId.Value)
+                                .ConfigureAwait(true);
 
                             lastQueueId.Value = catchUpChanges.LastProcessedQueueID;
 
@@ -162,7 +190,9 @@ namespace osu.Game.Online.Metadata
 
         public override async Task BeatmapSetsUpdated(BeatmapUpdates updates)
         {
-            Logger.Log($"Received beatmap updates {updates.BeatmapSetIDs.Length} updates with last id {updates.LastProcessedQueueID}");
+            Logger.Log(
+                $"Received beatmap updates {updates.BeatmapSetIDs.Length} updates with last id {updates.LastProcessedQueueID}"
+            );
 
             // If we're still catching up, avoid updating the last ID as it will interfere with catch-up efforts.
             if (!catchingUp)
@@ -180,7 +210,10 @@ namespace osu.Game.Online.Metadata
 
             Debug.Assert(connection != null);
 
-            return connection.InvokeAsync<BeatmapUpdates>(nameof(IMetadataServer.GetChangesSince), queueId);
+            return connection.InvokeAsync<BeatmapUpdates>(
+                nameof(IMetadataServer.GetChangesSince),
+                queueId
+            );
         }
 
         public override Task UpdateActivity(UserActivity? activity)
@@ -206,7 +239,10 @@ namespace osu.Game.Online.Metadata
             if (connector?.IsConnected.Value != true)
                 return Task.CompletedTask;
 
-            Logger.Log($@"{nameof(OnlineMetadataClient)} began watching user presence", LoggingTarget.Network);
+            Logger.Log(
+                $@"{nameof(OnlineMetadataClient)} began watching user presence",
+                LoggingTarget.Network
+            );
 
             Debug.Assert(connection != null);
             return connection.InvokeAsync(nameof(IMetadataServer.BeginWatchingUserPresence));
@@ -217,7 +253,10 @@ namespace osu.Game.Online.Metadata
             if (connector?.IsConnected.Value != true)
                 return Task.CompletedTask;
 
-            Logger.Log($@"{nameof(OnlineMetadataClient)} stopped watching user presence", LoggingTarget.Network);
+            Logger.Log(
+                $@"{nameof(OnlineMetadataClient)} stopped watching user presence",
+                LoggingTarget.Network
+            );
 
             // must be scheduled before any remote calls to avoid mis-ordering.
             Schedule(() => userPresences.Clear());
@@ -268,14 +307,24 @@ namespace osu.Game.Online.Metadata
             return Task.CompletedTask;
         }
 
-        public override async Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(long id)
+        public override async Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(
+            long id
+        )
         {
             if (connector?.IsConnected.Value != true)
                 throw new OperationCanceledException();
 
             Debug.Assert(connection != null);
-            var result = await connection.InvokeAsync<MultiplayerPlaylistItemStats[]>(nameof(IMetadataServer.BeginWatchingMultiplayerRoom), id).ConfigureAwait(false);
-            Logger.Log($@"{nameof(OnlineMetadataClient)} began watching multiplayer room with ID {id}", LoggingTarget.Network);
+            var result = await connection
+                .InvokeAsync<MultiplayerPlaylistItemStats[]>(
+                    nameof(IMetadataServer.BeginWatchingMultiplayerRoom),
+                    id
+                )
+                .ConfigureAwait(false);
+            Logger.Log(
+                $@"{nameof(OnlineMetadataClient)} began watching multiplayer room with ID {id}",
+                LoggingTarget.Network
+            );
             return result;
         }
 
@@ -285,8 +334,13 @@ namespace osu.Game.Online.Metadata
                 throw new OperationCanceledException();
 
             Debug.Assert(connection != null);
-            await connection.InvokeAsync(nameof(IMetadataServer.EndWatchingMultiplayerRoom), id).ConfigureAwait(false);
-            Logger.Log($@"{nameof(OnlineMetadataClient)} stopped watching multiplayer room with ID {id}", LoggingTarget.Network);
+            await connection
+                .InvokeAsync(nameof(IMetadataServer.EndWatchingMultiplayerRoom), id)
+                .ConfigureAwait(false);
+            Logger.Log(
+                $@"{nameof(OnlineMetadataClient)} stopped watching multiplayer room with ID {id}",
+                LoggingTarget.Network
+            );
         }
 
         public override async Task DisconnectRequested()

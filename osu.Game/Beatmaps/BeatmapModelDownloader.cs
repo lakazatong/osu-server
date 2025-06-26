@@ -9,15 +9,19 @@ namespace osu.Game.Beatmaps
 {
     public class BeatmapModelDownloader : ModelDownloader<BeatmapSetInfo, IBeatmapSetInfo>
     {
-        protected override ArchiveDownloadRequest<IBeatmapSetInfo> CreateDownloadRequest(IBeatmapSetInfo set, bool minimiseDownloadSize) =>
-            new DownloadBeatmapSetRequest(set, minimiseDownloadSize);
+        protected override ArchiveDownloadRequest<IBeatmapSetInfo> CreateDownloadRequest(
+            IBeatmapSetInfo set,
+            bool minimiseDownloadSize
+        ) => new DownloadBeatmapSetRequest(set, minimiseDownloadSize);
 
-        public override ArchiveDownloadRequest<IBeatmapSetInfo>? GetExistingDownload(IBeatmapSetInfo model)
-            => CurrentDownloads.Find(r => r.Model.OnlineID == model.OnlineID);
+        public override ArchiveDownloadRequest<IBeatmapSetInfo>? GetExistingDownload(
+            IBeatmapSetInfo model
+        ) => CurrentDownloads.Find(r => r.Model.OnlineID == model.OnlineID);
 
-        public BeatmapModelDownloader(IModelImporter<BeatmapSetInfo> beatmapImporter, IAPIProvider api)
-            : base(beatmapImporter, api)
-        {
-        }
+        public BeatmapModelDownloader(
+            IModelImporter<BeatmapSetInfo> beatmapImporter,
+            IAPIProvider api
+        )
+            : base(beatmapImporter, api) { }
     }
 }

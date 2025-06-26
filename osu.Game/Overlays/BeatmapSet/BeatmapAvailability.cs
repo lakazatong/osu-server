@@ -20,7 +20,8 @@ namespace osu.Game.Overlays.BeatmapSet
         private APIBeatmapSet beatmapSet;
 
         private bool downloadDisabled => BeatmapSet?.Availability.DownloadDisabled ?? false;
-        private bool hasExternalLink => !string.IsNullOrEmpty(BeatmapSet?.Availability.ExternalLink);
+        private bool hasExternalLink =>
+            !string.IsNullOrEmpty(BeatmapSet?.Availability.ExternalLink);
 
         private readonly LinkFlowContainer textContainer;
 
@@ -32,11 +33,7 @@ namespace osu.Game.Overlays.BeatmapSet
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black.Opacity(0.6f),
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black.Opacity(0.6f) },
                 textContainer = new LinkFlowContainer(t => t.Font = OsuFont.GetFont(size: 14))
                 {
                     RelativeSizeAxes = Axes.X,
@@ -49,7 +46,6 @@ namespace osu.Game.Overlays.BeatmapSet
         public APIBeatmapSet BeatmapSet
         {
             get => beatmapSet;
-
             set
             {
                 if (value == beatmapSet)
@@ -70,15 +66,22 @@ namespace osu.Game.Overlays.BeatmapSet
         private void updateText()
         {
             textContainer.Clear();
-            textContainer.AddParagraph(downloadDisabled
-                ? BeatmapsetsStrings.AvailabilityDisabled
-                : BeatmapsetsStrings.AvailabilityPartsRemoved, t => t.Colour = Color4.Orange);
+            textContainer.AddParagraph(
+                downloadDisabled
+                    ? BeatmapsetsStrings.AvailabilityDisabled
+                    : BeatmapsetsStrings.AvailabilityPartsRemoved,
+                t => t.Colour = Color4.Orange
+            );
 
             if (hasExternalLink)
             {
                 textContainer.NewParagraph();
                 textContainer.NewParagraph();
-                textContainer.AddLink(BeatmapsetsStrings.AvailabilityMoreInfo, BeatmapSet.Availability.ExternalLink, creationParameters: t => t.Font = OsuFont.GetFont(size: 10));
+                textContainer.AddLink(
+                    BeatmapsetsStrings.AvailabilityMoreInfo,
+                    BeatmapSet.Availability.ExternalLink,
+                    creationParameters: t => t.Font = OsuFont.GetFont(size: 10)
+                );
             }
         }
     }

@@ -31,49 +31,67 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup compose screen", () =>
-            {
-                var beatmap = new ManiaBeatmap(new StageDefinition(4))
+            AddStep(
+                "setup compose screen",
+                () =>
                 {
-                    BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
-                };
-
-                beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
-
-                var editorBeatmap = new EditorBeatmap(beatmap, new LegacyBeatmapSkin(beatmap.BeatmapInfo, null));
-
-                Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
-
-                Child = new DependencyProvidingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new (Type, object)[]
+                    var beatmap = new ManiaBeatmap(new StageDefinition(4))
                     {
-                        (typeof(EditorBeatmap), editorBeatmap),
-                        (typeof(IBeatSnapProvider), editorBeatmap),
-                        (typeof(OverlayColourProvider), new OverlayColourProvider(OverlayColourScheme.Green)),
-                    },
-                    Children = new Drawable[]
-                    {
-                        editorBeatmap,
-                        new ComposeScreen { State = { Value = Visibility.Visible } },
-                    }
-                };
-            });
+                        BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
+                    };
 
-            AddUntilStep("wait for composer", () => this.ChildrenOfType<HitObjectComposer>().SingleOrDefault()?.IsLoaded == true);
+                    beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
+
+                    var editorBeatmap = new EditorBeatmap(
+                        beatmap,
+                        new LegacyBeatmapSkin(beatmap.BeatmapInfo, null)
+                    );
+
+                    Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(EditorBeatmap), editorBeatmap),
+                            (typeof(IBeatSnapProvider), editorBeatmap),
+                            (
+                                typeof(OverlayColourProvider),
+                                new OverlayColourProvider(OverlayColourScheme.Green)
+                            ),
+                        },
+                        Children = new Drawable[]
+                        {
+                            editorBeatmap,
+                            new ComposeScreen { State = { Value = Visibility.Visible } },
+                        },
+                    };
+                }
+            );
+
+            AddUntilStep(
+                "wait for composer",
+                () => this.ChildrenOfType<HitObjectComposer>().SingleOrDefault()?.IsLoaded == true
+            );
         }
 
         [Test]
         public void TestDefaultSkin()
         {
-            AddStep("set default skin", () => skins.CurrentSkinInfo.Value = TrianglesSkin.CreateInfo().ToLiveUnmanaged());
+            AddStep(
+                "set default skin",
+                () => skins.CurrentSkinInfo.Value = TrianglesSkin.CreateInfo().ToLiveUnmanaged()
+            );
         }
 
         [Test]
         public void TestLegacySkin()
         {
-            AddStep("set legacy skin", () => skins.CurrentSkinInfo.Value = DefaultLegacySkin.CreateInfo().ToLiveUnmanaged());
+            AddStep(
+                "set legacy skin",
+                () => skins.CurrentSkinInfo.Value = DefaultLegacySkin.CreateInfo().ToLiveUnmanaged()
+            );
         }
     }
 }

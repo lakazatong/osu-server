@@ -25,7 +25,8 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Resolved]
         private OsuConfigManager config { get; set; } = null!;
 
-        private readonly List<DrawablePool<TestDrawableOsuJudgement>> pools = new List<DrawablePool<TestDrawableOsuJudgement>>();
+        private readonly List<DrawablePool<TestDrawableOsuJudgement>> pools =
+            new List<DrawablePool<TestDrawableOsuJudgement>>();
 
         [TestCaseSource(nameof(validResults))]
         public void Test(HitResult result)
@@ -42,9 +43,22 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             showResult(HitResult.Great);
 
-            AddUntilStep("judgements shown", () => this.ChildrenOfType<TestDrawableOsuJudgement>().Any());
-            AddAssert("hit lighting has no transforms", () => this.ChildrenOfType<TestDrawableOsuJudgement>().All(judgement => !judgement.Lighting.Transforms.Any()));
-            AddAssert("hit lighting hidden", () => this.ChildrenOfType<TestDrawableOsuJudgement>().All(judgement => judgement.Lighting.Alpha == 0));
+            AddUntilStep(
+                "judgements shown",
+                () => this.ChildrenOfType<TestDrawableOsuJudgement>().Any()
+            );
+            AddAssert(
+                "hit lighting has no transforms",
+                () =>
+                    this.ChildrenOfType<TestDrawableOsuJudgement>()
+                        .All(judgement => !judgement.Lighting.Transforms.Any())
+            );
+            AddAssert(
+                "hit lighting hidden",
+                () =>
+                    this.ChildrenOfType<TestDrawableOsuJudgement>()
+                        .All(judgement => judgement.Lighting.Alpha == 0)
+            );
         }
 
         [Test]
@@ -54,55 +68,74 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             showResult(HitResult.Great);
 
-            AddUntilStep("judgements shown", () => this.ChildrenOfType<TestDrawableOsuJudgement>().Any());
-            AddUntilStep("hit lighting shown", () => this.ChildrenOfType<TestDrawableOsuJudgement>().Any(judgement => judgement.Lighting.Alpha > 0));
+            AddUntilStep(
+                "judgements shown",
+                () => this.ChildrenOfType<TestDrawableOsuJudgement>().Any()
+            );
+            AddUntilStep(
+                "hit lighting shown",
+                () =>
+                    this.ChildrenOfType<TestDrawableOsuJudgement>()
+                        .Any(judgement => judgement.Lighting.Alpha > 0)
+            );
         }
 
         private void showResult(HitResult result)
         {
-            AddStep("Show " + result.GetDescription(), () =>
-            {
-                int poolIndex = 0;
-
-                SetContents(_ =>
+            AddStep(
+                "Show " + result.GetDescription(),
+                () =>
                 {
-                    DrawablePool<TestDrawableOsuJudgement> pool;
+                    int poolIndex = 0;
 
-                    if (poolIndex >= pools.Count)
-                        pools.Add(pool = new DrawablePool<TestDrawableOsuJudgement>(1));
-                    else
+                    SetContents(_ =>
                     {
-                        // We need to make sure neither the pool nor the judgement get disposed when new content is set, and they both share the same parent.
-                        pool = pools[poolIndex];
-                        ((Container)pool.Parent!).Clear(false);
-                    }
+                        DrawablePool<TestDrawableOsuJudgement> pool;
 
-                    var container = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Child = pool,
-                    };
+                        if (poolIndex >= pools.Count)
+                            pools.Add(pool = new DrawablePool<TestDrawableOsuJudgement>(1));
+                        else
+                        {
+                            // We need to make sure neither the pool nor the judgement get disposed when new content is set, and they both share the same parent.
+                            pool = pools[poolIndex];
+                            ((Container)pool.Parent!).Clear(false);
+                        }
 
-                    // Must be scheduled so the pool is loaded before we try and retrieve from it.
-                    Schedule(() =>
-                    {
-                        container.Add(pool.Get(j => j.Apply(new JudgementResult(new HitObject
+                        var container = new Container
                         {
-                            StartTime = Time.Current
-                        }, new Judgement())
+                            RelativeSizeAxes = Axes.Both,
+                            Child = pool,
+                        };
+
+                        // Must be scheduled so the pool is loaded before we try and retrieve from it.
+                        Schedule(() =>
                         {
-                            Type = result,
-                        }, null)).With(j =>
-                        {
-                            j.Anchor = Anchor.Centre;
-                            j.Origin = Anchor.Centre;
-                        }));
+                            container.Add(
+                                pool.Get(j =>
+                                        j.Apply(
+                                            new JudgementResult(
+                                                new HitObject { StartTime = Time.Current },
+                                                new Judgement()
+                                            )
+                                            {
+                                                Type = result,
+                                            },
+                                            null
+                                        )
+                                    )
+                                    .With(j =>
+                                    {
+                                        j.Anchor = Anchor.Centre;
+                                        j.Origin = Anchor.Centre;
+                                    })
+                            );
+                        });
+
+                        poolIndex++;
+                        return container;
                     });
-
-                    poolIndex++;
-                    return container;
-                });
-            });
+                }
+            );
         }
 
         private partial class TestDrawableOsuJudgement : DrawableOsuJudgement

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics;
-using osu.Game.Graphics.Sprites;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Extensions;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays;
 using osuTK;
@@ -37,7 +37,11 @@ namespace osu.Game.Screens.Edit.Components
                 bpm = new OsuSpriteText
                 {
                     Colour = colours.Orange1,
-                    Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold, fixedWidth: true),
+                    Font = OsuFont.Torus.With(
+                        size: 14,
+                        weight: FontWeight.SemiBold,
+                        fixedWidth: true
+                    ),
                     Spacing = new Vector2(-1, 0),
                     Position = new Vector2(0, 4),
                     Anchor = Anchor.CentreRight,
@@ -46,11 +50,15 @@ namespace osu.Game.Screens.Edit.Components
                 progress = new OsuSpriteText
                 {
                     Colour = colours.Purple1,
-                    Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold, fixedWidth: true),
+                    Font = OsuFont.Torus.With(
+                        size: 14,
+                        weight: FontWeight.SemiBold,
+                        fixedWidth: true
+                    ),
                     Spacing = new Vector2(-1, 0),
                     Anchor = Anchor.CentreLeft,
                     Position = new Vector2(2, 4),
-                }
+                },
             };
         }
 
@@ -61,7 +69,9 @@ namespace osu.Game.Screens.Edit.Components
         {
             base.Update();
 
-            double newBPM = editorBeatmap.ControlPointInfo.TimingPointAt(editorClock.CurrentTime).BPM;
+            double newBPM = editorBeatmap
+                .ControlPointInfo.TimingPointAt(editorClock.CurrentTime)
+                .BPM;
             double newProgress = (int)(editorClock.CurrentTime / editorClock.TrackLength * 100);
 
             if (lastBPM != newBPM)
@@ -90,54 +100,58 @@ namespace osu.Game.Screens.Edit.Components
             private EditorClock editorClock { get; set; } = null!;
 
             public TimestampControl()
-                : base(HoverSampleSet.Button)
-            {
-            }
+                : base(HoverSampleSet.Button) { }
 
             [BackgroundDependencyLoader]
             private void load()
             {
                 AutoSizeAxes = Axes.Both;
 
-                AddRangeInternal(new Drawable[]
-                {
-                    hoverLayer = new Container
+                AddRangeInternal(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding
-                        {
-                            Top = 4,
-                            Bottom = 1,
-                            Horizontal = -2
-                        },
-                        Child = new Container
+                        hoverLayer = new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            CornerRadius = 5,
-                            Masking = true,
-                            Children = new Drawable[]
+                            Padding = new MarginPadding
                             {
-                                new Box { RelativeSizeAxes = Axes.Both, },
-                            }
+                                Top = 4,
+                                Bottom = 1,
+                                Horizontal = -2,
+                            },
+                            Child = new Container
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                CornerRadius = 5,
+                                Masking = true,
+                                Children = new Drawable[]
+                                {
+                                    new Box { RelativeSizeAxes = Axes.Both },
+                                },
+                            },
+                            Alpha = 0,
                         },
-                        Alpha = 0,
-                    },
-                    trackTimer = new OsuSpriteText
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Spacing = new Vector2(-2, 0),
-                        Font = OsuFont.Torus.With(size: 32, fixedWidth: true, weight: FontWeight.Light),
-                    },
-                    inputTextBox = new TimestampTextBox
-                    {
-                        Position = new Vector2(-2, 4),
-                        Width = 128,
-                        Height = 26,
-                        Alpha = 0,
-                        CommitOnFocusLost = true,
-                    },
-                });
+                        trackTimer = new OsuSpriteText
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Spacing = new Vector2(-2, 0),
+                            Font = OsuFont.Torus.With(
+                                size: 32,
+                                fixedWidth: true,
+                                weight: FontWeight.Light
+                            ),
+                        },
+                        inputTextBox = new TimestampTextBox
+                        {
+                            Position = new Vector2(-2, 4),
+                            Width = 128,
+                            Height = 26,
+                            Alpha = 0,
+                            CommitOnFocusLost = true,
+                        },
+                    }
+                );
 
                 Action = () =>
                 {

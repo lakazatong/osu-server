@@ -10,7 +10,8 @@ namespace osu.Game.Database
     /// <summary>
     /// Contains information related to an active external edit operation.
     /// </summary>
-    public class ExternalEditOperation<TModel> where TModel : class, IHasGuidPrimaryKey
+    public class ExternalEditOperation<TModel>
+        where TModel : class, IHasGuidPrimaryKey
     {
         /// <summary>
         /// The temporary path at which the model has been exported to for editing.
@@ -50,8 +51,9 @@ namespace osu.Game.Database
 
             IsMounted = false;
 
-            Live<TModel>? imported = await importer.ImportAsUpdate(new ProgressNotification(), new ImportTask(MountedPath), original)
-                                                   .ConfigureAwait(false);
+            Live<TModel>? imported = await importer
+                .ImportAsUpdate(new ProgressNotification(), new ImportTask(MountedPath), original)
+                .ConfigureAwait(false);
 
             try
             {

@@ -18,7 +18,8 @@ namespace osu.Game.Database
     {
         private readonly ManualResetEventSlim loaded = new ManualResetEventSlim();
 
-        private readonly BindableList<BeatmapSetInfo> detachedBeatmapSets = new BindableList<BeatmapSetInfo>();
+        private readonly BindableList<BeatmapSetInfo> detachedBeatmapSets =
+            new BindableList<BeatmapSetInfo>();
 
         private IDisposable? realmSubscription;
 
@@ -27,7 +28,9 @@ namespace osu.Game.Database
         [Resolved]
         private RealmAccess realm { get; set; } = null!;
 
-        public override IBindableList<BeatmapSetInfo> GetBeatmapSets(CancellationToken? cancellationToken)
+        public override IBindableList<BeatmapSetInfo> GetBeatmapSets(
+            CancellationToken? cancellationToken
+        )
         {
             loaded.Wait(cancellationToken ?? CancellationToken.None);
             lock (detachedBeatmapSets)
@@ -37,7 +40,10 @@ namespace osu.Game.Database
         [BackgroundDependencyLoader]
         private void load()
         {
-            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected), beatmapSetsChanged);
+            realmSubscription = realm.RegisterForNotifications(
+                r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected),
+                beatmapSetsChanged
+            );
         }
 
         private void beatmapSetsChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
@@ -58,57 +64,63 @@ namespace osu.Game.Database
                 // Detaching beatmaps takes some time, so let's make sure it doesn't run on the update thread.
                 var frozenSets = sender.Freeze();
 
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        realm.Run(_ =>
+                Task.Factory.StartNew(
+                        () =>
                         {
-                            var detached = frozenSets.Detach();
-
-                            lock (detachedBeatmapSets)
+                            try
                             {
-                                detachedBeatmapSets.Clear();
-                                detachedBeatmapSets.AddRange(detached);
+                                realm.Run(_ =>
+                                {
+                                    var detached = frozenSets.Detach();
+
+                                    lock (detachedBeatmapSets)
+                                    {
+                                        detachedBeatmapSets.Clear();
+                                        detachedBeatmapSets.AddRange(detached);
+                                    }
+                                });
                             }
-                        });
-                    }
-                    finally
-                    {
-                        loaded.Set();
-                    }
-                }, TaskCreationOptions.LongRunning).FireAndForget();
+                            finally
+                            {
+                                loaded.Set();
+                            }
+                        },
+                        TaskCreationOptions.LongRunning
+                    )
+                    .FireAndForget();
 
                 return;
             }
 
             foreach (int i in changes.DeletedIndices.OrderDescending())
             {
-                pendingOperations.Enqueue(new OperationArgs
-                {
-                    Type = OperationType.Remove,
-                    Index = i,
-                });
+                pendingOperations.Enqueue(
+                    new OperationArgs { Type = OperationType.Remove, Index = i }
+                );
             }
 
             foreach (int i in changes.InsertedIndices)
             {
-                pendingOperations.Enqueue(new OperationArgs
-                {
-                    Type = OperationType.Insert,
-                    BeatmapSet = sender[i].Detach(),
-                    Index = i,
-                });
+                pendingOperations.Enqueue(
+                    new OperationArgs
+                    {
+                        Type = OperationType.Insert,
+                        BeatmapSet = sender[i].Detach(),
+                        Index = i,
+                    }
+                );
             }
 
             foreach (int i in changes.NewModifiedIndices)
             {
-                pendingOperations.Enqueue(new OperationArgs
-                {
-                    Type = OperationType.Update,
-                    BeatmapSet = sender[i].Detach(),
-                    Index = i,
-                });
+                pendingOperations.Enqueue(
+                    new OperationArgs
+                    {
+                        Type = OperationType.Update,
+                        BeatmapSet = sender[i].Detach(),
+                        Index = i,
+                    }
+                );
             }
         }
 
@@ -166,7 +178,7 @@ namespace osu.Game.Database
         {
             Insert,
             Update,
-            Remove
+            Remove,
         }
     }
 }

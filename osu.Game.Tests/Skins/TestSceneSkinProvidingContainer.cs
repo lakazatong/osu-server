@@ -35,28 +35,39 @@ namespace osu.Game.Tests.Skins
             TestSkinProvidingContainer provider = null;
             TestSkin mostPrioritisedSource = null;
 
-            AddStep("setup sources", () =>
-            {
-                var sources = new List<TestSkin>();
-                for (int i = 0; i < 10; i++)
-                    sources.Add(new TestSkin(renderer));
+            AddStep(
+                "setup sources",
+                () =>
+                {
+                    var sources = new List<TestSkin>();
+                    for (int i = 0; i < 10; i++)
+                        sources.Add(new TestSkin(renderer));
 
-                mostPrioritisedSource = sources.First();
+                    mostPrioritisedSource = sources.First();
 
-                Child = provider = new TestSkinProvidingContainer(sources);
-            });
+                    Child = provider = new TestSkinProvidingContainer(sources);
+                }
+            );
 
-            AddAssert("texture provided by expected skin", () =>
-            {
-                return provider.FindProvider(s => s.GetTexture(TestSkin.TEXTURE_NAME) != null) == mostPrioritisedSource;
-            });
+            AddAssert(
+                "texture provided by expected skin",
+                () =>
+                {
+                    return provider.FindProvider(s => s.GetTexture(TestSkin.TEXTURE_NAME) != null)
+                        == mostPrioritisedSource;
+                }
+            );
 
             AddStep("trigger source change", () => provider.TriggerSourceChanged());
 
-            AddAssert("texture still provided by expected skin", () =>
-            {
-                return provider.FindProvider(s => s.GetTexture(TestSkin.TEXTURE_NAME) != null) == mostPrioritisedSource;
-            });
+            AddAssert(
+                "texture still provided by expected skin",
+                () =>
+                {
+                    return provider.FindProvider(s => s.GetTexture(TestSkin.TEXTURE_NAME) != null)
+                        == mostPrioritisedSource;
+                }
+            );
         }
 
         private partial class TestSkinProvidingContainer : SkinProvidingContainer
@@ -87,7 +98,8 @@ namespace osu.Game.Tests.Skins
                 this.renderer = renderer;
             }
 
-            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) => throw new System.NotImplementedException();
+            public Drawable GetDrawableComponent(ISkinComponentLookup lookup) =>
+                throw new System.NotImplementedException();
 
             public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT)
             {
@@ -97,9 +109,11 @@ namespace osu.Game.Tests.Skins
                 return null;
             }
 
-            public ISample GetSample(ISampleInfo sampleInfo) => throw new System.NotImplementedException();
+            public ISample GetSample(ISampleInfo sampleInfo) =>
+                throw new System.NotImplementedException();
 
-            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => throw new System.NotImplementedException();
+            public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+                throw new System.NotImplementedException();
         }
     }
 }

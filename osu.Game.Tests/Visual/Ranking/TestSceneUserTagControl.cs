@@ -24,128 +24,216 @@ namespace osu.Game.Tests.Visual.Ranking
     public partial class TestSceneUserTagControl : OsuManualInputManagerTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         private DummyAPIAccess dummyAPI => (DummyAPIAccess)API;
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("set up network requests", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+            AddStep(
+                "set up network requests",
+                () =>
                 {
-                    switch (request)
+                    dummyAPI.HandleRequest = request =>
                     {
-                        case ListTagsRequest listTagsRequest:
+                        switch (request)
                         {
-                            Scheduler.AddDelayed(() => listTagsRequest.TriggerSuccess(new APITagCollection
+                            case ListTagsRequest listTagsRequest:
                             {
-                                Tags =
+                                Scheduler.AddDelayed(
+                                    () =>
+                                        listTagsRequest.TriggerSuccess(
+                                            new APITagCollection
+                                            {
+                                                Tags =
+                                                [
+                                                    new APITag
+                                                    {
+                                                        Id = 0,
+                                                        Name = "uncategorised tag",
+                                                        Description =
+                                                            "This probably isn't real but could be and should be handled.",
+                                                    },
+                                                    new APITag
+                                                    {
+                                                        Id = 1,
+                                                        Name = "song representation/simple",
+                                                        Description =
+                                                            "Accessible and straightforward map design.",
+                                                    },
+                                                    new APITag
+                                                    {
+                                                        Id = 2,
+                                                        Name = "style/clean",
+                                                        Description =
+                                                            "Visually uncluttered and organised patterns, often involving few overlaps and equal visual spacing between objects.",
+                                                    },
+                                                    new APITag
+                                                    {
+                                                        Id = 3,
+                                                        Name = "aim/aim control",
+                                                        Description =
+                                                            "Patterns with velocity or direction changes which strongly go against a player's natural movement pattern.",
+                                                    },
+                                                    new APITag
+                                                    {
+                                                        Id = 4,
+                                                        Name = "tap/bursts",
+                                                        Description =
+                                                            "Patterns requiring continuous movement and alternating, typically 9 notes or less.",
+                                                    },
+                                                    new APITag
+                                                    {
+                                                        Id = 5,
+                                                        Name = "style/mono-heavy",
+                                                        Description =
+                                                            "Features monos used in large amounts.",
+                                                        RulesetId = 1,
+                                                    },
+                                                ],
+                                            }
+                                        ),
+                                    500
+                                );
+                                return true;
+                            }
+
+                            case GetBeatmapSetRequest getBeatmapSetRequest:
+                            {
+                                var beatmapSet = CreateAPIBeatmapSet(Beatmap.Value.BeatmapInfo);
+                                beatmapSet.Beatmaps.Single().TopTags =
                                 [
-                                    new APITag { Id = 0, Name = "uncategorised tag", Description = "This probably isn't real but could be and should be handled.", },
-                                    new APITag { Id = 1, Name = "song representation/simple", Description = "Accessible and straightforward map design.", },
-                                    new APITag
-                                    {
-                                        Id = 2, Name = "style/clean",
-                                        Description = "Visually uncluttered and organised patterns, often involving few overlaps and equal visual spacing between objects.",
-                                    },
-                                    new APITag
-                                    {
-                                        Id = 3, Name = "aim/aim control", Description = "Patterns with velocity or direction changes which strongly go against a player's natural movement pattern.",
-                                    },
-                                    new APITag { Id = 4, Name = "tap/bursts", Description = "Patterns requiring continuous movement and alternating, typically 9 notes or less.", },
-                                    new APITag { Id = 5, Name = "style/mono-heavy", Description = "Features monos used in large amounts.", RulesetId = 1, },
-                                ]
-                            }), 500);
-                            return true;
+                                    new APIBeatmapTag { TagId = 3, VoteCount = 9 },
+                                    new APIBeatmapTag { TagId = 2, VoteCount = 8 },
+                                    new APIBeatmapTag { TagId = 0, VoteCount = 7 },
+                                ];
+                                Scheduler.AddDelayed(
+                                    () => getBeatmapSetRequest.TriggerSuccess(beatmapSet),
+                                    500
+                                );
+                                return true;
+                            }
+
+                            case AddBeatmapTagRequest:
+                            case RemoveBeatmapTagRequest:
+                            {
+                                Scheduler.AddDelayed(request.TriggerSuccess, 500);
+                                return true;
+                            }
                         }
 
-                        case GetBeatmapSetRequest getBeatmapSetRequest:
-                        {
-                            var beatmapSet = CreateAPIBeatmapSet(Beatmap.Value.BeatmapInfo);
-                            beatmapSet.Beatmaps.Single().TopTags =
-                            [
-                                new APIBeatmapTag { TagId = 3, VoteCount = 9 },
-                                new APIBeatmapTag { TagId = 2, VoteCount = 8 },
-                                new APIBeatmapTag { TagId = 0, VoteCount = 7 },
-                            ];
-                            Scheduler.AddDelayed(() => getBeatmapSetRequest.TriggerSuccess(beatmapSet), 500);
-                            return true;
-                        }
-
-                        case AddBeatmapTagRequest:
-                        case RemoveBeatmapTagRequest:
-                        {
-                            Scheduler.AddDelayed(request.TriggerSuccess, 500);
-                            return true;
-                        }
-                    }
-
-                    return false;
-                };
-            });
+                        return false;
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestRulesetSupport()
         {
-            AddStep("show for osu! beatmap", () =>
-            {
-                var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-                working.BeatmapInfo.OnlineID = 42;
-                Beatmap.Value = working;
-                recreateControl();
-            });
+            AddStep(
+                "show for osu! beatmap",
+                () =>
+                {
+                    var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
+                    working.BeatmapInfo.OnlineID = 42;
+                    Beatmap.Value = working;
+                    recreateControl();
+                }
+            );
 
-            AddStep("show for taiko beatmap", () =>
-            {
-                var working = CreateWorkingBeatmap(new TaikoRuleset().RulesetInfo);
-                working.BeatmapInfo.OnlineID = 44;
-                Beatmap.Value = working;
-                recreateControl();
-            });
+            AddStep(
+                "show for taiko beatmap",
+                () =>
+                {
+                    var working = CreateWorkingBeatmap(new TaikoRuleset().RulesetInfo);
+                    working.BeatmapInfo.OnlineID = 44;
+                    Beatmap.Value = working;
+                    recreateControl();
+                }
+            );
         }
 
         [Test]
         public void TestTagsDoNotMoveUntilMouseMovesAway()
         {
-            AddStep("show", () =>
-            {
-                var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-                working.BeatmapInfo.OnlineID = 42;
-                Beatmap.Value = working;
-                recreateControl();
-            });
+            AddStep(
+                "show",
+                () =>
+                {
+                    var working = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
+                    working.BeatmapInfo.OnlineID = 42;
+                    Beatmap.Value = working;
+                    recreateControl();
+                }
+            );
             AddUntilStep("wait for ready", () => getTagFlow().Count, () => Is.EqualTo(4));
-            AddAssert("tag 2 is second", () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)), () => Is.EqualTo(1));
-            AddStep("vote for tag 2", () =>
-            {
-                InputManager.MoveMouseTo(getDrawableTagById(2));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("tag 2 voted for", () => getDrawableTagById(2).UserTag.VoteCount.Value, () => Is.EqualTo(9));
+            AddAssert(
+                "tag 2 is second",
+                () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)),
+                () => Is.EqualTo(1)
+            );
+            AddStep(
+                "vote for tag 2",
+                () =>
+                {
+                    InputManager.MoveMouseTo(getDrawableTagById(2));
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "tag 2 voted for",
+                () => getDrawableTagById(2).UserTag.VoteCount.Value,
+                () => Is.EqualTo(9)
+            );
 
-            AddStep("remove vote for tag 2", () =>
-            {
-                InputManager.MoveMouseTo(getDrawableTagById(2));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("tag 2 not voted for", () => getDrawableTagById(2).UserTag.VoteCount.Value, () => Is.EqualTo(8));
-            AddAssert("tag 2 is still second", () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)), () => Is.EqualTo(1));
+            AddStep(
+                "remove vote for tag 2",
+                () =>
+                {
+                    InputManager.MoveMouseTo(getDrawableTagById(2));
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "tag 2 not voted for",
+                () => getDrawableTagById(2).UserTag.VoteCount.Value,
+                () => Is.EqualTo(8)
+            );
+            AddAssert(
+                "tag 2 is still second",
+                () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("vote for tag 2", () =>
-            {
-                InputManager.MoveMouseTo(getDrawableTagById(2));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("tag 2 voted for", () => getDrawableTagById(2).UserTag.VoteCount.Value, () => Is.EqualTo(9));
+            AddStep(
+                "vote for tag 2",
+                () =>
+                {
+                    InputManager.MoveMouseTo(getDrawableTagById(2));
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "tag 2 voted for",
+                () => getDrawableTagById(2).UserTag.VoteCount.Value,
+                () => Is.EqualTo(9)
+            );
             AddStep("move mouse away", () => InputManager.MoveMouseTo(Vector2.Zero));
-            AddAssert("tag 2 reordered to first", () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)), () => Is.EqualTo(0));
+            AddAssert(
+                "tag 2 reordered to first",
+                () => getTagFlow().GetLayoutPosition(getDrawableTagById(2)),
+                () => Is.EqualTo(0)
+            );
 
-            FillFlowContainer<UserTagControl.DrawableUserTag> getTagFlow() => this.ChildrenOfType<FillFlowContainer<UserTagControl.DrawableUserTag>>().Single();
+            FillFlowContainer<UserTagControl.DrawableUserTag> getTagFlow() =>
+                this.ChildrenOfType<FillFlowContainer<UserTagControl.DrawableUserTag>>().Single();
 
-            UserTagControl.DrawableUserTag getDrawableTagById(long id) => getTagFlow().Single(t => t.UserTag.Id == id);
+            UserTagControl.DrawableUserTag getDrawableTagById(long id) =>
+                getTagFlow().Single(t => t.UserTag.Id == id);
         }
 
         private void recreateControl()
@@ -158,7 +246,7 @@ namespace osu.Game.Tests.Visual.Ranking
                     Width = 700,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                }
+                },
             };
         }
     }

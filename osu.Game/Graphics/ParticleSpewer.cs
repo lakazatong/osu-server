@@ -35,7 +35,8 @@ namespace osu.Game.Graphics
         protected virtual bool CanSpawnParticles => true;
         protected virtual float ParticleGravity => 0;
 
-        private bool hasActiveParticles => Active.Value || (lastParticleAdded + maxDuration) > Time.Current;
+        private bool hasActiveParticles =>
+            Active.Value || (lastParticleAdded + maxDuration) > Time.Current;
 
         protected ParticleSpewer(Texture texture, int perSecond, double maxDuration)
         {
@@ -160,10 +161,12 @@ namespace osu.Game.Graphics
 
                     // ignore particles from the future.
                     // these can appear when seeking in replays.
-                    if (timeSinceStart < 0) continue;
+                    if (timeSinceStart < 0)
+                        continue;
 
                     float alpha = p.AlphaAtTime(timeSinceStart);
-                    if (alpha <= 0) continue;
+                    if (alpha <= 0)
+                        continue;
 
                     var pos = p.PositionAtTime(timeSinceStart, gravity, maxDuration);
                     float scale = p.ScaleAtTime(timeSinceStart);
@@ -178,9 +181,16 @@ namespace osu.Game.Graphics
                         transformPosition(rect.BottomRight, rect.Centre, angle)
                     );
 
-                    renderer.DrawQuad(Texture, quad, DrawColourInfo.Colour.MultiplyAlpha(alpha),
-                        inflationPercentage: new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height),
-                        textureCoords: TextureCoords);
+                    renderer.DrawQuad(
+                        Texture,
+                        quad,
+                        DrawColourInfo.Colour.MultiplyAlpha(alpha),
+                        inflationPercentage: new Vector2(
+                            InflationAmount.X / DrawRectangle.Width,
+                            InflationAmount.Y / DrawRectangle.Height
+                        ),
+                        textureCoords: TextureCoords
+                    );
                 }
             }
 
@@ -198,7 +208,8 @@ namespace osu.Game.Graphics
                     position.X - width / 2,
                     position.Y - height / 2,
                     width,
-                    height);
+                    height
+                );
             }
 
             private Vector2 transformPosition(Vector2 pos, Vector2 centre, float angle)
@@ -229,9 +240,11 @@ namespace osu.Game.Graphics
 
             public float AlphaAtTime(float timeSinceStart) => 1 - progressAtTime(timeSinceStart);
 
-            public float ScaleAtTime(float timeSinceStart) => (float)Interpolation.Lerp(1, EndScale, progressAtTime(timeSinceStart));
+            public float ScaleAtTime(float timeSinceStart) =>
+                (float)Interpolation.Lerp(1, EndScale, progressAtTime(timeSinceStart));
 
-            public float AngleAtTime(float timeSinceStart) => (float)Interpolation.Lerp(StartAngle, EndAngle, progressAtTime(timeSinceStart));
+            public float AngleAtTime(float timeSinceStart) =>
+                (float)Interpolation.Lerp(StartAngle, EndAngle, progressAtTime(timeSinceStart));
 
             public Vector2 PositionAtTime(float timeSinceStart, float gravity, float maxDuration)
             {
@@ -241,7 +254,8 @@ namespace osu.Game.Graphics
                 return StartPosition + (Velocity + currentGravity) * timeSinceStart / maxDuration;
             }
 
-            private float progressAtTime(float timeSinceStart) => Math.Clamp(timeSinceStart / Duration, 0, 1);
+            private float progressAtTime(float timeSinceStart) =>
+                Math.Clamp(timeSinceStart / Duration, 0, 1);
         }
     }
 }

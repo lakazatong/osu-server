@@ -34,7 +34,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmap;
             set
             {
-                if (value == beatmap) return;
+                if (value == beatmap)
+                    return;
 
                 beatmap = value;
 
@@ -72,7 +73,7 @@ namespace osu.Game.Overlays.BeatmapSet
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Text = BeatmapsetsStrings.ShowInfoSuccessRate,
-                            Font = OsuFont.GetFont(size: 12)
+                            Font = OsuFont.GetFont(size: 12),
                         },
                         successRate = new Bar
                         {
@@ -85,12 +86,13 @@ namespace osu.Game.Overlays.BeatmapSet
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                             Width = 0f,
-                            Child = successPercent = new SuccessRatePercentage
-                            {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.TopCentre,
-                                Font = OsuFont.GetFont(size: 12),
-                            },
+                            Child = successPercent =
+                                new SuccessRatePercentage
+                                {
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopCentre,
+                                    Font = OsuFont.GetFont(size: 12),
+                                },
                         },
                         new OsuSpriteText
                         {

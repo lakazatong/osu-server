@@ -36,12 +36,14 @@ namespace osu.Game.Overlays.Wiki.Markdown
             Children = new Drawable[]
             {
                 new BlockMarkdownImage(linkInline),
-                textFlow = parentFlowComponent.CreateTextFlow().With(t =>
-                {
-                    t.Anchor = Anchor.TopCentre;
-                    t.Origin = Anchor.TopCentre;
-                    t.TextAnchor = Anchor.TopCentre;
-                }),
+                textFlow = parentFlowComponent
+                    .CreateTextFlow()
+                    .With(t =>
+                    {
+                        t.Anchor = Anchor.TopCentre;
+                        t.Origin = Anchor.TopCentre;
+                        t.TextAnchor = Anchor.TopCentre;
+                    }),
             };
 
             textFlow.AddText(linkInline.Title);
@@ -56,7 +58,8 @@ namespace osu.Game.Overlays.Wiki.Markdown
                 RelativeSizeAxes = Axes.X;
             }
 
-            protected override ImageContainer CreateImageContainer(string url) => new BlockImageContainer(url);
+            protected override ImageContainer CreateImageContainer(string url) =>
+                new BlockImageContainer(url);
 
             private partial class BlockImageContainer : ImageContainer
             {

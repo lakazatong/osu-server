@@ -18,9 +18,7 @@ namespace osu.Game.IO.Legacy
     public class SerializationWriter : BinaryWriter
     {
         public SerializationWriter(Stream s, bool leaveOpen = false)
-            : base(s, Encoding.UTF8, leaveOpen)
-        {
-        }
+            : base(s, Encoding.UTF8, leaveOpen) { }
 
         /// <summary> Static method to initialise the writer with a suitable MemoryStream. </summary>
         public static SerializationWriter GetWriter()
@@ -55,7 +53,8 @@ namespace osu.Game.IO.Legacy
             {
                 int len = b.Length;
                 Write(len);
-                if (len > 0) base.Write(b);
+                if (len > 0)
+                    base.Write(b);
             }
         }
 
@@ -71,7 +70,8 @@ namespace osu.Game.IO.Legacy
             {
                 int len = c.Length;
                 Write(len);
-                if (len > 0) base.Write(c);
+                if (len > 0)
+                    base.Write(c);
             }
         }
 
@@ -85,7 +85,8 @@ namespace osu.Game.IO.Legacy
         }
 
         /// <summary> Writes a generic ICollection (such as an IList(T)) to the buffer.</summary>
-        public void Write<T>(List<T> c) where T : ILegacySerializable
+        public void Write<T>(List<T> c)
+            where T : ILegacySerializable
         {
             if (c == null)
             {
@@ -237,7 +238,8 @@ namespace osu.Game.IO.Legacy
             {
                 int len = b.Length;
                 Write(len);
-                if (len > 0) base.Write(b);
+                if (len > 0)
+                    base.Write(b);
             }
         }
 

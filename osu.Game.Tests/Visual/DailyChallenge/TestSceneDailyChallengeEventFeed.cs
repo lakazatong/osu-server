@@ -21,99 +21,152 @@ namespace osu.Game.Tests.Visual.DailyChallenge
         private DailyChallengeEventFeed feed = null!;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create content", () => Children = new Drawable[]
-            {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
-                feed = new DailyChallengeEventFeed
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Height = 0.3f,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                }
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background4,
+                        },
+                        feed = new DailyChallengeEventFeed
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Height = 0.3f,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    }
+            );
 
-            AddSliderStep("adjust width", 0.1f, 1, 1, width =>
-            {
-                if (feed.IsNotNull())
-                    feed.Width = width;
-            });
-            AddSliderStep("adjust height", 0.1f, 1, 0.3f, height =>
-            {
-                if (feed.IsNotNull())
-                    feed.Height = height;
-            });
+            AddSliderStep(
+                "adjust width",
+                0.1f,
+                1,
+                1,
+                width =>
+                {
+                    if (feed.IsNotNull())
+                        feed.Width = width;
+                }
+            );
+            AddSliderStep(
+                "adjust height",
+                0.1f,
+                1,
+                0.3f,
+                height =>
+                {
+                    if (feed.IsNotNull())
+                        feed.Height = height;
+                }
+            );
         }
 
         [Test]
         public void TestBasicAppearance()
         {
-            AddRepeatStep("add normal score", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+            AddRepeatStep(
+                "add normal score",
+                () =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), null);
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        null
+                    );
 
-                feed.AddNewScore(ev);
-            }, 50);
+                    feed.AddNewScore(ev);
+                },
+                50
+            );
 
-            AddRepeatStep("add new user best", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+            AddRepeatStep(
+                "add new user best",
+                () =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), RNG.Next(11, 1000));
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        RNG.Next(11, 1000)
+                    );
 
-                var testScore = TestResources.CreateTestScoreInfo();
-                testScore.TotalScore = RNG.Next(1_000_000);
+                    var testScore = TestResources.CreateTestScoreInfo();
+                    testScore.TotalScore = RNG.Next(1_000_000);
 
-                feed.AddNewScore(ev);
-            }, 50);
+                    feed.AddNewScore(ev);
+                },
+                50
+            );
 
-            AddRepeatStep("add top 10 score", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+            AddRepeatStep(
+                "add top 10 score",
+                () =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), RNG.Next(1, 10));
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        RNG.Next(1, 10)
+                    );
 
-                feed.AddNewScore(ev);
-            }, 50);
+                    feed.AddNewScore(ev);
+                },
+                50
+            );
         }
 
         [Test]
         public void TestMassAdd()
         {
-            AddStep("add 1000 scores at once", () =>
-            {
-                for (int i = 0; i < 1000; i++)
+            AddStep(
+                "add 1000 scores at once",
+                () =>
                 {
-                    var ev = new NewScoreEvent(1, new APIUser
+                    for (int i = 0; i < 1000; i++)
                     {
-                        Id = 2,
-                        Username = "peppy",
-                        CoverUrl = TestResources.COVER_IMAGE_3,
-                    }, RNG.Next(1_000_000), null);
+                        var ev = new NewScoreEvent(
+                            1,
+                            new APIUser
+                            {
+                                Id = 2,
+                                Username = "peppy",
+                                CoverUrl = TestResources.COVER_IMAGE_3,
+                            },
+                            RNG.Next(1_000_000),
+                            null
+                        );
 
-                    feed.AddNewScore(ev);
+                        feed.AddNewScore(ev);
+                    }
                 }
-            });
+            );
         }
     }
 }

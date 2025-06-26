@@ -28,20 +28,16 @@ namespace osu.Game.Tests.Mods
         [Test]
         public void TestUnchangedSettingsFollowAppliedDifficulty()
         {
-            var result = applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 10,
-                OverallDifficulty = 10
-            });
+            var result = applyDifficulty(
+                new BeatmapDifficulty { DrainRate = 10, OverallDifficulty = 10 }
+            );
 
             Assert.That(result.DrainRate, Is.EqualTo(10));
             Assert.That(result.OverallDifficulty, Is.EqualTo(10));
 
-            result = applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 1,
-                OverallDifficulty = 1
-            });
+            result = applyDifficulty(
+                new BeatmapDifficulty { DrainRate = 1, OverallDifficulty = 1 }
+            );
 
             Assert.That(result.DrainRate, Is.EqualTo(1));
             Assert.That(result.OverallDifficulty, Is.EqualTo(1));
@@ -52,20 +48,16 @@ namespace osu.Game.Tests.Mods
         {
             testMod.OverallDifficulty.Value = 4;
 
-            var result = applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 10,
-                OverallDifficulty = 10
-            });
+            var result = applyDifficulty(
+                new BeatmapDifficulty { DrainRate = 10, OverallDifficulty = 10 }
+            );
 
             Assert.That(result.DrainRate, Is.EqualTo(10));
             Assert.That(result.OverallDifficulty, Is.EqualTo(4));
 
-            result = applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 1,
-                OverallDifficulty = 1
-            });
+            result = applyDifficulty(
+                new BeatmapDifficulty { DrainRate = 1, OverallDifficulty = 1 }
+            );
 
             Assert.That(result.DrainRate, Is.EqualTo(1));
             Assert.That(result.OverallDifficulty, Is.EqualTo(4));
@@ -97,11 +89,7 @@ namespace osu.Game.Tests.Mods
         [Test]
         public void TestChangedSettingsRevertedToDefault()
         {
-            applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 10,
-                OverallDifficulty = 10
-            });
+            applyDifficulty(new BeatmapDifficulty { DrainRate = 10, OverallDifficulty = 10 });
 
             testMod.OverallDifficulty.Value = 4;
             testMod.ResetSettingsToDefaults();
@@ -109,11 +97,9 @@ namespace osu.Game.Tests.Mods
             Assert.That(testMod.DrainRate.Value, Is.Null);
             Assert.That(testMod.OverallDifficulty.Value, Is.Null);
 
-            var applied = applyDifficulty(new BeatmapDifficulty
-            {
-                DrainRate = 10,
-                OverallDifficulty = 10
-            });
+            var applied = applyDifficulty(
+                new BeatmapDifficulty { DrainRate = 10, OverallDifficulty = 10 }
+            );
 
             Assert.That(applied.OverallDifficulty, Is.EqualTo(10));
         }
@@ -128,7 +114,7 @@ namespace osu.Game.Tests.Mods
                 {
                     [@"circle_size"] = -727,
                     [@"approach_rate"] = -727,
-                }
+                },
             };
             var ruleset = new OsuRuleset();
 
@@ -136,8 +122,14 @@ namespace osu.Game.Tests.Mods
 
             Assert.Multiple(() =>
             {
-                Assert.That(mod.CircleSize.Value, Is.GreaterThanOrEqualTo(0).And.LessThanOrEqualTo(11));
-                Assert.That(mod.ApproachRate.Value, Is.GreaterThanOrEqualTo(-10).And.LessThanOrEqualTo(11));
+                Assert.That(
+                    mod.CircleSize.Value,
+                    Is.GreaterThanOrEqualTo(0).And.LessThanOrEqualTo(11)
+                );
+                Assert.That(
+                    mod.ApproachRate.Value,
+                    Is.GreaterThanOrEqualTo(-10).And.LessThanOrEqualTo(11)
+                );
             });
         }
 
@@ -147,16 +139,16 @@ namespace osu.Game.Tests.Mods
             var apiMod = new APIMod
             {
                 Acronym = @"DA",
-                Settings = new Dictionary<string, object>
-                {
-                    [@"approach_rate"] = -9,
-                }
+                Settings = new Dictionary<string, object> { [@"approach_rate"] = -9 },
             };
             var ruleset = new OsuRuleset();
 
             var mod = (OsuModDifficultyAdjust)apiMod.ToMod(ruleset);
 
-            Assert.That(mod.ApproachRate.Value, Is.GreaterThanOrEqualTo(-10).And.LessThanOrEqualTo(11));
+            Assert.That(
+                mod.ApproachRate.Value,
+                Is.GreaterThanOrEqualTo(-10).And.LessThanOrEqualTo(11)
+            );
             Assert.That(mod.ApproachRate.Value, Is.EqualTo(-9));
         }
 
@@ -171,9 +163,7 @@ namespace osu.Game.Tests.Mods
             return newDifficulty;
         }
 
-        private class TestModDifficultyAdjust : ModDifficultyAdjust
-        {
-        }
+        private class TestModDifficultyAdjust : ModDifficultyAdjust { }
 
         private class TestRuleset : Ruleset
         {
@@ -183,7 +173,10 @@ namespace osu.Game.Tests.Mods
                     yield return new TestModDifficultyAdjust();
             }
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod>? mods = null
+            )
             {
                 throw new System.NotImplementedException();
             }

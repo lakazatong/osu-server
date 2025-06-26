@@ -13,13 +13,10 @@ namespace osu.Game.Tests
     public class FlakyTestAttribute : RetryAttribute
     {
         public FlakyTestAttribute()
-            : this(10)
-        {
-        }
+            : this(10) { }
 
         public FlakyTestAttribute(int tryCount)
             : base(Environment.GetEnvironmentVariable("OSU_TESTS_FAIL_FLAKY") == "1" ? 1 : tryCount)
-        {
-        }
+        { }
     }
 }

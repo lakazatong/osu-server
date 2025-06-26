@@ -23,12 +23,19 @@ namespace osu.Game.Tests
         /// <param name="bypassCleanupOnSetup">Whether to bypass directory cleanup on <see cref="SetupForRun"/>.</param>
         /// <param name="bypassCleanupOnDispose">Whether to bypass directory cleanup on host disposal. Should be used only if a subsequent test relies on the files still existing.</param>
         /// <param name="callingMethodName">The name of the calling method, used for test file isolation and clean-up.</param>
-        public CleanRunHeadlessGameHost(bool bindIPC = false, bool realtime = true, bool bypassCleanupOnSetup = false, bool bypassCleanupOnDispose = false,
-                                        [CallerMemberName] string callingMethodName = @"")
-            : base($"{callingMethodName}-{Guid.NewGuid()}", new HostOptions
-            {
-                IPCPipeName = bindIPC ? OsuGame.IPC_PIPE_NAME : null,
-            }, bypassCleanup: bypassCleanupOnDispose, realtime: realtime)
+        public CleanRunHeadlessGameHost(
+            bool bindIPC = false,
+            bool realtime = true,
+            bool bypassCleanupOnSetup = false,
+            bool bypassCleanupOnDispose = false,
+            [CallerMemberName] string callingMethodName = @""
+        )
+            : base(
+                $"{callingMethodName}-{Guid.NewGuid()}",
+                new HostOptions { IPCPipeName = bindIPC ? OsuGame.IPC_PIPE_NAME : null },
+                bypassCleanup: bypassCleanupOnDispose,
+                realtime: realtime
+            )
         {
             this.bypassCleanupOnSetup = bypassCleanupOnSetup;
         }

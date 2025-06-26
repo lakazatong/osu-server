@@ -63,13 +63,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             updateCornerRadius();
 
-            Add(Triangles = new TrianglesV2
-            {
-                Thickness = 0.02f,
-                SpawnRatio = 0.6f,
-                RelativeSizeAxes = Axes.Both,
-                Depth = float.MaxValue,
-            });
+            Add(
+                Triangles = new TrianglesV2
+                {
+                    Thickness = 0.02f,
+                    SpawnRatio = 0.6f,
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = float.MaxValue,
+                }
+            );
 
             updateColours();
         }
@@ -81,7 +83,10 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
             Debug.Assert(triangleGradientSecondColour != null);
 
-            Triangles.Colour = ColourInfo.GradientVertical(triangleGradientSecondColour.Value, BackgroundColour);
+            Triangles.Colour = ColourInfo.GradientVertical(
+                triangleGradientSecondColour.Value,
+                BackgroundColour
+            );
         }
 
         protected override bool OnHover(HoverEvent e)

@@ -41,7 +41,10 @@ namespace osu.Game.Rulesets.Mods
         [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
         public abstract BindableFloat SizeMultiplier { get; }
 
-        [SettingSource("Change size based on combo", "Decrease the flashlight size as combo increases.")]
+        [SettingSource(
+            "Change size based on combo",
+            "Decrease the flashlight size as combo increases."
+        )]
         public abstract BindableBool ComboBasedSize { get; }
 
         /// <summary>
@@ -51,7 +54,10 @@ namespace osu.Game.Rulesets.Mods
         public abstract float DefaultFlashlightSize { get; }
     }
 
-    public abstract partial class ModFlashlight<T> : ModFlashlight, IApplicableToDrawableRuleset<T>, IApplicableToScoreProcessor
+    public abstract partial class ModFlashlight<T>
+        : ModFlashlight,
+            IApplicableToDrawableRuleset<T>,
+            IApplicableToScoreProcessor
         where T : HitObject
     {
         public const double FLASHLIGHT_FADE_DURATION = 800;
@@ -87,16 +93,18 @@ namespace osu.Game.Rulesets.Mods
             flashlight.Combo.BindTo(Combo);
             flashlight.GetPlayfieldScale = () => drawableRuleset.Playfield.Scale;
 
-            drawableRuleset.Overlays.Add(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                // workaround for 1px gaps on the edges of the playfield which would sometimes show with "gameplay" screen scaling active.
-                Padding = new MarginPadding(-1),
-                Child = flashlight,
-                // Flashlight mods should always draw above any other mod adding overlays.
-                // NegativeInfinity is not used to allow one more thing drawn on top (used in replay analysis overlay in osu!).
-                Depth = float.MinValue,
-            });
+            drawableRuleset.Overlays.Add(
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    // workaround for 1px gaps on the edges of the playfield which would sometimes show with "gameplay" screen scaling active.
+                    Padding = new MarginPadding(-1),
+                    Child = flashlight,
+                    // Flashlight mods should always draw above any other mod adding overlays.
+                    // NegativeInfinity is not used to allow one more thing drawn on top (used in replay analysis overlay in osu!).
+                    Depth = float.MinValue,
+                }
+            );
         }
 
         protected abstract Flashlight CreateFlashlight();
@@ -160,8 +168,13 @@ namespace osu.Game.Rulesets.Mods
                 {
                     Vector2 playfieldScale = GetPlayfieldScale();
 
-                    Debug.Assert(Precision.AlmostEquals(Math.Abs(playfieldScale.X), Math.Abs(playfieldScale.Y)),
-                        @"Playfield has non-proportional scaling. Flashlight implementations should be revisited with regard to balance.");
+                    Debug.Assert(
+                        Precision.AlmostEquals(
+                            Math.Abs(playfieldScale.X),
+                            Math.Abs(playfieldScale.Y)
+                        ),
+                        @"Playfield has non-proportional scaling. Flashlight implementations should be revisited with regard to balance."
+                    );
                     size *= Math.Abs(playfieldScale.X);
                 }
 
@@ -190,7 +203,8 @@ namespace osu.Game.Rulesets.Mods
                 get => flashlightPosition;
                 set
                 {
-                    if (flashlightPosition == value) return;
+                    if (flashlightPosition == value)
+                        return;
 
                     flashlightPosition = value;
                     Invalidate(Invalidation.DrawNode);
@@ -204,7 +218,8 @@ namespace osu.Game.Rulesets.Mods
                 get => flashlightSize;
                 set
                 {
-                    if (flashlightSize == value) return;
+                    if (flashlightSize == value)
+                        return;
 
                     flashlightSize = value;
                     Invalidate(Invalidation.DrawNode);
@@ -218,7 +233,8 @@ namespace osu.Game.Rulesets.Mods
                 get => flashlightDim;
                 set
                 {
-                    if (flashlightDim == value) return;
+                    if (flashlightDim == value)
+                        return;
 
                     flashlightDim = value;
                     Invalidate(Invalidation.DrawNode);
@@ -232,7 +248,8 @@ namespace osu.Game.Rulesets.Mods
                 get => flashlightSmoothness;
                 set
                 {
-                    if (flashlightSmoothness == value) return;
+                    if (flashlightSmoothness == value)
+                        return;
 
                     flashlightSmoothness = value;
                     Invalidate(Invalidation.DrawNode);
@@ -254,9 +271,7 @@ namespace osu.Game.Rulesets.Mods
                 private Action<TexturedVertex2D>? addAction;
 
                 public FlashlightDrawNode(Flashlight source)
-                    : base(source)
-                {
-                }
+                    : base(source) { }
 
                 public override void ApplyState()
                 {
@@ -264,7 +279,10 @@ namespace osu.Game.Rulesets.Mods
 
                     shader = Source.shader;
                     screenSpaceDrawQuad = Source.ScreenSpaceDrawQuad;
-                    flashlightPosition = Vector2Extensions.Transform(Source.FlashlightPosition, DrawInfo.Matrix);
+                    flashlightPosition = Vector2Extensions.Transform(
+                        Source.FlashlightPosition,
+                        DrawInfo.Matrix
+                    );
                     flashlightSize = Source.FlashlightSize * DrawInfo.Matrix.ExtractScale().Xy;
                     flashlightDim = Source.FlashlightDim;
                     flashlightSmoothness = Source.flashlightSmoothness;
@@ -279,26 +297,35 @@ namespace osu.Game.Rulesets.Mods
                     if (quadBatch == null)
                     {
                         quadBatch = renderer.CreateQuadBatch<PositionAndColourVertex>(1, 1);
-                        addAction = v => quadBatch.Add(new PositionAndColourVertex
-                        {
-                            Position = v.Position,
-                            Colour = v.Colour
-                        });
+                        addAction = v =>
+                            quadBatch.Add(
+                                new PositionAndColourVertex
+                                {
+                                    Position = v.Position,
+                                    Colour = v.Colour,
+                                }
+                            );
                     }
 
-                    flashlightParametersBuffer ??= renderer.CreateUniformBuffer<FlashlightParameters>();
+                    flashlightParametersBuffer ??=
+                        renderer.CreateUniformBuffer<FlashlightParameters>();
                     flashlightParametersBuffer.Data = flashlightParametersBuffer.Data with
                     {
                         Position = flashlightPosition,
                         Size = flashlightSize,
                         Dim = flashlightDim,
-                        Smoothness = flashlightSmoothness
+                        Smoothness = flashlightSmoothness,
                     };
 
                     shader.Bind();
                     shader.BindUniformBlock(@"m_FlashlightParameters", flashlightParametersBuffer);
 
-                    renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
+                    renderer.DrawQuad(
+                        renderer.WhitePixel,
+                        screenSpaceDrawQuad,
+                        DrawColourInfo.Colour,
+                        vertexAction: addAction
+                    );
 
                     shader.Unbind();
                 }

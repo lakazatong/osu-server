@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Taiko.Mods
 {
-    public class TaikoModNoFail : ModNoFail
-    {
-    }
+    public class TaikoModNoFail : ModNoFail { }
 }

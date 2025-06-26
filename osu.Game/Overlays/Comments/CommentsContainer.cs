@@ -4,24 +4,24 @@
 #nullable disable
 
 using System;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Online.API;
-using osu.Game.Online.API.Requests;
-using osu.Framework.Graphics;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Online.API.Requests.Responses;
-using System.Threading;
-using System.Linq;
-using osu.Framework.Extensions.IEnumerableExtensions;
-using osu.Framework.Threading;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
+using osu.Framework.Threading;
 using osu.Game.Extensions;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Online.API;
+using osu.Game.Online.API.Requests;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Resources.Localisation.Web;
 using osu.Game.Users.Drawables;
 using osuTK;
@@ -63,124 +63,129 @@ namespace osu.Game.Overlays.Comments
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5
-                },
-                new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
+                    new FillFlowContainer
                     {
-                        commentCounter = new TotalCommentsCounter(),
-                        new Container
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Children = new Drawable[]
+                            commentCounter = new TotalCommentsCounter(),
+                            new Container
                             {
-                                new Box
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = colourProvider.Background4,
+                                    new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Colour = colourProvider.Background4,
+                                    },
+                                    pinnedContent = new FillFlowContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Direction = FillDirection.Vertical,
+                                    },
                                 },
-                                pinnedContent = new FillFlowContainer
+                            },
+                            new Container
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding
                                 {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Direction = FillDirection.Vertical,
+                                    Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                                    Vertical = 20,
+                                },
+                                Children = new Drawable[]
+                                {
+                                    avatar = new UpdateableAvatar(
+                                        api.LocalUser.Value,
+                                        isInteractive: false
+                                    )
+                                    {
+                                        Size = new Vector2(50),
+                                        CornerExponent = 2,
+                                        CornerRadius = 25,
+                                        Masking = true,
+                                    },
+                                    new Container
+                                    {
+                                        Padding = new MarginPadding { Left = 60 },
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Child = newCommentEditor =
+                                            new NewCommentEditor { OnPost = prependPostedComments },
+                                    },
+                                },
+                            },
+                            new CommentsHeader
+                            {
+                                Sort = { BindTarget = Sort },
+                                ShowDeleted = { BindTarget = ShowDeleted },
+                            },
+                            content = new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                            },
+                            new Container
+                            {
+                                Name = @"Footer",
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Children = new Drawable[]
+                                {
+                                    new FillFlowContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Direction = FillDirection.Vertical,
+                                        Margin = new MarginPadding { Bottom = 20 },
+                                        Children = new Drawable[]
+                                        {
+                                            deletedCommentsCounter = new DeletedCommentsCounter
+                                            {
+                                                ShowDeleted = { BindTarget = ShowDeleted },
+                                                Margin = new MarginPadding
+                                                {
+                                                    Horizontal =
+                                                        WaveOverlayContainer.HORIZONTAL_PADDING,
+                                                    Vertical = 10,
+                                                },
+                                            },
+                                            new Container
+                                            {
+                                                AutoSizeAxes = Axes.Y,
+                                                RelativeSizeAxes = Axes.X,
+                                                Child = moreButton =
+                                                    new CommentsShowMoreButton
+                                                    {
+                                                        Anchor = Anchor.Centre,
+                                                        Origin = Anchor.Centre,
+                                                        Margin = new MarginPadding
+                                                        {
+                                                            Vertical = 10,
+                                                        },
+                                                        Action = getComments,
+                                                        IsLoading = true,
+                                                    },
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING, Vertical = 20 },
-                            Children = new Drawable[]
-                            {
-                                avatar = new UpdateableAvatar(api.LocalUser.Value, isInteractive: false)
-                                {
-                                    Size = new Vector2(50),
-                                    CornerExponent = 2,
-                                    CornerRadius = 25,
-                                    Masking = true,
-                                },
-                                new Container
-                                {
-                                    Padding = new MarginPadding { Left = 60 },
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Child = newCommentEditor = new NewCommentEditor
-                                    {
-                                        OnPost = prependPostedComments
-                                    }
-                                }
-                            }
-                        },
-                        new CommentsHeader
-                        {
-                            Sort = { BindTarget = Sort },
-                            ShowDeleted = { BindTarget = ShowDeleted }
-                        },
-                        content = new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Vertical,
-                        },
-                        new Container
-                        {
-                            Name = @"Footer",
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Children = new Drawable[]
-                            {
-                                new FillFlowContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Direction = FillDirection.Vertical,
-                                    Margin = new MarginPadding { Bottom = 20 },
-                                    Children = new Drawable[]
-                                    {
-                                        deletedCommentsCounter = new DeletedCommentsCounter
-                                        {
-                                            ShowDeleted = { BindTarget = ShowDeleted },
-                                            Margin = new MarginPadding
-                                            {
-                                                Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
-                                                Vertical = 10
-                                            }
-                                        },
-                                        new Container
-                                        {
-                                            AutoSizeAxes = Axes.Y,
-                                            RelativeSizeAxes = Axes.X,
-                                            Child = moreButton = new CommentsShowMoreButton
-                                            {
-                                                Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre,
-                                                Margin = new MarginPadding
-                                                {
-                                                    Vertical = 10
-                                                },
-                                                Action = getComments,
-                                                IsLoading = true,
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    },
                 }
-            });
+            );
 
             User.BindTo(api.LocalUser);
         }
@@ -239,12 +244,20 @@ namespace osu.Game.Overlays.Comments
             CommentDictionary.Clear();
         }
 
-        protected readonly Dictionary<long, DrawableComment> CommentDictionary = new Dictionary<long, DrawableComment>();
+        protected readonly Dictionary<long, DrawableComment> CommentDictionary =
+            new Dictionary<long, DrawableComment>();
 
         protected void OnSuccess(CommentBundle response)
         {
             commentCounter.Current.Value = response.Total;
-            newCommentEditor.CommentableMeta.Value = response.CommentableMeta.SingleOrDefault(m => m.Id == id.Value && string.Equals(m.Type, type.Value.ToString().ToSnakeCase(), StringComparison.OrdinalIgnoreCase));
+            newCommentEditor.CommentableMeta.Value = response.CommentableMeta.SingleOrDefault(m =>
+                m.Id == id.Value
+                && string.Equals(
+                    m.Type,
+                    type.Value.ToString().ToSnakeCase(),
+                    StringComparison.OrdinalIgnoreCase
+                )
+            );
 
             if (!response.Comments.Any())
             {
@@ -265,7 +278,11 @@ namespace osu.Game.Overlays.Comments
             var topLevelComments = new List<DrawableComment>();
             var orphaned = new List<Comment>();
 
-            foreach (var comment in bundle.Comments.Concat(bundle.IncludedComments).Concat(bundle.PinnedComments))
+            foreach (
+                var comment in bundle
+                    .Comments.Concat(bundle.IncludedComments)
+                    .Concat(bundle.PinnedComments)
+            )
             {
                 // Exclude possible duplicated comments.
                 if (CommentDictionary.ContainsKey(comment.Id))
@@ -280,26 +297,37 @@ namespace osu.Game.Overlays.Comments
 
             if (topLevelComments.Any())
             {
-                LoadComponentsAsync(topLevelComments, loaded =>
-                {
-                    pinnedContent.AddRange(loaded.Where(d => d.Comment.Pinned));
-                    content.AddRange(loaded.Where(d => !d.Comment.Pinned));
-                    deletedCommentsCounter.Count.Value += topLevelComments.Select(d => d.Comment).Count(c => c.IsDeleted && c.IsTopLevel);
-
-                    if (bundle.HasMore)
+                LoadComponentsAsync(
+                    topLevelComments,
+                    loaded =>
                     {
-                        int loadedTopLevelComments = 0;
-                        pinnedContent.Children.OfType<DrawableComment>().ForEach(_ => loadedTopLevelComments++);
-                        content.Children.OfType<DrawableComment>().ForEach(_ => loadedTopLevelComments++);
+                        pinnedContent.AddRange(loaded.Where(d => d.Comment.Pinned));
+                        content.AddRange(loaded.Where(d => !d.Comment.Pinned));
+                        deletedCommentsCounter.Count.Value += topLevelComments
+                            .Select(d => d.Comment)
+                            .Count(c => c.IsDeleted && c.IsTopLevel);
 
-                        moreButton.Current.Value = bundle.TopLevelCount - loadedTopLevelComments;
-                        moreButton.IsLoading = false;
-                    }
-                    else
-                    {
-                        moreButton.Hide();
-                    }
-                }, (loadCancellation = new CancellationTokenSource()).Token);
+                        if (bundle.HasMore)
+                        {
+                            int loadedTopLevelComments = 0;
+                            pinnedContent
+                                .Children.OfType<DrawableComment>()
+                                .ForEach(_ => loadedTopLevelComments++);
+                            content
+                                .Children.OfType<DrawableComment>()
+                                .ForEach(_ => loadedTopLevelComments++);
+
+                            moreButton.Current.Value =
+                                bundle.TopLevelCount - loadedTopLevelComments;
+                            moreButton.IsLoading = false;
+                        }
+                        else
+                        {
+                            moreButton.Hide();
+                        }
+                    },
+                    (loadCancellation = new CancellationTokenSource()).Token
+                );
             }
 
             void addNewComment(Comment comment)
@@ -311,7 +339,9 @@ namespace osu.Game.Overlays.Comments
                     // Comments that have no parent are added as top-level comments to the flow.
                     topLevelComments.Add(drawableComment);
                 }
-                else if (CommentDictionary.TryGetValue(comment.ParentId.Value, out var parentDrawable))
+                else if (
+                    CommentDictionary.TryGetValue(comment.ParentId.Value, out var parentDrawable)
+                )
                 {
                     // The comment's parent has already been seen, so the parent<-> child links can be added.
                     comment.ParentComment = parentDrawable.Comment;
@@ -341,20 +371,27 @@ namespace osu.Game.Overlays.Comments
 
             if (topLevelComments.Any())
             {
-                LoadComponentsAsync(topLevelComments, loaded =>
-                {
-                    if (content.Count > 0 && content[0] is NoCommentsPlaceholder placeholder)
-                        content.Remove(placeholder, true);
-
-                    foreach (var comment in loaded)
+                LoadComponentsAsync(
+                    topLevelComments,
+                    loaded =>
                     {
-                        content.Insert((int)-Clock.CurrentTime, comment);
-                    }
-                }, (loadCancellation = new CancellationTokenSource()).Token);
+                        if (content.Count > 0 && content[0] is NoCommentsPlaceholder placeholder)
+                            content.Remove(placeholder, true);
+
+                        foreach (var comment in loaded)
+                        {
+                            content.Insert((int)-Clock.CurrentTime, comment);
+                        }
+                    },
+                    (loadCancellation = new CancellationTokenSource()).Token
+                );
             }
         }
 
-        public DrawableComment GetDrawableComment(Comment comment, IReadOnlyList<CommentableMeta> meta)
+        public DrawableComment GetDrawableComment(
+            Comment comment,
+            IReadOnlyList<CommentableMeta> meta
+        )
         {
             if (CommentDictionary.TryGetValue(comment.Id, out var existing))
                 return existing;
@@ -363,13 +400,19 @@ namespace osu.Game.Overlays.Comments
             {
                 ShowDeleted = { BindTarget = ShowDeleted },
                 Sort = { BindTarget = Sort },
-                RepliesRequested = onCommentRepliesRequested
+                RepliesRequested = onCommentRepliesRequested,
             };
         }
 
         private void onCommentRepliesRequested(DrawableComment drawableComment, int page)
         {
-            var req = new GetCommentsRequest(id.Value, type.Value, Sort.Value, page, drawableComment.Comment.Id);
+            var req = new GetCommentsRequest(
+                id.Value,
+                type.Value,
+                Sort.Value,
+                page,
+                drawableComment.Comment.Id
+            );
 
             req.Success += response => Schedule(() => AppendComments(response));
 
@@ -390,16 +433,21 @@ namespace osu.Game.Overlays.Comments
             {
                 Height = 80;
                 RelativeSizeAxes = Axes.X;
-                AddRangeInternal(new Drawable[]
-                {
-                    new OsuSpriteText
+                AddRangeInternal(
+                    new Drawable[]
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Margin = new MarginPadding { Left = WaveOverlayContainer.HORIZONTAL_PADDING },
-                        Text = CommentsStrings.Empty
+                        new OsuSpriteText
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Margin = new MarginPadding
+                            {
+                                Left = WaveOverlayContainer.HORIZONTAL_PADDING,
+                            },
+                            Text = CommentsStrings.Empty,
+                        },
                     }
-                });
+                );
             }
         }
 
@@ -416,23 +464,30 @@ namespace osu.Game.Overlays.Comments
             protected override LocalisableString GetButtonText(bool isLoggedIn) =>
                 isLoggedIn ? CommonStrings.ButtonsPost : CommentsStrings.GuestButtonNew;
 
-            protected override LocalisableString GetPlaceholderText() => CommentsStrings.PlaceholderNew;
+            protected override LocalisableString GetPlaceholderText() =>
+                CommentsStrings.PlaceholderNew;
 
             protected override void OnCommit(string text)
             {
                 ShowLoadingSpinner = true;
-                CommentPostRequest req = new CommentPostRequest(commentsContainer.Type.Value, commentsContainer.Id.Value, text);
-                req.Failure += e => Schedule(() =>
-                {
-                    ShowLoadingSpinner = false;
-                    Logger.Error(e, "Posting comment failed.");
-                });
-                req.Success += cb => Schedule(() =>
-                {
-                    ShowLoadingSpinner = false;
-                    Current.Value = string.Empty;
-                    OnPost?.Invoke(cb);
-                });
+                CommentPostRequest req = new CommentPostRequest(
+                    commentsContainer.Type.Value,
+                    commentsContainer.Id.Value,
+                    text
+                );
+                req.Failure += e =>
+                    Schedule(() =>
+                    {
+                        ShowLoadingSpinner = false;
+                        Logger.Error(e, "Posting comment failed.");
+                    });
+                req.Success += cb =>
+                    Schedule(() =>
+                    {
+                        ShowLoadingSpinner = false;
+                        Current.Value = string.Empty;
+                        OnPost?.Invoke(cb);
+                    });
                 API.Queue(req);
             }
         }

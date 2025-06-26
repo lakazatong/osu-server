@@ -1,8 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Numerics;
 using System.Globalization;
+using System.Numerics;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -80,8 +80,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         {
                             TransferValueOnCommit = true,
                             RelativeSizeAxes = Axes.X,
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
@@ -97,7 +97,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void textChanged(ValueChangedEvent<string> change)
         {
-            if (!instantaneous) return;
+            if (!instantaneous)
+                return;
 
             tryUpdateSliderFromTextBox();
         }
@@ -142,7 +143,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateTextBoxFromSlider(ValueChangedEvent<T> _)
         {
-            if (updatingFromTextBox) return;
+            if (updatingFromTextBox)
+                return;
 
             decimal decimalValue = decimal.CreateTruncating(slider.Current.Value);
             textBox.Text = decimalValue.ToString($@"N{FormatUtils.FindPrecision(decimalValue)}");

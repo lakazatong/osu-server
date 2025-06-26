@@ -19,7 +19,8 @@ namespace osu.Game.Overlays.Rankings
         private const int duration = 200;
         private const int height = 70;
 
-        private readonly BindableWithCurrent<CountryCode> current = new BindableWithCurrent<CountryCode>();
+        private readonly BindableWithCurrent<CountryCode> current =
+            new BindableWithCurrent<CountryCode>();
 
         public Bindable<CountryCode> Current
         {
@@ -42,17 +43,17 @@ namespace osu.Game.Overlays.Rankings
                 Alpha = 0,
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Direction = FillDirection.Horizontal,
                         Spacing = new Vector2(10, 0),
-                        Margin = new MarginPadding { Left = WaveOverlayContainer.HORIZONTAL_PADDING },
+                        Margin = new MarginPadding
+                        {
+                            Left = WaveOverlayContainer.HORIZONTAL_PADDING,
+                        },
                         Children = new Drawable[]
                         {
                             new OsuSpriteText
@@ -60,18 +61,18 @@ namespace osu.Game.Overlays.Rankings
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Text = @"filtered by country:",
-                                Font = OsuFont.GetFont(size: 14)
+                                Font = OsuFont.GetFont(size: 14),
                             },
                             countryPill = new CountryPill
                             {
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Alpha = 0,
-                                Current = Current
-                            }
-                        }
-                    }
-                }
+                                Current = Current,
+                            },
+                        },
+                    },
+                },
             };
         }
 

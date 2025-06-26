@@ -9,15 +9,15 @@ using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 using osu.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Allocation;
 using osu.Framework.Layout;
 using osu.Framework.Threading;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play
 {
@@ -34,7 +34,8 @@ namespace osu.Game.Screens.Play
             get => progress;
             set
             {
-                if (value == progress) return;
+                if (value == progress)
+                    return;
 
                 progress = value;
                 redrawProgress();
@@ -50,7 +51,8 @@ namespace osu.Game.Screens.Play
             get => values;
             set
             {
-                if (value == values) return;
+                if (value == values)
+                    return;
 
                 values = value;
                 layout.Invalidate();
@@ -64,7 +66,8 @@ namespace osu.Game.Screens.Play
             get => fillColour;
             set
             {
-                if (value == fillColour) return;
+                if (value == fillColour)
+                    return;
 
                 fillColour = value;
                 redrawFilled();
@@ -73,7 +76,9 @@ namespace osu.Game.Screens.Play
 
         private ScheduledDelegate scheduledCreate;
 
-        private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawSize | Invalidation.DrawInfo);
+        private readonly LayoutValue layout = new LayoutValue(
+            Invalidation.DrawSize | Invalidation.DrawInfo
+        );
 
         public SquareGraph()
         {
@@ -110,27 +115,33 @@ namespace osu.Game.Screens.Play
 
             for (float x = 0; x < DrawWidth; x += Column.WIDTH)
             {
-                newColumns.Add(new Column(DrawHeight)
-                {
-                    LitColour = fillColour,
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Position = new Vector2(x, 0),
-                    State = ColumnState.Dimmed,
-                });
+                newColumns.Add(
+                    new Column(DrawHeight)
+                    {
+                        LitColour = fillColour,
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                        Position = new Vector2(x, 0),
+                        State = ColumnState.Dimmed,
+                    }
+                );
             }
 
             cts?.Cancel();
 
-            LoadComponentAsync(newColumns, c =>
-            {
-                Child = columns = c;
-                columns.FadeInFromZero(500, Easing.OutQuint);
+            LoadComponentAsync(
+                newColumns,
+                c =>
+                {
+                    Child = columns = c;
+                    columns.FadeInFromZero(500, Easing.OutQuint);
 
-                recalculateValues();
-                redrawFilled();
-                redrawProgress();
-            }, (cts = new CancellationTokenSource()).Token);
+                    recalculateValues();
+                    redrawFilled();
+                    redrawProgress();
+                },
+                (cts = new CancellationTokenSource()).Token
+            );
         }
 
         /// <summary>
@@ -203,7 +214,8 @@ namespace osu.Game.Screens.Play
                 get => filled;
                 set
                 {
-                    if (value == filled) return;
+                    if (value == filled)
+                        return;
 
                     filled = value;
                     fillActive();
@@ -217,7 +229,8 @@ namespace osu.Game.Screens.Play
                 get => state;
                 set
                 {
-                    if (value == state) return;
+                    if (value == state)
+                        return;
 
                     state = value;
                     if (IsLoaded)
@@ -236,11 +249,15 @@ namespace osu.Game.Screens.Play
             [BackgroundDependencyLoader]
             private void load()
             {
-                drawableRows.AddRange(Enumerable.Range(0, (int)cubeCount).Select(r => new Box
-                {
-                    Size = new Vector2(cube_size),
-                    Position = new Vector2(0, r * WIDTH + padding),
-                }));
+                drawableRows.AddRange(
+                    Enumerable
+                        .Range(0, (int)cubeCount)
+                        .Select(r => new Box
+                        {
+                            Size = new Vector2(cube_size),
+                            Position = new Vector2(0, r * WIDTH + padding),
+                        })
+                );
 
                 Children = drawableRows;
 
@@ -258,7 +275,8 @@ namespace osu.Game.Screens.Play
             {
                 Color4 colour = State == ColumnState.Lit ? LitColour : DimmedColour;
 
-                int countFilled = (int)Math.Clamp(filled * drawableRows.Count, 0, drawableRows.Count);
+                int countFilled = (int)
+                    Math.Clamp(filled * drawableRows.Count, 0, drawableRows.Count);
 
                 for (int i = 0; i < drawableRows.Count; i++)
                     drawableRows[i].Colour = i < countFilled ? colour : EmptyColour;
@@ -268,7 +286,7 @@ namespace osu.Game.Screens.Play
         public enum ColumnState
         {
             Lit,
-            Dimmed
+            Dimmed,
         }
     }
 }

@@ -25,12 +25,8 @@ namespace osu.Game.Screens.Edit.Components
                 Children = new Drawable[]
                 {
                     new SectionHeader(sectionName),
-                    Content = new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                    },
-                }
+                    Content = new Container { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y },
+                },
             };
         }
     }

@@ -15,7 +15,10 @@ namespace osu.Game.Rulesets.Osu.Mods
     /// <summary>
     /// Mod that colours <see cref="HitObject"/>s based on the musical division they are on
     /// </summary>
-    public class OsuModSynesthesia : ModSynesthesia, IApplicableToBeatmap, IApplicableToDrawableHitObject
+    public class OsuModSynesthesia
+        : ModSynesthesia,
+            IApplicableToBeatmap,
+            IApplicableToDrawableHitObject
     {
         private readonly OsuColour colours = new OsuColour();
 
@@ -30,7 +33,8 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         public void ApplyToDrawableHitObject(DrawableHitObject d)
         {
-            if (currentBeatmap == null) return;
+            if (currentBeatmap == null)
+                return;
 
             Color4? timingBasedColour = null;
 
@@ -41,7 +45,10 @@ namespace osu.Game.Rulesets.Osu.Mods
                 double snapTime = d is DrawableSliderTail tail
                     ? tail.Slider.GetEndTime()
                     : d.HitObject.StartTime;
-                timingBasedColour = BindableBeatDivisor.GetColourFor(currentBeatmap.ControlPointInfo.GetClosestBeatDivisor(snapTime), colours);
+                timingBasedColour = BindableBeatDivisor.GetColourFor(
+                    currentBeatmap.ControlPointInfo.GetClosestBeatDivisor(snapTime),
+                    colours
+                );
             };
 
             // Need to set this every update to ensure it doesn't get overwritten by DrawableHitObject.OnApply() -> UpdateComboColour().

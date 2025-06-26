@@ -5,13 +5,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using osuTK;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
+using osuTK;
 
 namespace osu.Game.Screens.Select
 {
@@ -63,7 +63,11 @@ namespace osu.Game.Screens.Select
             if (selectedButton != null)
             {
                 modeLight.FadeIn(TRANSITION_LENGTH, Easing.OutQuint);
-                modeLight.FadeColour(selectedButton.SelectedColour, TRANSITION_LENGTH, Easing.OutQuint);
+                modeLight.FadeColour(
+                    selectedButton.SelectedColour,
+                    TRANSITION_LENGTH,
+                    Easing.OutQuint
+                );
             }
             else
                 modeLight.FadeOut(TRANSITION_LENGTH, Easing.OutQuint);
@@ -107,9 +111,9 @@ namespace osu.Game.Screens.Select
                             Direction = FillDirection.Horizontal,
                             Spacing = new Vector2(-FooterButton.SHEAR_WIDTH, 0),
                             AutoSizeAxes = Axes.Both,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             updateModeLight();

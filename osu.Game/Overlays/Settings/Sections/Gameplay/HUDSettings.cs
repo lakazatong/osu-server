@@ -21,7 +21,7 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                 new SettingsEnumDropdown<HUDVisibilityMode>
                 {
                     LabelText = GameplaySettingsStrings.HUDVisibilityMode,
-                    Current = config.GetBindable<HUDVisibilityMode>(OsuSetting.HUDVisibilityMode)
+                    Current = config.GetBindable<HUDVisibilityMode>(OsuSetting.HUDVisibilityMode),
                 },
                 new SettingsCheckbox
                 {
@@ -55,7 +55,7 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                     ClassicDefault = false,
                     LabelText = GameplaySettingsStrings.ShowHealthDisplayWhenCantFail,
                     Current = config.GetBindable<bool>(OsuSetting.ShowHealthDisplayWhenCantFail),
-                    Keywords = new[] { "hp", "bar" }
+                    Keywords = new[] { "hp", "bar" },
                 },
             };
         }

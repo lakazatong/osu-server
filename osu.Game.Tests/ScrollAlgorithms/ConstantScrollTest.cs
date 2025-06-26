@@ -58,8 +58,16 @@ namespace osu.Game.Tests.ScrollAlgorithms
         [TestCase(25000)]
         public void TestTime(double time)
         {
-            Assert.AreEqual(time, algorithm.TimeAt(algorithm.PositionAt(time, 0, 5000, 1), 0, 5000, 1), 0.001);
-            Assert.AreEqual(time, algorithm.TimeAt(algorithm.PositionAt(time, 5000, 5000, 1), 5000, 5000, 1), 0.001);
+            Assert.AreEqual(
+                time,
+                algorithm.TimeAt(algorithm.PositionAt(time, 0, 5000, 1), 0, 5000, 1),
+                0.001
+            );
+            Assert.AreEqual(
+                time,
+                algorithm.TimeAt(algorithm.PositionAt(time, 5000, 5000, 1), 5000, 5000, 1),
+                0.001
+            );
         }
     }
 }

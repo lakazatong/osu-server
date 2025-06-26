@@ -10,8 +10,6 @@ namespace osu.Game.Online.Multiplayer
     public class NotJoinedRoomException : HubException
     {
         public NotJoinedRoomException()
-            : base("This user has not yet joined a multiplayer room.")
-        {
-        }
+            : base("This user has not yet joined a multiplayer room.") { }
     }
 }

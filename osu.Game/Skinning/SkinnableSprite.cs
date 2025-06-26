@@ -29,13 +29,22 @@ namespace osu.Game.Skinning
         [Resolved]
         private TextureStore textures { get; set; } = null!;
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.SpriteName), nameof(SkinnableComponentStrings.SpriteNameDescription), SettingControlType = typeof(SpriteSelectorControl))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.SpriteName),
+            nameof(SkinnableComponentStrings.SpriteNameDescription),
+            SettingControlType = typeof(SpriteSelectorControl)
+        )]
         public Bindable<string> SpriteName { get; } = new Bindable<string>(string.Empty);
 
         [Resolved]
         private ISkinSource source { get; set; } = null!;
 
-        public SkinnableSprite(string textureName, Vector2? maxSize = null, ConfineMode confineMode = ConfineMode.NoScaling)
+        public SkinnableSprite(
+            string textureName,
+            Vector2? maxSize = null,
+            ConfineMode confineMode = ConfineMode.NoScaling
+        )
             : base(new SpriteComponentLookup(textureName, maxSize), confineMode)
         {
             SpriteName.Value = textureName;
@@ -92,12 +101,22 @@ namespace osu.Game.Skinning
                 // Round-about way of getting the user's skin to find available resources.
                 // In the future we'll probably want to allow access to resources from the fallbacks, or potentially other skins
                 // but that requires further thought.
-                var highestPrioritySkin = getHighestPriorityUserSkin(((SkinnableSprite)SettingSourceObject).source.AllSources) as Skin;
+                var highestPrioritySkin =
+                    getHighestPriorityUserSkin(
+                        ((SkinnableSprite)SettingSourceObject).source.AllSources
+                    ) as Skin;
 
-                string[]? availableFiles = highestPrioritySkin?.SkinInfo.PerformRead(
-                    s => s.Files
-                          .Where(f => SupportedExtensions.IMAGE_EXTENSIONS.Contains(Path.GetExtension(f.Filename).ToLowerInvariant()))
-                          .Select(f => f.Filename).Distinct()).ToArray();
+                string[]? availableFiles = highestPrioritySkin
+                    ?.SkinInfo.PerformRead(s =>
+                        s.Files.Where(f =>
+                                SupportedExtensions.IMAGE_EXTENSIONS.Contains(
+                                    Path.GetExtension(f.Filename).ToLowerInvariant()
+                                )
+                            )
+                            .Select(f => f.Filename)
+                            .Distinct()
+                    )
+                    .ToArray();
 
                 if (availableFiles?.Length > 0)
                     Items = availableFiles;
@@ -117,12 +136,12 @@ namespace osu.Game.Skinning
                 }
 
                 // Temporarily used to exclude undesirable ISkin implementations
-                static bool isUserSkin(ISkin skin)
-                    => skin.GetType() == typeof(TrianglesSkin)
-                       || skin.GetType() == typeof(ArgonProSkin)
-                       || skin.GetType() == typeof(ArgonSkin)
-                       || skin.GetType() == typeof(DefaultLegacySkin)
-                       || skin.GetType() == typeof(LegacySkin);
+                static bool isUserSkin(ISkin skin) =>
+                    skin.GetType() == typeof(TrianglesSkin)
+                    || skin.GetType() == typeof(ArgonProSkin)
+                    || skin.GetType() == typeof(ArgonSkin)
+                    || skin.GetType() == typeof(DefaultLegacySkin)
+                    || skin.GetType() == typeof(LegacySkin);
             }
         }
 
@@ -137,14 +156,14 @@ namespace osu.Game.Skinning
                     new SpriteIcon
                     {
                         Size = new Vector2(50),
-                        Icon = FontAwesome.Solid.QuestionCircle
+                        Icon = FontAwesome.Solid.QuestionCircle,
                     },
                     new OsuSpriteText
                     {
                         Position = new Vector2(25, 50),
                         Text = $"missing: {lookup}",
                         Origin = Anchor.TopCentre,
-                    }
+                    },
                 };
             }
         }

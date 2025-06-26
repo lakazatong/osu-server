@@ -18,16 +18,25 @@ namespace osu.Game.Skinning.Components
     {
         public bool UsesFixedAnchor { get; set; }
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.CornerRadius), nameof(SkinnableComponentStrings.CornerRadiusDescription),
-            SettingControlType = typeof(SettingsPercentageSlider<float>))]
-        public new BindableFloat CornerRadius { get; } = new BindableFloat(0.25f)
-        {
-            MinValue = 0,
-            MaxValue = 0.5f,
-            Precision = 0.01f
-        };
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.CornerRadius),
+            nameof(SkinnableComponentStrings.CornerRadiusDescription),
+            SettingControlType = typeof(SettingsPercentageSlider<float>)
+        )]
+        public new BindableFloat CornerRadius { get; } =
+            new BindableFloat(0.25f)
+            {
+                MinValue = 0,
+                MaxValue = 0.5f,
+                Precision = 0.01f,
+            };
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.Colour), nameof(SkinnableComponentStrings.ColourDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.Colour),
+            nameof(SkinnableComponentStrings.ColourDescription)
+        )]
         public BindableColour4 AccentColour { get; } = new BindableColour4(Colour4.White);
 
         public BoxElement()
@@ -36,11 +45,7 @@ namespace osu.Game.Skinning.Components
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = Color4.White,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
             };
 
             Masking = true;

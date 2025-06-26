@@ -25,11 +25,7 @@ namespace osu.Game.Screens.Ranking
 
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both, Depth = float.MaxValue },
                 new SpriteIcon
                 {
                     Anchor = Anchor.Centre,

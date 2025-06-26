@@ -68,7 +68,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         Anchor = Anchor.TopCentre,
                         Text = header,
                         Font = OsuFont.Torus.With(size: 25),
-                        Margin = new MarginPadding { Bottom = 10 }
+                        Margin = new MarginPadding { Bottom = 10 },
                     },
                     new OsuSpriteText
                     {
@@ -80,10 +80,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 40,
-                        Child = reasonDropdown = new OsuEnumDropdown<TReportReason>
-                        {
-                            RelativeSizeAxes = Axes.X
-                        }
+                        Child = reasonDropdown =
+                            new OsuEnumDropdown<TReportReason> { RelativeSizeAxes = Axes.X },
                     },
                     new OsuSpriteText
                     {
@@ -109,8 +107,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             this.HidePopover();
                         },
                         Margin = new MarginPadding { Bottom = 5, Top = 10 },
-                    }
-                }
+                    },
+                },
             };
 
             commentsTextBox.Current.BindValueChanged(_ => updateStatus());
@@ -122,7 +120,9 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateStatus()
         {
-            submitButton.Enabled.Value = !string.IsNullOrWhiteSpace(commentsTextBox.Current.Value) || !IsCommentRequired(reasonDropdown.Current.Value);
+            submitButton.Enabled.Value =
+                !string.IsNullOrWhiteSpace(commentsTextBox.Current.Value)
+                || !IsCommentRequired(reasonDropdown.Current.Value);
         }
 
         /// <summary>

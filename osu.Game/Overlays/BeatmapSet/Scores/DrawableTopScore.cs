@@ -36,10 +36,7 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.X,
@@ -72,14 +69,18 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                                         Anchor = Anchor.CentreRight,
                                         Origin = Anchor.CentreRight,
                                         Score = score,
-                                    }
+                                    },
                                 },
                             },
-                            ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension(GridSizeMode.Absolute, 20) },
+                            ColumnDimensions = new[]
+                            {
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(GridSizeMode.Absolute, 20),
+                            },
                             RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 

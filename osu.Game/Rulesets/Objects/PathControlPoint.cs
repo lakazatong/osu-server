@@ -59,9 +59,7 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// Creates a new <see cref="PathControlPoint"/>.
         /// </summary>
-        public PathControlPoint()
-        {
-        }
+        public PathControlPoint() { }
 
         /// <summary>
         /// Creates a new <see cref="PathControlPoint"/> with a provided position and type.
@@ -75,10 +73,10 @@ namespace osu.Game.Rulesets.Objects
             Type = type;
         }
 
-        public bool Equals(PathControlPoint other) => Position == other?.Position && Type == other.Type;
+        public bool Equals(PathControlPoint other) =>
+            Position == other?.Position && Type == other.Type;
 
-        public override string ToString() => type == null
-            ? $"Position={Position}"
-            : $"Position={Position}, Type={type}";
+        public override string ToString() =>
+            type == null ? $"Position={Position}" : $"Position={Position}, Type={type}";
     }
 }

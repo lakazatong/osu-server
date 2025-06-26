@@ -14,7 +14,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
         /// Introduces floating-point errors to post-multiplied beat length for legacy rulesets that depend on it.
         /// You should definitely not use this unless you know exactly what you're doing.
         /// </summary>
-        public static double GetPrecisionAdjustedBeatLength(IHasSliderVelocity hasSliderVelocity, TimingControlPoint timingControlPoint, string rulesetShortName)
+        public static double GetPrecisionAdjustedBeatLength(
+            IHasSliderVelocity hasSliderVelocity,
+            TimingControlPoint timingControlPoint,
+            string rulesetShortName
+        )
         {
             double sliderVelocityAsBeatLength = -100 / hasSliderVelocity.SliderVelocityMultiplier;
 
@@ -25,16 +29,25 @@ namespace osu.Game.Rulesets.Objects.Legacy
             {
                 case "taiko":
                 case "mania":
-                    bpmMultiplier = sliderVelocityAsBeatLength < 0 ? Math.Clamp((float)-sliderVelocityAsBeatLength, 10, 10000) / 100.0 : 1;
+                    bpmMultiplier =
+                        sliderVelocityAsBeatLength < 0
+                            ? Math.Clamp((float)-sliderVelocityAsBeatLength, 10, 10000) / 100.0
+                            : 1;
                     break;
 
                 case "osu":
                 case "fruits":
-                    bpmMultiplier = sliderVelocityAsBeatLength < 0 ? Math.Clamp((float)-sliderVelocityAsBeatLength, 10, 1000) / 100.0 : 1;
+                    bpmMultiplier =
+                        sliderVelocityAsBeatLength < 0
+                            ? Math.Clamp((float)-sliderVelocityAsBeatLength, 10, 1000) / 100.0
+                            : 1;
                     break;
 
                 default:
-                    throw new ArgumentException("Must be a legacy ruleset", nameof(rulesetShortName));
+                    throw new ArgumentException(
+                        "Must be a legacy ruleset",
+                        nameof(rulesetShortName)
+                    );
             }
 
             return timingControlPoint.BeatLength * bpmMultiplier;
@@ -55,10 +68,16 @@ namespace osu.Game.Rulesets.Objects.Legacy
             // It works out to under 1 game pixel and is generally not meaningful to gameplay, but is to replay playback accuracy.
             const float broken_gamefield_rounding_allowance = 1.00041f;
 
-            return (float)(1.0f - 0.7f * IBeatmapDifficultyInfo.DifficultyRange(circleSize)) / 2 * (applyFudge ? broken_gamefield_rounding_allowance : 1);
+            return (float)(1.0f - 0.7f * IBeatmapDifficultyInfo.DifficultyRange(circleSize))
+                / 2
+                * (applyFudge ? broken_gamefield_rounding_allowance : 1);
         }
 
-        public static int CalculateDifficultyPeppyStars(BeatmapDifficulty difficulty, int objectCount, int drainLength)
+        public static int CalculateDifficultyPeppyStars(
+            BeatmapDifficulty difficulty,
+            int objectCount,
+            int drainLength
+        )
         {
             /*
              * WARNING: DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING
@@ -75,9 +94,8 @@ namespace osu.Game.Rulesets.Objects.Legacy
              * but it is considered an "acceptable casualty", since in that case scores aren't inflated by _that_ much compared to others.
              */
 
-            decimal objectToDrainRatio = drainLength != 0
-                ? Math.Clamp((decimal)objectCount / drainLength * 8, 0, 16)
-                : 16;
+            decimal objectToDrainRatio =
+                drainLength != 0 ? Math.Clamp((decimal)objectCount / drainLength * 8, 0, 16) : 16;
 
             /*
              * Notably, THE `double` CASTS BELOW ARE IMPORTANT AND MUST REMAIN.
@@ -90,7 +108,10 @@ namespace osu.Game.Rulesets.Objects.Legacy
             decimal overallDifficulty = (decimal)(double)difficulty.OverallDifficulty;
             decimal circleSize = (decimal)(double)difficulty.CircleSize;
 
-            return (int)Math.Round((drainRate + overallDifficulty + circleSize + objectToDrainRatio) / 38 * 5);
+            return (int)
+                Math.Round(
+                    (drainRate + overallDifficulty + circleSize + objectToDrainRatio) / 38 * 5
+                );
         }
     }
 }

@@ -20,27 +20,32 @@ namespace osu.Game.Tests.Visual.Settings
     public partial class TestSceneKeyBindingConflictPopover : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider { get; set; } = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider { get; set; } =
+            new OverlayColourProvider(OverlayColourScheme.Aquamarine);
 
         [Test]
         public void TestAppearance()
         {
             ButtonWithConflictPopover button = null!;
 
-            AddStep("create content", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = button = new ButtonWithConflictPopover
+                    Child = new PopoverContainer
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = "Open popover",
-                        Width = 300
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Child = button =
+                            new ButtonWithConflictPopover
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = "Open popover",
+                                Width = 300,
+                            },
+                    };
+                }
+            );
             AddStep("show popover", () => button.TriggerClick());
         }
 
@@ -52,12 +57,23 @@ namespace osu.Game.Tests.Visual.Settings
                 Action = this.ShowPopover;
             }
 
-            public Popover GetPopover() => new KeyBindingConflictPopover(
-                new KeyBindingRow.KeyBindingConflictInfo(
-                    new KeyBindingRow.ConflictingKeyBinding(Guid.NewGuid(), OsuAction.LeftButton, KeyCombination.FromKey(Key.X), new KeyCombination(InputKey.None)),
-                    new KeyBindingRow.ConflictingKeyBinding(Guid.NewGuid(), OsuAction.RightButton, KeyCombination.FromKey(Key.Z), KeyCombination.FromKey(Key.X))
-                )
-            );
+            public Popover GetPopover() =>
+                new KeyBindingConflictPopover(
+                    new KeyBindingRow.KeyBindingConflictInfo(
+                        new KeyBindingRow.ConflictingKeyBinding(
+                            Guid.NewGuid(),
+                            OsuAction.LeftButton,
+                            KeyCombination.FromKey(Key.X),
+                            new KeyCombination(InputKey.None)
+                        ),
+                        new KeyBindingRow.ConflictingKeyBinding(
+                            Guid.NewGuid(),
+                            OsuAction.RightButton,
+                            KeyCombination.FromKey(Key.Z),
+                            KeyCombination.FromKey(Key.X)
+                        )
+                    )
+                );
         }
     }
 }

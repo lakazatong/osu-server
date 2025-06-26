@@ -40,10 +40,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 ],
                 Content = new[]
                 {
-                    new Drawable[]
-                    {
-                        new SectionHeader("Total pass count")
-                    },
+                    new Drawable[] { new SectionHeader("Total pass count") },
                     new Drawable[]
                     {
                         passCountContainer = new Container
@@ -51,17 +48,15 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Child = passCounter = new TotalRollingCounter
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                            }
-                        }
+                            Child = passCounter =
+                                new TotalRollingCounter
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        },
                     },
-                    new Drawable[]
-                    {
-                        new SectionHeader("Cumulative total score")
-                    },
+                    new Drawable[] { new SectionHeader("Cumulative total score") },
                     new Drawable[]
                     {
                         totalScoreContainer = new Container
@@ -69,14 +64,15 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Child = totalScoreCounter = new TotalRollingCounter
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                            }
-                        }
+                            Child = totalScoreCounter =
+                                new TotalRollingCounter
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        },
                     },
-                }
+                },
             };
         }
 
@@ -104,11 +100,29 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         {
             base.UpdateAfterChildren();
 
-            var totalPassCountProportionOfParent = Vector2.Divide(passCountContainer.DrawSize, passCounter.DrawSize);
-            passCounter.Scale = new Vector2(Math.Min(Math.Min(totalPassCountProportionOfParent.X, totalPassCountProportionOfParent.Y) * 0.8f, 1));
+            var totalPassCountProportionOfParent = Vector2.Divide(
+                passCountContainer.DrawSize,
+                passCounter.DrawSize
+            );
+            passCounter.Scale = new Vector2(
+                Math.Min(
+                    Math.Min(totalPassCountProportionOfParent.X, totalPassCountProportionOfParent.Y)
+                        * 0.8f,
+                    1
+                )
+            );
 
-            var totalScoreTextProportionOfParent = Vector2.Divide(totalScoreContainer.DrawSize, totalScoreCounter.DrawSize);
-            totalScoreCounter.Scale = new Vector2(Math.Min(Math.Min(totalScoreTextProportionOfParent.X, totalScoreTextProportionOfParent.Y) * 0.8f, 1));
+            var totalScoreTextProportionOfParent = Vector2.Divide(
+                totalScoreContainer.DrawSize,
+                totalScoreCounter.DrawSize
+            );
+            totalScoreCounter.Scale = new Vector2(
+                Math.Min(
+                    Math.Min(totalScoreTextProportionOfParent.X, totalScoreTextProportionOfParent.Y)
+                        * 0.8f,
+                    1
+                )
+            );
         }
 
         private partial class TotalRollingCounter : RollingCounter<long>
@@ -129,13 +143,15 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 return Math.Min(6000, RollingDuration * Math.Sqrt(change) / 100);
             }
 
-            protected override OsuSpriteText CreateSpriteText() => new OsuSpriteText
-            {
-                Font = OsuFont.Default.With(size: 80f, fixedWidth: true),
-                Spacing = new Vector2(-4, 0)
-            };
+            protected override OsuSpriteText CreateSpriteText() =>
+                new OsuSpriteText
+                {
+                    Font = OsuFont.Default.With(size: 80f, fixedWidth: true),
+                    Spacing = new Vector2(-4, 0),
+                };
 
-            protected override LocalisableString FormatCount(long count) => count.ToLocalisableString(@"N0");
+            protected override LocalisableString FormatCount(long count) =>
+                count.ToLocalisableString(@"N0");
         }
     }
 }

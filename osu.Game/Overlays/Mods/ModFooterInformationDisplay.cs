@@ -43,10 +43,7 @@ namespace osu.Game.Overlays.Mods
                 Masking = true,
                 Children = new Drawable[]
                 {
-                    MainBackground = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    MainBackground = new Box { RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer // divide inner and outer content
                     {
                         Origin = Anchor.BottomLeft,
@@ -65,10 +62,7 @@ namespace osu.Game.Overlays.Mods
                                 Masking = true,
                                 Children = new Drawable[]
                                 {
-                                    FrontBackground = new Box
-                                    {
-                                        RelativeSizeAxes = Axes.Both
-                                    },
+                                    FrontBackground = new Box { RelativeSizeAxes = Axes.Both },
                                     LeftContent = new FillFlowContainer // actual inner content
                                     {
                                         Origin = Anchor.Centre,
@@ -77,8 +71,8 @@ namespace osu.Game.Overlays.Mods
                                         AutoSizeAxes = Axes.X,
                                         Margin = new MarginPadding { Horizontal = 15 },
                                         Spacing = new Vector2(10),
-                                    }
-                                }
+                                    },
+                                },
                             },
                             RightContent = new FillFlowContainer
                             {
@@ -87,10 +81,10 @@ namespace osu.Game.Overlays.Mods
                                 AutoSizeAxes = Axes.X,
                                 RelativeSizeAxes = Axes.Y,
                                 Direction = FillDirection.Horizontal,
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -103,7 +97,10 @@ namespace osu.Game.Overlays.Mods
             Color4 glowColour = ColourProvider.Background1;
 
             Content.BorderColour = ColourInfo.GradientVertical(MainBackground.Colour, glowColour);
-            innerContent.BorderColour = ColourInfo.GradientVertical(FrontBackground.Colour, glowColour);
+            innerContent.BorderColour = ColourInfo.GradientVertical(
+                FrontBackground.Colour,
+                glowColour
+            );
         }
     }
 }

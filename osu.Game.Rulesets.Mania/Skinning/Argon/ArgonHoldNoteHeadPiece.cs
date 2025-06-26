@@ -9,12 +9,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 {
     internal partial class ArgonHoldNoteHeadPiece : ArgonNotePiece
     {
-        protected override Drawable CreateIcon() => new Circle
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Y = 2,
-            Size = new Vector2(20, 5),
-        };
+        protected override Drawable CreateIcon() =>
+            new Circle
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Y = 2,
+                Size = new Vector2(20, 5),
+            };
     }
 }

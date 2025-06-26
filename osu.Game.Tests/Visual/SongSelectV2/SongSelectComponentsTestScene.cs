@@ -14,13 +14,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
     public abstract partial class SongSelectComponentsTestScene : OsuManualInputManagerTestScene
     {
         [Cached]
-        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
-        protected override Container<Drawable> Content { get; } = new OsuContextMenuContainer
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-        };
+        protected override Container<Drawable> Content { get; } =
+            new OsuContextMenuContainer { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y };
 
         private Container? resizeContainer;
 
@@ -33,22 +32,29 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             base.Content.Child = new PopoverContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = resizeContainer = new Container
-                {
-                    Anchor = ComponentAnchor,
-                    Origin = ComponentAnchor,
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Width = InitialRelativeWidth,
-                    Child = Content
-                }
+                Child = resizeContainer =
+                    new Container
+                    {
+                        Anchor = ComponentAnchor,
+                        Origin = ComponentAnchor,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Width = InitialRelativeWidth,
+                        Child = Content,
+                    },
             };
 
-            AddSliderStep("change relative width", 0, 1f, InitialRelativeWidth, v =>
-            {
-                if (resizeContainer != null)
-                    resizeContainer.Width = v;
-            });
+            AddSliderStep(
+                "change relative width",
+                0,
+                1f,
+                InitialRelativeWidth,
+                v =>
+                {
+                    if (resizeContainer != null)
+                        resizeContainer.Width = v;
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -60,11 +66,14 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [SetUpSteps]
         public virtual void SetUpSteps()
         {
-            AddStep("reset dependencies", () =>
-            {
-                Beatmap.SetDefault();
-                SelectedMods.SetDefault();
-            });
+            AddStep(
+                "reset dependencies",
+                () =>
+                {
+                    Beatmap.SetDefault();
+                    SelectedMods.SetDefault();
+                }
+            );
         }
     }
 }

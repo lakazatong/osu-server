@@ -1,20 +1,20 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Skinning;
-using osu.Framework.Graphics.Sprites;
-using osu.Game.Rulesets.Taiko.Objects.Drawables;
-using osu.Game.Rulesets.Taiko.Objects;
-using osu.Game.Audio;
-using osuTK;
-using osu.Game.Rulesets.Objects.Drawables;
-using osu.Framework.Extensions.ObjectExtensions;
 using System;
 using System.Globalization;
+using osu.Framework.Allocation;
+using osu.Framework.Extensions.ObjectExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Utils;
+using osu.Game.Audio;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Taiko.Objects;
+using osu.Game.Rulesets.Taiko.Objects.Drawables;
+using osu.Game.Skinning;
+using osuTK;
 
 namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 {
@@ -54,7 +54,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                     Texture = skin.GetTexture("spinner-warning"),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Scale = skin.GetTexture("spinner-warning") != null ? Vector2.One : new Vector2(0.18f),
+                    Scale =
+                        skin.GetTexture("spinner-warning") != null
+                            ? Vector2.One
+                            : new Vector2(0.18f),
                 },
                 new Container
                 {
@@ -94,7 +97,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                                     Position = new Vector2(0f, 130f),
                                     Scale = Vector2.One,
                                 },
-                            }
+                            },
                         },
                         clearAnimation = new Sprite
                         {
@@ -117,7 +120,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
         private void animateSwellProgress(int numHits)
         {
             this.numHits = numHits;
-            remainingHitsText.Text = (drawableSwell.HitObject.RequiredHits - numHits).ToString(CultureInfo.InvariantCulture);
+            remainingHitsText.Text = (drawableSwell.HitObject.RequiredHits - numHits).ToString(
+                CultureInfo.InvariantCulture
+            );
             spinnerCircle.Scale = new Vector2(Math.Min(0.94f, spinnerCircle.Scale.X + 0.02f));
         }
 
@@ -127,12 +132,32 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 
             int requiredHits = drawableSwell.HitObject.RequiredHits;
             int remainingHits = requiredHits - numHits;
-            remainingHitsText.Scale = new Vector2((float)Interpolation.DampContinuously(
-                remainingHitsText.Scale.X, 1.6f - (0.6f * ((float)remainingHits / requiredHits)), 17.5, Math.Abs(Time.Elapsed)));
+            remainingHitsText.Scale = new Vector2(
+                (float)
+                    Interpolation.DampContinuously(
+                        remainingHitsText.Scale.X,
+                        1.6f - (0.6f * ((float)remainingHits / requiredHits)),
+                        17.5,
+                        Math.Abs(Time.Elapsed)
+                    )
+            );
 
-            spinnerCircle.Rotation = (float)Interpolation.DampContinuously(spinnerCircle.Rotation, 180f * numHits, 130, Math.Abs(Time.Elapsed));
-            spinnerCircle.Scale = new Vector2((float)Interpolation.DampContinuously(
-                spinnerCircle.Scale.X, 0.8f, 120, Math.Abs(Time.Elapsed)));
+            spinnerCircle.Rotation = (float)
+                Interpolation.DampContinuously(
+                    spinnerCircle.Rotation,
+                    180f * numHits,
+                    130,
+                    Math.Abs(Time.Elapsed)
+                );
+            spinnerCircle.Scale = new Vector2(
+                (float)
+                    Interpolation.DampContinuously(
+                        spinnerCircle.Scale.X,
+                        0.8f,
+                        120,
+                        Math.Abs(Time.Elapsed)
+                    )
+            );
         }
 
         private void updateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)
@@ -152,9 +177,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 
                 const double body_transition_duration = 200;
 
-                warning.MoveTo(swell_display_position, body_transition_duration)
-                       .ScaleTo(3, body_transition_duration, Easing.Out)
-                       .FadeOut(body_transition_duration);
+                warning
+                    .MoveTo(swell_display_position, body_transition_duration)
+                    .ScaleTo(3, body_transition_duration, Easing.Out)
+                    .FadeOut(body_transition_duration);
 
                 bodyContainer.FadeIn(body_transition_duration);
                 approachCircle.ResizeTo(0.1f * 0.8f, swell.Duration);
@@ -166,7 +192,11 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 const double clear_fade_in = 120;
 
                 bodyContainer.FadeOut(clear_transition_duration, Easing.OutQuad);
-                spinnerCircle.ScaleTo(spinnerCircle.Scale.X + 0.05f, clear_transition_duration, Easing.OutQuad);
+                spinnerCircle.ScaleTo(
+                    spinnerCircle.Scale.X + 0.05f,
+                    clear_transition_duration,
+                    Easing.OutQuad
+                );
 
                 if (state == ArmedState.Hit)
                 {
@@ -177,7 +207,11 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                     }
 
                     clearAnimation
-                        .MoveToOffset(new Vector2(0, -90 * scale_adjust), clear_fade_in * 2, Easing.Out)
+                        .MoveToOffset(
+                            new Vector2(0, -90 * scale_adjust),
+                            clear_fade_in * 2,
+                            Easing.Out
+                        )
                         .ScaleTo(0.4f)
                         .ScaleTo(1f, clear_fade_in * 2, Easing.Out)
                         .FadeIn()

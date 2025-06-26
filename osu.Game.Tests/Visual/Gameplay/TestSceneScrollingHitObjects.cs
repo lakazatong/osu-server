@@ -42,76 +42,109 @@ namespace osu.Game.Tests.Visual.Gameplay
         private ScheduledDelegate hitObjectSpawnDelegate;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = new GridContainer
+        public void Setup() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Content = new[]
+                Child = new GridContainer
                 {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    Content = new[]
                     {
-                        scrollContainers[0] = new ScrollingTestContainer(ScrollingDirection.Up)
+                        new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = playfields[0] = new TestPlayfield(),
-                            TimeRange = time_range
+                            scrollContainers[0] = new ScrollingTestContainer(ScrollingDirection.Up)
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = playfields[0] = new TestPlayfield(),
+                                TimeRange = time_range,
+                            },
+                            scrollContainers[1] = new ScrollingTestContainer(
+                                ScrollingDirection.Down
+                            )
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = playfields[1] = new TestPlayfield(),
+                                TimeRange = time_range,
+                            },
                         },
-                        scrollContainers[1] = new ScrollingTestContainer(ScrollingDirection.Down)
+                        new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = playfields[1] = new TestPlayfield(),
-                            TimeRange = time_range
+                            scrollContainers[2] = new ScrollingTestContainer(
+                                ScrollingDirection.Left
+                            )
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = playfields[2] = new TestPlayfield(),
+                                TimeRange = time_range,
+                            },
+                            scrollContainers[3] = new ScrollingTestContainer(
+                                ScrollingDirection.Right
+                            )
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = playfields[3] = new TestPlayfield(),
+                                TimeRange = time_range,
+                            },
                         },
                     },
-                    new Drawable[]
-                    {
-                        scrollContainers[2] = new ScrollingTestContainer(ScrollingDirection.Left)
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = playfields[2] = new TestPlayfield(),
-                            TimeRange = time_range
-                        },
-                        scrollContainers[3] = new ScrollingTestContainer(ScrollingDirection.Right)
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = playfields[3] = new TestPlayfield(),
-                            TimeRange = time_range
-                        }
-                    }
+                };
+
+                hitObjectSpawnDelegate?.Cancel();
+            });
+
+        private void setUpHitObjects() =>
+            AddStep(
+                "set up hit objects",
+                () =>
+                {
+                    scrollContainers.ForEach(c =>
+                        c.ControlPoints.Add(new MultiplierControlPoint(0))
+                    );
+
+                    for (int i = spawn_rate / 2; i <= time_range; i += spawn_rate)
+                        addHitObject(Time.Current + i);
+
+                    hitObjectSpawnDelegate = Scheduler.AddDelayed(
+                        () => addHitObject(Time.Current + time_range),
+                        spawn_rate,
+                        true
+                    );
                 }
+            );
+
+        private IList<MultiplierControlPoint> testControlPoints =>
+            new List<MultiplierControlPoint>
+            {
+                new MultiplierControlPoint(time_range) { EffectPoint = { ScrollSpeed = 1.25 } },
+                new MultiplierControlPoint(1.5 * time_range) { EffectPoint = { ScrollSpeed = 1 } },
+                new MultiplierControlPoint(2 * time_range) { EffectPoint = { ScrollSpeed = 1.5 } },
             };
-
-            hitObjectSpawnDelegate?.Cancel();
-        });
-
-        private void setUpHitObjects() => AddStep("set up hit objects", () =>
-        {
-            scrollContainers.ForEach(c => c.ControlPoints.Add(new MultiplierControlPoint(0)));
-
-            for (int i = spawn_rate / 2; i <= time_range; i += spawn_rate)
-                addHitObject(Time.Current + i);
-
-            hitObjectSpawnDelegate = Scheduler.AddDelayed(() => addHitObject(Time.Current + time_range), spawn_rate, true);
-        });
-
-        private IList<MultiplierControlPoint> testControlPoints => new List<MultiplierControlPoint>
-        {
-            new MultiplierControlPoint(time_range) { EffectPoint = { ScrollSpeed = 1.25 } },
-            new MultiplierControlPoint(1.5 * time_range) { EffectPoint = { ScrollSpeed = 1 } },
-            new MultiplierControlPoint(2 * time_range) { EffectPoint = { ScrollSpeed = 1.5 } }
-        };
 
         [Test]
         public void TestScrollAlgorithms()
         {
             setUpHitObjects();
 
-            AddStep("constant scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Constant));
-            AddStep("overlapping scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Overlapping));
-            AddStep("sequential scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential));
+            AddStep(
+                "constant scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Constant)
+            );
+            AddStep(
+                "overlapping scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Overlapping)
+            );
+            AddStep(
+                "sequential scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential)
+            );
 
-            AddSliderStep("time range", 100, 10000, time_range, v => scrollContainers.Where(c => c != null).ForEach(c => c.TimeRange = v));
+            AddSliderStep(
+                "time range",
+                100,
+                10000,
+                time_range,
+                v => scrollContainers.Where(c => c != null).ForEach(c => c.TimeRange = v)
+            );
 
             AddStep("add control points", () => addControlPoints(testControlPoints, Time.Current));
         }
@@ -121,10 +154,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             setUpHitObjects();
 
-            AddStep("set constant scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Constant));
+            AddStep(
+                "set constant scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Constant)
+            );
             // scroll container time range must be less than the rate of spawning hitobjects
             // otherwise the hitobjects will spawn already partly visible on screen and look wrong
-            AddStep("set time range", () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0));
+            AddStep(
+                "set time range",
+                () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0)
+            );
         }
 
         [Test]
@@ -132,31 +171,51 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             setUpHitObjects();
 
-            AddStep("set sequential scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential));
-            AddStep("set time range", () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0));
+            AddStep(
+                "set sequential scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential)
+            );
+            AddStep(
+                "set time range",
+                () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0)
+            );
             AddStep("add control points", () => addControlPoints(testControlPoints, Time.Current));
         }
 
         [Test]
         public void TestSlowSequentialScroll()
         {
-            AddStep("set sequential scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential));
-            AddStep("set time range", () => scrollContainers.ForEach(c => c.TimeRange = time_range));
-            AddStep("add control points", () => addControlPoints(
-                new List<MultiplierControlPoint>
-                {
-                    new MultiplierControlPoint { Velocity = 0.1 }
-                },
-                Time.Current + time_range));
+            AddStep(
+                "set sequential scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Sequential)
+            );
+            AddStep(
+                "set time range",
+                () => scrollContainers.ForEach(c => c.TimeRange = time_range)
+            );
+            AddStep(
+                "add control points",
+                () =>
+                    addControlPoints(
+                        new List<MultiplierControlPoint>
+                        {
+                            new MultiplierControlPoint { Velocity = 0.1 },
+                        },
+                        Time.Current + time_range
+                    )
+            );
 
             // All of the hit objects added below should be immediately visible on screen
-            AddStep("add hit objects", () =>
-            {
-                for (int i = 0; i < 20; ++i)
+            AddStep(
+                "add hit objects",
+                () =>
                 {
-                    addHitObject(Time.Current + time_range * (2 + 0.1 * i));
+                    for (int i = 0; i < 20; ++i)
+                    {
+                        addHitObject(Time.Current + time_range * (2 + 0.1 * i));
+                    }
                 }
-            });
+            );
         }
 
         [Test]
@@ -164,8 +223,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             setUpHitObjects();
 
-            AddStep("set overlapping scroll", () => setScrollAlgorithm(ScrollVisualisationMethod.Overlapping));
-            AddStep("set time range", () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0));
+            AddStep(
+                "set overlapping scroll",
+                () => setScrollAlgorithm(ScrollVisualisationMethod.Overlapping)
+            );
+            AddStep(
+                "set time range",
+                () => scrollContainers.ForEach(c => c.TimeRange = time_range / 2.0)
+            );
             AddStep("add control points", () => addControlPoints(testControlPoints, Time.Current));
         }
 
@@ -175,22 +240,31 @@ namespace osu.Game.Tests.Visual.Gameplay
             const double long_time_range = 100000;
             var manualClock = new ManualClock();
 
-            AddStep("set manual clock", () =>
-            {
-                manualClock.CurrentTime = 0;
-                scrollContainers.ForEach(c => c.Clock = new FramedClock(manualClock));
+            AddStep(
+                "set manual clock",
+                () =>
+                {
+                    manualClock.CurrentTime = 0;
+                    scrollContainers.ForEach(c => c.Clock = new FramedClock(manualClock));
 
-                setScrollAlgorithm(ScrollVisualisationMethod.Constant);
-                scrollContainers.ForEach(c => c.TimeRange = long_time_range);
-            });
+                    setScrollAlgorithm(ScrollVisualisationMethod.Constant);
+                    scrollContainers.ForEach(c => c.TimeRange = long_time_range);
+                }
+            );
 
-            AddStep("add hit objects", () =>
-            {
-                addHitObject(long_time_range);
-                addHitObject(long_time_range + 100, 250);
-            });
+            AddStep(
+                "add hit objects",
+                () =>
+                {
+                    addHitObject(long_time_range);
+                    addHitObject(long_time_range + 100, 250);
+                }
+            );
 
-            AddAssert("hit objects are alive", () => playfields.All(p => p.HitObjectContainer.AliveObjects.Count() == 2));
+            AddAssert(
+                "hit objects are alive",
+                () => playfields.All(p => p.HitObjectContainer.AliveObjects.Count() == 2)
+            );
         }
 
         private void addHitObject(double time, float size = 75)
@@ -212,7 +286,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             return obj;
         }
 
-        private void addControlPoints(IList<MultiplierControlPoint> controlPoints, double sequenceStartTime)
+        private void addControlPoints(
+            IList<MultiplierControlPoint> controlPoints,
+            double sequenceStartTime
+        )
         {
             controlPoints.ForEach(point => point.Time += sequenceStartTime);
 
@@ -250,7 +327,8 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
         }
 
-        private void setScrollAlgorithm(ScrollVisualisationMethod algorithm) => scrollContainers.ForEach(c => c.ScrollAlgorithm = algorithm);
+        private void setScrollAlgorithm(ScrollVisualisationMethod algorithm) =>
+            scrollContainers.ForEach(c => c.ScrollAlgorithm = algorithm);
 
         private partial class TestPlayfield : ScrollingPlayfield
         {
@@ -262,21 +340,18 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.5f,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
                         Masking = true,
-                        Child = HitObjectContainer
-                    }
+                        Child = HitObjectContainer,
+                    },
                 };
             }
 
-            protected override ScrollingHitObjectContainer CreateScrollingHitObjectContainer() => new TestScrollingHitObjectContainer();
+            protected override ScrollingHitObjectContainer CreateScrollingHitObjectContainer() =>
+                new TestScrollingHitObjectContainer();
         }
 
         private partial class TestDrawableControlPoint : DrawableHitObject<HitObject>
@@ -286,12 +361,14 @@ namespace osu.Game.Tests.Visual.Gameplay
             {
                 Origin = Anchor.Centre;
 
-                AddInternal(new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both
-                });
+                AddInternal(
+                    new Box
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                    }
+                );
 
                 switch (direction)
                 {
@@ -328,11 +405,18 @@ namespace osu.Game.Tests.Visual.Gameplay
                 Origin = Anchor.Centre;
                 Size = new Vector2(hitObject.Size);
 
-                AddInternal(new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = new Color4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1)
-                });
+                AddInternal(
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(
+                            RNG.NextSingle(),
+                            RNG.NextSingle(),
+                            RNG.NextSingle(),
+                            1
+                        ),
+                    }
+                );
             }
         }
 

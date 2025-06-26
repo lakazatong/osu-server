@@ -9,10 +9,14 @@ namespace osu.Game.Storyboards.Commands
 {
     public class StoryboardFlipHCommand : StoryboardCommand<bool>
     {
-        public StoryboardFlipHCommand(Easing easing, double startTime, double endTime, bool startValue, bool endValue)
-            : base(easing, startTime, endTime, startValue, endValue)
-        {
-        }
+        public StoryboardFlipHCommand(
+            Easing easing,
+            double startTime,
+            double endTime,
+            bool startValue,
+            bool endValue
+        )
+            : base(easing, startTime, endTime, startValue, endValue) { }
 
         public override string PropertyName => nameof(IFlippable.FlipH);
 
@@ -22,8 +26,9 @@ namespace osu.Game.Storyboards.Commands
                 d.FlipH = StartValue;
         }
 
-        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d)
-            => d.TransformTo(nameof(IFlippable.FlipH), StartValue).Delay(Duration)
+        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d) =>
+            d.TransformTo(nameof(IFlippable.FlipH), StartValue)
+                .Delay(Duration)
                 .TransformTo(nameof(IFlippable.FlipH), EndValue);
     }
 }

@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 {
     public partial class ArgonHitTarget : CompositeDrawable
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         [BackgroundDependencyLoader]
         private void load(IScrollingInfo scrollingInfo)
@@ -31,7 +32,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0.3f,
                     Blending = BlendingParameters.Additive,
-                    Colour = Color4.White
+                    Colour = Color4.White,
                 },
             };
 
@@ -41,7 +42,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            Anchor = Origin = direction.NewValue == ScrollingDirection.Up ? Anchor.TopLeft : Anchor.BottomLeft;
+            Anchor = Origin =
+                direction.NewValue == ScrollingDirection.Up ? Anchor.TopLeft : Anchor.BottomLeft;
         }
     }
 }

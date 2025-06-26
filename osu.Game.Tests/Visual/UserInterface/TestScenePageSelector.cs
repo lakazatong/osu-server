@@ -14,20 +14,23 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestScenePageSelector : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider provider { get; } = new OverlayColourProvider(OverlayColourScheme.Green);
+        private OverlayColourProvider provider { get; } =
+            new OverlayColourProvider(OverlayColourScheme.Green);
 
         private readonly PageSelector pageSelector;
 
         public TestScenePageSelector()
         {
-            AddRange(new Drawable[]
-            {
-                pageSelector = new PageSelector
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-            });
+                    pageSelector = new PageSelector
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    },
+                }
+            );
         }
 
         [Test]
@@ -62,18 +65,32 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             setAvailablePages(10);
             selectPageIndex(11);
-            AddAssert("Page 10 is current", () => pageSelector.CurrentPage.Value == pageSelector.AvailablePages.Value - 1);
+            AddAssert(
+                "Page 10 is current",
+                () => pageSelector.CurrentPage.Value == pageSelector.AvailablePages.Value - 1
+            );
 
             selectPageIndex(-1);
             AddAssert("Page 1 is current", () => pageSelector.CurrentPage.Value == 0);
         }
 
-        private void checkVisiblePageNumbers(int[] expected) => AddAssert($"Sequence is {string.Join(',', expected.Select(i => i.ToString()))}", () => pageSelector.ChildrenOfType<PageSelectorPageButton>().Select(p => p.PageNumber).SequenceEqual(expected));
+        private void checkVisiblePageNumbers(int[] expected) =>
+            AddAssert(
+                $"Sequence is {string.Join(',', expected.Select(i => i.ToString()))}",
+                () =>
+                    pageSelector
+                        .ChildrenOfType<PageSelectorPageButton>()
+                        .Select(p => p.PageNumber)
+                        .SequenceEqual(expected)
+            );
 
         private void selectPageIndex(int pageIndex) =>
             AddStep($"Select page {pageIndex}", () => pageSelector.CurrentPage.Value = pageIndex);
 
         private void setAvailablePages(int availablePages) =>
-            AddStep($"Set available pages to {availablePages}", () => pageSelector.AvailablePages.Value = availablePages);
+            AddStep(
+                $"Set available pages to {availablePages}",
+                () => pageSelector.AvailablePages.Value = availablePages
+            );
     }
 }

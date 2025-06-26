@@ -29,14 +29,18 @@ namespace osu.Game.Rulesets.Osu.UI
             this.hittableRange = hittableRange;
         }
 
-        public void HandleHit(DrawableHitObject hitObject)
-        {
-        }
+        public void HandleHit(DrawableHitObject hitObject) { }
 
-        public virtual ClickAction CheckHittable(DrawableHitObject hitObject, double time, HitResult result)
+        public virtual ClickAction CheckHittable(
+            DrawableHitObject hitObject,
+            double time,
+            HitResult result
+        )
         {
             if (HitObjectContainer == null)
-                throw new InvalidOperationException($"{nameof(HitObjectContainer)} should be set before {nameof(CheckHittable)} is called.");
+                throw new InvalidOperationException(
+                    $"{nameof(HitObjectContainer)} should be set before {nameof(CheckHittable)} is called."
+                );
 
             var aliveObjects = HitObjectContainer.AliveObjects.ToList();
             int index = aliveObjects.IndexOf(hitObject);
@@ -66,7 +70,9 @@ namespace osu.Game.Rulesets.Osu.UI
                     return ClickAction.Shake;
             }
 
-            return Math.Abs(hitObject.HitObject.StartTime - time) < hittableRange ? ClickAction.Hit : ClickAction.Shake;
+            return Math.Abs(hitObject.HitObject.StartTime - time) < hittableRange
+                ? ClickAction.Hit
+                : ClickAction.Shake;
         }
     }
 }

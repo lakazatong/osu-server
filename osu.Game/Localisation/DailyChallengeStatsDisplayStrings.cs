@@ -12,12 +12,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "{0}d"
         /// </summary>
-        public static LocalisableString UnitDay(LocalisableString count) => new TranslatableString(getKey(@"unit_day"), @"{0}d", count);
+        public static LocalisableString UnitDay(LocalisableString count) =>
+            new TranslatableString(getKey(@"unit_day"), @"{0}d", count);
 
         /// <summary>
         /// "{0}w"
         /// </summary>
-        public static LocalisableString UnitWeek(LocalisableString count) => new TranslatableString(getKey(@"unit_week"), @"{0}w", count);
+        public static LocalisableString UnitWeek(LocalisableString count) =>
+            new TranslatableString(getKey(@"unit_week"), @"{0}w", count);
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

@@ -14,9 +14,12 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
-    public partial class LegacyColumnBackground : LegacyManiaColumnElement, IKeyBindingHandler<ManiaAction>
+    public partial class LegacyColumnBackground
+        : LegacyManiaColumnElement,
+            IKeyBindingHandler<ManiaAction>
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container lightContainer = null!;
         private Drawable light = null!;
@@ -29,16 +32,27 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            string lightImage = skin.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.LightImage)?.Value
-                                ?? "mania-stage-light";
+            string lightImage =
+                skin.GetManiaSkinConfig<string>(
+                    LegacyManiaSkinConfigurationLookups.LightImage
+                )?.Value ?? "mania-stage-light";
 
-            float lightPosition = GetColumnSkinConfig<float>(skin, LegacyManiaSkinConfigurationLookups.LightPosition)?.Value
-                                  ?? 0;
+            float lightPosition =
+                GetColumnSkinConfig<float>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.LightPosition
+                )?.Value ?? 0;
 
-            Color4 lightColour = GetColumnSkinConfig<Color4>(skin, LegacyManiaSkinConfigurationLookups.ColumnLightColour)?.Value
-                                 ?? Color4.White;
+            Color4 lightColour =
+                GetColumnSkinConfig<Color4>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.ColumnLightColour
+                )?.Value ?? Color4.White;
 
-            int lightFramePerSecond = skin.GetManiaSkinConfig<int>(LegacyManiaSkinConfigurationLookups.LightFramePerSecond)?.Value ?? 60;
+            int lightFramePerSecond =
+                skin.GetManiaSkinConfig<int>(
+                    LegacyManiaSkinConfigurationLookups.LightFramePerSecond
+                )?.Value ?? 60;
 
             InternalChildren = new[]
             {
@@ -47,16 +61,23 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Bottom = lightPosition },
-                    Child = light = skin.GetAnimation(lightImage, true, true, frameLength: 1000d / lightFramePerSecond)?.With(l =>
-                    {
-                        l.Anchor = Anchor.BottomCentre;
-                        l.Origin = Anchor.BottomCentre;
-                        l.Colour = LegacyColourCompatibility.DisallowZeroAlpha(lightColour);
-                        l.RelativeSizeAxes = Axes.X;
-                        l.Width = 1;
-                        l.Alpha = 0;
-                    }) ?? Empty(),
-                }
+                    Child = light =
+                        skin.GetAnimation(
+                                lightImage,
+                                true,
+                                true,
+                                frameLength: 1000d / lightFramePerSecond
+                            )
+                            ?.With(l =>
+                            {
+                                l.Anchor = Anchor.BottomCentre;
+                                l.Origin = Anchor.BottomCentre;
+                                l.Colour = LegacyColourCompatibility.DisallowZeroAlpha(lightColour);
+                                l.RelativeSizeAxes = Axes.X;
+                                l.Width = 1;
+                                l.Alpha = 0;
+                            }) ?? Empty(),
+                },
             };
 
             direction.BindTo(scrollingInfo.Direction);

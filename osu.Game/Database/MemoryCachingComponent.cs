@@ -19,7 +19,8 @@ namespace osu.Game.Database
     public abstract partial class MemoryCachingComponent<TLookup, TValue> : Component
         where TLookup : notnull
     {
-        private readonly ConcurrentDictionary<TLookup, TValue?> cache = new ConcurrentDictionary<TLookup, TValue?>();
+        private readonly ConcurrentDictionary<TLookup, TValue?> cache =
+            new ConcurrentDictionary<TLookup, TValue?>();
 
         private readonly GlobalStatistic<MemoryCachingStatistics> statistics;
 
@@ -27,7 +28,10 @@ namespace osu.Game.Database
 
         protected MemoryCachingComponent()
         {
-            statistics = GlobalStatistics.Get<MemoryCachingStatistics>(nameof(MemoryCachingComponent<TLookup, TValue>), GetType().ReadableName());
+            statistics = GlobalStatistics.Get<MemoryCachingStatistics>(
+                nameof(MemoryCachingComponent<TLookup, TValue>),
+                GetType().ReadableName()
+            );
             statistics.Value = new MemoryCachingStatistics();
         }
 
@@ -37,7 +41,11 @@ namespace osu.Game.Database
         /// <param name="lookup">The lookup to retrieve.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> to cancel the operation.</param>
         /// <param name="computationDelay">In the case a cached lookup was not possible, a value in milliseconds of to wait until performing potentially intensive lookup.</param>
-        protected async Task<TValue?> GetAsync(TLookup lookup, CancellationToken cancellationToken = default, int computationDelay = 0)
+        protected async Task<TValue?> GetAsync(
+            TLookup lookup,
+            CancellationToken cancellationToken = default,
+            int computationDelay = 0
+        )
         {
             if (CheckExists(lookup, out TValue? existing))
             {
@@ -85,7 +93,10 @@ namespace osu.Game.Database
         /// <param name="lookup">The lookup to retrieve.</param>
         /// <param name="token">An optional <see cref="CancellationToken"/> to cancel the operation.</param>
         /// <returns>The computed value.</returns>
-        protected abstract Task<TValue?> ComputeValueAsync(TLookup lookup, CancellationToken token = default);
+        protected abstract Task<TValue?> ComputeValueAsync(
+            TLookup lookup,
+            CancellationToken token = default
+        );
 
         private class MemoryCachingStatistics
         {

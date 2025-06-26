@@ -26,9 +26,11 @@ namespace osu.Game.Overlays.Music
             set => current.Current = value;
         }
 
-        private readonly BindableWithCurrent<Live<BeatmapSetInfo>> current = new BindableWithCurrent<Live<BeatmapSetInfo>>();
+        private readonly BindableWithCurrent<Live<BeatmapSetInfo>> current =
+            new BindableWithCurrent<Live<BeatmapSetInfo>>();
 
-        private readonly Bindable<Live<BeatmapSetInfo>?> selectedSet = new Bindable<Live<BeatmapSetInfo>?>();
+        private readonly Bindable<Live<BeatmapSetInfo>?> selectedSet =
+            new Bindable<Live<BeatmapSetInfo>?>();
         private Action<Live<BeatmapSetInfo>>? requestSelection;
 
         private MarqueeContainer text = null!;
@@ -62,36 +64,43 @@ namespace osu.Game.Overlays.Music
             selectedSet.BindValueChanged(updateSelectionState, true);
         }
 
-        private void onItemChanged() => Current.Value.PerformRead(m =>
-        {
-            var metadata = m.Metadata;
-
-            var title = new RomanisableString(metadata.TitleUnicode, metadata.Title);
-            var artist = new RomanisableString(metadata.ArtistUnicode, metadata.Artist);
-
-            text.CreateContent = () =>
+        private void onItemChanged() =>
+            Current.Value.PerformRead(m =>
             {
-                var flow = new OsuTextFlowContainer
+                var metadata = m.Metadata;
+
+                var title = new RomanisableString(metadata.TitleUnicode, metadata.Title);
+                var artist = new RomanisableString(metadata.ArtistUnicode, metadata.Artist);
+
+                text.CreateContent = () =>
                 {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
+                    var flow = new OsuTextFlowContainer
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                    };
+
+                    flow.AddText(
+                        title,
+                        sprite => sprite.Font = OsuFont.GetFont(weight: FontWeight.Regular)
+                    );
+                    flow.AddText(@"  "); // to separate the title from the artist.
+                    flow.AddText(
+                        artist,
+                        sprite =>
+                        {
+                            sprite.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold);
+                            sprite.Colour = colours.Gray9;
+                        }
+                    );
+                    return flow;
                 };
 
-                flow.AddText(title, sprite => sprite.Font = OsuFont.GetFont(weight: FontWeight.Regular));
-                flow.AddText(@"  "); // to separate the title from the artist.
-                flow.AddText(artist, sprite =>
-                {
-                    sprite.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold);
-                    sprite.Colour = colours.Gray9;
-                });
-                return flow;
-            };
-
-            selectedSet.TriggerChange();
-            FinishTransforms(true);
-        });
+                selectedSet.TriggerChange();
+                FinishTransforms(true);
+            });
 
         private bool? selected;
 

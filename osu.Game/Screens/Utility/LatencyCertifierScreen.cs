@@ -47,9 +47,24 @@ namespace osu.Game.Screens.Utility
 
         private readonly Container resultsArea;
 
-        public readonly BindableDouble SampleBPM = new BindableDouble(120) { MinValue = 60, MaxValue = 300, Precision = 1 };
-        public readonly BindableDouble SampleApproachRate = new BindableDouble(9) { MinValue = 5, MaxValue = 12, Precision = 0.1 };
-        public readonly BindableFloat SampleVisualSpacing = new BindableFloat(0.5f) { MinValue = 0f, MaxValue = 1, Precision = 0.1f };
+        public readonly BindableDouble SampleBPM = new BindableDouble(120)
+        {
+            MinValue = 60,
+            MaxValue = 300,
+            Precision = 1,
+        };
+        public readonly BindableDouble SampleApproachRate = new BindableDouble(9)
+        {
+            MinValue = 5,
+            MaxValue = 12,
+            Precision = 0.1,
+        };
+        public readonly BindableFloat SampleVisualSpacing = new BindableFloat(0.5f)
+        {
+            MinValue = 0f,
+            MaxValue = 1,
+            Precision = 0.1f,
+        };
 
         /// <summary>
         /// The rate at which the game host should attempt to run.
@@ -57,7 +72,9 @@ namespace osu.Game.Screens.Utility
         private const int target_host_update_frames = 4000;
 
         [Cached]
-        private readonly OverlayColourProvider overlayColourProvider = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider overlayColourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         [Resolved]
         private OsuColour colours { get; set; } = null!;
@@ -76,7 +93,8 @@ namespace osu.Game.Screens.Utility
         /// </summary>
         private bool isCertifying;
 
-        private int totalRoundForNextResultsScreen => isCertifying ? rounds_to_complete_certified : rounds_to_complete;
+        private int totalRoundForNextResultsScreen =>
+            isCertifying ? rounds_to_complete_certified : rounds_to_complete;
 
         private int attemptsAtCurrentDifficulty;
         private int correctAtCurrentDifficulty;
@@ -103,15 +121,15 @@ namespace osu.Game.Screens.Utility
                     Colour = overlayColourProvider.Background6,
                     RelativeSizeAxes = Axes.Both,
                 },
-                mainArea = new Container<LatencyArea>
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                mainArea = new Container<LatencyArea> { RelativeSizeAxes = Axes.Both },
                 // Make sure the edge between the two comparisons can't be used to ascertain latency.
                 new Box
                 {
                     Name = "separator",
-                    Colour = ColourInfo.GradientHorizontal(overlayColourProvider.Background6, overlayColourProvider.Background6.Opacity(0)),
+                    Colour = ColourInfo.GradientHorizontal(
+                        overlayColourProvider.Background6,
+                        overlayColourProvider.Background6.Opacity(0)
+                    ),
                     Width = 100,
                     RelativeSizeAxes = Axes.Y,
                     Anchor = Anchor.TopCentre,
@@ -120,7 +138,10 @@ namespace osu.Game.Screens.Utility
                 new Box
                 {
                     Name = "separator",
-                    Colour = ColourInfo.GradientHorizontal(overlayColourProvider.Background6.Opacity(0), overlayColourProvider.Background6),
+                    Colour = ColourInfo.GradientHorizontal(
+                        overlayColourProvider.Background6.Opacity(0),
+                        overlayColourProvider.Background6
+                    ),
                     Width = 100,
                     RelativeSizeAxes = Axes.Y,
                     Anchor = Anchor.TopCentre,
@@ -138,7 +159,9 @@ namespace osu.Game.Screens.Utility
                     Origin = Anchor.BottomCentre,
                     Children = new Drawable[]
                     {
-                        explanatoryText = new LinkFlowContainer(cp => cp.Font = OsuFont.Default.With(size: 20))
+                        explanatoryText = new LinkFlowContainer(cp =>
+                            cp.Font = OsuFont.Default.With(size: 20)
+                        )
                         {
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
@@ -153,7 +176,7 @@ namespace osu.Game.Screens.Utility
                             RelativeSizeAxes = Axes.None,
                             Width = 400,
                             LabelText = "bpm",
-                            Current = SampleBPM
+                            Current = SampleBPM,
                         },
                         new SettingsSlider<float>
                         {
@@ -162,7 +185,7 @@ namespace osu.Game.Screens.Utility
                             RelativeSizeAxes = Axes.None,
                             Width = 400,
                             LabelText = "visual spacing",
-                            Current = SampleVisualSpacing
+                            Current = SampleVisualSpacing,
                         },
                         new SettingsSlider<double>
                         {
@@ -171,15 +194,14 @@ namespace osu.Game.Screens.Utility
                             RelativeSizeAxes = Axes.None,
                             Width = 400,
                             LabelText = "approach rate",
-                            Current = SampleApproachRate
+                            Current = SampleApproachRate,
                         },
                     },
                 },
-                resultsArea = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                statusText = new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: 40))
+                resultsArea = new Container { RelativeSizeAxes = Axes.Both },
+                statusText = new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: 40)
+                )
                 {
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
@@ -191,8 +213,13 @@ namespace osu.Game.Screens.Utility
             };
 
             explanatoryText.AddParagraph(@"Welcome to the latency certifier!");
-            explanatoryText.AddParagraph(@"Do whatever you need to try and perceive the difference in latency, then choose your best side. Read more about the methodology ");
-            explanatoryText.AddLink("here", "https://github.com/ppy/osu/wiki/Latency-and-unlimited-frame-rates#methodology");
+            explanatoryText.AddParagraph(
+                @"Do whatever you need to try and perceive the difference in latency, then choose your best side. Read more about the methodology "
+            );
+            explanatoryText.AddLink(
+                "here",
+                "https://github.com/ppy/osu/wiki/Latency-and-unlimited-frame-rates#methodology"
+            );
             explanatoryText.AddParagraph(@"Use the arrow keys or Z/X/F/J to control the display.");
             explanatoryText.AddParagraph(@"Tab key to change focus. Space to change display mode");
         }
@@ -238,7 +265,9 @@ namespace osu.Game.Screens.Utility
             {
                 case Key.Space:
                     int availableModes = Enum.GetValues<LatencyVisualMode>().Length;
-                    VisualMode.Value = (LatencyVisualMode)(((int)VisualMode.Value + 1) % availableModes);
+                    VisualMode.Value = (LatencyVisualMode)(
+                        ((int)VisualMode.Value + 1) % availableModes
+                    );
                     return true;
 
                 case Key.Tab:
@@ -259,36 +288,51 @@ namespace osu.Game.Screens.Utility
 
             var displayMode = host.Window?.CurrentDisplayMode.Value;
 
-            string exclusive = (host.Renderer as IWindowsRenderer)?.FullscreenCapability.ToString() ?? "unknown";
+            string exclusive =
+                (host.Renderer as IWindowsRenderer)?.FullscreenCapability.ToString() ?? "unknown";
 
             statusText.Clear();
 
             float successRate = (float)correctAtCurrentDifficulty / attemptsAtCurrentDifficulty;
             bool isPass = successRate == 1;
 
-            statusText.AddParagraph($"You scored {correctAtCurrentDifficulty} out of {attemptsAtCurrentDifficulty} ({successRate:0%})!", cp => cp.Colour = isPass ? colours.Green : colours.Red);
-            statusText.AddParagraph($"Level {DifficultyLevel} ({mapDifficultyToTargetFrameRate(DifficultyLevel):N0} Hz)",
-                cp => cp.Font = OsuFont.Default.With(size: 24));
+            statusText.AddParagraph(
+                $"You scored {correctAtCurrentDifficulty} out of {attemptsAtCurrentDifficulty} ({successRate:0%})!",
+                cp => cp.Colour = isPass ? colours.Green : colours.Red
+            );
+            statusText.AddParagraph(
+                $"Level {DifficultyLevel} ({mapDifficultyToTargetFrameRate(DifficultyLevel):N0} Hz)",
+                cp => cp.Font = OsuFont.Default.With(size: 24)
+            );
 
             statusText.AddParagraph(string.Empty);
             statusText.AddParagraph(string.Empty);
-            statusText.AddIcon(isPass ? FontAwesome.Regular.CheckCircle : FontAwesome.Regular.TimesCircle, cp => cp.Colour = isPass ? colours.Green : colours.Red);
+            statusText.AddIcon(
+                isPass ? FontAwesome.Regular.CheckCircle : FontAwesome.Regular.TimesCircle,
+                cp => cp.Colour = isPass ? colours.Green : colours.Red
+            );
             statusText.AddParagraph(string.Empty);
 
             if (!isPass && DifficultyLevel > 1)
             {
-                statusText.AddParagraph("To complete certification, the difficulty level will now decrease until you can get 20 rounds correct in a row!",
-                    cp => cp.Font = OsuFont.Default.With(size: 24, weight: FontWeight.SemiBold));
+                statusText.AddParagraph(
+                    "To complete certification, the difficulty level will now decrease until you can get 20 rounds correct in a row!",
+                    cp => cp.Font = OsuFont.Default.With(size: 24, weight: FontWeight.SemiBold)
+                );
                 statusText.AddParagraph(string.Empty);
             }
 
-            statusText.AddParagraph($"Polling: {pollingMax} Hz Monitor: {displayMode?.RefreshRate ?? 0:N0} Hz Exclusive: {exclusive}",
-                cp => cp.Font = OsuFont.Default.With(size: 15, weight: FontWeight.SemiBold));
+            statusText.AddParagraph(
+                $"Polling: {pollingMax} Hz Monitor: {displayMode?.RefreshRate ?? 0:N0} Hz Exclusive: {exclusive}",
+                cp => cp.Font = OsuFont.Default.With(size: 15, weight: FontWeight.SemiBold)
+            );
 
-            statusText.AddParagraph($"Input: {host.InputThread.Clock.FramesPerSecond} Hz "
-                                    + $"Update: {host.UpdateThread.Clock.FramesPerSecond} Hz "
-                                    + $"Draw: {host.DrawThread.Clock.FramesPerSecond} Hz"
-                , cp => cp.Font = OsuFont.Default.With(size: 15, weight: FontWeight.SemiBold));
+            statusText.AddParagraph(
+                $"Input: {host.InputThread.Clock.FramesPerSecond} Hz "
+                    + $"Update: {host.UpdateThread.Clock.FramesPerSecond} Hz "
+                    + $"Draw: {host.DrawThread.Clock.FramesPerSecond} Hz",
+                cp => cp.Font = OsuFont.Default.With(size: 15, weight: FontWeight.SemiBold)
+            );
 
             if (isCertifying && isPass)
             {
@@ -305,64 +349,72 @@ namespace osu.Game.Screens.Utility
 
             FillFlowContainer buttonFlow;
 
-            resultsArea.Add(buttonFlow = new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                Spacing = new Vector2(20),
-                Padding = new MarginPadding(20),
-            });
+            resultsArea.Add(
+                buttonFlow = new FillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Spacing = new Vector2(20),
+                    Padding = new MarginPadding(20),
+                }
+            );
 
             if (isPass)
             {
-                buttonFlow.Add(new ButtonWithKeyBind(Key.Enter)
-                {
-                    Text = "Continue to next level",
-                    BackgroundColour = colours.Green,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Action = () => changeDifficulty(DifficultyLevel + 1),
-                    Enabled = { Value = string.IsNullOrEmpty(cannotIncreaseReason) },
-                    TooltipText = cannotIncreaseReason
-                });
+                buttonFlow.Add(
+                    new ButtonWithKeyBind(Key.Enter)
+                    {
+                        Text = "Continue to next level",
+                        BackgroundColour = colours.Green,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Action = () => changeDifficulty(DifficultyLevel + 1),
+                        Enabled = { Value = string.IsNullOrEmpty(cannotIncreaseReason) },
+                        TooltipText = cannotIncreaseReason,
+                    }
+                );
             }
             else
             {
                 if (DifficultyLevel == 1)
                 {
-                    buttonFlow.Add(new ButtonWithKeyBind(Key.Enter)
-                    {
-                        Text = "Retry",
-                        TooltipText = "Are you even trying..?",
-                        BackgroundColour = colours.Pink2,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Action = () =>
+                    buttonFlow.Add(
+                        new ButtonWithKeyBind(Key.Enter)
                         {
-                            isCertifying = false;
-                            changeDifficulty(1);
-                        },
-                    });
+                            Text = "Retry",
+                            TooltipText = "Are you even trying..?",
+                            BackgroundColour = colours.Pink2,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Action = () =>
+                            {
+                                isCertifying = false;
+                                changeDifficulty(1);
+                            },
+                        }
+                    );
                 }
                 else
                 {
-                    buttonFlow.Add(new ButtonWithKeyBind(Key.Enter)
-                    {
-                        Text = "Begin certification at last level",
-                        BackgroundColour = colours.Yellow,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Action = () =>
+                    buttonFlow.Add(
+                        new ButtonWithKeyBind(Key.Enter)
                         {
-                            isCertifying = true;
-                            changeDifficulty(DifficultyLevel - 1);
-                        },
-                        TooltipText = isPass
-                            ? $"Chain {rounds_to_complete_certified} rounds to confirm your perception!"
-                            : "You've reached your limits. Go to the previous level to complete certification!",
-                    });
+                            Text = "Begin certification at last level",
+                            BackgroundColour = colours.Yellow,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Action = () =>
+                            {
+                                isCertifying = true;
+                                changeDifficulty(DifficultyLevel - 1);
+                            },
+                            TooltipText = isPass
+                                ? $"Chain {rounds_to_complete_certified} rounds to confirm your perception!"
+                                : "You've reached your limits. Go to the previous level to complete certification!",
+                        }
+                    );
                 }
             }
         }
@@ -372,37 +424,46 @@ namespace osu.Game.Screens.Utility
             Drawable background;
             Drawable certifiedText;
 
-            resultsArea.AddRange(new[]
-            {
-                background = new Box
+            resultsArea.AddRange(
+                new[]
                 {
-                    Colour = overlayColourProvider.Background4,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                (certifiedText = new OsuSpriteText
-                {
-                    Alpha = 0,
-                    Font = OsuFont.TorusAlternate.With(size: 80, weight: FontWeight.Bold),
-                    Text = "Certified!",
-                    Blending = BlendingParameters.Additive,
-                }).WithEffect(new GlowEffect
-                {
-                    Colour = overlayColourProvider.Colour1,
-                    PadExtent = true
-                }).With(e =>
-                {
-                    e.Anchor = Anchor.Centre;
-                    e.Origin = Anchor.Centre;
-                }),
-                new OsuSpriteText
-                {
-                    Text = $"You should use a frame limiter with update rate of {mapDifficultyToTargetFrameRate(DifficultyLevel + 1)} Hz (or fps) for best results!",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Font = OsuFont.Torus.With(size: 24, weight: FontWeight.SemiBold),
-                    Y = 80,
+                    background = new Box
+                    {
+                        Colour = overlayColourProvider.Background4,
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    (
+                        certifiedText = new OsuSpriteText
+                        {
+                            Alpha = 0,
+                            Font = OsuFont.TorusAlternate.With(size: 80, weight: FontWeight.Bold),
+                            Text = "Certified!",
+                            Blending = BlendingParameters.Additive,
+                        }
+                    )
+                        .WithEffect(
+                            new GlowEffect
+                            {
+                                Colour = overlayColourProvider.Colour1,
+                                PadExtent = true,
+                            }
+                        )
+                        .With(e =>
+                        {
+                            e.Anchor = Anchor.Centre;
+                            e.Origin = Anchor.Centre;
+                        }),
+                    new OsuSpriteText
+                    {
+                        Text =
+                            $"You should use a frame limiter with update rate of {mapDifficultyToTargetFrameRate(DifficultyLevel + 1)} Hz (or fps) for best results!",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Font = OsuFont.Torus.With(size: 24, weight: FontWeight.SemiBold),
+                        Y = 80,
+                    },
                 }
-            });
+            );
 
             background.FadeInFromZero(1000, Easing.OutQuint);
 
@@ -437,30 +498,39 @@ namespace osu.Game.Screens.Utility
             settings.Show();
 
             attemptsAtCurrentDifficulty++;
-            statusText.Text = $"Level {DifficultyLevel}\nRound {attemptsAtCurrentDifficulty} of {totalRoundForNextResultsScreen}";
+            statusText.Text =
+                $"Level {DifficultyLevel}\nRound {attemptsAtCurrentDifficulty} of {totalRoundForNextResultsScreen}";
 
             mainArea.Clear();
 
             int betterSide = RNG.Next(0, 2);
 
-            mainArea.AddRange(new[]
-            {
-                new LatencyArea(Key.Number1, betterSide == 1 ? mapDifficultyToTargetFrameRate(DifficultyLevel) : null)
+            mainArea.AddRange(
+                new[]
                 {
-                    Width = 0.5f,
-                    VisualMode = { BindTarget = VisualMode },
-                    IsActiveArea = { Value = true },
-                    ReportUserBest = () => recordResult(betterSide == 0),
-                },
-                new LatencyArea(Key.Number2, betterSide == 0 ? mapDifficultyToTargetFrameRate(DifficultyLevel) : null)
-                {
-                    Width = 0.5f,
-                    VisualMode = { BindTarget = VisualMode },
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    ReportUserBest = () => recordResult(betterSide == 1)
+                    new LatencyArea(
+                        Key.Number1,
+                        betterSide == 1 ? mapDifficultyToTargetFrameRate(DifficultyLevel) : null
+                    )
+                    {
+                        Width = 0.5f,
+                        VisualMode = { BindTarget = VisualMode },
+                        IsActiveArea = { Value = true },
+                        ReportUserBest = () => recordResult(betterSide == 0),
+                    },
+                    new LatencyArea(
+                        Key.Number2,
+                        betterSide == 0 ? mapDifficultyToTargetFrameRate(DifficultyLevel) : null
+                    )
+                    {
+                        Width = 0.5f,
+                        VisualMode = { BindTarget = VisualMode },
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        ReportUserBest = () => recordResult(betterSide == 1),
+                    },
                 }
-            });
+            );
 
             foreach (var area in mainArea)
             {

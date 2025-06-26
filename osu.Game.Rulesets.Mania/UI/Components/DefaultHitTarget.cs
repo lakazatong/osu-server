@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Mania.UI.Components
     {
         private const float hit_target_bar_height = 2;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container hitTargetLine;
         private Drawable hitTargetBar;
@@ -45,27 +46,30 @@ namespace osu.Game.Rulesets.Mania.UI.Components
                     RelativeSizeAxes = Axes.X,
                     Height = DefaultNotePiece.NOTE_HEIGHT,
                     Alpha = 0.6f,
-                    Colour = Color4.Black
+                    Colour = Color4.Black,
                 },
                 hitTargetLine = new Container
                 {
                     RelativeSizeAxes = Axes.X,
                     Height = hit_target_bar_height,
                     Masking = true,
-                    Child = new Box { RelativeSizeAxes = Axes.Both }
+                    Child = new Box { RelativeSizeAxes = Axes.Both },
                 },
             };
 
             accentColour = column.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour =>
-            {
-                hitTargetLine.EdgeEffect = new EdgeEffectParameters
+            accentColour.BindValueChanged(
+                colour =>
                 {
-                    Type = EdgeEffectType.Glow,
-                    Radius = 5,
-                    Colour = colour.NewValue.Opacity(0.5f),
-                };
-            }, true);
+                    hitTargetLine.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Radius = 5,
+                        Colour = colour.NewValue.Opacity(0.5f),
+                    };
+                },
+                true
+            );
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);

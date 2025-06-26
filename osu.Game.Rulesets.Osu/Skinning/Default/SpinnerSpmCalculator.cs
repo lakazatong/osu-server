@@ -50,10 +50,17 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 while (records.Count > 0 && Time.Current - records.Peek().Time > spm_count_duration)
                     record = records.Dequeue();
 
-                result.Value = (currentRotation - record.Rotation) / (Time.Current - record.Time) * 1000 * 60 / 360;
+                result.Value =
+                    (currentRotation - record.Rotation)
+                    / (Time.Current - record.Time)
+                    * 1000
+                    * 60
+                    / 360;
             }
 
-            records.Enqueue(lastRecord = new RotationRecord { Rotation = currentRotation, Time = Time.Current });
+            records.Enqueue(
+                lastRecord = new RotationRecord { Rotation = currentRotation, Time = Time.Current }
+            );
         }
 
         private void resetState(DrawableHitObject hitObject)

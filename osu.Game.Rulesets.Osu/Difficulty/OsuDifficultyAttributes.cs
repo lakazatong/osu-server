@@ -99,7 +99,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             yield return (ATTRIB_ID_AIM_DIFFICULT_SLIDER_COUNT, AimDifficultSliderCount);
         }
 
-        public override void FromDatabaseAttributes(IReadOnlyDictionary<int, double> values, IBeatmapOnlineInfo onlineInfo)
+        public override void FromDatabaseAttributes(
+            IReadOnlyDictionary<int, double> values,
+            IBeatmapOnlineInfo onlineInfo
+        )
         {
             base.FromDatabaseAttributes(values, onlineInfo);
 

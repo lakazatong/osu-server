@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Catch.Edit
 {
     public partial class CatchSelectionHandler : EditorSelectionHandler
     {
-        protected ScrollingHitObjectContainer HitObjectContainer => (ScrollingHitObjectContainer)playfield.HitObjectContainer;
+        protected ScrollingHitObjectContainer HitObjectContainer =>
+            (ScrollingHitObjectContainer)playfield.HitObjectContainer;
 
         [Resolved]
         private Playfield playfield { get; set; } = null!;
@@ -28,8 +29,12 @@ namespace osu.Game.Rulesets.Catch.Edit
         public override bool HandleMovement(MoveSelectionEvent<HitObject> moveEvent)
         {
             var blueprint = moveEvent.Blueprint;
-            Vector2 originalPosition = HitObjectContainer.ToLocalSpace(blueprint.ScreenSpaceSelectionPoint);
-            Vector2 targetPosition = HitObjectContainer.ToLocalSpace(blueprint.ScreenSpaceSelectionPoint + moveEvent.ScreenSpaceDelta);
+            Vector2 originalPosition = HitObjectContainer.ToLocalSpace(
+                blueprint.ScreenSpaceSelectionPoint
+            );
+            Vector2 targetPosition = HitObjectContainer.ToLocalSpace(
+                blueprint.ScreenSpaceSelectionPoint + moveEvent.ScreenSpaceDelta
+            );
 
             float deltaX = targetPosition.X - originalPosition.X;
             deltaX = limitMovement(deltaX, SelectedItems);
@@ -49,7 +54,8 @@ namespace osu.Game.Rulesets.Catch.Edit
         {
             EditorBeatmap.PerformOnSelection(h =>
             {
-                if (!(h is CatchHitObject catchObject)) return;
+                if (!(h is CatchHitObject catchObject))
+                    return;
 
                 catchObject.OriginalX += deltaX;
 
@@ -138,10 +144,10 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         public override bool HandleReverse()
         {
-            var hitObjects = EditorBeatmap.SelectedHitObjects
-                                          .OfType<CatchHitObject>()
-                                          .OrderBy(obj => obj.StartTime)
-                                          .ToList();
+            var hitObjects = EditorBeatmap
+                .SelectedHitObjects.OfType<CatchHitObject>()
+                .OrderBy(obj => obj.StartTime)
+                .ToList();
 
             double selectionStartTime = SelectedItems.Min(h => h.StartTime);
             double selectionEndTime = SelectedItems.Max(h => h.GetEndTime());
@@ -178,8 +184,11 @@ namespace osu.Game.Rulesets.Catch.Edit
             base.OnSelectionChanged();
 
             var selectionRange = CatchHitObjectUtils.GetPositionRange(SelectedItems);
-            SelectionBox.CanFlipX = selectionRange.Length > 0 && SelectedItems.Any(h => h is CatchHitObject && !(h is BananaShower));
-            SelectionBox.CanReverse = SelectedItems.Count > 1 || SelectedItems.Any(h => h is JuiceStream);
+            SelectionBox.CanFlipX =
+                selectionRange.Length > 0
+                && SelectedItems.Any(h => h is CatchHitObject && !(h is BananaShower));
+            SelectionBox.CanReverse =
+                SelectedItems.Count > 1 || SelectedItems.Any(h => h is JuiceStream);
         }
 
         /// <summary>
@@ -204,7 +213,11 @@ namespace osu.Game.Rulesets.Catch.Edit
             return Math.Clamp(deltaX, lowerBound, upperBound);
         }
 
-        private bool handleFlip(PositionRange selectionRange, CatchHitObject hitObject, bool flipOverOrigin)
+        private bool handleFlip(
+            PositionRange selectionRange,
+            CatchHitObject hitObject,
+            bool flipOverOrigin
+        )
         {
             switch (hitObject)
             {
@@ -225,7 +238,10 @@ namespace osu.Game.Rulesets.Catch.Edit
                     return true;
             }
 
-            float getFlippedPosition(float original) => flipOverOrigin ? CatchPlayfield.WIDTH - original : selectionRange.GetFlippedPosition(original);
+            float getFlippedPosition(float original) =>
+                flipOverOrigin
+                    ? CatchPlayfield.WIDTH - original
+                    : selectionRange.GetFlippedPosition(original);
         }
     }
 }

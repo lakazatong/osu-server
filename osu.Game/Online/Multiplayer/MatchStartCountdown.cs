@@ -9,7 +9,5 @@ namespace osu.Game.Online.Multiplayer
     /// A <see cref="MultiplayerCountdown"/> which will start the match after ending.
     /// </summary>
     [MessagePackObject]
-    public sealed class MatchStartCountdown : MultiplayerCountdown
-    {
-    }
+    public sealed class MatchStartCountdown : MultiplayerCountdown { }
 }

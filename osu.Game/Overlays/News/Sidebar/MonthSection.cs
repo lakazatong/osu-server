@@ -4,23 +4,23 @@
 #nullable disable
 
 using System;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Graphics.Containers;
-using osuTK;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
-using System.Linq;
 using System.Collections.Generic;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Sprites;
 using System.Diagnostics;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.LocalisationExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
+using osuTK;
 
 namespace osu.Game.Overlays.News.Sidebar
 {
@@ -36,7 +36,9 @@ namespace osu.Game.Overlays.News.Sidebar
 
         public MonthSection(int month, int year, IEnumerable<APINewsPost> posts)
         {
-            Debug.Assert(posts.All(p => p.PublishedAt.Month == month && p.PublishedAt.Year == year));
+            Debug.Assert(
+                posts.All(p => p.PublishedAt.Month == month && p.PublishedAt.Year == year)
+            );
 
             Year = year;
             Month = month;
@@ -52,16 +54,13 @@ namespace osu.Game.Overlays.News.Sidebar
                 Direction = FillDirection.Vertical,
                 Children = new Drawable[]
                 {
-                    new DropdownHeader(month, year)
-                    {
-                        Expanded = { BindTarget = Expanded }
-                    },
+                    new DropdownHeader(month, year) { Expanded = { BindTarget = Expanded } },
                     new PostsContainer
                     {
                         Expanded = { BindTarget = Expanded },
-                        Children = posts.Select(p => new PostLink(p)).ToArray()
-                    }
-                }
+                        Children = posts.Select(p => new PostLink(p)).ToArray(),
+                    },
+                },
             };
 
             Expanded.ValueChanged += expanded =>
@@ -100,15 +99,15 @@ namespace osu.Game.Overlays.News.Sidebar
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
-                        Text = date.ToLocalisableString(@"MMM yyyy")
+                        Text = date.ToLocalisableString(@"MMM yyyy"),
                     },
                     icon = new SpriteIcon
                     {
                         Anchor = Anchor.CentreRight,
                         Origin = Anchor.CentreRight,
                         Size = new Vector2(10),
-                        Icon = FontAwesome.Solid.ChevronDown
-                    }
+                        Icon = FontAwesome.Solid.ChevronDown,
+                    },
                 };
             }
 
@@ -116,10 +115,17 @@ namespace osu.Game.Overlays.News.Sidebar
             {
                 base.LoadComplete();
 
-                Expanded.BindValueChanged(open =>
-                {
-                    icon.ScaleTo(open.NewValue ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
-                }, true);
+                Expanded.BindValueChanged(
+                    open =>
+                    {
+                        icon.ScaleTo(
+                            open.NewValue ? new Vector2(1f, -1f) : Vector2.One,
+                            300,
+                            Easing.OutQuint
+                        );
+                    },
+                    true
+                );
             }
         }
 
@@ -130,7 +136,12 @@ namespace osu.Game.Overlays.News.Sidebar
             {
                 RelativeSizeAxes = Axes.X;
                 AutoSizeAxes = Axes.Y;
-                AddLink(post.Title, LinkAction.External, @"/home/news/" + post.Slug, "view in browser");
+                AddLink(
+                    post.Title,
+                    LinkAction.External,
+                    @"/home/news/" + post.Slug,
+                    "view in browser"
+                );
             }
         }
 
@@ -153,7 +164,7 @@ namespace osu.Game.Overlays.News.Sidebar
                     AutoSizeAxes = Axes.Y,
                     Direction = FillDirection.Vertical,
                     Spacing = new Vector2(0, 5),
-                    Alpha = 0
+                    Alpha = 0,
                 };
             }
 

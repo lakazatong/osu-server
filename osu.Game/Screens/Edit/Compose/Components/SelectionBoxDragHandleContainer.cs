@@ -20,7 +20,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
         private Container<SelectionBoxScaleHandle> scaleHandles;
         private Container<SelectionBoxRotationHandle> rotationHandles;
 
-        private readonly List<SelectionBoxDragHandle> allDragHandles = new List<SelectionBoxDragHandle>();
+        private readonly List<SelectionBoxDragHandle> allDragHandles =
+            new List<SelectionBoxDragHandle>();
 
         public new MarginPadding Padding
         {
@@ -87,10 +88,16 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             // if the active handle is a rotation handle and is held or hovered,
             // then no need to perform any updates to the rotation handles visibility.
-            if (activeHandle is SelectionBoxRotationHandle && (activeHandle?.IsHeld == true || activeHandle?.IsHovered == true))
+            if (
+                activeHandle is SelectionBoxRotationHandle
+                && (activeHandle?.IsHeld == true || activeHandle?.IsHovered == true)
+            )
                 return;
 
-            displayedRotationHandle?.FadeOut(SelectionBoxControl.TRANSFORM_DURATION, Easing.OutQuint);
+            displayedRotationHandle?.FadeOut(
+                SelectionBoxControl.TRANSFORM_DURATION,
+                Easing.OutQuint
+            );
             displayedRotationHandle = null;
 
             // if the active handle is not a rotation handle but is held, then keep the rotation handle hidden.
@@ -102,8 +109,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             if (activeHandle != null)
             {
-                displayedRotationHandle = getCorrespondingRotationHandle(activeHandle, rotationHandles);
-                displayedRotationHandle?.FadeIn(SelectionBoxControl.TRANSFORM_DURATION, Easing.OutQuint);
+                displayedRotationHandle = getCorrespondingRotationHandle(
+                    activeHandle,
+                    rotationHandles
+                );
+                displayedRotationHandle?.FadeIn(
+                    SelectionBoxControl.TRANSFORM_DURATION,
+                    Easing.OutQuint
+                );
             }
         }
 
@@ -111,7 +124,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// Gets the rotation handle corresponding to the given handle.
         /// </summary>
         [CanBeNull]
-        private static SelectionBoxRotationHandle getCorrespondingRotationHandle(SelectionBoxDragHandle handle, IEnumerable<SelectionBoxRotationHandle> rotationHandles)
+        private static SelectionBoxRotationHandle getCorrespondingRotationHandle(
+            SelectionBoxDragHandle handle,
+            IEnumerable<SelectionBoxRotationHandle> rotationHandles
+        )
         {
             if (handle is SelectionBoxRotationHandle rotationHandle)
                 return rotationHandle;

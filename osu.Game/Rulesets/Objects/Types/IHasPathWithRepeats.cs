@@ -9,9 +9,7 @@ namespace osu.Game.Rulesets.Objects.Types
     /// A HitObject that has a curve.
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public interface IHasPathWithRepeats : IHasPath, IHasRepeats
-    {
-    }
+    public interface IHasPathWithRepeats : IHasPath, IHasRepeats { }
 
     public static class HasPathWithRepeatsExtensions
     {
@@ -21,8 +19,8 @@ namespace osu.Game.Rulesets.Objects.Types
         /// <param name="obj">The curve.</param>
         /// <param name="progress">[0, 1] where 0 is the start time of the <see cref="HitObject"/> and 1 is the end time of the <see cref="HitObject"/>.</param>
         /// <returns>The position on the curve.</returns>
-        public static Vector2 CurvePositionAt(this IHasPathWithRepeats obj, double progress)
-            => obj.Path.PositionAt(obj.ProgressAt(progress));
+        public static Vector2 CurvePositionAt(this IHasPathWithRepeats obj, double progress) =>
+            obj.Path.PositionAt(obj.ProgressAt(progress));
 
         /// <summary>
         /// Computes the progress along the curve relative to how much of the <see cref="HitObject"/> has been completed.
@@ -44,7 +42,7 @@ namespace osu.Game.Rulesets.Objects.Types
         /// <param name="obj">The curve.</param>
         /// <param name="progress">[0, 1] where 0 is the beginning of the curve and 1 is the end of the curve.</param>
         /// <returns>[0, SpanCount) where 0 is the first run.</returns>
-        public static int SpanAt(this IHasPathWithRepeats obj, double progress)
-            => (int)(progress * obj.SpanCount());
+        public static int SpanAt(this IHasPathWithRepeats obj, double progress) =>
+            (int)(progress * obj.SpanCount());
     }
 }

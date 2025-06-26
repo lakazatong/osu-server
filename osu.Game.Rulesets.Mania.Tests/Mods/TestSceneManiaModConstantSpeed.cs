@@ -18,14 +18,20 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new ManiaRuleset();
 
         [Test]
-        public void TestConstantScroll() => CreateModTest(new ModTestData
-        {
-            Mod = new ManiaModConstantSpeed(),
-            PassCondition = () =>
-            {
-                var hitObject = Player.ChildrenOfType<DrawableManiaHitObject>().FirstOrDefault();
-                return hitObject?.Dependencies.Get<IScrollingInfo>().Algorithm.Value is ConstantScrollAlgorithm;
-            }
-        });
+        public void TestConstantScroll() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModConstantSpeed(),
+                    PassCondition = () =>
+                    {
+                        var hitObject = Player
+                            .ChildrenOfType<DrawableManiaHitObject>()
+                            .FirstOrDefault();
+                        return hitObject?.Dependencies.Get<IScrollingInfo>().Algorithm.Value
+                            is ConstantScrollAlgorithm;
+                    },
+                }
+            );
     }
 }

@@ -18,18 +18,28 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [BackgroundDependencyLoader]
         private void load(ScoreManager scores, IDialogOverlay? dialogOverlay)
         {
-            Add(deleteScoresButton = new DangerousSettingsButton
-            {
-                Text = MaintenanceSettingsStrings.DeleteAllScores,
-                Action = () =>
+            Add(
+                deleteScoresButton = new DangerousSettingsButton
                 {
-                    dialogOverlay?.Push(new MassDeleteConfirmationDialog(() =>
+                    Text = MaintenanceSettingsStrings.DeleteAllScores,
+                    Action = () =>
                     {
-                        deleteScoresButton.Enabled.Value = false;
-                        Task.Run(() => scores.Delete()).ContinueWith(_ => Schedule(() => deleteScoresButton.Enabled.Value = true));
-                    }, DeleteConfirmationContentStrings.Scores));
+                        dialogOverlay?.Push(
+                            new MassDeleteConfirmationDialog(
+                                () =>
+                                {
+                                    deleteScoresButton.Enabled.Value = false;
+                                    Task.Run(() => scores.Delete())
+                                        .ContinueWith(_ =>
+                                            Schedule(() => deleteScoresButton.Enabled.Value = true)
+                                        );
+                                },
+                                DeleteConfirmationContentStrings.Scores
+                            )
+                        );
+                    },
                 }
-            });
+            );
         }
     }
 }

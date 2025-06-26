@@ -81,7 +81,9 @@ namespace osu.Game.Tests.NonVisual
         {
             var mutex = new ManualResetEventSlim(false);
 
-            var task = taskChain.Add(async () => await Task.Run(() => mutex.Wait(globalCancellationToken.Token)));
+            var task = taskChain.Add(async () =>
+                await Task.Run(() => mutex.Wait(globalCancellationToken.Token))
+            );
 
             // Allow task to potentially complete
             Thread.Sleep(1000);
@@ -94,19 +96,29 @@ namespace osu.Game.Tests.NonVisual
             await task;
         }
 
-        private (Task<int> task, ManualResetEventSlim mutex, CancellationTokenSource cancellation) addTask()
+        private (
+            Task<int> task,
+            ManualResetEventSlim mutex,
+            CancellationTokenSource cancellation
+        ) addTask()
         {
             var mutex = new ManualResetEventSlim(false);
             var completionSource = new TaskCompletionSource<int>();
 
             var cancellationSource = new CancellationTokenSource();
-            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationSource.Token, globalCancellationToken.Token);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationSource.Token,
+                globalCancellationToken.Token
+            );
 
-            taskChain.Add(() =>
-            {
-                mutex.Wait(globalCancellationToken.Token);
-                completionSource.SetResult(Interlocked.Increment(ref currentTask));
-            }, token.Token);
+            taskChain.Add(
+                () =>
+                {
+                    mutex.Wait(globalCancellationToken.Token);
+                    completionSource.SetResult(Interlocked.Increment(ref currentTask));
+                },
+                token.Token
+            );
 
             return (completionSource.Task, mutex, cancellationSource);
         }

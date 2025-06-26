@@ -20,23 +20,25 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
         /// </summary>
         protected abstract LocalisableString GraphCounterName { get; }
 
-        protected ChartProfileSubsection(Bindable<UserProfileData?> user, LocalisableString headerText)
-            : base(user, headerText)
-        {
-        }
+        protected ChartProfileSubsection(
+            Bindable<UserProfileData?> user,
+            LocalisableString headerText
+        )
+            : base(user, headerText) { }
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Padding = new MarginPadding
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                Top = 10,
-                Left = 20,
-                Right = 40
-            },
-            Child = chart = new ProfileLineChart(GraphCounterName)
-        };
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Padding = new MarginPadding
+                {
+                    Top = 10,
+                    Left = 20,
+                    Right = 40,
+                },
+                Child = chart = new ProfileLineChart(GraphCounterName),
+            };
 
         protected override void LoadComplete()
         {
@@ -71,11 +73,13 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 
                 while (lastFilled?.Date.AddMonths(1) < entry.Date)
                 {
-                    filledHistoryEntries.Add(lastFilled = new APIUserHistoryCount
-                    {
-                        Count = 0,
-                        Date = lastFilled.Date.AddMonths(1)
-                    });
+                    filledHistoryEntries.Add(
+                        lastFilled = new APIUserHistoryCount
+                        {
+                            Count = 0,
+                            Date = lastFilled.Date.AddMonths(1),
+                        }
+                    );
                 }
 
                 filledHistoryEntries.Add(entry);

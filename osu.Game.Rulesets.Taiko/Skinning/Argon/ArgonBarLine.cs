@@ -29,40 +29,46 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             // Avoid flickering due to no anti-aliasing of boxes by default.
             var edgeSmoothness = new Vector2(0.3f);
 
-            AddInternal(mainLine = new Box
-            {
-                Name = "Bar line",
-                EdgeSmoothness = edgeSmoothness,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(
+                mainLine = new Box
+                {
+                    Name = "Bar line",
+                    EdgeSmoothness = edgeSmoothness,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
 
             const float major_extension = 10;
 
-            AddInternal(topAnchor = new Box
-            {
-                Name = "Top anchor",
-                EdgeSmoothness = edgeSmoothness,
-                Blending = BlendingParameters.Additive,
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.BottomCentre,
-                Height = major_extension,
-                RelativeSizeAxes = Axes.X,
-                Colour = ColourInfo.GradientVertical(Colour4.Transparent, Colour4.White),
-            });
+            AddInternal(
+                topAnchor = new Box
+                {
+                    Name = "Top anchor",
+                    EdgeSmoothness = edgeSmoothness,
+                    Blending = BlendingParameters.Additive,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.BottomCentre,
+                    Height = major_extension,
+                    RelativeSizeAxes = Axes.X,
+                    Colour = ColourInfo.GradientVertical(Colour4.Transparent, Colour4.White),
+                }
+            );
 
-            AddInternal(bottomAnchor = new Box
-            {
-                Name = "Bottom anchor",
-                EdgeSmoothness = edgeSmoothness,
-                Blending = BlendingParameters.Additive,
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.TopCentre,
-                Height = major_extension,
-                RelativeSizeAxes = Axes.X,
-                Colour = ColourInfo.GradientVertical(Colour4.White, Colour4.Transparent),
-            });
+            AddInternal(
+                bottomAnchor = new Box
+                {
+                    Name = "Bottom anchor",
+                    EdgeSmoothness = edgeSmoothness,
+                    Blending = BlendingParameters.Additive,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.TopCentre,
+                    Height = major_extension,
+                    RelativeSizeAxes = Axes.X,
+                    Colour = ColourInfo.GradientVertical(Colour4.White, Colour4.Transparent),
+                }
+            );
 
             major = ((DrawableBarLine)drawableHitObject).Major.GetBoundCopy();
         }

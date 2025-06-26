@@ -18,11 +18,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public void TestScaling()
         {
             // scheduling is needed as scaling the content immediately causes the entire scene to shake badly, for some odd reason.
-            AddSliderStep("scale", 0.5f, 1.6f, 1f, v => Schedule(() =>
-            {
-                Stack.Scale = new Vector2(v);
-                Stack.Size = new Vector2(1f / v);
-            }));
+            AddSliderStep(
+                "scale",
+                0.5f,
+                1.6f,
+                1f,
+                v =>
+                    Schedule(() =>
+                    {
+                        Stack.Scale = new Vector2(v);
+                        Stack.Size = new Vector2(1f / v);
+                    })
+            );
         }
 
         [TestCase(7483253, 1048576)]
@@ -32,20 +39,33 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             MultiplayerResultsScreen screen = null!;
 
-            AddStep("show results screen", () =>
-            {
-                var rulesetInfo = new OsuRuleset().RulesetInfo;
-                var beatmapInfo = CreateBeatmap(rulesetInfo).BeatmapInfo;
-                var score = TestResources.CreateTestScoreInfo(beatmapInfo);
-
-                SortedDictionary<int, BindableLong> teamScores = new SortedDictionary<int, BindableLong>
+            AddStep(
+                "show results screen",
+                () =>
                 {
-                    { 0, new BindableLong(team1Score) },
-                    { 1, new BindableLong(team2Score) }
-                };
+                    var rulesetInfo = new OsuRuleset().RulesetInfo;
+                    var beatmapInfo = CreateBeatmap(rulesetInfo).BeatmapInfo;
+                    var score = TestResources.CreateTestScoreInfo(beatmapInfo);
 
-                Stack.Push(screen = new MultiplayerTeamResultsScreen(score, 1, new PlaylistItem(beatmapInfo), teamScores));
-            });
+                    SortedDictionary<int, BindableLong> teamScores = new SortedDictionary<
+                        int,
+                        BindableLong
+                    >
+                    {
+                        { 0, new BindableLong(team1Score) },
+                        { 1, new BindableLong(team2Score) },
+                    };
+
+                    Stack.Push(
+                        screen = new MultiplayerTeamResultsScreen(
+                            score,
+                            1,
+                            new PlaylistItem(beatmapInfo),
+                            teamScores
+                        )
+                    );
+                }
+            );
 
             AddUntilStep("wait for loaded", () => screen.IsLoaded);
         }

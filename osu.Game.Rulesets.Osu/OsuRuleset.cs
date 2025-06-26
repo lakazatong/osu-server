@@ -46,28 +46,35 @@ namespace osu.Game.Rulesets.Osu
 {
     public class OsuRuleset : Ruleset, ILegacyRuleset
     {
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => new DrawableOsuRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        ) => new DrawableOsuRuleset(this, beatmap, mods);
 
         public override ScoreProcessor CreateScoreProcessor() => new OsuScoreProcessor();
 
-        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new OsuHealthProcessor(drainStartTime);
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime) =>
+            new OsuHealthProcessor(drainStartTime);
 
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new OsuBeatmapConverter(beatmap, this);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+            new OsuBeatmapConverter(beatmap, this);
 
-        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new OsuBeatmapProcessor(beatmap);
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) =>
+            new OsuBeatmapProcessor(beatmap);
 
         public const string SHORT_NAME = "osu";
 
         public override string RulesetAPIVersionSupported => CURRENT_RULESET_API_VERSION;
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
-        {
-            new KeyBinding(InputKey.Z, OsuAction.LeftButton),
-            new KeyBinding(InputKey.X, OsuAction.RightButton),
-            new KeyBinding(InputKey.C, OsuAction.Smoke),
-            new KeyBinding(InputKey.MouseLeft, OsuAction.LeftButton),
-            new KeyBinding(InputKey.MouseRight, OsuAction.RightButton),
-        };
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            new[]
+            {
+                new KeyBinding(InputKey.Z, OsuAction.LeftButton),
+                new KeyBinding(InputKey.X, OsuAction.RightButton),
+                new KeyBinding(InputKey.C, OsuAction.Smoke),
+                new KeyBinding(InputKey.MouseLeft, OsuAction.LeftButton),
+                new KeyBinding(InputKey.MouseRight, OsuAction.RightButton),
+            };
 
         public override IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods)
         {
@@ -184,7 +191,7 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModClassic(),
                         new OsuModRandom(),
                         new OsuModMirror(),
-                        new MultiMod(new OsuModAlternate(), new OsuModSingleTap())
+                        new MultiMod(new OsuModAlternate(), new OsuModSingleTap()),
                     };
 
                 case ModType.Automation:
@@ -215,15 +222,11 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModBubbles(),
                         new OsuModSynesthesia(),
                         new OsuModDepth(),
-                        new OsuModBloom()
+                        new OsuModBloom(),
                     };
 
                 case ModType.System:
-                    return new Mod[]
-                    {
-                        new OsuModTouchDevice(),
-                        new ModScoreV2(),
-                    };
+                    return new Mod[] { new OsuModTouchDevice(), new ModScoreV2() };
 
                 default:
                     return Array.Empty<Mod>();
@@ -232,11 +235,14 @@ namespace osu.Game.Rulesets.Osu
 
         public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.RulesetOsu };
 
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new OsuDifficultyCalculator(RulesetInfo, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            new OsuDifficultyCalculator(RulesetInfo, beatmap);
 
-        public override PerformanceCalculator CreatePerformanceCalculator() => new OsuPerformanceCalculator();
+        public override PerformanceCalculator CreatePerformanceCalculator() =>
+            new OsuPerformanceCalculator();
 
-        public override HitObjectComposer CreateHitObjectComposer() => new OsuHitObjectComposer(this);
+        public override HitObjectComposer CreateHitObjectComposer() =>
+            new OsuHitObjectComposer(this);
 
         public override IBeatmapVerifier CreateBeatmapVerifier() => new OsuBeatmapVerifier();
 
@@ -246,7 +252,8 @@ namespace osu.Game.Rulesets.Osu
 
         public override string PlayingVerb => "Clicking circles";
 
-        public override RulesetSettingsSubsection CreateSettings() => new OsuSettingsSubsection(this);
+        public override RulesetSettingsSubsection CreateSettings() =>
+            new OsuSettingsSubsection(this);
 
         public override ISkin? CreateSkinTransformer(ISkin skin, IBeatmap beatmap)
         {
@@ -269,9 +276,11 @@ namespace osu.Game.Rulesets.Osu
 
         public ILegacyScoreSimulator CreateLegacyScoreSimulator() => new OsuLegacyScoreSimulator();
 
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new OsuReplayFrame();
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() =>
+            new OsuReplayFrame();
 
-        public override IRulesetConfigManager CreateConfig(SettingsStore? settings) => new OsuRulesetConfigManager(settings, RulesetInfo);
+        public override IRulesetConfigManager CreateConfig(SettingsStore? settings) =>
+            new OsuRulesetConfigManager(settings, RulesetInfo);
 
         protected override IEnumerable<HitResult> GetValidHitResults()
         {
@@ -280,7 +289,6 @@ namespace osu.Game.Rulesets.Osu
                 HitResult.Great,
                 HitResult.Ok,
                 HitResult.Meh,
-
                 HitResult.LargeTickHit,
                 HitResult.SmallTickHit,
                 HitResult.SliderTailHit,
@@ -310,72 +318,116 @@ namespace osu.Game.Rulesets.Osu
             return base.GetDisplayNameForHitResult(result);
         }
 
-        public override StatisticItem[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap)
+        public override StatisticItem[] CreateStatisticsForScore(
+            ScoreInfo score,
+            IBeatmap playableBeatmap
+        )
         {
-            var timedHitEvents = score.HitEvents.Where(e => e.HitObject is HitCircle && !(e.HitObject is SliderTailCircle)).ToList();
+            var timedHitEvents = score
+                .HitEvents.Where(e =>
+                    e.HitObject is HitCircle && !(e.HitObject is SliderTailCircle)
+                )
+                .ToList();
 
             return new[]
             {
-                new StatisticItem("Performance Breakdown", () => new PerformanceBreakdownChart(score, playableBeatmap)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
-                }),
-                new StatisticItem("Timing Distribution", () => new HitEventTimingDistributionGraph(timedHitEvents)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 250
-                }, true),
-                new StatisticItem("Accuracy Heatmap", () => new AccuracyHeatmap(score, playableBeatmap)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 250
-                }, true),
-                new StatisticItem("Statistics", () => new SimpleStatisticTable(2, new SimpleStatisticItem[]
-                {
-                    new AverageHitError(timedHitEvents),
-                    new UnstableRate(timedHitEvents)
-                }), true)
+                new StatisticItem(
+                    "Performance Breakdown",
+                    () =>
+                        new PerformanceBreakdownChart(score, playableBeatmap)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                        }
+                ),
+                new StatisticItem(
+                    "Timing Distribution",
+                    () =>
+                        new HitEventTimingDistributionGraph(timedHitEvents)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 250,
+                        },
+                    true
+                ),
+                new StatisticItem(
+                    "Accuracy Heatmap",
+                    () =>
+                        new AccuracyHeatmap(score, playableBeatmap)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 250,
+                        },
+                    true
+                ),
+                new StatisticItem(
+                    "Statistics",
+                    () =>
+                        new SimpleStatisticTable(
+                            2,
+                            new SimpleStatisticItem[]
+                            {
+                                new AverageHitError(timedHitEvents),
+                                new UnstableRate(timedHitEvents),
+                            }
+                        ),
+                    true
+                ),
             };
         }
 
         public override IEnumerable<Drawable> CreateEditorSetupSections() =>
-        [
-            new MetadataSection(),
-            new OsuDifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(SetupScreen.SPACING),
-                Children = new Drawable[]
+            [
+                new MetadataSection(),
+                new OsuDifficultySection(),
+                new FillFlowContainer
                 {
-                    new ResourcesSection
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(SetupScreen.SPACING),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
+                        new ResourcesSection { RelativeSizeAxes = Axes.X },
+                        new ColoursSection { RelativeSizeAxes = Axes.X },
                     },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
-        ];
+                },
+                new DesignSection(),
+            ];
 
         /// <seealso cref="OsuHitObject.ApplyDefaultsToSelf"/>
         /// <seealso cref="OsuHitWindows"/>
-        public override BeatmapDifficulty GetRateAdjustedDisplayDifficulty(IBeatmapDifficultyInfo difficulty, double rate)
+        public override BeatmapDifficulty GetRateAdjustedDisplayDifficulty(
+            IBeatmapDifficultyInfo difficulty,
+            double rate
+        )
         {
             BeatmapDifficulty adjustedDifficulty = new BeatmapDifficulty(difficulty);
 
-            double preempt = IBeatmapDifficultyInfo.DifficultyRange(adjustedDifficulty.ApproachRate, OsuHitObject.PREEMPT_MAX, OsuHitObject.PREEMPT_MID, OsuHitObject.PREEMPT_MIN);
+            double preempt = IBeatmapDifficultyInfo.DifficultyRange(
+                adjustedDifficulty.ApproachRate,
+                OsuHitObject.PREEMPT_MAX,
+                OsuHitObject.PREEMPT_MID,
+                OsuHitObject.PREEMPT_MIN
+            );
             preempt /= rate;
-            adjustedDifficulty.ApproachRate = (float)IBeatmapDifficultyInfo.InverseDifficultyRange(preempt, OsuHitObject.PREEMPT_MAX, OsuHitObject.PREEMPT_MID, OsuHitObject.PREEMPT_MIN);
+            adjustedDifficulty.ApproachRate = (float)
+                IBeatmapDifficultyInfo.InverseDifficultyRange(
+                    preempt,
+                    OsuHitObject.PREEMPT_MAX,
+                    OsuHitObject.PREEMPT_MID,
+                    OsuHitObject.PREEMPT_MIN
+                );
 
-            double greatHitWindow = IBeatmapDifficultyInfo.DifficultyRange(adjustedDifficulty.OverallDifficulty, OsuHitWindows.GREAT_WINDOW_RANGE);
+            double greatHitWindow = IBeatmapDifficultyInfo.DifficultyRange(
+                adjustedDifficulty.OverallDifficulty,
+                OsuHitWindows.GREAT_WINDOW_RANGE
+            );
             greatHitWindow /= rate;
-            adjustedDifficulty.OverallDifficulty = (float)IBeatmapDifficultyInfo.InverseDifficultyRange(greatHitWindow, OsuHitWindows.GREAT_WINDOW_RANGE);
+            adjustedDifficulty.OverallDifficulty = (float)
+                IBeatmapDifficultyInfo.InverseDifficultyRange(
+                    greatHitWindow,
+                    OsuHitWindows.GREAT_WINDOW_RANGE
+                );
 
             return adjustedDifficulty;
         }

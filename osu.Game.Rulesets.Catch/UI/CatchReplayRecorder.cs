@@ -20,7 +20,16 @@ namespace osu.Game.Rulesets.Catch.UI
             this.playfield = playfield;
         }
 
-        protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<CatchAction> actions, ReplayFrame previousFrame)
-            => new CatchReplayFrame(Time.Current, playfield.Catcher.X, actions.Contains(CatchAction.Dash), previousFrame as CatchReplayFrame);
+        protected override ReplayFrame HandleFrame(
+            Vector2 mousePosition,
+            List<CatchAction> actions,
+            ReplayFrame previousFrame
+        ) =>
+            new CatchReplayFrame(
+                Time.Current,
+                playfield.Catcher.X,
+                actions.Contains(CatchAction.Dash),
+                previousFrame as CatchReplayFrame
+            );
     }
 }

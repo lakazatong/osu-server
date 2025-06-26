@@ -31,16 +31,18 @@ namespace osu.Game.Screens.Select.Carousel
             foreach (var item in items)
                 item.Filtered.BindValueChanged(_ => Scheduler.AddOnce(updateFilteredDisplay));
 
-            AddInternal(new OsuSpriteText
-            {
-                Anchor = Anchor.CentreRight,
-                Origin = Anchor.CentreRight,
-                Padding = new MarginPadding { Left = Size.X },
-                Margin = new MarginPadding { Left = 2, Right = 5 },
-                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold),
-                Text = items.Count.ToString(),
-                Colour = Color4.White,
-            });
+            AddInternal(
+                new OsuSpriteText
+                {
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Padding = new MarginPadding { Left = Size.X },
+                    Margin = new MarginPadding { Left = 2, Right = 5 },
+                    Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold),
+                    Text = items.Count.ToString(),
+                    Colour = Color4.White,
+                }
+            );
 
             updateFilteredDisplay();
         }

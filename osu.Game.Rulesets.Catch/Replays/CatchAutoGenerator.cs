@@ -50,7 +50,10 @@ namespace osu.Game.Rulesets.Catch.Replays
                 bool dashRequired = speedRequired > Catcher.BASE_WALK_SPEED;
                 bool impossibleJump = speedRequired > Catcher.BASE_DASH_SPEED;
 
-                if (lastPosition - halfCatcherWidth < h.EffectiveX && lastPosition + halfCatcherWidth > h.EffectiveX)
+                if (
+                    lastPosition - halfCatcherWidth < h.EffectiveX
+                    && lastPosition + halfCatcherWidth > h.EffectiveX
+                )
                 {
                     // we are already in the correct range.
                     lastTime = h.StartTime;
@@ -74,7 +77,12 @@ namespace osu.Game.Rulesets.Catch.Replays
                     double timeWeNeedToSave = timeAtNormalSpeed - timeAvailable;
                     double timeAtDashSpeed = timeWeNeedToSave / 2;
 
-                    float midPosition = (float)Interpolation.Lerp(lastPosition, h.EffectiveX, (float)timeAtDashSpeed / timeAvailable);
+                    float midPosition = (float)
+                        Interpolation.Lerp(
+                            lastPosition,
+                            h.EffectiveX,
+                            (float)timeAtDashSpeed / timeAvailable
+                        );
 
                     // dash movement
                     addFrame(h.StartTime - timeAvailable + 1, lastPosition, true);

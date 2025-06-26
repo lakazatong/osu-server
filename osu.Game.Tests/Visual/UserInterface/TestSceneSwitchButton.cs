@@ -16,14 +16,15 @@ namespace osu.Game.Tests.Visual.UserInterface
         private SwitchButton switchButton;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = switchButton = new SwitchButton
+        public void Setup() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
-        });
+                Child = switchButton = new SwitchButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                };
+            });
 
         [Test]
         public void TestChangeThroughInput()
@@ -38,7 +39,10 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             BindableBool bindable = null;
 
-            AddStep("bind bindable", () => switchButton.Current.BindTo(bindable = new BindableBool()));
+            AddStep(
+                "bind bindable",
+                () => switchButton.Current.BindTo(bindable = new BindableBool())
+            );
             AddStep("toggle bindable", () => bindable.Toggle());
             AddStep("toggle bindable", () => bindable.Toggle());
         }

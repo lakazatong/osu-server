@@ -19,56 +19,68 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             base.SetUpSteps();
 
-            AddStep("setup API", () =>
-            {
-                ((DummyAPIAccess)API).HandleRequest = r =>
+            AddStep(
+                "setup API",
+                () =>
                 {
-                    switch (r)
+                    ((DummyAPIAccess)API).HandleRequest = r =>
                     {
-                        case GetRoomLeaderboardRequest leaderboardRequest:
-                            leaderboardRequest.TriggerSuccess(new APILeaderboard
-                            {
-                                Leaderboard = new List<APIUserScoreAggregate>
-                                {
-                                    new APIUserScoreAggregate
+                        switch (r)
+                        {
+                            case GetRoomLeaderboardRequest leaderboardRequest:
+                                leaderboardRequest.TriggerSuccess(
+                                    new APILeaderboard
                                     {
-                                        UserID = 2,
-                                        User = new APIUser { Id = 2, Username = "peppy" },
-                                        TotalScore = 995533,
-                                        RoomID = 3,
-                                        CompletedBeatmaps = 1,
-                                        TotalAttempts = 6,
-                                        Accuracy = 0.9851
-                                    },
-                                    new APIUserScoreAggregate
-                                    {
-                                        UserID = 1040328,
-                                        User = new APIUser { Id = 1040328, Username = "smoogipoo" },
-                                        TotalScore = 981100,
-                                        RoomID = 3,
-                                        CompletedBeatmaps = 1,
-                                        TotalAttempts = 9,
-                                        Accuracy = 0.937
+                                        Leaderboard = new List<APIUserScoreAggregate>
+                                        {
+                                            new APIUserScoreAggregate
+                                            {
+                                                UserID = 2,
+                                                User = new APIUser { Id = 2, Username = "peppy" },
+                                                TotalScore = 995533,
+                                                RoomID = 3,
+                                                CompletedBeatmaps = 1,
+                                                TotalAttempts = 6,
+                                                Accuracy = 0.9851,
+                                            },
+                                            new APIUserScoreAggregate
+                                            {
+                                                UserID = 1040328,
+                                                User = new APIUser
+                                                {
+                                                    Id = 1040328,
+                                                    Username = "smoogipoo",
+                                                },
+                                                TotalScore = 981100,
+                                                RoomID = 3,
+                                                CompletedBeatmaps = 1,
+                                                TotalAttempts = 9,
+                                                Accuracy = 0.937,
+                                            },
+                                        },
                                     }
-                                }
-                            });
-                            return true;
-                    }
+                                );
+                                return true;
+                        }
 
-                    return false;
-                };
-            });
+                        return false;
+                    };
+                }
+            );
 
-            AddStep("create leaderboard", () =>
-            {
-                Child = new MatchLeaderboard(new Room { RoomID = 3 })
+            AddStep(
+                "create leaderboard",
+                () =>
                 {
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Size = new Vector2(550f, 450f),
-                    Scope = MatchLeaderboardScope.Overall,
-                };
-            });
+                    Child = new MatchLeaderboard(new Room { RoomID = 3 })
+                    {
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Size = new Vector2(550f, 450f),
+                        Scope = MatchLeaderboardScope.Overall,
+                    };
+                }
+            );
         }
     }
 }

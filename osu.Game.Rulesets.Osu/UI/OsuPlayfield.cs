@@ -48,7 +48,8 @@ namespace osu.Game.Rulesets.Osu.UI
 
         protected override GameplayCursorContainer? CreateCursor() => new OsuCursorContainer();
 
-        public override Quad SkinnableComponentScreenSpaceDrawQuad => playfieldBorder.ScreenSpaceDrawQuad;
+        public override Quad SkinnableComponentScreenSpaceDrawQuad =>
+            playfieldBorder.ScreenSpaceDrawQuad;
 
         private readonly Container judgementAboveHitObjectLayer;
 
@@ -67,7 +68,10 @@ namespace osu.Game.Rulesets.Osu.UI
                 Smoke = new SmokeContainer { RelativeSizeAxes = Axes.Both },
                 spinnerProxies = new ProxyContainer { RelativeSizeAxes = Axes.Both },
                 FollowPoints = new FollowPointRenderer { RelativeSizeAxes = Axes.Both },
-                judgementLayer = new JudgementContainer<DrawableOsuJudgement> { RelativeSizeAxes = Axes.Both },
+                judgementLayer = new JudgementContainer<DrawableOsuJudgement>
+                {
+                    RelativeSizeAxes = Axes.Both,
+                },
                 HitObjectContainer,
                 judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
                 approachCircles = new ProxyContainer { RelativeSizeAxes = Axes.Both },
@@ -75,15 +79,20 @@ namespace osu.Game.Rulesets.Osu.UI
 
             HitPolicy = new StartTimeOrderedHitPolicy();
 
-            AddInternal(judgementPooler = new JudgementPooler<DrawableOsuJudgement>(new[]
-            {
-                HitResult.Great,
-                HitResult.Ok,
-                HitResult.Meh,
-                HitResult.Miss,
-                HitResult.LargeTickMiss,
-                HitResult.IgnoreMiss,
-            }, onJudgementLoaded));
+            AddInternal(
+                judgementPooler = new JudgementPooler<DrawableOsuJudgement>(
+                    new[]
+                    {
+                        HitResult.Great,
+                        HitResult.Ok,
+                        HitResult.Meh,
+                        HitResult.Miss,
+                        HitResult.LargeTickMiss,
+                        HitResult.IgnoreMiss,
+                    },
+                    onJudgementLoaded
+                )
+            );
 
             NewResult += onNewResult;
         }
@@ -105,7 +114,10 @@ namespace osu.Game.Rulesets.Osu.UI
         {
             ((DrawableOsuHitObject)drawable).CheckHittable = hitPolicy.CheckHittable;
 
-            Debug.Assert(!drawable.IsLoaded, $"Already loaded {nameof(DrawableHitObject)} is added to {nameof(OsuPlayfield)}");
+            Debug.Assert(
+                !drawable.IsLoaded,
+                $"Already loaded {nameof(DrawableHitObject)} is added to {nameof(OsuPlayfield)}"
+            );
             drawable.OnLoadComplete += onDrawableHitObjectLoaded;
         }
 
@@ -132,7 +144,10 @@ namespace osu.Game.Rulesets.Osu.UI
         [BackgroundDependencyLoader]
         private void load(OsuRulesetConfigManager? config, IBeatmap? beatmap)
         {
-            config?.BindWith(OsuRulesetSetting.PlayfieldBorderStyle, playfieldBorder.PlayfieldBorderStyle);
+            config?.BindWith(
+                OsuRulesetSetting.PlayfieldBorderStyle,
+                playfieldBorder.PlayfieldBorderStyle
+            );
 
             var osuBeatmap = (OsuBeatmap?)beatmap;
 
@@ -147,15 +162,24 @@ namespace osu.Game.Rulesets.Osu.UI
                 foreach (var slider in osuBeatmap.HitObjects.OfType<Slider>())
                 {
                     maxRepeatsOnOneSlider = Math.Max(maxRepeatsOnOneSlider, slider.RepeatCount);
-                    maxTicksOnOneSlider = Math.Max(maxTicksOnOneSlider, slider.NestedHitObjects.OfType<SliderTick>().Count());
+                    maxTicksOnOneSlider = Math.Max(
+                        maxTicksOnOneSlider,
+                        slider.NestedHitObjects.OfType<SliderTick>().Count()
+                    );
                 }
             }
 
             RegisterPool<Slider, DrawableSlider>(20, 100);
             RegisterPool<SliderHeadCircle, DrawableSliderHead>(20, 100);
             RegisterPool<SliderTailCircle, DrawableSliderTail>(20, 100);
-            RegisterPool<SliderTick, DrawableSliderTick>(Math.Max(maxTicksOnOneSlider, 20), Math.Max(maxTicksOnOneSlider, 200));
-            RegisterPool<SliderRepeat, DrawableSliderRepeat>(Math.Max(maxRepeatsOnOneSlider, 20), Math.Max(maxRepeatsOnOneSlider, 200));
+            RegisterPool<SliderTick, DrawableSliderTick>(
+                Math.Max(maxTicksOnOneSlider, 20),
+                Math.Max(maxTicksOnOneSlider, 200)
+            );
+            RegisterPool<SliderRepeat, DrawableSliderRepeat>(
+                Math.Max(maxRepeatsOnOneSlider, 20),
+                Math.Max(maxRepeatsOnOneSlider, 200)
+            );
 
             RegisterPool<Spinner, DrawableSpinner>(2, 20);
             RegisterPool<SpinnerTick, DrawableSpinnerTick>(10, 200);
@@ -167,10 +191,17 @@ namespace osu.Game.Rulesets.Osu.UI
 
         protected void ApplyCircleSizeToPlayfieldBorder(IBeatmap beatmap)
         {
-            borderContainer.Padding = new MarginPadding(OsuHitObject.OBJECT_RADIUS * -LegacyRulesetExtensions.CalculateScaleFromCircleSize(beatmap.Difficulty.CircleSize, true));
+            borderContainer.Padding = new MarginPadding(
+                OsuHitObject.OBJECT_RADIUS
+                    * -LegacyRulesetExtensions.CalculateScaleFromCircleSize(
+                        beatmap.Difficulty.CircleSize,
+                        true
+                    )
+            );
         }
 
-        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new OsuHitObjectLifetimeEntry(hitObject);
+        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) =>
+            new OsuHitObjectLifetimeEntry(hitObject);
 
         protected override void OnHitObjectAdded(HitObject hitObject)
         {
@@ -192,7 +223,10 @@ namespace osu.Game.Rulesets.Osu.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            var explosion = judgementPooler.Get(result.Type, doj => doj.Apply(result, judgedObject));
+            var explosion = judgementPooler.Get(
+                result.Type,
+                doj => doj.Apply(result, judgedObject)
+            );
 
             if (explosion == null)
                 return;
@@ -201,14 +235,20 @@ namespace osu.Game.Rulesets.Osu.UI
 
             // the proxied content is added to judgementAboveHitObjectLayer once, on first load, and never removed from it.
             // ensure that ordering is consistent with expectations (latest judgement should be front-most).
-            judgementAboveHitObjectLayer.ChangeChildDepth(explosion.ProxiedAboveHitObjectsContent, (float)-result.TimeAbsolute);
+            judgementAboveHitObjectLayer.ChangeChildDepth(
+                explosion.ProxiedAboveHitObjectsContent,
+                (float)-result.TimeAbsolute
+            );
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => HitObjectContainer.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            HitObjectContainer.ReceivePositionalInputAt(screenSpacePos);
 
         private OsuResumeOverlay.OsuResumeOverlayInputBlocker? resumeInputBlocker;
 
-        public void AttachResumeOverlayInputBlocker(OsuResumeOverlay.OsuResumeOverlayInputBlocker resumeInputBlocker)
+        public void AttachResumeOverlayInputBlocker(
+            OsuResumeOverlay.OsuResumeOverlayInputBlocker resumeInputBlocker
+        )
         {
             Debug.Assert(this.resumeInputBlocker == null);
             this.resumeInputBlocker = resumeInputBlocker;
@@ -226,10 +266,12 @@ namespace osu.Game.Rulesets.Osu.UI
                 : base(hitObject)
             {
                 // Prevent past objects in idles states from remaining alive as their end times are skipped in non-frame-stable contexts.
-                LifetimeEnd = HitObject.GetEndTime() + HitObject.HitWindows.WindowFor(HitResult.Miss);
+                LifetimeEnd =
+                    HitObject.GetEndTime() + HitObject.HitWindows.WindowFor(HitResult.Miss);
             }
 
-            protected override double InitialLifetimeOffset => ((OsuHitObject)HitObject).TimePreempt;
+            protected override double InitialLifetimeOffset =>
+                ((OsuHitObject)HitObject).TimePreempt;
         }
     }
 }

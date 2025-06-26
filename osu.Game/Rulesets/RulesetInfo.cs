@@ -9,7 +9,11 @@ using Realms;
 namespace osu.Game.Rulesets
 {
     [MapTo("Ruleset")]
-    public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<RulesetInfo>, IRulesetInfo
+    public class RulesetInfo
+        : RealmObject,
+            IEquatable<RulesetInfo>,
+            IComparable<RulesetInfo>,
+            IRulesetInfo
     {
         [PrimaryKey]
         public string ShortName { get; set; } = string.Empty;
@@ -35,16 +39,16 @@ namespace osu.Game.Rulesets
         }
 
         [UsedImplicitly]
-        public RulesetInfo()
-        {
-        }
+        public RulesetInfo() { }
 
         public bool Available { get; set; }
 
         public bool Equals(RulesetInfo? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other == null) return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
 
             return ShortName == other.ShortName;
         }
@@ -68,7 +72,10 @@ namespace osu.Game.Rulesets
         public int CompareTo(IRulesetInfo? other)
         {
             if (!(other is RulesetInfo ruleset))
-                throw new ArgumentException($@"Object is not of type {nameof(RulesetInfo)}.", nameof(other));
+                throw new ArgumentException(
+                    $@"Object is not of type {nameof(RulesetInfo)}.",
+                    nameof(other)
+                );
 
             return CompareTo(ruleset);
         }
@@ -84,15 +91,16 @@ namespace osu.Game.Rulesets
 
         public override string ToString() => Name;
 
-        public RulesetInfo Clone() => new RulesetInfo
-        {
-            OnlineID = OnlineID,
-            Name = Name,
-            ShortName = ShortName,
-            InstantiationInfo = InstantiationInfo,
-            Available = Available,
-            LastAppliedDifficultyVersion = LastAppliedDifficultyVersion,
-        };
+        public RulesetInfo Clone() =>
+            new RulesetInfo
+            {
+                OnlineID = OnlineID,
+                Name = Name,
+                ShortName = ShortName,
+                InstantiationInfo = InstantiationInfo,
+                Available = Available,
+                LastAppliedDifficultyVersion = LastAppliedDifficultyVersion,
+            };
 
         public Ruleset CreateInstance()
         {

@@ -24,19 +24,30 @@ namespace osu.Game.Rulesets.Mods
             AllowMistimedEventFiring = false;
             Divisor = 1;
 
-            InternalChild = sample = new PausableSkinnableSound(new SampleInfo("Gameplay/catch-banana"));
+            InternalChild = sample = new PausableSkinnableSound(
+                new SampleInfo("Gameplay/catch-banana")
+            );
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
-            if (!IsBeatSyncedWithTrack) return;
+            if (!IsBeatSyncedWithTrack)
+                return;
 
             int timeSignature = timingPoint.TimeSignature.Numerator;
 
             // play metronome from one measure before the first object.
-            if (BeatSyncSource.Clock.CurrentTime < firstHitTime - timingPoint.BeatLength * timeSignature)
+            if (
+                BeatSyncSource.Clock.CurrentTime
+                < firstHitTime - timingPoint.BeatLength * timeSignature
+            )
                 return;
 
             sample.Frequency.Value = beatIndex % timeSignature == 0 ? 1 : 0.5f;

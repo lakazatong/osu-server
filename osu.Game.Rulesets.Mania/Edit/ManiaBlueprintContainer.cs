@@ -18,11 +18,11 @@ namespace osu.Game.Rulesets.Mania.Edit
         public new ManiaHitObjectComposer Composer => (ManiaHitObjectComposer)base.Composer;
 
         public ManiaBlueprintContainer(ManiaHitObjectComposer composer)
-            : base(composer)
-        {
-        }
+            : base(composer) { }
 
-        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(HitObject hitObject)
+        public override HitObjectSelectionBlueprint? CreateHitObjectBlueprintFor(
+            HitObject hitObject
+        )
         {
             switch (hitObject)
             {
@@ -36,22 +36,36 @@ namespace osu.Game.Rulesets.Mania.Edit
             return base.CreateHitObjectBlueprintFor(hitObject);
         }
 
-        protected override SelectionHandler<HitObject> CreateSelectionHandler() => new ManiaSelectionHandler();
+        protected override SelectionHandler<HitObject> CreateSelectionHandler() =>
+            new ManiaSelectionHandler();
 
-        protected sealed override DragBox CreateDragBox() => new ScrollingDragBox(Composer.Playfield);
+        protected sealed override DragBox CreateDragBox() =>
+            new ScrollingDragBox(Composer.Playfield);
 
-        protected override bool TryMoveBlueprints(DragEvent e, IList<(SelectionBlueprint<HitObject> blueprint, Vector2[] originalSnapPositions)> blueprints)
+        protected override bool TryMoveBlueprints(
+            DragEvent e,
+            IList<(
+                SelectionBlueprint<HitObject> blueprint,
+                Vector2[] originalSnapPositions
+            )> blueprints
+        )
         {
             Vector2 distanceTravelled = e.ScreenSpaceMousePosition - e.ScreenSpaceMouseDownPosition;
 
             // The final movement position, relative to movementBlueprintOriginalPosition.
-            Vector2 movePosition = blueprints.First().originalSnapPositions.First() + distanceTravelled;
+            Vector2 movePosition =
+                blueprints.First().originalSnapPositions.First() + distanceTravelled;
 
             // Retrieve a snapped position.
             var result = Composer.FindSnappedPositionAndTime(movePosition);
 
             var referenceBlueprint = blueprints.First().blueprint;
-            bool moved = SelectionHandler.HandleMovement(new MoveSelectionEvent<HitObject>(referenceBlueprint, result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint));
+            bool moved = SelectionHandler.HandleMovement(
+                new MoveSelectionEvent<HitObject>(
+                    referenceBlueprint,
+                    result.ScreenSpacePosition - referenceBlueprint.ScreenSpaceSelectionPoint
+                )
+            );
             if (moved)
                 ApplySnapResultTime(result, referenceBlueprint.Item.StartTime);
             return moved;

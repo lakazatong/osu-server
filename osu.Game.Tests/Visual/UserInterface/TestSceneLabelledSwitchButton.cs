@@ -16,26 +16,32 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void createSwitchButton(bool hasDescription = false)
         {
-            AddStep("create component", () =>
-            {
-                LabelledSwitchButton component;
-
-                Child = new Container
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                    AutoSizeAxes = Axes.Y,
-                    Child = component = new LabelledSwitchButton
+                    LabelledSwitchButton component;
+
+                    Child = new Container
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
-                };
+                        Width = 500,
+                        AutoSizeAxes = Axes.Y,
+                        Child = component =
+                            new LabelledSwitchButton
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                    };
 
-                component.Label = "a sample component";
-                component.Description = hasDescription ? "this text describes the component" : string.Empty;
-            });
+                    component.Label = "a sample component";
+                    component.Description = hasDescription
+                        ? "this text describes the component"
+                        : string.Empty;
+                }
+            );
         }
     }
 }

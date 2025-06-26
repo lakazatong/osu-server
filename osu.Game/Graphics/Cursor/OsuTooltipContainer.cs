@@ -1,16 +1,16 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using osu.Framework.Graphics.Containers;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.Cursor
 {
@@ -19,9 +19,7 @@ namespace osu.Game.Graphics.Cursor
         protected override ITooltip CreateTooltip() => new OsuTooltip();
 
         public OsuTooltipContainer(CursorContainer cursor)
-            : base(cursor)
-        {
-        }
+            : base(cursor) { }
 
         protected override double AppearDelay => (1 - CurrentTooltip.Alpha) * base.AppearDelay; // reduce appear delay if the tooltip is already partly visible.
 
@@ -67,11 +65,7 @@ namespace osu.Game.Graphics.Cursor
                 };
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.9f,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.9f },
                     text = new TextFlowContainer(f =>
                     {
                         f.Font = OsuFont.GetFont(weight: FontWeight.Regular);
@@ -80,7 +74,7 @@ namespace osu.Game.Graphics.Cursor
                         Margin = new MarginPadding(5),
                         AutoSizeAxes = Axes.Both,
                         MaximumSize = new Vector2(max_width, float.PositiveInfinity),
-                    }
+                    },
                 };
             }
 

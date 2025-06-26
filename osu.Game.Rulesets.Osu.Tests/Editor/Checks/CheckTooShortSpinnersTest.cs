@@ -86,7 +86,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             Assert.That(check.Run(getContext(hitObjects, beatmapDifficulty)), Is.Empty);
         }
 
-        private void assertVeryShort(List<HitObject> hitObjects, IBeatmapDifficultyInfo beatmapDifficulty)
+        private void assertVeryShort(
+            List<HitObject> hitObjects,
+            IBeatmapDifficultyInfo beatmapDifficulty
+        )
         {
             var issues = check.Run(getContext(hitObjects, beatmapDifficulty)).ToList();
 
@@ -94,7 +97,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             Assert.That(issues.First().Template is CheckTooShortSpinners.IssueTemplateVeryShort);
         }
 
-        private void assertTooShort(List<HitObject> hitObjects, IBeatmapDifficultyInfo beatmapDifficulty)
+        private void assertTooShort(
+            List<HitObject> hitObjects,
+            IBeatmapDifficultyInfo beatmapDifficulty
+        )
         {
             var issues = check.Run(getContext(hitObjects, beatmapDifficulty)).ToList();
 
@@ -102,12 +108,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor.Checks
             Assert.That(issues.First().Template is CheckTooShortSpinners.IssueTemplateTooShort);
         }
 
-        private BeatmapVerifierContext getContext(List<HitObject> hitObjects, IBeatmapDifficultyInfo beatmapDifficulty)
+        private BeatmapVerifierContext getContext(
+            List<HitObject> hitObjects,
+            IBeatmapDifficultyInfo beatmapDifficulty
+        )
         {
             var beatmap = new Beatmap<HitObject>
             {
                 HitObjects = hitObjects,
-                BeatmapInfo = new BeatmapInfo { Difficulty = new BeatmapDifficulty(beatmapDifficulty) }
+                BeatmapInfo = new BeatmapInfo
+                {
+                    Difficulty = new BeatmapDifficulty(beatmapDifficulty),
+                },
             };
 
             return new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));

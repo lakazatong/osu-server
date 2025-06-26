@@ -36,7 +36,13 @@ namespace osu.Game.Overlays.SkinEditor
         /// <param name="target">The target. This is mainly used as a dependency source to find candidate components.</param>
         /// <param name="ruleset">A ruleset to filter components by. If null, only components which are not ruleset-specific will be included.</param>
         public SkinComponentToolbox(SkinnableContainer target, RulesetInfo? ruleset)
-            : base(ruleset == null ? SkinEditorStrings.Components : LocalisableString.Interpolate($"{SkinEditorStrings.Components} ({ruleset.Name})"))
+            : base(
+                ruleset == null
+                    ? SkinEditorStrings.Components
+                    : LocalisableString.Interpolate(
+                        $"{SkinEditorStrings.Components} ({ruleset.Name})"
+                    )
+            )
         {
             this.target = target;
             this.ruleset = ruleset;
@@ -50,7 +56,7 @@ namespace osu.Game.Overlays.SkinEditor
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
                 Direction = FillDirection.Vertical,
-                Spacing = new Vector2(EditorSidebar.PADDING)
+                Spacing = new Vector2(EditorSidebar.PADDING),
             };
 
             reloadComponents();
@@ -71,13 +77,16 @@ namespace osu.Game.Overlays.SkinEditor
             {
                 Drawable instance = (Drawable)Activator.CreateInstance(type)!;
 
-                if (!((ISerialisableDrawable)instance).IsEditable) return;
+                if (!((ISerialisableDrawable)instance).IsEditable)
+                    return;
 
-                fill.Add(new ToolboxComponentButton(instance, target)
-                {
-                    RequestPlacement = t => RequestPlacement?.Invoke(t),
-                    Expanding = contractOtherButtons,
-                });
+                fill.Add(
+                    new ToolboxComponentButton(instance, target)
+                    {
+                        RequestPlacement = t => RequestPlacement?.Invoke(t),
+                        Expanding = contractOtherButtons,
+                    }
+                );
             }
             catch (DependencyNotRegisteredException)
             {
@@ -86,7 +95,10 @@ namespace osu.Game.Overlays.SkinEditor
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Skin component {type} could not be loaded in the editor component list due to an error");
+                Logger.Error(
+                    e,
+                    $"Skin component {type} could not be loaded in the editor component list due to an error"
+                );
             }
         }
 
@@ -132,11 +144,14 @@ namespace osu.Game.Overlays.SkinEditor
             protected override bool OnHover(HoverEvent e)
             {
                 expandContractAction?.Cancel();
-                expandContractAction = Scheduler.AddDelayed(() =>
-                {
-                    this.ResizeHeightTo(expanded_size, animation_duration, Easing.OutQuint);
-                    Expanding?.Invoke(this);
-                }, 100);
+                expandContractAction = Scheduler.AddDelayed(
+                    () =>
+                    {
+                        this.ResizeHeightTo(expanded_size, animation_duration, Easing.OutQuint);
+                        Expanding?.Invoke(this);
+                    },
+                    100
+                );
 
                 return base.OnHover(e);
             }
@@ -169,29 +184,32 @@ namespace osu.Game.Overlays.SkinEditor
             {
                 BackgroundColour = colourProvider.Background3;
 
-                AddRange(new Drawable[]
-                {
-                    new Container
+                AddRange(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding(10) { Bottom = 20 },
-                        Masking = true,
-                        Child = innerContainer = new DependencyBorrowingContainer(dependencySource)
+                        new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Child = component
+                            Padding = new MarginPadding(10) { Bottom = 20 },
+                            Masking = true,
+                            Child = innerContainer =
+                                new DependencyBorrowingContainer(dependencySource)
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Child = component,
+                                },
                         },
-                    },
-                    new OsuSpriteText
-                    {
-                        Text = component.GetType().Name,
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        Margin = new MarginPadding(5),
-                    },
-                });
+                        new OsuSpriteText
+                        {
+                            Text = component.GetType().Name,
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            Margin = new MarginPadding(5),
+                        },
+                    }
+                );
 
                 // adjust provided component to fit / display in a known state.
                 component.Anchor = Anchor.Centre;
@@ -206,7 +224,8 @@ namespace osu.Game.Overlays.SkinEditor
                 {
                     float bestScale = Math.Min(
                         innerContainer.DrawWidth / component.DrawWidth,
-                        innerContainer.DrawHeight / component.DrawHeight);
+                        innerContainer.DrawHeight / component.DrawHeight
+                    );
 
                     innerContainer.Scale = new Vector2(bestScale);
                 }
@@ -232,7 +251,9 @@ namespace osu.Game.Overlays.SkinEditor
                 this.donor = donor;
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var baseDependencies = base.CreateChildDependencies(parent);
                 if (donor == null)

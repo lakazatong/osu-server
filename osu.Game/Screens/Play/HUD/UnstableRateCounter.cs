@@ -43,7 +43,8 @@ namespace osu.Game.Screens.Play.HUD
         {
             Colour = colours.BlueLighter;
             valid.BindValueChanged(e =>
-                DrawableCount.FadeTo(e.NewValue ? 1 : alpha_when_invalid, 1000, Easing.OutQuint));
+                DrawableCount.FadeTo(e.NewValue ? 1 : alpha_when_invalid, 1000, Easing.OutQuint)
+            );
         }
 
         protected override void LoadComplete()
@@ -73,10 +74,8 @@ namespace osu.Game.Screens.Play.HUD
                 Current.Value = (int)Math.Round(unstableRate.Value);
         }
 
-        protected override IHasText CreateText() => new TextComponent
-        {
-            Alpha = alpha_when_invalid,
-        };
+        protected override IHasText CreateText() =>
+            new TextComponent { Alpha = alpha_when_invalid };
 
         protected override void Dispose(bool isDisposing)
         {
@@ -113,7 +112,7 @@ namespace osu.Game.Screens.Play.HUD
                         {
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true)
+                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true),
                         },
                         new OsuSpriteText
                         {
@@ -122,8 +121,8 @@ namespace osu.Game.Screens.Play.HUD
                             Font = OsuFont.Numeric.With(size: 8, fixedWidth: true),
                             Text = @"UR",
                             Padding = new MarginPadding { Bottom = 1.5f }, // align baseline better
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

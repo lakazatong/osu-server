@@ -15,9 +15,11 @@ namespace osu.Game.Online.API.Requests
         public readonly string? Filename;
 
         public GetBeatmapRequest(IBeatmapInfo beatmapInfo)
-            : this(onlineId: beatmapInfo.OnlineID, md5Hash: beatmapInfo.MD5Hash, filename: (beatmapInfo as BeatmapInfo)?.Path)
-        {
-        }
+            : this(
+                onlineId: beatmapInfo.OnlineID,
+                md5Hash: beatmapInfo.MD5Hash,
+                filename: (beatmapInfo as BeatmapInfo)?.Path
+            ) { }
 
         public GetBeatmapRequest(int onlineId = -1, string? md5Hash = null, string? filename = null)
         {

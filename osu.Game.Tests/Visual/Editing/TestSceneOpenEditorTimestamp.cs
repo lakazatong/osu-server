@@ -31,30 +31,61 @@ namespace osu.Game.Tests.Visual.Editing
             RulesetInfo rulesetInfo = new OsuRuleset().RulesetInfo;
 
             addStepClickLink("00:00:000", waitForSeek: false);
-            AddUntilStep("received 'must be in edit'",
-                () => Game.Notifications.AllNotifications.Count(x => x.Text == EditorStrings.MustBeInEditorToHandleLinks),
-                () => Is.EqualTo(1));
+            AddUntilStep(
+                "received 'must be in edit'",
+                () =>
+                    Game.Notifications.AllNotifications.Count(x =>
+                        x.Text == EditorStrings.MustBeInEditorToHandleLinks
+                    ),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("entered song select", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "entered song select",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
             addStepClickLink("00:00:000 (1)", waitForSeek: false);
-            AddUntilStep("received 'must be in edit'",
-                () => Game.Notifications.AllNotifications.Count(x => x.Text == EditorStrings.MustBeInEditorToHandleLinks),
-                () => Is.EqualTo(2));
+            AddUntilStep(
+                "received 'must be in edit'",
+                () =>
+                    Game.Notifications.AllNotifications.Count(x =>
+                        x.Text == EditorStrings.MustBeInEditorToHandleLinks
+                    ),
+                () => Is.EqualTo(2)
+            );
 
             setUpEditor(rulesetInfo);
-            AddAssert("ruleset is osu!", () => editorBeatmap.BeatmapInfo.Ruleset.Equals(rulesetInfo));
+            AddAssert(
+                "ruleset is osu!",
+                () => editorBeatmap.BeatmapInfo.Ruleset.Equals(rulesetInfo)
+            );
 
             addStepClickLink("00:000", "invalid link", waitForSeek: false);
-            AddUntilStep("received 'failed to process'",
-                () => Game.Notifications.AllNotifications.Count(x => x.Text == EditorStrings.FailedToParseEditorLink),
-                () => Is.EqualTo(1));
+            AddUntilStep(
+                "received 'failed to process'",
+                () =>
+                    Game.Notifications.AllNotifications.Count(x =>
+                        x.Text == EditorStrings.FailedToParseEditorLink
+                    ),
+                () => Is.EqualTo(1)
+            );
 
             addStepClickLink("50000:00:000", "too long link", waitForSeek: false);
-            AddUntilStep("received 'failed to process'",
-                () => Game.Notifications.AllNotifications.Count(x => x.Text == EditorStrings.FailedToParseEditorLink),
-                () => Is.EqualTo(2));
+            AddUntilStep(
+                "received 'failed to process'",
+                () =>
+                    Game.Notifications.AllNotifications.Count(x =>
+                        x.Text == EditorStrings.FailedToParseEditorLink
+                    ),
+                () => Is.EqualTo(2)
+            );
         }
 
         [Test]
@@ -63,10 +94,17 @@ namespace osu.Game.Tests.Visual.Editing
             RulesetInfo rulesetInfo = new OsuRuleset().RulesetInfo;
 
             setUpEditor(rulesetInfo);
-            AddAssert("is osu! ruleset", () => editorBeatmap.BeatmapInfo.Ruleset.Equals(rulesetInfo));
+            AddAssert(
+                "is osu! ruleset",
+                () => editorBeatmap.BeatmapInfo.Ruleset.Equals(rulesetInfo)
+            );
 
             addStepClickLink("100:00:000", "long link");
-            AddUntilStep("moved to end of track", () => editorClock.CurrentTime, () => Is.EqualTo(editorClock.TrackLength));
+            AddUntilStep(
+                "moved to end of track",
+                () => editorClock.CurrentTime,
+                () => Is.EqualTo(editorClock.TrackLength)
+            );
 
             addStepScreenModeTo(EditorScreenMode.SongSetup);
             addStepClickLink("00:00:000");
@@ -104,20 +142,28 @@ namespace osu.Game.Tests.Visual.Editing
         public void TestUrlDecodingOfArgs()
         {
             setUpEditor(new OsuRuleset().RulesetInfo);
-            AddAssert("is osu! ruleset", () => editorBeatmap.BeatmapInfo.Ruleset.Equals(new OsuRuleset().RulesetInfo));
+            AddAssert(
+                "is osu! ruleset",
+                () => editorBeatmap.BeatmapInfo.Ruleset.Equals(new OsuRuleset().RulesetInfo)
+            );
 
             AddStep("jump to encoded link", () => Game.HandleLink("osu://edit/00:14:142%20(1)"));
 
             AddUntilStep("wait for seek", () => editorClock.SeekingOrStopped.Value);
 
             AddAssert("time is correct", () => editorClock.CurrentTime, () => Is.EqualTo(14_142));
-            AddAssert("selected object is correct", () => editorBeatmap.SelectedHitObjects.Single().StartTime, () => Is.EqualTo(14_142));
+            AddAssert(
+                "selected object is correct",
+                () => editorBeatmap.SelectedHitObjects.Single().StartTime,
+                () => Is.EqualTo(14_142)
+            );
         }
 
         private void addStepClickLink(string timestamp, string step = "", bool waitForSeek = true)
         {
-            AddStep($"{step} {timestamp}", () =>
-                Game.HandleLink(new LinkDetails(LinkAction.OpenEditorTimestamp, timestamp))
+            AddStep(
+                $"{step} {timestamp}",
+                () => Game.HandleLink(new LinkDetails(LinkAction.OpenEditorTimestamp, timestamp))
             );
 
             if (waitForSeek)
@@ -129,9 +175,9 @@ namespace osu.Game.Tests.Visual.Editing
 
         private void assertOnScreenAt(EditorScreenMode screen, double time)
         {
-            AddAssert($"stayed on {screen} at {time}", () =>
-                editor!.Mode.Value == screen
-                && editorClock.CurrentTime == time
+            AddAssert(
+                $"stayed on {screen} at {time}",
+                () => editor!.Mode.Value == screen && editorClock.CurrentTime == time
             );
         }
 
@@ -142,22 +188,34 @@ namespace osu.Game.Tests.Visual.Editing
         {
             BeatmapSetInfo beatmapSet = null!;
 
-            AddStep("Import test beatmap", () =>
-                Game.BeatmapManager.Import(TestResources.GetTestBeatmapForImport()).WaitSafely()
+            AddStep(
+                "Import test beatmap",
+                () =>
+                    Game.BeatmapManager.Import(TestResources.GetTestBeatmapForImport()).WaitSafely()
             );
-            AddStep("Retrieve beatmap", () =>
-                beatmapSet = Game.BeatmapManager.QueryBeatmapSet(set => !set.Protected).AsNonNull().Value.Detach()
+            AddStep(
+                "Retrieve beatmap",
+                () =>
+                    beatmapSet = Game
+                        .BeatmapManager.QueryBeatmapSet(set => !set.Protected)
+                        .AsNonNull()
+                        .Value.Detach()
             );
             AddStep("Present beatmap", () => Game.PresentBeatmap(beatmapSet));
-            AddUntilStep("Wait for song select", () =>
-                Game.Beatmap.Value.BeatmapSetInfo.Equals(beatmapSet)
-                && Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
-                && songSelect.BeatmapSetsLoaded
+            AddUntilStep(
+                "Wait for song select",
+                () =>
+                    Game.Beatmap.Value.BeatmapSetInfo.Equals(beatmapSet)
+                    && Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
             );
             AddStep("Switch ruleset", () => Game.Ruleset.Value = ruleset);
-            AddStep("Open editor for ruleset", () =>
-                ((PlaySongSelect)Game.ScreenStack.CurrentScreen)
-                .Edit(beatmapSet.Beatmaps.Last(beatmap => beatmap.Ruleset.Name == ruleset.Name))
+            AddStep(
+                "Open editor for ruleset",
+                () =>
+                    ((PlaySongSelect)Game.ScreenStack.CurrentScreen).Edit(
+                        beatmapSet.Beatmaps.Last(beatmap => beatmap.Ruleset.Name == ruleset.Name)
+                    )
             );
             AddUntilStep("Wait for editor open", () => editor?.ReadyForUse == true);
         }

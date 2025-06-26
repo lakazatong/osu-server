@@ -14,6 +14,9 @@ namespace osu.Game.Rulesets.UI
         /// <param name="hitObject">The <see cref="HitObject"/> to retrieve the <see cref="DrawableHitObject"/> representation of.</param>
         /// <param name="parent">The parenting <see cref="DrawableHitObject"/>, if any.</param>
         /// <returns>The <see cref="DrawableHitObject"/> representing <see cref="HitObject"/>, or <c>null</c> if no poolable representation exists.</returns>
-        DrawableHitObject? GetPooledDrawableRepresentation(HitObject hitObject, DrawableHitObject? parent);
+        DrawableHitObject? GetPooledDrawableRepresentation(
+            HitObject hitObject,
+            DrawableHitObject? parent
+        );
     }
 }

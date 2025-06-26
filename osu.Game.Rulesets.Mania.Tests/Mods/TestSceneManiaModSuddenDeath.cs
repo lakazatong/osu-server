@@ -18,55 +18,53 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new ManiaRuleset();
 
         public TestSceneManiaModSuddenDeath()
-            : base(new ManiaModSuddenDeath())
-        {
-        }
+            : base(new ManiaModSuddenDeath()) { }
 
         [Test]
-        public void TestGreatHit() => CreateModTest(new ModTestData
-        {
-            Mod = new ManiaModSuddenDeath(),
-            PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(false),
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject>
+        public void TestGreatHit() =>
+            CreateModTest(
+                new ModTestData
                 {
-                    new Note
+                    Mod = new ManiaModSuddenDeath(),
+                    PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(false),
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = new List<HitObject> { new Note { StartTime = 1000 } },
+                        },
+                    ReplayFrames = new List<ReplayFrame>
                     {
-                        StartTime = 1000,
-                    }
-                },
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(1020, ManiaAction.Key1),
-                new ManiaReplayFrame(2000)
-            }
-        });
-
-        [Test]
-        public void TestBreakOnHoldNote() => CreateModTest(new ModTestData
-        {
-            Mod = new ManiaModSuddenDeath(),
-            PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(true) && Player.Results.Count == 2,
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject>
-                {
-                    new HoldNote
-                    {
-                        StartTime = 1000,
-                        EndTime = 3000,
+                        new ManiaReplayFrame(1020, ManiaAction.Key1),
+                        new ManiaReplayFrame(2000),
                     },
-                },
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(1000, ManiaAction.Key1),
-                new ManiaReplayFrame(2000)
-            }
-        });
+                }
+            );
+
+        [Test]
+        public void TestBreakOnHoldNote() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModSuddenDeath(),
+                    PassCondition = () =>
+                        ((ModFailConditionTestPlayer)Player).CheckFailed(true)
+                        && Player.Results.Count == 2,
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = new List<HitObject>
+                            {
+                                new HoldNote { StartTime = 1000, EndTime = 3000 },
+                            },
+                        },
+                    ReplayFrames = new List<ReplayFrame>
+                    {
+                        new ManiaReplayFrame(1000, ManiaAction.Key1),
+                        new ManiaReplayFrame(2000),
+                    },
+                }
+            );
     }
 }

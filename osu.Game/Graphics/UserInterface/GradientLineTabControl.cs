@@ -3,13 +3,13 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osuTK;
-using osu.Framework.Graphics.Shapes;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -27,24 +27,27 @@ namespace osu.Game.Graphics.UserInterface
         {
             RelativeSizeAxes = Axes.X;
 
-            AddInternal(line = new GradientLine
-            {
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-            });
+            AddInternal(
+                line = new GradientLine
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                }
+            );
         }
 
         protected override Dropdown<TModel> CreateDropdown() => null;
 
-        protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            Anchor = Anchor.BottomCentre,
-            Origin = Anchor.BottomCentre,
-            AutoSizeAxes = Axes.X,
-            RelativeSizeAxes = Axes.Y,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(20, 0),
-        };
+        protected override TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                Anchor = Anchor.BottomCentre,
+                Origin = Anchor.BottomCentre,
+                AutoSizeAxes = Axes.X,
+                RelativeSizeAxes = Axes.Y,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(20, 0),
+            };
 
         private partial class GradientLine : GridContainer
         {
@@ -60,14 +63,14 @@ namespace osu.Game.Graphics.UserInterface
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Color4.Transparent, Colour)
+                            Colour = ColourInfo.GradientHorizontal(Color4.Transparent, Colour),
                         },
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Colour, Color4.Transparent)
+                            Colour = ColourInfo.GradientHorizontal(Colour, Color4.Transparent),
                         },
-                    }
+                    },
                 };
             }
         }

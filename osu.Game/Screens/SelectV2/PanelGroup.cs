@@ -59,23 +59,25 @@ namespace osu.Game.Screens.SelectV2
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background5,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
                     triangles = new TrianglesV2
                     {
                         RelativeSizeAxes = Axes.Both,
                         Thickness = 0.02f,
                         SpawnRatio = 0.6f,
-                        Colour = ColourInfo.GradientHorizontal(colourProvider.Background6, colourProvider.Background5)
+                        Colour = ColourInfo.GradientHorizontal(
+                            colourProvider.Background6,
+                            colourProvider.Background5
+                        ),
                     },
                     glow = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.5f,
-                        Colour = ColourInfo.GradientHorizontal(colourProvider.Highlight1, colourProvider.Highlight1.Opacity(0f)),
+                        Colour = ColourInfo.GradientHorizontal(
+                            colourProvider.Highlight1,
+                            colourProvider.Highlight1.Opacity(0f)
+                        ),
                     },
                 },
             };
@@ -110,7 +112,7 @@ namespace osu.Game.Screens.SelectV2
                             Origin = Anchor.Centre,
                             Font = OsuFont.Style.Caption1.With(weight: FontWeight.Bold),
                             UseFullGlyphHeight = false,
-                        }
+                        },
                     },
                 },
             };
@@ -131,8 +133,14 @@ namespace osu.Game.Screens.SelectV2
             iconContainer.FadeTo(Expanded.Value ? 1f : 0f, duration, Easing.OutQuint);
 
             ColourInfo colour = Expanded.Value
-                ? ColourInfo.GradientHorizontal(colourProvider.Highlight1.Opacity(0.25f), colourProvider.Highlight1.Opacity(0f))
-                : ColourInfo.GradientHorizontal(colourProvider.Background6, colourProvider.Background5);
+                ? ColourInfo.GradientHorizontal(
+                    colourProvider.Highlight1.Opacity(0.25f),
+                    colourProvider.Highlight1.Opacity(0f)
+                )
+                : ColourInfo.GradientHorizontal(
+                    colourProvider.Background6,
+                    colourProvider.Background5
+                );
 
             triangles.FadeColour(colour, duration, Easing.OutQuint);
             glow.FadeTo(Expanded.Value ? 0.4f : 0, duration, Easing.OutQuint);
@@ -167,7 +175,11 @@ namespace osu.Game.Screens.SelectV2
 
                 return new MenuItem[]
                 {
-                    new OsuMenuItem(Expanded.Value ? "Collapse" : "Expand", MenuItemType.Highlighted, () => TriggerClick())
+                    new OsuMenuItem(
+                        Expanded.Value ? "Collapse" : "Expand",
+                        MenuItemType.Highlighted,
+                        () => TriggerClick()
+                    ),
                 };
             }
         }

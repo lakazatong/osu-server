@@ -60,13 +60,29 @@ namespace osu.Game.Tests.Beatmaps
         protected sealed override bool HasCustomSteps => true;
         protected override bool Autoplay => true;
 
-        protected sealed override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-            => new DependencyContainer(dependencies = new SkinSourceDependencyContainer(base.CreateChildDependencies(parent)));
+        protected sealed override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) =>
+            new DependencyContainer(
+                dependencies = new SkinSourceDependencyContainer(
+                    base.CreateChildDependencies(parent)
+                )
+            );
 
         protected sealed override IBeatmap CreateBeatmap(RulesetInfo ruleset) => currentTestBeatmap;
 
-        protected sealed override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
-            => new TestWorkingBeatmap(beatmapInfo, beatmapSkinResourceStore, beatmap, storyboard, Clock, this);
+        protected sealed override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) =>
+            new TestWorkingBeatmap(
+                beatmapInfo,
+                beatmapSkinResourceStore,
+                beatmap,
+                storyboard,
+                Clock,
+                this
+            );
 
         protected override TestPlayer CreatePlayer(Ruleset ruleset) => new TestPlayer(false);
 
@@ -74,57 +90,102 @@ namespace osu.Game.Tests.Beatmaps
         {
             CreateTest(() =>
             {
-                AddStep("clear performed lookups", () =>
-                {
-                    userSkinResourceStore.PerformedLookups.Clear();
-                    beatmapSkinResourceStore.PerformedLookups.Clear();
-                });
+                AddStep(
+                    "clear performed lookups",
+                    () =>
+                    {
+                        userSkinResourceStore.PerformedLookups.Clear();
+                        beatmapSkinResourceStore.PerformedLookups.Clear();
+                    }
+                );
 
-                AddStep($"load {filename}", () =>
-                {
-                    using (var reader = new LineBufferedReader(RulesetResources.GetStream($"Resources/SampleLookups/{filename}")))
-                        currentTestBeatmap = Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
+                AddStep(
+                    $"load {filename}",
+                    () =>
+                    {
+                        using (
+                            var reader = new LineBufferedReader(
+                                RulesetResources.GetStream($"Resources/SampleLookups/{filename}")
+                            )
+                        )
+                            currentTestBeatmap = Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
 
-                    // populate ruleset for beatmap converters that require it to be present.
-                    var ruleset = rulesetStore.GetRuleset(currentTestBeatmap.BeatmapInfo.Ruleset.OnlineID);
+                        // populate ruleset for beatmap converters that require it to be present.
+                        var ruleset = rulesetStore.GetRuleset(
+                            currentTestBeatmap.BeatmapInfo.Ruleset.OnlineID
+                        );
 
-                    Debug.Assert(ruleset != null);
+                        Debug.Assert(ruleset != null);
 
-                    currentTestBeatmap.BeatmapInfo.Ruleset = ruleset;
-                });
+                        currentTestBeatmap.BeatmapInfo.Ruleset = ruleset;
+                    }
+                );
             });
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
             AddUntilStep("results displayed", () => Stack.CurrentScreen is ResultsScreen);
         }
 
         protected void SetupSkins(string beatmapFile, string userFile)
         {
-            AddStep("setup skins", () =>
-            {
-                userSkinInfo.Files.Clear();
-                if (!string.IsNullOrEmpty(userFile))
-                    userSkinInfo.Files.Add(new RealmNamedFileUsage(new RealmFile { Hash = userFile }, userFile));
+            AddStep(
+                "setup skins",
+                () =>
+                {
+                    userSkinInfo.Files.Clear();
+                    if (!string.IsNullOrEmpty(userFile))
+                        userSkinInfo.Files.Add(
+                            new RealmNamedFileUsage(new RealmFile { Hash = userFile }, userFile)
+                        );
 
-                Debug.Assert(beatmapInfo.BeatmapSet != null);
+                    Debug.Assert(beatmapInfo.BeatmapSet != null);
 
-                beatmapInfo.BeatmapSet.Files.Clear();
-                if (!string.IsNullOrEmpty(beatmapFile))
-                    beatmapInfo.BeatmapSet.Files.Add(new RealmNamedFileUsage(new RealmFile { Hash = beatmapFile }, beatmapFile));
+                    beatmapInfo.BeatmapSet.Files.Clear();
+                    if (!string.IsNullOrEmpty(beatmapFile))
+                        beatmapInfo.BeatmapSet.Files.Add(
+                            new RealmNamedFileUsage(
+                                new RealmFile { Hash = beatmapFile },
+                                beatmapFile
+                            )
+                        );
 
-                // Need to refresh the cached skin source to refresh the skin resource store.
-                dependencies.SkinSource = new SkinProvidingContainer(Skin = new LegacySkin(userSkinInfo, this));
-            });
+                    // Need to refresh the cached skin source to refresh the skin resource store.
+                    dependencies.SkinSource = new SkinProvidingContainer(
+                        Skin = new LegacySkin(userSkinInfo, this)
+                    );
+                }
+            );
         }
 
-        protected void AssertBeatmapLookup(string name) => AddAssert($"\"{name}\" looked up from beatmap skin",
-            () => !userSkinResourceStore.PerformedLookups.Contains(name) && beatmapSkinResourceStore.PerformedLookups.Contains(name));
+        protected void AssertBeatmapLookup(string name) =>
+            AddAssert(
+                $"\"{name}\" looked up from beatmap skin",
+                () =>
+                    !userSkinResourceStore.PerformedLookups.Contains(name)
+                    && beatmapSkinResourceStore.PerformedLookups.Contains(name)
+            );
 
-        protected void AssertUserLookup(string name) => AddAssert($"\"{name}\" looked up from user skin",
-            () => !beatmapSkinResourceStore.PerformedLookups.Contains(name) && userSkinResourceStore.PerformedLookups.Contains(name));
+        protected void AssertUserLookup(string name) =>
+            AddAssert(
+                $"\"{name}\" looked up from user skin",
+                () =>
+                    !beatmapSkinResourceStore.PerformedLookups.Contains(name)
+                    && userSkinResourceStore.PerformedLookups.Contains(name)
+            );
 
-        protected void AssertNoLookup(string name) => AddAssert($"\"{name}\" not looked up",
-            () => !beatmapSkinResourceStore.PerformedLookups.Contains(name) && !userSkinResourceStore.PerformedLookups.Contains(name));
+        protected void AssertNoLookup(string name) =>
+            AddAssert(
+                $"\"{name}\" not looked up",
+                () =>
+                    !beatmapSkinResourceStore.PerformedLookups.Contains(name)
+                    && !userSkinResourceStore.PerformedLookups.Contains(name)
+            );
 
         #region IResourceStorageProvider
 
@@ -132,7 +193,11 @@ namespace osu.Game.Tests.Beatmaps
         public AudioManager AudioManager => Audio;
         public IResourceStore<byte[]> Files => userSkinResourceStore;
         public new IResourceStore<byte[]> Resources => base.Resources;
-        public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => null!;
+
+        public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => null!;
+
         RealmAccess IStorageResourceProvider.RealmAccess => null!;
 
         #endregion
@@ -164,7 +229,8 @@ namespace osu.Game.Tests.Beatmaps
                 return fallback.Get(type, info);
             }
 
-            public void Inject<T>(T instance) where T : class, IDependencyInjectionCandidate
+            public void Inject<T>(T instance)
+                where T : class, IDependencyInjectionCandidate
             {
                 // Never used directly
             }
@@ -192,13 +258,14 @@ namespace osu.Game.Tests.Beatmaps
                 return new MemoryStream();
             }
 
-            private void markLookup(string name) => PerformedLookups.Add(name.Substring(name.LastIndexOf(Path.DirectorySeparatorChar) + 1));
+            private void markLookup(string name) =>
+                PerformedLookups.Add(
+                    name.Substring(name.LastIndexOf(Path.DirectorySeparatorChar) + 1)
+                );
 
             public IEnumerable<string> GetAvailableResources() => Enumerable.Empty<string>();
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
 
         private class TestWorkingBeatmap : ClockBackedTestWorkingBeatmap, IStorageResourceProvider
@@ -207,8 +274,14 @@ namespace osu.Game.Tests.Beatmaps
 
             private readonly IStorageResourceProvider resources;
 
-            public TestWorkingBeatmap(BeatmapInfo skinBeatmapInfo, IResourceStore<byte[]> accessMarkingResourceStore, IBeatmap beatmap, Storyboard storyboard, IFrameBasedClock referenceClock,
-                                      IStorageResourceProvider resources)
+            public TestWorkingBeatmap(
+                BeatmapInfo skinBeatmapInfo,
+                IResourceStore<byte[]> accessMarkingResourceStore,
+                IBeatmap beatmap,
+                Storyboard storyboard,
+                IFrameBasedClock referenceClock,
+                IStorageResourceProvider resources
+            )
                 : base(beatmap, storyboard, referenceClock, resources.AudioManager)
             {
                 this.skinBeatmapInfo = skinBeatmapInfo;
@@ -216,7 +289,8 @@ namespace osu.Game.Tests.Beatmaps
                 this.resources = resources;
             }
 
-            protected internal override ISkin GetSkin() => new LegacyBeatmapSkin(skinBeatmapInfo, this);
+            protected internal override ISkin GetSkin() =>
+                new LegacyBeatmapSkin(skinBeatmapInfo, this);
 
             public IRenderer Renderer => resources.Renderer;
             public AudioManager AudioManager => resources.AudioManager;
@@ -227,7 +301,9 @@ namespace osu.Game.Tests.Beatmaps
 
             public RealmAccess RealmAccess => resources.RealmAccess;
 
-            public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => resources.CreateTextureLoaderStore(underlyingStore);
+            public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+                IResourceStore<byte[]> underlyingStore
+            ) => resources.CreateTextureLoaderStore(underlyingStore);
         }
     }
 }

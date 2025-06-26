@@ -20,7 +20,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             set => selectedItem.Current = value;
         }
 
-        private readonly BindableWithCurrent<PlaylistItem?> selectedItem = new BindableWithCurrent<PlaylistItem?>();
+        private readonly BindableWithCurrent<PlaylistItem?> selectedItem =
+            new BindableWithCurrent<PlaylistItem?>();
 
         public PlaylistsRoomPanel(Room room)
             : base(room)
@@ -28,9 +29,11 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             base.SelectedItem.BindTo(SelectedItem);
         }
 
-        protected override UpdateableBeatmapBackgroundSprite CreateBackground() => base.CreateBackground().With(d =>
-        {
-            d.BackgroundLoadDelay = 0;
-        });
+        protected override UpdateableBeatmapBackgroundSprite CreateBackground() =>
+            base.CreateBackground()
+                .With(d =>
+                {
+                    d.BackgroundLoadDelay = 0;
+                });
     }
 }

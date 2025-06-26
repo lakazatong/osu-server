@@ -111,12 +111,13 @@ namespace osu.Game.Screens.Select
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     AutoSizeAxes = Axes.Both,
-                                    Child = SpriteText = new OsuSpriteText
-                                    {
-                                        AlwaysPresent = true,
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                    }
+                                    Child = SpriteText =
+                                        new OsuSpriteText
+                                        {
+                                            AlwaysPresent = true,
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
                                 },
                             },
                         },
@@ -136,9 +137,7 @@ namespace osu.Game.Screens.Select
 
                 using (box.BeginDelayedSequence(200))
                 {
-                    box.FadeIn(200)
-                       .Then()
-                       .FadeOut(1500, Easing.OutQuint);
+                    box.FadeIn(200).Then().FadeOut(1500, Easing.OutQuint);
                 }
             }
         }
@@ -158,7 +157,7 @@ namespace osu.Game.Screens.Select
             {
                 Left = horizontalMargin,
                 // right side margin offset to compensate for shear
-                Right = horizontalMargin - SHEAR_WIDTH / 2
+                Right = horizontalMargin - SHEAR_WIDTH / 2,
             };
         }
 
@@ -220,10 +219,22 @@ namespace osu.Game.Screens.Select
         {
             this.FadeTo(Enabled.Value ? 1 : 0.25f, Footer.TRANSITION_LENGTH, Easing.OutQuint);
 
-            light.ScaleTo(Enabled.Value && IsHovered ? new Vector2(1, 2) : new Vector2(1), Footer.TRANSITION_LENGTH, Easing.OutQuint);
-            light.FadeColour(Enabled.Value && IsHovered ? SelectedColour : DeselectedColour, Footer.TRANSITION_LENGTH, Easing.OutQuint);
+            light.ScaleTo(
+                Enabled.Value && IsHovered ? new Vector2(1, 2) : new Vector2(1),
+                Footer.TRANSITION_LENGTH,
+                Easing.OutQuint
+            );
+            light.FadeColour(
+                Enabled.Value && IsHovered ? SelectedColour : DeselectedColour,
+                Footer.TRANSITION_LENGTH,
+                Easing.OutQuint
+            );
 
-            box.FadeTo(Enabled.Value & mouseDown ? 0.3f : 0f, Footer.TRANSITION_LENGTH * 2, Easing.OutQuint);
+            box.FadeTo(
+                Enabled.Value & mouseDown ? 0.3f : 0f,
+                Footer.TRANSITION_LENGTH * 2,
+                Easing.OutQuint
+            );
 
             if (Enabled.Value && IsHovered)
                 Hovered?.Invoke();

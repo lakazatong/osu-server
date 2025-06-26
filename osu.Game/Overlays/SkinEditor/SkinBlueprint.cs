@@ -9,8 +9,8 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Utils;
 using osu.Framework.Input.Events;
+using osu.Framework.Utils;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Edit;
@@ -38,7 +38,8 @@ namespace osu.Game.Overlays.SkinEditor
         public override Quad ScreenSpaceDrawQuad => drawableQuad;
         public override Quad SelectionQuad => drawable.ScreenSpaceDrawQuad;
 
-        public override bool Contains(Vector2 screenSpacePos) => drawableQuad.Contains(screenSpacePos);
+        public override bool Contains(Vector2 screenSpacePos) =>
+            drawableQuad.Contains(screenSpacePos);
 
         public override Vector2 ScreenSpaceSelectionPoint =>
             // Important to use a stable position (not based on origin) as origin may be automatically updated during drag operations.
@@ -48,9 +49,7 @@ namespace osu.Game.Overlays.SkinEditor
             drawableQuad.Contains(screenSpacePos);
 
         public SkinBlueprint(ISerialisableDrawable component)
-            : base(component)
-        {
-        }
+            : base(component) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -67,7 +66,10 @@ namespace osu.Game.Overlays.SkinEditor
                             Masking = true,
                             CornerRadius = 3,
                             BorderThickness = SelectionBox.BORDER_RADIUS / 2,
-                            BorderColour = ColourInfo.GradientVertical(colours.Pink4.Darken(0.4f), colours.Pink4),
+                            BorderColour = ColourInfo.GradientVertical(
+                                colours.Pink4.Darken(0.4f),
+                                colours.Pink4
+                            ),
                             Children = new Drawable[]
                             {
                                 new Box
@@ -75,10 +77,13 @@ namespace osu.Game.Overlays.SkinEditor
                                     RelativeSizeAxes = Axes.Both,
                                     Blending = BlendingParameters.Additive,
                                     Alpha = 0.2f,
-                                    Colour = ColourInfo.GradientVertical(colours.Pink2, colours.Pink4),
+                                    Colour = ColourInfo.GradientVertical(
+                                        colours.Pink2,
+                                        colours.Pink4
+                                    ),
                                     AlwaysPresent = true,
                                 },
-                            }
+                            },
                         },
                         label = new OsuSpriteText
                         {
@@ -90,10 +95,7 @@ namespace osu.Game.Overlays.SkinEditor
                         },
                     },
                 },
-                anchorOriginVisualiser = new AnchorOriginVisualiser(drawable)
-                {
-                    Alpha = 0,
-                }
+                anchorOriginVisualiser = new AnchorOriginVisualiser(drawable) { Alpha = 0 },
             };
         }
 
@@ -140,8 +142,8 @@ namespace osu.Game.Overlays.SkinEditor
 
             Vector2 scale = drawable.DrawInfo.MatrixInverse.ExtractScale().Xy;
             drawableQuad = drawable.ToScreenSpace(
-                drawable.DrawRectangle
-                        .Inflate(SkinSelectionHandler.INFLATE_SIZE * scale));
+                drawable.DrawRectangle.Inflate(SkinSelectionHandler.INFLATE_SIZE * scale)
+            );
 
             var localSpaceQuad = ToLocalSpace(drawableQuad);
 
@@ -178,7 +180,10 @@ namespace osu.Game.Overlays.SkinEditor
                 {
                     Height = 3f,
                     Origin = Anchor.CentreLeft,
-                    Colour = ColourInfo.GradientHorizontal(originColour.Opacity(0.5f), originColour),
+                    Colour = ColourInfo.GradientHorizontal(
+                        originColour.Opacity(0.5f),
+                        originColour
+                    ),
                 },
                 originBox = new Circle
                 {
@@ -210,21 +215,41 @@ namespace osu.Game.Overlays.SkinEditor
             anchorBox.Position = anchorPosition.Value;
 
             // for the origin, tween in the drawable's local space to avoid unwanted tweening when the drawable is being dragged.
-            originPositionInDrawableSpace = originPositionInDrawableSpace != null ? tweenPosition(originPositionInDrawableSpace.Value, drawable.OriginPosition) : drawable.OriginPosition;
-            originBox.Position = drawable.ToSpaceOfOtherDrawable(originPositionInDrawableSpace.Value, this);
+            originPositionInDrawableSpace =
+                originPositionInDrawableSpace != null
+                    ? tweenPosition(originPositionInDrawableSpace.Value, drawable.OriginPosition)
+                    : drawable.OriginPosition;
+            originBox.Position = drawable.ToSpaceOfOtherDrawable(
+                originPositionInDrawableSpace.Value,
+                this
+            );
 
             var point1 = ToLocalSpace(anchorBox.ScreenSpaceDrawQuad.Centre);
             var point2 = ToLocalSpace(originBox.ScreenSpaceDrawQuad.Centre);
 
             anchorLine.Position = point1;
             anchorLine.Width = (point2 - point1).Length;
-            anchorLine.Rotation = MathHelper.RadiansToDegrees(MathF.Atan2(point2.Y - point1.Y, point2.X - point1.X));
+            anchorLine.Rotation = MathHelper.RadiansToDegrees(
+                MathF.Atan2(point2.Y - point1.Y, point2.X - point1.X)
+            );
         }
 
-        private Vector2 tweenPosition(Vector2 oldPosition, Vector2 newPosition)
-            => new Vector2(
-                (float)Interpolation.DampContinuously(oldPosition.X, newPosition.X, 25, Clock.ElapsedFrameTime),
-                (float)Interpolation.DampContinuously(oldPosition.Y, newPosition.Y, 25, Clock.ElapsedFrameTime)
+        private Vector2 tweenPosition(Vector2 oldPosition, Vector2 newPosition) =>
+            new Vector2(
+                (float)
+                    Interpolation.DampContinuously(
+                        oldPosition.X,
+                        newPosition.X,
+                        25,
+                        Clock.ElapsedFrameTime
+                    ),
+                (float)
+                    Interpolation.DampContinuously(
+                        oldPosition.Y,
+                        newPosition.Y,
+                        25,
+                        Clock.ElapsedFrameTime
+                    )
             );
     }
 }

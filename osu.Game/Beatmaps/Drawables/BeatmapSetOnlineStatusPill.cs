@@ -76,16 +76,12 @@ namespace osu.Game.Beatmaps.Drawables
 
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
                 statusText = new OsuSpriteText
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font = OsuFont.GetFont(weight: FontWeight.Bold)
+                    Font = OsuFont.GetFont(weight: FontWeight.Bold),
                 },
             };
 
@@ -130,12 +126,24 @@ namespace osu.Game.Beatmaps.Drawables
             Color4 statusTextColour;
 
             if (colourProvider != null)
-                statusTextColour = status == BeatmapOnlineStatus.Graveyard ? colourProvider.Background1 : colourProvider.Background3;
+                statusTextColour =
+                    status == BeatmapOnlineStatus.Graveyard
+                        ? colourProvider.Background1
+                        : colourProvider.Background3;
             else
-                statusTextColour = status == BeatmapOnlineStatus.Graveyard ? colours.GreySeaFoamLight : Color4.Black;
+                statusTextColour =
+                    status == BeatmapOnlineStatus.Graveyard
+                        ? colours.GreySeaFoamLight
+                        : Color4.Black;
 
             statusText.FadeColour(statusTextColour, duration, Easing.OutQuint);
-            background.FadeColour(OsuColour.ForBeatmapSetOnlineStatus(Status) ?? colourProvider?.Light1 ?? colours.GreySeaFoamLighter, duration, Easing.OutQuint);
+            background.FadeColour(
+                OsuColour.ForBeatmapSetOnlineStatus(Status)
+                    ?? colourProvider?.Light1
+                    ?? colours.GreySeaFoamLighter,
+                duration,
+                Easing.OutQuint
+            );
 
             statusText.Text = Status.GetLocalisableDescription().ToUpper();
         }

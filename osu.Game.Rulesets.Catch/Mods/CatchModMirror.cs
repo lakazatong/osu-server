@@ -6,8 +6,8 @@ using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Catch.Beatmaps;
 using osu.Game.Rulesets.Catch.Objects;
-using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Catch.UI;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osuTK;
 
@@ -69,11 +69,16 @@ namespace osu.Game.Rulesets.Catch.Mods
         /// </summary>
         private static void mirrorJuiceStreamPath(JuiceStream juiceStream)
         {
-            var controlPoints = juiceStream.Path.ControlPoints.Select(p => new PathControlPoint(p.Position, p.Type)).ToArray();
+            var controlPoints = juiceStream
+                .Path.ControlPoints.Select(p => new PathControlPoint(p.Position, p.Type))
+                .ToArray();
             foreach (var point in controlPoints)
                 point.Position = new Vector2(-point.Position.X, point.Position.Y);
 
-            juiceStream.Path = new SliderPath(controlPoints, juiceStream.Path.ExpectedDistance.Value);
+            juiceStream.Path = new SliderPath(
+                controlPoints,
+                juiceStream.Path.ExpectedDistance.Value
+            );
         }
 
         /// <summary>

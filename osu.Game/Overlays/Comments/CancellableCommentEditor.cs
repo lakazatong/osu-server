@@ -14,11 +14,13 @@ namespace osu.Game.Overlays.Comments
         [BackgroundDependencyLoader]
         private void load()
         {
-            ButtonsContainer.Add(new EditorButton
-            {
-                Action = () => OnCancel?.Invoke(),
-                Text = CommonStrings.ButtonsCancel,
-            });
+            ButtonsContainer.Add(
+                new EditorButton
+                {
+                    Action = () => OnCancel?.Invoke(),
+                    Text = CommonStrings.ButtonsCancel,
+                }
+            );
         }
     }
 }

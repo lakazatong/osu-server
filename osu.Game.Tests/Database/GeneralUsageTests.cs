@@ -22,75 +22,94 @@ namespace osu.Game.Tests.Database
         [Test]
         public void TestConstructRealm()
         {
-            RunTestWithRealm((realm, _) => { realm.Run(r => r.Refresh()); });
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    realm.Run(r => r.Refresh());
+                }
+            );
         }
 
         [Test]
         public void TestBlockOperations()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                using (realm.BlockAllOperations("testing"))
+            RunTestWithRealm(
+                (realm, _) =>
                 {
+                    using (realm.BlockAllOperations("testing")) { }
                 }
-            });
+            );
         }
 
         [Test]
         public void TestAsyncWriteAsync()
         {
-            RunTestWithRealmAsync(async (realm, _) =>
-            {
-                await realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
+            RunTestWithRealmAsync(
+                async (realm, _) =>
+                {
+                    await realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
-            });
+                    Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
+                }
+            );
         }
 
         [Test]
         public void TestAsyncWriteWhileBlocking()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                Task writeTask;
-
-                using (realm.BlockAllOperations("testing"))
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    writeTask = realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()));
-                    Thread.Sleep(100);
-                    Assert.That(writeTask.IsCompleted, Is.False);
+                    Task writeTask;
+
+                    using (realm.BlockAllOperations("testing"))
+                    {
+                        writeTask = realm.WriteAsync(r =>
+                            r.Add(TestResources.CreateTestBeatmapSetInfo())
+                        );
+                        Thread.Sleep(100);
+                        Assert.That(writeTask.IsCompleted, Is.False);
+                    }
+
+                    writeTask.WaitSafely();
+
+                    realm.Run(r => r.Refresh());
+                    Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
                 }
-
-                writeTask.WaitSafely();
-
-                realm.Run(r => r.Refresh());
-                Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
-            });
+            );
         }
 
         [Test]
         public void TestAsyncWrite()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo())).WaitSafely();
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    realm
+                        .WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()))
+                        .WaitSafely();
 
-                realm.Run(r => r.Refresh());
+                    realm.Run(r => r.Refresh());
 
-                Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
-            });
+                    Assert.That(realm.Run(r => r.All<BeatmapSetInfo>().Count()), Is.EqualTo(1));
+                }
+            );
         }
 
         [Test]
         public void TestAsyncWriteAfterDisposal()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                realm.Dispose();
-                Assert.ThrowsAsync<ObjectDisposedException>(() => realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo())));
-            });
+            RunTestWithRealm(
+                (realm, _) =>
+                {
+                    realm.Dispose();
+                    Assert.ThrowsAsync<ObjectDisposedException>(() =>
+                        realm.WriteAsync(r => r.Add(TestResources.CreateTestBeatmapSetInfo()))
+                    );
+                }
+            );
         }
 
         [Test]
@@ -98,21 +117,23 @@ namespace osu.Game.Tests.Database
         {
             ManualResetEventSlim resetEvent = new ManualResetEventSlim();
 
-            RunTestWithRealm((realm, _) =>
-            {
-                var writeTask = realm.WriteAsync(r =>
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    // ensure that disposal blocks for our execution
-                    Assert.That(resetEvent.Wait(100), Is.False);
+                    var writeTask = realm.WriteAsync(r =>
+                    {
+                        // ensure that disposal blocks for our execution
+                        Assert.That(resetEvent.Wait(100), Is.False);
 
-                    r.Add(TestResources.CreateTestBeatmapSetInfo());
-                });
+                        r.Add(TestResources.CreateTestBeatmapSetInfo());
+                    });
 
-                realm.Dispose();
-                resetEvent.Set();
+                    realm.Dispose();
+                    resetEvent.Set();
 
-                writeTask.WaitSafely();
-            });
+                    writeTask.WaitSafely();
+                }
+            );
         }
 
         /// <summary>
@@ -122,65 +143,71 @@ namespace osu.Game.Tests.Database
         [Test]
         public void TestNestedContextCreationWithSubscription()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                bool callbackRan = false;
-
-                realm.RegisterCustomSubscription(r =>
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    var subscription = r.All<BeatmapInfo>().QueryAsyncWithNotifications((_, _) =>
+                    bool callbackRan = false;
+
+                    realm.RegisterCustomSubscription(r =>
                     {
-                        realm.Run(_ =>
-                        {
-                            callbackRan = true;
-                        });
+                        var subscription = r.All<BeatmapInfo>()
+                            .QueryAsyncWithNotifications(
+                                (_, _) =>
+                                {
+                                    realm.Run(_ =>
+                                    {
+                                        callbackRan = true;
+                                    });
+                                }
+                            );
+
+                        // Force the callback above to run.
+                        realm.Run(rr => rr.Refresh());
+
+                        subscription?.Dispose();
+                        return null;
                     });
 
-                    // Force the callback above to run.
-                    realm.Run(rr => rr.Refresh());
-
-                    subscription?.Dispose();
-                    return null;
-                });
-
-                Assert.IsTrue(callbackRan);
-            });
+                    Assert.IsTrue(callbackRan);
+                }
+            );
         }
 
         [Test]
         public void TestBlockOperationsWithContention()
         {
-            RunTestWithRealm((realm, _) =>
-            {
-                ManualResetEventSlim stopThreadedUsage = new ManualResetEventSlim();
-                ManualResetEventSlim hasThreadedUsage = new ManualResetEventSlim();
-
-                Task.Factory.StartNew(() =>
+            RunTestWithRealm(
+                (realm, _) =>
                 {
-                    realm.Run(_ =>
-                    {
-                        hasThreadedUsage.Set();
+                    ManualResetEventSlim stopThreadedUsage = new ManualResetEventSlim();
+                    ManualResetEventSlim hasThreadedUsage = new ManualResetEventSlim();
 
-                        stopThreadedUsage.Wait(60000);
+                    Task.Factory.StartNew(
+                        () =>
+                        {
+                            realm.Run(_ =>
+                            {
+                                hasThreadedUsage.Set();
+
+                                stopThreadedUsage.Wait(60000);
+                            });
+                        },
+                        TaskCreationOptions.LongRunning | TaskCreationOptions.HideScheduler
+                    );
+
+                    hasThreadedUsage.Wait(60000);
+
+                    Assert.Throws<TimeoutException>(() =>
+                    {
+                        using (realm.BlockAllOperations("testing")) { }
                     });
-                }, TaskCreationOptions.LongRunning | TaskCreationOptions.HideScheduler);
 
-                hasThreadedUsage.Wait(60000);
+                    stopThreadedUsage.Set();
 
-                Assert.Throws<TimeoutException>(() =>
-                {
-                    using (realm.BlockAllOperations("testing"))
-                    {
-                    }
-                });
-
-                stopThreadedUsage.Set();
-
-                // Ensure we can block a second time after the usage has ended.
-                using (realm.BlockAllOperations("testing"))
-                {
+                    // Ensure we can block a second time after the usage has ended.
+                    using (realm.BlockAllOperations("testing")) { }
                 }
-            });
+            );
         }
     }
 }

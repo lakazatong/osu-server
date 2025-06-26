@@ -14,9 +14,7 @@ namespace osu.Game.Configuration
             InitialiseDefaults();
         }
 
-        protected override void PerformLoad()
-        {
-        }
+        protected override void PerformLoad() { }
 
         protected override bool PerformSave() => true;
     }

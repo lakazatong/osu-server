@@ -12,11 +12,11 @@ using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.IO.Archives;
-using osu.Game.Rulesets;
-using osu.Game.Scoring.Legacy;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Rulesets;
+using osu.Game.Scoring.Legacy;
 using osu.Game.Utils;
 using Realms;
 
@@ -33,7 +33,13 @@ namespace osu.Game.Scoring
 
         private readonly IAPIProvider api;
 
-        public ScoreImporter(RulesetStore rulesets, Func<BeatmapManager> beatmaps, Storage storage, RealmAccess realm, IAPIProvider api)
+        public ScoreImporter(
+            RulesetStore rulesets,
+            Func<BeatmapManager> beatmaps,
+            Storage storage,
+            RealmAccess realm,
+            IAPIProvider api
+        )
             : base(storage, realm)
         {
             this.rulesets = rulesets;
@@ -41,25 +47,40 @@ namespace osu.Game.Scoring
             this.api = api;
         }
 
-        protected override ScoreInfo? CreateModel(ArchiveReader archive, ImportParameters parameters)
+        protected override ScoreInfo? CreateModel(
+            ArchiveReader archive,
+            ImportParameters parameters
+        )
         {
-            string name = archive.Filenames.First(f => f.EndsWith(".osr", StringComparison.OrdinalIgnoreCase));
+            string name = archive.Filenames.First(f =>
+                f.EndsWith(".osr", StringComparison.OrdinalIgnoreCase)
+            );
 
             using (var stream = archive.GetStream(name))
             {
                 try
                 {
-                    return new DatabasedLegacyScoreDecoder(rulesets, beatmaps()).Parse(stream).ScoreInfo;
+                    return new DatabasedLegacyScoreDecoder(rulesets, beatmaps())
+                        .Parse(stream)
+                        .ScoreInfo;
                 }
                 catch (LegacyScoreDecoder.BeatmapNotFoundException notFound)
                 {
-                    Logger.Log($@"Score '{archive.Name}' failed to import: no corresponding beatmap with the hash '{notFound.Hash}' could be found.", LoggingTarget.Database);
+                    Logger.Log(
+                        $@"Score '{archive.Name}' failed to import: no corresponding beatmap with the hash '{notFound.Hash}' could be found.",
+                        LoggingTarget.Database
+                    );
 
                     if (!parameters.Batch)
                     {
                         // In the case of a missing beatmap, let's attempt to resolve it and show a prompt to the user to download the required beatmap.
-                        var req = new GetBeatmapRequest(new BeatmapInfo { MD5Hash = notFound.Hash });
-                        req.Success += res => PostNotification?.Invoke(new MissingBeatmapNotification(res, notFound.Hash, archive));
+                        var req = new GetBeatmapRequest(
+                            new BeatmapInfo { MD5Hash = notFound.Hash }
+                        );
+                        req.Success += res =>
+                            PostNotification?.Invoke(
+                                new MissingBeatmapNotification(res, notFound.Hash, archive)
+                            );
                         api.Queue(req);
                     }
 
@@ -67,15 +88,24 @@ namespace osu.Game.Scoring
                 }
                 catch (Exception e)
                 {
-                    Logger.Log($@"Failed to parse headers of score '{archive.Name}': {e}.", LoggingTarget.Database);
+                    Logger.Log(
+                        $@"Failed to parse headers of score '{archive.Name}': {e}.",
+                        LoggingTarget.Database
+                    );
                     return null;
                 }
             }
         }
 
-        public Score GetScore(ScoreInfo score) => new LegacyDatabasedScore(score, rulesets, beatmaps(), Files.Store);
+        public Score GetScore(ScoreInfo score) =>
+            new LegacyDatabasedScore(score, rulesets, beatmaps(), Files.Store);
 
-        protected override void Populate(ScoreInfo model, ArchiveReader? archive, Realm realm, CancellationToken cancellationToken = default)
+        protected override void Populate(
+            ScoreInfo model,
+            ArchiveReader? archive,
+            Realm realm,
+            CancellationToken cancellationToken = default
+        )
         {
             Debug.Assert(model.BeatmapInfo != null);
 
@@ -92,7 +122,9 @@ namespace osu.Game.Scoring
             ArgumentNullException.ThrowIfNull(model.Ruleset);
 
             if (!ModUtils.CheckCompatibleSet(model.Mods))
-                throw new InvalidOperationException(@"The score specifies an incompatible set of mods!");
+                throw new InvalidOperationException(
+                    @"The score specifies an incompatible set of mods!"
+                );
 
             if (string.IsNullOrEmpty(model.StatisticsJson))
                 model.StatisticsJson = JsonConvert.SerializeObject(model.Statistics);
@@ -115,9 +147,14 @@ namespace osu.Game.Scoring
         // This means that sometimes `PostImport()` is called from a sync context, and sometimes from an async one, whilst itself being a sync method.
         // That in turn makes `.GetResultSafely()` not callable inside `PostImport()`, as it will throw when called from an async context,
         private readonly Dictionary<int, APIUser> idLookupCache = new Dictionary<int, APIUser>();
-        private readonly Dictionary<string, APIUser> usernameLookupCache = new Dictionary<string, APIUser>();
+        private readonly Dictionary<string, APIUser> usernameLookupCache =
+            new Dictionary<string, APIUser>();
 
-        protected override void PostImport(ScoreInfo model, Realm realm, ImportParameters parameters)
+        protected override void PostImport(
+            ScoreInfo model,
+            Realm realm,
+            ImportParameters parameters
+        )
         {
             base.PostImport(model, realm, parameters);
 
@@ -126,7 +163,14 @@ namespace osu.Game.Scoring
             Debug.Assert(model.BeatmapInfo != null);
 
             // This needs to be run after user detail population to ensure we have a valid user id.
-            if (api.IsLoggedIn && api.LocalUser.Value.OnlineID == model.UserID && (model.BeatmapInfo.LastPlayed == null || model.Date > model.BeatmapInfo.LastPlayed))
+            if (
+                api.IsLoggedIn
+                && api.LocalUser.Value.OnlineID == model.UserID
+                && (
+                    model.BeatmapInfo.LastPlayed == null
+                    || model.Date > model.BeatmapInfo.LastPlayed
+                )
+            )
                 model.BeatmapInfo.LastPlayed = model.Date;
         }
 
@@ -166,15 +210,18 @@ namespace osu.Game.Scoring
             {
                 APIUser cachedUser;
 
-                idLookupCache.TryAdd(id, cachedUser = new APIUser
-                {
-                    // Because this is a permanent cache, let's only store the pieces we're interested in,
-                    // rather than the full API response. If we start to store more than these three fields
-                    // in realm, this should be undone.
-                    Id = user.Id,
-                    Username = user.Username,
-                    CountryCode = user.CountryCode,
-                });
+                idLookupCache.TryAdd(
+                    id,
+                    cachedUser = new APIUser
+                    {
+                        // Because this is a permanent cache, let's only store the pieces we're interested in,
+                        // rather than the full API response. If we start to store more than these three fields
+                        // in realm, this should be undone.
+                        Id = user.Id,
+                        Username = user.Username,
+                        CountryCode = user.CountryCode,
+                    }
+                );
 
                 return cachedUser;
             }
@@ -197,15 +244,18 @@ namespace osu.Game.Scoring
             {
                 APIUser cachedUser;
 
-                usernameLookupCache.TryAdd(username, cachedUser = new APIUser
-                {
-                    // Because this is a permanent cache, let's only store the pieces we're interested in,
-                    // rather than the full API response. If we start to store more than these three fields
-                    // in realm, this should be undone.
-                    Id = user.Id,
-                    Username = user.Username,
-                    CountryCode = user.CountryCode,
-                });
+                usernameLookupCache.TryAdd(
+                    username,
+                    cachedUser = new APIUser
+                    {
+                        // Because this is a permanent cache, let's only store the pieces we're interested in,
+                        // rather than the full API response. If we start to store more than these three fields
+                        // in realm, this should be undone.
+                        Id = user.Id,
+                        Username = user.Username,
+                        CountryCode = user.CountryCode,
+                    }
+                );
 
                 return cachedUser;
             }

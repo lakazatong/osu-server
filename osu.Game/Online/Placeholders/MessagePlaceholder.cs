@@ -13,15 +13,19 @@ namespace osu.Game.Online.Placeholders
 
         public MessagePlaceholder(LocalisableString message)
         {
-            AddIcon(FontAwesome.Solid.ExclamationCircle, cp =>
-            {
-                cp.Font = cp.Font.With(size: TEXT_SIZE);
-                cp.Padding = new MarginPadding { Right = 10 };
-            });
+            AddIcon(
+                FontAwesome.Solid.ExclamationCircle,
+                cp =>
+                {
+                    cp.Font = cp.Font.With(size: TEXT_SIZE);
+                    cp.Padding = new MarginPadding { Right = 10 };
+                }
+            );
 
             AddText(this.message = message);
         }
 
-        public override bool Equals(Placeholder? other) => (other as MessagePlaceholder)?.message == message;
+        public override bool Equals(Placeholder? other) =>
+            (other as MessagePlaceholder)?.message == message;
     }
 }

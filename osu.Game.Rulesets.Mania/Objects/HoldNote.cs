@@ -96,32 +96,33 @@ namespace osu.Game.Rulesets.Mania.Objects
             // Ensure they are set to a sane default here.
             NodeSamples ??= CreateDefaultNodeSamples(this);
 
-            AddNested(Head = new HeadNote
-            {
-                StartTime = StartTime,
-                Column = Column,
-                Samples = GetNodeSamples(0),
-            });
+            AddNested(
+                Head = new HeadNote
+                {
+                    StartTime = StartTime,
+                    Column = Column,
+                    Samples = GetNodeSamples(0),
+                }
+            );
 
-            AddNested(Tail = new TailNote
-            {
-                StartTime = EndTime,
-                Column = Column,
-                Samples = GetNodeSamples(NodeSamples.Count - 1),
-            });
+            AddNested(
+                Tail = new TailNote
+                {
+                    StartTime = EndTime,
+                    Column = Column,
+                    Samples = GetNodeSamples(NodeSamples.Count - 1),
+                }
+            );
 
-            AddNested(Body = new HoldNoteBody
-            {
-                StartTime = StartTime,
-                Column = Column
-            });
+            AddNested(Body = new HoldNoteBody { StartTime = StartTime, Column = Column });
         }
 
         public override Judgement CreateJudgement() => new IgnoreJudgement();
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
 
-        public IList<HitSampleInfo> GetNodeSamples(int nodeIndex) => nodeIndex < NodeSamples?.Count ? NodeSamples[nodeIndex] : Samples;
+        public IList<HitSampleInfo> GetNodeSamples(int nodeIndex) =>
+            nodeIndex < NodeSamples?.Count ? NodeSamples[nodeIndex] : Samples;
 
         /// <summary>
         /// Create the default note samples for a hold note, based off their main sample.
@@ -131,10 +132,7 @@ namespace osu.Game.Rulesets.Mania.Objects
         /// </remarks>
         /// <param name="obj">The object to use as a basis for the head sample.</param>
         /// <returns>Defaults for assigning to <see cref="HoldNote.NodeSamples"/>.</returns>
-        public static List<IList<HitSampleInfo>> CreateDefaultNodeSamples(HitObject obj) => new List<IList<HitSampleInfo>>
-        {
-            obj.Samples,
-            new List<HitSampleInfo>(),
-        };
+        public static List<IList<HitSampleInfo>> CreateDefaultNodeSamples(HitObject obj) =>
+            new List<IList<HitSampleInfo>> { obj.Samples, new List<HitSampleInfo>() };
     }
 }

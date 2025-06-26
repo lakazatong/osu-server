@@ -46,26 +46,48 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
         private GameplayState? gameplayState { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load(ISkinSource skin, DrawableHitObject drawableHitObject, IBeatSyncProvider? beatSyncProvider)
+        private void load(
+            ISkinSource skin,
+            DrawableHitObject drawableHitObject,
+            IBeatSyncProvider? beatSyncProvider
+        )
         {
             Drawable? getDrawableFor(string lookup, bool animatable)
             {
                 const string normal_hit = "taikohit";
                 const string big_hit = "taikobig";
 
-                string prefix = ((drawableHitObject.HitObject as TaikoStrongableHitObject)?.IsStrong ?? false) ? big_hit : normal_hit;
+                string prefix =
+                    ((drawableHitObject.HitObject as TaikoStrongableHitObject)?.IsStrong ?? false)
+                        ? big_hit
+                        : normal_hit;
 
-                return skin.GetAnimation($"{prefix}{lookup}", animatable, false, maxSize: max_circle_sprite_size) ??
-                       // fallback to regular size if "big" version doesn't exist.
-                       skin.GetAnimation($"{normal_hit}{lookup}", animatable, false, maxSize: max_circle_sprite_size);
+                return skin.GetAnimation(
+                        $"{prefix}{lookup}",
+                        animatable,
+                        false,
+                        maxSize: max_circle_sprite_size
+                    )
+                    ??
+                    // fallback to regular size if "big" version doesn't exist.
+                    skin.GetAnimation(
+                        $"{normal_hit}{lookup}",
+                        animatable,
+                        false,
+                        maxSize: max_circle_sprite_size
+                    );
             }
 
             // backgroundLayer is guaranteed to exist due to the pre-check in TaikoLegacySkinTransformer.
-            AddInternal(backgroundLayer = new LegacyKiaiFlashingDrawable(() => getDrawableFor("circle", false))
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            AddInternal(
+                backgroundLayer = new LegacyKiaiFlashingDrawable(() =>
+                    getDrawableFor("circle", false)
+                )
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
 
             foregroundLayer = getDrawableFor("circleoverlay", true);
 
@@ -82,10 +104,15 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 AddInternal(foregroundLayer);
             }
 
-            drawableHitObject.StartTimeBindable.BindValueChanged(startTime =>
-            {
-                timingPoint = beatSyncProvider?.ControlPoints?.TimingPointAt(startTime.NewValue) ?? TimingControlPoint.DEFAULT;
-            }, true);
+            drawableHitObject.StartTimeBindable.BindValueChanged(
+                startTime =>
+                {
+                    timingPoint =
+                        beatSyncProvider?.ControlPoints?.TimingPointAt(startTime.NewValue)
+                        ?? TimingControlPoint.DEFAULT;
+                },
+                true
+            );
 
             if (gameplayState != null)
                 currentCombo.BindTo(gameplayState.ScoreProcessor.Combo);
@@ -128,7 +155,12 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 return;
             }
 
-            animationFrame = Math.Abs(Time.Current - timingPoint.Time) % ((timingPoint.BeatLength * 2) / multiplier) >= timingPoint.BeatLength / multiplier ? 0 : 1;
+            animationFrame =
+                Math.Abs(Time.Current - timingPoint.Time)
+                    % ((timingPoint.BeatLength * 2) / multiplier)
+                >= timingPoint.BeatLength / multiplier
+                    ? 0
+                    : 1;
             animation.GotoFrame(animationFrame);
         }
 

@@ -70,12 +70,11 @@ namespace osu.Game.Seasonal
             // Intentionally maintain separately so the lighting is not in audio clock space (it shouldn't rewind etc.)
             beatmapClock = new InterpolatingFramedClock(new FramedClock(working.Value.Track));
 
-            hitObjects = working.Value
-                                .GetPlayableBeatmap(osuRuleset)
-                                .HitObjects
-                                .SelectMany(h => h.NestedHitObjects.Prepend(h))
-                                .OrderBy(h => h.StartTime)
-                                .ToList();
+            hitObjects = working
+                .Value.GetPlayableBeatmap(osuRuleset)
+                .HitObjects.SelectMany(h => h.NestedHitObjects.Prepend(h))
+                .OrderBy(h => h.StartTime)
+                .ToList();
         }
 
         protected override void Update()
@@ -93,8 +92,12 @@ namespace osu.Game.Seasonal
             double time = beatmapClock.CurrentTime + 50;
 
             // handle seeks or OOB by skipping to current.
-            if (lastObjectIndex == null || lastObjectIndex >= hitObjects.Count || (lastObjectIndex >= 0 && hitObjects[lastObjectIndex.Value].StartTime > time)
-                || Math.Abs(beatmapClock.ElapsedFrameTime) > 500)
+            if (
+                lastObjectIndex == null
+                || lastObjectIndex >= hitObjects.Count
+                || (lastObjectIndex >= 0 && hitObjects[lastObjectIndex.Value].StartTime > time)
+                || Math.Abs(beatmapClock.ElapsedFrameTime) > 500
+            )
                 lastObjectIndex = hitObjects.Count(h => h.StartTime < time) - 1;
 
             while (lastObjectIndex < hitObjects.Count - 1)
@@ -117,7 +120,7 @@ namespace osu.Game.Seasonal
             var light = new Light
             {
                 RelativePositionAxes = Axes.Both,
-                Position = ((IHasPosition)h).Position
+                Position = ((IHasPosition)h).Position,
             };
 
             AddInternal(light);
@@ -126,12 +129,13 @@ namespace osu.Game.Seasonal
             {
                 light.Colour = SeasonalUIConfig.AMBIENT_COLOUR_1;
                 light.Scale = new Vector2(0.5f);
-                light
-                    .FadeInFromZero(250)
-                    .Then()
-                    .FadeOutFromOne(1000, Easing.Out);
+                light.FadeInFromZero(250).Then().FadeOutFromOne(1000, Easing.Out);
 
-                light.MoveToOffset(new Vector2(RNG.Next(-20, 20), RNG.Next(-20, 20)), 1400, Easing.Out);
+                light.MoveToOffset(
+                    new Vector2(RNG.Next(-20, 20), RNG.Next(-20, 20)),
+                    1400,
+                    Easing.Out
+                );
             }
             else
             {
@@ -151,10 +155,7 @@ namespace osu.Game.Seasonal
                 if (h.Samples.Any(s => s.Name == HitSampleInfo.HIT_FINISH))
                     light.Scale = new Vector2(3);
 
-                light
-                    .FadeInFromZero(150)
-                    .Then()
-                    .FadeOutFromOne(1000, Easing.In);
+                light.FadeInFromZero(150).Then().FadeOutFromOne(1000, Easing.In);
             }
 
             light.Expire();
@@ -194,8 +195,8 @@ namespace osu.Game.Seasonal
                             Type = EdgeEffectType.Glow,
                             Colour = SeasonalUIConfig.AMBIENT_COLOUR_2,
                             Radius = 80,
-                        }
-                    }
+                        },
+                    },
                 };
 
                 Origin = Anchor.Centre;

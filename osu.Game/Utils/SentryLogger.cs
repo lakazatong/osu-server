@@ -41,7 +41,10 @@ namespace osu.Game.Utils
         {
             this.game = game;
 
-            if (!game.IsDeployedBuild || !game.CreateEndpoints().WebsiteUrl.EndsWith(@".ppy.sh", StringComparison.Ordinal))
+            if (
+                !game.IsDeployedBuild
+                || !game.CreateEndpoints().WebsiteUrl.EndsWith(@".ppy.sh", StringComparison.Ordinal)
+            )
                 return;
 
             sentrySession = SentrySdk.Init(options =>
@@ -71,25 +74,32 @@ namespace osu.Game.Utils
             Debug.Assert(localUser == null);
 
             localUser = user.GetBoundCopy();
-            localUser.BindValueChanged(u =>
-            {
-                SentrySdk.ConfigureScope(scope => scope.User = new SentryUser
+            localUser.BindValueChanged(
+                u =>
                 {
-                    Username = u.NewValue.Username,
-                    Id = u.NewValue.Id.ToString(),
-                });
-            }, true);
+                    SentrySdk.ConfigureScope(scope =>
+                        scope.User = new SentryUser
+                        {
+                            Username = u.NewValue.Username,
+                            Id = u.NewValue.Id.ToString(),
+                        }
+                    );
+                },
+                true
+            );
         }
 
         private void processLogEntry(LogEntry entry)
         {
-            if (entry.Level < LogLevel.Verbose) return;
+            if (entry.Level < LogLevel.Verbose)
+                return;
 
             var exception = entry.Exception;
 
             if (exception != null)
             {
-                if (!shouldSubmitException(exception)) return;
+                if (!shouldSubmitException(exception))
+                    return;
 
                 // framework does some weird exception redirection which means sentry does not see unhandled exceptions using its automatic methods.
                 // but all unhandled exceptions still arrive via this pathway. we just need to mark them as unhandled for tagging purposes.
@@ -112,70 +122,93 @@ namespace osu.Game.Utils
 
                 exception.Data[Mechanism.HandledKey] = !wasUnhandled;
 
-                SentrySdk.CaptureEvent(new SentryEvent(exception)
-                {
-                    Message = entry.Message,
-                    Level = getSentryLevel(entry.Level),
-                }, scope =>
-                {
-                    var beatmap = game.Dependencies.Get<IBindable<WorkingBeatmap>>().Value.BeatmapInfo;
-                    var ruleset = game.Dependencies.Get<IBindable<RulesetInfo>>().Value;
-
-                    scope.Contexts[@"config"] = new
+                SentrySdk.CaptureEvent(
+                    new SentryEvent(exception)
                     {
-                        Game = game.Dependencies.Get<OsuConfigManager>().GetCurrentConfigurationForLogging(),
-                        Framework = game.Dependencies.Get<FrameworkConfigManager>().GetCurrentConfigurationForLogging(),
-                    };
-
-                    game.Dependencies.Get<RealmAccess>().Run(realm =>
+                        Message = entry.Message,
+                        Level = getSentryLevel(entry.Level),
+                    },
+                    scope =>
                     {
-                        scope.Contexts[@"realm"] = new
+                        var beatmap = game
+                            .Dependencies.Get<IBindable<WorkingBeatmap>>()
+                            .Value.BeatmapInfo;
+                        var ruleset = game.Dependencies.Get<IBindable<RulesetInfo>>().Value;
+
+                        scope.Contexts[@"config"] = new
                         {
-                            Counts = new
-                            {
-                                BeatmapSets = realm.All<BeatmapSetInfo>().Count(),
-                                Beatmaps = realm.All<BeatmapInfo>().Count(),
-                                Files = realm.All<RealmFile>().Count(),
-                                Rulesets = realm.All<RulesetInfo>().Count(),
-                                RulesetsAvailable = realm.All<RulesetInfo>().Count(r => r.Available),
-                                Skins = realm.All<SkinInfo>().Count(),
-                            }
+                            Game = game
+                                .Dependencies.Get<OsuConfigManager>()
+                                .GetCurrentConfigurationForLogging(),
+                            Framework = game
+                                .Dependencies.Get<FrameworkConfigManager>()
+                                .GetCurrentConfigurationForLogging(),
                         };
-                    });
 
-                    scope.Contexts[@"global statistics"] = GlobalStatistics.GetStatistics()
-                                                                           .GroupBy(s => s.Group)
-                                                                           .ToDictionary(g => g.Key, items => items.ToDictionary(i => i.Name, g => g.DisplayValue));
+                        game.Dependencies.Get<RealmAccess>()
+                            .Run(realm =>
+                            {
+                                scope.Contexts[@"realm"] = new
+                                {
+                                    Counts = new
+                                    {
+                                        BeatmapSets = realm.All<BeatmapSetInfo>().Count(),
+                                        Beatmaps = realm.All<BeatmapInfo>().Count(),
+                                        Files = realm.All<RealmFile>().Count(),
+                                        Rulesets = realm.All<RulesetInfo>().Count(),
+                                        RulesetsAvailable = realm
+                                            .All<RulesetInfo>()
+                                            .Count(r => r.Available),
+                                        Skins = realm.All<SkinInfo>().Count(),
+                                    },
+                                };
+                            });
 
-                    scope.Contexts[@"beatmap"] = new
-                    {
-                        Name = beatmap.ToString(),
-                        Ruleset = beatmap.Ruleset.InstantiationInfo,
-                        beatmap.OnlineID,
-                    };
+                        scope.Contexts[@"global statistics"] = GlobalStatistics
+                            .GetStatistics()
+                            .GroupBy(s => s.Group)
+                            .ToDictionary(
+                                g => g.Key,
+                                items => items.ToDictionary(i => i.Name, g => g.DisplayValue)
+                            );
 
-                    scope.Contexts[@"ruleset"] = new
-                    {
-                        ruleset.ShortName,
-                        ruleset.Name,
-                        ruleset.InstantiationInfo,
-                        ruleset.OnlineID
-                    };
+                        scope.Contexts[@"beatmap"] = new
+                        {
+                            Name = beatmap.ToString(),
+                            Ruleset = beatmap.Ruleset.InstantiationInfo,
+                            beatmap.OnlineID,
+                        };
 
-                    scope.Contexts[@"clocks"] = new
-                    {
-                        Audio = game.Dependencies.Get<MusicController>().CurrentTrack.CurrentTime,
-                        Game = game.Clock.CurrentTime,
-                    };
+                        scope.Contexts[@"ruleset"] = new
+                        {
+                            ruleset.ShortName,
+                            ruleset.Name,
+                            ruleset.InstantiationInfo,
+                            ruleset.OnlineID,
+                        };
 
-                    scope.SetTag(@"beatmap", $"{beatmap.OnlineID}");
-                    scope.SetTag(@"ruleset", ruleset.ShortName);
-                    scope.SetTag(@"os", $"{RuntimeInfo.OS} ({Environment.OSVersion})");
-                    scope.SetTag(@"processor count", Environment.ProcessorCount.ToString());
-                });
+                        scope.Contexts[@"clocks"] = new
+                        {
+                            Audio = game
+                                .Dependencies.Get<MusicController>()
+                                .CurrentTrack.CurrentTime,
+                            Game = game.Clock.CurrentTime,
+                        };
+
+                        scope.SetTag(@"beatmap", $"{beatmap.OnlineID}");
+                        scope.SetTag(@"ruleset", ruleset.ShortName);
+                        scope.SetTag(@"os", $"{RuntimeInfo.OS} ({Environment.OSVersion})");
+                        scope.SetTag(@"processor count", Environment.ProcessorCount.ToString());
+                    }
+                );
             }
             else
-                SentrySdk.AddBreadcrumb(entry.Message, entry.Target.ToString(), "navigation", level: getBreadcrumbLevel(entry.Level));
+                SentrySdk.AddBreadcrumb(
+                    entry.Message,
+                    entry.Target.ToString(),
+                    "navigation",
+                    level: getBreadcrumbLevel(entry.Level)
+                );
         }
 
         private BreadcrumbLevel getBreadcrumbLevel(LogLevel entryLevel)
@@ -229,7 +262,10 @@ namespace osu.Game.Utils
                     const int hr_error_handle_disk_full = unchecked((int)0x80070027);
                     const int hr_error_disk_full = unchecked((int)0x80070070);
 
-                    if (ioe.HResult == hr_error_handle_disk_full || ioe.HResult == hr_error_disk_full)
+                    if (
+                        ioe.HResult == hr_error_handle_disk_full
+                        || ioe.HResult == hr_error_disk_full
+                    )
                         return false;
 
                     break;

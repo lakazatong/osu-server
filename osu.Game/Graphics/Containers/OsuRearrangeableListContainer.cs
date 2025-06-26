@@ -14,22 +14,26 @@ using osu.Framework.Utils;
 
 namespace osu.Game.Graphics.Containers
 {
-    public abstract partial class OsuRearrangeableListContainer<TModel> : RearrangeableListContainer<TModel>
+    public abstract partial class OsuRearrangeableListContainer<TModel>
+        : RearrangeableListContainer<TModel>
     {
         /// <summary>
         /// Whether any item is currently being dragged. Used to hide other items' drag handles.
         /// </summary>
         protected readonly BindableBool DragActive = new BindableBool();
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new OsuScrollContainer();
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new OsuScrollContainer();
 
         private Sample sampleSwap;
         private double sampleLastPlaybackTime;
 
-        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) => CreateOsuDrawable(item).With(d =>
-        {
-            d.DragActive.BindTo(DragActive);
-        });
+        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) =>
+            CreateOsuDrawable(item)
+                .With(d =>
+                {
+                    d.DragActive.BindTo(DragActive);
+                });
 
         protected abstract OsuRearrangeableListItem<TModel> CreateOsuDrawable(TModel item);
 

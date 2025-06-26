@@ -40,44 +40,47 @@ namespace osu.Game.Tests.Visual.Editing
         {
             TestWaveformGraph graph = null;
 
-            AddStep("add graph", () =>
-            {
-                Child = new Container
+            AddStep(
+                "add graph",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 100,
-                    Children = new Drawable[]
+                    Child = new Container
                     {
-                        graph = new TestWaveformGraph
+                        RelativeSizeAxes = Axes.X,
+                        Height = 100,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Resolution = resolution,
-                            Waveform = waveformBeatmap.Waveform,
-                        },
-                        new Container
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            AutoSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            graph = new TestWaveformGraph
                             {
-                                new Box
+                                RelativeSizeAxes = Axes.Both,
+                                Resolution = resolution,
+                                Waveform = waveformBeatmap.Waveform,
+                            },
+                            new Container
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                AutoSizeAxes = Axes.Both,
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.Black,
-                                    Alpha = 0.75f
+                                    new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Colour = Color4.Black,
+                                        Alpha = 0.75f,
+                                    },
+                                    new OsuSpriteText
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        Text = $"Resolution: {resolution:0.00}",
+                                    },
                                 },
-                                new OsuSpriteText
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Text = $"Resolution: {resolution:0.00}"
-                                }
-                            }
-                        }
-                    }
-                };
-            });
+                            },
+                        },
+                    };
+                }
+            );
 
             AddUntilStep("wait for load", () => graph.Loaded.IsSet);
         }
@@ -87,19 +90,25 @@ namespace osu.Game.Tests.Visual.Editing
         {
             TestWaveformGraph graph = null;
 
-            AddStep("add graph", () =>
-            {
-                Child = new Container
+            AddStep(
+                "add graph",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 100,
-                    Child = graph = new TestWaveformGraph
+                    Child = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Waveform = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo).Waveform,
-                    },
-                };
-            });
+                        RelativeSizeAxes = Axes.X,
+                        Height = 100,
+                        Child = graph =
+                            new TestWaveformGraph
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Waveform = CreateWorkingBeatmap(
+                                    new OsuRuleset().RulesetInfo
+                                ).Waveform,
+                            },
+                    };
+                }
+            );
 
             AddUntilStep("wait for load", () => graph.Loaded.IsSet);
         }

@@ -105,22 +105,17 @@ namespace osu.Game.Graphics.UserInterface
                     BorderThickness = BORDER_THICKNESS,
                     Children = new Drawable[]
                     {
-                        background = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        background = new Box { RelativeSizeAxes = Axes.Both },
                         ButtonContent = new Container
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             AutoSizeAxes = Axes.Both,
                             Shear = -OsuGame.SHEAR,
-                            Child = text = new OsuSpriteText
-                            {
-                                Font = OsuFont.TorusAlternate.With(size: 17),
-                            }
+                            Child = text =
+                                new OsuSpriteText { Font = OsuFont.TorusAlternate.With(size: 17) },
                         },
-                    }
+                    },
                 },
                 flashLayer = new Box
                 {
@@ -144,7 +139,8 @@ namespace osu.Game.Graphics.UserInterface
             }
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverClickSounds(sampleSet) { Enabled = { BindTarget = Enabled } };
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverClickSounds(sampleSet) { Enabled = { BindTarget = Enabled } };
 
         protected override void LoadComplete()
         {
@@ -206,7 +202,12 @@ namespace osu.Game.Graphics.UserInterface
             }
 
             background.FadeColour(colourDark, 150, Easing.OutQuint);
-            backgroundLayer.TransformTo(nameof(BorderColour), ColourInfo.GradientVertical(colourDark, colourLight), 150, Easing.OutQuint);
+            backgroundLayer.TransformTo(
+                nameof(BorderColour),
+                ColourInfo.GradientVertical(colourDark, colourLight),
+                150,
+                Easing.OutQuint
+            );
 
             if (!Enabled.Value)
                 colourContent = colourContent.Opacity(0.6f);

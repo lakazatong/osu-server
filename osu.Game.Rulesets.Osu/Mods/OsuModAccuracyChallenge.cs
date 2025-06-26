@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModAccuracyChallenge : ModAccuracyChallenge
-    {
-    }
+    public class OsuModAccuracyChallenge : ModAccuracyChallenge { }
 }

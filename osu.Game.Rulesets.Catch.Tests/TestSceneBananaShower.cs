@@ -23,11 +23,18 @@ namespace osu.Game.Rulesets.Catch.Tests
                 BeatmapInfo = new BeatmapInfo
                 {
                     Difficulty = new BeatmapDifficulty { CircleSize = 6 },
-                    Ruleset = ruleset
-                }
+                    Ruleset = ruleset,
+                },
             };
 
-            beatmap.HitObjects.Add(new BananaShower { StartTime = 200, Duration = 3000, NewCombo = true });
+            beatmap.HitObjects.Add(
+                new BananaShower
+                {
+                    StartTime = 200,
+                    Duration = 3000,
+                    NewCombo = true,
+                }
+            );
 
             return beatmap;
         }

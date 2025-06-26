@@ -15,7 +15,11 @@ namespace osu.Game.Overlays.Settings.Sections.General
         protected override LocalisableString Header => GeneralSettingsStrings.LanguageHeader;
 
         [BackgroundDependencyLoader]
-        private void load(OsuGameBase game, OsuConfigManager config, FrameworkConfigManager frameworkConfig)
+        private void load(
+            OsuGameBase game,
+            OsuConfigManager config,
+            FrameworkConfigManager frameworkConfig
+        )
         {
             Children = new Drawable[]
             {
@@ -28,12 +32,12 @@ namespace osu.Game.Overlays.Settings.Sections.General
                 new SettingsCheckbox
                 {
                     LabelText = GeneralSettingsStrings.PreferOriginalMetadataLanguage,
-                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowUnicode)
+                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowUnicode),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = GeneralSettingsStrings.Prefer24HourTimeDisplay,
-                    Current = config.GetBindable<bool>(OsuSetting.Prefer24HourTime)
+                    Current = config.GetBindable<bool>(OsuSetting.Prefer24HourTime),
                 },
             };
         }

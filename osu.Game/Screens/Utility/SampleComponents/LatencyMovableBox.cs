@@ -48,7 +48,9 @@ namespace osu.Game.Screens.Utility.SampleComponents
 
                 var buttons = inputState.Keyboard.Keys;
 
-                box.Colour = buttons.HasAnyButtonPressed ? OverlayColourProvider.Content1 : OverlayColourProvider.Colour1;
+                box.Colour = buttons.HasAnyButtonPressed
+                    ? OverlayColourProvider.Content1
+                    : OverlayColourProvider.Colour1;
 
                 foreach (var key in buttons)
                 {

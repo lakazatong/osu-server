@@ -39,15 +39,17 @@ namespace osu.Game.Online.API
 
         internal void AuthenticateWithLogin(string username, string password)
         {
-            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Missing username.");
-            if (string.IsNullOrEmpty(password)) throw new ArgumentException("Missing password.");
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentException("Missing username.");
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("Missing password.");
 
             var accessTokenRequest = new AccessTokenRequestPassword(username, password)
             {
                 Url = $@"{endpoint}/oauth/token",
                 Method = HttpMethod.Post,
                 ClientId = clientId,
-                ClientSecret = clientSecret
+                ClientSecret = clientSecret,
             };
 
             using (accessTokenRequest)
@@ -65,13 +67,13 @@ namespace osu.Game.Online.API
                     try
                     {
                         // attempt to decode a displayable error string.
-                        var error = JsonConvert.DeserializeObject<OAuthError>(accessTokenRequest.GetResponseString() ?? string.Empty);
+                        var error = JsonConvert.DeserializeObject<OAuthError>(
+                            accessTokenRequest.GetResponseString() ?? string.Empty
+                        );
                         if (error != null)
                             throwableException = new APIException(error.UserDisplayableError, ex);
                     }
-                    catch
-                    {
-                    }
+                    catch { }
 
                     throw throwableException;
                 }
@@ -89,7 +91,7 @@ namespace osu.Game.Online.API
                     Url = $@"{endpoint}/oauth/token",
                     Method = HttpMethod.Post,
                     ClientId = clientId,
-                    ClientSecret = clientSecret
+                    ClientSecret = clientSecret,
                 };
 
                 using (refreshRequest)
@@ -126,7 +128,8 @@ namespace osu.Game.Online.API
         private bool ensureAccessToken()
         {
             // if we already have a valid access token, let's use it.
-            if (accessTokenValid) return true;
+            if (accessTokenValid)
+                return true;
 
             // if not, let's try using our refresh token to request a new access token.
             if (!string.IsNullOrEmpty(Token.Value?.RefreshToken))
@@ -144,7 +147,8 @@ namespace osu.Game.Online.API
         {
             lock (access_token_retrieval_lock)
             {
-                if (!ensureAccessToken()) return null;
+                if (!ensureAccessToken())
+                    return null;
 
                 return Token.Value.AccessToken;
             }
@@ -215,7 +219,8 @@ namespace osu.Game.Online.API
 
         private class OAuthError
         {
-            public string UserDisplayableError => !string.IsNullOrEmpty(Hint) ? Hint : ErrorIdentifier;
+            public string UserDisplayableError =>
+                !string.IsNullOrEmpty(Hint) ? Hint : ErrorIdentifier;
 
             [JsonProperty("error")]
             public string ErrorIdentifier { get; set; }

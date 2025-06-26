@@ -23,7 +23,8 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Cached(typeof(ILocalUserPlayInfo))]
         private ILocalUserPlayInfo localUserInfo;
 
-        private readonly Bindable<LocalUserPlayingState> playingState = new Bindable<LocalUserPlayingState>();
+        private readonly Bindable<LocalUserPlayingState> playingState =
+            new Bindable<LocalUserPlayingState>();
 
         private TextBox textBox => chatDisplay.ChildrenOfType<TextBox>().First();
 
@@ -38,12 +39,17 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("load chat display", () => Child = chatDisplay = new GameplayChatDisplay(new Room())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Width = 0.5f,
-            });
+            AddStep(
+                "load chat display",
+                () =>
+                    Child = chatDisplay =
+                        new GameplayChatDisplay(new Room())
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Width = 0.5f,
+                        }
+            );
 
             AddStep("expand", () => chatDisplay.Expanded.Value = true);
         }
@@ -53,11 +59,14 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             setLocalUserPlaying(true);
 
-            AddStep("attempt focus chat", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "attempt focus chat",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertChatFocused(false);
         }
@@ -67,11 +76,14 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             assertChatFocused(false);
 
-            AddStep("focus chat", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus chat",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             setLocalUserPlaying(true);
             assertChatFocused(false);
@@ -119,9 +131,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         }
 
         private void assertChatFocused(bool isFocused) =>
-            AddAssert($"chat {(isFocused ? "focused" : "not focused")}", () => textBox.HasFocus == isFocused);
+            AddAssert(
+                $"chat {(isFocused ? "focused" : "not focused")}",
+                () => textBox.HasFocus == isFocused
+            );
 
         private void setLocalUserPlaying(bool playing) =>
-            AddStep($"local user {(playing ? "playing" : "not playing")}", () => playingState.Value = playing ? LocalUserPlayingState.Playing : LocalUserPlayingState.NotPlaying);
+            AddStep(
+                $"local user {(playing ? "playing" : "not playing")}",
+                () =>
+                    playingState.Value = playing
+                        ? LocalUserPlayingState.Playing
+                        : LocalUserPlayingState.NotPlaying
+            );
     }
 }

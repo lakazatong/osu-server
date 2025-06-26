@@ -42,12 +42,14 @@ namespace osu.Game.Overlays
             TabContainer.Masking = false;
             TabContainer.Spacing = new Vector2(20, 0);
 
-            AddInternal(bar = new Box
-            {
-                RelativeSizeAxes = Axes.X,
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft
-            });
+            AddInternal(
+                bar = new Box
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -103,9 +105,9 @@ namespace osu.Game.Overlays
                     {
                         Anchor = Anchor.BottomCentre,
                         ExpandedSize = 5f,
-                        CollapsedSize = 0
+                        CollapsedSize = 0,
                     },
-                    new HoverSounds(HoverSampleSet.TabSelect)
+                    new HoverSounds(HoverSampleSet.TabSelect),
                 };
             }
 

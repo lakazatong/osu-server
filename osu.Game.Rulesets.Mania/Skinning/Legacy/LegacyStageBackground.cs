@@ -30,11 +30,15 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, StageDefinition stageDefinition)
         {
-            string leftImage = skin.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.LeftStageImage)?.Value
-                               ?? "mania-stage-left";
+            string leftImage =
+                skin.GetManiaSkinConfig<string>(
+                    LegacyManiaSkinConfigurationLookups.LeftStageImage
+                )?.Value ?? "mania-stage-left";
 
-            string rightImage = skin.GetManiaSkinConfig<string>(LegacyManiaSkinConfigurationLookups.RightStageImage)?.Value
-                                ?? "mania-stage-right";
+            string rightImage =
+                skin.GetManiaSkinConfig<string>(
+                    LegacyManiaSkinConfigurationLookups.RightStageImage
+                )?.Value ?? "mania-stage-right";
 
             InternalChildren = new[]
             {
@@ -50,7 +54,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopLeft,
                     X = -0.05f,
-                    Texture = skin.GetTexture(rightImage)
+                    Texture = skin.GetTexture(rightImage),
                 },
                 columnBackgrounds = new ColumnFlow<Drawable>(stageDefinition)
                 {
@@ -59,12 +63,15 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                 },
                 new HitTargetInsetContainer
                 {
-                    Child = new LegacyHitTarget { RelativeSizeAxes = Axes.Both }
-                }
+                    Child = new LegacyHitTarget { RelativeSizeAxes = Axes.Both },
+                },
             };
 
             for (int i = 0; i < stageDefinition.Columns; i++)
-                columnBackgrounds.SetContentForColumn(i, new ColumnBackground(i, i == stageDefinition.Columns - 1));
+                columnBackgrounds.SetContentForColumn(
+                    i,
+                    new ColumnBackground(i, i == stageDefinition.Columns - 1)
+                );
         }
 
         protected override void Update()
@@ -94,21 +101,43 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             [BackgroundDependencyLoader]
             private void load(ISkinSource skin)
             {
-                float leftLineWidth = skin.GetManiaSkinConfig<float>(LegacyManiaSkinConfigurationLookups.LeftLineWidth, columnIndex)?.Value ?? 1;
-                float rightLineWidth = skin.GetManiaSkinConfig<float>(LegacyManiaSkinConfigurationLookups.RightLineWidth, columnIndex)?.Value ?? 1;
+                float leftLineWidth =
+                    skin.GetManiaSkinConfig<float>(
+                        LegacyManiaSkinConfigurationLookups.LeftLineWidth,
+                        columnIndex
+                    )?.Value ?? 1;
+                float rightLineWidth =
+                    skin.GetManiaSkinConfig<float>(
+                        LegacyManiaSkinConfigurationLookups.RightLineWidth,
+                        columnIndex
+                    )?.Value ?? 1;
 
                 bool hasLeftLine = leftLineWidth > 0;
-                bool hasRightLine = (rightLineWidth > 0 && skin.GetConfig<SkinConfiguration.LegacySetting, decimal>(SkinConfiguration.LegacySetting.Version)?.Value >= 2.4m) || isLastColumn;
+                bool hasRightLine =
+                    (
+                        rightLineWidth > 0
+                        && skin.GetConfig<SkinConfiguration.LegacySetting, decimal>(
+                            SkinConfiguration.LegacySetting.Version
+                        )?.Value >= 2.4m
+                    ) || isLastColumn;
 
-                Color4 lineColour = skin.GetManiaSkinConfig<Color4>(LegacyManiaSkinConfigurationLookups.ColumnLineColour, columnIndex)?.Value ?? Color4.White;
-                Color4 backgroundColour = skin.GetManiaSkinConfig<Color4>(LegacyManiaSkinConfigurationLookups.ColumnBackgroundColour, columnIndex)?.Value ?? Color4.Black;
+                Color4 lineColour =
+                    skin.GetManiaSkinConfig<Color4>(
+                        LegacyManiaSkinConfigurationLookups.ColumnLineColour,
+                        columnIndex
+                    )?.Value ?? Color4.White;
+                Color4 backgroundColour =
+                    skin.GetManiaSkinConfig<Color4>(
+                        LegacyManiaSkinConfigurationLookups.ColumnBackgroundColour,
+                        columnIndex
+                    )?.Value ?? Color4.Black;
 
                 InternalChildren = new Drawable[]
                 {
-                    LegacyColourCompatibility.ApplyWithDoubledAlpha(new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }, backgroundColour),
+                    LegacyColourCompatibility.ApplyWithDoubledAlpha(
+                        new Box { RelativeSizeAxes = Axes.Both },
+                        backgroundColour
+                    ),
                     new HitTargetInsetContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -120,10 +149,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                                 Width = leftLineWidth,
                                 Scale = new Vector2(0.740f, 1),
                                 Alpha = hasLeftLine ? 1 : 0,
-                                Child = LegacyColourCompatibility.ApplyWithDoubledAlpha(new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both
-                                }, lineColour)
+                                Child = LegacyColourCompatibility.ApplyWithDoubledAlpha(
+                                    new Box { RelativeSizeAxes = Axes.Both },
+                                    lineColour
+                                ),
                             },
                             new Container
                             {
@@ -133,13 +162,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                                 Width = rightLineWidth,
                                 Scale = new Vector2(0.740f, 1),
                                 Alpha = hasRightLine ? 1 : 0,
-                                Child = LegacyColourCompatibility.ApplyWithDoubledAlpha(new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both
-                                }, lineColour)
+                                Child = LegacyColourCompatibility.ApplyWithDoubledAlpha(
+                                    new Box { RelativeSizeAxes = Axes.Both },
+                                    lineColour
+                                ),
                             },
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

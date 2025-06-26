@@ -37,18 +37,16 @@ namespace osu.Game.Graphics.UserInterface
                 Spacing = new Vector2(2),
                 Children = new Drawable[]
                 {
-                    new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: 16, weight: FontWeight.SemiBold))
+                    new OsuTextFlowContainer(cp =>
+                        cp.Font = OsuFont.Default.With(size: 16, weight: FontWeight.SemiBold)
+                    )
                     {
                         Text = text,
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                     },
-                    new Circle
-                    {
-                        Colour = colourProvider.Highlight1,
-                        Size = new Vector2(28, 2),
-                    }
-                }
+                    new Circle { Colour = colourProvider.Highlight1, Size = new Vector2(28, 2) },
+                },
             };
         }
     }

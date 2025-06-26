@@ -65,6 +65,6 @@ namespace osu.Game.Online.Multiplayer
         /// <summary>
         /// The user is currently spectating this room.
         /// </summary>
-        Spectating
+        Spectating,
     }
 }

@@ -57,14 +57,27 @@ namespace osu.Game.Screens.SelectV2
                 };
 
                 addHeader(CommonStrings.General);
-                addButton(SongSelectStrings.ManageCollections, FontAwesome.Solid.Book, () => SongSelect?.ManageCollections());
+                addButton(
+                    SongSelectStrings.ManageCollections,
+                    FontAwesome.Solid.Book,
+                    () => SongSelect?.ManageCollections()
+                );
 
                 addHeader(SongSelectStrings.ForAllDifficulties, beatmap.BeatmapSetInfo.ToString());
-                addButton(SongSelectStrings.DeleteBeatmap, FontAwesome.Solid.Trash, () => SongSelect?.Delete(beatmap.BeatmapSetInfo), colours.Red1);
+                addButton(
+                    SongSelectStrings.DeleteBeatmap,
+                    FontAwesome.Solid.Trash,
+                    () => SongSelect?.Delete(beatmap.BeatmapSetInfo),
+                    colours.Red1
+                );
 
-                addHeader(SongSelectStrings.ForSelectedDifficulty, beatmap.BeatmapInfo.DifficultyName);
+                addHeader(
+                    SongSelectStrings.ForSelectedDifficulty,
+                    beatmap.BeatmapInfo.DifficultyName
+                );
 
-                if (SongSelect == null) return;
+                if (SongSelect == null)
+                    return;
 
                 foreach (OsuMenuItem item in SongSelect.GetForwardActions(beatmap.BeatmapInfo))
                 {
@@ -74,15 +87,16 @@ namespace osu.Game.Screens.SelectV2
 
                     if (item is OsuMenuItemSpacer)
                     {
-                        buttonFlow.Add(new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 10,
-                        });
+                        buttonFlow.Add(new Container { RelativeSizeAxes = Axes.X, Height = 10 });
                         continue;
                     }
 
-                    addButton(item.Text.Value, item.Icon, item.Action.Value, item.Type == MenuItemType.Destructive ? colours.Red1 : null);
+                    addButton(
+                        item.Text.Value,
+                        item.Icon,
+                        item.Action.Value,
+                        item.Type == MenuItemType.Destructive ? colours.Red1 : null
+                    );
                 }
             }
 
@@ -108,22 +122,33 @@ namespace osu.Game.Screens.SelectV2
                     Padding = new MarginPadding(10),
                 };
 
-                textFlow.AddText(text, t => t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold));
+                textFlow.AddText(
+                    text,
+                    t => t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold)
+                );
 
                 if (context != null)
                 {
                     textFlow.NewLine();
-                    textFlow.AddText(context, t =>
-                    {
-                        t.Colour = ColourProvider.Content2;
-                        t.Font = t.Font.With(size: 13);
-                    });
+                    textFlow.AddText(
+                        context,
+                        t =>
+                        {
+                            t.Colour = ColourProvider.Content2;
+                            t.Font = t.Font.With(size: 13);
+                        }
+                    );
                 }
 
                 buttonFlow.Add(textFlow);
             }
 
-            private void addButton(LocalisableString text, IconUsage? icon, Action? action, Color4? colour = null)
+            private void addButton(
+                LocalisableString text,
+                IconUsage? icon,
+                Action? action,
+                Color4? colour = null
+            )
             {
                 var button = new OptionButton
                 {
@@ -144,13 +169,16 @@ namespace osu.Game.Screens.SelectV2
             protected override bool OnKeyDown(KeyDownEvent e)
             {
                 // don't absorb control as ToolbarRulesetSelector uses control + number to navigate
-                if (e.ControlPressed) return false;
+                if (e.ControlPressed)
+                    return false;
 
                 if (!e.Repeat && e.Key >= Key.Number1 && e.Key <= Key.Number9)
                 {
                     int requested = e.Key - Key.Number1;
 
-                    OptionButton? found = buttonFlow.Children.OfType<OptionButton>().ElementAtOrDefault(requested);
+                    OptionButton? found = buttonFlow
+                        .Children.OfType<OptionButton>()
+                        .ElementAtOrDefault(requested);
 
                     if (found != null)
                     {
@@ -178,24 +206,27 @@ namespace osu.Game.Screens.SelectV2
                     SpriteText.Colour = TextColour ?? Color4.White;
                     Content.CornerRadius = 10;
 
-                    Add(new SpriteIcon
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Size = new Vector2(17),
-                        X = 15,
-                        Icon = Icon,
-                        Colour = TextColour ?? Color4.White,
-                    });
+                    Add(
+                        new SpriteIcon
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Size = new Vector2(17),
+                            X = 15,
+                            Icon = Icon,
+                            Colour = TextColour ?? Color4.White,
+                        }
+                    );
                 }
 
-                protected override SpriteText CreateText() => new OsuSpriteText
-                {
-                    Depth = -1,
-                    Origin = Anchor.CentreLeft,
-                    Anchor = Anchor.CentreLeft,
-                    X = 40
-                };
+                protected override SpriteText CreateText() =>
+                    new OsuSpriteText
+                    {
+                        Depth = -1,
+                        Origin = Anchor.CentreLeft,
+                        Anchor = Anchor.CentreLeft,
+                        X = 40,
+                    };
             }
         }
     }

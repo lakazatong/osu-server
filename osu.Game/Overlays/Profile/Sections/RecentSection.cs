@@ -15,10 +15,7 @@ namespace osu.Game.Overlays.Profile.Sections
 
         public RecentSection()
         {
-            Children = new[]
-            {
-                new PaginatedRecentActivityContainer(User),
-            };
+            Children = new[] { new PaginatedRecentActivityContainer(User) };
         }
     }
 }

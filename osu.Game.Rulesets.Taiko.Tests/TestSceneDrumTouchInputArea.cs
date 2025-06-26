@@ -17,12 +17,14 @@ namespace osu.Game.Rulesets.Taiko.Tests
     {
         private DrumTouchInputArea drumTouchInputArea = null!;
 
-        private readonly Bindable<TaikoTouchControlScheme> controlScheme = new Bindable<TaikoTouchControlScheme>();
+        private readonly Bindable<TaikoTouchControlScheme> controlScheme =
+            new Bindable<TaikoTouchControlScheme>();
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (TaikoRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
+            var config = (TaikoRulesetConfigManager)
+                RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
             config.BindWith(TaikoRulesetSetting.TouchControlScheme, controlScheme);
         }
 
@@ -43,8 +45,8 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     {
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -54,9 +56,18 @@ namespace osu.Game.Rulesets.Taiko.Tests
             AddStep("create drum", createDrum);
             AddStep("show drum", () => drumTouchInputArea.Show());
 
-            AddStep("change scheme (kddk)", () => controlScheme.Value = TaikoTouchControlScheme.KDDK);
-            AddStep("change scheme (kkdd)", () => controlScheme.Value = TaikoTouchControlScheme.KKDD);
-            AddStep("change scheme (ddkk)", () => controlScheme.Value = TaikoTouchControlScheme.DDKK);
+            AddStep(
+                "change scheme (kddk)",
+                () => controlScheme.Value = TaikoTouchControlScheme.KDDK
+            );
+            AddStep(
+                "change scheme (kkdd)",
+                () => controlScheme.Value = TaikoTouchControlScheme.KKDD
+            );
+            AddStep(
+                "change scheme (ddkk)",
+                () => controlScheme.Value = TaikoTouchControlScheme.DDKK
+            );
         }
 
         protected override Ruleset CreateRuleset() => new TaikoRuleset();

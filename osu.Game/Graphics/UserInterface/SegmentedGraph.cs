@@ -30,10 +30,7 @@ namespace osu.Game.Graphics.UserInterface
         public SegmentedGraph(int tierCount = 1)
         {
             this.tierCount = tierCount;
-            tierColours = new[]
-            {
-                new Colour4(0, 0, 0, 0)
-            };
+            tierColours = new[] { new Colour4(0, 0, 0, 0) };
             segments = new SegmentManager(tierCount);
         }
 
@@ -42,7 +39,8 @@ namespace osu.Game.Graphics.UserInterface
             get => values ?? Array.Empty<T>();
             set
             {
-                if (value == values) return;
+                if (value == values)
+                    return;
 
                 values = value;
                 graphNeedsUpdate = true;
@@ -70,7 +68,10 @@ namespace osu.Game.Graphics.UserInterface
         private void load(IRenderer renderer, ShaderManager shaders)
         {
             texture = renderer.WhitePixel;
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            shader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         protected override void Update()
@@ -202,9 +203,7 @@ namespace osu.Game.Graphics.UserInterface
             private readonly List<Colour4> tierColours = new List<Colour4>();
 
             public SegmentedGraphDrawNode(SegmentedGraph<T> source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -240,8 +239,10 @@ namespace osu.Game.Graphics.UserInterface
                             Vector2Extensions.Transform(topLeft, DrawInfo.Matrix),
                             Vector2Extensions.Transform(topRight, DrawInfo.Matrix),
                             Vector2Extensions.Transform(bottomLeft, DrawInfo.Matrix),
-                            Vector2Extensions.Transform(bottomRight, DrawInfo.Matrix)),
-                        getSegmentColour(segment));
+                            Vector2Extensions.Transform(bottomRight, DrawInfo.Matrix)
+                        ),
+                        getSegmentColour(segment)
+                    );
                 }
 
                 shader.Unbind();
@@ -249,9 +250,12 @@ namespace osu.Game.Graphics.UserInterface
 
             private ColourInfo getSegmentColour(SegmentInfo segment)
             {
-                var segmentColour = DrawColourInfo.Colour.Interpolate(new Quad(segment.Start, 0f, segment.End - segment.Start, 1f));
+                var segmentColour = DrawColourInfo.Colour.Interpolate(
+                    new Quad(segment.Start, 0f, segment.End - segment.Start, 1f)
+                );
 
-                var tierColour = segment.Tier >= 0 ? tierColours[segment.Tier] : new Colour4(0, 0, 0, 0);
+                var tierColour =
+                    segment.Tier >= 0 ? tierColours[segment.Tier] : new Colour4(0, 0, 0, 0);
                 segmentColour.ApplyChild(tierColour);
 
                 return segmentColour;
@@ -272,12 +276,14 @@ namespace osu.Game.Graphics.UserInterface
             public void StartSegment(int tier, float start)
             {
                 if (pendingSegments[tier] != null)
-                    throw new InvalidOperationException($"Another {nameof(SegmentInfo)} of tier {tier.ToString()} has already been started.");
+                    throw new InvalidOperationException(
+                        $"Another {nameof(SegmentInfo)} of tier {tier.ToString()} has already been started."
+                    );
 
                 pendingSegments[tier] = new SegmentInfo
                 {
                     Tier = tier,
-                    Start = Math.Clamp(start, 0, 1)
+                    Start = Math.Clamp(start, 0, 1),
                 };
             }
 
@@ -285,7 +291,9 @@ namespace osu.Game.Graphics.UserInterface
             {
                 SegmentInfo? pendingSegment = pendingSegments[tier];
                 if (pendingSegment == null)
-                    throw new InvalidOperationException($"Cannot end {nameof(SegmentInfo)} of tier {tier.ToString()} that has not been started.");
+                    throw new InvalidOperationException(
+                        $"Cannot end {nameof(SegmentInfo)} of tier {tier.ToString()} that has not been started."
+                    );
 
                 SegmentInfo segment = pendingSegment.Value;
                 segment.End = Math.Clamp(end, 0, 1);
@@ -307,10 +315,10 @@ namespace osu.Game.Graphics.UserInterface
             }
 
             public void Sort() =>
-                segments.Sort((a, b) =>
-                    a.Tier != b.Tier
-                        ? a.Tier.CompareTo(b.Tier)
-                        : a.Start.CompareTo(b.Start));
+                segments.Sort(
+                    (a, b) =>
+                        a.Tier != b.Tier ? a.Tier.CompareTo(b.Tier) : a.Start.CompareTo(b.Start)
+                );
 
             public void Add(SegmentInfo segment) => segments.Add(segment);
 
@@ -330,11 +338,13 @@ namespace osu.Game.Graphics.UserInterface
                 {
                     Tier = tier,
                     Start = Math.Clamp(start, 0, 1),
-                    End = Math.Clamp(end, 0, 1)
+                    End = Math.Clamp(end, 0, 1),
                 };
 
                 if (segment.Start > segment.End)
-                    throw new InvalidOperationException("Segment start cannot be after segment end.");
+                    throw new InvalidOperationException(
+                        "Segment start cannot be after segment end."
+                    );
 
                 Add(segment);
             }
@@ -342,6 +352,7 @@ namespace osu.Game.Graphics.UserInterface
             public bool IsTierStarted(int tier) => tier >= 0 && pendingSegments[tier].HasValue;
 
             public IEnumerator<SegmentInfo> GetEnumerator() => segments.GetEnumerator();
+
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }

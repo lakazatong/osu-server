@@ -41,12 +41,11 @@ namespace osu.Game.Online.Chat
             return false;
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new LinkHoverSounds(sampleSet, Parts);
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new LinkHoverSounds(sampleSet, Parts);
 
         public DrawableLinkCompiler(ITextPart part)
-            : this(part.Drawables.OfType<SpriteText>())
-        {
-        }
+            : this(part.Drawables.OfType<SpriteText>()) { }
 
         public DrawableLinkCompiler(IEnumerable<Drawable> parts)
         {
@@ -65,7 +64,10 @@ namespace osu.Game.Online.Chat
         {
             private readonly SlimReadOnlyListWrapper<Drawable> parts;
 
-            public LinkHoverSounds(HoverSampleSet sampleSet, SlimReadOnlyListWrapper<Drawable> parts)
+            public LinkHoverSounds(
+                HoverSampleSet sampleSet,
+                SlimReadOnlyListWrapper<Drawable> parts
+            )
                 : base(sampleSet)
             {
                 this.parts = parts;

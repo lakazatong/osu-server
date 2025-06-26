@@ -1,15 +1,15 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osu.Game.Beatmaps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu.UI;
 using osu.Game.Rulesets.Replays;
+using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Replays
 {
@@ -77,8 +77,7 @@ namespace osu.Game.Rulesets.Osu.Replays
         /// in milliseconds.
         /// </summary>
         /// <param name="time">The time of the previous frame.</param>
-        protected double GetFrameDelay(double time)
-            => ApplyModsToRate(time, 1000.0 / 60);
+        protected double GetFrameDelay(double time) => ApplyModsToRate(time, 1000.0 / 60);
 
         private class ReplayFrameComparer : IComparer<ReplayFrame>
         {
@@ -91,7 +90,8 @@ namespace osu.Game.Rulesets.Osu.Replays
             }
         }
 
-        private static readonly IComparer<ReplayFrame> replay_frame_comparer = new ReplayFrameComparer();
+        private static readonly IComparer<ReplayFrame> replay_frame_comparer =
+            new ReplayFrameComparer();
 
         protected int FindInsertionIndex(ReplayFrame frame)
         {
@@ -113,9 +113,11 @@ namespace osu.Game.Rulesets.Osu.Replays
             return index;
         }
 
-        protected void AddFrameToReplay(ReplayFrame frame) => Frames.Insert(FindInsertionIndex(frame), frame);
+        protected void AddFrameToReplay(ReplayFrame frame) =>
+            Frames.Insert(FindInsertionIndex(frame), frame);
 
-        protected static Vector2 CirclePosition(double t, double radius) => new Vector2((float)(Math.Cos(t) * radius), (float)(Math.Sin(t) * radius));
+        protected static Vector2 CirclePosition(double t, double radius) =>
+            new Vector2((float)(Math.Cos(t) * radius), (float)(Math.Sin(t) * radius));
 
         #endregion
     }

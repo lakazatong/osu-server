@@ -15,7 +15,8 @@ namespace osu.Game.Screens.Play
             if (e.Repeat)
                 return false;
 
-            if (e.Action != GlobalAction.QuickRetry) return false;
+            if (e.Action != GlobalAction.QuickRetry)
+                return false;
 
             BeginConfirm();
             return true;
@@ -23,7 +24,8 @@ namespace osu.Game.Screens.Play
 
         public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
         {
-            if (e.Action != GlobalAction.QuickRetry) return;
+            if (e.Action != GlobalAction.QuickRetry)
+                return;
 
             AbortConfirm();
         }

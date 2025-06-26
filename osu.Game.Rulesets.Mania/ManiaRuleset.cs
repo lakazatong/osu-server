@@ -48,21 +48,28 @@ namespace osu.Game.Rulesets.Mania
         /// </summary>
         public const int MAX_STAGE_KEYS = 10;
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => new DrawableManiaRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        ) => new DrawableManiaRuleset(this, beatmap, mods);
 
         public override ScoreProcessor CreateScoreProcessor() => new ManiaScoreProcessor();
 
-        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new ManiaHealthProcessor(drainStartTime);
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime) =>
+            new ManiaHealthProcessor(drainStartTime);
 
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new ManiaBeatmapConverter(beatmap, this);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+            new ManiaBeatmapConverter(beatmap, this);
 
-        public override PerformanceCalculator CreatePerformanceCalculator() => new ManiaPerformanceCalculator();
+        public override PerformanceCalculator CreatePerformanceCalculator() =>
+            new ManiaPerformanceCalculator();
 
         public const string SHORT_NAME = "mania";
 
         public override string RulesetAPIVersionSupported => CURRENT_RULESET_API_VERSION;
 
-        public override HitObjectComposer CreateHitObjectComposer() => new ManiaHitObjectComposer(this);
+        public override HitObjectComposer CreateHitObjectComposer() =>
+            new ManiaHitObjectComposer(this);
 
         public override IBeatmapVerifier CreateBeatmapVerifier() => new ManiaBeatmapVerifier();
 
@@ -249,7 +256,11 @@ namespace osu.Game.Rulesets.Mania
                         new ManiaModHardRock(),
                         new MultiMod(new ManiaModSuddenDeath(), new ManiaModPerfect()),
                         new MultiMod(new ManiaModDoubleTime(), new ManiaModNightcore()),
-                        new MultiMod(new ManiaModFadeIn(), new ManiaModHidden(), new ManiaModCover()),
+                        new MultiMod(
+                            new ManiaModFadeIn(),
+                            new ManiaModHidden(),
+                            new ManiaModCover()
+                        ),
                         new ManiaModFlashlight(),
                         new ModAccuracyChallenge(),
                     };
@@ -280,24 +291,18 @@ namespace osu.Game.Rulesets.Mania
                     };
 
                 case ModType.Automation:
-                    return new Mod[]
-                    {
-                        new MultiMod(new ManiaModAutoplay(), new ManiaModCinema()),
-                    };
+                    return new Mod[] { new MultiMod(new ManiaModAutoplay(), new ManiaModCinema()) };
 
                 case ModType.Fun:
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
                         new ManiaModMuted(),
-                        new ModAdaptiveSpeed()
+                        new ModAdaptiveSpeed(),
                     };
 
                 case ModType.System:
-                    return new Mod[]
-                    {
-                        new ModScoreV2(),
-                    };
+                    return new Mod[] { new ModScoreV2() };
 
                 default:
                     return Array.Empty<Mod>();
@@ -312,17 +317,22 @@ namespace osu.Game.Rulesets.Mania
 
         public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.RulesetMania };
 
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new ManiaDifficultyCalculator(RulesetInfo, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            new ManiaDifficultyCalculator(RulesetInfo, beatmap);
 
         public int LegacyID => 3;
 
-        public ILegacyScoreSimulator CreateLegacyScoreSimulator() => new ManiaLegacyScoreSimulator();
+        public ILegacyScoreSimulator CreateLegacyScoreSimulator() =>
+            new ManiaLegacyScoreSimulator();
 
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new ManiaReplayFrame();
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() =>
+            new ManiaReplayFrame();
 
-        public override IRulesetConfigManager CreateConfig(SettingsStore? settings) => new ManiaRulesetConfigManager(settings, RulesetInfo);
+        public override IRulesetConfigManager CreateConfig(SettingsStore? settings) =>
+            new ManiaRulesetConfigManager(settings, RulesetInfo);
 
-        public override RulesetSettingsSubsection CreateSettings() => new ManiaSettingsSubsection(this);
+        public override RulesetSettingsSubsection CreateSettings() =>
+            new ManiaSettingsSubsection(this);
 
         public override IEnumerable<int> AvailableVariants
         {
@@ -343,7 +353,9 @@ namespace osu.Game.Rulesets.Mania
                     return new SingleStageVariantGenerator(variant).GenerateMappings();
 
                 case PlayfieldType.Dual:
-                    return new DualStageVariantGenerator(getDualStageKeyCount(variant)).GenerateMappings();
+                    return new DualStageVariantGenerator(
+                        getDualStageKeyCount(variant)
+                    ).GenerateMappings();
             }
 
             return Array.Empty<KeyBinding>();
@@ -377,7 +389,11 @@ namespace osu.Game.Rulesets.Mania
         /// <returns>The <see cref="PlayfieldType"/> that corresponds to <paramref name="variant"/>.</returns>
         private PlayfieldType getPlayfieldType(int variant)
         {
-            return (PlayfieldType)Enum.GetValues(typeof(PlayfieldType)).Cast<int>().OrderDescending().First(v => variant >= v);
+            return (PlayfieldType)
+                Enum.GetValues(typeof(PlayfieldType))
+                    .Cast<int>()
+                    .OrderDescending()
+                    .First(v => variant >= v);
         }
 
         protected override IEnumerable<HitResult> GetValidHitResults()
@@ -395,24 +411,45 @@ namespace osu.Game.Rulesets.Mania
             };
         }
 
-        public override StatisticItem[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
-        {
-            new StatisticItem("Performance Breakdown", () => new PerformanceBreakdownChart(score, playableBeatmap)
+        public override StatisticItem[] CreateStatisticsForScore(
+            ScoreInfo score,
+            IBeatmap playableBeatmap
+        ) =>
+            new[]
             {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y
-            }),
-            new StatisticItem("Timing Distribution", () => new HitEventTimingDistributionGraph(score.HitEvents)
-            {
-                RelativeSizeAxes = Axes.X,
-                Height = 250
-            }, true),
-            new StatisticItem("Statistics", () => new SimpleStatisticTable(2, new SimpleStatisticItem[]
-            {
-                new AverageHitError(score.HitEvents),
-                new UnstableRate(score.HitEvents)
-            }), true)
-        };
+                new StatisticItem(
+                    "Performance Breakdown",
+                    () =>
+                        new PerformanceBreakdownChart(score, playableBeatmap)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                        }
+                ),
+                new StatisticItem(
+                    "Timing Distribution",
+                    () =>
+                        new HitEventTimingDistributionGraph(score.HitEvents)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 250,
+                        },
+                    true
+                ),
+                new StatisticItem(
+                    "Statistics",
+                    () =>
+                        new SimpleStatisticTable(
+                            2,
+                            new SimpleStatisticItem[]
+                            {
+                                new AverageHitError(score.HitEvents),
+                                new UnstableRate(score.HitEvents),
+                            }
+                        ),
+                    true
+                ),
+            };
 
         public override IRulesetFilterCriteria CreateRulesetFilterCriteria()
         {
@@ -420,15 +457,18 @@ namespace osu.Game.Rulesets.Mania
         }
 
         public override IEnumerable<Drawable> CreateEditorSetupSections() =>
-        [
-            new MetadataSection(),
-            new ManiaDifficultySection(),
-            new ResourcesSection(),
-            new DesignSection(),
-        ];
+            [
+                new MetadataSection(),
+                new ManiaDifficultySection(),
+                new ResourcesSection(),
+                new DesignSection(),
+            ];
 
-        public int GetKeyCount(IBeatmapInfo beatmapInfo, IReadOnlyList<Mod>? mods = null)
-            => ManiaBeatmapConverter.GetColumnCount(LegacyBeatmapConversionDifficultyInfo.FromBeatmapInfo(beatmapInfo), mods);
+        public int GetKeyCount(IBeatmapInfo beatmapInfo, IReadOnlyList<Mod>? mods = null) =>
+            ManiaBeatmapConverter.GetColumnCount(
+                LegacyBeatmapConversionDifficultyInfo.FromBeatmapInfo(beatmapInfo),
+                mods
+            );
     }
 
     public enum PlayfieldType

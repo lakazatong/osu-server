@@ -22,16 +22,28 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
 
         public bool UsesFixedAnchor { get; set; }
 
-        [SettingSource(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.JudgementDisplayMode))]
+        [SettingSource(
+            typeof(JudgementCounterDisplayStrings),
+            nameof(JudgementCounterDisplayStrings.JudgementDisplayMode)
+        )]
         public Bindable<DisplayMode> Mode { get; } = new Bindable<DisplayMode>();
 
-        [SettingSource(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.FlowDirection))]
+        [SettingSource(
+            typeof(JudgementCounterDisplayStrings),
+            nameof(JudgementCounterDisplayStrings.FlowDirection)
+        )]
         public Bindable<Direction> FlowDirection { get; } = new Bindable<Direction>();
 
-        [SettingSource(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.ShowJudgementNames))]
+        [SettingSource(
+            typeof(JudgementCounterDisplayStrings),
+            nameof(JudgementCounterDisplayStrings.ShowJudgementNames)
+        )]
         public BindableBool ShowJudgementNames { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.ShowMaxJudgement))]
+        [SettingSource(
+            typeof(JudgementCounterDisplayStrings),
+            nameof(JudgementCounterDisplayStrings.ShowMaxJudgement)
+        )]
         public BindableBool ShowMaxJudgement { get; } = new BindableBool(true);
 
         [Resolved]
@@ -47,7 +59,7 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
             {
                 Direction = getFillDirection(FlowDirection.Value),
                 Spacing = new Vector2(10),
-                AutoSizeAxes = Axes.Both
+                AutoSizeAxes = Axes.Both,
             };
 
             foreach (var result in judgementCountController.Counters)
@@ -58,15 +70,18 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
         {
             base.LoadComplete();
 
-            FlowDirection.BindValueChanged(direction =>
-            {
-                var convertedDirection = getFillDirection(direction.NewValue);
+            FlowDirection.BindValueChanged(
+                direction =>
+                {
+                    var convertedDirection = getFillDirection(direction.NewValue);
 
-                CounterFlow.Direction = convertedDirection;
+                    CounterFlow.Direction = convertedDirection;
 
-                foreach (var counter in CounterFlow)
-                    counter.Direction.Value = convertedDirection;
-            }, true);
+                    foreach (var counter in CounterFlow)
+                        counter.Direction.Value = convertedDirection;
+                },
+                true
+            );
 
             Mode.BindValueChanged(_ => updateDisplay());
             ShowMaxJudgement.BindValueChanged(_ => updateDisplay(), true);
@@ -122,7 +137,11 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
                     return FillDirection.Vertical;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(flow), flow, @"Unsupported direction");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(flow),
+                        flow,
+                        @"Unsupported direction"
+                    );
             }
         }
 
@@ -130,19 +149,28 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
             new JudgementCounter(info)
             {
                 State = { Value = Visibility.Hidden },
-                ShowName = { BindTarget = ShowJudgementNames }
+                ShowName = { BindTarget = ShowJudgementNames },
             };
 
         public enum DisplayMode
         {
-            [LocalisableDescription(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.JudgementDisplayModeSimple))]
+            [LocalisableDescription(
+                typeof(JudgementCounterDisplayStrings),
+                nameof(JudgementCounterDisplayStrings.JudgementDisplayModeSimple)
+            )]
             Simple,
 
-            [LocalisableDescription(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.JudgementDisplayModeNormal))]
+            [LocalisableDescription(
+                typeof(JudgementCounterDisplayStrings),
+                nameof(JudgementCounterDisplayStrings.JudgementDisplayModeNormal)
+            )]
             Normal,
 
-            [LocalisableDescription(typeof(JudgementCounterDisplayStrings), nameof(JudgementCounterDisplayStrings.JudgementDisplayModeAll))]
-            All
+            [LocalisableDescription(
+                typeof(JudgementCounterDisplayStrings),
+                nameof(JudgementCounterDisplayStrings.JudgementDisplayModeAll)
+            )]
+            All,
         }
     }
 }

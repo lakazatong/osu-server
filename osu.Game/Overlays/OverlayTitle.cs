@@ -33,15 +33,17 @@ namespace osu.Game.Overlays
         public IconUsage Icon
         {
             get => icon;
-            protected set => iconContainer.Child = new SpriteIcon
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                FillMode = FillMode.Fit,
+            protected set =>
+                iconContainer.Child = new SpriteIcon
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fit,
 
-                Icon = icon = value,
-            };
+                    Icon = icon =
+                        value,
+                };
         }
 
         protected OverlayTitle()
@@ -60,16 +62,16 @@ namespace osu.Game.Overlays
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Margin = new MarginPadding { Horizontal = 5 }, // compensates for osu-web sprites having around 5px of whitespace on each side
-                        Size = new Vector2(ICON_SIZE)
+                        Size = new Vector2(ICON_SIZE),
                     },
                     titleText = new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Font = OsuFont.GetFont(size: 20, weight: FontWeight.Regular),
-                        Margin = new MarginPadding { Vertical = 17.5f } // 15px padding + 2.5px line-height difference compensation
-                    }
-                }
+                        Margin = new MarginPadding { Vertical = 17.5f }, // 15px padding + 2.5px line-height difference compensation
+                    },
+                },
             };
         }
     }

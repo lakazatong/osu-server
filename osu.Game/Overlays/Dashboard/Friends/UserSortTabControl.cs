@@ -7,9 +7,7 @@ using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Overlays.Dashboard.Friends
 {
-    public partial class UserSortTabControl : OverlaySortTabControl<UserSortCriteria>
-    {
-    }
+    public partial class UserSortTabControl : OverlaySortTabControl<UserSortCriteria> { }
 
     public enum UserSortCriteria
     {
@@ -21,6 +19,6 @@ namespace osu.Game.Overlays.Dashboard.Friends
         Rank,
 
         [LocalisableDescription(typeof(SortStrings), nameof(SortStrings.Username))]
-        Username
+        Username,
     }
 }

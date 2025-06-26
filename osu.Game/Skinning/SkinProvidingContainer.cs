@@ -50,7 +50,10 @@ namespace osu.Game.Skinning
         /// <summary>
         /// A dictionary mapping each <see cref="ISkin"/> source to a wrapper which handles lookup allowances.
         /// </summary>
-        private (ISkin skin, DisableableSkinSource wrapped)[] skinSources = Array.Empty<(ISkin skin, DisableableSkinSource wrapped)>();
+        private (ISkin skin, DisableableSkinSource wrapped)[] skinSources = Array.Empty<(
+            ISkin skin,
+            DisableableSkinSource wrapped
+        )>();
 
         /// <summary>
         /// Constructs a new <see cref="SkinProvidingContainer"/> initialised with a single skin source.
@@ -70,7 +73,9 @@ namespace osu.Game.Skinning
             RelativeSizeAxes = Axes.Both;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
@@ -134,7 +139,10 @@ namespace osu.Game.Skinning
             foreach (var (_, lookupWrapper) in skinSources)
             {
                 Texture? sourceTexture;
-                if ((sourceTexture = lookupWrapper.GetTexture(componentName, wrapModeS, wrapModeT)) != null)
+                if (
+                    (sourceTexture = lookupWrapper.GetTexture(componentName, wrapModeS, wrapModeT))
+                    != null
+                )
                     return sourceTexture;
             }
 
@@ -203,9 +211,10 @@ namespace osu.Game.Skinning
                 }
 
                 skinSources = sources
-                              // Shouldn't be required after NRT is applied to all calling sources.
-                              .Where(skin => skin.IsNotNull())
-                              .Select(skin => (skin, new DisableableSkinSource(skin, this))).ToArray();
+                    // Shouldn't be required after NRT is applied to all calling sources.
+                    .Where(skin => skin.IsNotNull())
+                    .Select(skin => (skin, new DisableableSkinSource(skin, this)))
+                    .ToArray();
 
                 foreach (var skin in skinSources)
                 {

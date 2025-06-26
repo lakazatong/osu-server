@@ -18,21 +18,21 @@ namespace osu.Game.Rulesets.Osu.Tests
         private ControlPointInfo controlPoints { get; set; }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            controlPoints = new ControlPointInfo();
-
-            controlPoints.Add(0, new TimingControlPoint { BeatLength = 500 });
-            controlPoints.Add(0, new EffectControlPoint { KiaiMode = true });
-
-            Beatmap.Value = CreateWorkingBeatmap(new Beatmap
+        public void SetUp() =>
+            Schedule(() =>
             {
-                ControlPointInfo = controlPoints
-            });
+                controlPoints = new ControlPointInfo();
 
-            // track needs to be playing for BeatSyncedContainer to work.
-            Beatmap.Value.Track.Start();
-        });
+                controlPoints.Add(0, new TimingControlPoint { BeatLength = 500 });
+                controlPoints.Add(0, new EffectControlPoint { KiaiMode = true });
+
+                Beatmap.Value = CreateWorkingBeatmap(
+                    new Beatmap { ControlPointInfo = controlPoints }
+                );
+
+                // track needs to be playing for BeatSyncedContainer to work.
+                Beatmap.Value.Track.Start();
+            });
 
         ChannelAmplitudes IHasAmplitudes.CurrentAmplitudes => new ChannelAmplitudes();
         ControlPointInfo IBeatSyncProvider.ControlPoints => controlPoints;

@@ -17,12 +17,14 @@ namespace osu.Game.Tournament.Screens
 
         protected BeatmapInfoScreen()
         {
-            AddInternal(SongBar = new SongBar
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                Depth = float.MinValue,
-            });
+            AddInternal(
+                SongBar = new SongBar
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Depth = float.MinValue,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]

@@ -22,14 +22,16 @@ namespace osu.Game.Rulesets.Edit.Checks
         private const int low_width = 960;
         private const int low_height = 540;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Resources, "Too high or low background resolution");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Resources, "Too high or low background resolution");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooHighResolution(this),
-            new IssueTemplateTooLowResolution(this),
-            new IssueTemplateTooUncompressed(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateTooHighResolution(this),
+                new IssueTemplateTooLowResolution(this),
+                new IssueTemplateTooUncompressed(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -42,14 +44,25 @@ namespace osu.Game.Rulesets.Edit.Checks
                 yield break;
 
             if (texture.Width > max_width || texture.Height > max_height)
-                yield return new IssueTemplateTooHighResolution(this).Create(texture.Width, texture.Height);
+                yield return new IssueTemplateTooHighResolution(this).Create(
+                    texture.Width,
+                    texture.Height
+                );
 
             if (texture.Width < min_width || texture.Height < min_height)
-                yield return new IssueTemplateTooLowResolution(this).Create(texture.Width, texture.Height);
+                yield return new IssueTemplateTooLowResolution(this).Create(
+                    texture.Width,
+                    texture.Height
+                );
             else if (texture.Width < low_width || texture.Height < low_height)
-                yield return new IssueTemplateLowResolution(this).Create(texture.Width, texture.Height);
+                yield return new IssueTemplateLowResolution(this).Create(
+                    texture.Width,
+                    texture.Height
+                );
 
-            string? storagePath = context.Beatmap.BeatmapInfo.BeatmapSet?.GetPathForFile(backgroundFile);
+            string? storagePath = context.Beatmap.BeatmapInfo.BeatmapSet?.GetPathForFile(
+                backgroundFile
+            );
 
             using (Stream stream = context.WorkingBeatmap.GetStream(storagePath))
             {
@@ -63,39 +76,50 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateTooHighResolution : IssueTemplate
         {
             public IssueTemplateTooHighResolution(ICheck check)
-                : base(check, IssueType.Problem, "The background resolution ({0} x {1}) exceeds {2} x {3}.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "The background resolution ({0} x {1}) exceeds {2} x {3}."
+                ) { }
 
-            public Issue Create(double width, double height) => new Issue(this, width, height, max_width, max_height);
+            public Issue Create(double width, double height) =>
+                new Issue(this, width, height, max_width, max_height);
         }
 
         public class IssueTemplateTooLowResolution : IssueTemplate
         {
             public IssueTemplateTooLowResolution(ICheck check)
-                : base(check, IssueType.Problem, "The background resolution ({0} x {1}) is lower than {2} x {3}.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "The background resolution ({0} x {1}) is lower than {2} x {3}."
+                ) { }
 
-            public Issue Create(double width, double height) => new Issue(this, width, height, min_width, min_height);
+            public Issue Create(double width, double height) =>
+                new Issue(this, width, height, min_width, min_height);
         }
 
         public class IssueTemplateLowResolution : IssueTemplate
         {
             public IssueTemplateLowResolution(ICheck check)
-                : base(check, IssueType.Warning, "The background resolution ({0} x {1}) is lower than {2} x {3}.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "The background resolution ({0} x {1}) is lower than {2} x {3}."
+                ) { }
 
-            public Issue Create(double width, double height) => new Issue(this, width, height, low_width, low_height);
+            public Issue Create(double width, double height) =>
+                new Issue(this, width, height, low_width, low_height);
         }
 
         public class IssueTemplateTooUncompressed : IssueTemplate
         {
             public IssueTemplateTooUncompressed(ICheck check)
-                : base(check, IssueType.Problem, "The background filesize ({0:0.##} MB) exceeds {1} MB.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "The background filesize ({0:0.##} MB) exceeds {1} MB."
+                ) { }
 
             public Issue Create(double actualMb) => new Issue(this, actualMb, max_filesize_mb);
         }

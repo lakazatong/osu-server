@@ -34,9 +34,11 @@ namespace osu.Game.Screens.Play
         private PlaybackSettings playbackSettings;
 
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private readonly SoloGameplayLeaderboardProvider leaderboardProvider = new SoloGameplayLeaderboardProvider();
+        private readonly SoloGameplayLeaderboardProvider leaderboardProvider =
+            new SoloGameplayLeaderboardProvider();
 
-        protected override UserActivity InitialActivity => new UserActivity.WatchingReplay(Score.ScoreInfo);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.WatchingReplay(Score.ScoreInfo);
 
         private bool isAutoplayPlayback => GameplayState.Mods.OfType<ModAutoplay>().Any();
 
@@ -55,7 +57,10 @@ namespace osu.Game.Screens.Play
             replayIsFailedScore = score.ScoreInfo.Rank == ScoreRank.F;
         }
 
-        public ReplayPlayer(Func<IBeatmap, IReadOnlyList<Mod>, Score> createScore, PlayerConfiguration configuration = null)
+        public ReplayPlayer(
+            Func<IBeatmap, IReadOnlyList<Mod>, Score> createScore,
+            PlayerConfiguration configuration = null
+        )
             : base(configuration)
         {
             this.createScore = createScore;
@@ -66,11 +71,12 @@ namespace osu.Game.Screens.Play
         /// Add a settings group to the HUD overlay. Intended to be used by rulesets to add replay-specific settings.
         /// </summary>
         /// <param name="settings">The settings group to be shown.</param>
-        public void AddSettings(PlayerSettingsGroup settings) => Schedule(() =>
-        {
-            settings.Expanded.Value = false;
-            HUDOverlay.PlayerSettingsOverlay.Add(settings);
-        });
+        public void AddSettings(PlayerSettingsGroup settings) =>
+            Schedule(() =>
+            {
+                settings.Expanded.Value = false;
+                HUDOverlay.PlayerSettingsOverlay.Add(settings);
+            });
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -83,7 +89,12 @@ namespace osu.Game.Screens.Play
             playbackSettings = new PlaybackSettings
             {
                 Depth = float.MaxValue,
-                Expanded = { BindTarget = config.GetBindable<bool>(OsuSetting.ReplayPlaybackControlsExpanded) }
+                Expanded =
+                {
+                    BindTarget = config.GetBindable<bool>(
+                        OsuSetting.ReplayPlaybackControlsExpanded
+                    ),
+                },
             };
 
             if (GameplayClockContainer is MasterGameplayClockContainer master)
@@ -102,12 +113,13 @@ namespace osu.Game.Screens.Play
         // Don't re-import replay scores as they're already present in the database.
         protected override Task ImportScore(Score score) => Task.CompletedTask;
 
-        protected override ResultsScreen CreateResults(ScoreInfo score) => new SoloResultsScreen(score)
-        {
-            // Only show the relevant button otherwise things look silly.
-            AllowWatchingReplay = !isAutoplayPlayback,
-            AllowRetry = isAutoplayPlayback,
-        };
+        protected override ResultsScreen CreateResults(ScoreInfo score) =>
+            new SoloResultsScreen(score)
+            {
+                // Only show the relevant button otherwise things look silly.
+                AllowWatchingReplay = !isAutoplayPlayback,
+                AllowRetry = isAutoplayPlayback,
+            };
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
@@ -149,21 +161,30 @@ namespace osu.Game.Screens.Play
             if (frames.Count == 0)
                 return;
 
-            GameplayClockContainer.Seek(direction < 0
-                ? (frames.LastOrDefault(f => f.Time < GameplayClockContainer.CurrentTime) ?? frames.First()).Time
-                : (frames.FirstOrDefault(f => f.Time > GameplayClockContainer.CurrentTime) ?? frames.Last()).Time
+            GameplayClockContainer.Seek(
+                direction < 0
+                    ? (
+                        frames.LastOrDefault(f => f.Time < GameplayClockContainer.CurrentTime)
+                        ?? frames.First()
+                    ).Time
+                    : (
+                        frames.FirstOrDefault(f => f.Time > GameplayClockContainer.CurrentTime)
+                        ?? frames.Last()
+                    ).Time
             );
         }
 
         public void SeekInDirection(float amount)
         {
-            double target = Math.Clamp(GameplayClockContainer.CurrentTime + amount * BASE_SEEK_AMOUNT, 0, GameplayState.Beatmap.GetLastObjectTime());
+            double target = Math.Clamp(
+                GameplayClockContainer.CurrentTime + amount * BASE_SEEK_AMOUNT,
+                0,
+                GameplayState.Beatmap.GetLastObjectTime()
+            );
 
             Seek(target);
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
     }
 }

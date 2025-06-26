@@ -34,7 +34,8 @@ namespace osu.Game.Online
         /// <summary>
         /// The current connection opened by this connector.
         /// </summary>
-        public new HubConnection? CurrentConnection => ((HubClient?)base.CurrentConnection)?.Connection;
+        public new HubConnection? CurrentConnection =>
+            ((HubClient?)base.CurrentConnection)?.Connection;
 
         /// <summary>
         /// Constructs a new <see cref="HubClientConnector"/>.
@@ -44,7 +45,13 @@ namespace osu.Game.Online
         /// <param name="api"> An API provider used to react to connection state changes.</param>
         /// <param name="versionHash">The hash representing the current game version, used for verification purposes.</param>
         /// <param name="preferMessagePack">Whether to use MessagePack for serialisation if available on this platform.</param>
-        public HubClientConnector(string clientName, string endpoint, IAPIProvider api, string versionHash, bool preferMessagePack = true)
+        public HubClientConnector(
+            string clientName,
+            string endpoint,
+            IAPIProvider api,
+            string versionHash,
+            bool preferMessagePack = true
+        )
             : base(api)
         {
             ClientName = clientName;
@@ -56,10 +63,13 @@ namespace osu.Game.Online
             Start();
         }
 
-        protected override Task<PersistentEndpointClient> BuildConnectionAsync(CancellationToken cancellationToken)
+        protected override Task<PersistentEndpointClient> BuildConnectionAsync(
+            CancellationToken cancellationToken
+        )
         {
-            var builder = new HubConnectionBuilder()
-                .WithUrl(endpoint, options =>
+            var builder = new HubConnectionBuilder().WithUrl(
+                endpoint,
+                options =>
                 {
                     // Configuring proxies is not supported on iOS, see https://github.com/xamarin/xamarin-macios/issues/14632.
                     if (RuntimeInfo.OS != RuntimeInfo.Platform.iOS)
@@ -76,7 +86,8 @@ namespace osu.Game.Online
                     options.Headers.Add(@"OsuVersionHash", versionHash);
                     options.Headers.Add(VERSION_HASH_HEADER, versionHash);
                     options.Headers.Add(CLIENT_SESSION_ID_HEADER, API.SessionIdentifier.ToString());
-                });
+                }
+            );
 
             if (RuntimeFeature.IsDynamicCodeCompiled && preferMessagePack)
             {
@@ -91,7 +102,8 @@ namespace osu.Game.Online
                 // see https://github.com/neuecc/MessagePack-CSharp/issues/780#issuecomment-768794308.
                 builder.AddNewtonsoftJsonProtocol(options =>
                 {
-                    options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.PayloadSerializerSettings.ReferenceLoopHandling =
+                        ReferenceLoopHandling.Ignore;
                     options.PayloadSerializerSettings.Converters = new List<JsonConverter>
                     {
                         new SignalRDerivedTypeWorkaroundJsonConverter(),

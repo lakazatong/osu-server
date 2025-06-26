@@ -9,7 +9,8 @@ namespace osu.Game.Rulesets.Mania.Judgements
 {
     public class HoldNoteJudgementResult : JudgementResult
     {
-        private Stack<(double time, bool holding)> holdingState { get; } = new Stack<(double, bool)>();
+        private Stack<(double time, bool holding)> holdingState { get; } =
+            new Stack<(double, bool)>();
 
         public HoldNoteJudgementResult(HoldNote hitObject, Judgement judgement)
             : base(hitObject, judgement)

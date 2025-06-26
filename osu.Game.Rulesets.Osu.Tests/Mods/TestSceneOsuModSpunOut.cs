@@ -31,31 +31,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             DrawableSpinner? spinner = null;
             JudgementResult? lastResult = null;
 
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModSpunOut(),
-                Autoplay = false,
-                CreateBeatmap = singleSpinnerBeatmap,
-                PassCondition = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    // Bind to the first spinner's results for further tracking.
-                    if (spinner == null)
+                    Mod = new OsuModSpunOut(),
+                    Autoplay = false,
+                    CreateBeatmap = singleSpinnerBeatmap,
+                    PassCondition = () =>
                     {
-                        // We only care about the first spinner we encounter for this test.
-                        var nextSpinner = Player.ChildrenOfType<DrawableSpinner>().SingleOrDefault();
+                        // Bind to the first spinner's results for further tracking.
+                        if (spinner == null)
+                        {
+                            // We only care about the first spinner we encounter for this test.
+                            var nextSpinner = Player
+                                .ChildrenOfType<DrawableSpinner>()
+                                .SingleOrDefault();
 
-                        if (nextSpinner == null)
-                            return false;
+                            if (nextSpinner == null)
+                                return false;
 
-                        lastResult = null;
+                            lastResult = null;
 
-                        spinner = nextSpinner;
-                        spinner.OnNewResult += (_, result) => lastResult = result;
-                    }
+                            spinner = nextSpinner;
+                            spinner.OnNewResult += (_, result) => lastResult = result;
+                        }
 
-                    return lastResult?.Type == HitResult.Great;
+                        return lastResult?.Type == HitResult.Great;
+                    },
                 }
-            });
+            );
         }
 
         [TestCase(null)]
@@ -67,28 +71,38 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             if (additionalModType != null)
                 mods.Add((Mod)Activator.CreateInstance(additionalModType)!);
 
-            CreateModTest(new ModTestData
-            {
-                Mods = mods,
-                Autoplay = false,
-                CreateBeatmap = singleSpinnerBeatmap,
-                PassCondition = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    var counter = Player.ChildrenOfType<SpinnerSpmCalculator>().SingleOrDefault();
-                    var spinner = Player.ChildrenOfType<DrawableSpinner>().FirstOrDefault();
+                    Mods = mods,
+                    Autoplay = false,
+                    CreateBeatmap = singleSpinnerBeatmap,
+                    PassCondition = () =>
+                    {
+                        var counter = Player
+                            .ChildrenOfType<SpinnerSpmCalculator>()
+                            .SingleOrDefault();
+                        var spinner = Player.ChildrenOfType<DrawableSpinner>().FirstOrDefault();
 
-                    if (counter == null || spinner == null)
-                        return false;
+                        if (counter == null || spinner == null)
+                            return false;
 
-                    // ignore cases where the spinner hasn't started as these lead to false-positives
-                    if (Precision.AlmostEquals(counter.Result.Value, 0, 1))
-                        return false;
+                        // ignore cases where the spinner hasn't started as these lead to false-positives
+                        if (Precision.AlmostEquals(counter.Result.Value, 0, 1))
+                            return false;
 
-                    float rotationSpeed = (float)(1.01 * spinner.HitObject.SpinsRequired / spinner.HitObject.Duration);
+                        float rotationSpeed = (float)(
+                            1.01 * spinner.HitObject.SpinsRequired / spinner.HitObject.Duration
+                        );
 
-                    return Precision.AlmostEquals(counter.Result.Value, rotationSpeed * 1000 * 60, 1);
+                        return Precision.AlmostEquals(
+                            counter.Result.Value,
+                            rotationSpeed * 1000 * 60,
+                            1
+                        );
+                    },
                 }
-            });
+            );
         }
 
         [Test]
@@ -97,50 +111,58 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             DrawableSpinner? spinner = null;
             List<JudgementResult> results = new List<JudgementResult>();
 
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModSpunOut(),
-                Autoplay = false,
-                CreateBeatmap = singleSpinnerBeatmap,
-                PassCondition = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    // Bind to the first spinner's results for further tracking.
-                    if (spinner == null)
+                    Mod = new OsuModSpunOut(),
+                    Autoplay = false,
+                    CreateBeatmap = singleSpinnerBeatmap,
+                    PassCondition = () =>
                     {
-                        // We only care about the first spinner we encounter for this test.
-                        var nextSpinner = Player.ChildrenOfType<DrawableSpinner>().SingleOrDefault();
+                        // Bind to the first spinner's results for further tracking.
+                        if (spinner == null)
+                        {
+                            // We only care about the first spinner we encounter for this test.
+                            var nextSpinner = Player
+                                .ChildrenOfType<DrawableSpinner>()
+                                .SingleOrDefault();
 
-                        if (nextSpinner == null)
+                            if (nextSpinner == null)
+                                return false;
+
+                            spinner = nextSpinner;
+                            spinner.OnNewResult += (_, result) => results.Add(result);
+
+                            results.Clear();
+                        }
+
+                        // we should only be checking the bonus/progress after the spinner has fully completed.
+                        if (
+                            results
+                                .OfType<OsuSpinnerJudgementResult>()
+                                .All(r => r.TimeCompleted == null)
+                        )
                             return false;
 
-                        spinner = nextSpinner;
-                        spinner.OnNewResult += (_, result) => results.Add(result);
-
-                        results.Clear();
-                    }
-
-                    // we should only be checking the bonus/progress after the spinner has fully completed.
-                    if (results.OfType<OsuSpinnerJudgementResult>().All(r => r.TimeCompleted == null))
-                        return false;
-
-                    return
-                        results.Any(r => r.Type == HitResult.SmallBonus)
-                        && results.All(r => r.Type != HitResult.LargeBonus);
+                        return results.Any(r => r.Type == HitResult.SmallBonus)
+                            && results.All(r => r.Type != HitResult.LargeBonus);
+                    },
                 }
-            });
+            );
         }
 
-        private Beatmap singleSpinnerBeatmap() => new Beatmap
-        {
-            HitObjects = new List<HitObject>
+        private Beatmap singleSpinnerBeatmap() =>
+            new Beatmap
             {
-                new Spinner
+                HitObjects = new List<HitObject>
                 {
-                    Position = new Vector2(256, 192),
-                    StartTime = 500,
-                    Duration = 2000
-                }
-            }
-        };
+                    new Spinner
+                    {
+                        Position = new Vector2(256, 192),
+                        StartTime = 500,
+                        Duration = 2000,
+                    },
+                },
+            };
     }
 }

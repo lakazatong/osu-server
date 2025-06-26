@@ -1,9 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System.Collections.Generic;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Taiko.Objects;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
 {
@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
         /// <summary>
         /// List of <see cref="DifficultyHitObject"/>s that are encoded within this <see cref="MonoStreak"/>.
         /// </summary>
-        public List<TaikoDifficultyHitObject> HitObjects { get; private set; } = new List<TaikoDifficultyHitObject>();
+        public List<TaikoDifficultyHitObject> HitObjects { get; private set; } =
+            new List<TaikoDifficultyHitObject>();
 
         /// <summary>
         /// The parent <see cref="AlternatingMonoPattern"/> that contains this <see cref="MonoStreak"/>

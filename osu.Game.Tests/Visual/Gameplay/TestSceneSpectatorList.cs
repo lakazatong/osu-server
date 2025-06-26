@@ -30,54 +30,82 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             SpectatorList list = null!;
             Bindable<LocalUserPlayingState> playingState = new Bindable<LocalUserPlayingState>();
-            GameplayState gameplayState = new GameplayState(new Beatmap(), new OsuRuleset(), healthProcessor: new OsuHealthProcessor(0), localUserPlayingState: playingState);
+            GameplayState gameplayState = new GameplayState(
+                new Beatmap(),
+                new OsuRuleset(),
+                healthProcessor: new OsuHealthProcessor(0),
+                localUserPlayingState: playingState
+            );
             TestSpectatorClient spectatorClient = new TestSpectatorClient();
-            TestMultiplayerClient multiplayerClient = new TestMultiplayerClient(new TestRoomRequestsHandler());
+            TestMultiplayerClient multiplayerClient = new TestMultiplayerClient(
+                new TestRoomRequestsHandler()
+            );
 
-            AddStep("create spectator list", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create spectator list",
+                () =>
                 {
-                    spectatorClient,
-                    multiplayerClient,
-                    new DependencyProvidingContainer
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        CachedDependencies =
-                        [
-                            (typeof(GameplayState), gameplayState),
-                            (typeof(SpectatorClient), spectatorClient),
-                            (typeof(MultiplayerClient), multiplayerClient),
-                        ],
-                        Child = list = new SpectatorList
+                        spectatorClient,
+                        multiplayerClient,
+                        new DependencyProvidingContainer
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        }
-                    }
-                };
-            });
+                            RelativeSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (typeof(GameplayState), gameplayState),
+                                (typeof(SpectatorClient), spectatorClient),
+                                (typeof(MultiplayerClient), multiplayerClient),
+                            ],
+                            Child = list =
+                                new SpectatorList
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        },
+                    };
+                }
+            );
 
             AddStep("start playing", () => playingState.Value = LocalUserPlayingState.Playing);
 
-            AddRepeatStep("add a user", () =>
-            {
-                int id = Interlocked.Increment(ref counter);
-                ((ISpectatorClient)spectatorClient).UserStartedWatching([
-                    new SpectatorUser
-                    {
-                        OnlineID = id,
-                        Username = $"User {id}"
-                    }
-                ]);
-            }, 10);
+            AddRepeatStep(
+                "add a user",
+                () =>
+                {
+                    int id = Interlocked.Increment(ref counter);
+                    ((ISpectatorClient)spectatorClient).UserStartedWatching(
+                        [new SpectatorUser { OnlineID = id, Username = $"User {id}" }]
+                    );
+                },
+                10
+            );
 
-            AddRepeatStep("remove random user", () => ((ISpectatorClient)spectatorClient).UserEndedWatching(
-                spectatorClient.WatchingUsers[RNG.Next(spectatorClient.WatchingUsers.Count)].OnlineID), 5);
+            AddRepeatStep(
+                "remove random user",
+                () =>
+                    ((ISpectatorClient)spectatorClient).UserEndedWatching(
+                        spectatorClient
+                            .WatchingUsers[RNG.Next(spectatorClient.WatchingUsers.Count)]
+                            .OnlineID
+                    ),
+                5
+            );
 
             AddStep("change font to venera", () => list.HeaderFont.Value = Typeface.Venera);
             AddStep("change font to torus", () => list.HeaderFont.Value = Typeface.Torus);
-            AddStep("change header colour", () => list.HeaderColour.Value = new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1));
+            AddStep(
+                "change header colour",
+                () =>
+                    list.HeaderColour.Value = new Colour4(
+                        RNG.NextSingle(),
+                        RNG.NextSingle(),
+                        RNG.NextSingle(),
+                        1
+                    )
+            );
 
             AddStep("enter break", () => playingState.Value = LocalUserPlayingState.Break);
             AddStep("stop playing", () => playingState.Value = LocalUserPlayingState.NotPlaying);

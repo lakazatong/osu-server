@@ -32,7 +32,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             base.LoadComplete();
 
             accentColour = drawableObject.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour => Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue), true);
+            accentColour.BindValueChanged(
+                colour => Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue),
+                true
+            );
         }
     }
 }

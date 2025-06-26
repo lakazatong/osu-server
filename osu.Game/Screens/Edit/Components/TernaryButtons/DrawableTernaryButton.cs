@@ -19,7 +19,10 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.Edit.Components.TernaryButtons
 {
-    public partial class DrawableTernaryButton : OsuButton, IHasTooltip, IHasCurrentValue<TernaryState>
+    public partial class DrawableTernaryButton
+        : OsuButton,
+            IHasTooltip,
+            IHasCurrentValue<TernaryState>
     {
         public Bindable<TernaryState> Current
         {
@@ -27,7 +30,8 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             set => current.Current = value;
         }
 
-        private readonly BindableWithCurrent<TernaryState> current = new BindableWithCurrent<TernaryState>();
+        private readonly BindableWithCurrent<TernaryState> current =
+            new BindableWithCurrent<TernaryState>();
 
         public required LocalisableString Description
         {
@@ -63,14 +67,16 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             defaultIconColour = defaultBackgroundColour.Darken(0.5f);
             selectedIconColour = selectedBackgroundColour.Lighten(0.5f);
 
-            Add(Icon = (CreateIcon?.Invoke() ?? new Circle()).With(b =>
-            {
-                b.Blending = BlendingParameters.Additive;
-                b.Anchor = Anchor.CentreLeft;
-                b.Origin = Anchor.CentreLeft;
-                b.Size = new Vector2(20);
-                b.X = 10;
-            }));
+            Add(
+                Icon = (CreateIcon?.Invoke() ?? new Circle()).With(b =>
+                {
+                    b.Blending = BlendingParameters.Additive;
+                    b.Anchor = Anchor.CentreLeft;
+                    b.Origin = Anchor.CentreLeft;
+                    b.Size = new Vector2(20);
+                    b.X = 10;
+                })
+            );
         }
 
         protected override void LoadComplete()
@@ -129,12 +135,13 @@ namespace osu.Game.Screens.Edit.Components.TernaryButtons
             }
         }
 
-        protected override SpriteText CreateText() => new OsuSpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.CentreLeft,
-            Anchor = Anchor.CentreLeft,
-            X = 40f
-        };
+        protected override SpriteText CreateText() =>
+            new OsuSpriteText
+            {
+                Depth = -1,
+                Origin = Anchor.CentreLeft,
+                Anchor = Anchor.CentreLeft,
+                X = 40f,
+            };
     }
 }

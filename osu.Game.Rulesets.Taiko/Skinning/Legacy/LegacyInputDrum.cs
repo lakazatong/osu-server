@@ -34,16 +34,13 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Sprite
-                    {
-                        Texture = skin.GetTexture("taiko-bar-left")
-                    },
+                    new Sprite { Texture = skin.GetTexture("taiko-bar-left") },
                     left = new LegacyHalfDrum(false)
                     {
                         Name = "Left Half",
                         RelativeSizeAxes = Axes.Both,
                         RimAction = TaikoAction.LeftRim,
-                        CentreAction = TaikoAction.LeftCentre
+                        CentreAction = TaikoAction.LeftCentre,
                     },
                     right = new LegacyHalfDrum(true)
                     {
@@ -52,9 +49,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                         Origin = Anchor.TopRight,
                         Scale = new Vector2(-1, 1),
                         RimAction = TaikoAction.RightRim,
-                        CentreAction = TaikoAction.RightCentre
-                    }
-                }
+                        CentreAction = TaikoAction.RightCentre,
+                    },
+                },
             };
 
             // this will be used in the future for stable skin alignment. keeping here for reference.
@@ -66,19 +63,26 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             // because the right half is flipped, we need to position using width - position to get the true "topleft" origin position
             const float negative_scale_adjust = TaikoPlayfield.INPUT_DRUM_WIDTH / ratio;
 
-            if (skin.GetConfig<SkinConfiguration.LegacySetting, decimal>(SkinConfiguration.LegacySetting.Version)?.Value >= 2.1m)
+            if (
+                skin.GetConfig<SkinConfiguration.LegacySetting, decimal>(
+                    SkinConfiguration.LegacySetting.Version
+                )?.Value >= 2.1m
+            )
             {
                 left.Centre.Position = new Vector2(0, taiko_bar_y) * ratio;
-                right.Centre.Position = new Vector2(negative_scale_adjust - 56, taiko_bar_y) * ratio;
+                right.Centre.Position =
+                    new Vector2(negative_scale_adjust - 56, taiko_bar_y) * ratio;
                 left.Rim.Position = new Vector2(0, taiko_bar_y) * ratio;
                 right.Rim.Position = new Vector2(negative_scale_adjust - 56, taiko_bar_y) * ratio;
             }
             else
             {
                 left.Centre.Position = new Vector2(18, taiko_bar_y + 31) * ratio;
-                right.Centre.Position = new Vector2(negative_scale_adjust - 54, taiko_bar_y + 31) * ratio;
+                right.Centre.Position =
+                    new Vector2(negative_scale_adjust - 54, taiko_bar_y + 31) * ratio;
                 left.Rim.Position = new Vector2(8, taiko_bar_y + 23) * ratio;
-                right.Rim.Position = new Vector2(negative_scale_adjust - 53, taiko_bar_y + 23) * ratio;
+                right.Rim.Position =
+                    new Vector2(negative_scale_adjust - 53, taiko_bar_y + 23) * ratio;
             }
         }
 
@@ -116,7 +120,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                     {
                         Alpha = 0,
                         Origin = flipped ? Anchor.TopRight : Anchor.TopLeft,
-                    }
+                    },
                 };
             }
 
@@ -147,15 +151,14 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 
                     target
                         .FadeTo(1, down_time * (1 - target.Alpha), Easing.Out)
-                        .Delay(100).FadeOut(up_time);
+                        .Delay(100)
+                        .FadeOut(up_time);
                 }
 
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
         }
     }
 }

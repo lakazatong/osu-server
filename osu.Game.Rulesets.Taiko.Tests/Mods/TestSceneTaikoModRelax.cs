@@ -22,28 +22,35 @@ namespace osu.Game.Rulesets.Taiko.Tests.Mods
 
             var replay = new TaikoAutoGenerator(beatmapForReplay).Generate();
 
-            foreach (var frame in replay.Frames.OfType<TaikoReplayFrame>().Where(r => r.Actions.Any()))
+            foreach (
+                var frame in replay.Frames.OfType<TaikoReplayFrame>().Where(r => r.Actions.Any())
+            )
                 frame.Actions = [TaikoAction.LeftCentre];
 
-            CreateModTest(new ModTestData
-            {
-                Mod = new TaikoModRelax(),
-                CreateBeatmap = createBeatmap,
-                ReplayFrames = replay.Frames,
-                Autoplay = false,
-                PassCondition = () => Player.ScoreProcessor.HasCompleted.Value && Player.ScoreProcessor.Accuracy.Value == 1,
-            });
-
-            TaikoBeatmap createBeatmap() => new TaikoBeatmap
-            {
-                HitObjects =
+            CreateModTest(
+                new ModTestData
                 {
-                    new Hit { StartTime = 0, Type = HitType.Centre, },
-                    new Hit { StartTime = 250, Type = HitType.Rim, },
-                    new DrumRoll { StartTime = 500, Duration = 500, },
-                    new Swell { StartTime = 1250, Duration = 500 },
+                    Mod = new TaikoModRelax(),
+                    CreateBeatmap = createBeatmap,
+                    ReplayFrames = replay.Frames,
+                    Autoplay = false,
+                    PassCondition = () =>
+                        Player.ScoreProcessor.HasCompleted.Value
+                        && Player.ScoreProcessor.Accuracy.Value == 1,
                 }
-            };
+            );
+
+            TaikoBeatmap createBeatmap() =>
+                new TaikoBeatmap
+                {
+                    HitObjects =
+                    {
+                        new Hit { StartTime = 0, Type = HitType.Centre },
+                        new Hit { StartTime = 250, Type = HitType.Rim },
+                        new DrumRoll { StartTime = 500, Duration = 500 },
+                        new Swell { StartTime = 1250, Duration = 500 },
+                    },
+                };
         }
     }
 }

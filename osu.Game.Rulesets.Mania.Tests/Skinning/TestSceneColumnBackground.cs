@@ -28,21 +28,27 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.5f,
-                        Child = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground), _ => new DefaultColumnBackground())
+                        Child = new SkinnableDrawable(
+                            new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground),
+                            _ => new DefaultColumnBackground()
+                        )
                         {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                            RelativeSizeAxes = Axes.Both,
+                        },
                     },
                     new ColumnTestContainer(1, ManiaAction.Key2)
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.5f,
-                        Child = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground), _ => new DefaultColumnBackground())
+                        Child = new SkinnableDrawable(
+                            new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground),
+                            _ => new DefaultColumnBackground()
+                        )
                         {
-                            RelativeSizeAxes = Axes.Both
-                        }
-                    }
-                }
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                    },
+                },
             });
         }
     }

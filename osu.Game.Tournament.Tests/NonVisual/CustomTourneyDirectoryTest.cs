@@ -25,7 +25,12 @@ namespace osu.Game.Tournament.Tests.NonVisual
                     var osu = LoadTournament(host);
                     var storage = osu.Dependencies.Get<Storage>();
 
-                    Assert.That(storage.GetFullPath("."), Is.EqualTo(Path.Combine(host.Storage.GetFullPath("."), "tournaments", "default")));
+                    Assert.That(
+                        storage.GetFullPath("."),
+                        Is.EqualTo(
+                            Path.Combine(host.Storage.GetFullPath("."), "tournaments", "default")
+                        )
+                    );
                 }
                 finally
                 {
@@ -39,7 +44,10 @@ namespace osu.Game.Tournament.Tests.NonVisual
         {
             using (HeadlessGameHost host = new TestRunHeadlessGameHost(nameof(TestCustomDirectory))) // don't use clean run as we are writing a config file.
             {
-                string osuDesktopStorage = Path.Combine(host.UserStoragePaths.First(), nameof(TestCustomDirectory));
+                string osuDesktopStorage = Path.Combine(
+                    host.UserStoragePaths.First(),
+                    nameof(TestCustomDirectory)
+                );
                 const string custom_tournament = "custom";
 
                 // need access before the game has constructed its own storage yet.
@@ -56,7 +64,16 @@ namespace osu.Game.Tournament.Tests.NonVisual
 
                     storage = osu.Dependencies.Get<Storage>();
 
-                    Assert.That(storage.GetFullPath("."), Is.EqualTo(Path.Combine(host.Storage.GetFullPath("."), "tournaments", custom_tournament)));
+                    Assert.That(
+                        storage.GetFullPath("."),
+                        Is.EqualTo(
+                            Path.Combine(
+                                host.Storage.GetFullPath("."),
+                                "tournaments",
+                                custom_tournament
+                            )
+                        )
+                    );
                 }
                 finally
                 {

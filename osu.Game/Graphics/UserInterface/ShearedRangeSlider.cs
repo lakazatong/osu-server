@@ -22,7 +22,8 @@ namespace osu.Game.Graphics.UserInterface
     {
         private readonly LocalisableString label;
 
-        private readonly BindableNumberWithCurrent<double> lowerBound = new BindableNumberWithCurrent<double>();
+        private readonly BindableNumberWithCurrent<double> lowerBound =
+            new BindableNumberWithCurrent<double>();
 
         /// <summary>
         /// The lower limiting value.
@@ -33,7 +34,8 @@ namespace osu.Game.Graphics.UserInterface
             set => lowerBound.Current = value;
         }
 
-        private readonly BindableNumberWithCurrent<double> upperBound = new BindableNumberWithCurrent<double>();
+        private readonly BindableNumberWithCurrent<double> upperBound =
+            new BindableNumberWithCurrent<double>();
 
         /// <summary>
         /// The upper limiting value.
@@ -95,11 +97,7 @@ namespace osu.Game.Graphics.UserInterface
             InternalChild = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(),
-                },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 Content = new[]
                 {
                     new[]
@@ -135,22 +133,24 @@ namespace osu.Game.Graphics.UserInterface
                             Padding = new MarginPadding { Left = -10 },
                             Children = new[]
                             {
-                                UpperBoundSlider = CreateBoundSlider(true).With(d =>
-                                {
-                                    d.KeyboardStep = 0.1f;
-                                    d.RelativeSizeAxes = Axes.X;
-                                    d.DefaultString = DefaultStringUpperBound;
-                                    d.NubWidth = NubWidth;
-                                    d.Current = upperBound;
-                                }),
-                                LowerBoundSlider = CreateBoundSlider(false).With(d =>
-                                {
-                                    d.KeyboardStep = 0.1f;
-                                    d.RelativeSizeAxes = Axes.X;
-                                    d.DefaultString = DefaultStringLowerBound;
-                                    d.NubWidth = NubWidth;
-                                    d.Current = lowerBound;
-                                }),
+                                UpperBoundSlider = CreateBoundSlider(true)
+                                    .With(d =>
+                                    {
+                                        d.KeyboardStep = 0.1f;
+                                        d.RelativeSizeAxes = Axes.X;
+                                        d.DefaultString = DefaultStringUpperBound;
+                                        d.NubWidth = NubWidth;
+                                        d.Current = upperBound;
+                                    }),
+                                LowerBoundSlider = CreateBoundSlider(false)
+                                    .With(d =>
+                                    {
+                                        d.KeyboardStep = 0.1f;
+                                        d.RelativeSizeAxes = Axes.X;
+                                        d.DefaultString = DefaultStringLowerBound;
+                                        d.NubWidth = NubWidth;
+                                        d.Current = lowerBound;
+                                    }),
                                 UpperBoundSlider.Nub.CreateProxy(),
                                 LowerBoundSlider.Nub.CreateProxy(),
                             },
@@ -164,11 +164,20 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            LowerBoundSlider.Current.ValueChanged += min => UpperBoundSlider.Current.Value = Math.Max(min.NewValue + minRange, UpperBoundSlider.Current.Value);
-            UpperBoundSlider.Current.ValueChanged += max => LowerBoundSlider.Current.Value = Math.Min(max.NewValue - minRange, LowerBoundSlider.Current.Value);
+            LowerBoundSlider.Current.ValueChanged += min =>
+                UpperBoundSlider.Current.Value = Math.Max(
+                    min.NewValue + minRange,
+                    UpperBoundSlider.Current.Value
+                );
+            UpperBoundSlider.Current.ValueChanged += max =>
+                LowerBoundSlider.Current.Value = Math.Min(
+                    max.NewValue - minRange,
+                    LowerBoundSlider.Current.Value
+                );
         }
 
-        protected virtual BoundSliderBar CreateBoundSlider(bool isUpper) => new BoundSliderBar(this, isUpper);
+        protected virtual BoundSliderBar CreateBoundSlider(bool isUpper) =>
+            new BoundSliderBar(this, isUpper);
 
         protected partial class BoundSliderBar : ShearedSliderBar<double>
         {
@@ -210,15 +219,17 @@ namespace osu.Game.Graphics.UserInterface
                 Nub.Width = NubWidth;
                 RangePadding = Nub.Width / 2;
 
-                Nub.Add(NubText = new OsuSpriteText
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    X = -3,
-                    UseFullGlyphHeight = false,
-                    Colour = OsuColour.ForegroundTextColourFor(colourProvider.Light1),
-                    Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
-                });
+                Nub.Add(
+                    NubText = new OsuSpriteText
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        X = -3,
+                        UseFullGlyphHeight = false,
+                        Colour = OsuColour.ForegroundTextColourFor(colourProvider.Light1),
+                        Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
+                    }
+                );
 
                 AccentColour = colourProvider.Highlight1.Darken(0.1f);
                 Nub.AccentColour = colourProvider.Highlight1;
@@ -251,9 +262,11 @@ namespace osu.Game.Graphics.UserInterface
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
             {
                 if (isUpper)
-                    return base.ReceivePositionalInputAt(screenSpacePos) && screenSpacePos.X > rangeSlider.ScreenSpaceHalfwayPoint.X;
+                    return base.ReceivePositionalInputAt(screenSpacePos)
+                        && screenSpacePos.X > rangeSlider.ScreenSpaceHalfwayPoint.X;
 
-                return base.ReceivePositionalInputAt(screenSpacePos) && screenSpacePos.X <= rangeSlider.ScreenSpaceHalfwayPoint.X;
+                return base.ReceivePositionalInputAt(screenSpacePos)
+                    && screenSpacePos.X <= rangeSlider.ScreenSpaceHalfwayPoint.X;
             }
 
             protected override void UpdateAfterChildren()
@@ -263,7 +276,9 @@ namespace osu.Game.Graphics.UserInterface
                 if (isUpper)
                 {
                     // Only draw left box where required to avoid masking bleed issues.
-                    LeftBox.X = ToParentSpace(ToLocalSpace(rangeSlider.LowerBoundSlider.Nub.ScreenSpaceDrawQuad.Centre)).X;
+                    LeftBox.X = ToParentSpace(
+                        ToLocalSpace(rangeSlider.LowerBoundSlider.Nub.ScreenSpaceDrawQuad.Centre)
+                    ).X;
                     LeftBox.Size -= new Vector2(LeftBox.X, 0);
                 }
             }

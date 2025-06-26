@@ -19,8 +19,8 @@ namespace osu.Game.Screens.Play.HUD
             Current.BindTo(scoreProcessor.Combo);
         }
 
-        protected override OsuSpriteText CreateSpriteText()
-            => base.CreateSpriteText().With(s => s.Font = s.Font.With(size: 20f));
+        protected override OsuSpriteText CreateSpriteText() =>
+            base.CreateSpriteText().With(s => s.Font = s.Font.With(size: 20f));
 
         protected override LocalisableString FormatCount(int count)
         {

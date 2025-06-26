@@ -55,7 +55,7 @@ namespace osu.Game.Tests.Visual.Menus
                     Depth = float.MinValue,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                }
+                },
             };
         }
 
@@ -70,36 +70,50 @@ namespace osu.Game.Tests.Visual.Menus
         [Test]
         public virtual void TestPlayIntroWithFailingAudioDevice()
         {
-            AddStep("reset notifications", () =>
-            {
-                notifications.Show();
-                notifications.Hide();
-            });
-
-            AddUntilStep("wait for no notifications", () => notifications.UnreadCount.Value, () => Is.EqualTo(0));
-
-            AddStep("restart sequence", () =>
-            {
-                logo.FinishTransforms();
-                logo.IsTracking = false;
-
-                IntroStack?.Expire();
-
-                Add(IntroStack = new OsuScreenStack
+            AddStep(
+                "reset notifications",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                });
+                    notifications.Show();
+                    notifications.Hide();
+                }
+            );
 
-                IntroStack.Push(Intro = CreateScreen());
-            });
+            AddUntilStep(
+                "wait for no notifications",
+                () => notifications.UnreadCount.Value,
+                () => Is.EqualTo(0)
+            );
 
-            AddStep("trigger failure", () =>
-            {
-                trackResetDelegate = Scheduler.AddDelayed(() =>
+            AddStep(
+                "restart sequence",
+                () =>
                 {
-                    Intro.Beatmap.Value.Track.Seek(0);
-                }, 0, true);
-            });
+                    logo.FinishTransforms();
+                    logo.IsTracking = false;
+
+                    IntroStack?.Expire();
+
+                    Add(IntroStack = new OsuScreenStack { RelativeSizeAxes = Axes.Both });
+
+                    IntroStack.Push(Intro = CreateScreen());
+                }
+            );
+
+            AddStep(
+                "trigger failure",
+                () =>
+                {
+                    trackResetDelegate = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            Intro.Beatmap.Value.Track.Seek(0);
+                        },
+                        0,
+                        true
+                    );
+                }
+            );
 
             WaitForMenu();
 
@@ -111,20 +125,20 @@ namespace osu.Game.Tests.Visual.Menus
 
         protected void RestartIntro()
         {
-            AddStep("restart sequence", () =>
-            {
-                logo.FinishTransforms();
-                logo.IsTracking = false;
-
-                IntroStack?.Expire();
-
-                Add(IntroStack = new OsuScreenStack
+            AddStep(
+                "restart sequence",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                });
+                    logo.FinishTransforms();
+                    logo.IsTracking = false;
 
-                IntroStack.Push(Intro = CreateScreen());
-            });
+                    IntroStack?.Expire();
+
+                    Add(IntroStack = new OsuScreenStack { RelativeSizeAxes = Axes.Both });
+
+                    IntroStack.Push(Intro = CreateScreen());
+                }
+            );
         }
 
         protected void WaitForMenu()

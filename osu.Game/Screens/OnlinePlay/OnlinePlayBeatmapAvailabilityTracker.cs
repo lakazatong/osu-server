@@ -45,7 +45,8 @@ namespace osu.Game.Screens.OnlinePlay
         [Resolved]
         private BeatmapLookupCache beatmapLookupCache { get; set; } = null!;
 
-        private readonly Bindable<BeatmapAvailability> availability = new Bindable<BeatmapAvailability>(BeatmapAvailability.NotDownloaded());
+        private readonly Bindable<BeatmapAvailability> availability =
+            new Bindable<BeatmapAvailability>(BeatmapAvailability.NotDownloaded());
 
         private ScheduledDelegate? progressUpdate;
         private BeatmapDownloadTracker? downloadTracker;
@@ -55,32 +56,44 @@ namespace osu.Game.Screens.OnlinePlay
         {
             base.LoadComplete();
 
-            PlaylistItem.BindValueChanged(item =>
-            {
-                // the underlying playlist is regularly cleared for maintenance purposes (things which probably need to be fixed eventually).
-                // to avoid exposing a state change when there may actually be none, ignore all nulls for now.
-                if (item.NewValue == null)
-                    return;
-
-                // Initially set to unknown until we have attained a good state.
-                // This has the wanted side effect of forcing a state change when the current playlist
-                // item changes at the server but our local availability doesn't necessarily change
-                // (ie. we have both the previous and next item LocallyAvailable).
-                //
-                // Note that even without this, the server will trigger a state change and things will work.
-                // This is just for safety.
-                availability.Value = BeatmapAvailability.Unknown();
-
-                cancelTracking();
-
-                beatmapLookupCache.GetBeatmapAsync(item.NewValue.Beatmap.OnlineID).ContinueWith(task => Schedule(() =>
+            PlaylistItem.BindValueChanged(
+                item =>
                 {
-                    var beatmap = task.GetResultSafely();
+                    // the underlying playlist is regularly cleared for maintenance purposes (things which probably need to be fixed eventually).
+                    // to avoid exposing a state change when there may actually be none, ignore all nulls for now.
+                    if (item.NewValue == null)
+                        return;
 
-                    if (beatmap != null && PlaylistItem.Value?.Beatmap.OnlineID == beatmap.OnlineID)
-                        startTracking(beatmap);
-                }), TaskContinuationOptions.OnlyOnRanToCompletion);
-            }, true);
+                    // Initially set to unknown until we have attained a good state.
+                    // This has the wanted side effect of forcing a state change when the current playlist
+                    // item changes at the server but our local availability doesn't necessarily change
+                    // (ie. we have both the previous and next item LocallyAvailable).
+                    //
+                    // Note that even without this, the server will trigger a state change and things will work.
+                    // This is just for safety.
+                    availability.Value = BeatmapAvailability.Unknown();
+
+                    cancelTracking();
+
+                    beatmapLookupCache
+                        .GetBeatmapAsync(item.NewValue.Beatmap.OnlineID)
+                        .ContinueWith(
+                            task =>
+                                Schedule(() =>
+                                {
+                                    var beatmap = task.GetResultSafely();
+
+                                    if (
+                                        beatmap != null
+                                        && PlaylistItem.Value?.Beatmap.OnlineID == beatmap.OnlineID
+                                    )
+                                        startTracking(beatmap);
+                                }),
+                            TaskContinuationOptions.OnlyOnRanToCompletion
+                        );
+                },
+                true
+            );
         }
 
         private void cancelTracking()
@@ -94,28 +107,40 @@ namespace osu.Game.Screens.OnlinePlay
             Debug.Assert(beatmap.BeatmapSet != null);
 
             downloadTracker = new BeatmapDownloadTracker(beatmap.BeatmapSet);
-            downloadTracker.State.BindValueChanged(_ => Scheduler.AddOnce(updateAvailability), true);
-            downloadTracker.Progress.BindValueChanged(_ =>
-            {
-                if (downloadTracker.State.Value != DownloadState.Downloading)
-                    return;
+            downloadTracker.State.BindValueChanged(
+                _ => Scheduler.AddOnce(updateAvailability),
+                true
+            );
+            downloadTracker.Progress.BindValueChanged(
+                _ =>
+                {
+                    if (downloadTracker.State.Value != DownloadState.Downloading)
+                        return;
 
-                // incoming progress changes are going to be at a very high rate.
-                // we don't want to flood the network with this, so rate limit how often we send progress updates.
-                if (progressUpdate?.Completed != false)
-                    progressUpdate = Scheduler.AddDelayed(updateAvailability, progressUpdate == null ? 0 : 500);
-            }, true);
+                    // incoming progress changes are going to be at a very high rate.
+                    // we don't want to flood the network with this, so rate limit how often we send progress updates.
+                    if (progressUpdate?.Completed != false)
+                        progressUpdate = Scheduler.AddDelayed(
+                            updateAvailability,
+                            progressUpdate == null ? 0 : 500
+                        );
+                },
+                true
+            );
 
             AddInternal(downloadTracker);
 
             // handles changes to hash that didn't occur from the import process (ie. a user editing the beatmap in the editor, somehow).
-            realmSubscription = realm.RegisterForNotifications(_ => queryBeatmap(), (_, changes) =>
-            {
-                if (changes == null)
-                    return;
+            realmSubscription = realm.RegisterForNotifications(
+                _ => queryBeatmap(),
+                (_, changes) =>
+                {
+                    if (changes == null)
+                        return;
 
-                Scheduler.AddOnce(updateAvailability);
-            });
+                    Scheduler.AddOnce(updateAvailability);
+                }
+            );
 
             void updateAvailability()
             {
@@ -130,7 +155,9 @@ namespace osu.Game.Screens.OnlinePlay
                         break;
 
                     case DownloadState.Downloading:
-                        availability.Value = BeatmapAvailability.Downloading((float)downloadTracker.Progress.Value);
+                        availability.Value = BeatmapAvailability.Downloading(
+                            (float)downloadTracker.Progress.Value
+                        );
                         break;
 
                     case DownloadState.Importing:
@@ -140,11 +167,17 @@ namespace osu.Game.Screens.OnlinePlay
                     case DownloadState.LocallyAvailable:
                         bool available = queryBeatmap().Any();
 
-                        availability.Value = available ? BeatmapAvailability.LocallyAvailable() : BeatmapAvailability.NotDownloaded();
+                        availability.Value = available
+                            ? BeatmapAvailability.LocallyAvailable()
+                            : BeatmapAvailability.NotDownloaded();
 
                         // only display a message to the user if a download seems to have just completed.
                         if (!available && downloadTracker.Progress.Value == 1)
-                            Logger.Log("The imported beatmap set does not match the online version.", LoggingTarget.Runtime, LogLevel.Important);
+                            Logger.Log(
+                                "The imported beatmap set does not match the online version.",
+                                LoggingTarget.Runtime,
+                                LogLevel.Important
+                            );
 
                         break;
 
@@ -154,7 +187,13 @@ namespace osu.Game.Screens.OnlinePlay
             }
 
             IQueryable<BeatmapInfo> queryBeatmap() =>
-                realm.Realm.All<BeatmapInfo>().Filter("OnlineID == $0 && MD5Hash == $1 && BeatmapSet.DeletePending == false", beatmap.OnlineID, beatmap.MD5Hash);
+                realm
+                    .Realm.All<BeatmapInfo>()
+                    .Filter(
+                        "OnlineID == $0 && MD5Hash == $1 && BeatmapSet.DeletePending == false",
+                        beatmap.OnlineID,
+                        beatmap.MD5Hash
+                    );
         }
 
         protected override void Dispose(bool isDisposing)

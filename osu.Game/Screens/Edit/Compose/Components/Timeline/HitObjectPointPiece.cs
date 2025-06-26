@@ -38,11 +38,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                     Origin = Anchor.BottomCentre,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = colour,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = colour, RelativeSizeAxes = Axes.Both },
                         Label = new OsuSpriteText
                         {
                             Anchor = Anchor.Centre,
@@ -50,8 +46,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                             Padding = new MarginPadding(5),
                             Font = OsuFont.Default.With(size: 12, weight: FontWeight.SemiBold),
                             Colour = colours.B5,
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }

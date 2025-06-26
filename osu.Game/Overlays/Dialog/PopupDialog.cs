@@ -77,7 +77,9 @@ namespace osu.Game.Overlays.Dialog
                 bodyText = value;
 
                 body.Text = value;
-                body.TextAnchor = bodyText.ToString().Contains('\n') ? Anchor.TopLeft : Anchor.TopCentre;
+                body.TextAnchor = bodyText.ToString().Contains('\n')
+                    ? Anchor.TopLeft
+                    : Anchor.TopCentre;
             }
         }
 
@@ -93,7 +95,8 @@ namespace osu.Game.Overlays.Dialog
                     var action = b.Action;
                     b.Action = () =>
                     {
-                        if (actionInvoked) return;
+                        if (actionInvoked)
+                            return;
 
                         actionInvoked = true;
 
@@ -205,7 +208,9 @@ namespace osu.Game.Overlays.Dialog
                                         },
                                     },
                                 },
-                                header = new OsuTextFlowContainer(t => t.Font = t.Font.With(size: 25))
+                                header = new OsuTextFlowContainer(t =>
+                                    t.Font = t.Font.With(size: 25)
+                                )
                                 {
                                     Origin = Anchor.TopCentre,
                                     Anchor = Anchor.TopCentre,
@@ -256,7 +261,8 @@ namespace osu.Game.Overlays.Dialog
         /// <summary>
         /// Programmatically clicks the first button of the provided type.
         /// </summary>
-        public void PerformAction<T>() where T : PopupDialogButton
+        public void PerformAction<T>()
+            where T : PopupDialogButton
         {
             // Buttons are regularly added in BDL or LoadComplete, so let's schedule to ensure
             // they are ready to be pressed.
@@ -265,15 +271,17 @@ namespace osu.Game.Overlays.Dialog
 
         public void Flash()
         {
-            flashLayer.FadeInFromZero(80, Easing.OutQuint)
-                      .Then()
-                      .FadeOutFromOne(1500, Easing.OutQuint);
+            flashLayer
+                .FadeInFromZero(80, Easing.OutQuint)
+                .Then()
+                .FadeOutFromOne(1500, Easing.OutQuint);
             flashSample?.Play();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Repeat) return false;
+            if (e.Repeat)
+                return false;
 
             // press button at number if 1-9 on number row or keypad are pressed
             var k = e.Key;
@@ -305,9 +313,7 @@ namespace osu.Game.Overlays.Dialog
                 icon.ScaleTo(0f);
             }
 
-            content
-                .ScaleTo(1, 750, Easing.OutElasticHalf)
-                .FadeIn(ENTER_DURATION, Easing.OutQuint);
+            content.ScaleTo(1, 750, Easing.OutElasticHalf).FadeIn(ENTER_DURATION, Easing.OutQuint);
 
             ring.ResizeTo(ringSize, ENTER_DURATION * 1.5f, Easing.OutQuint);
             icon.Delay(100).ScaleTo(1, ENTER_DURATION * 1.5f, Easing.OutQuint);

@@ -3,16 +3,16 @@
 
 #nullable disable
 
+using System;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
-using osu.Game.Online.API.Requests.Responses;
-using System;
-using System.Linq;
 using osu.Game.Graphics.Sprites;
-using osu.Framework.Allocation;
+using osu.Game.Online.API.Requests.Responses;
 
 namespace osu.Game.Overlays.Changelog
 {
@@ -48,64 +48,73 @@ namespace osu.Game.Overlays.Changelog
         [BackgroundDependencyLoader]
         private void load()
         {
-            foreach (var categoryEntries in Build.ChangelogEntries.GroupBy(b => b.Category).OrderBy(c => c.Key))
+            foreach (
+                var categoryEntries in Build
+                    .ChangelogEntries.GroupBy(b => b.Category)
+                    .OrderBy(c => c.Key)
+            )
             {
-                ChangelogEntries.Add(new OsuSpriteText
-                {
-                    Text = categoryEntries.Key,
-                    Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 18),
-                    Margin = new MarginPadding { Top = 35, Bottom = 15 },
-                });
+                ChangelogEntries.Add(
+                    new OsuSpriteText
+                    {
+                        Text = categoryEntries.Key,
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 18),
+                        Margin = new MarginPadding { Top = 35, Bottom = 15 },
+                    }
+                );
 
-                ChangelogEntries.AddRange(categoryEntries.Select(entry => new ChangelogEntry(entry)));
+                ChangelogEntries.AddRange(
+                    categoryEntries.Select(entry => new ChangelogEntry(entry))
+                );
             }
         }
 
-        protected virtual FillFlowContainer CreateHeader() => new FillFlowContainer
-        {
-            Anchor = Anchor.TopCentre,
-            Origin = Anchor.TopCentre,
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Vertical,
-            Margin = new MarginPadding { Top = 20 },
-            Child = new FillFlowContainer
+        protected virtual FillFlowContainer CreateHeader() =>
+            new FillFlowContainer
             {
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.TopCentre,
                 AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Horizontal,
-                Child = new OsuHoverContainer
+                Direction = FillDirection.Vertical,
+                Margin = new MarginPadding { Top = 20 },
+                Child = new FillFlowContainer
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
                     AutoSizeAxes = Axes.Both,
-                    Action = () => SelectBuild?.Invoke(Build),
-                    Child = new FillFlowContainer<SpriteText>
+                    Direction = FillDirection.Horizontal,
+                    Child = new OsuHoverContainer
                     {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
                         AutoSizeAxes = Axes.Both,
-                        Margin = new MarginPadding { Horizontal = 40 },
-                        Children = new[]
+                        Action = () => SelectBuild?.Invoke(Build),
+                        Child = new FillFlowContainer<SpriteText>
                         {
-                            new OsuSpriteText
+                            AutoSizeAxes = Axes.Both,
+                            Margin = new MarginPadding { Horizontal = 40 },
+                            Children = new[]
                             {
-                                Text = Build.UpdateStream.DisplayName,
-                                Font = OsuFont.GetFont(weight: FontWeight.Medium, size: 19),
+                                new OsuSpriteText
+                                {
+                                    Text = Build.UpdateStream.DisplayName,
+                                    Font = OsuFont.GetFont(weight: FontWeight.Medium, size: 19),
+                                },
+                                new OsuSpriteText
+                                {
+                                    Text = " ",
+                                    Font = OsuFont.GetFont(weight: FontWeight.Medium, size: 19),
+                                },
+                                new OsuSpriteText
+                                {
+                                    Text = Build.DisplayVersion,
+                                    Font = OsuFont.GetFont(weight: FontWeight.Light, size: 19),
+                                    Colour = Build.UpdateStream.Colour,
+                                },
                             },
-                            new OsuSpriteText
-                            {
-                                Text = " ",
-                                Font = OsuFont.GetFont(weight: FontWeight.Medium, size: 19),
-                            },
-                            new OsuSpriteText
-                            {
-                                Text = Build.DisplayVersion,
-                                Font = OsuFont.GetFont(weight: FontWeight.Light, size: 19),
-                                Colour = Build.UpdateStream.Colour,
-                            },
-                        }
-                    }
+                        },
+                    },
                 },
-            }
-        };
+            };
     }
 }

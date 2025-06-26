@@ -12,6 +12,7 @@ namespace osu.Game.Overlays.Mods.Input
     /// </summary>
     public class NoopModHotkeyHandler : IModHotkeyHandler
     {
-        public bool HandleHotkeyPressed(KeyDownEvent e, IEnumerable<ModState> availableMods) => false;
+        public bool HandleHotkeyPressed(KeyDownEvent e, IEnumerable<ModState> availableMods) =>
+            false;
     }
 }

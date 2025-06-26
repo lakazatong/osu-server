@@ -39,7 +39,8 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// The control points of the path.
         /// </summary>
-        public readonly BindableList<PathControlPoint> ControlPoints = new BindableList<PathControlPoint>();
+        public readonly BindableList<PathControlPoint> ControlPoints =
+            new BindableList<PathControlPoint>();
 
         private readonly List<Vector2> calculatedPath = new List<Vector2>();
         private readonly List<double> cumulativeLength = new List<double>();
@@ -108,9 +109,12 @@ namespace osu.Game.Rulesets.Objects
         }
 
         public SliderPath(PathType type, Vector2[] controlPoints, double? expectedDistance = null)
-            : this(controlPoints.Select((c, i) => new PathControlPoint(c, i == 0 ? type : null)).ToArray(), expectedDistance)
-        {
-        }
+            : this(
+                controlPoints
+                    .Select((c, i) => new PathControlPoint(c, i == 0 ? type : null))
+                    .ToArray(),
+                expectedDistance
+            ) { }
 
         /// <summary>
         /// The distance of the path after lengthening/shortening to account for <see cref="ExpectedDistance"/>.
@@ -173,9 +177,7 @@ namespace osu.Game.Rulesets.Objects
 
             int i = 0;
 
-            for (; i < calculatedPath.Count && cumulativeLength[i] < d0; ++i)
-            {
-            }
+            for (; i < calculatedPath.Count && cumulativeLength[i] < d0; ++i) { }
 
             path.Add(interpolateVertices(i, d0));
 
@@ -304,7 +306,10 @@ namespace osu.Game.Rulesets.Objects
                     List<Vector2> subPath = calculateSubPath(segmentVertices, segmentType);
 
                     // Skip the first vertex if it is the same as the last vertex from the previous segment
-                    bool skipFirst = calculatedPath.Count > 0 && subPath.Count > 0 && calculatedPath.Last() == subPath[0];
+                    bool skipFirst =
+                        calculatedPath.Count > 0
+                        && subPath.Count > 0
+                        && calculatedPath.Last() == subPath[0];
 
                     for (int j = skipFirst ? 1 : 0; j < subPath.Count; j++)
                         calculatedPath.Add(subPath[j]);
@@ -321,7 +326,10 @@ namespace osu.Game.Rulesets.Objects
             }
         }
 
-        private List<Vector2> calculateSubPath(ReadOnlySpan<Vector2> subControlPoints, PathType type)
+        private List<Vector2> calculateSubPath(
+            ReadOnlySpan<Vector2> subControlPoints,
+            PathType type
+        )
         {
             switch (type.Type)
             {
@@ -333,21 +341,40 @@ namespace osu.Game.Rulesets.Objects
                     if (subControlPoints.Length != 3)
                         break;
 
-                    CircularArcProperties circularArcProperties = new CircularArcProperties(subControlPoints);
+                    CircularArcProperties circularArcProperties = new CircularArcProperties(
+                        subControlPoints
+                    );
 
                     // `PathApproximator` will already internally revert to B-spline if the arc isn't valid.
                     if (!circularArcProperties.IsValid)
                         break;
 
                     // taken from https://github.com/ppy/osu-framework/blob/1201e641699a1d50d2f6f9295192dad6263d5820/osu.Framework/Utils/PathApproximator.cs#L181-L186
-                    int subPoints = (2f * circularArcProperties.Radius <= 0.1f) ? 2 : Math.Max(2, (int)Math.Ceiling(circularArcProperties.ThetaRange / (2.0 * Math.Acos(1f - (0.1f / circularArcProperties.Radius)))));
+                    int subPoints =
+                        (2f * circularArcProperties.Radius <= 0.1f)
+                            ? 2
+                            : Math.Max(
+                                2,
+                                (int)
+                                    Math.Ceiling(
+                                        circularArcProperties.ThetaRange
+                                            / (
+                                                2.0
+                                                * Math.Acos(
+                                                    1f - (0.1f / circularArcProperties.Radius)
+                                                )
+                                            )
+                                    )
+                            );
 
                     // 1000 subpoints requires an arc length of at least ~120 thousand to occur
                     // See here for calculations https://www.desmos.com/calculator/umj6jvmcz7
                     if (subPoints >= 1000)
                         break;
 
-                    List<Vector2> subPath = PathApproximator.CircularArcToPiecewiseLinear(subControlPoints);
+                    List<Vector2> subPath = PathApproximator.CircularArcToPiecewiseLinear(
+                        subControlPoints
+                    );
 
                     // If for some reason a circular arc could not be fit to the 3 given points, fall back to a numerically stable bezier approximation.
                     if (subPath.Count == 0)
@@ -358,7 +385,9 @@ namespace osu.Game.Rulesets.Objects
 
                 case SplineType.Catmull:
                 {
-                    List<Vector2> subPath = PathApproximator.CatmullToPiecewiseLinear(subControlPoints);
+                    List<Vector2> subPath = PathApproximator.CatmullToPiecewiseLinear(
+                        subControlPoints
+                    );
 
                     if (!OptimiseCatmull)
                         return subPath;
@@ -394,7 +423,11 @@ namespace osu.Game.Rulesets.Objects
                         const int catmull_segment_length = catmull_detail * 2;
 
                         // Either 6px from the start, the last vertex at every knot, or the end of the path.
-                        if (distFromStart > 6 || (i + 1) % catmull_segment_length == 0 || i == subPath.Count - 1)
+                        if (
+                            distFromStart > 6
+                            || (i + 1) % catmull_segment_length == 0
+                            || i == subPath.Count - 1
+                        )
                         {
                             optimisedPath.Add(subPath[i]);
                             optimisedLength += lengthRemovedSinceStart - distFromStart;
@@ -408,7 +441,10 @@ namespace osu.Game.Rulesets.Objects
                 }
             }
 
-            return PathApproximator.BSplineToPiecewiseLinear(subControlPoints, type.Degree ?? subControlPoints.Length);
+            return PathApproximator.BSplineToPiecewiseLinear(
+                subControlPoints,
+                type.Degree ?? subControlPoints.Length
+            );
         }
 
         private void calculateLength()
@@ -432,10 +468,17 @@ namespace osu.Game.Rulesets.Objects
                 segmentEndDistances[i] = cumulativeLength[segmentEnds[i]];
             }
 
-            if (ExpectedDistance.Value is double expectedDistance && calculatedLength != expectedDistance)
+            if (
+                ExpectedDistance.Value is double expectedDistance
+                && calculatedLength != expectedDistance
+            )
             {
                 // In osu-stable, if the last two path points of a slider are equal, extension is not performed.
-                if (calculatedPath.Count >= 2 && calculatedPath[^1] == calculatedPath[^2] && expectedDistance > calculatedLength)
+                if (
+                    calculatedPath.Count >= 2
+                    && calculatedPath[^1] == calculatedPath[^2]
+                    && expectedDistance > calculatedLength
+                )
                 {
                     cumulativeLength.Add(calculatedLength);
                     return;
@@ -465,9 +508,13 @@ namespace osu.Game.Rulesets.Objects
                 }
 
                 // The direction of the segment to shorten or lengthen
-                Vector2 dir = (calculatedPath[pathEndIndex] - calculatedPath[pathEndIndex - 1]).Normalized();
+                Vector2 dir = (
+                    calculatedPath[pathEndIndex] - calculatedPath[pathEndIndex - 1]
+                ).Normalized();
 
-                calculatedPath[pathEndIndex] = calculatedPath[pathEndIndex - 1] + dir * (float)(expectedDistance - cumulativeLength[^1]);
+                calculatedPath[pathEndIndex] =
+                    calculatedPath[pathEndIndex - 1]
+                    + dir * (float)(expectedDistance - cumulativeLength[^1]);
                 cumulativeLength.Add(expectedDistance);
             }
         }
@@ -475,7 +522,8 @@ namespace osu.Game.Rulesets.Objects
         private int indexOfDistance(double d)
         {
             int i = cumulativeLength.BinarySearch(d);
-            if (i < 0) i = ~i;
+            if (i < 0)
+                i = ~i;
 
             return i;
         }

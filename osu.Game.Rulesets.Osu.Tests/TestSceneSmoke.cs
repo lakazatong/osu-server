@@ -28,42 +28,50 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             var smokeContainers = new List<SmokeContainer>();
 
-            AddStep(stepName, () =>
-            {
-                smokeContainers.Clear();
-                SetContents(_ =>
+            AddStep(
+                stepName,
+                () =>
                 {
-                    smokeContainers.Add(new TestSmokeContainer
+                    smokeContainers.Clear();
+                    SetContents(_ =>
                     {
-                        Duration = duration,
-                        RelativeSizeAxes = Axes.Both
+                        smokeContainers.Add(
+                            new TestSmokeContainer
+                            {
+                                Duration = duration,
+                                RelativeSizeAxes = Axes.Both,
+                            }
+                        );
+
+                        return new SmokingInputManager
+                        {
+                            Duration = duration,
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.95f),
+                            Child = smokeContainers[^1],
+                        };
                     });
-
-                    return new SmokingInputManager
-                    {
-                        Duration = duration,
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.95f),
-                        Child = smokeContainers[^1],
-                    };
-                });
-            });
-
-            AddUntilStep("Until skinnable expires", () =>
-            {
-                if (smokeContainers.Count == 0)
-                    return false;
-
-                Logger.Log("How many: " + smokeContainers.Count);
-
-                foreach (var smokeContainer in smokeContainers)
-                {
-                    if (smokeContainer.Children.Count != 0)
-                        return false;
                 }
+            );
 
-                return true;
-            });
+            AddUntilStep(
+                "Until skinnable expires",
+                () =>
+                {
+                    if (smokeContainers.Count == 0)
+                        return false;
+
+                    Logger.Log("How many: " + smokeContainers.Count);
+
+                    foreach (var smokeContainer in smokeContainers)
+                    {
+                        if (smokeContainer.Children.Count != 0)
+                            return false;
+                    }
+
+                    return true;
+                }
+            );
         }
 
         private partial class SmokingInputManager : ManualInputManager
@@ -97,7 +105,8 @@ namespace osu.Game.Rulesets.Osu.Tests
                 float angle = fraction * spin_angle;
                 float radius = fraction * Math.Min(DrawSize.X, DrawSize.Y) / 2;
 
-                Vector2 pos = radius * new Vector2(MathF.Cos(angle), MathF.Sin(angle)) + DrawSize / 2;
+                Vector2 pos =
+                    radius * new Vector2(MathF.Cos(angle), MathF.Sin(angle)) + DrawSize / 2;
                 MoveMouseTo(ToScreenSpace(pos));
             }
         }
@@ -119,14 +128,18 @@ namespace osu.Game.Rulesets.Osu.Tests
 
                 if (!isPressing && !isFinished && Time.Current > startTime)
                 {
-                    OnPressed(new KeyBindingPressEvent<OsuAction>(new InputState(), OsuAction.Smoke));
+                    OnPressed(
+                        new KeyBindingPressEvent<OsuAction>(new InputState(), OsuAction.Smoke)
+                    );
                     isPressing = true;
                     isFinished = false;
                 }
 
                 if (isPressing && Time.Current > startTime + Duration)
                 {
-                    OnReleased(new KeyBindingReleaseEvent<OsuAction>(new InputState(), OsuAction.Smoke));
+                    OnReleased(
+                        new KeyBindingReleaseEvent<OsuAction>(new InputState(), OsuAction.Smoke)
+                    );
                     isPressing = false;
                     isFinished = true;
                 }

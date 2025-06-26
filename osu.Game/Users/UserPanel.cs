@@ -7,23 +7,23 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Overlays;
-using osu.Framework.Graphics.UserInterface;
-using osu.Game.Graphics.UserInterface;
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
 using osu.Framework.Screens;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
-using osu.Game.Resources.Localisation.Web;
-using osu.Game.Localisation;
 using osu.Game.Online.Metadata;
 using osu.Game.Online.Multiplayer;
+using osu.Game.Overlays;
+using osu.Game.Resources.Localisation.Web;
 using osu.Game.Screens;
 using osu.Game.Screens.Play;
 using osu.Game.Users.Drawables;
@@ -88,11 +88,13 @@ namespace osu.Game.Users
         {
             Masking = true;
 
-            Add(new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = ColourProvider?.Background5 ?? Colours.Gray1
-            });
+            Add(
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = ColourProvider?.Background5 ?? Colours.Gray1,
+                }
+            );
 
             var background = CreateBackground();
             if (background != null)
@@ -114,33 +116,30 @@ namespace osu.Game.Users
         /// <summary>
         /// Panel background container. Can be null if a panel doesn't want a background under it's layout
         /// </summary>
-        protected virtual Drawable? CreateBackground() => Background = new UserCoverBackground
-        {
-            RelativeSizeAxes = Axes.Both,
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            User = User
-        };
+        protected virtual Drawable? CreateBackground() =>
+            Background = new UserCoverBackground
+            {
+                RelativeSizeAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                User = User,
+            };
 
-        protected OsuSpriteText CreateUsername() => new OsuSpriteText
-        {
-            Font = OsuFont.GetFont(size: 16, weight: FontWeight.Bold),
-            Shadow = false,
-            Text = User.Username,
-        };
+        protected OsuSpriteText CreateUsername() =>
+            new OsuSpriteText
+            {
+                Font = OsuFont.GetFont(size: 16, weight: FontWeight.Bold),
+                Shadow = false,
+                Text = User.Username,
+            };
 
         protected UpdateableAvatar CreateAvatar() => new UpdateableAvatar(User, false);
 
-        protected UpdateableFlag CreateFlag() => new UpdateableFlag(User.CountryCode)
-        {
-            Size = new Vector2(36, 26),
-            Action = Action,
-        };
+        protected UpdateableFlag CreateFlag() =>
+            new UpdateableFlag(User.CountryCode) { Size = new Vector2(36, 26), Action = Action };
 
-        protected Drawable CreateTeamLogo() => new UpdateableTeamFlag(User.Team)
-        {
-            Size = new Vector2(52, 26),
-        };
+        protected Drawable CreateTeamLogo() =>
+            new UpdateableTeamFlag(User.Team) { Size = new Vector2(52, 26) };
 
         public MenuItem[] ContextMenuItems
         {
@@ -148,44 +147,80 @@ namespace osu.Game.Users
             {
                 List<MenuItem> items = new List<MenuItem>
                 {
-                    new OsuMenuItem(ContextMenuStrings.ViewProfile, MenuItemType.Highlighted, ViewProfile)
+                    new OsuMenuItem(
+                        ContextMenuStrings.ViewProfile,
+                        MenuItemType.Highlighted,
+                        ViewProfile
+                    ),
                 };
 
                 if (User.Equals(api.LocalUser.Value))
                     return items.ToArray();
 
-                items.Add(new OsuMenuItem(UsersStrings.CardSendMessage, MenuItemType.Standard, () =>
-                {
-                    channelManager?.OpenPrivateChannel(User);
-                    chatOverlay?.Show();
-                }));
+                items.Add(
+                    new OsuMenuItem(
+                        UsersStrings.CardSendMessage,
+                        MenuItemType.Standard,
+                        () =>
+                        {
+                            channelManager?.OpenPrivateChannel(User);
+                            chatOverlay?.Show();
+                        }
+                    )
+                );
 
-                items.Add(!isUserBlocked()
-                    ? new OsuMenuItem(UsersStrings.BlocksButtonBlock, MenuItemType.Destructive, () => dialogOverlay?.Push(ConfirmBlockActionDialog.Block(User)))
-                    : new OsuMenuItem(UsersStrings.BlocksButtonUnblock, MenuItemType.Standard, () => dialogOverlay?.Push(ConfirmBlockActionDialog.Unblock(User))));
+                items.Add(
+                    !isUserBlocked()
+                        ? new OsuMenuItem(
+                            UsersStrings.BlocksButtonBlock,
+                            MenuItemType.Destructive,
+                            () => dialogOverlay?.Push(ConfirmBlockActionDialog.Block(User))
+                        )
+                        : new OsuMenuItem(
+                            UsersStrings.BlocksButtonUnblock,
+                            MenuItemType.Standard,
+                            () => dialogOverlay?.Push(ConfirmBlockActionDialog.Unblock(User))
+                        )
+                );
 
                 if (isUserOnline())
                 {
-                    items.Add(new OsuMenuItem(ContextMenuStrings.SpectatePlayer, MenuItemType.Standard, () =>
-                    {
-                        if (isUserOnline())
-                            performer?.PerformFromScreen(s => s.Push(new SoloSpectatorScreen(User)));
-                    }));
+                    items.Add(
+                        new OsuMenuItem(
+                            ContextMenuStrings.SpectatePlayer,
+                            MenuItemType.Standard,
+                            () =>
+                            {
+                                if (isUserOnline())
+                                    performer?.PerformFromScreen(s =>
+                                        s.Push(new SoloSpectatorScreen(User))
+                                    );
+                            }
+                        )
+                    );
 
                     if (canInviteUser())
                     {
-                        items.Add(new OsuMenuItem(ContextMenuStrings.InvitePlayer, MenuItemType.Standard, () =>
-                        {
-                            if (canInviteUser())
-                                multiplayerClient!.InvitePlayer(User.Id);
-                        }));
+                        items.Add(
+                            new OsuMenuItem(
+                                ContextMenuStrings.InvitePlayer,
+                                MenuItemType.Standard,
+                                () =>
+                                {
+                                    if (canInviteUser())
+                                        multiplayerClient!.InvitePlayer(User.Id);
+                                }
+                            )
+                        );
                     }
                 }
 
                 return items.ToArray();
 
                 bool isUserOnline() => metadataClient?.GetPresence(User.OnlineID) != null;
-                bool canInviteUser() => isUserOnline() && multiplayerClient?.Room?.Users.All(u => u.UserID != User.Id) == true;
+                bool canInviteUser() =>
+                    isUserOnline()
+                    && multiplayerClient?.Room?.Users.All(u => u.UserID != User.Id) == true;
                 bool isUserBlocked() => api.Blocks.Any(b => b.TargetID == User.OnlineID);
             }
         }

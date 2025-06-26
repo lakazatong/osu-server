@@ -12,12 +12,12 @@ namespace osu.Game.Rulesets.Mania.Edit
     public class HoldNoteCompositionTool : CompositionTool
     {
         public HoldNoteCompositionTool()
-            : base("Hold")
-        {
-        }
+            : base("Hold") { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new HoldNotePlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new HoldNotePlacementBlueprint();
     }
 }

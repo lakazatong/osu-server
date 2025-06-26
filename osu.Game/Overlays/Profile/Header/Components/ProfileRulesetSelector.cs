@@ -32,16 +32,21 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
         private void updateState(UserProfileData? user)
         {
-            Current.Value = Items.SingleOrDefault(ruleset => user?.Ruleset.MatchesOnlineID(ruleset) == true);
+            Current.Value = Items.SingleOrDefault(ruleset =>
+                user?.Ruleset.MatchesOnlineID(ruleset) == true
+            );
             SetDefaultRuleset(Rulesets.GetRuleset(user?.User.PlayMode ?? @"osu").AsNonNull());
         }
 
         public void SetDefaultRuleset(RulesetInfo ruleset)
         {
             foreach (var tabItem in TabContainer)
-                ((ProfileRulesetTabItem)tabItem).IsDefault = ((ProfileRulesetTabItem)tabItem).Value.Equals(ruleset);
+                ((ProfileRulesetTabItem)tabItem).IsDefault = (
+                    (ProfileRulesetTabItem)tabItem
+                ).Value.Equals(ruleset);
         }
 
-        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) => new ProfileRulesetTabItem(value);
+        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) =>
+            new ProfileRulesetTabItem(value);
     }
 }

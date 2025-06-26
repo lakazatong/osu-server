@@ -22,7 +22,11 @@ namespace osu.Game.Tests.Beatmaps
         /// <param name="beatmap">The beatmap.</param>
         /// <param name="storyboard">An optional storyboard.</param>
         /// <param name="audioManager">The <see cref="AudioManager"/>.</param>
-        public TestWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null, AudioManager? audioManager = null)
+        public TestWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null,
+            AudioManager? audioManager = null
+        )
             : base(beatmap.BeatmapInfo, audioManager)
         {
             this.beatmap = beatmap;

@@ -21,9 +21,7 @@ namespace osu.Game.Overlays.Volume
         private VolumeOverlay volumeOverlay { get; set; } = null!;
 
         public MasterVolumeMeter(string name, float circleSize, Color4 meterColour)
-            : base(name, circleSize, meterColour)
-        {
-        }
+            : base(name, circleSize, meterColour) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
@@ -36,15 +34,17 @@ namespace osu.Game.Overlays.Volume
                     audio.RemoveAdjustment(AdjustableProperty.Volume, muteAdjustment);
             });
 
-            Add(muteButton = new MuteButton
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.Centre,
-                Blending = BlendingParameters.Additive,
-                X = CircleSize / 2,
-                Y = CircleSize * 0.23f,
-                Current = { BindTarget = IsMuted }
-            });
+            Add(
+                muteButton = new MuteButton
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.Centre,
+                    Blending = BlendingParameters.Additive,
+                    X = CircleSize / 2,
+                    Y = CircleSize * 0.23f,
+                    Current = { BindTarget = IsMuted },
+                }
+            );
 
             muteButton.Current.ValueChanged += _ => volumeOverlay.Show();
         }

@@ -15,10 +15,14 @@ namespace osu.Game.Tests.Visual.Gameplay
     public partial class TestSceneSkinnableScoreCounter : SkinnableHUDComponentTestScene
     {
         [Cached(typeof(ScoreProcessor))]
-        private ScoreProcessor scoreProcessor = TestGameplayState.Create(new OsuRuleset()).ScoreProcessor;
+        private ScoreProcessor scoreProcessor = TestGameplayState
+            .Create(new OsuRuleset())
+            .ScoreProcessor;
 
         protected override Drawable CreateArgonImplementation() => new ArgonScoreCounter();
+
         protected override Drawable CreateDefaultImplementation() => new DefaultScoreCounter();
+
         protected override Drawable CreateLegacyImplementation() => new LegacyScoreCounter();
 
         [Test]

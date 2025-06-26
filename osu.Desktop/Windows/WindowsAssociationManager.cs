@@ -31,7 +31,11 @@ namespace osu.Desktop.Windows
         /// </summary>
         internal const string SHELL_OPEN_COMMAND = @"Shell\Open\Command";
 
-        private static readonly string exe_path = Path.ChangeExtension(typeof(WindowsAssociationManager).Assembly.Location, ".exe").Replace('/', '\\');
+        private static readonly string exe_path = Path.ChangeExtension(
+                typeof(WindowsAssociationManager).Assembly.Location,
+                ".exe"
+            )
+            .Replace('/', '\\');
 
         /// <summary>
         /// Program ID prefix used for file associations. Should be relatively short since the full program ID has a 39 character limit,
@@ -41,12 +45,21 @@ namespace osu.Desktop.Windows
 
         private const string program_id_protocol_prefix = "osu.Uri";
 
-        private static readonly ApplicationCapability application_capability = new ApplicationCapability(@"osu", @"Software\ppy\osu\Capabilities", "osu!(lazer)");
+        private static readonly ApplicationCapability application_capability =
+            new ApplicationCapability(@"osu", @"Software\ppy\osu\Capabilities", "osu!(lazer)");
 
         private static readonly FileAssociation[] file_associations =
         {
-            new FileAssociation(@".osz", WindowsAssociationManagerStrings.OsuBeatmap, Icons.Beatmap),
-            new FileAssociation(@".olz", WindowsAssociationManagerStrings.OsuBeatmap, Icons.Beatmap),
+            new FileAssociation(
+                @".osz",
+                WindowsAssociationManagerStrings.OsuBeatmap,
+                Icons.Beatmap
+            ),
+            new FileAssociation(
+                @".olz",
+                WindowsAssociationManagerStrings.OsuBeatmap,
+                Icons.Beatmap
+            ),
             new FileAssociation(@".osr", WindowsAssociationManagerStrings.OsuReplay, Icons.Beatmap),
             new FileAssociation(@".osk", WindowsAssociationManagerStrings.OsuSkin, Icons.Beatmap),
         };
@@ -54,7 +67,11 @@ namespace osu.Desktop.Windows
         private static readonly UriAssociation[] uri_associations =
         {
             new UriAssociation(@"osu", WindowsAssociationManagerStrings.OsuProtocol, Icons.Lazer),
-            new UriAssociation(@"osump", WindowsAssociationManagerStrings.OsuMultiplayer, Icons.Lazer),
+            new UriAssociation(
+                @"osump",
+                WindowsAssociationManagerStrings.OsuMultiplayer,
+                Icons.Lazer
+            ),
         };
 
         /// <summary>
@@ -136,7 +153,13 @@ namespace osu.Desktop.Windows
             }
         }
 
-        public static void NotifyShellUpdate() => SHChangeNotify(EventId.SHCNE_ASSOCCHANGED, Flags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
+        public static void NotifyShellUpdate() =>
+            SHChangeNotify(
+                EventId.SHCNE_ASSOCCHANGED,
+                Flags.SHCNF_IDLIST,
+                IntPtr.Zero,
+                IntPtr.Zero
+            );
 
         /// <summary>
         /// Installs or updates associations.
@@ -158,7 +181,12 @@ namespace osu.Desktop.Windows
         #region Native interop
 
         [DllImport("Shell32.dll")]
-        private static extern void SHChangeNotify(EventId wEventId, Flags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+        private static extern void SHChangeNotify(
+            EventId wEventId,
+            Flags uFlags,
+            IntPtr dwItem1,
+            IntPtr dwItem2
+        );
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum EventId
@@ -167,13 +195,13 @@ namespace osu.Desktop.Windows
             /// A file type association has changed. <see cref="Flags.SHCNF_IDLIST"/> must be specified in the uFlags parameter.
             /// dwItem1 and dwItem2 are not used and must be <see cref="IntPtr.Zero"/>. This event should also be sent for registered protocols.
             /// </summary>
-            SHCNE_ASSOCCHANGED = 0x08000000
+            SHCNE_ASSOCCHANGED = 0x08000000,
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum Flags : uint
         {
-            SHCNF_IDLIST = 0x0000
+            SHCNF_IDLIST = 0x0000,
         }
 
         #endregion
@@ -184,7 +212,11 @@ namespace osu.Desktop.Windows
             private string capabilityPath { get; }
             private LocalisableString description { get; }
 
-            public ApplicationCapability(string uniqueName, string capabilityPath, LocalisableString description)
+            public ApplicationCapability(
+                string uniqueName,
+                string capabilityPath,
+                LocalisableString description
+            )
             {
                 this.uniqueName = uniqueName;
                 this.capabilityPath = capabilityPath;
@@ -202,14 +234,20 @@ namespace osu.Desktop.Windows
                     capability.SetValue(@"ApplicationDescription", description.ToString());
                 }
 
-                using (var registeredApplications = Registry.CurrentUser.OpenSubKey(software_registered_applications, true))
+                using (
+                    var registeredApplications = Registry.CurrentUser.OpenSubKey(
+                        software_registered_applications,
+                        true
+                    )
+                )
                     registeredApplications?.SetValue(uniqueName, capabilityPath);
             }
 
             public void RegisterFileAssociations(FileAssociation[] associations)
             {
                 using var capability = Registry.CurrentUser.OpenSubKey(capabilityPath, true);
-                if (capability == null) return;
+                if (capability == null)
+                    return;
 
                 using var fileAssociations = capability.CreateSubKey(@"FileAssociations");
 
@@ -220,7 +258,8 @@ namespace osu.Desktop.Windows
             public void RegisterUriAssociations(UriAssociation[] associations)
             {
                 using var capability = Registry.CurrentUser.OpenSubKey(capabilityPath, true);
-                if (capability == null) return;
+                if (capability == null)
+                    return;
 
                 using var urlAssociations = capability.CreateSubKey(@"UrlAssociations");
 
@@ -232,13 +271,21 @@ namespace osu.Desktop.Windows
             {
                 using (var capability = Registry.CurrentUser.OpenSubKey(capabilityPath, true))
                 {
-                    capability?.SetValue(@"ApplicationDescription", localisationManager.GetLocalisedString(description));
+                    capability?.SetValue(
+                        @"ApplicationDescription",
+                        localisationManager.GetLocalisedString(description)
+                    );
                 }
             }
 
             public void Uninstall()
             {
-                using (var registeredApplications = Registry.CurrentUser.OpenSubKey(software_registered_applications, true))
+                using (
+                    var registeredApplications = Registry.CurrentUser.OpenSubKey(
+                        software_registered_applications,
+                        true
+                    )
+                )
                     registeredApplications?.DeleteValue(uniqueName, throwOnMissingValue: false);
 
                 Registry.CurrentUser.DeleteSubKeyTree(capabilityPath, throwOnMissingSubKey: false);
@@ -266,7 +313,8 @@ namespace osu.Desktop.Windows
             public void Install()
             {
                 using var classes = Registry.CurrentUser.OpenSubKey(software_classes, true);
-                if (classes == null) return;
+                if (classes == null)
+                    return;
 
                 // register a program id for the given extension
                 using (var programKey = classes.CreateSubKey(ProgramId))
@@ -297,7 +345,8 @@ namespace osu.Desktop.Windows
             public void LocaliseDescription(LocalisationManager localisationManager)
             {
                 using var classes = Registry.CurrentUser.OpenSubKey(software_classes, true);
-                if (classes == null) return;
+                if (classes == null)
+                    return;
 
                 using (var programKey = classes.OpenSubKey(ProgramId, true))
                     programKey?.SetValue(null, localisationManager.GetLocalisedString(description));
@@ -309,7 +358,8 @@ namespace osu.Desktop.Windows
             public void Uninstall()
             {
                 using var classes = Registry.CurrentUser.OpenSubKey(software_classes, true);
-                if (classes == null) return;
+                if (classes == null)
+                    return;
 
                 using (var extensionKey = classes.OpenSubKey(Extension, true))
                 {
@@ -348,7 +398,8 @@ namespace osu.Desktop.Windows
             public void Install()
             {
                 using var classes = Registry.CurrentUser.OpenSubKey(software_classes, true);
-                if (classes == null) return;
+                if (classes == null)
+                    return;
 
                 using (var protocolKey = classes.CreateSubKey(Protocol))
                 {
@@ -374,10 +425,14 @@ namespace osu.Desktop.Windows
             public void LocaliseDescription(LocalisationManager localisationManager)
             {
                 using var classes = Registry.CurrentUser.OpenSubKey(software_classes, true);
-                if (classes == null) return;
+                if (classes == null)
+                    return;
 
                 using (var protocolKey = classes.OpenSubKey(Protocol, true))
-                    protocolKey?.SetValue(null, $@"URL:{localisationManager.GetLocalisedString(description)}");
+                    protocolKey?.SetValue(
+                        null,
+                        $@"URL:{localisationManager.GetLocalisedString(description)}"
+                    );
             }
 
             public void Uninstall()

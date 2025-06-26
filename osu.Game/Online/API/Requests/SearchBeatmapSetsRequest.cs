@@ -44,7 +44,8 @@ namespace osu.Game.Online.API.Requests
         private readonly RulesetInfo ruleset;
         private readonly Cursor cursor;
 
-        private string directionString => SortDirection == SortDirection.Descending ? @"desc" : @"asc";
+        private string directionString =>
+            SortDirection == SortDirection.Descending ? @"desc" : @"asc";
 
         public SearchBeatmapSetsRequest(
             string query,
@@ -59,7 +60,8 @@ namespace osu.Game.Online.API.Requests
             IReadOnlyCollection<SearchExtra> extra = null,
             IReadOnlyCollection<ScoreRank> ranks = null,
             SearchPlayed played = SearchPlayed.Any,
-            SearchExplicit explicitContent = SearchExplicit.Hide)
+            SearchExplicit explicitContent = SearchExplicit.Hide
+        )
         {
             this.query = query;
             this.ruleset = ruleset;
@@ -85,7 +87,10 @@ namespace osu.Game.Online.API.Requests
                 req.AddParameter("q", query);
 
             if (General != null && General.Any())
-                req.AddParameter("c", string.Join('.', General.Select(e => e.ToString().ToSnakeCase())));
+                req.AddParameter(
+                    "c",
+                    string.Join('.', General.Select(e => e.ToString().ToSnakeCase()))
+                );
 
             if (ruleset.OnlineID >= 0)
                 req.AddParameter("m", ruleset.OnlineID.ToString());
@@ -98,10 +103,16 @@ namespace osu.Game.Online.API.Requests
             if (Language != SearchLanguage.Any)
                 req.AddParameter("l", ((int)Language).ToString());
 
-            req.AddParameter("sort", $"{SortCriteria.ToString().ToLowerInvariant()}_{directionString}");
+            req.AddParameter(
+                "sort",
+                $"{SortCriteria.ToString().ToLowerInvariant()}_{directionString}"
+            );
 
             if (Extra != null && Extra.Any())
-                req.AddParameter("e", string.Join('.', Extra.Select(e => e.ToString().ToLowerInvariant())));
+                req.AddParameter(
+                    "e",
+                    string.Join('.', Extra.Select(e => e.ToString().ToLowerInvariant()))
+                );
 
             if (Ranks != null && Ranks.Any())
                 req.AddParameter("r", string.Join('.', Ranks.Select(r => r.ToString())));

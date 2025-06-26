@@ -13,18 +13,22 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneCommentsHeader : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private readonly Bindable<CommentsSortCriteria> sort = new Bindable<CommentsSortCriteria>();
         private readonly BindableBool showDeleted = new BindableBool();
 
         public TestSceneCommentsHeader()
         {
-            Add(new CommentsHeader
-            {
-                Sort = { BindTarget = sort },
-                ShowDeleted = { BindTarget = showDeleted }
-            });
+            Add(
+                new CommentsHeader
+                {
+                    Sort = { BindTarget = sort },
+                    ShowDeleted = { BindTarget = showDeleted },
+                }
+            );
 
             AddStep("Trigger ShowDeleted", () => showDeleted.Value = !showDeleted.Value);
             AddStep("Select old", () => sort.Value = CommentsSortCriteria.Old);

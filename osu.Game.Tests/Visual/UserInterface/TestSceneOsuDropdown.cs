@@ -14,12 +14,13 @@ namespace osu.Game.Tests.Visual.UserInterface
 {
     public partial class TestSceneOsuDropdown : ThemeComparisonTestScene
     {
-        protected override Drawable CreateContent() => new OsuEnumDropdown<TestEnum>
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.TopCentre,
-            Width = 150
-        };
+        protected override Drawable CreateContent() =>
+            new OsuEnumDropdown<TestEnum>
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.TopCentre,
+                Width = 150,
+            };
 
         [Test]
         public void TestBackAction()
@@ -30,10 +31,16 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("open", () => dropdownMenu.Open());
             AddStep("type something", () => dropdownSearchBar.SearchTerm.Value = "something");
-            AddAssert("search bar visible", () => dropdownSearchBar.State.Value == Visibility.Visible);
+            AddAssert(
+                "search bar visible",
+                () => dropdownSearchBar.State.Value == Visibility.Visible
+            );
             AddStep("press back", () => InputManager.Key(Key.Escape));
             AddAssert("text clear", () => dropdownSearchBar.SearchTerm.Value == string.Empty);
-            AddAssert("search bar hidden", () => dropdownSearchBar.State.Value == Visibility.Hidden);
+            AddAssert(
+                "search bar hidden",
+                () => dropdownSearchBar.State.Value == Visibility.Hidden
+            );
             AddAssert("still open", () => dropdownMenu.State == MenuState.Open);
             AddStep("press back", () => InputManager.Key(Key.Escape));
             AddAssert("closed", () => dropdownMenu.State == MenuState.Closed);
@@ -48,9 +55,11 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert("second selected", () => dropdown.Current.Value == TestEnum.ReallyLongOption);
         }
 
-        private OsuEnumDropdown<TestEnum> dropdown => this.ChildrenOfType<OsuEnumDropdown<TestEnum>>().Last();
+        private OsuEnumDropdown<TestEnum> dropdown =>
+            this.ChildrenOfType<OsuEnumDropdown<TestEnum>>().Last();
         private Menu dropdownMenu => dropdown.ChildrenOfType<Menu>().Single();
-        private DropdownSearchBar dropdownSearchBar => dropdown.ChildrenOfType<DropdownSearchBar>().Single();
+        private DropdownSearchBar dropdownSearchBar =>
+            dropdown.ChildrenOfType<DropdownSearchBar>().Single();
 
         private enum TestEnum
         {

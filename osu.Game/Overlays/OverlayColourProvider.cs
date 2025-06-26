@@ -13,9 +13,7 @@ namespace osu.Game.Overlays
         public int Hue { get; private set; }
 
         public OverlayColourProvider(OverlayColourScheme colourScheme)
-            : this(colourScheme.GetHue())
-        {
-        }
+            : this(colourScheme.GetHue()) { }
 
         public OverlayColourProvider(int hue)
         {
@@ -58,7 +56,8 @@ namespace osu.Game.Overlays
         /// Note that this does not trigger any kind of signal to any drawable that received colours from here, all drawables need to be updated manually.
         /// </summary>
         /// <param name="colourScheme">The proposed colour scheme.</param>
-        public void ChangeColourScheme(OverlayColourScheme colourScheme) => ChangeColourScheme(colourScheme.GetHue());
+        public void ChangeColourScheme(OverlayColourScheme colourScheme) =>
+            ChangeColourScheme(colourScheme.GetHue());
 
         /// <summary>
         /// Changes the <see cref="Hue"/> to a different degree.
@@ -67,6 +66,7 @@ namespace osu.Game.Overlays
         /// <param name="hue">The proposed hue degree.</param>
         public void ChangeColourScheme(int hue) => Hue = hue;
 
-        private Color4 getColour(float saturation, float lightness) => Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, lightness);
+        private Color4 getColour(float saturation, float lightness) =>
+            Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, lightness);
     }
 }

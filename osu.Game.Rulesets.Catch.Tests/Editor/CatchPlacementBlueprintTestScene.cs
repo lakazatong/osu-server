@@ -28,7 +28,8 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 
         protected DrawableCatchHitObject LastObject;
 
-        protected new ScrollingHitObjectContainer HitObjectContainer => contentContainer.Playfield.HitObjectContainer;
+        protected new ScrollingHitObjectContainer HitObjectContainer =>
+            contentContainer.Playfield.HitObjectContainer;
 
         protected override Container<Drawable> Content => contentContainer;
 
@@ -42,24 +43,35 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            HitObjectContainer.Clear();
-            ResetPlacement();
-            LastObject = null;
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                HitObjectContainer.Clear();
+                ResetPlacement();
+                LastObject = null;
+            });
 
-        protected void AddMoveStep(double time, float x) => AddStep($"move to time={time}, x={x}", () =>
-        {
-            float y = HitObjectContainer.PositionAtTime(time);
-            Vector2 pos = HitObjectContainer.ToScreenSpace(new Vector2(x, y + HitObjectContainer.DrawHeight));
-            InputManager.MoveMouseTo(pos);
-        });
+        protected void AddMoveStep(double time, float x) =>
+            AddStep(
+                $"move to time={time}, x={x}",
+                () =>
+                {
+                    float y = HitObjectContainer.PositionAtTime(time);
+                    Vector2 pos = HitObjectContainer.ToScreenSpace(
+                        new Vector2(x, y + HitObjectContainer.DrawHeight)
+                    );
+                    InputManager.MoveMouseTo(pos);
+                }
+            );
 
-        protected void AddClickStep(MouseButton button) => AddStep($"click {button}", () =>
-        {
-            InputManager.Click(button);
-        });
+        protected void AddClickStep(MouseButton button) =>
+            AddStep(
+                $"click {button}",
+                () =>
+                {
+                    InputManager.Click(button);
+                }
+            );
 
         protected IEnumerable<FruitOutline> FruitOutlines => Content.ChildrenOfType<FruitOutline>();
 
@@ -75,7 +87,9 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
         protected override void UpdatePlacementTimeAndPosition()
         {
             var position = InputManager.CurrentState.Mouse.Position;
-            double time = Math.Round(HitObjectContainer.TimeAtScreenSpacePosition(position) / TIME_SNAP) * TIME_SNAP;
+            double time =
+                Math.Round(HitObjectContainer.TimeAtScreenSpacePosition(position) / TIME_SNAP)
+                * TIME_SNAP;
             CurrentBlueprint.UpdateTimeAndPosition(position, time);
         }
     }

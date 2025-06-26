@@ -31,19 +31,26 @@ namespace osu.Game.Rulesets.Osu.Skinning
             if (DrawableObject != null)
             {
                 tracking.BindTo(DrawableObject.Tracking);
-                tracking.BindValueChanged(tracking =>
-                {
-                    if (DrawableObject.Judged)
-                        return;
-
-                    using (BeginAbsoluteSequence(Math.Max(Time.Current, DrawableObject.HitObject?.StartTime ?? 0)))
+                tracking.BindValueChanged(
+                    tracking =>
                     {
-                        if (tracking.NewValue)
-                            OnSliderPress();
-                        else
-                            OnSliderRelease();
-                    }
-                }, true);
+                        if (DrawableObject.Judged)
+                            return;
+
+                        using (
+                            BeginAbsoluteSequence(
+                                Math.Max(Time.Current, DrawableObject.HitObject?.StartTime ?? 0)
+                            )
+                        )
+                        {
+                            if (tracking.NewValue)
+                                OnSliderPress();
+                            else
+                                OnSliderRelease();
+                        }
+                    },
+                    true
+                );
             }
         }
 
@@ -64,8 +71,7 @@ namespace osu.Game.Rulesets.Osu.Skinning
         private void onHitObjectApplied(DrawableHitObject drawableObject)
         {
             // Sane defaults when a new hitobject is applied to the drawable slider.
-            this.ScaleTo(1f)
-                .FadeOut();
+            this.ScaleTo(1f).FadeOut();
 
             // Immediately play out any pending transforms from press/release
             FinishTransforms(true);

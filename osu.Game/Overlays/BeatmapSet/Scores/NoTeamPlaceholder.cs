@@ -27,7 +27,7 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                         Origin = Anchor.TopCentre,
                         Text = LeaderboardStrings.NoTeam,
                     },
-                }
+                },
             };
         }
     }

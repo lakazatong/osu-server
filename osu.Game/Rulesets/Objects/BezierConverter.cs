@@ -27,16 +27,61 @@ namespace osu.Game.Rulesets.Objects
         // Extremely accurate a bezier anchor positions for approximating circles of several arc lengths
         private static readonly CircleBezierPreset[] circle_presets =
         {
-            new CircleBezierPreset(0.4993379862754501,
-                new[] { new Vector2d(1, 0), new Vector2d(1, 0.2549893626632736f), new Vector2d(0.8778997558480327f, 0.47884446188920726f) }),
-            new CircleBezierPreset(1.7579419829169447,
-                new[] { new Vector2d(1, 0), new Vector2d(1, 0.6263026f), new Vector2d(0.42931178f, 1.0990661f), new Vector2d(-0.18605515f, 0.9825393f) }),
-            new CircleBezierPreset(3.1385246920140215,
-                new[] { new Vector2d(1, 0), new Vector2d(1, 0.87084764f), new Vector2d(0.002304826f, 1.5033062f), new Vector2d(-0.9973236f, 0.8739115f), new Vector2d(-0.9999953f, 0.0030679568f) }),
-            new CircleBezierPreset(5.69720464620727,
-                new[] { new Vector2d(1, 0), new Vector2d(1, 1.4137783f), new Vector2d(-1.4305235f, 2.0779421f), new Vector2d(-2.3410065f, -0.94017583f), new Vector2d(0.05132711f, -1.7309346f), new Vector2d(0.8331702f, -0.5530167f) }),
-            new CircleBezierPreset(2 * Math.PI,
-                new[] { new Vector2d(1, 0), new Vector2d(1, 1.2447058f), new Vector2d(-0.8526471f, 2.118367f), new Vector2d(-2.6211002f, 7.854936e-06f), new Vector2d(-0.8526448f, -2.118357f), new Vector2d(1, -1.2447058f), new Vector2d(1, 0) })
+            new CircleBezierPreset(
+                0.4993379862754501,
+                new[]
+                {
+                    new Vector2d(1, 0),
+                    new Vector2d(1, 0.2549893626632736f),
+                    new Vector2d(0.8778997558480327f, 0.47884446188920726f),
+                }
+            ),
+            new CircleBezierPreset(
+                1.7579419829169447,
+                new[]
+                {
+                    new Vector2d(1, 0),
+                    new Vector2d(1, 0.6263026f),
+                    new Vector2d(0.42931178f, 1.0990661f),
+                    new Vector2d(-0.18605515f, 0.9825393f),
+                }
+            ),
+            new CircleBezierPreset(
+                3.1385246920140215,
+                new[]
+                {
+                    new Vector2d(1, 0),
+                    new Vector2d(1, 0.87084764f),
+                    new Vector2d(0.002304826f, 1.5033062f),
+                    new Vector2d(-0.9973236f, 0.8739115f),
+                    new Vector2d(-0.9999953f, 0.0030679568f),
+                }
+            ),
+            new CircleBezierPreset(
+                5.69720464620727,
+                new[]
+                {
+                    new Vector2d(1, 0),
+                    new Vector2d(1, 1.4137783f),
+                    new Vector2d(-1.4305235f, 2.0779421f),
+                    new Vector2d(-2.3410065f, -0.94017583f),
+                    new Vector2d(0.05132711f, -1.7309346f),
+                    new Vector2d(0.8331702f, -0.5530167f),
+                }
+            ),
+            new CircleBezierPreset(
+                2 * Math.PI,
+                new[]
+                {
+                    new Vector2d(1, 0),
+                    new Vector2d(1, 1.2447058f),
+                    new Vector2d(-0.8526471f, 2.118367f),
+                    new Vector2d(-2.6211002f, 7.854936e-06f),
+                    new Vector2d(-0.8526448f, -2.118357f),
+                    new Vector2d(1, -1.2447058f),
+                    new Vector2d(1, 0),
+                }
+            ),
         };
 
         /// <summary>
@@ -44,7 +89,8 @@ namespace osu.Game.Rulesets.Objects
         /// </summary>
         /// <param name="controlPoints">The control points of the path.</param>
         /// <returns>The number of segments in a slider path.</returns>
-        public static int CountSegments(IList<PathControlPoint> controlPoints) => controlPoints.Where((t, i) => t.Type != null && i < controlPoints.Count - 1).Count();
+        public static int CountSegments(IList<PathControlPoint> controlPoints) =>
+            controlPoints.Where((t, i) => t.Type != null && i < controlPoints.Count - 1).Count();
 
         /// <summary>
         /// Converts a slider path to bezier control point positions compatible with the legacy osu! client.
@@ -52,7 +98,10 @@ namespace osu.Game.Rulesets.Objects
         /// <param name="controlPoints">The control points of the path.</param>
         /// <param name="position">The offset for the whole path.</param>
         /// <returns>The list of legacy bezier control point positions.</returns>
-        public static List<Vector2> ConvertToLegacyBezier(IList<PathControlPoint> controlPoints, Vector2 position)
+        public static List<Vector2> ConvertToLegacyBezier(
+            IList<PathControlPoint> controlPoints,
+            Vector2 position
+        )
         {
             Vector2[] vertices = new Vector2[controlPoints.Count];
             for (int i = 0; i < controlPoints.Count; i++)
@@ -73,20 +122,32 @@ namespace osu.Game.Rulesets.Objects
                 switch (segmentType.Type)
                 {
                     case SplineType.Catmull:
-                        result.AddRange(from segment in ConvertCatmullToBezierAnchors(segmentVertices) from v in segment select v + position);
+                        result.AddRange(
+                            from segment in ConvertCatmullToBezierAnchors(segmentVertices)
+                            from v in segment
+                            select v + position
+                        );
                         break;
 
                     case SplineType.Linear:
-                        result.AddRange(from segment in ConvertLinearToBezierAnchors(segmentVertices) from v in segment select v + position);
+                        result.AddRange(
+                            from segment in ConvertLinearToBezierAnchors(segmentVertices)
+                            from v in segment
+                            select v + position
+                        );
                         break;
 
                     case SplineType.PerfectCurve:
-                        result.AddRange(ConvertCircleToBezierAnchors(segmentVertices).Select(v => v + position));
+                        result.AddRange(
+                            ConvertCircleToBezierAnchors(segmentVertices).Select(v => v + position)
+                        );
                         break;
 
                     case SplineType.BSpline:
                         if (segmentType.Degree != null)
-                            throw new NotImplementedException("BSpline conversion of arbitrary degree is not implemented.");
+                            throw new NotImplementedException(
+                                "BSpline conversion of arbitrary degree is not implemented."
+                            );
 
                         foreach (Vector2 v in segmentVertices)
                         {
@@ -96,7 +157,11 @@ namespace osu.Game.Rulesets.Objects
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(segmentType.Type), segmentType.Type, "Unsupported segment type found when converting to legacy Bezier");
+                        throw new ArgumentOutOfRangeException(
+                            nameof(segmentType.Type),
+                            segmentType.Type,
+                            "Unsupported segment type found when converting to legacy Bezier"
+                        );
                 }
 
                 // Start the new segment at the current vertex
@@ -111,7 +176,9 @@ namespace osu.Game.Rulesets.Objects
         /// </summary>
         /// <param name="controlPoints">The control points of the path.</param>
         /// <returns>The list of bezier control points.</returns>
-        public static List<PathControlPoint> ConvertToModernBezier(IList<PathControlPoint> controlPoints)
+        public static List<PathControlPoint> ConvertToModernBezier(
+            IList<PathControlPoint> controlPoints
+        )
         {
             Vector2[] vertices = new Vector2[controlPoints.Count];
             for (int i = 0; i < controlPoints.Count; i++)
@@ -136,7 +203,12 @@ namespace osu.Game.Rulesets.Objects
                         {
                             for (int j = 0; j < segment.Length - 1; j++)
                             {
-                                result.Add(new PathControlPoint(segment[j], j == 0 ? PathType.BEZIER : null));
+                                result.Add(
+                                    new PathControlPoint(
+                                        segment[j],
+                                        j == 0 ? PathType.BEZIER : null
+                                    )
+                                );
                             }
                         }
 
@@ -147,7 +219,12 @@ namespace osu.Game.Rulesets.Objects
                         {
                             for (int j = 0; j < segment.Length - 1; j++)
                             {
-                                result.Add(new PathControlPoint(segment[j], j == 0 ? PathType.BEZIER : null));
+                                result.Add(
+                                    new PathControlPoint(
+                                        segment[j],
+                                        j == 0 ? PathType.BEZIER : null
+                                    )
+                                );
                             }
                         }
 
@@ -158,25 +235,43 @@ namespace osu.Game.Rulesets.Objects
 
                         for (int j = 0; j < circleResult.Length - 1; j++)
                         {
-                            result.Add(new PathControlPoint(circleResult[j], j == 0 ? PathType.BEZIER : null));
+                            result.Add(
+                                new PathControlPoint(
+                                    circleResult[j],
+                                    j == 0 ? PathType.BEZIER : null
+                                )
+                            );
                         }
 
                         break;
 
                     case SplineType.BSpline:
-                        var bSplineResult = segmentType.Degree == null
-                            ? segmentVertices
-                            : PathApproximator.BSplineToBezier(segmentVertices, segmentType.Degree.Value);
+                        var bSplineResult =
+                            segmentType.Degree == null
+                                ? segmentVertices
+                                : PathApproximator.BSplineToBezier(
+                                    segmentVertices,
+                                    segmentType.Degree.Value
+                                );
 
                         for (int j = 0; j < bSplineResult.Length - 1; j++)
                         {
-                            result.Add(new PathControlPoint(bSplineResult[j], j == 0 ? PathType.BEZIER : null));
+                            result.Add(
+                                new PathControlPoint(
+                                    bSplineResult[j],
+                                    j == 0 ? PathType.BEZIER : null
+                                )
+                            );
                         }
 
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(segmentType.Type), segmentType.Type, "Unsupported segment type found when converting to legacy Bezier");
+                        throw new ArgumentOutOfRangeException(
+                            nameof(segmentType.Type),
+                            segmentType.Type,
+                            "Unsupported segment type found when converting to legacy Bezier"
+                        );
                 }
 
                 // Start the new segment at the current vertex
@@ -205,7 +300,8 @@ namespace osu.Game.Rulesets.Objects
 
             foreach (CircleBezierPreset cbp in circle_presets)
             {
-                if (cbp.ArcLength < pr.ThetaRange) continue;
+                if (cbp.ArcLength < pr.ThetaRange)
+                    continue;
 
                 preset = cbp;
                 break;
@@ -245,8 +341,21 @@ namespace osu.Game.Rulesets.Objects
             for (int i = 0; i < arc.Length; i++)
             {
                 result[i] = new Vector2(
-                    (float)((Math.Cos(pr.ThetaStart) * arc[i].X + -Math.Sin(pr.ThetaStart) * pr.Direction * arc[i].Y) * pr.Radius + pr.Centre.X),
-                    (float)((Math.Sin(pr.ThetaStart) * arc[i].X + Math.Cos(pr.ThetaStart) * pr.Direction * arc[i].Y) * pr.Radius + pr.Centre.Y));
+                    (float)(
+                        (
+                            Math.Cos(pr.ThetaStart) * arc[i].X
+                            + -Math.Sin(pr.ThetaStart) * pr.Direction * arc[i].Y
+                        ) * pr.Radius
+                        + pr.Centre.X
+                    ),
+                    (float)(
+                        (
+                            Math.Sin(pr.ThetaStart) * arc[i].X
+                            + Math.Cos(pr.ThetaStart) * pr.Direction * arc[i].Y
+                        ) * pr.Radius
+                        + pr.Centre.Y
+                    )
+                );
             }
 
             return result;
@@ -268,13 +377,7 @@ namespace osu.Game.Rulesets.Objects
                 var v3 = i < iLen - 1 ? controlPoints[i + 1] : v2 + v2 - v1;
                 var v4 = i < iLen - 2 ? controlPoints[i + 2] : v3 + v3 - v2;
 
-                bezier[i] = new[]
-                {
-                    v2,
-                    (-v1 + 6 * v2 + v3) / 6,
-                    (-v4 + 6 * v3 + v2) / 6,
-                    v3
-                };
+                bezier[i] = new[] { v2, (-v1 + 6 * v2 + v3) / 6, (-v4 + 6 * v3 + v2) / 6, v3 };
             }
 
             return bezier;
@@ -291,11 +394,7 @@ namespace osu.Game.Rulesets.Objects
 
             for (int i = 0; i < iLen - 1; i++)
             {
-                bezier[i] = new[]
-                {
-                    controlPoints[i],
-                    controlPoints[i + 1]
-                };
+                bezier[i] = new[] { controlPoints[i], controlPoints[i + 1] };
             }
 
             return bezier;

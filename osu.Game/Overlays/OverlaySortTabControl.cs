@@ -3,24 +3,24 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Graphics.Sprites;
-using osu.Game.Graphics;
-using osuTK;
-using osu.Game.Graphics.UserInterface;
-using osu.Framework.Input.Events;
-using osu.Framework.Bindables;
-using osu.Framework.Allocation;
-using osu.Game.Graphics.Sprites;
-using osuTK.Graphics;
-using osu.Game.Overlays.Comments;
-using JetBrains.Annotations;
 using System;
+using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Overlays.Comments;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -47,28 +47,31 @@ namespace osu.Game.Overlays
         public OverlaySortTabControl()
         {
             AutoSizeAxes = Axes.Both;
-            AddInternal(new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Horizontal,
-                Spacing = new Vector2(10, 0),
-                Children = new Drawable[]
+            AddInternal(
+                new FillFlowContainer
                 {
-                    text = new OsuSpriteText
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Horizontal,
+                    Spacing = new Vector2(10, 0),
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                        Text = SortStrings.Default
+                        text = new OsuSpriteText
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                            Text = SortStrings.Default,
+                        },
+                        TabControl = CreateControl()
+                            .With(c =>
+                            {
+                                c.Anchor = Anchor.CentreLeft;
+                                c.Origin = Anchor.CentreLeft;
+                                c.Current = current;
+                            }),
                     },
-                    TabControl = CreateControl().With(c =>
-                    {
-                        c.Anchor = Anchor.CentreLeft;
-                        c.Origin = Anchor.CentreLeft;
-                        c.Current = current;
-                    })
                 }
-            });
+            );
         }
 
         [NotNull]
@@ -80,12 +83,13 @@ namespace osu.Game.Overlays
 
             protected override TabItem<T> CreateTabItem(T value) => new SortTabItem(value);
 
-            protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Horizontal,
-                Spacing = new Vector2(5, 0),
-            };
+            protected override TabFillFlowContainer CreateTabFlow() =>
+                new TabFillFlowContainer
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Horizontal,
+                    Spacing = new Vector2(5, 0),
+                };
 
             public SortTabControl()
             {
@@ -103,18 +107,12 @@ namespace osu.Game.Overlays
             }
 
             [NotNull]
-            protected virtual TabButton CreateTabButton(T value) => new TabButton(value)
-            {
-                Active = { BindTarget = Active }
-            };
+            protected virtual TabButton CreateTabButton(T value) =>
+                new TabButton(value) { Active = { BindTarget = Active } };
 
-            protected override void OnActivated()
-            {
-            }
+            protected override void OnActivated() { }
 
-            protected override void OnDeactivated()
-            {
-            }
+            protected override void OnDeactivated() { }
         }
 
         public partial class TabButton : HeaderButton
@@ -136,22 +134,26 @@ namespace osu.Game.Overlays
 
             public TabButton(T value)
             {
-                base.Content.Add(content = new FillFlowContainer
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(3, 0),
-                    Children = new Drawable[]
+                base.Content.Add(
+                    content = new FillFlowContainer
                     {
-                        text = new OsuSpriteText
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(3, 0),
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                            Text = (value as Enum)?.GetLocalisableDescription() ?? value.ToString()
-                        }
+                            text = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                                Text =
+                                    (value as Enum)?.GetLocalisableDescription()
+                                    ?? value.ToString(),
+                            },
+                        },
                     }
-                });
+                );
 
                 AddInternal(new HoverClickSounds(HoverSampleSet.TabSelect));
             }
@@ -179,7 +181,9 @@ namespace osu.Game.Overlays
 
                 ContentColour = Active.Value && !IsHovered ? colourProvider.Light1 : Color4.White;
 
-                text.Font = text.Font.With(weight: Active.Value ? FontWeight.Bold : FontWeight.SemiBold);
+                text.Font = text.Font.With(
+                    weight: Active.Value ? FontWeight.Bold : FontWeight.SemiBold
+                );
             }
         }
     }

@@ -77,9 +77,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                 audioContainer = new AudioContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = gameplayContent = new DrawSizePreservingFillContainer { RelativeSizeAxes = Axes.Both },
+                    Child = gameplayContent =
+                        new DrawSizePreservingFillContainer { RelativeSizeAxes = Axes.Both },
                 },
-                loadingLayer = new LoadingLayer(true) { State = { Value = Visibility.Visible } }
+                loadingLayer = new LoadingLayer(true) { State = { Value = Visibility.Visible } },
             };
 
             audioContainer.AddAdjustment(AdjustableProperty.Volume, volumeAdjustment);
@@ -88,7 +89,9 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
         public void LoadScore(Score score)
         {
             if (Score != null)
-                throw new InvalidOperationException($"Cannot load a new score on a {nameof(PlayerArea)} that has an existing score.");
+                throw new InvalidOperationException(
+                    $"Cannot load a new score on a {nameof(PlayerArea)} that has an existing score."
+                );
 
             Score = score;
 
@@ -100,24 +103,30 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             if (!workingBeatmap.TrackLoaded)
                 loadedTrack = workingBeatmap.LoadTrack();
 
-            gameplayContent.Child = new PlayerIsolationContainer(workingBeatmap, Score.ScoreInfo.Ruleset, Score.ScoreInfo.Mods)
+            gameplayContent.Child = new PlayerIsolationContainer(
+                workingBeatmap,
+                Score.ScoreInfo.Ruleset,
+                Score.ScoreInfo.Mods
+            )
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = stack = new OsuScreenStack
-                {
-                    Name = nameof(PlayerArea),
-                }
+                Child = stack = new OsuScreenStack { Name = nameof(PlayerArea) },
             };
 
-            stack.Push(new MultiSpectatorPlayerLoader(Score, () =>
-            {
-                var player = new MultiSpectatorPlayer(Score, SpectatorPlayerClock);
-                player.OnGameplayStarted += () => OnGameplayStarted?.Invoke();
+            stack.Push(
+                new MultiSpectatorPlayerLoader(
+                    Score,
+                    () =>
+                    {
+                        var player = new MultiSpectatorPlayer(Score, SpectatorPlayerClock);
+                        player.OnGameplayStarted += () => OnGameplayStarted?.Invoke();
 
-                clockAdjustmentsFromMods.BindAdjustments(player.ClockAdjustmentsFromMods);
+                        clockAdjustmentsFromMods.BindAdjustments(player.ClockAdjustmentsFromMods);
 
-                return player;
-            }));
+                        return player;
+                    }
+                )
+            );
 
             loadingLayer.Hide();
         }
@@ -165,14 +174,20 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             [Cached(typeof(IBindable<IReadOnlyList<Mod>>))]
             private readonly Bindable<IReadOnlyList<Mod>> mods = new Bindable<IReadOnlyList<Mod>>();
 
-            public PlayerIsolationContainer(WorkingBeatmap beatmap, RulesetInfo ruleset, IReadOnlyList<Mod> mods)
+            public PlayerIsolationContainer(
+                WorkingBeatmap beatmap,
+                RulesetInfo ruleset,
+                IReadOnlyList<Mod> mods
+            )
             {
                 this.beatmap.Value = beatmap;
                 this.ruleset.Value = ruleset;
                 this.mods.Value = mods;
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
                 dependencies.CacheAs(ruleset.BeginLease(false));

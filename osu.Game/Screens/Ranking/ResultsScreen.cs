@@ -37,7 +37,9 @@ using osuTK;
 namespace osu.Game.Screens.Ranking
 {
     [Cached]
-    public abstract partial class ResultsScreen : ScreenWithBeatmapBackground, IKeyBindingHandler<GlobalAction>
+    public abstract partial class ResultsScreen
+        : ScreenWithBeatmapBackground,
+            IKeyBindingHandler<GlobalAction>
     {
         protected const float BACKGROUND_BLUR = 20;
         private static readonly float screen_height = 768 - TwoLayerButton.SIZE_EXTENDED.Y;
@@ -46,7 +48,8 @@ namespace osu.Game.Screens.Ranking
 
         public override bool? AllowGlobalTrackControl => true;
 
-        protected override OverlayActivation InitialOverlayActivationMode => OverlayActivation.UserTriggered;
+        protected override OverlayActivation InitialOverlayActivationMode =>
+            OverlayActivation.UserTriggered;
 
         public readonly Bindable<ScoreInfo?> SelectedScore = new Bindable<ScoreInfo?>();
 
@@ -87,7 +90,9 @@ namespace osu.Game.Screens.Ranking
         private Sample? popInSample;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         protected ResultsScreen(ScoreInfo? score)
         {
@@ -127,20 +132,22 @@ namespace osu.Game.Screens.Ranking
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             Score = { BindTarget = SelectedScore },
-                                            AchievedScore = IsLocalPlay && Score != null ? Score : null,
+                                            AchievedScore =
+                                                IsLocalPlay && Score != null ? Score : null,
                                         },
                                         ScorePanelList = new ScorePanelList
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             SelectedScore = { BindTarget = SelectedScore },
-                                            PostExpandAction = () => StatisticsPanel.ToggleVisibility()
+                                            PostExpandAction = () =>
+                                                StatisticsPanel.ToggleVisibility(),
                                         },
                                         detachedPanelContainer = new Container<ScorePanel>
                                         {
-                                            RelativeSizeAxes = Axes.Both
+                                            RelativeSizeAxes = Axes.Both,
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
                         },
                         new[]
@@ -157,7 +164,7 @@ namespace osu.Game.Screens.Ranking
                                     new Box
                                     {
                                         RelativeSizeAxes = Axes.Both,
-                                        Colour = Color4Extensions.FromHex("#333")
+                                        Colour = Color4Extensions.FromHex("#333"),
                                     },
                                     buttons = new FillFlowContainer
                                     {
@@ -165,18 +172,14 @@ namespace osu.Game.Screens.Ranking
                                         Origin = Anchor.Centre,
                                         AutoSizeAxes = Axes.Both,
                                         Spacing = new Vector2(5),
-                                        Direction = FillDirection.Horizontal
+                                        Direction = FillDirection.Horizontal,
                                     },
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
-                    RowDimensions = new[]
-                    {
-                        new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize)
-                    }
-                }
+                    RowDimensions = new[] { new Dimension(), new Dimension(GridSizeMode.AutoSize) },
+                },
             };
 
             if (Score != null)
@@ -188,18 +191,23 @@ namespace osu.Game.Screens.Ranking
                 // this is mostly for medal display.
                 // we don't want the medal animation to trample on the results screen animation, so we (ab)use `OverlayActivationMode`
                 // to give the results screen enough time to play the animation out before the medals can be shown.
-                Scheduler.AddDelayed(() => OverlayActivationMode.Value = OverlayActivation.All, shouldFlair ? AccuracyCircle.TOTAL_DURATION + 1000 : 0);
+                Scheduler.AddDelayed(
+                    () => OverlayActivationMode.Value = OverlayActivation.All,
+                    shouldFlair ? AccuracyCircle.TOTAL_DURATION + 1000 : 0
+                );
             }
 
             bool allowHotkeyRetry = false;
 
             if (AllowWatchingReplay)
             {
-                buttons.Add(new ReplayDownloadButton(SelectedScore.Value)
-                {
-                    Score = { BindTarget = SelectedScore },
-                    Width = 300
-                });
+                buttons.Add(
+                    new ReplayDownloadButton(SelectedScore.Value)
+                    {
+                        Score = { BindTarget = SelectedScore },
+                        Width = 300,
+                    }
+                );
 
                 // for simplicity, only allow this when coming from a replay player where we know the replay is ready to be played.
                 //
@@ -216,16 +224,19 @@ namespace osu.Game.Screens.Ranking
 
             if (allowHotkeyRetry)
             {
-                AddInternal(new HotkeyRetryOverlay
-                {
-                    Action = () =>
+                AddInternal(
+                    new HotkeyRetryOverlay
                     {
-                        if (!this.IsCurrentScreen()) return;
+                        Action = () =>
+                        {
+                            if (!this.IsCurrentScreen())
+                                return;
 
-                        skipExitTransition = true;
-                        player?.Restart(true);
-                    },
-                });
+                            skipExitTransition = true;
+                            player?.Restart(true);
+                        },
+                    }
+                );
             }
 
             if (Score?.BeatmapInfo != null)
@@ -300,16 +311,21 @@ namespace osu.Game.Screens.Ranking
                     break;
             }
 
-            LoadComponentAsync(rankApplauseSound = new PoolableSkinnableSample(new SampleInfo(applauseSamples.ToArray())), s =>
-            {
-                if (!this.IsCurrentScreen() || s != rankApplauseSound)
-                    return;
+            LoadComponentAsync(
+                rankApplauseSound = new PoolableSkinnableSample(
+                    new SampleInfo(applauseSamples.ToArray())
+                ),
+                s =>
+                {
+                    if (!this.IsCurrentScreen() || s != rankApplauseSound)
+                        return;
 
-                AddInternal(rankApplauseSound);
+                    AddInternal(rankApplauseSound);
 
-                rankApplauseSound.VolumeTo(applause_volume);
-                rankApplauseSound.Play();
-            });
+                    rankApplauseSound.VolumeTo(applause_volume);
+                    rankApplauseSound.Play();
+                }
+            );
         }
 
         #endregion
@@ -354,7 +370,8 @@ namespace osu.Game.Screens.Ranking
         /// Performs a fetch of the next page of scores. This is invoked every frame.
         /// </summary>
         /// <param name="direction">The fetch direction. -1 to fetch scores greater than the current start of the list, and 1 to fetch scores lower than the current end of the list.</param>
-        protected virtual Task<ScoreInfo[]> FetchNextPage(int direction) => Task.FromResult<ScoreInfo[]>([]);
+        protected virtual Task<ScoreInfo[]> FetchNextPage(int direction) =>
+            Task.FromResult<ScoreInfo[]>([]);
 
         private Task addScores(ScoreInfo[] scores)
         {
@@ -375,7 +392,9 @@ namespace osu.Game.Screens.Ranking
                 if (ScorePanelList.IsEmpty)
                 {
                     // This can happen if for example a beatmap that is part of a playlist hasn't been played yet.
-                    VerticalScrollContent.Add(new MessagePlaceholder(LeaderboardStrings.NoRecordsYet));
+                    VerticalScrollContent.Add(
+                        new MessagePlaceholder(LeaderboardStrings.NoRecordsYet)
+                    );
                 }
 
                 OnScoresAdded(scores);
@@ -388,9 +407,7 @@ namespace osu.Game.Screens.Ranking
         /// Invoked after online scores are fetched and added to the list.
         /// </summary>
         /// <param name="scores">The scores that were added.</param>
-        protected virtual void OnScoresAdded(ScoreInfo[] scores)
-        {
-        }
+        protected virtual void OnScoresAdded(ScoreInfo[] scores) { }
 
         public override void OnEntering(ScreenTransitionEvent e)
         {
@@ -452,12 +469,17 @@ namespace osu.Game.Screens.Ranking
 
                 // Move into its original location in the local container first, then to the final location.
                 float origLocation = detachedPanelContainer.ToLocalSpace(screenSpacePos).X;
-                expandedPanel.MoveToX(origLocation)
-                             .Then()
-                             .MoveToX(StatisticsPanel.SIDE_PADDING, 400, Easing.OutElasticQuarter);
+                expandedPanel
+                    .MoveToX(origLocation)
+                    .Then()
+                    .MoveToX(StatisticsPanel.SIDE_PADDING, 400, Easing.OutElasticQuarter);
 
                 // Hide contracted panels.
-                foreach (var contracted in ScorePanelList.GetScorePanels().Where(p => p.State == PanelState.Contracted))
+                foreach (
+                    var contracted in ScorePanelList
+                        .GetScorePanels()
+                        .Where(p => p.State == PanelState.Contracted)
+                )
                     contracted.FadeOut(150, Easing.OutQuint);
                 ScorePanelList.HandleInput = false;
 
@@ -476,12 +498,17 @@ namespace osu.Game.Screens.Ranking
 
                 // Move into its original location in the attached container first, then to the final location.
                 float origLocation = detachedPanel.Parent!.ToLocalSpace(screenSpacePos).X;
-                detachedPanel.MoveToX(origLocation)
-                             .Then()
-                             .MoveToX(0, 250, Easing.OutElasticQuarter);
+                detachedPanel
+                    .MoveToX(origLocation)
+                    .Then()
+                    .MoveToX(0, 250, Easing.OutElasticQuarter);
 
                 // Show contracted panels.
-                foreach (var contracted in ScorePanelList.GetScorePanels().Where(p => p.State == PanelState.Contracted))
+                foreach (
+                    var contracted in ScorePanelList
+                        .GetScorePanels()
+                        .Where(p => p.State == PanelState.Contracted)
+                )
                     contracted.FadeIn(150, Easing.OutQuint);
                 ScorePanelList.HandleInput = true;
 
@@ -517,9 +544,7 @@ namespace osu.Game.Screens.Ranking
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         protected override bool OnScroll(ScrollEvent e)
         {
@@ -537,7 +562,8 @@ namespace osu.Game.Screens.Ranking
 
             private readonly Container content;
 
-            protected override bool OnScroll(ScrollEvent e) => !e.ControlPressed && !e.AltPressed && !e.ShiftPressed && !e.SuperPressed;
+            protected override bool OnScroll(ScrollEvent e) =>
+                !e.ControlPressed && !e.AltPressed && !e.ShiftPressed && !e.SuperPressed;
 
             public VerticalScrollContainer()
             {

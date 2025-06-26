@@ -22,11 +22,8 @@ namespace osu.Game.Rulesets.Osu.Tests
     [TestFixture]
     public partial class TestSceneScoring : ScoringTestScene
     {
-        private Bindable<double> scoreMultiplier { get; } = new BindableDouble
-        {
-            Default = 4,
-            Value = 4
-        };
+        private Bindable<double> scoreMultiplier { get; } =
+            new BindableDouble { Default = 4, Value = 4 };
 
         protected override IBeatmap CreateBeatmap(int maxCombo)
         {
@@ -36,46 +33,66 @@ namespace osu.Game.Rulesets.Osu.Tests
             return beatmap;
         }
 
-        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods)
-            => new ScoreV1(selectedMods)
-            {
-                ScoreMultiplier = { BindTarget = scoreMultiplier }
-            };
+        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods) =>
+            new ScoreV1(selectedMods) { ScoreMultiplier = { BindTarget = scoreMultiplier } };
 
-        protected override IScoringAlgorithm CreateScoreV2(int maxCombo, IReadOnlyList<Mod> selectedMods)
-            => new ScoreV2(maxCombo, selectedMods);
+        protected override IScoringAlgorithm CreateScoreV2(
+            int maxCombo,
+            IReadOnlyList<Mod> selectedMods
+        ) => new ScoreV2(maxCombo, selectedMods);
 
-        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> mods)
-            => new OsuProcessorBasedScoringAlgorithm(beatmap, mode, mods);
+        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(
+            IBeatmap beatmap,
+            ScoringMode mode,
+            IReadOnlyList<Mod> mods
+        ) => new OsuProcessorBasedScoringAlgorithm(beatmap, mode, mods);
 
         [Test]
         public void TestBasicScenarios()
         {
-            AddStep("set up score multiplier", () =>
-            {
-                scoreMultiplier.BindValueChanged(_ => Rerun());
-            });
+            AddStep(
+                "set up score multiplier",
+                () =>
+                {
+                    scoreMultiplier.BindValueChanged(_ => Rerun());
+                }
+            );
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
-            AddStep("set perfect score", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-            });
-            AddStep("set score with misses", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-                MissLocations.AddRange(new[] { 24d, 49 });
-            });
-            AddStep("set score with misses and OKs", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
+            AddStep(
+                "set perfect score",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                }
+            );
+            AddStep(
+                "set score with misses",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                    MissLocations.AddRange(new[] { 24d, 49 });
+                }
+            );
+            AddStep(
+                "set score with misses and OKs",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
 
-                NonPerfectLocations.AddRange(new[] { 9d, 19, 29, 39, 59, 69, 79, 89, 99 });
-                MissLocations.AddRange(new[] { 24d, 49 });
-            });
-            AddSliderStep("adjust score multiplier", 0, 10, (int)scoreMultiplier.Default, multiplier => scoreMultiplier.Value = multiplier);
+                    NonPerfectLocations.AddRange(new[] { 9d, 19, 29, 39, 59, 69, 79, 89, 99 });
+                    MissLocations.AddRange(new[] { 24d, 49 });
+                }
+            );
+            AddSliderStep(
+                "adjust score multiplier",
+                0,
+                10,
+                (int)scoreMultiplier.Default,
+                multiplier => scoreMultiplier.Value = multiplier
+            );
         }
 
         private const int base_great = 300;
@@ -91,14 +108,21 @@ namespace osu.Game.Rulesets.Osu.Tests
             public ScoreV1(IReadOnlyList<Mod> selectedMods)
             {
                 var ruleset = new OsuRuleset();
-                modMultiplier = ruleset.CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(selectedMods, new LegacyBeatmapConversionDifficultyInfo
-                {
-                    SourceRuleset = ruleset.RulesetInfo
-                });
+                modMultiplier = ruleset
+                    .CreateLegacyScoreSimulator()
+                    .GetLegacyScoreMultiplier(
+                        selectedMods,
+                        new LegacyBeatmapConversionDifficultyInfo
+                        {
+                            SourceRuleset = ruleset.RulesetInfo,
+                        }
+                    );
             }
 
             public void ApplyHit() => applyHitV1(base_great);
+
             public void ApplyNonPerfect() => applyHitV1(base_ok);
+
             public void ApplyMiss() => applyHitV1(0);
 
             private void applyHitV1(int baseScore)
@@ -113,7 +137,10 @@ namespace osu.Game.Rulesets.Osu.Tests
 
                 // combo multiplier
                 // ReSharper disable once PossibleLossOfFraction
-                TotalScore += (int)(Math.Max(0, currentCombo - 1) * (baseScore / 25 * (ScoreMultiplier.Value * modMultiplier)));
+                TotalScore += (int)(
+                    Math.Max(0, currentCombo - 1)
+                    * (baseScore / 25 * (ScoreMultiplier.Value * modMultiplier))
+                );
 
                 currentCombo++;
             }
@@ -139,12 +166,15 @@ namespace osu.Game.Rulesets.Osu.Tests
                 this.maxCombo = maxCombo;
 
                 var ruleset = new OsuRuleset();
-                modMultiplier = ruleset.CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(
-                    selectedMods.Append(new ModScoreV2()).ToList(),
-                    new LegacyBeatmapConversionDifficultyInfo
-                    {
-                        SourceRuleset = ruleset.RulesetInfo
-                    });
+                modMultiplier = ruleset
+                    .CreateLegacyScoreSimulator()
+                    .GetLegacyScoreMultiplier(
+                        selectedMods.Append(new ModScoreV2()).ToList(),
+                        new LegacyBeatmapConversionDifficultyInfo
+                        {
+                            SourceRuleset = ruleset.RulesetInfo,
+                        }
+                    );
 
                 for (int i = 0; i < this.maxCombo; i++)
                     ApplyHit();
@@ -159,6 +189,7 @@ namespace osu.Game.Rulesets.Osu.Tests
             }
 
             public void ApplyHit() => applyHitV2(base_great);
+
             public void ApplyNonPerfect() => applyHitV2(base_ok);
 
             private void applyHitV2(int baseScore)
@@ -183,26 +214,42 @@ namespace osu.Game.Rulesets.Osu.Tests
                 {
                     double accuracy = currentBaseScore / maxBaseScore;
 
-                    return (int)Math.Round
-                    ((
-                        700000 * comboPortion / comboPortionMax +
-                        300000 * Math.Pow(accuracy, 10) * ((double)currentHits / maxCombo)
-                    ) * modMultiplier);
+                    return (int)
+                        Math.Round(
+                            (
+                                700000 * comboPortion / comboPortionMax
+                                + 300000 * Math.Pow(accuracy, 10) * ((double)currentHits / maxCombo)
+                            ) * modMultiplier
+                        );
                 }
             }
         }
 
         private class OsuProcessorBasedScoringAlgorithm : ProcessorBasedScoringAlgorithm
         {
-            public OsuProcessorBasedScoringAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
-                : base(beatmap, mode, selectedMods)
-            {
-            }
+            public OsuProcessorBasedScoringAlgorithm(
+                IBeatmap beatmap,
+                ScoringMode mode,
+                IReadOnlyList<Mod> selectedMods
+            )
+                : base(beatmap, mode, selectedMods) { }
 
             protected override ScoreProcessor CreateScoreProcessor() => new OsuScoreProcessor();
-            protected override JudgementResult CreatePerfectJudgementResult() => new OsuJudgementResult(new HitCircle(), new OsuJudgement()) { Type = HitResult.Great };
-            protected override JudgementResult CreateNonPerfectJudgementResult() => new OsuJudgementResult(new HitCircle(), new OsuJudgement()) { Type = HitResult.Ok };
-            protected override JudgementResult CreateMissJudgementResult() => new OsuJudgementResult(new HitCircle(), new OsuJudgement()) { Type = HitResult.Miss };
+
+            protected override JudgementResult CreatePerfectJudgementResult() =>
+                new OsuJudgementResult(new HitCircle(), new OsuJudgement())
+                {
+                    Type = HitResult.Great,
+                };
+
+            protected override JudgementResult CreateNonPerfectJudgementResult() =>
+                new OsuJudgementResult(new HitCircle(), new OsuJudgement()) { Type = HitResult.Ok };
+
+            protected override JudgementResult CreateMissJudgementResult() =>
+                new OsuJudgementResult(new HitCircle(), new OsuJudgement())
+                {
+                    Type = HitResult.Miss,
+                };
         }
     }
 }

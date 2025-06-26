@@ -21,9 +21,7 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Skills
         protected override double StrainDecayBase => 0.8;
 
         public Colour(Mod[] mods)
-            : base(mods)
-        {
-        }
+            : base(mods) { }
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {

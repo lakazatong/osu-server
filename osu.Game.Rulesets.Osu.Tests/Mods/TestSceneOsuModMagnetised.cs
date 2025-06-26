@@ -13,15 +13,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [TestCase(1)]
         public void TestMagnetised(float strength)
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModMagnetised
+            CreateModTest(
+                new ModTestData
                 {
-                    AttractionStrength = { Value = strength },
-                },
-                PassCondition = () => true,
-                Autoplay = false,
-            });
+                    Mod = new OsuModMagnetised { AttractionStrength = { Value = strength } },
+                    PassCondition = () => true,
+                    Autoplay = false,
+                }
+            );
         }
     }
 }

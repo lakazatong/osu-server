@@ -33,31 +33,33 @@ namespace osu.Game.Screens.Select
             SelectedColour = colours.Green;
             DeselectedColour = SelectedColour.Opacity(0.5f);
 
-            TextContainer.Add(persistentText = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AlwaysPresent = true,
-                AutoSizeAxes = Axes.Both,
-                Children = new[]
+            TextContainer.Add(
+                persistentText = new Container
                 {
-                    randomSpriteText = new OsuSpriteText
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AlwaysPresent = true,
+                    AutoSizeAxes = Axes.Both,
+                    Children = new[]
                     {
-                        AlwaysPresent = true,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = "random",
+                        randomSpriteText = new OsuSpriteText
+                        {
+                            AlwaysPresent = true,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = "random",
+                        },
+                        rewindSpriteText = new OsuSpriteText
+                        {
+                            AlwaysPresent = true,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = "rewind",
+                            Alpha = 0f,
+                        },
                     },
-                    rewindSpriteText = new OsuSpriteText
-                    {
-                        AlwaysPresent = true,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = "rewind",
-                        Alpha = 0f,
-                    }
                 }
-            });
+            );
 
             Action = () =>
             {
@@ -67,17 +69,21 @@ namespace osu.Game.Screens.Select
 
                     OsuSpriteText fallingRewind;
 
-                    TextContainer.Add(fallingRewind = new OsuSpriteText
-                    {
-                        Alpha = 0,
-                        Text = rewindSpriteText.Text,
-                        AlwaysPresent = true, // make sure the button is sized large enough to always show this
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    });
+                    TextContainer.Add(
+                        fallingRewind = new OsuSpriteText
+                        {
+                            Alpha = 0,
+                            Text = rewindSpriteText.Text,
+                            AlwaysPresent = true, // make sure the button is sized large enough to always show this
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+                    );
 
                     fallingRewind.FadeOutFromOne(fade_time, Easing.In);
-                    fallingRewind.MoveTo(Vector2.Zero).MoveTo(new Vector2(0, 10), fade_time, Easing.In);
+                    fallingRewind
+                        .MoveTo(Vector2.Zero)
+                        .MoveTo(new Vector2(0, 10), fade_time, Easing.In);
                     fallingRewind.Expire();
 
                     persistentText.FadeInFromZero(fade_time, Easing.In);
@@ -140,7 +146,10 @@ namespace osu.Game.Screens.Select
         {
             rewindSearch = e.Action == GlobalAction.SelectPreviousRandom;
 
-            if (e.Action != GlobalAction.SelectNextRandom && e.Action != GlobalAction.SelectPreviousRandom)
+            if (
+                e.Action != GlobalAction.SelectNextRandom
+                && e.Action != GlobalAction.SelectPreviousRandom
+            )
             {
                 return false;
             }
@@ -160,7 +169,8 @@ namespace osu.Game.Screens.Select
 
         private void updateText(UIEvent e)
         {
-            bool aboutToRewind = e.ShiftPressed || e.CurrentState.Mouse.IsPressed(MouseButton.Right);
+            bool aboutToRewind =
+                e.ShiftPressed || e.CurrentState.Mouse.IsPressed(MouseButton.Right);
 
             randomSpriteText.Alpha = aboutToRewind ? 0 : 1;
             rewindSpriteText.Alpha = aboutToRewind ? 1 : 0;

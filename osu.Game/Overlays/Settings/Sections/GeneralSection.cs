@@ -21,10 +21,7 @@ namespace osu.Game.Overlays.Settings.Sections
 
         public override LocalisableString Header => CommonStrings.General;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Settings
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Settings };
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -34,7 +31,15 @@ namespace osu.Game.Overlays.Settings.Sections
                 new SettingsButton
                 {
                     Text = GeneralSettingsStrings.RunSetupWizard,
-                    Keywords = new[] { @"first run", @"initial", @"getting started", @"import", @"tutorial", @"recommended beatmaps" },
+                    Keywords = new[]
+                    {
+                        @"first run",
+                        @"initial",
+                        @"getting started",
+                        @"import",
+                        @"tutorial",
+                        @"recommended beatmaps",
+                    },
                     TooltipText = FirstRunSetupOverlayStrings.FirstRunSetupDescription,
                     Action = () => firstRunSetupOverlay?.Show(),
                 },
@@ -43,7 +48,7 @@ namespace osu.Game.Overlays.Settings.Sections
                     Text = GeneralSettingsStrings.LearnMoreAboutLazer,
                     TooltipText = GeneralSettingsStrings.LearnMoreAboutLazerTooltip,
                     BackgroundColour = colours.YellowDark,
-                    Action = () => game?.ShowWiki(@"Help_centre/Upgrading_to_lazer")
+                    Action = () => game?.ShowWiki(@"Help_centre/Upgrading_to_lazer"),
                 },
                 new LanguageSettings(),
                 new UpdateSettings(),

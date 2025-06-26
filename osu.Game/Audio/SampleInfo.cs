@@ -29,13 +29,13 @@ namespace osu.Game.Audio
         {
             return HashCode.Combine(
                 StructuralComparisons.StructuralEqualityComparer.GetHashCode(sampleNames),
-                Volume);
+                Volume
+            );
         }
 
-        public bool Equals(SampleInfo? other)
-            => other != null && sampleNames.SequenceEqual(other.sampleNames);
+        public bool Equals(SampleInfo? other) =>
+            other != null && sampleNames.SequenceEqual(other.sampleNames);
 
-        public override bool Equals(object? obj)
-            => obj is SampleInfo other && Equals(other);
+        public override bool Equals(object? obj) => obj is SampleInfo other && Equals(other);
     }
 }

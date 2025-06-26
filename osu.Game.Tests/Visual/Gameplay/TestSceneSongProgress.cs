@@ -36,22 +36,25 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             FrameStabilityContainer frameStabilityContainer;
 
-            AddRange(new Drawable[]
-            {
-                background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue
-                },
-                gameplayClockContainer = new MasterGameplayClockContainer(Beatmap.Value, skip_target_time)
-                {
-                    Child = frameStabilityContainer = new FrameStabilityContainer
+                    background = new Box
                     {
-                        Child = new FakeLoad()
-                    }
+                        Colour = Color4.Black,
+                        RelativeSizeAxes = Axes.Both,
+                        Depth = float.MaxValue,
+                    },
+                    gameplayClockContainer = new MasterGameplayClockContainer(
+                        Beatmap.Value,
+                        skip_target_time
+                    )
+                    {
+                        Child = frameStabilityContainer =
+                            new FrameStabilityContainer { Child = new FakeLoad() },
+                    },
                 }
-            });
+            );
 
             Dependencies.CacheAs<IGameplayClock>(gameplayClockContainer);
             Dependencies.CacheAs<IFrameStableClock>(frameStabilityContainer);
@@ -70,12 +73,26 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void SetupSteps()
         {
             AddStep("reset clock", () => gameplayClockContainer.Reset());
-            AddStep("set hit objects", () => this.ChildrenOfType<SongProgress>().ForEach(progress => progress.Objects = Beatmap.Value.Beatmap.HitObjects));
-            AddStep("hook seeking", () =>
-            {
-                applyToDefaultProgress(d => d.ChildrenOfType<DefaultSongProgressBar>().Single().OnSeek += t => gameplayClockContainer.Seek(t));
-                applyToArgonProgress(d => d.ChildrenOfType<ArgonSongProgressBar>().Single().OnSeek += t => gameplayClockContainer.Seek(t));
-            });
+            AddStep(
+                "set hit objects",
+                () =>
+                    this.ChildrenOfType<SongProgress>()
+                        .ForEach(progress => progress.Objects = Beatmap.Value.Beatmap.HitObjects)
+            );
+            AddStep(
+                "hook seeking",
+                () =>
+                {
+                    applyToDefaultProgress(d =>
+                        d.ChildrenOfType<DefaultSongProgressBar>().Single().OnSeek += t =>
+                            gameplayClockContainer.Seek(t)
+                    );
+                    applyToArgonProgress(d =>
+                        d.ChildrenOfType<ArgonSongProgressBar>().Single().OnSeek += t =>
+                            gameplayClockContainer.Seek(t)
+                    );
+                }
+            );
             AddStep("seek to intro", () => gameplayClockContainer.Seek(skip_target_time));
             AddStep("start", () => gameplayClockContainer.Start());
         }
@@ -83,20 +100,37 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestBasic()
         {
-            AddToggleStep("toggle seeking", b =>
-            {
-                applyToDefaultProgress(s => s.Interactive.Value = b);
-                applyToArgonProgress(s => s.Interactive.Value = b);
-            });
+            AddToggleStep(
+                "toggle seeking",
+                b =>
+                {
+                    applyToDefaultProgress(s => s.Interactive.Value = b);
+                    applyToArgonProgress(s => s.Interactive.Value = b);
+                }
+            );
 
-            AddToggleStep("toggle graph", b =>
-            {
-                applyToDefaultProgress(s => s.ShowGraph.Value = b);
-                applyToArgonProgress(s => s.ShowGraph.Value = b);
-            });
+            AddToggleStep(
+                "toggle graph",
+                b =>
+                {
+                    applyToDefaultProgress(s => s.ShowGraph.Value = b);
+                    applyToArgonProgress(s => s.ShowGraph.Value = b);
+                }
+            );
 
-            AddStep("set white background", () => background.FadeColour(Color4.White, 200, Easing.OutQuint));
-            AddStep("randomise background colour", () => background.FadeColour(new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1), 200, Easing.OutQuint));
+            AddStep(
+                "set white background",
+                () => background.FadeColour(Color4.White, 200, Easing.OutQuint)
+            );
+            AddStep(
+                "randomise background colour",
+                () =>
+                    background.FadeColour(
+                        new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1),
+                        200,
+                        Easing.OutQuint
+                    )
+            );
 
             AddStep("stop", gameplayClockContainer.Stop);
         }

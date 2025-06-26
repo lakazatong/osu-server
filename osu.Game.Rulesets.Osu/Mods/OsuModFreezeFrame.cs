@@ -24,7 +24,17 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override LocalisableString Description => "Burn the notes into your memory.";
 
         //Alters the transforms of the approach circles, breaking the effects of these mods.
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(OsuModApproachDifferent), typeof(OsuModTransform), typeof(OsuModDepth) }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(
+                    new[]
+                    {
+                        typeof(OsuModApproachDifferent),
+                        typeof(OsuModTransform),
+                        typeof(OsuModDepth),
+                    }
+                )
+                .ToArray();
 
         public override ModType Type => ModType.Fun;
 
@@ -77,7 +87,8 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             drawableObject.ApplyCustomUpdateState += (drawableHitObject, _) =>
             {
-                if (drawableHitObject is not DrawableHitCircle drawableHitCircle) return;
+                if (drawableHitObject is not DrawableHitCircle drawableHitCircle)
+                    return;
 
                 var hitCircle = drawableHitCircle.HitObject;
                 var approachCircle = drawableHitCircle.ApproachCircle;
@@ -86,7 +97,11 @@ namespace osu.Game.Rulesets.Osu.Mods
                 approachCircle.ClearTransforms(targetMember: nameof(approachCircle.Scale));
                 approachCircle.ScaleTo(4 * (float)(hitCircle.TimePreempt / originalPreempt));
 
-                using (drawableHitCircle.ApproachCircle.BeginAbsoluteSequence(hitCircle.StartTime - hitCircle.TimePreempt))
+                using (
+                    drawableHitCircle.ApproachCircle.BeginAbsoluteSequence(
+                        hitCircle.StartTime - hitCircle.TimePreempt
+                    )
+                )
                     approachCircle.ScaleTo(1, hitCircle.TimePreempt).Then().Expire();
             };
         }

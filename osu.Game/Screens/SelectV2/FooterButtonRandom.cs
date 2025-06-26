@@ -32,33 +32,35 @@ namespace osu.Game.Screens.SelectV2
             //TODO: use https://fontawesome.com/icons/shuffle?s=solid&f=classic when local Fontawesome is updated
             Icon = FontAwesome.Solid.Random;
             AccentColour = colour.Blue1;
-            TextContainer.Add(persistentText = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AlwaysPresent = true,
-                AutoSizeAxes = Axes.Both,
-                Children = new[]
+            TextContainer.Add(
+                persistentText = new Container
                 {
-                    randomSpriteText = new OsuSpriteText
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AlwaysPresent = true,
+                    AutoSizeAxes = Axes.Both,
+                    Children = new[]
                     {
-                        Font = OsuFont.TorusAlternate.With(size: 16),
-                        AlwaysPresent = true,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Text = "Random",
+                        randomSpriteText = new OsuSpriteText
+                        {
+                            Font = OsuFont.TorusAlternate.With(size: 16),
+                            AlwaysPresent = true,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Text = "Random",
+                        },
+                        rewindSpriteText = new OsuSpriteText
+                        {
+                            Font = OsuFont.TorusAlternate.With(size: 16),
+                            AlwaysPresent = true,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Text = "Rewind",
+                            Alpha = 0f,
+                        },
                     },
-                    rewindSpriteText = new OsuSpriteText
-                    {
-                        Font = OsuFont.TorusAlternate.With(size: 16),
-                        AlwaysPresent = true,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Text = "Rewind",
-                        Alpha = 0f,
-                    }
                 }
-            });
+            );
 
             Action = () =>
             {
@@ -68,18 +70,22 @@ namespace osu.Game.Screens.SelectV2
 
                     OsuSpriteText fallingRewind;
 
-                    TextContainer.Add(fallingRewind = new OsuSpriteText
-                    {
-                        Alpha = 0,
-                        Text = rewindSpriteText.Text,
-                        AlwaysPresent = true, // make sure the button is sized large enough to always show this
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        Font = OsuFont.TorusAlternate.With(size: 16),
-                    });
+                    TextContainer.Add(
+                        fallingRewind = new OsuSpriteText
+                        {
+                            Alpha = 0,
+                            Text = rewindSpriteText.Text,
+                            AlwaysPresent = true, // make sure the button is sized large enough to always show this
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            Font = OsuFont.TorusAlternate.With(size: 16),
+                        }
+                    );
 
                     fallingRewind.FadeOutFromOne(fade_time, Easing.In);
-                    fallingRewind.MoveTo(Vector2.Zero).MoveTo(new Vector2(0, 10), fade_time, Easing.In);
+                    fallingRewind
+                        .MoveTo(Vector2.Zero)
+                        .MoveTo(new Vector2(0, 10), fade_time, Easing.In);
                     fallingRewind.Expire();
 
                     persistentText.FadeInFromZero(fade_time, Easing.In);
@@ -135,7 +141,10 @@ namespace osu.Game.Screens.SelectV2
         {
             rewindSearch = e.Action == GlobalAction.SelectPreviousRandom;
 
-            if (e.Action != GlobalAction.SelectNextRandom && e.Action != GlobalAction.SelectPreviousRandom)
+            if (
+                e.Action != GlobalAction.SelectNextRandom
+                && e.Action != GlobalAction.SelectPreviousRandom
+            )
             {
                 return false;
             }

@@ -102,15 +102,15 @@ namespace osu.Game.Tournament
                                 new SeedingScreen(),
                                 new DrawingsScreen(),
                                 new GameplayScreen(),
-                                new TeamWinScreen()
-                            }
+                                new TeamWinScreen(),
+                            },
                         },
                         chatContainer = new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = chat
+                            Child = chat,
                         },
-                    }
+                    },
                 },
                 new Container
                 {
@@ -118,11 +118,7 @@ namespace osu.Game.Tournament
                     Width = CONTROL_AREA_WIDTH,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                         buttons = new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -131,26 +127,78 @@ namespace osu.Game.Tournament
                             Padding = new MarginPadding(5),
                             Children = new Drawable[]
                             {
-                                new ScreenButton(typeof(SetupScreen)) { Text = "Setup", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(SetupScreen))
+                                {
+                                    Text = "Setup",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(TeamEditorScreen)) { Text = "Team Editor", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(RoundEditorScreen)) { Text = "Rounds Editor", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(LadderEditorScreen)) { Text = "Bracket Editor", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(TeamEditorScreen))
+                                {
+                                    Text = "Team Editor",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(RoundEditorScreen))
+                                {
+                                    Text = "Rounds Editor",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(LadderEditorScreen))
+                                {
+                                    Text = "Bracket Editor",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(ScheduleScreen), Key.S) { Text = "Schedule", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(LadderScreen), Key.B) { Text = "Bracket", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(ScheduleScreen), Key.S)
+                                {
+                                    Text = "Schedule",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(LadderScreen), Key.B)
+                                {
+                                    Text = "Bracket",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(TeamIntroScreen), Key.I) { Text = "Team Intro", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(SeedingScreen), Key.D) { Text = "Seeding", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(TeamIntroScreen), Key.I)
+                                {
+                                    Text = "Team Intro",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(SeedingScreen), Key.D)
+                                {
+                                    Text = "Seeding",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(MapPoolScreen), Key.M) { Text = "Map Pool", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(GameplayScreen), Key.G) { Text = "Gameplay", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(MapPoolScreen), Key.M)
+                                {
+                                    Text = "Map Pool",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(GameplayScreen), Key.G)
+                                {
+                                    Text = "Gameplay",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(TeamWinScreen), Key.W) { Text = "Win", RequestSelection = SetScreen },
+                                new ScreenButton(typeof(TeamWinScreen), Key.W)
+                                {
+                                    Text = "Win",
+                                    RequestSelection = SetScreen,
+                                },
                                 new Separator(),
-                                new ScreenButton(typeof(DrawingsScreen)) { Text = "Drawings", RequestSelection = SetScreen },
-                                new ScreenButton(typeof(ShowcaseScreen)) { Text = "Showcase", RequestSelection = SetScreen },
-                            }
+                                new ScreenButton(typeof(DrawingsScreen))
+                                {
+                                    Text = "Drawings",
+                                    RequestSelection = SetScreen,
+                                },
+                                new ScreenButton(typeof(ShowcaseScreen))
+                                {
+                                    Text = "Showcase",
+                                    RequestSelection = SetScreen,
+                                },
+                            },
                         },
                     },
                 },
@@ -183,7 +231,8 @@ namespace osu.Game.Tournament
 
             var target = screens.FirstOrDefault(s => s.GetType() == screenType);
 
-            if (target == null || currentScreen == target) return;
+            if (target == null || currentScreen == target)
+                return;
 
             if (scheduledHide?.Completed == false)
             {
@@ -195,12 +244,18 @@ namespace osu.Game.Tournament
             var lastScreen = currentScreen;
             currentScreen = target;
 
-            if (currentScreen.ChildrenOfType<TourneyVideo>().FirstOrDefault()?.VideoAvailable == true)
+            if (
+                currentScreen.ChildrenOfType<TourneyVideo>().FirstOrDefault()?.VideoAvailable
+                == true
+            )
             {
                 video.FadeOut(200);
 
                 // delay the hide to avoid a double-fade transition.
-                scheduledHide = Scheduler.AddDelayed(() => lastScreen?.Hide(), TournamentScreen.FADE_DELAY);
+                scheduledHide = Scheduler.AddDelayed(
+                    () => lastScreen?.Hide(),
+                    TournamentScreen.FADE_DELAY
+                );
             }
             else
             {
@@ -260,32 +315,34 @@ namespace osu.Game.Tournament
 
                 if (shortcutKey != null)
                 {
-                    Add(new CircularContainer
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Size = new Vector2(24),
-                        Margin = new MarginPadding(5),
-                        Masking = true,
-                        Alpha = 0.5f,
-                        Blending = BlendingParameters.Additive,
-                        Children = new Drawable[]
+                    Add(
+                        new CircularContainer
                         {
-                            new Box
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Size = new Vector2(24),
+                            Margin = new MarginPadding(5),
+                            Masking = true,
+                            Alpha = 0.5f,
+                            Blending = BlendingParameters.Additive,
+                            Children = new Drawable[]
                             {
-                                Colour = OsuColour.Gray(0.1f),
-                                RelativeSizeAxes = Axes.Both,
+                                new Box
+                                {
+                                    Colour = OsuColour.Gray(0.1f),
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                                new OsuSpriteText
+                                {
+                                    Font = OsuFont.Default.With(size: 24),
+                                    Y = -2,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = shortcutKey.Value.ToString(),
+                                },
                             },
-                            new OsuSpriteText
-                            {
-                                Font = OsuFont.Default.With(size: 24),
-                                Y = -2,
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Text = shortcutKey.Value.ToString(),
-                            }
                         }
-                    });
+                    );
                 }
             }
 

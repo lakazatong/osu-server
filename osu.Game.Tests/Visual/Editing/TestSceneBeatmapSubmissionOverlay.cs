@@ -16,30 +16,30 @@ namespace osu.Game.Tests.Visual.Editing
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("add overlay", () =>
-            {
-                var receptor = new ScreenFooter.BackReceptor();
-                footer = new ScreenFooter(receptor);
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "add overlay",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new[]
+                    var receptor = new ScreenFooter.BackReceptor();
+                    footer = new ScreenFooter(receptor);
+
+                    Child = new DependencyProvidingContainer
                     {
-                        (typeof(ScreenFooter), (object)footer),
-                        (typeof(BeatmapSubmissionSettings), new BeatmapSubmissionSettings()),
-                    },
-                    Children = new Drawable[]
-                    {
-                        receptor,
-                        new BeatmapSubmissionOverlay
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new[]
                         {
-                            State = { Value = Visibility.Visible, },
+                            (typeof(ScreenFooter), (object)footer),
+                            (typeof(BeatmapSubmissionSettings), new BeatmapSubmissionSettings()),
                         },
-                        footer,
-                    }
-                };
-            });
+                        Children = new Drawable[]
+                        {
+                            receptor,
+                            new BeatmapSubmissionOverlay { State = { Value = Visibility.Visible } },
+                            footer,
+                        },
+                    };
+                }
+            );
         }
     }
 }

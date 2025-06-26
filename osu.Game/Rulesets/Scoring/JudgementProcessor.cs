@@ -69,7 +69,9 @@ namespace osu.Game.Rulesets.Scoring
         {
 #pragma warning disable CS0618
             if (result.Type == HitResult.LegacyComboIncrease)
-                throw new ArgumentException(@$"A {nameof(HitResult.LegacyComboIncrease)} hit result cannot be applied.");
+                throw new ArgumentException(
+                    @$"A {nameof(HitResult.LegacyComboIncrease)} hit result cannot be applied."
+                );
 #pragma warning restore CS0618
 
             JudgedHits++;
@@ -153,7 +155,9 @@ namespace osu.Game.Rulesets.Scoring
 
                 var result = CreateResult(obj, judgement);
                 if (result == null)
-                    throw new InvalidOperationException($"{GetType().ReadableName()} must provide a {nameof(JudgementResult)} through {nameof(CreateResult)}.");
+                    throw new InvalidOperationException(
+                        $"{GetType().ReadableName()} must provide a {nameof(JudgementResult)} through {nameof(CreateResult)}."
+                    );
 
                 result.Type = GetSimulatedHitResult(judgement);
                 ApplyResult(result);
@@ -171,8 +175,8 @@ namespace osu.Game.Rulesets.Scoring
         /// This means that the score is dependent on the order of evaluation of judgements.
         /// This method is provided so that rulesets can specify custom ordering that is correct for them and matches processing order during actual gameplay.
         /// </remarks>
-        protected virtual IEnumerable<HitObject> EnumerateHitObjects(IBeatmap beatmap)
-            => enumerateRecursively(beatmap.HitObjects);
+        protected virtual IEnumerable<HitObject> EnumerateHitObjects(IBeatmap beatmap) =>
+            enumerateRecursively(beatmap.HitObjects);
 
         private IEnumerable<HitObject> enumerateRecursively(IEnumerable<HitObject> hitObjects)
         {
@@ -190,14 +194,16 @@ namespace osu.Game.Rulesets.Scoring
         /// </summary>
         /// <param name="hitObject">The <see cref="HitObject"/> which was judged.</param>
         /// <param name="judgement">The <see cref="Judgement"/> that provides the scoring information.</param>
-        protected virtual JudgementResult CreateResult(HitObject hitObject, Judgement judgement) => new JudgementResult(hitObject, judgement);
+        protected virtual JudgementResult CreateResult(HitObject hitObject, Judgement judgement) =>
+            new JudgementResult(hitObject, judgement);
 
         /// <summary>
         /// Gets a simulated <see cref="HitResult"/> for a judgement. Used during <see cref="SimulateAutoplay"/> to simulate a "perfect" play.
         /// </summary>
         /// <param name="judgement">The judgement to simulate a <see cref="HitResult"/> for.</param>
         /// <returns>The simulated <see cref="HitResult"/> for the judgement.</returns>
-        protected virtual HitResult GetSimulatedHitResult(Judgement judgement) => judgement.MaxResult;
+        protected virtual HitResult GetSimulatedHitResult(Judgement judgement) =>
+            judgement.MaxResult;
 
         protected override void Update()
         {
@@ -205,9 +211,11 @@ namespace osu.Game.Rulesets.Scoring
 
             hasCompleted.Value =
                 JudgedHits == MaxHits
-                && (JudgedHits == 0
+                && (
+                    JudgedHits == 0
                     // Last applied result is guaranteed to be non-null when JudgedHits > 0.
-                    || lastAppliedResult.AsNonNull().TimeAbsolute < Clock.CurrentTime);
+                    || lastAppliedResult.AsNonNull().TimeAbsolute < Clock.CurrentTime
+                );
         }
     }
 }

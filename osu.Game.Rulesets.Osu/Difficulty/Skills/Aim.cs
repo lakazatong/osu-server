@@ -33,12 +33,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
         private double strainDecay(double ms) => Math.Pow(strainDecayBase, ms / 1000);
 
-        protected override double CalculateInitialStrain(double time, DifficultyHitObject current) => currentStrain * strainDecay(time - current.Previous(0).StartTime);
+        protected override double CalculateInitialStrain(
+            double time,
+            DifficultyHitObject current
+        ) => currentStrain * strainDecay(time - current.Previous(0).StartTime);
 
         protected override double StrainValueAt(DifficultyHitObject current)
         {
             currentStrain *= strainDecay(current.DeltaTime);
-            currentStrain += AimEvaluator.EvaluateDifficultyOf(current, IncludeSliders) * skillMultiplier;
+            currentStrain +=
+                AimEvaluator.EvaluateDifficultyOf(current, IncludeSliders) * skillMultiplier;
 
             if (current.BaseObject is Slider)
             {
@@ -57,7 +61,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             if (maxSliderStrain == 0)
                 return 0;
 
-            return sliderStrains.Sum(strain => 1.0 / (1.0 + Math.Exp(-(strain / maxSliderStrain * 12.0 - 6.0))));
+            return sliderStrains.Sum(strain =>
+                1.0 / (1.0 + Math.Exp(-(strain / maxSliderStrain * 12.0 - 6.0)))
+            );
         }
     }
 }

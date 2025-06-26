@@ -10,25 +10,28 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneLabelledDropdown : OsuTestScene
     {
         [Test]
-        public void TestLabelledDropdown()
-            => AddStep(@"create dropdown", () => Child = new LabelledDropdown<string>
-            {
-                Label = @"Countdown speed",
-                Items = new[]
-                {
-                    @"Half",
-                    @"Normal",
-                    @"Double"
-                },
-                Description = @"This is a description"
-            });
+        public void TestLabelledDropdown() =>
+            AddStep(
+                @"create dropdown",
+                () =>
+                    Child = new LabelledDropdown<string>
+                    {
+                        Label = @"Countdown speed",
+                        Items = new[] { @"Half", @"Normal", @"Double" },
+                        Description = @"This is a description",
+                    }
+            );
 
         [Test]
-        public void TestLabelledEnumDropdown()
-            => AddStep(@"create dropdown", () => Child = new LabelledEnumDropdown<BeatmapOnlineStatus>
-            {
-                Label = @"Beatmap status",
-                Description = @"This is a description"
-            });
+        public void TestLabelledEnumDropdown() =>
+            AddStep(
+                @"create dropdown",
+                () =>
+                    Child = new LabelledEnumDropdown<BeatmapOnlineStatus>
+                    {
+                        Label = @"Beatmap status",
+                        Description = @"This is a description",
+                    }
+            );
     }
 }

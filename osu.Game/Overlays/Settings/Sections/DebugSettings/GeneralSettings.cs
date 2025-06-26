@@ -13,19 +13,22 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
         protected override LocalisableString Header => @"General";
 
         [BackgroundDependencyLoader]
-        private void load(FrameworkDebugConfigManager config, FrameworkConfigManager frameworkConfig)
+        private void load(
+            FrameworkDebugConfigManager config,
+            FrameworkConfigManager frameworkConfig
+        )
         {
             Children = new Drawable[]
             {
                 new SettingsCheckbox
                 {
                     LabelText = @"Show log overlay",
-                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowLogOverlay)
+                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowLogOverlay),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = @"Bypass front-to-back render pass",
-                    Current = config.GetBindable<bool>(DebugSetting.BypassFrontToBackPass)
+                    Current = config.GetBindable<bool>(DebugSetting.BypassFrontToBackPass),
                 },
             };
         }

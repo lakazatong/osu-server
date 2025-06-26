@@ -25,15 +25,17 @@ namespace osu.Game.Rulesets.Osu.Mods
     {
         public override LocalisableString Description => "It never gets boring!";
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(OsuModTargetPractice)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(OsuModTargetPractice)).ToArray();
 
         [SettingSource("Angle sharpness", "How sharp angles should be")]
-        public BindableFloat AngleSharpness { get; } = new BindableFloat(7)
-        {
-            MinValue = 1,
-            MaxValue = 10,
-            Precision = 0.1f
-        };
+        public BindableFloat AngleSharpness { get; } =
+            new BindableFloat(7)
+            {
+                MinValue = 1,
+                MaxValue = 10,
+                Precision = 0.1f,
+            };
 
         private static readonly float playfield_diagonal = OsuPlayfield.BASE_SIZE.LengthFast;
 
@@ -48,7 +50,9 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             random = new Random((int)Seed.Value);
 
-            var positionInfos = OsuHitObjectGenerationUtils.GeneratePositionInfos(osuBeatmap.HitObjects);
+            var positionInfos = OsuHitObjectGenerationUtils.GeneratePositionInfos(
+                osuBeatmap.HitObjects
+            );
 
             // Offsets the angles of all hit objects in a "section" by the same amount.
             float sectionOffset = 0;
@@ -71,8 +75,12 @@ namespace osu.Game.Rulesets.Osu.Mods
 
                 if (i == 0)
                 {
-                    positionInfos[i].DistanceFromPrevious = (float)(random.NextDouble() * OsuPlayfield.BASE_SIZE.Y / 2);
-                    positionInfos[i].RelativeAngle = (float)(random.NextDouble() * 2 * Math.PI - Math.PI);
+                    positionInfos[i].DistanceFromPrevious = (float)(
+                        random.NextDouble() * OsuPlayfield.BASE_SIZE.Y / 2
+                    );
+                    positionInfos[i].RelativeAngle = (float)(
+                        random.NextDouble() * 2 * Math.PI - Math.PI
+                    );
                 }
                 else
                 {
@@ -90,11 +98,17 @@ namespace osu.Game.Rulesets.Osu.Mods
 
                     float totalOffset =
                         // sectionOffset and oneTimeOffset should mainly affect patterns with large spacing.
-                        (sectionOffset + oneTimeOffset) * positionInfos[i].DistanceFromPrevious +
+                        (sectionOffset + oneTimeOffset) * positionInfos[i].DistanceFromPrevious
+                        +
                         // flowChangeOffset should mainly affect streams.
-                        flowChangeOffset * (playfield_diagonal - positionInfos[i].DistanceFromPrevious);
+                        flowChangeOffset
+                            * (playfield_diagonal - positionInfos[i].DistanceFromPrevious);
 
-                    positionInfos[i].RelativeAngle = getRelativeTargetAngle(positionInfos[i].DistanceFromPrevious, totalOffset, flowDirection);
+                    positionInfos[i].RelativeAngle = getRelativeTargetAngle(
+                        positionInfos[i].DistanceFromPrevious,
+                        totalOffset,
+                        flowDirection
+                    );
                 }
             }
 
@@ -105,7 +119,9 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             // Range: [0.5, 2]
             // Higher angle sharpness -> lower multiplier
-            float customMultiplier = (1.5f * AngleSharpness.MaxValue - AngleSharpness.Value) / (1.5f * AngleSharpness.MaxValue - AngleSharpness.Default);
+            float customMultiplier =
+                (1.5f * AngleSharpness.MaxValue - AngleSharpness.Value)
+                / (1.5f * AngleSharpness.MaxValue - AngleSharpness.Default);
 
             return OsuHitObjectGenerationUtils.RandomGaussian(random, 0, stdDev * customMultiplier);
         }
@@ -126,7 +142,9 @@ namespace osu.Game.Rulesets.Osu.Mods
             float customOffsetY = angleWideness * 0.25f - 0.075f;
 
             targetDistance += customOffsetX;
-            float angle = (float)(2.16 / (1 + 200 * Math.Exp(0.036 * (targetDistance - 310 + customOffsetX))) + 0.5);
+            float angle = (float)(
+                2.16 / (1 + 200 * Math.Exp(0.036 * (targetDistance - 310 + customOffsetX))) + 0.5
+            );
             angle += offset + customOffsetY;
 
             float relativeAngle = (float)Math.PI - angle;
@@ -135,28 +153,44 @@ namespace osu.Game.Rulesets.Osu.Mods
         }
 
         /// <returns>Whether a new section should be started at the current <see cref="OsuHitObject"/>.</returns>
-        private bool shouldStartNewSection(OsuBeatmap beatmap, IReadOnlyList<OsuHitObjectGenerationUtils.ObjectPositionInfo> positionInfos, int i)
+        private bool shouldStartNewSection(
+            OsuBeatmap beatmap,
+            IReadOnlyList<OsuHitObjectGenerationUtils.ObjectPositionInfo> positionInfos,
+            int i
+        )
         {
             if (i == 0)
                 return true;
 
             // Exclude new-combo-spam and 1-2-combos.
-            bool previousObjectStartedCombo = positionInfos[Math.Max(0, i - 2)].HitObject.IndexInCurrentCombo > 1 &&
-                                              positionInfos[i - 1].HitObject.NewCombo;
-            bool previousObjectWasOnDownbeat = OsuHitObjectGenerationUtils.IsHitObjectOnBeat(beatmap, positionInfos[i - 1].HitObject, true);
-            bool previousObjectWasOnBeat = OsuHitObjectGenerationUtils.IsHitObjectOnBeat(beatmap, positionInfos[i - 1].HitObject);
+            bool previousObjectStartedCombo =
+                positionInfos[Math.Max(0, i - 2)].HitObject.IndexInCurrentCombo > 1
+                && positionInfos[i - 1].HitObject.NewCombo;
+            bool previousObjectWasOnDownbeat = OsuHitObjectGenerationUtils.IsHitObjectOnBeat(
+                beatmap,
+                positionInfos[i - 1].HitObject,
+                true
+            );
+            bool previousObjectWasOnBeat = OsuHitObjectGenerationUtils.IsHitObjectOnBeat(
+                beatmap,
+                positionInfos[i - 1].HitObject
+            );
 
-            return (previousObjectStartedCombo && random.NextDouble() < 0.6f) ||
-                   previousObjectWasOnDownbeat ||
-                   (previousObjectWasOnBeat && random.NextDouble() < 0.4f);
+            return (previousObjectStartedCombo && random.NextDouble() < 0.6f)
+                || previousObjectWasOnDownbeat
+                || (previousObjectWasOnBeat && random.NextDouble() < 0.4f);
         }
 
         /// <returns>Whether a flow change should be applied at the current <see cref="OsuHitObject"/>.</returns>
-        private bool shouldApplyFlowChange(IReadOnlyList<OsuHitObjectGenerationUtils.ObjectPositionInfo> positionInfos, int i)
+        private bool shouldApplyFlowChange(
+            IReadOnlyList<OsuHitObjectGenerationUtils.ObjectPositionInfo> positionInfos,
+            int i
+        )
         {
             // Exclude new-combo-spam and 1-2-combos.
-            bool previousObjectStartedCombo = positionInfos[Math.Max(0, i - 2)].HitObject.IndexInCurrentCombo > 1 &&
-                                              positionInfos[i - 1].HitObject.NewCombo;
+            bool previousObjectStartedCombo =
+                positionInfos[Math.Max(0, i - 2)].HitObject.IndexInCurrentCombo > 1
+                && positionInfos[i - 1].HitObject.NewCombo;
 
             return previousObjectStartedCombo && random.NextDouble() < 0.6f;
         }

@@ -18,7 +18,9 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Taiko.Objects.Drawables
 {
-    public abstract partial class DrawableTaikoHitObject : DrawableHitObject<TaikoHitObject>, IKeyBindingHandler<TaikoAction>
+    public abstract partial class DrawableTaikoHitObject
+        : DrawableHitObject<TaikoHitObject>,
+            IKeyBindingHandler<TaikoAction>
     {
         protected readonly Container Content;
         private readonly Container proxiedContent;
@@ -37,15 +39,17 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         protected DrawableTaikoHitObject([CanBeNull] TaikoHitObject hitObject)
             : base(hitObject)
         {
-            AddRangeInternal(new[]
-            {
-                nonProxiedContent = new Container
+            AddRangeInternal(
+                new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = Content = new Container { RelativeSizeAxes = Axes.Both }
-                },
-                proxiedContent = new ProxiedContentContainer { RelativeSizeAxes = Axes.Both }
-            });
+                    nonProxiedContent = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = Content = new Container { RelativeSizeAxes = Axes.Both },
+                    },
+                    proxiedContent = new ProxiedContentContainer { RelativeSizeAxes = Axes.Both },
+                }
+            );
         }
 
         /// <summary>
@@ -61,7 +65,8 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         /// </summary>
         protected void ProxyContent()
         {
-            if (isProxied) return;
+            if (isProxied)
+                return;
 
             isProxied = true;
 
@@ -75,7 +80,8 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         /// </summary>
         protected void UnproxyContent()
         {
-            if (!isProxied) return;
+            if (!isProxied)
+                return;
 
             isProxied = false;
 
@@ -90,9 +96,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
 
         public abstract bool OnPressed(KeyBindingPressEvent<TaikoAction> e);
 
-        public virtual void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-        {
-        }
+        public virtual void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
 
         public override double LifetimeStart
         {
@@ -120,7 +124,8 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         }
 
         // osu!taiko hitsounds are managed by the drum (see DrumSampleTriggerSource).
-        public sealed override IEnumerable<HitSampleInfo> GetSamples() => Enumerable.Empty<HitSampleInfo>();
+        public sealed override IEnumerable<HitSampleInfo> GetSamples() =>
+            Enumerable.Empty<HitSampleInfo>();
     }
 
     public abstract partial class DrawableTaikoHitObject<TObject> : DrawableTaikoHitObject

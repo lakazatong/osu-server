@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Osu.Edit
     public class SpinnerCompositionTool : CompositionTool
     {
         public SpinnerCompositionTool()
-            : base(nameof(Spinner))
-        {
-        }
+            : base(nameof(Spinner)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new SpinnerPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new SpinnerPlacementBlueprint();
     }
 }

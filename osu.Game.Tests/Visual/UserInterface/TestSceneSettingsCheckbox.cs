@@ -18,40 +18,42 @@ namespace osu.Game.Tests.Visual.UserInterface
         [TestCase]
         public void TestCheckbox()
         {
-            AddStep("create component", () =>
-            {
-                FillFlowContainer flow;
-
-                Child = flow = new FillFlowContainer
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                    AutoSizeAxes = Axes.Y,
-                    Spacing = new Vector2(5),
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
-                    {
-                        new SettingsCheckbox
-                        {
-                            LabelText = "a sample component",
-                        },
-                    },
-                };
+                    FillFlowContainer flow;
 
-                foreach (var colour1 in Enum.GetValues(typeof(OverlayColourScheme)).OfType<OverlayColourScheme>())
-                {
-                    flow.Add(new OverlayColourContainer(colour1)
+                    Child = flow = new FillFlowContainer
                     {
-                        RelativeSizeAxes = Axes.X,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 500,
                         AutoSizeAxes = Axes.Y,
-                        Child = new SettingsCheckbox
+                        Spacing = new Vector2(5),
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            LabelText = "a sample component",
-                        }
-                    });
+                            new SettingsCheckbox { LabelText = "a sample component" },
+                        },
+                    };
+
+                    foreach (
+                        var colour1 in Enum.GetValues(typeof(OverlayColourScheme))
+                            .OfType<OverlayColourScheme>()
+                    )
+                    {
+                        flow.Add(
+                            new OverlayColourContainer(colour1)
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Child = new SettingsCheckbox { LabelText = "a sample component" },
+                            }
+                        );
+                    }
                 }
-            });
+            );
         }
 
         private partial class OverlayColourContainer : Container

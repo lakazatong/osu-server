@@ -12,7 +12,8 @@ namespace osu.Game.Rulesets.Osu.Tests
     {
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
 
-        protected override IResourceStore<byte[]> RulesetResources => new DllResourceStore(Assembly.GetAssembly(typeof(TestSceneOsuHitObjectSamples)));
+        protected override IResourceStore<byte[]> RulesetResources =>
+            new DllResourceStore(Assembly.GetAssembly(typeof(TestSceneOsuHitObjectSamples)));
 
         [TestCase("normal-hitnormal")]
         [TestCase("hitnormal")]

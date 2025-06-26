@@ -23,7 +23,11 @@ namespace osu.Game.Skinning
 
         private readonly ParticleExplosion? particles;
 
-        public LegacyJudgementPieceNew(HitResult result, Func<Drawable> createMainDrawable, Texture? particleTexture)
+        public LegacyJudgementPieceNew(
+            HitResult result,
+            Func<Drawable> createMainDrawable,
+            Texture? particleTexture
+        )
         {
             this.result = result;
 
@@ -32,33 +36,43 @@ namespace osu.Game.Skinning
 
             InternalChildren = new[]
             {
-                mainPiece = createMainDrawable().With(d =>
-                {
-                    d.Anchor = Anchor.Centre;
-                    d.Origin = Anchor.Centre;
-                })
+                mainPiece = createMainDrawable()
+                    .With(d =>
+                    {
+                        d.Anchor = Anchor.Centre;
+                        d.Origin = Anchor.Centre;
+                    }),
             };
 
             if (particleTexture != null)
             {
-                AddInternal(particles = new ParticleExplosion(particleTexture, 150, 1600)
-                {
-                    Size = new Vector2(140),
-                    Depth = float.MaxValue,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                AddInternal(
+                    particles = new ParticleExplosion(particleTexture, 150, 1600)
+                    {
+                        Size = new Vector2(140),
+                        Depth = float.MaxValue,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
 
             if (!result.IsMiss())
             {
                 //new judgement shows old as a temporary effect
-                AddInternal(temporaryOldStyle = new LegacyJudgementPieceOld(result, createMainDrawable, 1.05f, true)
-                {
-                    Blending = BlendingParameters.Additive,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                AddInternal(
+                    temporaryOldStyle = new LegacyJudgementPieceOld(
+                        result,
+                        createMainDrawable,
+                        1.05f,
+                        true
+                    )
+                    {
+                        Blending = BlendingParameters.Additive,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
         }
 
@@ -88,9 +102,7 @@ namespace osu.Game.Skinning
                 temporaryOldStyle.PlayAnimation();
 
                 temporaryOldStyle.Hide();
-                temporaryOldStyle.Delay(-16)
-                                 .FadeTo(0.5f, 56, Easing.Out).Then()
-                                 .FadeOut(300);
+                temporaryOldStyle.Delay(-16).FadeTo(0.5f, 56, Easing.Out).Then().FadeOut(300);
             }
 
             // legacy judgements don't play any transforms if they are an animation.

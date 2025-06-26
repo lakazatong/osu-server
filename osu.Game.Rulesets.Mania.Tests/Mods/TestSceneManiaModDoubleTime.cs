@@ -23,53 +23,61 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new ManiaRuleset();
 
         [Test]
-        public void TestHitWindowWithoutDoubleTime() => CreateModTest(new ModTestData
-        {
-            PassCondition = () => Player.ScoreProcessor.JudgedHits > 0
-                                  && Precision.AlmostEquals(Player.ScoreProcessor.Accuracy.Value, 0.9836, 0.01)
-                                  && Player.ScoreProcessor.TotalScore.Value == 946_049,
-            Autoplay = false,
-            CreateBeatmap = () => new Beatmap
-            {
-                BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
-                Difficulty = { OverallDifficulty = 10 },
-                HitObjects = new List<HitObject>
+        public void TestHitWindowWithoutDoubleTime() =>
+            CreateModTest(
+                new ModTestData
                 {
-                    new Note { StartTime = 1000 }
-                },
-            },
-            ReplayFrames = new List<ReplayFrame>
-            {
-                new ManiaReplayFrame(1000 + offset, ManiaAction.Key1)
-            }
-        });
+                    PassCondition = () =>
+                        Player.ScoreProcessor.JudgedHits > 0
+                        && Precision.AlmostEquals(
+                            Player.ScoreProcessor.Accuracy.Value,
+                            0.9836,
+                            0.01
+                        )
+                        && Player.ScoreProcessor.TotalScore.Value == 946_049,
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
+                            Difficulty = { OverallDifficulty = 10 },
+                            HitObjects = new List<HitObject> { new Note { StartTime = 1000 } },
+                        },
+                    ReplayFrames = new List<ReplayFrame>
+                    {
+                        new ManiaReplayFrame(1000 + offset, ManiaAction.Key1),
+                    },
+                }
+            );
 
         [Test]
         public void TestHitWindowWithDoubleTime()
         {
             var doubleTime = new ManiaModDoubleTime();
 
-            CreateModTest(new ModTestData
-            {
-                Mod = doubleTime,
-                PassCondition = () => Player.ScoreProcessor.JudgedHits > 0
-                                      && Player.ScoreProcessor.Accuracy.Value == 1
-                                      && Player.ScoreProcessor.TotalScore.Value == (long)(1_000_000 * doubleTime.ScoreMultiplier),
-                Autoplay = false,
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
-                    Difficulty = { OverallDifficulty = 10 },
-                    HitObjects = new List<HitObject>
+                    Mod = doubleTime,
+                    PassCondition = () =>
+                        Player.ScoreProcessor.JudgedHits > 0
+                        && Player.ScoreProcessor.Accuracy.Value == 1
+                        && Player.ScoreProcessor.TotalScore.Value
+                            == (long)(1_000_000 * doubleTime.ScoreMultiplier),
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
+                            Difficulty = { OverallDifficulty = 10 },
+                            HitObjects = new List<HitObject> { new Note { StartTime = 1000 } },
+                        },
+                    ReplayFrames = new List<ReplayFrame>
                     {
-                        new Note { StartTime = 1000 }
+                        new ManiaReplayFrame(1000 + offset, ManiaAction.Key1),
                     },
-                },
-                ReplayFrames = new List<ReplayFrame>
-                {
-                    new ManiaReplayFrame(1000 + offset, ManiaAction.Key1)
                 }
-            });
+            );
         }
     }
 }

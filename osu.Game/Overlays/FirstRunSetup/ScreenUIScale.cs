@@ -31,7 +31,10 @@ using osuTK;
 
 namespace osu.Game.Overlays.FirstRunSetup
 {
-    [LocalisableDescription(typeof(GraphicsSettingsStrings), nameof(GraphicsSettingsStrings.UIScaling))]
+    [LocalisableDescription(
+        typeof(GraphicsSettingsStrings),
+        nameof(GraphicsSettingsStrings.UIScaling)
+    )]
     public partial class ScreenUIScale : WizardScreen
     {
         [BackgroundDependencyLoader]
@@ -41,11 +44,13 @@ namespace osu.Game.Overlays.FirstRunSetup
 
             Content.Children = new Drawable[]
             {
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Text = FirstRunSetupOverlayStrings.UIScaleDescription,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 new SettingsSlider<float, UIScaleSlider>
                 {
@@ -72,21 +77,20 @@ namespace osu.Game.Overlays.FirstRunSetup
                                 },
                                 // TODO: add more screens here in the future (gameplay / results)
                                 // requires a bit more consideration to isolate their behaviour from the "parent" game.
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
-        private partial class InverseScalingDrawSizePreservingFillContainer : ScalingContainer.ScalingDrawSizePreservingFillContainer
+        private partial class InverseScalingDrawSizePreservingFillContainer
+            : ScalingContainer.ScalingDrawSizePreservingFillContainer
         {
             private Vector2 initialSize;
 
             public InverseScalingDrawSizePreservingFillContainer()
-                : base(true)
-            {
-            }
+                : base(true) { }
 
             protected override void LoadComplete()
             {
@@ -125,11 +129,13 @@ namespace osu.Game.Overlays.FirstRunSetup
 
             [Cached]
             [Cached(typeof(IBindable<WorkingBeatmap>))]
-            protected Bindable<WorkingBeatmap> Beatmap { get; private set; } = new Bindable<WorkingBeatmap>();
+            protected Bindable<WorkingBeatmap> Beatmap { get; private set; } =
+                new Bindable<WorkingBeatmap>();
 
             [Cached]
             [Cached(typeof(IBindable<IReadOnlyList<Mod>>))]
-            protected Bindable<IReadOnlyList<Mod>> SelectedMods { get; private set; } = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+            protected Bindable<IReadOnlyList<Mod>> SelectedMods { get; private set; } =
+                new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
             public override bool HandlePositionalInput => false;
             public override bool HandleNonPositionalInput => false;
@@ -142,8 +148,12 @@ namespace osu.Game.Overlays.FirstRunSetup
                 RelativeSizeAxes = Axes.Both;
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
-                new DependencyContainer(new DependencyIsolationContainer(base.CreateChildDependencies(parent)));
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            ) =>
+                new DependencyContainer(
+                    new DependencyIsolationContainer(base.CreateChildDependencies(parent))
+                );
 
             [BackgroundDependencyLoader]
             private void load(AudioManager audio, TextureStore textures, RulesetStore rulesets)
@@ -164,11 +174,14 @@ namespace osu.Game.Overlays.FirstRunSetup
                     {
                         CachedDependencies = new (Type, object)[]
                         {
-                            (typeof(OsuLogo), logo = new OsuLogo
-                            {
-                                RelativePositionAxes = Axes.Both,
-                                Position = new Vector2(0.5f),
-                            }),
+                            (
+                                typeof(OsuLogo),
+                                logo = new OsuLogo
+                                {
+                                    RelativePositionAxes = Axes.Both,
+                                    Position = new Vector2(0.5f),
+                                }
+                            ),
                             (typeof(ScreenFooter), footer = new ScreenFooter()),
                         },
                         RelativeSizeAxes = Axes.Both,
@@ -185,7 +198,7 @@ namespace osu.Game.Overlays.FirstRunSetup
                                     logo,
                                 },
                             },
-                        }
+                        },
                     },
                 };
 
@@ -198,10 +211,7 @@ namespace osu.Game.Overlays.FirstRunSetup
         {
             private readonly IReadOnlyDependencyContainer parentDependencies;
 
-            private readonly Type[] isolatedTypes =
-            {
-                typeof(OsuGame)
-            };
+            private readonly Type[] isolatedTypes = { typeof(OsuGame) };
 
             public DependencyIsolationContainer(IReadOnlyDependencyContainer parentDependencies)
             {
@@ -224,7 +234,8 @@ namespace osu.Game.Overlays.FirstRunSetup
                 return parentDependencies.Get(type, info);
             }
 
-            public void Inject<T>(T instance) where T : class, IDependencyInjectionCandidate
+            public void Inject<T>(T instance)
+                where T : class, IDependencyInjectionCandidate
             {
                 parentDependencies.Inject(instance);
             }

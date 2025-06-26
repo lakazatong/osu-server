@@ -35,9 +35,7 @@ namespace osu.Game.Screens.Play
         private OsuColour colours { get; set; } = null!;
 
         public ArgonKeyCounter(InputTrigger trigger)
-            : base(trigger)
-        {
-        }
+            : base(trigger) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -48,12 +46,15 @@ namespace osu.Game.Screens.Play
                 {
                     RelativeSizeAxes = Axes.X,
                     Height = line_height * scale_factor,
-                    Alpha = 0.5f
+                    Alpha = 0.5f,
                 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = line_height * scale_factor + indicator_press_offset },
+                    Padding = new MarginPadding
+                    {
+                        Top = line_height * scale_factor + indicator_press_offset,
+                    },
                     Children = new Drawable[]
                     {
                         uprightContainer = new UprightAspectMaintainingContainer
@@ -67,19 +68,25 @@ namespace osu.Game.Screens.Play
                                 {
                                     Anchor = Anchor.TopLeft,
                                     Origin = Anchor.TopLeft,
-                                    Font = OsuFont.Torus.With(size: name_font_size * scale_factor, weight: FontWeight.Bold),
+                                    Font = OsuFont.Torus.With(
+                                        size: name_font_size * scale_factor,
+                                        weight: FontWeight.Bold
+                                    ),
                                     Colour = colours.Blue0,
-                                    Text = Trigger.Name
+                                    Text = Trigger.Name,
                                 },
                                 countText = new OsuSpriteText
                                 {
                                     Anchor = Anchor.BottomLeft,
                                     Origin = Anchor.BottomLeft,
-                                    Font = OsuFont.Torus.With(size: count_font_size * scale_factor, weight: FontWeight.Bold),
+                                    Font = OsuFont.Torus.With(
+                                        size: count_font_size * scale_factor,
+                                        weight: FontWeight.Bold
+                                    ),
                                 },
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             };
 
@@ -104,19 +111,18 @@ namespace osu.Game.Screens.Play
             float absRotation = Math.Abs(uprightContainer.Rotation) % 180;
             bool isRotated = absRotation > allowance && absRotation < (180 - allowance);
 
-            keyNameText.Anchor =
-                keyNameText.Origin = isRotated ? Anchor.TopCentre : Anchor.TopLeft;
+            keyNameText.Anchor = keyNameText.Origin = isRotated ? Anchor.TopCentre : Anchor.TopLeft;
 
-            countText.Anchor =
-                countText.Origin = isRotated ? Anchor.BottomCentre : Anchor.BottomLeft;
+            countText.Anchor = countText.Origin = isRotated
+                ? Anchor.BottomCentre
+                : Anchor.BottomLeft;
         }
 
         protected override void Activate(bool forwardPlayback = true)
         {
             base.Activate(forwardPlayback);
 
-            keyNameText
-                .FadeColour(Colour4.White, 10, Easing.OutQuint);
+            keyNameText.FadeColour(Colour4.White, 10, Easing.OutQuint);
 
             inputIndicator
                 .FadeIn(10, Easing.OutQuint)
@@ -129,12 +135,9 @@ namespace osu.Game.Screens.Play
         {
             base.Deactivate(forwardPlayback);
 
-            keyNameText
-                .FadeColour(colours.Blue0, 200, Easing.OutQuart);
+            keyNameText.FadeColour(colours.Blue0, 200, Easing.OutQuart);
 
-            inputIndicator
-                .MoveToY(0, 250, Easing.OutQuart)
-                .FadeTo(0.5f, 250, Easing.OutQuart);
+            inputIndicator.MoveToY(0, 250, Easing.OutQuart).FadeTo(0.5f, 250, Easing.OutQuart);
         }
     }
 }

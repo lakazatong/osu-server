@@ -14,24 +14,40 @@ namespace osu.Game.Rulesets.Taiko.Tests
         {
             var drumRoll = new DrawableDrumRoll();
 
-            AddStep("apply new drum roll", () => drumRoll.Apply(PrepareObject(new DrumRoll
-            {
-                StartTime = 300,
-                Duration = 500,
-                IsStrong = false,
-                TickRate = 2
-            })));
+            AddStep(
+                "apply new drum roll",
+                () =>
+                    drumRoll.Apply(
+                        PrepareObject(
+                            new DrumRoll
+                            {
+                                StartTime = 300,
+                                Duration = 500,
+                                IsStrong = false,
+                                TickRate = 2,
+                            }
+                        )
+                    )
+            );
 
             AddHitObject(drumRoll);
             RemoveHitObject(drumRoll);
 
-            AddStep("apply new drum roll", () => drumRoll.Apply(PrepareObject(new DrumRoll
-            {
-                StartTime = 150,
-                Duration = 400,
-                IsStrong = true,
-                TickRate = 16
-            })));
+            AddStep(
+                "apply new drum roll",
+                () =>
+                    drumRoll.Apply(
+                        PrepareObject(
+                            new DrumRoll
+                            {
+                                StartTime = 150,
+                                Duration = 400,
+                                IsStrong = true,
+                                TickRate = 16,
+                            }
+                        )
+                    )
+            );
 
             AddHitObject(drumRoll);
         }

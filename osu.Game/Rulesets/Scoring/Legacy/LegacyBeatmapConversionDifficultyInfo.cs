@@ -54,28 +54,33 @@ namespace osu.Game.Rulesets.Scoring.Legacy
         double IBeatmapDifficultyInfo.SliderMultiplier => 0;
         double IBeatmapDifficultyInfo.SliderTickRate => 0;
 
-        public static LegacyBeatmapConversionDifficultyInfo FromAPIBeatmap(APIBeatmap apiBeatmap) => FromBeatmapInfo(apiBeatmap);
+        public static LegacyBeatmapConversionDifficultyInfo FromAPIBeatmap(APIBeatmap apiBeatmap) =>
+            FromBeatmapInfo(apiBeatmap);
 
-        public static LegacyBeatmapConversionDifficultyInfo FromBeatmap(IBeatmap beatmap) => new LegacyBeatmapConversionDifficultyInfo
-        {
-            SourceRuleset = beatmap.BeatmapInfo.Ruleset,
-            DrainRate = beatmap.Difficulty.DrainRate,
-            ApproachRate = beatmap.Difficulty.ApproachRate,
-            CircleSize = beatmap.Difficulty.CircleSize,
-            OverallDifficulty = beatmap.Difficulty.OverallDifficulty,
-            EndTimeObjectCount = beatmap.HitObjects.Count(h => h is IHasDuration),
-            TotalObjectCount = beatmap.HitObjects.Count
-        };
+        public static LegacyBeatmapConversionDifficultyInfo FromBeatmap(IBeatmap beatmap) =>
+            new LegacyBeatmapConversionDifficultyInfo
+            {
+                SourceRuleset = beatmap.BeatmapInfo.Ruleset,
+                DrainRate = beatmap.Difficulty.DrainRate,
+                ApproachRate = beatmap.Difficulty.ApproachRate,
+                CircleSize = beatmap.Difficulty.CircleSize,
+                OverallDifficulty = beatmap.Difficulty.OverallDifficulty,
+                EndTimeObjectCount = beatmap.HitObjects.Count(h => h is IHasDuration),
+                TotalObjectCount = beatmap.HitObjects.Count,
+            };
 
-        public static LegacyBeatmapConversionDifficultyInfo FromBeatmapInfo(IBeatmapInfo beatmapInfo) => new LegacyBeatmapConversionDifficultyInfo
-        {
-            SourceRuleset = beatmapInfo.Ruleset,
-            DrainRate = beatmapInfo.Difficulty.DrainRate,
-            ApproachRate = beatmapInfo.Difficulty.ApproachRate,
-            CircleSize = beatmapInfo.Difficulty.CircleSize,
-            OverallDifficulty = beatmapInfo.Difficulty.OverallDifficulty,
-            EndTimeObjectCount = beatmapInfo.EndTimeObjectCount,
-            TotalObjectCount = beatmapInfo.TotalObjectCount
-        };
+        public static LegacyBeatmapConversionDifficultyInfo FromBeatmapInfo(
+            IBeatmapInfo beatmapInfo
+        ) =>
+            new LegacyBeatmapConversionDifficultyInfo
+            {
+                SourceRuleset = beatmapInfo.Ruleset,
+                DrainRate = beatmapInfo.Difficulty.DrainRate,
+                ApproachRate = beatmapInfo.Difficulty.ApproachRate,
+                CircleSize = beatmapInfo.Difficulty.CircleSize,
+                OverallDifficulty = beatmapInfo.Difficulty.OverallDifficulty,
+                EndTimeObjectCount = beatmapInfo.EndTimeObjectCount,
+                TotalObjectCount = beatmapInfo.TotalObjectCount,
+            };
     }
 }

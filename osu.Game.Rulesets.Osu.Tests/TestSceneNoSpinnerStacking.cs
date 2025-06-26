@@ -18,14 +18,21 @@ namespace osu.Game.Rulesets.Osu.Tests
                 BeatmapInfo = new BeatmapInfo
                 {
                     Difficulty = new BeatmapDifficulty { OverallDifficulty = 10 },
-                    Ruleset = ruleset
-                }
+                    Ruleset = ruleset,
+                },
             };
 
             for (int i = 0; i < 512; i++)
             {
                 if (i % 32 < 20)
-                    beatmap.HitObjects.Add(new Spinner { Position = new Vector2(256, 192), StartTime = i * 200, EndTime = (i * 200) + 100 });
+                    beatmap.HitObjects.Add(
+                        new Spinner
+                        {
+                            Position = new Vector2(256, 192),
+                            StartTime = i * 200,
+                            EndTime = (i * 200) + 100,
+                        }
+                    );
             }
 
             return beatmap;

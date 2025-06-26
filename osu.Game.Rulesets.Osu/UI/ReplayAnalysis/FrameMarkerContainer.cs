@@ -6,7 +6,8 @@ using osu.Game.Rulesets.Objects.Pooling;
 
 namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
 {
-    public partial class FrameMarkerContainer : PooledDrawableWithLifetimeContainer<AnalysisFrameEntry, AnalysisMarker>
+    public partial class FrameMarkerContainer
+        : PooledDrawableWithLifetimeContainer<AnalysisFrameEntry, AnalysisMarker>
     {
         private readonly DrawablePool<FrameMarker> pool;
 
@@ -15,6 +16,7 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
             AddInternal(pool = new DrawablePool<FrameMarker>(80));
         }
 
-        protected override AnalysisMarker GetDrawable(AnalysisFrameEntry entry) => pool.Get(d => d.Apply(entry));
+        protected override AnalysisMarker GetDrawable(AnalysisFrameEntry entry) =>
+            pool.Get(d => d.Apply(entry));
     }
 }

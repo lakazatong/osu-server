@@ -8,10 +8,7 @@ namespace osu.Game.Screens.Edit.Verify
 {
     public partial class IssueSettings : EditorRoundedScreenSettings
     {
-        protected override IReadOnlyList<Drawable> CreateSections() => new Drawable[]
-        {
-            new InterpretationSection(),
-            new VisibilitySection()
-        };
+        protected override IReadOnlyList<Drawable> CreateSections() =>
+            new Drawable[] { new InterpretationSection(), new VisibilitySection() };
     }
 }

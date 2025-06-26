@@ -24,23 +24,40 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("join room", () => JoinRoom(CreateDefaultRoom()));
             WaitForJoined();
 
-            AddStep("add display", () => Child = modDisplay = new MultiplayerUserModDisplay
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            AddStep(
+                "add display",
+                () =>
+                    Child = modDisplay =
+                        new MultiplayerUserModDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
         }
 
         [Test]
         public void TestChangeMods()
         {
-            AddStep("set DT", () => MultiplayerClient.ChangeUserMods([new OsuModDoubleTime()]).WaitSafely());
+            AddStep(
+                "set DT",
+                () => MultiplayerClient.ChangeUserMods([new OsuModDoubleTime()]).WaitSafely()
+            );
             AddUntilStep("mod displayed", () => modDisplay.ChildrenOfType<ModIcon>().Count() == 1);
 
-            AddStep("set DT, HR", () => MultiplayerClient.ChangeUserMods([new OsuModDoubleTime(), new OsuModHardRock()]).WaitSafely());
+            AddStep(
+                "set DT, HR",
+                () =>
+                    MultiplayerClient
+                        .ChangeUserMods([new OsuModDoubleTime(), new OsuModHardRock()])
+                        .WaitSafely()
+            );
             AddUntilStep("mods displayed", () => modDisplay.ChildrenOfType<ModIcon>().Count() == 2);
 
-            AddStep("set no mods", () => MultiplayerClient.ChangeUserMods(Enumerable.Empty<APIMod>()).WaitSafely());
+            AddStep(
+                "set no mods",
+                () => MultiplayerClient.ChangeUserMods(Enumerable.Empty<APIMod>()).WaitSafely()
+            );
             AddUntilStep("no mods displayed", () => !modDisplay.ChildrenOfType<ModIcon>().Any());
         }
     }

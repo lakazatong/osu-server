@@ -11,16 +11,18 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     public partial class PerformancePointsChangeRow : RankingChangeRow<int?>
     {
         public PerformancePointsChangeRow()
-            : base(stats => stats.PP != null ? (int)Math.Round(stats.PP.Value) : null)
-        {
-        }
+            : base(stats => stats.PP != null ? (int)Math.Round(stats.PP.Value) : null) { }
 
         protected override LocalisableString Label => RankingsStrings.StatPerformance;
 
-        protected override LocalisableString FormatCurrentValue(int? current)
-            => current == null ? string.Empty : LocalisableString.Interpolate($@"{current:N0}pp");
+        protected override LocalisableString FormatCurrentValue(int? current) =>
+            current == null ? string.Empty : LocalisableString.Interpolate($@"{current:N0}pp");
 
-        protected override int CalculateDifference(int? previous, int? current, out LocalisableString formattedDifference)
+        protected override int CalculateDifference(
+            int? previous,
+            int? current,
+            out LocalisableString formattedDifference
+        )
         {
             if (previous == null && current == null)
             {

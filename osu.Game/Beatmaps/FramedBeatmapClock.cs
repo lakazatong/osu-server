@@ -23,7 +23,11 @@ namespace osu.Game.Beatmaps
     ///  - Exposes track length.
     ///  - Allows changing the source to a new track (for cases like editor track updating).
     /// </summary>
-    public partial class FramedBeatmapClock : Component, IFrameBasedClock, IAdjustableClock, ISourceChangeableClock
+    public partial class FramedBeatmapClock
+        : Component,
+            IFrameBasedClock,
+            IAdjustableClock,
+            ISourceChangeableClock
     {
         private readonly bool applyOffsets;
 
@@ -55,7 +59,10 @@ namespace osu.Game.Beatmaps
         {
             this.applyOffsets = applyOffsets;
 
-            decoupledTrack = new DecouplingFramedClock(source) { AllowDecoupling = requireDecoupling };
+            decoupledTrack = new DecouplingFramedClock(source)
+            {
+                AllowDecoupling = requireDecoupling,
+            };
 
             // An interpolating clock is used to ensure precise time values even when the host audio subsystem is not reporting
             // high precision times (on windows there's generally only 5-10ms reporting intervals, as an example).
@@ -65,13 +72,18 @@ namespace osu.Game.Beatmaps
             {
                 // Audio timings in general with newer BASS versions don't match stable.
                 // This only seems to be required on windows. We need to eventually figure out why, with a bit of luck.
-                platformOffsetClock = new OffsetCorrectionClock(interpolatedTrack) { Offset = RuntimeInfo.OS == RuntimeInfo.Platform.Windows ? 15 : 0 };
+                platformOffsetClock = new OffsetCorrectionClock(interpolatedTrack)
+                {
+                    Offset = RuntimeInfo.OS == RuntimeInfo.Platform.Windows ? 15 : 0,
+                };
 
                 // User global offset (set in settings) should also be applied.
                 userGlobalOffsetClock = new OffsetCorrectionClock(platformOffsetClock);
 
                 // User per-beatmap offset will be applied to this final clock.
-                finalClockSource = userBeatmapOffsetClock = new FramedOffsetClock(userGlobalOffsetClock);
+                finalClockSource = userBeatmapOffsetClock = new FramedOffsetClock(
+                    userGlobalOffsetClock
+                );
             }
             else
             {
@@ -89,7 +101,10 @@ namespace osu.Game.Beatmaps
                 Debug.Assert(userGlobalOffsetClock != null);
 
                 userAudioOffset = config.GetBindable<double>(OsuSetting.AudioOffset);
-                userAudioOffset.BindValueChanged(offset => userGlobalOffsetClock.Offset = offset.NewValue, true);
+                userAudioOffset.BindValueChanged(
+                    offset => userGlobalOffsetClock.Offset = offset.NewValue,
+                    true
+                );
 
                 // TODO: this doesn't update when using ChangeSource() to change beatmap.
                 beatmapOffsetSubscription = realm.SubscribeToPropertyChanged(
@@ -98,7 +113,8 @@ namespace osu.Game.Beatmaps
                     val =>
                     {
                         userBeatmapOffsetClock.Offset = val;
-                    });
+                    }
+                );
             }
         }
 
@@ -123,7 +139,9 @@ namespace osu.Game.Beatmaps
                 Debug.Assert(userBeatmapOffsetClock != null);
                 Debug.Assert(platformOffsetClock != null);
 
-                return userGlobalOffsetClock.RateAdjustedOffset + userBeatmapOffsetClock.Offset + platformOffsetClock.RateAdjustedOffset;
+                return userGlobalOffsetClock.RateAdjustedOffset
+                    + userBeatmapOffsetClock.Offset
+                    + platformOffsetClock.RateAdjustedOffset;
             }
         }
 
@@ -194,14 +212,13 @@ namespace osu.Game.Beatmaps
 
         public string GetSnapshot()
         {
-            return
-                $"originalSource: {output(Source)}\n" +
-                $"userGlobalOffsetClock: {output(userGlobalOffsetClock)}\n" +
-                $"platformOffsetClock: {output(platformOffsetClock)}\n" +
-                $"userBeatmapOffsetClock: {output(userBeatmapOffsetClock)}\n" +
-                $"interpolatedTrack: {output(interpolatedTrack)}\n" +
-                $"decoupledTrack: {output(decoupledTrack)}\n" +
-                $"finalClockSource: {output(finalClockSource)}\n";
+            return $"originalSource: {output(Source)}\n"
+                + $"userGlobalOffsetClock: {output(userGlobalOffsetClock)}\n"
+                + $"platformOffsetClock: {output(platformOffsetClock)}\n"
+                + $"userBeatmapOffsetClock: {output(userBeatmapOffsetClock)}\n"
+                + $"interpolatedTrack: {output(interpolatedTrack)}\n"
+                + $"decoupledTrack: {output(decoupledTrack)}\n"
+                + $"finalClockSource: {output(finalClockSource)}\n";
 
             string output(IClock? clock)
             {

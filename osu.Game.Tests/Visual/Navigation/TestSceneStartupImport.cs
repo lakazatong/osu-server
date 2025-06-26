@@ -13,11 +13,15 @@ namespace osu.Game.Tests.Visual.Navigation
     {
         private string? importFilename;
 
-        protected override TestOsuGame CreateTestGame() => new TestOsuGame(LocalStorage, API, new[] { importFilename });
+        protected override TestOsuGame CreateTestGame() =>
+            new TestOsuGame(LocalStorage, API, new[] { importFilename });
 
         public override void SetUpSteps()
         {
-            AddStep("Prepare import beatmap", () => importFilename = TestResources.GetTestBeatmapForImport());
+            AddStep(
+                "Prepare import beatmap",
+                () => importFilename = TestResources.GetTestBeatmapForImport()
+            );
 
             base.SetUpSteps();
         }
@@ -25,7 +29,11 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestImportCreatedNotification()
         {
-            AddUntilStep("Import notification was presented", () => Game.Notifications.ChildrenOfType<ProgressCompletionNotification>().Count() == 1);
+            AddUntilStep(
+                "Import notification was presented",
+                () =>
+                    Game.Notifications.ChildrenOfType<ProgressCompletionNotification>().Count() == 1
+            );
         }
     }
 }

@@ -25,16 +25,25 @@ namespace osu.Game.Screens.Play.PlayerSettings
                 dimSliderBar = new PlayerSliderBar<double>
                 {
                     LabelText = GameplaySettingsStrings.BackgroundDim,
-                    DisplayAsPercentage = true
+                    DisplayAsPercentage = true,
                 },
                 blurSliderBar = new PlayerSliderBar<double>
                 {
                     LabelText = GameplaySettingsStrings.BackgroundBlur,
-                    DisplayAsPercentage = true
+                    DisplayAsPercentage = true,
                 },
-                showStoryboardToggle = new PlayerCheckbox { LabelText = GraphicsSettingsStrings.StoryboardVideo },
-                beatmapSkinsToggle = new PlayerCheckbox { LabelText = SkinSettingsStrings.BeatmapSkins },
-                beatmapColorsToggle = new PlayerCheckbox { LabelText = SkinSettingsStrings.BeatmapColours },
+                showStoryboardToggle = new PlayerCheckbox
+                {
+                    LabelText = GraphicsSettingsStrings.StoryboardVideo,
+                },
+                beatmapSkinsToggle = new PlayerCheckbox
+                {
+                    LabelText = SkinSettingsStrings.BeatmapSkins,
+                },
+                beatmapColorsToggle = new PlayerCheckbox
+                {
+                    LabelText = SkinSettingsStrings.BeatmapColours,
+                },
                 comboColourNormalisationSliderBar = new PlayerSliderBar<float>
                 {
                     LabelText = GraphicsSettingsStrings.ComboColourNormalisation,
@@ -51,7 +60,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
             showStoryboardToggle.Current = config.GetBindable<bool>(OsuSetting.ShowStoryboard);
             beatmapSkinsToggle.Current = config.GetBindable<bool>(OsuSetting.BeatmapSkins);
             beatmapColorsToggle.Current = config.GetBindable<bool>(OsuSetting.BeatmapColours);
-            comboColourNormalisationSliderBar.Current = config.GetBindable<float>(OsuSetting.ComboColourNormalisationAmount);
+            comboColourNormalisationSliderBar.Current = config.GetBindable<float>(
+                OsuSetting.ComboColourNormalisationAmount
+            );
         }
     }
 }

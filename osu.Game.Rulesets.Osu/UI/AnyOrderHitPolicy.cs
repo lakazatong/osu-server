@@ -14,10 +14,12 @@ namespace osu.Game.Rulesets.Osu.UI
     {
         public IHitObjectContainer HitObjectContainer { get; set; } = null!;
 
-        public ClickAction CheckHittable(DrawableHitObject hitObject, double time, HitResult result) => ClickAction.Hit;
+        public ClickAction CheckHittable(
+            DrawableHitObject hitObject,
+            double time,
+            HitResult result
+        ) => ClickAction.Hit;
 
-        public void HandleHit(DrawableHitObject hitObject)
-        {
-        }
+        public void HandleHit(DrawableHitObject hitObject) { }
     }
 }

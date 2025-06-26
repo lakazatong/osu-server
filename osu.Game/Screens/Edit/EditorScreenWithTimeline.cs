@@ -20,9 +20,7 @@ namespace osu.Game.Screens.Edit
         private Container timelineContent = null!;
 
         protected EditorScreenWithTimeline(EditorScreenMode type)
-            : base(type)
-        {
-        }
+            : base(type) { }
 
         [BackgroundDependencyLoader(true)]
         private void load()
@@ -33,11 +31,7 @@ namespace osu.Game.Screens.Edit
             Child = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(),
-                },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 Content = new[]
                 {
                     new Drawable[]
@@ -65,17 +59,14 @@ namespace osu.Game.Screens.Edit
                                             },
                                         },
                                     },
-                                    RowDimensions = new[]
-                                    {
-                                        new Dimension(GridSizeMode.AutoSize),
-                                    },
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                                     ColumnDimensions = new[]
                                     {
                                         new Dimension(),
                                         new Dimension(GridSizeMode.Absolute, 90),
-                                    }
-                                }
-                            }
+                                    },
+                                },
+                            },
                         },
                     },
                     new Drawable[]
@@ -85,13 +76,11 @@ namespace osu.Game.Screens.Edit
                             Name = "Main content",
                             RelativeSizeAxes = Axes.Both,
                             Depth = float.MaxValue,
-                            Child = spinner = new LoadingSpinner(true)
-                            {
-                                State = { Value = Visibility.Visible },
-                            },
+                            Child = spinner =
+                                new LoadingSpinner(true) { State = { Value = Visibility.Visible } },
                         },
                     },
-                }
+                },
             };
         }
 
@@ -99,24 +88,28 @@ namespace osu.Game.Screens.Edit
         {
             base.LoadComplete();
 
-            LoadComponentAsync(CreateMainContent(), content =>
-            {
-                spinner.State.Value = Visibility.Hidden;
-
-                MainContent.Add(content);
-                content.FadeInFromZero(300, Easing.OutQuint);
-
-                LoadComponentAsync(TimelineArea = new TimelineArea(CreateTimelineContent()), timeline =>
+            LoadComponentAsync(
+                CreateMainContent(),
+                content =>
                 {
-                    ConfigureTimeline(timeline);
-                    timelineContent.Add(timeline);
-                });
-            });
+                    spinner.State.Value = Visibility.Hidden;
+
+                    MainContent.Add(content);
+                    content.FadeInFromZero(300, Easing.OutQuint);
+
+                    LoadComponentAsync(
+                        TimelineArea = new TimelineArea(CreateTimelineContent()),
+                        timeline =>
+                        {
+                            ConfigureTimeline(timeline);
+                            timelineContent.Add(timeline);
+                        }
+                    );
+                }
+            );
         }
 
-        protected virtual void ConfigureTimeline(TimelineArea timelineArea)
-        {
-        }
+        protected virtual void ConfigureTimeline(TimelineArea timelineArea) { }
 
         protected abstract Drawable CreateMainContent();
 

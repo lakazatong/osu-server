@@ -46,7 +46,8 @@ namespace osu.Game.Rulesets.Edit
             config.BindWith(OsuSetting.EditorContractSidebars, contractSidebars);
         }
 
-        protected override OsuScrollContainer CreateScrollContainer() => scrollContainer = new OffsetMaintainingScrollContainer();
+        protected override OsuScrollContainer CreateScrollContainer() =>
+            scrollContainer = new OffsetMaintainingScrollContainer();
 
         protected override void LoadComplete()
         {
@@ -60,9 +61,14 @@ namespace osu.Game.Rulesets.Edit
                 {
                     // When state changes from expanded -> collapsed the mouse is no longer within the toolbox so there would be no
                     // hovered children if we used the mouse position directly
-                    var position = new Vector2(ScreenSpaceDrawQuad.Centre.X, inputManager.CurrentState.Mouse.Position.Y);
+                    var position = new Vector2(
+                        ScreenSpaceDrawQuad.Centre.X,
+                        inputManager.CurrentState.Mouse.Position.Y
+                    );
 
-                    scrollContainer.TargetDrawable = Children.FirstOrDefault(it => it.Contains(position));
+                    scrollContainer.TargetDrawable = Children.FirstOrDefault(it =>
+                        it.Contains(position)
+                    );
                 });
             }
         }
@@ -71,7 +77,8 @@ namespace osu.Game.Rulesets.Edit
         {
             base.Update();
 
-            bool requireContracting = contractSidebars.Value || editor?.DrawSize.X / editor?.DrawSize.Y < 1.7f;
+            bool requireContracting =
+                contractSidebars.Value || editor?.DrawSize.X / editor?.DrawSize.Y < 1.7f;
 
             if (expandOnHover != requireContracting)
             {
@@ -105,7 +112,9 @@ namespace osu.Game.Rulesets.Edit
             {
                 if (targetDrawable != null)
                 {
-                    float currentPosition = ToLocalSpace(targetDrawable.ScreenSpaceDrawQuad.TopLeft).Y;
+                    float currentPosition = ToLocalSpace(
+                        targetDrawable.ScreenSpaceDrawQuad.TopLeft
+                    ).Y;
 
                     if (!Precision.AlmostEquals(targetPosition, currentPosition))
                     {
@@ -120,7 +129,11 @@ namespace osu.Game.Rulesets.Edit
                 base.UpdateAfterChildren();
             }
 
-            protected override void OnUserScroll(double value, bool animated = true, double? distanceDecay = null)
+            protected override void OnUserScroll(
+                double value,
+                bool animated = true,
+                double? distanceDecay = null
+            )
             {
                 targetDrawable = null;
 

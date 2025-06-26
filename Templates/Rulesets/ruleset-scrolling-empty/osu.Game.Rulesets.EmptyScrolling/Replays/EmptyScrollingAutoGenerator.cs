@@ -9,12 +9,11 @@ namespace osu.Game.Rulesets.EmptyScrolling.Replays
 {
     public class EmptyScrollingAutoGenerator : AutoGenerator<EmptyScrollingReplayFrame>
     {
-        public new Beatmap<EmptyScrollingHitObject> Beatmap => (Beatmap<EmptyScrollingHitObject>)base.Beatmap;
+        public new Beatmap<EmptyScrollingHitObject> Beatmap =>
+            (Beatmap<EmptyScrollingHitObject>)base.Beatmap;
 
         public EmptyScrollingAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
@@ -22,11 +21,13 @@ namespace osu.Game.Rulesets.EmptyScrolling.Replays
 
             foreach (EmptyScrollingHitObject hitObject in Beatmap.HitObjects)
             {
-                Frames.Add(new EmptyScrollingReplayFrame
-                {
-                    Time = hitObject.StartTime
-                    // todo: add required inputs and extra frames.
-                });
+                Frames.Add(
+                    new EmptyScrollingReplayFrame
+                    {
+                        Time = hitObject.StartTime,
+                        // todo: add required inputs and extra frames.
+                    }
+                );
             }
         }
     }

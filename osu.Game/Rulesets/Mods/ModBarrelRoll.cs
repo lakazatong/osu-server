@@ -14,7 +14,10 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModBarrelRoll<TObject> : Mod, IUpdatableByPlayfield, IApplicableToDrawableRuleset<TObject>
+    public abstract class ModBarrelRoll<TObject>
+        : Mod,
+            IUpdatableByPlayfield,
+            IApplicableToDrawableRuleset<TObject>
         where TObject : HitObject
     {
         /// <summary>
@@ -24,12 +27,13 @@ namespace osu.Game.Rulesets.Mods
         protected float CurrentRotation { get; private set; }
 
         [SettingSource("Roll speed", "Rotations per minute")]
-        public BindableNumber<double> SpinSpeed { get; } = new BindableDouble(0.5)
-        {
-            MinValue = 0.02,
-            MaxValue = 12,
-            Precision = 0.01,
-        };
+        public BindableNumber<double> SpinSpeed { get; } =
+            new BindableDouble(0.5)
+            {
+                MinValue = 0.02,
+                MaxValue = 12,
+                Precision = 0.01,
+            };
 
         [SettingSource("Direction", "The direction of rotation")]
         public Bindable<RotationDirection> Direction { get; } = new Bindable<RotationDirection>();
@@ -39,7 +43,10 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "The whole playfield is on a wheel!";
         public override double ScoreMultiplier => 1;
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -52,7 +59,10 @@ namespace osu.Game.Rulesets.Mods
 
         public virtual void Update(Playfield playfield)
         {
-            playfieldAdjustmentContainer.Rotation = CurrentRotation = (Direction.Value == RotationDirection.Counterclockwise ? -1 : 1) * 360 * (float)(playfield.Time.Current / 60000 * SpinSpeed.Value);
+            playfieldAdjustmentContainer.Rotation = CurrentRotation =
+                (Direction.Value == RotationDirection.Counterclockwise ? -1 : 1)
+                * 360
+                * (float)(playfield.Time.Current / 60000 * SpinSpeed.Value);
         }
 
         public void ApplyToDrawableRuleset(DrawableRuleset<TObject> drawableRuleset)

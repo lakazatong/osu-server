@@ -8,13 +8,9 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         protected override float ScaleFactor => base.ScaleFactor / 2;
 
         public DrawableTinyDroplet()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableTinyDroplet(TinyDroplet? h)
-            : base(h)
-        {
-        }
+            : base(h) { }
     }
 }

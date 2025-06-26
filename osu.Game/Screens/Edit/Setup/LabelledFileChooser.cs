@@ -27,7 +27,11 @@ namespace osu.Game.Screens.Edit.Setup
     /// A labelled drawable displaying file chooser on click, with placeholder text support.
     /// todo: this should probably not use PopoverTextBox just to display placeholder text, but is the best way for now.
     /// </summary>
-    internal partial class LabelledFileChooser : LabelledDrawable<LabelledTextBoxWithPopover.PopoverTextBox>, IHasCurrentValue<FileInfo?>, ICanAcceptFiles, IHasPopover
+    internal partial class LabelledFileChooser
+        : LabelledDrawable<LabelledTextBoxWithPopover.PopoverTextBox>,
+            IHasCurrentValue<FileInfo?>,
+            ICanAcceptFiles,
+            IHasPopover
     {
         private readonly string[] handledExtensions;
 
@@ -45,7 +49,8 @@ namespace osu.Game.Screens.Edit.Setup
         /// </remarks>
         private string? initialChooserPath;
 
-        private readonly BindableWithCurrent<FileInfo?> current = new BindableWithCurrent<FileInfo?>();
+        private readonly BindableWithCurrent<FileInfo?> current =
+            new BindableWithCurrent<FileInfo?>();
 
         public Bindable<FileInfo?> Current
         {
@@ -92,7 +97,8 @@ namespace osu.Game.Screens.Edit.Setup
             return Task.CompletedTask;
         }
 
-        Task ICanAcceptFiles.Import(ImportTask[] tasks, ImportParameters parameters) => throw new NotImplementedException();
+        Task ICanAcceptFiles.Import(ImportTask[] tasks, ImportParameters parameters) =>
+            throw new NotImplementedException();
 
         protected override void Dispose(bool isDisposing)
         {
@@ -102,23 +108,29 @@ namespace osu.Game.Screens.Edit.Setup
                 game.UnregisterImportHandler(this);
         }
 
-        protected override LabelledTextBoxWithPopover.PopoverTextBox CreateComponent() => new LabelledTextBoxWithPopover.PopoverTextBox
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            RelativeSizeAxes = Axes.X,
-            CornerRadius = CORNER_RADIUS,
-            OnFocused = this.ShowPopover,
-        };
+        protected override LabelledTextBoxWithPopover.PopoverTextBox CreateComponent() =>
+            new LabelledTextBoxWithPopover.PopoverTextBox
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.X,
+                CornerRadius = CORNER_RADIUS,
+                OnFocused = this.ShowPopover,
+            };
 
-        public Popover GetPopover() => new FileChooserPopover(handledExtensions, Current, initialChooserPath);
+        public Popover GetPopover() =>
+            new FileChooserPopover(handledExtensions, Current, initialChooserPath);
 
         private partial class FileChooserPopover : OsuPopover
         {
             protected override string PopInSampleName => "UI/overlay-big-pop-in";
             protected override string PopOutSampleName => "UI/overlay-big-pop-out";
 
-            public FileChooserPopover(string[] handledExtensions, Bindable<FileInfo?> currentFile, string? chooserPath)
+            public FileChooserPopover(
+                string[] handledExtensions,
+                Bindable<FileInfo?> currentFile,
+                string? chooserPath
+            )
                 : base(false)
             {
                 Child = new Container
@@ -127,7 +139,7 @@ namespace osu.Game.Screens.Edit.Setup
                     Child = new OsuFileSelector(chooserPath, handledExtensions)
                     {
                         RelativeSizeAxes = Axes.Both,
-                        CurrentFile = { BindTarget = currentFile }
+                        CurrentFile = { BindTarget = currentFile },
                     },
                 };
             }

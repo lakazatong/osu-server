@@ -51,12 +51,12 @@ namespace osu.Game.Tests.Visual
         [Resolved]
         private SpectatorClient spectatorClient { get; set; }
 
-        public TestPlayer(bool allowPause = true, bool showResults = true, bool pauseOnFocusLost = false)
-            : base(new PlayerConfiguration
-            {
-                AllowPause = allowPause,
-                ShowResults = showResults
-            })
+        public TestPlayer(
+            bool allowPause = true,
+            bool showResults = true,
+            bool pauseOnFocusLost = false
+        )
+            : base(new PlayerConfiguration { AllowPause = allowPause, ShowResults = showResults })
         {
             PauseOnFocusLost = pauseOnFocusLost;
         }
@@ -69,7 +69,10 @@ namespace osu.Game.Tests.Visual
             return base.CreateTokenRequest();
         }
 
-        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(Score score, long token)
+        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(
+            Score score,
+            long token
+        )
         {
             SubmittedScore = score;
             return base.CreateSubmissionRequest(score, token);
@@ -88,7 +91,9 @@ namespace osu.Game.Tests.Visual
 
             if (autoplayMod != null)
             {
-                DrawableRuleset?.SetReplayScore(autoplayMod.CreateScoreFromReplayData(GameplayState.Beatmap, Mods.Value));
+                DrawableRuleset?.SetReplayScore(
+                    autoplayMod.CreateScoreFromReplayData(GameplayState.Beatmap, Mods.Value)
+                );
                 return;
             }
 

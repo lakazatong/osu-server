@@ -33,44 +33,46 @@ namespace osu.Game.Overlays
 
             mainContent.RelativeSizeAxes = Axes.Both;
 
-            mainContent.AddRange(new Drawable[]
-            {
-                ScrollFlow = new OverlayScrollContainer
+            mainContent.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    ScrollbarVisible = false,
-                    Child = new OsuContextMenuContainer
+                    ScrollFlow = new OverlayScrollContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Child = new PopoverContainer
+                        RelativeSizeAxes = Axes.Both,
+                        ScrollbarVisible = false,
+                        Child = new OsuContextMenuContainer
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Child = new FillFlowContainer
+                            Child = new PopoverContainer
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                Direction = FillDirection.Vertical,
-                                Children = new Drawable[]
+                                Child = new FillFlowContainer
                                 {
-                                    Header.With(h => h.Depth = float.MinValue),
-                                    content = new Container
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Direction = FillDirection.Vertical,
+                                    Children = new Drawable[]
                                     {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y
-                                    }
-                                }
-                            }
+                                        Header.With(h => h.Depth = float.MinValue),
+                                        content = new Container
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                        },
+                                    },
+                                },
+                            },
                         },
-                    }
-                },
-                loadingContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = Loading = new LoadingLayer(true),
+                    },
+                    loadingContainer = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = Loading = new LoadingLayer(true),
+                    },
                 }
-            });
+            );
 
             base.Content.Add(mainContent);
         }
@@ -88,7 +90,10 @@ namespace osu.Game.Overlays
             base.UpdateAfterChildren();
 
             // don't block header by applying padding equal to the visible header height
-            loadingContainer.Padding = new MarginPadding { Top = (float)Math.Max(0, Header.Height - ScrollFlow.Current) };
+            loadingContainer.Padding = new MarginPadding
+            {
+                Top = (float)Math.Max(0, Header.Height - ScrollFlow.Current),
+            };
         }
     }
 }

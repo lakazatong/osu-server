@@ -24,6 +24,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Spinners
             piece.UpdateFrom(HitObject);
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => piece.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            piece.ReceivePositionalInputAt(screenSpacePos);
     }
 }

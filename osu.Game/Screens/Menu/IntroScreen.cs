@@ -92,10 +92,8 @@ namespace osu.Game.Screens.Menu
         /// </summary>
         protected bool UsingThemedIntro { get; private set; }
 
-        protected override BackgroundScreen CreateBackground() => new BackgroundScreenDefault
-        {
-            Colour = Color4.Black
-        };
+        protected override BackgroundScreen CreateBackground() =>
+            new BackgroundScreenDefault { Colour = Color4.Black };
 
         public override bool? AllowGlobalTrackControl => false;
 
@@ -108,7 +106,12 @@ namespace osu.Game.Screens.Menu
         private BeatmapManager beatmaps { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config, Framework.Game game, RealmAccess realm, IAPIProvider api)
+        private void load(
+            OsuConfigManager config,
+            Framework.Game game,
+            RealmAccess realm,
+            IAPIProvider api
+        )
         {
             // prevent user from changing beatmap while the intro is still running.
             beatmap = Beatmap.BeginLease(false);
@@ -126,13 +129,16 @@ namespace osu.Game.Screens.Menu
             {
                 realm.Run(r =>
                 {
-                    var usableBeatmapSets = r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected).AsRealmCollection();
+                    var usableBeatmapSets = r.All<BeatmapSetInfo>()
+                        .Where(s => !s.DeletePending && !s.Protected)
+                        .AsRealmCollection();
 
                     int setCount = usableBeatmapSets.Count;
 
                     if (setCount > 0)
                     {
-                        var found = usableBeatmapSets[RNG.Next(0, setCount - 1)].Beatmaps.FirstOrDefault();
+                        var found = usableBeatmapSets[RNG.Next(0, setCount - 1)]
+                            .Beatmaps.FirstOrDefault();
 
                         if (found != null)
                             initialBeatmap = beatmaps.GetWorkingBeatmap(found);
@@ -151,7 +157,14 @@ namespace osu.Game.Screens.Menu
                 {
                     // if we detect that the theme track or beatmap is unavailable this is either first startup or things are in a bad state.
                     // this could happen if a user has nuked their files store. for now, reimport to repair this.
-                    var import = beatmaps.Import(new ImportTask(game.Resources.GetStream($"Tracks/{BeatmapFile}"), BeatmapFile)).GetResultSafely();
+                    var import = beatmaps
+                        .Import(
+                            new ImportTask(
+                                game.Resources.GetStream($"Tracks/{BeatmapFile}"),
+                                BeatmapFile
+                            )
+                        )
+                        .GetResultSafely();
 
                     import?.PerformWrite(b => b.Protected = true);
 
@@ -217,22 +230,27 @@ namespace osu.Game.Screens.Menu
             // play audio, causing a clock to never elapse time and the intro to never end.
             //
             // This safety measure gives the user a chance to fix the problem from the settings menu.
-            Scheduler.AddDelayed(() =>
-            {
-                if (DidLoadMenu)
-                    return;
-
-                PrepareMenuLoad();
-                LoadMenu();
-
-                if (!Debugger.IsAttached)
+            Scheduler.AddDelayed(
+                () =>
                 {
-                    notifications.Post(new SimpleErrorNotification
+                    if (DidLoadMenu)
+                        return;
+
+                    PrepareMenuLoad();
+                    LoadMenu();
+
+                    if (!Debugger.IsAttached)
                     {
-                        Text = NotificationsStrings.AudioPlaybackIssue
-                    });
-                }
-            }, 8000);
+                        notifications.Post(
+                            new SimpleErrorNotification
+                            {
+                                Text = NotificationsStrings.AudioPlaybackIssue,
+                            }
+                        );
+                    }
+                },
+                8000
+            );
         }
 
         public override void OnResuming(ScreenTransitionEvent e)
@@ -266,7 +284,8 @@ namespace osu.Game.Screens.Menu
                 // initially fade to almost silent then ramp out over the remaining time.
                 const double initial_fade = 200;
                 track
-                    .VolumeTo(0.03f, initial_fade).Then()
+                    .VolumeTo(0.03f, initial_fade)
+                    .Then()
                     .VolumeTo(0, fadeOutTime - initial_fade, Easing.In);
             }
             else
@@ -348,8 +367,7 @@ namespace osu.Game.Screens.Menu
 
                 logo.MoveTo(new Vector2(0.5f), initialMovementTime, Easing.OutQuint);
 
-                logo
-                    .ScaleTo(1, initialMovementTime, Easing.OutQuint)
+                logo.ScaleTo(1, initialMovementTime, Easing.OutQuint)
                     .FadeIn(quick_appear, Easing.OutQuint)
                     .Then()
                     .RotateTo(20, exit_delay * 1.5f)

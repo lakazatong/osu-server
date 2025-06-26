@@ -23,9 +23,7 @@ namespace osu.Game.Models
         }
 
         [UsedImplicitly]
-        private RealmNamedFileUsage()
-        {
-        }
+        private RealmNamedFileUsage() { }
 
         IFileInfo INamedFileUsage.File => File;
     }

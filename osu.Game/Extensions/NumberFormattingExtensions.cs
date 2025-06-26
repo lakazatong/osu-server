@@ -17,7 +17,12 @@ namespace osu.Game.Extensions
         /// <param name="maxDecimalDigits">The maximum number of decimals to be considered in the original value.</param>
         /// <param name="asPercentage">Whether the output should be a percentage. For integer types, 0-100 is mapped to 0-100%; for other types 0-1 is mapped to 0-100%.</param>
         /// <returns>The formatted output.</returns>
-        public static string ToStandardFormattedString<T>(this T value, int maxDecimalDigits, bool asPercentage = false) where T : struct, INumber<T>, IMinMaxValue<T>
+        public static string ToStandardFormattedString<T>(
+            this T value,
+            int maxDecimalDigits,
+            bool asPercentage = false
+        )
+            where T : struct, INumber<T>, IMinMaxValue<T>
         {
             double floatValue = double.CreateTruncating(value);
 
@@ -31,12 +36,18 @@ namespace osu.Game.Extensions
                 if (value is int)
                     floatValue /= 100;
 
-                return floatValue.ToString($@"0.{new string('0', Math.Max(0, significantDigits - 2))}%", CultureInfo.InvariantCulture);
+                return floatValue.ToString(
+                    $@"0.{new string('0', Math.Max(0, significantDigits - 2))}%",
+                    CultureInfo.InvariantCulture
+                );
             }
 
-            string negativeSign = Math.Round(floatValue, significantDigits) < 0 ? "-" : string.Empty;
+            string negativeSign =
+                Math.Round(floatValue, significantDigits) < 0 ? "-" : string.Empty;
 
-            return FormattableString.Invariant($"{negativeSign}{Math.Abs(floatValue).ToString($"N{significantDigits}")}");
+            return FormattableString.Invariant(
+                $"{negativeSign}{Math.Abs(floatValue).ToString($"N{significantDigits}")}"
+            );
         }
 
         /// <summary>
@@ -45,7 +56,14 @@ namespace osu.Game.Extensions
         /// <param name="d">The decimal to normalize.</param>
         /// <param name="sd">The maximum number of decimal digits to keep. The final result may have fewer decimal digits than this value.</param>
         /// <returns>The normalised decimal.</returns>
-        private static decimal normalise(decimal d, int sd)
-            => decimal.Parse(Math.Round(d, sd).ToString(string.Concat("0.", new string('#', sd)), CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
+        private static decimal normalise(decimal d, int sd) =>
+            decimal.Parse(
+                Math.Round(d, sd)
+                    .ToString(
+                        string.Concat("0.", new string('#', sd)),
+                        CultureInfo.InvariantCulture
+                    ),
+                CultureInfo.InvariantCulture
+            );
     }
 }

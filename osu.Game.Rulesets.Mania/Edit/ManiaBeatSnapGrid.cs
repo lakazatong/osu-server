@@ -15,9 +15,8 @@ namespace osu.Game.Rulesets.Mania.Edit
         protected override IEnumerable<Container> GetTargetContainers(HitObjectComposer composer)
         {
             return ((ManiaPlayfield)composer.Playfield)
-                   .Stages
-                   .SelectMany(stage => stage.Columns)
-                   .Select(column => column.UnderlayElements);
+                .Stages.SelectMany(stage => stage.Columns)
+                .Select(column => column.UnderlayElements);
         }
     }
 }

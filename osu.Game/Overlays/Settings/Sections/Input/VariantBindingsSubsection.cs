@@ -35,12 +35,16 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         {
             string rulesetName = Ruleset.ShortName;
 
-            return realm.All<RealmKeyBinding>()
-                        .Where(b => b.RulesetName == rulesetName && b.Variant == variant);
+            return realm
+                .All<RealmKeyBinding>()
+                .Where(b => b.RulesetName == rulesetName && b.Variant == variant);
         }
 
-        protected override KeyBindingRow CreateKeyBindingRow(object action, IEnumerable<KeyBinding> defaults)
-            => new KeyBindingRow(action)
+        protected override KeyBindingRow CreateKeyBindingRow(
+            object action,
+            IEnumerable<KeyBinding> defaults
+        ) =>
+            new KeyBindingRow(action)
             {
                 AllowMainMouseButtons = true,
                 Defaults = defaults.Select(d => d.KeyCombination),

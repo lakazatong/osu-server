@@ -13,9 +13,7 @@ namespace osu.Game.Benchmarks
     {
         [GlobalSetup]
         [OneTimeSetUp]
-        public virtual void SetUp()
-        {
-        }
+        public virtual void SetUp() { }
 
         [Test]
         public void RunBenchmark() => BenchmarkRunner.Run(GetType());

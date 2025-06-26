@@ -62,21 +62,14 @@ namespace osu.Game.Screens.SelectV2
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    contentBackground = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    contentBackground = new Box { RelativeSizeAxes = Axes.Both },
                     triangles = new TrianglesV2
                     {
                         RelativeSizeAxes = Axes.Both,
                         Thickness = 0.02f,
                         SpawnRatio = 0.6f,
                     },
-                    glow = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Width = 0.5f,
-                    },
+                    glow = new Box { RelativeSizeAxes = Axes.Both, Width = 0.5f },
                 },
             };
             AccentColour = colourProvider.Highlight1;
@@ -97,8 +90,8 @@ namespace osu.Game.Screens.SelectV2
                             Origin = Anchor.CentreLeft,
                             UseFullGlyphHeight = false,
                             Font = OsuFont.Style.Heading2,
-                        }
-                    }
+                        },
+                    },
                 },
                 countPill = new CircularContainer
                 {
@@ -120,9 +113,9 @@ namespace osu.Game.Screens.SelectV2
                             Origin = Anchor.Centre,
                             Font = OsuFont.Style.Caption1.With(weight: FontWeight.Bold),
                             UseFullGlyphHeight = false,
-                        }
+                        },
                     },
-                }
+                },
             };
         }
 
@@ -144,7 +137,8 @@ namespace osu.Game.Screens.SelectV2
             var group = (StarDifficultyGroupDefinition)Item.Model;
             int starNumber = (int)group.Difficulty.Stars;
 
-            ratingColour = starNumber >= 9 ? OsuColour.Gray(0.2f) : colours.ForStarDifficulty(starNumber);
+            ratingColour =
+                starNumber >= 9 ? OsuColour.Gray(0.2f) : colours.ForStarDifficulty(starNumber);
 
             AccentColour = ratingColour;
             contentBackground.Colour = ratingColour.Darken(1f);
@@ -165,7 +159,8 @@ namespace osu.Game.Screens.SelectV2
                     break;
             }
 
-            iconContainer.Colour = starNumber >= 7 ? colourProvider.Content1 : colourProvider.Background5;
+            iconContainer.Colour =
+                starNumber >= 7 ? colourProvider.Content1 : colourProvider.Background5;
             starRatingText.Colour = colourProvider.Content1;
             starRatingText.Text = group.Title;
 
@@ -174,7 +169,10 @@ namespace osu.Game.Screens.SelectV2
             if (starNumber >= 8)
                 colour = ColourInfo.GradientHorizontal(ratingColour, ratingColour.Darken(0.2f));
             else
-                colour = ColourInfo.GradientHorizontal(ratingColour.Darken(0.6f), ratingColour.Darken(0.8f));
+                colour = ColourInfo.GradientHorizontal(
+                    ratingColour.Darken(0.6f),
+                    ratingColour.Darken(0.8f)
+                );
 
             triangles.Colour = colour;
 
@@ -210,7 +208,11 @@ namespace osu.Game.Screens.SelectV2
 
                 return new MenuItem[]
                 {
-                    new OsuMenuItem(Expanded.Value ? "Collapse" : "Expand", MenuItemType.Highlighted, () => TriggerClick())
+                    new OsuMenuItem(
+                        Expanded.Value ? "Collapse" : "Expand",
+                        MenuItemType.Highlighted,
+                        () => TriggerClick()
+                    ),
                 };
             }
         }

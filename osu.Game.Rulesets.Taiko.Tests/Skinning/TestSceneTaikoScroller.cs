@@ -20,15 +20,33 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
 
         public TestSceneTaikoScroller()
         {
-            AddStep("Load scroller", () => SetContents(_ =>
-                new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.Scroller), _ => Empty())
-                {
-                    Clock = new FramedClock(clock),
-                    Height = 0.4f,
-                }));
+            AddStep(
+                "Load scroller",
+                () =>
+                    SetContents(_ => new SkinnableDrawable(
+                        new TaikoSkinComponentLookup(TaikoSkinComponents.Scroller),
+                        _ => Empty()
+                    )
+                    {
+                        Clock = new FramedClock(clock),
+                        Height = 0.4f,
+                    })
+            );
 
-            AddToggleStep("Toggle passing", passing => this.ChildrenOfType<LegacyTaikoScroller>().ForEach(s => s.LastResult.Value =
-                new JudgementResult(new HitObject(), new Judgement()) { Type = passing ? HitResult.Great : HitResult.Miss }));
+            AddToggleStep(
+                "Toggle passing",
+                passing =>
+                    this.ChildrenOfType<LegacyTaikoScroller>()
+                        .ForEach(s =>
+                            s.LastResult.Value = new JudgementResult(
+                                new HitObject(),
+                                new Judgement()
+                            )
+                            {
+                                Type = passing ? HitResult.Great : HitResult.Miss,
+                            }
+                        )
+            );
 
             AddToggleStep("toggle playback direction", reversed => this.reversed = reversed);
         }

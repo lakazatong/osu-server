@@ -15,18 +15,11 @@ namespace osu.Game.Overlays.Settings.Sections
     {
         public override LocalisableString Header => OnlineSettingsStrings.OnlineSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Online
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Online };
 
         public OnlineSection()
         {
-            Children = new Drawable[]
-            {
-                new WebSettings(),
-                new AlertsAndPrivacySettings(),
-            };
+            Children = new Drawable[] { new WebSettings(), new AlertsAndPrivacySettings() };
 
             if (RuntimeInfo.IsDesktop)
                 Add(new IntegrationSettings());

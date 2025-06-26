@@ -18,26 +18,32 @@ namespace osu.Game.Tests.Visual.Menus
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("prepare beatmap", () =>
-            {
-                var setInfo = beatmaps.QueryBeatmapSet(b => b.Protected && b.Hash == IntroChristmas.CHRISTMAS_BEATMAP_SET_HASH);
+            AddStep(
+                "prepare beatmap",
+                () =>
+                {
+                    var setInfo = beatmaps.QueryBeatmapSet(b =>
+                        b.Protected && b.Hash == IntroChristmas.CHRISTMAS_BEATMAP_SET_HASH
+                    );
 
-                if (setInfo != null)
-                    Beatmap.Value = beatmaps.GetWorkingBeatmap(setInfo.Value.Beatmaps.First());
-            });
+                    if (setInfo != null)
+                        Beatmap.Value = beatmaps.GetWorkingBeatmap(setInfo.Value.Beatmaps.First());
+                }
+            );
 
             AddStep("create lighting", () => Child = new MainMenuSeasonalLighting());
 
-            AddStep("restart beatmap", () =>
-            {
-                Beatmap.Value.Track.Start();
-                Beatmap.Value.Track.Seek(4000);
-            });
+            AddStep(
+                "restart beatmap",
+                () =>
+                {
+                    Beatmap.Value.Track.Start();
+                    Beatmap.Value.Track.Seek(4000);
+                }
+            );
         }
 
         [Test]
-        public void TestBasic()
-        {
-        }
+        public void TestBasic() { }
     }
 }

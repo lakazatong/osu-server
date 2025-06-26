@@ -63,8 +63,16 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Explicit]
         public void TestAddRemoveRepeatedOps()
         {
-            AddRepeatStep("add beatmaps", () => BeatmapSets.Add(TestResources.CreateTestBeatmapSetInfo(RNG.Next(1, 4))), 20);
-            AddRepeatStep("remove beatmaps", () => BeatmapSets.RemoveAt(RNG.Next(0, BeatmapSets.Count)), 20);
+            AddRepeatStep(
+                "add beatmaps",
+                () => BeatmapSets.Add(TestResources.CreateTestBeatmapSetInfo(RNG.Next(1, 4))),
+                20
+            );
+            AddRepeatStep(
+                "remove beatmaps",
+                () => BeatmapSets.RemoveAt(RNG.Next(0, BeatmapSets.Count)),
+                20
+            );
         }
 
         [Test]
@@ -80,19 +88,22 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         public void TestRandomStatus()
         {
             SortBy(SortMode.Title);
-            AddStep("add beatmaps", () =>
-            {
-                for (int i = 0; i < 50; i++)
+            AddStep(
+                "add beatmaps",
+                () =>
                 {
-                    var set = TestResources.CreateTestBeatmapSetInfo();
-                    set.Status = Enum.GetValues<BeatmapOnlineStatus>().MinBy(_ => RNG.Next());
+                    for (int i = 0; i < 50; i++)
+                    {
+                        var set = TestResources.CreateTestBeatmapSetInfo();
+                        set.Status = Enum.GetValues<BeatmapOnlineStatus>().MinBy(_ => RNG.Next());
 
-                    if (i % 2 == 0)
-                        set.Status = BeatmapOnlineStatus.None;
+                        if (i % 2 == 0)
+                            set.Status = BeatmapOnlineStatus.None;
 
-                    BeatmapSets.Add(set);
+                        BeatmapSets.Add(set);
+                    }
                 }
-            });
+            );
         }
 
         [Test]
@@ -102,14 +113,28 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             AddBeatmaps(1, 1);
 
-            AddStep("start constantly updating beatmap in background", () =>
-            {
-                updateTask = Scheduler.AddDelayed(() => { BeatmapSets.ReplaceRange(0, 1, [BeatmapSets.First()]); }, 1, true);
-            });
+            AddStep(
+                "start constantly updating beatmap in background",
+                () =>
+                {
+                    updateTask = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            BeatmapSets.ReplaceRange(0, 1, [BeatmapSets.First()]);
+                        },
+                        1,
+                        true
+                    );
+                }
+            );
 
             CreateCarousel();
 
-            AddUntilStep("panels loaded", () => Carousel.ChildrenOfType<Panel>(), () => Is.Not.Empty);
+            AddUntilStep(
+                "panels loaded",
+                () => Carousel.ChildrenOfType<Panel>(),
+                () => Is.Not.Empty
+            );
 
             AddStep("end task", () => updateTask.Cancel());
         }
@@ -122,18 +147,30 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             List<BeatmapSetInfo> generated = new List<BeatmapSetInfo>();
 
-            AddStep($"populate {count} test beatmaps", () =>
-            {
-                generated.Clear();
-                Task.Run(() =>
+            AddStep(
+                $"populate {count} test beatmaps",
+                () =>
                 {
-                    for (int j = 0; j < count; j++)
-                        generated.Add(CreateTestBeatmapSetInfo(3, true));
-                }).ConfigureAwait(true);
-            });
+                    generated.Clear();
+                    Task.Run(() =>
+                        {
+                            for (int j = 0; j < count; j++)
+                                generated.Add(CreateTestBeatmapSetInfo(3, true));
+                        })
+                        .ConfigureAwait(true);
+                }
+            );
 
-            AddUntilStep("wait for beatmaps populated", () => generated.Count, () => Is.GreaterThan(count / 3));
-            AddUntilStep("this takes a while", () => generated.Count, () => Is.GreaterThan(count / 3 * 2));
+            AddUntilStep(
+                "wait for beatmaps populated",
+                () => generated.Count,
+                () => Is.GreaterThan(count / 3)
+            );
+            AddUntilStep(
+                "this takes a while",
+                () => generated.Count,
+                () => Is.GreaterThan(count / 3 * 2)
+            );
             AddUntilStep("maybe they are done now", () => generated.Count, () => Is.EqualTo(count));
 
             AddStep("add all beatmaps", () => BeatmapSets.AddRange(generated));
@@ -147,7 +184,11 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             SortAndGroupBy(SortMode.Difficulty, GroupMode.None);
             AddBeatmaps(1, fixedDifficultiesPerSet: 1);
-            AddUntilStep("single item is shown", () => this.ChildrenOfType<PanelBeatmapStandalone>().Count(), () => Is.EqualTo(1));
+            AddUntilStep(
+                "single item is shown",
+                () => this.ChildrenOfType<PanelBeatmapStandalone>().Count(),
+                () => Is.EqualTo(1)
+            );
         }
     }
 }

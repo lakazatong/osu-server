@@ -16,7 +16,9 @@ using osuTK;
 
 namespace osu.Game.Overlays.Mods
 {
-    public partial class AdjustedAttributesTooltip : VisibilityContainer, ITooltip<AdjustedAttributesTooltip.Data?>
+    public partial class AdjustedAttributesTooltip
+        : VisibilityContainer,
+            ITooltip<AdjustedAttributesTooltip.Data?>
     {
         private readonly OverlayColourProvider? colourProvider;
         private FillFlowContainer attributesFillFlow = null!;
@@ -67,11 +69,11 @@ namespace osu.Game.Overlays.Mods
                                 attributesFillFlow = new FillFlowContainer
                                 {
                                     Direction = FillDirection.Vertical,
-                                    AutoSizeAxes = Axes.Both
-                                }
-                            }
-                        }
-                    }
+                                    AutoSizeAxes = Axes.Both,
+                                },
+                            },
+                        },
+                    },
                 },
             };
 
@@ -101,7 +103,9 @@ namespace osu.Game.Overlays.Mods
                 double adjustedValue = lookup(data.AdjustedDifficulty);
 
                 if (!Precision.AlmostEquals(originalValue, adjustedValue))
-                    attributesFillFlow.Add(new AttributeDisplay(name, originalValue, adjustedValue));
+                    attributesFillFlow.Add(
+                        new AttributeDisplay(name, originalValue, adjustedValue)
+                    );
             }
         }
 
@@ -115,6 +119,7 @@ namespace osu.Game.Overlays.Mods
         }
 
         protected override void PopIn() => this.FadeIn(200, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(200, Easing.OutQuint);
 
         public void Move(Vector2 pos) => Position = pos;
@@ -140,7 +145,7 @@ namespace osu.Game.Overlays.Mods
                 InternalChild = new OsuSpriteText
                 {
                     Font = OsuFont.Default.With(weight: FontWeight.Bold),
-                    Text = $"{name}: {original:0.0#} → {adjusted:0.0#}"
+                    Text = $"{name}: {original:0.0#} → {adjusted:0.0#}",
                 };
             }
         }

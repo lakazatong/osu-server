@@ -40,19 +40,28 @@ namespace osu.Game.Rulesets.Osu.Tests
         private ScoreAccessibleReplayPlayer currentPlayer = null!;
         private ManualClock? manualClock;
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        )
         {
             return manualClock == null
                 ? base.CreateWorkingBeatmap(beatmap, storyboard)
-                : new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(manualClock), Audio);
+                : new ClockBackedTestWorkingBeatmap(
+                    beatmap,
+                    storyboard,
+                    new FramedClock(manualClock),
+                    Audio
+                );
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            manualClock = null;
-            SelectedMods.Value = Array.Empty<Mod>();
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                manualClock = null;
+                SelectedMods.Value = Array.Empty<Mod>();
+            });
 
         /// <summary>
         /// While off-centre, vibrates backwards and forwards on the x-axis, from centre-50 to centre+50, every 50ms.
@@ -69,8 +78,20 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             for (double i = time_spinner_start; i <= time_spinner_end; i += vibrate_time)
             {
-                frames.Add(new OsuReplayFrame(i, new Vector2(centre_x + direction * 50, y_pos), OsuAction.LeftButton));
-                frames.Add(new OsuReplayFrame(i + vibrate_time, new Vector2(centre_x - direction * 50, y_pos), OsuAction.LeftButton));
+                frames.Add(
+                    new OsuReplayFrame(
+                        i,
+                        new Vector2(centre_x + direction * 50, y_pos),
+                        OsuAction.LeftButton
+                    )
+                );
+                frames.Add(
+                    new OsuReplayFrame(
+                        i + vibrate_time,
+                        new Vector2(centre_x - direction * 50, y_pos),
+                        OsuAction.LeftButton
+                    )
+                );
 
                 direction *= -1;
             }
@@ -95,8 +116,20 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             for (double i = time_spinner_start; i <= time_spinner_end; i += vibrate_time)
             {
-                frames.Add(new OsuReplayFrame(i, new Vector2(centre_x + direction * 50, centre_y), OsuAction.LeftButton));
-                frames.Add(new OsuReplayFrame(i + vibrate_time, new Vector2(centre_x - direction * 50, centre_y), OsuAction.LeftButton));
+                frames.Add(
+                    new OsuReplayFrame(
+                        i,
+                        new Vector2(centre_x + direction * 50, centre_y),
+                        OsuAction.LeftButton
+                    )
+                );
+                frames.Add(
+                    new OsuReplayFrame(
+                        i + vibrate_time,
+                        new Vector2(centre_x - direction * 50, centre_y),
+                        OsuAction.LeftButton
+                    )
+                );
 
                 direction *= -1;
             }
@@ -123,13 +156,32 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             for (double i = time_spinner_start; i <= time_spinner_end; i += vibrate_time)
             {
-                frames.Add(new OsuReplayFrame(i, new Vector2(centre_x + direction * 50, centre_y), OsuAction.LeftButton));
-                frames.Add(new OsuReplayFrame(i + vibrate_time, new Vector2(centre_x - direction * 50, centre_y), OsuAction.LeftButton));
+                frames.Add(
+                    new OsuReplayFrame(
+                        i,
+                        new Vector2(centre_x + direction * 50, centre_y),
+                        OsuAction.LeftButton
+                    )
+                );
+                frames.Add(
+                    new OsuReplayFrame(
+                        i + vibrate_time,
+                        new Vector2(centre_x - direction * 50, centre_y),
+                        OsuAction.LeftButton
+                    )
+                );
 
                 direction *= -1;
             }
 
-            AddStep("set DT", () => SelectedMods.Value = new[] { new OsuModDoubleTime { SpeedChange = { Value = rate } } });
+            AddStep(
+                "set DT",
+                () =>
+                    SelectedMods.Value = new[]
+                    {
+                        new OsuModDoubleTime { SpeedChange = { Value = rate } },
+                    }
+            );
             performTest(frames);
 
             assertSpinnerHit(false);
@@ -148,9 +200,7 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(-720, 2)]
         public void TestSpinSingleDirection(float amount, int expectedTicks)
         {
-            performTest(new SpinFramesGenerator(time_spinner_start)
-                        .Spin(amount, 500)
-                        .Build());
+            performTest(new SpinFramesGenerator(time_spinner_start).Spin(amount, 500).Build());
 
             assertTicksHit(expectedTicks);
             assertSpinnerHit(false);
@@ -163,10 +213,12 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestSpinHalfBothDirections()
         {
-            performTest(new SpinFramesGenerator(time_spinner_start)
-                        .Spin(180, 500) // Rotate to +0.5.
-                        .Spin(-360, 500) // Rotate to -0.5
-                        .Build());
+            performTest(
+                new SpinFramesGenerator(time_spinner_start)
+                    .Spin(180, 500) // Rotate to +0.5.
+                    .Spin(-360, 500) // Rotate to -0.5
+                    .Build()
+            );
 
             assertTicksHit(0);
             assertSpinnerHit(false);
@@ -179,12 +231,18 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(-180, 540, 1)]
         [TestCase(180, -900, 2)]
         [TestCase(-180, 900, 2)]
-        public void TestSpinOneDirectionThenChangeDirection(float direction1, float direction2, int expectedTicks)
+        public void TestSpinOneDirectionThenChangeDirection(
+            float direction1,
+            float direction2,
+            int expectedTicks
+        )
         {
-            performTest(new SpinFramesGenerator(time_spinner_start)
-                        .Spin(direction1, 500)
-                        .Spin(direction2, 500)
-                        .Build());
+            performTest(
+                new SpinFramesGenerator(time_spinner_start)
+                    .Spin(direction1, 500)
+                    .Spin(direction2, 500)
+                    .Build()
+            );
 
             assertTicksHit(expectedTicks);
             assertSpinnerHit(false);
@@ -193,41 +251,52 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestRewind()
         {
-            AddStep("set manual clock", () => manualClock = new ManualClock
-            {
-                // Avoids interpolation trying to run ahead during testing.
-                Rate = 0
-            });
+            AddStep(
+                "set manual clock",
+                () =>
+                    manualClock = new ManualClock
+                    {
+                        // Avoids interpolation trying to run ahead during testing.
+                        Rate = 0,
+                    }
+            );
 
-            List<ReplayFrame> frames =
-                new SpinFramesGenerator(time_spinner_start)
-                    // 1500ms start
-                    .Spin(360, 500)
-                    // 2000ms -> 1 full CW spin
-                    .Spin(-180, 500)
-                    // 2500ms -> 1 full CW spin + 0.5 CCW spins
-                    .Spin(90, 500)
-                    // 3000ms -> 1 full CW spin + 0.25 CCW spins
-                    .Spin(450, 500)
-                    // 3500ms -> 2 full CW spins
-                    .Spin(180, 500)
-                    // 4000ms -> 2 full CW spins + 0.5 CW spins
-                    .Build();
+            List<ReplayFrame> frames = new SpinFramesGenerator(time_spinner_start)
+                // 1500ms start
+                .Spin(360, 500)
+                // 2000ms -> 1 full CW spin
+                .Spin(-180, 500)
+                // 2500ms -> 1 full CW spin + 0.5 CCW spins
+                .Spin(90, 500)
+                // 3000ms -> 1 full CW spin + 0.25 CCW spins
+                .Spin(450, 500)
+                // 3500ms -> 2 full CW spins
+                .Spin(180, 500)
+                // 4000ms -> 2 full CW spins + 0.5 CW spins
+                .Build();
 
             loadPlayer(frames);
 
             GameplayClockContainer clock = null!;
             DrawableRuleset drawableRuleset = null!;
-            AddStep("get gameplay objects", () =>
-            {
-                clock = currentPlayer.ChildrenOfType<GameplayClockContainer>().Single();
-                drawableRuleset = currentPlayer.ChildrenOfType<DrawableRuleset>().Single();
-            });
+            AddStep(
+                "get gameplay objects",
+                () =>
+                {
+                    clock = currentPlayer.ChildrenOfType<GameplayClockContainer>().Single();
+                    drawableRuleset = currentPlayer.ChildrenOfType<DrawableRuleset>().Single();
+                }
+            );
 
             addSeekStep(frames.Last().Time);
 
             DrawableSpinner drawableSpinner = null!;
-            AddUntilStep("get spinner", () => (drawableSpinner = currentPlayer.ChildrenOfType<DrawableSpinner>().Single()) != null);
+            AddUntilStep(
+                "get spinner",
+                () =>
+                    (drawableSpinner = currentPlayer.ChildrenOfType<DrawableSpinner>().Single())
+                    != null
+            );
 
             assertFinalRotationCorrect();
             assertTotalRotation(3750, 810);
@@ -263,15 +332,24 @@ namespace osu.Game.Rulesets.Osu.Tests
             void assertTotalRotation(double time, float expected)
             {
                 addSeekStep(time);
-                AddAssert($"total rotation @ {time} is {expected}", () => drawableSpinner.Result.TotalRotation,
-                    () => Is.EqualTo(expected).Within(MathHelper.RadiansToDegrees(SpinFramesGenerator.SPIN_ERROR * 2)));
+                AddAssert(
+                    $"total rotation @ {time} is {expected}",
+                    () => drawableSpinner.Result.TotalRotation,
+                    () =>
+                        Is.EqualTo(expected)
+                            .Within(MathHelper.RadiansToDegrees(SpinFramesGenerator.SPIN_ERROR * 2))
+                );
             }
 
             void addSeekStep(double time)
             {
                 AddStep($"seek to {time}", () => clock.Seek(time));
                 // Lenience is required due to interpolation running slightly ahead on a stalled clock.
-                AddUntilStep("wait for seek to finish", () => drawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(time));
+                AddUntilStep(
+                    "wait for seek to finish",
+                    () => drawableRuleset.FrameStableClock.CurrentTime,
+                    () => Is.EqualTo(time)
+                );
             }
 
             void assertFinalRotationCorrect() => assertTotalRotation(4000, 900);
@@ -279,49 +357,65 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private void assertTicksHit(int count)
         {
-            AddAssert($"{count} ticks hit", () => judgementResults.Where(r => r.HitObject is SpinnerTick).Count(r => r.IsHit), () => Is.EqualTo(count));
+            AddAssert(
+                $"{count} ticks hit",
+                () => judgementResults.Where(r => r.HitObject is SpinnerTick).Count(r => r.IsHit),
+                () => Is.EqualTo(count)
+            );
         }
 
         private void assertSpinnerHit(bool shouldBeHit)
         {
-            AddAssert($"spinner is {(shouldBeHit ? "hit" : "missed")}", () => judgementResults.Single(r => r.HitObject is Spinner).IsHit, () => Is.EqualTo(shouldBeHit));
+            AddAssert(
+                $"spinner is {(shouldBeHit ? "hit" : "missed")}",
+                () => judgementResults.Single(r => r.HitObject is Spinner).IsHit,
+                () => Is.EqualTo(shouldBeHit)
+            );
         }
 
         private void loadPlayer(List<ReplayFrame> frames)
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new Beatmap<OsuHitObject>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects =
-                    {
-                        new Spinner
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new Beatmap<OsuHitObject>
                         {
-                            StartTime = time_spinner_start,
-                            EndTime = time_spinner_end,
-                            Position = new Vector2(centre_x, centre_y)
+                            HitObjects =
+                            {
+                                new Spinner
+                                {
+                                    StartTime = time_spinner_start,
+                                    EndTime = time_spinner_end,
+                                    Position = new Vector2(centre_x, centre_y),
+                                },
+                            },
+                            BeatmapInfo =
+                            {
+                                Difficulty = new BeatmapDifficulty(),
+                                Ruleset = new OsuRuleset().RulesetInfo,
+                            },
                         }
-                    },
-                    BeatmapInfo =
-                    {
-                        Difficulty = new BeatmapDifficulty(),
-                        Ruleset = new OsuRuleset().RulesetInfo
-                    },
-                });
+                    );
 
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
 
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
+                    p.OnLoadComplete += _ =>
                     {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults.Clear();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults.Clear();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
@@ -330,7 +424,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         private void performTest(List<ReplayFrame> frames)
         {
             loadPlayer(frames);
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -340,13 +437,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

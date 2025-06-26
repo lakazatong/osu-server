@@ -48,7 +48,9 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             relativeMode = mouseHandler.UseRelativeMode.GetBoundCopy();
             windowMode = config.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
-            minimiseOnFocusLoss = config.GetBindable<bool>(FrameworkSetting.MinimiseOnFocusLossInFullscreen);
+            minimiseOnFocusLoss = config.GetBindable<bool>(
+                FrameworkSetting.MinimiseOnFocusLossInFullscreen
+            );
 
             Children = new Drawable[]
             {
@@ -57,29 +59,40 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                     LabelText = MouseSettingsStrings.HighPrecisionMouse,
                     TooltipText = MouseSettingsStrings.HighPrecisionMouseTooltip,
                     Current = relativeMode,
-                    Keywords = new[] { @"raw", @"input", @"relative", @"cursor", "sensitivity", "speed", "velocity" },
+                    Keywords = new[]
+                    {
+                        @"raw",
+                        @"input",
+                        @"relative",
+                        @"cursor",
+                        "sensitivity",
+                        "speed",
+                        "velocity",
+                    },
                 },
                 new SensitivitySetting
                 {
                     Keywords = new[] { "speed", "velocity" },
                     LabelText = MouseSettingsStrings.CursorSensitivity,
-                    Current = localSensitivity
+                    Current = localSensitivity,
                 },
                 confineMouseModeSetting = new SettingsEnumDropdown<OsuConfineMouseMode>
                 {
                     LabelText = MouseSettingsStrings.ConfineMouseMode,
-                    Current = osuConfig.GetBindable<OsuConfineMouseMode>(OsuSetting.ConfineMouseMode)
+                    Current = osuConfig.GetBindable<OsuConfineMouseMode>(
+                        OsuSetting.ConfineMouseMode
+                    ),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = MouseSettingsStrings.DisableMouseWheelVolumeAdjust,
                     TooltipText = MouseSettingsStrings.DisableMouseWheelVolumeAdjustTooltip,
-                    Current = osuConfig.GetBindable<bool>(OsuSetting.MouseDisableWheel)
+                    Current = osuConfig.GetBindable<bool>(OsuSetting.MouseDisableWheel),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = MouseSettingsStrings.DisableClicksDuringGameplay,
-                    Current = osuConfig.GetBindable<bool>(OsuSetting.MouseDisableButtons)
+                    Current = osuConfig.GetBindable<bool>(OsuSetting.MouseDisableButtons),
                 },
             };
         }
@@ -88,37 +101,52 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         {
             base.LoadComplete();
 
-            relativeMode.BindValueChanged(relative => localSensitivity.Disabled = !relative.NewValue, true);
+            relativeMode.BindValueChanged(
+                relative => localSensitivity.Disabled = !relative.NewValue,
+                true
+            );
 
-            handlerSensitivity.BindValueChanged(val =>
-            {
-                bool disabled = localSensitivity.Disabled;
+            handlerSensitivity.BindValueChanged(
+                val =>
+                {
+                    bool disabled = localSensitivity.Disabled;
 
-                localSensitivity.Disabled = false;
-                localSensitivity.Value = val.NewValue;
-                localSensitivity.Disabled = disabled;
-            }, true);
+                    localSensitivity.Disabled = false;
+                    localSensitivity.Value = val.NewValue;
+                    localSensitivity.Disabled = disabled;
+                },
+                true
+            );
 
             localSensitivity.BindValueChanged(val => handlerSensitivity.Value = val.NewValue);
 
             windowMode.BindValueChanged(_ => updateConfineMouseModeSettingVisibility());
-            minimiseOnFocusLoss.BindValueChanged(_ => updateConfineMouseModeSettingVisibility(), true);
+            minimiseOnFocusLoss.BindValueChanged(
+                _ => updateConfineMouseModeSettingVisibility(),
+                true
+            );
 
-            highPrecisionMouse.Current.BindValueChanged(highPrecision =>
-            {
-                switch (RuntimeInfo.OS)
+            highPrecisionMouse.Current.BindValueChanged(
+                highPrecision =>
                 {
-                    case RuntimeInfo.Platform.Linux:
-                    case RuntimeInfo.Platform.macOS:
-                    case RuntimeInfo.Platform.iOS:
-                        if (highPrecision.NewValue)
-                            highPrecisionMouse.SetNoticeText(MouseSettingsStrings.HighPrecisionPlatformWarning, true);
-                        else
-                            highPrecisionMouse.ClearNoticeText();
+                    switch (RuntimeInfo.OS)
+                    {
+                        case RuntimeInfo.Platform.Linux:
+                        case RuntimeInfo.Platform.macOS:
+                        case RuntimeInfo.Platform.iOS:
+                            if (highPrecision.NewValue)
+                                highPrecisionMouse.SetNoticeText(
+                                    MouseSettingsStrings.HighPrecisionPlatformWarning,
+                                    true
+                                );
+                            else
+                                highPrecisionMouse.ClearNoticeText();
 
-                        break;
-                }
-            }, true);
+                            break;
+                    }
+                },
+                true
+            );
         }
 
         /// <summary>
@@ -126,7 +154,8 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         /// </summary>
         private void updateConfineMouseModeSettingVisibility()
         {
-            bool confineModeOverriden = windowMode.Value == WindowMode.Fullscreen && minimiseOnFocusLoss.Value;
+            bool confineModeOverriden =
+                windowMode.Value == WindowMode.Fullscreen && minimiseOnFocusLoss.Value;
 
             if (confineModeOverriden)
             {
@@ -151,7 +180,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
         public partial class SensitivitySlider : RoundedSliderBar<double>
         {
-            public override LocalisableString TooltipText => Current.Disabled ? MouseSettingsStrings.EnableHighPrecisionForSensitivityAdjust : $"{base.TooltipText}x";
+            public override LocalisableString TooltipText =>
+                Current.Disabled
+                    ? MouseSettingsStrings.EnableHighPrecisionForSensitivityAdjust
+                    : $"{base.TooltipText}x";
         }
     }
 }

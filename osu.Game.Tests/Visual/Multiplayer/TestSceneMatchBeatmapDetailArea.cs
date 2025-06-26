@@ -22,31 +22,38 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             base.SetUpSteps();
 
-            AddStep("create area", () =>
-            {
-                Child = new MatchBeatmapDetailArea(room = new Room())
+            AddStep(
+                "create area",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(500),
-                    CreateNewItem = createNewItem
-                };
-            });
+                    Child = new MatchBeatmapDetailArea(room = new Room())
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(500),
+                        CreateNewItem = createNewItem,
+                    };
+                }
+            );
         }
 
         private void createNewItem()
         {
-            room.Playlist = room.Playlist.Append(new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo)
-            {
-                ID = room.Playlist.Count,
-                RulesetID = new OsuRuleset().RulesetInfo.OnlineID,
-                RequiredMods = new[]
-                {
-                    new APIMod(new OsuModHardRock()),
-                    new APIMod(new OsuModDoubleTime()),
-                    new APIMod(new OsuModAutoplay())
-                }
-            }).ToArray();
+            room.Playlist = room
+                .Playlist.Append(
+                    new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo)
+                    {
+                        ID = room.Playlist.Count,
+                        RulesetID = new OsuRuleset().RulesetInfo.OnlineID,
+                        RequiredMods = new[]
+                        {
+                            new APIMod(new OsuModHardRock()),
+                            new APIMod(new OsuModDoubleTime()),
+                            new APIMod(new OsuModAutoplay()),
+                        },
+                    }
+                )
+                .ToArray();
         }
     }
 }

@@ -22,14 +22,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         /// </summary>
         private const double overlap_leniency = 5;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Spread, "Missing or unexpected overlaps");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Spread, "Missing or unexpected overlaps");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateShouldOverlap(this),
-            new IssueTemplateShouldProbablyOverlap(this),
-            new IssueTemplateShouldNotOverlap(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateShouldOverlap(this),
+                new IssueTemplateShouldProbablyOverlap(this),
+                new IssueTemplateShouldNotOverlap(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -52,7 +54,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
                     // The objects are not visible at the same time (without mods), hence skipping.
                     continue;
 
-                float distanceSq = (hitObject.StackedEndPosition - nextHitObject.StackedPosition).LengthSquared;
+                float distanceSq = (
+                    hitObject.StackedEndPosition - nextHitObject.StackedPosition
+                ).LengthSquared;
                 double diameter = (hitObject.Radius - overlap_leniency) * 2;
                 double diameterSq = diameter * diameter;
 
@@ -62,48 +66,69 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
                 if (!areOverlapping && !(hitObject is Slider))
                 {
                     if (deltaTime < should_overlap_threshold)
-                        yield return new IssueTemplateShouldOverlap(this).Create(deltaTime, hitObject, nextHitObject);
+                        yield return new IssueTemplateShouldOverlap(this).Create(
+                            deltaTime,
+                            hitObject,
+                            nextHitObject
+                        );
                     else if (deltaTime < should_probably_overlap_threshold)
-                        yield return new IssueTemplateShouldProbablyOverlap(this).Create(deltaTime, hitObject, nextHitObject);
+                        yield return new IssueTemplateShouldProbablyOverlap(this).Create(
+                            deltaTime,
+                            hitObject,
+                            nextHitObject
+                        );
                 }
 
                 if (areOverlapping && deltaTime > should_not_overlap_threshold)
-                    yield return new IssueTemplateShouldNotOverlap(this).Create(deltaTime, hitObject, nextHitObject);
+                    yield return new IssueTemplateShouldNotOverlap(this).Create(
+                        deltaTime,
+                        hitObject,
+                        nextHitObject
+                    );
             }
         }
 
         public abstract class IssueTemplateOverlap : IssueTemplate
         {
-            protected IssueTemplateOverlap(ICheck check, IssueType issueType, string unformattedMessage)
-                : base(check, issueType, unformattedMessage)
-            {
-            }
+            protected IssueTemplateOverlap(
+                ICheck check,
+                IssueType issueType,
+                string unformattedMessage
+            )
+                : base(check, issueType, unformattedMessage) { }
 
-            public Issue Create(double deltaTime, params HitObject[] hitObjects) => new Issue(hitObjects, this, deltaTime);
+            public Issue Create(double deltaTime, params HitObject[] hitObjects) =>
+                new Issue(hitObjects, this, deltaTime);
         }
 
         public class IssueTemplateShouldOverlap : IssueTemplateOverlap
         {
             public IssueTemplateShouldOverlap(ICheck check)
-                : base(check, IssueType.Problem, "These are {0} ms apart and so should be overlapping.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "These are {0} ms apart and so should be overlapping."
+                ) { }
         }
 
         public class IssueTemplateShouldProbablyOverlap : IssueTemplateOverlap
         {
             public IssueTemplateShouldProbablyOverlap(ICheck check)
-                : base(check, IssueType.Warning, "These are {0} ms apart and so should probably be overlapping.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "These are {0} ms apart and so should probably be overlapping."
+                ) { }
         }
 
         public class IssueTemplateShouldNotOverlap : IssueTemplateOverlap
         {
             public IssueTemplateShouldNotOverlap(ICheck check)
-                : base(check, IssueType.Problem, "These are {0} ms apart and so should NOT be overlapping.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "These are {0} ms apart and so should NOT be overlapping."
+                ) { }
         }
     }
 }

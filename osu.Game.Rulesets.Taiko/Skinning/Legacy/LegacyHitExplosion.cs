@@ -39,20 +39,24 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 
             AutoSizeAxes = Axes.Both;
 
-            AddInternal(sprite.With(s =>
-            {
-                s.Anchor = Anchor.Centre;
-                s.Origin = Anchor.Centre;
-            }));
+            AddInternal(
+                sprite.With(s =>
+                {
+                    s.Anchor = Anchor.Centre;
+                    s.Origin = Anchor.Centre;
+                })
+            );
 
             if (strongSprite != null)
             {
-                AddInternal(strongSprite.With(s =>
-                {
-                    s.Alpha = 0;
-                    s.Anchor = Anchor.Centre;
-                    s.Origin = Anchor.Centre;
-                }));
+                AddInternal(
+                    strongSprite.With(s =>
+                    {
+                        s.Alpha = 0;
+                        s.Anchor = Anchor.Centre;
+                        s.Origin = Anchor.Centre;
+                    })
+                );
             }
         }
 
@@ -72,9 +76,12 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 return;
 
             this.ScaleTo(0.6f)
-                .Then().ScaleTo(1.1f, animation_time * 0.8)
-                .Then().ScaleTo(0.9f, animation_time * 0.4)
-                .Then().ScaleTo(1f, animation_time * 0.2);
+                .Then()
+                .ScaleTo(1.1f, animation_time * 0.8)
+                .Then()
+                .ScaleTo(0.9f, animation_time * 0.4)
+                .Then()
+                .ScaleTo(1f, animation_time * 0.2);
         }
 
         public void AnimateSecondHit()

@@ -9,11 +9,10 @@ namespace osu.Game.Online.Multiplayer
     [Serializable]
     public class UserBlocksPMsException : HubException
     {
-        public const string MESSAGE = "Cannot perform action because user has disabled non-friend communications.";
+        public const string MESSAGE =
+            "Cannot perform action because user has disabled non-friend communications.";
 
         public UserBlocksPMsException()
-            : base(MESSAGE)
-        {
-        }
+            : base(MESSAGE) { }
     }
 }

@@ -10,8 +10,6 @@ namespace osu.Game.Database
         protected override string ImportFromStablePath => "Skins";
 
         public LegacySkinImporter(IModelImporter<SkinInfo> importer)
-            : base(importer)
-        {
-        }
+            : base(importer) { }
     }
 }

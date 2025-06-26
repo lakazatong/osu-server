@@ -1,12 +1,12 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Taiko.Objects;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Taiko.UI
 {
@@ -32,8 +32,11 @@ namespace osu.Game.Rulesets.Taiko.UI
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(border_thickness, (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE) / 2f),
-                    Alpha = 0.1f
+                    Size = new Vector2(
+                        border_thickness,
+                        (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE) / 2f
+                    ),
+                    Alpha = 0.1f,
                 },
                 new CircularContainer
                 {
@@ -52,9 +55,9 @@ namespace osu.Game.Rulesets.Taiko.UI
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
+                            AlwaysPresent = true,
+                        },
+                    },
                 },
                 new CircularContainer
                 {
@@ -73,9 +76,9 @@ namespace osu.Game.Rulesets.Taiko.UI
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
+                            AlwaysPresent = true,
+                        },
+                    },
                 },
                 new Box
                 {
@@ -83,8 +86,11 @@ namespace osu.Game.Rulesets.Taiko.UI
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(border_thickness, (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE) / 2f),
-                    Alpha = 0.1f
+                    Size = new Vector2(
+                        border_thickness,
+                        (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE) / 2f
+                    ),
+                    Alpha = 0.1f,
                 },
             };
         }

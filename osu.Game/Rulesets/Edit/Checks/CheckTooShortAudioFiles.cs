@@ -14,12 +14,11 @@ namespace osu.Game.Rulesets.Edit.Checks
     {
         private const int ms_threshold = 25;
 
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Audio, "Too short audio files");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Audio, "Too short audio files");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooShort(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateTooShort(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -29,15 +28,23 @@ namespace osu.Game.Rulesets.Edit.Checks
             {
                 foreach (var file in beatmapSet.Files)
                 {
-                    using (Stream data = context.WorkingBeatmap.GetStream(file.File.GetStoragePath()))
+                    using (
+                        Stream data = context.WorkingBeatmap.GetStream(file.File.GetStoragePath())
+                    )
                     {
                         if (data == null)
                             continue;
 
                         var fileCallbacks = new FileCallbacks(new DataStreamFileProcedures(data));
-                        int decodeStream = Bass.CreateStream(StreamSystem.NoBuffer, BassFlags.Decode | BassFlags.Prescan, fileCallbacks.Callbacks, fileCallbacks.Handle);
+                        int decodeStream = Bass.CreateStream(
+                            StreamSystem.NoBuffer,
+                            BassFlags.Decode | BassFlags.Prescan,
+                            fileCallbacks.Callbacks,
+                            fileCallbacks.Handle
+                        );
 
-                        if (decodeStream == 0) continue;
+                        if (decodeStream == 0)
+                            continue;
 
                         long length = Bass.ChannelGetLength(decodeStream);
                         double ms = Bass.ChannelBytes2Seconds(decodeStream, length) * 1000;
@@ -53,11 +60,14 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateTooShort : IssueTemplate
         {
             public IssueTemplateTooShort(ICheck check)
-                : base(check, IssueType.Problem, "\"{0}\" is too short ({1:0} ms), should be at least {2:0} ms.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "\"{0}\" is too short ({1:0} ms), should be at least {2:0} ms."
+                ) { }
 
-            public Issue Create(string filename, double ms) => new Issue(this, filename, ms, ms_threshold);
+            public Issue Create(string filename, double ms) =>
+                new Issue(this, filename, ms, ms_threshold);
         }
     }
 }

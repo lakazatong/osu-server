@@ -36,21 +36,25 @@ namespace osu.Game.Overlays.Settings
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            AddInternal(new Box
-            {
-                Colour = colourProvider.Background5,
-                RelativeSizeAxes = Axes.Both,
-                Depth = float.MaxValue
-            });
+            AddInternal(
+                new Box
+                {
+                    Colour = colourProvider.Background5,
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = float.MaxValue,
+                }
+            );
 
             if (showBackButton)
             {
-                AddInternal(new BackButton
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Action = () => BackButtonAction?.Invoke(),
-                });
+                AddInternal(
+                    new BackButton
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Action = () => BackButtonAction?.Invoke(),
+                    }
+                );
             }
         }
 
@@ -59,9 +63,7 @@ namespace osu.Game.Overlays.Settings
             private Drawable content = null!;
 
             public BackButton()
-                : base(HoverSampleSet.Default)
-            {
-            }
+                : base(HoverSampleSet.Default) { }
 
             [BackgroundDependencyLoader]
             private void load()
@@ -70,42 +72,48 @@ namespace osu.Game.Overlays.Settings
 
                 Padding = new MarginPadding(40);
 
-                AddRange(new[]
-                {
-                    content = new FillFlowContainer
+                AddRange(
+                    new[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Direction = FillDirection.Vertical,
-                        AutoSizeAxes = Axes.Both,
-                        Spacing = new Vector2(5),
-                        Children = new Drawable[]
+                        content = new FillFlowContainer
                         {
-                            new SpriteIcon
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Direction = FillDirection.Vertical,
+                            AutoSizeAxes = Axes.Both,
+                            Spacing = new Vector2(5),
+                            Children = new Drawable[]
                             {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Size = new Vector2(30),
-                                Shadow = true,
-                                Icon = FontAwesome.Solid.ChevronLeft
+                                new SpriteIcon
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Size = new Vector2(30),
+                                    Shadow = true,
+                                    Icon = FontAwesome.Solid.ChevronLeft,
+                                },
+                                new OsuSpriteText
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
+                                    Text = @"back",
+                                },
                             },
-                            new OsuSpriteText
-                            {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
-                                Text = @"back",
-                            },
-                        }
+                        },
                     }
-                });
+                );
             }
 
             protected override void UpdateState()
             {
                 base.UpdateState();
 
-                content.FadeColour(IsHovered ? ColourProvider.Light1 : ColourProvider.Light3, FADE_DURATION, Easing.OutQuint);
+                content.FadeColour(
+                    IsHovered ? ColourProvider.Light1 : ColourProvider.Light3,
+                    FADE_DURATION,
+                    Easing.OutQuint
+                );
             }
         }
     }

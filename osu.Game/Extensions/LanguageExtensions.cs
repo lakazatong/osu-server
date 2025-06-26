@@ -52,7 +52,10 @@ namespace osu.Game.Extensions
         /// <param name="frameworkLocale">The current <see cref="FrameworkSetting.Locale"/>.</param>
         /// <param name="localisationParameters">The current <see cref="LocalisationParameters"/> of the <see cref="LocalisationManager"/>.</param>
         /// <returns>The parsed language.</returns>
-        public static Language GetLanguageFor(string frameworkLocale, LocalisationParameters localisationParameters)
+        public static Language GetLanguageFor(
+            string frameworkLocale,
+            LocalisationParameters localisationParameters
+        )
         {
             // the usual case when the user has changed the language
             if (TryParseCultureCode(frameworkLocale, out var language))
@@ -61,7 +64,12 @@ namespace osu.Game.Extensions
             if (localisationParameters.Store != null)
             {
                 // startup case, locale not explicitly set, or the set language was removed in an update
-                if (TryParseCultureCode(localisationParameters.Store.EffectiveCulture.Name, out language))
+                if (
+                    TryParseCultureCode(
+                        localisationParameters.Store.EffectiveCulture.Name,
+                        out language
+                    )
+                )
                     return language;
             }
 

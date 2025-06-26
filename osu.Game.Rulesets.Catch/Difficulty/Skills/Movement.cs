@@ -55,8 +55,10 @@ namespace osu.Game.Rulesets.Catch.Difficulty.Skills
 
             float playerPosition = Math.Clamp(
                 lastPlayerPosition.Value,
-                catchCurrent.NormalizedPosition - (normalized_hitobject_radius - absolute_player_positioning_error),
-                catchCurrent.NormalizedPosition + (normalized_hitobject_radius - absolute_player_positioning_error)
+                catchCurrent.NormalizedPosition
+                    - (normalized_hitobject_radius - absolute_player_positioning_error),
+                catchCurrent.NormalizedPosition
+                    + (normalized_hitobject_radius - absolute_player_positioning_error)
             );
 
             float distanceMoved = playerPosition - lastPlayerPosition.Value;
@@ -74,16 +76,31 @@ namespace osu.Game.Rulesets.Catch.Difficulty.Skills
             // Direction change bonus.
             if (Math.Abs(distanceMoved) > 0.1)
             {
-                if (Math.Abs(lastDistanceMoved) > 0.1 && Math.Sign(distanceMoved) != Math.Sign(lastDistanceMoved))
+                if (
+                    Math.Abs(lastDistanceMoved) > 0.1
+                    && Math.Sign(distanceMoved) != Math.Sign(lastDistanceMoved)
+                )
                 {
                     double bonusFactor = Math.Min(50, Math.Abs(distanceMoved)) / 50;
-                    double antiflowFactor = Math.Max(Math.Min(70, Math.Abs(lastDistanceMoved)) / 70, 0.38);
+                    double antiflowFactor = Math.Max(
+                        Math.Min(70, Math.Abs(lastDistanceMoved)) / 70,
+                        0.38
+                    );
 
-                    distanceAddition += direction_change_bonus / Math.Sqrt(lastStrainTime + 16) * bonusFactor * antiflowFactor * Math.Max(1 - Math.Pow(weightedStrainTime / 1000, 3), 0);
+                    distanceAddition +=
+                        direction_change_bonus
+                        / Math.Sqrt(lastStrainTime + 16)
+                        * bonusFactor
+                        * antiflowFactor
+                        * Math.Max(1 - Math.Pow(weightedStrainTime / 1000, 3), 0);
                 }
 
                 // Base bonus for every movement, giving some weight to streams.
-                distanceAddition += 12.5 * Math.Min(Math.Abs(distanceMoved), normalized_hitobject_radius * 2) / (normalized_hitobject_radius * 6) / sqrtStrain;
+                distanceAddition +=
+                    12.5
+                    * Math.Min(Math.Abs(distanceMoved), normalized_hitobject_radius * 2)
+                    / (normalized_hitobject_radius * 6)
+                    / sqrtStrain;
             }
 
             // Bonus for edge dashes.
@@ -97,15 +114,25 @@ namespace osu.Game.Rulesets.Catch.Difficulty.Skills
                     playerPosition = catchCurrent.NormalizedPosition;
                 }
 
-                distanceAddition *= 1.0 + edgeDashBonus * ((20 - catchCurrent.LastObject.DistanceToHyperDash) / 20)
-                                                        * Math.Pow((Math.Min(catchCurrent.StrainTime * catcherSpeedMultiplier, 265) / 265), 1.5); // Edge Dashes are easier at lower ms values
+                distanceAddition *=
+                    1.0
+                    + edgeDashBonus
+                        * ((20 - catchCurrent.LastObject.DistanceToHyperDash) / 20)
+                        * Math.Pow(
+                            (Math.Min(catchCurrent.StrainTime * catcherSpeedMultiplier, 265) / 265),
+                            1.5
+                        ); // Edge Dashes are easier at lower ms values
             }
 
             // There is an edge case where horizontal back and forth sliders create "buzz" patterns which are repeated "movements" with a distance lower than
             // the platter's width but high enough to be considered a movement due to the absolute_player_positioning_error and normalized_hitobject_radius offsets
             // We are detecting this exact scenario. The first back and forth is counted but all subsequent ones are nullified.
             // To achieve that, we need to store the exact distances (distance ignoring absolute_player_positioning_error and normalized_hitobject_radius)
-            if (Math.Abs(exactDistanceMoved) <= HalfCatcherWidth * 2 && exactDistanceMoved == -lastExactDistanceMoved && catchCurrent.StrainTime == lastStrainTime)
+            if (
+                Math.Abs(exactDistanceMoved) <= HalfCatcherWidth * 2
+                && exactDistanceMoved == -lastExactDistanceMoved
+                && catchCurrent.StrainTime == lastStrainTime
+            )
             {
                 if (isInBuzzSection)
                     distanceAddition = 0;

@@ -23,7 +23,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Overlays.Toolbar
 {
-    public abstract partial class ToolbarButton : OsuClickableContainer, IKeyBindingHandler<GlobalAction>
+    public abstract partial class ToolbarButton
+        : OsuClickableContainer,
+            IKeyBindingHandler<GlobalAction>
     {
         public const float PADDING = 3;
 
@@ -38,11 +40,7 @@ namespace osu.Game.Overlays.Toolbar
         [Resolved]
         private ReadableKeyCombinationProvider keyCombinationProvider { get; set; } = null!;
 
-        public void SetIcon(IconUsage icon) =>
-            SetIcon(new SpriteIcon
-            {
-                Icon = icon,
-            });
+        public void SetIcon(IconUsage icon) => SetIcon(new SpriteIcon { Icon = icon });
 
         public LocalisableString Text
         {
@@ -116,7 +114,7 @@ namespace osu.Game.Overlays.Toolbar
                                     Colour = Color4.White.Opacity(100),
                                     Blending = BlendingParameters.Additive,
                                 },
-                            }
+                            },
                         },
                         Flow = new FillFlowContainer
                         {
@@ -124,7 +122,11 @@ namespace osu.Game.Overlays.Toolbar
                             Spacing = new Vector2(5),
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            Padding = new MarginPadding { Left = Toolbar.HEIGHT / 2, Right = Toolbar.HEIGHT / 2 },
+                            Padding = new MarginPadding
+                            {
+                                Left = Toolbar.HEIGHT / 2,
+                                Right = Toolbar.HEIGHT / 2,
+                            },
                             RelativeSizeAxes = Axes.Y,
                             AutoSizeAxes = Axes.X,
                             Children = new Drawable[]
@@ -149,7 +151,9 @@ namespace osu.Game.Overlays.Toolbar
                 {
                     Direction = FillDirection.Vertical,
                     RelativeSizeAxes = Axes.Both, // stops us being considered in parent's autosize
-                    Anchor = TooltipAnchor.HasFlag(Anchor.x0) ? Anchor.BottomLeft : Anchor.BottomRight,
+                    Anchor = TooltipAnchor.HasFlag(Anchor.x0)
+                        ? Anchor.BottomLeft
+                        : Anchor.BottomRight,
                     Origin = TooltipAnchor,
                     Position = new Vector2(TooltipAnchor.HasFlag(Anchor.x0) ? 5 : -5, 5),
                     Alpha = 0,
@@ -171,11 +175,11 @@ namespace osu.Game.Overlays.Toolbar
                             Children = new[]
                             {
                                 tooltip2 = new OsuSpriteText { Shadow = true },
-                                keyBindingTooltip = new OsuSpriteText { Shadow = true }
-                            }
-                        }
-                    }
-                }
+                                keyBindingTooltip = new OsuSpriteText { Shadow = true },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -184,7 +188,15 @@ namespace osu.Game.Overlays.Toolbar
         {
             if (Hotkey != null)
             {
-                realm.SubscribeToPropertyChanged(r => r.All<RealmKeyBinding>().FirstOrDefault(rkb => rkb.RulesetName == null && rkb.ActionInt == (int)Hotkey.Value), kb => kb.KeyCombinationString, updateKeyBindingTooltip);
+                realm.SubscribeToPropertyChanged(
+                    r =>
+                        r.All<RealmKeyBinding>()
+                            .FirstOrDefault(rkb =>
+                                rkb.RulesetName == null && rkb.ActionInt == (int)Hotkey.Value
+                            ),
+                    kb => kb.KeyCombinationString,
+                    updateKeyBindingTooltip
+                );
             }
         }
 
@@ -222,9 +234,7 @@ namespace osu.Game.Overlays.Toolbar
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void updateKeyBindingTooltip(string keyCombination)
         {
@@ -244,11 +254,7 @@ namespace osu.Game.Overlays.Toolbar
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = OsuColour.Gray(30)
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(30) },
                 new Triangles
                 {
                     RelativeSizeAxes = Axes.Both,

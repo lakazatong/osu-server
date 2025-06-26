@@ -28,7 +28,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,
-                Font = OsuFont.GetFont(weight: FontWeight.SemiBold, size: 12)
+                Font = OsuFont.GetFont(weight: FontWeight.SemiBold, size: 12),
             };
         }
 

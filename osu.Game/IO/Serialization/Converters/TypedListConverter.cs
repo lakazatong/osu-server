@@ -25,9 +25,7 @@ namespace osu.Game.IO.Serialization.Converters
         /// Constructs a new <see cref="TypedListConverter{T}"/>.
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public TypedListConverter()
-        {
-        }
+        public TypedListConverter() { }
 
         /// <summary>
         /// Constructs a new <see cref="TypedListConverter{T}"/>.
@@ -39,7 +37,13 @@ namespace osu.Game.IO.Serialization.Converters
             this.requiresTypeVersion = requiresTypeVersion;
         }
 
-        public override IReadOnlyList<T> ReadJson(JsonReader reader, Type objectType, IReadOnlyList<T> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override IReadOnlyList<T> ReadJson(
+            JsonReader reader,
+            Type objectType,
+            IReadOnlyList<T> existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
             var list = new List<T>();
 
@@ -48,7 +52,9 @@ namespace osu.Game.IO.Serialization.Converters
             if (obj["$lookup_table"] == null)
                 return list;
 
-            var lookupTable = serializer.Deserialize<List<string>>(obj["$lookup_table"].CreateReader());
+            var lookupTable = serializer.Deserialize<List<string>>(
+                obj["$lookup_table"].CreateReader()
+            );
             if (lookupTable == null)
                 return list;
 
@@ -76,7 +82,11 @@ namespace osu.Game.IO.Serialization.Converters
             return list;
         }
 
-        public override void WriteJson(JsonWriter writer, IReadOnlyList<T> value, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer,
+            IReadOnlyList<T> value,
+            JsonSerializer serializer
+        )
         {
             var lookupTable = new List<string>();
             var objects = new List<JObject>();

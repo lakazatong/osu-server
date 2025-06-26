@@ -43,18 +43,21 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             onRoomUpdated();
         }
 
-        private void onRoomUpdated() => Scheduler.AddOnce(() =>
-        {
-            if (client.Room == null || client.LocalUser == null)
-                return;
+        private void onRoomUpdated() =>
+            Scheduler.AddOnce(() =>
+            {
+                if (client.Room == null || client.LocalUser == null)
+                    return;
 
-            MultiplayerPlaylistItem currentItem = client.Room.CurrentPlaylistItem;
-            Ruleset ruleset = rulesets.GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!.CreateInstance();
-            Mod[] userMods = client.LocalUser.Mods.Select(m => m.ToMod(ruleset)).ToArray();
+                MultiplayerPlaylistItem currentItem = client.Room.CurrentPlaylistItem;
+                Ruleset ruleset = rulesets
+                    .GetRuleset(client.LocalUser.RulesetId ?? currentItem.RulesetID)!
+                    .CreateInstance();
+                Mod[] userMods = client.LocalUser.Mods.Select(m => m.ToMod(ruleset)).ToArray();
 
-            if (!userMods.SequenceEqual(modDisplay.Current.Value))
-                modDisplay.Current.Value = userMods;
-        });
+                if (!userMods.SequenceEqual(modDisplay.Current.Value))
+                    modDisplay.Current.Value = userMods;
+            });
 
         protected override void Dispose(bool isDisposing)
         {

@@ -20,7 +20,9 @@ using osuTK;
 
 namespace osu.Game.Overlays.Profile.Header.Components
 {
-    public partial class DailyChallengeStatsDisplay : CompositeDrawable, IHasCustomTooltip<DailyChallengeTooltipData>
+    public partial class DailyChallengeStatsDisplay
+        : CompositeDrawable,
+            IHasCustomTooltip<DailyChallengeTooltipData>
     {
         public readonly Bindable<UserProfileData?> User = new Bindable<UserProfileData?>();
 
@@ -71,7 +73,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                             Direction = FillDirection.Horizontal,
                             Children = new Drawable[]
                             {
-                                label = new OsuTextFlowContainer(s => s.Font = OsuFont.GetFont(size: 12))
+                                label = new OsuTextFlowContainer(s =>
+                                    s.Font = OsuFont.GetFont(size: 12)
+                                )
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Margin = new MarginPadding { Horizontal = 5f, Bottom = 2f },
@@ -95,13 +99,17 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                             Origin = Anchor.Centre,
                                             UseFullGlyphHeight = false,
                                             Colour = colourProvider.Content2,
-                                            Margin = new MarginPadding { Horizontal = 10f, Vertical = 5f },
+                                            Margin = new MarginPadding
+                                            {
+                                                Horizontal = 10f,
+                                                Vertical = 5f,
+                                            },
                                         },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
                 completionMark = new CircularContainer
                 {
@@ -112,11 +120,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colours.Lime1,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = colours.Lime1 },
                         new SpriteIcon
                         {
                             Size = new Vector2(8),
@@ -124,8 +128,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Icon = FontAwesome.Solid.Check,
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
@@ -156,8 +160,12 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 return;
             }
 
-            dailyPlayCount.Text = DailyChallengeStatsDisplayStrings.UnitDay(stats.PlayCount.ToLocalisableString("N0"));
-            dailyPlayCount.Colour = colours.ForRankingTier(DailyChallengeStatsTooltip.TierForPlayCount(stats.PlayCount));
+            dailyPlayCount.Text = DailyChallengeStatsDisplayStrings.UnitDay(
+                stats.PlayCount.ToLocalisableString("N0")
+            );
+            dailyPlayCount.Colour = colours.ForRankingTier(
+                DailyChallengeStatsTooltip.TierForPlayCount(stats.PlayCount)
+            );
 
             bool playedToday = stats.LastUpdate?.Date == DateTimeOffset.UtcNow.Date;
             bool userIsOnOwnProfile = stats.UserID == api.LocalUser.Value.Id;
@@ -187,6 +195,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
             Show();
         }
 
-        public ITooltip<DailyChallengeTooltipData> GetCustomTooltip() => new DailyChallengeStatsTooltip();
+        public ITooltip<DailyChallengeTooltipData> GetCustomTooltip() =>
+            new DailyChallengeStatsTooltip();
     }
 }

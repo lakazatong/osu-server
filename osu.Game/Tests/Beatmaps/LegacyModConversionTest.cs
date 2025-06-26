@@ -34,9 +34,10 @@ namespace osu.Game.Tests.Beatmaps
         protected void TestToLegacy(LegacyMods expectedLegacyMods, Type[] providedModTypes)
         {
             var ruleset = CreateRuleset();
-            var modInstances = ruleset.CreateAllMods()
-                                      .Where(mod => providedModTypes.Contains(mod.GetType()))
-                                      .ToArray();
+            var modInstances = ruleset
+                .CreateAllMods()
+                .Where(mod => providedModTypes.Contains(mod.GetType()))
+                .ToArray();
             var actualLegacyMods = ruleset.ConvertToLegacyMods(modInstances);
             Assert.AreEqual(expectedLegacyMods, actualLegacyMods);
         }

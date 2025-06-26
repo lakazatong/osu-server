@@ -28,13 +28,15 @@ namespace osu.Game.Screens.Edit.GameplayTest
         private readonly Editor editor;
         private readonly EditorState editorState;
 
-        protected override UserActivity InitialActivity => new UserActivity.TestingBeatmap(Beatmap.Value.BeatmapInfo);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.TestingBeatmap(Beatmap.Value.BeatmapInfo);
 
         [Resolved]
         private MusicController musicController { get; set; } = null!;
 
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private EmptyGameplayLeaderboardProvider leaderboardProvider = new EmptyGameplayLeaderboardProvider();
+        private EmptyGameplayLeaderboardProvider leaderboardProvider =
+            new EmptyGameplayLeaderboardProvider();
 
         public EditorPlayer(Editor editor)
             : base(new PlayerConfiguration { ShowResults = false })
@@ -43,13 +45,22 @@ namespace osu.Game.Screens.Edit.GameplayTest
             editorState = editor.GetState();
         }
 
-        protected override GameplayClockContainer CreateGameplayClockContainer(WorkingBeatmap beatmap, double gameplayStart)
+        protected override GameplayClockContainer CreateGameplayClockContainer(
+            WorkingBeatmap beatmap,
+            double gameplayStart
+        )
         {
-            var masterGameplayClockContainer = new MasterGameplayClockContainer(beatmap, gameplayStart);
+            var masterGameplayClockContainer = new MasterGameplayClockContainer(
+                beatmap,
+                gameplayStart
+            );
 
             // Only reset the time to the current point if the editor is later than the normal start time (and the first object).
             // This allows more sane test playing from the start of the beatmap (ie. correctly adding lead-in time).
-            if (editorState.Time > gameplayStart && editorState.Time > DrawableRuleset.Objects.FirstOrDefault()?.StartTime)
+            if (
+                editorState.Time > gameplayStart
+                && editorState.Time > DrawableRuleset.Objects.FirstOrDefault()?.StartTime
+            )
                 masterGameplayClockContainer.Reset(editorState.Time);
 
             return masterGameplayClockContainer;
@@ -66,18 +77,23 @@ namespace osu.Game.Screens.Edit.GameplayTest
             {
                 if (completed.NewValue)
                 {
-                    Scheduler.AddDelayed(() =>
-                    {
-                        if (this.IsCurrentScreen())
-                            this.Exit();
-                    }, RESULTS_DISPLAY_DELAY);
+                    Scheduler.AddDelayed(
+                        () =>
+                        {
+                            if (this.IsCurrentScreen())
+                                this.Exit();
+                        },
+                        RESULTS_DISPLAY_DELAY
+                    );
                 }
             });
         }
 
         private void markPreviousObjectsHit()
         {
-            foreach (var hitObject in enumerateHitObjects(DrawableRuleset.Objects, editorState.Time))
+            foreach (
+                var hitObject in enumerateHitObjects(DrawableRuleset.Objects, editorState.Time)
+            )
             {
                 var judgement = hitObject.Judgement;
                 // this is very dodgy because there's no guarantee that `JudgementResult` is the correct result type for the object.
@@ -95,11 +111,16 @@ namespace osu.Game.Screens.Edit.GameplayTest
                 ScoreProcessor.ApplyResult(result);
             }
 
-            static IEnumerable<HitObject> enumerateHitObjects(IEnumerable<HitObject> hitObjects, double cutoffTime)
+            static IEnumerable<HitObject> enumerateHitObjects(
+                IEnumerable<HitObject> hitObjects,
+                double cutoffTime
+            )
             {
                 foreach (var hitObject in hitObjects)
                 {
-                    foreach (var nested in enumerateHitObjects(hitObject.NestedHitObjects, cutoffTime))
+                    foreach (
+                        var nested in enumerateHitObjects(hitObject.NestedHitObjects, cutoffTime)
+                    )
                     {
                         if (nested.GetEndTime() < cutoffTime)
                             yield return nested;
@@ -119,7 +140,12 @@ namespace osu.Game.Screens.Edit.GameplayTest
                 return;
             }
 
-            foreach (var drawableObject in enumerateDrawableObjects(DrawableRuleset.Playfield.AllHitObjects, editorState.Time))
+            foreach (
+                var drawableObject in enumerateDrawableObjects(
+                    DrawableRuleset.Playfield.AllHitObjects,
+                    editorState.Time
+                )
+            )
             {
                 if (drawableObject.Entry == null)
                     continue;
@@ -129,11 +155,19 @@ namespace osu.Game.Screens.Edit.GameplayTest
                 drawableObject.Entry.Result = result;
             }
 
-            static IEnumerable<DrawableHitObject> enumerateDrawableObjects(IEnumerable<DrawableHitObject> drawableObjects, double cutoffTime)
+            static IEnumerable<DrawableHitObject> enumerateDrawableObjects(
+                IEnumerable<DrawableHitObject> drawableObjects,
+                double cutoffTime
+            )
             {
                 foreach (var drawableObject in drawableObjects)
                 {
-                    foreach (var nested in enumerateDrawableObjects(drawableObject.NestedHitObjects, cutoffTime))
+                    foreach (
+                        var nested in enumerateDrawableObjects(
+                            drawableObject.NestedHitObjects,
+                            cutoffTime
+                        )
+                    )
                     {
                         if (nested.HitObject.GetEndTime() < cutoffTime)
                             yield return nested;
@@ -180,9 +214,7 @@ namespace osu.Game.Screens.Edit.GameplayTest
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void toggleAutoplay()
         {
@@ -240,6 +272,7 @@ namespace osu.Game.Screens.Edit.GameplayTest
             return base.OnExiting(e);
         }
 
-        protected override ResultsScreen CreateResults(ScoreInfo score) => throw new NotSupportedException();
+        protected override ResultsScreen CreateResults(ScoreInfo score) =>
+            throw new NotSupportedException();
     }
 }

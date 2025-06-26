@@ -14,16 +14,17 @@ namespace osu.Game.Graphics.UserInterfaceV2
             this.allowDecimals = allowDecimals;
         }
 
-        internal override InnerTextBox CreateTextBox() => new InnerNumberBox(allowDecimals)
-        {
-            SelectAllOnFocus = true,
-        };
+        internal override InnerTextBox CreateTextBox() =>
+            new InnerNumberBox(allowDecimals) { SelectAllOnFocus = true };
 
         internal partial class InnerNumberBox : InnerTextBox
         {
             public InnerNumberBox(bool allowDecimals)
             {
-                InputProperties = new TextInputProperties(allowDecimals ? TextInputType.Decimal : TextInputType.Number, false);
+                InputProperties = new TextInputProperties(
+                    allowDecimals ? TextInputType.Decimal : TextInputType.Number,
+                    false
+                );
             }
         }
     }

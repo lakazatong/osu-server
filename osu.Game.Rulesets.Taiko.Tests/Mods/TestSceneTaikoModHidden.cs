@@ -14,60 +14,61 @@ namespace osu.Game.Rulesets.Taiko.Tests.Mods
 {
     public partial class TestSceneTaikoModHidden : TaikoModTestScene
     {
-        private Func<bool> checkAllMaxResultJudgements(int count) => ()
-            => Player.ScoreProcessor.JudgedHits >= count
-               && Player.Results.All(result => result.Type == result.Judgement.MaxResult);
+        private Func<bool> checkAllMaxResultJudgements(int count) =>
+            () =>
+                Player.ScoreProcessor.JudgedHits >= count
+                && Player.Results.All(result => result.Type == result.Judgement.MaxResult);
 
         [Test]
-        public void TestDefaultBeatmapTest() => CreateModTest(new ModTestData
-        {
-            Mod = new TaikoModHidden(),
-            Autoplay = true,
-            PassCondition = checkAllMaxResultJudgements(4),
-        });
+        public void TestDefaultBeatmapTest() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new TaikoModHidden(),
+                    Autoplay = true,
+                    PassCondition = checkAllMaxResultJudgements(4),
+                }
+            );
 
         [Test]
         public void TestHitTwoNotesWithinShortPeriod()
         {
             const double hit_time = 1;
 
-            CreateModTest(new ModTestData
-            {
-                Mod = new TaikoModHidden(),
-                Autoplay = true,
-                PassCondition = checkAllMaxResultJudgements(2),
-                CreateBeatmap = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    var beatmap = new Beatmap<TaikoHitObject>
+                    Mod = new TaikoModHidden(),
+                    Autoplay = true,
+                    PassCondition = checkAllMaxResultJudgements(2),
+                    CreateBeatmap = () =>
                     {
-                        HitObjects = new List<TaikoHitObject>
+                        var beatmap = new Beatmap<TaikoHitObject>
                         {
-                            new Hit
+                            HitObjects = new List<TaikoHitObject>
                             {
-                                Type = HitType.Rim,
-                                StartTime = hit_time,
+                                new Hit { Type = HitType.Rim, StartTime = hit_time },
+                                new Hit { Type = HitType.Centre, StartTime = hit_time * 2 },
                             },
-                            new Hit
+                            BeatmapInfo =
                             {
-                                Type = HitType.Centre,
-                                StartTime = hit_time * 2,
+                                Difficulty = new BeatmapDifficulty
+                                {
+                                    SliderTickRate = 4,
+                                    OverallDifficulty = 0,
+                                },
+                                Ruleset = new TaikoRuleset().RulesetInfo,
                             },
-                        },
-                        BeatmapInfo =
-                        {
-                            Difficulty = new BeatmapDifficulty
-                            {
-                                SliderTickRate = 4,
-                                OverallDifficulty = 0,
-                            },
-                            Ruleset = new TaikoRuleset().RulesetInfo
-                        },
-                    };
+                        };
 
-                    beatmap.ControlPointInfo.Add(0, new EffectControlPoint { ScrollSpeed = 0.1f });
-                    return beatmap;
-                },
-            });
+                        beatmap.ControlPointInfo.Add(
+                            0,
+                            new EffectControlPoint { ScrollSpeed = 0.1f }
+                        );
+                        return beatmap;
+                    },
+                }
+            );
         }
     }
 }

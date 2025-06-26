@@ -3,9 +3,9 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Framework.Bindables;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Game.Graphics.Sprites;
 
 namespace osu.Game.Graphics.UserInterface.PageSelector
@@ -34,11 +34,12 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
             };
         }
 
-        protected override Drawable CreateContent() => text = new OsuSpriteText
-        {
-            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-            Text = PageNumber.ToString(),
-        };
+        protected override Drawable CreateContent() =>
+            text = new OsuSpriteText
+            {
+                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                Text = PageNumber.ToString(),
+            };
 
         [BackgroundDependencyLoader]
         private void load()
@@ -57,8 +58,14 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
         {
             Background.FadeTo(selected.NewValue ? 1 : 0, DURATION, Easing.OutQuint);
 
-            text.FadeColour(selected.NewValue ? ColourProvider.Dark4 : ColourProvider.Light3, DURATION, Easing.OutQuint);
-            text.Font = text.Font.With(weight: IsHovered ? FontWeight.SemiBold : FontWeight.Regular);
+            text.FadeColour(
+                selected.NewValue ? ColourProvider.Dark4 : ColourProvider.Light3,
+                DURATION,
+                Easing.OutQuint
+            );
+            text.Font = text.Font.With(
+                weight: IsHovered ? FontWeight.SemiBold : FontWeight.Regular
+            );
         }
 
         protected override void UpdateHoverState()
@@ -66,7 +73,11 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
             if (selected.Value)
                 return;
 
-            text.FadeColour(IsHovered ? ColourProvider.Light2 : ColourProvider.Light1, DURATION, Easing.OutQuint);
+            text.FadeColour(
+                IsHovered ? ColourProvider.Light2 : ColourProvider.Light1,
+                DURATION,
+                Easing.OutQuint
+            );
         }
     }
 }

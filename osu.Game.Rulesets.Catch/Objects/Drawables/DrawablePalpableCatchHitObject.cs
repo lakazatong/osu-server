@@ -13,7 +13,9 @@ using osuTK.Graphics;
 namespace osu.Game.Rulesets.Catch.Objects.Drawables
 {
     [Cached(typeof(IHasCatchObjectState))]
-    public abstract partial class DrawablePalpableCatchHitObject : DrawableCatchHitObject, IHasCatchObjectState
+    public abstract partial class DrawablePalpableCatchHitObject
+        : DrawableCatchHitObject,
+            IHasCatchObjectState
     {
         public new PalpableCatchHitObject HitObject => (PalpableCatchHitObject)base.HitObject;
 
@@ -49,12 +51,14 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             Origin = Anchor.Centre;
             Size = new Vector2(CatchHitObject.OBJECT_RADIUS * 2);
 
-            AddInternal(ScalingContainer = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(CatchHitObject.OBJECT_RADIUS * 2)
-            });
+            AddInternal(
+                ScalingContainer = new Container
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(CatchHitObject.OBJECT_RADIUS * 2),
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -63,11 +67,14 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             OriginalXBindable.BindValueChanged(updateXPosition);
             XOffsetBindable.BindValueChanged(updateXPosition, true);
 
-            ScaleBindable.BindValueChanged(scale =>
-            {
-                ScalingContainer.Scale = new Vector2(scale.NewValue * ScaleFactor);
-                Size = DisplaySize;
-            }, true);
+            ScaleBindable.BindValueChanged(
+                scale =>
+                {
+                    ScalingContainer.Scale = new Vector2(scale.NewValue * ScaleFactor);
+                    Size = DisplaySize;
+                },
+                true
+            );
 
             IndexInBeatmap.BindValueChanged(_ => UpdateComboColour());
         }
@@ -77,7 +84,11 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             // same as `CatchHitObject.EffectiveX`.
             // not using that property directly to support scenarios where `HitObject` may not necessarily be present
             // for this pooled drawable.
-            X = Math.Clamp(OriginalXBindable.Value + XOffsetBindable.Value, 0, CatchPlayfield.WIDTH);
+            X = Math.Clamp(
+                OriginalXBindable.Value + XOffsetBindable.Value,
+                0,
+                CatchPlayfield.WIDTH
+            );
         }
 
         protected override void OnApply()
@@ -98,6 +109,9 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             base.OnFree();
         }
 
-        public void RestoreState(CatchObjectState state) => throw new NotSupportedException("Cannot restore state into a drawable catch hitobject.");
+        public void RestoreState(CatchObjectState state) =>
+            throw new NotSupportedException(
+                "Cannot restore state into a drawable catch hitobject."
+            );
     }
 }

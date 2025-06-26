@@ -3,8 +3,8 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Logging;
 using osu.Game.Extensions;
 
@@ -33,7 +33,10 @@ namespace osu.Game.Rulesets
                 }
                 catch
                 {
-                    Logger.Log($"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.", level: LogLevel.Error);
+                    Logger.Log(
+                        $"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.",
+                        level: LogLevel.Error
+                    );
                 }
             }
         }

@@ -11,7 +11,8 @@ namespace osu.Game.Tournament.Components
 {
     public partial class DateTextBox : SettingsTextBox
     {
-        private readonly BindableWithCurrent<DateTimeOffset> current = new BindableWithCurrent<DateTimeOffset>(DateTimeOffset.Now);
+        private readonly BindableWithCurrent<DateTimeOffset> current =
+            new BindableWithCurrent<DateTimeOffset>(DateTimeOffset.Now);
 
         public new Bindable<DateTimeOffset>? Current
         {
@@ -23,14 +24,22 @@ namespace osu.Game.Tournament.Components
         {
             base.Current = new Bindable<string>(string.Empty);
 
-            current.BindValueChanged(dto =>
-                base.Current.Value = dto.NewValue.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", DateTimeFormatInfo.InvariantInfo), true);
+            current.BindValueChanged(
+                dto =>
+                    base.Current.Value = dto
+                        .NewValue.ToUniversalTime()
+                        .ToString("yyyy-MM-ddTHH:mm:ssZ", DateTimeFormatInfo.InvariantInfo),
+                true
+            );
 
             ((OsuTextBox)Control).OnCommit += (sender, _) =>
             {
                 try
                 {
-                    current.Value = DateTimeOffset.Parse(sender.Text, DateTimeFormatInfo.InvariantInfo);
+                    current.Value = DateTimeOffset.Parse(
+                        sender.Text,
+                        DateTimeFormatInfo.InvariantInfo
+                    );
                 }
                 catch
                 {

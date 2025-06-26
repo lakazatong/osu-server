@@ -14,7 +14,10 @@ namespace osu.Game.Overlays.BeatmapListing
         [Order(0)]
         Any,
 
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.LanguageUnspecified))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.LanguageUnspecified)
+        )]
         [Order(14)]
         Unspecified,
 
@@ -30,7 +33,10 @@ namespace osu.Game.Overlays.BeatmapListing
         [Order(2)]
         Chinese,
 
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.LanguageInstrumental))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.LanguageInstrumental)
+        )]
         [Order(12)]
         Instrumental,
 
@@ -68,6 +74,6 @@ namespace osu.Game.Overlays.BeatmapListing
 
         [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.LanguageOther))]
         [Order(13)]
-        Other
+        Other,
     }
 }

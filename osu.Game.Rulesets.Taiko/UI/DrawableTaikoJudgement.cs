@@ -23,6 +23,7 @@ namespace osu.Game.Rulesets.Taiko.UI
             Size = Vector2.One;
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new DefaultJudgementPiece(result);
+        protected override Drawable CreateDefaultJudgement(HitResult result) =>
+            new DefaultJudgementPiece(result);
     }
 }

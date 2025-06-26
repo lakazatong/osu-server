@@ -17,7 +17,10 @@ using osu.Game.Users;
 
 namespace osu.Game.Screens.OnlinePlay
 {
-    public abstract partial class OnlinePlayFreestyleSelect : SongSelect, IOnlinePlaySubScreen, IHandlePresentBeatmap
+    public abstract partial class OnlinePlayFreestyleSelect
+        : SongSelect,
+            IOnlinePlaySubScreen,
+            IHandlePresentBeatmap
     {
         public string ShortTitle => "style selection";
 
@@ -51,7 +54,10 @@ namespace osu.Game.Screens.OnlinePlay
             // Beatmaps with too different of a duration are filtered away; this is just a final safety.
             if (!criteria.Length.IsInRange(Beatmap.Value.BeatmapInfo.Length))
             {
-                Logger.Log("The selected beatmap's duration differs too much from the host's selection.", level: LogLevel.Error);
+                Logger.Log(
+                    "The selected beatmap's duration differs too much from the host's selection.",
+                    level: LogLevel.Error
+                );
                 return false;
             }
 
@@ -65,7 +71,10 @@ namespace osu.Game.Screens.OnlinePlay
             // Beatmaps from different sets are filtered away; this is just a final safety.
             if (Beatmap.Value.BeatmapSetInfo.OnlineID != criteria.BeatmapSetId)
             {
-                Logger.Log("The selected beatmap is from a different beatmap set.", level: LogLevel.Error);
+                Logger.Log(
+                    "The selected beatmap is from a different beatmap set.",
+                    level: LogLevel.Error
+                );
                 return false;
             }
 
@@ -78,16 +87,21 @@ namespace osu.Game.Screens.OnlinePlay
             return true;
         }
 
-        protected override FilterControl CreateFilterControl() => new DifficultySelectFilterControl(item);
+        protected override FilterControl CreateFilterControl() =>
+            new DifficultySelectFilterControl(item);
 
-        protected override IEnumerable<(FooterButton button, OverlayContainer? overlay)> CreateSongSelectFooterButtons()
+        protected override IEnumerable<(
+            FooterButton button,
+            OverlayContainer? overlay
+        )> CreateSongSelectFooterButtons()
         {
             // Required to create the drawable components.
             base.CreateSongSelectFooterButtons();
             return Enumerable.Empty<(FooterButton, OverlayContainer?)>();
         }
 
-        protected override BeatmapDetailArea CreateBeatmapDetailArea() => new PlayBeatmapDetailArea();
+        protected override BeatmapDetailArea CreateBeatmapDetailArea() =>
+            new PlayBeatmapDetailArea();
 
         public void PresentBeatmap(WorkingBeatmap beatmap, RulesetInfo ruleset)
         {
@@ -111,7 +125,8 @@ namespace osu.Game.Screens.OnlinePlay
                 realm.Run(r =>
                 {
                     int beatmapId = item.Beatmap.OnlineID;
-                    BeatmapInfo? beatmap = r.All<BeatmapInfo>().FirstOrDefault(b => b.OnlineID == beatmapId);
+                    BeatmapInfo? beatmap = r.All<BeatmapInfo>()
+                        .FirstOrDefault(b => b.OnlineID == beatmapId);
 
                     itemLength = beatmap?.Length ?? 0;
                     beatmapSetId = beatmap?.BeatmapSet?.OnlineID ?? 0;

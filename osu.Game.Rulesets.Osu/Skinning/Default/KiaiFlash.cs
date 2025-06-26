@@ -30,7 +30,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             };
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (!effectPoint.KiaiMode)
                 return;
@@ -38,7 +43,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             Child
                 .FadeTo(flash_opacity, EarlyActivationMilliseconds, Easing.OutQuint)
                 .Then()
-                .FadeOut(Math.Max(fade_length, timingPoint.BeatLength - fade_length), Easing.OutSine);
+                .FadeOut(
+                    Math.Max(fade_length, timingPoint.BeatLength - fade_length),
+                    Easing.OutSine
+                );
         }
     }
 }

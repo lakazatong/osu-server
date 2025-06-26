@@ -44,11 +44,19 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 switch (reason)
                 {
                     case GameplayAbortReason.LoadTookTooLong:
-                        Logger.Log("Gameplay aborted because loading the beatmap took too long.", LoggingTarget.Runtime, LogLevel.Important);
+                        Logger.Log(
+                            "Gameplay aborted because loading the beatmap took too long.",
+                            LoggingTarget.Runtime,
+                            LogLevel.Important
+                        );
                         break;
 
                     case GameplayAbortReason.HostAbortedTheMatch:
-                        Logger.Log("The host aborted the match.", LoggingTarget.Runtime, LogLevel.Important);
+                        Logger.Log(
+                            "The host aborted the match.",
+                            LoggingTarget.Runtime,
+                            LogLevel.Important
+                        );
                         break;
                 }
 
@@ -94,7 +102,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
 
         protected override LoungeSubScreen CreateLounge() => new MultiplayerLoungeSubScreen();
 
-        public void Join(Room room, string? password) => Schedule(() => Lounge.Join(room, password));
+        public void Join(Room room, string? password) =>
+            Schedule(() => Lounge.Join(room, password));
 
         protected override void Dispose(bool isDisposing)
         {

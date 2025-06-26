@@ -8,7 +8,8 @@ namespace osu.Game.Tournament.Screens
 {
     public abstract partial class TournamentMatchScreen : TournamentScreen
     {
-        protected readonly Bindable<TournamentMatch?> CurrentMatch = new Bindable<TournamentMatch?>();
+        protected readonly Bindable<TournamentMatch?> CurrentMatch =
+            new Bindable<TournamentMatch?>();
         private WarningBox? noMatchWarning;
 
         protected override void LoadComplete()
@@ -23,7 +24,9 @@ namespace osu.Game.Tournament.Screens
         {
             if (match.NewValue == null)
             {
-                AddInternal(noMatchWarning = new WarningBox("Choose a match first from the brackets screen"));
+                AddInternal(
+                    noMatchWarning = new WarningBox("Choose a match first from the brackets screen")
+                );
                 return;
             }
 

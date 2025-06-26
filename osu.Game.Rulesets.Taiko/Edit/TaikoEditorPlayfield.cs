@@ -15,11 +15,16 @@ namespace osu.Game.Rulesets.Taiko.Edit
         {
             // This is the simplest way to extend the taiko playfield beyond the left of the drum area.
             // Required in the editor to not look weird underneath left toolbox area.
-            AddInternal(new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.PlayfieldBackgroundRight), _ => new PlayfieldBackgroundRight())
-            {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopRight,
-            });
+            AddInternal(
+                new SkinnableDrawable(
+                    new TaikoSkinComponentLookup(TaikoSkinComponents.PlayfieldBackgroundRight),
+                    _ => new PlayfieldBackgroundRight()
+                )
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopRight,
+                }
+            );
         }
     }
 }

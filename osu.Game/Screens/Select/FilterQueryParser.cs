@@ -17,7 +17,8 @@ namespace osu.Game.Screens.Select
     {
         private static readonly Regex query_syntax_regex = new Regex(
             @"\b(?<key>\w+)(?<op>(!?(:|=)|(>|<)(:|=)?))(?<value>("".*""[!]?)|(\S*))",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase
+        );
 
         internal static void ApplyQueries(FilterCriteria criteria, string query)
         {
@@ -34,7 +35,12 @@ namespace osu.Game.Screens.Select
             criteria.SearchText = query;
         }
 
-        private static bool tryParseKeywordCriteria(FilterCriteria criteria, string key, string value, Operator op)
+        private static bool tryParseKeywordCriteria(
+            FilterCriteria criteria,
+            string key,
+            string value,
+            Operator op
+        )
         {
             switch (key)
             {
@@ -117,7 +123,8 @@ namespace osu.Game.Screens.Select
                     return TryUpdateCriteriaText(ref criteria.Source, op, value);
 
                 default:
-                    return criteria.RulesetCriteria?.TryParseCustomKeywordCriteria(key, op, value) ?? false;
+                    return criteria.RulesetCriteria?.TryParseCustomKeywordCriteria(key, op, value)
+                        ?? false;
             }
         }
 
@@ -148,21 +155,35 @@ namespace osu.Game.Screens.Select
                     return Operator.GreaterOrEqual;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(value), $"Unsupported operator {value}");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(value),
+                        $"Unsupported operator {value}"
+                    );
             }
         }
 
         private static int getLengthScale(string value) =>
-            value.EndsWith("ms", StringComparison.Ordinal) ? 1 :
-            value.EndsWith('s') ? 1000 :
-            value.EndsWith('m') ? 60000 :
-            value.EndsWith('h') ? 3600000 : 1000;
+            value.EndsWith("ms", StringComparison.Ordinal) ? 1
+            : value.EndsWith('s') ? 1000
+            : value.EndsWith('m') ? 60000
+            : value.EndsWith('h') ? 3600000
+            : 1000;
 
         private static bool tryParseFloatWithPoint(string value, out float result) =>
-            float.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+            float.TryParse(
+                value,
+                NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture,
+                out result
+            );
 
         private static bool tryParseDoubleWithPoint(string value, out double result) =>
-            double.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+            double.TryParse(
+                value,
+                NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture,
+                out result
+            );
 
         private static bool tryParseInt(string value, out int result) =>
             int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out result);
@@ -186,14 +207,16 @@ namespace osu.Game.Screens.Select
             }
         }
 
-        private static bool tryParseEnum<TEnum>(string value, out TEnum result) where TEnum : struct
+        private static bool tryParseEnum<TEnum>(string value, out TEnum result)
+            where TEnum : struct
         {
             // First try an exact match.
             if (Enum.TryParse(value, true, out result))
                 return true;
 
             // Then try a prefix match.
-            string? prefixMatch = Enum.GetNames(typeof(TEnum)).FirstOrDefault(name => name.StartsWith(value, true, CultureInfo.InvariantCulture));
+            string? prefixMatch = Enum.GetNames(typeof(TEnum))
+                .FirstOrDefault(name => name.StartsWith(value, true, CultureInfo.InvariantCulture));
 
             if (prefixMatch == null)
                 return false;
@@ -222,7 +245,11 @@ namespace osu.Game.Screens.Select
         /// Only <see cref="Operator.Equal"/> is valid for textual filters.
         /// </param>
         /// <param name="value">The value of the keyword filter.</param>
-        public static bool TryUpdateCriteriaText(ref FilterCriteria.OptionalTextFilter textFilter, Operator op, string value)
+        public static bool TryUpdateCriteriaText(
+            ref FilterCriteria.OptionalTextFilter textFilter,
+            Operator op,
+            string value
+        )
         {
             switch (op)
             {
@@ -248,10 +275,21 @@ namespace osu.Game.Screens.Select
         /// <param name="op">The operator for the keyword filter.</param>
         /// <param name="val">The value of the keyword filter.</param>
         /// <param name="tolerance">Allowed tolerance of the parsed range boundary value.</param>
-        public static bool TryUpdateCriteriaRange(ref FilterCriteria.OptionalRange<float> range, Operator op, string val, float tolerance = 0.05f)
-            => tryParseFloatWithPoint(val, out float value) && tryUpdateCriteriaRange(ref range, op, value, tolerance);
+        public static bool TryUpdateCriteriaRange(
+            ref FilterCriteria.OptionalRange<float> range,
+            Operator op,
+            string val,
+            float tolerance = 0.05f
+        ) =>
+            tryParseFloatWithPoint(val, out float value)
+            && tryUpdateCriteriaRange(ref range, op, value, tolerance);
 
-        private static bool tryUpdateCriteriaRange(ref FilterCriteria.OptionalRange<float> range, Operator op, float value, float tolerance = 0.05f)
+        private static bool tryUpdateCriteriaRange(
+            ref FilterCriteria.OptionalRange<float> range,
+            Operator op,
+            float value,
+            float tolerance = 0.05f
+        )
         {
             switch (op)
             {
@@ -296,10 +334,21 @@ namespace osu.Game.Screens.Select
         /// <param name="op">The operator for the keyword filter.</param>
         /// <param name="val">The value of the keyword filter.</param>
         /// <param name="tolerance">Allowed tolerance of the parsed range boundary value.</param>
-        public static bool TryUpdateCriteriaRange(ref FilterCriteria.OptionalRange<double> range, Operator op, string val, double tolerance = 0.05)
-            => tryParseDoubleWithPoint(val, out double value) && tryUpdateCriteriaRange(ref range, op, value, tolerance);
+        public static bool TryUpdateCriteriaRange(
+            ref FilterCriteria.OptionalRange<double> range,
+            Operator op,
+            string val,
+            double tolerance = 0.05
+        ) =>
+            tryParseDoubleWithPoint(val, out double value)
+            && tryUpdateCriteriaRange(ref range, op, value, tolerance);
 
-        private static bool tryUpdateCriteriaRange(ref FilterCriteria.OptionalRange<double> range, Operator op, double value, double tolerance = 0.05)
+        private static bool tryUpdateCriteriaRange(
+            ref FilterCriteria.OptionalRange<double> range,
+            Operator op,
+            double value,
+            double tolerance = 0.05
+        )
         {
             switch (op)
             {
@@ -356,9 +405,15 @@ namespace osu.Game.Screens.Select
         /// <param name="op">The operator for the keyword filter.</param>
         /// <param name="val">The value of the keyword filter.</param>
         /// <param name="parseFunction">Function used to determine if <paramref name="val"/> can be converted to type <typeparamref name="T"/>.</param>
-        public static bool TryUpdateCriteriaRange<T>(ref FilterCriteria.OptionalRange<T> range, Operator op, string val, TryParseFunction<T> parseFunction)
-            where T : struct
-            => parseFunction.Invoke(val, out var converted) && tryUpdateCriteriaRange(ref range, op, converted);
+        public static bool TryUpdateCriteriaRange<T>(
+            ref FilterCriteria.OptionalRange<T> range,
+            Operator op,
+            string val,
+            TryParseFunction<T> parseFunction
+        )
+            where T : struct =>
+            parseFunction.Invoke(val, out var converted)
+            && tryUpdateCriteriaRange(ref range, op, converted);
 
         /// <summary>
         /// Attempts to parse a keyword filter of type <typeparamref name="T"/>,
@@ -369,14 +424,21 @@ namespace osu.Game.Screens.Select
         /// <param name="range">The <see cref="FilterCriteria.OptionalSet{T}"/> to store the parsed data into, if successful.</param>
         /// <param name="op">The operator for the keyword filter.</param>
         /// <param name="filterValue">The value of the keyword filter.</param>
-        public static bool TryUpdateCriteriaSet<T>(ref FilterCriteria.OptionalSet<T> range, Operator op, string filterValue)
+        public static bool TryUpdateCriteriaSet<T>(
+            ref FilterCriteria.OptionalSet<T> range,
+            Operator op,
+            string filterValue
+        )
             where T : struct, Enum
         {
             var matchingValues = new HashSet<T>();
 
             if (op == Operator.Equal && filterValue.Contains(','))
             {
-                string[] splitValues = filterValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string[] splitValues = filterValue.Split(
+                    ',',
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+                );
 
                 foreach (string splitValue in splitValues)
                 {
@@ -400,23 +462,28 @@ namespace osu.Game.Screens.Select
                     switch (op)
                     {
                         case Operator.Less:
-                            if (compareResult < 0) matchingValues.Add(val);
+                            if (compareResult < 0)
+                                matchingValues.Add(val);
                             break;
 
                         case Operator.LessOrEqual:
-                            if (compareResult <= 0) matchingValues.Add(val);
+                            if (compareResult <= 0)
+                                matchingValues.Add(val);
                             break;
 
                         case Operator.Equal:
-                            if (compareResult == 0) matchingValues.Add(val);
+                            if (compareResult == 0)
+                                matchingValues.Add(val);
                             break;
 
                         case Operator.GreaterOrEqual:
-                            if (compareResult >= 0) matchingValues.Add(val);
+                            if (compareResult >= 0)
+                                matchingValues.Add(val);
                             break;
 
                         case Operator.Greater:
-                            if (compareResult > 0) matchingValues.Add(val);
+                            if (compareResult > 0)
+                                matchingValues.Add(val);
                             break;
 
                         default:
@@ -429,7 +496,11 @@ namespace osu.Game.Screens.Select
             return true;
         }
 
-        private static bool tryUpdateCriteriaRange<T>(ref FilterCriteria.OptionalRange<T> range, Operator op, T value)
+        private static bool tryUpdateCriteriaRange<T>(
+            ref FilterCriteria.OptionalRange<T> range,
+            Operator op,
+            T value
+        )
             where T : struct
         {
             switch (op)
@@ -474,7 +545,10 @@ namespace osu.Game.Screens.Select
             GroupCollection? match = null;
 
             match ??= tryMatchRegex(val, @"^((?<hours>\d+):)?(?<minutes>\d+):(?<seconds>\d+)$");
-            match ??= tryMatchRegex(val, @"^((?<hours>\d+(\.\d+)?)h)?((?<minutes>\d+(\.\d+)?)m)?((?<seconds>\d+(\.\d+)?)s)?$");
+            match ??= tryMatchRegex(
+                val,
+                @"^((?<hours>\d+(\.\d+)?)h)?((?<minutes>\d+(\.\d+)?)m)?((?<seconds>\d+(\.\d+)?)s)?$"
+            );
             match ??= tryMatchRegex(val, @"^(?<seconds>\d+(\.\d+)?)$");
 
             if (match == null)
@@ -513,7 +587,11 @@ namespace osu.Game.Screens.Select
         /// <summary>
         /// This function is intended for parsing "days / months / years ago" type filters.
         /// </summary>
-        private static bool tryUpdateDateAgoRange(ref FilterCriteria.OptionalRange<DateTimeOffset> dateRange, Operator op, string val)
+        private static bool tryUpdateDateAgoRange(
+            ref FilterCriteria.OptionalRange<DateTimeOffset> dateRange,
+            Operator op,
+            string val
+        )
         {
             switch (op)
             {
@@ -549,7 +627,10 @@ namespace osu.Game.Screens.Select
 
             GroupCollection? match = null;
 
-            match ??= tryMatchRegex(val, @"^((?<years>\d+)y)?((?<months>\d+)M)?((?<days>\d+(\.\d+)?)d)?((?<hours>\d+(\.\d+)?)h)?((?<minutes>\d+(\.\d+)?)m)?((?<seconds>\d+(\.\d+)?)s)?$");
+            match ??= tryMatchRegex(
+                val,
+                @"^((?<years>\d+)y)?((?<months>\d+)M)?((?<days>\d+(\.\d+)?)d)?((?<hours>\d+(\.\d+)?)h)?((?<minutes>\d+(\.\d+)?)m)?((?<seconds>\d+(\.\d+)?)s)?$"
+            );
             match ??= tryMatchRegex(val, @"^(?<days>\d+(\.\d+)?)$");
 
             if (match == null)
@@ -560,7 +641,15 @@ namespace osu.Game.Screens.Select
 
             try
             {
-                List<string> keys = new List<string> { @"seconds", @"minutes", @"hours", @"days", @"months", @"years" };
+                List<string> keys = new List<string>
+                {
+                    @"seconds",
+                    @"minutes",
+                    @"hours",
+                    @"days",
+                    @"months",
+                    @"years",
+                };
 
                 foreach (string key in keys)
                 {
@@ -628,9 +717,16 @@ namespace osu.Game.Screens.Select
         /// <param name="dateRange">The <see cref="FilterCriteria.OptionalRange{DateTimeOffset}"/> to store the parsed data into, if successful.</param>
         /// <param name="op">The operator of the filtering query</param>
         /// <param name="val">The string value to attempt parsing for.</param>
-        private static bool tryUpdateRankedDateRange(ref FilterCriteria.OptionalRange<DateTimeOffset> dateRange, Operator op, string val)
+        private static bool tryUpdateRankedDateRange(
+            ref FilterCriteria.OptionalRange<DateTimeOffset> dateRange,
+            Operator op,
+            string val
+        )
         {
-            GroupCollection? match = tryMatchRegex(val, @"^(?<year>\d+)([-/.](?<month>\d+)([-/.](?<day>\d+))?)?$");
+            GroupCollection? match = tryMatchRegex(
+                val,
+                @"^(?<year>\d+)([-/.](?<month>\d+)([-/.](?<day>\d+))?)?$"
+            );
 
             if (match == null)
                 return false;
@@ -683,7 +779,11 @@ namespace osu.Game.Screens.Select
                         month ??= 1;
                         day ??= 1;
 
-                        dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value);
+                        dateTimeOffset = dateTimeOffsetFromDateOnly(
+                            year.Value,
+                            month.Value,
+                            day.Value
+                        );
                         return tryUpdateCriteriaRange(ref dateRange, op, dateTimeOffset);
 
                     case Operator.LessOrEqual:
@@ -691,25 +791,52 @@ namespace osu.Game.Screens.Select
                         {
                             month = 1;
                             day = 1;
-                            dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddYears(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.Less, dateTimeOffset);
+                            dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddYears(1);
+                            return tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.Less,
+                                dateTimeOffset
+                            );
                         }
 
                         if (day == null)
                         {
                             day = 1;
-                            dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddMonths(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.Less, dateTimeOffset);
+                            dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddMonths(1);
+                            return tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.Less,
+                                dateTimeOffset
+                            );
                         }
 
-                        dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddDays(1);
+                        dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                year.Value,
+                                month.Value,
+                                day.Value
+                            )
+                            .AddDays(1);
                         return tryUpdateCriteriaRange(ref dateRange, Operator.Less, dateTimeOffset);
 
                     case Operator.GreaterOrEqual:
                         month ??= 1;
                         day ??= 1;
 
-                        dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value);
+                        dateTimeOffset = dateTimeOffsetFromDateOnly(
+                            year.Value,
+                            month.Value,
+                            day.Value
+                        );
                         return tryUpdateCriteriaRange(ref dateRange, op, dateTimeOffset);
 
                     case Operator.Greater:
@@ -717,19 +844,46 @@ namespace osu.Game.Screens.Select
                         {
                             month = 1;
                             day = 1;
-                            dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddYears(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, dateTimeOffset);
+                            dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddYears(1);
+                            return tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.GreaterOrEqual,
+                                dateTimeOffset
+                            );
                         }
 
                         if (day == null)
                         {
                             day = 1;
-                            dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddMonths(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, dateTimeOffset);
+                            dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddMonths(1);
+                            return tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.GreaterOrEqual,
+                                dateTimeOffset
+                            );
                         }
 
-                        dateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddDays(1);
-                        return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, dateTimeOffset);
+                        dateTimeOffset = dateTimeOffsetFromDateOnly(
+                                year.Value,
+                                month.Value,
+                                day.Value
+                            )
+                            .AddDays(1);
+                        return tryUpdateCriteriaRange(
+                            ref dateRange,
+                            Operator.GreaterOrEqual,
+                            dateTimeOffset
+                        );
 
                     case Operator.Equal:
 
@@ -740,25 +894,76 @@ namespace osu.Game.Screens.Select
                         {
                             month = 1;
                             day = 1;
-                            minDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value);
-                            maxDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddYears(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, minDateTimeOffset)
-                                   && tryUpdateCriteriaRange(ref dateRange, Operator.Less, maxDateTimeOffset);
+                            minDateTimeOffset = dateTimeOffsetFromDateOnly(
+                                year.Value,
+                                month.Value,
+                                day.Value
+                            );
+                            maxDateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddYears(1);
+                            return tryUpdateCriteriaRange(
+                                    ref dateRange,
+                                    Operator.GreaterOrEqual,
+                                    minDateTimeOffset
+                                )
+                                && tryUpdateCriteriaRange(
+                                    ref dateRange,
+                                    Operator.Less,
+                                    maxDateTimeOffset
+                                );
                         }
 
                         if (day == null)
                         {
                             day = 1;
-                            minDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value);
-                            maxDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddMonths(1);
-                            return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, minDateTimeOffset)
-                                   && tryUpdateCriteriaRange(ref dateRange, Operator.Less, maxDateTimeOffset);
+                            minDateTimeOffset = dateTimeOffsetFromDateOnly(
+                                year.Value,
+                                month.Value,
+                                day.Value
+                            );
+                            maxDateTimeOffset = dateTimeOffsetFromDateOnly(
+                                    year.Value,
+                                    month.Value,
+                                    day.Value
+                                )
+                                .AddMonths(1);
+                            return tryUpdateCriteriaRange(
+                                    ref dateRange,
+                                    Operator.GreaterOrEqual,
+                                    minDateTimeOffset
+                                )
+                                && tryUpdateCriteriaRange(
+                                    ref dateRange,
+                                    Operator.Less,
+                                    maxDateTimeOffset
+                                );
                         }
 
-                        minDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value);
-                        maxDateTimeOffset = dateTimeOffsetFromDateOnly(year.Value, month.Value, day.Value).AddDays(1);
-                        return tryUpdateCriteriaRange(ref dateRange, Operator.GreaterOrEqual, minDateTimeOffset)
-                               && tryUpdateCriteriaRange(ref dateRange, Operator.Less, maxDateTimeOffset);
+                        minDateTimeOffset = dateTimeOffsetFromDateOnly(
+                            year.Value,
+                            month.Value,
+                            day.Value
+                        );
+                        maxDateTimeOffset = dateTimeOffsetFromDateOnly(
+                                year.Value,
+                                month.Value,
+                                day.Value
+                            )
+                            .AddDays(1);
+                        return tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.GreaterOrEqual,
+                                minDateTimeOffset
+                            )
+                            && tryUpdateCriteriaRange(
+                                ref dateRange,
+                                Operator.Less,
+                                maxDateTimeOffset
+                            );
 
                     default:
                         return false;

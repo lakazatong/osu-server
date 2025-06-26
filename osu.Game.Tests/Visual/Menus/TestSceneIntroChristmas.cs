@@ -11,6 +11,7 @@ namespace osu.Game.Tests.Visual.Menus
     public partial class TestSceneIntroChristmas : IntroTestScene
     {
         protected override bool IntroReliesOnTrack => true;
+
         protected override IntroScreen CreateScreen() => new IntroChristmas();
     }
 }

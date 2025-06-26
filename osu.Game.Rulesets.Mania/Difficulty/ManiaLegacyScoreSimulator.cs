@@ -13,16 +13,22 @@ namespace osu.Game.Rulesets.Mania.Difficulty
 {
     internal class ManiaLegacyScoreSimulator : ILegacyScoreSimulator
     {
-        public LegacyScoreAttributes Simulate(IWorkingBeatmap workingBeatmap, IBeatmap playableBeatmap)
+        public LegacyScoreAttributes Simulate(
+            IWorkingBeatmap workingBeatmap,
+            IBeatmap playableBeatmap
+        )
         {
             return new LegacyScoreAttributes
             {
                 ComboScore = 1000000,
-                MaxCombo = 0 // Max combo is mod-dependent, so any value here is insufficient.
+                MaxCombo = 0, // Max combo is mod-dependent, so any value here is insufficient.
             };
         }
 
-        public double GetLegacyScoreMultiplier(IReadOnlyList<Mod> mods, LegacyBeatmapConversionDifficultyInfo difficulty)
+        public double GetLegacyScoreMultiplier(
+            IReadOnlyList<Mod> mods,
+            LegacyBeatmapConversionDifficultyInfo difficulty
+        )
         {
             bool scoreV2 = mods.Any(m => m is ModScoreV2);
 

@@ -44,6 +44,7 @@ namespace osu.Game.Overlays
         /// <summary>
         /// All ongoing operations (ie. any <see cref="ProgressNotification"/> not in a completed or cancelled state).
         /// </summary>
-        IEnumerable<ProgressNotification> OngoingOperations => AllNotifications.OfType<ProgressNotification>().Where(p => p.Ongoing);
+        IEnumerable<ProgressNotification> OngoingOperations =>
+            AllNotifications.OfType<ProgressNotification>().Where(p => p.Ongoing);
     }
 }

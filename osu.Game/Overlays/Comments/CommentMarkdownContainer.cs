@@ -15,21 +15,19 @@ namespace osu.Game.Overlays.Comments
 {
     public partial class CommentMarkdownContainer : OsuMarkdownContainer
     {
-        protected override OsuMarkdownContainerOptions Options => new OsuMarkdownContainerOptions
-        {
-            Autolinks = true
-        };
+        protected override OsuMarkdownContainerOptions Options =>
+            new OsuMarkdownContainerOptions { Autolinks = true };
 
-        protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) => new CommentMarkdownHeading(headingBlock);
+        protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) =>
+            new CommentMarkdownHeading(headingBlock);
 
-        public override OsuMarkdownTextFlowContainer CreateTextFlow() => new CommentMarkdownTextFlowContainer();
+        public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+            new CommentMarkdownTextFlowContainer();
 
         private partial class CommentMarkdownHeading : OsuMarkdownHeading
         {
             public CommentMarkdownHeading(HeadingBlock headingBlock)
-                : base(headingBlock)
-            {
-            }
+                : base(headingBlock) { }
 
             protected override float GetFontSizeByLevel(int level)
             {
@@ -51,18 +49,18 @@ namespace osu.Game.Overlays.Comments
 
         private partial class CommentMarkdownTextFlowContainer : OsuMarkdownTextFlowContainer
         {
-            protected override void AddImage(LinkInline linkInline) => AddDrawable(new CommentMarkdownImage(linkInline));
+            protected override void AddImage(LinkInline linkInline) =>
+                AddDrawable(new CommentMarkdownImage(linkInline));
 
             private partial class CommentMarkdownImage : OsuMarkdownImage
             {
                 public CommentMarkdownImage(LinkInline linkInline)
-                    : base(linkInline)
-                {
-                }
+                    : base(linkInline) { }
 
                 private DelayedLoadWrapper wrapper = null!;
 
-                protected override Drawable CreateContent(string url) => wrapper = new DelayedLoadWrapper(CreateImageContainer(url));
+                protected override Drawable CreateContent(string url) =>
+                    wrapper = new DelayedLoadWrapper(CreateImageContainer(url));
 
                 protected override ImageContainer CreateImageContainer(string url)
                 {
@@ -90,17 +88,18 @@ namespace osu.Game.Overlays.Comments
                         AutoSizeAxes = Axes.None;
                     }
 
-                    protected override Sprite CreateImageSprite() => new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    };
+                    protected override Sprite CreateImageSprite() =>
+                        new Sprite { RelativeSizeAxes = Axes.Both };
 
                     protected override Texture GetImageTexture(TextureStore textures, string url)
                     {
                         Texture t = base.GetImageTexture(textures, url);
 
                         if (t != null)
-                            Size = t.Height > max_height ? new Vector2(max_height / t.Height * t.Width, max_height) : t.Size;
+                            Size =
+                                t.Height > max_height
+                                    ? new Vector2(max_height / t.Height * t.Width, max_height)
+                                    : t.Size;
 
                         return t!;
                     }

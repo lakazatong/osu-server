@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osuTK;
-using osuTK.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play.HUD
 {
@@ -58,11 +58,7 @@ namespace osu.Game.Screens.Play.HUD
                     Position = new Vector2(2, 0),
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Name = "HandleBar box",
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Name = "HandleBar box", RelativeSizeAxes = Axes.Both },
                         handleContainer = new Container
                         {
                             Name = "Handle container",
@@ -77,12 +73,12 @@ namespace osu.Game.Screens.Play.HUD
                                 {
                                     Name = "Handle box",
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.White
-                                }
-                            }
-                        }
-                    }
-                }
+                                    Colour = Color4.White,
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -101,7 +97,12 @@ namespace osu.Game.Screens.Play.HUD
             base.Update();
 
             handleBase.Height = Height - handleContainer.Height;
-            float newX = (float)Interpolation.Lerp(handleBase.X, AudioProgress * DrawWidth, Math.Clamp(Time.Elapsed / 40, 0, 1));
+            float newX = (float)
+                Interpolation.Lerp(
+                    handleBase.X,
+                    AudioProgress * DrawWidth,
+                    Math.Clamp(Time.Elapsed / 40, 0, 1)
+                );
 
             fill.Width = newX;
             handleBase.X = newX;

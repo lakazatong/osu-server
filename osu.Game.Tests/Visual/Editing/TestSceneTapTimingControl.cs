@@ -30,7 +30,9 @@ namespace osu.Game.Tests.Visual.Editing
         private TestSceneHitObjectComposer.EditorBeatmapContainer editorBeatmapContainer;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [Cached]
         private Bindable<ControlPointGroup> selectedGroup = new Bindable<ControlPointGroup>();
@@ -44,32 +46,39 @@ namespace osu.Game.Tests.Visual.Editing
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create beatmap", () =>
-            {
-                Beatmap.Value = new WaveformTestBeatmap(audio);
-            });
-
-            AddStep("Create component", () =>
-            {
-                Child = editorBeatmapContainer = new TestSceneHitObjectComposer.EditorBeatmapContainer(Beatmap.Value)
+            AddStep(
+                "create beatmap",
+                () =>
                 {
-                    Children = new Drawable[]
-                    {
-                        new Container
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            AutoSizeAxes = Axes.Y,
-                            Width = 400,
-                            Scale = new Vector2(1.5f),
-                            Child = control = new TapTimingControl(),
-                        },
-                        timingInfo = new OsuSpriteText(),
-                    }
-                };
+                    Beatmap.Value = new WaveformTestBeatmap(audio);
+                }
+            );
 
-                selectedGroup.Value = editorBeatmap.ControlPointInfo.Groups.First();
-            });
+            AddStep(
+                "Create component",
+                () =>
+                {
+                    Child = editorBeatmapContainer =
+                        new TestSceneHitObjectComposer.EditorBeatmapContainer(Beatmap.Value)
+                        {
+                            Children = new Drawable[]
+                            {
+                                new Container
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    AutoSizeAxes = Axes.Y,
+                                    Width = 400,
+                                    Scale = new Vector2(1.5f),
+                                    Child = control = new TapTimingControl(),
+                                },
+                                timingInfo = new OsuSpriteText(),
+                            },
+                        };
+
+                    selectedGroup.Value = editorBeatmap.ControlPointInfo.Groups.First();
+                }
+            );
         }
 
         protected override void Update()
@@ -77,51 +86,64 @@ namespace osu.Game.Tests.Visual.Editing
             base.Update();
 
             if (selectedGroup.Value != null)
-                timingInfo.Text = $"offset: {selectedGroup.Value.Time:N2} bpm: {selectedGroup.Value.ControlPoints.OfType<TimingControlPoint>().First().BPM:N2}";
+                timingInfo.Text =
+                    $"offset: {selectedGroup.Value.Time:N2} bpm: {selectedGroup.Value.ControlPoints.OfType<TimingControlPoint>().First().BPM:N2}";
         }
 
         [Test]
         public void TestBasic()
         {
-            AddStep("set low bpm", () =>
-            {
-                editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 1000;
-            });
+            AddStep(
+                "set low bpm",
+                () =>
+                {
+                    editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 1000;
+                }
+            );
 
-            AddStep("click tap button", () =>
-            {
-                control.ChildrenOfType<OsuButton>()
-                       .Last()
-                       .TriggerClick();
-            });
+            AddStep(
+                "click tap button",
+                () =>
+                {
+                    control.ChildrenOfType<OsuButton>().Last().TriggerClick();
+                }
+            );
 
-            AddSliderStep("BPM", 30, 400, 128, bpm =>
-            {
-                if (editorBeatmap == null)
-                    return;
+            AddSliderStep(
+                "BPM",
+                30,
+                400,
+                128,
+                bpm =>
+                {
+                    if (editorBeatmap == null)
+                        return;
 
-                editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 60000f / bpm;
-            });
+                    editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 60000f / bpm;
+                }
+            );
         }
 
         [Test]
         public void TestTapThenReset()
         {
-            AddStep("click tap button", () =>
-            {
-                control.ChildrenOfType<OsuButton>()
-                       .Last()
-                       .TriggerClick();
-            });
+            AddStep(
+                "click tap button",
+                () =>
+                {
+                    control.ChildrenOfType<OsuButton>().Last().TriggerClick();
+                }
+            );
 
             AddUntilStep("wait for track playing", () => EditorClock.IsRunning);
 
-            AddStep("click reset button", () =>
-            {
-                control.ChildrenOfType<OsuButton>()
-                       .First()
-                       .TriggerClick();
-            });
+            AddStep(
+                "click reset button",
+                () =>
+                {
+                    control.ChildrenOfType<OsuButton>().First().TriggerClick();
+                }
+            );
 
             AddUntilStep("wait for track stopped", () => !EditorClock.IsRunning);
         }
@@ -132,33 +154,41 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("unset selected group", () => selectedGroup.Value = null);
             AddStep("press T to tap", () => InputManager.Key(Key.T));
 
-            AddStep("click tap button", () =>
-            {
-                control.ChildrenOfType<OsuButton>()
-                       .Last()
-                       .TriggerClick();
-            });
+            AddStep(
+                "click tap button",
+                () =>
+                {
+                    control.ChildrenOfType<OsuButton>().Last().TriggerClick();
+                }
+            );
 
-            AddStep("click reset button", () =>
-            {
-                control.ChildrenOfType<OsuButton>()
-                       .First()
-                       .TriggerClick();
-            });
+            AddStep(
+                "click reset button",
+                () =>
+                {
+                    control.ChildrenOfType<OsuButton>().First().TriggerClick();
+                }
+            );
 
-            AddStep("adjust offset", () =>
-            {
-                var adjustOffsetButton = control.ChildrenOfType<TimingAdjustButton>().First();
-                InputManager.MoveMouseTo(adjustOffsetButton);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "adjust offset",
+                () =>
+                {
+                    var adjustOffsetButton = control.ChildrenOfType<TimingAdjustButton>().First();
+                    InputManager.MoveMouseTo(adjustOffsetButton);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("adjust BPM", () =>
-            {
-                var adjustBPMButton = control.ChildrenOfType<TimingAdjustButton>().Last();
-                InputManager.MoveMouseTo(adjustBPMButton);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "adjust BPM",
+                () =>
+                {
+                    var adjustBPMButton = control.ChildrenOfType<TimingAdjustButton>().Last();
+                    InputManager.MoveMouseTo(adjustBPMButton);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
         }
 
         protected override void Dispose(bool isDisposing)

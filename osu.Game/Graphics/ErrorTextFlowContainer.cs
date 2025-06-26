@@ -13,9 +13,7 @@ namespace osu.Game.Graphics
         private readonly List<ITextPart> errorTextParts = new List<ITextPart>();
 
         public ErrorTextFlowContainer()
-            : base(cp => cp.Font = cp.Font.With(size: 12))
-        {
-        }
+            : base(cp => cp.Font = cp.Font.With(size: 12)) { }
 
         public void ClearErrors()
         {
@@ -27,7 +25,8 @@ namespace osu.Game.Graphics
         {
             ClearErrors();
 
-            if (errors == null) return;
+            if (errors == null)
+                return;
 
             foreach (string error in errors)
                 errorTextParts.Add(AddParagraph(error, cp => cp.Colour = Color4.Red));

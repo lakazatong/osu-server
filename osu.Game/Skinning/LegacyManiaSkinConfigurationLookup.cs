@@ -24,14 +24,19 @@ namespace osu.Game.Skinning
 
         public readonly LegacyManiaSkinConfigurationLookups Lookup;
 
-        public LegacyManiaSkinConfigurationLookup(int totalColumns, LegacyManiaSkinConfigurationLookups lookup, int? columnIndex = null)
+        public LegacyManiaSkinConfigurationLookup(
+            int totalColumns,
+            LegacyManiaSkinConfigurationLookups lookup,
+            int? columnIndex = null
+        )
         {
             TotalColumns = totalColumns;
             Lookup = lookup;
             ColumnIndex = columnIndex;
         }
 
-        public override string ToString() => $"[{nameof(LegacyManiaSkinConfigurationLookup)} lookup:{Lookup} col:{ColumnIndex} totalcols:{TotalColumns}]";
+        public override string ToString() =>
+            $"[{nameof(LegacyManiaSkinConfigurationLookup)} lookup:{Lookup} col:{ColumnIndex} totalcols:{TotalColumns}]";
     }
 
     public enum LegacyManiaSkinConfigurationLookups

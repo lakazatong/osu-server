@@ -22,7 +22,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneChannelListing : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider overlayColours = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private readonly OverlayColourProvider overlayColours = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         private SearchTextBox search;
         private ChannelListing listing;
@@ -56,20 +58,26 @@ namespace osu.Game.Tests.Visual.Online
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Add Join/Leave callbacks", () =>
-            {
-                listing.OnRequestJoin += channel => channel.Joined.Value = true;
-                listing.OnRequestLeave += channel => channel.Joined.Value = false;
-            });
+            AddStep(
+                "Add Join/Leave callbacks",
+                () =>
+                {
+                    listing.OnRequestJoin += channel => channel.Joined.Value = true;
+                    listing.OnRequestLeave += channel => channel.Joined.Value = false;
+                }
+            );
         }
 
         [Test]
         public void TestAddRandomChannels()
         {
-            AddStep("Add Random Channels", () =>
-            {
-                listing.UpdateAvailableChannels(createRandomChannels(20));
-            });
+            AddStep(
+                "Add Random Channels",
+                () =>
+                {
+                    listing.UpdateAvailableChannels(createRandomChannels(20));
+                }
+            );
         }
 
         private Channel createRandomChannel()
@@ -84,9 +92,7 @@ namespace osu.Game.Tests.Visual.Online
             };
         }
 
-        private List<Channel> createRandomChannels(int num)
-            => Enumerable.Range(0, num)
-                         .Select(_ => createRandomChannel())
-                         .ToList();
+        private List<Channel> createRandomChannels(int num) =>
+            Enumerable.Range(0, num).Select(_ => createRandomChannel()).ToList();
     }
 }

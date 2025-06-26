@@ -16,7 +16,8 @@ using osu.Game.Tests.Beatmaps;
 namespace osu.Game.Rulesets.Mania.Tests
 {
     [TestFixture]
-    public class ManiaBeatmapConversionTest : BeatmapConversionTest<ManiaConvertMapping, ConvertValue>
+    public class ManiaBeatmapConversionTest
+        : BeatmapConversionTest<ManiaConvertMapping, ConvertValue>
     {
         protected override string ResourceAssembly => "osu.Game.Rulesets.Mania.Tests";
 
@@ -35,20 +36,26 @@ namespace osu.Game.Rulesets.Mania.Tests
             {
                 StartTime = hitObject.StartTime,
                 EndTime = hitObject.GetEndTime(),
-                Column = ((ManiaHitObject)hitObject).Column
+                Column = ((ManiaHitObject)hitObject).Column,
             };
         }
 
-        private readonly Dictionary<HitObject, RngSnapshot> rngSnapshots = new Dictionary<HitObject, RngSnapshot>();
+        private readonly Dictionary<HitObject, RngSnapshot> rngSnapshots =
+            new Dictionary<HitObject, RngSnapshot>();
 
-        protected override void OnConversionGenerated(HitObject original, IEnumerable<HitObject> result, IBeatmapConverter beatmapConverter)
+        protected override void OnConversionGenerated(
+            HitObject original,
+            IEnumerable<HitObject> result,
+            IBeatmapConverter beatmapConverter
+        )
         {
             base.OnConversionGenerated(original, result, beatmapConverter);
 
             rngSnapshots[original] = new RngSnapshot(beatmapConverter);
         }
 
-        protected override ManiaConvertMapping CreateConvertMapping(HitObject source) => new ManiaConvertMapping(rngSnapshots[source]);
+        protected override ManiaConvertMapping CreateConvertMapping(HitObject source) =>
+            new ManiaConvertMapping(rngSnapshots[source]);
 
         protected override Ruleset CreateRuleset() => new ManiaRuleset();
     }
@@ -77,9 +84,7 @@ namespace osu.Game.Rulesets.Mania.Tests
         public uint RandomY;
         public uint RandomZ;
 
-        public ManiaConvertMapping()
-        {
-        }
+        public ManiaConvertMapping() { }
 
         public ManiaConvertMapping(RngSnapshot snapshot)
         {
@@ -95,8 +100,15 @@ namespace osu.Game.Rulesets.Mania.Tests
             Objects.Sort();
         }
 
-        public bool Equals(ManiaConvertMapping other) => other != null && RandomW == other.RandomW && RandomX == other.RandomX && RandomY == other.RandomY && RandomZ == other.RandomZ;
-        public override bool Equals(ConvertMapping<ConvertValue> other) => base.Equals(other) && Equals(other as ManiaConvertMapping);
+        public bool Equals(ManiaConvertMapping other) =>
+            other != null
+            && RandomW == other.RandomW
+            && RandomX == other.RandomX
+            && RandomY == other.RandomY
+            && RandomZ == other.RandomZ;
+
+        public override bool Equals(ConvertMapping<ConvertValue> other) =>
+            base.Equals(other) && Equals(other as ManiaConvertMapping);
     }
 
     public struct ConvertValue : IEquatable<ConvertValue>, IComparable<ConvertValue>
@@ -110,10 +122,10 @@ namespace osu.Game.Rulesets.Mania.Tests
         public double EndTime;
         public int Column;
 
-        public bool Equals(ConvertValue other)
-            => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
-               && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
-               && Column == other.Column;
+        public bool Equals(ConvertValue other) =>
+            Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
+            && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
+            && Column == other.Column;
 
         public int CompareTo(ConvertValue other)
         {

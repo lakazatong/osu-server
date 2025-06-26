@@ -11,7 +11,8 @@ using osu.Game.Overlays.Dashboard.Friends;
 
 namespace osu.Game.Overlays
 {
-    public partial class DashboardOverlay : TabbableOnlineOverlay<DashboardOverlayHeader, DashboardOverlayTabs>
+    public partial class DashboardOverlay
+        : TabbableOnlineOverlay<DashboardOverlayHeader, DashboardOverlayTabs>
     {
         [Resolved]
         private MetadataClient metadataClient { get; set; } = null!;
@@ -20,9 +21,7 @@ namespace osu.Game.Overlays
         private IDisposable? userPresenceWatchToken;
 
         public DashboardOverlay()
-            : base(OverlayColourScheme.Purple)
-        {
-        }
+            : base(OverlayColourScheme.Purple) { }
 
         protected override DashboardOverlayHeader CreateHeader() => new DashboardOverlayHeader();
 

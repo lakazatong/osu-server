@@ -7,6 +7,6 @@ namespace osu.Game.Screens.Edit.Compose.Components
     {
         GridCentre,
         PlayfieldCentre,
-        SelectionCentre
+        SelectionCentre,
     }
 }

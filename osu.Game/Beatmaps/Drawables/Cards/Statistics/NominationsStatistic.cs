@@ -18,7 +18,10 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
         {
             Icon = FontAwesome.Solid.ThumbsUp;
             Text = current.ToLocalisableString();
-            TooltipText = BeatmapsStrings.NominationsRequiredText(current.ToLocalisableString(), required.ToLocalisableString());
+            TooltipText = BeatmapsStrings.NominationsRequiredText(
+                current.ToLocalisableString(),
+                required.ToLocalisableString()
+            );
         }
 
         public static NominationsStatistic? CreateFor(APIBeatmapSet beatmapSet)
@@ -34,7 +37,10 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
 
             int rulesets = beatmapSet.Beatmaps.GroupBy(b => b.Ruleset).Count();
 
-            return new NominationsStatistic(current, requiredMainRuleset + requiredNonMainRuleset * (rulesets - 1));
+            return new NominationsStatistic(
+                current,
+                requiredMainRuleset + requiredNonMainRuleset * (rulesets - 1)
+            );
         }
     }
 }

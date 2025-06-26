@@ -48,23 +48,24 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                         new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = facadeContainer = new FillFlowContainer<Facade>
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(player_spacing),
-                            }
+                            Child = facadeContainer =
+                                new FillFlowContainer<Facade>
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Spacing = new Vector2(player_spacing),
+                                },
                         },
                         MaximisedFacade = new Facade
                         {
                             RelativeSizeAxes = Axes.Both,
                             Size = new Vector2(0.8f),
-                        }
-                    }
+                        },
+                    },
                 },
-                cellContainer = new Container<Cell> { RelativeSizeAxes = Axes.Both }
+                cellContainer = new Container<Cell> { RelativeSizeAxes = Axes.Both },
             };
         }
 
@@ -83,7 +84,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             var facade = new Facade();
             facadeContainer.Add(facade);
 
-            var cell = new Cell(index, content, facade) { ToggleMaximisationState = toggleMaximisationState };
+            var cell = new Cell(index, content, facade)
+            {
+                ToggleMaximisationState = toggleMaximisationState,
+            };
 
             cellContainer.Add(cell);
         }
@@ -91,7 +95,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
         /// <summary>
         /// The content added to this grid.
         /// </summary>
-        public IEnumerable<Drawable> Content => cellContainer.OrderBy(c => c.FacadeIndex).Select(c => c.Content);
+        public IEnumerable<Drawable> Content =>
+            cellContainer.OrderBy(c => c.FacadeIndex).Select(c => c.Content);
 
         // A depth value that gets decremented every time a new instance is maximised in order to reduce underlaps.
         private float maximisedInstanceDepth;
@@ -116,7 +121,11 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                     cell.SetFacade(facadeContainer[cell.FacadeIndex], false);
                 }
 
-                cell.FadeColour(hasMaximised && cell != target ? Color4.Gray : Color4.White, ANIMATION_DELAY, Easing.OutQuint);
+                cell.FadeColour(
+                    hasMaximised && cell != target ? Color4.Gray : Color4.White,
+                    ANIMATION_DELAY,
+                    Easing.OutQuint
+                );
             }
 
             facadeContainer.ScaleTo(hasMaximised ? 0.95f : 1, ANIMATION_DELAY, Easing.OutQuint);
@@ -173,7 +182,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             Vector2 totalCellSpacing = player_spacing * (cellsPerDimension - Vector2.One);
 
             Vector2 fullSize = paddingContainer.ChildSize - totalCellSpacing;
-            Vector2 cellSize = Vector2.Divide(fullSize, new Vector2(cellsPerDimension.X, cellsPerDimension.Y));
+            Vector2 cellSize = Vector2.Divide(
+                fullSize,
+                new Vector2(cellsPerDimension.X, cellsPerDimension.Y)
+            );
 
             foreach (var cell in facadeContainer)
                 cell.Size = cellSize;

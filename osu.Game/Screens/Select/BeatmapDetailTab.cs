@@ -33,6 +33,6 @@ namespace osu.Game.Screens.Select
         /// <summary>
         /// Team leaderboards.
         /// </summary>
-        Team
+        Team,
     }
 }

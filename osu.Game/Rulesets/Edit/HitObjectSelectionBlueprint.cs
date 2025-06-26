@@ -31,12 +31,12 @@ namespace osu.Game.Rulesets.Edit
         /// </summary>
         protected Bindable<bool> ShowHitMarkers { get; private set; }
 
-        protected override bool ShouldBeAlive => (DrawableObject?.IsAlive == true && DrawableObject.IsPresent) || (AlwaysShowWhenSelected && State == SelectionState.Selected);
+        protected override bool ShouldBeAlive =>
+            (DrawableObject?.IsAlive == true && DrawableObject.IsPresent)
+            || (AlwaysShowWhenSelected && State == SelectionState.Selected);
 
         protected HitObjectSelectionBlueprint(HitObject hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -44,9 +44,11 @@ namespace osu.Game.Rulesets.Edit
             ShowHitMarkers = config.GetBindable<bool>(OsuSetting.EditorShowHitMarkers);
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => DrawableObject.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            DrawableObject.ReceivePositionalInputAt(screenSpacePos);
 
-        public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.ScreenSpaceDrawQuad.Centre;
+        public override Vector2 ScreenSpaceSelectionPoint =>
+            DrawableObject.ScreenSpaceDrawQuad.Centre;
 
         public override Quad SelectionQuad => DrawableObject.ScreenSpaceDrawQuad;
     }
@@ -57,8 +59,6 @@ namespace osu.Game.Rulesets.Edit
         public T HitObject => (T)Item;
 
         protected HitObjectSelectionBlueprint(T item)
-            : base(item)
-        {
-        }
+            : base(item) { }
     }
 }

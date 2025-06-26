@@ -21,26 +21,40 @@ namespace osu.Game.Tests.Visual.Online
         protected override bool UseOnlineAPI => true;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         public TestSceneHistoricalSection()
         {
             HistoricalSection section;
 
-            Add(new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = OsuColour.Gray(0.2f)
-            });
+            Add(new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) });
 
-            Add(new OsuScrollContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = section = new HistoricalSection(),
-            });
+            Add(
+                new OsuScrollContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = section = new HistoricalSection(),
+                }
+            );
 
-            AddStep("Show peppy", () => section.User.Value = new UserProfileData(new APIUser { Id = 2 }, new OsuRuleset().RulesetInfo));
-            AddStep("Show WubWoofWolf", () => section.User.Value = new UserProfileData(new APIUser { Id = 39828 }, new OsuRuleset().RulesetInfo));
+            AddStep(
+                "Show peppy",
+                () =>
+                    section.User.Value = new UserProfileData(
+                        new APIUser { Id = 2 },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
+            AddStep(
+                "Show WubWoofWolf",
+                () =>
+                    section.User.Value = new UserProfileData(
+                        new APIUser { Id = 39828 },
+                        new OsuRuleset().RulesetInfo
+                    )
+            );
         }
     }
 }

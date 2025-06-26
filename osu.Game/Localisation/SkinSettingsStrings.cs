@@ -12,47 +12,62 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Skin"
         /// </summary>
-        public static LocalisableString SkinSectionHeader => new TranslatableString(getKey(@"skin_section_header"), @"Skin");
+        public static LocalisableString SkinSectionHeader =>
+            new TranslatableString(getKey(@"skin_section_header"), @"Skin");
 
         /// <summary>
         /// "Current skin"
         /// </summary>
-        public static LocalisableString CurrentSkin => new TranslatableString(getKey(@"current_skin"), @"Current skin");
+        public static LocalisableString CurrentSkin =>
+            new TranslatableString(getKey(@"current_skin"), @"Current skin");
 
         /// <summary>
         /// "Skin layout editor"
         /// </summary>
-        public static LocalisableString SkinLayoutEditor => new TranslatableString(getKey(@"skin_layout_editor"), @"Skin layout editor");
+        public static LocalisableString SkinLayoutEditor =>
+            new TranslatableString(getKey(@"skin_layout_editor"), @"Skin layout editor");
 
         /// <summary>
         /// "Gameplay cursor size"
         /// </summary>
-        public static LocalisableString GameplayCursorSize => new TranslatableString(getKey(@"gameplay_cursor_size"), @"Gameplay cursor size");
+        public static LocalisableString GameplayCursorSize =>
+            new TranslatableString(getKey(@"gameplay_cursor_size"), @"Gameplay cursor size");
 
         /// <summary>
         /// "Adjust gameplay cursor size based on current beatmap"
         /// </summary>
-        public static LocalisableString AutoCursorSize => new TranslatableString(getKey(@"auto_cursor_size"), @"Adjust gameplay cursor size based on current beatmap");
+        public static LocalisableString AutoCursorSize =>
+            new TranslatableString(
+                getKey(@"auto_cursor_size"),
+                @"Adjust gameplay cursor size based on current beatmap"
+            );
 
         /// <summary>
         /// "Show gameplay cursor during touch input"
         /// </summary>
-        public static LocalisableString GameplayCursorDuringTouch => new TranslatableString(getKey(@"gameplay_cursor_during_touch"), @"Show gameplay cursor during touch input");
+        public static LocalisableString GameplayCursorDuringTouch =>
+            new TranslatableString(
+                getKey(@"gameplay_cursor_during_touch"),
+                @"Show gameplay cursor during touch input"
+            );
 
         /// <summary>
         /// "Beatmap skins"
         /// </summary>
-        public static LocalisableString BeatmapSkins => new TranslatableString(getKey(@"beatmap_skins"), @"Beatmap skins");
+        public static LocalisableString BeatmapSkins =>
+            new TranslatableString(getKey(@"beatmap_skins"), @"Beatmap skins");
 
         /// <summary>
         /// "Beatmap colours"
         /// </summary>
-        public static LocalisableString BeatmapColours => new TranslatableString(getKey(@"beatmap_colours"), @"Beatmap colours");
+        public static LocalisableString BeatmapColours =>
+            new TranslatableString(getKey(@"beatmap_colours"), @"Beatmap colours");
 
         /// <summary>
         /// "Beatmap hitsounds"
         /// </summary>
-        public static LocalisableString BeatmapHitsounds => new TranslatableString(getKey(@"beatmap_hitsounds"), @"Beatmap hitsounds");
+        public static LocalisableString BeatmapHitsounds =>
+            new TranslatableString(getKey(@"beatmap_hitsounds"), @"Beatmap hitsounds");
 
         private static string getKey(string key) => $"{prefix}:{key}";
     }

@@ -31,7 +31,9 @@ namespace osu.Game.Beatmaps.Drawables
 
         private readonly BeatmapSetCoverType beatmapSetCoverType;
 
-        public UpdateableBeatmapBackgroundSprite(BeatmapSetCoverType beatmapSetCoverType = BeatmapSetCoverType.Cover)
+        public UpdateableBeatmapBackgroundSprite(
+            BeatmapSetCoverType beatmapSetCoverType = BeatmapSetCoverType.Cover
+        )
         {
             Beatmap.BindValueChanged(b => Model = b.NewValue);
             this.beatmapSetCoverType = beatmapSetCoverType;
@@ -41,8 +43,14 @@ namespace osu.Game.Beatmaps.Drawables
 
         protected virtual double UnloadDelay => BackgroundUnloadDelay;
 
-        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad) =>
-            new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, UnloadDelay) { RelativeSizeAxes = Axes.Both };
+        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(
+            Func<Drawable> createContentFunc,
+            double timeBeforeLoad
+        ) =>
+            new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, UnloadDelay)
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
 
         protected override double TransformDuration => 400;
 

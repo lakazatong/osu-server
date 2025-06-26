@@ -28,17 +28,20 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
 
         private readonly Container<GradedCircle> circles;
 
-        public GradedCircles(double accuracyC, double accuracyB, double accuracyA, double accuracyS, double accuracyX)
+        public GradedCircles(
+            double accuracyC,
+            double accuracyB,
+            double accuracyA,
+            double accuracyS,
+            double accuracyX
+        )
         {
             InternalChild = circles = new Container<GradedCircle>
             {
                 RelativeSizeAxes = Axes.Both,
                 Children = new[]
                 {
-                    new GradedCircle(0.0, accuracyC)
-                    {
-                        Colour = OsuColour.ForRank(ScoreRank.D),
-                    },
+                    new GradedCircle(0.0, accuracyC) { Colour = OsuColour.ForRank(ScoreRank.D) },
                     new GradedCircle(accuracyC, accuracyB)
                     {
                         Colour = OsuColour.ForRank(ScoreRank.C),
@@ -57,9 +60,9 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                     },
                     new GradedCircle(accuracyX - AccuracyCircle.VIRTUAL_SS_PERCENTAGE, 1.0)
                     {
-                        Colour = OsuColour.ForRank(ScoreRank.X)
-                    }
-                }
+                        Colour = OsuColour.ForRank(ScoreRank.X),
+                    },
+                },
             };
         }
 

@@ -24,7 +24,8 @@ namespace osu.Game.Rulesets.Osu.UI
 
         private OsuCursorContainer? localCursorContainer;
 
-        public override CursorContainer? LocalCursor => State.Value == Visibility.Visible ? localCursorContainer : null;
+        public override CursorContainer? LocalCursor =>
+            State.Value == Visibility.Visible ? localCursorContainer : null;
 
         protected override LocalisableString Message => "Click the orange cursor to resume";
 
@@ -41,33 +42,47 @@ namespace osu.Game.Rulesets.Osu.UI
             if (drawableOsuRuleset != null)
             {
                 var osuPlayfield = drawableOsuRuleset.Playfield;
-                osuPlayfield.AttachResumeOverlayInputBlocker(inputBlocker = new OsuResumeOverlayInputBlocker());
+                osuPlayfield.AttachResumeOverlayInputBlocker(
+                    inputBlocker = new OsuResumeOverlayInputBlocker()
+                );
             }
 
-            Add(cursorScaleContainer = new Container
-            {
-                Child = clickToResumeCursor = new OsuClickToResumeCursor
+            Add(
+                cursorScaleContainer = new Container
                 {
-                    ResumeRequested = action =>
-                    {
-                        // since the user had to press a button to tap the resume cursor,
-                        // block that press event from potentially reaching a hit circle that's behind the cursor.
-                        // we cannot do this from OsuClickToResumeCursor directly since we're in a different input manager tree than the gameplay one,
-                        // so we rely on a dedicated input blocking component that's implanted in there to do that for us.
-                        // note this only matters when the user didn't pause while they were holding the same key that they are resuming with.
-                        if (inputBlocker != null && !drawableOsuRuleset.AsNonNull().KeyBindingInputManager.PressedActions.Contains(action))
-                            inputBlocker.BlockNextPress = true;
+                    Child = clickToResumeCursor =
+                        new OsuClickToResumeCursor
+                        {
+                            ResumeRequested = action =>
+                            {
+                                // since the user had to press a button to tap the resume cursor,
+                                // block that press event from potentially reaching a hit circle that's behind the cursor.
+                                // we cannot do this from OsuClickToResumeCursor directly since we're in a different input manager tree than the gameplay one,
+                                // so we rely on a dedicated input blocking component that's implanted in there to do that for us.
+                                // note this only matters when the user didn't pause while they were holding the same key that they are resuming with.
+                                if (
+                                    inputBlocker != null
+                                    && !drawableOsuRuleset
+                                        .AsNonNull()
+                                        .KeyBindingInputManager.PressedActions.Contains(action)
+                                )
+                                    inputBlocker.BlockNextPress = true;
 
-                        Resume();
-                    }
+                                Resume();
+                            },
+                        },
                 }
-            });
+            );
         }
 
         protected override void PopIn()
         {
             // Can't display if the cursor is outside the window.
-            if (GameplayCursor.LastFrameState == Visibility.Hidden || drawableRuleset?.Contains(GameplayCursor.ActiveCursor.ScreenSpaceDrawQuad.Centre) == false)
+            if (
+                GameplayCursor.LastFrameState == Visibility.Hidden
+                || drawableRuleset?.Contains(GameplayCursor.ActiveCursor.ScreenSpaceDrawQuad.Centre)
+                    == false
+            )
             {
                 Resume();
                 return;
@@ -76,7 +91,9 @@ namespace osu.Game.Rulesets.Osu.UI
             base.PopIn();
 
             GameplayCursor.ActiveCursor.Hide();
-            cursorScaleContainer.Position = ToLocalSpace(GameplayCursor.ActiveCursor.ScreenSpaceDrawQuad.Centre);
+            cursorScaleContainer.Position = ToLocalSpace(
+                GameplayCursor.ActiveCursor.ScreenSpaceDrawQuad.Centre
+            );
             clickToResumeCursor.Appear();
 
             if (localCursorContainer == null)
@@ -106,13 +123,14 @@ namespace osu.Game.Rulesets.Osu.UI
                 RelativePositionAxes = Axes.Both;
             }
 
-            protected override Container CreateCursorContent() => scaleTransitionContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Child = base.CreateCursorContent(),
-            };
+            protected override Container CreateCursorContent() =>
+                scaleTransitionContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Child = base.CreateCursorContent(),
+                };
 
             protected override float CalculateCursorScale() =>
                 // Force minimum cursor size so it's easily clickable
@@ -147,18 +165,17 @@ namespace osu.Game.Rulesets.Osu.UI
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e) { }
 
-            public void Appear() => Schedule(() =>
-            {
-                updateColour();
+            public void Appear() =>
+                Schedule(() =>
+                {
+                    updateColour();
 
-                // importantly, we perform the scale transition on an underlying container rather than the whole cursor
-                // to prevent attempts of abuse by the scale change in the cursor's hitbox (see: https://github.com/ppy/osu/issues/26477).
-                scaleTransitionContainer.ScaleTo(4).Then().ScaleTo(1, 1000, Easing.OutQuint);
-            });
+                    // importantly, we perform the scale transition on an underlying container rather than the whole cursor
+                    // to prevent attempts of abuse by the scale change in the cursor's hitbox (see: https://github.com/ppy/osu/issues/26477).
+                    scaleTransitionContainer.ScaleTo(4).Then().ScaleTo(1, 1000, Easing.OutQuint);
+                });
 
             private void updateColour()
             {
@@ -183,9 +200,7 @@ namespace osu.Game.Rulesets.Osu.UI
                 return block;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e) { }
         }
     }
 }

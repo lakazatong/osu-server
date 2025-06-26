@@ -26,11 +26,14 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestHitCircleClassicModMiss()
         {
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = new Mod[] { new OsuModClassic() };
-                createCircle();
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = new Mod[] { new OsuModClassic() };
+                    createCircle();
+                }
+            );
 
             AddUntilStep("Wait until circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Transparent when missed", () => alphaAtMiss == 0);
@@ -39,11 +42,14 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestHitCircleClassicAndFullHiddenMods()
         {
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = new Mod[] { new OsuModHidden(), new OsuModClassic() };
-                createCircle();
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = new Mod[] { new OsuModHidden(), new OsuModClassic() };
+                    createCircle();
+                }
+            );
 
             AddUntilStep("Wait until circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Transparent when missed", () => alphaAtMiss == 0);
@@ -52,11 +58,18 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestHitCircleClassicAndApproachCircleOnlyHiddenMods()
         {
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = new Mod[] { new OsuModHidden { OnlyFadeApproachCircles = { Value = true } }, new OsuModClassic() };
-                createCircle();
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = new Mod[]
+                    {
+                        new OsuModHidden { OnlyFadeApproachCircles = { Value = true } },
+                        new OsuModClassic(),
+                    };
+                    createCircle();
+                }
+            );
 
             AddUntilStep("Wait until circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Transparent when missed", () => alphaAtMiss == 0);
@@ -70,25 +83,39 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             TestDrawableHitCircle circle = null!;
 
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = new Mod[] { new OsuModClassic() };
-                circle = createCircle(true);
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = new Mod[] { new OsuModClassic() };
+                    circle = createCircle(true);
+                }
+            );
 
             AddUntilStep("Wait until circle is hit", () => circle.Result?.Type == HitResult.Great);
-            AddUntilStep("Wait for miss window", () => Clock.CurrentTime, () => Is.GreaterThanOrEqualTo(circle.HitObject.StartTime + circle.HitObject.HitWindows.WindowFor(HitResult.Miss)));
+            AddUntilStep(
+                "Wait for miss window",
+                () => Clock.CurrentTime,
+                () =>
+                    Is.GreaterThanOrEqualTo(
+                        circle.HitObject.StartTime
+                            + circle.HitObject.HitWindows.WindowFor(HitResult.Miss)
+                    )
+            );
             AddAssert("Check circle is still visible", () => circle.Alpha, () => Is.GreaterThan(0));
         }
 
         [Test]
         public void TestHitCircleNoModMiss()
         {
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = Array.Empty<Mod>();
-                createCircle();
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = Array.Empty<Mod>();
+                    createCircle();
+                }
+            );
 
             AddUntilStep("Wait until circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Opaque when missed", () => alphaAtMiss == 1);
@@ -97,21 +124,27 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestHitCircleNoModHit()
         {
-            AddStep("Create hit circle", () =>
-            {
-                SelectedMods.Value = Array.Empty<Mod>();
-                createCircle(true);
-            });
+            AddStep(
+                "Create hit circle",
+                () =>
+                {
+                    SelectedMods.Value = Array.Empty<Mod>();
+                    createCircle(true);
+                }
+            );
         }
 
         [Test]
         public void TestSliderClassicMod()
         {
-            AddStep("Create slider", () =>
-            {
-                SelectedMods.Value = new Mod[] { new OsuModClassic() };
-                createSlider();
-            });
+            AddStep(
+                "Create slider",
+                () =>
+                {
+                    SelectedMods.Value = new Mod[] { new OsuModClassic() };
+                    createSlider();
+                }
+            );
 
             AddUntilStep("Wait until head circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Head circle transparent when missed", () => alphaAtMiss == 0);
@@ -120,11 +153,14 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestSliderNoMod()
         {
-            AddStep("Create slider", () =>
-            {
-                SelectedMods.Value = Array.Empty<Mod>();
-                createSlider();
-            });
+            AddStep(
+                "Create slider",
+                () =>
+                {
+                    SelectedMods.Value = Array.Empty<Mod>();
+                    createSlider();
+                }
+            );
 
             AddUntilStep("Wait until head circle is missed", () => alphaAtMiss.IsNotNull());
             AddAssert("Head circle opaque when missed", () => alphaAtMiss == 1);
@@ -134,11 +170,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             alphaAtMiss = null;
 
-            TestDrawableHitCircle drawableHitCircle = new TestDrawableHitCircle(new HitCircle
-            {
-                StartTime = Time.Current + 500,
-                Position = new Vector2(250),
-            }, shouldHit);
+            TestDrawableHitCircle drawableHitCircle = new TestDrawableHitCircle(
+                new HitCircle { StartTime = Time.Current + 500, Position = new Vector2(250) },
+                shouldHit
+            );
 
             drawableHitCircle.Scale = new Vector2(2f);
 
@@ -146,7 +181,10 @@ namespace osu.Game.Rulesets.Osu.Tests
             foreach (var mod in SelectedMods.Value.OfType<IApplicableToDrawableHitObject>())
                 mod.ApplyToDrawableHitObject(drawableHitCircle);
 
-            drawableHitCircle.HitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
+            drawableHitCircle.HitObject.ApplyDefaults(
+                new ControlPointInfo(),
+                new BeatmapDifficulty()
+            );
 
             drawableHitCircle.OnNewResult += (_, result) =>
             {
@@ -163,16 +201,17 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             alphaAtMiss = null;
 
-            DrawableSlider drawableSlider = new DrawableSlider(new Slider
-            {
-                StartTime = Time.Current + 500,
-                Position = new Vector2(250),
-                Path = new SliderPath(PathType.LINEAR, new[]
+            DrawableSlider drawableSlider = new DrawableSlider(
+                new Slider
                 {
-                    Vector2.Zero,
-                    new Vector2(0, 100),
-                })
-            });
+                    StartTime = Time.Current + 500,
+                    Position = new Vector2(250),
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(0, 100) }
+                    ),
+                }
+            );
 
             drawableSlider.Scale = new Vector2(2f);
 

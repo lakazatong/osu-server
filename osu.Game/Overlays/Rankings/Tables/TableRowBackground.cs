@@ -27,10 +27,7 @@ namespace osu.Game.Overlays.Rankings.Tables
             Masking = true;
             MaskingSmoothness = 0.5f;
 
-            InternalChild = background = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            InternalChild = background = new Box { RelativeSizeAxes = Axes.Both };
         }
 
         [BackgroundDependencyLoader]

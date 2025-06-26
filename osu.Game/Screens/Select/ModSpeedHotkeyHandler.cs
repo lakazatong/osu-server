@@ -34,24 +34,34 @@ namespace osu.Game.Screens.Select
         {
             base.LoadComplete();
 
-            selectedMods.BindValueChanged(val =>
-            {
-                storeLastActiveRateAdjustMod();
+            selectedMods.BindValueChanged(
+                val =>
+                {
+                    storeLastActiveRateAdjustMod();
 
-                settingChangeTracker?.Dispose();
-                settingChangeTracker = new ModSettingChangeTracker(val.NewValue);
-                settingChangeTracker.SettingChanged += _ => storeLastActiveRateAdjustMod();
-            }, true);
+                    settingChangeTracker?.Dispose();
+                    settingChangeTracker = new ModSettingChangeTracker(val.NewValue);
+                    settingChangeTracker.SettingChanged += _ => storeLastActiveRateAdjustMod();
+                },
+                true
+            );
         }
 
         private void storeLastActiveRateAdjustMod()
         {
-            lastActiveRateAdjustMod = (ModRateAdjust?)selectedMods.Value.OfType<ModRateAdjust>().SingleOrDefault()?.DeepClone() ?? lastActiveRateAdjustMod;
+            lastActiveRateAdjustMod =
+                (ModRateAdjust?)
+                    selectedMods.Value.OfType<ModRateAdjust>().SingleOrDefault()?.DeepClone()
+                ?? lastActiveRateAdjustMod;
         }
 
         public bool ChangeSpeed(double delta, IEnumerable<Mod> availableMods)
         {
-            double targetSpeed = (selectedMods.Value.OfType<ModRateAdjust>().SingleOrDefault()?.SpeedChange.Value ?? 1) + delta;
+            double targetSpeed =
+                (
+                    selectedMods.Value.OfType<ModRateAdjust>().SingleOrDefault()?.SpeedChange.Value
+                    ?? 1
+                ) + delta;
 
             if (Precision.AlmostEquals(targetSpeed, 1, 0.005))
             {
@@ -64,15 +74,17 @@ namespace osu.Game.Screens.Select
 
             if (lastActiveRateAdjustMod is ModDaycore || lastActiveRateAdjustMod is ModNightcore)
             {
-                targetMod = targetSpeed < 1
-                    ? availableMods.OfType<ModDaycore>().SingleOrDefault()
-                    : availableMods.OfType<ModNightcore>().SingleOrDefault();
+                targetMod =
+                    targetSpeed < 1
+                        ? availableMods.OfType<ModDaycore>().SingleOrDefault()
+                        : availableMods.OfType<ModNightcore>().SingleOrDefault();
             }
             else
             {
-                targetMod = targetSpeed < 1
-                    ? availableMods.OfType<ModHalfTime>().SingleOrDefault()
-                    : availableMods.OfType<ModDoubleTime>().SingleOrDefault();
+                targetMod =
+                    targetSpeed < 1
+                        ? availableMods.OfType<ModHalfTime>().SingleOrDefault()
+                        : availableMods.OfType<ModDoubleTime>().SingleOrDefault();
             }
 
             if (targetMod == null)
@@ -81,7 +93,9 @@ namespace osu.Game.Screens.Select
             // preserve other settings from latest rate adjust mod instance seen
             if (lastActiveRateAdjustMod != null)
             {
-                foreach (var (_, sourceProperty) in lastActiveRateAdjustMod.GetSettingsSourceProperties())
+                foreach (
+                    var (_, sourceProperty) in lastActiveRateAdjustMod.GetSettingsSourceProperties()
+                )
                 {
                     if (sourceProperty.Name == nameof(ModRateAdjust.SpeedChange))
                         continue;
@@ -92,7 +106,8 @@ namespace osu.Game.Screens.Select
                         continue;
 
                     var targetBindable = (IBindable)targetProperty.GetValue(targetMod)!;
-                    var sourceBindable = (IBindable)sourceProperty.GetValue(lastActiveRateAdjustMod)!;
+                    var sourceBindable = (IBindable)
+                        sourceProperty.GetValue(lastActiveRateAdjustMod)!;
 
                     if (targetBindable.GetType() != sourceBindable.GetType())
                         continue;
@@ -103,13 +118,18 @@ namespace osu.Game.Screens.Select
 
             targetMod.SpeedChange.Value = targetSpeed;
 
-            var intendedMods = selectedMods.Value.Where(m => m is not ModRateAdjust).Append(targetMod).ToList();
+            var intendedMods = selectedMods
+                .Value.Where(m => m is not ModRateAdjust)
+                .Append(targetMod)
+                .ToList();
 
             if (!ModUtils.CheckCompatibleSet(intendedMods))
                 return false;
 
             selectedMods.Value = intendedMods;
-            onScreenDisplay?.Display(new SpeedChangeToast(keyBindingStore, targetMod.SpeedChange.Value));
+            onScreenDisplay?.Display(
+                new SpeedChangeToast(keyBindingStore, targetMod.SpeedChange.Value)
+            );
             return true;
         }
     }

@@ -15,13 +15,15 @@ namespace osu.Game.Screens.Edit.Verify
         [BackgroundDependencyLoader]
         private void load(VerifyScreen verify)
         {
-            Flow.Add(new SettingsEnumDropdown<DifficultyRating>
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                TooltipText = "Affects checks that depend on difficulty level",
-                Current = verify.InterpretedDifficulty.GetBoundCopy()
-            });
+            Flow.Add(
+                new SettingsEnumDropdown<DifficultyRating>
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    TooltipText = "Affects checks that depend on difficulty level",
+                    Current = verify.InterpretedDifficulty.GetBoundCopy(),
+                }
+            );
         }
     }
 }

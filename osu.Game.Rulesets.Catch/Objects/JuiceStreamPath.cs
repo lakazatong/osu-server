@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Catch.Objects
         /// </remarks>
         private readonly List<JuiceStreamPathVertex> vertices = new List<JuiceStreamPathVertex>
         {
-            new JuiceStreamPathVertex()
+            new JuiceStreamPathVertex(),
         };
 
         /// <summary>
@@ -185,7 +185,8 @@ namespace osu.Game.Rulesets.Catch.Objects
 
             for (int i = 1; i < sliderPathVertices.Count; i++)
             {
-                time += Vector2.Distance(sliderPathVertices[i - 1], sliderPathVertices[i]) / velocity;
+                time +=
+                    Vector2.Distance(sliderPathVertices[i - 1], sliderPathVertices[i]) / velocity;
 
                 if (!Precision.AlmostEquals(vertices[^1].Time, time))
                     Add(time, sliderPathVertices[i].X);
@@ -256,11 +257,13 @@ namespace osu.Game.Rulesets.Catch.Objects
                 }
 
                 // When `deltaY` is large or when the slider velocity is fast, the segment must be partitioned to subsegments to stay in bounds.
-                for (double currentProgress = 0; currentProgress < deltaY;)
+                for (double currentProgress = 0; currentProgress < deltaY; )
                 {
                     double nextProgress = Math.Min(currentProgress + getMaxDeltaY(), deltaY);
                     float nextX = (float)(vertices[i - 1].X + nextProgress / deltaY * deltaX);
-                    float nextY = (float)(lastPosition.Y + getYDirection() * (nextProgress - currentProgress));
+                    float nextY = (float)(
+                        lastPosition.Y + getYDirection() * (nextProgress - currentProgress)
+                    );
                     addControlPoint(nextX, nextY);
                     currentProgress = nextProgress;
                 }
@@ -313,7 +316,9 @@ namespace osu.Game.Rulesets.Catch.Objects
 
             float deltaX = vertices[index].X - vertices[index - 1].X;
 
-            return (float)(vertices[index - 1].X + deltaX * ((time - vertices[index - 1].Time) / duration));
+            return (float)(
+                vertices[index - 1].X + deltaX * ((time - vertices[index - 1].Time) / duration)
+            );
         }
 
         private void invalidate() => InvalidationID++;

@@ -40,7 +40,10 @@ namespace osu.Game.Rulesets.UI
     /// Displays an interactive ruleset gameplay instance.
     /// </summary>
     /// <typeparam name="TObject">The type of HitObject contained by this DrawableRuleset.</typeparam>
-    public abstract partial class DrawableRuleset<TObject> : DrawableRuleset, IProvideCursor, ICanAttachHUDPieces
+    public abstract partial class DrawableRuleset<TObject>
+        : DrawableRuleset,
+            IProvideCursor,
+            ICanAttachHUDPieces
         where TObject : HitObject
     {
         public override event Action<JudgementResult> NewResult;
@@ -70,15 +73,21 @@ namespace osu.Game.Rulesets.UI
         /// </summary>
         public override Playfield Playfield => playfield.Value;
 
-        public override PlayfieldAdjustmentContainer PlayfieldAdjustmentContainer => playfieldAdjustmentContainer;
+        public override PlayfieldAdjustmentContainer PlayfieldAdjustmentContainer =>
+            playfieldAdjustmentContainer;
 
-        public override Container Overlays { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        public override Container Overlays { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         public override IAdjustableAudioComponent Audio => audioContainer;
 
-        private readonly AudioContainer audioContainer = new AudioContainer { RelativeSizeAxes = Axes.Both };
+        private readonly AudioContainer audioContainer = new AudioContainer
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
 
-        public override Container FrameStableComponents { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        public override Container FrameStableComponents { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         public override IFrameStableClock FrameStableClock => frameStabilityContainer;
 
@@ -140,7 +149,10 @@ namespace osu.Game.Rulesets.UI
             ArgumentNullException.ThrowIfNull(beatmap);
 
             if (!(beatmap is Beatmap<TObject> tBeatmap))
-                throw new ArgumentException($"{GetType()} expected the beatmap to contain hitobjects of type {typeof(TObject)}.", nameof(beatmap));
+                throw new ArgumentException(
+                    $"{GetType()} expected the beatmap to contain hitobjects of type {typeof(TObject)}.",
+                    nameof(beatmap)
+                );
 
             Beatmap = tBeatmap;
             Mods = mods?.ToArray() ?? Array.Empty<Mod>();
@@ -149,11 +161,14 @@ namespace osu.Game.Rulesets.UI
 
             KeyBindingInputManager = CreateInputManager();
             playfieldAdjustmentContainer = CreatePlayfieldAdjustmentContainer();
-            playfield = new Lazy<Playfield>(() => CreatePlayfield().With(p =>
-            {
-                p.NewResult += (_, r) => NewResult?.Invoke(r);
-                p.RevertResult += r => RevertResult?.Invoke(r);
-            }));
+            playfield = new Lazy<Playfield>(() =>
+                CreatePlayfield()
+                    .With(p =>
+                    {
+                        p.NewResult += (_, r) => NewResult?.Invoke(r);
+                        p.RevertResult += r => RevertResult?.Invoke(r);
+                    })
+            );
         }
 
         protected override void LoadComplete()
@@ -172,14 +187,20 @@ namespace osu.Game.Rulesets.UI
             };
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
-            dependencies = new DrawableRulesetDependencies(Ruleset, base.CreateChildDependencies(parent));
+            dependencies = new DrawableRulesetDependencies(
+                Ruleset,
+                base.CreateChildDependencies(parent)
+            );
             Config = dependencies.RulesetConfigManager;
             return dependencies;
         }
 
-        public virtual PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new PlayfieldAdjustmentContainer();
+        public virtual PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new PlayfieldAdjustmentContainer();
 
         [Resolved]
         private OsuConfigManager config { get; set; }
@@ -194,20 +215,24 @@ namespace osu.Game.Rulesets.UI
                 Children = new Drawable[]
                 {
                     FrameStableComponents,
-                    audioContainer.WithChild(KeyBindingInputManager
-                        .WithChildren(new Drawable[]
-                        {
-                            playfieldAdjustmentContainer.WithChild(Playfield),
-                            Overlays
-                        })),
-                }
+                    audioContainer.WithChild(
+                        KeyBindingInputManager.WithChildren(
+                            new Drawable[]
+                            {
+                                playfieldAdjustmentContainer.WithChild(Playfield),
+                                Overlays,
+                            }
+                        )
+                    ),
+                },
             };
 
             if ((ResumeOverlay = CreateResumeOverlay()) != null)
             {
-                AddInternal(CreateInputManager()
-                    .WithChild(CreatePlayfieldAdjustmentContainer()
-                        .WithChild(ResumeOverlay)));
+                AddInternal(
+                    CreateInputManager()
+                        .WithChild(CreatePlayfieldAdjustmentContainer().WithChild(ResumeOverlay))
+                );
             }
 
             applyRulesetMods(Mods, config);
@@ -286,7 +311,9 @@ namespace osu.Game.Rulesets.UI
                 return true;
 
             // If the entry was not removed from the playfield, assume the hitobject is not being pooled and attempt a direct drawable removal.
-            var drawableObject = Playfield.AllHitObjects.SingleOrDefault(d => d.HitObject == hitObject);
+            var drawableObject = Playfield.AllHitObjects.SingleOrDefault(d =>
+                d.HitObject == hitObject
+            );
             if (drawableObject != null)
                 return Playfield.Remove(drawableObject);
 
@@ -296,7 +323,9 @@ namespace osu.Game.Rulesets.UI
         public sealed override void SetRecordTarget(Score score)
         {
             if (!(KeyBindingInputManager is IHasRecordingHandler recordingInputManager))
-                throw new InvalidOperationException($"A {nameof(KeyBindingInputManager)} which supports recording is not available");
+                throw new InvalidOperationException(
+                    $"A {nameof(KeyBindingInputManager)} which supports recording is not available"
+                );
 
             if (score == null)
             {
@@ -315,15 +344,21 @@ namespace osu.Game.Rulesets.UI
             NewResult += emitImportantFrame;
             recordingInputManager.Recorder = recorder;
 
-            void emitImportantFrame(JudgementResult judgementResult) => recordingInputManager.Recorder?.RecordFrame(true);
+            void emitImportantFrame(JudgementResult judgementResult) =>
+                recordingInputManager.Recorder?.RecordFrame(true);
         }
 
         public override void SetReplayScore(Score replayScore)
         {
             if (!(KeyBindingInputManager is IHasReplayHandler replayInputManager))
-                throw new InvalidOperationException($"A {nameof(KeyBindingInputManager)} which supports replay loading is not available");
+                throw new InvalidOperationException(
+                    $"A {nameof(KeyBindingInputManager)} which supports replay loading is not available"
+                );
 
-            var handler = (ReplayScore = replayScore) != null ? CreateReplayInputHandler(replayScore.Replay) : null;
+            var handler =
+                (ReplayScore = replayScore) != null
+                    ? CreateReplayInputHandler(replayScore.Replay)
+                    : null;
 
             replayInputManager.ReplayInputHandler = handler;
             frameStabilityContainer.ReplayInputHandler = handler;
@@ -331,7 +366,8 @@ namespace osu.Game.Rulesets.UI
             HasReplayLoaded.Value = replayInputManager.ReplayInputHandler != null;
 
             if (replayInputManager.ReplayInputHandler != null)
-                replayInputManager.ReplayInputHandler.GamefieldToScreenSpace = Playfield.GamefieldToScreenSpace;
+                replayInputManager.ReplayInputHandler.GamefieldToScreenSpace =
+                    Playfield.GamefieldToScreenSpace;
 
             if (!ProvidingUserCursor)
             {
@@ -395,7 +431,8 @@ namespace osu.Game.Rulesets.UI
         protected override bool OnHover(HoverEvent e) => true; // required for IProvideCursor
 
         // only show the cursor when within the playfield, by default.
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Playfield.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            Playfield.ReceivePositionalInputAt(screenSpacePos);
 
         CursorContainer IProvideCursor.Cursor => Playfield.Cursor;
 
@@ -611,8 +648,6 @@ namespace osu.Game.Rulesets.UI
     public class BeatmapInvalidForRulesetException : ArgumentException
     {
         public BeatmapInvalidForRulesetException(string text)
-            : base(text)
-        {
-        }
+            : base(text) { }
     }
 }

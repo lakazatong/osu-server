@@ -65,11 +65,11 @@ namespace osu.Game.Tests.Visual.UserInterface
                                             Colour = Color4.White,
                                             Size = new Vector2(100),
                                         },
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             };
         }
@@ -92,25 +92,38 @@ namespace osu.Game.Tests.Visual.UserInterface
             Quad? scaling2LastQuad = null;
             Quad? scalingTargetLastQuad = null;
 
-            AddUntilStep("ensure dimensions don't change", () =>
-            {
-                if (scaling1LastQuad.HasValue && scaling2LastQuad.HasValue)
+            AddUntilStep(
+                "ensure dimensions don't change",
+                () =>
                 {
-                    // check inter-frame changes to make sure they match expectations.
-                    Assert.That(scaling1.ScreenSpaceDrawQuad.AlmostEquals(scaling1LastQuad.Value), Is.True);
-                    Assert.That(scaling2.ScreenSpaceDrawQuad.AlmostEquals(scaling2LastQuad.Value), Is.True);
+                    if (scaling1LastQuad.HasValue && scaling2LastQuad.HasValue)
+                    {
+                        // check inter-frame changes to make sure they match expectations.
+                        Assert.That(
+                            scaling1.ScreenSpaceDrawQuad.AlmostEquals(scaling1LastQuad.Value),
+                            Is.True
+                        );
+                        Assert.That(
+                            scaling2.ScreenSpaceDrawQuad.AlmostEquals(scaling2LastQuad.Value),
+                            Is.True
+                        );
+                    }
+
+                    scaling1LastQuad = scaling1.ScreenSpaceDrawQuad;
+                    scaling2LastQuad = scaling2.ScreenSpaceDrawQuad;
+
+                    // wait for scaling to stop.
+                    bool scalingFinished =
+                        scalingTargetLastQuad.HasValue
+                        && scaleTarget.ScreenSpaceDrawQuad.AlmostEquals(
+                            scalingTargetLastQuad.Value
+                        );
+
+                    scalingTargetLastQuad = scaleTarget.ScreenSpaceDrawQuad;
+
+                    return scalingFinished;
                 }
-
-                scaling1LastQuad = scaling1.ScreenSpaceDrawQuad;
-                scaling2LastQuad = scaling2.ScreenSpaceDrawQuad;
-
-                // wait for scaling to stop.
-                bool scalingFinished = scalingTargetLastQuad.HasValue && scaleTarget.ScreenSpaceDrawQuad.AlmostEquals(scalingTargetLastQuad.Value);
-
-                scalingTargetLastQuad = scaleTarget.ScreenSpaceDrawQuad;
-
-                return scalingFinished;
-            });
+            );
         }
     }
 }

@@ -14,7 +14,8 @@ namespace osu.Game.Storyboards
 {
     public class Storyboard
     {
-        private readonly Dictionary<string, StoryboardLayer> layers = new Dictionary<string, StoryboardLayer>();
+        private readonly Dictionary<string, StoryboardLayer> layers =
+            new Dictionary<string, StoryboardLayer>();
         public IEnumerable<StoryboardLayer> Layers => layers.Values;
 
         public BeatmapInfo BeatmapInfo = new BeatmapInfo();
@@ -36,9 +37,12 @@ namespace osu.Game.Storyboards
         /// Sample events use their start time as "end time" during this calculation.
         /// Video and background events are not included to match stable.
         /// </remarks>
-        public double? EarliestEventTime => Layers.SelectMany(l => l.Elements)
-                                                  .Where(e => e is not StoryboardVideo)
-                                                  .MinBy(e => e.StartTime)?.StartTime;
+        public double? EarliestEventTime =>
+            Layers
+                .SelectMany(l => l.Elements)
+                .Where(e => e is not StoryboardVideo)
+                .MinBy(e => e.StartTime)
+                ?.StartTime;
 
         /// <summary>
         /// Across all layers, find the latest point in time that a storyboard element ends at.
@@ -49,9 +53,12 @@ namespace osu.Game.Storyboards
         /// Sample events use their start time as "end time" during this calculation.
         /// Video and background events are not included to match stable.
         /// </remarks>
-        public double? LatestEventTime => Layers.SelectMany(l => l.Elements)
-                                                .Where(e => e is not StoryboardVideo)
-                                                .MaxBy(e => e.GetEndTime())?.GetEndTime();
+        public double? LatestEventTime =>
+            Layers
+                .SelectMany(l => l.Elements)
+                .Where(e => e is not StoryboardVideo)
+                .MaxBy(e => e.GetEndTime())
+                ?.GetEndTime();
 
         /// <summary>
         /// Depth of the currently front-most storyboard layer, excluding the overlay layer.
@@ -62,8 +69,8 @@ namespace osu.Game.Storyboards
         {
             layers.Add("Video", new StoryboardVideoLayer("Video", 4, false));
             layers.Add("Background", new StoryboardLayer("Background", 3));
-            layers.Add("Fail", new StoryboardLayer("Fail", 2) { VisibleWhenPassing = false, });
-            layers.Add("Pass", new StoryboardLayer("Pass", 1) { VisibleWhenFailing = false, });
+            layers.Add("Fail", new StoryboardLayer("Fail", 2) { VisibleWhenPassing = false });
+            layers.Add("Pass", new StoryboardLayer("Pass", 1) { VisibleWhenFailing = false });
             layers.Add("Foreground", new StoryboardLayer("Foreground", minimumLayerDepth = 0));
 
             layers.Add("Overlay", new StoryboardLayer("Overlay", int.MinValue));
@@ -92,7 +99,10 @@ namespace osu.Game.Storyboards
                 // Importantly, do this after the NullOrEmpty because EF may have stored the non-nullable value as null to the database, bypassing compile-time constraints.
                 backgroundPath = backgroundPath.ToLowerInvariant();
 
-                return GetLayer("Background").Elements.Any(e => string.Equals(e.Path, backgroundPath, StringComparison.OrdinalIgnoreCase));
+                return GetLayer("Background")
+                    .Elements.Any(e =>
+                        string.Equals(e.Path, backgroundPath, StringComparison.OrdinalIgnoreCase)
+                    );
             }
         }
 
@@ -112,7 +122,10 @@ namespace osu.Game.Storyboards
                 // Some old storyboards don't include a file extension, so let's best guess at one.
                 foreach (string ext in SupportedExtensions.IMAGE_EXTENSIONS)
                 {
-                    if ((resolvedPath = BeatmapInfo.BeatmapSet?.GetPathForFile($"{path}{ext}")) != null)
+                    if (
+                        (resolvedPath = BeatmapInfo.BeatmapSet?.GetPathForFile($"{path}{ext}"))
+                        != null
+                    )
                         break;
                 }
             }

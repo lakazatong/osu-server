@@ -24,9 +24,7 @@ namespace osu.Game.Tournament.Screens.Setup
         private TournamentSpriteText valueText = null!;
 
         public ActionableInfo()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
         public string ButtonText
         {
@@ -43,33 +41,34 @@ namespace osu.Game.Tournament.Screens.Setup
             set => valueText.Colour = value ? Color4.Red : Color4.White;
         }
 
-        protected override Drawable CreateComponent() => new Container
-        {
-            AutoSizeAxes = Axes.Y,
-            RelativeSizeAxes = Axes.X,
-            Children = new Drawable[]
+        protected override Drawable CreateComponent() =>
+            new Container
             {
-                valueText = new TournamentSpriteText
+                AutoSizeAxes = Axes.Y,
+                RelativeSizeAxes = Axes.X,
+                Children = new Drawable[]
                 {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                },
-                FlowContainer = new FillFlowContainer
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    AutoSizeAxes = Axes.Both,
-                    Spacing = new Vector2(10, 0),
-                    Children = new Drawable[]
+                    valueText = new TournamentSpriteText
                     {
-                        Button = new RoundedButton
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                    },
+                    FlowContainer = new FillFlowContainer
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        AutoSizeAxes = Axes.Both,
+                        Spacing = new Vector2(10, 0),
+                        Children = new Drawable[]
                         {
-                            Size = new Vector2(BUTTON_SIZE, 40),
-                            Action = () => Action?.Invoke()
-                        }
-                    }
-                }
-            }
-        };
+                            Button = new RoundedButton
+                            {
+                                Size = new Vector2(BUTTON_SIZE, 40),
+                                Action = () => Action?.Invoke(),
+                            },
+                        },
+                    },
+                },
+            };
     }
 }

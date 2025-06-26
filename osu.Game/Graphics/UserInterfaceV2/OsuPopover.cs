@@ -42,14 +42,19 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 Type = EdgeEffectType.Shadow,
                 Offset = new Vector2(0, 2),
                 Radius = 5,
-                Colour = Colour4.Black.Opacity(0.3f)
+                Colour = Colour4.Black.Opacity(0.3f),
             };
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(OverlayColourProvider? colourProvider, OsuColour colours, AudioManager audio)
+        private void load(
+            OverlayColourProvider? colourProvider,
+            OsuColour colours,
+            AudioManager audio
+        )
         {
-            Background.Colour = Arrow.Colour = colourProvider?.Background4 ?? colours.GreySeaFoamDarker;
+            Background.Colour = Arrow.Colour =
+                colourProvider?.Background4 ?? colours.GreySeaFoamDarker;
             samplePopIn = audio.Samples.Get(PopInSampleName);
             samplePopOut = audio.Samples.Get(PopOutSampleName);
         }
@@ -91,8 +96,6 @@ namespace osu.Game.Graphics.UserInterfaceV2
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
     }
 }

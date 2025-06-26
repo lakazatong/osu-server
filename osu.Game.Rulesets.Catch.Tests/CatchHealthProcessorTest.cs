@@ -19,17 +19,18 @@ namespace osu.Game.Rulesets.Catch.Tests
             [new Droplet(), 0.01, true],
             [new TinyDroplet(), 0, false],
             [new Banana(), 0, false],
-            [new BananaShower(), 0, false]
+            [new BananaShower(), 0, false],
         ];
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestFailAfterMinResult(CatchHitObject hitObject, double startingHealth, bool failExpected)
+        public void TestFailAfterMinResult(
+            CatchHitObject hitObject,
+            double startingHealth,
+            bool failExpected
+        )
         {
             var healthProcessor = new CatchHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new CatchBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new CatchBeatmap { HitObjects = { hitObject } });
             healthProcessor.Health.Value = startingHealth;
 
             var result = new CatchJudgementResult(hitObject, hitObject.CreateJudgement());
@@ -40,13 +41,14 @@ namespace osu.Game.Rulesets.Catch.Tests
         }
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestNoFailAfterMaxResult(CatchHitObject hitObject, double startingHealth, bool _)
+        public void TestNoFailAfterMaxResult(
+            CatchHitObject hitObject,
+            double startingHealth,
+            bool _
+        )
         {
             var healthProcessor = new CatchHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new CatchBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new CatchBeatmap { HitObjects = { hitObject } });
             healthProcessor.Health.Value = startingHealth;
 
             var result = new CatchJudgementResult(hitObject, hitObject.CreateJudgement());

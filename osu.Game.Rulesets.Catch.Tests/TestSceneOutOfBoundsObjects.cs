@@ -26,47 +26,47 @@ namespace osu.Game.Rulesets.Catch.Tests
 
             AddStep("reset flag", () => anyObjectOutOfBounds = false);
 
-            AddUntilStep("check for out-of-bounds objects",
+            AddUntilStep(
+                "check for out-of-bounds objects",
                 () =>
                 {
-                    anyObjectOutOfBounds |= Player.ChildrenOfType<DrawableCatchHitObject>().Any(dho => dho.X < 0 || dho.X > CatchPlayfield.WIDTH);
+                    anyObjectOutOfBounds |= Player
+                        .ChildrenOfType<DrawableCatchHitObject>()
+                        .Any(dho => dho.X < 0 || dho.X > CatchPlayfield.WIDTH);
                     return Player.ScoreProcessor.HasCompleted.Value;
-                });
+                }
+            );
 
             AddAssert("no out of bound objects found", () => !anyObjectOutOfBounds);
         }
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap
-        {
-            BeatmapInfo = new BeatmapInfo
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap
             {
-                Ruleset = ruleset,
-            },
-            HitObjects = new List<HitObject>
-            {
-                new Fruit { StartTime = 1000, X = -50 },
-                new Fruit { StartTime = 1200, X = CatchPlayfield.WIDTH + 50 },
-                new JuiceStream
+                BeatmapInfo = new BeatmapInfo { Ruleset = ruleset },
+                HitObjects = new List<HitObject>
                 {
-                    StartTime = 1500,
-                    X = 10,
-                    Path = new SliderPath(PathType.LINEAR, new[]
+                    new Fruit { StartTime = 1000, X = -50 },
+                    new Fruit { StartTime = 1200, X = CatchPlayfield.WIDTH + 50 },
+                    new JuiceStream
                     {
-                        Vector2.Zero,
-                        new Vector2(-200, 0)
-                    })
-                },
-                new JuiceStream
-                {
-                    StartTime = 3000,
-                    X = CatchPlayfield.WIDTH - 10,
-                    Path = new SliderPath(PathType.LINEAR, new[]
+                        StartTime = 1500,
+                        X = 10,
+                        Path = new SliderPath(
+                            PathType.LINEAR,
+                            new[] { Vector2.Zero, new Vector2(-200, 0) }
+                        ),
+                    },
+                    new JuiceStream
                     {
-                        Vector2.Zero,
-                        new Vector2(200, 0)
-                    })
+                        StartTime = 3000,
+                        X = CatchPlayfield.WIDTH - 10,
+                        Path = new SliderPath(
+                            PathType.LINEAR,
+                            new[] { Vector2.Zero, new Vector2(200, 0) }
+                        ),
+                    },
                 },
-            }
-        };
+            };
     }
 }

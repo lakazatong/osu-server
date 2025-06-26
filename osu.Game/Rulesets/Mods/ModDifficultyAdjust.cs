@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets.Mods
     {
         public override string Name => @"Difficulty Adjust";
 
-        public override LocalisableString Description => @"Override a beatmap's difficulty settings.";
+        public override LocalisableString Description =>
+            @"Override a beatmap's difficulty settings.";
 
         public override string Acronym => "DA";
 
@@ -36,25 +37,37 @@ namespace osu.Game.Rulesets.Mods
 
         protected const int LAST_SETTING_ORDER = 2;
 
-        [SettingSource("HP Drain", "Override a beatmap's set HP.", FIRST_SETTING_ORDER, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable DrainRate { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.DrainRate,
-        };
+        [SettingSource(
+            "HP Drain",
+            "Override a beatmap's set HP.",
+            FIRST_SETTING_ORDER,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable DrainRate { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.DrainRate,
+            };
 
-        [SettingSource("Accuracy", "Override a beatmap's set OD.", LAST_SETTING_ORDER, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable OverallDifficulty { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.OverallDifficulty,
-        };
+        [SettingSource(
+            "Accuracy",
+            "Override a beatmap's set OD.",
+            LAST_SETTING_ORDER,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable OverallDifficulty { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.OverallDifficulty,
+            };
 
         [SettingSource("Extended Limits", "Adjust difficulty beyond sane limits.")]
         public BindableBool ExtendedLimits { get; } = new BindableBool();
@@ -75,16 +88,22 @@ namespace osu.Game.Rulesets.Mods
                 if (UserAdjustedSettingsCount != 1)
                     return string.Empty;
 
-                if (!OverallDifficulty.IsDefault) return format("OD", OverallDifficulty);
-                if (!DrainRate.IsDefault) return format("HP", DrainRate);
+                if (!OverallDifficulty.IsDefault)
+                    return format("OD", OverallDifficulty);
+                if (!DrainRate.IsDefault)
+                    return format("HP", DrainRate);
 
                 return string.Empty;
 
-                string format(string acronym, DifficultyBindable bindable) => $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
+                string format(string acronym, DifficultyBindable bindable) =>
+                    $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
             }
         }
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -104,8 +123,10 @@ namespace osu.Game.Rulesets.Mods
         /// <param name="difficulty">The beatmap to have settings applied.</param>
         protected virtual void ApplySettings(BeatmapDifficulty difficulty)
         {
-            if (DrainRate.Value != null) difficulty.DrainRate = DrainRate.Value.Value;
-            if (OverallDifficulty.Value != null) difficulty.OverallDifficulty = OverallDifficulty.Value.Value;
+            if (DrainRate.Value != null)
+                difficulty.DrainRate = DrainRate.Value.Value;
+            if (OverallDifficulty.Value != null)
+                difficulty.OverallDifficulty = OverallDifficulty.Value.Value;
         }
 
         /// <summary>

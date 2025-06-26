@@ -27,7 +27,10 @@ namespace osu.Game.Rulesets.UI.Scrolling
     /// A type of <see cref="DrawableRuleset{TObject}"/> that supports a <see cref="ScrollingPlayfield"/>.
     /// <see cref="HitObject"/>s inside this <see cref="DrawableRuleset{TObject}"/> will scroll within the playfield.
     /// </summary>
-    public abstract partial class DrawableScrollingRuleset<TObject> : DrawableRuleset<TObject>, IDrawableScrollingRuleset, IKeyBindingHandler<GlobalAction>
+    public abstract partial class DrawableScrollingRuleset<TObject>
+        : DrawableRuleset<TObject>,
+            IDrawableScrollingRuleset,
+            IKeyBindingHandler<GlobalAction>
         where TObject : HitObject
     {
         /// <summary>
@@ -51,7 +54,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// </summary>
         private const double time_span_step = 200;
 
-        protected readonly Bindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
+        protected readonly Bindable<ScrollingDirection> Direction =
+            new Bindable<ScrollingDirection>();
 
         /// <summary>
         /// The span of time that is visible by the length of the scrolling axes.
@@ -60,7 +64,7 @@ namespace osu.Game.Rulesets.UI.Scrolling
         protected readonly BindableDouble TimeRange = new BindableDouble(time_span_default)
         {
             MinValue = time_span_min,
-            MaxValue = time_span_max
+            MaxValue = time_span_max,
         };
 
         /// <summary>
@@ -72,7 +76,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// Whether at the current point in time, whether scroll speed adjustments should be applied to gameplay.
         /// This can potentially become false at some point during gameplay for game balance reasons.
         /// </summary>
-        protected bool AllowScrollSpeedAdjustment => UserScrollSpeedAdjustment && player?.AllowCriticalSettingsAdjustment != false;
+        protected bool AllowScrollSpeedAdjustment =>
+            UserScrollSpeedAdjustment && player?.AllowCriticalSettingsAdjustment != false;
 
         /// <summary>
         /// Whether <see cref="TimingControlPoint"/> beat lengths should scale relative to the most common beat length in the <see cref="Beatmap"/>.
@@ -82,7 +87,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// <summary>
         /// The <see cref="MultiplierControlPoint"/>s that adjust the scrolling rate of <see cref="HitObject"/>s inside this <see cref="DrawableRuleset{TObject}"/>.
         /// </summary>
-        protected readonly SortedList<MultiplierControlPoint> ControlPoints = new SortedList<MultiplierControlPoint>(Comparer<MultiplierControlPoint>.Default);
+        protected readonly SortedList<MultiplierControlPoint> ControlPoints =
+            new SortedList<MultiplierControlPoint>(Comparer<MultiplierControlPoint>.Default);
 
         public IScrollingInfo ScrollingInfo => scrollingInfo;
 
@@ -92,7 +98,11 @@ namespace osu.Game.Rulesets.UI.Scrolling
         [Resolved]
         private Player? player { get; set; }
 
-        protected DrawableScrollingRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
+        protected DrawableScrollingRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        )
             : base(ruleset, beatmap, mods)
         {
             scrollingInfo = new LocalScrollingInfo();
@@ -105,7 +115,9 @@ namespace osu.Game.Rulesets.UI.Scrolling
         {
             updateScrollAlgorithm();
 
-            double lastObjectTime = Beatmap.HitObjects.Any() ? Beatmap.GetLastObjectTime() : double.MaxValue;
+            double lastObjectTime = Beatmap.HitObjects.Any()
+                ? Beatmap.GetLastObjectTime()
+                : double.MaxValue;
             double baseBeatLength = TimingControlPoint.DEFAULT_BEAT_LENGTH;
 
             if (RelativeScaleBeatLengths)
@@ -144,21 +156,25 @@ namespace osu.Game.Rulesets.UI.Scrolling
                     Velocity = Beatmap.Difficulty.SliderMultiplier,
                     BaseBeatLength = baseBeatLength,
                     TimingPoint = lastTimingPoint,
-                    EffectPoint = lastEffectPoint
+                    EffectPoint = lastEffectPoint,
                 };
             });
 
             // Trim unwanted sequences of timing changes
             timingChanges = timingChanges
-                            // Collapse sections after the last hit object
-                            .Where(s => s.Time <= lastObjectTime)
-                            // Collapse sections with the same start time
-                            .GroupBy(s => s.Time).Select(g => g.Last()).OrderBy(s => s.Time);
+                // Collapse sections after the last hit object
+                .Where(s => s.Time <= lastObjectTime)
+                // Collapse sections with the same start time
+                .GroupBy(s => s.Time)
+                .Select(g => g.Last())
+                .OrderBy(s => s.Time);
 
             ControlPoints.AddRange(timingChanges);
 
             if (ControlPoints.Count == 0)
-                ControlPoints.Add(new MultiplierControlPoint { Velocity = Beatmap.Difficulty.SliderMultiplier });
+                ControlPoints.Add(
+                    new MultiplierControlPoint { Velocity = Beatmap.Difficulty.SliderMultiplier }
+                );
         }
 
         protected override void LoadComplete()
@@ -166,10 +182,13 @@ namespace osu.Game.Rulesets.UI.Scrolling
             base.LoadComplete();
 
             if (!(Playfield is ScrollingPlayfield))
-                throw new ArgumentException($"{nameof(Playfield)} must be a {nameof(ScrollingPlayfield)} when using {nameof(DrawableScrollingRuleset<TObject>)}.");
+                throw new ArgumentException(
+                    $"{nameof(Playfield)} must be a {nameof(ScrollingPlayfield)} when using {nameof(DrawableScrollingRuleset<TObject>)}."
+                );
         }
 
-        private ScrollVisualisationMethod visualisationMethod = ScrollVisualisationMethod.Sequential;
+        private ScrollVisualisationMethod visualisationMethod =
+            ScrollVisualisationMethod.Sequential;
 
         public ScrollVisualisationMethod VisualisationMethod
         {
@@ -205,7 +224,12 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// <param name="amount">The amount to adjust by. Greater than 0 if the scroll speed should be increased, less than 0 if it should be decreased.</param>
         protected virtual void AdjustScrollSpeed(int amount)
         {
-            this.TransformBindableTo(TimeRange, TimeRange.Value - amount * time_span_step, 200, Easing.OutQuint);
+            this.TransformBindableTo(
+                TimeRange,
+                TimeRange.Value - amount * time_span_step,
+                200,
+                Easing.OutQuint
+            );
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
@@ -236,11 +260,14 @@ namespace osu.Game.Rulesets.UI.Scrolling
 
         private class LocalScrollingInfo : IScrollingInfo
         {
-            public IBindable<ScrollingDirection> Direction { get; } = new Bindable<ScrollingDirection>();
+            public IBindable<ScrollingDirection> Direction { get; } =
+                new Bindable<ScrollingDirection>();
 
             public IBindable<double> TimeRange { get; } = new BindableDouble();
 
-            public readonly Bindable<IScrollAlgorithm> Algorithm = new Bindable<IScrollAlgorithm>(new ConstantScrollAlgorithm());
+            public readonly Bindable<IScrollAlgorithm> Algorithm = new Bindable<IScrollAlgorithm>(
+                new ConstantScrollAlgorithm()
+            );
 
             IBindable<IScrollAlgorithm> IScrollingInfo.Algorithm => Algorithm;
         }

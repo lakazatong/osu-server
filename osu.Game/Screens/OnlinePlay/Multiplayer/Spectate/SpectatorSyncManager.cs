@@ -76,7 +76,9 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
         public void RemoveManagedClock(SpectatorPlayerClock clock)
         {
             playerClocks.Remove(clock);
-            Logger.Log($"Removing managed clock from {nameof(SpectatorSyncManager)} ({playerClocks.Count} remain)");
+            Logger.Log(
+                $"Removing managed clock from {nameof(SpectatorSyncManager)} ({playerClocks.Count} remain)"
+            );
             clock.IsRunning = false;
         }
 
@@ -179,7 +181,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
         {
             // Clocks are removed as players complete the beatmap.
             // Once there are no clocks we want to make sure the track plays out to the end.
-            MasterClockState newState = playerClocks.Count == 0 || playerClocks.Any(s => !s.IsCatchingUp) ? MasterClockState.Synchronised : MasterClockState.TooFarAhead;
+            MasterClockState newState =
+                playerClocks.Count == 0 || playerClocks.Any(s => !s.IsCatchingUp)
+                    ? MasterClockState.Synchronised
+                    : MasterClockState.TooFarAhead;
 
             if (masterState == newState)
                 return;

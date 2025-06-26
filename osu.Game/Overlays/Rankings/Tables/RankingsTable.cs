@@ -3,20 +3,20 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Extensions.LocalisationExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Localisation;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Users;
 using osu.Game.Users.Drawables;
 using osuTK;
-using osu.Framework.Localisation;
 
 namespace osu.Game.Overlays.Rankings.Tables
 {
@@ -47,65 +47,87 @@ namespace osu.Game.Overlays.Rankings.Tables
         {
             FillFlowContainer backgroundFlow;
 
-            AddInternal(backgroundFlow = new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Depth = 1f,
-                Margin = new MarginPadding { Top = row_height + row_spacing },
-                Spacing = new Vector2(0, row_spacing),
-            });
+            AddInternal(
+                backgroundFlow = new FillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = 1f,
+                    Margin = new MarginPadding { Top = row_height + row_spacing },
+                    Spacing = new Vector2(0, row_spacing),
+                }
+            );
 
             rankings.ForEach(s => backgroundFlow.Add(CreateRowBackground(s)));
 
             Columns = mainHeaders.Concat(CreateAdditionalHeaders()).Cast<TableColumn>().ToArray();
-            Content = rankings.Select((s, i) => CreateRowContent((page - 1) * items_per_page + i, s)).ToArray().ToRectangular();
+            Content = rankings
+                .Select((s, i) => CreateRowContent((page - 1) * items_per_page + i, s))
+                .ToArray()
+                .ToRectangular();
         }
 
-        protected virtual Drawable CreateRowBackground(TModel item) => new TableRowBackground { Height = row_height };
+        protected virtual Drawable CreateRowBackground(TModel item) =>
+            new TableRowBackground { Height = row_height };
 
-        protected virtual Drawable[] CreateRowContent(int index, TModel item) => new Drawable[] { createIndexDrawable(index), createMainContent(item) }.Concat(CreateAdditionalContent(item)).ToArray();
+        protected virtual Drawable[] CreateRowContent(int index, TModel item) =>
+            new Drawable[] { createIndexDrawable(index), createMainContent(item) }
+                .Concat(CreateAdditionalContent(item))
+                .ToArray();
 
-        private static RankingsTableColumn[] mainHeaders => new[]
-        {
-            new RankingsTableColumn(string.Empty, Anchor.Centre, new Dimension(GridSizeMode.Absolute, 40)), // place
-            new RankingsTableColumn(string.Empty, Anchor.CentreLeft, new Dimension()), // flag and username (country name)
-        };
+        private static RankingsTableColumn[] mainHeaders =>
+            new[]
+            {
+                new RankingsTableColumn(
+                    string.Empty,
+                    Anchor.Centre,
+                    new Dimension(GridSizeMode.Absolute, 40)
+                ), // place
+                new RankingsTableColumn(string.Empty, Anchor.CentreLeft, new Dimension()), // flag and username (country name)
+            };
 
         protected abstract RankingsTableColumn[] CreateAdditionalHeaders();
 
         protected abstract Drawable[] CreateAdditionalContent(TModel item);
 
-        protected sealed override Drawable CreateHeader(int index, TableColumn column)
-            => (column as RankingsTableColumn)?.CreateHeaderText() ?? new HeaderText(column?.Header ?? default, false);
+        protected sealed override Drawable CreateHeader(int index, TableColumn column) =>
+            (column as RankingsTableColumn)?.CreateHeaderText()
+            ?? new HeaderText(column?.Header ?? default, false);
 
         protected abstract CountryCode GetCountryCode(TModel item);
 
         protected abstract Drawable[] CreateFlagContent(TModel item);
 
-        private OsuSpriteText createIndexDrawable(int index) => new RowText
-        {
-            Text = (index + 1).ToLocalisableString(@"\##"),
-            Font = OsuFont.GetFont(size: TEXT_SIZE, weight: FontWeight.SemiBold)
-        };
+        private OsuSpriteText createIndexDrawable(int index) =>
+            new RowText
+            {
+                Text = (index + 1).ToLocalisableString(@"\##"),
+                Font = OsuFont.GetFont(size: TEXT_SIZE, weight: FontWeight.SemiBold),
+            };
 
-        private FillFlowContainer createMainContent(TModel item) => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(5, 0),
-            Margin = new MarginPadding { Bottom = row_spacing },
-            Children =
-            [
-                new UpdateableFlag(GetCountryCode(item)) { Size = new Vector2(28, 20) },
-                ..CreateFlagContent(item)
-            ]
-        };
+        private FillFlowContainer createMainContent(TModel item) =>
+            new FillFlowContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(5, 0),
+                Margin = new MarginPadding { Bottom = row_spacing },
+                Children =
+                [
+                    new UpdateableFlag(GetCountryCode(item)) { Size = new Vector2(28, 20) },
+                    .. CreateFlagContent(item),
+                ],
+            };
 
         protected class RankingsTableColumn : TableColumn
         {
             protected readonly bool Highlighted;
 
-            public RankingsTableColumn(LocalisableString? header = null, Anchor anchor = Anchor.TopLeft, Dimension dimension = null, bool highlighted = false)
+            public RankingsTableColumn(
+                LocalisableString? header = null,
+                Anchor anchor = Anchor.TopLeft,
+                Dimension dimension = null,
+                bool highlighted = false
+            )
                 : base(header, anchor, dimension)
             {
                 Highlighted = highlighted;

@@ -19,7 +19,10 @@ namespace osu.Game.Rulesets.EmptyFreeform.Replays
                 Actions.Add(button.Value);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is EmptyFreeformReplayFrame freeformFrame && Time == freeformFrame.Time && Position == freeformFrame.Position && Actions.SequenceEqual(freeformFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is EmptyFreeformReplayFrame freeformFrame
+            && Time == freeformFrame.Time
+            && Position == freeformFrame.Position
+            && Actions.SequenceEqual(freeformFrame.Actions);
     }
 }

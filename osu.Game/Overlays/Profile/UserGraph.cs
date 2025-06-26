@@ -23,7 +23,9 @@ namespace osu.Game.Overlays.Profile
     /// </summary>
     /// <typeparam name="TKey">Type of data to be used for X-axis of the graph.</typeparam>
     /// <typeparam name="TValue">Type of data to be used for Y-axis of the graph.</typeparam>
-    public abstract partial class UserGraph<TKey, TValue> : Container, IHasCustomTooltip<UserGraphTooltipContent?>
+    public abstract partial class UserGraph<TKey, TValue>
+        : Container,
+            IHasCustomTooltip<UserGraphTooltipContent?>
     {
         protected const float FADE_DURATION = 150;
 
@@ -33,11 +35,7 @@ namespace osu.Game.Overlays.Profile
 
         protected UserGraph()
         {
-            Add(graph = new UserLineGraph
-            {
-                RelativeSizeAxes = Axes.Both,
-                Alpha = 0
-            });
+            Add(graph = new UserLineGraph { RelativeSizeAxes = Axes.Both, Alpha = 0 });
 
             graph.OnBallMove += i => hoveredIndex = i;
         }
@@ -114,6 +112,7 @@ namespace osu.Game.Overlays.Profile
         protected abstract float GetDataPointHeight(TValue value);
 
         protected virtual void ShowGraph() => graph.FadeIn(FADE_DURATION, Easing.Out);
+
         protected virtual void HideGraph() => graph.FadeOut(FADE_DURATION, Easing.Out);
 
         public ITooltip<UserGraphTooltipContent?> GetCustomTooltip() => new UserGraphTooltip();
@@ -143,34 +142,36 @@ namespace osu.Game.Overlays.Profile
 
             public UserLineGraph()
             {
-                Add(bar = new Container
-                {
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.Y,
-                    AutoSizeAxes = Axes.X,
-                    Alpha = 0,
-                    RelativePositionAxes = Axes.Both,
-                    Children = new Drawable[]
+                Add(
+                    bar = new Container
                     {
-                        line = new Box
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.Y,
+                        AutoSizeAxes = Axes.X,
+                        Alpha = 0,
+                        RelativePositionAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Y,
-                            Width = 2,
+                            line = new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Y,
+                                Width = 2,
+                            },
+                            movingBall = new CircularContainer
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(20),
+                                Masking = true,
+                                BorderThickness = 4,
+                                RelativePositionAxes = Axes.Y,
+                                Child = ballBg = new Box { RelativeSizeAxes = Axes.Both },
+                            },
                         },
-                        movingBall = new CircularContainer
-                        {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(20),
-                            Masking = true,
-                            BorderThickness = 4,
-                            RelativePositionAxes = Axes.Y,
-                            Child = ballBg = new Box { RelativeSizeAxes = Axes.Both }
-                        }
                     }
-                });
+                );
             }
 
             [BackgroundDependencyLoader]
@@ -194,7 +195,13 @@ namespace osu.Game.Overlays.Profile
 
             public void HideBar() => bar.FadeOut(FADE_DURATION);
 
-            private int calculateIndex(float mouseXPosition) => (int)Math.Clamp(MathF.Round(mouseXPosition / DrawWidth * (DefaultValueCount - 1)), 0, DefaultValueCount - 1);
+            private int calculateIndex(float mouseXPosition) =>
+                (int)
+                    Math.Clamp(
+                        MathF.Round(mouseXPosition / DrawWidth * (DefaultValueCount - 1)),
+                        0,
+                        DefaultValueCount - 1
+                    );
 
             private Vector2 calculateBallPosition(int index)
             {
@@ -203,9 +210,13 @@ namespace osu.Game.Overlays.Profile
             }
         }
 
-        private partial class UserGraphTooltip : VisibilityContainer, ITooltip<UserGraphTooltipContent?>
+        private partial class UserGraphTooltip
+            : VisibilityContainer,
+                ITooltip<UserGraphTooltipContent?>
         {
-            protected readonly OsuSpriteText Label, Counter, BottomText;
+            protected readonly OsuSpriteText Label,
+                Counter,
+                BottomText;
             private readonly Box background;
 
             public UserGraphTooltip()
@@ -216,10 +227,7 @@ namespace osu.Game.Overlays.Profile
 
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         AutoSizeAxes = Axes.Both,
@@ -240,18 +248,21 @@ namespace osu.Game.Overlays.Profile
                                     },
                                     Counter = new OsuSpriteText
                                     {
-                                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular),
+                                        Font = OsuFont.GetFont(
+                                            size: 12,
+                                            weight: FontWeight.Regular
+                                        ),
                                         Anchor = Anchor.BottomLeft,
                                         Origin = Anchor.BottomLeft,
-                                    }
-                                }
+                                    },
+                                },
                             },
                             BottomText = new OsuSpriteText
                             {
                                 Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular),
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 

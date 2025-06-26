@@ -39,26 +39,34 @@ namespace osu.Game.Overlays.Comments
             Direction = FillDirection.Horizontal;
             Spacing = new Vector2(4, 0);
 
-            Add(new LinkFlowContainer(s => s.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold))
-            {
-                AutoSizeAxes = Axes.Both
-            }.With(username =>
-            {
-                if (comment.UserId.HasValue)
-                    username.AddUserLink(comment.User);
-                else
-                    username.AddText(comment.LegacyName!);
-            }));
+            Add(
+                new LinkFlowContainer(s =>
+                    s.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold)
+                )
+                {
+                    AutoSizeAxes = Axes.Both,
+                }.With(username =>
+                {
+                    if (comment.UserId.HasValue)
+                        username.AddUserLink(comment.User);
+                    else
+                        username.AddText(comment.LegacyName!);
+                })
+            );
 
-            var ownerMeta = meta.FirstOrDefault(m => m.Id == comment.CommentableId && m.Type == comment.CommentableType);
+            var ownerMeta = meta.FirstOrDefault(m =>
+                m.Id == comment.CommentableId && m.Type == comment.CommentableType
+            );
 
             if (ownerMeta?.OwnerId != null && ownerMeta.OwnerId == comment.UserId)
             {
-                Add(new OwnerTitleBadge(ownerMeta.OwnerTitle ?? string.Empty)
-                {
-                    // add top space to align with username
-                    Margin = new MarginPadding { Top = 1f },
-                });
+                Add(
+                    new OwnerTitleBadge(ownerMeta.OwnerTitle ?? string.Empty)
+                    {
+                        // add top space to align with username
+                        Margin = new MarginPadding { Top = 1f },
+                    }
+                );
             }
 
             if (comment.Pinned)
@@ -66,12 +74,14 @@ namespace osu.Game.Overlays.Comments
 
             Add(new ParentUsername(comment));
 
-            Add(deletedLabel = new OsuSpriteText
-            {
-                Alpha = 0f,
-                Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold),
-                Text = CommentsStrings.Deleted
-            });
+            Add(
+                deletedLabel = new OsuSpriteText
+                {
+                    Alpha = 0f,
+                    Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold),
+                    Text = CommentsStrings.Deleted,
+                }
+            );
         }
 
         public void MarkDeleted()
@@ -96,11 +106,7 @@ namespace osu.Game.Overlays.Comments
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Light1,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Light1 },
                     new OsuSpriteText
                     {
                         Text = title,
@@ -134,7 +140,7 @@ namespace osu.Game.Overlays.Comments
                         Text = CommentsStrings.Pinned,
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                    }
+                    },
                 };
             }
         }
@@ -155,16 +161,12 @@ namespace osu.Game.Overlays.Comments
                 Alpha = comment.ParentId == null ? 0 : 1;
                 Children = new Drawable[]
                 {
-                    new SpriteIcon
-                    {
-                        Icon = FontAwesome.Solid.Reply,
-                        Size = new Vector2(14),
-                    },
+                    new SpriteIcon { Icon = FontAwesome.Solid.Reply, Size = new Vector2(14) },
                     new OsuSpriteText
                     {
                         Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold, italics: true),
-                        Text = parentComment?.User?.Username ?? parentComment?.LegacyName!
-                    }
+                        Text = parentComment?.User?.Username ?? parentComment?.LegacyName!,
+                    },
                 };
             }
 
@@ -173,7 +175,9 @@ namespace osu.Game.Overlays.Comments
                 if (parentComment == null)
                     return string.Empty;
 
-                return parentComment.HasMessage ? parentComment.Message : parentComment.IsDeleted ? CommentsStrings.Deleted : string.Empty;
+                return parentComment.HasMessage ? parentComment.Message
+                    : parentComment.IsDeleted ? CommentsStrings.Deleted
+                    : string.Empty;
             }
         }
     }

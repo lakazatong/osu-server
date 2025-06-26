@@ -19,7 +19,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneBeatmapListingCardSizeTabControl : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private readonly Bindable<BeatmapCardSize> cardSize = new Bindable<BeatmapCardSize>();
 
@@ -33,17 +35,14 @@ namespace osu.Game.Tests.Visual.UserInterface
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    cardSizeText = new OsuSpriteText
-                    {
-                        Font = OsuFont.Default.With(size: 24)
-                    },
+                    cardSizeText = new OsuSpriteText { Font = OsuFont.Default.With(size: 24) },
                     new BeatmapListingCardSizeTabControl
                     {
                         Current = cardSize,
                         Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
-                    }
-                }
+                        Origin = Anchor.Centre,
+                    },
+                },
             };
         }
 
@@ -51,7 +50,10 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             base.LoadComplete();
 
-            cardSize.BindValueChanged(size => cardSizeText.Text = $"Current size: {size.NewValue}", true);
+            cardSize.BindValueChanged(
+                size => cardSizeText.Text = $"Current size: {size.NewValue}",
+                true
+            );
         }
     }
 }

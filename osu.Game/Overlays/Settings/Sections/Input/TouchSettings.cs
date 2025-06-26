@@ -31,20 +31,25 @@ namespace osu.Game.Overlays.Settings.Sections.Input
         {
             if (!RuntimeInfo.IsMobile) // don't allow disabling the only input method (touch) on mobile.
             {
-                Add(new SettingsCheckbox
-                {
-                    LabelText = CommonStrings.Enabled,
-                    Current = handler.Enabled
-                });
+                Add(
+                    new SettingsCheckbox
+                    {
+                        LabelText = CommonStrings.Enabled,
+                        Current = handler.Enabled,
+                    }
+                );
             }
 
-            Add(new SettingsCheckbox
-            {
-                LabelText = TouchSettingsStrings.DisableTapsDuringGameplay,
-                Current = osuConfig.GetBindable<bool>(OsuSetting.TouchDisableGameplayTaps)
-            });
+            Add(
+                new SettingsCheckbox
+                {
+                    LabelText = TouchSettingsStrings.DisableTapsDuringGameplay,
+                    Current = osuConfig.GetBindable<bool>(OsuSetting.TouchDisableGameplayTaps),
+                }
+            );
         }
 
-        public override IEnumerable<LocalisableString> FilterTerms => base.FilterTerms.Concat(new LocalisableString[] { @"touchscreen" });
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            base.FilterTerms.Concat(new LocalisableString[] { @"touchscreen" });
     }
 }

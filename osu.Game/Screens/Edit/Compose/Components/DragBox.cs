@@ -58,7 +58,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
             get => state;
             set
             {
-                if (value == state) return;
+                if (value == state)
+                    return;
 
                 state = value;
                 this.FadeTo(state == Visibility.Hidden ? 0 : 1, 250, Easing.OutQuint);
@@ -75,7 +76,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         public partial class BoxWithBorders : CompositeDrawable
         {
-            private readonly LayoutValue cache = new LayoutValue(Invalidation.RequiredParentSizeToFit);
+            private readonly LayoutValue cache = new LayoutValue(
+                Invalidation.RequiredParentSizeToFit
+            );
 
             public BoxWithBorders()
             {
@@ -102,19 +105,16 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 }
 
                 // Make lines the same width independent of display resolution.
-                float lineThickness = DrawWidth > 0
-                    ? DrawWidth / ScreenSpaceDrawQuad.Width * 2
-                    : DrawHeight / ScreenSpaceDrawQuad.Height * 2;
+                float lineThickness =
+                    DrawWidth > 0
+                        ? DrawWidth / ScreenSpaceDrawQuad.Width * 2
+                        : DrawHeight / ScreenSpaceDrawQuad.Height * 2;
 
                 Padding = new MarginPadding(-lineThickness / 2);
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = lineThickness,
-                    },
+                    new Box { RelativeSizeAxes = Axes.X, Height = lineThickness },
                     new Box
                     {
                         RelativeSizeAxes = Axes.X,
@@ -122,11 +122,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
                     },
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Y,
-                        Width = lineThickness,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Y, Width = lineThickness },
                     new Box
                     {
                         RelativeSizeAxes = Axes.Y,
@@ -134,11 +130,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
                     },
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.1f
-                    }
+                    new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.1f },
                 };
             }
         }

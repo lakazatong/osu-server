@@ -23,8 +23,10 @@ namespace osu.Game.Screens.Select
 
         public bool Equals(BeatmapDetailAreaTabItem other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return Name == other.Name;
         }

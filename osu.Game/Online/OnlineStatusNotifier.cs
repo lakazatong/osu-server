@@ -80,39 +80,48 @@ namespace osu.Game.Online
                     return;
                 }
 
-                if (userNotified) return;
+                if (userNotified)
+                    return;
 
                 if (state.NewValue == APIState.Offline && getCurrentScreen() is OnlinePlayScreen)
                 {
                     userNotified = true;
-                    notificationOverlay?.Post(new SimpleErrorNotification
-                    {
-                        Icon = FontAwesome.Solid.ExclamationCircle,
-                        Text = "Connection to API was lost. Can't continue with online play."
-                    });
+                    notificationOverlay?.Post(
+                        new SimpleErrorNotification
+                        {
+                            Icon = FontAwesome.Solid.ExclamationCircle,
+                            Text = "Connection to API was lost. Can't continue with online play.",
+                        }
+                    );
                 }
             });
 
-            multiplayerState.BindValueChanged(connected => Schedule(() =>
-            {
-                if (connected.NewValue)
+            multiplayerState.BindValueChanged(connected =>
+                Schedule(() =>
                 {
-                    userNotified = false;
-                    return;
-                }
-
-                if (userNotified) return;
-
-                if (multiplayerClient.Room != null)
-                {
-                    userNotified = true;
-                    notificationOverlay?.Post(new SimpleErrorNotification
+                    if (connected.NewValue)
                     {
-                        Icon = FontAwesome.Solid.ExclamationCircle,
-                        Text = "Connection to the multiplayer server was lost. Exiting multiplayer."
-                    });
-                }
-            }));
+                        userNotified = false;
+                        return;
+                    }
+
+                    if (userNotified)
+                        return;
+
+                    if (multiplayerClient.Room != null)
+                    {
+                        userNotified = true;
+                        notificationOverlay?.Post(
+                            new SimpleErrorNotification
+                            {
+                                Icon = FontAwesome.Solid.ExclamationCircle,
+                                Text =
+                                    "Connection to the multiplayer server was lost. Exiting multiplayer.",
+                            }
+                        );
+                    }
+                })
+            );
 
             spectatorState.BindValueChanged(_ =>
             {
@@ -122,28 +131,37 @@ namespace osu.Game.Online
 
         private void notifyAboutForcedDisconnection()
         {
-            if (userNotified) return;
+            if (userNotified)
+                return;
 
             userNotified = true;
-            notificationOverlay?.Post(new SimpleErrorNotification
-            {
-                Icon = FontAwesome.Solid.ExclamationCircle,
-                Text = "You have been logged out on this device due to a login to your account on another device."
-            });
+            notificationOverlay?.Post(
+                new SimpleErrorNotification
+                {
+                    Icon = FontAwesome.Solid.ExclamationCircle,
+                    Text =
+                        "You have been logged out on this device due to a login to your account on another device.",
+                }
+            );
         }
 
         private void notifyAboutForcedDisconnection(SocketMessage obj)
         {
-            if (obj.Event != @"logout") return;
+            if (obj.Event != @"logout")
+                return;
 
-            if (userNotified) return;
+            if (userNotified)
+                return;
 
             userNotified = true;
-            notificationOverlay?.Post(new SimpleErrorNotification
-            {
-                Icon = FontAwesome.Solid.ExclamationCircle,
-                Text = "You have been logged out due to a change to your account. Please log in again."
-            });
+            notificationOverlay?.Post(
+                new SimpleErrorNotification
+                {
+                    Icon = FontAwesome.Solid.ExclamationCircle,
+                    Text =
+                        "You have been logged out due to a change to your account. Please log in again.",
+                }
+            );
         }
 
         protected override void Dispose(bool isDisposing)

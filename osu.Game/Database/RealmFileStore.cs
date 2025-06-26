@@ -41,7 +41,12 @@ namespace osu.Game.Database
         /// <param name="realm">The realm instance to add to. Should already be in a transaction.</param>
         /// <param name="addToRealm">Whether the <see cref="RealmFile"/> should immediately be added to the underlying realm. If <c>false</c> is provided here, the instance must be manually added.</param>
         /// <param name="preferHardLinks">Whether this import should use hard links rather than file copy operations if available.</param>
-        public RealmFile Add(Stream data, Realm realm, bool addToRealm = true, bool preferHardLinks = false)
+        public RealmFile Add(
+            Stream data,
+            Realm realm,
+            bool addToRealm = true,
+            bool preferHardLinks = false
+        )
         {
             string hash = data.ComputeSHA2Hash();
 
@@ -63,7 +68,12 @@ namespace osu.Game.Database
             if (data is FileStream fs && preferHardLinks)
             {
                 // attempt to do a fast hard link rather than copy.
-                if (HardLinkHelper.TryCreateHardLink(Storage.GetFullPath(file.GetStoragePath(), true), fs.Name))
+                if (
+                    HardLinkHelper.TryCreateHardLink(
+                        Storage.GetFullPath(file.GetStoragePath(), true),
+                        fs.Name
+                    )
+                )
                     return;
             }
 
@@ -98,7 +108,9 @@ namespace osu.Game.Database
             // can potentially be run asynchronously, although we will need to consider operation order for disk deletion vs realm removal.
             realm.Write(r =>
             {
-                foreach (var file in r.All<RealmFile>().Filter(@$"{nameof(RealmFile.Usages)}.@count = 0"))
+                foreach (
+                    var file in r.All<RealmFile>().Filter(@$"{nameof(RealmFile.Usages)}.@count = 0")
+                )
                 {
                     totalFiles++;
 
@@ -117,7 +129,9 @@ namespace osu.Game.Database
                 }
             });
 
-            Logger.Log($@"Finished realm file store cleanup ({removedFiles} of {totalFiles} deleted)");
+            Logger.Log(
+                $@"Finished realm file store cleanup ({removedFiles} of {totalFiles} deleted)"
+            );
         }
     }
 }

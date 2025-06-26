@@ -32,9 +32,7 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         protected new DrawableHoldNote DrawableObject => (DrawableHoldNote)base.DrawableObject;
 
         public HoldNoteSelectionBlueprint(HoldNote hold)
-            : base(hold)
-        {
-        }
+            : base(hold) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -56,7 +54,9 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
                     Dragging = pos =>
                     {
                         double endTimeBeforeDrag = HitObject.EndTime;
-                        double proposedStartTime = positionSnapProvider?.FindSnappedPositionAndTime(pos).Time ?? HitObjectContainer.TimeAtScreenSpacePosition(pos);
+                        double proposedStartTime =
+                            positionSnapProvider?.FindSnappedPositionAndTime(pos).Time
+                            ?? HitObjectContainer.TimeAtScreenSpacePosition(pos);
                         double proposedEndTime = endTimeBeforeDrag;
 
                         if (proposedStartTime >= proposedEndTime)
@@ -77,7 +77,9 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
                     Dragging = pos =>
                     {
                         double proposedStartTime = HitObject.StartTime;
-                        double proposedEndTime = positionSnapProvider?.FindSnappedPositionAndTime(pos).Time ?? HitObjectContainer.TimeAtScreenSpacePosition(pos);
+                        double proposedEndTime =
+                            positionSnapProvider?.FindSnappedPositionAndTime(pos).Time
+                            ?? HitObjectContainer.TimeAtScreenSpacePosition(pos);
 
                         if (proposedStartTime >= proposedEndTime)
                             return;
@@ -96,20 +98,34 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
             base.Update();
 
             head.Height = DrawableObject.Head.DrawHeight;
-            head.Y = HitObjectContainer.PositionAtTime(HitObject.Head.StartTime, HitObject.StartTime);
+            head.Y = HitObjectContainer.PositionAtTime(
+                HitObject.Head.StartTime,
+                HitObject.StartTime
+            );
             tail.Height = DrawableObject.Tail.DrawHeight;
-            tail.Y = HitObjectContainer.PositionAtTime(HitObject.Tail.StartTime, HitObject.StartTime);
-            Height = HitObjectContainer.LengthAtTime(HitObject.StartTime, HitObject.EndTime) + tail.DrawHeight;
+            tail.Y = HitObjectContainer.PositionAtTime(
+                HitObject.Tail.StartTime,
+                HitObject.StartTime
+            );
+            Height =
+                HitObjectContainer.LengthAtTime(HitObject.StartTime, HitObject.EndTime)
+                + tail.DrawHeight;
         }
 
         protected override void OnDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            Origin = direction.NewValue == ScrollingDirection.Down ? Anchor.BottomCentre : Anchor.TopCentre;
+            Origin =
+                direction.NewValue == ScrollingDirection.Down
+                    ? Anchor.BottomCentre
+                    : Anchor.TopCentre;
 
             foreach (var child in InternalChildren)
                 child.Anchor = Origin;
 
-            head.Scale = tail.Scale = body.Scale = new Vector2(1, direction.NewValue == ScrollingDirection.Down ? 1 : -1);
+            head.Scale =
+                tail.Scale =
+                body.Scale =
+                    new Vector2(1, direction.NewValue == ScrollingDirection.Down ? 1 : -1);
         }
 
         public override Quad SelectionQuad => ScreenSpaceDrawQuad;

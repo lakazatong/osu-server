@@ -14,9 +14,14 @@ namespace osu.Game.Utils
         /// <param name="userPlayInfo">Information about whether the user is currently playing.</param>
         /// <param name="currentScreen">The current screen which the user is at.</param>
         /// <param name="isTablet">Whether the user is playing on a mobile tablet device instead of a phone.</param>
-        public static Orientation GetOrientation(ILocalUserPlayInfo userPlayInfo, IOsuScreen currentScreen, bool isTablet)
+        public static Orientation GetOrientation(
+            ILocalUserPlayInfo userPlayInfo,
+            IOsuScreen currentScreen,
+            bool isTablet
+        )
         {
-            bool lockCurrentOrientation = userPlayInfo.PlayingState.Value == LocalUserPlayingState.Playing;
+            bool lockCurrentOrientation =
+                userPlayInfo.PlayingState.Value == LocalUserPlayingState.Playing;
             bool lockToPortraitOnPhone = currentScreen.RequiresPortraitOrientation;
 
             if (lockToPortraitOnPhone && !isTablet)

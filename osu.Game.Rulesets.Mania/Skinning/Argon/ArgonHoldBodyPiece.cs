@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
             InternalChildren = new[]
             {
                 background = new Box { RelativeSizeAxes = Axes.Both },
-                hittingLayer = new ArgonHoldNoteHittingLayer()
+                hittingLayer = new ArgonHoldNoteHittingLayer(),
             };
 
             if (drawableObject != null)
@@ -51,10 +51,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                 ((IBindable<bool>)hittingLayer.IsHitting).BindTo(holdNote.IsHolding);
             }
 
-            AccentColour.BindValueChanged(colour =>
-            {
-                background.Colour = colour.NewValue.Darken(0.6f);
-            }, true);
+            AccentColour.BindValueChanged(
+                colour =>
+                {
+                    background.Colour = colour.NewValue.Darken(0.6f);
+                },
+                true
+            );
         }
 
         public void Recycle()

@@ -6,25 +6,36 @@
       "version": "2023.3.3",
       "commands": [
         "jb"
-      ]
+      ],
+      "rollForward": false
     },
     "nvika": {
       "version": "4.0.0",
       "commands": [
         "nvika"
-      ]
+      ],
+      "rollForward": false
     },
     "codefilesanity": {
       "version": "0.0.37",
       "commands": [
         "CodeFileSanity"
-      ]
+      ],
+      "rollForward": false
     },
     "ppy.localisationanalyser.tools": {
       "version": "2024.802.0",
       "commands": [
         "localisation"
-      ]
+      ],
+      "rollForward": false
+    },
+    "csharpier": {
+      "version": "1.0.2",
+      "commands": [
+        "csharpier"
+      ],
+      "rollForward": false
     }
   }
 }

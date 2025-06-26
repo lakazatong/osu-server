@@ -10,14 +10,15 @@ namespace osu.Game.Screens.Select.Leaderboards
     public partial class MultiSpectatorLeaderboardProvider : MultiplayerLeaderboardProvider
     {
         public MultiSpectatorLeaderboardProvider(MultiplayerRoomUser[] users)
-            : base(users)
-        {
-        }
+            : base(users) { }
 
         public void AddClock(int userId, IClock clock)
         {
             if (!UserScores.TryGetValue(userId, out var data))
-                throw new ArgumentException(@"Provided user is not tracked by this leaderboard", nameof(userId));
+                throw new ArgumentException(
+                    @"Provided user is not tracked by this leaderboard",
+                    nameof(userId)
+                );
 
             data.ScoreProcessor.ReferenceClock = clock;
         }

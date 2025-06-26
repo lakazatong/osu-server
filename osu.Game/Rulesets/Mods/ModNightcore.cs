@@ -30,13 +30,18 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Uguuuuuuuu...";
         public override bool Ranked => UsesDefaultConfiguration;
 
-        [SettingSource("Speed increase", "The actual increase to apply", SettingControlType = typeof(MultiplierSettingsSlider))]
-        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
-        {
-            MinValue = 1.01,
-            MaxValue = 2,
-            Precision = 0.01,
-        };
+        [SettingSource(
+            "Speed increase",
+            "The actual increase to apply",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
+        public override BindableNumber<double> SpeedChange { get; } =
+            new BindableDouble(1.5)
+            {
+                MinValue = 1.01,
+                MaxValue = 2,
+                Precision = 0.01,
+            };
 
         private readonly BindableNumber<double> tempoAdjust = new BindableDouble(1);
         private readonly BindableNumber<double> freqAdjust = new BindableDouble(1);
@@ -49,11 +54,14 @@ namespace osu.Game.Rulesets.Mods
 
             // intentionally not deferring the speed change handling to `RateAdjustModHelper`
             // as the expected result of operation is not the same (nightcore should preserve constant pitch).
-            SpeedChange.BindValueChanged(val =>
-            {
-                freqAdjust.Value = SpeedChange.Default;
-                tempoAdjust.Value = val.NewValue / SpeedChange.Default;
-            }, true);
+            SpeedChange.BindValueChanged(
+                val =>
+                {
+                    freqAdjust.Value = SpeedChange.Default;
+                    tempoAdjust.Value = val.NewValue / SpeedChange.Default;
+                },
+                true
+            );
         }
 
         public override void ApplyToTrack(IAdjustableAudioComponent track)
@@ -65,7 +73,9 @@ namespace osu.Game.Rulesets.Mods
         public override double ScoreMultiplier => rateAdjustHelper.ScoreMultiplier;
     }
 
-    public abstract partial class ModNightcore<TObject> : ModNightcore, IApplicableToDrawableRuleset<TObject>
+    public abstract partial class ModNightcore<TObject>
+        : ModNightcore,
+            IApplicableToDrawableRuleset<TObject>
         where TObject : HitObject
     {
         public void ApplyToDrawableRuleset(DrawableRuleset<TObject> drawableRuleset)
@@ -92,16 +102,29 @@ namespace osu.Game.Rulesets.Mods
             {
                 InternalChildren = new Drawable[]
                 {
-                    hatSample = new PausableSkinnableSound(new SampleInfo("Gameplay/nightcore-hat")),
-                    clapSample = new PausableSkinnableSound(new SampleInfo("Gameplay/nightcore-clap")),
-                    kickSample = new PausableSkinnableSound(new SampleInfo("Gameplay/nightcore-kick")),
-                    finishSample = new PausableSkinnableSound(new SampleInfo("Gameplay/nightcore-finish")),
+                    hatSample = new PausableSkinnableSound(
+                        new SampleInfo("Gameplay/nightcore-hat")
+                    ),
+                    clapSample = new PausableSkinnableSound(
+                        new SampleInfo("Gameplay/nightcore-clap")
+                    ),
+                    kickSample = new PausableSkinnableSound(
+                        new SampleInfo("Gameplay/nightcore-kick")
+                    ),
+                    finishSample = new PausableSkinnableSound(
+                        new SampleInfo("Gameplay/nightcore-finish")
+                    ),
                 };
             }
 
             private const int bars_per_segment = 4;
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 

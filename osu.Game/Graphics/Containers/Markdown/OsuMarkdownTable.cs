@@ -9,10 +9,12 @@ namespace osu.Game.Graphics.Containers.Markdown
     public partial class OsuMarkdownTable : MarkdownTable
     {
         public OsuMarkdownTable(Table table)
-            : base(table)
-        {
-        }
+            : base(table) { }
 
-        protected override MarkdownTableCell CreateTableCell(TableCell cell, TableColumnDefinition definition, bool isHeading) => new OsuMarkdownTableCell(cell, definition, isHeading);
+        protected override MarkdownTableCell CreateTableCell(
+            TableCell cell,
+            TableColumnDefinition definition,
+            bool isHeading
+        ) => new OsuMarkdownTableCell(cell, definition, isHeading);
     }
 }

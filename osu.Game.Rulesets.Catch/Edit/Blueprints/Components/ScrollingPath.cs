@@ -25,22 +25,24 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
 
             InternalChildren = new Drawable[]
             {
-                drawablePath = new SmoothPath
-                {
-                    PathRadius = 2,
-                    Alpha = 0.5f
-                },
+                drawablePath = new SmoothPath { PathRadius = 2, Alpha = 0.5f },
             };
         }
 
-        public void UpdatePathFrom(ScrollingHitObjectContainer hitObjectContainer, JuiceStream hitObject)
+        public void UpdatePathFrom(
+            ScrollingHitObjectContainer hitObjectContainer,
+            JuiceStream hitObject
+        )
         {
-            double timeToYFactor = -hitObjectContainer.LengthAtTime(hitObject.StartTime, hitObject.StartTime + 1);
+            double timeToYFactor = -hitObjectContainer.LengthAtTime(
+                hitObject.StartTime,
+                hitObject.StartTime + 1
+            );
 
             computeTimeXs(hitObject);
             drawablePath.Vertices = vertices
-                                    .Select(v => new Vector2(v.X, (float)(v.Time * timeToYFactor)))
-                                    .ToArray();
+                .Select(v => new Vector2(v.X, (float)(v.Time * timeToYFactor)))
+                .ToArray();
             drawablePath.OriginPosition = drawablePath.PositionInBoundingBox(Vector2.Zero);
         }
 

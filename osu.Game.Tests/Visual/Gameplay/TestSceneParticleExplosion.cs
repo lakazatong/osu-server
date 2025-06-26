@@ -20,22 +20,33 @@ namespace osu.Game.Tests.Visual.Gameplay
         [BackgroundDependencyLoader]
         private void load(TextureStore textures)
         {
-            AddStep("create initial", () =>
-            {
-                Child = explosion = new ParticleExplosion(textures.Get("Cursor/cursortrail"), 150, 1200)
+            AddStep(
+                "create initial",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(400)
-                };
-            });
+                    Child = explosion = new ParticleExplosion(
+                        textures.Get("Cursor/cursortrail"),
+                        150,
+                        1200
+                    )
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(400),
+                    };
+                }
+            );
 
             AddWaitStep("wait for playback", 5);
 
-            AddRepeatStep(@"restart animation", () =>
-            {
-                explosion.Restart();
-            }, 10);
+            AddRepeatStep(
+                @"restart animation",
+                () =>
+                {
+                    explosion.Restart();
+                },
+                10
+            );
         }
     }
 }

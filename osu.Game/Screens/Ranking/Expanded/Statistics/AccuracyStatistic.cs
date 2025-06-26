@@ -44,16 +44,20 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
         {
             // FormatAccuracy doesn't round, which means if we use the OutPow10 easing the number will stick 0.01% short for some time.
             // To avoid that let's use a shorter easing which looks roughly the same.
-            protected override double RollingDuration => AccuracyCircle.ACCURACY_TRANSFORM_DURATION / 2;
+            protected override double RollingDuration =>
+                AccuracyCircle.ACCURACY_TRANSFORM_DURATION / 2;
             protected override Easing RollingEasing => Easing.OutQuad;
 
-            protected override LocalisableString FormatCount(double count) => count.FormatAccuracy();
+            protected override LocalisableString FormatCount(double count) =>
+                count.FormatAccuracy();
 
-            protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(s =>
-            {
-                s.Font = OsuFont.Torus.With(size: 20, fixedWidth: true);
-                s.Spacing = new Vector2(-2, 0);
-            });
+            protected override OsuSpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(s =>
+                    {
+                        s.Font = OsuFont.Torus.With(size: 20, fixedWidth: true);
+                        s.Spacing = new Vector2(-2, 0);
+                    });
         }
     }
 }

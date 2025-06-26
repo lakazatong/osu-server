@@ -54,15 +54,20 @@ namespace osu.Game.Online.Chat
             }
             else
             {
-                isTrustedDomain = url.StartsWith(api.Endpoints.WebsiteUrl, StringComparison.Ordinal);
+                isTrustedDomain = url.StartsWith(
+                    api.Endpoints.WebsiteUrl,
+                    StringComparison.Ordinal
+                );
             }
 
             if (!url.CheckIsValidUrl())
             {
-                notificationOverlay?.Post(new SimpleErrorNotification
-                {
-                    Text = NotificationsStrings.UnsupportedOrDangerousUrlProtocol(url),
-                });
+                notificationOverlay?.Post(
+                    new SimpleErrorNotification
+                    {
+                        Text = NotificationsStrings.UnsupportedOrDangerousUrlProtocol(url),
+                    }
+                );
 
                 return;
             }
@@ -88,17 +93,28 @@ namespace osu.Game.Online.Chat
             }
 
             if (dialogOverlay != null && shouldWarn)
-                dialogOverlay.Push(new ExternalLinkDialog(url, () => host.OpenUrlExternally(url), () => clipboard.SetText(url)));
+                dialogOverlay.Push(
+                    new ExternalLinkDialog(
+                        url,
+                        () => host.OpenUrlExternally(url),
+                        () => clipboard.SetText(url)
+                    )
+                );
             else
                 host.OpenUrlExternally(url);
         }
 
         public partial class ExternalLinkDialog : PopupDialog
         {
-            public ExternalLinkDialog(string url, Action openExternalLinkAction, Action copyExternalLinkAction)
+            public ExternalLinkDialog(
+                string url,
+                Action openExternalLinkAction,
+                Action copyExternalLinkAction
+            )
             {
                 HeaderText = DialogStrings.CautionHeaderText;
-                BodyText = $"Are you sure you want to open the following link in a web browser?\n\n{url}";
+                BodyText =
+                    $"Are you sure you want to open the following link in a web browser?\n\n{url}";
 
                 Icon = FontAwesome.Solid.ExclamationTriangle;
 
@@ -107,17 +123,14 @@ namespace osu.Game.Online.Chat
                     new PopupDialogOkButton
                     {
                         Text = @"Open in browser",
-                        Action = openExternalLinkAction
+                        Action = openExternalLinkAction,
                     },
                     new PopupDialogCancelButton
                     {
                         Text = CommonStrings.CopyLink,
-                        Action = copyExternalLinkAction
+                        Action = copyExternalLinkAction,
                     },
-                    new PopupDialogCancelButton
-                    {
-                        Text = WebCommonStrings.ButtonsCancel,
-                    },
+                    new PopupDialogCancelButton { Text = WebCommonStrings.ButtonsCancel },
                 };
             }
         }

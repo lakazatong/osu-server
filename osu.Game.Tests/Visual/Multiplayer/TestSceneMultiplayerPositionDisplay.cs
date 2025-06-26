@@ -26,7 +26,8 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
         private readonly Bindable<int?> position = new Bindable<int?>(8);
 
-        private TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider leaderboardProvider = null!;
+        private TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider leaderboardProvider =
+            null!;
         private MultiplayerPositionDisplay display = null!;
         private GameplayState gameplayState = null!;
 
@@ -35,87 +36,145 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestAppearance()
         {
-            AddStep("create content", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create content",
+                () =>
                 {
-                    new DependencyProvidingContainer
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        CachedDependencies =
-                        [
-                            (typeof(IGameplayLeaderboardProvider), leaderboardProvider = new TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider()),
-                            (typeof(GameplayState), gameplayState = TestGameplayState.Create(new OsuRuleset()))
-                        ],
-                        Child = display = new MultiplayerPositionDisplay
+                        new DependencyProvidingContainer
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        }
+                            RelativeSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (
+                                    typeof(IGameplayLeaderboardProvider),
+                                    leaderboardProvider =
+                                        new TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider()
+                                ),
+                                (
+                                    typeof(GameplayState),
+                                    gameplayState = TestGameplayState.Create(new OsuRuleset())
+                                ),
+                            ],
+                            Child = display =
+                                new MultiplayerPositionDisplay
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        },
+                    };
+
+                    score = leaderboardProvider.CreateLeaderboardScore(
+                        new BindableLong(),
+                        API.LocalUser.Value,
+                        true
+                    );
+                    score.Position.BindTo(position);
+
+                    for (int i = 0; i < player_count - 1; i++)
+                    {
+                        var r = leaderboardProvider.CreateRandomScore(new APIUser());
+                        r.Position.Value = i;
                     }
-                };
-
-                score = leaderboardProvider.CreateLeaderboardScore(new BindableLong(), API.LocalUser.Value, true);
-                score.Position.BindTo(position);
-
-                for (int i = 0; i < player_count - 1; i++)
-                {
-                    var r = leaderboardProvider.CreateRandomScore(new APIUser());
-                    r.Position.Value = i;
                 }
-            });
+            );
 
-            AddSliderStep("set score position", 1, player_count, position.Value!.Value, r => position.Value = r);
+            AddSliderStep(
+                "set score position",
+                1,
+                player_count,
+                position.Value!.Value,
+                r => position.Value = r
+            );
             AddStep("unset position", () => position.Value = null);
 
-            AddStep("toggle leaderboardProvider on", () => config.SetValue(OsuSetting.GameplayLeaderboard, true));
+            AddStep(
+                "toggle leaderboardProvider on",
+                () => config.SetValue(OsuSetting.GameplayLeaderboard, true)
+            );
             AddUntilStep("display visible", () => display.Alpha, () => Is.EqualTo(1));
 
-            AddStep("toggle leaderboardProvider off", () => config.SetValue(OsuSetting.GameplayLeaderboard, false));
+            AddStep(
+                "toggle leaderboardProvider off",
+                () => config.SetValue(OsuSetting.GameplayLeaderboard, false)
+            );
             AddUntilStep("display hidden", () => display.Alpha, () => Is.EqualTo(0));
 
-            AddStep("enter break", () => ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value = LocalUserPlayingState.Break);
+            AddStep(
+                "enter break",
+                () =>
+                    ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value =
+                        LocalUserPlayingState.Break
+            );
             AddUntilStep("display visible", () => display.Alpha, () => Is.EqualTo(1));
 
-            AddStep("exit break", () => ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value = LocalUserPlayingState.Playing);
+            AddStep(
+                "exit break",
+                () =>
+                    ((Bindable<LocalUserPlayingState>)gameplayState.PlayingState).Value =
+                        LocalUserPlayingState.Playing
+            );
             AddUntilStep("display hidden", () => display.Alpha, () => Is.EqualTo(0));
 
-            AddStep("toggle leaderboardProvider on", () => config.SetValue(OsuSetting.GameplayLeaderboard, true));
+            AddStep(
+                "toggle leaderboardProvider on",
+                () => config.SetValue(OsuSetting.GameplayLeaderboard, true)
+            );
             AddUntilStep("display visible", () => display.Alpha, () => Is.EqualTo(1));
 
-            AddStep("change local user", () => ((DummyAPIAccess)API).LocalUser.Value = new GuestUser());
+            AddStep(
+                "change local user",
+                () => ((DummyAPIAccess)API).LocalUser.Value = new GuestUser()
+            );
             AddUntilStep("display hidden", () => display.Alpha, () => Is.EqualTo(0));
         }
 
         [Test]
         public void TestTwoPlayers()
         {
-            AddStep("create content", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create content",
+                () =>
                 {
-                    new DependencyProvidingContainer
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        CachedDependencies =
-                        [
-                            (typeof(IGameplayLeaderboardProvider), leaderboardProvider = new TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider()),
-                            (typeof(GameplayState), gameplayState = TestGameplayState.Create(new OsuRuleset()))
-                        ],
-                        Child = display = new MultiplayerPositionDisplay
+                        new DependencyProvidingContainer
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        }
-                    }
-                };
+                            RelativeSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (
+                                    typeof(IGameplayLeaderboardProvider),
+                                    leaderboardProvider =
+                                        new TestSceneGameplayLeaderboard.TestGameplayLeaderboardProvider()
+                                ),
+                                (
+                                    typeof(GameplayState),
+                                    gameplayState = TestGameplayState.Create(new OsuRuleset())
+                                ),
+                            ],
+                            Child = display =
+                                new MultiplayerPositionDisplay
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                        },
+                    };
 
-                score = leaderboardProvider.CreateLeaderboardScore(new BindableLong(), API.LocalUser.Value, true);
-                score.Position.BindTo(position);
+                    score = leaderboardProvider.CreateLeaderboardScore(
+                        new BindableLong(),
+                        API.LocalUser.Value,
+                        true
+                    );
+                    score.Position.BindTo(position);
 
-                var r = leaderboardProvider.CreateRandomScore(new APIUser());
-                r.Position.Value = 1;
-            });
+                    var r = leaderboardProvider.CreateRandomScore(new APIUser());
+                    r.Position.Value = 1;
+                }
+            );
 
             AddStep("first place", () => position.Value = 1);
             AddStep("second place", () => position.Value = 2);

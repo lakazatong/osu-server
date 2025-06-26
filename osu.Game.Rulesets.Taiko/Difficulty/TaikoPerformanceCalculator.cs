@@ -30,11 +30,12 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
         private double effectiveMissCount;
 
         public TaikoPerformanceCalculator()
-            : base(new TaikoRuleset())
-        {
-        }
+            : base(new TaikoRuleset()) { }
 
-        protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
+        protected override PerformanceAttributes CreatePerformanceAttributes(
+            ScoreInfo score,
+            DifficultyAttributes attributes
+        )
         {
             var taikoAttributes = (TaikoDifficultyAttributes)attributes;
 
@@ -49,7 +50,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
 
             var difficulty = score.BeatmapInfo!.Difficulty.Clone();
 
-            score.Mods.OfType<IApplicableToDifficulty>().ForEach(m => m.ApplyToDifficulty(difficulty));
+            score
+                .Mods.OfType<IApplicableToDifficulty>()
+                .ForEach(m => m.ApplyToDifficulty(difficulty));
 
             HitWindows hitWindows = new TaikoHitWindows();
             hitWindows.SetDifficulty(difficulty.OverallDifficulty);
@@ -76,10 +79,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             double difficultyValue = computeDifficultyValue(score, taikoAttributes);
             double accuracyValue = computeAccuracyValue(score, taikoAttributes, isConvert);
             double totalValue =
-                Math.Pow(
-                    Math.Pow(difficultyValue, 1.1) +
-                    Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
-                ) * multiplier;
+                Math.Pow(Math.Pow(difficultyValue, 1.1) + Math.Pow(accuracyValue, 1.1), 1.0 / 1.1)
+                * multiplier;
 
             return new TaikoPerformanceAttributes
             {
@@ -87,14 +88,17 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                 Accuracy = accuracyValue,
                 EffectiveMissCount = effectiveMissCount,
                 EstimatedUnstableRate = estimatedUnstableRate,
-                Total = totalValue
+                Total = totalValue,
             };
         }
 
         private double computeDifficultyValue(ScoreInfo score, TaikoDifficultyAttributes attributes)
         {
             double baseDifficulty = 5 * Math.Max(1.0, attributes.StarRating / 0.110) - 4.0;
-            double difficultyValue = Math.Min(Math.Pow(baseDifficulty, 3) / 69052.51, Math.Pow(baseDifficulty, 2.25) / 1250.0);
+            double difficultyValue = Math.Min(
+                Math.Pow(baseDifficulty, 3) / 69052.51,
+                Math.Pow(baseDifficulty, 2.25) / 1250.0
+            );
 
             difficultyValue *= 1 + 0.10 * Math.Max(0, attributes.StarRating - 10);
 
@@ -110,7 +114,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                 difficultyValue *= 1.025;
 
             if (score.Mods.Any(m => m is ModFlashlight<TaikoHitObject>))
-                difficultyValue *= Math.Max(1, 1.050 - Math.Min(attributes.MonoStaminaFactor / 50, 1) * lengthBonus);
+                difficultyValue *= Math.Max(
+                    1,
+                    1.050 - Math.Min(attributes.MonoStaminaFactor / 50, 1) * lengthBonus
+                );
 
             if (estimatedUnstableRate == null)
                 return 0;
@@ -119,20 +126,37 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             double accScalingExponent = 2 + attributes.MonoStaminaFactor;
             double accScalingShift = 500 - 100 * (attributes.MonoStaminaFactor * 3);
 
-            return difficultyValue * Math.Pow(DifficultyCalculationUtils.Erf(accScalingShift / (Math.Sqrt(2) * estimatedUnstableRate.Value)), accScalingExponent);
+            return difficultyValue
+                * Math.Pow(
+                    DifficultyCalculationUtils.Erf(
+                        accScalingShift / (Math.Sqrt(2) * estimatedUnstableRate.Value)
+                    ),
+                    accScalingExponent
+                );
         }
 
-        private double computeAccuracyValue(ScoreInfo score, TaikoDifficultyAttributes attributes, bool isConvert)
+        private double computeAccuracyValue(
+            ScoreInfo score,
+            TaikoDifficultyAttributes attributes,
+            bool isConvert
+        )
         {
             if (greatHitWindow <= 0 || estimatedUnstableRate == null)
                 return 0;
 
-            double accuracyValue = Math.Pow(70 / estimatedUnstableRate.Value, 1.1) * Math.Pow(attributes.StarRating, 0.4) * 100.0;
+            double accuracyValue =
+                Math.Pow(70 / estimatedUnstableRate.Value, 1.1)
+                * Math.Pow(attributes.StarRating, 0.4)
+                * 100.0;
 
             double lengthBonus = Math.Min(1.15, Math.Pow(totalHits / 1500.0, 0.3));
 
             // Slight HDFL Bonus for accuracy. A clamp is used to prevent against negative values.
-            if (score.Mods.Any(m => m is ModFlashlight<TaikoHitObject>) && score.Mods.Any(m => m is ModHidden) && !isConvert)
+            if (
+                score.Mods.Any(m => m is ModFlashlight<TaikoHitObject>)
+                && score.Mods.Any(m => m is ModHidden)
+                && !isConvert
+            )
                 accuracyValue *= Math.Max(1.0, 1.05 * lengthBonus);
 
             return accuracyValue;
@@ -156,7 +180,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             double p = countGreat / n;
 
             // We can be 99% confident that p is at least this value.
-            double pLowerBound = (n * p + z * z / 2) / (n + z * z) - z / (n + z * z) * Math.Sqrt(n * p * (1 - p) + z * z / 4);
+            double pLowerBound =
+                (n * p + z * z / 2) / (n + z * z)
+                - z / (n + z * z) * Math.Sqrt(n * p * (1 - p) + z * z / 4);
 
             // We can be 99% confident that the deviation is not higher than:
             return greatHitWindow / (Math.Sqrt(2) * DifficultyCalculationUtils.ErfInv(pLowerBound));

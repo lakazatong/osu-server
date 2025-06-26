@@ -6,9 +6,9 @@ using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
-using osu.Game.Overlays;
 using osu.Game.Graphics.Carousel;
 using osu.Game.Graphics.Cursor;
+using osu.Game.Overlays;
 using osu.Game.Screens.SelectV2;
 using osu.Game.Tests.Visual.UserInterface;
 using osuTK;
@@ -18,9 +18,7 @@ namespace osu.Game.Tests.Visual.SongSelectV2
     public partial class TestScenePanelGroup : ThemeComparisonTestScene
     {
         public TestScenePanelGroup()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         [Test]
         public void TestGeneral()
@@ -35,54 +33,84 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             {
                 int star = i;
 
-                AddStep($"display {i} star(s)", () =>
-                {
-                    ContentContainer.Child = new DependencyProvidingContainer
+                AddStep(
+                    $"display {i} star(s)",
+                    () =>
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        CachedDependencies = new (Type, object)[]
-                        {
-                            (typeof(OverlayColourProvider), new OverlayColourProvider(OverlayColourScheme.Aquamarine))
-                        },
-                        Child = new OsuContextMenuContainer
+                        ContentContainer.Child = new DependencyProvidingContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = new FillFlowContainer
+                            CachedDependencies = new (Type, object)[]
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Width = 0.5f,
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Direction = FillDirection.Vertical,
-                                Spacing = new Vector2(0f, 5f),
-                                Children = new[]
+                                (
+                                    typeof(OverlayColourProvider),
+                                    new OverlayColourProvider(OverlayColourScheme.Aquamarine)
+                                ),
+                            },
+                            Child = new OsuContextMenuContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = new FillFlowContainer
                                 {
-                                    new PanelGroupStarDifficulty
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Width = 0.5f,
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Direction = FillDirection.Vertical,
+                                    Spacing = new Vector2(0f, 5f),
+                                    Children = new[]
                                     {
-                                        Item = new CarouselItem(new StarDifficultyGroupDefinition(0, $"{star} Star(s)", new StarDifficulty(star, 0)))
-                                    },
-                                    new PanelGroupStarDifficulty
-                                    {
-                                        Item = new CarouselItem(new StarDifficultyGroupDefinition(1, $"{star} Star(s)", new StarDifficulty(star, 0))),
-                                        KeyboardSelected = { Value = true },
-                                    },
-                                    new PanelGroupStarDifficulty
-                                    {
-                                        Item = new CarouselItem(new StarDifficultyGroupDefinition(2, $"{star} Star(s)", new StarDifficulty(star, 0))),
-                                        Expanded = { Value = true },
-                                    },
-                                    new PanelGroupStarDifficulty
-                                    {
-                                        Item = new CarouselItem(new StarDifficultyGroupDefinition(3, $"{star} Star(s)", new StarDifficulty(star, 0))),
-                                        Expanded = { Value = true },
-                                        KeyboardSelected = { Value = true },
+                                        new PanelGroupStarDifficulty
+                                        {
+                                            Item = new CarouselItem(
+                                                new StarDifficultyGroupDefinition(
+                                                    0,
+                                                    $"{star} Star(s)",
+                                                    new StarDifficulty(star, 0)
+                                                )
+                                            ),
+                                        },
+                                        new PanelGroupStarDifficulty
+                                        {
+                                            Item = new CarouselItem(
+                                                new StarDifficultyGroupDefinition(
+                                                    1,
+                                                    $"{star} Star(s)",
+                                                    new StarDifficulty(star, 0)
+                                                )
+                                            ),
+                                            KeyboardSelected = { Value = true },
+                                        },
+                                        new PanelGroupStarDifficulty
+                                        {
+                                            Item = new CarouselItem(
+                                                new StarDifficultyGroupDefinition(
+                                                    2,
+                                                    $"{star} Star(s)",
+                                                    new StarDifficulty(star, 0)
+                                                )
+                                            ),
+                                            Expanded = { Value = true },
+                                        },
+                                        new PanelGroupStarDifficulty
+                                        {
+                                            Item = new CarouselItem(
+                                                new StarDifficultyGroupDefinition(
+                                                    3,
+                                                    $"{star} Star(s)",
+                                                    new StarDifficulty(star, 0)
+                                                )
+                                            ),
+                                            Expanded = { Value = true },
+                                            KeyboardSelected = { Value = true },
+                                        },
                                     },
                                 },
-                            }
-                        }
-                    };
-                });
+                            },
+                        };
+                    }
+                );
             }
         }
 
@@ -104,26 +132,26 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                     {
                         new PanelGroup
                         {
-                            Item = new CarouselItem(new GroupDefinition('A', "Group A"))
-                        },
-                        new PanelGroup
-                        {
                             Item = new CarouselItem(new GroupDefinition('A', "Group A")),
-                            KeyboardSelected = { Value = true }
-                        },
-                        new PanelGroup
-                        {
-                            Item = new CarouselItem(new GroupDefinition('A', "Group A")),
-                            Expanded = { Value = true }
                         },
                         new PanelGroup
                         {
                             Item = new CarouselItem(new GroupDefinition('A', "Group A")),
                             KeyboardSelected = { Value = true },
-                            Expanded = { Value = true }
                         },
-                    }
-                }
+                        new PanelGroup
+                        {
+                            Item = new CarouselItem(new GroupDefinition('A', "Group A")),
+                            Expanded = { Value = true },
+                        },
+                        new PanelGroup
+                        {
+                            Item = new CarouselItem(new GroupDefinition('A', "Group A")),
+                            KeyboardSelected = { Value = true },
+                            Expanded = { Value = true },
+                        },
+                    },
+                },
             };
         }
     }

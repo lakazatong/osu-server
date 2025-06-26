@@ -13,16 +13,21 @@ namespace osu.Game.Overlays.BeatmapSet
     public partial class MetadataSectionLanguage : MetadataSection<BeatmapSetOnlineLanguage>
     {
         public MetadataSectionLanguage(Action<BeatmapSetOnlineLanguage>? searchAction = null)
-            : base(MetadataType.Language, searchAction)
-        {
-        }
+            : base(MetadataType.Language, searchAction) { }
 
-        protected override void AddMetadata(BeatmapSetOnlineLanguage metadata, LinkFlowContainer loaded)
+        protected override void AddMetadata(
+            BeatmapSetOnlineLanguage metadata,
+            LinkFlowContainer loaded
+        )
         {
             var language = (SearchLanguage)metadata.Id;
 
             if (Enum.IsDefined(language))
-                loaded.AddLink(language.GetLocalisableDescription(), LinkAction.FilterBeatmapSetLanguage, language);
+                loaded.AddLink(
+                    language.GetLocalisableDescription(),
+                    LinkAction.FilterBeatmapSetLanguage,
+                    language
+                );
             else
                 loaded.AddText(metadata.Name);
         }

@@ -30,13 +30,14 @@ namespace osu.Game.Rulesets.Osu.Tests
         ];
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestFailAfterMinResult(OsuHitObject hitObject, double startingHealth, bool failExpected)
+        public void TestFailAfterMinResult(
+            OsuHitObject hitObject,
+            double startingHealth,
+            bool failExpected
+        )
         {
             var healthProcessor = new OsuHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new OsuBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new OsuBeatmap { HitObjects = { hitObject } });
             healthProcessor.Health.Value = startingHealth;
 
             var result = new OsuJudgementResult(hitObject, hitObject.CreateJudgement());
@@ -50,10 +51,7 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestNoFailAfterMaxResult(OsuHitObject hitObject, double startingHealth, bool _)
         {
             var healthProcessor = new OsuHealthProcessor(0);
-            healthProcessor.ApplyBeatmap(new OsuBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new OsuBeatmap { HitObjects = { hitObject } });
             healthProcessor.Health.Value = startingHealth;
 
             var result = new OsuJudgementResult(hitObject, hitObject.CreateJudgement());

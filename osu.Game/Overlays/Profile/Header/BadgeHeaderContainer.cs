@@ -29,11 +29,7 @@ namespace osu.Game.Overlays.Profile.Header
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
                 new Container // artificial shadow
                 {
                     RelativeSizeAxes = Axes.X,
@@ -41,8 +37,11 @@ namespace osu.Game.Overlays.Profile.Header
                     Child = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = ColourInfo.GradientVertical(Colour4.Black.Opacity(0.2f), Colour4.Black.Opacity(0))
-                    }
+                        Colour = ColourInfo.GradientVertical(
+                            Colour4.Black.Opacity(0.2f),
+                            Colour4.Black.Opacity(0)
+                        ),
+                    },
                 },
                 badgeFlowContainer = new FillFlowContainer
                 {
@@ -50,8 +49,12 @@ namespace osu.Game.Overlays.Profile.Header
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Spacing = new Vector2(10, 10),
-                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING, Vertical = 10 },
-                }
+                    Padding = new MarginPadding
+                    {
+                        Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                        Vertical = 10,
+                    },
+                },
             };
         }
 
@@ -73,11 +76,15 @@ namespace osu.Game.Overlays.Profile.Header
                 for (int index = 0; index < badges.Length; index++)
                 {
                     int displayIndex = index;
-                    LoadComponentAsync(new DrawableBadge(badges[index]), asyncBadge =>
-                    {
-                        // load in stable order regardless of async load order.
-                        badgeFlowContainer.Insert(displayIndex, asyncBadge);
-                    }, cancellationTokenSource.Token);
+                    LoadComponentAsync(
+                        new DrawableBadge(badges[index]),
+                        asyncBadge =>
+                        {
+                            // load in stable order regardless of async load order.
+                            badgeFlowContainer.Insert(displayIndex, asyncBadge);
+                        },
+                        cancellationTokenSource.Token
+                    );
                 }
             }
             else

@@ -46,17 +46,23 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
             if (Result.IsHit())
             {
-                AddInternal(ringExplosion = new RingExplosion(Result)
-                {
-                    Colour = colours.ForHitResult(Result),
-                });
+                AddInternal(
+                    ringExplosion = new RingExplosion(Result)
+                    {
+                        Colour = colours.ForHitResult(Result),
+                    }
+                );
             }
         }
 
         private void onDirectionChanged()
         {
-            Anchor = direction.Value == ScrollingDirection.Up ? Anchor.TopCentre : Anchor.BottomCentre;
-            Y = direction.Value == ScrollingDirection.Up ? -judgement_y_position : judgement_y_position;
+            Anchor =
+                direction.Value == ScrollingDirection.Up ? Anchor.TopCentre : Anchor.BottomCentre;
+            Y =
+                direction.Value == ScrollingDirection.Up
+                    ? -judgement_y_position
+                    : judgement_y_position;
         }
 
         protected override SpriteText CreateJudgementText() =>
@@ -90,7 +96,11 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     this.ScaleTo(1.6f);
                     this.ScaleTo(1, 100, Easing.In);
 
-                    this.MoveToY(direction.Value == ScrollingDirection.Up ? -judgement_y_position : judgement_y_position);
+                    this.MoveToY(
+                        direction.Value == ScrollingDirection.Up
+                            ? -judgement_y_position
+                            : judgement_y_position
+                    );
                     this.MoveToOffset(new Vector2(0, 100), 800, Easing.InQuint);
 
                     this.RotateTo(0);
@@ -160,15 +170,21 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     float direction = RNG.NextSingle(0, 360);
                     float distance = RNG.NextSingle(travel / 2, travel);
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance * start_position_ratio,
-                        MathF.Sin(direction) * distance * start_position_ratio
-                    ));
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance * start_position_ratio,
+                            MathF.Sin(direction) * distance * start_position_ratio
+                        )
+                    );
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance,
-                        MathF.Sin(direction) * distance
-                    ), 600, Easing.OutQuint);
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance,
+                            MathF.Sin(direction) * distance
+                        ),
+                        600,
+                        Easing.OutQuint
+                    );
                 }
 
                 this.FadeOutFromOne(1000, Easing.OutQuint);
@@ -189,7 +205,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     {
                         AlwaysPresent = true,
                         Alpha = 0,
-                        RelativeSizeAxes = Axes.Both
+                        RelativeSizeAxes = Axes.Both,
                     };
                 }
             }

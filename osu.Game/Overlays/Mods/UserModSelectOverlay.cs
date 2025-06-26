@@ -17,9 +17,7 @@ namespace osu.Game.Overlays.Mods
         private ModSpeedHotkeyHandler modSpeedHotkeyHandler = null!;
 
         public UserModSelectOverlay(OverlayColourScheme colourScheme = OverlayColourScheme.Green)
-            : base(colourScheme)
-        {
-        }
+            : base(colourScheme) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -27,9 +25,13 @@ namespace osu.Game.Overlays.Mods
             Add(modSpeedHotkeyHandler = new ModSpeedHotkeyHandler());
         }
 
-        protected override ModColumn CreateModColumn(ModType modType) => new UserModColumn(modType, false);
+        protected override ModColumn CreateModColumn(ModType modType) =>
+            new UserModColumn(modType, false);
 
-        protected override IReadOnlyList<Mod> ComputeNewModsFromSelection(IReadOnlyList<Mod> oldSelection, IReadOnlyList<Mod> newSelection)
+        protected override IReadOnlyList<Mod> ComputeNewModsFromSelection(
+            IReadOnlyList<Mod> oldSelection,
+            IReadOnlyList<Mod> newSelection
+        )
         {
             var addedMods = newSelection.Except(oldSelection);
             var removedMods = oldSelection.Except(newSelection);
@@ -41,7 +43,12 @@ namespace osu.Game.Overlays.Mods
             // so be conservative and just remove all mods that aren't compatible with any one added mod.
             foreach (var addedMod in addedMods)
             {
-                if (!ModUtils.CheckCompatibleSet(modsAfterRemoval.Append(addedMod), out var invalidMods))
+                if (
+                    !ModUtils.CheckCompatibleSet(
+                        modsAfterRemoval.Append(addedMod),
+                        out var invalidMods
+                    )
+                )
                     modsAfterRemoval = modsAfterRemoval.Except(invalidMods);
 
                 modsAfterRemoval = modsAfterRemoval.Append(addedMod).ToList();
@@ -55,10 +62,20 @@ namespace osu.Game.Overlays.Mods
             switch (e.Action)
             {
                 case GlobalAction.IncreaseModSpeed:
-                    return modSpeedHotkeyHandler.ChangeSpeed(0.05, AllAvailableMods.Where(state => state.ValidForSelection.Value).Select(state => state.Mod));
+                    return modSpeedHotkeyHandler.ChangeSpeed(
+                        0.05,
+                        AllAvailableMods
+                            .Where(state => state.ValidForSelection.Value)
+                            .Select(state => state.Mod)
+                    );
 
                 case GlobalAction.DecreaseModSpeed:
-                    return modSpeedHotkeyHandler.ChangeSpeed(-0.05, AllAvailableMods.Where(state => state.ValidForSelection.Value).Select(state => state.Mod));
+                    return modSpeedHotkeyHandler.ChangeSpeed(
+                        -0.05,
+                        AllAvailableMods
+                            .Where(state => state.ValidForSelection.Value)
+                            .Select(state => state.Mod)
+                    );
             }
 
             return base.OnPressed(e);
@@ -67,11 +84,10 @@ namespace osu.Game.Overlays.Mods
         private partial class UserModColumn : ModColumn
         {
             public UserModColumn(ModType modType, bool allowIncompatibleSelection)
-                : base(modType, allowIncompatibleSelection)
-            {
-            }
+                : base(modType, allowIncompatibleSelection) { }
 
-            protected override ModPanel CreateModPanel(ModState modState) => new IncompatibilityDisplayingModPanel(modState);
+            protected override ModPanel CreateModPanel(ModState modState) =>
+                new IncompatibilityDisplayingModPanel(modState);
         }
     }
 }

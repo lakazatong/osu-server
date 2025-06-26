@@ -45,7 +45,10 @@ namespace osu.Game.Overlays.Notifications
 
         private readonly LocalisableString titleText;
 
-        public NotificationSection(LocalisableString title, IEnumerable<Type>? acceptedNotificationTypes = null)
+        public NotificationSection(
+            LocalisableString title,
+            IEnumerable<Type>? acceptedNotificationTypes = null
+        )
         {
             AcceptedNotificationTypes = acceptedNotificationTypes?.ToArray();
 
@@ -67,61 +70,61 @@ namespace osu.Game.Overlays.Notifications
                 Left = 20,
             };
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    new Container
                     {
-                        new ClearAllButton
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            Text = NotificationsStrings.ClearAll.ToUpper(),
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            Action = clearAll
-                        },
-                        new FillFlowContainer
-                        {
-                            Margin = new MarginPadding
+                            new ClearAllButton
                             {
-                                Bottom = 5
+                                Text = NotificationsStrings.ClearAll.ToUpper(),
+                                Anchor = Anchor.TopRight,
+                                Origin = Anchor.TopRight,
+                                Action = clearAll,
                             },
-                            Spacing = new Vector2(5, 0),
-                            AutoSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            new FillFlowContainer
                             {
-                                new OsuSpriteText
+                                Margin = new MarginPadding { Bottom = 5 },
+                                Spacing = new Vector2(5, 0),
+                                AutoSizeAxes = Axes.Both,
+                                Children = new Drawable[]
                                 {
-                                    Text = titleText.ToUpper(),
-                                    Font = OsuFont.GetFont(weight: FontWeight.Bold)
+                                    new OsuSpriteText
+                                    {
+                                        Text = titleText.ToUpper(),
+                                        Font = OsuFont.GetFont(weight: FontWeight.Bold),
+                                    },
+                                    countDrawable = new OsuSpriteText
+                                    {
+                                        Text = "3",
+                                        Colour = colours.Yellow,
+                                        Font = OsuFont.GetFont(weight: FontWeight.Bold),
+                                    },
                                 },
-                                countDrawable = new OsuSpriteText
-                                {
-                                    Text = "3",
-                                    Colour = colours.Yellow,
-                                    Font = OsuFont.GetFont(weight: FontWeight.Bold)
-                                },
-                            }
+                            },
                         },
                     },
-                },
-                notifications = new AlwaysUpdateFillFlowContainer<Notification>
-                {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    LayoutDuration = 150,
-                    LayoutEasing = Easing.OutQuart,
+                    notifications = new AlwaysUpdateFillFlowContainer<Notification>
+                    {
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        LayoutDuration = 150,
+                        LayoutEasing = Easing.OutQuart,
+                    },
                 }
-            });
+            );
         }
 
-        private void clearAll() => notifications.Children.ForEach(c =>
-        {
-            if (c is not ProgressNotification p || !p.Ongoing)
-                c.Close(true);
-        });
+        private void clearAll() =>
+            notifications.Children.ForEach(c =>
+            {
+                if (c is not ProgressNotification p || !p.Ongoing)
+                    c.Close(true);
+            });
 
         protected override void Update()
         {
@@ -151,10 +154,7 @@ namespace osu.Game.Overlays.Notifications
             {
                 AutoSizeAxes = Axes.Both;
 
-                Children = new[]
-                {
-                    text = new OsuSpriteText()
-                };
+                Children = new[] { text = new OsuSpriteText() };
             }
 
             public LocalisableString Text

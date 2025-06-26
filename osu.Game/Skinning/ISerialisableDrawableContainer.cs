@@ -23,7 +23,8 @@ namespace osu.Game.Skinning
         /// Serialise all children as <see cref="SerialisedDrawableInfo"/>.
         /// </summary>
         /// <returns>The serialised content.</returns>
-        IEnumerable<SerialisedDrawableInfo> CreateSerialisedInfo() => Components.Select(d => ((Drawable)d).CreateSerialisedInfo());
+        IEnumerable<SerialisedDrawableInfo> CreateSerialisedInfo() =>
+            Components.Select(d => ((Drawable)d).CreateSerialisedInfo());
 
         /// <summary>
         /// Reload this target from the current skin.

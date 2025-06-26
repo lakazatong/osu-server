@@ -39,14 +39,16 @@ namespace osu.Game.Screens.Edit.Compose.Components
         private void load()
         {
             Size = new Vector2(20);
-            AddInternal(icon = new SpriteIcon
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.5f),
-                Icon = iconUsage,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(
+                icon = new SpriteIcon
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.5f),
+                    Icon = iconUsage,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -61,7 +63,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
         protected override void UpdateHoverState()
         {
             base.UpdateHoverState();
-            icon.FadeColour(!IsHeld && IsHovered ? Color4.White : Color4.Black, TRANSFORM_DURATION, Easing.OutQuint);
+            icon.FadeColour(
+                !IsHeld && IsHovered ? Color4.White : Color4.Black,
+                TRANSFORM_DURATION,
+                Easing.OutQuint
+            );
         }
 
         protected override void OnHoverLost(HoverLostEvent e)

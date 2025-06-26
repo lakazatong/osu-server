@@ -24,6 +24,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             Add(new RepeatingButtonBehaviour(this));
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds(sampleSet);
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverSounds(sampleSet);
     }
 }

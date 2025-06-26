@@ -34,8 +34,16 @@ namespace osu.Game.Tests.Visual.Gameplay
             return beatmap;
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null) =>
-            new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audioManager);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audioManager
+            );
 
         [SetUpSteps]
         public override void SetUpSteps()
@@ -48,15 +56,30 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestBreakOverlayVisibility()
         {
-            AddAssert("break overlay hidden", () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent);
+            AddAssert(
+                "break overlay hidden",
+                () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent
+            );
             addSeekStep(2000);
-            AddUntilStep("break overlay visible", () => this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent);
+            AddUntilStep(
+                "break overlay visible",
+                () => this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent
+            );
             addSeekStep(5000);
-            AddAssert("break overlay hidden", () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent);
+            AddAssert(
+                "break overlay hidden",
+                () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent
+            );
             addSeekStep(7000);
-            AddUntilStep("break overlay visible", () => this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent);
+            AddUntilStep(
+                "break overlay visible",
+                () => this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent
+            );
             addSeekStep(10000);
-            AddAssert("break overlay hidden", () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent);
+            AddAssert(
+                "break overlay hidden",
+                () => !this.ChildrenOfType<BreakOverlay>().Single().Child.IsPresent
+            );
         }
 
         private void addSeekStep(double time)
@@ -64,7 +87,15 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep($"seek to {time}", () => Beatmap.Value.Track.Seek(time));
 
             // Allow a few frames of lenience
-            AddUntilStep("wait for seek to finish", () => Precision.AlmostEquals(time, Player.DrawableRuleset.FrameStableClock.CurrentTime, 100));
+            AddUntilStep(
+                "wait for seek to finish",
+                () =>
+                    Precision.AlmostEquals(
+                        time,
+                        Player.DrawableRuleset.FrameStableClock.CurrentTime,
+                        100
+                    )
+            );
         }
     }
 }

@@ -20,78 +20,122 @@ namespace osu.Game.Tests.Visual.DailyChallenge
     public partial class TestSceneDailyChallengeScoreBreakdown : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         private DailyChallengeScoreBreakdown breakdown = null!;
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create content", () => Children = new Drawable[]
-            {
-                new Box
+            AddStep(
+                "create content",
+                () =>
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background4,
+                        },
+                        breakdown = new DailyChallengeScoreBreakdown
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    }
+            );
+            AddSliderStep(
+                "adjust width",
+                0.1f,
+                1,
+                1,
+                width =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
-                breakdown = new DailyChallengeScoreBreakdown
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    if (breakdown.IsNotNull())
+                        breakdown.Width = width;
                 }
-            });
-            AddSliderStep("adjust width", 0.1f, 1, 1, width =>
-            {
-                if (breakdown.IsNotNull())
-                    breakdown.Width = width;
-            });
-            AddSliderStep("adjust height", 0.1f, 1, 1, height =>
-            {
-                if (breakdown.IsNotNull())
-                    breakdown.Height = height;
-            });
+            );
+            AddSliderStep(
+                "adjust height",
+                0.1f,
+                1,
+                1,
+                height =>
+                {
+                    if (breakdown.IsNotNull())
+                        breakdown.Height = height;
+                }
+            );
 
             AddToggleStep("toggle visible", v => breakdown.Alpha = v ? 1 : 0);
 
-            AddStep("set initial data", () => breakdown.SetInitialCounts([1, 4, 9, 16, 25, 36, 49, 36, 25, 16, 9, 4, 1]));
+            AddStep(
+                "set initial data",
+                () => breakdown.SetInitialCounts([1, 4, 9, 16, 25, 36, 49, 36, 25, 16, 9, 4, 1])
+            );
         }
 
         [Test]
         public void TestBasicAppearance()
         {
-            AddStep("add new score", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+            AddStep(
+                "add new score",
+                () =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), null);
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        null
+                    );
 
-                breakdown.AddNewScore(ev);
-            });
-            AddStep("set user score", () => breakdown.UserBestScore.Value = new MultiplayerScore { TotalScore = RNG.Next(1_000_000) });
+                    breakdown.AddNewScore(ev);
+                }
+            );
+            AddStep(
+                "set user score",
+                () =>
+                    breakdown.UserBestScore.Value = new MultiplayerScore
+                    {
+                        TotalScore = RNG.Next(1_000_000),
+                    }
+            );
             AddStep("unset user score", () => breakdown.UserBestScore.Value = null);
         }
 
         [Test]
         public void TestMassAdd()
         {
-            AddStep("add 1000 scores at once", () =>
-            {
-                for (int i = 0; i < 1000; i++)
+            AddStep(
+                "add 1000 scores at once",
+                () =>
                 {
-                    var ev = new NewScoreEvent(1, new APIUser
+                    for (int i = 0; i < 1000; i++)
                     {
-                        Id = 2,
-                        Username = "peppy",
-                        CoverUrl = TestResources.COVER_IMAGE_3,
-                    }, RNG.Next(1_000_000), null);
+                        var ev = new NewScoreEvent(
+                            1,
+                            new APIUser
+                            {
+                                Id = 2,
+                                Username = "peppy",
+                                CoverUrl = TestResources.COVER_IMAGE_3,
+                            },
+                            RNG.Next(1_000_000),
+                            null
+                        );
 
-                    breakdown.AddNewScore(ev);
+                        breakdown.AddNewScore(ev);
+                    }
                 }
-            });
+            );
         }
     }
 }

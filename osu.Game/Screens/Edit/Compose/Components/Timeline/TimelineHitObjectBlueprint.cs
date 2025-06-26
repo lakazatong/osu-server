@@ -75,64 +75,67 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             RelativeSizeAxes = Axes.X;
             Height = circle_size;
 
-            AddRangeInternal(new Drawable[]
-            {
-                circle = new ExtendableCircle
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                },
-                border = new Border
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                },
-                colouredComponents = new Container
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    circle = new ExtendableCircle
                     {
-                        comboIndexText = new OsuSpriteText
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                    },
+                    border = new Border
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                    },
+                    colouredComponents = new Container
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.Centre,
-                            Y = -1,
-                            Font = OsuFont.Default.With(size: circle_size * 0.5f, weight: FontWeight.Regular),
+                            comboIndexText = new OsuSpriteText
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.Centre,
+                                Y = -1,
+                                Font = OsuFont.Default.With(
+                                    size: circle_size * 0.5f,
+                                    weight: FontWeight.Regular
+                                ),
+                            },
                         },
-                    }
-                },
-                samplePointPiece = new SamplePointPiece(Item)
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.TopCentre,
-                    RelativePositionAxes = Axes.X,
-                    AlternativeColor = Item is IHasRepeats
-                },
-                sampleComponents = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-            });
+                    },
+                    samplePointPiece = new SamplePointPiece(Item)
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.TopCentre,
+                        RelativePositionAxes = Axes.X,
+                        AlternativeColor = Item is IHasRepeats,
+                    },
+                    sampleComponents = new Container { RelativeSizeAxes = Axes.Both },
+                }
+            );
 
             if (item is IHasDuration)
             {
-                colouredComponents.Add(new DragArea(item)
-                {
-                    OnDragHandled = e => OnDragHandled?.Invoke(e)
-                });
+                colouredComponents.Add(
+                    new DragArea(item) { OnDragHandled = e => OnDragHandled?.Invoke(e) }
+                );
             }
 
             if (item is IHasSliderVelocity)
             {
-                AddInternal(difficultyPointPiece = new DifficultyPointPiece(Item)
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.BottomCentre
-                });
+                AddInternal(
+                    difficultyPointPiece = new DifficultyPointPiece(Item)
+                    {
+                        Anchor = Anchor.TopLeft,
+                        Origin = Anchor.BottomCentre,
+                    }
+                );
             }
         }
 
@@ -148,14 +151,21 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                     break;
 
                 case IHasComboInformation comboInfo:
-                    indexInCurrentComboBindable = comboInfo.IndexInCurrentComboBindable.GetBoundCopy();
-                    indexInCurrentComboBindable.BindValueChanged(_ =>
-                    {
-                        comboIndexText.Text = (indexInCurrentComboBindable.Value + 1).ToString();
-                    }, true);
+                    indexInCurrentComboBindable =
+                        comboInfo.IndexInCurrentComboBindable.GetBoundCopy();
+                    indexInCurrentComboBindable.BindValueChanged(
+                        _ =>
+                        {
+                            comboIndexText.Text = (
+                                indexInCurrentComboBindable.Value + 1
+                            ).ToString();
+                        },
+                        true
+                    );
 
                     comboIndexBindable = comboInfo.ComboIndexBindable.GetBoundCopy();
-                    comboIndexWithOffsetsBindable = comboInfo.ComboIndexWithOffsetsBindable.GetBoundCopy();
+                    comboIndexWithOffsetsBindable =
+                        comboInfo.ComboIndexWithOffsetsBindable.GetBoundCopy();
 
                     comboIndexBindable.BindValueChanged(_ => updateColour());
                     comboIndexWithOffsetsBindable.BindValueChanged(_ => updateColour(), true);
@@ -206,7 +216,13 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             else
                 circle.Colour = colour;
 
-            var averageColour = Interpolation.ValueAt(0.5, circle.Colour.TopLeft, circle.Colour.TopRight, 0, 1);
+            var averageColour = Interpolation.ValueAt(
+                0.5,
+                circle.Colour.TopLeft,
+                circle.Colour.TopRight,
+                0,
+                1
+            );
             colouredComponents.Colour = OsuColour.ForegroundTextColourFor(averageColour);
         }
 
@@ -231,17 +247,13 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             repeatsContainer?.Expire();
 
-            colouredComponents.Add(repeatsContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            });
+            colouredComponents.Add(
+                repeatsContainer = new Container { RelativeSizeAxes = Axes.Both }
+            );
 
             for (int i = 0; i < repeats.RepeatCount; i++)
             {
-                repeatsContainer.Add(new Tick
-                {
-                    X = (float)(i + 1) / (repeats.RepeatCount + 1)
-                });
+                repeatsContainer.Add(new Tick { X = (float)(i + 1) / (repeats.RepeatCount + 1) });
             }
 
             // Add node sample pieces
@@ -249,13 +261,15 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             for (int i = 0; i < repeats.RepeatCount + 2; i++)
             {
-                sampleComponents.Add(new NodeSamplePointPiece(Item, i)
-                {
-                    X = (float)i / (repeats.RepeatCount + 1),
-                    RelativePositionAxes = Axes.X,
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.TopCentre
-                });
+                sampleComponents.Add(
+                    new NodeSamplePointPiece(Item, i)
+                    {
+                        X = (float)i / (repeats.RepeatCount + 1),
+                        RelativePositionAxes = Axes.X,
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.TopCentre,
+                    }
+                );
             }
 
             samplePointPiece.X = 1f / (repeats.RepeatCount + 1) / 2;
@@ -280,7 +294,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             // If the component is considered masked away, we'll use children to create an extended quad that encapsulates all parts of this blueprint
             // to ensure it doesn't pop in and out of existence abruptly when scrolling the timeline.
-            var rect = RectangleF.Union(ScreenSpaceDrawQuad.AABBFloat, circle.ScreenSpaceDrawQuad.AABBFloat);
+            var rect = RectangleF.Union(
+                ScreenSpaceDrawQuad.AABBFloat,
+                circle.ScreenSpaceDrawQuad.AABBFloat
+            );
             rect = RectangleF.Union(rect, samplePointPiece.ScreenSpaceDrawQuad.AABBFloat);
 
             if (difficultyPointPiece != null)
@@ -342,13 +359,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 RelativePositionAxes = Axes.X;
                 RelativeSizeAxes = Axes.Y;
 
-                InternalChildren = new Drawable[]
-                {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                };
+                InternalChildren = new Drawable[] { new Box { RelativeSizeAxes = Axes.Both } };
             }
 
             protected override void LoadComplete()
@@ -418,18 +429,31 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 {
                     OnDragHandled?.Invoke(e);
 
-                    if (timeline.FindSnappedPositionAndTime(e.ScreenSpaceMousePosition).Time is double time)
+                    if (
+                        timeline.FindSnappedPositionAndTime(e.ScreenSpaceMousePosition).Time
+                        is double time
+                    )
                     {
                         switch (hitObject)
                         {
                             case IHasRepeats repeatHitObject:
                                 double proposedDuration = time - hitObject.StartTime;
 
-                                if (e.CurrentState.Keyboard.ShiftPressed && hitObject is IHasSliderVelocity hasSliderVelocity)
+                                if (
+                                    e.CurrentState.Keyboard.ShiftPressed
+                                    && hitObject is IHasSliderVelocity hasSliderVelocity
+                                )
                                 {
-                                    double newVelocity = hasSliderVelocity.SliderVelocityMultiplier * (repeatHitObject.Duration / proposedDuration);
+                                    double newVelocity =
+                                        hasSliderVelocity.SliderVelocityMultiplier
+                                        * (repeatHitObject.Duration / proposedDuration);
 
-                                    if (Precision.AlmostEquals(newVelocity, hasSliderVelocity.SliderVelocityMultiplier))
+                                    if (
+                                        Precision.AlmostEquals(
+                                            newVelocity,
+                                            hasSliderVelocity.SliderVelocityMultiplier
+                                        )
+                                    )
                                         return;
 
                                     hasSliderVelocity.SliderVelocityMultiplier = newVelocity;
@@ -438,10 +462,18 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                                 else
                                 {
                                     // find the number of repeats which can fit in the requested time.
-                                    double lengthOfOneRepeat = repeatHitObject.Duration / (repeatHitObject.RepeatCount + 1);
-                                    int proposedCount = Math.Max(0, (int)Math.Round(proposedDuration / lengthOfOneRepeat) - 1);
+                                    double lengthOfOneRepeat =
+                                        repeatHitObject.Duration
+                                        / (repeatHitObject.RepeatCount + 1);
+                                    int proposedCount = Math.Max(
+                                        0,
+                                        (int)Math.Round(proposedDuration / lengthOfOneRepeat) - 1
+                                    );
 
-                                    if (proposedCount == repeatHitObject.RepeatCount || Precision.AlmostEquals(lengthOfOneRepeat, 0, 1))
+                                    if (
+                                        proposedCount == repeatHitObject.RepeatCount
+                                        || Precision.AlmostEquals(lengthOfOneRepeat, 0, 1)
+                                    )
                                         return;
 
                                     repeatHitObject.RepeatCount = proposedCount;
@@ -451,7 +483,11 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                                 break;
 
                             case IHasDuration endTimeHitObject:
-                                double snappedTime = Math.Max(hitObject.StartTime + beatSnapProvider.GetBeatLengthAtTime(hitObject.StartTime), beatSnapProvider.SnapTime(time));
+                                double snappedTime = Math.Max(
+                                    hitObject.StartTime
+                                        + beatSnapProvider.GetBeatLengthAtTime(hitObject.StartTime),
+                                    beatSnapProvider.SnapTime(time)
+                                );
 
                                 if (endTimeHitObject.EndTime == snappedTime)
                                     return;
@@ -502,7 +538,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             protected readonly Circle Content;
 
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Content.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                Content.ReceivePositionalInputAt(screenSpacePos);
 
             public override Quad ScreenSpaceDrawQuad => Content.ScreenSpaceDrawQuad;
 
@@ -519,8 +556,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                     {
                         Type = EdgeEffectType.Shadow,
                         Radius = 5,
-                        Colour = Color4.Black.Opacity(0.05f)
-                    }
+                        Colour = Color4.Black.Opacity(0.05f),
+                    },
                 };
             }
         }

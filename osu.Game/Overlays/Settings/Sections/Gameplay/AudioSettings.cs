@@ -24,14 +24,14 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                     Keywords = new[] { @"positional", @"balance" },
                     Current = osuConfig.GetBindable<float>(OsuSetting.PositionalHitsoundsLevel),
                     KeyboardStep = 0.01f,
-                    DisplayAsPercentage = true
+                    DisplayAsPercentage = true,
                 },
                 new SettingsCheckbox
                 {
                     ClassicDefault = false,
                     LabelText = GameplaySettingsStrings.AlwaysPlayFirstComboBreak,
-                    Current = config.GetBindable<bool>(OsuSetting.AlwaysPlayFirstComboBreak)
-                }
+                    Current = config.GetBindable<bool>(OsuSetting.AlwaysPlayFirstComboBreak),
+                },
             };
         }
     }

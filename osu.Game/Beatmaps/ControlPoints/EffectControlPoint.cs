@@ -13,7 +13,7 @@ namespace osu.Game.Beatmaps.ControlPoints
         public static readonly EffectControlPoint DEFAULT = new EffectControlPoint
         {
             KiaiModeBindable = { Disabled = true },
-            ScrollSpeedBindable = { Disabled = true }
+            ScrollSpeedBindable = { Disabled = true },
         };
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace osu.Game.Beatmaps.ControlPoints
         public readonly BindableDouble ScrollSpeedBindable = new BindableDouble(1)
         {
             MinValue = 0.01,
-            MaxValue = 10
+            MaxValue = 10,
         };
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace osu.Game.Beatmaps.ControlPoints
             ScrollSpeedBindable.BindValueChanged(_ => RaiseChanged());
         }
 
-        public override bool IsRedundant(ControlPoint? existing)
-            => existing is EffectControlPoint existingEffect
-               && KiaiMode == existingEffect.KiaiMode
-               && ScrollSpeed == existingEffect.ScrollSpeed;
+        public override bool IsRedundant(ControlPoint? existing) =>
+            existing is EffectControlPoint existingEffect
+            && KiaiMode == existingEffect.KiaiMode
+            && ScrollSpeed == existingEffect.ScrollSpeed;
 
         public override void CopyFrom(ControlPoint other)
         {
@@ -69,15 +69,13 @@ namespace osu.Game.Beatmaps.ControlPoints
             base.CopyFrom(other);
         }
 
-        public override bool Equals(ControlPoint? other)
-            => other is EffectControlPoint otherEffectControlPoint
-               && Equals(otherEffectControlPoint);
+        public override bool Equals(ControlPoint? other) =>
+            other is EffectControlPoint otherEffectControlPoint && Equals(otherEffectControlPoint);
 
-        public bool Equals(EffectControlPoint? other)
-            => base.Equals(other)
-               && ScrollSpeed == other.ScrollSpeed
-               && KiaiMode == other.KiaiMode;
+        public bool Equals(EffectControlPoint? other) =>
+            base.Equals(other) && ScrollSpeed == other.ScrollSpeed && KiaiMode == other.KiaiMode;
 
-        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), ScrollSpeed, KiaiMode);
+        public override int GetHashCode() =>
+            HashCode.Combine(base.GetHashCode(), ScrollSpeed, KiaiMode);
     }
 }

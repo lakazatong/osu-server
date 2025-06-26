@@ -46,10 +46,7 @@ namespace osu.Game.Screens.Utility
                     Y = judgement_position,
                     Height = bar_height,
                 },
-                circles = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                circles = new Container { RelativeSizeAxes = Axes.Both },
             };
 
             SampleBPM.BindValueChanged(_ =>
@@ -86,13 +83,15 @@ namespace osu.Game.Screens.Utility
 
             float adjustedXPos = ((1f + nextLocation++ % columns) - columns / 2) / columns;
 
-            circles.Add(new SampleNote(time)
-            {
-                RelativePositionAxes = Axes.Both,
-                X = 0.5f + SampleVisualSpacing.Value * (adjustedXPos * 0.5f),
-                Scale = new Vector2(0.4f + (0.8f * SampleVisualSpacing.Value), 1),
-                Hit = hit,
-            });
+            circles.Add(
+                new SampleNote(time)
+                {
+                    RelativePositionAxes = Axes.Both,
+                    X = 0.5f + SampleVisualSpacing.Value * (adjustedXPos * 0.5f),
+                    Scale = new Vector2(0.4f + (0.8f * SampleVisualSpacing.Value), 1),
+                    Hit = hit,
+                }
+            );
         }
 
         private void hit(HitEvent h)
@@ -163,7 +162,13 @@ namespace osu.Game.Screens.Utility
             {
                 if (HitEvent == null)
                 {
-                    double preempt = (float)IBeatmapDifficultyInfo.DifficultyRange(SampleApproachRate.Value, 1800, 1200, 450);
+                    double preempt = (float)
+                        IBeatmapDifficultyInfo.DifficultyRange(
+                            SampleApproachRate.Value,
+                            1800,
+                            1200,
+                            450
+                        );
 
                     Alpha = (float)Math.Clamp((Clock.CurrentTime - HitTime + 600) / 400, 0, 1);
                     Y = judgement_position - (float)((HitTime - Clock.CurrentTime) / preempt);
@@ -173,28 +178,31 @@ namespace osu.Game.Screens.Utility
                 }
             }
 
-            private void attemptHit() => Schedule(() =>
-            {
-                if (HitEvent != null)
-                    return;
-
-                // in case it was hit outside of display range, show immediately
-                // so the user isn't confused.
-                this.FadeIn();
-
-                box
-                    .FadeOut(duration / 2)
-                    .ScaleTo(1.5f, duration / 2);
-
-                HitEvent = new HitEvent(Clock.CurrentTime - HitTime, 1.0, HitResult.Good, new HitObject
+            private void attemptHit() =>
+                Schedule(() =>
                 {
-                    HitWindows = new DefaultHitWindows(),
-                }, null, null);
+                    if (HitEvent != null)
+                        return;
 
-                Hit?.Invoke(HitEvent.Value);
+                    // in case it was hit outside of display range, show immediately
+                    // so the user isn't confused.
+                    this.FadeIn();
 
-                this.Delay(duration).Expire();
-            });
+                    box.FadeOut(duration / 2).ScaleTo(1.5f, duration / 2);
+
+                    HitEvent = new HitEvent(
+                        Clock.CurrentTime - HitTime,
+                        1.0,
+                        HitResult.Good,
+                        new HitObject { HitWindows = new DefaultHitWindows() },
+                        null,
+                        null
+                    );
+
+                    Hit?.Invoke(HitEvent.Value);
+
+                    this.Delay(duration).Expire();
+                });
         }
     }
 }

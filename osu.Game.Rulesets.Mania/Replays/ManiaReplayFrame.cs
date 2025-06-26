@@ -14,9 +14,7 @@ namespace osu.Game.Rulesets.Mania.Replays
     {
         public List<ManiaAction> Actions = new List<ManiaAction>();
 
-        public ManiaReplayFrame()
-        {
-        }
+        public ManiaReplayFrame() { }
 
         public ManiaReplayFrame(double time, params ManiaAction[] actions)
             : base(time)
@@ -24,7 +22,11 @@ namespace osu.Game.Rulesets.Mania.Replays
             Actions.AddRange(actions);
         }
 
-        public void FromLegacy(LegacyReplayFrame legacyFrame, IBeatmap beatmap, ReplayFrame? lastFrame = null)
+        public void FromLegacy(
+            LegacyReplayFrame legacyFrame,
+            IBeatmap beatmap,
+            ReplayFrame? lastFrame = null
+        )
         {
             var action = ManiaAction.Key1;
             int activeColumns = (int)(legacyFrame.MouseX ?? 0);
@@ -49,7 +51,9 @@ namespace osu.Game.Rulesets.Mania.Replays
             return new LegacyReplayFrame(Time, keys, null, ReplayButtonState.None);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is ManiaReplayFrame maniaFrame && Time == maniaFrame.Time && Actions.SequenceEqual(maniaFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is ManiaReplayFrame maniaFrame
+            && Time == maniaFrame.Time
+            && Actions.SequenceEqual(maniaFrame.Actions);
     }
 }

@@ -23,29 +23,44 @@ namespace osu.Game.Screens.SelectV2
             this.getCriteria = getCriteria;
         }
 
-        public async Task<List<CarouselItem>> Run(IEnumerable<CarouselItem> items, CancellationToken cancellationToken) => await Task.Run(() =>
-        {
-            var criteria = getCriteria();
+        public async Task<List<CarouselItem>> Run(
+            IEnumerable<CarouselItem> items,
+            CancellationToken cancellationToken
+        ) =>
+            await Task.Run(
+                    () =>
+                    {
+                        var criteria = getCriteria();
 
-            bool groupedSets = BeatmapCarouselFilterGrouping.ShouldGroupBeatmapsTogether(criteria);
+                        bool groupedSets =
+                            BeatmapCarouselFilterGrouping.ShouldGroupBeatmapsTogether(criteria);
 
-            return items.Order(Comparer<CarouselItem>.Create((a, b) =>
-            {
-                var ab = (BeatmapInfo)a.Model;
-                var bb = (BeatmapInfo)b.Model;
+                        return items
+                            .Order(
+                                Comparer<CarouselItem>.Create(
+                                    (a, b) =>
+                                    {
+                                        var ab = (BeatmapInfo)a.Model;
+                                        var bb = (BeatmapInfo)b.Model;
 
-                if (groupedSets)
-                {
-                    if (ab.BeatmapSet!.Equals(bb.BeatmapSet))
-                        return compareDifficulty(ab, bb, criteria.Sort);
+                                        if (groupedSets)
+                                        {
+                                            if (ab.BeatmapSet!.Equals(bb.BeatmapSet))
+                                                return compareDifficulty(ab, bb, criteria.Sort);
 
-                    // If we're grouping by sets, all fallback sorts need to be aggregates for the set.
-                    return compare(ab, bb, criteria.Sort, aggregate: true);
-                }
+                                            // If we're grouping by sets, all fallback sorts need to be aggregates for the set.
+                                            return compare(ab, bb, criteria.Sort, aggregate: true);
+                                        }
 
-                return compare(ab, bb, criteria.Sort, aggregate: false);
-            })).ToList();
-        }, cancellationToken).ConfigureAwait(false);
+                                        return compare(ab, bb, criteria.Sort, aggregate: false);
+                                    }
+                                )
+                            )
+                            .ToList();
+                    },
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
 
         private static int compare(BeatmapInfo a, BeatmapInfo b, SortMode sort, bool aggregate)
         {
@@ -54,21 +69,33 @@ namespace osu.Game.Screens.SelectV2
             switch (sort)
             {
                 case SortMode.Artist:
-                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(a.BeatmapSet!.Metadata.Artist, b.BeatmapSet!.Metadata.Artist);
+                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(
+                        a.BeatmapSet!.Metadata.Artist,
+                        b.BeatmapSet!.Metadata.Artist
+                    );
                     if (comparison == 0)
                         goto case SortMode.Title;
                     break;
 
                 case SortMode.Title:
-                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(a.BeatmapSet!.Metadata.Title, b.BeatmapSet!.Metadata.Title);
+                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(
+                        a.BeatmapSet!.Metadata.Title,
+                        b.BeatmapSet!.Metadata.Title
+                    );
                     break;
 
                 case SortMode.Author:
-                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(a.BeatmapSet!.Metadata.Author.Username, b.BeatmapSet!.Metadata.Author.Username);
+                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(
+                        a.BeatmapSet!.Metadata.Author.Username,
+                        b.BeatmapSet!.Metadata.Author.Username
+                    );
                     break;
 
                 case SortMode.Source:
-                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(a.BeatmapSet!.Metadata.Source, b.BeatmapSet!.Metadata.Source);
+                    comparison = OrdinalSortByCaseStringComparer.DEFAULT.Compare(
+                        a.BeatmapSet!.Metadata.Source,
+                        b.BeatmapSet!.Metadata.Source
+                    );
                     break;
 
                 case SortMode.Difficulty:
@@ -80,16 +107,27 @@ namespace osu.Game.Screens.SelectV2
                     break;
 
                 case SortMode.DateRanked:
-                    comparison = Nullable.Compare(b.BeatmapSet!.DateRanked, a.BeatmapSet!.DateRanked);
+                    comparison = Nullable.Compare(
+                        b.BeatmapSet!.DateRanked,
+                        a.BeatmapSet!.DateRanked
+                    );
                     break;
 
                 case SortMode.DateSubmitted:
-                    comparison = Nullable.Compare(b.BeatmapSet!.DateSubmitted, a.BeatmapSet!.DateSubmitted);
+                    comparison = Nullable.Compare(
+                        b.BeatmapSet!.DateSubmitted,
+                        a.BeatmapSet!.DateSubmitted
+                    );
                     break;
 
                 case SortMode.LastPlayed:
                     if (aggregate)
-                        comparison = compareUsingAggregateMax(b, a, static b => (b.LastPlayed ?? DateTimeOffset.MinValue).ToUnixTimeSeconds());
+                        comparison = compareUsingAggregateMax(
+                            b,
+                            a,
+                            static b =>
+                                (b.LastPlayed ?? DateTimeOffset.MinValue).ToUnixTimeSeconds()
+                        );
                     else
                         comparison = Nullable.Compare(b.LastPlayed, a.LastPlayed);
                     break;
@@ -135,7 +173,11 @@ namespace osu.Game.Screens.SelectV2
             return comparison;
         }
 
-        private static int compareUsingAggregateMax(BeatmapInfo a, BeatmapInfo b, Func<BeatmapInfo, double> func)
+        private static int compareUsingAggregateMax(
+            BeatmapInfo a,
+            BeatmapInfo b,
+            Func<BeatmapInfo, double> func
+        )
         {
             var aMatchedBeatmaps = a.BeatmapSet!.Beatmaps.Where(bb => !bb.Hidden);
             var bMatchedBeatmaps = b.BeatmapSet!.Beatmaps.Where(bb => !bb.Hidden);
@@ -143,9 +185,12 @@ namespace osu.Game.Screens.SelectV2
             bool aAny = aMatchedBeatmaps.Any();
             bool bAny = bMatchedBeatmaps.Any();
 
-            if (!aAny && !bAny) return 0;
-            if (!aAny) return -1;
-            if (!bAny) return 1;
+            if (!aAny && !bAny)
+                return 0;
+            if (!aAny)
+                return -1;
+            if (!bAny)
+                return 1;
 
             return aMatchedBeatmaps.Max(func).CompareTo(bMatchedBeatmaps.Max(func));
         }

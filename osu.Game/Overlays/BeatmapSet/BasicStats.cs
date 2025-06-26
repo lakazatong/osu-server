@@ -23,7 +23,10 @@ namespace osu.Game.Overlays.BeatmapSet
 {
     public partial class BasicStats : Container
     {
-        private readonly Statistic length, bpm, circleCount, sliderCount;
+        private readonly Statistic length,
+            bpm,
+            circleCount,
+            sliderCount;
 
         private IBeatmapSetInfo beatmapSet;
 
@@ -32,7 +35,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapSet;
             set
             {
-                if (value == beatmapSet) return;
+                if (value == beatmapSet)
+                    return;
 
                 beatmapSet = value;
 
@@ -47,7 +51,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapInfo;
             set
             {
-                if (value == beatmapInfo) return;
+                if (value == beatmapInfo)
+                    return;
 
                 beatmapInfo = value;
 
@@ -71,11 +76,14 @@ namespace osu.Game.Overlays.BeatmapSet
 
                 length.Value = TimeSpan.FromMilliseconds(beatmapInfo.Length).ToFormattedDuration();
 
-                if (beatmapInfo is not IBeatmapOnlineInfo onlineInfo) return;
+                if (beatmapInfo is not IBeatmapOnlineInfo onlineInfo)
+                    return;
 
                 circleCount.Value = onlineInfo.CircleCount.ToLocalisableString(@"N0");
                 sliderCount.Value = onlineInfo.SliderCount.ToLocalisableString(@"N0");
-                length.TooltipText = BeatmapsetsStrings.ShowStatsTotalLength(TimeSpan.FromMilliseconds(onlineInfo.HitLength).ToFormattedDuration());
+                length.TooltipText = BeatmapsetsStrings.ShowStatsTotalLength(
+                    TimeSpan.FromMilliseconds(onlineInfo.HitLength).ToFormattedDuration()
+                );
             }
         }
 
@@ -96,17 +104,17 @@ namespace osu.Game.Overlays.BeatmapSet
                     bpm = new Statistic(BeatmapStatisticsIconType.Bpm)
                     {
                         Width = 0.25f,
-                        TooltipText = BeatmapsetsStrings.ShowStatsBpm
+                        TooltipText = BeatmapsetsStrings.ShowStatsBpm,
                     },
                     circleCount = new Statistic(BeatmapStatisticsIconType.Circles)
                     {
                         Width = 0.25f,
-                        TooltipText = BeatmapsetsStrings.ShowStatsCountCircles
+                        TooltipText = BeatmapsetsStrings.ShowStatsCountCircles,
                     },
                     sliderCount = new Statistic(BeatmapStatisticsIconType.Sliders)
                     {
                         Width = 0.25f,
-                        TooltipText = BeatmapsetsStrings.ShowStatsCountSliders
+                        TooltipText = BeatmapsetsStrings.ShowStatsCountSliders,
                     },
                 },
             };

@@ -15,11 +15,12 @@ namespace osu.Game.Rulesets.Edit.Checks
 
         public CheckMetadata Metadata => new CheckMetadata(Category, $"Missing {TypeOfFile}");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateNoneSet(this),
-            new IssueTemplateDoesNotExist(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateNoneSet(this),
+                new IssueTemplateDoesNotExist(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -43,9 +44,7 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateNoneSet : IssueTemplate
         {
             public IssueTemplateNoneSet(ICheck check)
-                : base(check, IssueType.Problem, "No {0} has been set.")
-            {
-            }
+                : base(check, IssueType.Problem, "No {0} has been set.") { }
 
             public Issue Create(string typeOfFile) => new Issue(this, typeOfFile);
         }
@@ -53,11 +52,10 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateDoesNotExist : IssueTemplate
         {
             public IssueTemplateDoesNotExist(ICheck check)
-                : base(check, IssueType.Problem, "The {0} file \"{1}\" does not exist.")
-            {
-            }
+                : base(check, IssueType.Problem, "The {0} file \"{1}\" does not exist.") { }
 
-            public Issue Create(string typeOfFile, string filename) => new Issue(this, typeOfFile, filename);
+            public Issue Create(string typeOfFile, string filename) =>
+                new Issue(this, typeOfFile, filename);
         }
     }
 }

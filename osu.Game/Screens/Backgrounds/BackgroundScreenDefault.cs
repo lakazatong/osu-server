@@ -32,7 +32,8 @@ namespace osu.Game.Screens.Backgrounds
         private Bindable<Skin> skin;
         private Bindable<BackgroundSource> source;
         private Bindable<IntroSequence> introSequence;
-        private readonly SeasonalBackgroundLoader seasonalBackgroundLoader = new SeasonalBackgroundLoader();
+        private readonly SeasonalBackgroundLoader seasonalBackgroundLoader =
+            new SeasonalBackgroundLoader();
 
         [Resolved]
         private IBindable<WorkingBeatmap> beatmap { get; set; }
@@ -79,7 +80,10 @@ namespace osu.Game.Screens.Backgrounds
             Debug.Assert(backgroundScreenStack != null);
 
             if (background is BeatmapBackgroundWithStoryboard storyboardBackground)
-                storyboardUnloadDelegate = gameHost.UpdateThread.Scheduler.AddDelayed(storyboardBackground.UnloadStoryboard, TRANSITION_LENGTH);
+                storyboardUnloadDelegate = gameHost.UpdateThread.Scheduler.AddDelayed(
+                    storyboardBackground.UnloadStoryboard,
+                    TRANSITION_LENGTH
+                );
 
             base.OnSuspending(e);
         }
@@ -120,11 +124,14 @@ namespace osu.Game.Screens.Backgrounds
             cancellationTokenSource = new CancellationTokenSource();
 
             nextTask?.Cancel();
-            nextTask = Scheduler.AddDelayed(() =>
-            {
-                Logger.Log(@"🌅 Global background loading");
-                LoadComponentAsync(nextBackground, displayNext, cancellationTokenSource.Token);
-            }, 500);
+            nextTask = Scheduler.AddDelayed(
+                () =>
+                {
+                    Logger.Log(@"🌅 Global background loading");
+                    LoadComponentAsync(nextBackground, displayNext, cancellationTokenSource.Token);
+                },
+                500
+            );
 
             return true;
         }
@@ -150,9 +157,18 @@ namespace osu.Game.Screens.Backgrounds
                     case BackgroundSource.Beatmap:
                     case BackgroundSource.BeatmapWithStoryboard:
                     {
-                        if (source.Value == BackgroundSource.BeatmapWithStoryboard && AllowStoryboardBackground)
-                            newBackground = new BeatmapBackgroundWithStoryboard(beatmap.Value, getBackgroundTextureName());
-                        newBackground ??= new BeatmapBackground(beatmap.Value, getBackgroundTextureName());
+                        if (
+                            source.Value == BackgroundSource.BeatmapWithStoryboard
+                            && AllowStoryboardBackground
+                        )
+                            newBackground = new BeatmapBackgroundWithStoryboard(
+                                beatmap.Value,
+                                getBackgroundTextureName()
+                            );
+                        newBackground ??= new BeatmapBackground(
+                            beatmap.Value,
+                            getBackgroundTextureName()
+                        );
 
                         break;
                     }
@@ -167,7 +183,10 @@ namespace osu.Game.Screens.Backgrounds
                                 break;
 
                             default:
-                                newBackground = new SkinBackground(skin.Value, getBackgroundTextureName());
+                                newBackground = new SkinBackground(
+                                    skin.Value,
+                                    getBackgroundTextureName()
+                                );
                                 break;
                         }
 

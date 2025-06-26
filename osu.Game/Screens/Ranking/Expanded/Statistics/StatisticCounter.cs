@@ -16,10 +16,12 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
 
         protected override Easing RollingEasing => AccuracyCircle.ACCURACY_TRANSFORM_EASING;
 
-        protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(s =>
-        {
-            s.Font = OsuFont.Torus.With(size: 20, fixedWidth: true);
-            s.Spacing = new Vector2(-2, 0);
-        });
+        protected override OsuSpriteText CreateSpriteText() =>
+            base.CreateSpriteText()
+                .With(s =>
+                {
+                    s.Font = OsuFont.Torus.With(size: 20, fixedWidth: true);
+                    s.Spacing = new Vector2(-2, 0);
+                });
     }
 }

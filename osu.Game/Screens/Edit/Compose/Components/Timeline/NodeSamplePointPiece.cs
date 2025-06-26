@@ -17,7 +17,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             : base(hitObject)
         {
             if (hitObject is not IHasRepeats)
-                throw new System.ArgumentException($"HitObject must implement {nameof(IHasRepeats)}", nameof(hitObject));
+                throw new System.ArgumentException(
+                    $"HitObject must implement {nameof(IHasRepeats)}",
+                    nameof(hitObject)
+                );
 
             NodeIndex = nodeIndex;
         }
@@ -31,7 +34,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         protected override IList<HitSampleInfo> GetSamples()
         {
             var hasRepeats = (IHasRepeats)HitObject;
-            return NodeIndex < hasRepeats.NodeSamples.Count ? hasRepeats.NodeSamples[NodeIndex] : HitObject.Samples;
+            return NodeIndex < hasRepeats.NodeSamples.Count
+                ? hasRepeats.NodeSamples[NodeIndex]
+                : HitObject.Samples;
         }
 
         public override Popover GetPopover() => new NodeSampleEditPopover(HitObject, NodeIndex);
@@ -40,12 +45,23 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             private readonly int nodeIndex;
 
-            protected override IEnumerable<(HitObject hitObject, IList<HitSampleInfo> samples)> GetRelevantSamples(HitObject[] hitObjects)
+            protected override IEnumerable<(
+                HitObject hitObject,
+                IList<HitSampleInfo> samples
+            )> GetRelevantSamples(HitObject[] hitObjects)
             {
                 if (hitObjects.Length > 1 || hitObjects[0] is not IHasRepeats hasRepeats)
                     return base.GetRelevantSamples(hitObjects);
 
-                return [(hitObjects[0], nodeIndex < hasRepeats.NodeSamples.Count ? hasRepeats.NodeSamples[nodeIndex] : hitObjects[0].Samples)];
+                return
+                [
+                    (
+                        hitObjects[0],
+                        nodeIndex < hasRepeats.NodeSamples.Count
+                            ? hasRepeats.NodeSamples[nodeIndex]
+                            : hitObjects[0].Samples
+                    ),
+                ];
             }
 
             public NodeSampleEditPopover(HitObject hitObject, int nodeIndex)

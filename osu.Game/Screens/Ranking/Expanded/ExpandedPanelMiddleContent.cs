@@ -73,7 +73,10 @@ namespace osu.Game.Screens.Ranking.Expanded
             // In some cases, the beatmap ferried through ScoreInfo actually represents an online beatmap.
             // If it isn't, we may be able to compute a more accurate difficulty from the ruleset and mods.
             if (realmAccess.Run(r => r.Find<BeatmapInfo>(score.BeatmapInfo!.ID)) != null)
-                starDifficulty = beatmapDifficultyCache.GetDifficultyAsync(score.BeatmapInfo!, score.Ruleset, score.Mods).GetResultSafely() ?? starDifficulty;
+                starDifficulty =
+                    beatmapDifficultyCache
+                        .GetDifficultyAsync(score.BeatmapInfo!, score.Ruleset, score.Mods)
+                        .GetResultSafely() ?? starDifficulty;
 
             var topStatistics = new List<StatisticDisplay>
             {
@@ -90,151 +93,165 @@ namespace osu.Game.Screens.Ranking.Expanded
             statisticDisplays.AddRange(topStatistics);
             statisticDisplays.AddRange(bottomStatistics);
 
-            AddInternal(new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(20),
-                Children = new Drawable[]
+            AddInternal(
+                new FillFlowContainer
                 {
-                    new FillFlowContainer
+                    RelativeSizeAxes = Axes.Both,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(20),
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Children = new Drawable[]
+                        new FillFlowContainer
                         {
-                            new ClickableMetadata(beatmap.OnlineID, metadata),
-                            new Container
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Children = new Drawable[]
                             {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Margin = new MarginPadding { Top = 40 },
-                                RelativeSizeAxes = Axes.X,
-                                Height = 230,
-                                Child = new AccuracyCircle(score, withFlair)
+                                new ClickableMetadata(beatmap.OnlineID, metadata),
+                                new Container
                                 {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativeSizeAxes = Axes.Both,
-                                    FillMode = FillMode.Fit,
-                                }
-                            },
-                            scoreCounter = new TotalScoreCounter(!withFlair)
-                            {
-                                Margin = new MarginPadding { Top = 0, Bottom = 5 },
-                                Current = { Value = 0 },
-                                Alpha = 0,
-                                AlwaysPresent = true
-                            },
-                            new FillFlowContainer
-                            {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                AutoSizeAxes = Axes.Both,
-                                Spacing = new Vector2(5, 0),
-                                Children = new Drawable[]
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Margin = new MarginPadding { Top = 40 },
+                                    RelativeSizeAxes = Axes.X,
+                                    Height = 230,
+                                    Child = new AccuracyCircle(score, withFlair)
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        RelativeSizeAxes = Axes.Both,
+                                        FillMode = FillMode.Fit,
+                                    },
+                                },
+                                scoreCounter = new TotalScoreCounter(!withFlair)
                                 {
-                                    new StarRatingDisplay(starDifficulty)
-                                    {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft
-                                    },
-                                    new DifficultyIcon(beatmap, score.Ruleset)
-                                    {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        Size = new Vector2(20),
-                                        TooltipType = DifficultyIconTooltipType.Extended,
-                                    },
-                                    new ModDisplay
-                                    {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        ExpansionMode = ExpansionMode.AlwaysExpanded,
-                                        Scale = new Vector2(0.5f),
-                                        Current = { Value = score.Mods }
-                                    }
-                                }
-                            },
-                            new FillFlowContainer
-                            {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Direction = FillDirection.Vertical,
-                                AutoSizeAxes = Axes.Both,
-                                Children = new Drawable[]
+                                    Margin = new MarginPadding { Top = 0, Bottom = 5 },
+                                    Current = { Value = 0 },
+                                    Alpha = 0,
+                                    AlwaysPresent = true,
+                                },
+                                new FillFlowContainer
                                 {
-                                    new TruncatingSpriteText
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    AutoSizeAxes = Axes.Both,
+                                    Spacing = new Vector2(5, 0),
+                                    Children = new Drawable[]
                                     {
-                                        Anchor = Anchor.TopCentre,
-                                        Origin = Anchor.TopCentre,
-                                        Text = beatmap.DifficultyName,
-                                        Font = OsuFont.Torus.With(size: 16, weight: FontWeight.SemiBold),
-                                        MaxWidth = ScorePanel.EXPANDED_WIDTH - padding * 2,
-                                    },
-                                    new OsuTextFlowContainer(s => s.Font = OsuFont.Torus.With(size: 12))
-                                    {
-                                        Anchor = Anchor.TopCentre,
-                                        Origin = Anchor.TopCentre,
-                                        AutoSizeAxes = Axes.Both,
-                                        Direction = FillDirection.Horizontal,
-                                    }.With(t =>
-                                    {
-                                        if (!string.IsNullOrEmpty(creator))
+                                        new StarRatingDisplay(starDifficulty)
                                         {
-                                            t.AddText("mapped by ");
-                                            t.AddText(creator, s => s.Font = s.Font.With(weight: FontWeight.SemiBold));
-                                        }
-                                    })
-                                }
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                        },
+                                        new DifficultyIcon(beatmap, score.Ruleset)
+                                        {
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            Size = new Vector2(20),
+                                            TooltipType = DifficultyIconTooltipType.Extended,
+                                        },
+                                        new ModDisplay
+                                        {
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            ExpansionMode = ExpansionMode.AlwaysExpanded,
+                                            Scale = new Vector2(0.5f),
+                                            Current = { Value = score.Mods },
+                                        },
+                                    },
+                                },
+                                new FillFlowContainer
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Direction = FillDirection.Vertical,
+                                    AutoSizeAxes = Axes.Both,
+                                    Children = new Drawable[]
+                                    {
+                                        new TruncatingSpriteText
+                                        {
+                                            Anchor = Anchor.TopCentre,
+                                            Origin = Anchor.TopCentre,
+                                            Text = beatmap.DifficultyName,
+                                            Font = OsuFont.Torus.With(
+                                                size: 16,
+                                                weight: FontWeight.SemiBold
+                                            ),
+                                            MaxWidth = ScorePanel.EXPANDED_WIDTH - padding * 2,
+                                        },
+                                        new OsuTextFlowContainer(s =>
+                                            s.Font = OsuFont.Torus.With(size: 12)
+                                        )
+                                        {
+                                            Anchor = Anchor.TopCentre,
+                                            Origin = Anchor.TopCentre,
+                                            AutoSizeAxes = Axes.Both,
+                                            Direction = FillDirection.Horizontal,
+                                        }.With(t =>
+                                        {
+                                            if (!string.IsNullOrEmpty(creator))
+                                            {
+                                                t.AddText("mapped by ");
+                                                t.AddText(
+                                                    creator,
+                                                    s =>
+                                                        s.Font = s.Font.With(
+                                                            weight: FontWeight.SemiBold
+                                                        )
+                                                );
+                                            }
+                                        }),
+                                    },
+                                },
                             },
-                        }
-                    },
-                    new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 5),
-                        Children = new Drawable[]
+                        },
+                        new FillFlowContainer
                         {
-                            new GridContainer
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 5),
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Content = new[] { topStatistics.Cast<Drawable>().ToArray() },
-                                RowDimensions = new[]
+                                new GridContainer
                                 {
-                                    new Dimension(GridSizeMode.AutoSize),
-                                }
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Content = new[] { topStatistics.Cast<Drawable>().ToArray() },
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                },
+                                new GridContainer
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Content = new[]
+                                    {
+                                        bottomStatistics
+                                            .Where(s => s.Result <= HitResult.Perfect)
+                                            .ToArray(),
+                                    },
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                },
+                                new GridContainer
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Content = new[]
+                                    {
+                                        bottomStatistics
+                                            .Where(s => s.Result > HitResult.Perfect)
+                                            .ToArray(),
+                                    },
+                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                },
                             },
-                            new GridContainer
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Content = new[] { bottomStatistics.Where(s => s.Result <= HitResult.Perfect).ToArray() },
-                                RowDimensions = new[]
-                                {
-                                    new Dimension(GridSizeMode.AutoSize),
-                                }
-                            },
-                            new GridContainer
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Content = new[] { bottomStatistics.Where(s => s.Result > HitResult.Perfect).ToArray() },
-                                RowDimensions = new[]
-                                {
-                                    new Dimension(GridSizeMode.AutoSize),
-                                }
-                            }
-                        }
-                    }
+                        },
+                    },
                 }
-            });
+            );
 
             if (score.Date != default)
                 AddInternal(new PlayedOnText(score.Date));
@@ -297,8 +314,13 @@ namespace osu.Game.Screens.Ranking.Expanded
 
             private void updateDisplay()
             {
-                Text = LocalisableString.Format("Played on {0}",
-                    time.ToLocalTime().ToLocalisableString(prefer24HourTime.Value ? @"d MMMM yyyy HH:mm" : @"d MMMM yyyy h:mm tt"));
+                Text = LocalisableString.Format(
+                    "Played on {0}",
+                    time.ToLocalTime()
+                        .ToLocalisableString(
+                            prefer24HourTime.Value ? @"d MMMM yyyy HH:mm" : @"d MMMM yyyy h:mm tt"
+                        )
+                );
             }
         }
 
@@ -335,8 +357,8 @@ namespace osu.Game.Screens.Ranking.Expanded
                             Text = new RomanisableString(metadata.ArtistUnicode, metadata.Artist),
                             Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold),
                             MaxWidth = ScorePanel.EXPANDED_WIDTH - padding * 2,
-                        }
-                    }
+                        },
+                    },
                 };
 
                 if (beatmapId > 0)

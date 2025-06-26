@@ -15,7 +15,11 @@ namespace osu.Game.Graphics.Containers.Markdown
     {
         private readonly bool isHeading;
 
-        public OsuMarkdownTableCell(TableCell cell, TableColumnDefinition definition, bool isHeading)
+        public OsuMarkdownTableCell(
+            TableCell cell,
+            TableColumnDefinition definition,
+            bool isHeading
+        )
             : base(cell, definition)
         {
             this.isHeading = isHeading;
@@ -29,11 +33,12 @@ namespace osu.Game.Graphics.Containers.Markdown
             AddInternal(CreateBorder(isHeading));
         }
 
-        public override MarkdownTextFlowContainer CreateTextFlow() => new TableCellTextFlowContainer
-        {
-            Weight = isHeading ? FontWeight.Bold : FontWeight.Regular,
-            Padding = new MarginPadding(10),
-        };
+        public override MarkdownTextFlowContainer CreateTextFlow() =>
+            new TableCellTextFlowContainer
+            {
+                Weight = isHeading ? FontWeight.Bold : FontWeight.Regular,
+                Padding = new MarginPadding(10),
+            };
 
         protected virtual Box CreateBorder(bool isHeading)
         {
@@ -71,7 +76,8 @@ namespace osu.Game.Graphics.Containers.Markdown
         {
             public FontWeight Weight { get; set; }
 
-            protected override SpriteText CreateSpriteText() => base.CreateSpriteText().With(t => t.Font = t.Font.With(weight: Weight));
+            protected override SpriteText CreateSpriteText() =>
+                base.CreateSpriteText().With(t => t.Font = t.Font.With(weight: Weight));
         }
     }
 }

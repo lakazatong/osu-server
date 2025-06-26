@@ -17,36 +17,33 @@ namespace osu.Game.Tests.NonVisual.Filtering
     [TestFixture]
     public class FilterMatchingTest
     {
-        private BeatmapInfo getExampleBeatmap() => new BeatmapInfo
-        {
-            Ruleset = new RulesetInfo
+        private BeatmapInfo getExampleBeatmap() =>
+            new BeatmapInfo
             {
-                ShortName = "osu",
-                OnlineID = 0
-            },
-            StarRating = 4.0d,
-            Difficulty = new BeatmapDifficulty
-            {
-                ApproachRate = 5.0f,
-                DrainRate = 3.0f,
-                CircleSize = 2.0f,
-            },
-            Metadata = new BeatmapMetadata
-            {
-                Artist = "The Artist",
-                ArtistUnicode = "check unicode too",
-                Title = "Title goes here",
-                TitleUnicode = "TitleUnicode goes here",
-                Author = { Username = "The Author" },
-                Source = "unit tests",
-                Tags = "look for tags too",
-            },
-            DifficultyName = "version as well",
-            Length = 2500,
-            BPM = 160,
-            BeatDivisor = 12,
-            Status = BeatmapOnlineStatus.Loved
-        };
+                Ruleset = new RulesetInfo { ShortName = "osu", OnlineID = 0 },
+                StarRating = 4.0d,
+                Difficulty = new BeatmapDifficulty
+                {
+                    ApproachRate = 5.0f,
+                    DrainRate = 3.0f,
+                    CircleSize = 2.0f,
+                },
+                Metadata = new BeatmapMetadata
+                {
+                    Artist = "The Artist",
+                    ArtistUnicode = "check unicode too",
+                    Title = "Title goes here",
+                    TitleUnicode = "TitleUnicode goes here",
+                    Author = { Username = "The Author" },
+                    Source = "unit tests",
+                    Tags = "look for tags too",
+                },
+                DifficultyName = "version as well",
+                Length = 2500,
+                BPM = 160,
+                BeatDivisor = 12,
+                Status = BeatmapOnlineStatus.Loved,
+            };
 
         [Test]
         public void TestCriteriaMatchingNoRuleset()
@@ -62,10 +59,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
         public void TestCriteriaMatchingSpecificRuleset()
         {
             var exampleBeatmapInfo = getExampleBeatmap();
-            var criteria = new FilterCriteria
-            {
-                Ruleset = new RulesetInfo { ShortName = "catch" }
-            };
+            var criteria = new FilterCriteria { Ruleset = new RulesetInfo { ShortName = "catch" } };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
             Assert.IsTrue(carouselItem.Filtered.Value);
@@ -78,7 +72,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var criteria = new FilterCriteria
             {
                 Ruleset = new RulesetInfo { OnlineID = 6 },
-                AllowConvertedBeatmaps = true
+                AllowConvertedBeatmaps = true,
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -92,7 +86,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var criteria = new FilterCriteria
             {
                 Ruleset = new RulesetInfo { OnlineID = -1 },
-                AllowConvertedBeatmaps = true
+                AllowConvertedBeatmaps = true,
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -112,8 +106,8 @@ namespace osu.Game.Tests.NonVisual.Filtering
                 ApproachRate = new FilterCriteria.OptionalRange<float>
                 {
                     IsLowerInclusive = inclusive,
-                    Min = 5.0f
-                }
+                    Min = 5.0f,
+                },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -133,8 +127,8 @@ namespace osu.Game.Tests.NonVisual.Filtering
                 BPM = new FilterCriteria.OptionalRange<double>
                 {
                     IsUpperInclusive = inclusive,
-                    Max = 160d
-                }
+                    Max = 160d,
+                },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -156,7 +150,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             {
                 Ruleset = new RulesetInfo { OnlineID = 6 },
                 AllowConvertedBeatmaps = true,
-                SearchText = terms
+                SearchText = terms,
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -185,7 +179,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             {
                 Ruleset = new RulesetInfo { OnlineID = 6 },
                 AllowConvertedBeatmaps = true,
-                SearchText = terms
+                SearchText = terms,
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -205,7 +199,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var exampleBeatmapInfo = getExampleBeatmap();
             var criteria = new FilterCriteria
             {
-                Creator = new FilterCriteria.OptionalTextFilter { SearchTerm = creatorName }
+                Creator = new FilterCriteria.OptionalTextFilter { SearchTerm = creatorName },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -226,7 +220,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var exampleBeatmapInfo = getExampleBeatmap();
             var criteria = new FilterCriteria
             {
-                Title = new FilterCriteria.OptionalTextFilter { SearchTerm = titleName }
+                Title = new FilterCriteria.OptionalTextFilter { SearchTerm = titleName },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -250,7 +244,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
             var exampleBeatmapInfo = getExampleBeatmap();
             var criteria = new FilterCriteria
             {
-                Artist = new FilterCriteria.OptionalTextFilter { SearchTerm = artistName }
+                Artist = new FilterCriteria.OptionalTextFilter { SearchTerm = artistName },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -268,7 +262,7 @@ namespace osu.Game.Tests.NonVisual.Filtering
 
             var criteria = new FilterCriteria
             {
-                Artist = new FilterCriteria.OptionalTextFilter { SearchTerm = artistName }
+                Artist = new FilterCriteria.OptionalTextFilter { SearchTerm = artistName },
             };
             var carouselItem = new CarouselBeatmap(exampleBeatmapInfo);
             carouselItem.Filter(criteria);
@@ -297,7 +291,9 @@ namespace osu.Game.Tests.NonVisual.Filtering
         {
             var beatmap = getExampleBeatmap();
 
-            var customCriteria = matchCustomCriteria is bool match ? new CustomCriteria(match) : null;
+            var customCriteria = matchCustomCriteria is bool match
+                ? new CustomCriteria(match)
+                : null;
             var criteria = new FilterCriteria { RulesetCriteria = customCriteria };
             var carouselItem = new CarouselBeatmap(beatmap);
             carouselItem.Filter(criteria);
@@ -315,9 +311,12 @@ namespace osu.Game.Tests.NonVisual.Filtering
             }
 
             public bool Matches(BeatmapInfo beatmapInfo, FilterCriteria criteria) => match;
-            public bool TryParseCustomKeywordCriteria(string key, Operator op, string value) => false;
 
-            public bool FilterMayChangeFromMods(ValueChangedEvent<IReadOnlyList<Mod>> mods) => false;
+            public bool TryParseCustomKeywordCriteria(string key, Operator op, string value) =>
+                false;
+
+            public bool FilterMayChangeFromMods(ValueChangedEvent<IReadOnlyList<Mod>> mods) =>
+                false;
         }
     }
 }

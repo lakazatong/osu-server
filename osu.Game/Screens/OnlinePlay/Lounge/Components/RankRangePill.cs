@@ -44,16 +44,16 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
                             Size = new Vector2(8),
-                            Icon = FontAwesome.Solid.User
+                            Icon = FontAwesome.Solid.User,
                         },
                         rankFlow = new OsuTextFlowContainer(s => s.Font = OsuFont.GetFont(size: 12))
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
                             AutoSizeAxes = Axes.Both,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -77,16 +77,28 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 return;
             }
 
-            int minRank = client.Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Min();
-            int maxRank = client.Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Max();
+            int minRank = client
+                .Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0)
+                .DefaultIfEmpty(0)
+                .Min();
+            int maxRank = client
+                .Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0)
+                .DefaultIfEmpty(0)
+                .Max();
 
             rankFlow.AddText("#");
-            rankFlow.AddText(minRank.ToString("#,0"), s => s.Font = s.Font.With(weight: FontWeight.Bold));
+            rankFlow.AddText(
+                minRank.ToString("#,0"),
+                s => s.Font = s.Font.With(weight: FontWeight.Bold)
+            );
 
             rankFlow.AddText(" - ");
 
             rankFlow.AddText("#");
-            rankFlow.AddText(maxRank.ToString("#,0"), s => s.Font = s.Font.With(weight: FontWeight.Bold));
+            rankFlow.AddText(
+                maxRank.ToString("#,0"),
+                s => s.Font = s.Font.With(weight: FontWeight.Bold)
+            );
         }
 
         protected override void Dispose(bool isDisposing)

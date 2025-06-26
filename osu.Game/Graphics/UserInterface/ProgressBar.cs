@@ -61,12 +61,8 @@ namespace osu.Game.Graphics.UserInterface
 
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    Alpha = 0,
-                    RelativeSizeAxes = Axes.Both
-                },
-                fill = new Box { RelativeSizeAxes = Axes.Y }
+                background = new Box { Alpha = 0, RelativeSizeAxes = Axes.Both },
+                fill = new Box { RelativeSizeAxes = Axes.Y },
             };
         }
 

@@ -20,35 +20,44 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public TestSceneStarCounter()
         {
-            Add(new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(20),
-                Children = new Drawable[]
+            Add(
+                new FillFlowContainer
                 {
-                    starCounter = new StarCounter(),
-                    twentyStarCounter = new StarCounter(20),
-                    starsLabel = new OsuSpriteText
+                    AutoSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(20),
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Scale = new Vector2(2),
+                        starCounter = new StarCounter(),
+                        twentyStarCounter = new StarCounter(20),
+                        starsLabel = new OsuSpriteText
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Scale = new Vector2(2),
+                        },
                     },
                 }
-            });
+            );
 
             setStars(5);
 
-            AddRepeatStep("random value", () => setStars(RNG.NextSingle() * (twentyStarCounter.StarCount + 1)), 10);
+            AddRepeatStep(
+                "random value",
+                () => setStars(RNG.NextSingle() * (twentyStarCounter.StarCount + 1)),
+                10
+            );
             AddSliderStep("exact value", 0f, 20f, 5f, setStars);
-            AddStep("stop animation", () =>
-            {
-                starCounter.StopAnimation();
-                twentyStarCounter.StopAnimation();
-            });
+            AddStep(
+                "stop animation",
+                () =>
+                {
+                    starCounter.StopAnimation();
+                    twentyStarCounter.StopAnimation();
+                }
+            );
             AddStep("reset", () => setStars(0));
         }
 

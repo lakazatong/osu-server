@@ -18,14 +18,19 @@ namespace osu.Game.Screens.Play.HUD
 {
     public partial class PlayerAvatar : CompositeDrawable, ISerialisableDrawable
     {
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.CornerRadius), nameof(SkinnableComponentStrings.CornerRadiusDescription),
-            SettingControlType = typeof(SettingsPercentageSlider<float>))]
-        public new BindableFloat CornerRadius { get; } = new BindableFloat(0.25f)
-        {
-            MinValue = 0,
-            MaxValue = 0.5f,
-            Precision = 0.01f
-        };
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.CornerRadius),
+            nameof(SkinnableComponentStrings.CornerRadiusDescription),
+            SettingControlType = typeof(SettingsPercentageSlider<float>)
+        )]
+        public new BindableFloat CornerRadius { get; } =
+            new BindableFloat(0.25f)
+            {
+                MinValue = 0,
+                MaxValue = 0.5f,
+                Precision = 0.01f,
+            };
 
         private readonly UpdateableAvatar avatar;
 
@@ -49,13 +54,14 @@ namespace osu.Game.Screens.Play.HUD
             {
                 Masking = true,
                 RelativeSizeAxes = Axes.Both,
-                Child = avatar = new UpdateableAvatar(isInteractive: false)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fill,
-                }
+                Child = avatar =
+                    new UpdateableAvatar(isInteractive: false)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        FillMode = FillMode.Fill,
+                    },
             };
         }
 
@@ -75,7 +81,10 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.LoadComplete();
 
-            CornerRadius.BindValueChanged(e => cornerContainer.CornerRadius = e.NewValue * default_size, true);
+            CornerRadius.BindValueChanged(
+                e => cornerContainer.CornerRadius = e.NewValue * default_size,
+                true
+            );
         }
 
         public bool UsesFixedAnchor { get; set; }

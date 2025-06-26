@@ -56,55 +56,57 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             DrawableSpinner = (DrawableSpinner)drawableHitObject;
 
-            AddInternal(new Container
-            {
-                Depth = float.MinValue,
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            AddInternal(
+                new Container
                 {
-                    spin = new Sprite
+                    Depth = float.MinValue,
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Alpha = 0,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-spin"),
-                        Scale = new Vector2(SPRITE_SCALE),
-                        Y = SPINNER_TOP_OFFSET + 335,
-                    },
-                    clear = new Sprite
-                    {
-                        Alpha = 0,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-clear"),
-                        Scale = new Vector2(SPRITE_SCALE),
-                        Y = SPINNER_TOP_OFFSET + 115,
-                    },
-                    bonusCounter = new LegacySpriteText(LegacyFont.Score)
-                    {
-                        Alpha = 0,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
-                        Scale = new Vector2(SPRITE_SCALE),
-                        Y = SPINNER_TOP_OFFSET + 299,
-                    },
-                    spmBackground = new Sprite
-                    {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopLeft,
-                        Texture = source.GetTexture("spinner-rpm"),
-                        Scale = new Vector2(SPRITE_SCALE),
-                        Position = new Vector2(-87, 445 + spm_hide_offset),
-                    },
-                    spmCounter = new LegacySpriteText(LegacyFont.Score)
-                    {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopRight,
-                        Scale = new Vector2(SPRITE_SCALE * 0.9f),
-                        Position = new Vector2(80, 448 + spm_hide_offset),
+                        spin = new Sprite
+                        {
+                            Alpha = 0,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-spin"),
+                            Scale = new Vector2(SPRITE_SCALE),
+                            Y = SPINNER_TOP_OFFSET + 335,
+                        },
+                        clear = new Sprite
+                        {
+                            Alpha = 0,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-clear"),
+                            Scale = new Vector2(SPRITE_SCALE),
+                            Y = SPINNER_TOP_OFFSET + 115,
+                        },
+                        bonusCounter = new LegacySpriteText(LegacyFont.Score)
+                        {
+                            Alpha = 0,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.Centre,
+                            Scale = new Vector2(SPRITE_SCALE),
+                            Y = SPINNER_TOP_OFFSET + 299,
+                        },
+                        spmBackground = new Sprite
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopLeft,
+                            Texture = source.GetTexture("spinner-rpm"),
+                            Scale = new Vector2(SPRITE_SCALE),
+                            Position = new Vector2(-87, 445 + spm_hide_offset),
+                        },
+                        spmCounter = new LegacySpriteText(LegacyFont.Score)
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopRight,
+                            Scale = new Vector2(SPRITE_SCALE * 0.9f),
+                            Position = new Vector2(80, 448 + spm_hide_offset),
+                        },
                     },
                 }
-            });
+            );
         }
 
         private IBindable<int> completedSpins = null!;
@@ -122,7 +124,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 if (DrawableSpinner.CurrentBonusScore <= 0)
                     return;
 
-                bonusCounter.Text = DrawableSpinner.CurrentBonusScore.ToString(NumberFormatInfo.InvariantInfo);
+                bonusCounter.Text = DrawableSpinner.CurrentBonusScore.ToString(
+                    NumberFormatInfo.InvariantInfo
+                );
 
                 if (DrawableSpinner.CurrentBonusScore == DrawableSpinner.MaximumBonusScore)
                 {
@@ -132,15 +136,21 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 else
                 {
                     bonusCounter.FadeOutFromOne(800, Easing.Out);
-                    bonusCounter.ScaleTo(SPRITE_SCALE * 2f).Then().ScaleTo(SPRITE_SCALE * 1.28f, 800, Easing.Out);
+                    bonusCounter
+                        .ScaleTo(SPRITE_SCALE * 2f)
+                        .Then()
+                        .ScaleTo(SPRITE_SCALE * 1.28f, 800, Easing.Out);
                 }
             });
 
             spinsPerMinute = DrawableSpinner.SpinsPerMinute.GetBoundCopy();
-            spinsPerMinute.BindValueChanged(spm =>
-            {
-                spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
-            }, true);
+            spinsPerMinute.BindValueChanged(
+                spm =>
+                {
+                    spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
+                },
+                true
+            );
 
             completed.BindValueChanged(onCompletedChanged, true);
 
@@ -158,13 +168,18 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 {
                     clear.FadeInFromZero(400, Easing.Out);
 
-                    clear.ScaleTo(SPRITE_SCALE * 2)
-                         .Then().ScaleTo(SPRITE_SCALE * 0.8f, 240, Easing.Out)
-                         .Then().ScaleTo(SPRITE_SCALE, 160);
+                    clear
+                        .ScaleTo(SPRITE_SCALE * 2)
+                        .Then()
+                        .ScaleTo(SPRITE_SCALE * 0.8f, 240, Easing.Out)
+                        .Then()
+                        .ScaleTo(SPRITE_SCALE, 160);
                 }
 
                 const double fade_out_duration = 50;
-                using (BeginAbsoluteSequence(DrawableSpinner.HitStateUpdateTime - fade_out_duration))
+                using (
+                    BeginAbsoluteSequence(DrawableSpinner.HitStateUpdateTime - fade_out_duration)
+                )
                     clear.FadeOut(fade_out_duration);
             }
             else
@@ -180,18 +195,31 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             completed.Value = Time.Current >= DrawableSpinner.Result.TimeCompleted;
         }
 
-        protected virtual void UpdateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)
+        protected virtual void UpdateStateTransforms(
+            DrawableHitObject drawableHitObject,
+            ArmedState state
+        )
         {
             switch (drawableHitObject)
             {
                 case DrawableSpinner d:
                     using (BeginAbsoluteSequence(d.HitObject.StartTime - d.HitObject.TimeFadeIn))
                     {
-                        spmBackground.MoveToOffset(new Vector2(0, -spm_hide_offset), d.HitObject.TimeFadeIn, Easing.Out);
-                        spmCounter.MoveToOffset(new Vector2(0, -spm_hide_offset), d.HitObject.TimeFadeIn, Easing.Out);
+                        spmBackground.MoveToOffset(
+                            new Vector2(0, -spm_hide_offset),
+                            d.HitObject.TimeFadeIn,
+                            Easing.Out
+                        );
+                        spmCounter.MoveToOffset(
+                            new Vector2(0, -spm_hide_offset),
+                            d.HitObject.TimeFadeIn,
+                            Easing.Out
+                        );
                     }
 
-                    using (BeginAbsoluteSequence(d.HitObject.StartTime - d.HitObject.TimeFadeIn / 2))
+                    using (
+                        BeginAbsoluteSequence(d.HitObject.StartTime - d.HitObject.TimeFadeIn / 2)
+                    )
                         spin.FadeInFromZero(d.HitObject.TimeFadeIn / 2);
 
                     using (BeginAbsoluteSequence(d.HitObject.StartTime))
@@ -199,7 +227,11 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
                     double spinFadeOutLength = Math.Min(400, d.HitObject.Duration);
 
-                    using (BeginAbsoluteSequence(drawableHitObject.HitStateUpdateTime - spinFadeOutLength))
+                    using (
+                        BeginAbsoluteSequence(
+                            drawableHitObject.HitStateUpdateTime - spinFadeOutLength
+                        )
+                    )
                         spin.FadeOutFromOne(spinFadeOutLength);
                     break;
 

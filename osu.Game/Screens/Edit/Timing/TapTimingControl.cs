@@ -50,11 +50,7 @@ namespace osu.Game.Screens.Edit.Timing
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colourProvider.Background4,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colourProvider.Background4, RelativeSizeAxes = Axes.Both },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.X,
@@ -76,7 +72,7 @@ namespace osu.Game.Screens.Edit.Timing
                                 ColumnDimensions = new[]
                                 {
                                     new Dimension(GridSizeMode.AutoSize),
-                                    new Dimension()
+                                    new Dimension(),
                                 },
                                 Content = new[]
                                 {
@@ -87,17 +83,21 @@ namespace osu.Game.Screens.Edit.Timing
                                             Anchor = Anchor.CentreLeft,
                                             Origin = Anchor.CentreLeft,
                                         },
-                                        new WaveformComparisonDisplay()
-                                    }
+                                        new WaveformComparisonDisplay(),
+                                    },
                                 },
-                            }
+                            },
                         },
                         new Drawable[]
                         {
                             new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Padding = new MarginPadding { Bottom = padding, Horizontal = padding },
+                                Padding = new MarginPadding
+                                {
+                                    Bottom = padding,
+                                    Horizontal = padding,
+                                },
                                 Children = new Drawable[]
                                 {
                                     new TimingAdjustButton(1)
@@ -115,8 +115,8 @@ namespace osu.Game.Screens.Edit.Timing
                                         RelativeSizeAxes = Axes.Both,
                                         Size = new Vector2(0.48f, 1),
                                         Action = adjustBpm,
-                                    }
-                                }
+                                    },
+                                },
                             },
                         },
                         new Drawable[]
@@ -124,7 +124,11 @@ namespace osu.Game.Screens.Edit.Timing
                             new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Padding = new MarginPadding { Bottom = padding, Horizontal = padding },
+                                Padding = new MarginPadding
+                                {
+                                    Bottom = padding,
+                                    Horizontal = padding,
+                                },
                                 Children = new Drawable[]
                                 {
                                     new Container
@@ -145,7 +149,10 @@ namespace osu.Game.Screens.Edit.Timing
                                                 Height = 0.49f,
                                                 Action = reset,
                                             },
-                                            new InlineButton(FontAwesome.Solid.Play, Anchor.BottomLeft)
+                                            new InlineButton(
+                                                FontAwesome.Solid.Play,
+                                                Anchor.BottomLeft
+                                            )
                                             {
                                                 BackgroundColour = colourProvider.Background1,
                                                 RelativeSizeAxes = Axes.Both,
@@ -160,22 +167,25 @@ namespace osu.Game.Screens.Edit.Timing
                                     {
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        IsHandlingTapping = { BindTarget = isHandlingTapping }
-                                    }
-                                }
+                                        IsHandlingTapping = { BindTarget = isHandlingTapping },
+                                    },
+                                },
                             },
                         },
-                    }
+                    },
                 },
             };
 
-            isHandlingTapping.BindValueChanged(handling =>
-            {
-                metronome.EnableClicking = !handling.NewValue;
+            isHandlingTapping.BindValueChanged(
+                handling =>
+                {
+                    metronome.EnableClicking = !handling.NewValue;
 
-                if (handling.NewValue)
-                    start();
-            }, true);
+                    if (handling.NewValue)
+                        start();
+                },
+                true
+            );
         }
 
         private void start()
@@ -232,7 +242,9 @@ namespace osu.Game.Screens.Edit.Timing
 
         private void adjustBpm(double adjust)
         {
-            var timing = selectedGroup.Value?.ControlPoints.OfType<TimingControlPoint>().FirstOrDefault();
+            var timing = selectedGroup
+                .Value?.ControlPoints.OfType<TimingControlPoint>()
+                .FirstOrDefault();
 
             if (timing == null)
                 return;
@@ -274,22 +286,24 @@ namespace osu.Game.Screens.Edit.Timing
 
                 BackgroundColour = colourProvider.Background2;
 
-                Content.Add(new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding(15),
-                    Children = new Drawable[]
+                Content.Add(
+                    new Container
                     {
-                        spriteIcon = new SpriteIcon
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding(15),
+                        Children = new Drawable[]
                         {
-                            Icon = icon,
-                            Size = new Vector2(22),
-                            Anchor = anchor,
-                            Origin = anchor,
-                            Colour = colourProvider.Background1,
+                            spriteIcon = new SpriteIcon
+                            {
+                                Icon = icon,
+                                Size = new Vector2(22),
+                                Anchor = anchor,
+                                Origin = anchor,
+                                Colour = colourProvider.Background1,
+                            },
                         },
                     }
-                });
+                );
             }
 
             protected override bool OnMouseDown(MouseDownEvent e)

@@ -24,21 +24,23 @@ namespace osu.Game.Rulesets.Mania.Tests
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Size = new Vector2(300, 500),
-                Child = cover = new PlayfieldCoveringWrapper(new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Orange
-                })
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }
+                Child = cover =
+                    new PlayfieldCoveringWrapper(
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Orange }
+                    )
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
             };
         }
 
         [Test]
         public void TestScrollingDownwards()
         {
-            AddStep("set down scroll", () => scrollingContainer.Direction = ScrollingDirection.Down);
+            AddStep(
+                "set down scroll",
+                () => scrollingContainer.Direction = ScrollingDirection.Down
+            );
             AddStep("set coverage = 0.5", () => cover.Coverage.Value = 0.5f);
             AddStep("set coverage = 0.8f", () => cover.Coverage.Value = 0.8f);
             AddStep("set coverage = 0.2f", () => cover.Coverage.Value = 0.2f);

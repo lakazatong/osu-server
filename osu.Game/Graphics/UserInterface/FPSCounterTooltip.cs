@@ -54,7 +54,12 @@ namespace osu.Game.Graphics.UserInterface
                 })
                 {
                     Width = 190,
-                    Margin = new MarginPadding { Left = 35, Right = 10, Vertical = 10 },
+                    Margin = new MarginPadding
+                    {
+                        Left = 35,
+                        Right = 10,
+                        Vertical = 10,
+                    },
                     AutoSizeAxes = Axes.Y,
                     TextAnchor = Anchor.TopRight,
                     ParagraphSpacing = 0,
@@ -79,17 +84,17 @@ namespace osu.Game.Graphics.UserInterface
                     var clock = thread.Clock;
 
                     string maximum = clock.Throttling
-                        ? $"/{(clock.MaximumUpdateHz > 0 && clock.MaximumUpdateHz < 10000 ? clock.MaximumUpdateHz.ToString("0") : "∞"),4}"
+                        ? $"/{(clock.MaximumUpdateHz > 0 && clock.MaximumUpdateHz < 10000 ? clock.MaximumUpdateHz.ToString("0") : "∞"), 4}"
                         : string.Empty;
 
-                    textFlow.AddParagraph($"{clock.FramesPerSecond:0}{maximum}fps ({clock.ElapsedFrameTime:0.00}ms)");
+                    textFlow.AddParagraph(
+                        $"{clock.FramesPerSecond:0}{maximum}fps ({clock.ElapsedFrameTime:0.00}ms)"
+                    );
                 }
             }
         }
 
-        public void SetContent(object content)
-        {
-        }
+        public void SetContent(object content) { }
 
         public void Move(Vector2 pos)
         {

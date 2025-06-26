@@ -48,12 +48,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Texture = skin?.GetTexture(lookup_name)?.WithMaximumSize(maxSize: OsuHitObject.OBJECT_DIMENSIONS * 2),
+                Texture = skin
+                    ?.GetTexture(lookup_name)
+                    ?.WithMaximumSize(maxSize: OsuHitObject.OBJECT_DIMENSIONS * 2),
             };
 
-            textureIsDefaultSkin = skin is ISkinTransformer transformer && transformer.Skin is DefaultLegacySkin;
+            textureIsDefaultSkin =
+                skin is ISkinTransformer transformer && transformer.Skin is DefaultLegacySkin;
 
-            shouldRotate = skinSource.GetConfig<SkinConfiguration.LegacySetting, decimal>(SkinConfiguration.LegacySetting.Version)?.Value <= 1;
+            shouldRotate =
+                skinSource
+                    .GetConfig<SkinConfiguration.LegacySetting, decimal>(
+                        SkinConfiguration.LegacySetting.Version
+                    )
+                    ?.Value <= 1;
         }
 
         protected override void LoadComplete()
@@ -66,10 +74,17 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             onHitObjectApplied(drawableRepeat);
 
             accentColour = drawableRepeat.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(c =>
-            {
-                arrow.Colour = textureIsDefaultSkin && c.NewValue.R + c.NewValue.G + c.NewValue.B > 600 / 255f ? Color4.Black : Color4.White;
-            }, true);
+            accentColour.BindValueChanged(
+                c =>
+                {
+                    arrow.Colour =
+                        textureIsDefaultSkin
+                        && c.NewValue.R + c.NewValue.G + c.NewValue.B > 600 / 255f
+                            ? Color4.Black
+                            : Color4.White;
+                },
+                true
+            );
         }
 
         private void onHitObjectApplied(DrawableHitObject drawableObject)
@@ -84,27 +99,50 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         {
             base.Update();
 
-            if (Time.Current >= drawableRepeat.HitStateUpdateTime && drawableRepeat.State.Value == ArmedState.Hit)
+            if (
+                Time.Current >= drawableRepeat.HitStateUpdateTime
+                && drawableRepeat.State.Value == ArmedState.Hit
+            )
             {
                 double animDuration = Math.Min(300, drawableRepeat.HitObject.SpanDuration);
-                arrow.Scale = new Vector2(Interpolation.ValueAt(Time.Current, 1, 1.4f, drawableRepeat.HitStateUpdateTime, drawableRepeat.HitStateUpdateTime + animDuration, Easing.Out));
+                arrow.Scale = new Vector2(
+                    Interpolation.ValueAt(
+                        Time.Current,
+                        1,
+                        1.4f,
+                        drawableRepeat.HitStateUpdateTime,
+                        drawableRepeat.HitStateUpdateTime + animDuration,
+                        Easing.Out
+                    )
+                );
             }
             else
             {
                 const double duration = 300;
                 const float rotation = 5.625f;
 
-                double loopCurrentTime = (Time.Current - drawableRepeat.AnimationStartTime.Value) % duration;
+                double loopCurrentTime =
+                    (Time.Current - drawableRepeat.AnimationStartTime.Value) % duration;
 
                 // Reference: https://github.com/peppy/osu-stable-reference/blob/2280c4c436f80d04f9c79d3c905db00ac2902273/osu!/GameplayElements/HitObjects/Osu/HitCircleSliderEnd.cs#L79-L96
                 if (shouldRotate)
                 {
-                    arrow.Rotation = Interpolation.ValueAt(loopCurrentTime, rotation, -rotation, 0, duration);
-                    arrow.Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, 1.3f, 1, 0, duration));
+                    arrow.Rotation = Interpolation.ValueAt(
+                        loopCurrentTime,
+                        rotation,
+                        -rotation,
+                        0,
+                        duration
+                    );
+                    arrow.Scale = new Vector2(
+                        Interpolation.ValueAt(loopCurrentTime, 1.3f, 1, 0, duration)
+                    );
                 }
                 else
                 {
-                    arrow.Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, 1.3f, 1, 0, duration, Easing.Out));
+                    arrow.Scale = new Vector2(
+                        Interpolation.ValueAt(loopCurrentTime, 1.3f, 1, 0, duration, Easing.Out)
+                    );
                 }
             }
         }

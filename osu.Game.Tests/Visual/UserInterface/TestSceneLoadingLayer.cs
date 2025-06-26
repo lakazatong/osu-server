@@ -23,42 +23,44 @@ namespace osu.Game.Tests.Visual.UserInterface
         private Container content;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Children = new[]
+        public void SetUp() =>
+            Schedule(() =>
             {
-                content = new Container
+                Children = new[]
                 {
-                    Size = new Vector2(300),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
+                    content = new Container
                     {
-                        new Box
+                        Size = new Vector2(300),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.SlateGray,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        new FillFlowContainer
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(10),
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(0.9f),
-                            Children = new Drawable[]
+                            new Box { Colour = Color4.SlateGray, RelativeSizeAxes = Axes.Both },
+                            new FillFlowContainer
                             {
-                                new OsuSpriteText { Text = "Sample content" },
-                                new RoundedButton { Text = "can't puush me", Width = 200, },
-                                new RoundedButton { Text = "puush me", Width = 200, Action = () => { } },
-                            }
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(10),
+                                RelativeSizeAxes = Axes.Both,
+                                Size = new Vector2(0.9f),
+                                Children = new Drawable[]
+                                {
+                                    new OsuSpriteText { Text = "Sample content" },
+                                    new RoundedButton { Text = "can't puush me", Width = 200 },
+                                    new RoundedButton
+                                    {
+                                        Text = "puush me",
+                                        Width = 200,
+                                        Action = () => { },
+                                    },
+                                },
+                            },
+                            overlay = new TestLoadingLayer(true),
                         },
-                        overlay = new TestLoadingLayer(true),
-                    }
-                },
-            };
-        });
+                    },
+                };
+            });
 
         [Test]
         public void TestShowHide()
@@ -71,19 +73,25 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("hide", () => overlay.Hide());
 
-            AddUntilStep("wait for content restore", () => Precision.AlmostEquals(overlay.Alpha, 0));
+            AddUntilStep(
+                "wait for content restore",
+                () => Precision.AlmostEquals(overlay.Alpha, 0)
+            );
         }
 
         [Test]
         public void TestLargeArea()
         {
-            AddStep("show", () =>
-            {
-                content.RelativeSizeAxes = Axes.Both;
-                content.Size = new Vector2(1);
+            AddStep(
+                "show",
+                () =>
+                {
+                    content.RelativeSizeAxes = Axes.Both;
+                    content.Size = new Vector2(1);
 
-                overlay.Show();
-            });
+                    overlay.Show();
+                }
+            );
 
             AddStep("hide", () => overlay.Hide());
         }
@@ -91,9 +99,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         private partial class TestLoadingLayer : LoadingLayer
         {
             public TestLoadingLayer(bool dimBackground = false, bool withBox = true)
-                : base(dimBackground, withBox)
-            {
-            }
+                : base(dimBackground, withBox) { }
         }
     }
 }

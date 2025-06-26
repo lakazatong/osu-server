@@ -86,64 +86,66 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
 
             EarlyActivationMilliseconds = pre_beat_transition_time;
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new CircularContainer
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Name = "Background",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    Children = new Drawable[]
+                    background = new CircularContainer
                     {
-                        new Box
+                        Name = "Background",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Masking = true,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
+                            new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            new Triangles
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Both,
+                                ColourLight = Color4.White,
+                                ColourDark = Color4.White.Darken(0.1f),
+                            },
                         },
-                        new Triangles
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
-                            ColourLight = Color4.White,
-                            ColourDark = Color4.White.Darken(0.1f)
-                        }
-                    }
-                },
-                new CircularContainer
-                {
-                    Name = "Ring",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    BorderThickness = 8,
-                    BorderColour = Color4.White,
-                    Masking = true,
-                    Children = new[]
+                    },
+                    new CircularContainer
                     {
-                        flashBox = new Box
+                        Name = "Ring",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        BorderThickness = 8,
+                        BorderColour = Color4.White,
+                        Masking = true,
+                        Children = new[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.White,
-                            Blending = BlendingParameters.Additive,
-                            Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
-                },
-                content = new Container
-                {
-                    Name = "Content",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
+                            flashBox = new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.White,
+                                Blending = BlendingParameters.Additive,
+                                Alpha = 0,
+                                AlwaysPresent = true,
+                            },
+                        },
+                    },
+                    content = new Container
+                    {
+                        Name = "Content",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                    },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -176,11 +178,16 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
             {
                 Type = EdgeEffectType.Glow,
                 Colour = AccentColour.Opacity(KiaiMode ? edge_alpha_kiai : 1f),
-                Radius = KiaiMode ? 32 : 8
+                Radius = KiaiMode ? 32 : 8,
             };
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (!effectPoint.KiaiMode)
                 return;

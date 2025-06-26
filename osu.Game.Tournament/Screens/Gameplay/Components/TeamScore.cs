@@ -37,14 +37,13 @@ namespace osu.Game.Tournament.Screens.Gameplay.Components
             currentTeamScore.BindTo(score);
         }
 
-        private void scoreChanged(ValueChangedEvent<int?> score) => counter.Current = score.NewValue ?? 0;
+        private void scoreChanged(ValueChangedEvent<int?> score) =>
+            counter.Current = score.NewValue ?? 0;
 
         public partial class TeamScoreStarCounter : StarCounter
         {
             public TeamScoreStarCounter(int count)
-                : base(count)
-            {
-            }
+                : base(count) { }
 
             public override Star CreateStar() => new LightSquare();
 
@@ -72,7 +71,7 @@ namespace osu.Game.Tournament.Screens.Gameplay.Components
                                     RelativeSizeAxes = Axes.Both,
                                     AlwaysPresent = true,
                                 },
-                            }
+                            },
                         },
                         box = new Box
                         {

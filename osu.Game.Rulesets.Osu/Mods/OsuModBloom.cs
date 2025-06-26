@@ -17,16 +17,22 @@ using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModBloom : Mod, IApplicableToScoreProcessor, IUpdatableByPlayfield, IApplicableToPlayer
+    public class OsuModBloom
+        : Mod,
+            IApplicableToScoreProcessor,
+            IUpdatableByPlayfield,
+            IApplicableToPlayer
     {
         public override string Name => "Bloom";
         public override string Acronym => "BM";
         public override ModType Type => ModType.Fun;
-        public override LocalisableString Description => "The cursor blooms into.. a larger cursor!";
+        public override LocalisableString Description =>
+            "The cursor blooms into.. a larger cursor!";
         public override double ScoreMultiplier => 1;
         protected const float MIN_SIZE = 1;
         protected const float TRANSITION_DURATION = 100;
-        public override Type[] IncompatibleMods => new[] { typeof(OsuModFlashlight), typeof(OsuModNoScope), typeof(ModTouchDevice) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(OsuModFlashlight), typeof(OsuModNoScope), typeof(ModTouchDevice) };
 
         protected readonly BindableNumber<int> CurrentCombo = new BindableInt();
         protected readonly IBindable<bool> IsBreakTime = new Bindable<bool>();
@@ -38,23 +44,21 @@ namespace osu.Game.Rulesets.Osu.Mods
             "The combo count at which the cursor reaches its maximum size",
             SettingControlType = typeof(SettingsSlider<int, RoundedSliderBar<int>>)
         )]
-        public BindableInt MaxSizeComboCount { get; } = new BindableInt(50)
-        {
-            MinValue = 5,
-            MaxValue = 100,
-        };
+        public BindableInt MaxSizeComboCount { get; } =
+            new BindableInt(50) { MinValue = 5, MaxValue = 100 };
 
         [SettingSource(
             "Final size multiplier",
             "The multiplier applied to cursor size when combo reaches maximum",
             SettingControlType = typeof(SettingsSlider<float, RoundedSliderBar<float>>)
         )]
-        public BindableFloat MaxCursorSize { get; } = new BindableFloat(10f)
-        {
-            MinValue = 5f,
-            MaxValue = 15f,
-            Precision = 0.5f,
-        };
+        public BindableFloat MaxCursorSize { get; } =
+            new BindableFloat(10f)
+            {
+                MinValue = 5f,
+                MaxValue = 15f,
+                Precision = 0.5f,
+            };
 
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
 
@@ -66,10 +70,17 @@ namespace osu.Game.Rulesets.Osu.Mods
         public void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
         {
             CurrentCombo.BindTo(scoreProcessor.Combo);
-            CurrentCombo.BindValueChanged(combo =>
-            {
-                currentSize = Math.Clamp(MaxCursorSize.Value * ((float)combo.NewValue / MaxSizeComboCount.Value), MIN_SIZE, MaxCursorSize.Value);
-            }, true);
+            CurrentCombo.BindValueChanged(
+                combo =>
+                {
+                    currentSize = Math.Clamp(
+                        MaxCursorSize.Value * ((float)combo.NewValue / MaxSizeComboCount.Value),
+                        MIN_SIZE,
+                        MaxCursorSize.Value
+                    );
+                },
+                true
+            );
         }
 
         public void Update(Playfield playfield)
@@ -79,7 +90,12 @@ namespace osu.Game.Rulesets.Osu.Mods
             if (IsBreakTime.Value)
                 cursor.ModScaleAdjust.Value = 1;
             else
-                cursor.ModScaleAdjust.Value = (float)Interpolation.Lerp(cursor.ModScaleAdjust.Value, currentSize, Math.Clamp(cursor.Time.Elapsed / TRANSITION_DURATION, 0, 1));
+                cursor.ModScaleAdjust.Value = (float)
+                    Interpolation.Lerp(
+                        cursor.ModScaleAdjust.Value,
+                        currentSize,
+                        Math.Clamp(cursor.Time.Elapsed / TRANSITION_DURATION, 0, 1)
+                    );
         }
     }
 }

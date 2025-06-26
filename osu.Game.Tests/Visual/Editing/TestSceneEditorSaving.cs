@@ -25,38 +25,84 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestCantExitWithoutSaving()
         {
-            AddUntilStep("Wait for dialog overlay load", () => ((Drawable)Game.Dependencies.Get<IDialogOverlay>()).IsLoaded);
+            AddUntilStep(
+                "Wait for dialog overlay load",
+                () => ((Drawable)Game.Dependencies.Get<IDialogOverlay>()).IsLoaded
+            );
             AddRepeatStep("Exit", () => InputManager.Key(Key.Escape), 10);
             AddAssert("Sample playback disabled", () => Editor.SamplePlaybackDisabled.Value);
-            AddAssert("Editor is still active screen", () => Game.ScreenStack.CurrentScreen is Editor);
+            AddAssert(
+                "Editor is still active screen",
+                () => Game.ScreenStack.CurrentScreen is Editor
+            );
         }
 
         [Test]
         public void TestMetadata()
         {
-            AddStep("Set artist and title", () =>
-            {
-                EditorBeatmap.BeatmapInfo.Metadata.Artist = "artist";
-                EditorBeatmap.BeatmapInfo.Metadata.Title = "title";
-            });
-            AddStep("Set author", () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username = "author");
-            AddStep("Set difficulty name", () => EditorBeatmap.BeatmapInfo.DifficultyName = "difficulty");
+            AddStep(
+                "Set artist and title",
+                () =>
+                {
+                    EditorBeatmap.BeatmapInfo.Metadata.Artist = "artist";
+                    EditorBeatmap.BeatmapInfo.Metadata.Title = "title";
+                }
+            );
+            AddStep(
+                "Set author",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username = "author"
+            );
+            AddStep(
+                "Set difficulty name",
+                () => EditorBeatmap.BeatmapInfo.DifficultyName = "difficulty"
+            );
 
             SaveEditor();
 
-            AddAssert("Hash updated", () => !string.IsNullOrEmpty(EditorBeatmap.BeatmapInfo.BeatmapSet?.Hash));
+            AddAssert(
+                "Hash updated",
+                () => !string.IsNullOrEmpty(EditorBeatmap.BeatmapInfo.BeatmapSet?.Hash)
+            );
 
-            AddAssert("Beatmap has correct metadata", () => EditorBeatmap.BeatmapInfo.Metadata.Artist == "artist" && EditorBeatmap.BeatmapInfo.Metadata.Title == "title");
-            AddAssert("Beatmap has correct author", () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username == "author");
-            AddAssert("Beatmap has correct difficulty name", () => EditorBeatmap.BeatmapInfo.DifficultyName == "difficulty");
-            AddAssert("Beatmap has correct .osu file path", () => EditorBeatmap.BeatmapInfo.Path == "artist - title (author) [difficulty].osu");
+            AddAssert(
+                "Beatmap has correct metadata",
+                () =>
+                    EditorBeatmap.BeatmapInfo.Metadata.Artist == "artist"
+                    && EditorBeatmap.BeatmapInfo.Metadata.Title == "title"
+            );
+            AddAssert(
+                "Beatmap has correct author",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username == "author"
+            );
+            AddAssert(
+                "Beatmap has correct difficulty name",
+                () => EditorBeatmap.BeatmapInfo.DifficultyName == "difficulty"
+            );
+            AddAssert(
+                "Beatmap has correct .osu file path",
+                () => EditorBeatmap.BeatmapInfo.Path == "artist - title (author) [difficulty].osu"
+            );
 
             ReloadEditorToSameBeatmap();
 
-            AddAssert("Beatmap still has correct metadata", () => EditorBeatmap.BeatmapInfo.Metadata.Artist == "artist" && EditorBeatmap.BeatmapInfo.Metadata.Title == "title");
-            AddAssert("Beatmap still has correct author", () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username == "author");
-            AddAssert("Beatmap still has correct difficulty name", () => EditorBeatmap.BeatmapInfo.DifficultyName == "difficulty");
-            AddAssert("Beatmap still has correct .osu file path", () => EditorBeatmap.BeatmapInfo.Path == "artist - title (author) [difficulty].osu");
+            AddAssert(
+                "Beatmap still has correct metadata",
+                () =>
+                    EditorBeatmap.BeatmapInfo.Metadata.Artist == "artist"
+                    && EditorBeatmap.BeatmapInfo.Metadata.Title == "title"
+            );
+            AddAssert(
+                "Beatmap still has correct author",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Author.Username == "author"
+            );
+            AddAssert(
+                "Beatmap still has correct difficulty name",
+                () => EditorBeatmap.BeatmapInfo.DifficultyName == "difficulty"
+            );
+            AddAssert(
+                "Beatmap still has correct .osu file path",
+                () => EditorBeatmap.BeatmapInfo.Path == "artist - title (author) [difficulty].osu"
+            );
         }
 
         [Test]
@@ -65,35 +111,59 @@ namespace osu.Game.Tests.Visual.Editing
             double originalTimelineZoom = 0;
             double changedTimelineZoom = 0;
 
-            AddUntilStep("wait for timeline load", () => Editor.ChildrenOfType<Timeline>().SingleOrDefault()?.IsLoaded == true);
+            AddUntilStep(
+                "wait for timeline load",
+                () => Editor.ChildrenOfType<Timeline>().SingleOrDefault()?.IsLoaded == true
+            );
 
-            AddStep("Set beat divisor", () => Editor.Dependencies.Get<BindableBeatDivisor>().Value = 16);
-            AddStep("Set timeline zoom", () =>
-            {
-                originalTimelineZoom = EditorBeatmap.TimelineZoom;
+            AddStep(
+                "Set beat divisor",
+                () => Editor.Dependencies.Get<BindableBeatDivisor>().Value = 16
+            );
+            AddStep(
+                "Set timeline zoom",
+                () =>
+                {
+                    originalTimelineZoom = EditorBeatmap.TimelineZoom;
 
-                var timeline = Editor.ChildrenOfType<Timeline>().Single();
-                InputManager.MoveMouseTo(timeline);
-                InputManager.PressKey(Key.AltLeft);
-                InputManager.ScrollVerticalBy(15f);
-                InputManager.ReleaseKey(Key.AltLeft);
-            });
+                    var timeline = Editor.ChildrenOfType<Timeline>().Single();
+                    InputManager.MoveMouseTo(timeline);
+                    InputManager.PressKey(Key.AltLeft);
+                    InputManager.ScrollVerticalBy(15f);
+                    InputManager.ReleaseKey(Key.AltLeft);
+                }
+            );
 
-            AddAssert("Ensure timeline zoom changed", () =>
-            {
-                changedTimelineZoom = EditorBeatmap.TimelineZoom;
-                return !Precision.AlmostEquals(changedTimelineZoom, originalTimelineZoom);
-            });
+            AddAssert(
+                "Ensure timeline zoom changed",
+                () =>
+                {
+                    changedTimelineZoom = EditorBeatmap.TimelineZoom;
+                    return !Precision.AlmostEquals(changedTimelineZoom, originalTimelineZoom);
+                }
+            );
 
             SaveEditor();
 
-            AddAssert("Beatmap has correct beat divisor", () => EditorBeatmap.BeatmapInfo.BeatDivisor == 16);
-            AddAssert("Beatmap has correct timeline zoom", () => EditorBeatmap.TimelineZoom == changedTimelineZoom);
+            AddAssert(
+                "Beatmap has correct beat divisor",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor == 16
+            );
+            AddAssert(
+                "Beatmap has correct timeline zoom",
+                () => EditorBeatmap.TimelineZoom == changedTimelineZoom
+            );
 
             ReloadEditorToSameBeatmap();
 
-            AddAssert("Beatmap still has correct beat divisor", () => EditorBeatmap.BeatmapInfo.BeatDivisor == 16);
-            AddAssert("Beatmap still has correct timeline zoom", () => EditorBeatmap.TimelineZoom == changedTimelineZoom);
+            AddAssert(
+                "Beatmap still has correct beat divisor",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor == 16
+            );
+            AddAssert(
+                "Beatmap still has correct timeline zoom",
+                () => EditorBeatmap.TimelineZoom == changedTimelineZoom
+            );
         }
 
         [Test]
@@ -103,28 +173,46 @@ namespace osu.Game.Tests.Visual.Editing
 
             SaveEditor();
 
-            AddAssert("Beatmap has correct overall difficulty", () => EditorBeatmap.Difficulty.OverallDifficulty == 7);
+            AddAssert(
+                "Beatmap has correct overall difficulty",
+                () => EditorBeatmap.Difficulty.OverallDifficulty == 7
+            );
 
             ReloadEditorToSameBeatmap();
 
-            AddAssert("Beatmap still has correct overall difficulty", () => EditorBeatmap.Difficulty.OverallDifficulty == 7);
+            AddAssert(
+                "Beatmap still has correct overall difficulty",
+                () => EditorBeatmap.Difficulty.OverallDifficulty == 7
+            );
         }
 
         [Test]
         public void TestHitObjectPlacement()
         {
-            AddStep("Add timing point", () => EditorBeatmap.ControlPointInfo.Add(500, new TimingControlPoint()));
+            AddStep(
+                "Add timing point",
+                () => EditorBeatmap.ControlPointInfo.Add(500, new TimingControlPoint())
+            );
             AddStep("Change to placement mode", () => InputManager.Key(Key.Number2));
-            AddStep("Move to playfield", () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move to playfield",
+                () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("Place single hitcircle", () => InputManager.Click(MouseButton.Left));
 
             SaveEditor();
 
-            AddAssert("Beatmap has correct timing point", () => EditorBeatmap.ControlPointInfo.TimingPoints.Single().Time == 500);
+            AddAssert(
+                "Beatmap has correct timing point",
+                () => EditorBeatmap.ControlPointInfo.TimingPoints.Single().Time == 500
+            );
 
             ReloadEditorToSameBeatmap();
 
-            AddAssert("Beatmap still has correct timing point", () => EditorBeatmap.ControlPointInfo.TimingPoints.Single().Time == 500);
+            AddAssert(
+                "Beatmap still has correct timing point",
+                () => EditorBeatmap.ControlPointInfo.TimingPoints.Single().Time == 500
+            );
         }
 
         [Test]
@@ -134,14 +222,28 @@ namespace osu.Game.Tests.Visual.Editing
             double lastStarRating = 0;
             double lastLength = 0;
 
-            AddStep("Add timing point", () => EditorBeatmap.ControlPointInfo.Add(200, new TimingControlPoint { BeatLength = 600 }));
+            AddStep(
+                "Add timing point",
+                () =>
+                    EditorBeatmap.ControlPointInfo.Add(
+                        200,
+                        new TimingControlPoint { BeatLength = 600 }
+                    )
+            );
             AddStep("Change to placement mode", () => InputManager.Key(Key.Number2));
-            AddStep("Move to playfield", () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move to playfield",
+                () => InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("Place single hitcircle", () => InputManager.Click(MouseButton.Left));
             AddAssert("One hitobject placed", () => EditorBeatmap.HitObjects.Count == 1);
 
             SaveEditor();
-            AddStep("Get working beatmap", () => working = Game.BeatmapManager.GetWorkingBeatmap(EditorBeatmap.BeatmapInfo, true));
+            AddStep(
+                "Get working beatmap",
+                () =>
+                    working = Game.BeatmapManager.GetWorkingBeatmap(EditorBeatmap.BeatmapInfo, true)
+            );
 
             AddAssert("Beatmap length is zero", () => working.BeatmapInfo.Length == 0);
             checkDifficultyIncreased();
@@ -151,27 +253,37 @@ namespace osu.Game.Tests.Visual.Editing
             AddAssert("Two hitobjects placed", () => EditorBeatmap.HitObjects.Count == 2);
 
             SaveEditor();
-            AddStep("Get working beatmap", () => working = Game.BeatmapManager.GetWorkingBeatmap(EditorBeatmap.BeatmapInfo, true));
+            AddStep(
+                "Get working beatmap",
+                () =>
+                    working = Game.BeatmapManager.GetWorkingBeatmap(EditorBeatmap.BeatmapInfo, true)
+            );
 
             checkDifficultyIncreased();
             checkLengthIncreased();
 
             void checkLengthIncreased()
             {
-                AddStep("Beatmap length increased", () =>
-                {
-                    Assert.That(working.BeatmapInfo.Length, Is.GreaterThan(lastLength));
-                    lastLength = working.BeatmapInfo.Length;
-                });
+                AddStep(
+                    "Beatmap length increased",
+                    () =>
+                    {
+                        Assert.That(working.BeatmapInfo.Length, Is.GreaterThan(lastLength));
+                        lastLength = working.BeatmapInfo.Length;
+                    }
+                );
             }
 
             void checkDifficultyIncreased()
             {
-                AddStep("Beatmap difficulty increased", () =>
-                {
-                    Assert.That(working.BeatmapInfo.StarRating, Is.GreaterThan(lastStarRating));
-                    lastStarRating = working.BeatmapInfo.StarRating;
-                });
+                AddStep(
+                    "Beatmap difficulty increased",
+                    () =>
+                    {
+                        Assert.That(working.BeatmapInfo.StarRating, Is.GreaterThan(lastStarRating));
+                        lastStarRating = working.BeatmapInfo.StarRating;
+                    }
+                );
             }
         }
 
@@ -183,30 +295,63 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddStep("Set tags", () => EditorBeatmap.BeatmapInfo.Metadata.Tags = tags_to_save);
             SaveEditor();
-            AddAssert("Tags saved correctly", () => EditorBeatmap.BeatmapInfo.Metadata.Tags == tags_to_save);
+            AddAssert(
+                "Tags saved correctly",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Tags == tags_to_save
+            );
 
             ReloadEditorToSameBeatmap();
-            AddAssert("Tags saved correctly", () => EditorBeatmap.BeatmapInfo.Metadata.Tags == tags_to_save);
-            AddStep("Set tags again", () => EditorBeatmap.BeatmapInfo.Metadata.Tags = tags_to_discard);
+            AddAssert(
+                "Tags saved correctly",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Tags == tags_to_save
+            );
+            AddStep(
+                "Set tags again",
+                () => EditorBeatmap.BeatmapInfo.Metadata.Tags = tags_to_discard
+            );
 
             AddStep("Exit editor", () => Editor.Exit());
-            AddUntilStep("Wait for song select", () => Game.ScreenStack.CurrentScreen is PlaySongSelect);
-            AddAssert("Tags reverted correctly", () => Game.Beatmap.Value.BeatmapInfo.Metadata.Tags == tags_to_save);
+            AddUntilStep(
+                "Wait for song select",
+                () => Game.ScreenStack.CurrentScreen is PlaySongSelect
+            );
+            AddAssert(
+                "Tags reverted correctly",
+                () => Game.Beatmap.Value.BeatmapInfo.Metadata.Tags == tags_to_save
+            );
         }
 
         [Test]
         public void TestBeatDivisor()
         {
-            AddStep("Set custom beat divisor", () => Editor.Dependencies.Get<BindableBeatDivisor>().SetArbitraryDivisor(7));
+            AddStep(
+                "Set custom beat divisor",
+                () => Editor.Dependencies.Get<BindableBeatDivisor>().SetArbitraryDivisor(7)
+            );
 
             SaveEditor();
-            AddAssert("Hash updated", () => !string.IsNullOrEmpty(EditorBeatmap.BeatmapInfo.BeatmapSet?.Hash));
-            AddAssert("Beatmap has correct beat divisor", () => EditorBeatmap.BeatmapInfo.BeatDivisor, () => Is.EqualTo(7));
+            AddAssert(
+                "Hash updated",
+                () => !string.IsNullOrEmpty(EditorBeatmap.BeatmapInfo.BeatmapSet?.Hash)
+            );
+            AddAssert(
+                "Beatmap has correct beat divisor",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor,
+                () => Is.EqualTo(7)
+            );
 
             ReloadEditorToSameBeatmap();
 
-            AddAssert("Beatmap still has correct beat divisor", () => EditorBeatmap.BeatmapInfo.BeatDivisor, () => Is.EqualTo(7));
-            AddAssert("Correct beat divisor actually active", () => Editor.BeatDivisor, () => Is.EqualTo(7));
+            AddAssert(
+                "Beatmap still has correct beat divisor",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor,
+                () => Is.EqualTo(7)
+            );
+            AddAssert(
+                "Correct beat divisor actually active",
+                () => Editor.BeatDivisor,
+                () => Is.EqualTo(7)
+            );
         }
 
         [Test]

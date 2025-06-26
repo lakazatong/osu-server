@@ -20,6 +20,7 @@ namespace osu.Game.Graphics.Containers
         /// Shake the contents of this container.
         /// </summary>
         /// <param name="maximumLength">The maximum length the shake should last.</param>
-        public void Shake(double? maximumLength = null) => this.Shake(ShakeDuration, maximumLength: maximumLength);
+        public void Shake(double? maximumLength = null) =>
+            this.Shake(ShakeDuration, maximumLength: maximumLength);
     }
 }

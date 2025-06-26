@@ -56,80 +56,187 @@ namespace osu.Game.Tests.Visual.Ranking
         [Test]
         public void TestAroundCentre()
         {
-            createTest(Enumerable.Range(-150, 300).Select(i => new HitEvent(i / 50f, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null)).ToList());
+            createTest(
+                Enumerable
+                    .Range(-150, 300)
+                    .Select(i => new HitEvent(
+                        i / 50f,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ))
+                    .ToList()
+            );
         }
 
         [Test]
         public void TestSparse()
         {
-            createTest(new List<HitEvent>
-            {
-                new HitEvent(-7, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-                new HitEvent(-6, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-                new HitEvent(-5, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-                new HitEvent(5, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-                new HitEvent(6, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-                new HitEvent(7, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null),
-            });
+            createTest(
+                new List<HitEvent>
+                {
+                    new HitEvent(
+                        -7,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                    new HitEvent(
+                        -6,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                    new HitEvent(
+                        -5,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                    new HitEvent(
+                        5,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                    new HitEvent(
+                        6,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                    new HitEvent(
+                        7,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ),
+                }
+            );
         }
 
         [Test]
         public void TestVariousTypesOfHitResult()
         {
-            createTest(CreateDistributedHitEvents(0, 50).Select(h =>
-            {
-                double offset = Math.Abs(h.TimeOffset);
-                HitResult result = offset > 36 ? HitResult.Miss
-                    : offset > 32 ? HitResult.Meh
-                    : offset > 24 ? HitResult.Ok
-                    : offset > 16 ? HitResult.Good
-                    : offset > 8 ? HitResult.Great
-                    : HitResult.Perfect;
-                return new HitEvent(h.TimeOffset, 1.0, result, placeholder_object, placeholder_object, null);
-            }).ToList());
+            createTest(
+                CreateDistributedHitEvents(0, 50)
+                    .Select(h =>
+                    {
+                        double offset = Math.Abs(h.TimeOffset);
+                        HitResult result =
+                            offset > 36 ? HitResult.Miss
+                            : offset > 32 ? HitResult.Meh
+                            : offset > 24 ? HitResult.Ok
+                            : offset > 16 ? HitResult.Good
+                            : offset > 8 ? HitResult.Great
+                            : HitResult.Perfect;
+                        return new HitEvent(
+                            h.TimeOffset,
+                            1.0,
+                            result,
+                            placeholder_object,
+                            placeholder_object,
+                            null
+                        );
+                    })
+                    .ToList()
+            );
         }
 
         [Test]
         public void TestNonBasicHitResultsAreIgnored()
         {
-            createTest(CreateDistributedHitEvents(0, 50)
-                       .Select(h => new HitEvent(h.TimeOffset, 1.0, h.TimeOffset > 0 ? HitResult.Ok : HitResult.LargeTickHit, placeholder_object, placeholder_object, null))
-                       .ToList());
+            createTest(
+                CreateDistributedHitEvents(0, 50)
+                    .Select(h => new HitEvent(
+                        h.TimeOffset,
+                        1.0,
+                        h.TimeOffset > 0 ? HitResult.Ok : HitResult.LargeTickHit,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ))
+                    .ToList()
+            );
         }
 
         [Test]
         public void TestMultipleWindowsOfHitResult()
         {
-            var wide = CreateDistributedHitEvents(0, 50).Select(h =>
-            {
-                double offset = Math.Abs(h.TimeOffset);
-                HitResult result = offset > 36 ? HitResult.Miss
-                    : offset > 32 ? HitResult.Meh
-                    : offset > 24 ? HitResult.Ok
-                    : offset > 16 ? HitResult.Good
-                    : offset > 8 ? HitResult.Great
-                    : HitResult.Perfect;
+            var wide = CreateDistributedHitEvents(0, 50)
+                .Select(h =>
+                {
+                    double offset = Math.Abs(h.TimeOffset);
+                    HitResult result =
+                        offset > 36 ? HitResult.Miss
+                        : offset > 32 ? HitResult.Meh
+                        : offset > 24 ? HitResult.Ok
+                        : offset > 16 ? HitResult.Good
+                        : offset > 8 ? HitResult.Great
+                        : HitResult.Perfect;
 
-                return new HitEvent(h.TimeOffset, 1.0, result, placeholder_object, placeholder_object, null);
-            });
-            var narrow = CreateDistributedHitEvents(0, 50).Select(h =>
-            {
-                double offset = Math.Abs(h.TimeOffset);
-                HitResult result = offset > 25 ? HitResult.Miss
-                    : offset > 20 ? HitResult.Meh
-                    : offset > 15 ? HitResult.Ok
-                    : offset > 10 ? HitResult.Good
-                    : offset > 5 ? HitResult.Great
-                    : HitResult.Perfect;
-                return new HitEvent(h.TimeOffset, 1.0, result, placeholder_object, placeholder_object, null);
-            });
+                    return new HitEvent(
+                        h.TimeOffset,
+                        1.0,
+                        result,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    );
+                });
+            var narrow = CreateDistributedHitEvents(0, 50)
+                .Select(h =>
+                {
+                    double offset = Math.Abs(h.TimeOffset);
+                    HitResult result =
+                        offset > 25 ? HitResult.Miss
+                        : offset > 20 ? HitResult.Meh
+                        : offset > 15 ? HitResult.Ok
+                        : offset > 10 ? HitResult.Good
+                        : offset > 5 ? HitResult.Great
+                        : HitResult.Perfect;
+                    return new HitEvent(
+                        h.TimeOffset,
+                        1.0,
+                        result,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    );
+                });
             createTest(wide.Concat(narrow).ToList());
         }
 
         [Test]
         public void TestZeroTimeOffset()
         {
-            createTest(Enumerable.Range(0, 100).Select(_ => new HitEvent(0, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null)).ToList());
+            createTest(
+                Enumerable
+                    .Range(0, 100)
+                    .Select(_ => new HitEvent(
+                        0,
+                        1.0,
+                        HitResult.Perfect,
+                        placeholder_object,
+                        placeholder_object,
+                        null
+                    ))
+                    .ToList()
+            );
         }
 
         [Test]
@@ -141,32 +248,55 @@ namespace osu.Game.Tests.Visual.Ranking
         [Test]
         public void TestMissesDontShow()
         {
-            createTest(Enumerable.Range(0, 100).Select(i =>
-            {
-                if (i % 2 == 0)
-                    return new HitEvent(0, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null);
+            createTest(
+                Enumerable
+                    .Range(0, 100)
+                    .Select(i =>
+                    {
+                        if (i % 2 == 0)
+                            return new HitEvent(
+                                0,
+                                1.0,
+                                HitResult.Perfect,
+                                placeholder_object,
+                                placeholder_object,
+                                null
+                            );
 
-                return new HitEvent(30, 1.0, HitResult.Miss, placeholder_object, placeholder_object, null);
-            }).ToList());
+                        return new HitEvent(
+                            30,
+                            1.0,
+                            HitResult.Miss,
+                            placeholder_object,
+                            placeholder_object,
+                            null
+                        );
+                    })
+                    .ToList()
+            );
         }
 
-        private void createTest(List<HitEvent> events) => AddStep("create test", () =>
-        {
-            Children = new Drawable[]
-            {
-                new Box
+        private void createTest(List<HitEvent> events) =>
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4Extensions.FromHex("#333")
-                },
-                graph = new HitEventTimingDistributionGraph(events)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(width.Value, height.Value)
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4Extensions.FromHex("#333"),
+                        },
+                        graph = new HitEventTimingDistributionGraph(events)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(width.Value, height.Value),
+                        },
+                    };
                 }
-            };
-        });
+            );
 
         public static List<HitEvent> CreateHitEvents(double offset = 0, int count = 50)
         {
@@ -175,13 +305,25 @@ namespace osu.Game.Tests.Visual.Ranking
             for (int i = 0; i < count; i++)
             {
                 for (int j = 0; j < count; j++)
-                    hitEvents.Add(new HitEvent(offset, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null));
+                    hitEvents.Add(
+                        new HitEvent(
+                            offset,
+                            1.0,
+                            HitResult.Perfect,
+                            placeholder_object,
+                            placeholder_object,
+                            null
+                        )
+                    );
             }
 
             return hitEvents;
         }
 
-        public static List<HitEvent> CreateDistributedHitEvents(double centre = 0, double range = 25)
+        public static List<HitEvent> CreateDistributedHitEvents(
+            double centre = 0,
+            double range = 25
+        )
         {
             var hitEvents = new List<HitEvent>();
 
@@ -190,7 +332,16 @@ namespace osu.Game.Tests.Visual.Ranking
                 int count = (int)(Math.Pow(range - Math.Abs(i - range), 2)) / 10;
 
                 for (int j = 0; j < count; j++)
-                    hitEvents.Add(new HitEvent(centre + i - range, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null));
+                    hitEvents.Add(
+                        new HitEvent(
+                            centre + i - range,
+                            1.0,
+                            HitResult.Perfect,
+                            placeholder_object,
+                            placeholder_object,
+                            null
+                        )
+                    );
             }
 
             return hitEvents;

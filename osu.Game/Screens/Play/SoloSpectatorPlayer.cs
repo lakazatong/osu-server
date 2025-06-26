@@ -14,7 +14,8 @@ namespace osu.Game.Screens.Play
     {
         private readonly Score score;
 
-        protected override UserActivity InitialActivity => new UserActivity.SpectatingUser(Score.ScoreInfo);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.SpectatingUser(Score.ScoreInfo);
 
         public SoloSpectatorPlayer(Score score)
             : base(score, new PlayerConfiguration { AllowUserInteraction = false })
@@ -37,11 +38,13 @@ namespace osu.Game.Screens.Play
 
         private void userBeganPlaying(int userId, SpectatorState state)
         {
-            if (userId != score.ScoreInfo.UserID) return;
+            if (userId != score.ScoreInfo.UserID)
+                return;
 
             Schedule(() =>
             {
-                if (this.IsCurrentScreen()) this.Exit();
+                if (this.IsCurrentScreen())
+                    this.Exit();
             });
         }
 

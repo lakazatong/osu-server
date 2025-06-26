@@ -16,6 +16,7 @@ namespace osu.Game.Screens
 
         public override bool CursorVisible => false;
 
-        protected override OverlayActivation InitialOverlayActivationMode => OverlayActivation.Disabled;
+        protected override OverlayActivation InitialOverlayActivationMode =>
+            OverlayActivation.Disabled;
     }
 }

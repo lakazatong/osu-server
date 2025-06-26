@@ -54,10 +54,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                 Unhovered = _ => updateFromHoverChange(),
                 Children = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     bodyContent = new Container
                     {
                         RelativeSizeAxes = Axes.X,
@@ -77,11 +74,12 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                             return true;
                         },
                         Unhovered = _ => updateFromHoverChange(),
-                        Child = dropdownScroll = new ExpandedContentScrollContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            ScrollbarVisible = false
-                        }
+                        Child = dropdownScroll =
+                            new ExpandedContentScrollContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                ScrollbarVisible = false,
+                            },
                     },
                     borderContainer = new Container
                     {
@@ -93,10 +91,10 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
-                }
+                            AlwaysPresent = true,
+                        },
+                    },
+                },
             };
         }
 
@@ -151,14 +149,18 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                 borderContainer.FadeOut(BeatmapCard.TRANSITION_DURATION / 3f, Easing.OutQuint);
             }
 
-            content.TweenEdgeEffectTo(new EdgeEffectParameters
-            {
-                Type = EdgeEffectType.Shadow,
-                Offset = new Vector2(0, 2),
-                Radius = 10,
-                Colour = Colour4.Black.Opacity(Expanded.Value ? 0.3f : 0f),
-                Hollow = true,
-            }, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            content.TweenEdgeEffectTo(
+                new EdgeEffectParameters
+                {
+                    Type = EdgeEffectType.Shadow,
+                    Offset = new Vector2(0, 2),
+                    Radius = 10,
+                    Colour = Colour4.Black.Opacity(Expanded.Value ? 0.3f : 0f),
+                    Hollow = true,
+                },
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
         }
     }
 }

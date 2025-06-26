@@ -18,28 +18,34 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void createTextBox(bool hasDescription = false)
         {
-            AddStep("create component", () =>
-            {
-                LabelledTextBox component;
-
-                Child = new Container
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                    AutoSizeAxes = Axes.Y,
-                    Child = component = new LabelledTextBox
+                    LabelledTextBox component;
+
+                    Child = new Container
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Label = "Testing text",
-                        PlaceholderText = "This is definitely working as intended",
-                    }
-                };
+                        Width = 500,
+                        AutoSizeAxes = Axes.Y,
+                        Child = component =
+                            new LabelledTextBox
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Label = "Testing text",
+                                PlaceholderText = "This is definitely working as intended",
+                            },
+                    };
 
-                component.Label = "a sample component";
-                component.Description = hasDescription ? "this text describes the component" : string.Empty;
-            });
+                    component.Label = "a sample component";
+                    component.Description = hasDescription
+                        ? "this text describes the component"
+                        : string.Empty;
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -57,7 +63,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                     Origin = Anchor.Centre,
                     Label = "Testing text",
                     PlaceholderText = "This is definitely working as intended",
-                }
+                },
             };
         }
     }

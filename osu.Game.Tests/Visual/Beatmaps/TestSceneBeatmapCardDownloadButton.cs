@@ -23,7 +23,9 @@ namespace osu.Game.Tests.Visual.Beatmaps
         private DownloadButton downloadButton;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [Resolved]
         private OsuConfigManager config { get; set; }
@@ -35,10 +37,16 @@ namespace osu.Game.Tests.Visual.Beatmaps
             assertDownloadEnabled(true);
 
             AddStep("prefer no video", () => config.SetValue(OsuSetting.PreferNoVideo, true));
-            AddAssert("tooltip text correct", () => downloadButton.TooltipText == BeatmapsetsStrings.PanelDownloadNoVideo);
+            AddAssert(
+                "tooltip text correct",
+                () => downloadButton.TooltipText == BeatmapsetsStrings.PanelDownloadNoVideo
+            );
 
             AddStep("prefer video", () => config.SetValue(OsuSetting.PreferNoVideo, false));
-            AddAssert("tooltip text correct", () => downloadButton.TooltipText == BeatmapsetsStrings.PanelDownloadVideo);
+            AddAssert(
+                "tooltip text correct",
+                () => downloadButton.TooltipText == BeatmapsetsStrings.PanelDownloadVideo
+            );
         }
 
         [Test]
@@ -46,24 +54,38 @@ namespace osu.Game.Tests.Visual.Beatmaps
         {
             createButton(false);
             assertDownloadEnabled(false);
-            AddAssert("tooltip text correct", () => downloadButton.TooltipText == BeatmapsetsStrings.AvailabilityDisabled);
+            AddAssert(
+                "tooltip text correct",
+                () => downloadButton.TooltipText == BeatmapsetsStrings.AvailabilityDisabled
+            );
         }
 
-        private void assertDownloadEnabled(bool enabled) => AddAssert($"download {(enabled ? "enabled" : "disabled")}", () => downloadButton.Enabled.Value == enabled);
+        private void assertDownloadEnabled(bool enabled) =>
+            AddAssert(
+                $"download {(enabled ? "enabled" : "disabled")}",
+                () => downloadButton.Enabled.Value == enabled
+            );
 
         private void createButton(bool downloadable, bool hasVideo = false)
         {
-            AddStep("create button", () =>
-            {
-                Child = downloadButton = new DownloadButton(downloadable ? getDownloadableBeatmapSet(hasVideo) : getUndownloadableBeatmapSet())
+            AddStep(
+                "create button",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(25f, 50f),
-                    Scale = new Vector2(2f),
-                    State = { Value = DownloadState.NotDownloaded },
-                };
-            });
+                    Child = downloadButton = new DownloadButton(
+                        downloadable
+                            ? getDownloadableBeatmapSet(hasVideo)
+                            : getUndownloadableBeatmapSet()
+                    )
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(25f, 50f),
+                        Scale = new Vector2(2f),
+                        State = { Value = DownloadState.NotDownloaded },
+                    };
+                }
+            );
         }
 
         private APIBeatmapSet getDownloadableBeatmapSet(bool hasVideo)

@@ -122,7 +122,8 @@ namespace osu.Game.Tests.NonVisual
                     host.Storage.GetStorageForDirectory("cache");
 
                     // for testing nested files are not ignored (only top level)
-                    host.Storage.GetStorageForDirectory("test-nested").GetStorageForDirectory("cache");
+                    host.Storage.GetStorageForDirectory("test-nested")
+                        .GetStorageForDirectory("cache");
 
                     Assert.That(storage.GetFullPath("."), Is.EqualTo(defaultStorageLocation));
 
@@ -134,7 +135,9 @@ namespace osu.Game.Tests.NonVisual
                     Assert.That(Directory.Exists(Path.Combine(originalDirectory, "cache")));
 
                     // ensure nested cache was moved
-                    Assert.That(!Directory.Exists(Path.Combine(originalDirectory, "test-nested", "cache")));
+                    Assert.That(
+                        !Directory.Exists(Path.Combine(originalDirectory, "test-nested", "cache"))
+                    );
                     Assert.That(storage.ExistsDirectory(Path.Combine("test-nested", "cache")));
 
                     Assert.That(osuStorage, Is.Not.Null);
@@ -150,7 +153,12 @@ namespace osu.Game.Tests.NonVisual
                         if (!file.Contains(".realm", StringComparison.Ordinal))
                         {
                             Assert.That(File.Exists(Path.Combine(originalDirectory, file)));
-                            Assert.That(storage.Exists(file), Is.False, () => $"{file} exists in destination when it was expected to be ignored");
+                            Assert.That(
+                                storage.Exists(file),
+                                Is.False,
+                                () =>
+                                    $"{file} exists in destination when it was expected to be ignored"
+                            );
                         }
                     }
 
@@ -159,11 +167,20 @@ namespace osu.Game.Tests.NonVisual
                         if (!dir.Contains(".realm", StringComparison.Ordinal))
                         {
                             Assert.That(Directory.Exists(Path.Combine(originalDirectory, dir)));
-                            Assert.That(storage.Exists(dir), Is.False, () => $"{dir} exists in destination when it was expected to be ignored");
+                            Assert.That(
+                                storage.Exists(dir),
+                                Is.False,
+                                () =>
+                                    $"{dir} exists in destination when it was expected to be ignored"
+                            );
                         }
                     }
 
-                    Assert.That(new StreamReader(Path.Combine(originalDirectory, "storage.ini")).ReadToEnd().Contains($"FullPath = {customPath}"));
+                    Assert.That(
+                        new StreamReader(Path.Combine(originalDirectory, "storage.ini"))
+                            .ReadToEnd()
+                            .Contains($"FullPath = {customPath}")
+                    );
                 }
                 finally
                 {
@@ -184,16 +201,22 @@ namespace osu.Game.Tests.NonVisual
                     var osu = LoadOsuIntoHost(host);
 
                     Assert.DoesNotThrow(() => osu.Migrate(customPath));
-                    Assert.That(File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME)));
+                    Assert.That(
+                        File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME))
+                    );
 
                     Assert.DoesNotThrow(() => osu.Migrate(customPath2));
-                    Assert.That(File.Exists(Path.Combine(customPath2, OsuGameBase.CLIENT_DATABASE_FILENAME)));
+                    Assert.That(
+                        File.Exists(Path.Combine(customPath2, OsuGameBase.CLIENT_DATABASE_FILENAME))
+                    );
 
                     // some files may have been left behind for whatever reason, but that's not what we're testing here.
                     cleanupPath(customPath);
 
                     Assert.DoesNotThrow(() => osu.Migrate(customPath));
-                    Assert.That(File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME)));
+                    Assert.That(
+                        File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME))
+                    );
                 }
                 finally
                 {
@@ -239,10 +262,15 @@ namespace osu.Game.Tests.NonVisual
                     string originalDirectory = storage.GetFullPath(".");
 
                     Assert.DoesNotThrow(() => osu.Migrate(customPath));
-                    Assert.That(File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME)));
+                    Assert.That(
+                        File.Exists(Path.Combine(customPath, OsuGameBase.CLIENT_DATABASE_FILENAME))
+                    );
 
                     Directory.CreateDirectory(customPath2);
-                    File.WriteAllText(Path.Combine(customPath2, OsuGameBase.CLIENT_DATABASE_FILENAME), "I am a text");
+                    File.WriteAllText(
+                        Path.Combine(customPath2, OsuGameBase.CLIENT_DATABASE_FILENAME),
+                        "I am a text"
+                    );
 
                     // Fails because file already exists.
                     Assert.Throws<ArgumentException>(() => osu.Migrate(customPath2));
@@ -250,7 +278,11 @@ namespace osu.Game.Tests.NonVisual
                     osuStorage?.ChangeDataPath(customPath2);
 
                     Assert.That(osuStorage?.CustomStoragePath, Is.EqualTo(customPath2));
-                    Assert.That(new StreamReader(Path.Combine(originalDirectory, "storage.ini")).ReadToEnd().Contains($"FullPath = {customPath2}"));
+                    Assert.That(
+                        new StreamReader(Path.Combine(originalDirectory, "storage.ini"))
+                            .ReadToEnd()
+                            .Contains($"FullPath = {customPath2}")
+                    );
                 }
                 finally
                 {
@@ -322,11 +354,17 @@ namespace osu.Game.Tests.NonVisual
             {
                 try
                 {
-                    File.WriteAllText(host.InitialStorage.GetFullPath(OsuGameBase.CLIENT_DATABASE_FILENAME, true), "i am definitely not a realm file");
+                    File.WriteAllText(
+                        host.InitialStorage.GetFullPath(OsuGameBase.CLIENT_DATABASE_FILENAME, true),
+                        "i am definitely not a realm file"
+                    );
 
                     LoadOsuIntoHost(host);
 
-                    Assert.That(host.InitialStorage.GetFiles(string.Empty, "*_corrupt.realm"), Has.One.Items);
+                    Assert.That(
+                        host.InitialStorage.GetFiles(string.Empty, "*_corrupt.realm"),
+                        Has.One.Items
+                    );
                 }
                 finally
                 {
@@ -347,7 +385,10 @@ namespace osu.Game.Tests.NonVisual
 
         private static IDisposable prepareCustomPath(out string path)
         {
-            path = Path.Combine(TestRunHeadlessGameHost.TemporaryTestDirectory, $"custom-path-{Guid.NewGuid()}");
+            path = Path.Combine(
+                TestRunHeadlessGameHost.TemporaryTestDirectory,
+                $"custom-path-{Guid.NewGuid()}"
+            );
             return new InvokeOnDisposal<string>(path, cleanupPath);
         }
 
@@ -355,11 +396,10 @@ namespace osu.Game.Tests.NonVisual
         {
             try
             {
-                if (Directory.Exists(path)) Directory.Delete(path, true);
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         public class CustomTestHeadlessGameHost : CleanRunHeadlessGameHost

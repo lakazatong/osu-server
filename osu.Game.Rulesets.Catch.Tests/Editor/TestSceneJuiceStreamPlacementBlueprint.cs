@@ -41,11 +41,26 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             addPlacementSteps(times, positions);
 
             AddAssert("juice stream is placed", () => lastObject != null);
-            AddAssert("start time is correct", () => Precision.AlmostEquals(lastObject.StartTime, times[0]));
-            AddAssert("end time is correct", () => Precision.AlmostEquals(lastObject.EndTime, times[1]));
-            AddAssert("start position is correct", () => Precision.AlmostEquals(lastObject.OriginalX, positions[0]));
-            AddAssert("end position is correct", () => Precision.AlmostEquals(lastObject.EndX, positions[1]));
-            AddAssert("default slider velocity", () => lastObject.SliderVelocityMultiplierBindable.IsDefault);
+            AddAssert(
+                "start time is correct",
+                () => Precision.AlmostEquals(lastObject.StartTime, times[0])
+            );
+            AddAssert(
+                "end time is correct",
+                () => Precision.AlmostEquals(lastObject.EndTime, times[1])
+            );
+            AddAssert(
+                "start position is correct",
+                () => Precision.AlmostEquals(lastObject.OriginalX, positions[0])
+            );
+            AddAssert(
+                "end position is correct",
+                () => Precision.AlmostEquals(lastObject.EndX, positions[1])
+            );
+            AddAssert(
+                "default slider velocity",
+                () => lastObject.SliderVelocityMultiplierBindable.IsDefault
+            );
         }
 
         [Test]
@@ -76,7 +91,10 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             addPlacementSteps(times, positions);
             addPathCheckStep(times, positions);
 
-            AddAssert("slider velocity changed", () => !lastObject.SliderVelocityMultiplierBindable.IsDefault);
+            AddAssert(
+                "slider velocity changed",
+                () => !lastObject.SliderVelocityMultiplierBindable.IsDefault
+            );
         }
 
         [Test]
@@ -108,13 +126,21 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             double[] times = { 300, 500, 100 };
             float[] positions = { 100, 100, 100 };
             addPlacementSteps(times, positions);
-            AddAssert("start time is correct", () => Precision.AlmostEquals(lastObject.StartTime, times[0]));
-            AddAssert("end time is correct", () => Precision.AlmostEquals(lastObject.EndTime, times[1], 1e-3));
+            AddAssert(
+                "start time is correct",
+                () => Precision.AlmostEquals(lastObject.StartTime, times[0])
+            );
+            AddAssert(
+                "end time is correct",
+                () => Precision.AlmostEquals(lastObject.EndTime, times[1], 1e-3)
+            );
         }
 
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableJuiceStream((JuiceStream)hitObject);
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableJuiceStream((JuiceStream)hitObject);
 
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new JuiceStreamPlacementBlueprint();
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new JuiceStreamPlacementBlueprint();
 
         private void addMoveAndClickSteps(double time, float position, bool end = false)
         {
@@ -128,16 +154,26 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
                 addMoveAndClickSteps(times[i], positions[i], i == times.Length - 1);
         }
 
-        private void addPathCheckStep(double[] times, float[] positions) => AddStep("assert path is correct", () =>
-            Assert.That(getPositions(times), Is.EqualTo(positions).Within(Precision.FLOAT_EPSILON)));
+        private void addPathCheckStep(double[] times, float[] positions) =>
+            AddStep(
+                "assert path is correct",
+                () =>
+                    Assert.That(
+                        getPositions(times),
+                        Is.EqualTo(positions).Within(Precision.FLOAT_EPSILON)
+                    )
+            );
 
         private float[] getPositions(IEnumerable<double> times)
         {
             JuiceStream hitObject = lastObject.AsNonNull();
             return times
-                   .Select(time => (time - hitObject.StartTime) * hitObject.Velocity)
-                   .Select(distance => hitObject.EffectiveX + hitObject.Path.PositionAt(distance / hitObject.Distance).X)
-                   .ToArray();
+                .Select(time => (time - hitObject.StartTime) * hitObject.Velocity)
+                .Select(distance =>
+                    hitObject.EffectiveX
+                    + hitObject.Path.PositionAt(distance / hitObject.Distance).X
+                )
+                .ToArray();
         }
     }
 }

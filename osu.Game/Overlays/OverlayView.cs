@@ -65,15 +65,16 @@ namespace osu.Game.Overlays
             API.Queue(request);
         }
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            switch (state.NewValue)
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
             {
-                case APIState.Online:
-                    PerformFetch();
-                    break;
-            }
-        });
+                switch (state.NewValue)
+                {
+                    case APIState.Online:
+                        PerformFetch();
+                        break;
+                }
+            });
 
         protected override void Dispose(bool isDisposing)
         {

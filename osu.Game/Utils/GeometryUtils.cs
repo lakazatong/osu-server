@@ -43,8 +43,10 @@ namespace osu.Game.Utils
         public static Vector2 RotateVector(Vector2 vector, float angle)
         {
             return new Vector2(
-                vector.X * MathF.Cos(float.DegreesToRadians(angle)) + vector.Y * MathF.Sin(float.DegreesToRadians(angle)),
-                vector.X * -MathF.Sin(float.DegreesToRadians(angle)) + vector.Y * MathF.Cos(float.DegreesToRadians(angle))
+                vector.X * MathF.Cos(float.DegreesToRadians(angle))
+                    + vector.Y * MathF.Sin(float.DegreesToRadians(angle)),
+                vector.X * -MathF.Sin(float.DegreesToRadians(angle))
+                    + vector.Y * MathF.Cos(float.DegreesToRadians(angle))
             );
         }
 
@@ -91,7 +93,12 @@ namespace osu.Game.Utils
         /// Given a scale vector, a surrounding quad for all selected objects, and a position,
         /// will return the scaled position in screen space coordinates.
         /// </summary>
-        public static Vector2 GetScaledPosition(Anchor reference, Vector2 scale, Quad selectionQuad, Vector2 position)
+        public static Vector2 GetScaledPosition(
+            Anchor reference,
+            Vector2 scale,
+            Quad selectionQuad,
+            Vector2 position
+        )
         {
             // adjust the direction of scale depending on which side the user is dragging.
             float xOffset = ((reference & Anchor.x0) > 0) ? -scale.X : 0;
@@ -99,10 +106,20 @@ namespace osu.Game.Utils
 
             // guard against no-ops and NaN.
             if (scale.X != 0 && selectionQuad.Width > 0)
-                position.X = selectionQuad.TopLeft.X + xOffset + (position.X - selectionQuad.TopLeft.X) / selectionQuad.Width * (selectionQuad.Width + scale.X);
+                position.X =
+                    selectionQuad.TopLeft.X
+                    + xOffset
+                    + (position.X - selectionQuad.TopLeft.X)
+                        / selectionQuad.Width
+                        * (selectionQuad.Width + scale.X);
 
             if (scale.Y != 0 && selectionQuad.Height > 0)
-                position.Y = selectionQuad.TopLeft.Y + yOffset + (position.Y - selectionQuad.TopLeft.Y) / selectionQuad.Height * (selectionQuad.Height + scale.Y);
+                position.Y =
+                    selectionQuad.TopLeft.Y
+                    + yOffset
+                    + (position.Y - selectionQuad.TopLeft.Y)
+                        / selectionQuad.Height
+                        * (selectionQuad.Height + scale.Y);
 
             return position;
         }
@@ -111,9 +128,18 @@ namespace osu.Game.Utils
         /// Given a scale multiplier, an origin, and a position,
         /// will return the scaled position in screen space coordinates.
         /// </summary>
-        public static Vector2 GetScaledPosition(Vector2 scale, Vector2 origin, Vector2 position, float axisRotation = 0)
+        public static Vector2 GetScaledPosition(
+            Vector2 scale,
+            Vector2 origin,
+            Vector2 position,
+            float axisRotation = 0
+        )
         {
-            return origin + RotateVector(RotateVector(position - origin, axisRotation) * scale, -axisRotation);
+            return origin
+                + RotateVector(
+                    RotateVector(position - origin, axisRotation) * scale,
+                    -axisRotation
+                );
         }
 
         /// <summary>
@@ -158,22 +184,17 @@ namespace osu.Game.Utils
             if (pointsList.Count < 3)
                 return pointsList;
 
-            var convexHullLower = new List<Vector2>
-            {
-                pointsList[0],
-                pointsList[1]
-            };
-            var convexHullUpper = new List<Vector2>
-            {
-                pointsList[^1],
-                pointsList[^2]
-            };
+            var convexHullLower = new List<Vector2> { pointsList[0], pointsList[1] };
+            var convexHullUpper = new List<Vector2> { pointsList[^1], pointsList[^2] };
 
             // Build the lower hull.
             for (int i = 2; i < pointsList.Count; i++)
             {
                 Vector2 c = pointsList[i];
-                while (convexHullLower.Count > 1 && isClockwise(convexHullLower[^2], convexHullLower[^1], c))
+                while (
+                    convexHullLower.Count > 1
+                    && isClockwise(convexHullLower[^2], convexHullLower[^1], c)
+                )
                     convexHullLower.RemoveAt(convexHullLower.Count - 1);
 
                 convexHullLower.Add(c);
@@ -183,7 +204,10 @@ namespace osu.Game.Utils
             for (int i = pointsList.Count - 3; i >= 0; i--)
             {
                 Vector2 c = pointsList[i];
-                while (convexHullUpper.Count > 1 && isClockwise(convexHullUpper[^2], convexHullUpper[^1], c))
+                while (
+                    convexHullUpper.Count > 1
+                    && isClockwise(convexHullUpper[^2], convexHullUpper[^1], c)
+                )
                     convexHullUpper.RemoveAt(convexHullUpper.Count - 1);
 
                 convexHullUpper.Add(c);
@@ -204,7 +228,9 @@ namespace osu.Game.Utils
         public static List<Vector2> GetConvexHull(IEnumerable<IHasPosition> hitObjects) =>
             GetConvexHull(enumerateStartAndEndPositions(hitObjects));
 
-        private static IEnumerable<Vector2> enumerateStartAndEndPositions(IEnumerable<IHasPosition> hitObjects) =>
+        private static IEnumerable<Vector2> enumerateStartAndEndPositions(
+            IEnumerable<IHasPosition> hitObjects
+        ) =>
             hitObjects.SelectMany(h =>
             {
                 if (h is IHasPath path)
@@ -213,7 +239,7 @@ namespace osu.Game.Utils
                     {
                         h.Position,
                         // can't use EndPosition for reverse slider cases.
-                        h.Position + path.Path.PositionAt(1)
+                        h.Position + path.Path.PositionAt(1),
                     };
                 }
 
@@ -240,9 +266,11 @@ namespace osu.Game.Utils
             float bSq = b.LengthSquared;
             float cSq = c.LengthSquared;
 
-            var centre = new Vector2(
-                aSq * (b - c).Y + bSq * (c - a).Y + cSq * (a - b).Y,
-                aSq * (c - b).X + bSq * (a - c).X + cSq * (b - a).X) / d;
+            var centre =
+                new Vector2(
+                    aSq * (b - c).Y + bSq * (c - a).Y + cSq * (a - b).Y,
+                    aSq * (c - b).X + bSq * (a - c).X + cSq * (b - a).X
+                ) / d;
 
             return (centre, Vector2.Distance(a, centre));
         }
@@ -260,7 +288,8 @@ namespace osu.Game.Utils
             // Iterating through all the points to check whether the points lie inside the circle or not
             foreach (Vector2 p in points)
             {
-                if (!isInside(c, p)) return false;
+                if (!isInside(c, p))
+                    return false;
             }
 
             return true;
@@ -370,7 +399,8 @@ namespace osu.Game.Utils
         /// Function to find the minimum enclosing circle for a collection of hit objects.
         /// </summary>
         /// <returns>A tuple containing the circle centre and radius.</returns>
-        public static (Vector2, float) MinimumEnclosingCircle(IEnumerable<IHasPosition> hitObjects) =>
-            MinimumEnclosingCircle(enumerateStartAndEndPositions(hitObjects));
+        public static (Vector2, float) MinimumEnclosingCircle(
+            IEnumerable<IHasPosition> hitObjects
+        ) => MinimumEnclosingCircle(enumerateStartAndEndPositions(hitObjects));
     }
 }

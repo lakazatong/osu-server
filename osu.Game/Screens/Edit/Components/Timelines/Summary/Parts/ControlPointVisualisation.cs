@@ -13,7 +13,10 @@ using osu.Game.Screens.Edit.Components.Timelines.Summary.Visualisations;
 
 namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 {
-    public partial class ControlPointVisualisation : PointVisualisation, IControlPointVisualisation, IHasTooltip
+    public partial class ControlPointVisualisation
+        : PointVisualisation,
+            IControlPointVisualisation,
+            IHasTooltip
     {
         protected readonly ControlPoint Point;
 

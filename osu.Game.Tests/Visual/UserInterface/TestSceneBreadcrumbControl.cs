@@ -18,13 +18,15 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public TestSceneBreadcrumbControl()
         {
-            Add(breadcrumbs = new TestBreadcrumbControl
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.X,
-                Width = 0.5f,
-            });
+            Add(
+                breadcrumbs = new TestBreadcrumbControl
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.X,
+                    Width = 0.5f,
+                }
+            );
 
             AddStep(@"first", () => breadcrumbs.Current.Value = BreadcrumbTab.Click);
             assertVisible(1);
@@ -42,16 +44,20 @@ namespace osu.Game.Tests.Visual.UserInterface
             breadcrumbs.StripColour = colours.Blue;
         }
 
-        private void assertVisible(int count) => AddAssert($"first {count} item(s) visible", () =>
-        {
-            for (int i = 0; i < count; i++)
-            {
-                if (breadcrumbs.GetDrawable((BreadcrumbTab)i).State != Visibility.Visible)
-                    return false;
-            }
+        private void assertVisible(int count) =>
+            AddAssert(
+                $"first {count} item(s) visible",
+                () =>
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (breadcrumbs.GetDrawable((BreadcrumbTab)i).State != Visibility.Visible)
+                            return false;
+                    }
 
-            return true;
-        });
+                    return true;
+                }
+            );
 
         private enum BreadcrumbTab
         {
@@ -62,7 +68,8 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private partial class TestBreadcrumbControl : BreadcrumbControl<BreadcrumbTab>
         {
-            public BreadcrumbTabItem GetDrawable(BreadcrumbTab tab) => (BreadcrumbTabItem)TabContainer.First(t => t.Value == tab);
+            public BreadcrumbTabItem GetDrawable(BreadcrumbTab tab) =>
+                (BreadcrumbTabItem)TabContainer.First(t => t.Value == tab);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace osu.Game.Rulesets.Mods
 
         public override Mod DeepClone() => new MultiMod(Mods.Select(m => m.DeepClone()).ToArray());
 
-        public override Type[] IncompatibleMods => Mods.SelectMany(m => m.IncompatibleMods).ToArray();
+        public override Type[] IncompatibleMods =>
+            Mods.SelectMany(m => m.IncompatibleMods).ToArray();
     }
 }

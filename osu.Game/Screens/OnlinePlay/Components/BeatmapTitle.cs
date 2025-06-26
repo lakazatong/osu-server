@@ -71,22 +71,37 @@ namespace osu.Game.Screens.OnlinePlay.Components
 
             if (beatmap == null)
             {
-                textFlow.AddText("No beatmap selected", s =>
-                {
-                    s.Font = s.Font.With(size: TextSize);
-                    s.Colour = colours.PinkLight;
-                });
+                textFlow.AddText(
+                    "No beatmap selected",
+                    s =>
+                    {
+                        s.Font = s.Font.With(size: TextSize);
+                        s.Colour = colours.PinkLight;
+                    }
+                );
             }
             else
             {
                 var metadataInfo = beatmap.Metadata;
 
-                string artistUnicode = string.IsNullOrEmpty(metadataInfo.ArtistUnicode) ? metadataInfo.Artist : metadataInfo.ArtistUnicode;
-                string titleUnicode = string.IsNullOrEmpty(metadataInfo.TitleUnicode) ? metadataInfo.Title : metadataInfo.TitleUnicode;
+                string artistUnicode = string.IsNullOrEmpty(metadataInfo.ArtistUnicode)
+                    ? metadataInfo.Artist
+                    : metadataInfo.ArtistUnicode;
+                string titleUnicode = string.IsNullOrEmpty(metadataInfo.TitleUnicode)
+                    ? metadataInfo.Title
+                    : metadataInfo.TitleUnicode;
 
-                var title = new RomanisableString($"{artistUnicode} - {titleUnicode}".Trim(), $"{metadataInfo.Artist} - {metadataInfo.Title}".Trim());
+                var title = new RomanisableString(
+                    $"{artistUnicode} - {titleUnicode}".Trim(),
+                    $"{metadataInfo.Artist} - {metadataInfo.Title}".Trim()
+                );
 
-                textFlow.AddLink(title, LinkAction.OpenBeatmap, beatmap.OnlineID.ToString(), "Open beatmap");
+                textFlow.AddLink(
+                    title,
+                    LinkAction.OpenBeatmap,
+                    beatmap.OnlineID.ToString(),
+                    "Open beatmap"
+                );
             }
         }
 

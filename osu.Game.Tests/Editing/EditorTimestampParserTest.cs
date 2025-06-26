@@ -26,14 +26,35 @@ namespace osu.Game.Tests.Editing
             new object?[] { "1:02:300 ()", false, null, null },
             new object?[] { "1:02:300 (1,2,3)", true, new TimeSpan(0, 0, 1, 2, 300), "1,2,3" },
             new object?[] { "1:02:300 (1,2,3) - ", true, new TimeSpan(0, 0, 1, 2, 300), "1,2,3" },
-            new object?[] { "1:02:300 (1,2,3) - following mod", true, new TimeSpan(0, 0, 1, 2, 300), "1,2,3" },
-            new object?[] { "1:02:300 (1,2,3) - following mod\nwith newlines", true, new TimeSpan(0, 0, 1, 2, 300), "1,2,3" },
+            new object?[]
+            {
+                "1:02:300 (1,2,3) - following mod",
+                true,
+                new TimeSpan(0, 0, 1, 2, 300),
+                "1,2,3",
+            },
+            new object?[]
+            {
+                "1:02:300 (1,2,3) - following mod\nwith newlines",
+                true,
+                new TimeSpan(0, 0, 1, 2, 300),
+                "1,2,3",
+            },
         };
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestTryParse(string timestamp, bool expectedSuccess, TimeSpan? expectedParsedTime, string? expectedSelection)
+        public void TestTryParse(
+            string timestamp,
+            bool expectedSuccess,
+            TimeSpan? expectedParsedTime,
+            string? expectedSelection
+        )
         {
-            bool actualSuccess = EditorTimestampParser.TryParse(timestamp, out var actualParsedTime, out string? actualSelection);
+            bool actualSuccess = EditorTimestampParser.TryParse(
+                timestamp,
+                out var actualParsedTime,
+                out string? actualSelection
+            );
 
             Assert.Multiple(() =>
             {

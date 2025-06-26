@@ -16,13 +16,17 @@ namespace osu.Game.Rulesets.Mania.Tests
         {
             base.SetUpSteps();
 
-            AddStep("change direction to down", () => changeDirectionTo(ManiaScrollingDirection.Down));
+            AddStep(
+                "change direction to down",
+                () => changeDirectionTo(ManiaScrollingDirection.Down)
+            );
             AddStep("change direction to up", () => changeDirectionTo(ManiaScrollingDirection.Up));
         }
 
         private void changeDirectionTo(ManiaScrollingDirection direction)
         {
-            var rulesetConfig = (ManiaRulesetConfigManager)RulesetConfigs.GetConfigFor(new ManiaRuleset()).AsNonNull();
+            var rulesetConfig = (ManiaRulesetConfigManager)
+                RulesetConfigs.GetConfigFor(new ManiaRuleset()).AsNonNull();
             rulesetConfig.SetValue(ManiaRulesetSetting.ScrollDirection, direction);
         }
     }

@@ -20,10 +20,12 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         public readonly BindableDouble TimeRangeMultiplier = new BindableDouble(1);
 
-        public DrawableCatchEditorRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawableCatchEditorRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        )
+            : base(ruleset, beatmap, mods) { }
 
         protected override void Update()
         {
@@ -54,12 +56,16 @@ namespace osu.Game.Rulesets.Catch.Edit
             if (Playfield is CatchEditorPlayfield catchPlayfield)
             {
                 catchPlayfield.Catcher.ApplyDifficulty(editorBeatmap.Difficulty);
-                catchPlayfield.CatcherArea.CatcherTrails.UpdateCatcherTrailsScale(catchPlayfield.Catcher.BodyScale);
+                catchPlayfield.CatcherArea.CatcherTrails.UpdateCatcherTrailsScale(
+                    catchPlayfield.Catcher.BodyScale
+                );
             }
         }
 
-        protected override Playfield CreatePlayfield() => new CatchEditorPlayfield(Beatmap.Difficulty);
+        protected override Playfield CreatePlayfield() =>
+            new CatchEditorPlayfield(Beatmap.Difficulty);
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new CatchEditorPlayfieldAdjustmentContainer();
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new CatchEditorPlayfieldAdjustmentContainer();
     }
 }

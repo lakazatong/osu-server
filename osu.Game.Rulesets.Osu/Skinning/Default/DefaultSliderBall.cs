@@ -27,7 +27,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             RelativeSizeAxes = Axes.Both;
 
-            float radius = skin.GetConfig<OsuSkinConfiguration, float>(OsuSkinConfiguration.SliderPathRadius)?.Value ?? OsuHitObject.OBJECT_RADIUS;
+            float radius =
+                skin.GetConfig<OsuSkinConfiguration, float>(
+                    OsuSkinConfiguration.SliderPathRadius
+                )?.Value ?? OsuHitObject.OBJECT_RADIUS;
 
             InternalChild = new CircularContainer
             {
@@ -40,14 +43,15 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 BorderThickness = 10,
                 BorderColour = Color4.White,
                 Alpha = 1,
-                Child = box = new Box
-                {
-                    Blending = BlendingParameters.Additive,
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.White,
-                    AlwaysPresent = true,
-                    Alpha = 0
-                }
+                Child = box =
+                    new Box
+                    {
+                        Blending = BlendingParameters.Additive,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.White,
+                        AlwaysPresent = true,
+                        Alpha = 0,
+                    },
             };
 
             if (parentObject != null)
@@ -82,8 +86,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
             using (BeginAbsoluteSequence(drawableObject.StateUpdateTime))
             {
-                this.FadeIn()
-                    .ScaleTo(1f);
+                this.FadeIn().ScaleTo(1f);
             }
 
             using (BeginAbsoluteSequence(drawableObject.HitStateUpdateTime))

@@ -16,84 +16,100 @@ namespace osu.Game.Tests.Visual.Editing
     public partial class TestSceneEditorMenuBar : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         public TestSceneEditorMenuBar()
         {
-            Add(new Container
-            {
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                RelativeSizeAxes = Axes.X,
-                Height = 50,
-                Y = 50,
-                Child = new EditorMenuBar
+            Add(
+                new Container
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Items = new[]
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.X,
+                    Height = 50,
+                    Y = 50,
+                    Child = new EditorMenuBar
                     {
-                        new MenuItem("File")
+                        RelativeSizeAxes = Axes.Both,
+                        Items = new[]
                         {
-                            Items = new OsuMenuItem[]
+                            new MenuItem("File")
                             {
-                                new EditorMenuItem("Clear All Notes"),
-                                new EditorMenuItem("Open Difficulty..."),
-                                new EditorMenuItem("Save"),
-                                new EditorMenuItem("Create a new Difficulty..."),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Revert to Saved"),
-                                new EditorMenuItem("Revert to Saved (Full)"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Test Beatmap"),
-                                new EditorMenuItem("Open AiMod"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Upload Beatmap..."),
-                                new EditorMenuItem("Export Package"),
-                                new EditorMenuItem("Export Map Package"),
-                                new EditorMenuItem("Import from..."),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Open Song Folder"),
-                                new EditorMenuItem("Open .osu in Notepad"),
-                                new EditorMenuItem("Open .osb in Notepad"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Exit"),
-                            }
-                        },
-                        new MenuItem("Timing")
-                        {
-                            Items = new OsuMenuItem[]
+                                Items = new OsuMenuItem[]
+                                {
+                                    new EditorMenuItem("Clear All Notes"),
+                                    new EditorMenuItem("Open Difficulty..."),
+                                    new EditorMenuItem("Save"),
+                                    new EditorMenuItem("Create a new Difficulty..."),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Revert to Saved"),
+                                    new EditorMenuItem("Revert to Saved (Full)"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Test Beatmap"),
+                                    new EditorMenuItem("Open AiMod"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Upload Beatmap..."),
+                                    new EditorMenuItem("Export Package"),
+                                    new EditorMenuItem("Export Map Package"),
+                                    new EditorMenuItem("Import from..."),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Open Song Folder"),
+                                    new EditorMenuItem("Open .osu in Notepad"),
+                                    new EditorMenuItem("Open .osb in Notepad"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Exit"),
+                                },
+                            },
+                            new MenuItem("Timing")
                             {
-                                new EditorMenuItem("Time Signature"),
-                                new EditorMenuItem("Metronome Clicks"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Add Timing Section"),
-                                new EditorMenuItem("Add Inheriting Section"),
-                                new EditorMenuItem("Reset Current Section"),
-                                new EditorMenuItem("Delete Timing Section"),
-                                new EditorMenuItem("Resnap Current Section"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Timing Setup"),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Resnap All Notes", MenuItemType.Destructive),
-                                new EditorMenuItem("Move all notes in time...", MenuItemType.Destructive),
-                                new EditorMenuItem("Recalculate Slider Lengths", MenuItemType.Destructive),
-                                new EditorMenuItem("Delete All Timing Sections", MenuItemType.Destructive),
-                                new OsuMenuItemSpacer(),
-                                new EditorMenuItem("Set Current Position as Preview Point"),
-                            }
-                        },
-                        new MenuItem("Testing")
-                        {
-                            Items = new[]
+                                Items = new OsuMenuItem[]
+                                {
+                                    new EditorMenuItem("Time Signature"),
+                                    new EditorMenuItem("Metronome Clicks"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Add Timing Section"),
+                                    new EditorMenuItem("Add Inheriting Section"),
+                                    new EditorMenuItem("Reset Current Section"),
+                                    new EditorMenuItem("Delete Timing Section"),
+                                    new EditorMenuItem("Resnap Current Section"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Timing Setup"),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem(
+                                        "Resnap All Notes",
+                                        MenuItemType.Destructive
+                                    ),
+                                    new EditorMenuItem(
+                                        "Move all notes in time...",
+                                        MenuItemType.Destructive
+                                    ),
+                                    new EditorMenuItem(
+                                        "Recalculate Slider Lengths",
+                                        MenuItemType.Destructive
+                                    ),
+                                    new EditorMenuItem(
+                                        "Delete All Timing Sections",
+                                        MenuItemType.Destructive
+                                    ),
+                                    new OsuMenuItemSpacer(),
+                                    new EditorMenuItem("Set Current Position as Preview Point"),
+                                },
+                            },
+                            new MenuItem("Testing")
                             {
-                                new EditorMenuItem("Item 1"),
-                                new EditorMenuItem("Item 2"),
-                                new EditorMenuItem("Item 3"),
-                            }
+                                Items = new[]
+                                {
+                                    new EditorMenuItem("Item 1"),
+                                    new EditorMenuItem("Item 2"),
+                                    new EditorMenuItem("Item 3"),
+                                },
+                            },
                         },
-                    }
+                    },
                 }
-            });
+            );
         }
     }
 }

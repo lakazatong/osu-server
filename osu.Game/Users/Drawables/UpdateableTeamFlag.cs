@@ -84,11 +84,7 @@ namespace osu.Game.Users.Drawables
                 InternalChildren = new Drawable[]
                 {
                     new HoverClickSounds(),
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Colour4.FromHex("333"),
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.FromHex("333") },
                     new Sprite
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -96,7 +92,7 @@ namespace osu.Game.Users.Drawables
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         FillMode = FillMode.Fit,
-                    }
+                    },
                 };
             }
 

@@ -12,14 +12,18 @@ using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.Taiko.Edit
 {
-    public partial class DrawableTaikoEditorRuleset : DrawableTaikoRuleset, ISupportConstantAlgorithmToggle
+    public partial class DrawableTaikoEditorRuleset
+        : DrawableTaikoRuleset,
+            ISupportConstantAlgorithmToggle
     {
         public BindableBool ShowSpeedChanges { get; } = new BindableBool();
 
-        public DrawableTaikoEditorRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawableTaikoEditorRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        )
+            : base(ruleset, beatmap, mods) { }
 
         protected override Playfield CreatePlayfield() => new TaikoEditorPlayfield();
 
@@ -27,7 +31,13 @@ namespace osu.Game.Rulesets.Taiko.Edit
         {
             base.LoadComplete();
 
-            ShowSpeedChanges.BindValueChanged(showChanges => VisualisationMethod = showChanges.NewValue ? ScrollVisualisationMethod.Overlapping : ScrollVisualisationMethod.Constant, true);
+            ShowSpeedChanges.BindValueChanged(
+                showChanges =>
+                    VisualisationMethod = showChanges.NewValue
+                        ? ScrollVisualisationMethod.Overlapping
+                        : ScrollVisualisationMethod.Constant,
+                true
+            );
         }
     }
 }

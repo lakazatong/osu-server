@@ -36,18 +36,23 @@ namespace osu.Game.Tests.Visual.Editing
         {
             base.LoadComplete();
 
-            AddStep("create timeline", () =>
-            {
-                // required for track
-                Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
-
-                Add(new SummaryTimeline
+            AddStep(
+                "create timeline",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(500, 50)
-                });
-            });
+                    // required for track
+                    Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
+
+                    Add(
+                        new SummaryTimeline
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(500, 50),
+                        }
+                    );
+                }
+            );
         }
     }
 }

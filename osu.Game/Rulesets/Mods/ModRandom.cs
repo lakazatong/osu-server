@@ -17,7 +17,11 @@ namespace osu.Game.Rulesets.Mods
         public override IconUsage? Icon => OsuIcon.Dice;
         public override double ScoreMultiplier => 1;
 
-        [SettingSource("Seed", "Use a custom seed instead of a random one", SettingControlType = typeof(SettingsNumberBox))]
+        [SettingSource(
+            "Seed",
+            "Use a custom seed instead of a random one",
+            SettingControlType = typeof(SettingsNumberBox)
+        )]
         public Bindable<int?> Seed { get; } = new Bindable<int?>();
     }
 }

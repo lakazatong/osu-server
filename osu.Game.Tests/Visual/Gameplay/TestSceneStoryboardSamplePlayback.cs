@@ -38,10 +38,16 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             storyboard = new Storyboard();
             var backgroundLayer = storyboard.GetLayer("Background");
-            backgroundLayer.Add(new StoryboardSampleInfo("Intro/welcome.mp3", time: -7000, volume: 20));
-            backgroundLayer.Add(new StoryboardSampleInfo("Intro/welcome.mp3", time: -5000, volume: 20));
+            backgroundLayer.Add(
+                new StoryboardSampleInfo("Intro/welcome.mp3", time: -7000, volume: 20)
+            );
+            backgroundLayer.Add(
+                new StoryboardSampleInfo("Intro/welcome.mp3", time: -5000, volume: 20)
+            );
             backgroundLayer.Add(new StoryboardSampleInfo("Intro/welcome.mp3", time: 0, volume: 20));
-            backgroundLayer.Add(new StoryboardSampleInfo("Intro/welcome.mp3", time: 2000, volume: 20));
+            backgroundLayer.Add(
+                new StoryboardSampleInfo("Intro/welcome.mp3", time: 2000, volume: 20)
+            );
         }
 
         [SetUp]
@@ -53,7 +59,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             createPlayerTest();
 
             AddStep("player paused", () => Player.Pause());
-            AddAssert("player is currently paused", () => Player.GameplayClockContainer.IsPaused.Value);
+            AddAssert(
+                "player is currently paused",
+                () => Player.GameplayClockContainer.IsPaused.Value
+            );
             allStoryboardSamplesStopped();
 
             AddStep("player resume", () => Player.Resume());
@@ -75,49 +84,79 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(typeof(OsuModDoubleTime), 2)]
         [TestCase(typeof(OsuModHalfTime), 0.75)]
         [TestCase(typeof(OsuModHalfTime), 0.5)]
-        public void TestStoryboardSamplesPlaybackWithRateAdjustMods(Type expectedMod, double expectedRate)
+        public void TestStoryboardSamplesPlaybackWithRateAdjustMods(
+            Type expectedMod,
+            double expectedRate
+        )
         {
-            AddStep("setup mod", () =>
-            {
-                ModRateAdjust testedMod = (ModRateAdjust)Activator.CreateInstance(expectedMod).AsNonNull();
-                testedMod.SpeedChange.Value = expectedRate;
-                storyboardMods = new[] { testedMod };
-            });
+            AddStep(
+                "setup mod",
+                () =>
+                {
+                    ModRateAdjust testedMod = (ModRateAdjust)
+                        Activator.CreateInstance(expectedMod).AsNonNull();
+                    testedMod.SpeedChange.Value = expectedRate;
+                    storyboardMods = new[] { testedMod };
+                }
+            );
 
             createPlayerTest();
             skipIntro();
 
-            AddAssert("sample playback rate matches mod rates", () => allStoryboardSamples.All(sound =>
-                sound.ChildrenOfType<DrawableSample>().First().AggregateFrequency.Value == expectedRate));
+            AddAssert(
+                "sample playback rate matches mod rates",
+                () =>
+                    allStoryboardSamples.All(sound =>
+                        sound.ChildrenOfType<DrawableSample>().First().AggregateFrequency.Value
+                        == expectedRate
+                    )
+            );
         }
 
         [TestCase(typeof(ModWindUp), 0.5, 2)]
         [TestCase(typeof(ModWindUp), 1.51, 2)]
         [TestCase(typeof(ModWindDown), 2, 0.5)]
         [TestCase(typeof(ModWindDown), 0.99, 0.5)]
-        public void TestStoryboardSamplesPlaybackWithTimeRampMods(Type expectedMod, double initialRate, double finalRate)
+        public void TestStoryboardSamplesPlaybackWithTimeRampMods(
+            Type expectedMod,
+            double initialRate,
+            double finalRate
+        )
         {
-            AddStep("setup mod", () =>
-            {
-                ModTimeRamp testedMod = (ModTimeRamp)Activator.CreateInstance(expectedMod).AsNonNull();
-                testedMod.InitialRate.Value = initialRate;
-                testedMod.FinalRate.Value = finalRate;
-                storyboardMods = new[] { testedMod };
-            });
+            AddStep(
+                "setup mod",
+                () =>
+                {
+                    ModTimeRamp testedMod = (ModTimeRamp)
+                        Activator.CreateInstance(expectedMod).AsNonNull();
+                    testedMod.InitialRate.Value = initialRate;
+                    testedMod.FinalRate.Value = finalRate;
+                    storyboardMods = new[] { testedMod };
+                }
+            );
 
             createPlayerTest();
             skipIntro();
 
             ModTimeRamp gameplayMod = null;
 
-            AddUntilStep("mod speed change updated", () =>
-            {
-                gameplayMod = Player.GameplayState.Mods.OfType<ModTimeRamp>().Single();
-                return gameplayMod.SpeedChange.Value != initialRate;
-            });
+            AddUntilStep(
+                "mod speed change updated",
+                () =>
+                {
+                    gameplayMod = Player.GameplayState.Mods.OfType<ModTimeRamp>().Single();
+                    return gameplayMod.SpeedChange.Value != initialRate;
+                }
+            );
 
-            AddAssert("sample playback rate matches mod rates", () => allStoryboardSamples.All(sound =>
-                sound.ChildrenOfType<DrawableSample>().First().AggregateFrequency.Value == gameplayMod.SpeedChange.Value));
+            AddAssert(
+                "sample playback rate matches mod rates",
+                () =>
+                    allStoryboardSamples.All(sound =>
+                        sound.ChildrenOfType<DrawableSample>().First().AggregateFrequency.Value
+                        == gameplayMod.SpeedChange.Value
+                    )
+            );
         }
 
         private void createPlayerTest()
@@ -128,13 +167,22 @@ namespace osu.Game.Tests.Visual.Gameplay
             waitUntilStoryboardSamplesPlay();
         }
 
-        private void waitUntilStoryboardSamplesPlay() => AddUntilStep("any storyboard samples playing", () => allStoryboardSamples.Any(sound => sound.IsPlaying));
+        private void waitUntilStoryboardSamplesPlay() =>
+            AddUntilStep(
+                "any storyboard samples playing",
+                () => allStoryboardSamples.Any(sound => sound.IsPlaying)
+            );
 
-        private void allStoryboardSamplesStopped() => AddAssert("all storyboard samples stopped immediately", () => allStoryboardSamples.All(sound => !sound.IsPlaying));
+        private void allStoryboardSamplesStopped() =>
+            AddAssert(
+                "all storyboard samples stopped immediately",
+                () => allStoryboardSamples.All(sound => !sound.IsPlaying)
+            );
 
         private void skipIntro() => AddStep("skip intro", () => InputManager.Key(Key.Space));
 
-        private IEnumerable<DrawableStoryboardSample> allStoryboardSamples => Player.ChildrenOfType<DrawableStoryboardSample>();
+        private IEnumerable<DrawableStoryboardSample> allStoryboardSamples =>
+            Player.ChildrenOfType<DrawableStoryboardSample>();
 
         protected override bool AllowFail => false;
 
@@ -146,7 +194,10 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null) =>
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) =>
             new ClockBackedTestWorkingBeatmap(beatmap, storyboard ?? this.storyboard, Clock, Audio);
     }
 }

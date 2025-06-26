@@ -19,7 +19,8 @@ namespace osu.Game.Collections
     /// <summary>
     /// Visualises a list of <see cref="BeatmapCollection"/>s.
     /// </summary>
-    public partial class DrawableCollectionList : OsuRearrangeableListContainer<Live<BeatmapCollection>>
+    public partial class DrawableCollectionList
+        : OsuRearrangeableListContainer<Live<BeatmapCollection>>
     {
         public new MarginPadding Padding
         {
@@ -27,7 +28,8 @@ namespace osu.Game.Collections
             set => base.Padding = value;
         }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => scroll = new Scroll();
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            scroll = new Scroll();
 
         [Resolved]
         private RealmAccess realm { get; set; } = null!;
@@ -46,16 +48,19 @@ namespace osu.Game.Collections
             set => flow.SearchTerm = value;
         }
 
-        protected override FillFlowContainer<RearrangeableListItem<Live<BeatmapCollection>>> CreateListFillFlowContainer() => flow = new Flow
-        {
-            DragActive = { BindTarget = DragActive }
-        };
+        protected override FillFlowContainer<
+            RearrangeableListItem<Live<BeatmapCollection>>
+        > CreateListFillFlowContainer() =>
+            flow = new Flow { DragActive = { BindTarget = DragActive } };
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapCollection>().OrderBy(c => c.Name), collectionsChanged);
+            realmSubscription = realm.RegisterForNotifications(
+                r => r.All<BeatmapCollection>().OrderBy(c => c.Name),
+                collectionsChanged
+            );
         }
 
         /// <summary>
@@ -69,7 +74,9 @@ namespace osu.Game.Collections
 
             if (lastCreated != null)
             {
-                var createdItem = flow.Children.SingleOrDefault(item => item.Model.Value.ID == lastCreated);
+                var createdItem = flow.Children.SingleOrDefault(item =>
+                    item.Model.Value.ID == lastCreated
+                );
 
                 if (createdItem != null)
                     scroll.ScrollTo(createdItem);
@@ -78,7 +85,10 @@ namespace osu.Game.Collections
             }
         }
 
-        private void collectionsChanged(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
+        private void collectionsChanged(
+            IRealmCollection<BeatmapCollection> collections,
+            ChangeSet? changes
+        )
         {
             if (changes == null)
             {
@@ -104,7 +114,9 @@ namespace osu.Game.Collections
             }
         }
 
-        protected override OsuRearrangeableListItem<Live<BeatmapCollection>> CreateOsuDrawable(Live<BeatmapCollection> item)
+        protected override OsuRearrangeableListItem<Live<BeatmapCollection>> CreateOsuDrawable(
+            Live<BeatmapCollection> item
+        )
         {
             if (item.ID == scroll.PlaceholderItem.Model.ID)
                 return scroll.ReplacePlaceholder();
@@ -141,22 +153,24 @@ namespace osu.Game.Collections
             {
                 ScrollbarOverlapsContent = false;
 
-                base.Content.Add(new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    LayoutDuration = 200,
-                    LayoutEasing = Easing.OutQuint,
-                    Children = new Drawable[]
+                base.Content.Add(
+                    new FillFlowContainer
                     {
-                        content = new Container { RelativeSizeAxes = Axes.X },
-                        placeholderContainer = new Container<DrawableCollectionListItem>
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        LayoutDuration = 200,
+                        LayoutEasing = Easing.OutQuint,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y
-                        }
+                            content = new Container { RelativeSizeAxes = Axes.X },
+                            placeholderContainer = new Container<DrawableCollectionListItem>
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                            },
+                        },
                     }
-                });
+                );
 
                 ReplacePlaceholder();
                 Debug.Assert(PlaceholderItem != null);
@@ -167,7 +181,9 @@ namespace osu.Game.Collections
                 base.Update();
 
                 // AutoSizeAxes cannot be used as the height should represent the post-layout-transform height at all times, so that the placeholder doesn't bounce around.
-                content.Height = ((Flow)Child).Children.Sum(c => c.IsPresent ? c.DrawHeight + 5 : 0);
+                content.Height = ((Flow)Child).Children.Sum(c =>
+                    c.IsPresent ? c.DrawHeight + 5 : 0
+                );
             }
 
             /// <summary>
@@ -191,9 +207,7 @@ namespace osu.Game.Collections
             private RealmAccess realm { get; set; } = null!;
 
             public NewCollectionEntryItem()
-                : base(new BeatmapCollection().ToLiveUnmanaged(), false)
-            {
-            }
+                : base(new BeatmapCollection().ToLiveUnmanaged(), false) { }
 
             protected override void LoadComplete()
             {

@@ -37,9 +37,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
         /// </summary>
         public bool IsRepetitionOf(AlternatingMonoPattern other)
         {
-            return HasIdenticalMonoLength(other) &&
-                   other.MonoStreaks.Count == MonoStreaks.Count &&
-                   other.MonoStreaks[0].HitType == MonoStreaks[0].HitType;
+            return HasIdenticalMonoLength(other)
+                && other.MonoStreaks.Count == MonoStreaks.Count
+                && other.MonoStreaks[0].HitType == MonoStreaks[0].HitType;
         }
 
         /// <summary>

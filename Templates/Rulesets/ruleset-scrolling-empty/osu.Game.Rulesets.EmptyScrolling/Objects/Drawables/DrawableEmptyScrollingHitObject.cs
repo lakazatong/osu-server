@@ -8,7 +8,8 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.EmptyScrolling.Objects.Drawables
 {
-    public partial class DrawableEmptyScrollingHitObject : DrawableHitObject<EmptyScrollingHitObject>
+    public partial class DrawableEmptyScrollingHitObject
+        : DrawableHitObject<EmptyScrollingHitObject>
     {
         public DrawableEmptyScrollingHitObject(EmptyScrollingHitObject hitObject)
             : base(hitObject)

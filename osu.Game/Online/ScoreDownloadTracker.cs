@@ -24,9 +24,7 @@ namespace osu.Game.Online
         private RealmAccess realm { get; set; } = null!;
 
         public ScoreDownloadTracker(ScoreInfo trackedItem)
-            : base(trackedItem)
-        {
-        }
+            : base(trackedItem) { }
 
         protected override void LoadComplete()
         {
@@ -40,7 +38,7 @@ namespace osu.Game.Online
             {
                 ID = TrackedItem.ID,
                 OnlineID = TrackedItem.OnlineID,
-                LegacyOnlineID = TrackedItem.LegacyOnlineID
+                LegacyOnlineID = TrackedItem.LegacyOnlineID,
             };
 
             Downloader.DownloadBegan += downloadBegan;
@@ -51,36 +49,45 @@ namespace osu.Game.Online
             long legacyOnlineId = TrackedItem.LegacyOnlineID;
             string hash = TrackedItem.Hash;
 
-            realmSubscription = realm.RegisterForNotifications(r => r.All<ScoreInfo>().Where(s =>
-                ((s.OnlineID > 0 && s.OnlineID == onlineId)
-                 || (s.LegacyOnlineID > 0 && s.LegacyOnlineID == legacyOnlineId)
-                 || (!string.IsNullOrEmpty(s.Hash) && s.Hash == hash))
-                && !s.DeletePending), (items, _) =>
-            {
-                if (items.Any())
-                    Schedule(() => UpdateState(DownloadState.LocallyAvailable));
-                else
+            realmSubscription = realm.RegisterForNotifications(
+                r =>
+                    r.All<ScoreInfo>()
+                        .Where(s =>
+                            (
+                                (s.OnlineID > 0 && s.OnlineID == onlineId)
+                                || (s.LegacyOnlineID > 0 && s.LegacyOnlineID == legacyOnlineId)
+                                || (!string.IsNullOrEmpty(s.Hash) && s.Hash == hash)
+                            ) && !s.DeletePending
+                        ),
+                (items, _) =>
                 {
-                    Schedule(() =>
+                    if (items.Any())
+                        Schedule(() => UpdateState(DownloadState.LocallyAvailable));
+                    else
                     {
-                        UpdateState(DownloadState.NotDownloaded);
-                        attachDownload(Downloader.GetExistingDownload(scoreInfo));
-                    });
+                        Schedule(() =>
+                        {
+                            UpdateState(DownloadState.NotDownloaded);
+                            attachDownload(Downloader.GetExistingDownload(scoreInfo));
+                        });
+                    }
                 }
-            });
+            );
         }
 
-        private void downloadBegan(ArchiveDownloadRequest<IScoreInfo> request) => Schedule(() =>
-        {
-            if (checkEquality(request.Model, TrackedItem))
-                attachDownload(request);
-        });
+        private void downloadBegan(ArchiveDownloadRequest<IScoreInfo> request) =>
+            Schedule(() =>
+            {
+                if (checkEquality(request.Model, TrackedItem))
+                    attachDownload(request);
+            });
 
-        private void downloadFailed(ArchiveDownloadRequest<IScoreInfo> request) => Schedule(() =>
-        {
-            if (checkEquality(request.Model, TrackedItem))
-                attachDownload(null);
-        });
+        private void downloadFailed(ArchiveDownloadRequest<IScoreInfo> request) =>
+            Schedule(() =>
+            {
+                if (checkEquality(request.Model, TrackedItem))
+                    attachDownload(null);
+            });
 
         private void attachDownload(ArchiveDownloadRequest<IScoreInfo>? request)
         {
@@ -116,7 +123,8 @@ namespace osu.Game.Online
             }
         }
 
-        private void onRequestSuccess(string _) => Schedule(() => UpdateState(DownloadState.Importing));
+        private void onRequestSuccess(string _) =>
+            Schedule(() => UpdateState(DownloadState.Importing));
 
         private void onRequestProgress(float progress) => Schedule(() => UpdateProgress(progress));
 

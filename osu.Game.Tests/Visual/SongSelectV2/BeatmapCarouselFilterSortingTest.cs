@@ -51,12 +51,18 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             var results = await runSorting(SortMode.Author, beatmapSets);
 
             Assert.That(results.Last().Metadata.Author.Username, Is.EqualTo(zzz_uppercase));
-            Assert.That(results.SkipLast(diff_count).Last().Metadata.Author.Username, Is.EqualTo(zzz_lowercase));
+            Assert.That(
+                results.SkipLast(diff_count).Last().Metadata.Author.Username,
+                Is.EqualTo(zzz_lowercase)
+            );
 
             results = await runSorting(SortMode.Artist, beatmapSets);
 
             Assert.That(results.Last().Metadata.Artist, Is.EqualTo(zzz_uppercase));
-            Assert.That(results.SkipLast(diff_count).Last().Metadata.Artist, Is.EqualTo(zzz_lowercase));
+            Assert.That(
+                results.SkipLast(diff_count).Last().Metadata.Artist,
+                Is.EqualTo(zzz_lowercase)
+            );
         }
 
         [Test]
@@ -87,8 +93,16 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             Assert.That(results.Count(), Is.EqualTo(50));
 
-            Assert.That(results.Reverse().TakeWhile(b => b.BeatmapSet!.DateSubmitted == null).Count(), Is.EqualTo(20), () => "missing dates should be at the end");
-            Assert.That(results.TakeWhile(b => b.BeatmapSet!.DateSubmitted != null).Count(), Is.EqualTo(30), () => "non-missing dates should be at the start");
+            Assert.That(
+                results.Reverse().TakeWhile(b => b.BeatmapSet!.DateSubmitted == null).Count(),
+                Is.EqualTo(20),
+                () => "missing dates should be at the end"
+            );
+            Assert.That(
+                results.TakeWhile(b => b.BeatmapSet!.DateSubmitted != null).Count(),
+                Is.EqualTo(30),
+                () => "non-missing dates should be at the start"
+            );
         }
 
         [Test]
@@ -134,7 +148,8 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             Assert.That(() =>
             {
                 var secondLastItem = results.SkipLast(diff_count).Last();
-                return secondLastItem.Metadata.Artist == "ZZZ" && secondLastItem.Metadata.Title == "AAA";
+                return secondLastItem.Metadata.Artist == "ZZZ"
+                    && secondLastItem.Metadata.Title == "AAA";
             });
         }
 
@@ -170,10 +185,16 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             Assert.That(results.Select(b => b.BeatmapSet!.DateAdded), Is.Ordered.Descending);
         }
 
-        private static async Task<IEnumerable<BeatmapInfo>> runSorting(SortMode sort, List<BeatmapSetInfo> beatmapSets)
+        private static async Task<IEnumerable<BeatmapInfo>> runSorting(
+            SortMode sort,
+            List<BeatmapSetInfo> beatmapSets
+        )
         {
             var sorter = new BeatmapCarouselFilterSorting(() => new FilterCriteria { Sort = sort });
-            var carouselItems = await sorter.Run(beatmapSets.SelectMany(s => s.Beatmaps.Select(b => new CarouselItem(b))), CancellationToken.None);
+            var carouselItems = await sorter.Run(
+                beatmapSets.SelectMany(s => s.Beatmaps.Select(b => new CarouselItem(b))),
+                CancellationToken.None
+            );
             return carouselItems.Select(ci => ci.Model).OfType<BeatmapInfo>();
         }
     }

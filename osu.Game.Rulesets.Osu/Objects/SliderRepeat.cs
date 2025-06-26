@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Osu.Objects
         public double PathProgress { get; set; }
 
         public SliderRepeat(Slider slider)
-            : base(slider)
-        {
-        }
+            : base(slider) { }
     }
 }

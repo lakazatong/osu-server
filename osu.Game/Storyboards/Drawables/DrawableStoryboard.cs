@@ -55,8 +55,9 @@ namespace osu.Game.Storyboards.Drawables
         private BindableNumber<double> health = null!;
         private readonly BindableBool passing = new BindableBool(true);
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
-            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
         public DrawableStoryboard(Storyboard storyboard, IReadOnlyList<Mod>? mods = null)
         {
@@ -65,31 +66,50 @@ namespace osu.Game.Storyboards.Drawables
 
             Size = new Vector2(640, 480);
 
-            bool onlyHasVideoElements = Storyboard.Layers.SelectMany(l => l.Elements).All(e => e is StoryboardVideo);
+            bool onlyHasVideoElements = Storyboard
+                .Layers.SelectMany(l => l.Elements)
+                .All(e => e is StoryboardVideo);
 
-            Width = Height * (storyboard.Beatmap.WidescreenStoryboard || onlyHasVideoElements ? 16 / 9f : 4 / 3f);
+            Width =
+                Height
+                * (
+                    storyboard.Beatmap.WidescreenStoryboard || onlyHasVideoElements
+                        ? 16 / 9f
+                        : 4 / 3f
+                );
 
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            AddInternal(Content = new Container<DrawableStoryboardLayer>
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(
+                Content = new Container<DrawableStoryboardLayer>
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
-        private void load(IGameplayClock? clock, CancellationToken? cancellationToken, GameplayState? gameplayState)
+        private void load(
+            IGameplayClock? clock,
+            CancellationToken? cancellationToken,
+            GameplayState? gameplayState
+        )
         {
             if (clock != null)
                 Clock = clock;
 
-            dependencies.CacheAs(typeof(TextureStore),
-                new TextureStore(host.Renderer, host.CreateTextureLoaderStore(
-                    CreateResourceLookupStore()
-                ), false, scaleAdjust: 1));
+            dependencies.CacheAs(
+                typeof(TextureStore),
+                new TextureStore(
+                    host.Renderer,
+                    host.CreateTextureLoaderStore(CreateResourceLookupStore()),
+                    false,
+                    scaleAdjust: 1
+                )
+            );
 
             foreach (var layer in Storyboard.Layers)
             {
@@ -111,7 +131,8 @@ namespace osu.Game.Storyboards.Drawables
             passing.BindValueChanged(_ => updateLayerVisibility(), true);
         }
 
-        protected virtual IResourceStore<byte[]> CreateResourceLookupStore() => new StoryboardResourceLookupStore(Storyboard, realm, host);
+        protected virtual IResourceStore<byte[]> CreateResourceLookupStore() =>
+            new StoryboardResourceLookupStore(Storyboard, realm, host);
 
         protected override void Update()
         {
@@ -119,12 +140,15 @@ namespace osu.Game.Storyboards.Drawables
             hasStoryboardEnded.Value = lastEventEndTime == null || Time.Current >= lastEventEndTime;
         }
 
-        public DrawableStoryboardLayer OverlayLayer => Children.Single(layer => layer.Name == "Overlay");
+        public DrawableStoryboardLayer OverlayLayer =>
+            Children.Single(layer => layer.Name == "Overlay");
 
         private void updateLayerVisibility()
         {
             foreach (var layer in Children)
-                layer.Enabled = passing.Value ? layer.Layer.VisibleWhenPassing : layer.Layer.VisibleWhenFailing;
+                layer.Enabled = passing.Value
+                    ? layer.Layer.VisibleWhenPassing
+                    : layer.Layer.VisibleWhenFailing;
         }
 
         private class StoryboardResourceLookupStore : IResourceStore<byte[]>
@@ -132,25 +156,29 @@ namespace osu.Game.Storyboards.Drawables
             private readonly IResourceStore<byte[]> realmFileStore;
             private readonly Storyboard storyboard;
 
-            public StoryboardResourceLookupStore(Storyboard storyboard, RealmAccess realm, GameHost host)
+            public StoryboardResourceLookupStore(
+                Storyboard storyboard,
+                RealmAccess realm,
+                GameHost host
+            )
             {
                 realmFileStore = new RealmFileStore(realm, host.Storage).Store;
                 this.storyboard = storyboard;
             }
 
-            public void Dispose() =>
-                realmFileStore.Dispose();
+            public void Dispose() => realmFileStore.Dispose();
 
             public byte[] Get(string name)
             {
                 string? storagePath = storyboard.GetStoragePathFromStoryboardPath(name);
 
-                return string.IsNullOrEmpty(storagePath)
-                    ? null!
-                    : realmFileStore.Get(storagePath);
+                return string.IsNullOrEmpty(storagePath) ? null! : realmFileStore.Get(storagePath);
             }
 
-            public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = new CancellationToken())
+            public Task<byte[]> GetAsync(
+                string name,
+                CancellationToken cancellationToken = new CancellationToken()
+            )
             {
                 string? storagePath = storyboard.GetStoragePathFromStoryboardPath(name);
 

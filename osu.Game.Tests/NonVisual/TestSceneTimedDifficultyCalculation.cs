@@ -29,21 +29,24 @@ namespace osu.Game.Tests.NonVisual
                 HitObjects =
                 {
                     new TestHitObject { StartTime = 1 },
-                    new TestHitObject
-                    {
-                        StartTime = 2,
-                        Nested = 1
-                    },
+                    new TestHitObject { StartTime = 2, Nested = 1 },
                     new TestHitObject { StartTime = 3 },
-                }
+                },
             };
 
-            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(new TestWorkingBeatmap(beatmap)).CalculateTimed();
+            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(
+                new TestWorkingBeatmap(beatmap)
+            ).CalculateTimed();
 
             Assert.That(attribs.Count, Is.EqualTo(3));
             assertEquals(attribs[0], beatmap.HitObjects[0]);
             assertEquals(attribs[1], beatmap.HitObjects[0], beatmap.HitObjects[1]);
-            assertEquals(attribs[2], beatmap.HitObjects[0], beatmap.HitObjects[1], beatmap.HitObjects[2]);
+            assertEquals(
+                attribs[2],
+                beatmap.HitObjects[0],
+                beatmap.HitObjects[1],
+                beatmap.HitObjects[2]
+            );
         }
 
         [Test]
@@ -54,27 +57,26 @@ namespace osu.Game.Tests.NonVisual
                 HitObjects =
                 {
                     // The first object is usually skipped in all implementations
-                    new TestHitObject
-                    {
-                        StartTime = 1,
-                        Skip = true
-                    },
+                    new TestHitObject { StartTime = 1, Skip = true },
                     // An intermediate skipped object.
-                    new TestHitObject
-                    {
-                        StartTime = 2,
-                        Skip = true
-                    },
+                    new TestHitObject { StartTime = 2, Skip = true },
                     new TestHitObject { StartTime = 3 },
-                }
+                },
             };
 
-            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(new TestWorkingBeatmap(beatmap)).CalculateTimed();
+            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(
+                new TestWorkingBeatmap(beatmap)
+            ).CalculateTimed();
 
             Assert.That(attribs.Count, Is.EqualTo(3));
             assertEquals(attribs[0], beatmap.HitObjects[0]);
             assertEquals(attribs[1], beatmap.HitObjects[0], beatmap.HitObjects[1]);
-            assertEquals(attribs[2], beatmap.HitObjects[0], beatmap.HitObjects[1], beatmap.HitObjects[2]);
+            assertEquals(
+                attribs[2],
+                beatmap.HitObjects[0],
+                beatmap.HitObjects[1],
+                beatmap.HitObjects[2]
+            );
         }
 
         [Test]
@@ -89,27 +91,33 @@ namespace osu.Game.Tests.NonVisual
                     {
                         StartTime = 2,
                         Nested = 5,
-                        Skip = true
+                        Skip = true,
                     },
-                    new TestHitObject
-                    {
-                        StartTime = 3,
-                        Skip = true
-                    },
-                }
+                    new TestHitObject { StartTime = 3, Skip = true },
+                },
             };
 
-            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(new TestWorkingBeatmap(beatmap)).CalculateTimed();
+            List<TimedDifficultyAttributes> attribs = new TestDifficultyCalculator(
+                new TestWorkingBeatmap(beatmap)
+            ).CalculateTimed();
 
             Assert.That(attribs.Count, Is.EqualTo(3));
             assertEquals(attribs[0], beatmap.HitObjects[0]);
             assertEquals(attribs[1], beatmap.HitObjects[0], beatmap.HitObjects[1]);
-            assertEquals(attribs[2], beatmap.HitObjects[0], beatmap.HitObjects[1], beatmap.HitObjects[2]);
+            assertEquals(
+                attribs[2],
+                beatmap.HitObjects[0],
+                beatmap.HitObjects[1],
+                beatmap.HitObjects[2]
+            );
         }
 
         private void assertEquals(TimedDifficultyAttributes attribs, params HitObject[] expected)
         {
-            Assert.That(((TestDifficultyAttributes)attribs.Attributes).Objects, Is.EquivalentTo(expected));
+            Assert.That(
+                ((TestDifficultyAttributes)attribs.Attributes).Objects,
+                Is.EquivalentTo(expected)
+            );
         }
 
         private class TestHitObject : HitObject
@@ -135,11 +143,17 @@ namespace osu.Game.Tests.NonVisual
         {
             public override IEnumerable<Mod> GetModsFor(ModType type) => Enumerable.Empty<Mod>();
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null) => throw new NotImplementedException();
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod>? mods = null
+            ) => throw new NotImplementedException();
 
-            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new PassThroughBeatmapConverter(beatmap);
+            public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
+                new PassThroughBeatmapConverter(beatmap);
 
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TestDifficultyCalculator(beatmap);
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => new TestDifficultyCalculator(beatmap);
 
             public override string Description => string.Empty;
             public override string ShortName => string.Empty;
@@ -168,41 +182,56 @@ namespace osu.Game.Tests.NonVisual
         private class TestDifficultyCalculator : DifficultyCalculator
         {
             public TestDifficultyCalculator(IWorkingBeatmap beatmap)
-                : base(new TestRuleset().RulesetInfo, beatmap)
-            {
-            }
+                : base(new TestRuleset().RulesetInfo, beatmap) { }
 
-            protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
-                => new TestDifficultyAttributes { Objects = beatmap.HitObjects.ToArray() };
+            protected override DifficultyAttributes CreateDifficultyAttributes(
+                IBeatmap beatmap,
+                Mod[] mods,
+                Skill[] skills,
+                double clockRate
+            ) => new TestDifficultyAttributes { Objects = beatmap.HitObjects.ToArray() };
 
-            protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+            protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(
+                IBeatmap beatmap,
+                double clockRate
+            )
             {
                 List<DifficultyHitObject> objects = new List<DifficultyHitObject>();
 
                 foreach (var obj in beatmap.HitObjects.OfType<TestHitObject>())
                 {
                     if (!obj.Skip)
-                        objects.Add(new DifficultyHitObject(obj, obj, clockRate, objects, objects.Count));
+                        objects.Add(
+                            new DifficultyHitObject(obj, obj, clockRate, objects, objects.Count)
+                        );
 
                     foreach (var nested in obj.NestedHitObjects)
-                        objects.Add(new DifficultyHitObject(nested, nested, clockRate, objects, objects.Count));
+                        objects.Add(
+                            new DifficultyHitObject(
+                                nested,
+                                nested,
+                                clockRate,
+                                objects,
+                                objects.Count
+                            )
+                        );
                 }
 
                 return objects;
             }
 
-            protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[] { new PassThroughSkill(mods) };
+            protected override Skill[] CreateSkills(
+                IBeatmap beatmap,
+                Mod[] mods,
+                double clockRate
+            ) => new Skill[] { new PassThroughSkill(mods) };
 
             private class PassThroughSkill : Skill
             {
                 public PassThroughSkill(Mod[] mods)
-                    : base(mods)
-                {
-                }
+                    : base(mods) { }
 
-                public override void Process(DifficultyHitObject current)
-                {
-                }
+                public override void Process(DifficultyHitObject current) { }
 
                 public override double DifficultyValue() => 1;
             }

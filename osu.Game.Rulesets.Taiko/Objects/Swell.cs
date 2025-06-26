@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Threading;
-using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko.Judgements;
 
@@ -31,11 +31,7 @@ namespace osu.Game.Rulesets.Taiko.Objects
             for (int i = 0; i < RequiredHits; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                AddNested(new SwellTick
-                {
-                    StartTime = StartTime,
-                    Samples = Samples
-                });
+                AddNested(new SwellTick { StartTime = StartTime, Samples = Samples });
             }
         }
 

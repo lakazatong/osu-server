@@ -20,13 +20,17 @@ using osuTK;
 
 namespace osu.Game.Screens.Edit.Submission
 {
-    [LocalisableDescription(typeof(BeatmapSubmissionStrings), nameof(BeatmapSubmissionStrings.SubmissionSettings))]
+    [LocalisableDescription(
+        typeof(BeatmapSubmissionStrings),
+        nameof(BeatmapSubmissionStrings.SubmissionSettings)
+    )]
     public partial class ScreenSubmissionSettings : WizardScreen
     {
         private readonly BindableBool notifyOnDiscussionReplies = new BindableBool();
         private readonly BindableBool loadInBrowserAfterSubmission = new BindableBool();
 
-        public override LocalisableString? NextStepText => BeatmapSubmissionStrings.ConfirmSubmission;
+        public override LocalisableString? NextStepText =>
+            BeatmapSubmissionStrings.ConfirmSubmission;
 
         [Resolved]
         private BeatmapSubmissionSettings settings { get; set; } = null!;
@@ -34,41 +38,54 @@ namespace osu.Game.Screens.Edit.Submission
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager configManager, OsuColour colours)
         {
-            configManager.BindWith(OsuSetting.EditorSubmissionNotifyOnDiscussionReplies, settings.NotifyOnDiscussionReplies);
-            configManager.BindWith(OsuSetting.EditorSubmissionLoadInBrowserAfterSubmission, loadInBrowserAfterSubmission);
+            configManager.BindWith(
+                OsuSetting.EditorSubmissionNotifyOnDiscussionReplies,
+                settings.NotifyOnDiscussionReplies
+            );
+            configManager.BindWith(
+                OsuSetting.EditorSubmissionLoadInBrowserAfterSubmission,
+                loadInBrowserAfterSubmission
+            );
 
-            Content.Add(new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Spacing = new Vector2(5),
-                Children = new Drawable[]
+            Content.Add(
+                new FillFlowContainer
                 {
-                    new FormEnumDropdown<BeatmapSubmissionTarget>
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Spacing = new Vector2(5),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Caption = BeatmapSubmissionStrings.BeatmapSubmissionTargetCaption,
-                        Current = settings.Target,
-                    },
-                    new FormCheckBox
-                    {
-                        Caption = BeatmapSubmissionStrings.NotifyOnDiscussionReplies,
-                        Current = settings.NotifyOnDiscussionReplies,
-                    },
-                    new FormCheckBox
-                    {
-                        Caption = BeatmapSubmissionStrings.LoadInBrowserAfterSubmission,
-                        Current = loadInBrowserAfterSubmission,
-                    },
-                    new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE, weight: FontWeight.Bold))
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Colour = colours.Orange1,
-                        Text = BeatmapSubmissionStrings.LegacyExportDisclaimer,
-                        Padding = new MarginPadding { Top = 20 }
+                        new FormEnumDropdown<BeatmapSubmissionTarget>
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Caption = BeatmapSubmissionStrings.BeatmapSubmissionTargetCaption,
+                            Current = settings.Target,
+                        },
+                        new FormCheckBox
+                        {
+                            Caption = BeatmapSubmissionStrings.NotifyOnDiscussionReplies,
+                            Current = settings.NotifyOnDiscussionReplies,
+                        },
+                        new FormCheckBox
+                        {
+                            Caption = BeatmapSubmissionStrings.LoadInBrowserAfterSubmission,
+                            Current = loadInBrowserAfterSubmission,
+                        },
+                        new OsuTextFlowContainer(cp =>
+                            cp.Font = OsuFont.Default.With(
+                                size: CONTENT_FONT_SIZE,
+                                weight: FontWeight.Bold
+                            )
+                        )
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Colour = colours.Orange1,
+                            Text = BeatmapSubmissionStrings.LegacyExportDisclaimer,
+                            Padding = new MarginPadding { Top = 20 },
+                        },
                     },
                 }
-            });
+            );
 
             switch (settings.LatestOnlineStateRequest?.CompletionState)
             {
@@ -78,7 +95,8 @@ namespace osu.Game.Screens.Edit.Submission
 
                 case APIRequestCompletionState.Waiting:
                     settings.Target.Disabled = true;
-                    settings.LatestOnlineStateRequest.Success += _ => setSubmissionTargetFromLatestOnlineState();
+                    settings.LatestOnlineStateRequest.Success += _ =>
+                        setSubmissionTargetFromLatestOnlineState();
                     break;
             }
         }
@@ -87,7 +105,10 @@ namespace osu.Game.Screens.Edit.Submission
         {
             Debug.Assert(settings.LatestOnlineStateRequest != null);
             settings.Target.Disabled = false;
-            settings.Target.Value = settings.LatestOnlineStateRequest.Response?.Status >= BeatmapOnlineStatus.Pending ? BeatmapSubmissionTarget.Pending : BeatmapSubmissionTarget.WIP;
+            settings.Target.Value =
+                settings.LatestOnlineStateRequest.Response?.Status >= BeatmapOnlineStatus.Pending
+                    ? BeatmapSubmissionTarget.Pending
+                    : BeatmapSubmissionTarget.WIP;
         }
     }
 }

@@ -10,13 +10,9 @@ namespace osu.Game.Screens.Edit.Components.Menus
     public class EditorMenuItem : OsuMenuItem
     {
         public EditorMenuItem(LocalisableString text, MenuItemType type = MenuItemType.Standard)
-            : base(text, type)
-        {
-        }
+            : base(text, type) { }
 
         public EditorMenuItem(LocalisableString text, MenuItemType type, Action action)
-            : base(text, type, action)
-        {
-        }
+            : base(text, type, action) { }
     }
 }

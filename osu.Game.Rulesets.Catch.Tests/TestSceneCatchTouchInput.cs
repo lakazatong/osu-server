@@ -22,21 +22,24 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             CatchTouchInputMapper catchTouchInputMapper = null!;
 
-            AddStep("create input overlay", () =>
-            {
-                Child = new CatchInputManager(new CatchRuleset().RulesetInfo)
+            AddStep(
+                "create input overlay",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = new CatchInputManager(new CatchRuleset().RulesetInfo)
                     {
-                        catchTouchInputMapper = new CatchTouchInputMapper
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        }
-                    }
-                };
-            });
+                            catchTouchInputMapper = new CatchTouchInputMapper
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                        },
+                    };
+                }
+            );
 
             AddStep("show overlay", () => catchTouchInputMapper.Show());
         }
@@ -44,23 +47,43 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Test]
         public void TestWithoutRelax()
         {
-            AddStep("create drawable ruleset without relax mod", () =>
-            {
-                Child = new DrawableCatchRuleset(new CatchRuleset(), new CatchBeatmap(), new List<Mod>());
-            });
+            AddStep(
+                "create drawable ruleset without relax mod",
+                () =>
+                {
+                    Child = new DrawableCatchRuleset(
+                        new CatchRuleset(),
+                        new CatchBeatmap(),
+                        new List<Mod>()
+                    );
+                }
+            );
             AddUntilStep("wait for load", () => Child.IsLoaded);
-            AddAssert("check touch input is shown", () => this.ChildrenOfType<CatchTouchInputMapper>().Any());
+            AddAssert(
+                "check touch input is shown",
+                () => this.ChildrenOfType<CatchTouchInputMapper>().Any()
+            );
         }
 
         [Test]
         public void TestWithRelax()
         {
-            AddStep("create drawable ruleset with relax mod", () =>
-            {
-                Child = new DrawableCatchRuleset(new CatchRuleset(), new CatchBeatmap(), new List<Mod> { new CatchModRelax() });
-            });
+            AddStep(
+                "create drawable ruleset with relax mod",
+                () =>
+                {
+                    Child = new DrawableCatchRuleset(
+                        new CatchRuleset(),
+                        new CatchBeatmap(),
+                        new List<Mod> { new CatchModRelax() }
+                    );
+                }
+            );
             AddUntilStep("wait for load", () => Child.IsLoaded);
-            AddAssert("check touch input is not shown", () => !this.ChildrenOfType<CatchTouchInputMapper>().Any());
+            AddAssert(
+                "check touch input is not shown",
+                () => !this.ChildrenOfType<CatchTouchInputMapper>().Any()
+            );
         }
     }
 }

@@ -14,7 +14,8 @@ namespace osu.Game.Overlays.Settings
     public partial class SettingsEnumDropdown<T> : SettingsDropdown<T>
         where T : struct, Enum
     {
-        public override IEnumerable<LocalisableString> FilterTerms => base.FilterTerms.Concat(Control.Items.Select(i => i.GetLocalisableDescription()));
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            base.FilterTerms.Concat(Control.Items.Select(i => i.GetLocalisableDescription()));
 
         protected override OsuDropdown<T> CreateDropdown() => new DropdownControl();
 
@@ -25,7 +26,8 @@ namespace osu.Game.Overlays.Settings
                 RelativeSizeAxes = Axes.X;
             }
 
-            protected override DropdownMenu CreateMenu() => base.CreateMenu().With(m => m.MaxHeight = 200);
+            protected override DropdownMenu CreateMenu() =>
+                base.CreateMenu().With(m => m.MaxHeight = 200);
         }
     }
 }

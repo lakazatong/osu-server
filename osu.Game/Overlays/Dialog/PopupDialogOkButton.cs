@@ -16,8 +16,6 @@ namespace osu.Game.Overlays.Dialog
         }
 
         public PopupDialogOkButton()
-            : base(HoverSampleSet.DialogOk)
-        {
-        }
+            : base(HoverSampleSet.DialogOk) { }
     }
 }

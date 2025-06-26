@@ -13,8 +13,6 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         public override bool StaysOnPlate => false;
 
         public CaughtDroplet()
-            : base(CatchSkinComponents.Droplet, _ => new DropletPiece())
-        {
-        }
+            : base(CatchSkinComponents.Droplet, _ => new DropletPiece()) { }
     }
 }

@@ -33,7 +33,10 @@ namespace osu.Game.Beatmaps
 
             Debug.Assert(beatmapInfo.BeatmapSet != null);
 
-            var req = new GetBeatmapRequest(md5Hash: beatmapInfo.MD5Hash, filename: beatmapInfo.Path);
+            var req = new GetBeatmapRequest(
+                md5Hash: beatmapInfo.MD5Hash,
+                filename: beatmapInfo.Path
+            );
 
             try
             {
@@ -42,7 +45,10 @@ namespace osu.Game.Beatmaps
 
                 if (req.CompletionState == APIRequestCompletionState.Failed)
                 {
-                    logForModel(beatmapInfo.BeatmapSet, $@"Online retrieval failed for {beatmapInfo}");
+                    logForModel(
+                        beatmapInfo.BeatmapSet,
+                        $@"Online retrieval failed for {beatmapInfo}"
+                    );
                     onlineMetadata = null;
                     return true;
                 }
@@ -51,7 +57,10 @@ namespace osu.Game.Beatmaps
 
                 if (res != null)
                 {
-                    logForModel(beatmapInfo.BeatmapSet, $@"Online retrieval mapped {beatmapInfo} to {res.OnlineBeatmapSetID} / {res.OnlineID}.");
+                    logForModel(
+                        beatmapInfo.BeatmapSet,
+                        $@"Online retrieval mapped {beatmapInfo} to {res.OnlineBeatmapSetID} / {res.OnlineID}."
+                    );
 
                     onlineMetadata = new OnlineBeatmapMetadata
                     {
@@ -63,14 +72,17 @@ namespace osu.Game.Beatmaps
                         DateRanked = res.BeatmapSet?.Ranked,
                         DateSubmitted = res.BeatmapSet?.Submitted,
                         MD5Hash = res.MD5Hash,
-                        LastUpdated = res.LastUpdated
+                        LastUpdated = res.LastUpdated,
                     };
                     return true;
                 }
             }
             catch (Exception e)
             {
-                logForModel(beatmapInfo.BeatmapSet, $@"Online retrieval failed for {beatmapInfo} ({e.Message})");
+                logForModel(
+                    beatmapInfo.BeatmapSet,
+                    $@"Online retrieval failed for {beatmapInfo} ({e.Message})"
+                );
                 onlineMetadata = null;
                 return false;
             }
@@ -80,10 +92,11 @@ namespace osu.Game.Beatmaps
         }
 
         private void logForModel(BeatmapSetInfo set, string message) =>
-            RealmArchiveModelImporter<BeatmapSetInfo>.LogForModel(set, $@"[{nameof(APIBeatmapMetadataSource)}] {message}");
+            RealmArchiveModelImporter<BeatmapSetInfo>.LogForModel(
+                set,
+                $@"[{nameof(APIBeatmapMetadataSource)}] {message}"
+            );
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

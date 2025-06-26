@@ -41,29 +41,53 @@ namespace osu.Game.Rulesets.Catch.Tests
         public TestSceneCatcherArea()
         {
             AddSliderStep<float>("circle size", 0, 8, 5, createCatcher);
-            AddToggleStep("hyper dash", t => this.ChildrenOfType<TestCatcherArea>().ForEach(area => area.ToggleHyperDash(t)));
-            AddToggleStep("toggle hit lighting", lighting => config.SetValue(OsuSetting.HitLighting, lighting));
+            AddToggleStep(
+                "hyper dash",
+                t => this.ChildrenOfType<TestCatcherArea>().ForEach(area => area.ToggleHyperDash(t))
+            );
+            AddToggleStep(
+                "toggle hit lighting",
+                lighting => config.SetValue(OsuSetting.HitLighting, lighting)
+            );
 
             AddStep("catch centered fruit", () => attemptCatch(new Fruit()));
-            AddStep("catch many random fruit", () =>
-            {
-                int count = 50;
-
-                addManyFruit?.Cancel();
-                addManyFruit = Scheduler.AddDelayed(() =>
+            AddStep(
+                "catch many random fruit",
+                () =>
                 {
-                    attemptCatch(new Fruit
-                    {
-                        X = (RNG.NextSingle() - 0.5f) * Catcher.CalculateCatchWidth(beatmapDifficulty) * 0.6f,
-                    });
+                    int count = 50;
 
-                    if (count-- == 0)
-                        addManyFruit?.Cancel();
-                }, 50, true);
-            });
-            AddStep("catch fruit last in combo", () => attemptCatch(new Fruit { LastInCombo = true }));
+                    addManyFruit?.Cancel();
+                    addManyFruit = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            attemptCatch(
+                                new Fruit
+                                {
+                                    X =
+                                        (RNG.NextSingle() - 0.5f)
+                                        * Catcher.CalculateCatchWidth(beatmapDifficulty)
+                                        * 0.6f,
+                                }
+                            );
+
+                            if (count-- == 0)
+                                addManyFruit?.Cancel();
+                        },
+                        50,
+                        true
+                    );
+                }
+            );
+            AddStep(
+                "catch fruit last in combo",
+                () => attemptCatch(new Fruit { LastInCombo = true })
+            );
             AddStep("catch kiai fruit", () => attemptCatch(new TestSceneCatcher.TestKiaiFruit()));
-            AddStep("miss last in combo", () => attemptCatch(new Fruit { X = 100, LastInCombo = true }));
+            AddStep(
+                "miss last in combo",
+                () => attemptCatch(new Fruit { X = 100, LastInCombo = true })
+            );
         }
 
         private void attemptCatch(Fruit fruit)
@@ -78,10 +102,13 @@ namespace osu.Game.Rulesets.Catch.Tests
 
                 Schedule(() =>
                 {
-                    area.OnNewResult(drawable, new CatchJudgementResult(fruit, new CatchJudgement())
-                    {
-                        Type = area.Catcher.CanCatch(fruit) ? HitResult.Great : HitResult.Miss
-                    });
+                    area.OnNewResult(
+                        drawable,
+                        new CatchJudgementResult(fruit, new CatchJudgement())
+                        {
+                            Type = area.Catcher.CanCatch(fruit) ? HitResult.Great : HitResult.Miss,
+                        }
+                    );
 
                     drawable.Expire();
                 });
@@ -92,10 +119,7 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             circleSize = size;
 
-            beatmapDifficulty = new BeatmapDifficulty
-            {
-                CircleSize = circleSize
-            };
+            beatmapDifficulty = new BeatmapDifficulty { CircleSize = circleSize };
 
             SetContents(_ =>
             {
@@ -108,8 +132,8 @@ namespace osu.Game.Rulesets.Catch.Tests
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.TopCentre,
-                        }
-                    }
+                        },
+                    },
                 };
             });
         }
@@ -129,7 +153,7 @@ namespace osu.Game.Rulesets.Catch.Tests
 
                 Catcher = new Catcher(droppedObjectContainer, beatmapDifficulty)
                 {
-                    X = CatchPlayfield.CENTER_X
+                    X = CatchPlayfield.CENTER_X,
                 };
             }
 

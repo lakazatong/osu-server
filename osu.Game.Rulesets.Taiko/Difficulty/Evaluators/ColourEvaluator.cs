@@ -19,7 +19,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Evaluators
         /// <param name="hitObject">The current hitObject to consider.</param>
         /// <param name="threshold"> The allowable margin of error for determining whether ratios are consistent.</param>
         /// <param name="maxObjectsToCheck">The maximum objects to check per count of consistent ratio.</param>
-        private static double consistentRatioPenalty(TaikoDifficultyHitObject hitObject, double threshold = 0.01, int maxObjectsToCheck = 64)
+        private static double consistentRatioPenalty(
+            TaikoDifficultyHitObject hitObject,
+            double threshold = 0.01,
+            int maxObjectsToCheck = 64
+        )
         {
             int consistentRatioCount = 0;
             double totalRatioCount = 0.0;
@@ -68,7 +72,9 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Evaluators
                 difficulty += evaluateMonoStreakDifficulty(colourData.MonoStreak);
 
             if (colourData.AlternatingMonoPattern?.FirstHitObject == hitObject) // Difficulty for AlternatingMonoPattern
-                difficulty += evaluateAlternatingMonoPatternDifficulty(colourData.AlternatingMonoPattern);
+                difficulty += evaluateAlternatingMonoPatternDifficulty(
+                    colourData.AlternatingMonoPattern
+                );
 
             if (colourData.RepeatingHitPattern?.FirstHitObject == hitObject) // Difficulty for RepeatingHitPattern
                 difficulty += evaluateRepeatingHitPatternsDifficulty(colourData.RepeatingHitPattern);
@@ -80,12 +86,26 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Evaluators
         }
 
         private static double evaluateMonoStreakDifficulty(MonoStreak monoStreak) =>
-            DifficultyCalculationUtils.Logistic(exponent: Math.E * monoStreak.Index - 2 * Math.E) * evaluateAlternatingMonoPatternDifficulty(monoStreak.Parent) * 0.5;
+            DifficultyCalculationUtils.Logistic(exponent: Math.E * monoStreak.Index - 2 * Math.E)
+            * evaluateAlternatingMonoPatternDifficulty(monoStreak.Parent)
+            * 0.5;
 
-        private static double evaluateAlternatingMonoPatternDifficulty(AlternatingMonoPattern alternatingMonoPattern) =>
-            DifficultyCalculationUtils.Logistic(exponent: Math.E * alternatingMonoPattern.Index - 2 * Math.E) * evaluateRepeatingHitPatternsDifficulty(alternatingMonoPattern.Parent);
+        private static double evaluateAlternatingMonoPatternDifficulty(
+            AlternatingMonoPattern alternatingMonoPattern
+        ) =>
+            DifficultyCalculationUtils.Logistic(
+                exponent: Math.E * alternatingMonoPattern.Index - 2 * Math.E
+            ) * evaluateRepeatingHitPatternsDifficulty(alternatingMonoPattern.Parent);
 
-        private static double evaluateRepeatingHitPatternsDifficulty(RepeatingHitPatterns repeatingHitPattern) =>
-            2 * (1 - DifficultyCalculationUtils.Logistic(exponent: Math.E * repeatingHitPattern.RepetitionInterval - 2 * Math.E));
+        private static double evaluateRepeatingHitPatternsDifficulty(
+            RepeatingHitPatterns repeatingHitPattern
+        ) =>
+            2
+            * (
+                1
+                - DifficultyCalculationUtils.Logistic(
+                    exponent: Math.E * repeatingHitPattern.RepetitionInterval - 2 * Math.E
+                )
+            );
     }
 }

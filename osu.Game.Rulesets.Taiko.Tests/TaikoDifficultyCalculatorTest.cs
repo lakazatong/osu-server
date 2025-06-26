@@ -16,15 +16,20 @@ namespace osu.Game.Rulesets.Taiko.Tests
 
         [TestCase(3.305554470092722d, 200, "diffcalc-test")]
         [TestCase(3.305554470092722d, 200, "diffcalc-test-strong")]
-        public void Test(double expectedStarRating, int expectedMaxCombo, string name)
-            => base.Test(expectedStarRating, expectedMaxCombo, name);
+        public void Test(double expectedStarRating, int expectedMaxCombo, string name) =>
+            base.Test(expectedStarRating, expectedMaxCombo, name);
 
         [TestCase(4.4472572672057815d, 200, "diffcalc-test")]
         [TestCase(4.4472572672057815d, 200, "diffcalc-test-strong")]
-        public void TestClockRateAdjusted(double expectedStarRating, int expectedMaxCombo, string name)
-            => Test(expectedStarRating, expectedMaxCombo, name, new TaikoModDoubleTime());
+        public void TestClockRateAdjusted(
+            double expectedStarRating,
+            int expectedMaxCombo,
+            string name
+        ) => Test(expectedStarRating, expectedMaxCombo, name, new TaikoModDoubleTime());
 
-        protected override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TaikoDifficultyCalculator(new TaikoRuleset().RulesetInfo, beatmap);
+        protected override DifficultyCalculator CreateDifficultyCalculator(
+            IWorkingBeatmap beatmap
+        ) => new TaikoDifficultyCalculator(new TaikoRuleset().RulesetInfo, beatmap);
 
         protected override Ruleset CreateRuleset() => new TaikoRuleset();
     }

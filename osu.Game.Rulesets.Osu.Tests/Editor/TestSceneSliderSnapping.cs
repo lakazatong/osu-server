@@ -36,10 +36,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             var controlPointInfo = new ControlPointInfo();
             controlPointInfo.Add(0, new TimingControlPoint { BeatLength = beat_length });
-            return new TestBeatmap(ruleset, false)
-            {
-                ControlPointInfo = controlPointInfo
-            };
+            return new TestBeatmap(ruleset, false) { ControlPointInfo = controlPointInfo };
         }
 
         private Slider slider;
@@ -48,25 +45,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             base.SetUpSteps();
 
-            AddStep("add unsnapped slider", () => EditorBeatmap.Add(slider = new Slider
-            {
-                StartTime = 0,
-                Position = OsuPlayfield.BASE_SIZE / 5,
-                Path = new SliderPath
+            AddStep(
+                "add unsnapped slider",
+                () =>
+                    EditorBeatmap.Add(
+                        slider = new Slider
+                        {
+                            StartTime = 0,
+                            Position = OsuPlayfield.BASE_SIZE / 5,
+                            Path = new SliderPath
+                            {
+                                ControlPoints =
+                                {
+                                    new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
+                                    new PathControlPoint(new Vector2(136, 205)),
+                                    new PathControlPoint(new Vector2(-4, 226)),
+                                },
+                            },
+                        }
+                    )
+            );
+            AddStep(
+                "set beat divisor to 1/1",
+                () =>
                 {
-                    ControlPoints =
-                    {
-                        new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
-                        new PathControlPoint(new Vector2(136, 205)),
-                        new PathControlPoint(new Vector2(-4, 226))
-                    }
+                    var beatDivisor = (BindableBeatDivisor)
+                        Editor.Dependencies.Get(typeof(BindableBeatDivisor));
+                    beatDivisor.Value = 1;
                 }
-            }));
-            AddStep("set beat divisor to 1/1", () =>
-            {
-                var beatDivisor = (BindableBeatDivisor)Editor.Dependencies.Get(typeof(BindableBeatDivisor));
-                beatDivisor.Value = 1;
-            });
+            );
         }
 
         [Test]
@@ -77,17 +84,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("select slider end", () =>
-            {
-                sliderEnd = this.ChildrenOfType<PathControlPointPiece<Slider>>().Single(piece => piece.ControlPoint == slider.Path.ControlPoints.Last());
-                InputManager.MoveMouseTo(sliderEnd.ScreenSpaceDrawQuad.Centre);
-            });
-            AddStep("move slider end", () =>
-            {
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(sliderEnd.ScreenSpaceDrawQuad.Centre - new Vector2(0, 20));
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "select slider end",
+                () =>
+                {
+                    sliderEnd = this.ChildrenOfType<PathControlPointPiece<Slider>>()
+                        .Single(piece => piece.ControlPoint == slider.Path.ControlPoints.Last());
+                    InputManager.MoveMouseTo(sliderEnd.ScreenSpaceDrawQuad.Centre);
+                }
+            );
+            AddStep(
+                "move slider end",
+                () =>
+                {
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        sliderEnd.ScreenSpaceDrawQuad.Centre - new Vector2(0, 20)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
             assertSliderSnapped(true);
         }
 
@@ -97,18 +113,25 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("move mouse to new point location", () =>
-            {
-                var firstPiece = this.ChildrenOfType<PathControlPointPiece<Slider>>().Single(piece => piece.ControlPoint == slider.Path.ControlPoints[0]);
-                var pos = slider.Path.PositionAt(0.25d) + slider.Position;
-                InputManager.MoveMouseTo(firstPiece.Parent!.ToScreenSpace(pos));
-            });
-            AddStep("move slider end", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Click(MouseButton.Left);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
+            AddStep(
+                "move mouse to new point location",
+                () =>
+                {
+                    var firstPiece = this.ChildrenOfType<PathControlPointPiece<Slider>>()
+                        .Single(piece => piece.ControlPoint == slider.Path.ControlPoints[0]);
+                    var pos = slider.Path.PositionAt(0.25d) + slider.Position;
+                    InputManager.MoveMouseTo(firstPiece.Parent!.ToScreenSpace(pos));
+                }
+            );
+            AddStep(
+                "move slider end",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
             assertSliderSnapped(true);
         }
 
@@ -118,17 +141,24 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("move mouse to second control point", () =>
-            {
-                var secondPiece = this.ChildrenOfType<PathControlPointPiece<Slider>>().Single(piece => piece.ControlPoint == slider.Path.ControlPoints[1]);
-                InputManager.MoveMouseTo(secondPiece);
-            });
-            AddStep("quick delete", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.PressButton(MouseButton.Right);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "move mouse to second control point",
+                () =>
+                {
+                    var secondPiece = this.ChildrenOfType<PathControlPointPiece<Slider>>()
+                        .Single(piece => piece.ControlPoint == slider.Path.ControlPoints[1]);
+                    InputManager.MoveMouseTo(secondPiece);
+                }
+            );
+            AddStep(
+                "quick delete",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.PressButton(MouseButton.Right);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
             assertSliderSnapped(true);
         }
 
@@ -140,17 +170,25 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("move mouse to scale handle", () =>
-            {
-                handle = this.ChildrenOfType<SelectionBoxScaleHandle>().First();
-                InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre);
-            });
-            AddStep("scale slider", () =>
-            {
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre + new Vector2(20, 20));
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "move mouse to scale handle",
+                () =>
+                {
+                    handle = this.ChildrenOfType<SelectionBoxScaleHandle>().First();
+                    InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre);
+                }
+            );
+            AddStep(
+                "scale slider",
+                () =>
+                {
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        handle.ScreenSpaceDrawQuad.Centre + new Vector2(20, 20)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
             assertSliderSnapped(true);
         }
 
@@ -162,17 +200,25 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("move mouse to rotate handle", () =>
-            {
-                handle = this.ChildrenOfType<SelectionBoxRotationHandle>().First();
-                InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre);
-            });
-            AddStep("scale slider", () =>
-            {
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre + new Vector2(0, 20));
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "move mouse to rotate handle",
+                () =>
+                {
+                    handle = this.ChildrenOfType<SelectionBoxRotationHandle>().First();
+                    InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre);
+                }
+            );
+            AddStep(
+                "scale slider",
+                () =>
+                {
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(
+                        handle.ScreenSpaceDrawQuad.Centre + new Vector2(0, 20)
+                    );
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
             assertSliderSnapped(false);
         }
 
@@ -181,16 +227,25 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             OsuSelectionHandler selectionHandler;
 
-            AddAssert("first control point perfect", () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE);
+            AddAssert(
+                "first control point perfect",
+                () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE
+            );
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("rotate 90 degrees ccw", () =>
-            {
-                selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
-                selectionHandler.HandleRotation(-90);
-            });
+            AddStep(
+                "rotate 90 degrees ccw",
+                () =>
+                {
+                    selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
+                    selectionHandler.HandleRotation(-90);
+                }
+            );
 
-            AddAssert("first control point still perfect", () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE);
+            AddAssert(
+                "first control point still perfect",
+                () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE
+            );
         }
 
         [Test]
@@ -201,19 +256,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("flip slider horizontally", () =>
-            {
-                selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
-                selectionHandler.OnPressed(new KeyBindingPressEvent<GlobalAction>(InputManager.CurrentState, GlobalAction.EditorFlipHorizontally));
-            });
+            AddStep(
+                "flip slider horizontally",
+                () =>
+                {
+                    selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
+                    selectionHandler.OnPressed(
+                        new KeyBindingPressEvent<GlobalAction>(
+                            InputManager.CurrentState,
+                            GlobalAction.EditorFlipHorizontally
+                        )
+                    );
+                }
+            );
 
             assertSliderSnapped(false);
 
-            AddStep("flip slider vertically", () =>
-            {
-                selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
-                selectionHandler.OnPressed(new KeyBindingPressEvent<GlobalAction>(InputManager.CurrentState, GlobalAction.EditorFlipVertically));
-            });
+            AddStep(
+                "flip slider vertically",
+                () =>
+                {
+                    selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
+                    selectionHandler.OnPressed(
+                        new KeyBindingPressEvent<GlobalAction>(
+                            InputManager.CurrentState,
+                            GlobalAction.EditorFlipVertically
+                        )
+                    );
+                }
+            );
 
             assertSliderSnapped(false);
         }
@@ -223,16 +294,30 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             OsuSelectionHandler selectionHandler;
 
-            AddAssert("first control point perfect", () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE);
+            AddAssert(
+                "first control point perfect",
+                () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE
+            );
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("flip slider horizontally", () =>
-            {
-                selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
-                selectionHandler.OnPressed(new KeyBindingPressEvent<GlobalAction>(InputManager.CurrentState, GlobalAction.EditorFlipVertically));
-            });
+            AddStep(
+                "flip slider horizontally",
+                () =>
+                {
+                    selectionHandler = this.ChildrenOfType<OsuSelectionHandler>().Single();
+                    selectionHandler.OnPressed(
+                        new KeyBindingPressEvent<GlobalAction>(
+                            InputManager.CurrentState,
+                            GlobalAction.EditorFlipVertically
+                        )
+                    );
+                }
+            );
 
-            AddAssert("first control point still perfect", () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE);
+            AddAssert(
+                "first control point still perfect",
+                () => slider.Path.ControlPoints[0].Type == PathType.PERFECT_CURVE
+            );
         }
 
         [Test]
@@ -241,22 +326,28 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertSliderSnapped(false);
 
             AddStep("select slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
-            AddStep("reverse slider", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Key(Key.G);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
+            AddStep(
+                "reverse slider",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Key(Key.G);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
 
             assertSliderSnapped(false);
         }
 
-        private void assertSliderSnapped(bool snapped)
-            => AddAssert($"slider is {(snapped ? "" : "not ")}snapped", () =>
-            {
-                double durationInBeatLengths = slider.Duration / beat_length;
-                double fractionalPart = durationInBeatLengths - (int)durationInBeatLengths;
-                return Precision.AlmostEquals(fractionalPart, 0) == snapped;
-            });
+        private void assertSliderSnapped(bool snapped) =>
+            AddAssert(
+                $"slider is {(snapped ? "" : "not ")}snapped",
+                () =>
+                {
+                    double durationInBeatLengths = slider.Duration / beat_length;
+                    double fractionalPart = durationInBeatLengths - (int)durationInBeatLengths;
+                    return Precision.AlmostEquals(fractionalPart, 0) == snapped;
+                }
+            );
     }
 }

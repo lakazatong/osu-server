@@ -14,43 +14,42 @@ namespace osu.Game.Tests.Visual.Settings
     public partial class TestSceneFileSelector : ThemeComparisonTestScene
     {
         public TestSceneFileSelector()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         [Test]
         public void TestJpgFilesOnly()
         {
-            AddStep("create", () =>
-            {
-                var colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
-
-                ContentContainer.Child = new DependencyProvidingContainer
+            AddStep(
+                "create",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new (Type, object)[]
+                    var colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+
+                    ContentContainer.Child = new DependencyProvidingContainer
                     {
-                        (typeof(OverlayColourProvider), colourProvider)
-                    },
-                    Children = new Drawable[]
-                    {
-                        new Box
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colourProvider.Background3
+                            (typeof(OverlayColourProvider), colourProvider),
                         },
-                        new OsuFileSelector(validFileExtensions: new[] { ".jpg" })
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = colourProvider.Background3,
+                            },
+                            new OsuFileSelector(validFileExtensions: new[] { ".jpg" })
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
                         },
-                    }
-                };
-            });
+                    };
+                }
+            );
         }
 
-        protected override Drawable CreateContent() => new OsuFileSelector
-        {
-            RelativeSizeAxes = Axes.Both,
-        };
+        protected override Drawable CreateContent() =>
+            new OsuFileSelector { RelativeSizeAxes = Axes.Both };
     }
 }

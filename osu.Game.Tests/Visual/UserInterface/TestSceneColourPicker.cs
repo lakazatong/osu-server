@@ -20,57 +20,57 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create pickers", () => Child = new GridContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
-                {
-                    new Dimension(),
-                    new Dimension()
-                },
-                Content = new[]
-                {
-                    new Drawable[]
+            AddStep(
+                "create pickers",
+                () =>
+                    Child = new GridContainer
                     {
-                        new Container
+                        RelativeSizeAxes = Axes.Both,
+                        ColumnDimensions = new[] { new Dimension(), new Dimension() },
+                        Content = new[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            new Drawable[]
                             {
-                                new OsuSpriteText
+                                new Container
                                 {
-                                    Text = @"No OverlayColourProvider",
-                                    Font = OsuFont.Default.With(size: 40)
+                                    RelativeSizeAxes = Axes.Both,
+                                    Children = new Drawable[]
+                                    {
+                                        new OsuSpriteText
+                                        {
+                                            Text = @"No OverlayColourProvider",
+                                            Font = OsuFont.Default.With(size: 40),
+                                        },
+                                        new OsuColourPicker
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Current = { BindTarget = colour },
+                                        },
+                                    },
                                 },
-                                new OsuColourPicker
+                                new ColourProvidingContainer(OverlayColourScheme.Blue)
                                 {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Current = { BindTarget = colour },
-                                }
-                            }
+                                    RelativeSizeAxes = Axes.Both,
+                                    Children = new Drawable[]
+                                    {
+                                        new OsuSpriteText
+                                        {
+                                            Text = @"With blue OverlayColourProvider",
+                                            Font = OsuFont.Default.With(size: 40),
+                                        },
+                                        new OsuColourPicker
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Current = { BindTarget = colour },
+                                        },
+                                    },
+                                },
+                            },
                         },
-                        new ColourProvidingContainer(OverlayColourScheme.Blue)
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
-                            {
-                                new OsuSpriteText
-                                {
-                                    Text = @"With blue OverlayColourProvider",
-                                    Font = OsuFont.Default.With(size: 40)
-                                },
-                                new OsuColourPicker
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Current = { BindTarget = colour },
-                                }
-                            }
-                        }
                     }
-                }
-            });
+            );
 
             AddStep("set green", () => colour.Value = Colour4.LimeGreen);
             AddStep("set white", () => colour.Value = Colour4.White);

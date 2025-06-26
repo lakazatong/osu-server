@@ -47,7 +47,11 @@ namespace osu.Game.Database
             if (!storage.Exists(database_name))
             {
                 // This handles situations like when the user does not have a collections.db file
-                Logger.Log($"No {database_name} available in osu!stable installation", LoggingTarget.Information, LogLevel.Error);
+                Logger.Log(
+                    $"No {database_name} available in osu!stable installation",
+                    LoggingTarget.Information,
+                    LogLevel.Error
+                );
                 return Task.CompletedTask;
             }
 
@@ -63,7 +67,7 @@ namespace osu.Game.Database
             var notification = new ProgressNotification
             {
                 State = ProgressNotificationState.Active,
-                Text = "Collections import is initialising..."
+                Text = "Collections import is initialising...",
             };
 
             PostNotification?.Invoke(notification);
@@ -85,7 +89,8 @@ namespace osu.Game.Database
                 {
                     foreach (var collection in newCollections)
                     {
-                        var existing = r.All<BeatmapCollection>().FirstOrDefault(c => c.Name == collection.Name);
+                        var existing = r.All<BeatmapCollection>()
+                            .FirstOrDefault(c => c.Name == collection.Name);
 
                         if (existing != null)
                         {
@@ -111,7 +116,10 @@ namespace osu.Game.Database
             return tcs.Task;
         }
 
-        private List<BeatmapCollection> readCollections(Stream stream, ProgressNotification? notification = null)
+        private List<BeatmapCollection> readCollections(
+            Stream stream,
+            ProgressNotification? notification = null
+        )
         {
             if (notification != null)
             {
@@ -150,7 +158,8 @@ namespace osu.Game.Database
 
                         if (notification != null)
                         {
-                            notification.Text = $"Imported {i + 1} of {collectionCount} collections";
+                            notification.Text =
+                                $"Imported {i + 1} of {collectionCount} collections";
                             notification.Progress = (float)(i + 1) / collectionCount;
                         }
 

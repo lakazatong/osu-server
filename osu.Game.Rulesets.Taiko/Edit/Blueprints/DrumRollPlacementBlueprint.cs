@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
     public partial class DrumRollPlacementBlueprint : TaikoSpanPlacementBlueprint
     {
         public DrumRollPlacementBlueprint()
-            : base(new DrumRoll())
-        {
-        }
+            : base(new DrumRoll()) { }
     }
 }

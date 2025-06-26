@@ -16,13 +16,12 @@ namespace osu.Game.Rulesets.Osu.Edit
     public partial class DrawableOsuEditorRuleset : DrawableOsuRuleset
     {
         public DrawableOsuEditorRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+            : base(ruleset, beatmap, mods) { }
 
         protected override Playfield CreatePlayfield() => new OsuEditorPlayfield();
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new OsuPlayfieldAdjustmentContainer { Size = Vector2.One };
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new OsuPlayfieldAdjustmentContainer { Size = Vector2.One };
 
         private partial class OsuEditorPlayfield : OsuPlayfield
         {

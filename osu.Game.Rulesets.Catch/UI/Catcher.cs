@@ -134,7 +134,10 @@ namespace osu.Game.Rulesets.Catch.UI
         private readonly DrawablePool<CaughtBanana> caughtBananaPool;
         private readonly DrawablePool<CaughtDroplet> caughtDropletPool;
 
-        public Catcher(DroppedObjectContainer droppedObjectTarget, IBeatmapDifficultyInfo? difficulty = null)
+        public Catcher(
+            DroppedObjectContainer droppedObjectTarget,
+            IBeatmapDifficultyInfo? difficulty = null
+        )
         {
             this.droppedObjectTarget = droppedObjectTarget;
 
@@ -155,7 +158,7 @@ namespace osu.Game.Rulesets.Catch.UI
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.BottomCentre,
                     // offset fruit vertically to better place "above" the plate.
-                    Y = -5
+                    Y = -5,
                 },
                 body = new SkinnableCatcher(),
                 hitExplosionContainer = new HitExplosionContainer
@@ -181,13 +184,15 @@ namespace osu.Game.Rulesets.Catch.UI
         /// Calculates the width of the area used for attempting catches in gameplay.
         /// </summary>
         /// <param name="scale">The scale of the catcher.</param>
-        public static float CalculateCatchWidth(Vector2 scale) => BASE_SIZE * Math.Abs(scale.X) * ALLOWED_CATCH_RANGE;
+        public static float CalculateCatchWidth(Vector2 scale) =>
+            BASE_SIZE * Math.Abs(scale.X) * ALLOWED_CATCH_RANGE;
 
         /// <summary>
         /// Calculates the width of the area used for attempting catches in gameplay.
         /// </summary>
         /// <param name="difficulty">The beatmap difficulty.</param>
-        public static float CalculateCatchWidth(IBeatmapDifficultyInfo difficulty) => CalculateCatchWidth(calculateScale(difficulty));
+        public static float CalculateCatchWidth(IBeatmapDifficultyInfo difficulty) =>
+            CalculateCatchWidth(calculateScale(difficulty));
 
         /// <summary>
         /// Determine if this catcher can catch a <see cref="CatchHitObject"/> in the current position.
@@ -198,8 +203,7 @@ namespace osu.Game.Rulesets.Catch.UI
                 return false;
 
             float halfCatchWidth = CatchWidth * 0.5f;
-            return fruit.EffectiveX >= X - halfCatchWidth &&
-                   fruit.EffectiveX <= X + halfCatchWidth;
+            return fruit.EffectiveX >= X - halfCatchWidth && fruit.EffectiveX <= X + halfCatchWidth;
         }
 
         public void OnNewResult(DrawableCatchHitObject drawableObject, JudgementResult result)
@@ -209,13 +213,17 @@ namespace osu.Game.Rulesets.Catch.UI
             catchResult.CatcherHyperDash = HyperDashing;
 
             // Ignore JuiceStreams and BananaShowers
-            if (!(drawableObject is DrawablePalpableCatchHitObject palpableObject)) return;
+            if (!(drawableObject is DrawablePalpableCatchHitObject palpableObject))
+                return;
 
             var hitObject = palpableObject.HitObject;
 
             if (result.IsHit)
             {
-                var positionInStack = computePositionInStack(new Vector2(palpableObject.X - X, 0), palpableObject.DisplaySize.X);
+                var positionInStack = computePositionInStack(
+                    new Vector2(palpableObject.X - X, 0),
+                    palpableObject.DisplaySize.X
+                );
 
                 if (CatchFruitOnPlate)
                     placeCaughtObject(palpableObject, positionInStack);
@@ -225,7 +233,8 @@ namespace osu.Game.Rulesets.Catch.UI
             }
 
             // droplet doesn't affect the catcher state
-            if (hitObject is TinyDroplet) return;
+            if (hitObject is TinyDroplet)
+                return;
 
             // if a hyper fruit was already handled this frame, just go where it says to go.
             // this special-cases some aspire maps that have doubled-up objects (one hyper, one not) at the same time instant.
@@ -237,7 +246,8 @@ namespace osu.Game.Rulesets.Catch.UI
                 {
                     double timeDifference = target.StartTime - hitObject.StartTime;
                     double positionDifference = target.EffectiveX - X;
-                    double velocity = positionDifference / Math.Max(1.0, timeDifference - 1000.0 / 60.0);
+                    double velocity =
+                        positionDifference / Math.Max(1.0, timeDifference - 1000.0 / 60.0);
 
                     SetHyperDashState(Math.Abs(velocity) / BASE_DASH_SPEED, target.EffectiveX);
                 }
@@ -246,13 +256,18 @@ namespace osu.Game.Rulesets.Catch.UI
             }
 
             if (result.IsHit)
-                CurrentState = hitObject.Kiai ? CatcherAnimationState.Kiai : CatcherAnimationState.Idle;
+                CurrentState = hitObject.Kiai
+                    ? CatcherAnimationState.Kiai
+                    : CatcherAnimationState.Idle;
             else if (!(hitObject is Banana))
                 CurrentState = CatcherAnimationState.Fail;
 
             if (palpableObject.HitObject.LastInCombo)
             {
-                if (result.Judgement is CatchJudgement catchJudgement && catchJudgement.ShouldExplodeFor(result))
+                if (
+                    result.Judgement is CatchJudgement catchJudgement
+                    && catchJudgement.ShouldExplodeFor(result)
+                )
                     Explode();
                 else
                     Drop();
@@ -332,7 +347,11 @@ namespace osu.Game.Rulesets.Catch.UI
 
         private void runHyperDashStateTransition(bool hyperDashing)
         {
-            this.FadeColour(hyperDashing ? hyperDashColour : Color4.White, HYPER_DASH_TRANSITION_DURATION, Easing.OutQuint);
+            this.FadeColour(
+                hyperDashing ? hyperDashColour : Color4.White,
+                HYPER_DASH_TRANSITION_DURATION,
+                Easing.OutQuint
+            );
         }
 
         protected override void SkinChanged(ISkinSource skin)
@@ -340,8 +359,8 @@ namespace osu.Game.Rulesets.Catch.UI
             base.SkinChanged(skin);
 
             hyperDashColour =
-                skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDash)?.Value ??
-                DEFAULT_HYPER_DASH_COLOUR;
+                skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDash)?.Value
+                ?? DEFAULT_HYPER_DASH_COLOUR;
 
             runHyperDashStateTransition(HyperDashing);
         }
@@ -357,19 +376,25 @@ namespace osu.Game.Rulesets.Catch.UI
             caughtObjectContainer.Scale = new Vector2(1 / Scale.X);
 
             // Correct overshooting.
-            if ((hyperDashDirection > 0 && hyperDashTargetPosition < X) ||
-                (hyperDashDirection < 0 && hyperDashTargetPosition > X))
+            if (
+                (hyperDashDirection > 0 && hyperDashTargetPosition < X)
+                || (hyperDashDirection < 0 && hyperDashTargetPosition > X)
+            )
             {
                 X = hyperDashTargetPosition;
                 SetHyperDashState();
             }
         }
 
-        private void placeCaughtObject(DrawablePalpableCatchHitObject drawableObject, Vector2 position)
+        private void placeCaughtObject(
+            DrawablePalpableCatchHitObject drawableObject,
+            Vector2 position
+        )
         {
             var caughtObject = getCaughtObject(drawableObject.HitObject);
 
-            if (caughtObject == null) return;
+            if (caughtObject == null)
+                return;
 
             caughtObject.RestoreState(drawableObject.SaveState());
             caughtObject.Anchor = Anchor.TopCentre;
@@ -390,7 +415,11 @@ namespace osu.Game.Rulesets.Catch.UI
             float adjustedRadius = displayRadius * lenience_adjust;
             float checkDistance = MathF.Pow(adjustedRadius, 2);
 
-            while (caughtObjectContainer.Any(f => Vector2Extensions.DistanceSquared(f.Position, position) < checkDistance))
+            while (
+                caughtObjectContainer.Any(f =>
+                    Vector2Extensions.DistanceSquared(f.Position, position) < checkDistance
+                )
+            )
             {
                 position.X += RNG.NextSingle(-adjustedRadius, adjustedRadius);
                 position.Y -= RNG.NextSingle(0, 5);
@@ -400,7 +429,9 @@ namespace osu.Game.Rulesets.Catch.UI
         }
 
         private void addLighting(JudgementResult judgementResult, Color4 colour, float x) =>
-            hitExplosionContainer.Add(new HitExplosionEntry(Time.Current, judgementResult, colour, x));
+            hitExplosionContainer.Add(
+                new HitExplosionEntry(Time.Current, judgementResult, colour, x)
+            );
 
         private CaughtObject? getCaughtObject(PalpableCatchHitObject source)
         {
@@ -427,7 +458,10 @@ namespace osu.Game.Rulesets.Catch.UI
 
             droppedObject.RestoreState(state);
             droppedObject.Anchor = Anchor.TopLeft;
-            droppedObject.Position = caughtObjectContainer.ToSpaceOfOtherDrawable(state.DisplayPosition, droppedObjectTarget);
+            droppedObject.Position = caughtObjectContainer.ToSpaceOfOtherDrawable(
+                state.DisplayPosition,
+                droppedObjectTarget
+            );
 
             return droppedObject;
         }
@@ -477,8 +511,13 @@ namespace osu.Game.Rulesets.Catch.UI
                     break;
 
                 case DroppedObjectAnimation.Explode:
-                    float originalX = droppedObjectTarget.ToSpaceOfOtherDrawable(d.DrawPosition, caughtObjectContainer).X * caughtObjectContainer.Scale.X;
-                    d.MoveToY(d.Y - 50, 250, Easing.OutSine).Then().MoveToY(d.Y + 50, 500, Easing.InSine);
+                    float originalX =
+                        droppedObjectTarget
+                            .ToSpaceOfOtherDrawable(d.DrawPosition, caughtObjectContainer)
+                            .X * caughtObjectContainer.Scale.X;
+                    d.MoveToY(d.Y - 50, 250, Easing.OutSine)
+                        .Then()
+                        .MoveToY(d.Y + 50, 500, Easing.InSine);
                     d.MoveToX(d.X + originalX * 6, 1000);
                     d.FadeOut(750);
                     break;
@@ -492,12 +531,15 @@ namespace osu.Game.Rulesets.Catch.UI
         /// <summary>
         /// Calculates the scale of the catcher based off the provided beatmap difficulty.
         /// </summary>
-        private static Vector2 calculateScale(IBeatmapDifficultyInfo difficulty) => new Vector2(LegacyRulesetExtensions.CalculateScaleFromCircleSize(difficulty.CircleSize) * 2);
+        private static Vector2 calculateScale(IBeatmapDifficultyInfo difficulty) =>
+            new Vector2(
+                LegacyRulesetExtensions.CalculateScaleFromCircleSize(difficulty.CircleSize) * 2
+            );
 
         private enum DroppedObjectAnimation
         {
             Drop,
-            Explode
+            Explode,
         }
     }
 }

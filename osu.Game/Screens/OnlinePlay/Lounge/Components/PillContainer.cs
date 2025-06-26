@@ -38,7 +38,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.Black,
-                        Alpha = 0.5f
+                        Alpha = 0.5f,
                     },
                     new GridContainer
                     {
@@ -48,7 +48,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                         Padding = new MarginPadding { Horizontal = padding },
                         ColumnDimensions = new[]
                         {
-                            new Dimension(GridSizeMode.AutoSize, minSize: 80 - 2 * padding)
+                            new Dimension(GridSizeMode.AutoSize, minSize: 80 - 2 * padding),
                         },
                         Content = new[]
                         {
@@ -60,17 +60,18 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     Padding = new MarginPadding { Bottom = 2 },
-                                    Child = content = new Container
-                                    {
-                                        AutoSizeAxes = Axes.Both,
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                    Child = content =
+                                        new Container
+                                        {
+                                            AutoSizeAxes = Axes.Both,
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
     }

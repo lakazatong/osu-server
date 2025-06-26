@@ -75,8 +75,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
                     Size = new Vector2(28),
                     Alpha = 0,
                     InnerRadius = 0.1f,
-                    Progress = 1
-                }
+                    Progress = 1,
+                },
             };
         }
 
@@ -99,7 +99,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
         }
 
         // The connecting path is excluded from positional input
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => circle.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            circle.ReceivePositionalInputAt(screenSpacePos);
 
         protected override bool OnHover(HoverEvent e)
         {
@@ -212,7 +213,13 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
                         return colours.PinkLighter;
 
                     int idx = Math.Clamp(pathType.Degree.Value, 0, 3);
-                    return new[] { colours.PinkDarker, colours.PinkDark, colours.Pink, colours.PinkLight }[idx];
+                    return new[]
+                    {
+                        colours.PinkDarker,
+                        colours.PinkDark,
+                        colours.Pink,
+                        colours.PinkLight,
+                    }[idx];
 
                 case SplineType.PerfectCurve:
                     return colours.PurpleDark;

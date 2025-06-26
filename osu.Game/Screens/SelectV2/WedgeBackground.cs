@@ -32,7 +32,10 @@ namespace osu.Game.Screens.SelectV2
                     RelativeSizeAxes = Axes.Both,
                     Width = 0.6f,
                     Alpha = 0.5f,
-                    Colour = ColourInfo.GradientHorizontal(colourProvider.Background2, colourProvider.Background2.Opacity(0)),
+                    Colour = ColourInfo.GradientHorizontal(
+                        colourProvider.Background2,
+                        colourProvider.Background2.Opacity(0)
+                    ),
                 },
                 new Box
                 {
@@ -46,7 +49,10 @@ namespace osu.Game.Screens.SelectV2
                     Origin = Anchor.TopRight,
                     RelativeSizeAxes = Axes.Both,
                     Width = WidthForGradient,
-                    Colour = ColourInfo.GradientHorizontal(colourProvider.Background5.Opacity(StartAlpha), colourProvider.Background5.Opacity(FinalAlpha)),
+                    Colour = ColourInfo.GradientHorizontal(
+                        colourProvider.Background5.Opacity(StartAlpha),
+                        colourProvider.Background5.Opacity(FinalAlpha)
+                    ),
                 },
             };
         }

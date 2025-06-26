@@ -40,46 +40,50 @@ namespace osu.Game.Screens.Edit.Components.Menus
 
             TextFlowContainer text;
 
-            AddRangeInternal(new[]
-            {
-                new Container
+            AddRangeInternal(
+                new[]
                 {
-                    RelativeSizeAxes = Axes.Y,
-                    Width = heading_area,
-                    Padding = new MarginPadding(8),
-                    Children = new Drawable[]
+                    new Container
                     {
-                        new SpriteIcon
+                        RelativeSizeAxes = Axes.Y,
+                        Width = heading_area,
+                        Padding = new MarginPadding(8),
+                        Children = new Drawable[]
                         {
-                            Size = new Vector2(26),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Icon = OsuIcon.EditCircle,
+                            new SpriteIcon
+                            {
+                                Size = new Vector2(26),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Icon = OsuIcon.EditCircle,
+                            },
+                            text = new TextFlowContainer
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                AutoSizeAxes = Axes.Both,
+                            },
                         },
-                        text = new TextFlowContainer
-                        {
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                            AutoSizeAxes = Axes.Both,
-                        }
-                    }
-                },
-            });
+                    },
+                }
+            );
 
             text.AddText(@"osu!", t => t.Font = OsuFont.TorusAlternate);
-            text.AddText(@"editor", t =>
-            {
-                t.Font = OsuFont.TorusAlternate;
-                t.Colour = colourProvider.Highlight1;
-            });
+            text.AddText(
+                @"editor",
+                t =>
+                {
+                    t.Font = OsuFont.TorusAlternate;
+                    t.Colour = colourProvider.Highlight1;
+                }
+            );
         }
 
-        protected override Framework.Graphics.UserInterface.Menu CreateSubMenu() => new SubMenu
-        {
-            MaxHeight = MaxHeight,
-        };
+        protected override Framework.Graphics.UserInterface.Menu CreateSubMenu() =>
+            new SubMenu { MaxHeight = MaxHeight };
 
-        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new DrawableEditorBarMenuItem(item);
+        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) =>
+            new DrawableEditorBarMenuItem(item);
 
         internal partial class DrawableEditorBarMenuItem : DrawableMenuItem
         {
@@ -87,9 +91,7 @@ namespace osu.Game.Screens.Edit.Components.Menus
             private TextContainer text = null!;
 
             public DrawableEditorBarMenuItem(MenuItem item)
-                : base(item)
-            {
-            }
+                : base(item) { }
 
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colourProvider)
@@ -184,7 +186,11 @@ namespace osu.Game.Screens.Edit.Components.Menus
                     Origin = Anchor.CentreLeft,
 
                     AutoSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Horizontal = 17, Vertical = DrawableOsuMenuItem.MARGIN_VERTICAL, },
+                    Padding = new MarginPadding
+                    {
+                        Horizontal = 17,
+                        Vertical = DrawableOsuMenuItem.MARGIN_VERTICAL,
+                    },
 
                     Children = new Drawable[]
                     {
@@ -201,9 +207,12 @@ namespace osu.Game.Screens.Edit.Components.Menus
                             Alpha = 0,
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            Font = OsuFont.GetFont(size: DrawableOsuMenuItem.TEXT_SIZE, weight: FontWeight.Bold),
-                        }
-                    }
+                            Font = OsuFont.GetFont(
+                                size: DrawableOsuMenuItem.TEXT_SIZE,
+                                weight: FontWeight.Bold
+                            ),
+                        },
+                    },
                 };
             }
         }
@@ -224,10 +233,8 @@ namespace osu.Game.Screens.Edit.Components.Menus
                 BackgroundColour = colourProvider.Background2;
             }
 
-            protected override Framework.Graphics.UserInterface.Menu CreateSubMenu() => new SubMenu
-            {
-                MaxHeight = MaxHeight,
-            };
+            protected override Framework.Graphics.UserInterface.Menu CreateSubMenu() =>
+                new SubMenu { MaxHeight = MaxHeight };
 
             protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item)
             {
@@ -247,9 +254,7 @@ namespace osu.Game.Screens.Edit.Components.Menus
             private partial class EditorStatefulMenuItem : DrawableStatefulMenuItem
             {
                 public EditorStatefulMenuItem(StatefulMenuItem item)
-                    : base(item)
-                {
-                }
+                    : base(item) { }
 
                 [BackgroundDependencyLoader]
                 private void load(OverlayColourProvider colourProvider)
@@ -264,9 +269,7 @@ namespace osu.Game.Screens.Edit.Components.Menus
             private partial class EditorMenuItem : DrawableOsuMenuItem
             {
                 public EditorMenuItem(MenuItem item)
-                    : base(item)
-                {
-                }
+                    : base(item) { }
 
                 [BackgroundDependencyLoader]
                 private void load(OverlayColourProvider colourProvider)

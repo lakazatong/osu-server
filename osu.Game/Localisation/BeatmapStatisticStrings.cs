@@ -12,17 +12,20 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Circles"
         /// </summary>
-        public static LocalisableString Circles => new TranslatableString(getKey(@"circles"), @"Circles");
+        public static LocalisableString Circles =>
+            new TranslatableString(getKey(@"circles"), @"Circles");
 
         /// <summary>
         /// "Sliders"
         /// </summary>
-        public static LocalisableString Sliders => new TranslatableString(getKey(@"sliders"), @"Sliders");
+        public static LocalisableString Sliders =>
+            new TranslatableString(getKey(@"sliders"), @"Sliders");
 
         /// <summary>
         /// "Spinners"
         /// </summary>
-        public static LocalisableString Spinners => new TranslatableString(getKey(@"spinners"), @"Spinners");
+        public static LocalisableString Spinners =>
+            new TranslatableString(getKey(@"spinners"), @"Spinners");
 
         /// <summary>
         /// "Hits"
@@ -32,27 +35,32 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Drumrolls"
         /// </summary>
-        public static LocalisableString Drumrolls => new TranslatableString(getKey(@"drumrolls"), @"Drumrolls");
+        public static LocalisableString Drumrolls =>
+            new TranslatableString(getKey(@"drumrolls"), @"Drumrolls");
 
         /// <summary>
         /// "Swells"
         /// </summary>
-        public static LocalisableString Swells => new TranslatableString(getKey(@"swells"), @"Swells");
+        public static LocalisableString Swells =>
+            new TranslatableString(getKey(@"swells"), @"Swells");
 
         /// <summary>
         /// "Fruits"
         /// </summary>
-        public static LocalisableString Fruits => new TranslatableString(getKey(@"fruits"), @"Fruits");
+        public static LocalisableString Fruits =>
+            new TranslatableString(getKey(@"fruits"), @"Fruits");
 
         /// <summary>
         /// "Juice Streams"
         /// </summary>
-        public static LocalisableString JuiceStreams => new TranslatableString(getKey(@"juice_streams"), @"Juice Streams");
+        public static LocalisableString JuiceStreams =>
+            new TranslatableString(getKey(@"juice_streams"), @"Juice Streams");
 
         /// <summary>
         /// "Banana Showers"
         /// </summary>
-        public static LocalisableString BananaShowers => new TranslatableString(getKey(@"banana_showers"), @"Banana Showers");
+        public static LocalisableString BananaShowers =>
+            new TranslatableString(getKey(@"banana_showers"), @"Banana Showers");
 
         /// <summary>
         /// "Notes"
@@ -62,7 +70,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Hold Notes"
         /// </summary>
-        public static LocalisableString HoldNotes => new TranslatableString(getKey(@"hold_notes"), @"Hold Notes");
+        public static LocalisableString HoldNotes =>
+            new TranslatableString(getKey(@"hold_notes"), @"Hold Notes");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

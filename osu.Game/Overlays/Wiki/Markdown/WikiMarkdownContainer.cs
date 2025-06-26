@@ -13,19 +13,24 @@ namespace osu.Game.Overlays.Wiki.Markdown
 {
     public partial class WikiMarkdownContainer : OsuMarkdownContainer
     {
-        protected override OsuMarkdownContainerOptions Options => new OsuMarkdownContainerOptions
-        {
-            Footnotes = true,
-            CustomContainers = true,
-            BlockAttributes = true
-        };
+        protected override OsuMarkdownContainerOptions Options =>
+            new OsuMarkdownContainerOptions
+            {
+                Footnotes = true,
+                CustomContainers = true,
+                BlockAttributes = true,
+            };
 
         public string CurrentPath
         {
             set => DocumentUrl = value;
         }
 
-        protected override void AddMarkdownComponent(IMarkdownObject markdownObject, FillFlowContainer container, int level)
+        protected override void AddMarkdownComponent(
+            IMarkdownObject markdownObject,
+            FillFlowContainer container,
+            int level
+        )
         {
             switch (markdownObject)
             {
@@ -40,7 +45,11 @@ namespace osu.Game.Overlays.Wiki.Markdown
 
                 case ParagraphBlock paragraphBlock:
                     // Check if paragraph only contains an image
-                    if (paragraphBlock.Inline?.Count() == 1 && paragraphBlock.Inline.FirstChild is LinkInline { IsImage: true } linkInline)
+                    if (
+                        paragraphBlock.Inline?.Count() == 1
+                        && paragraphBlock.Inline.FirstChild
+                            is LinkInline { IsImage: true } linkInline
+                    )
                     {
                         container.Add(new WikiMarkdownImageBlock(linkInline));
                         return;
@@ -52,11 +61,13 @@ namespace osu.Game.Overlays.Wiki.Markdown
             base.AddMarkdownComponent(markdownObject, container, level);
         }
 
-        public override OsuMarkdownTextFlowContainer CreateTextFlow() => new WikiMarkdownTextFlowContainer();
+        public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+            new WikiMarkdownTextFlowContainer();
 
         private partial class WikiMarkdownTextFlowContainer : OsuMarkdownTextFlowContainer
         {
-            protected override void AddImage(LinkInline linkInline) => AddDrawable(new WikiMarkdownImage(linkInline));
+            protected override void AddImage(LinkInline linkInline) =>
+                AddDrawable(new WikiMarkdownImage(linkInline));
         }
     }
 }

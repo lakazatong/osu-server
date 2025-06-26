@@ -35,10 +35,13 @@ namespace osu.Game.Tests.Editing.Checks
                     {
                         Files =
                         {
-                            new RealmNamedFileUsage(new RealmFile { Hash = "abcdef" }, "normal-hitnormal.wav"),
-                        }
-                    }
-                }
+                            new RealmNamedFileUsage(
+                                new RealmFile { Hash = "abcdef" },
+                                "normal-hitnormal.wav"
+                            ),
+                        },
+                    },
+                },
             };
 
             if (!Bass.Init(0) && Bass.LastError != Errors.Already)
@@ -58,12 +61,16 @@ namespace osu.Game.Tests.Editing.Checks
             // 1 ms of silence -> 1 ms of noise at 0.3 amplitude -> hitsound transient
             // => The transient is delayed by 2 ms
             // Waveform: https://github.com/ppy/osu/assets/39100084/d5b9edbe-0ba2-401d-94b0-6d57228bdbd3
-            using (var resourceStream = TestResources.OpenResource("Samples/hitsound-minor-delay.wav"))
+            using (
+                var resourceStream = TestResources.OpenResource("Samples/hitsound-minor-delay.wav")
+            )
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
 
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckDelayedHitsounds.IssueTemplateMinorDelay);
+                Assert.That(
+                    issues.Single().Template is CheckDelayedHitsounds.IssueTemplateMinorDelay
+                );
             }
         }
 
@@ -86,12 +93,16 @@ namespace osu.Game.Tests.Editing.Checks
         {
             // The hitsound is delayed by 10 ms
             // Waveform: https://github.com/ppy/osu/assets/39100084/3a7ede0d-8523-4b99-a222-3624cd208267
-            using var resourceStream = TestResources.OpenResource("Samples/hitsound-consequent-delay.wav");
+            using var resourceStream = TestResources.OpenResource(
+                "Samples/hitsound-consequent-delay.wav"
+            );
 
             var issues = check.Run(getContext(resourceStream)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckDelayedHitsounds.IssueTemplateConsequentDelay);
+            Assert.That(
+                issues.Single().Template is CheckDelayedHitsounds.IssueTemplateConsequentDelay
+            );
         }
 
         private BeatmapVerifierContext getContext(Stream? resourceStream)

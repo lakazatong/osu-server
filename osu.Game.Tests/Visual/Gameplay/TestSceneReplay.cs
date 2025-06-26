@@ -21,13 +21,26 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             var beatmap = Beatmap.Value.GetPlayableBeatmap(ruleset.RulesetInfo, Array.Empty<Mod>());
 
-            return new ScoreAccessibleReplayPlayer(ruleset.GetAutoplayMod()?.CreateScoreFromReplayData(beatmap, Array.Empty<Mod>()));
+            return new ScoreAccessibleReplayPlayer(
+                ruleset.GetAutoplayMod()?.CreateScoreFromReplayData(beatmap, Array.Empty<Mod>())
+            );
         }
 
         protected override void AddCheckSteps()
         {
-            AddUntilStep("score above zero", () => ((ScoreAccessibleReplayPlayer)Player).ScoreProcessor.TotalScore.Value > 0);
-            AddUntilStep("key counter counted keys", () => ((ScoreAccessibleReplayPlayer)Player).HUDOverlay.InputCountController.Triggers.Any(kc => kc.ActivationCount.Value > 0));
+            AddUntilStep(
+                "score above zero",
+                () => ((ScoreAccessibleReplayPlayer)Player).ScoreProcessor.TotalScore.Value > 0
+            );
+            AddUntilStep(
+                "key counter counted keys",
+                () =>
+                    (
+                        (ScoreAccessibleReplayPlayer)Player
+                    ).HUDOverlay.InputCountController.Triggers.Any(kc =>
+                        kc.ActivationCount.Value > 0
+                    )
+            );
             AddAssert("cannot fail", () => !((ScoreAccessibleReplayPlayer)Player).AllowFail);
         }
 
@@ -41,9 +54,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score)
-            {
-            }
+                : base(score) { }
         }
     }
 }

@@ -20,12 +20,17 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             Anchor = Anchor.BottomLeft;
         }
 
-        public void UpdateNestedObjectsFrom(ScrollingHitObjectContainer hitObjectContainer, CatchHitObject parentHitObject)
+        public void UpdateNestedObjectsFrom(
+            ScrollingHitObjectContainer hitObjectContainer,
+            CatchHitObject parentHitObject
+        )
         {
             nestedHitObjects.Clear();
-            nestedHitObjects.AddRange(parentHitObject.NestedHitObjects
-                                                     .OfType<CatchHitObject>()
-                                                     .Where(h => !(h is TinyDroplet)));
+            nestedHitObjects.AddRange(
+                parentHitObject
+                    .NestedHitObjects.OfType<CatchHitObject>()
+                    .Where(h => !(h is TinyDroplet))
+            );
 
             while (nestedHitObjects.Count < InternalChildren.Count)
                 RemoveInternal(InternalChildren[^1], true);
@@ -37,7 +42,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             {
                 var hitObject = nestedHitObjects[i];
                 var outline = (FruitOutline)InternalChildren[i];
-                outline.Position = CatchHitObjectUtils.GetStartPosition(hitObjectContainer, hitObject) - Position;
+                outline.Position =
+                    CatchHitObjectUtils.GetStartPosition(hitObjectContainer, hitObject) - Position;
                 outline.UpdateFrom(hitObject);
                 outline.Scale *= hitObject is Droplet ? 0.5f : 1;
             }

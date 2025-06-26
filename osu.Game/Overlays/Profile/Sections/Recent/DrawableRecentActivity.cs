@@ -42,51 +42,53 @@ namespace osu.Game.Overlays.Profile.Sections.Recent
         {
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
-            AddInternal(new GridContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                ColumnDimensions = new[]
+            AddInternal(
+                new GridContainer
                 {
-                    new Dimension(GridSizeMode.Absolute, size: 28),
-                    new Dimension(),
-                    new Dimension(GridSizeMode.AutoSize)
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize)
-                },
-                Content = new[]
-                {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    ColumnDimensions = new[]
                     {
-                        new Container
+                        new Dimension(GridSizeMode.Absolute, size: 28),
+                        new Dimension(),
+                        new Dimension(GridSizeMode.AutoSize),
+                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                    Content = new[]
+                    {
+                        new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Child = createIcon().With(icon =>
+                            new Container
                             {
-                                icon.Anchor = Anchor.Centre;
-                                icon.Origin = Anchor.Centre;
-                            })
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Child = createIcon()
+                                    .With(icon =>
+                                    {
+                                        icon.Anchor = Anchor.Centre;
+                                        icon.Origin = Anchor.Centre;
+                                    }),
+                            },
+                            content = new LinkFlowContainer(t =>
+                                t.Font = OsuFont.GetFont(size: font_size)
+                            )
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                AutoSizeAxes = Axes.Y,
+                                RelativeSizeAxes = Axes.X,
+                            },
+                            new DrawableDate(activity.CreatedAt)
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Colour = colourProvider.Foreground1,
+                                Font = OsuFont.GetFont(size: font_size),
+                            },
                         },
-                        content = new LinkFlowContainer(t => t.Font = OsuFont.GetFont(size: font_size))
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            AutoSizeAxes = Axes.Y,
-                            RelativeSizeAxes = Axes.X,
-                        },
-                        new DrawableDate(activity.CreatedAt)
-                        {
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                            Colour = colourProvider.Foreground1,
-                            Font = OsuFont.GetFont(size: font_size),
-                        }
-                    }
+                    },
                 }
-            });
+            );
 
             createMessage();
         }
@@ -101,21 +103,23 @@ namespace osu.Game.Overlays.Profile.Sections.Recent
                         RelativeSizeAxes = Axes.X,
                         Height = 11,
                         FillMode = FillMode.Fit,
-                        Margin = new MarginPadding { Top = 2 }
+                        Margin = new MarginPadding { Top = 2 },
                     };
 
                 case RecentActivityType.Achievement:
-                    return new DelayedLoadWrapper(new MedalIcon(activity.Achievement.Slug)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        FillMode = FillMode.Fit,
-                    })
+                    return new DelayedLoadWrapper(
+                        new MedalIcon(activity.Achievement.Slug)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            FillMode = FillMode.Fit,
+                        }
+                    )
                     {
                         RelativeSizeAxes = Axes.X,
                         Width = 0.5f,
-                        Height = 18
+                        Height = 18,
                     };
 
                 default:
@@ -124,7 +128,7 @@ namespace osu.Game.Overlays.Profile.Sections.Recent
                         RelativeSizeAxes = Axes.X,
                         Height = 11,
                         FillMode = FillMode.Fit,
-                        Margin = new MarginPadding { Top = 2, Vertical = 2 }
+                        Margin = new MarginPadding { Top = 2, Vertical = 2 },
                     };
             }
         }
@@ -212,23 +216,45 @@ namespace osu.Game.Overlays.Profile.Sections.Recent
         }
 
         private string getRulesetName() =>
-            rulesets.AvailableRulesets.FirstOrDefault(r => r.ShortName == activity.Mode)?.Name ?? activity.Mode;
+            rulesets.AvailableRulesets.FirstOrDefault(r => r.ShortName == activity.Mode)?.Name
+            ?? activity.Mode;
 
-        private void addUserLink()
-            => content.AddLink(activity.User.AsNonNull().Username, LinkAction.OpenUserProfile, getLinkArgument(activity.User.AsNonNull().Url), creationParameters: t => t.Font = getLinkFont(FontWeight.Bold));
+        private void addUserLink() =>
+            content.AddLink(
+                activity.User.AsNonNull().Username,
+                LinkAction.OpenUserProfile,
+                getLinkArgument(activity.User.AsNonNull().Url),
+                creationParameters: t => t.Font = getLinkFont(FontWeight.Bold)
+            );
 
-        private void addBeatmapLink()
-            => content.AddLink(activity.Beatmap.AsNonNull().Title, LinkAction.OpenBeatmap, getLinkArgument(activity.Beatmap.AsNonNull().Url), creationParameters: t => t.Font = getLinkFont());
+        private void addBeatmapLink() =>
+            content.AddLink(
+                activity.Beatmap.AsNonNull().Title,
+                LinkAction.OpenBeatmap,
+                getLinkArgument(activity.Beatmap.AsNonNull().Url),
+                creationParameters: t => t.Font = getLinkFont()
+            );
 
-        private void addBeatmapsetLink()
-            => content.AddLink(activity.Beatmapset.AsNonNull().Title, LinkAction.OpenBeatmapSet, getLinkArgument(activity.Beatmapset.AsNonNull().Url), creationParameters: t => t.Font = getLinkFont());
+        private void addBeatmapsetLink() =>
+            content.AddLink(
+                activity.Beatmapset.AsNonNull().Title,
+                LinkAction.OpenBeatmapSet,
+                getLinkArgument(activity.Beatmapset.AsNonNull().Url),
+                creationParameters: t => t.Font = getLinkFont()
+            );
 
-        private object getLinkArgument(string url) => MessageFormatter.GetLinkDetails($"{api.Endpoints.WebsiteUrl}{url}").Argument.AsNonNull();
+        private object getLinkArgument(string url) =>
+            MessageFormatter
+                .GetLinkDetails($"{api.Endpoints.WebsiteUrl}{url}")
+                .Argument.AsNonNull();
 
-        private FontUsage getLinkFont(FontWeight fontWeight = FontWeight.Regular)
-            => OsuFont.GetFont(size: font_size, weight: fontWeight, italics: true);
+        private FontUsage getLinkFont(FontWeight fontWeight = FontWeight.Regular) =>
+            OsuFont.GetFont(size: font_size, weight: fontWeight, italics: true);
 
-        private void addText(string text)
-            => content.AddText(text, t => t.Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold));
+        private void addText(string text) =>
+            content.AddText(
+                text,
+                t => t.Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold)
+            );
     }
 }

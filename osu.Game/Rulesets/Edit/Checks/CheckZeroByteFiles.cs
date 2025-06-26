@@ -12,10 +12,8 @@ namespace osu.Game.Rulesets.Edit.Checks
     {
         public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Files, "Zero-byte files");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateZeroBytes(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateZeroBytes(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -25,7 +23,9 @@ namespace osu.Game.Rulesets.Edit.Checks
             {
                 foreach (var file in beatmapSet.Files)
                 {
-                    using (Stream data = context.WorkingBeatmap.GetStream(file.File.GetStoragePath()))
+                    using (
+                        Stream data = context.WorkingBeatmap.GetStream(file.File.GetStoragePath())
+                    )
                     {
                         if (data?.Length == 0)
                             yield return new IssueTemplateZeroBytes(this).Create(file.Filename);
@@ -37,9 +37,7 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateZeroBytes : IssueTemplate
         {
             public IssueTemplateZeroBytes(ICheck check)
-                : base(check, IssueType.Problem, "\"{0}\" is a 0-byte file.")
-            {
-            }
+                : base(check, IssueType.Problem, "\"{0}\" is a 0-byte file.") { }
 
             public Issue Create(string filename) => new Issue(this, filename);
         }

@@ -33,6 +33,6 @@ namespace osu.Game.Online.Spectator
         /// <summary>
         /// The spectated user has quit gameplay.
         /// </summary>
-        Quit
+        Quit,
     }
 }

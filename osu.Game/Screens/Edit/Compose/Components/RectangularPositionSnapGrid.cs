@@ -29,7 +29,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         protected override void CreateContent()
         {
             var drawSize = DrawSize;
-            var rot = Quaternion.FromAxisAngle(Vector3.UnitZ, MathHelper.DegreesToRadians(GridLineRotation.Value));
+            var rot = Quaternion.FromAxisAngle(
+                Vector3.UnitZ,
+                MathHelper.DegreesToRadians(GridLineRotation.Value)
+            );
 
             GenerateGridLines(Vector2.Transform(new Vector2(0, -Spacing.Value.Y), rot), drawSize);
             GenerateGridLines(Vector2.Transform(new Vector2(0, Spacing.Value.Y), rot), drawSize);
@@ -42,11 +45,18 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         public override Vector2 GetSnappedPosition(Vector2 original)
         {
-            Vector2 relativeToStart = GeometryUtils.RotateVector(original - StartPosition.Value, GridLineRotation.Value);
+            Vector2 relativeToStart = GeometryUtils.RotateVector(
+                original - StartPosition.Value,
+                GridLineRotation.Value
+            );
             Vector2 offset = Vector2.Divide(relativeToStart, Spacing.Value);
             Vector2 roundedOffset = new Vector2(MathF.Round(offset.X), MathF.Round(offset.Y));
 
-            return StartPosition.Value + GeometryUtils.RotateVector(Vector2.Multiply(roundedOffset, Spacing.Value), -GridLineRotation.Value);
+            return StartPosition.Value
+                + GeometryUtils.RotateVector(
+                    Vector2.Multiply(roundedOffset, Spacing.Value),
+                    -GridLineRotation.Value
+                );
         }
     }
 }

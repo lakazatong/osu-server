@@ -30,7 +30,10 @@ namespace osu.Game.Online.Rooms
                 req.AddParameter(@"mode", mode.ToString().ToSnakeCase().ToLowerInvariant());
 
             if (status != null)
-                req.AddParameter(@"status", status.Value.ToString().ToSnakeCase().ToLowerInvariant());
+                req.AddParameter(
+                    @"status",
+                    status.Value.ToString().ToSnakeCase().ToLowerInvariant()
+                );
 
             if (!string.IsNullOrEmpty(category))
                 req.AddParameter(@"category", category);

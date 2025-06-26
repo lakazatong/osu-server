@@ -32,13 +32,19 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             Children = new[]
             {
-                new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderFollowCircle), _ => new DefaultFollowCircle())
+                new SkinnableDrawable(
+                    new OsuSkinComponentLookup(OsuSkinComponents.SliderFollowCircle),
+                    _ => new DefaultFollowCircle()
+                )
                 {
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                 },
-                ball = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderBall), _ => new DefaultSliderBall())
+                ball = new SkinnableDrawable(
+                    new OsuSkinComponentLookup(OsuSkinComponents.SliderBall),
+                    _ => new DefaultSliderBall()
+                )
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -46,7 +52,11 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             };
         }
 
-        public override void ClearTransformsAfter(double time, bool propagateChildren = false, string targetMember = null)
+        public override void ClearTransformsAfter(
+            double time,
+            bool propagateChildren = false,
+            string targetMember = null
+        )
         {
             // Consider the case of rewinding - children's transforms are handled internally, so propagating down
             // any further will cause weirdness with the Tracking bool below. Let's not propagate further at this point.
@@ -68,7 +78,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             // 0.1 / slider.Path.Distance is the additional progress needed to ensure the diff length is 0.1
             double checkDistance = 0.1 / slider.Path.Distance;
-            var diff = slider.CurvePositionAt(Math.Min(1 - checkDistance, completionProgress)) - slider.CurvePositionAt(Math.Min(1, completionProgress + checkDistance));
+            var diff =
+                slider.CurvePositionAt(Math.Min(1 - checkDistance, completionProgress))
+                - slider.CurvePositionAt(Math.Min(1, completionProgress + checkDistance));
 
             // Ensure the value is substantially high enough to allow for Atan2 to get a valid angle.
             // Needed for when near completion, or in case of a very short slider.

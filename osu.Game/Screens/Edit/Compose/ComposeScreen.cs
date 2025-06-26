@@ -39,17 +39,19 @@ namespace osu.Game.Screens.Edit.Compose
         private HitObjectComposer composer;
 
         public ComposeScreen()
-            : base(EditorScreenMode.Compose)
-        {
-        }
+            : base(EditorScreenMode.Compose) { }
 
         private Ruleset ruleset;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-            ruleset = parent.Get<IBindable<WorkingBeatmap>>().Value.BeatmapInfo.Ruleset.CreateInstance();
+            ruleset = parent
+                .Get<IBindable<WorkingBeatmap>>()
+                .Value.BeatmapInfo.Ruleset.CreateInstance();
             composer = ruleset?.CreateHitObjectComposer();
 
             // make the composer available to the timeline and other components in this screen.
@@ -62,7 +64,9 @@ namespace osu.Game.Screens.Edit.Compose
         protected override Drawable CreateMainContent()
         {
             if (ruleset == null || composer == null)
-                return new ScreenWhiteBox.UnderConstructionMessage(ruleset == null ? "This beatmap" : $"{ruleset.Description}'s composer");
+                return new ScreenWhiteBox.UnderConstructionMessage(
+                    ruleset == null ? "This beatmap" : $"{ruleset.Description}'s composer"
+                );
 
             return wrapSkinnableContent(composer);
         }
@@ -80,18 +84,20 @@ namespace osu.Game.Screens.Edit.Compose
                 Height = 0.75f,
             };
 
-            return wrapSkinnableContent(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new[]
+            return wrapSkinnableContent(
+                new Container
                 {
-                    // We want to display this below hitobjects to better expose placement objects visually.
-                    // It needs to be above the blueprint container to handle drags on breaks though.
-                    breakDisplay.CreateProxy(),
-                    new TimelineBlueprintContainer(composer),
-                    breakDisplay
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new[]
+                    {
+                        // We want to display this below hitobjects to better expose placement objects visually.
+                        // It needs to be above the blueprint container to handle drags on breaks though.
+                        breakDisplay.CreateProxy(),
+                        new TimelineBlueprintContainer(composer),
+                        breakDisplay,
+                    },
                 }
-            });
+            );
         }
 
         private Drawable wrapSkinnableContent(Drawable content)
@@ -115,7 +121,9 @@ namespace osu.Game.Screens.Edit.Compose
             if (composer == null)
                 return;
 
-            EditorBeatmap.SelectedHitObjects.BindCollectionChanged((_, _) => updateClipboardActionAvailability());
+            EditorBeatmap.SelectedHitObjects.BindCollectionChanged(
+                (_, _) => updateClipboardActionAvailability()
+            );
             clipboard.BindValueChanged(_ => updateClipboardActionAvailability());
             composer.OnLoadComplete += _ => updateClipboardActionAvailability();
             updateClipboardActionAvailability();
@@ -153,7 +161,8 @@ namespace osu.Game.Screens.Edit.Compose
 
             Debug.Assert(objects.Any());
 
-            double timeOffset = beatSnapProvider.SnapTime(clock.CurrentTime) - objects.Min(o => o.StartTime);
+            double timeOffset =
+                beatSnapProvider.SnapTime(clock.CurrentTime) - objects.Min(o => o.StartTime);
 
             foreach (var h in objects)
                 h.StartTime += timeOffset;
@@ -179,7 +188,9 @@ namespace osu.Game.Screens.Edit.Compose
             if (composer == null)
                 return string.Empty;
 
-            double displayTime = EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)?.StartTime ?? clock.CurrentTime;
+            double displayTime =
+                EditorBeatmap.SelectedHitObjects.MinBy(h => h.StartTime)?.StartTime
+                ?? clock.CurrentTime;
             string selectionAsString = composer.ConvertSelectionToString();
 
             return !string.IsNullOrEmpty(selectionAsString)
@@ -194,6 +205,7 @@ namespace osu.Game.Screens.Edit.Compose
         IBindable<float> IGameplaySettings.ComboColourNormalisationAmount => new Bindable<float>();
 
         // Arguable.
-        IBindable<float> IGameplaySettings.PositionalHitsoundsLevel => globalGameplaySettings.PositionalHitsoundsLevel;
+        IBindable<float> IGameplaySettings.PositionalHitsoundsLevel =>
+            globalGameplaySettings.PositionalHitsoundsLevel;
     }
 }

@@ -76,13 +76,17 @@ namespace osu.Game.Tests.Beatmaps
             }
         }
 
-        private static readonly Lazy<(string md5, string sha2)> test_beatmap_hash = new Lazy<(string md5, string sha2)>(() =>
+        private static readonly Lazy<(string md5, string sha2)> test_beatmap_hash = new Lazy<(
+            string md5,
+            string sha2
+        )>(() =>
         {
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(test_beatmap_data)))
                 return (stream.ComputeMD5Hash(), stream.ComputeSHA2Hash());
         });
 
-        private const string test_beatmap_data = @"osu file format v14
+        private const string test_beatmap_data =
+            @"osu file format v14
 
 [General]
 AudioLeadIn: 500

@@ -27,9 +27,11 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
     public partial class MultiplayerPositionDisplay : VisibilityContainer
     {
         private readonly IBindable<APIUser> user = new Bindable<APIUser>();
-        private readonly IBindableList<GameplayLeaderboardScore> scores = new BindableList<GameplayLeaderboardScore>();
+        private readonly IBindableList<GameplayLeaderboardScore> scores =
+            new BindableList<GameplayLeaderboardScore>();
         private readonly BindableBool showLeaderboard = new BindableBool();
-        private readonly IBindable<LocalUserPlayingState> localUserPlayingState = new Bindable<LocalUserPlayingState>();
+        private readonly IBindable<LocalUserPlayingState> localUserPlayingState =
+            new Bindable<LocalUserPlayingState>();
 
         private readonly Bindable<int?> position = new Bindable<int?>();
 
@@ -48,7 +50,13 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
         protected override bool StartHidden => true;
 
         [BackgroundDependencyLoader]
-        private void load(IGameplayLeaderboardProvider leaderboardProvider, IAPIProvider api, OsuConfigManager configManager, GameplayState gameplayState, OsuColour colours)
+        private void load(
+            IGameplayLeaderboardProvider leaderboardProvider,
+            IAPIProvider api,
+            OsuConfigManager configManager,
+            GameplayState gameplayState,
+            OsuColour colours
+        )
         {
             scores.BindTo(leaderboardProvider.Scores);
             user.BindTo(api.LocalUser);
@@ -93,7 +101,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                             Blending = BlendingParameters.Additive,
                             Alpha = 0.4f,
                         },
-                    }
+                    },
                 },
             };
         }
@@ -126,7 +134,12 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
 
         private void updateVisibility()
         {
-            bool shouldDisplay = userScore != null && (showLeaderboard.Value || localUserPlayingState.Value == LocalUserPlayingState.Break);
+            bool shouldDisplay =
+                userScore != null
+                && (
+                    showLeaderboard.Value
+                    || localUserPlayingState.Value == LocalUserPlayingState.Break
+                );
 
             State.Value = shouldDisplay ? Visibility.Visible : Visibility.Hidden;
         }
@@ -148,7 +161,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
         private void updatePosition()
         {
             // only update when visible to delay animations.
-            if (State.Value != Visibility.Visible) return;
+            if (State.Value != Visibility.Visible)
+                return;
 
             if (position.Value == null)
             {
@@ -158,15 +172,27 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 return;
             }
 
-            float relativePosition = Math.Clamp((float)(position.Value.Value - 1) / Math.Max(scores.Count - 1, 1), 0, 1);
+            float relativePosition = Math.Clamp(
+                (float)(position.Value.Value - 1) / Math.Max(scores.Count - 1, 1),
+                0,
+                1
+            );
 
             positionText.Current.Value = position.Value.Value;
-            positionText.FadeTo(min_alpha + (max_alpha - min_alpha) * (1 - relativePosition), 1000, Easing.OutPow10);
+            positionText.FadeTo(
+                min_alpha + (max_alpha - min_alpha) * (1 - relativePosition),
+                1000,
+                Easing.OutPow10
+            );
 
             localPlayerMarker.FadeIn();
             float markerWidth = Math.Max(marker_size, width / scores.Count);
             localPlayerMarker.ResizeWidthTo(markerWidth, 1000, Easing.OutPow10);
-            localPlayerMarker.MoveToX(markerWidth / 2 + (width - markerWidth) * relativePosition, 1000, Easing.OutPow10);
+            localPlayerMarker.MoveToX(
+                markerWidth / 2 + (width - markerWidth) * relativePosition,
+                1000,
+                Easing.OutPow10
+            );
         }
 
         private partial class PositionCounter : RollingCounter<int>

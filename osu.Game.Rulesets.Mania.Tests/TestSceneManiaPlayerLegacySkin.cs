@@ -15,7 +15,8 @@ namespace osu.Game.Rulesets.Mania.Tests
         protected override Ruleset CreatePlayerRuleset() => new ManiaRuleset();
 
         // play with a converted beatmap to allow dual stages mod to work.
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(new RulesetInfo());
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(new RulesetInfo());
 
         protected override bool HasCustomSteps => true;
 

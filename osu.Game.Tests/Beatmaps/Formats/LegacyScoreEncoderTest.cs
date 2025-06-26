@@ -31,13 +31,20 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 [HitResult.Great] = 50,
                 [HitResult.LargeTickHit] = 5,
                 [HitResult.Miss] = missCount,
-                [HitResult.LargeTickMiss] = largeTickMissCount
+                [HitResult.LargeTickMiss] = largeTickMissCount,
             };
 
             var score = new Score { ScoreInfo = scoreInfo };
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
-            Assert.That(decodedAfterEncode.ScoreInfo.GetCountMiss(), Is.EqualTo(missCount + largeTickMissCount));
+            Assert.That(
+                decodedAfterEncode.ScoreInfo.GetCountMiss(),
+                Is.EqualTo(missCount + largeTickMissCount)
+            );
         }
 
         [Test]
@@ -50,7 +57,11 @@ namespace osu.Game.Tests.Beatmaps.Formats
             scoreInfo.Rank = ScoreRank.F;
 
             var score = new Score { ScoreInfo = scoreInfo };
-            var decodedAfterEncode = encodeThenDecode(LegacyBeatmapDecoder.LATEST_VERSION, score, beatmap);
+            var decodedAfterEncode = encodeThenDecode(
+                LegacyBeatmapDecoder.LATEST_VERSION,
+                score,
+                beatmap
+            );
 
             Assert.That(decodedAfterEncode.ScoreInfo.Rank, Is.EqualTo(ScoreRank.F));
         }
@@ -68,10 +79,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 [HitResult.Miss] = 1,
             };
 
-            scoreInfo.MaximumStatistics = new Dictionary<HitResult, int>
-            {
-                [HitResult.Great] = 3
-            };
+            scoreInfo.MaximumStatistics = new Dictionary<HitResult, int> { [HitResult.Great] = 3 };
 
             // Hit -> Miss -> Hit
             scoreInfo.Combo = 1;
@@ -79,7 +87,10 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             using (var ms = new MemoryStream())
             {
-                new LegacyScoreEncoder(new Score { ScoreInfo = scoreInfo }, beatmap).Encode(ms, true);
+                new LegacyScoreEncoder(new Score { ScoreInfo = scoreInfo }, beatmap).Encode(
+                    ms,
+                    true
+                );
 
                 ms.Seek(0, SeekOrigin.Begin);
 

@@ -28,11 +28,15 @@ namespace osu.Game.Utils
         /// <param name="combination">The <see cref="Mod"/>s to check.</param>
         /// <param name="allowedTypes">The set of allowed <see cref="Mod"/> types.</param>
         /// <returns>Whether all <see cref="Mod"/>s are compatible with each-other and appear in the set of allowed types.</returns>
-        public static bool CheckCompatibleSetAndAllowed(IEnumerable<Mod> combination, IEnumerable<Type> allowedTypes)
+        public static bool CheckCompatibleSetAndAllowed(
+            IEnumerable<Mod> combination,
+            IEnumerable<Type> allowedTypes
+        )
         {
             // Prevent multiple-enumeration.
             var combinationList = combination as ICollection<Mod> ?? combination.ToArray();
-            return CheckCompatibleSet(combinationList, out _) && CheckAllowed(combinationList, allowedTypes);
+            return CheckCompatibleSet(combinationList, out _)
+                && CheckAllowed(combinationList, allowedTypes);
         }
 
         /// <summary>
@@ -40,8 +44,8 @@ namespace osu.Game.Utils
         /// </summary>
         /// <param name="combination">The <see cref="Mod"/> combination to check.</param>
         /// <returns>Whether all <see cref="Mod"/>s in the combination are compatible with each-other.</returns>
-        public static bool CheckCompatibleSet(IEnumerable<Mod> combination)
-            => CheckCompatibleSet(combination, out _);
+        public static bool CheckCompatibleSet(IEnumerable<Mod> combination) =>
+            CheckCompatibleSet(combination, out _);
 
         /// <summary>
         /// Checks that all <see cref="Mod"/>s in a combination are compatible with each-other.
@@ -49,7 +53,10 @@ namespace osu.Game.Utils
         /// <param name="combination">The <see cref="Mod"/> combination to check.</param>
         /// <param name="invalidMods">Any invalid mods in the set.</param>
         /// <returns>Whether all <see cref="Mod"/>s in the combination are compatible with each-other.</returns>
-        public static bool CheckCompatibleSet(IEnumerable<Mod> combination, [NotNullWhen(false)] out List<Mod>? invalidMods)
+        public static bool CheckCompatibleSet(
+            IEnumerable<Mod> combination,
+            [NotNullWhen(false)] out List<Mod>? invalidMods
+        )
         {
             var mods = FlattenMods(combination).ToArray();
             invalidMods = null;
@@ -98,12 +105,14 @@ namespace osu.Game.Utils
         /// <param name="combination">The <see cref="Mod"/> combination to check.</param>
         /// <param name="allowedTypes">The set of allowed <see cref="Mod"/> types.</param>
         /// <returns>Whether all <see cref="Mod"/>s in the combination are allowed.</returns>
-        public static bool CheckAllowed(IEnumerable<Mod> combination, IEnumerable<Type> allowedTypes)
+        public static bool CheckAllowed(
+            IEnumerable<Mod> combination,
+            IEnumerable<Type> allowedTypes
+        )
         {
             var allowedSet = new HashSet<Type>(allowedTypes);
 
-            return combination.SelectMany(FlattenMod)
-                              .All(m => allowedSet.Contains(m.GetType()));
+            return combination.SelectMany(FlattenMod).All(m => allowedSet.Contains(m.GetType()));
         }
 
         /// <summary>
@@ -112,7 +121,10 @@ namespace osu.Game.Utils
         /// <param name="mods">The mods to check.</param>
         /// <param name="invalidMods">Invalid mods, if any were found. Will be null if all mods were valid.</param>
         /// <returns>Whether the input mods were all valid. If false, <paramref name="invalidMods"/> will contain all invalid entries.</returns>
-        public static bool CheckValidForGameplay(IEnumerable<Mod> mods, [NotNullWhen(false)] out List<Mod>? invalidMods)
+        public static bool CheckValidForGameplay(
+            IEnumerable<Mod> mods,
+            [NotNullWhen(false)] out List<Mod>? invalidMods
+        )
         {
             mods = mods.ToArray();
 
@@ -134,7 +146,11 @@ namespace osu.Game.Utils
         /// <param name="freestyle">Whether freestyle is enabled for the playlist item.</param>
         /// <param name="invalidMods">Invalid mods, if any were found. Will be null if all mods were valid.</param>
         /// <returns>Whether the input mods were all valid. If false, <paramref name="invalidMods"/> will contain all invalid entries.</returns>
-        public static bool CheckValidRequiredModsForMultiplayer(IEnumerable<Mod> mods, bool freestyle, [NotNullWhen(false)] out List<Mod>? invalidMods)
+        public static bool CheckValidRequiredModsForMultiplayer(
+            IEnumerable<Mod> mods,
+            bool freestyle,
+            [NotNullWhen(false)] out List<Mod>? invalidMods
+        )
         {
             mods = mods.ToArray();
 
@@ -146,7 +162,11 @@ namespace osu.Game.Utils
             if (!CheckCompatibleSet(mods, out invalidMods))
                 return false;
 
-            return checkValid(mods, m => IsValidModForMatch(m, true, MatchType.HeadToHead, freestyle), out invalidMods);
+            return checkValid(
+                mods,
+                m => IsValidModForMatch(m, true, MatchType.HeadToHead, freestyle),
+                out invalidMods
+            );
         }
 
         /// <summary>
@@ -161,10 +181,22 @@ namespace osu.Game.Utils
         /// <param name="freestyle">Whether freestyle is enabled for the playlist item.</param>
         /// <param name="invalidMods">Invalid mods, if any were found. Will be null if all mods were valid.</param>
         /// <returns>Whether the input mods were all valid. If false, <paramref name="invalidMods"/> will contain all invalid entries.</returns>
-        public static bool CheckValidAllowedModsForMultiplayer(IEnumerable<Mod> mods, bool freestyle, [NotNullWhen(false)] out List<Mod>? invalidMods)
-            => checkValid(mods, m => IsValidModForMatch(m, false, MatchType.HeadToHead, freestyle), out invalidMods);
+        public static bool CheckValidAllowedModsForMultiplayer(
+            IEnumerable<Mod> mods,
+            bool freestyle,
+            [NotNullWhen(false)] out List<Mod>? invalidMods
+        ) =>
+            checkValid(
+                mods,
+                m => IsValidModForMatch(m, false, MatchType.HeadToHead, freestyle),
+                out invalidMods
+            );
 
-        private static bool checkValid(IEnumerable<Mod> mods, Predicate<Mod> valid, [NotNullWhen(false)] out List<Mod>? invalidMods)
+        private static bool checkValid(
+            IEnumerable<Mod> mods,
+            Predicate<Mod> valid,
+            [NotNullWhen(false)] out List<Mod>? invalidMods
+        )
         {
             mods = mods.ToArray();
             invalidMods = null;
@@ -186,7 +218,8 @@ namespace osu.Game.Utils
         /// </summary>
         /// <param name="mods">The set of <see cref="Mod"/>s to flatten.</param>
         /// <returns>The new set, containing all <see cref="Mod"/>s in <paramref name="mods"/> recursively with all <see cref="MultiMod"/>s removed.</returns>
-        public static IEnumerable<Mod> FlattenMods(IEnumerable<Mod> mods) => mods.SelectMany(FlattenMod);
+        public static IEnumerable<Mod> FlattenMods(IEnumerable<Mod> mods) =>
+            mods.SelectMany(FlattenMod);
 
         /// <summary>
         /// Flattens a <see cref="Mod"/>, returning a set of <see cref="Mod"/>s in-place of any <see cref="MultiMod"/>s.
@@ -211,7 +244,11 @@ namespace osu.Game.Utils
         /// <param name="proposedMods">The proposed mods.</param>
         /// <param name="valid">Mods instantiated from <paramref name="proposedMods"/> which were valid for the given <paramref name="ruleset"/>.</param>
         /// <returns>Whether all <paramref name="proposedMods"/> were valid for the given <paramref name="ruleset"/>.</returns>
-        public static bool InstantiateValidModsForRuleset(Ruleset ruleset, IEnumerable<APIMod> proposedMods, out List<Mod> valid)
+        public static bool InstantiateValidModsForRuleset(
+            Ruleset ruleset,
+            IEnumerable<APIMod> proposedMods,
+            out List<Mod> valid
+        )
         {
             valid = new List<Mod>();
             bool proposedWereValid = true;
@@ -307,7 +344,12 @@ namespace osu.Game.Utils
         /// <param name="matchType">The type of match being played.</param>
         /// <param name="freestyle">Whether the target playlist item enables <see cref="MultiplayerPlaylistItem.Freestyle">freestyle</see> mode.</param>
         /// <seealso href="https://github.com/ppy/osu-web/blob/40936b514c6485b874f6c6496d55d9e8b1b88fd4/app/Singletons/Mods.php#L95-L113">Related osu!web function.</seealso>
-        public static bool IsValidModForMatch(Mod mod, bool required, MatchType matchType, bool freestyle)
+        public static bool IsValidModForMatch(
+            Mod mod,
+            bool required,
+            MatchType matchType,
+            bool freestyle
+        )
         {
             if (mod.Type == ModType.System || !mod.UserPlayable || !mod.HasImplementation)
                 return false;
@@ -333,19 +375,28 @@ namespace osu.Game.Utils
         /// <param name="allowedMods">The allowed mods for the playlist item.</param>
         /// <param name="freestyle">Whether freestyle is enabled for the playlist item.</param>
         /// <param name="userRuleset">The user's preferred ruleset, which may differ from the playlist item's selection on freestyle playlist items.</param>
-        public static Mod[] EnumerateUserSelectableFreeMods(MatchType matchType, IEnumerable<APIMod> requiredMods, IEnumerable<APIMod> allowedMods, bool freestyle, Ruleset userRuleset)
+        public static Mod[] EnumerateUserSelectableFreeMods(
+            MatchType matchType,
+            IEnumerable<APIMod> requiredMods,
+            IEnumerable<APIMod> allowedMods,
+            bool freestyle,
+            Ruleset userRuleset
+        )
         {
             if (freestyle)
             {
-                Mod[] rulesetRequiredMods = requiredMods.Select(m => m.ToMod(userRuleset)).ToArray();
+                Mod[] rulesetRequiredMods = requiredMods
+                    .Select(m => m.ToMod(userRuleset))
+                    .ToArray();
 
                 // In freestyle, the playlist item doesn't provide the allowed mods. Instead, all mods are unconditionally allowed by default.
-                return userRuleset.AllMods.OfType<Mod>()
-                                  // But the mods must still be compatible with the room...
-                                  .Where(m => IsValidModForMatch(m, false, matchType, true))
-                                  // ... And compatible with the required mods listing (this also handles de-duplication).
-                                  .Where(m => CheckCompatibleSet(rulesetRequiredMods.Append(m)))
-                                  .ToArray();
+                return userRuleset
+                    .AllMods.OfType<Mod>()
+                    // But the mods must still be compatible with the room...
+                    .Where(m => IsValidModForMatch(m, false, matchType, true))
+                    // ... And compatible with the required mods listing (this also handles de-duplication).
+                    .Where(m => CheckCompatibleSet(rulesetRequiredMods.Append(m)))
+                    .ToArray();
             }
 
             // Without freestyle, only the mods specified by the playlist item are valid.

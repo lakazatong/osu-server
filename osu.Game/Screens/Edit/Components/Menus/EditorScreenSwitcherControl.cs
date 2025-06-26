@@ -30,16 +30,15 @@ namespace osu.Game.Screens.Edit.Components.Menus
         {
             AccentColour = colourProvider.Light3;
 
-            AddInternal(new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = colourProvider.Background2,
-            });
+            AddInternal(
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background2 }
+            );
         }
 
         protected override Dropdown<EditorScreenMode> CreateDropdown() => null!;
 
-        protected override TabItem<EditorScreenMode> CreateTabItem(EditorScreenMode value) => new TabItem(value);
+        protected override TabItem<EditorScreenMode> CreateTabItem(EditorScreenMode value) =>
+            new TabItem(value);
 
         private partial class TabItem : OsuTabItem
         {
@@ -56,11 +55,7 @@ namespace osu.Game.Screens.Edit.Components.Menus
 
                 Text.Font = OsuFont.TorusAlternate;
 
-                Add(background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue,
-                });
+                Add(background = new Box { RelativeSizeAxes = Axes.Both, Depth = float.MaxValue });
 
                 Bar.Expire();
             }

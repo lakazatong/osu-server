@@ -1,20 +1,20 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osu.Game.Rulesets.Objects.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
-using osu.Game.Beatmaps.Formats;
-using osu.Game.Audio;
 using System.Linq;
 using osu.Framework.Utils;
+using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Beatmaps.Formats;
 using osu.Game.Beatmaps.Legacy;
+using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Skinning;
 using osu.Game.Utils;
-using System.Buffers;
+using osuTK;
 
 namespace osu.Game.Rulesets.Objects.Legacy
 {
@@ -55,8 +55,14 @@ namespace osu.Game.Rulesets.Objects.Legacy
 
             Vector2 pos =
                 formatVersion >= LegacyBeatmapEncoder.FIRST_LAZER_VERSION
-                    ? new Vector2(Parsing.ParseFloat(split[0], Parsing.MAX_COORDINATE_VALUE), Parsing.ParseFloat(split[1], Parsing.MAX_COORDINATE_VALUE))
-                    : new Vector2((int)Parsing.ParseFloat(split[0], Parsing.MAX_COORDINATE_VALUE), (int)Parsing.ParseFloat(split[1], Parsing.MAX_COORDINATE_VALUE));
+                    ? new Vector2(
+                        Parsing.ParseFloat(split[0], Parsing.MAX_COORDINATE_VALUE),
+                        Parsing.ParseFloat(split[1], Parsing.MAX_COORDINATE_VALUE)
+                    )
+                    : new Vector2(
+                        (int)Parsing.ParseFloat(split[0], Parsing.MAX_COORDINATE_VALUE),
+                        (int)Parsing.ParseFloat(split[1], Parsing.MAX_COORDINATE_VALUE)
+                    );
 
             double startTime = Parsing.ParseDouble(split[2]) + offset;
 
@@ -94,7 +100,10 @@ namespace osu.Game.Rulesets.Objects.Legacy
 
                 if (split.Length > 7)
                 {
-                    length = Math.Max(0, Parsing.ParseDouble(split[7], Parsing.MAX_COORDINATE_VALUE));
+                    length = Math.Max(
+                        0,
+                        Parsing.ParseDouble(split[7], Parsing.MAX_COORDINATE_VALUE)
+                    );
                     if (length == 0)
                         length = null;
                 }
@@ -150,7 +159,15 @@ namespace osu.Game.Rulesets.Objects.Legacy
                 for (int i = 0; i < nodes; i++)
                     nodeSamples.Add(convertSoundType(nodeSoundTypes[i], nodeBankInfos[i]));
 
-                result = createSlider(pos, combo, comboOffset, convertPathString(split[5], pos), length, repeatCount, nodeSamples);
+                result = createSlider(
+                    pos,
+                    combo,
+                    comboOffset,
+                    convertPathString(split[5], pos),
+                    length,
+                    repeatCount,
+                    nodeSamples
+                );
             }
             else if (type.HasFlag(LegacyHitObjectType.Spinner))
             {
@@ -191,7 +208,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
             return result;
         }
 
-        private void readCustomSampleBanks(string str, SampleBankInfo bankInfo, bool banksOnly = false)
+        private void readCustomSampleBanks(
+            string str,
+            SampleBankInfo bankInfo,
+            bool banksOnly = false
+        )
         {
             if (string.IsNullOrEmpty(str))
                 return;
@@ -221,9 +242,12 @@ namespace osu.Game.Rulesets.Objects.Legacy
                 bankInfo.EditorAutoBank = false;
 
             bankInfo.BankForNormal = stringBank;
-            bankInfo.BankForAdditions = string.IsNullOrEmpty(stringAddBank) ? stringBank : stringAddBank;
+            bankInfo.BankForAdditions = string.IsNullOrEmpty(stringAddBank)
+                ? stringBank
+                : stringAddBank;
 
-            if (banksOnly) return;
+            if (banksOnly)
+                return;
 
             if (split.Length > 2)
                 bankInfo.CustomSampleBank = Parsing.ParseInt(split[2]);
@@ -243,7 +267,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
                     return PathType.CATMULL;
 
                 case 'B':
-                    if (input.Length > 1 && int.TryParse(input.AsSpan(1), out int degree) && degree > 0)
+                    if (
+                        input.Length > 1
+                        && int.TryParse(input.AsSpan(1), out int degree)
+                        && degree > 0
+                    )
                         return PathType.BSpline(degree);
 
                     return PathType.BEZIER;
@@ -283,7 +311,9 @@ namespace osu.Game.Rulesets.Objects.Legacy
             string[] pointStringSplit = pointString.Split('|');
 
             var pointsBuffer = ArrayPool<Vector2>.Shared.Rent(pointStringSplit.Length);
-            var segmentsBuffer = ArrayPool<(PathType Type, int StartIndex)>.Shared.Rent(pointStringSplit.Length);
+            var segmentsBuffer = ArrayPool<(PathType Type, int StartIndex)>.Shared.Rent(
+                pointStringSplit.Length
+            );
             int currentPointsIndex = 0;
             int currentSegmentsIndex = 0;
 
@@ -318,12 +348,20 @@ namespace osu.Game.Rulesets.Objects.Legacy
                     {
                         int startIndex = segmentsBuffer[i].StartIndex;
                         int endIndex = segmentsBuffer[i + 1].StartIndex;
-                        controlPoints.AddRange(convertPoints(segmentsBuffer[i].Type, allPoints.Slice(startIndex, endIndex - startIndex), pointsBuffer[endIndex]));
+                        controlPoints.AddRange(
+                            convertPoints(
+                                segmentsBuffer[i].Type,
+                                allPoints.Slice(startIndex, endIndex - startIndex),
+                                pointsBuffer[endIndex]
+                            )
+                        );
                     }
                     else
                     {
                         int startIndex = segmentsBuffer[i].StartIndex;
-                        controlPoints.AddRange(convertPoints(segmentsBuffer[i].Type, allPoints.Slice(startIndex), null));
+                        controlPoints.AddRange(
+                            convertPoints(segmentsBuffer[i].Type, allPoints.Slice(startIndex), null)
+                        );
                     }
                 }
 
@@ -339,9 +377,16 @@ namespace osu.Game.Rulesets.Objects.Legacy
             {
                 string[] vertexSplit = value.Split(':');
 
-                Vector2 pos = formatVersion >= LegacyBeatmapEncoder.FIRST_LAZER_VERSION
-                    ? new Vector2(Parsing.ParseFloat(vertexSplit[0], Parsing.MAX_COORDINATE_VALUE), Parsing.ParseFloat(vertexSplit[1], Parsing.MAX_COORDINATE_VALUE))
-                    : new Vector2((int)Parsing.ParseFloat(vertexSplit[0], Parsing.MAX_COORDINATE_VALUE), (int)Parsing.ParseFloat(vertexSplit[1], Parsing.MAX_COORDINATE_VALUE));
+                Vector2 pos =
+                    formatVersion >= LegacyBeatmapEncoder.FIRST_LAZER_VERSION
+                        ? new Vector2(
+                            Parsing.ParseFloat(vertexSplit[0], Parsing.MAX_COORDINATE_VALUE),
+                            Parsing.ParseFloat(vertexSplit[1], Parsing.MAX_COORDINATE_VALUE)
+                        )
+                        : new Vector2(
+                            (int)Parsing.ParseFloat(vertexSplit[0], Parsing.MAX_COORDINATE_VALUE),
+                            (int)Parsing.ParseFloat(vertexSplit[1], Parsing.MAX_COORDINATE_VALUE)
+                        );
                 pos -= startPos;
                 return pos;
             }
@@ -354,7 +399,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
         /// <param name="points">The point list.</param>
         /// <param name="endPoint">Any extra endpoint to consider as part of the points. This will NOT be returned.</param>
         /// <returns>The set of points contained by <paramref name="points"/> as one or more segments of the path.</returns>
-        private IEnumerable<ArraySegment<PathControlPoint>> convertPoints(PathType type, ArraySegment<Vector2> points, Vector2? endPoint)
+        private IEnumerable<ArraySegment<PathControlPoint>> convertPoints(
+            PathType type,
+            ArraySegment<Vector2> points,
+            Vector2? endPoint
+        )
         {
             var vertices = new PathControlPoint[points.Count];
 
@@ -403,7 +452,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
                 // Legacy CATMULL sliders don't support multiple segments, so adjacent CATMULL segments should be treated as a single one.
                 // Importantly, this is not applied to the first control point, which may duplicate the slider path's position
                 // resulting in a duplicate (0,0) control point in the resultant list.
-                if (type == PathType.CATMULL && endIndex > 1 && formatVersion < LegacyBeatmapEncoder.FIRST_LAZER_VERSION)
+                if (
+                    type == PathType.CATMULL
+                    && endIndex > 1
+                    && formatVersion < LegacyBeatmapEncoder.FIRST_LAZER_VERSION
+                )
                     continue;
 
                 // The last control point of each segment is not allowed to start a new implicit segment.
@@ -412,21 +465,33 @@ namespace osu.Game.Rulesets.Objects.Legacy
 
                 // Force a type on the last point, and return the current control point set as a segment.
                 vertices[endIndex - 1].Type = type;
-                yield return new ArraySegment<PathControlPoint>(vertices, startIndex, endIndex - startIndex);
+                yield return new ArraySegment<PathControlPoint>(
+                    vertices,
+                    startIndex,
+                    endIndex - startIndex
+                );
 
                 // Skip the current control point - as it's the same as the one that's just been returned.
                 startIndex = endIndex + 1;
             }
 
             if (startIndex < endIndex)
-                yield return new ArraySegment<PathControlPoint>(vertices, startIndex, endIndex - startIndex);
+                yield return new ArraySegment<PathControlPoint>(
+                    vertices,
+                    startIndex,
+                    endIndex - startIndex
+                );
 
-            static bool isLinear(Vector2 p0, Vector2 p1, Vector2 p2)
-                => Precision.AlmostEquals(0, (p1.Y - p0.Y) * (p2.X - p0.X)
-                                             - (p1.X - p0.X) * (p2.Y - p0.Y));
+            static bool isLinear(Vector2 p0, Vector2 p1, Vector2 p2) =>
+                Precision.AlmostEquals(
+                    0,
+                    (p1.Y - p0.Y) * (p2.X - p0.X) - (p1.X - p0.X) * (p2.Y - p0.Y)
+                );
         }
 
-        private PathControlPoint[] mergeControlPointsLists(List<ArraySegment<PathControlPoint>> controlPointList)
+        private PathControlPoint[] mergeControlPointsLists(
+            List<ArraySegment<PathControlPoint>> controlPointList
+        )
         {
             int totalCount = 0;
 
@@ -458,7 +523,7 @@ namespace osu.Game.Rulesets.Objects.Legacy
             {
                 Position = position,
                 NewCombo = firstObject || lastObject is ConvertSpinner || newCombo,
-                ComboOffset = newCombo ? comboOffset : 0
+                ComboOffset = newCombo ? comboOffset : 0,
             };
         }
 
@@ -473,8 +538,15 @@ namespace osu.Game.Rulesets.Objects.Legacy
         /// <param name="repeatCount">The slider repeat count.</param>
         /// <param name="nodeSamples">The samples to be played when the slider nodes are hit. This includes the head and tail of the slider.</param>
         /// <returns>The hit object.</returns>
-        private ConvertHitObject createSlider(Vector2 position, bool newCombo, int comboOffset, PathControlPoint[] controlPoints, double? length, int repeatCount,
-                                              IList<IList<HitSampleInfo>> nodeSamples)
+        private ConvertHitObject createSlider(
+            Vector2 position,
+            bool newCombo,
+            int comboOffset,
+            PathControlPoint[] controlPoints,
+            double? length,
+            int repeatCount,
+            IList<IList<HitSampleInfo>> nodeSamples
+        )
         {
             return lastObject = new ConvertSlider
             {
@@ -483,7 +555,7 @@ namespace osu.Game.Rulesets.Objects.Legacy
                 ComboOffset = newCombo ? comboOffset : 0,
                 Path = new SliderPath(controlPoints, length),
                 NodeSamples = nodeSamples,
-                RepeatCount = repeatCount
+                RepeatCount = repeatCount,
             };
         }
 
@@ -500,7 +572,7 @@ namespace osu.Game.Rulesets.Objects.Legacy
             {
                 Position = position,
                 Duration = duration,
-                NewCombo = newCombo
+                NewCombo = newCombo,
                 // Spinners cannot have combo offset.
             };
         }
@@ -512,23 +584,31 @@ namespace osu.Game.Rulesets.Objects.Legacy
         /// <param name="duration">The hold duration.</param>
         private ConvertHitObject createHold(Vector2 position, double duration)
         {
-            return lastObject = new ConvertHold
-            {
-                Position = position,
-                Duration = duration
-            };
+            return lastObject = new ConvertHold { Position = position, Duration = duration };
         }
 
-        private List<HitSampleInfo> convertSoundType(LegacyHitSoundType type, SampleBankInfo bankInfo)
+        private List<HitSampleInfo> convertSoundType(
+            LegacyHitSoundType type,
+            SampleBankInfo bankInfo
+        )
         {
             var soundTypes = new List<HitSampleInfo>();
 
             if (string.IsNullOrEmpty(bankInfo.Filename))
             {
-                soundTypes.Add(new LegacyHitSampleInfo(HitSampleInfo.HIT_NORMAL, bankInfo.BankForNormal, bankInfo.Volume, true, bankInfo.CustomSampleBank,
-                    // if the sound type doesn't have the Normal flag set, attach it anyway as a layered sample.
-                    // None also counts as a normal non-layered sample: https://osu.ppy.sh/help/wiki/osu!_File_Formats/Osu_(file_format)#hitsounds
-                    type != LegacyHitSoundType.None && !type.HasFlag(LegacyHitSoundType.Normal)));
+                soundTypes.Add(
+                    new LegacyHitSampleInfo(
+                        HitSampleInfo.HIT_NORMAL,
+                        bankInfo.BankForNormal,
+                        bankInfo.Volume,
+                        true,
+                        bankInfo.CustomSampleBank,
+                        // if the sound type doesn't have the Normal flag set, attach it anyway as a layered sample.
+                        // None also counts as a normal non-layered sample: https://osu.ppy.sh/help/wiki/osu!_File_Formats/Osu_(file_format)#hitsounds
+                        type != LegacyHitSoundType.None
+                            && !type.HasFlag(LegacyHitSoundType.Normal)
+                    )
+                );
             }
             else
             {
@@ -537,13 +617,37 @@ namespace osu.Game.Rulesets.Objects.Legacy
             }
 
             if (type.HasFlag(LegacyHitSoundType.Finish))
-                soundTypes.Add(new LegacyHitSampleInfo(HitSampleInfo.HIT_FINISH, bankInfo.BankForAdditions, bankInfo.Volume, bankInfo.EditorAutoBank, bankInfo.CustomSampleBank));
+                soundTypes.Add(
+                    new LegacyHitSampleInfo(
+                        HitSampleInfo.HIT_FINISH,
+                        bankInfo.BankForAdditions,
+                        bankInfo.Volume,
+                        bankInfo.EditorAutoBank,
+                        bankInfo.CustomSampleBank
+                    )
+                );
 
             if (type.HasFlag(LegacyHitSoundType.Whistle))
-                soundTypes.Add(new LegacyHitSampleInfo(HitSampleInfo.HIT_WHISTLE, bankInfo.BankForAdditions, bankInfo.Volume, bankInfo.EditorAutoBank, bankInfo.CustomSampleBank));
+                soundTypes.Add(
+                    new LegacyHitSampleInfo(
+                        HitSampleInfo.HIT_WHISTLE,
+                        bankInfo.BankForAdditions,
+                        bankInfo.Volume,
+                        bankInfo.EditorAutoBank,
+                        bankInfo.CustomSampleBank
+                    )
+                );
 
             if (type.HasFlag(LegacyHitSoundType.Clap))
-                soundTypes.Add(new LegacyHitSampleInfo(HitSampleInfo.HIT_CLAP, bankInfo.BankForAdditions, bankInfo.Volume, bankInfo.EditorAutoBank, bankInfo.CustomSampleBank));
+                soundTypes.Add(
+                    new LegacyHitSampleInfo(
+                        HitSampleInfo.HIT_CLAP,
+                        bankInfo.BankForAdditions,
+                        bankInfo.Volume,
+                        bankInfo.EditorAutoBank,
+                        bankInfo.CustomSampleBank
+                    )
+                );
 
             return soundTypes;
         }
@@ -607,33 +711,66 @@ namespace osu.Game.Rulesets.Objects.Legacy
             /// </summary>
             public bool BankSpecified;
 
-            public LegacyHitSampleInfo(string name, string? bank = null, int volume = 0, bool editorAutoBank = false, int customSampleBank = 0, bool isLayered = false)
-                : base(name, bank ?? SampleControlPoint.DEFAULT_BANK, customSampleBank >= 2 ? customSampleBank.ToString() : null, volume, editorAutoBank)
+            public LegacyHitSampleInfo(
+                string name,
+                string? bank = null,
+                int volume = 0,
+                bool editorAutoBank = false,
+                int customSampleBank = 0,
+                bool isLayered = false
+            )
+                : base(
+                    name,
+                    bank ?? SampleControlPoint.DEFAULT_BANK,
+                    customSampleBank >= 2 ? customSampleBank.ToString() : null,
+                    volume,
+                    editorAutoBank
+                )
             {
                 CustomSampleBank = customSampleBank;
                 BankSpecified = !string.IsNullOrEmpty(bank);
                 IsLayered = isLayered;
             }
 
-            public sealed override HitSampleInfo With(Optional<string> newName = default, Optional<string> newBank = default, Optional<string?> newSuffix = default, Optional<int> newVolume = default,
-                                                      Optional<bool> newEditorAutoBank = default)
-                => With(newName, newBank, newVolume, newEditorAutoBank);
+            public sealed override HitSampleInfo With(
+                Optional<string> newName = default,
+                Optional<string> newBank = default,
+                Optional<string?> newSuffix = default,
+                Optional<int> newVolume = default,
+                Optional<bool> newEditorAutoBank = default
+            ) => With(newName, newBank, newVolume, newEditorAutoBank);
 
-            public virtual LegacyHitSampleInfo With(Optional<string> newName = default, Optional<string> newBank = default, Optional<int> newVolume = default,
-                                                    Optional<bool> newEditorAutoBank = default, Optional<int> newCustomSampleBank = default, Optional<bool> newIsLayered = default)
-                => new LegacyHitSampleInfo(newName.GetOr(Name), newBank.GetOr(Bank), newVolume.GetOr(Volume), newEditorAutoBank.GetOr(EditorAutoBank), newCustomSampleBank.GetOr(CustomSampleBank),
-                    newIsLayered.GetOr(IsLayered));
+            public virtual LegacyHitSampleInfo With(
+                Optional<string> newName = default,
+                Optional<string> newBank = default,
+                Optional<int> newVolume = default,
+                Optional<bool> newEditorAutoBank = default,
+                Optional<int> newCustomSampleBank = default,
+                Optional<bool> newIsLayered = default
+            ) =>
+                new LegacyHitSampleInfo(
+                    newName.GetOr(Name),
+                    newBank.GetOr(Bank),
+                    newVolume.GetOr(Volume),
+                    newEditorAutoBank.GetOr(EditorAutoBank),
+                    newCustomSampleBank.GetOr(CustomSampleBank),
+                    newIsLayered.GetOr(IsLayered)
+                );
 
             public bool Equals(LegacyHitSampleInfo? other)
                 // The additions to equality checks here are *required* to ensure that pooling works correctly.
                 // Of note, `IsLayered` may cause the usage of `SampleVirtual` instead of an actual sample (in cases playback is not required).
                 // Removing it would cause samples which may actually require playback to potentially source for a `SampleVirtual` sample pool.
-                => base.Equals(other) && CustomSampleBank == other.CustomSampleBank && IsLayered == other.IsLayered;
+                =>
+                base.Equals(other)
+                && CustomSampleBank == other.CustomSampleBank
+                && IsLayered == other.IsLayered;
 
-            public override bool Equals(object? obj)
-                => obj is LegacyHitSampleInfo other && Equals(other);
+            public override bool Equals(object? obj) =>
+                obj is LegacyHitSampleInfo other && Equals(other);
 
-            public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), CustomSampleBank, IsLayered);
+            public override int GetHashCode() =>
+                HashCode.Combine(base.GetHashCode(), CustomSampleBank, IsLayered);
         }
 
         private class FileHitSampleInfo : LegacyHitSampleInfo, IEquatable<FileHitSampleInfo>
@@ -648,21 +785,23 @@ namespace osu.Game.Rulesets.Objects.Legacy
                 Filename = filename;
             }
 
-            public override IEnumerable<string> LookupNames => new[]
-            {
-                Filename,
-                Path.ChangeExtension(Filename, null)
-            };
+            public override IEnumerable<string> LookupNames =>
+                new[] { Filename, Path.ChangeExtension(Filename, null) };
 
-            public sealed override LegacyHitSampleInfo With(Optional<string> newName = default, Optional<string> newBank = default, Optional<int> newVolume = default,
-                                                            Optional<bool> newEditorAutoBank = default, Optional<int> newCustomSampleBank = default, Optional<bool> newIsLayered = default)
-                => new FileHitSampleInfo(Filename, newVolume.GetOr(Volume));
+            public sealed override LegacyHitSampleInfo With(
+                Optional<string> newName = default,
+                Optional<string> newBank = default,
+                Optional<int> newVolume = default,
+                Optional<bool> newEditorAutoBank = default,
+                Optional<int> newCustomSampleBank = default,
+                Optional<bool> newIsLayered = default
+            ) => new FileHitSampleInfo(Filename, newVolume.GetOr(Volume));
 
-            public bool Equals(FileHitSampleInfo? other)
-                => base.Equals(other) && Filename == other.Filename;
+            public bool Equals(FileHitSampleInfo? other) =>
+                base.Equals(other) && Filename == other.Filename;
 
-            public override bool Equals(object? obj)
-                => obj is FileHitSampleInfo other && Equals(other);
+            public override bool Equals(object? obj) =>
+                obj is FileHitSampleInfo other && Equals(other);
 
             public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Filename);
         }

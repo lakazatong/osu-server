@@ -18,9 +18,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
         public event TextBox.OnCommitHandler OnCommit;
 
         public LabelledTextBox()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         public bool ReadOnly
         {
@@ -68,15 +66,17 @@ namespace osu.Game.Graphics.UserInterfaceV2
             GetContainingFocusManager()!.ChangeFocus(Component);
         }
 
-        protected override OsuTextBox CreateComponent() => CreateTextBox().With(t =>
-        {
-            t.CommitOnFocusLost = true;
-            t.Anchor = Anchor.Centre;
-            t.Origin = Anchor.Centre;
-            t.RelativeSizeAxes = Axes.X;
-            t.CornerRadius = CORNER_RADIUS;
+        protected override OsuTextBox CreateComponent() =>
+            CreateTextBox()
+                .With(t =>
+                {
+                    t.CommitOnFocusLost = true;
+                    t.Anchor = Anchor.Centre;
+                    t.Origin = Anchor.Centre;
+                    t.RelativeSizeAxes = Axes.X;
+                    t.CornerRadius = CORNER_RADIUS;
 
-            t.OnCommit += (sender, newText) => OnCommit?.Invoke(sender, newText);
-        });
+                    t.OnCommit += (sender, newText) => OnCommit?.Invoke(sender, newText);
+                });
     }
 }

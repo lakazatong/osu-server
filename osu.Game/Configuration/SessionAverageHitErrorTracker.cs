@@ -18,7 +18,8 @@ namespace osu.Game.Configuration
     public partial class SessionAverageHitErrorTracker : Component
     {
         public IBindableList<DataPoint> AverageHitErrorHistory => averageHitErrorHistory;
-        private readonly BindableList<DataPoint> averageHitErrorHistory = new BindableList<DataPoint>();
+        private readonly BindableList<DataPoint> averageHitErrorHistory =
+            new BindableList<DataPoint>();
 
         private readonly Bindable<ScoreInfo?> latestScore = new Bindable<ScoreInfo?>();
 

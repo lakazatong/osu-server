@@ -17,7 +17,13 @@ using osu.Game.Utils;
 namespace osu.Game.Beatmaps.ControlPoints
 {
     [Serializable]
-    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(
+        System
+            .Diagnostics
+            .CodeAnalysis
+            .DynamicallyAccessedMemberTypes
+            .PublicParameterlessConstructor
+    )]
     public class ControlPointInfo : IDeepCloneable<ControlPointInfo>
     {
         /// <summary>
@@ -26,7 +32,8 @@ namespace osu.Game.Beatmaps.ControlPoints
         [CanBeNull]
         public event Action ControlPointsChanged;
 
-        private void raiseControlPointsChanged([CanBeNull] ControlPoint _ = null) => ControlPointsChanged?.Invoke();
+        private void raiseControlPointsChanged([CanBeNull] ControlPoint _ = null) =>
+            ControlPointsChanged?.Invoke();
 
         /// <summary>
         /// All control points grouped by time.
@@ -34,7 +41,8 @@ namespace osu.Game.Beatmaps.ControlPoints
         [JsonProperty]
         public IBindableList<ControlPointGroup> Groups => groups;
 
-        private readonly BindableList<ControlPointGroup> groups = new BindableList<ControlPointGroup>();
+        private readonly BindableList<ControlPointGroup> groups =
+            new BindableList<ControlPointGroup>();
 
         /// <summary>
         /// All timing points.
@@ -42,7 +50,8 @@ namespace osu.Game.Beatmaps.ControlPoints
         [JsonProperty]
         public IReadOnlyList<TimingControlPoint> TimingPoints => timingPoints;
 
-        private readonly SortedList<TimingControlPoint> timingPoints = new SortedList<TimingControlPoint>(Comparer<TimingControlPoint>.Default);
+        private readonly SortedList<TimingControlPoint> timingPoints =
+            new SortedList<TimingControlPoint>(Comparer<TimingControlPoint>.Default);
 
         /// <summary>
         /// All effect points.
@@ -50,13 +59,15 @@ namespace osu.Game.Beatmaps.ControlPoints
         [JsonProperty]
         public IReadOnlyList<EffectControlPoint> EffectPoints => effectPoints;
 
-        private readonly SortedList<EffectControlPoint> effectPoints = new SortedList<EffectControlPoint>(Comparer<EffectControlPoint>.Default);
+        private readonly SortedList<EffectControlPoint> effectPoints =
+            new SortedList<EffectControlPoint>(Comparer<EffectControlPoint>.Default);
 
         /// <summary>
         /// All control points, of all types.
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<ControlPoint> AllControlPoints => Groups.SelectMany(g => g.ControlPoints).ToArray();
+        public IEnumerable<ControlPoint> AllControlPoints =>
+            Groups.SelectMany(g => g.ControlPoints).ToArray();
 
         /// <summary>
         /// Finds the effect control point that is active at <paramref name="time"/>.
@@ -64,7 +75,8 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// <param name="time">The time to find the effect control point at.</param>
         /// <returns>The effect control point.</returns>
         [NotNull]
-        public EffectControlPoint EffectPointAt(double time) => BinarySearchWithFallback(EffectPoints, time, EffectControlPoint.DEFAULT);
+        public EffectControlPoint EffectPointAt(double time) =>
+            BinarySearchWithFallback(EffectPoints, time, EffectControlPoint.DEFAULT);
 
         /// <summary>
         /// Finds the timing control point that is active at <paramref name="time"/>.
@@ -72,7 +84,12 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// <param name="time">The time to find the timing control point at.</param>
         /// <returns>The timing control point.</returns>
         [NotNull]
-        public TimingControlPoint TimingPointAt(double time) => BinarySearchWithFallback(TimingPoints, time, TimingPoints.Count > 0 ? TimingPoints[0] : TimingControlPoint.DEFAULT);
+        public TimingControlPoint TimingPointAt(double time) =>
+            BinarySearchWithFallback(
+                TimingPoints,
+                time,
+                TimingPoints.Count > 0 ? TimingPoints[0] : TimingControlPoint.DEFAULT
+            );
 
         /// <summary>
         /// Finds the first timing point that is active strictly after <paramref name="time"/>, or null if no such point exists.
@@ -92,14 +109,16 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// </summary>
         [JsonIgnore]
         public double BPMMaximum =>
-            60000 / (TimingPoints.MinBy(c => c.BeatLength) ?? TimingControlPoint.DEFAULT).BeatLength;
+            60000
+            / (TimingPoints.MinBy(c => c.BeatLength) ?? TimingControlPoint.DEFAULT).BeatLength;
 
         /// <summary>
         /// Finds the minimum BPM represented by any timing control point.
         /// </summary>
         [JsonIgnore]
         public double BPMMinimum =>
-            60000 / (TimingPoints.MaxBy(c => c.BeatLength) ?? TimingControlPoint.DEFAULT).BeatLength;
+            60000
+            / (TimingPoints.MaxBy(c => c.BeatLength) ?? TimingControlPoint.DEFAULT).BeatLength;
 
         /// <summary>
         /// Remove all <see cref="ControlPointGroup"/>s and return to a pristine state.
@@ -166,7 +185,11 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// <param name="time">The time to find the closest snapped time to.</param>
         /// <param name="beatDivisor">The beat divisor to snap to.</param>
         /// <param name="referenceTime">An optional reference point to use for timing point lookup.</param>
-        public double GetClosestSnappedTime(double time, int beatDivisor, double? referenceTime = null)
+        public double GetClosestSnappedTime(
+            double time,
+            int beatDivisor,
+            double? referenceTime = null
+        )
         {
             var timingPoint = TimingPointAt(referenceTime ?? time);
             double snappedTime = getClosestSnappedTime(timingPoint, time, beatDivisor);
@@ -176,14 +199,19 @@ namespace osu.Game.Beatmaps.ControlPoints
 
             // If there is a timing point right after the given time, we should check if it is closer than the snapped time and snap to it.
             var timingPointAfter = TimingPointAfter(time);
-            return timingPointAfter is null || Math.Abs(time - snappedTime) < Math.Abs(time - timingPointAfter.Time) ? snappedTime : timingPointAfter.Time;
+            return
+                timingPointAfter is null
+                || Math.Abs(time - snappedTime) < Math.Abs(time - timingPointAfter.Time)
+                ? snappedTime
+                : timingPointAfter.Time;
         }
 
         /// <summary>
         /// Returns the time on *ANY* valid beat divisor, favouring the divisor closest to the given time.
         /// </summary>
         /// <param name="time">The time to find the closest snapped time to.</param>
-        public double GetClosestSnappedTime(double time) => GetClosestSnappedTime(time, GetClosestBeatDivisor(time));
+        public double GetClosestSnappedTime(double time) =>
+            GetClosestSnappedTime(time, GetClosestBeatDivisor(time));
 
         /// <summary>
         /// Returns the beat snap divisor closest to the given time. If two are equally close, the smallest divisor is returned.
@@ -199,7 +227,9 @@ namespace osu.Game.Beatmaps.ControlPoints
 
             foreach (int divisor in BindableBeatDivisor.PREDEFINED_DIVISORS)
             {
-                double distanceFromSnap = Math.Abs(time - getClosestSnappedTime(timingPoint, time, divisor));
+                double distanceFromSnap = Math.Abs(
+                    time - getClosestSnappedTime(timingPoint, time, divisor)
+                );
 
                 if (Precision.DefinitelyBigger(closestTime, distanceFromSnap))
                 {
@@ -211,7 +241,11 @@ namespace osu.Game.Beatmaps.ControlPoints
             return closestDivisor;
         }
 
-        private static double getClosestSnappedTime(TimingControlPoint timingPoint, double time, int beatDivisor)
+        private static double getClosestSnappedTime(
+            TimingControlPoint timingPoint,
+            double time,
+            int beatDivisor
+        )
         {
             double beatLength = timingPoint.BeatLength / beatDivisor;
             double beats = (Math.Max(time, 0) - timingPoint.Time) / beatLength;
@@ -265,7 +299,11 @@ namespace osu.Game.Beatmaps.ControlPoints
         /// <param name="time">The time to find the control point at.</param>
         /// <param name="equalitySelection">Determines which index to return if there are multiple exact matches.</param>
         /// <returns>The index of the control point at <paramref name="time"/>. Will return the complement of the index of the control point after <paramref name="time"/> if no exact match is found.</returns>
-        public static int BinarySearch<T>(IReadOnlyList<T> list, double time, EqualitySelection equalitySelection)
+        public static int BinarySearch<T>(
+            IReadOnlyList<T> list,
+            double time,
+            EqualitySelection equalitySelection
+        )
             where T : class, IControlPoint
         {
             ArgumentNullException.ThrowIfNull(list);
@@ -314,7 +352,8 @@ namespace osu.Game.Beatmaps.ControlPoints
                 }
             }
 
-            if (!equalityFound) return ~l;
+            if (!equalityFound)
+                return ~l;
 
             switch (equalitySelection)
             {
@@ -365,7 +404,9 @@ namespace osu.Game.Beatmaps.ControlPoints
                     break;
 
                 default:
-                    throw new ArgumentException($"A control point of unexpected type {controlPoint.GetType()} was added to this {nameof(ControlPointInfo)}");
+                    throw new ArgumentException(
+                        $"A control point of unexpected type {controlPoint.GetType()} was added to this {nameof(ControlPointInfo)}"
+                    );
             }
 
             raiseControlPointsChanged();
@@ -402,6 +443,6 @@ namespace osu.Game.Beatmaps.ControlPoints
     {
         FirstFound,
         Leftmost,
-        Rightmost
+        Rightmost,
     }
 }

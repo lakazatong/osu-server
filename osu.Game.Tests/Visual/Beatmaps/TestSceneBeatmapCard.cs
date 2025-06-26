@@ -56,19 +56,11 @@ namespace osu.Game.Tests.Visual.Beatmaps
             withStatistics.FavouriteCount = 284_239;
             withStatistics.PlayCount = 999_001;
             withStatistics.Ranked = DateTimeOffset.Now.AddDays(-45);
-            withStatistics.HypeStatus = new BeatmapSetHypeStatus
-            {
-                Current = 34,
-                Required = 5
-            };
+            withStatistics.HypeStatus = new BeatmapSetHypeStatus { Current = 34, Required = 5 };
             withStatistics.NominationStatus = new BeatmapSetNominationStatus
             {
                 Current = 1,
-                RequiredMeta =
-                {
-                    MainRuleset = 2,
-                    NonMainRuleset = 1,
-                }
+                RequiredMeta = { MainRuleset = 2, NonMainRuleset = 1 },
             };
 
             var undownloadable = getUndownloadableBeatmapSet();
@@ -83,11 +75,7 @@ namespace osu.Game.Tests.Visual.Beatmaps
             someDifficulties.NominationStatus = new BeatmapSetNominationStatus
             {
                 Current = 2,
-                RequiredMeta =
-                {
-                    MainRuleset = 2,
-                    NonMainRuleset = 1,
-                }
+                RequiredMeta = { MainRuleset = 2, NonMainRuleset = 1 },
             };
 
             var manyDifficulties = getManyDifficultiesBeatmapSet(100);
@@ -112,9 +100,12 @@ namespace osu.Game.Tests.Visual.Beatmaps
             allBadgesMap.TrackId = 2;
 
             var longName = CreateAPIBeatmapSet(Ruleset.Value);
-            longName.Title = longName.TitleUnicode = "this track has an incredibly and implausibly long title";
-            longName.Artist = longName.ArtistUnicode = "and this artist! who would have thunk it. it's really such a long name.";
-            longName.Source = "wow. even the source field has an impossibly long string in it. this really takes the cake, doesn't it?";
+            longName.Title = longName.TitleUnicode =
+                "this track has an incredibly and implausibly long title";
+            longName.Artist = longName.ArtistUnicode =
+                "and this artist! who would have thunk it. it's really such a long name.";
+            longName.Source =
+                "wow. even the source field has an impossibly long string in it. this really takes the cake, doesn't it?";
             longName.HasExplicitContent = true;
             longName.FeaturedInSpotlight = true;
             longName.TrackId = 444;
@@ -130,45 +121,39 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 spotlightMap,
                 featuredMap,
                 allBadgesMap,
-                longName
+                longName,
             };
 
             foreach (var testCase in testCases)
                 testCase.OnlineID = online_id;
         }
 
-        private APIBeatmapSet getUndownloadableBeatmapSet() => new APIBeatmapSet
-        {
-            OnlineID = 123,
-            Title = "undownloadable beatmap",
-            Artist = "test",
-            Source = "more tests",
-            Author = new APIUser
+        private APIBeatmapSet getUndownloadableBeatmapSet() =>
+            new APIBeatmapSet
             {
-                Username = "BanchoBot",
-                Id = 3,
-            },
-            Availability = new BeatmapSetOnlineAvailability
-            {
-                DownloadDisabled = true,
-            },
-            Preview = @"https://b.ppy.sh/preview/12345.mp3",
-            PlayCount = 123,
-            FavouriteCount = 456,
-            BPM = 111,
-            HasVideo = true,
-            HasStoryboard = true,
-            Covers = new BeatmapSetOnlineCovers(),
-            Beatmaps = new[]
-            {
-                new APIBeatmap
+                OnlineID = 123,
+                Title = "undownloadable beatmap",
+                Artist = "test",
+                Source = "more tests",
+                Author = new APIUser { Username = "BanchoBot", Id = 3 },
+                Availability = new BeatmapSetOnlineAvailability { DownloadDisabled = true },
+                Preview = @"https://b.ppy.sh/preview/12345.mp3",
+                PlayCount = 123,
+                FavouriteCount = 456,
+                BPM = 111,
+                HasVideo = true,
+                HasStoryboard = true,
+                Covers = new BeatmapSetOnlineCovers(),
+                Beatmaps = new[]
                 {
-                    RulesetID = Ruleset.Value.OnlineID,
-                    DifficultyName = "Test",
-                    StarRating = 6.42,
-                }
-            }
-        };
+                    new APIBeatmap
+                    {
+                        RulesetID = Ruleset.Value.OnlineID,
+                        DifficultyName = "Test",
+                        StarRating = 6.42,
+                    },
+                },
+            };
 
         private static APIBeatmapSet getManyDifficultiesBeatmapSet(int count)
         {
@@ -176,11 +161,7 @@ namespace osu.Game.Tests.Visual.Beatmaps
 
             for (int i = 0; i < count; i++)
             {
-                beatmaps.Add(new APIBeatmap
-                {
-                    RulesetID = i % 4,
-                    StarRating = 2 + i % 4 * 2,
-                });
+                beatmaps.Add(new APIBeatmap { RulesetID = i % 4, StarRating = 2 + i % 4 * 2 });
             }
 
             return new APIBeatmapSet
@@ -188,11 +169,7 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 OnlineID = 1,
                 Title = "many difficulties beatmap",
                 Artist = "test",
-                Author = new APIUser
-                {
-                    Username = "BanchoBot",
-                    Id = 3,
-                },
+                Author = new APIUser { Username = "BanchoBot", Id = 3 },
                 HasVideo = true,
                 HasStoryboard = true,
                 Covers = new BeatmapSetOnlineCovers(),
@@ -205,14 +182,18 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("register request handling", () => dummyAPI.HandleRequest = request =>
-            {
-                if (!(request is PostBeatmapFavouriteRequest))
-                    return false;
+            AddStep(
+                "register request handling",
+                () =>
+                    dummyAPI.HandleRequest = request =>
+                    {
+                        if (!(request is PostBeatmapFavouriteRequest))
+                            return false;
 
-                request.TriggerSuccess();
-                return true;
-            });
+                        request.TriggerSuccess();
+                        return true;
+                    }
+            );
 
             ensureSoleilyRemoved();
         }
@@ -220,16 +201,22 @@ namespace osu.Game.Tests.Visual.Beatmaps
         private void ensureSoleilyRemoved()
         {
             AddUntilStep("ensure manager loaded", () => beatmaps != null);
-            AddStep("remove map", () =>
-            {
-                var beatmap = beatmaps.QueryBeatmapSet(b => b.OnlineID == online_id);
+            AddStep(
+                "remove map",
+                () =>
+                {
+                    var beatmap = beatmaps.QueryBeatmapSet(b => b.OnlineID == online_id);
 
-                if (beatmap != null) beatmaps.Delete(beatmap.Value);
-            });
+                    if (beatmap != null)
+                        beatmaps.Delete(beatmap.Value);
+                }
+            );
         }
 
-        private Drawable createContent(OverlayColourScheme colourScheme, Func<APIBeatmapSet, Drawable> creationFunc)
-            => createContent(colourScheme, testCases.Select(creationFunc).ToArray());
+        private Drawable createContent(
+            OverlayColourScheme colourScheme,
+            Func<APIBeatmapSet, Drawable> creationFunc
+        ) => createContent(colourScheme, testCases.Select(creationFunc).ToArray());
 
         private Drawable createContent(OverlayColourScheme colourScheme, Drawable[] cards)
         {
@@ -240,15 +227,11 @@ namespace osu.Game.Tests.Visual.Beatmaps
                 RelativeSizeAxes = Axes.Both,
                 CachedDependencies = new (Type, object)[]
                 {
-                    (typeof(OverlayColourProvider), colourProvider)
+                    (typeof(OverlayColourProvider), colourProvider),
                 },
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background5
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
                     new BasicScrollContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -259,16 +242,19 @@ namespace osu.Game.Tests.Visual.Beatmaps
                             Direction = FillDirection.Full,
                             Padding = new MarginPadding(10),
                             Spacing = new Vector2(10),
-                            ChildrenEnumerable = cards
-                        }
-                    }
-                }
+                            ChildrenEnumerable = cards,
+                        },
+                    },
+                },
             };
         }
 
         private void createTestCase(Func<APIBeatmapSet, Drawable> creationFunc)
         {
-            foreach (var scheme in Enum.GetValues(typeof(OverlayColourScheme)).Cast<OverlayColourScheme>())
+            foreach (
+                var scheme in Enum.GetValues(typeof(OverlayColourScheme))
+                    .Cast<OverlayColourScheme>()
+            )
                 AddStep($"set {scheme} scheme", () => Child = createContent(scheme, creationFunc));
         }
 
@@ -293,16 +279,31 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [Test]
         public void TestHoverState()
         {
-            AddStep("create cards", () => Child = createContent(OverlayColourScheme.Blue, s => new BeatmapCardNormal(s)));
+            AddStep(
+                "create cards",
+                () => Child = createContent(OverlayColourScheme.Blue, s => new BeatmapCardNormal(s))
+            );
 
             AddStep("Hover card", () => InputManager.MoveMouseTo(firstCard()));
             AddWaitStep("wait for potential state change", 5);
             AddAssert("card is not expanded", () => !firstCard().Expanded.Value);
 
-            AddStep("Hover spectrum display", () => InputManager.MoveMouseTo(firstCard().ChildrenOfType<DifficultySpectrumDisplay>().Single()));
+            AddStep(
+                "Hover spectrum display",
+                () =>
+                    InputManager.MoveMouseTo(
+                        firstCard().ChildrenOfType<DifficultySpectrumDisplay>().Single()
+                    )
+            );
             AddUntilStep("card is expanded", () => firstCard().Expanded.Value);
 
-            AddStep("Hover difficulty content", () => InputManager.MoveMouseTo(firstCard().ChildrenOfType<BeatmapCardDifficultyList>().Single()));
+            AddStep(
+                "Hover difficulty content",
+                () =>
+                    InputManager.MoveMouseTo(
+                        firstCard().ChildrenOfType<BeatmapCardDifficultyList>().Single()
+                    )
+            );
             AddWaitStep("wait for potential state change", 5);
             AddAssert("card is still expanded", () => firstCard().Expanded.Value);
 
@@ -310,7 +311,10 @@ namespace osu.Game.Tests.Visual.Beatmaps
             AddWaitStep("wait for potential state change", 5);
             AddAssert("card is still expanded", () => firstCard().Expanded.Value);
 
-            AddStep("Hover away", () => InputManager.MoveMouseTo(this.ChildrenOfType<BeatmapCardNormal>().Last()));
+            AddStep(
+                "Hover away",
+                () => InputManager.MoveMouseTo(this.ChildrenOfType<BeatmapCardNormal>().Last())
+            );
             AddUntilStep("card is not expanded", () => !firstCard().Expanded.Value);
 
             BeatmapCardNormal firstCard() => this.ChildrenOfType<BeatmapCardNormal>().First();
@@ -319,16 +323,29 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [Test]
         public void TestPlayButtonByTouchInput()
         {
-            AddStep("create cards", () => Child = createContent(OverlayColourScheme.Blue, beatmapSetInfo => new BeatmapCardNormal(beatmapSetInfo)));
+            AddStep(
+                "create cards",
+                () =>
+                    Child = createContent(
+                        OverlayColourScheme.Blue,
+                        beatmapSetInfo => new BeatmapCardNormal(beatmapSetInfo)
+                    )
+            );
 
             // mimics touch input
-            AddStep("touch play button area on first card", () =>
-            {
-                InputManager.MoveMouseTo(firstCard().ChildrenOfType<PlayButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "touch play button area on first card",
+                () =>
+                {
+                    InputManager.MoveMouseTo(firstCard().ChildrenOfType<PlayButton>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("first card is playing", () => firstCard().ChildrenOfType<PlayButton>().Single().Playing.Value);
+            AddAssert(
+                "first card is playing",
+                () => firstCard().ChildrenOfType<PlayButton>().Single().Playing.Value
+            );
 
             BeatmapCardNormal firstCard() => this.ChildrenOfType<BeatmapCardNormal>().First();
         }
@@ -336,46 +353,68 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [Test]
         public void TestNominations()
         {
-            AddStep("create cards", () =>
-            {
-                var singleRuleset = CreateAPIBeatmapSet(Ruleset.Value);
-                singleRuleset.HypeStatus = new BeatmapSetHypeStatus();
-                singleRuleset.NominationStatus = new BeatmapSetNominationStatus
+            AddStep(
+                "create cards",
+                () =>
                 {
-                    Current = 4,
-                    RequiredMeta =
+                    var singleRuleset = CreateAPIBeatmapSet(Ruleset.Value);
+                    singleRuleset.HypeStatus = new BeatmapSetHypeStatus();
+                    singleRuleset.NominationStatus = new BeatmapSetNominationStatus
                     {
-                        MainRuleset = 5,
-                        NonMainRuleset = 1,
-                    }
-                };
+                        Current = 4,
+                        RequiredMeta = { MainRuleset = 5, NonMainRuleset = 1 },
+                    };
 
-                var multipleRulesets = getManyDifficultiesBeatmapSet(3);
-                multipleRulesets.HypeStatus = new BeatmapSetHypeStatus();
-                multipleRulesets.NominationStatus = new BeatmapSetNominationStatus
-                {
-                    Current = 4,
-                    RequiredMeta =
+                    var multipleRulesets = getManyDifficultiesBeatmapSet(3);
+                    multipleRulesets.HypeStatus = new BeatmapSetHypeStatus();
+                    multipleRulesets.NominationStatus = new BeatmapSetNominationStatus
                     {
-                        MainRuleset = 5,
-                        NonMainRuleset = 1,
-                    }
-                };
+                        Current = 4,
+                        RequiredMeta = { MainRuleset = 5, NonMainRuleset = 1 },
+                    };
 
-                Child = createContent(OverlayColourScheme.Blue, new Drawable[]
-                {
-                    new BeatmapCardNormal(singleRuleset),
-                    new BeatmapCardNormal(multipleRulesets),
-                });
-            });
+                    Child = createContent(
+                        OverlayColourScheme.Blue,
+                        new Drawable[]
+                        {
+                            new BeatmapCardNormal(singleRuleset),
+                            new BeatmapCardNormal(multipleRulesets),
+                        }
+                    );
+                }
+            );
 
             // first card: only has main ruleset, required nominations = main_ruleset = 5
-            AddAssert("first card has single ruleset", () => firstCard().BeatmapSet.Beatmaps.GroupBy(b => b.Ruleset).Count(), () => Is.EqualTo(1));
-            AddAssert("first card nominations = 4/5", () => firstCard().ChildrenOfType<NominationsStatistic>().Single().TooltipText.ToString(), () => Is.EqualTo("Nominations: 4/5"));
+            AddAssert(
+                "first card has single ruleset",
+                () => firstCard().BeatmapSet.Beatmaps.GroupBy(b => b.Ruleset).Count(),
+                () => Is.EqualTo(1)
+            );
+            AddAssert(
+                "first card nominations = 4/5",
+                () =>
+                    firstCard()
+                        .ChildrenOfType<NominationsStatistic>()
+                        .Single()
+                        .TooltipText.ToString(),
+                () => Is.EqualTo("Nominations: 4/5")
+            );
 
             // second card: has non-main rulesets, required nominations = main_ruleset + non_main_ruleset * (count of non-main rulesets) = 5 + 1 * 2 = 7
-            AddAssert("second card has three rulesets", () => secondCard().BeatmapSet.Beatmaps.GroupBy(b => b.Ruleset).Count(), () => Is.EqualTo(3));
-            AddAssert("second card nominations = 4/7", () => secondCard().ChildrenOfType<NominationsStatistic>().Single().TooltipText.ToString(), () => Is.EqualTo("Nominations: 4/7"));
+            AddAssert(
+                "second card has three rulesets",
+                () => secondCard().BeatmapSet.Beatmaps.GroupBy(b => b.Ruleset).Count(),
+                () => Is.EqualTo(3)
+            );
+            AddAssert(
+                "second card nominations = 4/7",
+                () =>
+                    secondCard()
+                        .ChildrenOfType<NominationsStatistic>()
+                        .Single()
+                        .TooltipText.ToString(),
+                () => Is.EqualTo("Nominations: 4/7")
+            );
 
             // order is reversed due to the cards being inside a reverse child-id fill flow.
             BeatmapCardNormal firstCard() => this.ChildrenOfType<BeatmapCardNormal>().ElementAt(1);

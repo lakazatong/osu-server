@@ -14,29 +14,24 @@ namespace osu.Game.Overlays.Dashboard.Home
     public partial class DashboardPopularBeatmapPanel : DashboardBeatmapPanel
     {
         public DashboardPopularBeatmapPanel(APIBeatmapSet beatmapSet)
-            : base(beatmapSet)
-        {
-        }
+            : base(beatmapSet) { }
 
-        protected override Drawable CreateInfo() => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(3, 0),
-            Colour = ColourProvider.Foreground1,
-            Children = new Drawable[]
+        protected override Drawable CreateInfo() =>
+            new FillFlowContainer
             {
-                new SpriteIcon
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(3, 0),
+                Colour = ColourProvider.Foreground1,
+                Children = new Drawable[]
                 {
-                    Size = new Vector2(10),
-                    Icon = FontAwesome.Solid.Heart
+                    new SpriteIcon { Size = new Vector2(10), Icon = FontAwesome.Solid.Heart },
+                    new OsuSpriteText
+                    {
+                        Font = OsuFont.GetFont(size: 10, weight: FontWeight.Regular),
+                        Text = BeatmapSet.FavouriteCount.ToString(),
+                    },
                 },
-                new OsuSpriteText
-                {
-                    Font = OsuFont.GetFont(size: 10, weight: FontWeight.Regular),
-                    Text = BeatmapSet.FavouriteCount.ToString()
-                }
-            }
-        };
+            };
     }
 }

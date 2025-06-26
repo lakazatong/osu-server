@@ -10,10 +10,10 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
-using osu.Game.Localisation;
 
 namespace osu.Game.Beatmaps.Drawables.Cards
 {
@@ -41,7 +41,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards
             Expanded = new BindableBool { Disabled = !allowExpansion };
 
             BeatmapSet = beatmapSet;
-            FavouriteState = new Bindable<BeatmapSetFavouriteState>(new BeatmapSetFavouriteState(beatmapSet.HasFavourited, beatmapSet.FavouriteCount));
+            FavouriteState = new Bindable<BeatmapSetFavouriteState>(
+                new BeatmapSetFavouriteState(beatmapSet.HasFavourited, beatmapSet.FavouriteCount)
+            );
             DownloadTracker = new BeatmapDownloadTracker(beatmapSet);
         }
 
@@ -76,16 +78,26 @@ namespace osu.Game.Beatmaps.Drawables.Cards
 
         protected virtual void UpdateState()
         {
-            bool showProgress = DownloadTracker.State.Value == DownloadState.Downloading || DownloadTracker.State.Value == DownloadState.Importing;
+            bool showProgress =
+                DownloadTracker.State.Value == DownloadState.Downloading
+                || DownloadTracker.State.Value == DownloadState.Importing;
 
             IdleContent.FadeTo(showProgress ? 0 : 1, TRANSITION_DURATION, Easing.OutQuint);
-            DownloadInProgressContent.FadeTo(showProgress ? 1 : 0, TRANSITION_DURATION, Easing.OutQuint);
+            DownloadInProgressContent.FadeTo(
+                showProgress ? 1 : 0,
+                TRANSITION_DURATION,
+                Easing.OutQuint
+            );
         }
 
         /// <summary>
         /// Creates a beatmap card of the given <paramref name="size"/> for the supplied <paramref name="beatmapSet"/>.
         /// </summary>
-        public static BeatmapCard Create(APIBeatmapSet beatmapSet, BeatmapCardSize size, bool allowExpansion = true)
+        public static BeatmapCard Create(
+            APIBeatmapSet beatmapSet,
+            BeatmapCardSize size,
+            bool allowExpansion = true
+        )
         {
             switch (size)
             {
@@ -99,13 +111,18 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                     return new BeatmapCardExtra(beatmapSet, allowExpansion);
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(size), size, @"Unsupported card size");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(size),
+                        size,
+                        @"Unsupported card size"
+                    );
             }
         }
 
-        public MenuItem[] ContextMenuItems => new MenuItem[]
-        {
-            new OsuMenuItem(ContextMenuStrings.ViewBeatmap, MenuItemType.Highlighted, Action),
-        };
+        public MenuItem[] ContextMenuItems =>
+            new MenuItem[]
+            {
+                new OsuMenuItem(ContextMenuStrings.ViewBeatmap, MenuItemType.Highlighted, Action),
+            };
     }
 }

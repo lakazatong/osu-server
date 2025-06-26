@@ -27,12 +27,13 @@ namespace osu.Game.Skinning.Components
         public Bindable<bool> TextSpin { get; } = new BindableBool();
 
         [SettingSource("Alpha", "The alpha value of this box")]
-        public BindableNumber<float> BoxAlpha { get; } = new BindableNumber<float>(1)
-        {
-            MinValue = 0,
-            MaxValue = 1,
-            Precision = 0.01f,
-        };
+        public BindableNumber<float> BoxAlpha { get; } =
+            new BindableNumber<float>(1)
+            {
+                MinValue = 0,
+                MaxValue = 1,
+                Precision = 0.01f,
+            };
 
         private readonly Box box;
         private readonly OsuSpriteText text;
@@ -48,28 +49,27 @@ namespace osu.Game.Skinning.Components
 
             InternalChildren = new Drawable[]
             {
-                box = new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                box = new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                 text = new OsuSpriteText
                 {
                     Text = "Big Black Box",
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font = OsuFont.Default.With(size: 40)
+                    Font = OsuFont.Default.With(size: 40),
                 },
-                disclaimer = new OsuTextFlowContainer(st => st.Font = OsuFont.Default.With(size: 10))
+                disclaimer = new OsuTextFlowContainer(st =>
+                    st.Font = OsuFont.Default.With(size: 10)
+                )
                 {
-                    Text = "This is intended to be a test component and may disappear in the future!",
+                    Text =
+                        "This is intended to be a test component and may disappear in the future!",
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Margin = new MarginPadding(10),
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     TextAnchor = Anchor.TopCentre,
-                }
+                },
             };
         }
 
@@ -78,13 +78,16 @@ namespace osu.Game.Skinning.Components
             base.LoadComplete();
 
             BoxAlpha.BindValueChanged(alpha => box.Alpha = alpha.NewValue, true);
-            TextSpin.BindValueChanged(spin =>
-            {
-                if (spin.NewValue)
-                    text.Spin(1000, RotationDirection.Clockwise);
-                else
-                    text.ClearTransforms();
-            }, true);
+            TextSpin.BindValueChanged(
+                spin =>
+                {
+                    if (spin.NewValue)
+                        text.Spin(1000, RotationDirection.Clockwise);
+                    else
+                        text.ClearTransforms();
+                },
+                true
+            );
 
             disclaimer.FadeOutFromOne(5000, Easing.InQuint);
         }

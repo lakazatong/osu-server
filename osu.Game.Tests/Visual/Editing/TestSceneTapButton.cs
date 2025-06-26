@@ -18,33 +18,42 @@ namespace osu.Game.Tests.Visual.Editing
         private TapButton tapButton;
 
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [Test]
         public void TestBasic()
         {
-            AddStep("create button", () =>
-            {
-                Child = tapButton = new TapButton
+            AddStep(
+                "create button",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(4),
-                };
-            });
+                    Child = tapButton = new TapButton
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(4),
+                    };
+                }
+            );
 
             bool pressed = false;
 
-            AddRepeatStep("Press button", () =>
-            {
-                InputManager.MoveMouseTo(tapButton);
-                if (!pressed)
-                    InputManager.PressButton(MouseButton.Left);
-                else
-                    InputManager.ReleaseButton(MouseButton.Left);
+            AddRepeatStep(
+                "Press button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(tapButton);
+                    if (!pressed)
+                        InputManager.PressButton(MouseButton.Left);
+                    else
+                        InputManager.ReleaseButton(MouseButton.Left);
 
-                pressed = !pressed;
-            }, 100);
+                    pressed = !pressed;
+                },
+                100
+            );
         }
     }
 }

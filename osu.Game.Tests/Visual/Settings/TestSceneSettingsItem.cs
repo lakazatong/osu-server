@@ -11,8 +11,8 @@ using osu.Framework.Utils;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Overlays.Settings;
 using osu.Game.Overlays;
+using osu.Game.Overlays.Settings;
 
 namespace osu.Game.Tests.Visual.Settings
 {
@@ -25,15 +25,24 @@ namespace osu.Game.Tests.Visual.Settings
             SettingsTextBox textBox = null;
             RevertToDefaultButton<string> revertToDefaultButton = null;
 
-            AddStep("create settings item", () =>
-            {
-                Child = textBox = new SettingsTextBox
+            AddStep(
+                "create settings item",
+                () =>
                 {
-                    Current = new Bindable<string>("test")
-                };
-            });
+                    Child = textBox = new SettingsTextBox
+                    {
+                        Current = new Bindable<string>("test"),
+                    };
+                }
+            );
             AddUntilStep("wait for loaded", () => textBox.IsLoaded);
-            AddStep("retrieve restore default button", () => revertToDefaultButton = textBox.ChildrenOfType<RevertToDefaultButton<string>>().Single());
+            AddStep(
+                "retrieve restore default button",
+                () =>
+                    revertToDefaultButton = textBox
+                        .ChildrenOfType<RevertToDefaultButton<string>>()
+                        .Single()
+            );
 
             AddAssert("restore button hidden", () => revertToDefaultButton.Alpha == 0);
 
@@ -58,35 +67,86 @@ namespace osu.Game.Tests.Visual.Settings
             RevertToDefaultButton<string> revertToDefaultButton = null;
             OsuTextBox control = null;
 
-            AddStep("create settings item", () =>
-            {
-                Child = textBox = new SettingsTextBox
+            AddStep(
+                "create settings item",
+                () =>
                 {
-                    Current = new Bindable<string>("test")
-                };
-            });
+                    Child = textBox = new SettingsTextBox
+                    {
+                        Current = new Bindable<string>("test"),
+                    };
+                }
+            );
             AddUntilStep("wait for loaded", () => textBox.IsLoaded);
-            AddStep("retrieve components", () =>
-            {
-                revertToDefaultButton = textBox.ChildrenOfType<RevertToDefaultButton<string>>().Single();
-                control = textBox.ChildrenOfType<OsuTextBox>().Single();
-            });
+            AddStep(
+                "retrieve components",
+                () =>
+                {
+                    revertToDefaultButton = textBox
+                        .ChildrenOfType<RevertToDefaultButton<string>>()
+                        .Single();
+                    control = textBox.ChildrenOfType<OsuTextBox>().Single();
+                }
+            );
 
-            AddStep("set non-default value", () => revertToDefaultButton.Current.Value = "non-default");
-            AddAssert("default value button centre aligned to control size", () => Precision.AlmostEquals(revertToDefaultButton.Parent!.DrawHeight, control.DrawHeight, 1));
+            AddStep(
+                "set non-default value",
+                () => revertToDefaultButton.Current.Value = "non-default"
+            );
+            AddAssert(
+                "default value button centre aligned to control size",
+                () =>
+                    Precision.AlmostEquals(
+                        revertToDefaultButton.Parent!.DrawHeight,
+                        control.DrawHeight,
+                        1
+                    )
+            );
 
             AddStep("set label", () => textBox.LabelText = "label text");
-            AddAssert("default value button centre aligned to label size", () =>
-            {
-                var label = textBox.ChildrenOfType<OsuSpriteText>().Single(spriteText => spriteText.Text == "label text");
-                return Precision.AlmostEquals(revertToDefaultButton.Parent!.DrawHeight, label.DrawHeight, 1);
-            });
+            AddAssert(
+                "default value button centre aligned to label size",
+                () =>
+                {
+                    var label = textBox
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Single(spriteText => spriteText.Text == "label text");
+                    return Precision.AlmostEquals(
+                        revertToDefaultButton.Parent!.DrawHeight,
+                        label.DrawHeight,
+                        1
+                    );
+                }
+            );
 
             AddStep("clear label", () => textBox.LabelText = default);
-            AddAssert("default value button centre aligned to control size", () => Precision.AlmostEquals(revertToDefaultButton.Parent!.DrawHeight, control.DrawHeight, 1));
+            AddAssert(
+                "default value button centre aligned to control size",
+                () =>
+                    Precision.AlmostEquals(
+                        revertToDefaultButton.Parent!.DrawHeight,
+                        control.DrawHeight,
+                        1
+                    )
+            );
 
-            AddStep("set warning text", () => textBox.SetNoticeText("This is some very important warning text! Hopefully it doesn't break the alignment of the default value indicator...", true));
-            AddAssert("default value button centre aligned to control size", () => Precision.AlmostEquals(revertToDefaultButton.Parent!.DrawHeight, control.DrawHeight, 1));
+            AddStep(
+                "set warning text",
+                () =>
+                    textBox.SetNoticeText(
+                        "This is some very important warning text! Hopefully it doesn't break the alignment of the default value indicator...",
+                        true
+                    )
+            );
+            AddAssert(
+                "default value button centre aligned to control size",
+                () =>
+                    Precision.AlmostEquals(
+                        revertToDefaultButton.Parent!.DrawHeight,
+                        control.DrawHeight,
+                        1
+                    )
+            );
         }
 
         /// <summary>
@@ -101,24 +161,37 @@ namespace osu.Game.Tests.Visual.Settings
             SettingsSlider<float> sliderBar = null;
             RevertToDefaultButton<float> revertToDefaultButton = null;
 
-            AddStep("create settings item", () =>
-            {
-                Child = sliderBar = new SettingsSlider<float>
+            AddStep(
+                "create settings item",
+                () =>
                 {
-                    Current = current = new BindableFloat(initialValue)
+                    Child = sliderBar = new SettingsSlider<float>
                     {
-                        MinValue = 0f,
-                        MaxValue = 10f,
-                        Precision = 0.1f,
-                    }
-                };
-            });
+                        Current = current =
+                            new BindableFloat(initialValue)
+                            {
+                                MinValue = 0f,
+                                MaxValue = 10f,
+                                Precision = 0.1f,
+                            },
+                    };
+                }
+            );
             AddUntilStep("wait for loaded", () => sliderBar.IsLoaded);
-            AddStep("retrieve restore default button", () => revertToDefaultButton = sliderBar.ChildrenOfType<RevertToDefaultButton<float>>().Single());
+            AddStep(
+                "retrieve restore default button",
+                () =>
+                    revertToDefaultButton = sliderBar
+                        .ChildrenOfType<RevertToDefaultButton<float>>()
+                        .Single()
+            );
 
             AddAssert("restore button hidden", () => revertToDefaultButton.Alpha == 0);
 
-            AddStep("change value to next closest", () => sliderBar.Current.Value += current.Precision * 0.6f);
+            AddStep(
+                "change value to next closest",
+                () => sliderBar.Current.Value += current.Precision * 0.6f
+            );
             AddUntilStep("restore button shown", () => revertToDefaultButton.Alpha > 0);
 
             AddStep("restore default", () => sliderBar.Current.SetDefault());
@@ -131,16 +204,31 @@ namespace osu.Game.Tests.Visual.Settings
             SettingsNumberBox numberBox = null;
 
             AddStep("create settings item", () => Child = numberBox = new SettingsNumberBox());
-            AddAssert("warning text not created", () => !numberBox.ChildrenOfType<LinkFlowContainer>().Any());
+            AddAssert(
+                "warning text not created",
+                () => !numberBox.ChildrenOfType<LinkFlowContainer>().Any()
+            );
 
             AddStep("set warning text", () => numberBox.SetNoticeText("this is a warning!", true));
-            AddAssert("warning text created", () => numberBox.ChildrenOfType<LinkFlowContainer>().Single().Alpha == 1);
+            AddAssert(
+                "warning text created",
+                () => numberBox.ChildrenOfType<LinkFlowContainer>().Single().Alpha == 1
+            );
 
             AddStep("unset warning text", () => numberBox.ClearNoticeText());
-            AddAssert("warning text hidden", () => !numberBox.ChildrenOfType<LinkFlowContainer>().Any());
+            AddAssert(
+                "warning text hidden",
+                () => !numberBox.ChildrenOfType<LinkFlowContainer>().Any()
+            );
 
-            AddStep("set warning text again", () => numberBox.SetNoticeText("another warning!", true));
-            AddAssert("warning text shown again", () => numberBox.ChildrenOfType<LinkFlowContainer>().Single().Alpha == 1);
+            AddStep(
+                "set warning text again",
+                () => numberBox.SetNoticeText("another warning!", true)
+            );
+            AddAssert(
+                "warning text shown again",
+                () => numberBox.ChildrenOfType<LinkFlowContainer>().Single().Alpha == 1
+            );
 
             AddStep("set non warning text", () => numberBox.SetNoticeText("you did good!"));
         }

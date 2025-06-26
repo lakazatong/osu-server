@@ -4,9 +4,9 @@
 #nullable disable
 
 using System;
-using osu.Framework.Screens;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
+using osu.Framework.Screens;
 using osuTK;
 
 namespace osu.Game.Screens
@@ -42,7 +42,8 @@ namespace osu.Game.Screens
         /// Apply arbitrary changes to this background in a thread safe manner.
         /// </summary>
         /// <param name="action">The operation to perform.</param>
-        public void ApplyToBackground(Action<BackgroundScreen> action) => Schedule(() => action.Invoke(this));
+        public void ApplyToBackground(Action<BackgroundScreen> action) =>
+            Schedule(() => action.Invoke(this));
 
         protected override void Update()
         {

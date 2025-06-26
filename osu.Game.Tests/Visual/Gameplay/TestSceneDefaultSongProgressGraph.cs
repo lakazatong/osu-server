@@ -21,22 +21,27 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetupSteps()
         {
-            AddStep("add new big graph", () =>
-            {
-                if (graph != null)
+            AddStep(
+                "add new big graph",
+                () =>
                 {
-                    graph.Expire();
-                    graph = null;
-                }
+                    if (graph != null)
+                    {
+                        graph.Expire();
+                        graph = null;
+                    }
 
-                Add(graph = new TestSongProgressGraph
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 200,
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                });
-            });
+                    Add(
+                        graph = new TestSongProgressGraph
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 200,
+                            Anchor = Anchor.TopLeft,
+                            Origin = Anchor.TopLeft,
+                        }
+                    );
+                }
+            );
         }
 
         [Test]

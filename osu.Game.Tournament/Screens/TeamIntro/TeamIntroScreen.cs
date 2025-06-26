@@ -22,15 +22,8 @@ namespace osu.Game.Tournament.Screens.TeamIntro
 
             InternalChildren = new Drawable[]
             {
-                new TourneyVideo("teamintro")
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Loop = true,
-                },
-                mainContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }
+                new TourneyVideo("teamintro") { RelativeSizeAxes = Axes.Both, Loop = true },
+                mainContainer = new Container { RelativeSizeAxes = Axes.Both },
             };
         }
 
@@ -49,10 +42,7 @@ namespace osu.Game.Tournament.Screens.TeamIntro
 
             mainContainer.Children = new Drawable[]
             {
-                new RoundDisplay(match.NewValue)
-                {
-                    Position = new Vector2(100, 100)
-                },
+                new RoundDisplay(match.NewValue) { Position = new Vector2(100, 100) },
                 new DrawableTeamFlag(match.NewValue.Team1.Value)
                 {
                     Position = new Vector2(165, y_flag_offset),

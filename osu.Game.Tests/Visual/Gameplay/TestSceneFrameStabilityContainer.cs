@@ -129,20 +129,34 @@ namespace osu.Game.Tests.Visual.Gameplay
             checkRate(1);
         }
 
-        private void createStabilityContainer(double gameplayStartTime = double.MinValue) => AddStep("create container", () =>
-        {
-            mainContainer.Child = new FrameStabilityContainer(gameplayStartTime)
-            {
-                AllowBackwardsSeeks = true,
-            }.WithChild(consumer = new ClockConsumingChild());
-        });
+        private void createStabilityContainer(double gameplayStartTime = double.MinValue) =>
+            AddStep(
+                "create container",
+                () =>
+                {
+                    mainContainer.Child = new FrameStabilityContainer(gameplayStartTime)
+                    {
+                        AllowBackwardsSeeks = true,
+                    }.WithChild(consumer = new ClockConsumingChild());
+                }
+            );
 
-        private void seekManualTo(double time) => AddStep($"seek manual clock to {time}", () => manualClock.CurrentTime = time);
+        private void seekManualTo(double time) =>
+            AddStep($"seek manual clock to {time}", () => manualClock.CurrentTime = time);
 
-        private void confirmSeek(double time) => AddUntilStep($"wait for seek to {time}", () => consumer.Clock.CurrentTime, () => Is.EqualTo(time));
+        private void confirmSeek(double time) =>
+            AddUntilStep(
+                $"wait for seek to {time}",
+                () => consumer.Clock.CurrentTime,
+                () => Is.EqualTo(time)
+            );
 
         private void checkFrameCount(int frames) =>
-            AddAssert($"elapsed frames is {frames}", () => consumer.ElapsedFrames, () => Is.EqualTo(frames));
+            AddAssert(
+                $"elapsed frames is {frames}",
+                () => consumer.ElapsedFrames,
+                () => Is.EqualTo(frames)
+            );
 
         private void checkRate(double rate) =>
             AddAssert($"clock rate is {rate}", () => consumer.Clock.Rate, () => Is.EqualTo(rate));
@@ -181,7 +195,7 @@ namespace osu.Game.Tests.Visual.Gameplay
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                             },
-                        }
+                        },
                     },
                 };
             }

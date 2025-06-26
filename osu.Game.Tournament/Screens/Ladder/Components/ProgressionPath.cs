@@ -26,7 +26,8 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
         {
             base.LoadComplete();
 
-            static Vector2 getCenteredVector(Vector2 top, Vector2 bottom) => new Vector2(top.X, top.Y + (bottom.Y - top.Y) / 2);
+            static Vector2 getCenteredVector(Vector2 top, Vector2 bottom) =>
+                new Vector2(top.X, top.Y + (bottom.Y - top.Y) / 2);
 
             var q1 = Source.ScreenSpaceDrawQuad;
             var q2 = Destination.ScreenSpaceDrawQuad;
@@ -62,7 +63,9 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
             OriginPosition = new Vector2(PathRadius);
             Position = Parent!.ToLocalSpace(topLeft);
-            Vertices = points.Select(p => Parent!.ToLocalSpace(p) - Parent!.ToLocalSpace(topLeft)).ToList();
+            Vertices = points
+                .Select(p => Parent!.ToLocalSpace(p) - Parent!.ToLocalSpace(topLeft))
+                .ToList();
         }
     }
 }

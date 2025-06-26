@@ -35,7 +35,10 @@ namespace osu.Game.IO.Archives
             // Required to support rare code pages.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            DEFAULT_ENCODING = new ArchiveEncoding(Encoding.GetEncoding(932), Encoding.GetEncoding(932));
+            DEFAULT_ENCODING = new ArchiveEncoding(
+                Encoding.GetEncoding(932),
+                Encoding.GetEncoding(932)
+            );
         }
 
         public ZipArchiveReader(Stream archiveStream, string name = null)
@@ -43,10 +46,10 @@ namespace osu.Game.IO.Archives
         {
             this.archiveStream = archiveStream;
 
-            archive = ZipArchive.Open(archiveStream, new ReaderOptions
-            {
-                ArchiveEncoding = DEFAULT_ENCODING
-            });
+            archive = ZipArchive.Open(
+                archiveStream,
+                new ReaderOptions { ArchiveEncoding = DEFAULT_ENCODING }
+            );
         }
 
         public override Stream GetStream(string name)
@@ -79,7 +82,8 @@ namespace osu.Game.IO.Archives
             archiveStream.Dispose();
         }
 
-        public override IEnumerable<string> Filenames => archive.Entries.Where(e => !e.IsDirectory).Select(e => e.Key).ExcludeSystemFileNames();
+        public override IEnumerable<string> Filenames =>
+            archive.Entries.Where(e => !e.IsDirectory).Select(e => e.Key).ExcludeSystemFileNames();
 
         private class MemoryOwnerMemoryStream : Stream
         {
@@ -101,13 +105,16 @@ namespace osu.Game.IO.Archives
 
             public override void Flush() => stream.Flush();
 
-            public override int Read(byte[] buffer, int offset, int count) => stream.Read(buffer, offset, count);
+            public override int Read(byte[] buffer, int offset, int count) =>
+                stream.Read(buffer, offset, count);
 
-            public override long Seek(long offset, SeekOrigin origin) => stream.Seek(offset, origin);
+            public override long Seek(long offset, SeekOrigin origin) =>
+                stream.Seek(offset, origin);
 
             public override void SetLength(long value) => stream.SetLength(value);
 
-            public override void Write(byte[] buffer, int offset, int count) => stream.Write(buffer, offset, count);
+            public override void Write(byte[] buffer, int offset, int count) =>
+                stream.Write(buffer, offset, count);
 
             public override bool CanRead => stream.CanRead;
 

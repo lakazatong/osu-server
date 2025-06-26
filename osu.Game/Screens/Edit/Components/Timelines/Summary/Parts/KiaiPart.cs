@@ -38,48 +38,53 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
             updateParts();
         }
 
-        private void updateParts() => Scheduler.AddOnce(() =>
-        {
-            Clear(disposeChildren: false);
-
-            double? startTime = null;
-
-            foreach (var effectPoint in EditorBeatmap.ControlPointInfo.EffectPoints)
+        private void updateParts() =>
+            Scheduler.AddOnce(() =>
             {
+                Clear(disposeChildren: false);
+
+                double? startTime = null;
+
+                foreach (var effectPoint in EditorBeatmap.ControlPointInfo.EffectPoints)
+                {
+                    if (startTime.HasValue)
+                    {
+                        if (effectPoint.KiaiMode)
+                            continue;
+
+                        var section = new KiaiSection
+                        {
+                            StartTime = startTime.Value,
+                            EndTime = effectPoint.Time,
+                        };
+
+                        Add(pool.Get(v => v.Section = section));
+
+                        startTime = null;
+                    }
+                    else
+                    {
+                        if (!effectPoint.KiaiMode)
+                            continue;
+
+                        startTime = effectPoint.Time;
+                    }
+                }
+
+                // last effect point has kiai enabled, kiai should last until the end of the map
                 if (startTime.HasValue)
                 {
-                    if (effectPoint.KiaiMode)
-                        continue;
-
-                    var section = new KiaiSection
-                    {
-                        StartTime = startTime.Value,
-                        EndTime = effectPoint.Time
-                    };
-
-                    Add(pool.Get(v => v.Section = section));
-
-                    startTime = null;
+                    Add(
+                        pool.Get(v =>
+                            v.Section = new KiaiSection
+                            {
+                                StartTime = startTime.Value,
+                                EndTime = Content.RelativeChildSize.X,
+                            }
+                        )
+                    );
                 }
-                else
-                {
-                    if (!effectPoint.KiaiMode)
-                        continue;
-
-                    startTime = effectPoint.Time;
-                }
-            }
-
-            // last effect point has kiai enabled, kiai should last until the end of the map
-            if (startTime.HasValue)
-            {
-                Add(pool.Get(v => v.Section = new KiaiSection
-                {
-                    StartTime = startTime.Value,
-                    EndTime = Content.RelativeChildSize.X
-                }));
-            }
-        });
+            });
 
         private partial class KiaiVisualisation : PoolableDrawable, IHasTooltip
         {
@@ -105,14 +110,13 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
                 Anchor = Anchor.CentreLeft;
                 Origin = Anchor.CentreLeft;
                 Height = 0.2f;
-                AddInternal(new FastCircle
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colours.Purple1
-                });
+                AddInternal(
+                    new FastCircle { RelativeSizeAxes = Axes.Both, Colour = colours.Purple1 }
+                );
             }
 
-            public LocalisableString TooltipText => $"{section.StartTime.ToEditorFormattedString()} - {section.EndTime.ToEditorFormattedString()} kiai time";
+            public LocalisableString TooltipText =>
+                $"{section.StartTime.ToEditorFormattedString()} - {section.EndTime.ToEditorFormattedString()} kiai time";
         }
 
         private readonly struct KiaiSection

@@ -21,7 +21,8 @@ namespace osu.Android
         [Cached]
         private readonly OsuGameActivity gameActivity;
 
-        public override Vector2 ScalingContainerTargetDrawSize => new Vector2(1024, 1024 * DrawHeight / DrawWidth);
+        public override Vector2 ScalingContainerTargetDrawSize =>
+            new Vector2(1024, 1024 * DrawHeight / DrawWidth);
 
         public OsuGameAndroid(OsuGameActivity activity)
             : base(null)
@@ -33,7 +34,12 @@ namespace osu.Android
         {
             get
             {
-                var packageInfo = Application.Context.ApplicationContext!.PackageManager!.GetPackageInfo(Application.Context.ApplicationContext.PackageName!, 0).AsNonNull();
+                var packageInfo = Application
+                    .Context.ApplicationContext!.PackageManager!.GetPackageInfo(
+                        Application.Context.ApplicationContext.PackageName!,
+                        0
+                    )
+                    .AsNonNull();
 
                 try
                 {
@@ -63,11 +69,13 @@ namespace osu.Android
                     }
 
                     // undo play store version garbling (as mentioned above).
-                    return new Version(int.Parse(versionName.Substring(0, 4)), int.Parse(versionName.Substring(4, 4)), int.Parse(versionName.Substring(8, 1)));
+                    return new Version(
+                        int.Parse(versionName.Substring(0, 4)),
+                        int.Parse(versionName.Substring(4, 4)),
+                        int.Parse(versionName.Substring(8, 1))
+                    );
                 }
-                catch
-                {
-                }
+                catch { }
 
                 return new Version(packageInfo.VersionName.AsNonNull());
             }
@@ -89,7 +97,11 @@ namespace osu.Android
 
         private void updateOrientation()
         {
-            var orientation = MobileUtils.GetOrientation(this, (IOsuScreen)ScreenStack.CurrentScreen, gameActivity.IsTablet);
+            var orientation = MobileUtils.GetOrientation(
+                this,
+                (IOsuScreen)ScreenStack.CurrentScreen,
+                gameActivity.IsTablet
+            );
 
             switch (orientation)
             {

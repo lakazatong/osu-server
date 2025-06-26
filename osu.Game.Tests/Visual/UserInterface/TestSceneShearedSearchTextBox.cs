@@ -17,7 +17,10 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestAllColourSchemes()
         {
-            foreach (var scheme in Enum.GetValues(typeof(OverlayColourScheme)).Cast<OverlayColourScheme>())
+            foreach (
+                var scheme in Enum.GetValues(typeof(OverlayColourScheme))
+                    .Cast<OverlayColourScheme>()
+            )
                 AddStep($"set {scheme} scheme", () => Child = createContent(scheme));
         }
 
@@ -30,7 +33,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 RelativeSizeAxes = Axes.Both,
                 CachedDependencies = new (Type, object)[]
                 {
-                    (typeof(OverlayColourProvider), colourProvider)
+                    (typeof(OverlayColourProvider), colourProvider),
                 },
                 Child = new FillFlowContainer
                 {
@@ -46,7 +49,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
                             RelativeSizeAxes = Axes.X,
-                            Width = 0.5f
+                            Width = 0.5f,
                         },
                         new ShearedFilterTextBox
                         {
@@ -56,7 +59,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                             Width = 0.5f,
                             StatusText = "12345 matches",
                         },
-                    }
+                    },
                 },
             };
         }

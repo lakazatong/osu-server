@@ -21,25 +21,32 @@ namespace osu.Game.Tests.Visual
 
         protected SelectionBlueprintTestScene()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                editorClock,
-                content = new Container
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    Clock = new FramedClock(new StopwatchClock()),
-                    RelativeSizeAxes = Axes.Both
+                    editorClock,
+                    content = new Container
+                    {
+                        Clock = new FramedClock(new StopwatchClock()),
+                        RelativeSizeAxes = Axes.Both,
+                    },
                 }
-            });
+            );
         }
 
-        protected void AddBlueprint(HitObjectSelectionBlueprint blueprint, DrawableHitObject? drawableObject = null)
+        protected void AddBlueprint(
+            HitObjectSelectionBlueprint blueprint,
+            DrawableHitObject? drawableObject = null
+        )
         {
-            Add(blueprint.With(d =>
-            {
-                d.DrawableObject = drawableObject;
-                d.Depth = float.MinValue;
-                d.Select();
-            }));
+            Add(
+                blueprint.With(d =>
+                {
+                    d.DrawableObject = drawableObject;
+                    d.Depth = float.MinValue;
+                    d.Select();
+                })
+            );
         }
     }
 }

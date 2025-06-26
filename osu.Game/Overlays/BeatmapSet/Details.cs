@@ -32,7 +32,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapSet;
             set
             {
-                if (value == beatmapSet) return;
+                if (value == beatmapSet)
+                    return;
 
                 basic.BeatmapSet = preview.BeatmapSet = beatmapSet = value;
 
@@ -48,7 +49,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapInfo;
             set
             {
-                if (value == beatmapInfo) return;
+                if (value == beatmapInfo)
+                    return;
 
                 basic.BeatmapInfo = advanced.BeatmapInfo = beatmapInfo = value;
 
@@ -65,37 +67,36 @@ namespace osu.Game.Overlays.BeatmapSet
 
             Children = new Drawable[]
             {
-                preview = new PreviewButton
+                preview = new PreviewButton { RelativeSizeAxes = Axes.X, Height = 42 },
+                new DetailBox
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 42,
+                    Child = basic =
+                        new BasicStats
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding { Vertical = 10 },
+                        },
                 },
                 new DetailBox
                 {
-                    Child = basic = new BasicStats
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Vertical = 10 }
-                    },
-                },
-                new DetailBox
-                {
-                    Child = advanced = new AdvancedStats
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Margin = new MarginPadding { Vertical = 7.5f },
-                    },
+                    Child = advanced =
+                        new AdvancedStats
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Margin = new MarginPadding { Vertical = 7.5f },
+                        },
                 },
                 ratingBox = new DetailBox
                 {
-                    Child = Ratings = new UserRatings
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 95,
-                        Margin = new MarginPadding { Top = 10 },
-                    },
+                    Child = Ratings =
+                        new UserRatings
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 95,
+                            Margin = new MarginPadding { Top = 10 },
+                        },
                 },
             };
         }
@@ -130,11 +131,7 @@ namespace osu.Game.Overlays.BeatmapSet
 
                 InternalChildren = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.5f
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                     content = new Container
                     {
                         RelativeSizeAxes = Axes.X,

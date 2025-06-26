@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Mania.Edit
     public class NoteCompositionTool : CompositionTool
     {
         public NoteCompositionTool()
-            : base(nameof(Note))
-        {
-        }
+            : base(nameof(Note)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new NotePlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new NotePlacementBlueprint();
     }
 }

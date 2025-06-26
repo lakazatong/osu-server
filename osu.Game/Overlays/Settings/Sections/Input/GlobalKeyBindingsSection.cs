@@ -12,27 +12,47 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 {
     public partial class GlobalKeyBindingsSection : SettingsSection
     {
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = FontAwesome.Solid.Globe
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = FontAwesome.Solid.Globe };
 
         public override LocalisableString Header => InputSettingsStrings.GlobalKeyBindingHeader;
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRange(new[]
-            {
-                new GlobalKeyBindingsSubsection(string.Empty, GlobalActionCategory.General),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.OverlaysSection, GlobalActionCategory.Overlays),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.AudioSection, GlobalActionCategory.AudioControl),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.SongSelectSection, GlobalActionCategory.SongSelect),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.InGameSection, GlobalActionCategory.InGame),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.ReplaySection, GlobalActionCategory.Replay),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.EditorSection, GlobalActionCategory.Editor),
-                new GlobalKeyBindingsSubsection(InputSettingsStrings.EditorTestPlaySection, GlobalActionCategory.EditorTestPlay),
-            });
+            AddRange(
+                new[]
+                {
+                    new GlobalKeyBindingsSubsection(string.Empty, GlobalActionCategory.General),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.OverlaysSection,
+                        GlobalActionCategory.Overlays
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.AudioSection,
+                        GlobalActionCategory.AudioControl
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.SongSelectSection,
+                        GlobalActionCategory.SongSelect
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.InGameSection,
+                        GlobalActionCategory.InGame
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.ReplaySection,
+                        GlobalActionCategory.Replay
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.EditorSection,
+                        GlobalActionCategory.Editor
+                    ),
+                    new GlobalKeyBindingsSubsection(
+                        InputSettingsStrings.EditorTestPlaySection,
+                        GlobalActionCategory.EditorTestPlay
+                    ),
+                }
+            );
         }
     }
 }

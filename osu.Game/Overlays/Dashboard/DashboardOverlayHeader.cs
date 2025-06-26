@@ -30,6 +30,6 @@ namespace osu.Game.Overlays.Dashboard
         Friends,
 
         [Description("Currently online")]
-        CurrentlyPlaying
+        CurrentlyPlaying,
     }
 }

@@ -17,11 +17,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.Placeholders;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Online.Leaderboards
 {
@@ -106,20 +106,19 @@ namespace osu.Game.Online.Leaderboards
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     ScrollbarVisible = false,
-                                }
+                                },
                             },
                             new Drawable[]
                             {
-                                userScoreContainer = new UserTopScoreContainer<TScoreInfo>(CreateDrawableTopScore)
+                                userScoreContainer = new UserTopScoreContainer<TScoreInfo>(
+                                    CreateDrawableTopScore
+                                ),
                             },
                         },
                     },
                 },
                 loading = new LoadingSpinner(),
-                placeholderContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                placeholderContainer = new Container { RelativeSizeAxes = Axes.Both },
             };
         }
 
@@ -172,7 +171,9 @@ namespace osu.Game.Online.Leaderboards
                 case LeaderboardState.NoScores:
                 case LeaderboardState.Retrieving:
                 case LeaderboardState.Success:
-                    throw new InvalidOperationException($"State {state} cannot be set by a leaderboard implementation.");
+                    throw new InvalidOperationException(
+                        $"State {state} cannot be set by a leaderboard implementation."
+                    );
             }
 
             Debug.Assert(!scores.Any());
@@ -239,13 +240,17 @@ namespace osu.Game.Online.Leaderboards
             if (fetchScoresRequest == null)
                 return;
 
-            fetchScoresRequest.Failure += e => Schedule(() =>
-            {
-                if (e is OperationCanceledException || currentFetchCancellationSource.IsCancellationRequested)
-                    return;
+            fetchScoresRequest.Failure += e =>
+                Schedule(() =>
+                {
+                    if (
+                        e is OperationCanceledException
+                        || currentFetchCancellationSource.IsCancellationRequested
+                    )
+                        return;
 
-                SetErrorState(LeaderboardState.NetworkFailure);
-            });
+                    SetErrorState(LeaderboardState.NetworkFailure);
+                });
 
             api?.Queue(fetchScoresRequest);
         }
@@ -261,9 +266,7 @@ namespace osu.Game.Online.Leaderboards
         {
             currentScoresAsyncLoadCancellationSource?.Cancel();
 
-            scoreFlowContainer?
-                .FadeOut(fade_duration, Easing.OutQuint)
-                .Expire();
+            scoreFlowContainer?.FadeOut(fade_duration, Easing.OutQuint).Expire();
             scoreFlowContainer = null;
 
             if (!scores.Any())
@@ -272,31 +275,37 @@ namespace osu.Game.Online.Leaderboards
                 return;
             }
 
-            LoadComponentAsync(new FillFlowContainer<LeaderboardScore>
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Spacing = new Vector2(0f, 5f),
-                Padding = new MarginPadding { Top = 10, Bottom = 5 },
-                ChildrenEnumerable = scores.Select((s, index) => CreateDrawableScore(s, index + 1))
-            }, newFlow =>
-            {
-                setState(LeaderboardState.Success);
-
-                scrollContainer.Add(scoreFlowContainer = newFlow);
-
-                double delay = 0;
-
-                foreach (var s in scoreFlowContainer)
+            LoadComponentAsync(
+                new FillFlowContainer<LeaderboardScore>
                 {
-                    using (s.BeginDelayedSequence(delay))
-                        s.Show();
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Spacing = new Vector2(0f, 5f),
+                    Padding = new MarginPadding { Top = 10, Bottom = 5 },
+                    ChildrenEnumerable = scores.Select(
+                        (s, index) => CreateDrawableScore(s, index + 1)
+                    ),
+                },
+                newFlow =>
+                {
+                    setState(LeaderboardState.Success);
 
-                    delay += 50;
-                }
+                    scrollContainer.Add(scoreFlowContainer = newFlow);
 
-                scrollContainer.ScrollToStart(false);
-            }, (currentScoresAsyncLoadCancellationSource = new CancellationTokenSource()).Token);
+                    double delay = 0;
+
+                    foreach (var s in scoreFlowContainer)
+                    {
+                        using (s.BeginDelayedSequence(delay))
+                            s.Show();
+
+                        delay += 50;
+                    }
+
+                    scrollContainer.ScrollToStart(false);
+                },
+                (currentScoresAsyncLoadCancellationSource = new CancellationTokenSource()).Token
+            );
         }
 
         #region Placeholder handling
@@ -333,28 +342,39 @@ namespace osu.Game.Online.Leaderboards
             switch (state)
             {
                 case LeaderboardState.NetworkFailure:
-                    return new ClickablePlaceholder(LeaderboardStrings.CouldntFetchScores, FontAwesome.Solid.Sync)
+                    return new ClickablePlaceholder(
+                        LeaderboardStrings.CouldntFetchScores,
+                        FontAwesome.Solid.Sync
+                    )
                     {
-                        Action = RefetchScores
+                        Action = RefetchScores,
                     };
 
                 case LeaderboardState.NoneSelected:
                     return new MessagePlaceholder(LeaderboardStrings.PleaseSelectABeatmap);
 
                 case LeaderboardState.RulesetUnavailable:
-                    return new MessagePlaceholder(LeaderboardStrings.LeaderboardsAreNotAvailableForThisRuleset);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.LeaderboardsAreNotAvailableForThisRuleset
+                    );
 
                 case LeaderboardState.BeatmapUnavailable:
-                    return new MessagePlaceholder(LeaderboardStrings.LeaderboardsAreNotAvailableForThisBeatmap);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.LeaderboardsAreNotAvailableForThisBeatmap
+                    );
 
                 case LeaderboardState.NoScores:
                     return new MessagePlaceholder(LeaderboardStrings.NoRecordsYet);
 
                 case LeaderboardState.NotLoggedIn:
-                    return new LoginPlaceholder(LeaderboardStrings.PleaseSignInToViewOnlineLeaderboards);
+                    return new LoginPlaceholder(
+                        LeaderboardStrings.PleaseSignInToViewOnlineLeaderboards
+                    );
 
                 case LeaderboardState.NotSupporter:
-                    return new MessagePlaceholder(LeaderboardStrings.PleaseInvestInAnOsuSupporterTagToViewThisLeaderboard);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.PleaseInvestInAnOsuSupporterTagToViewThisLeaderboard
+                    );
 
                 case LeaderboardState.NoTeam:
                     return new MessagePlaceholder(LeaderboardStrings.NoTeam);
@@ -396,21 +416,34 @@ namespace osu.Game.Online.Leaderboards
 
                 if (!requireBottomFade)
                     c.Colour = Color4.White;
-                else if (topY > fadeBottom + LeaderboardScore.HEIGHT || bottomY < fadeTop - LeaderboardScore.HEIGHT)
+                else if (
+                    topY > fadeBottom + LeaderboardScore.HEIGHT
+                    || bottomY < fadeTop - LeaderboardScore.HEIGHT
+                )
                     c.Colour = Color4.Transparent;
                 else
                 {
                     if (bottomY - fadeBottom > 0)
                     {
                         c.Colour = ColourInfo.GradientVertical(
-                            Color4.White.Opacity(Math.Min(1 - (topY - fadeBottom) / LeaderboardScore.HEIGHT, 1)),
-                            Color4.White.Opacity(Math.Min(1 - (bottomY - fadeBottom) / LeaderboardScore.HEIGHT, 1)));
+                            Color4.White.Opacity(
+                                Math.Min(1 - (topY - fadeBottom) / LeaderboardScore.HEIGHT, 1)
+                            ),
+                            Color4.White.Opacity(
+                                Math.Min(1 - (bottomY - fadeBottom) / LeaderboardScore.HEIGHT, 1)
+                            )
+                        );
                     }
                     else
                     {
                         c.Colour = ColourInfo.GradientVertical(
-                            Color4.White.Opacity(Math.Min(1 - (fadeTop - topY) / LeaderboardScore.HEIGHT, 1)),
-                            Color4.White.Opacity(Math.Min(1 - (fadeTop - bottomY) / LeaderboardScore.HEIGHT, 1)));
+                            Color4.White.Opacity(
+                                Math.Min(1 - (fadeTop - topY) / LeaderboardScore.HEIGHT, 1)
+                            ),
+                            Color4.White.Opacity(
+                                Math.Min(1 - (fadeTop - bottomY) / LeaderboardScore.HEIGHT, 1)
+                            )
+                        );
                     }
                 }
             }

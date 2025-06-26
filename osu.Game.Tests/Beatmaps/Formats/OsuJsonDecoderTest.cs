@@ -25,7 +25,8 @@ namespace osu.Game.Tests.Beatmaps.Formats
     public class OsuJsonDecoderTest
     {
         private const string normal = "Soleily - Renatus (Gamu) [Insane].osu";
-        private const string marathon = "Within Temptation - The Unforgiving (Armin) [Marathon].osu";
+        private const string marathon =
+            "Within Temptation - The Unforgiving (Armin) [Marathon].osu";
         private const string with_sb = "Kozato snow - Rengetsu Ouka (_Kiva) [Yuki YukI].osu";
 
         [Test]
@@ -69,9 +70,28 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             int[] expectedBookmarks =
             {
-                11505, 22054, 32604, 43153, 53703, 64252, 74802, 85351,
-                95901, 106450, 116999, 119637, 130186, 140735, 151285,
-                161834, 164471, 175020, 185570, 196119, 206669, 209306
+                11505,
+                22054,
+                32604,
+                43153,
+                53703,
+                64252,
+                74802,
+                85351,
+                95901,
+                106450,
+                116999,
+                119637,
+                130186,
+                140735,
+                151285,
+                161834,
+                164471,
+                175020,
+                185570,
+                196119,
+                206669,
+                209306,
             };
             Assert.AreEqual(expectedBookmarks.Length, beatmap.Bookmarks.Length);
             for (int i = 0; i < expectedBookmarks.Length; i++)
@@ -98,7 +118,10 @@ namespace osu.Game.Tests.Beatmaps.Formats
         [Test]
         public void TestDecodePostConverted()
         {
-            var converted = new OsuBeatmapConverter(decodeAsJson(normal), new OsuRuleset()).Convert();
+            var converted = new OsuBeatmapConverter(
+                decodeAsJson(normal),
+                new OsuRuleset()
+            ).Convert();
 
             var processor = new OsuBeatmapProcessor(converted);
 
@@ -117,7 +140,9 @@ namespace osu.Game.Tests.Beatmaps.Formats
             Assert.AreEqual(90, curveData.Path.Distance);
             Assert.AreEqual(new Vector2(192, 168), positionData.Position);
             Assert.AreEqual(956, beatmap.HitObjects[0].StartTime);
-            Assert.IsTrue(beatmap.HitObjects[0].Samples.Any(s => s.Name == HitSampleInfo.HIT_NORMAL));
+            Assert.IsTrue(
+                beatmap.HitObjects[0].Samples.Any(s => s.Name == HitSampleInfo.HIT_NORMAL)
+            );
 
             positionData = beatmap.HitObjects[1] as IHasPosition;
 
@@ -140,7 +165,9 @@ namespace osu.Game.Tests.Beatmaps.Formats
             Assert.AreEqual(90, curveData.Path.Distance);
             Assert.AreEqual(new Vector2(192, 168), positionData.Position);
             Assert.AreEqual(956, beatmap.HitObjects[0].StartTime);
-            Assert.IsTrue(beatmap.HitObjects[0].Samples.Any(s => s.Name == HitSampleInfo.HIT_NORMAL));
+            Assert.IsTrue(
+                beatmap.HitObjects[0].Samples.Any(s => s.Name == HitSampleInfo.HIT_NORMAL)
+            );
 
             positionData = beatmap.HitObjects[1] as IHasPosition;
 
@@ -152,16 +179,21 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
         [TestCase(normal)]
         [TestCase(marathon)]
-        [Ignore("temporarily disabled pending DeepEqual fix (https://github.com/jamesfoster/DeepEqual/pull/35)")]
+        [Ignore(
+            "temporarily disabled pending DeepEqual fix (https://github.com/jamesfoster/DeepEqual/pull/35)"
+        )]
         // Currently fails:
         // [TestCase(with_sb)]
         public void TestParity(string beatmap)
         {
             var legacy = decode(beatmap, out Beatmap json);
             json.WithDeepEqual(legacy)
-                .IgnoreProperty(r => r.DeclaringType == typeof(HitWindows)
-                                     // Todo: CustomSampleBank shouldn't exist going forward, we need a conversion mechanism
-                                     || r.Name == nameof(LegacyDecoder<Beatmap>.LegacySampleControlPoint.CustomSampleBank))
+                .IgnoreProperty(r =>
+                    r.DeclaringType == typeof(HitWindows)
+                    // Todo: CustomSampleBank shouldn't exist going forward, we need a conversion mechanism
+                    || r.Name
+                        == nameof(LegacyDecoder<Beatmap>.LegacySampleControlPoint.CustomSampleBank)
+                )
                 .Assert();
         }
 

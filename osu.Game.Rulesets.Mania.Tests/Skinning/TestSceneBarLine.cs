@@ -19,10 +19,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
 
         private void recreate()
         {
-            var stageDefinitions = new List<StageDefinition>
-            {
-                new StageDefinition(4),
-            };
+            var stageDefinitions = new List<StageDefinition> { new StageDefinition(4) };
 
             SetContents(_ =>
             {
@@ -33,11 +30,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                 {
                     for (int i = 0; i < 64; i++)
                     {
-                        maniaPlayfield.Add(new BarLine
-                        {
-                            StartTime = Time.Current + i * 500,
-                            Major = i % 4 == 0,
-                        });
+                        maniaPlayfield.Add(
+                            new BarLine { StartTime = Time.Current + i * 500, Major = i % 4 == 0 }
+                        );
                     }
                 });
 

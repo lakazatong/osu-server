@@ -21,7 +21,8 @@ namespace osu.Game.Screens.Ranking.Statistics
             get => text;
             set
             {
-                if (text == value) return;
+                if (text == value)
+                    return;
 
                 text = value;
                 if (IsLoaded)
@@ -52,16 +53,19 @@ namespace osu.Game.Screens.Ranking.Statistics
                         Origin = Anchor.CentreLeft,
                         Height = 9,
                         Width = 4,
-                        Colour = Color4Extensions.FromHex("#00FFAA")
+                        Colour = Color4Extensions.FromHex("#00FFAA"),
                     },
                     spriteText = new OsuSpriteText
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Text = text,
-                        Font = OsuFont.GetFont(size: StatisticItem.FONT_SIZE, weight: FontWeight.SemiBold),
-                    }
-                }
+                        Font = OsuFont.GetFont(
+                            size: StatisticItem.FONT_SIZE,
+                            weight: FontWeight.SemiBold
+                        ),
+                    },
+                },
             };
         }
     }

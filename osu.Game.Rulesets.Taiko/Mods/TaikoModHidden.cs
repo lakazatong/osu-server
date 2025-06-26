@@ -38,18 +38,26 @@ namespace osu.Game.Rulesets.Taiko.Mods
             this.drawableRuleset = (DrawableTaikoRuleset)drawableRuleset;
         }
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        )
         {
             ApplyNormalVisibilityState(hitObject, state);
         }
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state)
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        )
         {
             switch (hitObject)
             {
                 case DrawableDrumRollTick:
                 case DrawableHit:
-                    double preempt = drawableRuleset.TimeRange.Value / drawableRuleset.ControlPointAt(hitObject.HitObject.StartTime).Multiplier;
+                    double preempt =
+                        drawableRuleset.TimeRange.Value
+                        / drawableRuleset.ControlPointAt(hitObject.HitObject.StartTime).Multiplier;
                     double start = hitObject.HitObject.StartTime - preempt * fade_out_start_time;
                     double duration = preempt * fade_out_duration;
 
@@ -59,9 +67,11 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
                         // DrawableHitObject sets LifetimeEnd to LatestTransformEndTime if it isn't manually changed.
                         // in order for the object to not be killed before its actual end time (as the latest transform ends earlier), set lifetime end explicitly.
-                        hitObject.LifetimeEnd = state == ArmedState.Idle || !hitObject.AllJudged
-                            ? hitObject.HitObject.GetEndTime() + hitObject.HitObject.HitWindows.WindowFor(HitResult.Miss)
-                            : hitObject.HitStateUpdateTime;
+                        hitObject.LifetimeEnd =
+                            state == ArmedState.Idle || !hitObject.AllJudged
+                                ? hitObject.HitObject.GetEndTime()
+                                    + hitObject.HitObject.HitWindows.WindowFor(HitResult.Miss)
+                                : hitObject.HitStateUpdateTime;
                         // extend the lifetime end of the object in order to allow its nested strong hit (if any) to be judged.
                         hitObject.LifetimeEnd += DrawableHit.StrongNestedHit.SECOND_HIT_WINDOW;
                     }

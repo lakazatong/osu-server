@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = hit_time,
                 Duration = 1000,
-                RequiredHits = 10
+                RequiredHits = 10,
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
@@ -34,7 +34,12 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             for (int i = 0; i < swell.RequiredHits; i++)
             {
                 double frameTime = 1000 + i * 50;
-                frames.Add(new TaikoReplayFrame(frameTime, i % 2 == 0 ? TaikoAction.LeftCentre : TaikoAction.LeftRim));
+                frames.Add(
+                    new TaikoReplayFrame(
+                        frameTime,
+                        i % 2 == 0 ? TaikoAction.LeftCentre : TaikoAction.LeftRim
+                    )
+                );
                 frames.Add(new TaikoReplayFrame(frameTime + 10));
             }
 
@@ -57,7 +62,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = hit_time,
                 Duration = 1000,
-                RequiredHits = 10
+                RequiredHits = 10,
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
@@ -69,7 +74,12 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             for (int i = 0; i < swell.RequiredHits / 2; i++)
             {
                 double frameTime = 1000 + i * 50;
-                frames.Add(new TaikoReplayFrame(frameTime, i % 2 == 0 ? TaikoAction.LeftCentre : TaikoAction.LeftRim));
+                frames.Add(
+                    new TaikoReplayFrame(
+                        frameTime,
+                        i % 2 == 0 ? TaikoAction.LeftCentre : TaikoAction.LeftRim
+                    )
+                );
                 frames.Add(new TaikoReplayFrame(frameTime + 10));
             }
 
@@ -94,7 +104,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = hit_time,
                 Duration = 1000,
-                RequiredHits = 10
+                RequiredHits = 10,
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
@@ -130,7 +140,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = hit_time,
                 Duration = 1000,
-                RequiredHits = 10
+                RequiredHits = 10,
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
@@ -148,7 +158,13 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
 
             AssertResult<Swell>(0, HitResult.IgnoreMiss);
 
-            AddAssert("all tick offsets are 0", () => JudgementResults.Where(r => r.HitObject is SwellTick).All(r => r.TimeOffset == 0));
+            AddAssert(
+                "all tick offsets are 0",
+                () =>
+                    JudgementResults
+                        .Where(r => r.HitObject is SwellTick)
+                        .All(r => r.TimeOffset == 0)
+            );
         }
 
         [Test]
@@ -160,7 +176,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = swell_time,
                 Duration = 1000,
-                RequiredHits = 10
+                RequiredHits = 10,
             };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
@@ -168,7 +184,13 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
                 new TaikoReplayFrame(1000),
                 new TaikoReplayFrame(1250, TaikoAction.LeftCentre, TaikoAction.LeftRim),
                 new TaikoReplayFrame(1251),
-                new TaikoReplayFrame(1500, TaikoAction.LeftCentre, TaikoAction.LeftRim, TaikoAction.RightCentre, TaikoAction.RightRim),
+                new TaikoReplayFrame(
+                    1500,
+                    TaikoAction.LeftCentre,
+                    TaikoAction.LeftRim,
+                    TaikoAction.RightCentre,
+                    TaikoAction.RightRim
+                ),
                 new TaikoReplayFrame(1501),
                 new TaikoReplayFrame(2000),
             };
@@ -206,13 +228,10 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = swell_time,
                 Duration = 100,
-                RequiredHits = 1
+                RequiredHits = 1,
             };
 
-            Hit hit = new Hit
-            {
-                StartTime = hit_time
-            };
+            Hit hit = new Hit { StartTime = hit_time };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
             {
@@ -240,13 +259,10 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             {
                 StartTime = swell_time,
                 Duration = 100,
-                RequiredHits = 1
+                RequiredHits = 1,
             };
 
-            Hit hit = new Hit
-            {
-                StartTime = hit_time
-            };
+            Hit hit = new Hit { StartTime = hit_time };
 
             List<ReplayFrame> frames = new List<ReplayFrame>
             {

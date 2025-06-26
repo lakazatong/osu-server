@@ -48,10 +48,11 @@ namespace osu.Game.Screens.SelectV2
             Enabled.Value = !beatmap.IsDefault;
         }
 
-        public Framework.Graphics.UserInterface.Popover GetPopover() => new Popover(this, beatmap.Value)
-        {
-            ColourProvider = colourProvider,
-            SongSelect = songSelect
-        };
+        public Framework.Graphics.UserInterface.Popover GetPopover() =>
+            new Popover(this, beatmap.Value)
+            {
+                ColourProvider = colourProvider,
+                SongSelect = songSelect,
+            };
     }
 }

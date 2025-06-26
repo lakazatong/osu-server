@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.EmptyScrolling
     public partial class EmptyScrollingInputManager : RulesetInputManager<EmptyScrollingAction>
     {
         public EmptyScrollingInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
     }
 
     public enum EmptyScrollingAction

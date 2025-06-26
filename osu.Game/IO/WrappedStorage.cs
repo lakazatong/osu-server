@@ -43,8 +43,7 @@ namespace osu.Game.IO
         public override string GetFullPath(string path, bool createIfNotExisting = false) =>
             UnderlyingStorage.GetFullPath(MutatePath(path), createIfNotExisting);
 
-        public override bool Exists(string path) =>
-            UnderlyingStorage.Exists(MutatePath(path));
+        public override bool Exists(string path) => UnderlyingStorage.Exists(MutatePath(path));
 
         public override bool ExistsDirectory(string path) =>
             UnderlyingStorage.ExistsDirectory(MutatePath(path));
@@ -52,8 +51,7 @@ namespace osu.Game.IO
         public override void DeleteDirectory(string path) =>
             UnderlyingStorage.DeleteDirectory(MutatePath(path));
 
-        public override void Delete(string path) =>
-            UnderlyingStorage.Delete(MutatePath(path));
+        public override void Delete(string path) => UnderlyingStorage.Delete(MutatePath(path));
 
         public override IEnumerable<string> GetDirectories(string path) =>
             ToLocalRelative(UnderlyingStorage.GetDirectories(MutatePath(path)));
@@ -69,14 +67,20 @@ namespace osu.Game.IO
         public override IEnumerable<string> GetFiles(string path, string pattern = "*") =>
             ToLocalRelative(UnderlyingStorage.GetFiles(MutatePath(path), pattern));
 
-        public override Stream GetStream(string path, FileAccess access = FileAccess.Read, FileMode mode = FileMode.OpenOrCreate) =>
-            UnderlyingStorage.GetStream(MutatePath(path), access, mode);
+        public override Stream GetStream(
+            string path,
+            FileAccess access = FileAccess.Read,
+            FileMode mode = FileMode.OpenOrCreate
+        ) => UnderlyingStorage.GetStream(MutatePath(path), access, mode);
 
-        public override void Move(string from, string to) => UnderlyingStorage.Move(MutatePath(from), MutatePath(to));
+        public override void Move(string from, string to) =>
+            UnderlyingStorage.Move(MutatePath(from), MutatePath(to));
 
-        public override bool OpenFileExternally(string filename) => UnderlyingStorage.OpenFileExternally(MutatePath(filename));
+        public override bool OpenFileExternally(string filename) =>
+            UnderlyingStorage.OpenFileExternally(MutatePath(filename));
 
-        public override bool PresentFileExternally(string filename) => UnderlyingStorage.PresentFileExternally(MutatePath(filename));
+        public override bool PresentFileExternally(string filename) =>
+            UnderlyingStorage.PresentFileExternally(MutatePath(filename));
 
         public override Storage GetStorageForDirectory(string path)
         {

@@ -30,11 +30,12 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         protected double CurrentStrain { get; private set; }
 
         protected StrainDecaySkill(Mod[] mods)
-            : base(mods)
-        {
-        }
+            : base(mods) { }
 
-        protected override double CalculateInitialStrain(double time, DifficultyHitObject current) => CurrentStrain * strainDecay(time - current.Previous(0).StartTime);
+        protected override double CalculateInitialStrain(
+            double time,
+            DifficultyHitObject current
+        ) => CurrentStrain * strainDecay(time - current.Previous(0).StartTime);
 
         protected override double StrainValueAt(DifficultyHitObject current)
         {

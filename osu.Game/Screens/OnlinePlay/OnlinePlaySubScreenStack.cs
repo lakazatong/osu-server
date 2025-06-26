@@ -22,7 +22,9 @@ namespace osu.Game.Screens.OnlinePlay
         private Bindable<RulesetInfo> ruleset = null!;
         private Bindable<IReadOnlyList<Mod>> mods = null!;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             // Bindables are leased by the OnlinePlayScreen, but pulled locally in order to not rely on screen load timings.
             // They will all be initially enabled while there is no screen in this stack.
@@ -30,7 +32,7 @@ namespace osu.Game.Screens.OnlinePlay
             {
                 Beatmap = { Disabled = false },
                 Ruleset = { Disabled = false },
-                Mods = { Disabled = false }
+                Mods = { Disabled = false },
             };
 
             beatmap = dependencies.Beatmap;
@@ -45,7 +47,9 @@ namespace osu.Game.Screens.OnlinePlay
             base.ScreenChanged(prev, next);
 
             if (next is not OsuScreen osuNext)
-                throw new InvalidOperationException("There must always be an online play subscreen.");
+                throw new InvalidOperationException(
+                    "There must always be an online play subscreen."
+                );
 
             // See: OnlinePlayScreen.DisallowExternalBeatmapRulesetChanges.
             //

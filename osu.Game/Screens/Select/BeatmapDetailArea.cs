@@ -41,40 +41,44 @@ namespace osu.Game.Screens.Select
 
         protected BeatmapDetailArea()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                content = new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = BeatmapDetailAreaTabControl.HEIGHT },
-                    Child = Details = new BeatmapDetails
+                    content = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding { Top = BeatmapDetailAreaTabControl.HEIGHT },
+                        Child = Details =
+                            new BeatmapDetails
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Alpha = 0,
+                                Margin = new MarginPadding { Top = details_padding },
+                            },
+                    },
+                    tabControl = new BeatmapDetailAreaTabControl
                     {
                         RelativeSizeAxes = Axes.X,
-                        Alpha = 0,
-                        Margin = new MarginPadding { Top = details_padding },
-                    }
-                },
-                tabControl = new BeatmapDetailAreaTabControl
-                {
-                    RelativeSizeAxes = Axes.X,
-                    TabItems = CreateTabItems(),
-                    OnFilter = OnTabChanged,
-                },
-            });
+                        TabItems = CreateTabItems(),
+                        OnFilter = OnTabChanged,
+                    },
+                }
+            );
         }
 
         /// <summary>
         /// Refreshes the currently-displayed details.
         /// </summary>
-        public virtual void Refresh()
-        {
-        }
+        public virtual void Refresh() { }
 
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
 
-            Details.Height = Math.Min(DrawHeight - details_padding * 3 - BeatmapDetailAreaTabControl.HEIGHT, 450);
+            Details.Height = Math.Min(
+                DrawHeight - details_padding * 3 - BeatmapDetailAreaTabControl.HEIGHT,
+                450
+            );
         }
 
         /// <summary>
@@ -100,9 +104,7 @@ namespace osu.Game.Screens.Select
         /// Creates the tabs to be displayed.
         /// </summary>
         /// <returns>The tabs.</returns>
-        protected virtual BeatmapDetailAreaTabItem[] CreateTabItems() => new BeatmapDetailAreaTabItem[]
-        {
-            new BeatmapDetailAreaDetailTabItem(),
-        };
+        protected virtual BeatmapDetailAreaTabItem[] CreateTabItems() =>
+            new BeatmapDetailAreaTabItem[] { new BeatmapDetailAreaDetailTabItem() };
     }
 }

@@ -27,15 +27,8 @@ namespace osu.Game.Overlays.Wiki
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                },
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(),
-                },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 Content = new[]
                 {
                     new Drawable[]
@@ -59,7 +52,7 @@ namespace osu.Game.Overlays.Wiki
                                 Right = WaveOverlayContainer.HORIZONTAL_PADDING,
                             },
                             OnAddHeading = sidebar.AddEntry,
-                        }
+                        },
                     },
                 },
             };

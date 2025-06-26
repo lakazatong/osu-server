@@ -36,10 +36,14 @@ namespace osu.Game.Graphics.Backgrounds
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config, SessionStatics sessionStatics)
         {
-            seasonalBackgroundMode = config.GetBindable<SeasonalBackgroundMode>(OsuSetting.SeasonalBackgroundMode);
+            seasonalBackgroundMode = config.GetBindable<SeasonalBackgroundMode>(
+                OsuSetting.SeasonalBackgroundMode
+            );
             seasonalBackgroundMode.BindValueChanged(_ => SeasonalBackgroundChanged?.Invoke());
 
-            seasonalBackgrounds = sessionStatics.GetBindable<APISeasonalBackgrounds>(Static.SeasonalBackgrounds);
+            seasonalBackgrounds = sessionStatics.GetBindable<APISeasonalBackgrounds>(
+                Static.SeasonalBackgrounds
+            );
             seasonalBackgrounds.BindValueChanged(_ =>
             {
                 if (shouldShowSeasonal)
@@ -91,7 +95,9 @@ namespace osu.Game.Graphics.Backgrounds
             }
         }
 
-        private bool isInSeason => seasonalBackgrounds.Value != null && DateTimeOffset.Now < seasonalBackgrounds.Value.EndDate;
+        private bool isInSeason =>
+            seasonalBackgrounds.Value != null
+            && DateTimeOffset.Now < seasonalBackgrounds.Value.EndDate;
     }
 
     [LongRunningLoad]
@@ -113,11 +119,12 @@ namespace osu.Game.Graphics.Backgrounds
 
         public override bool Equals(Background other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return other.GetType() == GetType()
-                   && ((SeasonalBackground)other).url == url;
+            return other.GetType() == GetType() && ((SeasonalBackground)other).url == url;
         }
     }
 }

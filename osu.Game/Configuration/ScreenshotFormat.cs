@@ -8,10 +8,16 @@ namespace osu.Game.Configuration
 {
     public enum ScreenshotFormat
     {
-        [LocalisableDescription(typeof(GraphicsSettingsStrings), nameof(GraphicsSettingsStrings.Jpg))]
+        [LocalisableDescription(
+            typeof(GraphicsSettingsStrings),
+            nameof(GraphicsSettingsStrings.Jpg)
+        )]
         Jpg = 1,
 
-        [LocalisableDescription(typeof(GraphicsSettingsStrings), nameof(GraphicsSettingsStrings.Png))]
-        Png = 2
+        [LocalisableDescription(
+            typeof(GraphicsSettingsStrings),
+            nameof(GraphicsSettingsStrings.Png)
+        )]
+        Png = 2,
     }
 }

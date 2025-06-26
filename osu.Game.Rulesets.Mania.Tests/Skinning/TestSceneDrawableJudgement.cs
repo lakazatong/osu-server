@@ -21,34 +21,47 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         {
             var hitWindows = new ManiaHitWindows();
 
-            foreach (HitResult result in Enum.GetValues(typeof(HitResult)).OfType<HitResult>().Skip(1))
+            foreach (
+                HitResult result in Enum.GetValues(typeof(HitResult)).OfType<HitResult>().Skip(1)
+            )
             {
                 if (hitWindows.IsHitResultAllowed(result))
                 {
-                    AddStep("Show " + result.GetDescription(), () =>
-                    {
-                        SetContents(_ =>
+                    AddStep(
+                        "Show " + result.GetDescription(),
+                        () =>
                         {
-                            var drawableManiaJudgement = new DrawableManiaJudgement
+                            SetContents(_ =>
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                            };
+                                var drawableManiaJudgement = new DrawableManiaJudgement
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                };
 
-                            drawableManiaJudgement.Apply(new JudgementResult(new HitObject { StartTime = Time.Current }, new Judgement())
-                            {
-                                Type = result
-                            }, null);
+                                drawableManiaJudgement.Apply(
+                                    new JudgementResult(
+                                        new HitObject { StartTime = Time.Current },
+                                        new Judgement()
+                                    )
+                                    {
+                                        Type = result,
+                                    },
+                                    null
+                                );
 
-                            return drawableManiaJudgement;
-                        });
+                                return drawableManiaJudgement;
+                            });
 
-                        // for test purposes, undo the Y adjustment related to the `ScorePosition` legacy positioning config value
-                        // (see `LegacyManiaJudgementPiece.load()`).
-                        // this prevents the judgements showing somewhere below or above the bounding box of the judgement.
-                        foreach (var legacyPiece in this.ChildrenOfType<LegacyManiaJudgementPiece>())
-                            legacyPiece.Y = 0;
-                    });
+                            // for test purposes, undo the Y adjustment related to the `ScorePosition` legacy positioning config value
+                            // (see `LegacyManiaJudgementPiece.load()`).
+                            // this prevents the judgements showing somewhere below or above the bounding box of the judgement.
+                            foreach (
+                                var legacyPiece in this.ChildrenOfType<LegacyManiaJudgementPiece>()
+                            )
+                                legacyPiece.Y = 0;
+                        }
+                    );
                 }
             }
         }

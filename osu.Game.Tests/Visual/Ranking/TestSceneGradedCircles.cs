@@ -24,12 +24,14 @@ namespace osu.Game.Tests.Visual.Ranking
             double accuracyB = scoreProcessor.AccuracyCutoffFromRank(ScoreRank.B);
             double accuracyC = scoreProcessor.AccuracyCutoffFromRank(ScoreRank.C);
 
-            Add(ring = new GradedCircles(accuracyC, accuracyB, accuracyA, accuracyS, accuracyX)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(400)
-            });
+            Add(
+                ring = new GradedCircles(accuracyC, accuracyB, accuracyA, accuracyS, accuracyX)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(400),
+                }
+            );
         }
 
         protected override void LoadComplete()

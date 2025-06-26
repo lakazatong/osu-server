@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         private readonly Container dropletContainer;
 
         public DrawableJuiceStream()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableJuiceStream(JuiceStream? s)
             : base(s)
@@ -22,7 +20,9 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
             RelativeSizeAxes = Axes.X;
             Origin = Anchor.BottomLeft;
 
-            AddInternal(dropletContainer = new NestedFruitContainer { RelativeSizeAxes = Axes.Both, });
+            AddInternal(
+                dropletContainer = new NestedFruitContainer { RelativeSizeAxes = Axes.Both }
+            );
         }
 
         protected override void AddNestedHitObject(DrawableHitObject hitObject)

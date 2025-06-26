@@ -13,8 +13,8 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input;
 using osu.Framework.Testing;
 using osu.Game.Overlays.Mods;
-using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Screens.Footer;
 using osu.Game.Screens.OnlinePlay;
 using osu.Game.Utils;
@@ -27,7 +27,8 @@ namespace osu.Game.Tests.Visual.Multiplayer
         private FreeModSelectOverlay freeModSelectOverlay = null!;
         private FooterButtonFreeMods footerButtonFreeMods = null!;
         private ScreenFooter footer = null!;
-        private readonly Bindable<Dictionary<ModType, IReadOnlyList<Mod>>> availableMods = new Bindable<Dictionary<ModType, IReadOnlyList<Mod>>>();
+        private readonly Bindable<Dictionary<ModType, IReadOnlyList<Mod>>> availableMods =
+            new Bindable<Dictionary<ModType, IReadOnlyList<Mod>>>();
 
         [BackgroundDependencyLoader]
         private void load(OsuGameBase osuGameBase)
@@ -40,15 +41,23 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createFreeModSelect();
 
-            AddUntilStep("all visible mods are playable",
-                () => this.ChildrenOfType<ModPanel>()
-                          .Where(panel => panel.IsPresent)
-                          .All(panel => panel.Mod.HasImplementation && panel.Mod.UserPlayable));
+            AddUntilStep(
+                "all visible mods are playable",
+                () =>
+                    this.ChildrenOfType<ModPanel>()
+                        .Where(panel => panel.IsPresent)
+                        .All(panel => panel.Mod.HasImplementation && panel.Mod.UserPlayable)
+            );
 
-            AddToggleStep("toggle visibility", visible =>
-            {
-                freeModSelectOverlay.State.Value = visible ? Visibility.Visible : Visibility.Hidden;
-            });
+            AddToggleStep(
+                "toggle visibility",
+                visible =>
+                {
+                    freeModSelectOverlay.State.Value = visible
+                        ? Visibility.Visible
+                        : Visibility.Hidden;
+                }
+            );
         }
 
         [Test]
@@ -56,11 +65,17 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createFreeModSelect();
 
-            AddStep("select difficulty adjust", () => freeModSelectOverlay.SelectedMods.Value = new[] { new OsuModDifficultyAdjust() });
+            AddStep(
+                "select difficulty adjust",
+                () =>
+                    freeModSelectOverlay.SelectedMods.Value = new[] { new OsuModDifficultyAdjust() }
+            );
             AddWaitStep("wait some", 3);
-            AddAssert("customisation area not expanded",
+            AddAssert(
+                "customisation area not expanded",
                 () => this.ChildrenOfType<ModCustomisationPanel>().Single().ExpandedState.Value,
-                () => Is.EqualTo(ModCustomisationPanel.ModCustomisationPanelState.Collapsed));
+                () => Is.EqualTo(ModCustomisationPanel.ModCustomisationPanelState.Collapsed)
+            );
         }
 
         [Test]
@@ -70,16 +85,26 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             AddStep("apply search term", () => freeModSelectOverlay.SearchTerm = "ea");
 
-            AddAssert("select all button enabled", () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddAssert(
+                "select all button enabled",
+                () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
 
             AddStep("click select all button", navigateAndClick<SelectAllModsButton>);
-            AddAssert("select all button disabled", () => !this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddAssert(
+                "select all button disabled",
+                () => !this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
 
             AddStep("change search term", () => freeModSelectOverlay.SearchTerm = "e");
 
-            AddAssert("select all button enabled", () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddAssert(
+                "select all button enabled",
+                () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
 
-            void navigateAndClick<T>() where T : Drawable
+            void navigateAndClick<T>()
+                where T : Drawable
             {
                 InputManager.MoveMouseTo(this.ChildrenOfType<T>().Single());
                 InputManager.Click(MouseButton.Left);
@@ -97,7 +122,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddUntilStep("all mods selected", assertAllAvailableModsSelected);
 
             AddStep("press backspace", () => InputManager.Key(Key.BackSpace));
-            AddUntilStep("all mods deselected", () => !freeModSelectOverlay.SelectedMods.Value.Any());
+            AddUntilStep(
+                "all mods deselected",
+                () => !freeModSelectOverlay.SelectedMods.Value.Any()
+            );
         }
 
         [Test]
@@ -105,23 +133,41 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createFreeModSelect();
 
-            AddAssert("select all button enabled", () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddAssert(
+                "select all button enabled",
+                () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
 
-            AddStep("click select all button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectAllModsButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click select all button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<SelectAllModsButton>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddUntilStep("all mods selected", assertAllAvailableModsSelected);
-            AddAssert("select all button disabled", () => !this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddAssert(
+                "select all button disabled",
+                () => !this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
 
-            AddStep("click deselect all button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DeselectAllModsButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("all mods deselected", () => !freeModSelectOverlay.SelectedMods.Value.Any());
-            AddAssert("select all button enabled", () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
+            AddStep(
+                "click deselect all button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DeselectAllModsButton>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "all mods deselected",
+                () => !freeModSelectOverlay.SelectedMods.Value.Any()
+            );
+            AddAssert(
+                "select all button enabled",
+                () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
         }
 
         [Test]
@@ -129,69 +175,106 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createFreeModSelect();
 
-            AddAssert("overlay select all button enabled", () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value);
-            AddAssert("footer button displays off", () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "off"));
+            AddAssert(
+                "overlay select all button enabled",
+                () => this.ChildrenOfType<SelectAllModsButton>().Single().Enabled.Value
+            );
+            AddAssert(
+                "footer button displays off",
+                () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "off")
+            );
 
-            AddStep("click footer select all button", () =>
-            {
-                InputManager.MoveMouseTo(footerButtonFreeMods);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click footer select all button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(footerButtonFreeMods);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddUntilStep("all mods selected", assertAllAvailableModsSelected);
-            AddAssert("footer button displays all", () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "all"));
+            AddAssert(
+                "footer button displays all",
+                () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "all")
+            );
 
-            AddStep("click deselect all button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DeselectAllModsButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("all mods deselected", () => !freeModSelectOverlay.SelectedMods.Value.Any());
-            AddAssert("footer button displays off", () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "off"));
+            AddStep(
+                "click deselect all button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DeselectAllModsButton>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "all mods deselected",
+                () => !freeModSelectOverlay.SelectedMods.Value.Any()
+            );
+            AddAssert(
+                "footer button displays off",
+                () => footerButtonFreeMods.ChildrenOfType<IHasText>().Any(t => t.Text == "off")
+            );
         }
 
         private void createFreeModSelect()
         {
-            AddStep("create free mod select screen", () => Child = new DependencyProvidingContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
-                {
-                    freeModSelectOverlay = new FreeModSelectOverlay
+            AddStep(
+                "create free mod select screen",
+                () =>
+                    Child = new DependencyProvidingContainer
                     {
-                        State = { Value = Visibility.Visible }
-                    },
-                    footerButtonFreeMods = new FooterButtonFreeMods(freeModSelectOverlay)
-                    {
-                        Anchor = Anchor.BottomRight,
-                        Origin = Anchor.BottomRight,
-                        Y = -ScreenFooter.HEIGHT,
-                        FreeMods = { BindTarget = freeModSelectOverlay.SelectedMods },
-                    },
-                    footer = new ScreenFooter(),
-                },
-                CachedDependencies = new (Type, object)[] { (typeof(ScreenFooter), footer) },
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
+                        {
+                            freeModSelectOverlay = new FreeModSelectOverlay
+                            {
+                                State = { Value = Visibility.Visible },
+                            },
+                            footerButtonFreeMods = new FooterButtonFreeMods(freeModSelectOverlay)
+                            {
+                                Anchor = Anchor.BottomRight,
+                                Origin = Anchor.BottomRight,
+                                Y = -ScreenFooter.HEIGHT,
+                                FreeMods = { BindTarget = freeModSelectOverlay.SelectedMods },
+                            },
+                            footer = new ScreenFooter(),
+                        },
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(ScreenFooter), footer),
+                        },
+                    }
+            );
 
-            AddUntilStep("all column content loaded",
-                () => freeModSelectOverlay.ChildrenOfType<ModColumn>().Any()
-                      && freeModSelectOverlay.ChildrenOfType<ModColumn>().All(column => column.IsLoaded && column.ItemsLoaded));
+            AddUntilStep(
+                "all column content loaded",
+                () =>
+                    freeModSelectOverlay.ChildrenOfType<ModColumn>().Any()
+                    && freeModSelectOverlay
+                        .ChildrenOfType<ModColumn>()
+                        .All(column => column.IsLoaded && column.ItemsLoaded)
+            );
         }
 
         private bool assertAllAvailableModsSelected()
         {
-            var allAvailableMods = availableMods.Value
-                                                .Where(pair => pair.Key != ModType.System)
-                                                .SelectMany(pair => ModUtils.FlattenMods(pair.Value))
-                                                .Where(mod => mod.UserPlayable && mod.HasImplementation)
-                                                .ToList();
+            var allAvailableMods = availableMods
+                .Value.Where(pair => pair.Key != ModType.System)
+                .SelectMany(pair => ModUtils.FlattenMods(pair.Value))
+                .Where(mod => mod.UserPlayable && mod.HasImplementation)
+                .ToList();
 
             if (freeModSelectOverlay.SelectedMods.Value.Count != allAvailableMods.Count)
                 return false;
 
             foreach (var availableMod in allAvailableMods)
             {
-                if (freeModSelectOverlay.SelectedMods.Value.All(selectedMod => selectedMod.GetType() != availableMod.GetType()))
+                if (
+                    freeModSelectOverlay.SelectedMods.Value.All(selectedMod =>
+                        selectedMod.GetType() != availableMod.GetType()
+                    )
+                )
                     return false;
             }
 

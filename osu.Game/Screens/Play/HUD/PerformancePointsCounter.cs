@@ -40,7 +40,8 @@ namespace osu.Game.Screens.Play.HUD
         [CanBeNull]
         private List<TimedDifficultyAttributes> timedAttributes;
 
-        private readonly CancellationTokenSource loadCancellationSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource loadCancellationSource =
+            new CancellationTokenSource();
 
         private JudgementResult lastJudgement;
         private PerformanceCalculator performanceCalculator;
@@ -56,19 +57,35 @@ namespace osu.Game.Screens.Play.HUD
                 performanceCalculator = gameplayState.Ruleset.CreatePerformanceCalculator();
                 clonedMods = gameplayState.Mods.Select(m => m.DeepClone()).ToArray();
 
-                scoreInfo = new ScoreInfo(gameplayState.Score.ScoreInfo.BeatmapInfo, gameplayState.Score.ScoreInfo.Ruleset) { Mods = clonedMods };
+                scoreInfo = new ScoreInfo(
+                    gameplayState.Score.ScoreInfo.BeatmapInfo,
+                    gameplayState.Score.ScoreInfo.Ruleset
+                )
+                {
+                    Mods = clonedMods,
+                };
 
                 var gameplayWorkingBeatmap = new GameplayWorkingBeatmap(gameplayState.Beatmap);
-                difficultyCache.GetTimedDifficultyAttributesAsync(gameplayWorkingBeatmap, gameplayState.Ruleset, clonedMods, loadCancellationSource.Token)
-                               .ContinueWith(task => Schedule(() =>
-                               {
-                                   timedAttributes = task.GetResultSafely();
+                difficultyCache
+                    .GetTimedDifficultyAttributesAsync(
+                        gameplayWorkingBeatmap,
+                        gameplayState.Ruleset,
+                        clonedMods,
+                        loadCancellationSource.Token
+                    )
+                    .ContinueWith(
+                        task =>
+                            Schedule(() =>
+                            {
+                                timedAttributes = task.GetResultSafely();
 
-                                   IsValid = true;
+                                IsValid = true;
 
-                                   if (lastJudgement != null)
-                                       onJudgementChanged(lastJudgement);
-                               }), TaskContinuationOptions.OnlyOnRanToCompletion);
+                                if (lastJudgement != null)
+                                    onJudgementChanged(lastJudgement);
+                            }),
+                        TaskContinuationOptions.OnlyOnRanToCompletion
+                    );
             }
         }
 
@@ -101,7 +118,11 @@ namespace osu.Game.Screens.Play.HUD
             }
 
             scoreProcessor.PopulateScore(scoreInfo);
-            Current.Value = (int)Math.Round(performanceCalculator?.Calculate(scoreInfo, attrib).Total ?? 0, MidpointRounding.AwayFromZero);
+            Current.Value = (int)
+                Math.Round(
+                    performanceCalculator?.Calculate(scoreInfo, attrib).Total ?? 0,
+                    MidpointRounding.AwayFromZero
+                );
             IsValid = true;
         }
 
@@ -111,11 +132,15 @@ namespace osu.Game.Screens.Play.HUD
             if (timedAttributes == null || timedAttributes.Count == 0)
                 return null;
 
-            int attribIndex = timedAttributes.BinarySearch(new TimedDifficultyAttributes(judgement.HitObject.GetEndTime(), null));
+            int attribIndex = timedAttributes.BinarySearch(
+                new TimedDifficultyAttributes(judgement.HitObject.GetEndTime(), null)
+            );
             if (attribIndex < 0)
                 attribIndex = ~attribIndex - 1;
 
-            return timedAttributes[Math.Clamp(attribIndex, 0, timedAttributes.Count - 1)].Attributes;
+            return timedAttributes[
+                Math.Clamp(attribIndex, 0, timedAttributes.Count - 1)
+            ].Attributes;
         }
 
         protected override void Dispose(bool isDisposing)
@@ -142,8 +167,11 @@ namespace osu.Game.Screens.Play.HUD
                 this.gameplayBeatmap = gameplayBeatmap;
             }
 
-            public override IBeatmap GetPlayableBeatmap(IRulesetInfo ruleset, IReadOnlyList<Mod> mods, CancellationToken cancellationToken)
-                => gameplayBeatmap;
+            public override IBeatmap GetPlayableBeatmap(
+                IRulesetInfo ruleset,
+                IReadOnlyList<Mod> mods,
+                CancellationToken cancellationToken
+            ) => gameplayBeatmap;
 
             protected override IBeatmap GetBeatmap() => gameplayBeatmap;
 
@@ -153,7 +181,8 @@ namespace osu.Game.Screens.Play.HUD
 
             protected internal override ISkin GetSkin() => throw new NotImplementedException();
 
-            public override Stream GetStream(string storagePath) => throw new NotImplementedException();
+            public override Stream GetStream(string storagePath) =>
+                throw new NotImplementedException();
         }
     }
 }

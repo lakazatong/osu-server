@@ -43,7 +43,8 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
         private void setCurrent()
         {
-            if (ladderInfo == null) return;
+            if (ladderInfo == null)
+                return;
 
             //todo: tournamentgamebase?
             if (ladderInfo.CurrentMatch.Value != null)
@@ -88,19 +89,12 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     Padding = new MarginPadding(5),
                     RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
-                    {
-                        AcronymText,
-                        Flag,
-                    }
+                    Children = new Drawable[] { AcronymText, Flag },
                 },
                 new Container
                 {
@@ -122,23 +116,27 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Font = OsuFont.Torus.With(size: 22),
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             completed.BindValueChanged(_ => updateWinStyle());
 
-            score.BindValueChanged(val =>
-            {
-                scoreText.Text = val.NewValue?.ToString() ?? string.Empty;
-                updateWinStyle();
-            }, true);
+            score.BindValueChanged(
+                val =>
+                {
+                    scoreText.Text = val.NewValue?.ToString() ?? string.Empty;
+                    updateWinStyle();
+                },
+                true
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
         {
-            if (Team == null || editorInfo != null) return false;
+            if (Team == null || editorInfo != null)
+                return false;
 
             if (!match.Current.Value)
             {
@@ -178,12 +176,22 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
         {
             bool winner = completed.Value && isWinner?.Invoke() == true;
 
-            background.FadeColour(winner ? Color4.White : Color4Extensions.FromHex("#444"), winner ? 500 : 0, Easing.OutQuint);
-            backgroundRight.FadeColour(winner ? colourWinner : Color4Extensions.FromHex("#333"), winner ? 500 : 0, Easing.OutQuint);
+            background.FadeColour(
+                winner ? Color4.White : Color4Extensions.FromHex("#444"),
+                winner ? 500 : 0,
+                Easing.OutQuint
+            );
+            backgroundRight.FadeColour(
+                winner ? colourWinner : Color4Extensions.FromHex("#333"),
+                winner ? 500 : 0,
+                Easing.OutQuint
+            );
 
             AcronymText.Colour = winner ? Color4.Black : Color4.White;
 
-            scoreText.Font = scoreText.Font.With(weight: winner ? FontWeight.Bold : FontWeight.Regular);
+            scoreText.Font = scoreText.Font.With(
+                weight: winner ? FontWeight.Bold : FontWeight.Regular
+            );
         }
 
         public MenuItem[] ContextMenuItems
@@ -196,9 +204,21 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                 return new MenuItem[]
                 {
                     new OsuMenuItem("Set as current", MenuItemType.Standard, setCurrent),
-                    new OsuMenuItem("Join with", MenuItemType.Standard, () => ladderEditor.BeginJoin(match, false)),
-                    new OsuMenuItem("Join with (loser)", MenuItemType.Standard, () => ladderEditor.BeginJoin(match, true)),
-                    new OsuMenuItem("Remove", MenuItemType.Destructive, () => ladderEditor.Remove(match)),
+                    new OsuMenuItem(
+                        "Join with",
+                        MenuItemType.Standard,
+                        () => ladderEditor.BeginJoin(match, false)
+                    ),
+                    new OsuMenuItem(
+                        "Join with (loser)",
+                        MenuItemType.Standard,
+                        () => ladderEditor.BeginJoin(match, true)
+                    ),
+                    new OsuMenuItem(
+                        "Remove",
+                        MenuItemType.Destructive,
+                        () => ladderEditor.Remove(match)
+                    ),
                 };
             }
         }

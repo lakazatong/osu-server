@@ -38,16 +38,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
 
             InternalChildren = new Drawable[]
             {
-                colouredSprite = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                overlaySprite = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
+                colouredSprite = new Sprite { Anchor = Anchor.Centre, Origin = Anchor.Centre },
+                overlaySprite = new Sprite { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 hyperSprite = new Sprite
                 {
                     Anchor = Anchor.Centre,
@@ -56,7 +48,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                     Depth = 1,
                     Alpha = 0,
                     Scale = new Vector2(1.2f),
-                }
+                },
             };
         }
 
@@ -68,19 +60,28 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             hyperDash.BindTo(ObjectState.HyperDash);
             IndexInBeatmap.BindTo(ObjectState.IndexInBeatmap);
 
-            hyperSprite.Colour = Skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDashFruit)?.Value ??
-                                 Skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDash)?.Value ??
-                                 Catcher.DEFAULT_HYPER_DASH_COLOUR;
+            hyperSprite.Colour =
+                Skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDashFruit)?.Value
+                ?? Skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDash)?.Value
+                ?? Catcher.DEFAULT_HYPER_DASH_COLOUR;
 
-            accentColour.BindValueChanged(colour =>
-            {
-                colouredSprite.Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue);
-            }, true);
+            accentColour.BindValueChanged(
+                colour =>
+                {
+                    colouredSprite.Colour = LegacyColourCompatibility.DisallowZeroAlpha(
+                        colour.NewValue
+                    );
+                },
+                true
+            );
 
-            hyperDash.BindValueChanged(hyper =>
-            {
-                hyperSprite.Alpha = hyper.NewValue ? 0.7f : 0;
-            }, true);
+            hyperDash.BindValueChanged(
+                hyper =>
+                {
+                    hyperSprite.Alpha = hyper.NewValue ? 0.7f : 0;
+                },
+                true
+            );
         }
 
         protected void SetTexture(Texture? texture, Texture? overlayTexture)

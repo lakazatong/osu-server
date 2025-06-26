@@ -13,19 +13,14 @@ namespace osu.Game.Graphics.Containers.Markdown
     public partial class OsuMarkdownQuoteBlock : MarkdownQuoteBlock
     {
         public OsuMarkdownQuoteBlock(QuoteBlock quoteBlock)
-            : base(quoteBlock)
-        {
-        }
+            : base(quoteBlock) { }
 
         protected override Drawable CreateBackground() => new QuoteBackground();
 
         public override MarkdownTextFlowContainer CreateTextFlow()
         {
-            return base.CreateTextFlow().With(f => f.Margin = new MarginPadding
-            {
-                Vertical = 10,
-                Horizontal = 20,
-            });
+            return base.CreateTextFlow()
+                .With(f => f.Margin = new MarginPadding { Vertical = 10, Horizontal = 20 });
         }
 
         private partial class QuoteBackground : Box

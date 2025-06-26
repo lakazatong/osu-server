@@ -19,11 +19,12 @@ namespace osu.Game.Rulesets.Taiko.Tests
     public abstract partial class HitObjectApplicationTestScene : OsuTestScene
     {
         [Cached(typeof(IScrollingInfo))]
-        private ScrollingTestContainer.TestScrollingInfo info = new ScrollingTestContainer.TestScrollingInfo
-        {
-            Direction = { Value = ScrollingDirection.Left },
-            TimeRange = { Value = 1000 },
-        };
+        private ScrollingTestContainer.TestScrollingInfo info =
+            new ScrollingTestContainer.TestScrollingInfo
+            {
+                Direction = { Value = ScrollingDirection.Left },
+                TimeRange = { Value = 1000 },
+            };
 
         private ScrollingHitObjectContainer hitObjectContainer;
 
@@ -36,19 +37,18 @@ namespace osu.Game.Rulesets.Taiko.Tests
                 Height = 200,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Clock = new FramedClock(new StopwatchClock())
+                Clock = new FramedClock(new StopwatchClock()),
             };
         }
 
         [SetUpSteps]
-        public void SetUp()
-            => AddStep("clear SHOC", () => hitObjectContainer.Clear());
+        public void SetUp() => AddStep("clear SHOC", () => hitObjectContainer.Clear());
 
-        protected void AddHitObject(DrawableHitObject hitObject)
-            => AddStep("add to SHOC", () => hitObjectContainer.Add(hitObject));
+        protected void AddHitObject(DrawableHitObject hitObject) =>
+            AddStep("add to SHOC", () => hitObjectContainer.Add(hitObject));
 
-        protected void RemoveHitObject(DrawableHitObject hitObject)
-            => AddStep("remove from SHOC", () => hitObjectContainer.Remove(hitObject));
+        protected void RemoveHitObject(DrawableHitObject hitObject) =>
+            AddStep("remove from SHOC", () => hitObjectContainer.Remove(hitObject));
 
         protected TObject PrepareObject<TObject>(TObject hitObject)
             where TObject : TaikoHitObject

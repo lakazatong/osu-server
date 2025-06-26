@@ -16,14 +16,23 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             MultiplayerResultsScreen screen = null!;
 
-            AddStep("show results screen", () =>
-            {
-                var rulesetInfo = new OsuRuleset().RulesetInfo;
-                var beatmapInfo = CreateBeatmap(rulesetInfo).BeatmapInfo;
-                var score = TestResources.CreateTestScoreInfo(beatmapInfo);
+            AddStep(
+                "show results screen",
+                () =>
+                {
+                    var rulesetInfo = new OsuRuleset().RulesetInfo;
+                    var beatmapInfo = CreateBeatmap(rulesetInfo).BeatmapInfo;
+                    var score = TestResources.CreateTestScoreInfo(beatmapInfo);
 
-                Stack.Push(screen = new MultiplayerResultsScreen(score, 1, new PlaylistItem(beatmapInfo)));
-            });
+                    Stack.Push(
+                        screen = new MultiplayerResultsScreen(
+                            score,
+                            1,
+                            new PlaylistItem(beatmapInfo)
+                        )
+                    );
+                }
+            );
 
             AddUntilStep("wait for loaded", () => screen.IsLoaded);
         }

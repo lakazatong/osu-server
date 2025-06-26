@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Catch.Edit
     public class JuiceStreamCompositionTool : CompositionTool
     {
         public JuiceStreamCompositionTool()
-            : base(nameof(JuiceStream))
-        {
-        }
+            : base(nameof(JuiceStream)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new JuiceStreamPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new JuiceStreamPlacementBlueprint();
     }
 }

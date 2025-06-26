@@ -18,9 +18,7 @@ namespace osu.Game.Graphics.UserInterface
         /// <param name="text">The text to display.</param>
         /// <param name="type">The type of action which this <see cref="ToggleMenuItem"/> performs.</param>
         public ToggleMenuItem(LocalisableString text, MenuItemType type = MenuItemType.Standard)
-            : this(text, type, null)
-        {
-        }
+            : this(text, type, null) { }
 
         /// <summary>
         /// Creates a new <see cref="ToggleMenuItem"/>.
@@ -29,10 +27,9 @@ namespace osu.Game.Graphics.UserInterface
         /// <param name="type">The type of action which this <see cref="ToggleMenuItem"/> performs.</param>
         /// <param name="action">A delegate to be invoked when this <see cref="ToggleMenuItem"/> is pressed.</param>
         public ToggleMenuItem(LocalisableString text, MenuItemType type, Action<bool>? action)
-            : base(text, value => !value, type, action)
-        {
-        }
+            : base(text, value => !value, type, action) { }
 
-        public override IconUsage? GetIconForState(bool state) => state ? FontAwesome.Solid.Check : null;
+        public override IconUsage? GetIconForState(bool state) =>
+            state ? FontAwesome.Solid.Check : null;
     }
 }

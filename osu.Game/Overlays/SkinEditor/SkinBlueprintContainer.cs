@@ -20,7 +20,8 @@ namespace osu.Game.Overlays.SkinEditor
     {
         private readonly ISerialisableDrawableContainer targetContainer;
 
-        private readonly List<BindableList<ISerialisableDrawable>> targetComponents = new List<BindableList<ISerialisableDrawable>>();
+        private readonly List<BindableList<ISerialisableDrawable>> targetComponents =
+            new List<BindableList<ISerialisableDrawable>>();
 
         [Resolved]
         private SkinEditor editor { get; set; } = null!;
@@ -36,43 +37,47 @@ namespace osu.Game.Overlays.SkinEditor
 
             SelectedItems.BindTo(editor.SelectedComponents);
 
-            var bindableList = new BindableList<ISerialisableDrawable> { BindTarget = targetContainer.Components };
+            var bindableList = new BindableList<ISerialisableDrawable>
+            {
+                BindTarget = targetContainer.Components,
+            };
             bindableList.BindCollectionChanged(componentsChanged, true);
 
             targetComponents.Add(bindableList);
         }
 
-        private void componentsChanged(object? sender, NotifyCollectionChangedEventArgs e) => Schedule(() =>
-        {
-            switch (e.Action)
+        private void componentsChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
+            Schedule(() =>
             {
-                case NotifyCollectionChangedAction.Add:
-                    Debug.Assert(e.NewItems != null);
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        Debug.Assert(e.NewItems != null);
 
-                    foreach (var item in e.NewItems.Cast<ISerialisableDrawable>())
-                        AddBlueprintFor(item);
-                    break;
+                        foreach (var item in e.NewItems.Cast<ISerialisableDrawable>())
+                            AddBlueprintFor(item);
+                        break;
 
-                case NotifyCollectionChangedAction.Remove:
-                case NotifyCollectionChangedAction.Reset:
-                    Debug.Assert(e.OldItems != null);
+                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangedAction.Reset:
+                        Debug.Assert(e.OldItems != null);
 
-                    foreach (var item in e.OldItems.Cast<ISerialisableDrawable>())
-                        RemoveBlueprintFor(item);
-                    break;
+                        foreach (var item in e.OldItems.Cast<ISerialisableDrawable>())
+                            RemoveBlueprintFor(item);
+                        break;
 
-                case NotifyCollectionChangedAction.Replace:
-                    Debug.Assert(e.NewItems != null);
-                    Debug.Assert(e.OldItems != null);
+                    case NotifyCollectionChangedAction.Replace:
+                        Debug.Assert(e.NewItems != null);
+                        Debug.Assert(e.OldItems != null);
 
-                    foreach (var item in e.OldItems.Cast<ISerialisableDrawable>())
-                        RemoveBlueprintFor(item);
+                        foreach (var item in e.OldItems.Cast<ISerialisableDrawable>())
+                            RemoveBlueprintFor(item);
 
-                    foreach (var item in e.NewItems.Cast<ISerialisableDrawable>())
-                        AddBlueprintFor(item);
-                    break;
-            }
-        });
+                        foreach (var item in e.NewItems.Cast<ISerialisableDrawable>())
+                            AddBlueprintFor(item);
+                        break;
+                }
+            });
 
         protected override void AddBlueprintFor(ISerialisableDrawable item)
         {
@@ -108,17 +113,31 @@ namespace osu.Game.Overlays.SkinEditor
 
         protected override void SelectAll()
         {
-            SelectedItems.AddRange(targetComponents.SelectMany(list => list).Except(SelectedItems).ToArray());
+            SelectedItems.AddRange(
+                targetComponents.SelectMany(list => list).Except(SelectedItems).ToArray()
+            );
         }
 
-        protected override bool TryMoveBlueprints(DragEvent e, IList<(SelectionBlueprint<ISerialisableDrawable> blueprint, Vector2[] originalSnapPositions)> blueprints)
+        protected override bool TryMoveBlueprints(
+            DragEvent e,
+            IList<(
+                SelectionBlueprint<ISerialisableDrawable> blueprint,
+                Vector2[] originalSnapPositions
+            )> blueprints
+        )
         {
             Vector2 distanceTravelled = e.ScreenSpaceMousePosition - e.ScreenSpaceMouseDownPosition;
 
             // The final movement position, relative to movementBlueprintOriginalPosition.
             var referenceBlueprint = blueprints.First().blueprint;
-            Vector2 movePosition = blueprints.First().originalSnapPositions.First() + distanceTravelled;
-            return SelectionHandler.HandleMovement(new MoveSelectionEvent<ISerialisableDrawable>(referenceBlueprint, movePosition - referenceBlueprint.ScreenSpaceSelectionPoint));
+            Vector2 movePosition =
+                blueprints.First().originalSnapPositions.First() + distanceTravelled;
+            return SelectionHandler.HandleMovement(
+                new MoveSelectionEvent<ISerialisableDrawable>(
+                    referenceBlueprint,
+                    movePosition - referenceBlueprint.ScreenSpaceSelectionPoint
+                )
+            );
         }
 
         /// <summary>
@@ -133,15 +152,20 @@ namespace osu.Game.Overlays.SkinEditor
                 return;
 
             // convert to game space coordinates
-            delta = firstBlueprint.ToScreenSpace(delta) - firstBlueprint.ToScreenSpace(Vector2.Zero);
+            delta =
+                firstBlueprint.ToScreenSpace(delta) - firstBlueprint.ToScreenSpace(Vector2.Zero);
 
-            SelectionHandler.HandleMovement(new MoveSelectionEvent<ISerialisableDrawable>(firstBlueprint, delta));
+            SelectionHandler.HandleMovement(
+                new MoveSelectionEvent<ISerialisableDrawable>(firstBlueprint, delta)
+            );
         }
 
-        protected override SelectionHandler<ISerialisableDrawable> CreateSelectionHandler() => new SkinSelectionHandler();
+        protected override SelectionHandler<ISerialisableDrawable> CreateSelectionHandler() =>
+            new SkinSelectionHandler();
 
-        protected override SelectionBlueprint<ISerialisableDrawable> CreateBlueprintFor(ISerialisableDrawable component)
-            => new SkinBlueprint(component);
+        protected override SelectionBlueprint<ISerialisableDrawable> CreateBlueprintFor(
+            ISerialisableDrawable component
+        ) => new SkinBlueprint(component);
 
         protected override void Dispose(bool isDisposing)
         {

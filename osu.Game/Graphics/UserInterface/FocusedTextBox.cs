@@ -1,14 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK.Graphics;
 using osu.Framework.Allocation;
+using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Platform;
 using osu.Game.Input.Bindings;
-using osuTK.Input;
-using osu.Framework.Input.Bindings;
 using osu.Game.Overlays;
+using osuTK.Graphics;
+using osuTK.Input;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -68,7 +68,8 @@ namespace osu.Game.Graphics.UserInterface
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (!HasFocus) return false;
+            if (!HasFocus)
+                return false;
 
             if (e.Key == Key.Escape)
                 return false; // disable the framework-level handling of escape key for conformity (we use GlobalAction.Back).
@@ -81,7 +82,8 @@ namespace osu.Game.Graphics.UserInterface
             if (e.Repeat)
                 return false;
 
-            if (!HasFocus) return false;
+            if (!HasFocus)
+                return false;
 
             if (ClearTextOnBackKey && e.Action == GlobalAction.Back)
             {
@@ -96,9 +98,7 @@ namespace osu.Game.Graphics.UserInterface
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         public override bool RequestsFocus => HoldFocus;
     }

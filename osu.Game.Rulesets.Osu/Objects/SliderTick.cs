@@ -15,7 +15,10 @@ namespace osu.Game.Rulesets.Osu.Objects
         public double SpanStartTime { get; set; }
         public double PathProgress { get; set; }
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 

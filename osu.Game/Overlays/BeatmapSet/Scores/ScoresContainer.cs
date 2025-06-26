@@ -31,7 +31,8 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
 
         public readonly Bindable<APIBeatmap> Beatmap = new Bindable<APIBeatmap>();
         private readonly Bindable<IRulesetInfo> ruleset = new Bindable<IRulesetInfo>();
-        private readonly Bindable<BeatmapLeaderboardScope> scope = new Bindable<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Global);
+        private readonly Bindable<BeatmapLeaderboardScope> scope =
+            new Bindable<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Global);
         private readonly IBindable<APIUser> user = new Bindable<APIUser>();
 
         private readonly Box background;
@@ -55,149 +56,157 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
 
         protected APIScoresCollection Scores
         {
-            set => Schedule(() =>
-            {
-                loadCancellationSource?.Cancel();
-                loadCancellationSource = new CancellationTokenSource();
-
-                topScoresContainer.Clear();
-                scoreTable.ClearScores();
-                scoreTable.Hide();
-
-                loading.Hide();
-                loading.FinishTransforms();
-
-                if (value?.Scores.Any() != true)
-                    return;
-
-                var apiBeatmap = Beatmap.Value;
-
-                Debug.Assert(apiBeatmap != null);
-
-                // TODO: temporary. should be removed once `OrderByTotalScore` can accept `IScoreInfo`.
-                var beatmapInfo = new BeatmapInfo
+            set =>
+                Schedule(() =>
                 {
+                    loadCancellationSource?.Cancel();
+                    loadCancellationSource = new CancellationTokenSource();
+
+                    topScoresContainer.Clear();
+                    scoreTable.ClearScores();
+                    scoreTable.Hide();
+
+                    loading.Hide();
+                    loading.FinishTransforms();
+
+                    if (value?.Scores.Any() != true)
+                        return;
+
+                    var apiBeatmap = Beatmap.Value;
+
+                    Debug.Assert(apiBeatmap != null);
+
+                    // TODO: temporary. should be removed once `OrderByTotalScore` can accept `IScoreInfo`.
+                    var beatmapInfo = new BeatmapInfo
+                    {
 #pragma warning disable 618
-                    MaxCombo = apiBeatmap.MaxCombo,
+                        MaxCombo = apiBeatmap.MaxCombo,
 #pragma warning restore 618
-                    Status = apiBeatmap.Status,
-                    MD5Hash = apiBeatmap.MD5Hash
-                };
+                        Status = apiBeatmap.Status,
+                        MD5Hash = apiBeatmap.MD5Hash,
+                    };
 
-                var scores = value.Scores.Select(s => s.ToScoreInfo(rulesets, beatmapInfo)).OrderByTotalScore().ToArray();
-                var topScore = scores.First();
+                    var scores = value
+                        .Scores.Select(s => s.ToScoreInfo(rulesets, beatmapInfo))
+                        .OrderByTotalScore()
+                        .ToArray();
+                    var topScore = scores.First();
 
-                scoreTable.DisplayScores(scores, apiBeatmap.Status.GrantsPerformancePoints());
-                scoreTable.Show();
+                    scoreTable.DisplayScores(scores, apiBeatmap.Status.GrantsPerformancePoints());
+                    scoreTable.Show();
 
-                var userScore = value.UserScore;
-                var userScoreInfo = userScore?.Score.ToScoreInfo(rulesets, beatmapInfo);
+                    var userScore = value.UserScore;
+                    var userScoreInfo = userScore?.Score.ToScoreInfo(rulesets, beatmapInfo);
 
-                topScoresContainer.Add(new DrawableTopScore(topScore));
+                    topScoresContainer.Add(new DrawableTopScore(topScore));
 
-                if (userScoreInfo != null && userScoreInfo.OnlineID != topScore.OnlineID)
-                    topScoresContainer.Add(new DrawableTopScore(userScoreInfo, userScore.Position));
-            });
+                    if (userScoreInfo != null && userScoreInfo.OnlineID != topScore.OnlineID)
+                        topScoresContainer.Add(
+                            new DrawableTopScore(userScoreInfo, userScore.Position)
+                        );
+                });
         }
 
         public ScoresContainer()
         {
-            AddRange(new Drawable[]
-            {
-                background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new FillFlowContainer
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING },
-                    Margin = new MarginPadding { Vertical = 20 },
-                    Children = new Drawable[]
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    new FillFlowContainer
                     {
-                        new FillFlowContainer
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Vertical,
+                        Padding = new MarginPadding
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(0, spacing),
-                            Children = new Drawable[]
-                            {
-                                new LeaderboardScopeSelector
-                                {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Current = { BindTarget = scope }
-                                },
-                                modSelector = new LeaderboardModSelector
-                                {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Ruleset = { BindTarget = ruleset }
-                                }
-                            }
+                            Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
                         },
-                        new Container
+                        Margin = new MarginPadding { Vertical = 20 },
+                        Children = new Drawable[]
                         {
-                            AutoSizeAxes = Axes.Y,
-                            RelativeSizeAxes = Axes.X,
-                            Margin = new MarginPadding { Top = spacing },
-                            Children = new Drawable[]
+                            new FillFlowContainer
                             {
-                                noScoresPlaceholder = new NoScoresPlaceholder
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(0, spacing),
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Alpha = 0,
-                                    AlwaysPresent = true,
-                                    Margin = new MarginPadding { Vertical = 10 }
-                                },
-                                noTeamPlaceholder = new NoTeamPlaceholder
-                                {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Margin = new MarginPadding { Vertical = 10 },
-                                    Alpha = 0,
-                                },
-                                notSupporterPlaceholder = new NotSupporterPlaceholder
-                                {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Margin = new MarginPadding { Vertical = 10 },
-                                    Alpha = 0,
-                                },
-                                new FillFlowContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Direction = FillDirection.Vertical,
-                                    Spacing = new Vector2(0, spacing),
-                                    Children = new Drawable[]
+                                    new LeaderboardScopeSelector
                                     {
-                                        topScoresContainer = new FillFlowContainer
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            AutoSizeAxes = Axes.Y,
-                                            Direction = FillDirection.Vertical,
-                                            Spacing = new Vector2(0, 5),
-                                        },
-                                        scoreTable = new ScoreTable
-                                        {
-                                            Anchor = Anchor.TopCentre,
-                                            Origin = Anchor.TopCentre,
-                                        }
-                                    }
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Current = { BindTarget = scope },
+                                    },
+                                    modSelector = new LeaderboardModSelector
+                                    {
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Ruleset = { BindTarget = ruleset },
+                                    },
                                 },
-                            }
-                        }
+                            },
+                            new Container
+                            {
+                                AutoSizeAxes = Axes.Y,
+                                RelativeSizeAxes = Axes.X,
+                                Margin = new MarginPadding { Top = spacing },
+                                Children = new Drawable[]
+                                {
+                                    noScoresPlaceholder = new NoScoresPlaceholder
+                                    {
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Alpha = 0,
+                                        AlwaysPresent = true,
+                                        Margin = new MarginPadding { Vertical = 10 },
+                                    },
+                                    noTeamPlaceholder = new NoTeamPlaceholder
+                                    {
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Margin = new MarginPadding { Vertical = 10 },
+                                        Alpha = 0,
+                                    },
+                                    notSupporterPlaceholder = new NotSupporterPlaceholder
+                                    {
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Margin = new MarginPadding { Vertical = 10 },
+                                        Alpha = 0,
+                                    },
+                                    new FillFlowContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Direction = FillDirection.Vertical,
+                                        Spacing = new Vector2(0, spacing),
+                                        Children = new Drawable[]
+                                        {
+                                            topScoresContainer = new FillFlowContainer
+                                            {
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Direction = FillDirection.Vertical,
+                                                Spacing = new Vector2(0, 5),
+                                            },
+                                            scoreTable = new ScoreTable
+                                            {
+                                                Anchor = Anchor.TopCentre,
+                                                Origin = Anchor.TopCentre,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
-                },
-                loading = new LoadingLayer()
-            });
+                    loading = new LoadingLayer(),
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -252,7 +261,11 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
             noTeamPlaceholder.Hide();
             notSupporterPlaceholder.Hide();
 
-            if (Beatmap.Value == null || Beatmap.Value.OnlineID <= 0 || (Beatmap.Value.Status <= BeatmapOnlineStatus.Pending))
+            if (
+                Beatmap.Value == null
+                || Beatmap.Value.OnlineID <= 0
+                || (Beatmap.Value.Status <= BeatmapOnlineStatus.Pending)
+            )
             {
                 Scores = null;
                 Hide();
@@ -266,7 +279,10 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                 return;
             }
 
-            if (scope.Value.RequiresSupporter(modSelector.SelectedMods.Count > 0) && !userIsSupporter)
+            if (
+                scope.Value.RequiresSupporter(modSelector.SelectedMods.Count > 0)
+                && !userIsSupporter
+            )
             {
                 Scores = null;
                 notSupporterPlaceholder.Show();
@@ -276,7 +292,12 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
             Show();
             loading.Show();
 
-            getScoresRequest = new GetScoresRequest(Beatmap.Value, Beatmap.Value.Ruleset, scope.Value, modSelector.SelectedMods);
+            getScoresRequest = new GetScoresRequest(
+                Beatmap.Value,
+                Beatmap.Value.Ruleset,
+                scope.Value,
+                modSelector.SelectedMods
+            );
             getScoresRequest.Success += scores =>
             {
                 Scores = scores;

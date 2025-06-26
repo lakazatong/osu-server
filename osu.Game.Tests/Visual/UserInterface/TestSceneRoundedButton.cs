@@ -39,7 +39,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Origin = Anchor.Centre,
                         Enabled = { BindTarget = enabled },
                     },
-                }
+                },
             };
         }
 
@@ -53,8 +53,18 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestBackgroundColour()
         {
             AddStep("set red scheme", () => CreateThemedContent(OverlayColourScheme.Red));
-            AddAssert("rounded button has correct colour", () => ContentContainer.ChildrenOfType<RoundedButton>().First().BackgroundColour == new OverlayColourProvider(OverlayColourScheme.Red).Colour3);
-            AddAssert("settings button has correct colour", () => ContentContainer.ChildrenOfType<SettingsButton>().First().BackgroundColour == new OverlayColourProvider(OverlayColourScheme.Red).Colour3);
+            AddAssert(
+                "rounded button has correct colour",
+                () =>
+                    ContentContainer.ChildrenOfType<RoundedButton>().First().BackgroundColour
+                    == new OverlayColourProvider(OverlayColourScheme.Red).Colour3
+            );
+            AddAssert(
+                "settings button has correct colour",
+                () =>
+                    ContentContainer.ChildrenOfType<SettingsButton>().First().BackgroundColour
+                    == new OverlayColourProvider(OverlayColourScheme.Red).Colour3
+            );
         }
     }
 }

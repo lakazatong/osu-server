@@ -14,9 +14,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
         private MultiplayerClient client { get; set; } = null!;
 
         public ParticipantsListHeader()
-            : base(RankingsStrings.SpotlightParticipants)
-        {
-        }
+            : base(RankingsStrings.SpotlightParticipants) { }
 
         protected override void Update()
         {

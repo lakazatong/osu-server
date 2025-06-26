@@ -11,7 +11,8 @@ namespace osu.Game.Graphics.Sprites
         [Obsolete("Use TruncatingSpriteText instead.")]
         public new bool Truncate
         {
-            set => throw new InvalidOperationException($"Use {nameof(TruncatingSpriteText)} instead.");
+            set =>
+                throw new InvalidOperationException($"Use {nameof(TruncatingSpriteText)} instead.");
         }
 
         public OsuSpriteText()

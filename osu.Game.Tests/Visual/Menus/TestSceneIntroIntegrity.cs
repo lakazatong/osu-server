@@ -22,16 +22,33 @@ namespace osu.Game.Tests.Visual.Menus
             WaitForMenu();
 
             AddStep("delete game files unexpectedly", () => LocalStorage.DeleteDirectory("files"));
-            AddStep("reset game beatmap", () => Dependencies.Get<Bindable<WorkingBeatmap>>().Value = new DummyWorkingBeatmap(Audio, null));
-            AddStep("invalidate beatmap from cache", () => Dependencies.Get<IWorkingBeatmapCache>().Invalidate(Intro.Beatmap.Value.BeatmapSetInfo));
+            AddStep(
+                "reset game beatmap",
+                () =>
+                    Dependencies.Get<Bindable<WorkingBeatmap>>().Value = new DummyWorkingBeatmap(
+                        Audio,
+                        null
+                    )
+            );
+            AddStep(
+                "invalidate beatmap from cache",
+                () =>
+                    Dependencies
+                        .Get<IWorkingBeatmapCache>()
+                        .Invalidate(Intro.Beatmap.Value.BeatmapSetInfo)
+            );
 
             RestartIntro();
             WaitForMenu();
 
-            AddUntilStep("ensure track is not virtual", () => Intro.Beatmap.Value.Track is TrackBass);
+            AddUntilStep(
+                "ensure track is not virtual",
+                () => Intro.Beatmap.Value.Track is TrackBass
+            );
         }
 
         protected override bool IntroReliesOnTrack => true;
+
         protected override IntroScreen CreateScreen() => new IntroTriangles();
     }
 }

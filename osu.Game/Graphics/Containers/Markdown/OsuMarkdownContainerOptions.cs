@@ -48,10 +48,10 @@ namespace osu.Game.Graphics.Containers.Markdown
         public MarkdownPipeline BuildPipeline()
         {
             var pipeline = new MarkdownPipelineBuilder()
-                           .UseAutoIdentifiers()
-                           .UsePipeTables()
-                           .UseEmphasisExtras(EmphasisExtraOptions.Strikethrough)
-                           .UseYamlFrontMatter();
+                .UseAutoIdentifiers()
+                .UsePipeTables()
+                .UseEmphasisExtras(EmphasisExtraOptions.Strikethrough)
+                .UseYamlFrontMatter();
 
             if (Footnotes)
                 pipeline = pipeline.UseFootnotes();

@@ -9,12 +9,13 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
 {
     public partial class ScoreboardTime : DrawableDate
     {
-        public ScoreboardTime(DateTimeOffset date, float textSize = OsuFont.DEFAULT_FONT_SIZE, bool italic = true)
-            : base(date, textSize, italic)
-        {
-        }
+        public ScoreboardTime(
+            DateTimeOffset date,
+            float textSize = OsuFont.DEFAULT_FONT_SIZE,
+            bool italic = true
+        )
+            : base(date, textSize, italic) { }
 
-        protected override string Format()
-            => Date.ToShortRelativeTime(TimeSpan.FromHours(1));
+        protected override string Format() => Date.ToShortRelativeTime(TimeSpan.FromHours(1));
     }
 }

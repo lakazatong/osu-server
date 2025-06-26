@@ -13,6 +13,6 @@ namespace osu.Game.Screens.Select.Filter
         Equal,
         NotEqual,
         GreaterOrEqual,
-        Greater
+        Greater,
     }
 }

@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.EmptyFreeform
     public partial class EmptyFreeformInputManager : RulesetInputManager<EmptyFreeformAction>
     {
         public EmptyFreeformInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
     }
 
     public enum EmptyFreeformAction

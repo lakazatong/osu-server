@@ -71,8 +71,10 @@ namespace osu.Game.Users
             var statistics = statisticsProvider?.GetStatisticsFor(ruleset.Value);
 
             loadingLayer.State.Value = statistics == null ? Visibility.Visible : Visibility.Hidden;
-            globalRankDisplay.Content = statistics?.GlobalRank?.ToLocalisableString("\\##,##0") ?? "-";
-            countryRankDisplay.Content = statistics?.CountryRank?.ToLocalisableString("\\##,##0") ?? "-";
+            globalRankDisplay.Content =
+                statistics?.GlobalRank?.ToLocalisableString("\\##,##0") ?? "-";
+            countryRankDisplay.Content =
+                statistics?.CountryRank?.ToLocalisableString("\\##,##0") ?? "-";
         }
 
         protected override Drawable CreateLayout()
@@ -100,7 +102,7 @@ namespace osu.Game.Users
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 User = User,
-                                Alpha = 0.3f
+                                Alpha = 0.3f,
                             },
                             new GridContainer
                             {
@@ -111,32 +113,27 @@ namespace osu.Game.Users
                                     new Dimension(GridSizeMode.AutoSize),
                                     new Dimension(),
                                 },
-                                RowDimensions = new[]
-                                {
-                                    new Dimension()
-                                },
+                                RowDimensions = new[] { new Dimension() },
                                 Content = new[]
                                 {
                                     new Drawable[]
                                     {
-                                        CreateAvatar().With(avatar =>
-                                        {
-                                            avatar.Size = new Vector2(60);
-                                            avatar.Masking = true;
-                                            avatar.CornerRadius = 6;
-                                        }),
+                                        CreateAvatar()
+                                            .With(avatar =>
+                                            {
+                                                avatar.Size = new Vector2(60);
+                                                avatar.Masking = true;
+                                                avatar.CornerRadius = 6;
+                                            }),
                                         new GridContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             Padding = new MarginPadding { Left = padding },
-                                            ColumnDimensions = new[]
-                                            {
-                                                new Dimension()
-                                            },
+                                            ColumnDimensions = new[] { new Dimension() },
                                             RowDimensions = new[]
                                             {
                                                 new Dimension(GridSizeMode.AutoSize),
-                                                new Dimension()
+                                                new Dimension(),
                                             },
                                             Content = new[]
                                             {
@@ -152,23 +149,24 @@ namespace osu.Game.Users
                                                             CreateFlag(),
                                                             CreateTeamLogo(),
                                                             // supporter icon is being added later
-                                                        }
-                                                    }
+                                                        },
+                                                    },
                                                 },
                                                 new Drawable[]
                                                 {
-                                                    CreateUsername().With(username =>
-                                                    {
-                                                        username.Anchor = Anchor.CentreLeft;
-                                                        username.Origin = Anchor.CentreLeft;
-                                                    })
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                                                    CreateUsername()
+                                                        .With(username =>
+                                                        {
+                                                            username.Anchor = Anchor.CentreLeft;
+                                                            username.Origin = Anchor.CentreLeft;
+                                                        }),
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                     new GridContainer
                     {
@@ -177,11 +175,7 @@ namespace osu.Game.Users
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Padding = new MarginPadding(padding),
-                        ColumnDimensions = new[]
-                        {
-                            new Dimension(),
-                            new Dimension()
-                        },
+                        ColumnDimensions = new[] { new Dimension(), new Dimension() },
                         RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                         Content = new[]
                         {
@@ -197,21 +191,17 @@ namespace osu.Game.Users
                                 countryRankDisplay = new ProfileValueDisplay(true)
                                 {
                                     Title = UsersStrings.ShowRankCountrySimple,
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
                     loadingLayer = new LoadingLayer(true),
-                }
+                },
             };
 
             if (User.IsSupporter)
             {
-                details.Add(new SupporterIcon
-                {
-                    Height = 26,
-                    SupportLevel = User.SupportLevel
-                });
+                details.Add(new SupporterIcon { Height = 26, SupportLevel = User.SupportLevel });
             }
 
             return layout;

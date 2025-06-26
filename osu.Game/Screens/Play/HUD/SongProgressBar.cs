@@ -21,7 +21,8 @@ namespace osu.Game.Screens.Play.HUD
         /// <summary>
         /// The current (non-frame-stable) audio time.
         /// </summary>
-        protected double AudioTime => Math.Clamp(GameplayClock.CurrentTime - StartTime, 0.0, length);
+        protected double AudioTime =>
+            Math.Clamp(GameplayClock.CurrentTime - StartTime, 0.0, length);
 
         [Resolved]
         protected IGameplayClock GameplayClock { get; private set; } = null!;
@@ -82,7 +83,11 @@ namespace osu.Game.Screens.Play.HUD
             if (!Interactive)
                 return;
 
-            double relativeX = Math.Clamp(ToLocalSpace(e.ScreenSpaceMousePosition).X / DrawWidth, 0, 1);
+            double relativeX = Math.Clamp(
+                ToLocalSpace(e.ScreenSpaceMousePosition).X / DrawWidth,
+                0,
+                1
+            );
             onUserChange(StartTime + (EndTime - StartTime) * relativeX);
         }
 

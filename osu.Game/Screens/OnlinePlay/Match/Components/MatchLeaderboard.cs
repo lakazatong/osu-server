@@ -10,7 +10,8 @@ using osu.Game.Online.Rooms;
 
 namespace osu.Game.Screens.OnlinePlay.Match.Components
 {
-    public partial class MatchLeaderboard : Leaderboard<MatchLeaderboardScope, APIUserScoreAggregate>
+    public partial class MatchLeaderboard
+        : Leaderboard<MatchLeaderboardScope, APIUserScoreAggregate>
     {
         private readonly Room room;
 
@@ -51,20 +52,25 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
 
             var req = new GetRoomLeaderboardRequest(room.RoomID.Value);
 
-            req.Success += r => Schedule(() =>
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    return;
+            req.Success += r =>
+                Schedule(() =>
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
 
-                SetScores(r.Leaderboard, r.UserScore);
-            });
+                    SetScores(r.Leaderboard, r.UserScore);
+                });
 
             return req;
         }
 
-        protected override LeaderboardScore CreateDrawableScore(APIUserScoreAggregate model, int index) => new MatchLeaderboardScore(model, index);
+        protected override LeaderboardScore CreateDrawableScore(
+            APIUserScoreAggregate model,
+            int index
+        ) => new MatchLeaderboardScore(model, index);
 
-        protected override LeaderboardScore CreateDrawableTopScore(APIUserScoreAggregate model) => new MatchLeaderboardScore(model, model.Position, false);
+        protected override LeaderboardScore CreateDrawableTopScore(APIUserScoreAggregate model) =>
+            new MatchLeaderboardScore(model, model.Position, false);
 
         protected override void Dispose(bool isDisposing)
         {
@@ -75,6 +81,6 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
 
     public enum MatchLeaderboardScope
     {
-        Overall
+        Overall,
     }
 }

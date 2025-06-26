@@ -19,7 +19,10 @@ using osu.Game.Overlays.Settings.Sections;
 
 namespace osu.Game.Overlays.FirstRunSetup
 {
-    [LocalisableDescription(typeof(FirstRunSetupOverlayStrings), nameof(FirstRunSetupOverlayStrings.Behaviour))]
+    [LocalisableDescription(
+        typeof(FirstRunSetupOverlayStrings),
+        nameof(FirstRunSetupOverlayStrings.Behaviour)
+    )]
     public partial class ScreenBehaviour : WizardScreen
     {
         private SearchContainer<SettingsSection> searchContainer;
@@ -29,11 +32,13 @@ namespace osu.Game.Overlays.FirstRunSetup
         {
             Content.Children = new Drawable[]
             {
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Text = FirstRunSetupOverlayStrings.BehaviourDescription,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 new GridContainer
                 {
@@ -45,10 +50,7 @@ namespace osu.Game.Overlays.FirstRunSetup
                         new Dimension(GridSizeMode.Absolute, 10),
                         new Dimension(),
                     },
-                    RowDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize),
-                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                     Content = new[]
                     {
                         new[]
@@ -69,8 +71,8 @@ namespace osu.Game.Overlays.FirstRunSetup
                                 BackgroundColour = colours.DangerousButtonColour,
                                 Text = FirstRunSetupOverlayStrings.ClassicDefaults,
                                 RelativeSizeAxes = Axes.X,
-                                Action = applyClassic
-                            }
+                                Action = applyClassic,
+                            },
                         },
                     },
                 },
@@ -93,7 +95,7 @@ namespace osu.Game.Overlays.FirstRunSetup
                         new MaintenanceSection(),
                     },
                     SearchTerm = SettingsItem<bool>.CLASSIC_DEFAULT_SEARCH_TERM,
-                }
+                },
             };
 
             if (DebugUtils.IsDebugBuild)
@@ -102,13 +104,21 @@ namespace osu.Game.Overlays.FirstRunSetup
 
         private void applyClassic()
         {
-            foreach (var i in searchContainer.ChildrenOfType<ISettingsItem>().Where(s => s.HasClassicDefault))
+            foreach (
+                var i in searchContainer
+                    .ChildrenOfType<ISettingsItem>()
+                    .Where(s => s.HasClassicDefault)
+            )
                 i.ApplyClassicDefault();
         }
 
         private void applyStandard()
         {
-            foreach (var i in searchContainer.ChildrenOfType<ISettingsItem>().Where(s => s.HasClassicDefault))
+            foreach (
+                var i in searchContainer
+                    .ChildrenOfType<ISettingsItem>()
+                    .Where(s => s.HasClassicDefault)
+            )
                 i.ApplyDefault();
         }
     }

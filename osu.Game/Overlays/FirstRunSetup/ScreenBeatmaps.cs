@@ -20,7 +20,10 @@ using Realms;
 
 namespace osu.Game.Overlays.FirstRunSetup
 {
-    [LocalisableDescription(typeof(FirstRunSetupBeatmapScreenStrings), nameof(FirstRunSetupBeatmapScreenStrings.Header))]
+    [LocalisableDescription(
+        typeof(FirstRunSetupBeatmapScreenStrings),
+        nameof(FirstRunSetupBeatmapScreenStrings.Header)
+    )]
     public partial class ScreenBeatmaps : WizardScreen
     {
         private ProgressRoundedButton downloadBundledButton = null!;
@@ -48,12 +51,14 @@ namespace osu.Game.Overlays.FirstRunSetup
 
             Content.Children = new Drawable[]
             {
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Colour = OverlayColourProvider.Content1,
                     Text = FirstRunSetupBeatmapScreenStrings.Description,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 new Container
                 {
@@ -61,7 +66,12 @@ namespace osu.Game.Overlays.FirstRunSetup
                     Height = 30,
                     Children = new Drawable[]
                     {
-                        currentlyLoadedBeatmaps = new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: HEADER_FONT_SIZE, weight: FontWeight.SemiBold))
+                        currentlyLoadedBeatmaps = new OsuTextFlowContainer(cp =>
+                            cp.Font = OsuFont.Default.With(
+                                size: HEADER_FONT_SIZE,
+                                weight: FontWeight.SemiBold
+                            )
+                        )
                         {
                             Colour = OverlayColourProvider.Content2,
                             TextAnchor = Anchor.Centre,
@@ -69,14 +79,16 @@ namespace osu.Game.Overlays.FirstRunSetup
                             Origin = Anchor.Centre,
                             AutoSizeAxes = Axes.Both,
                         },
-                    }
+                    },
                 },
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Colour = OverlayColourProvider.Content1,
                     Text = FirstRunSetupBeatmapScreenStrings.TutorialDescription,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 downloadTutorialButton = new ProgressRoundedButton
                 {
@@ -85,14 +97,16 @@ namespace osu.Game.Overlays.FirstRunSetup
                     Origin = Anchor.TopCentre,
                     BackgroundColour = colours.Pink3,
                     Text = FirstRunSetupBeatmapScreenStrings.TutorialButton,
-                    Action = downloadTutorial
+                    Action = downloadTutorial,
                 },
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Colour = OverlayColourProvider.Content1,
                     Text = FirstRunSetupBeatmapScreenStrings.BundledDescription,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 downloadBundledButton = new ProgressRoundedButton
                 {
@@ -101,23 +115,27 @@ namespace osu.Game.Overlays.FirstRunSetup
                     Origin = Anchor.TopCentre,
                     BackgroundColour = colours.Blue3,
                     Text = FirstRunSetupBeatmapScreenStrings.BundledButton,
-                    Action = downloadBundled
+                    Action = downloadBundled,
                 },
-                downloadInBackgroundText = new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                downloadInBackgroundText = new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Colour = OverlayColourProvider.Light2,
                     Alpha = 0,
                     TextAnchor = Anchor.TopCentre,
                     Text = FirstRunSetupBeatmapScreenStrings.DownloadingInBackground,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                new OsuTextFlowContainer(cp =>
+                    cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                )
                 {
                     Colour = OverlayColourProvider.Content1,
                     Text = FirstRunSetupBeatmapScreenStrings.ObtainMoreBeatmaps,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
             };
         }
@@ -126,7 +144,10 @@ namespace osu.Game.Overlays.FirstRunSetup
         {
             base.LoadComplete();
 
-            beatmapSubscription = realmAccess.RegisterForNotifications(r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected), beatmapsChanged);
+            beatmapSubscription = realmAccess.RegisterForNotifications(
+                r => r.All<BeatmapSetInfo>().Where(s => !s.DeletePending && !s.Protected),
+                beatmapsChanged
+            );
         }
 
         protected override void Dispose(bool isDisposing)
@@ -135,23 +156,28 @@ namespace osu.Game.Overlays.FirstRunSetup
             beatmapSubscription?.Dispose();
         }
 
-        private void beatmapsChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes) => Schedule(() =>
-        {
-            currentlyLoadedBeatmaps.Text = FirstRunSetupBeatmapScreenStrings.CurrentlyLoadedBeatmaps(sender.Count);
-
-            if (sender.Count == 0)
+        private void beatmapsChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes) =>
+            Schedule(() =>
             {
-                currentlyLoadedBeatmaps.FadeColour(colours.Red1, 500, Easing.OutQuint);
-            }
-            else if (changes != null && (changes.DeletedIndices.Any() || changes.InsertedIndices.Any()))
-            {
-                currentlyLoadedBeatmaps.FadeColour(colours.Yellow)
-                                       .FadeColour(OverlayColourProvider.Content2, 1500, Easing.OutQuint);
+                currentlyLoadedBeatmaps.Text =
+                    FirstRunSetupBeatmapScreenStrings.CurrentlyLoadedBeatmaps(sender.Count);
 
-                currentlyLoadedBeatmaps.ScaleTo(1.1f)
-                                       .ScaleTo(1, 1500, Easing.OutQuint);
-            }
-        });
+                if (sender.Count == 0)
+                {
+                    currentlyLoadedBeatmaps.FadeColour(colours.Red1, 500, Easing.OutQuint);
+                }
+                else if (
+                    changes != null
+                    && (changes.DeletedIndices.Any() || changes.InsertedIndices.Any())
+                )
+                {
+                    currentlyLoadedBeatmaps
+                        .FadeColour(colours.Yellow)
+                        .FadeColour(OverlayColourProvider.Content2, 1500, Easing.OutQuint);
+
+                    currentlyLoadedBeatmaps.ScaleTo(1.1f).ScaleTo(1, 1500, Easing.OutQuint);
+                }
+            });
 
         private void downloadTutorial()
         {
@@ -164,16 +190,22 @@ namespace osu.Game.Overlays.FirstRunSetup
 
             var downloadTracker = tutorialDownloader.DownloadTrackers.First();
 
-            downloadTracker.State.BindValueChanged(state =>
-            {
-                if (state.NewValue == DownloadState.LocallyAvailable)
-                    downloadTutorialButton.Complete();
-            }, true);
+            downloadTracker.State.BindValueChanged(
+                state =>
+                {
+                    if (state.NewValue == DownloadState.LocallyAvailable)
+                        downloadTutorialButton.Complete();
+                },
+                true
+            );
 
-            downloadTracker.Progress.BindValueChanged(progress =>
-            {
-                downloadTutorialButton.SetProgress(progress.NewValue, false);
-            }, true);
+            downloadTracker.Progress.BindValueChanged(
+                progress =>
+                {
+                    downloadTutorialButton.SetProgress(progress.NewValue, false);
+                },
+                true
+            );
         }
 
         private void downloadBundled()
@@ -181,9 +213,7 @@ namespace osu.Game.Overlays.FirstRunSetup
             if (bundledDownloader != null)
                 return;
 
-            downloadInBackgroundText
-                .FlashColour(Color4.White, 500)
-                .FadeIn(200);
+            downloadInBackgroundText.FlashColour(Color4.White, 500).FadeIn(200);
 
             bundledDownloader = new BundledBeatmapDownloader(false);
 
@@ -194,7 +224,11 @@ namespace osu.Game.Overlays.FirstRunSetup
 
             void updateProgress()
             {
-                double progress = (double)bundledDownloader.DownloadTrackers.Count(t => t.State.Value == DownloadState.LocallyAvailable) / bundledDownloader.DownloadTrackers.Count();
+                double progress =
+                    (double)
+                        bundledDownloader.DownloadTrackers.Count(t =>
+                            t.State.Value == DownloadState.LocallyAvailable
+                        ) / bundledDownloader.DownloadTrackers.Count();
 
                 if (progress == 1)
                     downloadBundledButton.Complete();

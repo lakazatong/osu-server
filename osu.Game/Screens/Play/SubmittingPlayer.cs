@@ -52,9 +52,7 @@ namespace osu.Game.Screens.Play
         private TaskCompletionSource<bool> scoreSubmissionSource;
 
         protected SubmittingPlayer(PlayerConfiguration configuration = null)
-            : base(configuration)
-        {
-        }
+            : base(configuration) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -69,18 +67,24 @@ namespace osu.Game.Screens.Play
 
             // We probably want to move this display to something more global.
             // Probably using the OSD somehow.
-            AddInternal(new GameplayOffsetControl
-            {
-                Margin = new MarginPadding(20),
-                Anchor = Anchor.CentreRight,
-                Origin = Anchor.CentreRight,
-            });
+            AddInternal(
+                new GameplayOffsetControl
+                {
+                    Margin = new MarginPadding(20),
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                }
+            );
         }
 
-        protected override GameplayClockContainer CreateGameplayClockContainer(WorkingBeatmap beatmap, double gameplayStart) => new MasterGameplayClockContainer(beatmap, gameplayStart)
-        {
-            ShouldValidatePlaybackRate = true,
-        };
+        protected override GameplayClockContainer CreateGameplayClockContainer(
+            WorkingBeatmap beatmap,
+            double gameplayStart
+        ) =>
+            new MasterGameplayClockContainer(beatmap, gameplayStart)
+            {
+                ShouldValidatePlaybackRate = true,
+            };
 
         protected override void LoadAsyncComplete()
         {
@@ -95,7 +99,9 @@ namespace osu.Game.Screens.Play
 
             if (Mods.Value.Any(m => !m.UserPlayable))
             {
-                handleTokenFailure(new InvalidOperationException("Non-user playable mod selected."));
+                handleTokenFailure(
+                    new InvalidOperationException("Non-user playable mod selected.")
+                );
                 return false;
             }
 
@@ -109,7 +115,9 @@ namespace osu.Game.Screens.Play
 
             if (req == null)
             {
-                handleTokenFailure(new InvalidOperationException("Request could not be constructed."));
+                handleTokenFailure(
+                    new InvalidOperationException("Request could not be constructed.")
+                );
                 return false;
             }
 
@@ -125,7 +133,9 @@ namespace osu.Game.Screens.Play
 
             // Generally a timeout would not happen here as APIAccess will timeout first.
             if (!tcs.Task.Wait(30000))
-                req.TriggerFailure(new InvalidOperationException("Token retrieval timed out (request never run)"));
+                req.TriggerFailure(
+                    new InvalidOperationException("Token retrieval timed out (request never run)")
+                );
 
             return true;
 
@@ -142,7 +152,10 @@ namespace osu.Game.Screens.Play
                         : "Your score will not be submitted.";
 
                     if (string.IsNullOrEmpty(exception.Message))
-                        Logger.Error(exception, $"Failed to retrieve a score submission token.\n\n{whatWillHappen}");
+                        Logger.Error(
+                            exception,
+                            $"Failed to retrieve a score submission token.\n\n{whatWillHappen}"
+                        );
                     else
                     {
                         switch (exception.Message)
@@ -150,19 +163,31 @@ namespace osu.Game.Screens.Play
                             case @"missing token header":
                             case @"invalid client hash":
                             case @"invalid verification hash":
-                                Logger.Log($"Please ensure that you are using the latest version of the official game releases.\n\n{whatWillHappen}", level: LogLevel.Important);
+                                Logger.Log(
+                                    $"Please ensure that you are using the latest version of the official game releases.\n\n{whatWillHappen}",
+                                    level: LogLevel.Important
+                                );
                                 break;
 
                             case @"invalid or missing beatmap_hash":
-                                Logger.Log($"This beatmap does not match the online version. Please update or redownload it.\n\n{whatWillHappen}", level: LogLevel.Important);
+                                Logger.Log(
+                                    $"This beatmap does not match the online version. Please update or redownload it.\n\n{whatWillHappen}",
+                                    level: LogLevel.Important
+                                );
                                 break;
 
                             case @"expired token":
-                                Logger.Log($"Your system clock is set incorrectly. Please check your system time, date and timezone.\n\n{whatWillHappen}", level: LogLevel.Important);
+                                Logger.Log(
+                                    $"Your system clock is set incorrectly. Please check your system time, date and timezone.\n\n{whatWillHappen}",
+                                    level: LogLevel.Important
+                                );
                                 break;
 
                             default:
-                                Logger.Log($"{whatWillHappen} {exception.Message}", level: LogLevel.Important);
+                                Logger.Log(
+                                    $"{whatWillHappen} {exception.Message}",
+                                    level: LogLevel.Important
+                                );
                                 break;
                         }
                     }
@@ -194,7 +219,11 @@ namespace osu.Game.Screens.Play
                 // These match stable for now.
 
                 // TODO: the blocking conditions should probably display a message.
-                if (!IsBreakTime.Value && GameplayClockContainer.CurrentTime - GameplayClockContainer.GameplayStartTime > 10000)
+                if (
+                    !IsBreakTime.Value
+                    && GameplayClockContainer.CurrentTime - GameplayClockContainer.GameplayStartTime
+                        > 10000
+                )
                     return false;
 
                 if (GameplayClockContainer.IsPaused.Value)
@@ -257,10 +286,11 @@ namespace osu.Game.Screens.Play
                 var scoreCopy = Score.DeepClone();
 
                 Task.Run(async () =>
-                {
-                    await submitScore(scoreCopy).ConfigureAwait(false);
-                    spectatorClient.EndPlaying(GameplayState);
-                }).FireAndForget();
+                    {
+                        await submitScore(scoreCopy).ConfigureAwait(false);
+                        spectatorClient.EndPlaying(GameplayState);
+                    })
+                    .FireAndForget();
             }
         }
 
@@ -277,7 +307,10 @@ namespace osu.Game.Screens.Play
         /// </summary>
         /// <param name="score">The score to be submitted.</param>
         /// <param name="token">The submission token.</param>
-        protected abstract APIRequest<MultiplayerScore> CreateSubmissionRequest(Score score, long token);
+        protected abstract APIRequest<MultiplayerScore> CreateSubmissionRequest(
+            Score score,
+            long token
+        );
 
         private Task submitScore(Score score)
         {
@@ -343,10 +376,7 @@ namespace osu.Game.Screens.Play
             return scoreSubmissionSource.Task;
         }
 
-        protected override ResultsScreen CreateResults(ScoreInfo score) => new SoloResultsScreen(score)
-        {
-            AllowRetry = true,
-            IsLocalPlay = true,
-        };
+        protected override ResultsScreen CreateResults(ScoreInfo score) =>
+            new SoloResultsScreen(score) { AllowRetry = true, IsLocalPlay = true };
     }
 }

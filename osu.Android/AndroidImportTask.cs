@@ -16,7 +16,12 @@ namespace osu.Android
 
         private readonly Uri uri;
 
-        private AndroidImportTask(Stream stream, string filename, ContentResolver contentResolver, Uri uri)
+        private AndroidImportTask(
+            Stream stream,
+            string filename,
+            ContentResolver contentResolver,
+            Uri uri
+        )
             : base(stream, filename)
         {
             this.contentResolver = contentResolver;
@@ -28,7 +33,10 @@ namespace osu.Android
             contentResolver.Delete(uri, null, null);
         }
 
-        public static async Task<AndroidImportTask?> Create(ContentResolver contentResolver, Uri uri)
+        public static async Task<AndroidImportTask?> Create(
+            ContentResolver contentResolver,
+            Uri uri
+        )
         {
             // there are more performant overloads of this method, but this one is the most backwards-compatible
             // (dates back to API 1).

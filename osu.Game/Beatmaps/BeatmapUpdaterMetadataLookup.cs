@@ -20,10 +20,12 @@ namespace osu.Game.Beatmaps
 
         public BeatmapUpdaterMetadataLookup(IAPIProvider api, Storage storage)
             : this(new APIBeatmapMetadataSource(api), new LocalCachedBeatmapMetadataSource(storage))
-        {
-        }
+        { }
 
-        internal BeatmapUpdaterMetadataLookup(IOnlineBeatmapMetadataSource apiMetadataSource, IOnlineBeatmapMetadataSource localCachedMetadataSource)
+        internal BeatmapUpdaterMetadataLookup(
+            IOnlineBeatmapMetadataSource apiMetadataSource,
+            IOnlineBeatmapMetadataSource localCachedMetadataSource
+        )
         {
             this.apiMetadataSource = apiMetadataSource;
             this.localCachedMetadataSource = localCachedMetadataSource;
@@ -79,9 +81,11 @@ namespace osu.Game.Beatmaps
                 }
             }
 
-            if (beatmapSet.Beatmaps.All(b => b.MatchesOnlineVersion)
+            if (
+                beatmapSet.Beatmaps.All(b => b.MatchesOnlineVersion)
                 && lookupResults.All(r => r != null)
-                && lookupResults.Select(r => r!.BeatmapSetID).Distinct().Count() == 1)
+                && lookupResults.Select(r => r!.BeatmapSetID).Distinct().Count() == 1
+            )
             {
                 var representative = lookupResults.First()!;
 
@@ -110,7 +114,11 @@ namespace osu.Game.Beatmaps
         /// In either case, the online ID read from the .osu file will be preserved, which may not necessarily be what we want.
         /// TODO: reconsider this if/when a better flow for queueing online retrieval is implemented.
         /// </remarks>
-        private bool tryLookup(BeatmapInfo beatmapInfo, bool preferOnlineFetch, out OnlineBeatmapMetadata? result)
+        private bool tryLookup(
+            BeatmapInfo beatmapInfo,
+            bool preferOnlineFetch,
+            out OnlineBeatmapMetadata? result
+        )
         {
             bool useLocalCache = !apiMetadataSource.Available || !preferOnlineFetch;
             if (useLocalCache && localCachedMetadataSource.TryLookup(beatmapInfo, out result))

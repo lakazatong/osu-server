@@ -32,7 +32,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             performTest(new List<ReplayFrame>());
 
-            AddAssert("all min judgements", () => judgementResults.All(result => result.Type == result.Judgement.MinResult));
+            AddAssert(
+                "all min judgements",
+                () => judgementResults.All(result => result.Type == result.Judgement.MinResult)
+            );
         }
 
         [TestCase(1)]
@@ -53,59 +56,81 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             performTest(generateReplay(20));
 
-            AddAssert("all max judgements", () => judgementResults.All(result => result.Type == result.Judgement.MaxResult));
+            AddAssert(
+                "all max judgements",
+                () => judgementResults.All(result => result.Type == result.Judgement.MaxResult)
+            );
         }
 
-        private static List<ReplayFrame> generateReplay(int spins) => new SpinFramesGenerator(time_spinner_start)
-                                                                      .Spin(spins * 360, time_spinner_end - time_spinner_start)
-                                                                      .Build();
+        private static List<ReplayFrame> generateReplay(int spins) =>
+            new SpinFramesGenerator(time_spinner_start)
+                .Spin(spins * 360, time_spinner_end - time_spinner_start)
+                .Build();
 
         private void performTest(List<ReplayFrame> frames)
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new Beatmap<OsuHitObject>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects =
-                    {
-                        new Spinner
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new Beatmap<OsuHitObject>
                         {
-                            StartTime = time_spinner_start,
-                            EndTime = time_spinner_end,
-                            Position = OsuPlayfield.BASE_SIZE / 2
+                            HitObjects =
+                            {
+                                new Spinner
+                                {
+                                    StartTime = time_spinner_start,
+                                    EndTime = time_spinner_end,
+                                    Position = OsuPlayfield.BASE_SIZE / 2,
+                                },
+                            },
+                            BeatmapInfo =
+                            {
+                                Difficulty = new BeatmapDifficulty(),
+                                Ruleset = new OsuRuleset().RulesetInfo,
+                            },
                         }
-                    },
-                    BeatmapInfo =
-                    {
-                        Difficulty = new BeatmapDifficulty(),
-                        Ruleset = new OsuRuleset().RulesetInfo
-                    },
-                });
+                    );
 
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
 
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
+                    p.OnLoadComplete += _ =>
                     {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults = new List<JudgementResult>();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults = new List<JudgementResult>();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private void assertResult<T>(int index, HitResult expectedResult)
         {
-            AddAssert($"{typeof(T).ReadableName()} ({index}) judged as {expectedResult}",
-                () => judgementResults.Where(j => j.HitObject is T).OrderBy(j => j.HitObject.StartTime).ElementAt(index).Type,
-                () => Is.EqualTo(expectedResult));
+            AddAssert(
+                $"{typeof(T).ReadableName()} ({index}) judged as {expectedResult}",
+                () =>
+                    judgementResults
+                        .Where(j => j.HitObject is T)
+                        .OrderBy(j => j.HitObject.StartTime)
+                        .ElementAt(index)
+                        .Type,
+                () => Is.EqualTo(expectedResult)
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -115,13 +140,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

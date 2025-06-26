@@ -24,34 +24,43 @@ namespace osu.Game.Rulesets.Catch.Scoring
         private double fruitTinyScale;
 
         public CatchScoreProcessor()
-            : base(new CatchRuleset())
-        {
-        }
+            : base(new CatchRuleset()) { }
 
         protected override void Reset(bool storeResults)
         {
             base.Reset(storeResults);
 
             // large ticks are *purposefully* not counted to match stable
-            int fruitTinyScaleDivisor = MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit) + MaximumResultCounts.GetValueOrDefault(HitResult.Great);
-            fruitTinyScale = fruitTinyScaleDivisor == 0
-                ? 0
-                : (double)MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit) / fruitTinyScaleDivisor;
+            int fruitTinyScaleDivisor =
+                MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit)
+                + MaximumResultCounts.GetValueOrDefault(HitResult.Great);
+            fruitTinyScale =
+                fruitTinyScaleDivisor == 0
+                    ? 0
+                    : (double)MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit)
+                        / fruitTinyScaleDivisor;
         }
 
-        protected override double ComputeTotalScore(double comboProgress, double accuracyProgress, double bonusPortion)
+        protected override double ComputeTotalScore(
+            double comboProgress,
+            double accuracyProgress,
+            double bonusPortion
+        )
         {
             const int max_tiny_droplets_portion = 400000;
 
-            double comboPortion = 1000000 - max_tiny_droplets_portion + max_tiny_droplets_portion * (1 - fruitTinyScale);
+            double comboPortion =
+                1000000
+                - max_tiny_droplets_portion
+                + max_tiny_droplets_portion * (1 - fruitTinyScale);
             double dropletsPortion = max_tiny_droplets_portion * fruitTinyScale;
-            double dropletsHit = MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit) == 0
-                ? 0
-                : (double)ScoreResultCounts.GetValueOrDefault(HitResult.SmallTickHit) / MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit);
+            double dropletsHit =
+                MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit) == 0
+                    ? 0
+                    : (double)ScoreResultCounts.GetValueOrDefault(HitResult.SmallTickHit)
+                        / MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit);
 
-            return comboPortion * comboProgress
-                   + dropletsPortion * dropletsHit
-                   + bonusPortion;
+            return comboPortion * comboProgress + dropletsPortion * dropletsHit + bonusPortion;
         }
 
         public override int GetBaseScoreForResult(HitResult result)
@@ -86,10 +95,17 @@ namespace osu.Game.Rulesets.Catch.Scoring
                     break;
             }
 
-            return baseIncrease * Math.Min(Math.Max(0.5, Math.Log(result.ComboAfterJudgement, combo_base)), Math.Log(combo_cap, combo_base));
+            return baseIncrease
+                * Math.Min(
+                    Math.Max(0.5, Math.Log(result.ComboAfterJudgement, combo_base)),
+                    Math.Log(combo_cap, combo_base)
+                );
         }
 
-        public override ScoreRank RankFromScore(double accuracy, IReadOnlyDictionary<HitResult, int> results)
+        public override ScoreRank RankFromScore(
+            double accuracy,
+            IReadOnlyDictionary<HitResult, int> results
+        )
         {
             if (accuracy == accuracy_cutoff_x)
                 return ScoreRank.X;

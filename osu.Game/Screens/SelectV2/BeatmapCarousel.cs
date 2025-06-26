@@ -35,7 +35,11 @@ namespace osu.Game.Screens.SelectV2
         /// <summary>
         /// From the provided beatmaps, select the most appropriate one for the user's skill.
         /// </summary>
-        public required Action<IEnumerable<BeatmapInfo>> RequestRecommendedSelection { private get; init; }
+        public required Action<IEnumerable<BeatmapInfo>> RequestRecommendedSelection
+        {
+            private get;
+            init;
+        }
 
         /// <summary>
         /// Selection requested for the provided beatmap.
@@ -79,7 +83,13 @@ namespace osu.Game.Screens.SelectV2
             else
             {
                 // `CurrentSelectionItem` cannot be used here because it may not be correctly set yet.
-                if (CurrentSelection != null && (CheckModelEquality(top.Model, CurrentSelection) || CheckModelEquality(bottom.Model, CurrentSelection)))
+                if (
+                    CurrentSelection != null
+                    && (
+                        CheckModelEquality(top.Model, CurrentSelection)
+                        || CheckModelEquality(bottom.Model, CurrentSelection)
+                    )
+                )
                     return SPACING * 2;
             }
 
@@ -105,7 +115,12 @@ namespace osu.Game.Screens.SelectV2
         }
 
         [BackgroundDependencyLoader]
-        private void load(BeatmapStore beatmapStore, AudioManager audio, OsuConfigManager config, CancellationToken? cancellationToken)
+        private void load(
+            BeatmapStore beatmapStore,
+            AudioManager audio,
+            OsuConfigManager config,
+            CancellationToken? cancellationToken
+        )
         {
             setupPools();
             detachedBeatmaps = beatmapStore.GetBeatmapSets(cancellationToken);
@@ -122,86 +137,98 @@ namespace osu.Game.Screens.SelectV2
 
         #region Beatmap source hookup
 
-        private void beatmapSetsChanged(object? beatmaps, NotifyCollectionChangedEventArgs changed) => Schedule(() =>
-        {
-            // This callback is scheduled to ensure there's no added overhead during gameplay.
-            // If this ever becomes an issue, it's important to note that the actual carousel filtering is already
-            // implemented in a way it will only run when at song select.
-            //
-            // The overhead we are avoiding here is that of this method directly – things like Items.IndexOf calls
-            // that can be slow for very large beatmap libraries. There are definitely ways to optimise this further.
-
-            // TODO: moving management of BeatmapInfo tracking to BeatmapStore might be something we want to consider.
-            // right now we are managing this locally which is a bit of added overhead.
-            IEnumerable<BeatmapSetInfo>? newItems = changed.NewItems?.Cast<BeatmapSetInfo>();
-            IEnumerable<BeatmapSetInfo>? oldItems = changed.OldItems?.Cast<BeatmapSetInfo>();
-
-            switch (changed.Action)
+        private void beatmapSetsChanged(
+            object? beatmaps,
+            NotifyCollectionChangedEventArgs changed
+        ) =>
+            Schedule(() =>
             {
-                case NotifyCollectionChangedAction.Add:
-                    Items.AddRange(newItems!.SelectMany(s => s.Beatmaps));
-                    break;
+                // This callback is scheduled to ensure there's no added overhead during gameplay.
+                // If this ever becomes an issue, it's important to note that the actual carousel filtering is already
+                // implemented in a way it will only run when at song select.
+                //
+                // The overhead we are avoiding here is that of this method directly – things like Items.IndexOf calls
+                // that can be slow for very large beatmap libraries. There are definitely ways to optimise this further.
 
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (var set in oldItems!)
-                    {
-                        foreach (var beatmap in set.Beatmaps)
-                            Items.RemoveAll(i => i is BeatmapInfo bi && beatmap.Equals(bi));
-                    }
+                // TODO: moving management of BeatmapInfo tracking to BeatmapStore might be something we want to consider.
+                // right now we are managing this locally which is a bit of added overhead.
+                IEnumerable<BeatmapSetInfo>? newItems = changed.NewItems?.Cast<BeatmapSetInfo>();
+                IEnumerable<BeatmapSetInfo>? oldItems = changed.OldItems?.Cast<BeatmapSetInfo>();
 
-                    break;
+                switch (changed.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        Items.AddRange(newItems!.SelectMany(s => s.Beatmaps));
+                        break;
 
-                case NotifyCollectionChangedAction.Move:
-                    // We can ignore move operations as we are applying our own sort in all cases.
-                    break;
-
-                case NotifyCollectionChangedAction.Replace:
-                    var oldSetBeatmaps = oldItems!.Single().Beatmaps;
-                    var newSetBeatmaps = newItems!.Single().Beatmaps.ToList();
-
-                    // Handling replace operations is a touch manual, as we need to locally diff the beatmaps of each version of the beatmap set.
-                    // Matching is done based on online IDs, then difficulty names as these are the most stable thing between updates (which are usually triggered
-                    // by users editing the beatmap or by difficulty/metadata recomputation).
-                    //
-                    // In the case of difficulty reprocessing, this will trigger multiple times per beatmap as it's always triggering a set update.
-                    // We may want to look to improve this in the future either here or at the source (only trigger an update after all difficulties
-                    // have been processed) if it becomes an issue for animation or performance reasons.
-                    foreach (var beatmap in oldSetBeatmaps)
-                    {
-                        int previousIndex = Items.IndexOf(beatmap);
-                        Debug.Assert(previousIndex >= 0);
-
-                        BeatmapInfo? matchingNewBeatmap =
-                            newSetBeatmaps.SingleOrDefault(b => b.OnlineID > 0 && b.OnlineID == beatmap.OnlineID) ??
-                            newSetBeatmaps.SingleOrDefault(b => b.DifficultyName == beatmap.DifficultyName && b.Ruleset.Equals(beatmap.Ruleset));
-
-                        if (matchingNewBeatmap != null)
+                    case NotifyCollectionChangedAction.Remove:
+                        foreach (var set in oldItems!)
                         {
-                            // TODO: should this exist in song select instead of here?
-                            // we need to ensure the global beatmap is also updated alongside changes.
-                            if (CurrentSelection != null && CheckModelEquality(beatmap, CurrentSelection))
-                                RequestSelection(matchingNewBeatmap);
-
-                            Items.ReplaceRange(previousIndex, 1, [matchingNewBeatmap]);
-                            newSetBeatmaps.Remove(matchingNewBeatmap);
+                            foreach (var beatmap in set.Beatmaps)
+                                Items.RemoveAll(i => i is BeatmapInfo bi && beatmap.Equals(bi));
                         }
-                        else
+
+                        break;
+
+                    case NotifyCollectionChangedAction.Move:
+                        // We can ignore move operations as we are applying our own sort in all cases.
+                        break;
+
+                    case NotifyCollectionChangedAction.Replace:
+                        var oldSetBeatmaps = oldItems!.Single().Beatmaps;
+                        var newSetBeatmaps = newItems!.Single().Beatmaps.ToList();
+
+                        // Handling replace operations is a touch manual, as we need to locally diff the beatmaps of each version of the beatmap set.
+                        // Matching is done based on online IDs, then difficulty names as these are the most stable thing between updates (which are usually triggered
+                        // by users editing the beatmap or by difficulty/metadata recomputation).
+                        //
+                        // In the case of difficulty reprocessing, this will trigger multiple times per beatmap as it's always triggering a set update.
+                        // We may want to look to improve this in the future either here or at the source (only trigger an update after all difficulties
+                        // have been processed) if it becomes an issue for animation or performance reasons.
+                        foreach (var beatmap in oldSetBeatmaps)
                         {
-                            Items.RemoveAt(previousIndex);
+                            int previousIndex = Items.IndexOf(beatmap);
+                            Debug.Assert(previousIndex >= 0);
+
+                            BeatmapInfo? matchingNewBeatmap =
+                                newSetBeatmaps.SingleOrDefault(b =>
+                                    b.OnlineID > 0 && b.OnlineID == beatmap.OnlineID
+                                )
+                                ?? newSetBeatmaps.SingleOrDefault(b =>
+                                    b.DifficultyName == beatmap.DifficultyName
+                                    && b.Ruleset.Equals(beatmap.Ruleset)
+                                );
+
+                            if (matchingNewBeatmap != null)
+                            {
+                                // TODO: should this exist in song select instead of here?
+                                // we need to ensure the global beatmap is also updated alongside changes.
+                                if (
+                                    CurrentSelection != null
+                                    && CheckModelEquality(beatmap, CurrentSelection)
+                                )
+                                    RequestSelection(matchingNewBeatmap);
+
+                                Items.ReplaceRange(previousIndex, 1, [matchingNewBeatmap]);
+                                newSetBeatmaps.Remove(matchingNewBeatmap);
+                            }
+                            else
+                            {
+                                Items.RemoveAt(previousIndex);
+                            }
                         }
-                    }
 
-                    // Add any items which weren't found in the previous pass (difficulty names didn't match).
-                    foreach (var beatmap in newSetBeatmaps)
-                        Items.Add(beatmap);
+                        // Add any items which weren't found in the previous pass (difficulty names didn't match).
+                        foreach (var beatmap in newSetBeatmaps)
+                            Items.Add(beatmap);
 
-                    break;
+                        break;
 
-                case NotifyCollectionChangedAction.Reset:
-                    Items.Clear();
-                    break;
-            }
-        });
+                    case NotifyCollectionChangedAction.Reset:
+                        Items.Clear();
+                        break;
+                }
+            });
 
         #endregion
 
@@ -232,7 +259,10 @@ namespace osu.Game.Screens.SelectV2
                         setExpandedGroup(group);
 
                         // If the active selection is within this group, it should get keyboard focus immediately.
-                        if (CurrentSelectionItem?.IsVisible == true && CurrentSelection is BeatmapInfo info)
+                        if (
+                            CurrentSelectionItem?.IsVisible == true
+                            && CurrentSelection is BeatmapInfo info
+                        )
                             RequestSelection(info);
 
                         return;
@@ -242,7 +272,10 @@ namespace osu.Game.Screens.SelectV2
                         return;
 
                     case BeatmapInfo beatmapInfo:
-                        if (CurrentSelection != null && CheckModelEquality(CurrentSelection, beatmapInfo))
+                        if (
+                            CurrentSelection != null
+                            && CheckModelEquality(CurrentSelection, beatmapInfo)
+                        )
                         {
                             RequestPresentBeatmap?.Invoke(beatmapInfo);
                             return;
@@ -270,7 +303,11 @@ namespace osu.Game.Screens.SelectV2
 
                 case BeatmapInfo beatmapInfo:
                     // Find any containing group. There should never be too many groups so iterating is efficient enough.
-                    GroupDefinition? containingGroup = grouping.GroupItems.SingleOrDefault(kvp => kvp.Value.Any(i => CheckModelEquality(i.Model, beatmapInfo))).Key;
+                    GroupDefinition? containingGroup = grouping
+                        .GroupItems.SingleOrDefault(kvp =>
+                            kvp.Value.Any(i => CheckModelEquality(i.Model, beatmapInfo))
+                        )
+                        .Key;
 
                     setExpandedGroup(containingGroup);
 
@@ -295,7 +332,10 @@ namespace osu.Game.Screens.SelectV2
 
             // If a group was selected that is not the one containing the selection, attempt to reselect it.
             // If the original group was not found, ExpandedGroup will already have been updated to a valid value in `HandleItemSelected` above.
-            if (groupForReselection != null && grouping.GroupItems.TryGetValue(groupForReselection, out _))
+            if (
+                groupForReselection != null
+                && grouping.GroupItems.TryGetValue(groupForReselection, out _)
+            )
                 setExpandedGroup(groupForReselection);
         }
 
@@ -316,7 +356,8 @@ namespace osu.Game.Screens.SelectV2
         {
             var items = GetCarouselItems();
 
-            if (items == null || items.Count == 0) return;
+            if (items == null || items.Count == 0)
+                return;
 
             BeatmapSetInfo? beatmapSetInfo = null;
 
@@ -344,7 +385,8 @@ namespace osu.Game.Screens.SelectV2
             RequestRecommendedSelection(beatmaps);
         }
 
-        protected override bool CheckValidForGroupSelection(CarouselItem item) => item.Model is GroupDefinition;
+        protected override bool CheckValidForGroupSelection(CarouselItem item) =>
+            item.Model is GroupDefinition;
 
         protected override bool CheckValidForSetSelection(CarouselItem item)
         {
@@ -508,12 +550,19 @@ namespace osu.Game.Screens.SelectV2
         {
             base.Update();
 
-            selectionFocusOffset = (float)Interpolation.DampContinuously(selectionFocusOffset, VisuallyFocusSelected ? 300 : 0, 100, Time.Elapsed);
+            selectionFocusOffset = (float)
+                Interpolation.DampContinuously(
+                    selectionFocusOffset,
+                    VisuallyFocusSelected ? 300 : 0,
+                    100,
+                    Time.Elapsed
+                );
         }
 
         protected override float GetPanelXOffset(Drawable panel)
         {
-            return base.GetPanelXOffset(panel) + (((ICarouselPanel)panel).Selected.Value ? 0 : selectionFocusOffset);
+            return base.GetPanelXOffset(panel)
+                + (((ICarouselPanel)panel).Selected.Value ? 0 : selectionFocusOffset);
         }
 
         #endregion
@@ -526,30 +575,40 @@ namespace osu.Game.Screens.SelectV2
 
         public void Filter(FilterCriteria criteria, bool showLoadingImmediately = false)
         {
-            bool resetDisplay = grouping.BeatmapSetsGroupedTogether != BeatmapCarouselFilterGrouping.ShouldGroupBeatmapsTogether(criteria);
+            bool resetDisplay =
+                grouping.BeatmapSetsGroupedTogether
+                != BeatmapCarouselFilterGrouping.ShouldGroupBeatmapsTogether(criteria);
 
             Criteria = criteria;
 
-            loadingDebounce ??= Scheduler.AddDelayed(() =>
-            {
-                if (loading.State.Value == Visibility.Visible)
-                    return;
+            loadingDebounce ??= Scheduler.AddDelayed(
+                () =>
+                {
+                    if (loading.State.Value == Visibility.Visible)
+                        return;
 
-                Scroll.FadeColour(OsuColour.Gray(0.5f), 1000, Easing.OutQuint);
-                loading.Show();
-            }, showLoadingImmediately ? 0 : 250);
+                    Scroll.FadeColour(OsuColour.Gray(0.5f), 1000, Easing.OutQuint);
+                    loading.Show();
+                },
+                showLoadingImmediately ? 0 : 250
+            );
 
-            FilterAsync(resetDisplay).ContinueWith(_ => Schedule(() =>
-            {
-                loadingDebounce?.Cancel();
-                loadingDebounce = null;
+            FilterAsync(resetDisplay)
+                .ContinueWith(_ =>
+                    Schedule(() =>
+                    {
+                        loadingDebounce?.Cancel();
+                        loadingDebounce = null;
 
-                Scroll.FadeColour(OsuColour.Gray(1f), 500, Easing.OutQuint);
-                loading.Hide();
-            }));
+                        Scroll.FadeColour(OsuColour.Gray(1f), 500, Easing.OutQuint);
+                        loading.Hide();
+                    })
+                );
         }
 
-        protected override Task<IEnumerable<CarouselItem>> FilterAsync(bool clearExistingPanels = false)
+        protected override Task<IEnumerable<CarouselItem>> FilterAsync(
+            bool clearExistingPanels = false
+        )
         {
             if (Criteria == null)
                 return Task.FromResult(Enumerable.Empty<CarouselItem>());
@@ -561,11 +620,17 @@ namespace osu.Game.Screens.SelectV2
 
         #region Drawable pooling
 
-        private readonly DrawablePool<PanelBeatmap> beatmapPanelPool = new DrawablePool<PanelBeatmap>(100);
-        private readonly DrawablePool<PanelBeatmapStandalone> standalonePanelPool = new DrawablePool<PanelBeatmapStandalone>(100);
-        private readonly DrawablePool<PanelBeatmapSet> setPanelPool = new DrawablePool<PanelBeatmapSet>(100);
-        private readonly DrawablePool<PanelGroup> groupPanelPool = new DrawablePool<PanelGroup>(100);
-        private readonly DrawablePool<PanelGroupStarDifficulty> starsGroupPanelPool = new DrawablePool<PanelGroupStarDifficulty>(11);
+        private readonly DrawablePool<PanelBeatmap> beatmapPanelPool =
+            new DrawablePool<PanelBeatmap>(100);
+        private readonly DrawablePool<PanelBeatmapStandalone> standalonePanelPool =
+            new DrawablePool<PanelBeatmapStandalone>(100);
+        private readonly DrawablePool<PanelBeatmapSet> setPanelPool =
+            new DrawablePool<PanelBeatmapSet>(100);
+        private readonly DrawablePool<PanelGroup> groupPanelPool = new DrawablePool<PanelGroup>(
+            100
+        );
+        private readonly DrawablePool<PanelGroupStarDifficulty> starsGroupPanelPool =
+            new DrawablePool<PanelGroupStarDifficulty>(11);
 
         private void setupPools()
         {
@@ -594,7 +659,10 @@ namespace osu.Game.Screens.SelectV2
             if (x is GroupDefinition groupX && y is GroupDefinition groupY)
                 return groupX.Equals(groupY);
 
-            if (x is StarDifficultyGroupDefinition starX && y is StarDifficultyGroupDefinition starY)
+            if (
+                x is StarDifficultyGroupDefinition starX
+                && y is StarDifficultyGroupDefinition starY
+            )
                 return starX.Equals(starY);
 
             return base.CheckModelEquality(x, y);
@@ -627,8 +695,10 @@ namespace osu.Game.Screens.SelectV2
 
         #region Random selection handling
 
-        private readonly Bindable<RandomSelectAlgorithm> randomAlgorithm = new Bindable<RandomSelectAlgorithm>();
-        private readonly List<BeatmapInfo> previouslyVisitedRandomBeatmaps = new List<BeatmapInfo>();
+        private readonly Bindable<RandomSelectAlgorithm> randomAlgorithm =
+            new Bindable<RandomSelectAlgorithm>();
+        private readonly List<BeatmapInfo> previouslyVisitedRandomBeatmaps =
+            new List<BeatmapInfo>();
         private readonly List<BeatmapInfo> randomHistory = new List<BeatmapInfo>();
 
         private Sample? spinSample;
@@ -670,7 +740,10 @@ namespace osu.Game.Screens.SelectV2
             Scheduler.Add(() =>
             {
                 if (selectionBefore != null && CurrentSelectionItem != null)
-                    playSpinSample(distanceBetween(selectionBefore, CurrentSelectionItem), carouselItems.Count);
+                    playSpinSample(
+                        distanceBetween(selectionBefore, CurrentSelectionItem),
+                        carouselItems.Count
+                    );
             });
 
             return true;
@@ -678,14 +751,19 @@ namespace osu.Game.Screens.SelectV2
 
         private bool nextRandomBeatmap()
         {
-            ICollection<BeatmapInfo> visibleBeatmaps = ExpandedGroup != null
-                // In the case of grouping, users expect random to only operate on the expanded group.
-                // This is going to incur some overhead as we don't have a group-beatmapset mapping currently.
-                //
-                // If this becomes an issue, we could either store a mapping, or run the random algorithm many times
-                // using the `SetItems` method until we get a group HIT.
-                ? grouping.GroupItems[ExpandedGroup].Select(i => i.Model).OfType<BeatmapInfo>().ToArray()
-                : GetCarouselItems()!.Select(i => i.Model).OfType<BeatmapInfo>().ToArray();
+            ICollection<BeatmapInfo> visibleBeatmaps =
+                ExpandedGroup != null
+                    // In the case of grouping, users expect random to only operate on the expanded group.
+                    // This is going to incur some overhead as we don't have a group-beatmapset mapping currently.
+                    //
+                    // If this becomes an issue, we could either store a mapping, or run the random algorithm many times
+                    // using the `SetItems` method until we get a group HIT.
+                    ? grouping
+                        .GroupItems[ExpandedGroup]
+                        .Select(i => i.Model)
+                        .OfType<BeatmapInfo>()
+                        .ToArray()
+                    : GetCarouselItems()!.Select(i => i.Model).OfType<BeatmapInfo>().ToArray();
 
             BeatmapInfo beatmap;
 
@@ -693,20 +771,26 @@ namespace osu.Game.Screens.SelectV2
             {
                 case RandomSelectAlgorithm.RandomPermutation:
                 {
-                    ICollection<BeatmapInfo> notYetVisitedBeatmaps = visibleBeatmaps.Except(previouslyVisitedRandomBeatmaps).ToList();
+                    ICollection<BeatmapInfo> notYetVisitedBeatmaps = visibleBeatmaps
+                        .Except(previouslyVisitedRandomBeatmaps)
+                        .ToList();
 
                     if (!notYetVisitedBeatmaps.Any())
                     {
                         previouslyVisitedRandomBeatmaps.RemoveAll(b => visibleBeatmaps.Contains(b));
                         notYetVisitedBeatmaps = visibleBeatmaps;
                         if (CurrentSelection is BeatmapInfo beatmapInfo)
-                            notYetVisitedBeatmaps = notYetVisitedBeatmaps.Except([beatmapInfo]).ToList();
+                            notYetVisitedBeatmaps = notYetVisitedBeatmaps
+                                .Except([beatmapInfo])
+                                .ToList();
                     }
 
                     if (notYetVisitedBeatmaps.Count == 0)
                         return false;
 
-                    beatmap = notYetVisitedBeatmaps.ElementAt(RNG.Next(notYetVisitedBeatmaps.Count));
+                    beatmap = notYetVisitedBeatmaps.ElementAt(
+                        RNG.Next(notYetVisitedBeatmaps.Count)
+                    );
                     break;
                 }
 
@@ -724,15 +808,20 @@ namespace osu.Game.Screens.SelectV2
 
         private bool nextRandomSet()
         {
-            ICollection<BeatmapSetInfo> visibleSets = ExpandedGroup != null
-                // In the case of grouping, users expect random to only operate on the expanded group.
-                // This is going to incur some overhead as we don't have a group-beatmapset mapping currently.
-                //
-                // If this becomes an issue, we could either store a mapping, or run the random algorithm many times
-                // using the `SetItems` method until we get a group HIT.
-                ? grouping.GroupItems[ExpandedGroup].Select(i => i.Model).OfType<BeatmapSetInfo>().ToArray()
-                // This is the fastest way to retrieve sets for randomisation.
-                : grouping.SetItems.Keys;
+            ICollection<BeatmapSetInfo> visibleSets =
+                ExpandedGroup != null
+                    // In the case of grouping, users expect random to only operate on the expanded group.
+                    // This is going to incur some overhead as we don't have a group-beatmapset mapping currently.
+                    //
+                    // If this becomes an issue, we could either store a mapping, or run the random algorithm many times
+                    // using the `SetItems` method until we get a group HIT.
+                    ? grouping
+                        .GroupItems[ExpandedGroup]
+                        .Select(i => i.Model)
+                        .OfType<BeatmapSetInfo>()
+                        .ToArray()
+                    // This is the fastest way to retrieve sets for randomisation.
+                    : grouping.SetItems.Keys;
 
             BeatmapSetInfo set;
 
@@ -740,14 +829,20 @@ namespace osu.Game.Screens.SelectV2
             {
                 case RandomSelectAlgorithm.RandomPermutation:
                 {
-                    ICollection<BeatmapSetInfo> notYetVisitedSets = visibleSets.Except(previouslyVisitedRandomBeatmaps.Select(b => b.BeatmapSet!)).ToList();
+                    ICollection<BeatmapSetInfo> notYetVisitedSets = visibleSets
+                        .Except(previouslyVisitedRandomBeatmaps.Select(b => b.BeatmapSet!))
+                        .ToList();
 
                     if (!notYetVisitedSets.Any())
                     {
-                        previouslyVisitedRandomBeatmaps.RemoveAll(b => visibleSets.Contains(b.BeatmapSet!));
+                        previouslyVisitedRandomBeatmaps.RemoveAll(b =>
+                            visibleSets.Contains(b.BeatmapSet!)
+                        );
                         notYetVisitedSets = visibleSets;
                         if (CurrentSelection is BeatmapInfo beatmapInfo)
-                            notYetVisitedSets = notYetVisitedSets.Except([beatmapInfo.BeatmapSet!]).ToList();
+                            notYetVisitedSets = notYetVisitedSets
+                                .Except([beatmapInfo.BeatmapSet!])
+                                .ToList();
                     }
 
                     if (notYetVisitedSets.Count == 0)
@@ -781,7 +876,9 @@ namespace osu.Game.Screens.SelectV2
                 var previousBeatmap = randomHistory[^1];
                 randomHistory.RemoveAt(randomHistory.Count - 1);
 
-                var previousBeatmapItem = carouselItems.FirstOrDefault(i => i.Model is BeatmapInfo b && b.Equals(previousBeatmap));
+                var previousBeatmapItem = carouselItems.FirstOrDefault(i =>
+                    i.Model is BeatmapInfo b && b.Equals(previousBeatmap)
+                );
 
                 if (previousBeatmapItem == null)
                     return;
@@ -794,7 +891,10 @@ namespace osu.Game.Screens.SelectV2
                     if (CurrentSelectionItem == null)
                         playSpinSample(0, carouselItems.Count);
                     else
-                        playSpinSample(distanceBetween(previousBeatmapItem, CurrentSelectionItem), carouselItems.Count);
+                        playSpinSample(
+                            distanceBetween(previousBeatmapItem, CurrentSelectionItem),
+                            carouselItems.Count
+                        );
                 }
 
                 RequestSelection(previousBeatmap);
@@ -802,7 +902,10 @@ namespace osu.Game.Screens.SelectV2
             }
         }
 
-        private double distanceBetween(CarouselItem item1, CarouselItem item2) => Math.Ceiling(Math.Abs(item1.CarouselYPosition - item2.CarouselYPosition) / PanelBeatmapSet.HEIGHT);
+        private double distanceBetween(CarouselItem item1, CarouselItem item2) =>
+            Math.Ceiling(
+                Math.Abs(item1.CarouselYPosition - item2.CarouselYPosition) / PanelBeatmapSet.HEIGHT
+            );
 
         private void playSpinSample(double distance, int count)
         {
@@ -830,5 +933,6 @@ namespace osu.Game.Screens.SelectV2
     /// <summary>
     /// Defines a grouping header for a set of carousel items grouped by star difficulty.
     /// </summary>
-    public record StarDifficultyGroupDefinition(int Order, string Title, StarDifficulty Difficulty) : GroupDefinition(Order, Title);
+    public record StarDifficultyGroupDefinition(int Order, string Title, StarDifficulty Difficulty)
+        : GroupDefinition(Order, Title);
 }

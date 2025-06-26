@@ -31,14 +31,10 @@ namespace osu.Game.Tests.Visual.UserInterface
                 {
                     fired = true;
                     firedText.FadeTo(1).Then().FadeOut(1000);
-                }
+                },
             };
 
-            Children = new Drawable[]
-            {
-                overlay,
-                firedText
-            };
+            Children = new Drawable[] { overlay, firedText };
 
             AddStep("start confirming", () => overlay.Begin());
             AddStep("abort confirming", () => overlay.Abort());

@@ -18,29 +18,39 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             LogoAnimation anim2;
 
-            Add(anim2 = new LogoAnimation
-            {
-                RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fit,
-                Texture = textures.Get("Intro/Triangles/logo-highlight"),
-                Colour = Colour4.White,
-            });
+            Add(
+                anim2 = new LogoAnimation
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Fit,
+                    Texture = textures.Get("Intro/Triangles/logo-highlight"),
+                    Colour = Colour4.White,
+                }
+            );
 
             LogoAnimation anim;
 
-            Add(anim = new LogoAnimation
-            {
-                RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fit,
-                Texture = textures.Get("Intro/Triangles/logo-background"),
-                Colour = OsuColour.Gray(0.6f),
-            });
+            Add(
+                anim = new LogoAnimation
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Fit,
+                    Texture = textures.Get("Intro/Triangles/logo-background"),
+                    Colour = OsuColour.Gray(0.6f),
+                }
+            );
 
-            AddSliderStep("Progress", 0f, 1f, 0f, newValue =>
-            {
-                anim2.AnimationProgress = newValue;
-                anim.AnimationProgress = newValue;
-            });
+            AddSliderStep(
+                "Progress",
+                0f,
+                1f,
+                0f,
+                newValue =>
+                {
+                    anim2.AnimationProgress = newValue;
+                    anim.AnimationProgress = newValue;
+                }
+            );
         }
     }
 }

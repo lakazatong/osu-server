@@ -51,14 +51,42 @@ namespace osu.Game.Overlays.Profile.Header.Components
                         Spacing = new Vector2(0, vertical_spacing),
                         Children = new Drawable[]
                         {
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsRankedScore },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsHitAccuracy },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsPlayCount },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsTotalScore },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsTotalHits },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsMaximumCombo },
-                            new OsuSpriteText { Font = font, Text = UsersStrings.ShowStatsReplaysWatchedByOthers },
-                        }
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsRankedScore,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsHitAccuracy,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsPlayCount,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsTotalScore,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsTotalHits,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsMaximumCombo,
+                            },
+                            new OsuSpriteText
+                            {
+                                Font = font,
+                                Text = UsersStrings.ShowStatsReplaysWatchedByOthers,
+                            },
+                        },
                     },
                     new FillFlowContainer
                     {
@@ -75,9 +103,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                             totalHits = new OsuSpriteText { Font = font },
                             maximumCombo = new OsuSpriteText { Font = font },
                             replaysWatched = new OsuSpriteText { Font = font },
-                        }
+                        },
                     },
-                }
+                },
             };
         }
 

@@ -54,7 +54,9 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         private IBindable<StarDifficulty> starDifficulty = null!;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         [Cached(typeof(OnlinePlayBeatmapAvailabilityTracker))]
         private readonly DailyChallengeBeatmapAvailabilityTracker beatmapAvailabilityTracker;
@@ -95,10 +97,17 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             beatmapAvailabilityTracker = new DailyChallengeBeatmapAvailabilityTracker(item);
         }
 
-        protected override BackgroundScreen CreateBackground() => new DailyChallengeIntroBackgroundScreen(colourProvider);
+        protected override BackgroundScreen CreateBackground() =>
+            new DailyChallengeIntroBackgroundScreen(colourProvider);
 
         [BackgroundDependencyLoader]
-        private void load(RulesetStore rulesets, BeatmapDifficultyCache difficultyCache, BeatmapModelDownloader beatmapDownloader, OsuConfigManager config, AudioManager audio)
+        private void load(
+            RulesetStore rulesets,
+            BeatmapDifficultyCache difficultyCache,
+            BeatmapModelDownloader beatmapDownloader,
+            OsuConfigManager config,
+            AudioManager audio
+        )
         {
             const float horizontal_info_size = 500f;
 
@@ -146,11 +155,19 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                             Anchor = Anchor.Centre,
                                             Origin = Anchor.Centre,
                                             Text = "Today's Challenge",
-                                            Margin = new MarginPadding { Horizontal = 10f, Vertical = 5f },
+                                            Margin = new MarginPadding
+                                            {
+                                                Horizontal = 10f,
+                                                Vertical = 5f,
+                                            },
                                             Shear = -OsuGame.SHEAR,
-                                            Font = OsuFont.GetFont(size: 32, weight: FontWeight.Light, typeface: Typeface.TorusAlternate),
+                                            Font = OsuFont.GetFont(
+                                                size: 32,
+                                                weight: FontWeight.Light,
+                                                typeface: Typeface.TorusAlternate
+                                            ),
                                         },
-                                    }
+                                    },
                                 },
                                 bottomDateDisplay = new Container
                                 {
@@ -171,14 +188,24 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                         {
                                             Anchor = Anchor.Centre,
                                             Origin = Anchor.Centre,
-                                            Text = room.Name.Split(':', StringSplitOptions.TrimEntries).Last(),
-                                            Margin = new MarginPadding { Horizontal = 10f, Vertical = 5f },
+                                            Text = room
+                                                .Name.Split(':', StringSplitOptions.TrimEntries)
+                                                .Last(),
+                                            Margin = new MarginPadding
+                                            {
+                                                Horizontal = 10f,
+                                                Vertical = 5f,
+                                            },
                                             Shear = -OsuGame.SHEAR,
-                                            Font = OsuFont.GetFont(size: 32, weight: FontWeight.Light, typeface: Typeface.TorusAlternate),
+                                            Font = OsuFont.GetFont(
+                                                size: 32,
+                                                weight: FontWeight.Light,
+                                                typeface: Typeface.TorusAlternate
+                                            ),
                                         },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
                         beatmapContent = new FillFlowContainer
                         {
@@ -214,8 +241,8 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                             Blending = BlendingParameters.Additive,
                                             RelativeSizeAxes = Axes.Both,
                                             Depth = float.MinValue,
-                                        }
-                                    }
+                                        },
+                                    },
                                 },
                                 new Container
                                 {
@@ -248,7 +275,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                     Origin = Anchor.TopCentre,
                                                     Shear = -OsuGame.SHEAR,
                                                     MaxWidth = horizontal_info_size,
-                                                    Text = beatmap.BeatmapSet!.Metadata.GetDisplayTitleRomanisable(false),
+                                                    Text =
+                                                        beatmap.BeatmapSet!.Metadata.GetDisplayTitleRomanisable(
+                                                            false
+                                                        ),
                                                     Padding = new MarginPadding { Horizontal = 5f },
                                                     Font = OsuFont.GetFont(size: 26),
                                                 },
@@ -276,10 +306,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                     Margin = new MarginPadding(5),
                                                     Anchor = Anchor.TopCentre,
                                                     Origin = Anchor.TopCentre,
-                                                }
-                                            }
+                                                },
+                                            },
                                         },
-                                    }
+                                    },
                                 },
                                 new Container
                                 {
@@ -304,40 +334,55 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                             Shear = -OsuGame.SHEAR,
                                             Current =
                                             {
-                                                Value = item.RequiredMods.Select(m => m.ToMod(ruleset)).ToArray()
+                                                Value = item
+                                                    .RequiredMods.Select(m => m.ToMod(ruleset))
+                                                    .ToArray(),
                                             },
-                                        }
-                                    }
-                                }
-                            }
+                                        },
+                                    },
+                                },
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
 
             starDifficulty = difficultyCache.GetBindableDifficulty(beatmap);
-            starDifficulty.BindValueChanged(star => starRatingDisplay.Current.Value = star.NewValue, true);
+            starDifficulty.BindValueChanged(
+                star => starRatingDisplay.Current.Value = star.NewValue,
+                true
+            );
 
-            LoadComponentAsync(new OnlineBeatmapSetCover(beatmap.BeatmapSet as IBeatmapSetOnlineInfo)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                FillMode = FillMode.Fit,
-                Scale = new Vector2(1.2f),
-                Shear = -OsuGame.SHEAR,
-            }, c =>
-            {
-                beatmapBackground.Add(c);
+            LoadComponentAsync(
+                new OnlineBeatmapSetCover(beatmap.BeatmapSet as IBeatmapSetOnlineInfo)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fit,
+                    Scale = new Vector2(1.2f),
+                    Shear = -OsuGame.SHEAR,
+                },
+                c =>
+                {
+                    beatmapBackground.Add(c);
 
-                beatmapBackgroundLoaded = true;
-                updateAnimationState();
-            });
+                    beatmapBackgroundLoaded = true;
+                    updateAnimationState();
+                }
+            );
 
             if (config.Get<bool>(OsuSetting.AutomaticallyDownloadMissingBeatmaps))
             {
-                if (!beatmapManager.IsAvailableLocally(new BeatmapSetInfo { OnlineID = beatmap.BeatmapSet!.OnlineID }))
-                    beatmapDownloader.Download(beatmap.BeatmapSet!, config.Get<bool>(OsuSetting.PreferNoVideo));
+                if (
+                    !beatmapManager.IsAvailableLocally(
+                        new BeatmapSetInfo { OnlineID = beatmap.BeatmapSet!.OnlineID }
+                    )
+                )
+                    beatmapDownloader.Download(
+                        beatmap.BeatmapSet!,
+                        config.Get<bool>(OsuSetting.PreferNoVideo)
+                    );
             }
 
             dateWindupSample = audio.Samples.Get(@"DailyChallenge/date-windup");
@@ -350,11 +395,23 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         {
             base.OnEntering(e);
 
-            beatmapAvailabilityTracker.Availability.BindValueChanged(availability =>
-            {
-                if (shouldBePlayingMusic && availability.NewValue.State == DownloadState.LocallyAvailable)
-                    DailyChallenge.TrySetDailyChallengeBeatmap(this, beatmapManager, rulesets, musicController, item);
-            }, true);
+            beatmapAvailabilityTracker.Availability.BindValueChanged(
+                availability =>
+                {
+                    if (
+                        shouldBePlayingMusic
+                        && availability.NewValue.State == DownloadState.LocallyAvailable
+                    )
+                        DailyChallenge.TrySetDailyChallengeBeatmap(
+                            this,
+                            beatmapManager,
+                            rulesets,
+                            musicController,
+                            item
+                        );
+                },
+                true
+            );
 
             this.FadeInFromZero(400, Easing.OutQuint);
             updateAnimationState();
@@ -389,18 +446,19 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 const float y_offset_start = 260;
                 const float y_offset_end = 20;
 
+                topTitleDisplay.FadeInFromZero(400, Easing.OutQuint);
+
                 topTitleDisplay
-                    .FadeInFromZero(400, Easing.OutQuint);
+                    .MoveToY(-y_offset_start)
+                    .MoveToY(-y_offset_end, 300, Easing.OutQuint)
+                    .Then()
+                    .MoveToY(0, 4000);
 
-                topTitleDisplay.MoveToY(-y_offset_start)
-                               .MoveToY(-y_offset_end, 300, Easing.OutQuint)
-                               .Then()
-                               .MoveToY(0, 4000);
-
-                bottomDateDisplay.MoveToY(y_offset_start)
-                                 .MoveToY(y_offset_end, 300, Easing.OutQuint)
-                                 .Then()
-                                 .MoveToY(0, 4000);
+                bottomDateDisplay
+                    .MoveToY(y_offset_start)
+                    .MoveToY(y_offset_end, 300, Easing.OutQuint)
+                    .Then()
+                    .MoveToY(0, 4000);
 
                 using (BeginDelayedSequence(150))
                 {
@@ -410,10 +468,9 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                         playBeatmapWindupSample();
 
                         duckOperation?.Dispose();
-                        duckOperation = musicController.Duck(new DuckParameters
-                        {
-                            RestoreDuration = 1500f,
-                        });
+                        duckOperation = musicController.Duck(
+                            new DuckParameters { RestoreDuration = 1500f }
+                        );
                     });
 
                     using (BeginDelayedSequence(2750))
@@ -435,9 +492,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 
                     using (BeginDelayedSequence(100))
                     {
-                        titleContainer
-                            .ScaleTo(0.4f, 400, Easing.In)
-                            .FadeOut(500, Easing.OutQuint);
+                        titleContainer.ScaleTo(0.4f, 400, Easing.In).FadeOut(500, Easing.OutQuint);
                     }
 
                     using (BeginDelayedSequence(240))
@@ -449,8 +504,16 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                             Schedule(() =>
                             {
                                 shouldBePlayingMusic = true;
-                                DailyChallenge.TrySetDailyChallengeBeatmap(this, beatmapManager, rulesets, musicController, item);
-                                ApplyToBackground(bs => ((RoomBackgroundScreen)bs).SelectedItem.Value = item);
+                                DailyChallenge.TrySetDailyChallengeBeatmap(
+                                    this,
+                                    beatmapManager,
+                                    rulesets,
+                                    musicController,
+                                    item
+                                );
+                                ApplyToBackground(bs =>
+                                    ((RoomBackgroundScreen)bs).SelectedItem.Value = item
+                                );
                                 playBeatmapImpactSample();
                             });
                         }
@@ -525,12 +588,14 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             [BackgroundDependencyLoader]
             private void load()
             {
-                AddInternal(new Box
-                {
-                    Depth = float.MinValue,
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5.Opacity(0.6f),
-                });
+                AddInternal(
+                    new Box
+                    {
+                        Depth = float.MinValue,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = colourProvider.Background5.Opacity(0.6f),
+                    }
+                );
             }
         }
     }

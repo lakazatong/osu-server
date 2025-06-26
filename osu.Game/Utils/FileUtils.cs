@@ -15,7 +15,12 @@ namespace osu.Game.Utils
         /// <param name="state">The provided state.</param>
         /// <param name="attempts">The number of attempts (250ms wait between each).</param>
         /// <param name="throwOnFailure">Whether to throw an exception on failure. If <c>false</c>, will silently fail.</param>
-        public static bool AttemptOperation<T>(Action<T> action, T state, int attempts = 10, bool throwOnFailure = true)
+        public static bool AttemptOperation<T>(
+            Action<T> action,
+            T state,
+            int attempts = 10,
+            bool throwOnFailure = true
+        )
         {
             while (true)
             {
@@ -45,7 +50,11 @@ namespace osu.Game.Utils
         /// <param name="action">The action to perform.</param>
         /// <param name="attempts">The number of attempts (250ms wait between each).</param>
         /// <param name="throwOnFailure">Whether to throw an exception on failure. If <c>false</c>, will silently fail.</param>
-        public static bool AttemptOperation(Action action, int attempts = 10, bool throwOnFailure = true)
+        public static bool AttemptOperation(
+            Action action,
+            int attempts = 10,
+            bool throwOnFailure = true
+        )
         {
             while (true)
             {

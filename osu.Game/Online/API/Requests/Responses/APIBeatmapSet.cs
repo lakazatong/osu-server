@@ -145,20 +145,17 @@ namespace osu.Game.Online.API.Requests.Responses
         [JsonProperty(@"related_tags")]
         public APITag[]? RelatedTags { get; set; }
 
-        private BeatmapMetadata metadata => new BeatmapMetadata
-        {
-            Title = Title,
-            TitleUnicode = TitleUnicode,
-            Artist = Artist,
-            ArtistUnicode = ArtistUnicode,
-            Author = new RealmUser
+        private BeatmapMetadata metadata =>
+            new BeatmapMetadata
             {
-                OnlineID = Author.OnlineID,
-                Username = Author.Username
-            },
-            Source = Source,
-            Tags = Tags,
-        };
+                Title = Title,
+                TitleUnicode = TitleUnicode,
+                Artist = Artist,
+                ArtistUnicode = ArtistUnicode,
+                Author = new RealmUser { OnlineID = Author.OnlineID, Username = Author.Username },
+                Source = Source,
+                Tags = Tags,
+            };
 
         #region Implementation of IBeatmapSetInfo
 
@@ -174,7 +171,8 @@ namespace osu.Game.Online.API.Requests.Responses
 
         #endregion
 
-        public bool Equals(IBeatmapSetInfo? other) => other is APIBeatmapSet b && this.MatchesOnlineID(b);
+        public bool Equals(IBeatmapSetInfo? other) =>
+            other is APIBeatmapSet b && this.MatchesOnlineID(b);
 
         // ReSharper disable once NonReadonlyMemberInGetHashCode
         public override int GetHashCode() => OnlineID.GetHashCode();

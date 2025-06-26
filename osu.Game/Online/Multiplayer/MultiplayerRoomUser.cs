@@ -26,7 +26,8 @@ namespace osu.Game.Online.Multiplayer
         /// The availability state of the current beatmap.
         /// </summary>
         [Key(2)]
-        public BeatmapAvailability BeatmapAvailability { get; set; } = BeatmapAvailability.Unknown();
+        public BeatmapAvailability BeatmapAvailability { get; set; } =
+            BeatmapAvailability.Unknown();
 
         /// <summary>
         /// Any mods applicable only to the local user.
@@ -60,16 +61,20 @@ namespace osu.Game.Online.Multiplayer
 
         public bool Equals(MultiplayerRoomUser? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other == null) return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
 
             return UserID == other.UserID;
         }
 
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj?.GetType() != GetType()) return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj?.GetType() != GetType())
+                return false;
 
             return Equals((MultiplayerRoomUser)obj);
         }

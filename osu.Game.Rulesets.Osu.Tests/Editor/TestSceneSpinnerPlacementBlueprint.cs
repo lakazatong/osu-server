@@ -15,8 +15,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         protected sealed override Ruleset CreateRuleset() => new OsuRuleset();
 
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableSpinner((Spinner)hitObject);
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableSpinner((Spinner)hitObject);
 
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new SpinnerPlacementBlueprint();
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new SpinnerPlacementBlueprint();
     }
 }

@@ -27,14 +27,22 @@ namespace osu.Game.Overlays.Login
 
         protected partial class UserDropdownMenu : OsuDropdownMenu
         {
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new DrawableUserDropdownMenuItem(item);
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) => new DrawableUserDropdownMenuItem(item);
 
             private partial class DrawableUserDropdownMenuItem : DrawableOsuDropdownMenuItem
             {
                 public DrawableUserDropdownMenuItem(MenuItem item)
                     : base(item)
                 {
-                    Foreground.Padding = new MarginPadding { Top = 5, Bottom = 5, Left = 10, Right = 5 };
+                    Foreground.Padding = new MarginPadding
+                    {
+                        Top = 5,
+                        Bottom = 5,
+                        Left = 10,
+                        Right = 5,
+                    };
                 }
             }
         }
@@ -50,12 +58,14 @@ namespace osu.Game.Overlays.Login
 
             public UserDropdownHeader()
             {
-                Foreground.Add(statusIcon = new StatusIcon
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Size = new Vector2(14),
-                });
+                Foreground.Add(
+                    statusIcon = new StatusIcon
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Size = new Vector2(14),
+                    }
+                );
 
                 Text.Margin = new MarginPadding { Left = 20 };
             }

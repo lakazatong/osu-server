@@ -50,21 +50,24 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
         private double countdownChangeTime;
         private ScheduledDelegate? countdownUpdateDelegate;
 
-        private void onRoomUpdated() => Scheduler.AddOnce(() =>
-        {
-            MultiplayerCountdown? newCountdown = room?.ActiveCountdowns.SingleOrDefault(c => c is MatchStartCountdown);
-
-            if (newCountdown != countdown)
+        private void onRoomUpdated() =>
+            Scheduler.AddOnce(() =>
             {
-                countdown = newCountdown;
-                countdownChangeTime = Time.Current;
-            }
+                MultiplayerCountdown? newCountdown = room?.ActiveCountdowns.SingleOrDefault(c =>
+                    c is MatchStartCountdown
+                );
 
-            scheduleNextCountdownUpdate();
+                if (newCountdown != countdown)
+                {
+                    countdown = newCountdown;
+                    countdownChangeTime = Time.Current;
+                }
 
-            updateButtonText();
-            updateButtonColour();
-        });
+                scheduleNextCountdownUpdate();
+
+                updateButtonText();
+                updateButtonColour();
+            });
 
         private void scheduleNextCountdownUpdate()
         {
@@ -102,7 +105,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
 
         private void playTickSound(int secondsRemaining)
         {
-            if (secondsRemaining < 10) countdownTickSample?.Play();
+            if (secondsRemaining < 10)
+                countdownTickSample?.Play();
 
             if (secondsRemaining <= 3)
             {
@@ -205,7 +209,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
 
                 case MultiplayerUserState.Spectating:
                 case MultiplayerUserState.Ready:
-                    if (multiplayerClient.IsHost && !room.ActiveCountdowns.Any(c => c is MatchStartCountdown))
+                    if (
+                        multiplayerClient.IsHost
+                        && !room.ActiveCountdowns.Any(c => c is MatchStartCountdown)
+                    )
                         setGreen();
                     else
                         setYellow();
@@ -232,10 +239,12 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
         {
             get
             {
-                if (room?.ActiveCountdowns.Any(c => c is MatchStartCountdown) == true
+                if (
+                    room?.ActiveCountdowns.Any(c => c is MatchStartCountdown) == true
                     && multiplayerClient.IsHost
                     && multiplayerClient.LocalUser?.State == MultiplayerUserState.Ready
-                    && !room.Settings.AutoStartEnabled)
+                    && !room.Settings.AutoStartEnabled
+                )
                 {
                     return "Cancel countdown";
                 }

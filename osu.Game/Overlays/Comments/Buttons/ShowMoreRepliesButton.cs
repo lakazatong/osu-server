@@ -3,15 +3,15 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Game.Graphics;
-using osu.Game.Graphics.UserInterface;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.Sprites;
 using System.Collections.Generic;
-using osuTK;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Overlays.Comments.Buttons
 {
@@ -34,16 +34,18 @@ namespace osu.Game.Overlays.Comments.Buttons
             HoverColour = colourProvider.Light1;
         }
 
-        protected override Drawable CreateContent() => new Container
-        {
-            AutoSizeAxes = Axes.Both,
-            Child = text = new OsuSpriteText
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                AlwaysPresent = true,
-                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                Text = CommonStrings.ButtonsShowMore
-            }
-        };
+                AutoSizeAxes = Axes.Both,
+                Child = text =
+                    new OsuSpriteText
+                    {
+                        AlwaysPresent = true,
+                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                        Text = CommonStrings.ButtonsShowMore,
+                    },
+            };
 
         protected override void OnLoadStarted() => text.FadeOut(200, Easing.OutQuint);
 

@@ -15,7 +15,9 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Taiko.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneLegacyReplayPlayback : LegacyReplayPlaybackTestScene
     {
         protected override string? ExportLocation => null;
@@ -39,7 +41,6 @@ namespace osu.Game.Rulesets.Taiko.Tests
             new object[] { 5f, -79d, HitResult.Ok },
             new object[] { 5f, -80d, HitResult.Miss },
             new object[] { 5f, -81d, HitResult.Miss },
-
             // OD = 7.8 test cases.
             // GREAT hit window is (-26ms, 26ms)
             // OK    hit window is (-63ms, 63ms)
@@ -67,7 +68,6 @@ namespace osu.Game.Rulesets.Taiko.Tests
             new object[] { 5f, -67d, HitResult.Ok },
             new object[] { 5f, -68d, HitResult.Miss },
             new object[] { 5f, -69d, HitResult.Miss },
-
             // OD = 7.8 test cases.
             // This would lead to "effective" OD of 10.92,
             // but the effects are capped to OD 10.
@@ -102,7 +102,11 @@ namespace osu.Game.Rulesets.Taiko.Tests
         private const double hit_time = 100;
 
         [TestCaseSource(nameof(no_mod_test_cases))]
-        public void TestHitWindowTreatment(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatment(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -113,23 +117,30 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new TaikoReplayFrame(0),
                     new TaikoReplayFrame(hit_time + hitOffset, TaikoAction.LeftCentre),
                     new TaikoReplayFrame(hit_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
             {
                 Replay = replay,
-                ScoreInfo = new ScoreInfo
-                {
-                    Ruleset = CreateRuleset().RulesetInfo,
-                }
+                ScoreInfo = new ScoreInfo { Ruleset = CreateRuleset().RulesetInfo },
             };
 
-            RunTest($@"single hit @ OD{overallDifficulty}", beatmap, $@"{hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"single hit @ OD{overallDifficulty}",
+                beatmap,
+                $@"{hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(hard_rock_test_cases))]
-        public void TestHitWindowTreatmentWithHardRock(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithHardRock(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -140,7 +151,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new TaikoReplayFrame(0),
                     new TaikoReplayFrame(hit_time + hitOffset, TaikoAction.LeftCentre),
                     new TaikoReplayFrame(hit_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -149,15 +160,25 @@ namespace osu.Game.Rulesets.Taiko.Tests
                 ScoreInfo = new ScoreInfo
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
-                    Mods = [new TaikoModHardRock()]
-                }
+                    Mods = [new TaikoModHardRock()],
+                },
             };
 
-            RunTest($@"HR single hit @ OD{overallDifficulty}", beatmap, $@"HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"HR single hit @ OD{overallDifficulty}",
+                beatmap,
+                $@"HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(easy_test_cases))]
-        public void TestHitWindowTreatmentWithEasy(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithEasy(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createBeatmap(overallDifficulty);
 
@@ -168,7 +189,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new TaikoReplayFrame(0),
                     new TaikoReplayFrame(hit_time + hitOffset, TaikoAction.LeftCentre),
                     new TaikoReplayFrame(hit_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -177,11 +198,17 @@ namespace osu.Game.Rulesets.Taiko.Tests
                 ScoreInfo = new ScoreInfo
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
-                    Mods = [new TaikoModHardRock()]
-                }
+                    Mods = [new TaikoModHardRock()],
+                },
             };
 
-            RunTest($@"EZ single hit @ OD{overallDifficulty}", beatmap, $@"EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"EZ single hit @ OD{overallDifficulty}",
+                beatmap,
+                $@"EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         private static TaikoBeatmap createBeatmap(float overallDifficulty)
@@ -192,17 +219,10 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 HitObjects =
                 {
-                    new Hit
-                    {
-                        StartTime = hit_time,
-                        Type = HitType.Centre,
-                    }
+                    new Hit { StartTime = hit_time, Type = HitType.Centre },
                 },
                 Difficulty = new BeatmapDifficulty { OverallDifficulty = overallDifficulty },
-                BeatmapInfo =
-                {
-                    Ruleset = new TaikoRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new TaikoRuleset().RulesetInfo },
                 ControlPointInfo = cpi,
             };
             return beatmap;

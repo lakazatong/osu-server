@@ -19,7 +19,8 @@ namespace osu.Game.Screens.Edit
         public const int MINIMUM_DIVISOR = 1;
         public const int MAXIMUM_DIVISOR = 64;
 
-        public Bindable<BeatDivisorPresetCollection> ValidDivisors { get; } = new Bindable<BeatDivisorPresetCollection>(BeatDivisorPresetCollection.COMMON);
+        public Bindable<BeatDivisorPresetCollection> ValidDivisors { get; } =
+            new Bindable<BeatDivisorPresetCollection>(BeatDivisorPresetCollection.COMMON);
 
         public BindableBeatDivisor(int value = 1)
             : base(value)
@@ -71,14 +72,20 @@ namespace osu.Game.Screens.Edit
         public void SelectNext()
         {
             var presets = ValidDivisors.Value.Presets;
-            if (presets.Cast<int?>().SkipWhile(preset => preset != Value).ElementAtOrDefault(1) is int newValue)
+            if (
+                presets.Cast<int?>().SkipWhile(preset => preset != Value).ElementAtOrDefault(1)
+                is int newValue
+            )
                 Value = newValue;
         }
 
         public void SelectPrevious()
         {
             var presets = ValidDivisors.Value.Presets;
-            if (presets.Cast<int?>().TakeWhile(preset => preset != Value).LastOrDefault() is int newValue)
+            if (
+                presets.Cast<int?>().TakeWhile(preset => preset != Value).LastOrDefault()
+                is int newValue
+            )
                 Value = newValue;
         }
 
@@ -167,7 +174,11 @@ namespace osu.Game.Screens.Edit
         /// <param name="beatDivisor">The beat divisor.</param>
         /// <param name="validDivisors">The list of valid divisors which can be chosen from. Assumes ordered from low to high. Defaults to <see cref="PREDEFINED_DIVISORS"/> if omitted.</param>
         /// <returns>The applicable divisor.</returns>
-        public static int GetDivisorForBeatIndex(int index, int beatDivisor, int[] validDivisors = null)
+        public static int GetDivisorForBeatIndex(
+            int index,
+            int beatDivisor,
+            int[] validDivisors = null
+        )
         {
             validDivisors ??= PREDEFINED_DIVISORS;
 

@@ -10,8 +10,6 @@ namespace osu.Game.Online.Multiplayer
     public class InvalidPasswordException : HubException
     {
         public InvalidPasswordException()
-            : base("Invalid password")
-        {
-        }
+            : base("Invalid password") { }
     }
 }

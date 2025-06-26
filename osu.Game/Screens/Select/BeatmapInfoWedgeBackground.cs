@@ -1,15 +1,15 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables;
-using osu.Framework.Graphics.Shapes;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Select
 {
@@ -35,17 +35,16 @@ namespace osu.Game.Screens.Select
                     // We will create the white-to-black gradient by modulating transparency and having
                     // a black backdrop. This results in an sRGB-space gradient and not linear space,
                     // transitioning from white to black more perceptually uniformly.
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
                     // We use a container, such that we can set the colour gradient to go across the
                     // vertices of the masked container instead of the vertices of the (larger) sprite.
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(0.3f)),
+                        Colour = ColourInfo.GradientVertical(
+                            Color4.White,
+                            Color4.White.Opacity(0.3f)
+                        ),
                         Children = new[]
                         {
                             // Zoomed-in and cropped beatmap background
@@ -58,7 +57,7 @@ namespace osu.Game.Screens.Select
                             },
                         },
                     },
-                }
+                },
             };
         }
     }

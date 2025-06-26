@@ -3,19 +3,19 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
 using System.IO;
 using osu.Framework.Allocation;
-using osu.Game.Graphics;
-using osu.Game.Graphics.UserInterfaceV2;
-using osu.Game.Screens;
-using osuTK;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
 using osu.Framework.Screens;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Localisation;
+using osu.Game.Screens;
+using osuTK;
 
 namespace osu.Game.Overlays.Settings.Sections.Maintenance
 {
@@ -49,7 +49,9 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         protected virtual DirectoryInfo InitialPath => null;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         [BackgroundDependencyLoader]
         private void load()
@@ -64,11 +66,7 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                 Size = new Vector2(0.5f, 0.8f),
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background4,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
                     new GridContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -92,14 +90,14 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                                     Margin = new MarginPadding(10),
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                }
+                                },
                             },
                             new Drawable[]
                             {
                                 directorySelector = new OsuDirectorySelector
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                }
+                                },
                             },
                             new Drawable[]
                             {
@@ -110,12 +108,12 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                                     Width = 300,
                                     Margin = new MarginPadding(10),
                                     Text = MaintenanceSettingsStrings.SelectDirectory,
-                                    Action = () => OnSelection(directorySelector.CurrentPath.Value)
+                                    Action = () => OnSelection(directorySelector.CurrentPath.Value),
                                 },
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -124,7 +122,12 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
             if (InitialPath != null)
                 directorySelector.CurrentPath.Value = InitialPath;
 
-            directorySelector.CurrentPath.BindValueChanged(e => selectionButton.Enabled.Value = e.NewValue != null && IsValidDirectory(e.NewValue), true);
+            directorySelector.CurrentPath.BindValueChanged(
+                e =>
+                    selectionButton.Enabled.Value =
+                        e.NewValue != null && IsValidDirectory(e.NewValue),
+                true
+            );
             base.LoadComplete();
         }
 

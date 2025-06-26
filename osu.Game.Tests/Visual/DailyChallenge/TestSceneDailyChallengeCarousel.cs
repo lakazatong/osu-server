@@ -23,7 +23,9 @@ namespace osu.Game.Tests.Visual.DailyChallenge
     public partial class TestSceneDailyChallengeCarousel : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         private readonly Bindable<Room> room = new Bindable<Room>(new Room());
 
@@ -32,30 +34,46 @@ namespace osu.Game.Tests.Visual.DailyChallenge
         {
             DailyChallengeCarousel carousel = null!;
 
-            AddStep("create content", () => Children = new Drawable[]
-            {
-                new Box
+            AddStep(
+                "create content",
+                () =>
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background4,
+                        },
+                        carousel = new DailyChallengeCarousel
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    }
+            );
+            AddSliderStep(
+                "adjust width",
+                0.1f,
+                1,
+                1,
+                width =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
-                carousel = new DailyChallengeCarousel
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    if (carousel.IsNotNull())
+                        carousel.Width = width;
                 }
-            });
-            AddSliderStep("adjust width", 0.1f, 1, 1, width =>
-            {
-                if (carousel.IsNotNull())
-                    carousel.Width = width;
-            });
-            AddSliderStep("adjust height", 0.1f, 1, 1, height =>
-            {
-                if (carousel.IsNotNull())
-                    carousel.Height = height;
-            });
+            );
+            AddSliderStep(
+                "adjust height",
+                0.1f,
+                1,
+                1,
+                height =>
+                {
+                    if (carousel.IsNotNull())
+                        carousel.Height = height;
+                }
+            );
             AddRepeatStep("add content", () => carousel.Add(new FakeContent()), 3);
         }
 
@@ -66,88 +84,122 @@ namespace osu.Game.Tests.Visual.DailyChallenge
             DailyChallengeEventFeed feed = null!;
             DailyChallengeScoreBreakdown breakdown = null!;
 
-            AddStep("create content", () => Children = new Drawable[]
-            {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background4,
-                },
-                grid = new GridContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RowDimensions =
-                    [
-                        new Dimension(),
-                        new Dimension()
-                    ],
-                    Content = new[]
+            AddStep(
+                "create content",
+                () =>
+                    Children = new Drawable[]
                     {
-                        new Drawable[]
+                        new Box
                         {
-                            new DailyChallengeCarousel
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Children = new Drawable[]
-                                {
-                                    new DailyChallengeTimeRemainingRing(room.Value),
-                                    breakdown = new DailyChallengeScoreBreakdown(),
-                                }
-                            }
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background4,
                         },
-                        [
-                            feed = new DailyChallengeEventFeed
+                        grid = new GridContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RowDimensions = [new Dimension(), new Dimension()],
+                            Content = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                            }
-                        ],
+                                new Drawable[]
+                                {
+                                    new DailyChallengeCarousel
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        Children = new Drawable[]
+                                        {
+                                            new DailyChallengeTimeRemainingRing(room.Value),
+                                            breakdown = new DailyChallengeScoreBreakdown(),
+                                        },
+                                    },
+                                },
+                                [
+                                    feed = new DailyChallengeEventFeed
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                ],
+                            },
+                        },
                     }
-                },
-            });
-            AddSliderStep("adjust width", 0.1f, 1, 1, width =>
-            {
-                if (grid.IsNotNull())
-                    grid.Width = width;
-            });
-            AddSliderStep("adjust height", 0.1f, 1, 1, height =>
-            {
-                if (grid.IsNotNull())
-                    grid.Height = height;
-            });
-            AddSliderStep("update time remaining", 0f, 1f, 0f, progress =>
-            {
-                var startedTimeAgo = TimeSpan.FromHours(24) * progress;
-                room.Value.StartDate = DateTimeOffset.Now - startedTimeAgo;
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
-            });
-            AddStep("add normal score", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+            );
+            AddSliderStep(
+                "adjust width",
+                0.1f,
+                1,
+                1,
+                width =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), null);
-
-                feed.AddNewScore(ev);
-                breakdown.AddNewScore(ev);
-            });
-            AddStep("add new user best", () =>
-            {
-                var ev = new NewScoreEvent(1, new APIUser
+                    if (grid.IsNotNull())
+                        grid.Width = width;
+                }
+            );
+            AddSliderStep(
+                "adjust height",
+                0.1f,
+                1,
+                1,
+                height =>
                 {
-                    Id = 2,
-                    Username = "peppy",
-                    CoverUrl = TestResources.COVER_IMAGE_3,
-                }, RNG.Next(1_000_000), RNG.Next(1, 1000));
+                    if (grid.IsNotNull())
+                        grid.Height = height;
+                }
+            );
+            AddSliderStep(
+                "update time remaining",
+                0f,
+                1f,
+                0f,
+                progress =>
+                {
+                    var startedTimeAgo = TimeSpan.FromHours(24) * progress;
+                    room.Value.StartDate = DateTimeOffset.Now - startedTimeAgo;
+                    room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                }
+            );
+            AddStep(
+                "add normal score",
+                () =>
+                {
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        null
+                    );
 
-                feed.AddNewScore(ev);
-                breakdown.AddNewScore(ev);
-            });
+                    feed.AddNewScore(ev);
+                    breakdown.AddNewScore(ev);
+                }
+            );
+            AddStep(
+                "add new user best",
+                () =>
+                {
+                    var ev = new NewScoreEvent(
+                        1,
+                        new APIUser
+                        {
+                            Id = 2,
+                            Username = "peppy",
+                            CoverUrl = TestResources.COVER_IMAGE_3,
+                        },
+                        RNG.Next(1_000_000),
+                        RNG.Next(1, 1000)
+                    );
+
+                    feed.AddNewScore(ev);
+                    breakdown.AddNewScore(ev);
+                }
+            );
         }
 
         private partial class FakeContent : CompositeDrawable
@@ -162,7 +214,12 @@ namespace osu.Game.Tests.Visual.DailyChallenge
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1),
+                        Colour = new Colour4(
+                            RNG.NextSingle(),
+                            RNG.NextSingle(),
+                            RNG.NextSingle(),
+                            1
+                        ),
                     },
                     text = new OsuSpriteText
                     {
@@ -172,9 +229,7 @@ namespace osu.Game.Tests.Visual.DailyChallenge
                     },
                 };
 
-                text.FadeOut(500, Easing.OutQuint)
-                    .Then().FadeIn(500, Easing.OutQuint)
-                    .Loop();
+                text.FadeOut(500, Easing.OutQuint).Then().FadeIn(500, Easing.OutQuint).Loop();
             }
         }
     }

@@ -19,8 +19,7 @@ namespace osu.Game.Graphics.OpenGL.Vertices
         [VertexMember(4, VertexAttribPointerType.Float)]
         public Color4 Colour;
 
-        public bool Equals(PositionAndColourVertex other)
-            => Position.Equals(other.Position)
-               && Colour.Equals(other.Colour);
+        public bool Equals(PositionAndColourVertex other) =>
+            Position.Equals(other.Position) && Colour.Equals(other.Colour);
     }
 }

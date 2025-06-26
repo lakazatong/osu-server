@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -9,7 +10,6 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using System.Linq;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Backgrounds;
 using osu.Game.Graphics.Containers;
@@ -51,7 +51,8 @@ namespace osu.Game.Overlays.Mods
             set => ItemsFlow.SearchTerm = value;
         }
 
-        protected override bool ReceivePositionalInputAtSubTree(Vector2 screenSpacePos) => base.ReceivePositionalInputAtSubTree(screenSpacePos) && Active.Value;
+        protected override bool ReceivePositionalInputAtSubTree(Vector2 screenSpacePos) =>
+            base.ReceivePositionalInputAtSubTree(screenSpacePos) && Active.Value;
 
         protected readonly Container ControlContainer;
         protected readonly ModSearchContainer ItemsFlow;
@@ -90,7 +91,7 @@ namespace osu.Game.Overlays.Mods
                                 headerBackground = new Box
                                 {
                                     RelativeSizeAxes = Axes.X,
-                                    Height = header_height + ModSelectPanel.CORNER_RADIUS
+                                    Height = header_height + ModSelectPanel.CORNER_RADIUS,
                                 },
                                 triangles = new TrianglesV2
                                 {
@@ -98,7 +99,7 @@ namespace osu.Game.Overlays.Mods
                                     Height = header_height,
                                     Shear = -OsuGame.SHEAR,
                                     Velocity = 0.7f,
-                                    ClampAxes = Axes.Y
+                                    ClampAxes = Axes.Y,
                                 },
                                 headerText = new OsuTextFlowContainer(t =>
                                 {
@@ -115,69 +116,74 @@ namespace osu.Game.Overlays.Mods
                                     Padding = new MarginPadding
                                     {
                                         Horizontal = 17,
-                                        Bottom = ModSelectPanel.CORNER_RADIUS
-                                    }
-                                }
-                            }
+                                        Bottom = ModSelectPanel.CORNER_RADIUS,
+                                    },
+                                },
+                            },
                         },
                         new Container
                         {
                             RelativeSizeAxes = Axes.Both,
                             Padding = new MarginPadding { Top = header_height },
-                            Child = contentContainer = new Container
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Masking = true,
-                                CornerRadius = ModSelectPanel.CORNER_RADIUS,
-                                BorderThickness = 3,
-                                Children = new Drawable[]
+                            Child = contentContainer =
+                                new Container
                                 {
-                                    contentBackground = new Box
+                                    RelativeSizeAxes = Axes.Both,
+                                    Masking = true,
+                                    CornerRadius = ModSelectPanel.CORNER_RADIUS,
+                                    BorderThickness = 3,
+                                    Children = new Drawable[]
                                     {
-                                        RelativeSizeAxes = Axes.Both
-                                    },
-                                    new GridContainer
-                                    {
-                                        Padding = new MarginPadding { Top = 1, Bottom = 3 },
-                                        RelativeSizeAxes = Axes.Both,
-                                        RowDimensions = new[]
+                                        contentBackground = new Box
                                         {
-                                            new Dimension(GridSizeMode.AutoSize),
-                                            new Dimension()
+                                            RelativeSizeAxes = Axes.Both,
                                         },
-                                        Content = new[]
+                                        new GridContainer
                                         {
-                                            new Drawable[]
+                                            Padding = new MarginPadding { Top = 1, Bottom = 3 },
+                                            RelativeSizeAxes = Axes.Both,
+                                            RowDimensions = new[]
                                             {
-                                                ControlContainer = new Container
-                                                {
-                                                    RelativeSizeAxes = Axes.X,
-                                                    Padding = new MarginPadding { Horizontal = 14 }
-                                                }
+                                                new Dimension(GridSizeMode.AutoSize),
+                                                new Dimension(),
                                             },
-                                            new Drawable[]
+                                            Content = new[]
                                             {
-                                                new OsuScrollContainer(Direction.Vertical)
+                                                new Drawable[]
                                                 {
-                                                    RelativeSizeAxes = Axes.Both,
-                                                    ClampExtension = 100,
-                                                    ScrollbarOverlapsContent = false,
-                                                    Child = ItemsFlow = new ModSearchContainer
+                                                    ControlContainer = new Container
                                                     {
                                                         RelativeSizeAxes = Axes.X,
-                                                        AutoSizeAxes = Axes.Y,
-                                                        Spacing = new Vector2(0, 7),
-                                                        Padding = new MarginPadding(7)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                                        Padding = new MarginPadding
+                                                        {
+                                                            Horizontal = 14,
+                                                        },
+                                                    },
+                                                },
+                                                new Drawable[]
+                                                {
+                                                    new OsuScrollContainer(Direction.Vertical)
+                                                    {
+                                                        RelativeSizeAxes = Axes.Both,
+                                                        ClampExtension = 100,
+                                                        ScrollbarOverlapsContent = false,
+                                                        Child = ItemsFlow =
+                                                            new ModSearchContainer
+                                                            {
+                                                                RelativeSizeAxes = Axes.X,
+                                                                AutoSizeAxes = Axes.Y,
+                                                                Spacing = new Vector2(0, 7),
+                                                                Padding = new MarginPadding(7),
+                                                            },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                        },
+                    },
+                },
             };
         }
 
@@ -199,7 +205,10 @@ namespace osu.Game.Overlays.Mods
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            contentContainer.BorderColour = ColourInfo.GradientVertical(colourProvider.Background4, colourProvider.Background3);
+            contentContainer.BorderColour = ColourInfo.GradientVertical(
+                colourProvider.Background4,
+                colourProvider.Background3
+            );
             contentBackground.Colour = colourProvider.Background4;
         }
     }

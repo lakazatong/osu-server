@@ -16,7 +16,13 @@ namespace osu.Game.Online.API.Requests
         private readonly int page;
         private readonly long? parentId;
 
-        public GetCommentsRequest(long commentableId, CommentableType type, CommentsSortCriteria sort = CommentsSortCriteria.New, int page = 1, long? parentId = null)
+        public GetCommentsRequest(
+            long commentableId,
+            CommentableType type,
+            CommentsSortCriteria sort = CommentsSortCriteria.New,
+            int page = 1,
+            long? parentId = null
+        )
         {
             this.commentableId = commentableId;
             this.type = type;
@@ -47,6 +53,6 @@ namespace osu.Game.Online.API.Requests
     {
         Build,
         Beatmapset,
-        NewsPost
+        NewsPost,
     }
 }

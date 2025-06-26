@@ -26,7 +26,8 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private readonly OsuGridToolboxGroup gridToolbox;
 
-        private readonly Bindable<PreciseRotationInfo> rotationInfo = new Bindable<PreciseRotationInfo>(new PreciseRotationInfo(0, EditorOrigin.GridCentre));
+        private readonly Bindable<PreciseRotationInfo> rotationInfo =
+            new Bindable<PreciseRotationInfo>(new PreciseRotationInfo(0, EditorOrigin.GridCentre));
 
         private SliderWithTextBoxInput<float> angleInput = null!;
         private EditorRadioButtonCollection rotationOrigin = null!;
@@ -37,7 +38,10 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private Bindable<EditorOrigin> configRotationOrigin = null!;
 
-        public PreciseRotationPopover(SelectionRotationHandler rotationHandler, OsuGridToolboxGroup gridToolbox)
+        public PreciseRotationPopover(
+            SelectionRotationHandler rotationHandler,
+            OsuGridToolboxGroup gridToolbox
+        )
         {
             this.rotationHandler = rotationHandler;
             this.gridToolbox = gridToolbox;
@@ -48,7 +52,9 @@ namespace osu.Game.Rulesets.Osu.Edit
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
-            configRotationOrigin = config.GetBindable<EditorOrigin>(OsuSetting.EditorRotationOrigin);
+            configRotationOrigin = config.GetBindable<EditorOrigin>(
+                OsuSetting.EditorRotationOrigin
+            );
 
             Child = new FillFlowContainer
             {
@@ -63,32 +69,52 @@ namespace osu.Game.Rulesets.Osu.Edit
                         {
                             MinValue = -360,
                             MaxValue = 360,
-                            Precision = 1
+                            Precision = 1,
                         },
                         KeyboardStep = 1f,
-                        Instantaneous = true
+                        Instantaneous = true,
                     },
                     rotationOrigin = new EditorRadioButtonCollection
                     {
                         RelativeSizeAxes = Axes.X,
                         Items = new[]
                         {
-                            gridCentreButton = new RadioButton("Grid centre",
-                                () => rotationInfo.Value = rotationInfo.Value with { Origin = EditorOrigin.GridCentre },
-                                () => new SpriteIcon { Icon = FontAwesome.Regular.PlusSquare }),
-                            playfieldCentreButton = new RadioButton("Playfield centre",
-                                () => rotationInfo.Value = rotationInfo.Value with { Origin = EditorOrigin.PlayfieldCentre },
-                                () => new SpriteIcon { Icon = FontAwesome.Regular.Square }),
-                            selectionCentreButton = new RadioButton("Selection centre",
-                                () => rotationInfo.Value = rotationInfo.Value with { Origin = EditorOrigin.SelectionCentre },
-                                () => new SpriteIcon { Icon = FontAwesome.Solid.VectorSquare })
-                        }
-                    }
-                }
+                            gridCentreButton = new RadioButton(
+                                "Grid centre",
+                                () =>
+                                    rotationInfo.Value = rotationInfo.Value with
+                                    {
+                                        Origin = EditorOrigin.GridCentre,
+                                    },
+                                () => new SpriteIcon { Icon = FontAwesome.Regular.PlusSquare }
+                            ),
+                            playfieldCentreButton = new RadioButton(
+                                "Playfield centre",
+                                () =>
+                                    rotationInfo.Value = rotationInfo.Value with
+                                    {
+                                        Origin = EditorOrigin.PlayfieldCentre,
+                                    },
+                                () => new SpriteIcon { Icon = FontAwesome.Regular.Square }
+                            ),
+                            selectionCentreButton = new RadioButton(
+                                "Selection centre",
+                                () =>
+                                    rotationInfo.Value = rotationInfo.Value with
+                                    {
+                                        Origin = EditorOrigin.SelectionCentre,
+                                    },
+                                () => new SpriteIcon { Icon = FontAwesome.Solid.VectorSquare }
+                            ),
+                        },
+                    },
+                },
             };
             selectionCentreButton.Selected.DisabledChanged += isDisabled =>
             {
-                selectionCentreButton.TooltipText = isDisabled ? "Select more than one object to perform selection-based rotation." : string.Empty;
+                selectionCentreButton.TooltipText = isDisabled
+                    ? "Select more than one object to perform selection-based rotation."
+                    : string.Empty;
             };
         }
 
@@ -97,67 +123,81 @@ namespace osu.Game.Rulesets.Osu.Edit
             base.LoadComplete();
 
             ScheduleAfterChildren(() => angleInput.TakeFocus());
-            angleInput.Current.BindValueChanged(angle => rotationInfo.Value = rotationInfo.Value with { Degrees = angle.NewValue });
+            angleInput.Current.BindValueChanged(angle =>
+                rotationInfo.Value = rotationInfo.Value with { Degrees = angle.NewValue }
+            );
 
-            rotationHandler.CanRotateAroundSelectionOrigin.BindValueChanged(e =>
-            {
-                selectionCentreButton.Selected.Disabled = !e.NewValue;
-            }, true);
+            rotationHandler.CanRotateAroundSelectionOrigin.BindValueChanged(
+                e =>
+                {
+                    selectionCentreButton.Selected.Disabled = !e.NewValue;
+                },
+                true
+            );
 
             bool didSelect = false;
 
-            configRotationOrigin.BindValueChanged(val =>
-            {
-                switch (configRotationOrigin.Value)
+            configRotationOrigin.BindValueChanged(
+                val =>
                 {
-                    case EditorOrigin.GridCentre:
-                        if (!gridCentreButton.Selected.Disabled)
-                        {
-                            gridCentreButton.Select();
-                            didSelect = true;
-                        }
+                    switch (configRotationOrigin.Value)
+                    {
+                        case EditorOrigin.GridCentre:
+                            if (!gridCentreButton.Selected.Disabled)
+                            {
+                                gridCentreButton.Select();
+                                didSelect = true;
+                            }
 
-                        break;
+                            break;
 
-                    case EditorOrigin.PlayfieldCentre:
-                        if (!playfieldCentreButton.Selected.Disabled)
-                        {
-                            playfieldCentreButton.Select();
-                            didSelect = true;
-                        }
+                        case EditorOrigin.PlayfieldCentre:
+                            if (!playfieldCentreButton.Selected.Disabled)
+                            {
+                                playfieldCentreButton.Select();
+                                didSelect = true;
+                            }
 
-                        break;
+                            break;
 
-                    case EditorOrigin.SelectionCentre:
-                        if (!selectionCentreButton.Selected.Disabled)
-                        {
-                            selectionCentreButton.Select();
-                            didSelect = true;
-                        }
+                        case EditorOrigin.SelectionCentre:
+                            if (!selectionCentreButton.Selected.Disabled)
+                            {
+                                selectionCentreButton.Select();
+                                didSelect = true;
+                            }
 
-                        break;
-                }
-            }, true);
+                            break;
+                    }
+                },
+                true
+            );
 
             if (!didSelect)
                 rotationOrigin.Items.First(b => !b.Selected.Disabled).Select();
 
             gridCentreButton.Selected.BindValueChanged(b =>
             {
-                if (b.NewValue) configRotationOrigin.Value = EditorOrigin.GridCentre;
+                if (b.NewValue)
+                    configRotationOrigin.Value = EditorOrigin.GridCentre;
             });
             playfieldCentreButton.Selected.BindValueChanged(b =>
             {
-                if (b.NewValue) configRotationOrigin.Value = EditorOrigin.PlayfieldCentre;
+                if (b.NewValue)
+                    configRotationOrigin.Value = EditorOrigin.PlayfieldCentre;
             });
             selectionCentreButton.Selected.BindValueChanged(b =>
             {
-                if (b.NewValue) configRotationOrigin.Value = EditorOrigin.SelectionCentre;
+                if (b.NewValue)
+                    configRotationOrigin.Value = EditorOrigin.SelectionCentre;
             });
 
             rotationInfo.BindValueChanged(rotation =>
             {
-                rotationHandler.Update(rotation.NewValue.Degrees, getOriginPosition(rotation.NewValue));
+                rotationHandler.Update(
+                    rotation.NewValue.Degrees,
+                    getOriginPosition(rotation.NewValue)
+                );
             });
         }
 
@@ -167,7 +207,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 EditorOrigin.GridCentre => gridToolbox.StartPosition.Value,
                 EditorOrigin.PlayfieldCentre => OsuPlayfield.BASE_SIZE / 2,
                 EditorOrigin.SelectionCentre => null,
-                _ => throw new ArgumentOutOfRangeException(nameof(rotation))
+                _ => throw new ArgumentOutOfRangeException(nameof(rotation)),
             };
 
         protected override void PopIn()

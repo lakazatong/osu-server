@@ -13,7 +13,9 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Osu.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneReplayStability : ReplayStabilityTestScene
     {
         private static readonly object[][] test_cases =
@@ -48,7 +50,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             new object[] { 5f, 150.4d, HitResult.Miss },
             new object[] { 5f, 150.9d, HitResult.Miss },
             new object[] { 5f, 151d, HitResult.Miss },
-
             // OD = 5.7 test cases.
             // GREAT hit window is [ -45.8ms,  45.8ms]
             // OK    hit window is [ -94.4ms,  94.4ms]
@@ -76,7 +77,11 @@ namespace osu.Game.Rulesets.Osu.Tests
         };
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestHitWindowStability(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowStability(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             const double hit_circle_time = 100;
 
@@ -87,14 +92,11 @@ namespace osu.Game.Rulesets.Osu.Tests
                     new HitCircle
                     {
                         StartTime = hit_circle_time,
-                        Position = OsuPlayfield.BASE_SIZE / 2
-                    }
+                        Position = OsuPlayfield.BASE_SIZE / 2,
+                    },
                 },
                 Difficulty = new BeatmapDifficulty { OverallDifficulty = overallDifficulty },
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo },
             };
 
             var replay = new Replay
@@ -102,9 +104,16 @@ namespace osu.Game.Rulesets.Osu.Tests
                 Frames =
                 {
                     new OsuReplayFrame(0, OsuPlayfield.BASE_SIZE / 2),
-                    new OsuReplayFrame(hit_circle_time + hitOffset, OsuPlayfield.BASE_SIZE / 2, OsuAction.LeftButton),
-                    new OsuReplayFrame(hit_circle_time + hitOffset + 20, OsuPlayfield.BASE_SIZE / 2),
-                }
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset,
+                        OsuPlayfield.BASE_SIZE / 2,
+                        OsuAction.LeftButton
+                    ),
+                    new OsuReplayFrame(
+                        hit_circle_time + hitOffset + 20,
+                        OsuPlayfield.BASE_SIZE / 2
+                    ),
+                },
             };
 
             RunTest(beatmap, replay, [expectedResult]);

@@ -24,7 +24,8 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 {
     public partial class DailyChallengeScoreBreakdown : CompositeDrawable
     {
-        public Bindable<MultiplayerScore?> UserBestScore { get; } = new Bindable<MultiplayerScore?>();
+        public Bindable<MultiplayerScore?> UserBestScore { get; } =
+            new Bindable<MultiplayerScore?>();
 
         private FillFlowContainer<Bar> barsContainer = null!;
 
@@ -45,15 +46,14 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                     Padding = new MarginPadding { Top = 35 },
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
-                }
+                },
             };
 
             for (int i = 0; i < bin_count; ++i)
             {
-                barsContainer.Add(new Bar(100_000 * i, 100_000 * (i + 1) - 1)
-                {
-                    Width = 1f / bin_count,
-                });
+                barsContainer.Add(
+                    new Bar(100_000 * i, 100_000 * (i + 1) - 1) { Width = 1f / bin_count }
+                );
             }
         }
 
@@ -64,7 +64,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             UserBestScore.BindValueChanged(_ =>
             {
                 foreach (var bar in barsContainer)
-                    bar.ContainsLocalUser.Value = UserBestScore.Value is not null && bar.BinStart <= UserBestScore.Value.TotalScore && UserBestScore.Value.TotalScore <= bar.BinEnd;
+                    bar.ContainsLocalUser.Value =
+                        UserBestScore.Value is not null
+                        && bar.BinStart <= UserBestScore.Value.TotalScore
+                        && UserBestScore.Value.TotalScore <= bar.BinEnd;
             });
         }
 
@@ -110,16 +113,21 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 };
                 AddInternal(text);
 
-                Scheduler.AddDelayed(() =>
-                {
-                    float startY = ToLocalSpace(barsContainer[targetBin].CircularBar.ScreenSpaceDrawQuad.TopLeft).Y;
-                    text.FadeInFromZero()
-                        .ScaleTo(new Vector2(0.8f), 500, Easing.OutElasticHalf)
-                        .MoveToY(startY)
-                        .MoveToOffset(new Vector2(0, -50), 2500, Easing.OutQuint)
-                        .FadeOut(2500, Easing.OutQuint)
-                        .Expire();
-                }, 150);
+                Scheduler.AddDelayed(
+                    () =>
+                    {
+                        float startY = ToLocalSpace(
+                            barsContainer[targetBin].CircularBar.ScreenSpaceDrawQuad.TopLeft
+                        ).Y;
+                        text.FadeInFromZero()
+                            .ScaleTo(new Vector2(0.8f), 500, Easing.OutElasticHalf)
+                            .MoveToY(startY)
+                            .MoveToOffset(new Vector2(0, -50), 2500, Easing.OutQuint)
+                            .FadeOut(2500, Easing.OutQuint)
+                            .Expire();
+                    },
+                    150
+                );
 
                 lastScoreDisplay = Time.Current;
             }
@@ -177,52 +185,47 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             {
                 RelativeSizeAxes = Axes.Both;
 
-                AddInternal(new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding
+                AddInternal(
+                    new Container
                     {
-                        Bottom = 20,
-                        Horizontal = 3,
-                    },
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Children = new Drawable[]
-                    {
-                        CircularBar = new Container
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding { Bottom = 20, Horizontal = 3 },
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Height = 0.01f,
-                            Masking = true,
-                            CornerRadius = 10,
-                            Children = new Drawable[]
+                            CircularBar = new Container
                             {
-                                fill = new Box
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.BottomCentre,
+                                Height = 0.01f,
+                                Masking = true,
+                                CornerRadius = 10,
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
+                                    fill = new Box { RelativeSizeAxes = Axes.Both },
+                                    flashLayer = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0,
+                                    },
                                 },
-                                flashLayer = new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Alpha = 0,
-                                },
-                            }
+                            },
+                            userIndicator = new OsuSpriteText
+                            {
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.BottomCentre,
+                                Colour = colours.Orange1,
+                                Text = "You",
+                                Font = OsuFont.Default.With(weight: FontWeight.Bold),
+                                Alpha = 0,
+                                RelativePositionAxes = Axes.Y,
+                                Margin = new MarginPadding { Bottom = 5 },
+                            },
                         },
-                        userIndicator = new OsuSpriteText
-                        {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Colour = colours.Orange1,
-                            Text = "You",
-                            Font = OsuFont.Default.With(weight: FontWeight.Bold),
-                            Alpha = 0,
-                            RelativePositionAxes = Axes.Y,
-                            Margin = new MarginPadding { Bottom = 5, },
-                        }
-                    },
-                });
+                    }
+                );
 
                 string? label = null;
 
@@ -242,13 +245,15 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
 
                 if (label != null)
                 {
-                    AddInternal(new OsuSpriteText
-                    {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomCentre,
-                        Text = label,
-                        Colour = colourProvider.Content2,
-                    });
+                    AddInternal(
+                        new OsuSpriteText
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomCentre,
+                            Text = label,
+                            Colour = colourProvider.Content2,
+                        }
+                    );
                 }
             }
 
@@ -256,11 +261,18 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             {
                 base.LoadComplete();
 
-                ContainsLocalUser.BindValueChanged(_ =>
-                {
-                    fill.FadeColour(ContainsLocalUser.Value ? colours.Orange1 : colourProvider.Highlight1, 300, Easing.OutQuint);
-                    userIndicator.FadeTo(ContainsLocalUser.Value ? 1 : 0, 300, Easing.OutQuint);
-                }, true);
+                ContainsLocalUser.BindValueChanged(
+                    _ =>
+                    {
+                        fill.FadeColour(
+                            ContainsLocalUser.Value ? colours.Orange1 : colourProvider.Highlight1,
+                            300,
+                            Easing.OutQuint
+                        );
+                        userIndicator.FadeTo(ContainsLocalUser.Value ? 1 : 0, 300, Easing.OutQuint);
+                    },
+                    true
+                );
                 FinishTransforms(true);
             }
 
@@ -268,7 +280,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             {
                 base.Update();
 
-                CircularBar.CornerRadius = Math.Min(CircularBar.DrawHeight / 2, CircularBar.DrawWidth / 4);
+                CircularBar.CornerRadius = Math.Min(
+                    CircularBar.DrawHeight / 2,
+                    CircularBar.DrawWidth / 4
+                );
             }
 
             public void UpdateCounts(long newCount, long newMax)
@@ -285,7 +300,13 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                     flashLayer.FadeOutFromOne(600, Easing.OutQuint);
             }
 
-            public LocalisableString TooltipText => LocalisableString.Format("{0:N0} passes in {1:N0} - {2:N0} range", count, BinStart, BinEnd);
+            public LocalisableString TooltipText =>
+                LocalisableString.Format(
+                    "{0:N0} passes in {1:N0} - {2:N0} range",
+                    count,
+                    BinStart,
+                    BinEnd
+                );
         }
     }
 }

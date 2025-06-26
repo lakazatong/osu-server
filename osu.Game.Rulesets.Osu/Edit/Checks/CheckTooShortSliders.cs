@@ -16,12 +16,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         /// </summary>
         private const double span_duration_threshold = 125; // 240 BPM 1/2
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Spread, "Too short sliders");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Spread, "Too short sliders");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooShort(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateTooShort(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -38,11 +37,14 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         public class IssueTemplateTooShort : IssueTemplate
         {
             public IssueTemplateTooShort(ICheck check)
-                : base(check, IssueType.Problem, "This slider is too short ({0:0} ms), expected at least {1:0} ms.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "This slider is too short ({0:0} ms), expected at least {1:0} ms."
+                ) { }
 
-            public Issue Create(Slider slider) => new Issue(slider, this, slider.SpanDuration, span_duration_threshold);
+            public Issue Create(Slider slider) =>
+                new Issue(slider, this, slider.SpanDuration, span_duration_threshold);
         }
     }
 }

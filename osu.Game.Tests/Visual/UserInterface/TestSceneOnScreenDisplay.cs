@@ -29,10 +29,26 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("Display toast with lengthy text", () => osd.Display(new LengthyToast()));
             AddAssert("Toast width is greater than 240", () => osd.Child.Width > 240);
 
-            AddRepeatStep("Change toggle (no bind)", () => config.ToggleSetting(TestConfigSetting.ToggleSettingNoKeyBind), 2);
-            AddRepeatStep("Change toggle (with bind)", () => config.ToggleSetting(TestConfigSetting.ToggleSettingWithKeyBind), 2);
-            AddRepeatStep("Change enum (no bind)", () => config.IncrementEnumSetting(TestConfigSetting.EnumSettingNoKeyBind), 3);
-            AddRepeatStep("Change enum (with bind)", () => config.IncrementEnumSetting(TestConfigSetting.EnumSettingWithKeyBind), 3);
+            AddRepeatStep(
+                "Change toggle (no bind)",
+                () => config.ToggleSetting(TestConfigSetting.ToggleSettingNoKeyBind),
+                2
+            );
+            AddRepeatStep(
+                "Change toggle (with bind)",
+                () => config.ToggleSetting(TestConfigSetting.ToggleSettingWithKeyBind),
+                2
+            );
+            AddRepeatStep(
+                "Change enum (no bind)",
+                () => config.IncrementEnumSetting(TestConfigSetting.EnumSettingNoKeyBind),
+                3
+            );
+            AddRepeatStep(
+                "Change enum (with bind)",
+                () => config.IncrementEnumSetting(TestConfigSetting.EnumSettingWithKeyBind),
+                3
+            );
         }
 
         private class TestConfigManager : ConfigManager<TestConfigSetting>
@@ -52,7 +68,8 @@ namespace osu.Game.Tests.Visual.UserInterface
                 base.InitialiseDefaults();
             }
 
-            public void ToggleSetting(TestConfigSetting setting) => SetValue(setting, !Get<bool>(setting));
+            public void ToggleSetting(TestConfigSetting setting) =>
+                SetValue(setting, !Get<bool>(setting));
 
             public void IncrementEnumSetting(TestConfigSetting setting)
             {
@@ -62,17 +79,42 @@ namespace osu.Game.Tests.Visual.UserInterface
                 SetValue(setting, nextValue);
             }
 
-            public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
-            {
-                new TrackedSetting<bool>(TestConfigSetting.ToggleSettingNoKeyBind, b => new SettingDescription(b, "toggle setting with no keybind", b ? "enabled" : "disabled")),
-                new TrackedSetting<EnumSetting>(TestConfigSetting.EnumSettingNoKeyBind, v => new SettingDescription(v, "enum setting with no keybind", v.ToString())),
-                new TrackedSetting<bool>(TestConfigSetting.ToggleSettingWithKeyBind, b => new SettingDescription(b, "toggle setting with keybind", b ? "enabled" : "disabled", "fake keybind")),
-                new TrackedSetting<EnumSetting>(TestConfigSetting.EnumSettingWithKeyBind, v => new SettingDescription(v, "enum setting with keybind", v.ToString(), "fake keybind")),
-            };
+            public override TrackedSettings CreateTrackedSettings() =>
+                new TrackedSettings
+                {
+                    new TrackedSetting<bool>(
+                        TestConfigSetting.ToggleSettingNoKeyBind,
+                        b => new SettingDescription(
+                            b,
+                            "toggle setting with no keybind",
+                            b ? "enabled" : "disabled"
+                        )
+                    ),
+                    new TrackedSetting<EnumSetting>(
+                        TestConfigSetting.EnumSettingNoKeyBind,
+                        v => new SettingDescription(v, "enum setting with no keybind", v.ToString())
+                    ),
+                    new TrackedSetting<bool>(
+                        TestConfigSetting.ToggleSettingWithKeyBind,
+                        b => new SettingDescription(
+                            b,
+                            "toggle setting with keybind",
+                            b ? "enabled" : "disabled",
+                            "fake keybind"
+                        )
+                    ),
+                    new TrackedSetting<EnumSetting>(
+                        TestConfigSetting.EnumSettingWithKeyBind,
+                        v => new SettingDescription(
+                            v,
+                            "enum setting with keybind",
+                            v.ToString(),
+                            "fake keybind"
+                        )
+                    ),
+                };
 
-            protected override void PerformLoad()
-            {
-            }
+            protected override void PerformLoad() { }
 
             protected override bool PerformSave() => false;
         }
@@ -82,7 +124,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             ToggleSettingNoKeyBind,
             EnumSettingNoKeyBind,
             ToggleSettingWithKeyBind,
-            EnumSettingWithKeyBind
+            EnumSettingWithKeyBind,
         }
 
         private enum EnumSetting
@@ -90,28 +132,29 @@ namespace osu.Game.Tests.Visual.UserInterface
             Setting1,
             Setting2,
             Setting3,
-            Setting4
+            Setting4,
         }
 
         private partial class EmptyToast : Toast
         {
             public EmptyToast()
-                : base("", "", "")
-            {
-            }
+                : base("", "", "") { }
         }
 
         private partial class LengthyToast : Toast
         {
             public LengthyToast()
-                : base("Toast with a very very very long text", "A very very very very very very long text also", "A very very very very very long shortcut")
-            {
-            }
+                : base(
+                    "Toast with a very very very long text",
+                    "A very very very very very very long text also",
+                    "A very very very very very long shortcut"
+                ) { }
         }
 
         private partial class TestOnScreenDisplay : OnScreenDisplay
         {
-            protected override void DisplayTemporarily(Drawable toDisplay) => toDisplay.FadeIn().ResizeHeightTo(110);
+            protected override void DisplayTemporarily(Drawable toDisplay) =>
+                toDisplay.FadeIn().ResizeHeightTo(110);
         }
     }
 }

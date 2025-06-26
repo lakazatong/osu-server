@@ -36,60 +36,82 @@ namespace osu.Game.Online.Notifications.WebSocket
             runReadLoop(cancellationToken);
         }
 
-        private void runReadLoop(CancellationToken cancellationToken) => Task.Run(async () =>
-        {
-            byte[] buffer = new byte[1024];
-            StringBuilder messageResult = new StringBuilder();
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                try
+        private void runReadLoop(CancellationToken cancellationToken) =>
+            Task.Run(
+                async () =>
                 {
-                    WebSocketReceiveResult result = await socket.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false);
+                    byte[] buffer = new byte[1024];
+                    StringBuilder messageResult = new StringBuilder();
 
-                    switch (result.MessageType)
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        case WebSocketMessageType.Text:
-                            messageResult.Append(Encoding.UTF8.GetString(buffer[..result.Count]));
+                        try
+                        {
+                            WebSocketReceiveResult result = await socket
+                                .ReceiveAsync(buffer, cancellationToken)
+                                .ConfigureAwait(false);
 
-                            if (result.EndOfMessage)
+                            switch (result.MessageType)
                             {
-                                SocketMessage? message = JsonConvert.DeserializeObject<SocketMessage>(messageResult.ToString());
-                                messageResult.Clear();
+                                case WebSocketMessageType.Text:
+                                    messageResult.Append(
+                                        Encoding.UTF8.GetString(buffer[..result.Count])
+                                    );
 
-                                Debug.Assert(message != null);
+                                    if (result.EndOfMessage)
+                                    {
+                                        SocketMessage? message =
+                                            JsonConvert.DeserializeObject<SocketMessage>(
+                                                messageResult.ToString()
+                                            );
+                                        messageResult.Clear();
 
-                                if (message.Error != null)
-                                {
-                                    Logger.Log($"{GetType().ReadableName()} error: {message.Error}", LoggingTarget.Network);
+                                        Debug.Assert(message != null);
+
+                                        if (message.Error != null)
+                                        {
+                                            Logger.Log(
+                                                $"{GetType().ReadableName()} error: {message.Error}",
+                                                LoggingTarget.Network
+                                            );
+                                            break;
+                                        }
+
+                                        MessageReceived?.Invoke(message);
+                                    }
+
                                     break;
-                                }
 
-                                MessageReceived?.Invoke(message);
+                                case WebSocketMessageType.Binary:
+                                    throw new NotImplementedException(
+                                        "Binary message type not supported."
+                                    );
+
+                                case WebSocketMessageType.Close:
+                                    throw new WebException("Connection closed by remote host.");
                             }
-
-                            break;
-
-                        case WebSocketMessageType.Binary:
-                            throw new NotImplementedException("Binary message type not supported.");
-
-                        case WebSocketMessageType.Close:
-                            throw new WebException("Connection closed by remote host.");
+                        }
+                        catch (Exception ex)
+                        {
+                            await InvokeClosed(ex).ConfigureAwait(false);
+                            return;
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    await InvokeClosed(ex).ConfigureAwait(false);
-                    return;
-                }
-            }
-        }, cancellationToken);
+                },
+                cancellationToken
+            );
 
         private async Task closeAsync()
         {
             try
             {
-                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, @"Disconnecting", CancellationToken.None).ConfigureAwait(false);
+                await socket
+                    .CloseAsync(
+                        WebSocketCloseStatus.NormalClosure,
+                        @"Disconnecting",
+                        CancellationToken.None
+                    )
+                    .ConfigureAwait(false);
             }
             catch
             {
@@ -97,12 +119,22 @@ namespace osu.Game.Online.Notifications.WebSocket
             }
         }
 
-        public async Task SendAsync(SocketMessage message, CancellationToken? cancellationToken = default)
+        public async Task SendAsync(
+            SocketMessage message,
+            CancellationToken? cancellationToken = default
+        )
         {
             if (socket.State != WebSocketState.Open)
                 return;
 
-            await socket.SendAsync(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), WebSocketMessageType.Text, true, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
+            await socket
+                .SendAsync(
+                    Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)),
+                    WebSocketMessageType.Text,
+                    true,
+                    cancellationToken ?? CancellationToken.None
+                )
+                .ConfigureAwait(false);
         }
 
         public override async ValueTask DisposeAsync()

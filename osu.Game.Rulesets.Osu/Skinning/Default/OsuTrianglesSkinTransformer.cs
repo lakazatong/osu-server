@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
     public class OsuTrianglesSkinTransformer : SkinTransformer
     {
         public OsuTrianglesSkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {

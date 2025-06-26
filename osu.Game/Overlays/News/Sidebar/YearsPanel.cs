@@ -34,23 +34,20 @@ namespace osu.Game.Overlays.News.Sidebar
             CornerRadius = 6;
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = overlayColours.Background3
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = overlayColours.Background3 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Padding = new MarginPadding(5),
-                    Child = yearsFlow = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Spacing = new Vector2(0, 5)
-                    }
-                }
+                    Child = yearsFlow =
+                        new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Spacing = new Vector2(0, 5),
+                        },
+                },
             };
         }
 
@@ -101,8 +98,11 @@ namespace osu.Game.Overlays.News.Sidebar
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font = OsuFont.GetFont(size: 12, weight: isCurrent ? FontWeight.SemiBold : FontWeight.Medium),
-                    Text = year.ToString()
+                    Font = OsuFont.GetFont(
+                        size: 12,
+                        weight: isCurrent ? FontWeight.SemiBold : FontWeight.Medium
+                    ),
+                    Text = year.ToString(),
                 };
             }
 

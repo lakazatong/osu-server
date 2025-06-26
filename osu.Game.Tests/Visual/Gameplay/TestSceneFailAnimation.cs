@@ -22,19 +22,31 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestOsuWithoutRedTint()
         {
-            AddStep("Disable red tint", () => Config.SetValue(OsuSetting.FadePlayfieldWhenHealthLow, false));
+            AddStep(
+                "Disable red tint",
+                () => Config.SetValue(OsuSetting.FadePlayfieldWhenHealthLow, false)
+            );
             TestOsu();
-            AddStep("Enable red tint", () => Config.SetValue(OsuSetting.FadePlayfieldWhenHealthLow, true));
+            AddStep(
+                "Enable red tint",
+                () => Config.SetValue(OsuSetting.FadePlayfieldWhenHealthLow, true)
+            );
         }
 
         protected override void AddCheckSteps()
         {
             AddUntilStep("wait for fail", () => Player.GameplayState.HasFailed);
-            AddUntilStep("wait for fail overlay", () => ((FailPlayer)Player).FailOverlay.State.Value == Visibility.Visible);
+            AddUntilStep(
+                "wait for fail overlay",
+                () => ((FailPlayer)Player).FailOverlay.State.Value == Visibility.Visible
+            );
 
             // The pause screen and fail animation both ramp frequency.
             // This tests to ensure that it doesn't reset during that handoff.
-            AddAssert("frequency only ever decreased", () => !((FailPlayer)Player).FrequencyIncreased);
+            AddAssert(
+                "frequency only ever decreased",
+                () => !((FailPlayer)Player).FrequencyIncreased
+            );
         }
 
         private partial class FailPlayer : TestPlayer
@@ -44,9 +56,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             public bool FrequencyIncreased { get; private set; }
 
             public FailPlayer()
-                : base(false, false)
-            {
-            }
+                : base(false, false) { }
 
             protected override void LoadComplete()
             {

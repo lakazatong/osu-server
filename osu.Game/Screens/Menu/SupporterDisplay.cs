@@ -51,11 +51,7 @@ namespace osu.Game.Screens.Menu
 
             InternalChildren = new Drawable[]
             {
-                backgroundBox = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.6f,
-                },
+                backgroundBox = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.6f },
                 supportFlow = new LinkFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
@@ -73,47 +69,58 @@ namespace osu.Game.Screens.Menu
 
             const float font_size = 14;
 
-            static void formatSemiBold(SpriteText t) => t.Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold);
+            static void formatSemiBold(SpriteText t) =>
+                t.Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold);
 
             currentUser.BindTo(api.LocalUser);
-            currentUser.BindValueChanged(e =>
-            {
-                supportFlow.Children.ForEach(d => d.FadeOut().Expire());
-
-                if (e.NewValue.IsSupporter)
+            currentUser.BindValueChanged(
+                e =>
                 {
-                    supportFlow.AddText("Eternal thanks to you for supporting osu!", formatSemiBold);
+                    supportFlow.Children.ForEach(d => d.FadeOut().Expire());
 
-                    backgroundBox.FadeColour(colours.Pink, 250);
-                }
-                else
-                {
-                    supportFlow.AddText("Consider becoming an ", formatSemiBold);
-                    supportFlow.AddLink("osu!supporter", "https://osu.ppy.sh/home/support", formatSemiBold);
-                    supportFlow.AddText(" to help support osu!'s development", formatSemiBold);
-
-                    backgroundBox.FadeColour(colours.Pink4, 250);
-                }
-
-                supportFlow.AddIcon(FontAwesome.Solid.Heart, t =>
-                {
-                    heart = t;
-
-                    t.Padding = new MarginPadding { Left = 5, Top = 1 };
-                    t.Font = t.Font.With(size: font_size);
-                    t.Colour = colours.Pink;
-
-                    Schedule(() =>
+                    if (e.NewValue.IsSupporter)
                     {
-                        heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop();
-                    });
-                });
-            }, true);
+                        supportFlow.AddText(
+                            "Eternal thanks to you for supporting osu!",
+                            formatSemiBold
+                        );
 
-            this
-                .FadeOut()
-                .Delay(RNG.Next(800, 4000))
-                .FadeInFromZero(800, Easing.OutQuint);
+                        backgroundBox.FadeColour(colours.Pink, 250);
+                    }
+                    else
+                    {
+                        supportFlow.AddText("Consider becoming an ", formatSemiBold);
+                        supportFlow.AddLink(
+                            "osu!supporter",
+                            "https://osu.ppy.sh/home/support",
+                            formatSemiBold
+                        );
+                        supportFlow.AddText(" to help support osu!'s development", formatSemiBold);
+
+                        backgroundBox.FadeColour(colours.Pink4, 250);
+                    }
+
+                    supportFlow.AddIcon(
+                        FontAwesome.Solid.Heart,
+                        t =>
+                        {
+                            heart = t;
+
+                            t.Padding = new MarginPadding { Left = 5, Top = 1 };
+                            t.Font = t.Font.With(size: font_size);
+                            t.Colour = colours.Pink;
+
+                            Schedule(() =>
+                            {
+                                heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop();
+                            });
+                        }
+                    );
+                },
+                true
+            );
+
+            this.FadeOut().Delay(RNG.Next(800, 4000)).FadeInFromZero(800, Easing.OutQuint);
 
             scheduleDismissal();
         }
@@ -144,24 +151,25 @@ namespace osu.Game.Screens.Menu
         private void scheduleDismissal()
         {
             dismissalDelegate?.Cancel();
-            dismissalDelegate = Scheduler.AddDelayed(() =>
-            {
-                // If the user is hovering they may want to interact with the link.
-                // Give them more time.
-                if (IsHovered)
+            dismissalDelegate = Scheduler.AddDelayed(
+                () =>
                 {
-                    scheduleDismissal();
-                    return;
-                }
+                    // If the user is hovering they may want to interact with the link.
+                    // Give them more time.
+                    if (IsHovered)
+                    {
+                        scheduleDismissal();
+                        return;
+                    }
 
-                dismissalDelegate?.Cancel();
+                    dismissalDelegate?.Cancel();
 
-                AutoSizeEasing = Easing.In;
-                supportFlow.BypassAutoSizeAxes = Axes.X;
-                this
-                    .Delay(200)
-                    .FadeOut(750, Easing.Out);
-            }, 8000);
+                    AutoSizeEasing = Easing.In;
+                    supportFlow.BypassAutoSizeAxes = Axes.X;
+                    this.Delay(200).FadeOut(750, Easing.Out);
+                },
+                8000
+            );
         }
     }
 }

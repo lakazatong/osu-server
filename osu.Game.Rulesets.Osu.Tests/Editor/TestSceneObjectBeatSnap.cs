@@ -18,26 +18,40 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         private OsuPlayfield playfield;
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(Ruleset.Value, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(Ruleset.Value, false);
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-            AddStep("get playfield", () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First());
+            AddStep(
+                "get playfield",
+                () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First()
+            );
         }
 
         [Test]
         public void TestBeatSnapHitCircle()
         {
-            double firstTimingPointTime() => Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time;
+            double firstTimingPointTime() =>
+                Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time;
 
-            AddStep("seek some milliseconds forward", () => EditorClock.Seek(firstTimingPointTime() + 10));
+            AddStep(
+                "seek some milliseconds forward",
+                () => EditorClock.Seek(firstTimingPointTime() + 10)
+            );
 
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(playfield.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(playfield.ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("enter placement mode", () => InputManager.Key(Key.Number2));
             AddStep("place first object", () => InputManager.Click(MouseButton.Left));
 
-            AddAssert("ensure object snapped back to correct time", () => EditorBeatmap.HitObjects.First().StartTime == firstTimingPointTime());
+            AddAssert(
+                "ensure object snapped back to correct time",
+                () => EditorBeatmap.HitObjects.First().StartTime == firstTimingPointTime()
+            );
         }
     }
 }

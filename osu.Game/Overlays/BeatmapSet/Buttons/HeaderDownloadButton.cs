@@ -69,38 +69,40 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
                 downloadTracker = new BeatmapDownloadTracker(beatmapSet),
             };
 
-            button.AddRange(new Drawable[]
-            {
-                new Container
+            button.AddRange(
+                new Drawable[]
                 {
-                    Padding = new MarginPadding { Horizontal = 10 },
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    new Container
                     {
-                        textSprites = new FillFlowContainer
+                        Padding = new MarginPadding { Horizontal = 10 },
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            AutoSizeAxes = Axes.Both,
-                            AutoSizeDuration = 500,
-                            AutoSizeEasing = Easing.OutQuint,
-                            Direction = FillDirection.Vertical,
+                            textSprites = new FillFlowContainer
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                AutoSizeAxes = Axes.Both,
+                                AutoSizeDuration = 500,
+                                AutoSizeEasing = Easing.OutQuint,
+                                Direction = FillDirection.Vertical,
+                            },
+                            new SpriteIcon
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Icon = FontAwesome.Solid.Download,
+                                Size = new Vector2(18),
+                            },
                         },
-                        new SpriteIcon
-                        {
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                            Icon = FontAwesome.Solid.Download,
-                            Size = new Vector2(18),
-                        },
-                    }
-                },
-                new DownloadProgressBar(beatmapSet)
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                },
-            });
+                    },
+                    new DownloadProgressBar(beatmapSet)
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                    },
+                }
+            );
 
             button.Action = () =>
             {
@@ -117,66 +119,85 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
             localUser.BindValueChanged(userChanged, true);
             button.Enabled.BindValueChanged(enabledChanged, true);
 
-            downloadTracker.State.BindValueChanged(state =>
-            {
-                switch (state.NewValue)
+            downloadTracker.State.BindValueChanged(
+                state =>
                 {
-                    case DownloadState.Downloading:
-                        textSprites.Children = new Drawable[]
-                        {
-                            new OsuSpriteText
+                    switch (state.NewValue)
+                    {
+                        case DownloadState.Downloading:
+                            textSprites.Children = new Drawable[]
                             {
-                                Text = CommonStrings.Downloading,
-                                Font = OsuFont.GetFont(size: text_size, weight: FontWeight.Bold)
-                            },
-                        };
-                        break;
+                                new OsuSpriteText
+                                {
+                                    Text = CommonStrings.Downloading,
+                                    Font = OsuFont.GetFont(
+                                        size: text_size,
+                                        weight: FontWeight.Bold
+                                    ),
+                                },
+                            };
+                            break;
 
-                    case DownloadState.Importing:
-                        textSprites.Children = new Drawable[]
-                        {
-                            new OsuSpriteText
+                        case DownloadState.Importing:
+                            textSprites.Children = new Drawable[]
                             {
-                                Text = CommonStrings.Importing,
-                                Font = OsuFont.GetFont(size: text_size, weight: FontWeight.Bold)
-                            },
-                        };
-                        break;
+                                new OsuSpriteText
+                                {
+                                    Text = CommonStrings.Importing,
+                                    Font = OsuFont.GetFont(
+                                        size: text_size,
+                                        weight: FontWeight.Bold
+                                    ),
+                                },
+                            };
+                            break;
 
-                    case DownloadState.LocallyAvailable:
-                        this.FadeOut(200);
-                        break;
+                        case DownloadState.LocallyAvailable:
+                            this.FadeOut(200);
+                            break;
 
-                    case DownloadState.NotDownloaded:
-                        textSprites.Children = new Drawable[]
-                        {
-                            new OsuSpriteText
+                        case DownloadState.NotDownloaded:
+                            textSprites.Children = new Drawable[]
                             {
-                                Text = BeatmapsetsStrings.ShowDetailsDownloadDefault,
-                                Font = OsuFont.GetFont(size: text_size, weight: FontWeight.Bold)
-                            },
-                            new OsuSpriteText
-                            {
-                                Text = getVideoSuffixText(),
-                                Font = OsuFont.GetFont(size: text_size - 2, weight: FontWeight.Bold)
-                            },
-                        };
-                        this.FadeIn(200);
-                        break;
-                }
-            }, true);
+                                new OsuSpriteText
+                                {
+                                    Text = BeatmapsetsStrings.ShowDetailsDownloadDefault,
+                                    Font = OsuFont.GetFont(
+                                        size: text_size,
+                                        weight: FontWeight.Bold
+                                    ),
+                                },
+                                new OsuSpriteText
+                                {
+                                    Text = getVideoSuffixText(),
+                                    Font = OsuFont.GetFont(
+                                        size: text_size - 2,
+                                        weight: FontWeight.Bold
+                                    ),
+                                },
+                            };
+                            this.FadeIn(200);
+                            break;
+                    }
+                },
+                true
+            );
         }
 
-        private void userChanged(ValueChangedEvent<APIUser> e) => button.Enabled.Value = !(e.NewValue is GuestUser);
+        private void userChanged(ValueChangedEvent<APIUser> e) =>
+            button.Enabled.Value = !(e.NewValue is GuestUser);
 
-        private void enabledChanged(ValueChangedEvent<bool> e) => this.FadeColour(e.NewValue ? Color4.White : Color4.Gray, 200, Easing.OutQuint);
+        private void enabledChanged(ValueChangedEvent<bool> e) =>
+            this.FadeColour(e.NewValue ? Color4.White : Color4.Gray, 200, Easing.OutQuint);
 
         private LocalisableString getVideoSuffixText()
         {
             if (!beatmapSet.HasVideo)
                 return string.Empty;
 
-            return noVideo ? BeatmapsetsStrings.ShowDetailsDownloadNoVideo : BeatmapsetsStrings.ShowDetailsDownloadVideo;
+            return noVideo
+                ? BeatmapsetsStrings.ShowDetailsDownloadNoVideo
+                : BeatmapsetsStrings.ShowDetailsDownloadVideo;
         }
     }
 }

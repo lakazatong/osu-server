@@ -20,7 +20,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             base.LoadComplete();
 
             AccentColourBindable.BindValueChanged(accent => BorderColour = accent.NewValue, true);
-            ScaleBindable.BindValueChanged(scale => PathRadius = path_radius * scale.NewValue, true);
+            ScaleBindable.BindValueChanged(
+                scale => PathRadius = path_radius * scale.NewValue,
+                true
+            );
 
             // This border size thing is kind of weird, hey.
             const float intended_thickness = ArgonMainCirclePiece.GRADIENT_THICKNESS / path_radius;
@@ -28,9 +31,13 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             BorderSize = intended_thickness / Default.DrawableSliderPath.BORDER_PORTION;
         }
 
-        protected override Default.DrawableSliderPath CreateSliderPath() => new DrawableSliderPath();
+        protected override Default.DrawableSliderPath CreateSliderPath() =>
+            new DrawableSliderPath();
 
-        protected override Color4 GetBodyAccentColour(ISkinSource skin, Color4 hitObjectAccentColour)
+        protected override Color4 GetBodyAccentColour(
+            ISkinSource skin,
+            Color4 hitObjectAccentColour
+        )
         {
             return base.GetBodyAccentColour(skin, hitObjectAccentColour).Opacity(BodyAlpha);
         }

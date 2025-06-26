@@ -15,25 +15,36 @@ namespace osu.Game.Rulesets.Taiko.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new TestTaikoRuleset();
 
         public TestSceneTaikoModPerfect()
-            : base(new TaikoModPerfect())
-        {
-        }
+            : base(new TaikoModPerfect()) { }
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestHit(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new Hit { StartTime = 1000, Type = HitType.Centre }), shouldMiss);
+        public void TestHit(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new Hit { StartTime = 1000, Type = HitType.Centre }),
+                shouldMiss
+            );
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestDrumRoll(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new DrumRoll { StartTime = 1000, EndTime = 3000 }, false), shouldMiss);
+        public void TestDrumRoll(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new DrumRoll { StartTime = 1000, EndTime = 3000 }, false),
+                shouldMiss
+            );
 
         [TestCase(false)]
         [TestCase(true)]
-        public void TestSwell(bool shouldMiss) => CreateHitObjectTest(new HitObjectTestData(new Swell { StartTime = 1000, EndTime = 3000 }, false), shouldMiss);
+        public void TestSwell(bool shouldMiss) =>
+            CreateHitObjectTest(
+                new HitObjectTestData(new Swell { StartTime = 1000, EndTime = 3000 }, false),
+                shouldMiss
+            );
 
         private partial class TestTaikoRuleset : TaikoRuleset
         {
-            public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new TestTaikoHealthProcessor();
+            public override HealthProcessor CreateHealthProcessor(double drainStartTime) =>
+                new TestTaikoHealthProcessor();
 
             private partial class TestTaikoHealthProcessor : TaikoHealthProcessor
             {

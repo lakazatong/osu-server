@@ -115,16 +115,22 @@ namespace osu.Game.Screens
 
         private bool? modTrackAdjustmentStateAtSuspend;
 
-        internal void CreateLeasedDependencies(IReadOnlyDependencyContainer dependencies) => createDependencies(dependencies);
+        internal void CreateLeasedDependencies(IReadOnlyDependencyContainer dependencies) =>
+            createDependencies(dependencies);
 
-        internal void LoadComponentsAgainstScreenDependencies(IEnumerable<Drawable> components) => LoadComponents(components);
+        internal void LoadComponentsAgainstScreenDependencies(IEnumerable<Drawable> components) =>
+            LoadComponents(components);
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             if (screenDependencies == null)
             {
                 if (DisallowExternalBeatmapRulesetChanges)
-                    throw new InvalidOperationException($"Screens that specify {nameof(DisallowExternalBeatmapRulesetChanges)} must be pushed immediately.");
+                    throw new InvalidOperationException(
+                        $"Screens that specify {nameof(DisallowExternalBeatmapRulesetChanges)} must be pushed immediately."
+                    );
 
                 createDependencies(parent);
             }
@@ -134,7 +140,10 @@ namespace osu.Game.Screens
 
         private void createDependencies(IReadOnlyDependencyContainer dependencies)
         {
-            screenDependencies = new OsuScreenDependencies(DisallowExternalBeatmapRulesetChanges, dependencies);
+            screenDependencies = new OsuScreenDependencies(
+                DisallowExternalBeatmapRulesetChanges,
+                dependencies
+            );
 
             Beatmap = screenDependencies.Beatmap;
             Ruleset = screenDependencies.Ruleset;
@@ -189,10 +198,14 @@ namespace osu.Game.Screens
         public void ApplyToBackground(Action<BackgroundScreen> action)
         {
             if (backgroundStack == null)
-                throw new InvalidOperationException("Attempted to apply to background without a background stack being available.");
+                throw new InvalidOperationException(
+                    "Attempted to apply to background without a background stack being available."
+                );
 
             if (background == null)
-                throw new InvalidOperationException("Attempted to apply to background before screen is pushed.");
+                throw new InvalidOperationException(
+                    "Attempted to apply to background before screen is pushed."
+                );
 
             background.ApplyToBackground(action);
         }
@@ -283,10 +296,14 @@ namespace osu.Game.Screens
 
         private void applyArrivingDefaults(bool isResuming)
         {
-            logo?.AppendAnimatingAction(() =>
-            {
-                if (this.IsCurrentScreen()) LogoArriving(logo, isResuming);
-            }, true);
+            logo?.AppendAnimatingAction(
+                () =>
+                {
+                    if (this.IsCurrentScreen())
+                        LogoArriving(logo, isResuming);
+                },
+                true
+            );
         }
 
         private void onExitingLogo()
@@ -297,9 +314,7 @@ namespace osu.Game.Screens
         /// <summary>
         /// Fired when this screen was exited to add any outwards transition to the logo.
         /// </summary>
-        protected virtual void LogoExiting(OsuLogo logo)
-        {
-        }
+        protected virtual void LogoExiting(OsuLogo logo) { }
 
         private void onSuspendingLogo()
         {
@@ -309,9 +324,7 @@ namespace osu.Game.Screens
         /// <summary>
         /// Fired when this screen was suspended to add any outwards transition to the logo.
         /// </summary>
-        protected virtual void LogoSuspending(OsuLogo logo)
-        {
-        }
+        protected virtual void LogoSuspending(OsuLogo logo) { }
 
         /// <summary>
         /// Override to create a BackgroundMode for the current screen.
@@ -319,7 +332,8 @@ namespace osu.Game.Screens
         /// </summary>
         protected virtual BackgroundScreen CreateBackground() => null;
 
-        public virtual IReadOnlyList<ScreenFooterButton> CreateFooterButtons() => Array.Empty<ScreenFooterButton>();
+        public virtual IReadOnlyList<ScreenFooterButton> CreateFooterButtons() =>
+            Array.Empty<ScreenFooterButton>();
 
         public virtual bool OnBackButton() => false;
     }

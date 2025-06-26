@@ -3,8 +3,8 @@
 
 using System;
 using osu.Framework.Graphics.Sprites;
-using osu.Game.Overlays.Dialog;
 using osu.Game.Localisation;
+using osu.Game.Overlays.Dialog;
 
 namespace osu.Game.Screens.Edit
 {
@@ -18,16 +18,8 @@ namespace osu.Game.Screens.Edit
 
             Buttons = new PopupDialogButton[]
             {
-                new PopupDialogOkButton
-                {
-                    Text = DialogStrings.Confirm,
-                    Action = reload
-                },
-                new PopupDialogCancelButton
-                {
-                    Text = DialogStrings.Cancel,
-                    Action = cancel
-                }
+                new PopupDialogOkButton { Text = DialogStrings.Confirm, Action = reload },
+                new PopupDialogCancelButton { Text = DialogStrings.Cancel, Action = cancel },
             };
         }
     }

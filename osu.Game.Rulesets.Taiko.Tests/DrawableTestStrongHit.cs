@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Taiko.Tests
     {
         private readonly bool hitBoth;
 
-        public DrawableTestStrongHit(double startTime, HitResult type = HitResult.Great, bool hitBoth = true)
-            : base(new Hit
-            {
-                IsStrong = true,
-                StartTime = startTime,
-            }, type)
+        public DrawableTestStrongHit(
+            double startTime,
+            HitResult type = HitResult.Great,
+            bool hitBoth = true
+        )
+            : base(new Hit { IsStrong = true, StartTime = startTime }, type)
         {
             this.hitBoth = hitBoth;
         }

@@ -20,18 +20,30 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             var hitObjectContainer = playfield.HitObjectContainer;
 
             // Warm up pools for non-standard samples.
-            sampleProvider.GetPooledSample(new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_NORMAL), true));
-            sampleProvider.GetPooledSample(new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_CLAP), true));
-            sampleProvider.GetPooledSample(new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_FLOURISH), true));
+            sampleProvider.GetPooledSample(
+                new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_NORMAL), true)
+            );
+            sampleProvider.GetPooledSample(
+                new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_CLAP), true)
+            );
+            sampleProvider.GetPooledSample(
+                new VolumeAwareHitSampleInfo(new HitSampleInfo(HitSampleInfo.HIT_FLOURISH), true)
+            );
 
             // We want to play back flourishes in an isolated source as to not have them cancelled.
             AddInternal(argonFlourishTrigger = new ArgonFlourishTriggerSource(hitObjectContainer));
         }
 
-        protected override DrumSampleTriggerSource CreateTriggerSource(HitObjectContainer hitObjectContainer, SampleBalance balance) =>
-            new ArgonDrumSampleTriggerSource(hitObjectContainer, balance);
+        protected override DrumSampleTriggerSource CreateTriggerSource(
+            HitObjectContainer hitObjectContainer,
+            SampleBalance balance
+        ) => new ArgonDrumSampleTriggerSource(hitObjectContainer, balance);
 
-        protected override void Play(DrumSampleTriggerSource triggerSource, HitType hitType, bool strong)
+        protected override void Play(
+            DrumSampleTriggerSource triggerSource,
+            HitType hitType,
+            bool strong
+        )
         {
             base.Play(triggerSource, hitType, strong);
 

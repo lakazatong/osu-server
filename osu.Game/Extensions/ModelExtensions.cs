@@ -20,7 +20,8 @@ namespace osu.Game.Extensions
         /// </summary>
         /// <param name="fileInfo">The file info.</param>
         /// <returns>A relative file path.</returns>
-        public static string GetStoragePath(this IFileInfo fileInfo) => Path.Combine(fileInfo.Hash.Remove(1), fileInfo.Hash.Remove(2), fileInfo.Hash);
+        public static string GetStoragePath(this IFileInfo fileInfo) =>
+            Path.Combine(fileInfo.Hash.Remove(1), fileInfo.Hash.Remove(2), fileInfo.Hash);
 
         /// <summary>
         /// Returns a user-facing string representing the <paramref name="model"/>.
@@ -73,7 +74,8 @@ namespace osu.Game.Extensions
         /// <summary>
         /// Check whether this <see cref="IRulesetInfo"/>'s online ID is within the range that defines it as a legacy ruleset (ie. either osu!, osu!taiko, osu!catch or osu!mania).
         /// </summary>
-        public static bool IsLegacyRuleset(this IRulesetInfo ruleset) => ruleset.OnlineID >= 0 && ruleset.OnlineID <= ILegacyRuleset.MAX_LEGACY_RULESET_ID;
+        public static bool IsLegacyRuleset(this IRulesetInfo ruleset) =>
+            ruleset.OnlineID >= 0 && ruleset.OnlineID <= ILegacyRuleset.MAX_LEGACY_RULESET_ID;
 
         /// <summary>
         /// Check whether the online ID of two <see cref="IBeatmapSetInfo"/>s match.
@@ -81,7 +83,10 @@ namespace osu.Game.Extensions
         /// <param name="instance">The instance to compare.</param>
         /// <param name="other">The other instance to compare against.</param>
         /// <returns>Whether online IDs match. If either instance is missing an online ID, this will return false.</returns>
-        public static bool MatchesOnlineID(this IBeatmapSetInfo? instance, IBeatmapSetInfo? other) => matchesOnlineID(instance, other);
+        public static bool MatchesOnlineID(
+            this IBeatmapSetInfo? instance,
+            IBeatmapSetInfo? other
+        ) => matchesOnlineID(instance, other);
 
         /// <summary>
         /// Check whether the online ID of two <see cref="IBeatmapInfo"/>s match.
@@ -89,7 +94,8 @@ namespace osu.Game.Extensions
         /// <param name="instance">The instance to compare.</param>
         /// <param name="other">The other instance to compare against.</param>
         /// <returns>Whether online IDs match. If either instance is missing an online ID, this will return false.</returns>
-        public static bool MatchesOnlineID(this IBeatmapInfo? instance, IBeatmapInfo? other) => matchesOnlineID(instance, other);
+        public static bool MatchesOnlineID(this IBeatmapInfo? instance, IBeatmapInfo? other) =>
+            matchesOnlineID(instance, other);
 
         /// <summary>
         /// Check whether the online ID of two <see cref="IRulesetInfo"/>s match.
@@ -97,7 +103,8 @@ namespace osu.Game.Extensions
         /// <param name="instance">The instance to compare.</param>
         /// <param name="other">The other instance to compare against.</param>
         /// <returns>Whether online IDs match. If either instance is missing an online ID, this will return false.</returns>
-        public static bool MatchesOnlineID(this IRulesetInfo? instance, IRulesetInfo? other) => matchesOnlineID(instance, other);
+        public static bool MatchesOnlineID(this IRulesetInfo? instance, IRulesetInfo? other) =>
+            matchesOnlineID(instance, other);
 
         /// <summary>
         /// Check whether the online ID of two <see cref="APIUser"/>s match.
@@ -105,7 +112,8 @@ namespace osu.Game.Extensions
         /// <param name="instance">The instance to compare.</param>
         /// <param name="other">The other instance to compare against.</param>
         /// <returns>Whether online IDs match. If either instance is missing an online ID, this will return false.</returns>
-        public static bool MatchesOnlineID(this APIUser? instance, APIUser? other) => matchesOnlineID(instance, other);
+        public static bool MatchesOnlineID(this APIUser? instance, APIUser? other) =>
+            matchesOnlineID(instance, other);
 
         /// <summary>
         /// Check whether the online ID of two <see cref="IScoreInfo"/>s match.
@@ -131,7 +139,10 @@ namespace osu.Game.Extensions
             return instance.LegacyOnlineID.Equals(other.LegacyOnlineID);
         }
 
-        private static bool matchesOnlineID(this IHasOnlineID<long>? instance, IHasOnlineID<long>? other)
+        private static bool matchesOnlineID(
+            this IHasOnlineID<long>? instance,
+            IHasOnlineID<long>? other
+        )
         {
             if (instance == null || other == null)
                 return false;
@@ -142,7 +153,10 @@ namespace osu.Game.Extensions
             return instance.OnlineID.Equals(other.OnlineID);
         }
 
-        private static bool matchesOnlineID(this IHasOnlineID<int>? instance, IHasOnlineID<int>? other)
+        private static bool matchesOnlineID(
+            this IHasOnlineID<int>? instance,
+            IHasOnlineID<int>? other
+        )
         {
             if (instance == null || other == null)
                 return false;
@@ -157,8 +171,47 @@ namespace osu.Game.Extensions
         // see https://referencesource.microsoft.com/#mscorlib/system/io/path.cs,88
         private static readonly char[] invalid_filename_chars =
         {
-            '\"', '<', '>', '|', '\0', (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10, (char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17,
-            (char)18, (char)19, (char)20, (char)21, (char)22, (char)23, (char)24, (char)25, (char)26, (char)27, (char)28, (char)29, (char)30, (char)31, ':', '*', '?', '\\', '/'
+            '\"',
+            '<',
+            '>',
+            '|',
+            '\0',
+            (char)1,
+            (char)2,
+            (char)3,
+            (char)4,
+            (char)5,
+            (char)6,
+            (char)7,
+            (char)8,
+            (char)9,
+            (char)10,
+            (char)11,
+            (char)12,
+            (char)13,
+            (char)14,
+            (char)15,
+            (char)16,
+            (char)17,
+            (char)18,
+            (char)19,
+            (char)20,
+            (char)21,
+            (char)22,
+            (char)23,
+            (char)24,
+            (char)25,
+            (char)26,
+            (char)27,
+            (char)28,
+            (char)29,
+            (char)30,
+            (char)31,
+            ':',
+            '*',
+            '?',
+            '\\',
+            '/',
         };
 
         /// <summary>

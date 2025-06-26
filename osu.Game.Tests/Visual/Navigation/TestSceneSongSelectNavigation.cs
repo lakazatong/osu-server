@@ -36,8 +36,20 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             var getOriginalPlayer = playToResults();
 
-            AddStep("attempt to retry", () => ((ResultsScreen)Game.ScreenStack.CurrentScreen).ChildrenOfType<HotkeyRetryOverlay>().First().Action());
-            AddUntilStep("wait for player", () => Game.ScreenStack.CurrentScreen != getOriginalPlayer() && Game.ScreenStack.CurrentScreen is Player);
+            AddStep(
+                "attempt to retry",
+                () =>
+                    ((ResultsScreen)Game.ScreenStack.CurrentScreen)
+                        .ChildrenOfType<HotkeyRetryOverlay>()
+                        .First()
+                        .Action()
+            );
+            AddUntilStep(
+                "wait for player",
+                () =>
+                    Game.ScreenStack.CurrentScreen != getOriginalPlayer()
+                    && Game.ScreenStack.CurrentScreen is Player
+            );
         }
 
         [Test]
@@ -46,13 +58,19 @@ namespace osu.Game.Tests.Visual.Navigation
             AddStep("push song select", () => Game.ScreenStack.Push(new SoloSongSelect()));
 
             // TODO: without this step, a critical bug will be hit, see inline comment in `OsuGame.handleBackButton`.
-            AddUntilStep("Wait for song select", () => Game.ScreenStack.CurrentScreen is SoloSongSelect select && select.IsLoaded);
+            AddUntilStep(
+                "Wait for song select",
+                () => Game.ScreenStack.CurrentScreen is SoloSongSelect select && select.IsLoaded
+            );
 
-            AddStep("click in corner", () =>
-            {
-                InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.BottomLeft);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click in corner",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Game.ScreenSpaceDrawQuad.BottomLeft);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             ConfirmAtMainMenu();
         }
@@ -63,9 +81,15 @@ namespace osu.Game.Tests.Visual.Navigation
             AddStep("push song select", () => Game.ScreenStack.Push(new SoloSongSelect()));
 
             // TODO: without this step, a critical bug will be hit, see inline comment in `OsuGame.handleBackButton`.
-            AddUntilStep("Wait for song select", () => Game.ScreenStack.CurrentScreen is SoloSongSelect select && select.IsLoaded);
+            AddUntilStep(
+                "Wait for song select",
+                () => Game.ScreenStack.CurrentScreen is SoloSongSelect select && select.IsLoaded
+            );
 
-            AddStep("press back button", () => Game.ChildrenOfType<ScreenBackButton>().First().Action!.Invoke());
+            AddStep(
+                "press back button",
+                () => Game.ChildrenOfType<ScreenBackButton>().First().Action!.Invoke()
+            );
 
             ConfirmAtMainMenu();
         }
@@ -75,16 +99,22 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             PushAndConfirm(() => new SoloSongSelect());
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely()
+            );
 
             AddUntilStep("wait for selected", () => !Game.Beatmap.IsDefault);
 
             AddStep("open menu", () => InputManager.Key(Key.F3));
-            AddStep("trigger edit", () =>
-            {
-                // TODO: should be 5, not 4.
-                InputManager.Key(Key.Number4);
-            });
+            AddStep(
+                "trigger edit",
+                () =>
+                {
+                    // TODO: should be 5, not 4.
+                    InputManager.Key(Key.Number4);
+                }
+            );
 
             waitForScreen<Editor>();
 
@@ -102,7 +132,10 @@ namespace osu.Game.Tests.Visual.Navigation
 
             PushAndConfirm(() => new SoloSongSelect());
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely()
+            );
 
             AddUntilStep("wait for selected", () => !Game.Beatmap.IsDefault);
 
@@ -111,21 +144,34 @@ namespace osu.Game.Tests.Visual.Navigation
 
             AddStep("press enter", () => InputManager.Key(Key.Enter));
 
-            AddUntilStep("wait for player", () =>
-            {
-                DismissAnyNotifications();
-                return (player = Game.ScreenStack.CurrentScreen as Player) != null;
-            });
+            AddUntilStep(
+                "wait for player",
+                () =>
+                {
+                    DismissAnyNotifications();
+                    return (player = Game.ScreenStack.CurrentScreen as Player) != null;
+                }
+            );
 
             AddUntilStep("wait for fail", () => player?.GameplayState.HasFailed, () => Is.True);
 
             AddUntilStep("wait for track stop", () => !Game.MusicController.IsPlaying);
-            AddAssert("Ensure time before preview point", () => Game.MusicController.CurrentTrack.CurrentTime < beatmap().BeatmapInfo.Metadata.PreviewTime);
+            AddAssert(
+                "Ensure time before preview point",
+                () =>
+                    Game.MusicController.CurrentTrack.CurrentTime
+                    < beatmap().BeatmapInfo.Metadata.PreviewTime
+            );
 
             pushEscape();
 
             AddUntilStep("wait for track playing", () => Game.MusicController.IsPlaying);
-            AddAssert("Ensure time wasn't reset to preview point", () => Game.MusicController.CurrentTrack.CurrentTime < beatmap().BeatmapInfo.Metadata.PreviewTime);
+            AddAssert(
+                "Ensure time wasn't reset to preview point",
+                () =>
+                    Game.MusicController.CurrentTrack.CurrentTime
+                    < beatmap().BeatmapInfo.Metadata.PreviewTime
+            );
         }
 
         [Test]
@@ -133,40 +179,73 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             PushAndConfirm(() => new SoloSongSelect());
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely()
+            );
 
             AddUntilStep("wait for selection", () => !Game.Beatmap.IsDefault);
 
             AddStep("open mod select", () => InputManager.Key(Key.F1));
-            AddStep("search magnetised", () => this.ChildrenOfType<ModSelectOverlay>().Single().SearchTerm = "MG");
+            AddStep(
+                "search magnetised",
+                () => this.ChildrenOfType<ModSelectOverlay>().Single().SearchTerm = "MG"
+            );
             AddStep("select", () => InputManager.Key(Key.Enter));
 
-            AddAssert("magnetised selected", () => Game.SelectedMods.Value.Single(), Is.TypeOf<OsuModMagnetised>);
-            AddStep("configure mod", () => ((OsuModMagnetised)Game.SelectedMods.Value.Single()).AttractionStrength.Value = 1.0f);
+            AddAssert(
+                "magnetised selected",
+                () => Game.SelectedMods.Value.Single(),
+                Is.TypeOf<OsuModMagnetised>
+            );
+            AddStep(
+                "configure mod",
+                () =>
+                    ((OsuModMagnetised)Game.SelectedMods.Value.Single()).AttractionStrength.Value =
+                        1.0f
+            );
 
             pushEscape();
             pushEscape();
 
-            AddStep("press ctrl+enter", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.Key(Key.Enter);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
+            AddStep(
+                "press ctrl+enter",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.Key(Key.Enter);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
 
-            AddUntilStep("wait for player", () =>
-            {
-                DismissAnyNotifications();
-                return Game.ScreenStack.CurrentScreen is Player;
-            });
+            AddUntilStep(
+                "wait for player",
+                () =>
+                {
+                    DismissAnyNotifications();
+                    return Game.ScreenStack.CurrentScreen is Player;
+                }
+            );
 
-            AddAssert("only autoplay selected", () => Game.SelectedMods.Value.Single(), Is.TypeOf<OsuModAutoplay>);
+            AddAssert(
+                "only autoplay selected",
+                () => Game.SelectedMods.Value.Single(),
+                Is.TypeOf<OsuModAutoplay>
+            );
 
             pushEscape();
             waitForScreen<SoloSongSelect>();
 
-            AddAssert("magnetised selected", () => Game.SelectedMods.Value.Single(), Is.TypeOf<OsuModMagnetised>);
-            AddAssert("mod configured", () => ((OsuModMagnetised)Game.SelectedMods.Value.Single()).AttractionStrength.Value, () => Is.EqualTo(1.0f));
+            AddAssert(
+                "magnetised selected",
+                () => Game.SelectedMods.Value.Single(),
+                Is.TypeOf<OsuModMagnetised>
+            );
+            AddAssert(
+                "mod configured",
+                () => ((OsuModMagnetised)Game.SelectedMods.Value.Single()).AttractionStrength.Value,
+                () => Is.EqualTo(1.0f)
+            );
         }
 
         [Test]
@@ -176,27 +255,43 @@ namespace osu.Game.Tests.Visual.Navigation
 
             PushAndConfirm(() => new SoloSongSelect());
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely()
+            );
 
             AddUntilStep("wait for selected", () => !Game.Beatmap.IsDefault);
-            AddStep("switch to next difficulty and immediately press enter", () =>
-            {
-                InputManager.Key(Key.Down);
-                Schedule(() => InputManager.Key(Key.Enter));
-            });
+            AddStep(
+                "switch to next difficulty and immediately press enter",
+                () =>
+                {
+                    InputManager.Key(Key.Down);
+                    Schedule(() => InputManager.Key(Key.Enter));
+                }
+            );
 
-            AddUntilStep("wait for player", () =>
-            {
-                DismissAnyNotifications();
-                return Game.ScreenStack.CurrentScreen is Player;
-            });
-            AddAssert("leaderboard matches gameplay beatmap", () => Game.ChildrenOfType<LeaderboardManager>().Single().CurrentCriteria?.Beatmap, () => Is.EqualTo(beatmap().BeatmapInfo));
+            AddUntilStep(
+                "wait for player",
+                () =>
+                {
+                    DismissAnyNotifications();
+                    return Game.ScreenStack.CurrentScreen is Player;
+                }
+            );
+            AddAssert(
+                "leaderboard matches gameplay beatmap",
+                () => Game.ChildrenOfType<LeaderboardManager>().Single().CurrentCriteria?.Beatmap,
+                () => Is.EqualTo(beatmap().BeatmapInfo)
+            );
         }
 
         private Func<Player> playToResults()
         {
             var player = playToCompletion();
-            AddUntilStep("wait for results", () => (Game.ScreenStack.CurrentScreen as ResultsScreen)?.IsLoaded == true);
+            AddUntilStep(
+                "wait for results",
+                () => (Game.ScreenStack.CurrentScreen as ResultsScreen)?.IsLoaded == true
+            );
             return player;
         }
 
@@ -208,34 +303,57 @@ namespace osu.Game.Tests.Visual.Navigation
 
             PushAndConfirm(() => new SoloSongSelect());
 
-            AddStep("import beatmap", () => BeatmapImportHelper.LoadQuickOszIntoOsu(Game).WaitSafely());
+            AddStep(
+                "import beatmap",
+                () => BeatmapImportHelper.LoadQuickOszIntoOsu(Game).WaitSafely()
+            );
 
             AddUntilStep("wait for selected", () => !Game.Beatmap.IsDefault);
 
-            AddStep("set mods", () => Game.SelectedMods.Value = new Mod[] { new OsuModNoFail(), new OsuModDoubleTime { SpeedChange = { Value = 2 } } });
+            AddStep(
+                "set mods",
+                () =>
+                    Game.SelectedMods.Value = new Mod[]
+                    {
+                        new OsuModNoFail(),
+                        new OsuModDoubleTime { SpeedChange = { Value = 2 } },
+                    }
+            );
 
             pushEnter();
 
-            AddUntilStep("wait for player", () =>
-            {
-                DismissAnyNotifications();
-                return (player = Game.ScreenStack.CurrentScreen as Player) != null;
-            });
+            AddUntilStep(
+                "wait for player",
+                () =>
+                {
+                    DismissAnyNotifications();
+                    return (player = Game.ScreenStack.CurrentScreen as Player) != null;
+                }
+            );
 
             AddUntilStep("wait for track playing", () => beatmap().Track.IsRunning);
-            AddStep("seek to near end", () => player.ChildrenOfType<GameplayClockContainer>().First().Seek(beatmap().Beatmap.HitObjects[^1].StartTime - 1000));
+            AddStep(
+                "seek to near end",
+                () =>
+                    player
+                        .ChildrenOfType<GameplayClockContainer>()
+                        .First()
+                        .Seek(beatmap().Beatmap.HitObjects[^1].StartTime - 1000)
+            );
             AddUntilStep("wait for complete", () => player?.GameplayState.HasPassed, () => Is.True);
 
             return () => player!;
         }
 
-        private void waitForScreen<T>() where T : OsuScreen =>
-            AddUntilStep($"Wait for {typeof(T).ReadableName()}", () => Game.ScreenStack.CurrentScreen is T screen && screen.IsLoaded);
+        private void waitForScreen<T>()
+            where T : OsuScreen =>
+            AddUntilStep(
+                $"Wait for {typeof(T).ReadableName()}",
+                () => Game.ScreenStack.CurrentScreen is T screen && screen.IsLoaded
+            );
 
-        private void pushEnter() =>
-            AddStep("Press enter", () => InputManager.Key(Key.Enter));
+        private void pushEnter() => AddStep("Press enter", () => InputManager.Key(Key.Enter));
 
-        private void pushEscape() =>
-            AddStep("Press escape", () => InputManager.Key(Key.Escape));
+        private void pushEscape() => AddStep("Press escape", () => InputManager.Key(Key.Escape));
     }
 }

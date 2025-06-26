@@ -25,69 +25,85 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestLocal([Values] BeatmapSetCoverType coverType)
         {
-            AddStep("setup cover", () => Child = new UpdateableOnlineBeatmapSetCover(coverType)
-            {
-                OnlineInfo = CreateAPIBeatmapSet(),
-                RelativeSizeAxes = Axes.Both,
-                Masking = true,
-            });
+            AddStep(
+                "setup cover",
+                () =>
+                    Child = new UpdateableOnlineBeatmapSetCover(coverType)
+                    {
+                        OnlineInfo = CreateAPIBeatmapSet(),
+                        RelativeSizeAxes = Axes.Both,
+                        Masking = true,
+                    }
+            );
 
-            AddUntilStep("wait for load", () => this.ChildrenOfType<OnlineBeatmapSetCover>().SingleOrDefault()?.IsLoaded ?? false);
+            AddUntilStep(
+                "wait for load",
+                () =>
+                    this.ChildrenOfType<OnlineBeatmapSetCover>().SingleOrDefault()?.IsLoaded
+                    ?? false
+            );
         }
 
         [Test]
         public void TestUnloadAndReload()
         {
             OsuScrollContainer scroll = null;
-            List<UpdateableOnlineBeatmapSetCover> covers = new List<UpdateableOnlineBeatmapSetCover>();
+            List<UpdateableOnlineBeatmapSetCover> covers =
+                new List<UpdateableOnlineBeatmapSetCover>();
 
-            AddStep("setup covers", () =>
-            {
-                var beatmapSet = CreateAPIBeatmapSet();
-
-                FillFlowContainer fillFlow;
-
-                Child = scroll = new OsuScrollContainer
+            AddStep(
+                "setup covers",
+                () =>
                 {
-                    Size = new Vector2(500f),
-                    Child = fillFlow = new FillFlowContainer
+                    var beatmapSet = CreateAPIBeatmapSet();
+
+                    FillFlowContainer fillFlow;
+
+                    Child = scroll = new OsuScrollContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(10),
-                        Padding = new MarginPadding { Bottom = 550 }
-                    }
-                };
-
-                var coverTypes = Enum.GetValues(typeof(BeatmapSetCoverType))
-                                     .Cast<BeatmapSetCoverType>()
-                                     .ToList();
-
-                for (int i = 0; i < 25; i++)
-                {
-                    var coverType = coverTypes[i % coverTypes.Count];
-
-                    var cover = new UpdateableOnlineBeatmapSetCover(coverType)
-                    {
-                        OnlineInfo = beatmapSet,
-                        Height = 100,
-                        Masking = true,
+                        Size = new Vector2(500f),
+                        Child = fillFlow =
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(10),
+                                Padding = new MarginPadding { Bottom = 550 },
+                            },
                     };
 
-                    if (coverType == BeatmapSetCoverType.Cover)
-                        cover.Width = 500;
-                    else if (coverType == BeatmapSetCoverType.Card)
-                        cover.Width = 400;
-                    else if (coverType == BeatmapSetCoverType.List)
-                        cover.Size = new Vector2(100, 50);
+                    var coverTypes = Enum.GetValues(typeof(BeatmapSetCoverType))
+                        .Cast<BeatmapSetCoverType>()
+                        .ToList();
 
-                    fillFlow.Add(cover);
-                    covers.Add(cover);
+                    for (int i = 0; i < 25; i++)
+                    {
+                        var coverType = coverTypes[i % coverTypes.Count];
+
+                        var cover = new UpdateableOnlineBeatmapSetCover(coverType)
+                        {
+                            OnlineInfo = beatmapSet,
+                            Height = 100,
+                            Masking = true,
+                        };
+
+                        if (coverType == BeatmapSetCoverType.Cover)
+                            cover.Width = 500;
+                        else if (coverType == BeatmapSetCoverType.Card)
+                            cover.Width = 400;
+                        else if (coverType == BeatmapSetCoverType.List)
+                            cover.Size = new Vector2(100, 50);
+
+                        fillFlow.Add(cover);
+                        covers.Add(cover);
+                    }
                 }
-            });
+            );
 
-            var loadedCovers = covers.Where(c => c.ChildrenOfType<OnlineBeatmapSetCover>().SingleOrDefault()?.IsLoaded ?? false);
+            var loadedCovers = covers.Where(c =>
+                c.ChildrenOfType<OnlineBeatmapSetCover>().SingleOrDefault()?.IsLoaded ?? false
+            );
 
             AddUntilStep("some loaded", () => loadedCovers.Any());
             AddStep("scroll to end", () => scroll.ScrollToEnd());
@@ -99,18 +115,26 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             TestUpdateableOnlineBeatmapSetCover updateableCover = null;
 
-            AddStep("setup cover", () => Child = updateableCover = new TestUpdateableOnlineBeatmapSetCover(400)
-            {
-                OnlineInfo = CreateAPIBeatmapSet(),
-                RelativeSizeAxes = Axes.Both,
-                Masking = true,
-            });
+            AddStep(
+                "setup cover",
+                () =>
+                    Child = updateableCover =
+                        new TestUpdateableOnlineBeatmapSetCover(400)
+                        {
+                            OnlineInfo = CreateAPIBeatmapSet(),
+                            RelativeSizeAxes = Axes.Both,
+                            Masking = true,
+                        }
+            );
 
             AddStep("change model to null", () => updateableCover.OnlineInfo = null);
 
             AddUntilStep("wait for load", () => updateableCover.DelayedLoadFinished);
 
-            AddAssert("no cover added", () => !updateableCover.ChildrenOfType<TestOnlineBeatmapSetCover>().Any());
+            AddAssert(
+                "no cover added",
+                () => !updateableCover.ChildrenOfType<TestOnlineBeatmapSetCover>().Any()
+            );
         }
 
         [Test]
@@ -119,27 +143,51 @@ namespace osu.Game.Tests.Visual.UserInterface
             TestUpdateableOnlineBeatmapSetCover updateableCover = null;
             OnlineBeatmapSetCover initialCover = null;
 
-            AddStep("setup cover", () => Child = updateableCover = new TestUpdateableOnlineBeatmapSetCover(0)
-            {
-                OnlineInfo = createBeatmapWithCover("https://assets.ppy.sh/beatmaps/1189904/covers/cover.jpg"),
-                RelativeSizeAxes = Axes.Both,
-                Masking = true,
-                Alpha = 0.4f
-            });
+            AddStep(
+                "setup cover",
+                () =>
+                    Child = updateableCover =
+                        new TestUpdateableOnlineBeatmapSetCover(0)
+                        {
+                            OnlineInfo = createBeatmapWithCover(
+                                "https://assets.ppy.sh/beatmaps/1189904/covers/cover.jpg"
+                            ),
+                            RelativeSizeAxes = Axes.Both,
+                            Masking = true,
+                            Alpha = 0.4f,
+                        }
+            );
 
-            AddUntilStep("cover loaded", () => updateableCover.ChildrenOfType<OnlineBeatmapSetCover>().Any());
-            AddStep("store initial cover", () => initialCover = updateableCover.ChildrenOfType<OnlineBeatmapSetCover>().Single());
+            AddUntilStep(
+                "cover loaded",
+                () => updateableCover.ChildrenOfType<OnlineBeatmapSetCover>().Any()
+            );
+            AddStep(
+                "store initial cover",
+                () =>
+                    initialCover = updateableCover.ChildrenOfType<OnlineBeatmapSetCover>().Single()
+            );
             AddUntilStep("wait for fade complete", () => initialCover.Alpha == 1);
 
-            AddStep("switch beatmap",
-                () => updateableCover.OnlineInfo = createBeatmapWithCover("https://assets.ppy.sh/beatmaps/1079428/covers/cover.jpg"));
-            AddUntilStep("new cover loaded", () => updateableCover.ChildrenOfType<OnlineBeatmapSetCover>().Except(new[] { initialCover }).Any());
+            AddStep(
+                "switch beatmap",
+                () =>
+                    updateableCover.OnlineInfo = createBeatmapWithCover(
+                        "https://assets.ppy.sh/beatmaps/1079428/covers/cover.jpg"
+                    )
+            );
+            AddUntilStep(
+                "new cover loaded",
+                () =>
+                    updateableCover
+                        .ChildrenOfType<OnlineBeatmapSetCover>()
+                        .Except(new[] { initialCover })
+                        .Any()
+            );
         }
 
-        private static APIBeatmapSet createBeatmapWithCover(string coverUrl) => new APIBeatmapSet
-        {
-            Covers = new BeatmapSetOnlineCovers { Cover = coverUrl }
-        };
+        private static APIBeatmapSet createBeatmapWithCover(string coverUrl) =>
+            new APIBeatmapSet { Covers = new BeatmapSetOnlineCovers { Cover = coverUrl } };
 
         private partial class TestUpdateableOnlineBeatmapSetCover : UpdateableOnlineBeatmapSetCover
         {

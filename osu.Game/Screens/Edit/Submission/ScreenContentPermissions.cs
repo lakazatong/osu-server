@@ -12,33 +12,41 @@ using osu.Game.Overlays;
 
 namespace osu.Game.Screens.Edit.Submission
 {
-    [LocalisableDescription(typeof(BeatmapSubmissionStrings), nameof(BeatmapSubmissionStrings.ContentPermissions))]
+    [LocalisableDescription(
+        typeof(BeatmapSubmissionStrings),
+        nameof(BeatmapSubmissionStrings.ContentPermissions)
+    )]
     public partial class ScreenContentPermissions : WizardScreen
     {
         [BackgroundDependencyLoader]
         private void load(OsuGame? game)
         {
-            Content.AddRange(new Drawable[]
-            {
-                new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+            Content.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Text = BeatmapSubmissionStrings.ContentPermissionsDisclaimer,
-                },
-                new RoundedButton
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Width = 450,
-                    Text = BeatmapSubmissionStrings.CheckContentUsageGuidelines,
-                    Action = () => game?.ShowWiki(@"Rules/Content_usage_permissions"),
-                },
-            });
+                    new OsuTextFlowContainer(cp =>
+                        cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                    )
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Text = BeatmapSubmissionStrings.ContentPermissionsDisclaimer,
+                    },
+                    new RoundedButton
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Width = 450,
+                        Text = BeatmapSubmissionStrings.CheckContentUsageGuidelines,
+                        Action = () => game?.ShowWiki(@"Rules/Content_usage_permissions"),
+                    },
+                }
+            );
         }
 
-        public override LocalisableString? NextStepText => BeatmapSubmissionStrings.ContentPermissionsAcknowledgement;
+        public override LocalisableString? NextStepText =>
+            BeatmapSubmissionStrings.ContentPermissionsAcknowledgement;
     }
 }

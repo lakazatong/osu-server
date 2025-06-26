@@ -60,7 +60,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             if (room.MaxAttempts == null || room.UserScore == null)
                 return;
 
-            int remaining = room.MaxAttempts.Value - room.UserScore.PlaylistItemAttempts.Sum(a => a.Attempts);
+            int remaining =
+                room.MaxAttempts.Value - room.UserScore.PlaylistItemAttempts.Sum(a => a.Attempts);
 
             hasRemainingAttempts = remaining > 0;
         }
@@ -95,7 +96,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             double trackLength = Math.Round(gameBeatmap.Value.Track.Length / rate);
 
             // Additional 30 second delay added to account for load and/or submit time.
-            return room.EndDate != null && DateTimeOffset.UtcNow.AddSeconds(30).AddMilliseconds(trackLength) < room.EndDate;
+            return room.EndDate != null
+                && DateTimeOffset.UtcNow.AddSeconds(30).AddMilliseconds(trackLength) < room.EndDate;
         }
 
         protected override void Dispose(bool isDisposing)

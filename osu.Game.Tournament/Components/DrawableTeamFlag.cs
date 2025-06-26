@@ -31,28 +31,28 @@ namespace osu.Game.Tournament.Components
         [BackgroundDependencyLoader]
         private void load(TextureStore textures)
         {
-            if (team == null) return;
+            if (team == null)
+                return;
 
             Size = new Vector2(75, 54);
             Masking = true;
             CornerRadius = 5;
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.FromHex("333"),
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.FromHex("333") },
                 flagSprite = new Sprite
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    FillMode = FillMode.Fit
+                    FillMode = FillMode.Fit,
                 },
             };
 
-            (flag = team.FlagName.GetBoundCopy()).BindValueChanged(_ => flagSprite.Texture = textures.Get($@"Flags/{team.FlagName}"), true);
+            (flag = team.FlagName.GetBoundCopy()).BindValueChanged(
+                _ => flagSprite.Texture = textures.Get($@"Flags/{team.FlagName}"),
+                true
+            );
         }
     }
 }

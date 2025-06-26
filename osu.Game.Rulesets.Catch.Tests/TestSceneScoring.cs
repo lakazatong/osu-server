@@ -23,15 +23,10 @@ namespace osu.Game.Rulesets.Catch.Tests
     public partial class TestSceneScoring : ScoringTestScene
     {
         public TestSceneScoring()
-            : base(supportsNonPerfectJudgements: false)
-        {
-        }
+            : base(supportsNonPerfectJudgements: false) { }
 
-        private Bindable<double> scoreMultiplier { get; } = new BindableDouble
-        {
-            Default = 4,
-            Value = 4
-        };
+        private Bindable<double> scoreMultiplier { get; } =
+            new BindableDouble { Default = 4, Value = 4 };
 
         protected override IBeatmap CreateBeatmap(int maxCombo)
         {
@@ -41,35 +36,55 @@ namespace osu.Game.Rulesets.Catch.Tests
             return beatmap;
         }
 
-        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods)
-            => new ScoreV1(selectedMods) { ScoreMultiplier = { BindTarget = scoreMultiplier } };
+        protected override IScoringAlgorithm CreateScoreV1(IReadOnlyList<Mod> selectedMods) =>
+            new ScoreV1(selectedMods) { ScoreMultiplier = { BindTarget = scoreMultiplier } };
 
-        protected override IScoringAlgorithm CreateScoreV2(int maxCombo, IReadOnlyList<Mod> selectedMods)
-            => new ScoreV2(maxCombo, selectedMods);
+        protected override IScoringAlgorithm CreateScoreV2(
+            int maxCombo,
+            IReadOnlyList<Mod> selectedMods
+        ) => new ScoreV2(maxCombo, selectedMods);
 
-        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
-            => new CatchProcessorBasedScoringAlgorithm(beatmap, mode, selectedMods);
+        protected override ProcessorBasedScoringAlgorithm CreateScoreAlgorithm(
+            IBeatmap beatmap,
+            ScoringMode mode,
+            IReadOnlyList<Mod> selectedMods
+        ) => new CatchProcessorBasedScoringAlgorithm(beatmap, mode, selectedMods);
 
         [Test]
         public void TestBasicScenarios()
         {
-            AddStep("set up score multiplier", () =>
-            {
-                scoreMultiplier.BindValueChanged(_ => Rerun());
-            });
+            AddStep(
+                "set up score multiplier",
+                () =>
+                {
+                    scoreMultiplier.BindValueChanged(_ => Rerun());
+                }
+            );
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
-            AddStep("set perfect score", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-            });
-            AddStep("set score with misses", () =>
-            {
-                NonPerfectLocations.Clear();
-                MissLocations.Clear();
-                MissLocations.AddRange(new[] { 24d, 49 });
-            });
-            AddSliderStep("adjust score multiplier", 0, 10, (int)scoreMultiplier.Default, multiplier => scoreMultiplier.Value = multiplier);
+            AddStep(
+                "set perfect score",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                }
+            );
+            AddStep(
+                "set score with misses",
+                () =>
+                {
+                    NonPerfectLocations.Clear();
+                    MissLocations.Clear();
+                    MissLocations.AddRange(new[] { 24d, 49 });
+                }
+            );
+            AddSliderStep(
+                "adjust score multiplier",
+                0,
+                10,
+                (int)scoreMultiplier.Default,
+                multiplier => scoreMultiplier.Value = multiplier
+            );
         }
 
         private const int base_great = 300;
@@ -85,15 +100,21 @@ namespace osu.Game.Rulesets.Catch.Tests
             public ScoreV1(IReadOnlyList<Mod> selectedMods)
             {
                 var ruleset = new CatchRuleset();
-                modMultiplier = ruleset.CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(selectedMods, new LegacyBeatmapConversionDifficultyInfo
-                {
-                    SourceRuleset = ruleset.RulesetInfo
-                });
+                modMultiplier = ruleset
+                    .CreateLegacyScoreSimulator()
+                    .GetLegacyScoreMultiplier(
+                        selectedMods,
+                        new LegacyBeatmapConversionDifficultyInfo
+                        {
+                            SourceRuleset = ruleset.RulesetInfo,
+                        }
+                    );
             }
 
             public void ApplyHit() => applyHitV1(base_great);
 
-            public void ApplyNonPerfect() => throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
+            public void ApplyNonPerfect() =>
+                throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
 
             public void ApplyMiss() => applyHitV1(0);
 
@@ -109,7 +130,10 @@ namespace osu.Game.Rulesets.Catch.Tests
 
                 // combo multiplier
                 // ReSharper disable once PossibleLossOfFraction
-                TotalScore += (int)(Math.Max(0, currentCombo - 1) * (baseScore / 25 * (ScoreMultiplier.Value * modMultiplier)));
+                TotalScore += (int)(
+                    Math.Max(0, currentCombo - 1)
+                    * (baseScore / 25 * (ScoreMultiplier.Value * modMultiplier))
+                );
 
                 currentCombo++;
             }
@@ -132,12 +156,15 @@ namespace osu.Game.Rulesets.Catch.Tests
             public ScoreV2(int maxCombo, IReadOnlyList<Mod> selectedMods)
             {
                 var ruleset = new CatchRuleset();
-                modMultiplier = ruleset.CreateLegacyScoreSimulator().GetLegacyScoreMultiplier(
-                    selectedMods.Append(new ModScoreV2()).ToList(),
-                    new LegacyBeatmapConversionDifficultyInfo
-                    {
-                        SourceRuleset = ruleset.RulesetInfo
-                    });
+                modMultiplier = ruleset
+                    .CreateLegacyScoreSimulator()
+                    .GetLegacyScoreMultiplier(
+                        selectedMods.Append(new ModScoreV2()).ToList(),
+                        new LegacyBeatmapConversionDifficultyInfo
+                        {
+                            SourceRuleset = ruleset.RulesetInfo,
+                        }
+                    );
 
                 for (int i = 0; i < maxCombo; i++)
                     ApplyHit();
@@ -150,11 +177,17 @@ namespace osu.Game.Rulesets.Catch.Tests
 
             public void ApplyHit() => applyHitV2(base_great);
 
-            public void ApplyNonPerfect() => throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
+            public void ApplyNonPerfect() =>
+                throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
 
             private void applyHitV2(int baseScore)
             {
-                comboPortion += baseScore * Math.Min(Math.Max(0.5, Math.Log(++currentCombo, combo_base)), Math.Log(combo_cap, combo_base));
+                comboPortion +=
+                    baseScore
+                    * Math.Min(
+                        Math.Max(0.5, Math.Log(++currentCombo, combo_base)),
+                        Math.Log(combo_cap, combo_base)
+                    );
             }
 
             public void ApplyMiss()
@@ -162,24 +195,35 @@ namespace osu.Game.Rulesets.Catch.Tests
                 currentCombo = 0;
             }
 
-            public long TotalScore
-                => (int)Math.Round((1000000 * comboPortion / comboPortionMax) * modMultiplier); // vast simplification, as we're not doing ticks here.
+            public long TotalScore =>
+                (int)Math.Round((1000000 * comboPortion / comboPortionMax) * modMultiplier); // vast simplification, as we're not doing ticks here.
         }
 
         private class CatchProcessorBasedScoringAlgorithm : ProcessorBasedScoringAlgorithm
         {
-            public CatchProcessorBasedScoringAlgorithm(IBeatmap beatmap, ScoringMode mode, IReadOnlyList<Mod> selectedMods)
-                : base(beatmap, mode, selectedMods)
-            {
-            }
+            public CatchProcessorBasedScoringAlgorithm(
+                IBeatmap beatmap,
+                ScoringMode mode,
+                IReadOnlyList<Mod> selectedMods
+            )
+                : base(beatmap, mode, selectedMods) { }
 
             protected override ScoreProcessor CreateScoreProcessor() => new CatchScoreProcessor();
 
-            protected override JudgementResult CreatePerfectJudgementResult() => new CatchJudgementResult(new Fruit(), new CatchJudgement()) { Type = HitResult.Great };
+            protected override JudgementResult CreatePerfectJudgementResult() =>
+                new CatchJudgementResult(new Fruit(), new CatchJudgement())
+                {
+                    Type = HitResult.Great,
+                };
 
-            protected override JudgementResult CreateNonPerfectJudgementResult() => throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
+            protected override JudgementResult CreateNonPerfectJudgementResult() =>
+                throw new NotSupportedException("catch does not have \"non-perfect\" judgements.");
 
-            protected override JudgementResult CreateMissJudgementResult() => new CatchJudgementResult(new Fruit(), new CatchJudgement()) { Type = HitResult.Miss };
+            protected override JudgementResult CreateMissJudgementResult() =>
+                new CatchJudgementResult(new Fruit(), new CatchJudgement())
+                {
+                    Type = HitResult.Miss,
+                };
         }
     }
 }

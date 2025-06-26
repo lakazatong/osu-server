@@ -36,10 +36,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             if (Result.IsHit())
             {
-                AddInternal(ringExplosion = new RingExplosion(Result)
-                {
-                    Colour = colours.ForHitResult(Result),
-                });
+                AddInternal(
+                    ringExplosion = new RingExplosion(Result)
+                    {
+                        Colour = colours.ForHitResult(Result),
+                    }
+                );
             }
         }
 
@@ -153,15 +155,21 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                     float direction = RNG.NextSingle(0, 360);
                     float distance = RNG.NextSingle(travel / 2, travel);
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance * start_position_ratio,
-                        MathF.Sin(direction) * distance * start_position_ratio
-                    ));
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance * start_position_ratio,
+                            MathF.Sin(direction) * distance * start_position_ratio
+                        )
+                    );
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance,
-                        MathF.Sin(direction) * distance
-                    ), 600, Easing.OutQuint);
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance,
+                            MathF.Sin(direction) * distance
+                        ),
+                        600,
+                        Easing.OutQuint
+                    );
                 }
 
                 this.FadeOutFromOne(1000, Easing.OutQuint);

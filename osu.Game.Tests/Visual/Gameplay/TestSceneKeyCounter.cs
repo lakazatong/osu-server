@@ -44,7 +44,7 @@ namespace osu.Game.Tests.Visual.Gameplay
                         {
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
-                            Scale = new Vector2(1, -1)
+                            Scale = new Vector2(1, -1),
                         },
                         new ArgonKeyCounterDisplay
                         {
@@ -55,7 +55,7 @@ namespace osu.Game.Tests.Visual.Gameplay
                         {
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
-                            Scale = new Vector2(1, -1)
+                            Scale = new Vector2(1, -1),
                         },
                         new LegacyKeyCounterDisplay
                         {
@@ -101,10 +101,10 @@ namespace osu.Game.Tests.Visual.Gameplay
                                     Anchor = Anchor.Centre,
                                     Rotation = 90,
                                 },
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
 
             var inputTriggers = new InputTrigger[]
@@ -118,33 +118,49 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddRange(inputTriggers);
             controller.AddRange(inputTriggers);
 
-            AddStep("Add random", () =>
-            {
-                Key key = (Key)((int)Key.A + RNG.Next(26));
-                var trigger = new KeyCounterKeyboardTrigger(key);
-                Add(trigger);
-                controller.Add(trigger);
-            });
+            AddStep(
+                "Add random",
+                () =>
+                {
+                    Key key = (Key)((int)Key.A + RNG.Next(26));
+                    var trigger = new KeyCounterKeyboardTrigger(key);
+                    Add(trigger);
+                    controller.Add(trigger);
+                }
+            );
 
             InputTrigger testTrigger = controller.Triggers.First();
             Key testKey = ((KeyCounterKeyboardTrigger)testTrigger).Key;
 
             addPressKeyStep();
-            AddAssert($"Check {testKey} counter after keypress", () => testTrigger.ActivationCount.Value == 1);
+            AddAssert(
+                $"Check {testKey} counter after keypress",
+                () => testTrigger.ActivationCount.Value == 1
+            );
             addPressKeyStep();
-            AddAssert($"Check {testKey} counter after keypress", () => testTrigger.ActivationCount.Value == 2);
+            AddAssert(
+                $"Check {testKey} counter after keypress",
+                () => testTrigger.ActivationCount.Value == 2
+            );
             AddStep("Disable counting", () => controller.IsCounting.Value = false);
             addPressKeyStep();
-            AddAssert($"Check {testKey} count has not changed", () => testTrigger.ActivationCount.Value == 2);
+            AddAssert(
+                $"Check {testKey} count has not changed",
+                () => testTrigger.ActivationCount.Value == 2
+            );
             AddStep("Enable counting", () => controller.IsCounting.Value = true);
             addPressKeyStep(100);
             addPressKeyStep(1000);
 
-            void addPressKeyStep(int repeat = 1) => AddStep($"Press {testKey} key {repeat} times", () =>
-            {
-                for (int i = 0; i < repeat; i++)
-                    InputManager.Key(testKey);
-            });
+            void addPressKeyStep(int repeat = 1) =>
+                AddStep(
+                    $"Press {testKey} key {repeat} times",
+                    () =>
+                    {
+                        for (int i = 0; i < repeat; i++)
+                            InputManager.Key(testKey);
+                    }
+                );
         }
     }
 }

@@ -17,9 +17,7 @@ namespace osu.Game.Graphics.UserInterface
         public IconUsage Icon { get; init; }
 
         public OsuMenuItem(LocalisableString text, MenuItemType type = MenuItemType.Standard)
-            : this(text, type, null)
-        {
-        }
+            : this(text, type, null) { }
 
         public OsuMenuItem(LocalisableString text, MenuItemType type, Action? action)
             : base(text, action)

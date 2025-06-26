@@ -62,44 +62,35 @@ namespace osu.Game.Overlays
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
                                 Direction = FillDirection.Vertical,
-                            }
+                            },
                         },
                     },
-                }
+                },
             };
         }
 
         public override void OnEntering(ScreenTransitionEvent e)
         {
             base.OnEntering(e);
-            this
-                .FadeInFromZero(100)
-                .MoveToX(offset)
-                .MoveToX(0, 500, Easing.OutQuint);
+            this.FadeInFromZero(100).MoveToX(offset).MoveToX(0, 500, Easing.OutQuint);
         }
 
         public override void OnResuming(ScreenTransitionEvent e)
         {
             base.OnResuming(e);
-            this
-                .FadeInFromZero(100)
-                .MoveToX(0, 500, Easing.OutQuint);
+            this.FadeInFromZero(100).MoveToX(0, 500, Easing.OutQuint);
         }
 
         public override bool OnExiting(ScreenExitEvent e)
         {
-            this
-                .FadeOut(100)
-                .MoveToX(offset, 500, Easing.OutQuint);
+            this.FadeOut(100).MoveToX(offset, 500, Easing.OutQuint);
 
             return base.OnExiting(e);
         }
 
         public override void OnSuspending(ScreenTransitionEvent e)
         {
-            this
-                .FadeOut(100)
-                .MoveToX(-offset, 500, Easing.OutQuint);
+            this.FadeOut(100).MoveToX(-offset, 500, Easing.OutQuint);
 
             base.OnSuspending(e);
         }

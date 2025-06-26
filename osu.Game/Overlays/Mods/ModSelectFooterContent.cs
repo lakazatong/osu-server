@@ -27,7 +27,8 @@ namespace osu.Game.Overlays.Mods
         public DeselectAllModsButton? DeselectAllModsButton { get; set; }
 
         public readonly IBindable<WorkingBeatmap?> Beatmap = new Bindable<WorkingBeatmap?>();
-        public readonly IBindable<IReadOnlyList<Mod>> ActiveMods = new Bindable<IReadOnlyList<Mod>>();
+        public readonly IBindable<IReadOnlyList<Mod>> ActiveMods =
+            new Bindable<IReadOnlyList<Mod>>();
 
         /// <summary>
         /// Whether the effects (on score multiplier, on or beatmap difficulty) of the current selected set of mods should be shown.
@@ -63,29 +64,31 @@ namespace osu.Game.Overlays.Mods
 
             if (ShowModEffects)
             {
-                AddInternal(contentFlow = new FillFlowContainer
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(30, 10),
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
-                    Margin = new MarginPadding { Horizontal = 20 },
-                    Children = new Drawable[]
+                AddInternal(
+                    contentFlow = new FillFlowContainer
                     {
-                        rankingInformationDisplay = new RankingInformationDisplay
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(30, 10),
+                        Anchor = Anchor.BottomRight,
+                        Origin = Anchor.BottomRight,
+                        Margin = new MarginPadding { Horizontal = 20 },
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.BottomRight,
-                            Origin = Anchor.BottomRight
-                        },
-                        beatmapAttributesDisplay = new BeatmapAttributesDisplay
-                        {
-                            Anchor = Anchor.BottomRight,
-                            Origin = Anchor.BottomRight,
-                            BeatmapInfo = { Value = Beatmap.Value?.BeatmapInfo },
+                            rankingInformationDisplay = new RankingInformationDisplay
+                            {
+                                Anchor = Anchor.BottomRight,
+                                Origin = Anchor.BottomRight,
+                            },
+                            beatmapAttributesDisplay = new BeatmapAttributesDisplay
+                            {
+                                Anchor = Anchor.BottomRight,
+                                Origin = Anchor.BottomRight,
+                                BeatmapInfo = { Value = Beatmap.Value?.BeatmapInfo },
+                            },
                         },
                     }
-                });
+                );
             }
         }
 
@@ -95,25 +98,31 @@ namespace osu.Game.Overlays.Mods
         {
             base.LoadComplete();
 
-            Beatmap.BindValueChanged(b =>
-            {
-                if (beatmapAttributesDisplay != null)
-                    beatmapAttributesDisplay.BeatmapInfo.Value = b.NewValue?.BeatmapInfo;
-            }, true);
+            Beatmap.BindValueChanged(
+                b =>
+                {
+                    if (beatmapAttributesDisplay != null)
+                        beatmapAttributesDisplay.BeatmapInfo.Value = b.NewValue?.BeatmapInfo;
+                },
+                true
+            );
 
-            ActiveMods.BindValueChanged(m =>
-            {
-                updateInformation();
+            ActiveMods.BindValueChanged(
+                m =>
+                {
+                    updateInformation();
 
-                modSettingChangeTracker?.Dispose();
+                    modSettingChangeTracker?.Dispose();
 
-                // Importantly, use ActiveMods.Value here (and not the ValueChanged NewValue) as the latter can
-                // potentially be stale, due to complexities in the way change trackers work.
-                //
-                // See https://github.com/ppy/osu/pull/23284#issuecomment-1529056988
-                modSettingChangeTracker = new ModSettingChangeTracker(ActiveMods.Value);
-                modSettingChangeTracker.SettingChanged += _ => updateInformation();
-            }, true);
+                    // Importantly, use ActiveMods.Value here (and not the ValueChanged NewValue) as the latter can
+                    // potentially be stale, due to complexities in the way change trackers work.
+                    //
+                    // See https://github.com/ppy/osu/pull/23284#issuecomment-1529056988
+                    modSettingChangeTracker = new ModSettingChangeTracker(ActiveMods.Value);
+                    modSettingChangeTracker.SettingChanged += _ => updateInformation();
+                },
+                true
+            );
         }
 
         private void updateInformation()
@@ -143,9 +152,12 @@ namespace osu.Game.Overlays.Mods
 
                 // this is cheating a bit; the 640 value is hardcoded based on how wide the expanded panel _generally_ is.
                 // due to the transition applied, the raw screenspace quad of the panel cannot be used, as it will trigger an ugly feedback cycle of expanding and collapsing.
-                float projectedLeftEdgeOfExpandedBeatmapAttributesDisplay = buttonFlow.ToScreenSpace(buttonFlow.DrawSize - new Vector2(640, 0)).X;
+                float projectedLeftEdgeOfExpandedBeatmapAttributesDisplay = buttonFlow
+                    .ToScreenSpace(buttonFlow.DrawSize - new Vector2(640, 0))
+                    .X;
 
-                DisplaysStackedVertically = rightEdgeOfLastButton > projectedLeftEdgeOfExpandedBeatmapAttributesDisplay;
+                DisplaysStackedVertically =
+                    rightEdgeOfLastButton > projectedLeftEdgeOfExpandedBeatmapAttributesDisplay;
 
                 // only update preview panel's collapsed state after we are fully visible, to ensure all the buttons are where we expect them to be.
                 if (Alpha == 1)
@@ -153,25 +165,23 @@ namespace osu.Game.Overlays.Mods
 
                 contentFlow.LayoutDuration = 200;
                 contentFlow.LayoutEasing = Easing.OutQuint;
-                contentFlow.Direction = DisplaysStackedVertically ? FillDirection.Vertical : FillDirection.Horizontal;
+                contentFlow.Direction = DisplaysStackedVertically
+                    ? FillDirection.Vertical
+                    : FillDirection.Horizontal;
             }
         }
 
-        protected virtual IEnumerable<ShearedButton> CreateButtons() => new[]
-        {
-            DeselectAllModsButton = new DeselectAllModsButton(overlay)
-        };
+        protected virtual IEnumerable<ShearedButton> CreateButtons() =>
+            new[] { DeselectAllModsButton = new DeselectAllModsButton(overlay) };
 
         protected override void PopIn()
         {
-            this.MoveToY(0, 400, Easing.OutQuint)
-                .FadeIn(400, Easing.OutQuint);
+            this.MoveToY(0, 400, Easing.OutQuint).FadeIn(400, Easing.OutQuint);
         }
 
         protected override void PopOut()
         {
-            this.MoveToY(-20f, 200, Easing.OutQuint)
-                .FadeOut(200, Easing.OutQuint);
+            this.MoveToY(-20f, 200, Easing.OutQuint).FadeOut(200, Easing.OutQuint);
         }
     }
 }

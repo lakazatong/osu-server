@@ -38,13 +38,15 @@ namespace osu.Game.Graphics.UserInterface
 
             if (dimBackground)
             {
-                AddInternal(new Box
-                {
-                    Depth = float.MaxValue,
-                    Colour = Color4.Black,
-                    Alpha = 0.5f,
-                    RelativeSizeAxes = Axes.Both,
-                });
+                AddInternal(
+                    new Box
+                    {
+                        Depth = float.MaxValue,
+                        Colour = Color4.Black,
+                        Alpha = 0.5f,
+                        RelativeSizeAxes = Axes.Both,
+                    }
+                );
             }
         }
 
@@ -74,7 +76,9 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.Update();
 
-            MainContents.Size = new Vector2(Math.Clamp(Math.Min(DrawWidth, DrawHeight) * 0.25f, 20, 80));
+            MainContents.Size = new Vector2(
+                Math.Clamp(Math.Min(DrawWidth, DrawHeight) * 0.25f, 20, 80)
+            );
         }
     }
 }

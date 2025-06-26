@@ -30,7 +30,9 @@ namespace osu.Game.Database
 
         public int Count => emptySet.Count;
         public T this[int index] => emptySet[index];
+
         public int IndexOf(object? item) => item == null ? -1 : emptySet.IndexOf((T)item);
+
         public bool Contains(object? item) => item != null && emptySet.Contains((T)item);
 
         public event NotifyCollectionChangedEventHandler? CollectionChanged
@@ -46,7 +48,11 @@ namespace osu.Game.Database
         }
 
         public IRealmCollection<T> Freeze() => throw new NotImplementedException();
-        public IDisposable SubscribeForNotifications(NotificationCallbackDelegate<T> callback, KeyPathsCollection? keyPathCollection = null) => throw new NotImplementedException();
+
+        public IDisposable SubscribeForNotifications(
+            NotificationCallbackDelegate<T> callback,
+            KeyPathsCollection? keyPathCollection = null
+        ) => throw new NotImplementedException();
 
         public bool IsValid => throw new NotImplementedException();
         public Realm Realm => throw new NotImplementedException();

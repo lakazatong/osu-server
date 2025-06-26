@@ -41,14 +41,19 @@ namespace osu.Game.IO.Archives
                 return input?.ReadAllBytesToArray();
         }
 
-        public async Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<byte[]> GetAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        )
         {
             using (Stream input = GetStream(name))
             {
                 if (input == null)
                     return null;
 
-                return await input.ReadAllBytesToArrayAsync(cancellationToken).ConfigureAwait(false);
+                return await input
+                    .ReadAllBytesToArrayAsync(cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
     }

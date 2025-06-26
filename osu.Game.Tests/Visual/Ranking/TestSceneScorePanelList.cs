@@ -32,10 +32,12 @@ namespace osu.Game.Tests.Visual.Ranking
         [Test]
         public void TestEmptyListWithSelectedScore()
         {
-            createListStep(() => new ScorePanelList
-            {
-                SelectedScore = { Value = TestResources.CreateTestScoreInfo() }
-            });
+            createListStep(() =>
+                new ScorePanelList
+                {
+                    SelectedScore = { Value = TestResources.CreateTestScoreInfo() },
+                }
+            );
         }
 
         [Test]
@@ -43,10 +45,7 @@ namespace osu.Game.Tests.Visual.Ranking
         {
             var score = TestResources.CreateTestScoreInfo();
 
-            createListStep(() => new ScorePanelList
-            {
-                SelectedScore = { Value = score }
-            });
+            createListStep(() => new ScorePanelList { SelectedScore = { Value = score } });
 
             AddStep("add panel", () => list.AddScore(score));
 
@@ -77,11 +76,14 @@ namespace osu.Game.Tests.Visual.Ranking
         {
             createListStep(() => new ScorePanelList());
 
-            AddStep("add many scores", () =>
-            {
-                for (int i = 0; i < 20; i++)
-                    list.AddScore(TestResources.CreateTestScoreInfo());
-            });
+            AddStep(
+                "add many scores",
+                () =>
+                {
+                    for (int i = 0; i < 20; i++)
+                        list.AddScore(TestResources.CreateTestScoreInfo());
+                }
+            );
 
             assertFirstPanelCentred();
         }
@@ -93,17 +95,23 @@ namespace osu.Game.Tests.Visual.Ranking
 
             createListStep(() => new ScorePanelList());
 
-            AddStep("add initial panel and select", () =>
-            {
-                list.AddScore(initialScore);
-                list.SelectedScore.Value = initialScore;
-            });
+            AddStep(
+                "add initial panel and select",
+                () =>
+                {
+                    list.AddScore(initialScore);
+                    list.SelectedScore.Value = initialScore;
+                }
+            );
 
-            AddStep("add many scores", () =>
-            {
-                for (int i = 0; i < 20; i++)
-                    list.AddScore(createScoreForTotalScore(initialScore.TotalScore - i - 1));
-            });
+            AddStep(
+                "add many scores",
+                () =>
+                {
+                    for (int i = 0; i < 20; i++)
+                        list.AddScore(createScoreForTotalScore(initialScore.TotalScore - i - 1));
+                }
+            );
 
             assertScoreState(initialScore, true);
             assertExpandedPanelCentred();
@@ -116,17 +124,23 @@ namespace osu.Game.Tests.Visual.Ranking
 
             createListStep(() => new ScorePanelList());
 
-            AddStep("add initial panel and select", () =>
-            {
-                list.AddScore(initialScore);
-                list.SelectedScore.Value = initialScore;
-            });
+            AddStep(
+                "add initial panel and select",
+                () =>
+                {
+                    list.AddScore(initialScore);
+                    list.SelectedScore.Value = initialScore;
+                }
+            );
 
-            AddStep("add scores", () =>
-            {
-                for (int i = 0; i < 20; i++)
-                    list.AddScore(createScoreForTotalScore(initialScore.TotalScore + i + 1));
-            });
+            AddStep(
+                "add scores",
+                () =>
+                {
+                    for (int i = 0; i < 20; i++)
+                        list.AddScore(createScoreForTotalScore(initialScore.TotalScore + i + 1));
+                }
+            );
 
             assertScoreState(initialScore, true);
             assertExpandedPanelCentred();
@@ -139,20 +153,26 @@ namespace osu.Game.Tests.Visual.Ranking
 
             createListStep(() => new ScorePanelList());
 
-            AddStep("add initial panel and select", () =>
-            {
-                list.AddScore(initialScore);
-                list.SelectedScore.Value = initialScore;
-            });
+            AddStep(
+                "add initial panel and select",
+                () =>
+                {
+                    list.AddScore(initialScore);
+                    list.SelectedScore.Value = initialScore;
+                }
+            );
 
-            AddStep("add scores after", () =>
-            {
-                for (int i = 0; i < 20; i++)
-                    list.AddScore(createScoreForTotalScore(initialScore.TotalScore - i - 1));
+            AddStep(
+                "add scores after",
+                () =>
+                {
+                    for (int i = 0; i < 20; i++)
+                        list.AddScore(createScoreForTotalScore(initialScore.TotalScore - i - 1));
 
-                for (int i = 0; i < 20; i++)
-                    list.AddScore(createScoreForTotalScore(initialScore.TotalScore + i + 1));
-            });
+                    for (int i = 0; i < 20; i++)
+                        list.AddScore(createScoreForTotalScore(initialScore.TotalScore + i + 1));
+                }
+            );
 
             assertScoreState(initialScore, true);
             assertExpandedPanelCentred();
@@ -169,23 +189,31 @@ namespace osu.Game.Tests.Visual.Ranking
 
             createListStep(() => new ScorePanelList());
 
-            AddStep("add scores and select first", () =>
-            {
-                list.AddScore(firstScore);
-                list.AddScore(secondScore);
-                list.SelectedScore.Value = firstScore;
-            });
+            AddStep(
+                "add scores and select first",
+                () =>
+                {
+                    list.AddScore(firstScore);
+                    list.AddScore(secondScore);
+                    list.SelectedScore.Value = firstScore;
+                }
+            );
 
             AddUntilStep("wait for load", () => list.AllPanelsVisible);
 
             assertScoreState(firstScore, true);
             assertScoreState(secondScore, false);
 
-            AddStep("select second score", () =>
-            {
-                InputManager.MoveMouseTo(list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(secondScore)));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "select second score",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(secondScore))
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertScoreState(firstScore, false);
             assertScoreState(secondScore, true);
@@ -228,16 +256,22 @@ namespace osu.Game.Tests.Visual.Ranking
 
             createListStep(() => new ScorePanelList());
 
-            AddStep("add scores and select middle", () =>
-            {
-                // order of addition purposefully scrambled.
-                list.AddScore(middleScore);
-                list.AddScore(lowestScore);
-                list.AddScore(highestScore);
-                list.SelectedScore.Value = middleScore;
-            });
+            AddStep(
+                "add scores and select middle",
+                () =>
+                {
+                    // order of addition purposefully scrambled.
+                    list.AddScore(middleScore);
+                    list.AddScore(lowestScore);
+                    list.AddScore(highestScore);
+                    list.SelectedScore.Value = middleScore;
+                }
+            );
 
-            AddUntilStep("wait for all scores to be visible", () => list.ChildrenOfType<ScorePanelTrackingContainer>().All(t => t.IsPresent));
+            AddUntilStep(
+                "wait for all scores to be visible",
+                () => list.ChildrenOfType<ScorePanelTrackingContainer>().All(t => t.IsPresent)
+            );
 
             assertScoreState(highestScore, false);
             assertScoreState(middleScore, true);
@@ -295,25 +329,55 @@ namespace osu.Game.Tests.Visual.Ranking
 
         private void createListStep(Func<ScorePanelList> creationFunc)
         {
-            AddStep("create list", () => Child = list = creationFunc().With(d =>
-            {
-                d.Anchor = Anchor.Centre;
-                d.Origin = Anchor.Centre;
-            }));
+            AddStep(
+                "create list",
+                () =>
+                    Child = list =
+                        creationFunc()
+                            .With(d =>
+                            {
+                                d.Anchor = Anchor.Centre;
+                                d.Origin = Anchor.Centre;
+                            })
+            );
 
             AddUntilStep("wait for load", () => list.IsLoaded);
         }
 
-        private void assertExpandedPanelCentred() => AddUntilStep("expanded panel centred", () =>
-        {
-            var expandedPanel = list.ChildrenOfType<ScorePanel>().Single(p => p.State == PanelState.Expanded);
-            return Precision.AlmostEquals(expandedPanel.ScreenSpaceDrawQuad.Centre.X, list.ScreenSpaceDrawQuad.Centre.X, 1);
-        });
+        private void assertExpandedPanelCentred() =>
+            AddUntilStep(
+                "expanded panel centred",
+                () =>
+                {
+                    var expandedPanel = list.ChildrenOfType<ScorePanel>()
+                        .Single(p => p.State == PanelState.Expanded);
+                    return Precision.AlmostEquals(
+                        expandedPanel.ScreenSpaceDrawQuad.Centre.X,
+                        list.ScreenSpaceDrawQuad.Centre.X,
+                        1
+                    );
+                }
+            );
 
-        private void assertFirstPanelCentred()
-            => AddUntilStep("first panel centred", () => Precision.AlmostEquals(list.ChildrenOfType<ScorePanel>().First().ScreenSpaceDrawQuad.Centre.X, list.ScreenSpaceDrawQuad.Centre.X, 1));
+        private void assertFirstPanelCentred() =>
+            AddUntilStep(
+                "first panel centred",
+                () =>
+                    Precision.AlmostEquals(
+                        list.ChildrenOfType<ScorePanel>().First().ScreenSpaceDrawQuad.Centre.X,
+                        list.ScreenSpaceDrawQuad.Centre.X,
+                        1
+                    )
+            );
 
-        private void assertScoreState(ScoreInfo score, bool expanded)
-            => AddUntilStep($"score expanded = {expanded}", () => (list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(score)).State == PanelState.Expanded) == expanded);
+        private void assertScoreState(ScoreInfo score, bool expanded) =>
+            AddUntilStep(
+                $"score expanded = {expanded}",
+                () =>
+                    (
+                        list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(score)).State
+                        == PanelState.Expanded
+                    ) == expanded
+            );
     }
 }

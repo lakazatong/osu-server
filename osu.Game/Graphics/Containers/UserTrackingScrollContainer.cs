@@ -8,14 +8,10 @@ namespace osu.Game.Graphics.Containers
 {
     public partial class UserTrackingScrollContainer : UserTrackingScrollContainer<Drawable>
     {
-        public UserTrackingScrollContainer()
-        {
-        }
+        public UserTrackingScrollContainer() { }
 
         public UserTrackingScrollContainer(Direction direction)
-            : base(direction)
-        {
-        }
+            : base(direction) { }
     }
 
     public partial class UserTrackingScrollContainer<T> : OsuScrollContainer<T>
@@ -26,16 +22,16 @@ namespace osu.Game.Graphics.Containers
         /// </summary>
         public bool UserScrolling { get; private set; }
 
-        public UserTrackingScrollContainer()
-        {
-        }
+        public UserTrackingScrollContainer() { }
 
         public UserTrackingScrollContainer(Direction direction)
-            : base(direction)
-        {
-        }
+            : base(direction) { }
 
-        protected override void OnUserScroll(double value, bool animated = true, double? distanceDecay = default)
+        protected override void OnUserScroll(
+            double value,
+            bool animated = true,
+            double? distanceDecay = default
+        )
         {
             UserScrolling = true;
             base.OnUserScroll(value, animated, distanceDecay);

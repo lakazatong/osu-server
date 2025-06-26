@@ -39,9 +39,7 @@ namespace osu.Game.Rulesets.Taiko.Scoring
         private double sumOfMaxHealthIncreases;
 
         public TaikoHealthProcessor()
-            : base(0.5)
-        {
-        }
+            : base(0.5) { }
 
         protected override void ApplyResultInternal(JudgementResult result)
         {
@@ -68,11 +66,27 @@ namespace osu.Game.Rulesets.Taiko.Scoring
         {
             base.ApplyBeatmap(beatmap);
 
-            hpMultiplier = 1 / (object_count_factor * Math.Max(1, beatmap.HitObjects.OfType<Hit>().Count()) * IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, 0.5, 0.75, 0.98));
-            hpMissMultiplier = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, 0.0018, 0.0075, 0.0120);
+            hpMultiplier =
+                1
+                / (
+                    object_count_factor
+                    * Math.Max(1, beatmap.HitObjects.OfType<Hit>().Count())
+                    * IBeatmapDifficultyInfo.DifficultyRange(
+                        beatmap.Difficulty.DrainRate,
+                        0.5,
+                        0.75,
+                        0.98
+                    )
+                );
+            hpMissMultiplier = IBeatmapDifficultyInfo.DifficultyRange(
+                beatmap.Difficulty.DrainRate,
+                0.0018,
+                0.0075,
+                0.0120
+            );
         }
 
-        protected override double GetHealthIncreaseFor(JudgementResult result)
-            => base.GetHealthIncreaseFor(result) * (result.IsHit ? hpMultiplier : hpMissMultiplier);
+        protected override double GetHealthIncreaseFor(JudgementResult result) =>
+            base.GetHealthIncreaseFor(result) * (result.IsHit ? hpMultiplier : hpMissMultiplier);
     }
 }

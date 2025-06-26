@@ -18,9 +18,13 @@ namespace osu.Game.Overlays.Settings
     {
         protected override Drawable CreateControl() => new ColourControl();
 
-        public partial class ColourControl : OsuClickableContainer, IHasPopover, IHasCurrentValue<Colour4>
+        public partial class ColourControl
+            : OsuClickableContainer,
+                IHasPopover,
+                IHasCurrentValue<Colour4>
         {
-            private readonly BindableWithCurrent<Colour4> current = new BindableWithCurrent<Colour4>(Colour4.White);
+            private readonly BindableWithCurrent<Colour4> current =
+                new BindableWithCurrent<Colour4>(Colour4.White);
 
             public Bindable<Colour4> Current
             {
@@ -41,16 +45,13 @@ namespace osu.Game.Overlays.Settings
 
                 Children = new Drawable[]
                 {
-                    fill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    fill = new Box { RelativeSizeAxes = Axes.Both },
                     colourHexCode = new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Font = OsuFont.Default.With(size: 20)
-                    }
+                        Font = OsuFont.Default.With(size: 20),
+                    },
                 };
             }
 
@@ -68,13 +69,11 @@ namespace osu.Game.Overlays.Settings
                 colourHexCode.Colour = OsuColour.ForegroundTextColourFor(Current.Value);
             }
 
-            public Popover GetPopover() => new OsuPopover(false)
-            {
-                Child = new OsuColourPicker
+            public Popover GetPopover() =>
+                new OsuPopover(false)
                 {
-                    Current = { BindTarget = Current }
-                }
-            };
+                    Child = new OsuColourPicker { Current = { BindTarget = Current } },
+                };
         }
     }
 }

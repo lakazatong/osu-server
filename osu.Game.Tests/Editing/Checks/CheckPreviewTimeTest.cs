@@ -46,7 +46,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(content).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckPreviewTime.IssueTemplatePreviewTimeConflict);
+            Assert.That(
+                issues.Single().Template is CheckPreviewTime.IssueTemplatePreviewTimeConflict
+            );
             Assert.That(issues.Single().Arguments.FirstOrDefault()?.ToString() == "Test1");
         }
 
@@ -57,7 +59,7 @@ namespace osu.Game.Tests.Editing.Checks
                 BeatmapInfo = new BeatmapInfo
                 {
                     Metadata = new BeatmapMetadata { PreviewTime = -1 },
-                }
+                },
             };
         }
 
@@ -68,20 +70,22 @@ namespace osu.Game.Tests.Editing.Checks
                 BeatmapInfo = new BeatmapInfo
                 {
                     Metadata = new BeatmapMetadata { PreviewTime = 10 },
-                    BeatmapSet = new BeatmapSetInfo(new List<BeatmapInfo>
-                    {
-                        new BeatmapInfo
+                    BeatmapSet = new BeatmapSetInfo(
+                        new List<BeatmapInfo>
                         {
-                            DifficultyName = "Test1",
-                            Metadata = new BeatmapMetadata { PreviewTime = 5 },
-                        },
-                        new BeatmapInfo
-                        {
-                            DifficultyName = "Test2",
-                            Metadata = new BeatmapMetadata { PreviewTime = 10 },
-                        },
-                    })
-                }
+                            new BeatmapInfo
+                            {
+                                DifficultyName = "Test1",
+                                Metadata = new BeatmapMetadata { PreviewTime = 5 },
+                            },
+                            new BeatmapInfo
+                            {
+                                DifficultyName = "Test2",
+                                Metadata = new BeatmapMetadata { PreviewTime = 10 },
+                            },
+                        }
+                    ),
+                },
             };
         }
     }

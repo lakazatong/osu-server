@@ -47,14 +47,15 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
                     new ScrollingTestContainer(ScrollingDirection.Down)
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = playfield = new CatchPlayfield(new BeatmapDifficulty())
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Clock = new FramedClock(manualClock)
-                        }
+                        Child = playfield =
+                            new CatchPlayfield(new BeatmapDifficulty())
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Clock = new FramedClock(manualClock),
+                            },
                     },
                     distanceGrid = new CatchDistanceSnapGrid(new double[] { 0, -1, 1 }),
-                    fruitOutline = new FruitOutline()
+                    fruitOutline = new FruitOutline(),
                 },
             };
         }

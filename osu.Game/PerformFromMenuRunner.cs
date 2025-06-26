@@ -45,7 +45,11 @@ namespace osu.Game
         /// <param name="finalAction">The action to perform once we are in the correct state.</param>
         /// <param name="validScreens">An optional collection of valid screen types. If any of these screens are already current we can perform the action immediately, else the first valid parent will be made current before performing the action. <see cref="MainMenu"/> is used if not specified.</param>
         /// <param name="getCurrentScreen">A function to retrieve the currently displayed game screen.</param>
-        public PerformFromMenuRunner(Action<IScreen> finalAction, IEnumerable<Type> validScreens, Func<IScreen> getCurrentScreen)
+        public PerformFromMenuRunner(
+            Action<IScreen> finalAction,
+            IEnumerable<Type> validScreens,
+            Func<IScreen> getCurrentScreen
+        )
         {
             validScreens ??= Enumerable.Empty<Type>();
             validScreens = validScreens.Append(typeof(MainMenu));
@@ -75,7 +79,8 @@ namespace osu.Game
                 return;
 
             // a dialog may be blocking the execution for now.
-            if (checkForDialog(current)) return;
+            if (checkForDialog(current))
+                return;
 
             game?.CloseAllOverlays(false);
 
@@ -165,7 +170,12 @@ namespace osu.Game
 
                 // the last dialog encountered has been dismissed but the screen has not changed, abort.
                 Cancel();
-                notifications.Post(new SimpleNotification { Text = @"An action was interrupted due to a dialog being displayed." });
+                notifications.Post(
+                    new SimpleNotification
+                    {
+                        Text = @"An action was interrupted due to a dialog being displayed.",
+                    }
+                );
                 return true;
             }
 

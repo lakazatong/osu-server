@@ -25,7 +25,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
 
         private InputManager inputManager = null!;
 
-        protected override bool IsValidForPlacement => Precision.DefinitelyBigger(HitObject.Duration, 0);
+        protected override bool IsValidForPlacement =>
+            Precision.DefinitelyBigger(HitObject.Duration, 0);
 
         public JuiceStreamPlacementBlueprint()
         {
@@ -33,7 +34,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             {
                 scrollingPath = new ScrollingPath(),
                 nestedOutlineContainer = new NestedOutlineContainer(),
-                editablePath = new PlacementEditablePath(positionToTime)
+                editablePath = new PlacementEditablePath(positionToTime),
             };
         }
 
@@ -59,7 +60,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             switch (PlacementActive)
             {
                 case PlacementState.Waiting:
-                    if (e.Button != MouseButton.Left) break;
+                    if (e.Button != MouseButton.Left)
+                        break;
 
                     editablePath.AddNewVertex();
                     BeginPlacement(true);
@@ -83,15 +85,25 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             return base.OnMouseDown(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
-            var gridSnapResult = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var gridSnapResult =
+                Composer?.FindSnappedPositionAndTime(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
             gridSnapResult.ScreenSpacePosition.X = screenSpacePosition.X;
             var distanceSnapResult = Composer?.TryDistanceSnap(gridSnapResult.ScreenSpacePosition);
 
-            var result = distanceSnapResult != null && Vector2.Distance(gridSnapResult.ScreenSpacePosition, distanceSnapResult.ScreenSpacePosition) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
-                ? distanceSnapResult
-                : gridSnapResult;
+            var result =
+                distanceSnapResult != null
+                && Vector2.Distance(
+                    gridSnapResult.ScreenSpacePosition,
+                    distanceSnapResult.ScreenSpacePosition
+                ) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
+                    ? distanceSnapResult
+                    : gridSnapResult;
 
             switch (PlacementActive)
             {
@@ -111,8 +123,14 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             }
 
             // Make sure the up-to-date position is used for outlines.
-            Vector2 startPosition = CatchHitObjectUtils.GetStartPosition(HitObjectContainer, HitObject);
-            editablePath.Position = nestedOutlineContainer.Position = scrollingPath.Position = startPosition;
+            Vector2 startPosition = CatchHitObjectUtils.GetStartPosition(
+                HitObjectContainer,
+                HitObject
+            );
+            editablePath.Position =
+                nestedOutlineContainer.Position =
+                scrollingPath.Position =
+                    startPosition;
 
             if (lastEditablePathId != editablePath.PathId)
                 editablePath.UpdateHitObjectFromPath(HitObject);

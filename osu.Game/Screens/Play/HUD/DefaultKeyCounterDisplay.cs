@@ -23,12 +23,13 @@ namespace osu.Game.Screens.Play.HUD
             };
         }
 
-        protected override KeyCounter CreateCounter(InputTrigger trigger) => new DefaultKeyCounter(trigger)
-        {
-            FadeTime = key_fade_time,
-            KeyDownTextColor = KeyDownTextColor,
-            KeyUpTextColor = KeyUpTextColor,
-        };
+        protected override KeyCounter CreateCounter(InputTrigger trigger) =>
+            new DefaultKeyCounter(trigger)
+            {
+                FadeTime = key_fade_time,
+                KeyDownTextColor = KeyDownTextColor,
+                KeyUpTextColor = KeyUpTextColor,
+            };
 
         private Color4 keyDownTextColor = Color4.DarkGray;
 

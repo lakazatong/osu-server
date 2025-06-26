@@ -80,8 +80,8 @@ namespace osu.Game.Screens.Play.HUD
                             Anchor = anchor,
                             Origin = anchor,
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -102,7 +102,8 @@ namespace osu.Game.Screens.Play.HUD
 
         private string wireframesLookup(char c)
         {
-            if (c == '.') return @"dot";
+            if (c == '.')
+                return @"dot";
 
             return @"wireframes";
         }
@@ -117,11 +118,14 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.LoadComplete();
             WireframeOpacity.BindValueChanged(v => wireframesPart.Alpha = v.NewValue, true);
-            ShowLabel.BindValueChanged(s =>
-            {
-                labelText.Alpha = s.NewValue ? 1 : 0;
-                NumberContainer.Y = s.NewValue ? 12 : 0;
-            }, true);
+            ShowLabel.BindValueChanged(
+                s =>
+                {
+                    labelText.Alpha = s.NewValue ? 1 : 0;
+                    NumberContainer.Y = s.NewValue ? 12 : 0;
+                },
+                true
+            );
         }
 
         private partial class ArgonCounterSpriteText : OsuSpriteText
@@ -156,7 +160,8 @@ namespace osu.Game.Screens.Play.HUD
                     glyphStore.Get(font_name, (char)('0' + i));
             }
 
-            protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) => base.CreateTextBuilder(glyphStore);
+            protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) =>
+                base.CreateTextBuilder(glyphStore);
 
             private class GlyphStore : ITexturedGlyphLookupStore
             {
@@ -164,9 +169,14 @@ namespace osu.Game.Screens.Play.HUD
                 private readonly TextureStore textures;
                 private readonly Func<char, string> getLookup;
 
-                private readonly Dictionary<char, ITexturedCharacterGlyph?> cache = new Dictionary<char, ITexturedCharacterGlyph?>();
+                private readonly Dictionary<char, ITexturedCharacterGlyph?> cache =
+                    new Dictionary<char, ITexturedCharacterGlyph?>();
 
-                public GlyphStore(string fontName, TextureStore textures, Func<char, string> getLookup)
+                public GlyphStore(
+                    string fontName,
+                    TextureStore textures,
+                    Func<char, string> getLookup
+                )
                 {
                     this.fontName = fontName;
                     this.textures = textures;
@@ -188,13 +198,25 @@ namespace osu.Game.Screens.Play.HUD
                     TexturedCharacterGlyph? glyph = null;
 
                     if (texture != null)
-                        glyph = new TexturedCharacterGlyph(new CharacterGlyph(character, 0, 0, texture.Width, texture.Height, null), texture, 0.125f);
+                        glyph = new TexturedCharacterGlyph(
+                            new CharacterGlyph(
+                                character,
+                                0,
+                                0,
+                                texture.Width,
+                                texture.Height,
+                                null
+                            ),
+                            texture,
+                            0.125f
+                        );
 
                     cache[character] = glyph;
                     return glyph;
                 }
 
-                public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) => Task.Run(() => Get(fontName, character));
+                public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) =>
+                    Task.Run(() => Get(fontName, character));
             }
         }
     }

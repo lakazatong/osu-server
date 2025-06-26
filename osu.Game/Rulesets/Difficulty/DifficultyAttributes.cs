@@ -47,9 +47,7 @@ namespace osu.Game.Rulesets.Difficulty
         /// <summary>
         /// Creates new <see cref="DifficultyAttributes"/>.
         /// </summary>
-        public DifficultyAttributes()
-        {
-        }
+        public DifficultyAttributes() { }
 
         /// <summary>
         /// Creates new <see cref="DifficultyAttributes"/>.
@@ -78,7 +76,10 @@ namespace osu.Game.Rulesets.Difficulty
         /// </summary>
         /// <param name="values">The attribute mappings.</param>
         /// <param name="onlineInfo">The <see cref="IBeatmapOnlineInfo"/> where more information about the beatmap may be extracted from (such as AR/CS/OD/etc).</param>
-        public virtual void FromDatabaseAttributes(IReadOnlyDictionary<int, double> values, IBeatmapOnlineInfo onlineInfo)
+        public virtual void FromDatabaseAttributes(
+            IReadOnlyDictionary<int, double> values,
+            IBeatmapOnlineInfo onlineInfo
+        )
         {
             MaxCombo = (int)values[ATTRIB_ID_MAX_COMBO];
         }

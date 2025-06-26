@@ -20,10 +20,26 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private static BindableSafeArea safeArea;
 
-        private readonly Bindable<float> safeAreaPaddingTop = new BindableFloat { MinValue = 0, MaxValue = 200 };
-        private readonly Bindable<float> safeAreaPaddingBottom = new BindableFloat { MinValue = 0, MaxValue = 200 };
-        private readonly Bindable<float> safeAreaPaddingLeft = new BindableFloat { MinValue = 0, MaxValue = 200 };
-        private readonly Bindable<float> safeAreaPaddingRight = new BindableFloat { MinValue = 0, MaxValue = 200 };
+        private readonly Bindable<float> safeAreaPaddingTop = new BindableFloat
+        {
+            MinValue = 0,
+            MaxValue = 200,
+        };
+        private readonly Bindable<float> safeAreaPaddingBottom = new BindableFloat
+        {
+            MinValue = 0,
+            MaxValue = 200,
+        };
+        private readonly Bindable<float> safeAreaPaddingLeft = new BindableFloat
+        {
+            MinValue = 0,
+            MaxValue = 200,
+        };
+        private readonly Bindable<float> safeAreaPaddingRight = new BindableFloat
+        {
+            MinValue = 0,
+            MaxValue = 200,
+        };
 
         private readonly Bindable<bool> applySafeAreaConsiderations = new Bindable<bool>(true);
 
@@ -34,10 +50,12 @@ namespace osu.Game.Tests.Visual.UserInterface
             // Usually this would be placed between the host and the game, but that's a bit of a pain to do with the test scene hierarchy.
 
             // Add is required for the container to get a size (and give out correct metrics to the usages in SafeAreaContainer).
-            Add(safeAreaContainer = new SafeAreaDefiningContainer(safeArea = new BindableSafeArea())
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            Add(
+                safeAreaContainer = new SafeAreaDefiningContainer(safeArea = new BindableSafeArea())
+                {
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
 
             // Cache is required for the test game to see the safe area.
             Dependencies.CacheAs<ISafeArea>(safeAreaContainer);
@@ -45,64 +63,69 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public override void SetUpSteps()
         {
-            AddStep("Add adjust controls", () =>
-            {
-                Add(new Container
+            AddStep(
+                "Add adjust controls",
+                () =>
                 {
-                    Depth = float.MinValue,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Children = new Drawable[]
-                    {
-                        new Box
+                    Add(
+                        new Container
                         {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0.8f,
-                        },
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Y,
-                            Width = 400,
+                            Depth = float.MinValue,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            AutoSizeAxes = Axes.Both,
                             Children = new Drawable[]
                             {
-                                new SettingsSlider<float>
+                                new Box
                                 {
-                                    Current = safeAreaPaddingTop,
-                                    LabelText = "Top"
+                                    Colour = Color4.Black,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Alpha = 0.8f,
                                 },
-                                new SettingsSlider<float>
+                                new FillFlowContainer
                                 {
-                                    Current = safeAreaPaddingBottom,
-                                    LabelText = "Bottom"
+                                    AutoSizeAxes = Axes.Y,
+                                    Width = 400,
+                                    Children = new Drawable[]
+                                    {
+                                        new SettingsSlider<float>
+                                        {
+                                            Current = safeAreaPaddingTop,
+                                            LabelText = "Top",
+                                        },
+                                        new SettingsSlider<float>
+                                        {
+                                            Current = safeAreaPaddingBottom,
+                                            LabelText = "Bottom",
+                                        },
+                                        new SettingsSlider<float>
+                                        {
+                                            Current = safeAreaPaddingLeft,
+                                            LabelText = "Left",
+                                        },
+                                        new SettingsSlider<float>
+                                        {
+                                            Current = safeAreaPaddingRight,
+                                            LabelText = "Right",
+                                        },
+                                        new SettingsCheckbox
+                                        {
+                                            LabelText = "Apply",
+                                            Current = applySafeAreaConsiderations,
+                                        },
+                                    },
                                 },
-                                new SettingsSlider<float>
-                                {
-                                    Current = safeAreaPaddingLeft,
-                                    LabelText = "Left"
-                                },
-                                new SettingsSlider<float>
-                                {
-                                    Current = safeAreaPaddingRight,
-                                    LabelText = "Right"
-                                },
-                                new SettingsCheckbox
-                                {
-                                    LabelText = "Apply",
-                                    Current = applySafeAreaConsiderations,
-                                },
-                            }
+                            },
                         }
-                    }
-                });
+                    );
 
-                safeAreaPaddingTop.BindValueChanged(_ => updateSafeArea());
-                safeAreaPaddingBottom.BindValueChanged(_ => updateSafeArea());
-                safeAreaPaddingLeft.BindValueChanged(_ => updateSafeArea());
-                safeAreaPaddingRight.BindValueChanged(_ => updateSafeArea());
-                applySafeAreaConsiderations.BindValueChanged(_ => updateSafeArea());
-            });
+                    safeAreaPaddingTop.BindValueChanged(_ => updateSafeArea());
+                    safeAreaPaddingBottom.BindValueChanged(_ => updateSafeArea());
+                    safeAreaPaddingLeft.BindValueChanged(_ => updateSafeArea());
+                    safeAreaPaddingRight.BindValueChanged(_ => updateSafeArea());
+                    applySafeAreaConsiderations.BindValueChanged(_ => updateSafeArea());
+                }
+            );
 
             base.SetUpSteps();
         }
@@ -117,12 +140,13 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Right = safeAreaPaddingRight.Value,
             };
 
-            Game.LocalConfig.SetValue(OsuSetting.SafeAreaConsiderations, applySafeAreaConsiderations.Value);
+            Game.LocalConfig.SetValue(
+                OsuSetting.SafeAreaConsiderations,
+                applySafeAreaConsiderations.Value
+            );
         }
 
         [Test]
-        public void TestSafeArea()
-        {
-        }
+        public void TestSafeArea() { }
     }
 }

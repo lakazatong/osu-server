@@ -53,9 +53,16 @@ namespace osu.Game.Graphics.Containers
 
         protected Bindable<bool> ShowStoryboard { get; private set; } = null!;
 
-        private float breakLightening => LightenDuringBreaks.Value && IsBreakTime.Value ? BREAK_LIGHTEN_AMOUNT : 0;
+        private float breakLightening =>
+            LightenDuringBreaks.Value && IsBreakTime.Value ? BREAK_LIGHTEN_AMOUNT : 0;
 
-        protected virtual float DimLevel => Math.Max(!IgnoreUserSettings.Value ? (float)UserDimLevel.Value - breakLightening : DimWhenUserSettingsIgnored.Value, 0);
+        protected virtual float DimLevel =>
+            Math.Max(
+                !IgnoreUserSettings.Value
+                    ? (float)UserDimLevel.Value - breakLightening
+                    : DimWhenUserSettingsIgnored.Value,
+                0
+            );
 
         protected override Container<Drawable> Content => dimContent;
 
@@ -103,7 +110,11 @@ namespace osu.Game.Graphics.Containers
             ContentDisplayed = ShowDimContent;
 
             dimContent.FadeTo(ContentDisplayed ? 1 : 0, BACKGROUND_FADE_DURATION, Easing.OutQuint);
-            dimContent.FadeColour(OsuColour.Gray(1f - DimLevel), BACKGROUND_FADE_DURATION, Easing.OutQuint);
+            dimContent.FadeColour(
+                OsuColour.Gray(1f - DimLevel),
+                BACKGROUND_FADE_DURATION,
+                Easing.OutQuint
+            );
         }
     }
 }

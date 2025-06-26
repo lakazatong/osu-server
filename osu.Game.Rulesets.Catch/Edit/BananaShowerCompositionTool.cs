@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Catch.Edit
     public class BananaShowerCompositionTool : CompositionTool
     {
         public BananaShowerCompositionTool()
-            : base(nameof(BananaShower))
-        {
-        }
+            : base(nameof(BananaShower)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new BananaShowerPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new BananaShowerPlacementBlueprint();
     }
 }

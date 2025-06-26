@@ -24,79 +24,117 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestDescription()
         {
             createSliderBar();
-            AddStep("set description", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.Description = "this text describes the component"));
+            AddStep(
+                "set description",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.Description = "this text describes the component")
+            );
         }
 
         [Test]
         public void TestSize()
         {
             createSliderBar();
-            AddStep("set zero width", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.ResizeWidthTo(0, 200, Easing.OutQuint)));
-            AddStep("set negative width", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.ResizeWidthTo(-1, 200, Easing.OutQuint)));
-            AddStep("revert back", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.ResizeWidthTo(1, 200, Easing.OutQuint)));
+            AddStep(
+                "set zero width",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.ResizeWidthTo(0, 200, Easing.OutQuint))
+            );
+            AddStep(
+                "set negative width",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.ResizeWidthTo(-1, 200, Easing.OutQuint))
+            );
+            AddStep(
+                "revert back",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.ResizeWidthTo(1, 200, Easing.OutQuint))
+            );
         }
 
         [Test]
         public void TestDisable()
         {
             createSliderBar();
-            AddStep("set disabled", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.Current.Disabled = true));
-            AddStep("unset disabled", () => this.ChildrenOfType<LabelledSliderBar<double>>().ForEach(l => l.Current.Disabled = false));
+            AddStep(
+                "set disabled",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.Current.Disabled = true)
+            );
+            AddStep(
+                "unset disabled",
+                () =>
+                    this.ChildrenOfType<LabelledSliderBar<double>>()
+                        .ForEach(l => l.Current.Disabled = false)
+            );
         }
 
         private void createSliderBar()
         {
-            AddStep("create component", () =>
-            {
-                FillFlowContainer flow;
-
-                Child = flow = new FillFlowContainer
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
-                    {
-                        new LabelledSliderBar<double>
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Current = new BindableDouble(5)
-                            {
-                                MinValue = 0,
-                                MaxValue = 10,
-                                Precision = 1,
-                            },
-                            Label = "a sample component",
-                        },
-                    },
-                };
+                    FillFlowContainer flow;
 
-                foreach (var colour in Enum.GetValues(typeof(OverlayColourScheme)).OfType<OverlayColourScheme>())
-                {
-                    flow.Add(new OverlayColourContainer(colour)
+                    Child = flow = new FillFlowContainer
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.X,
+                        Width = 500,
                         AutoSizeAxes = Axes.Y,
-                        Child = new LabelledSliderBar<double>
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Current = new BindableDouble(5)
+                            new LabelledSliderBar<double>
                             {
-                                MinValue = 0,
-                                MaxValue = 10,
-                                Precision = 1,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Current = new BindableDouble(5)
+                                {
+                                    MinValue = 0,
+                                    MaxValue = 10,
+                                    Precision = 1,
+                                },
+                                Label = "a sample component",
                             },
-                            Label = "a sample component",
-                        }
-                    });
+                        },
+                    };
+
+                    foreach (
+                        var colour in Enum.GetValues(typeof(OverlayColourScheme))
+                            .OfType<OverlayColourScheme>()
+                    )
+                    {
+                        flow.Add(
+                            new OverlayColourContainer(colour)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Child = new LabelledSliderBar<double>
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Current = new BindableDouble(5)
+                                    {
+                                        MinValue = 0,
+                                        MaxValue = 10,
+                                        Precision = 1,
+                                    },
+                                    Label = "a sample component",
+                                },
+                            }
+                        );
+                    }
                 }
-            });
+            );
         }
 
         private partial class OverlayColourContainer : Container

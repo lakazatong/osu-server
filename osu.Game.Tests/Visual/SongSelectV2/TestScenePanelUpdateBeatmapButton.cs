@@ -14,30 +14,35 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private PanelUpdateBeatmapButton button = null!;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = button = new PanelUpdateBeatmapButton
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
-        });
+                Child = button = new PanelUpdateBeatmapButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                };
+            });
 
         [Test]
         public void TestNonUpdatedBeatmap()
         {
-            AddStep("non-updated beatmap", () => button.BeatmapSet = new BeatmapSetInfo
-            {
-                Beatmaps =
-                {
-                    new BeatmapInfo
+            AddStep(
+                "non-updated beatmap",
+                () =>
+                    button.BeatmapSet = new BeatmapSetInfo
                     {
-                        MD5Hash = "test",
-                        OnlineMD5Hash = "online",
-                        LastOnlineUpdate = DateTimeOffset.Now,
+                        Beatmaps =
+                        {
+                            new BeatmapInfo
+                            {
+                                MD5Hash = "test",
+                                OnlineMD5Hash = "online",
+                                LastOnlineUpdate = DateTimeOffset.Now,
+                            },
+                        },
                     }
-                }
-            });
+            );
 
             AddAssert("button visible", () => button.Alpha == 1f);
         }
@@ -52,10 +57,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestUpdatedBeatmap()
         {
-            AddStep("updated beatmap", () => button.BeatmapSet = new BeatmapSetInfo
-            {
-                Beatmaps = { new BeatmapInfo() }
-            });
+            AddStep(
+                "updated beatmap",
+                () => button.BeatmapSet = new BeatmapSetInfo { Beatmaps = { new BeatmapInfo() } }
+            );
             AddAssert("button invisible", () => button.Alpha == 0f);
         }
     }

@@ -11,10 +11,12 @@ namespace osu.Game.Rulesets.Mania.Configuration
 {
     public class ManiaRulesetConfigManager : RulesetConfigManager<ManiaRulesetSetting>
     {
-        public ManiaRulesetConfigManager(SettingsStore? settings, RulesetInfo ruleset, int? variant = null)
-            : base(settings, ruleset, variant)
-        {
-        }
+        public ManiaRulesetConfigManager(
+            SettingsStore? settings,
+            RulesetInfo ruleset,
+            int? variant = null
+        )
+            : base(settings, ruleset, variant) { }
 
         protected override void InitialiseDefaults()
         {
@@ -26,16 +28,21 @@ namespace osu.Game.Rulesets.Mania.Configuration
             SetDefault(ManiaRulesetSetting.MobileLayout, ManiaMobileLayout.Portrait);
         }
 
-        public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
-        {
-            new TrackedSetting<double>(ManiaRulesetSetting.ScrollSpeed,
-                speed => new SettingDescription(
-                    rawValue: speed,
-                    name: RulesetSettingsStrings.ScrollSpeed,
-                    value: RulesetSettingsStrings.ScrollSpeedTooltip((int)DrawableManiaRuleset.ComputeScrollTime(speed), speed)
-                )
-            )
-        };
+        public override TrackedSettings CreateTrackedSettings() =>
+            new TrackedSettings
+            {
+                new TrackedSetting<double>(
+                    ManiaRulesetSetting.ScrollSpeed,
+                    speed => new SettingDescription(
+                        rawValue: speed,
+                        name: RulesetSettingsStrings.ScrollSpeed,
+                        value: RulesetSettingsStrings.ScrollSpeedTooltip(
+                            (int)DrawableManiaRuleset.ComputeScrollTime(speed),
+                            speed
+                        )
+                    )
+                ),
+            };
     }
 
     public enum ManiaRulesetSetting

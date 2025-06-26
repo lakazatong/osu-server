@@ -18,9 +18,7 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         public readonly Bindable<bool> Major = new Bindable<bool>();
 
         public DrawableBarLine()
-            : this(null!)
-        {
-        }
+            : this(null!) { }
 
         public DrawableBarLine(BarLine barLine)
             : base(barLine)
@@ -32,11 +30,16 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         [BackgroundDependencyLoader(true)]
         private void load()
         {
-            AddInternal(new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.BarLine), _ => new DefaultBarLine())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(
+                new SkinnableDrawable(
+                    new ManiaSkinComponentLookup(ManiaSkinComponents.BarLine),
+                    _ => new DefaultBarLine()
+                )
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
 
         protected override void OnApply()

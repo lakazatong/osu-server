@@ -46,29 +46,31 @@ namespace osu.Game.Overlays.Notifications
         {
             Light.Colour = colours.Orange2;
 
-            Content.Add(textDrawable = new OsuTextFlowContainer(t => t.Font = t.Font.With(size: 14, weight: FontWeight.Medium))
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Text = text
-            });
+            Content.Add(
+                textDrawable = new OsuTextFlowContainer(t =>
+                    t.Font = t.Font.With(size: 14, weight: FontWeight.Medium)
+                )
+                {
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                    Text = text,
+                }
+            );
 
             IconContent.Masking = true;
             IconContent.CornerRadius = CORNER_RADIUS;
 
-            IconContent.AddRange(new Drawable[]
-            {
-                new Box
+            IconContent.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5,
-                },
-            });
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
+                }
+            );
 
-            LoadComponentAsync(new DrawableAvatar(user)
-            {
-                FillMode = FillMode.Fill,
-            }, IconContent.Add);
+            LoadComponentAsync(
+                new DrawableAvatar(user) { FillMode = FillMode.Fill },
+                IconContent.Add
+            );
         }
     }
 }

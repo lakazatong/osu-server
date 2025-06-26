@@ -22,36 +22,54 @@ namespace osu.Game.Rulesets.Taiko.Tests
         [Test]
         public void TestForegroundSpritesHidesScroller()
         {
-            AddStep("load storyboard", () =>
-            {
-                currentStoryboard = new Storyboard();
+            AddStep(
+                "load storyboard",
+                () =>
+                {
+                    currentStoryboard = new Storyboard();
 
-                for (int i = 0; i < 10; i++)
-                    currentStoryboard.GetLayer("Foreground").Add(new StoryboardSprite($"test{i}", Anchor.Centre, Vector2.Zero));
-            });
+                    for (int i = 0; i < 10; i++)
+                        currentStoryboard
+                            .GetLayer("Foreground")
+                            .Add(new StoryboardSprite($"test{i}", Anchor.Centre, Vector2.Zero));
+                }
+            );
 
             CreateTest();
-            AddAssert("taiko scroller not present", () => !this.ChildrenOfType<LegacyTaikoScroller>().Any());
+            AddAssert(
+                "taiko scroller not present",
+                () => !this.ChildrenOfType<LegacyTaikoScroller>().Any()
+            );
         }
 
         [Test]
         public void TestOverlaySpritesKeepsScroller()
         {
-            AddStep("load storyboard", () =>
-            {
-                currentStoryboard = new Storyboard();
+            AddStep(
+                "load storyboard",
+                () =>
+                {
+                    currentStoryboard = new Storyboard();
 
-                for (int i = 0; i < 10; i++)
-                    currentStoryboard.GetLayer("Overlay").Add(new StoryboardSprite($"test{i}", Anchor.Centre, Vector2.Zero));
-            });
+                    for (int i = 0; i < 10; i++)
+                        currentStoryboard
+                            .GetLayer("Overlay")
+                            .Add(new StoryboardSprite($"test{i}", Anchor.Centre, Vector2.Zero));
+                }
+            );
 
             CreateTest();
-            AddAssert("taiko scroller present", () => this.ChildrenOfType<LegacyTaikoScroller>().Single().IsPresent);
+            AddAssert(
+                "taiko scroller present",
+                () => this.ChildrenOfType<LegacyTaikoScroller>().Single().IsPresent
+            );
         }
 
         protected override Ruleset CreatePlayerRuleset() => new TaikoRuleset();
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => base.CreateWorkingBeatmap(beatmap, currentStoryboard ?? storyboard);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) => base.CreateWorkingBeatmap(beatmap, currentStoryboard ?? storyboard);
     }
 }

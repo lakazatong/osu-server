@@ -21,7 +21,8 @@ namespace osu.Game.Screens.Select.Carousel
             State.Value = CarouselItemState.Collapsed;
         }
 
-        public override DrawableCarouselItem CreateDrawableRepresentation() => new DrawableCarouselBeatmap(this);
+        public override DrawableCarouselItem CreateDrawableRepresentation() =>
+            new DrawableCarouselBeatmap(this);
 
         public override void Filter(FilterCriteria criteria)
         {
@@ -33,9 +34,13 @@ namespace osu.Game.Screens.Select.Carousel
         private bool checkMatch(FilterCriteria criteria)
         {
             bool match =
-                criteria.Ruleset == null ||
-                BeatmapInfo.Ruleset.ShortName == criteria.Ruleset.ShortName ||
-                (BeatmapInfo.Ruleset.OnlineID == 0 && criteria.Ruleset.OnlineID != 0 && criteria.AllowConvertedBeatmaps);
+                criteria.Ruleset == null
+                || BeatmapInfo.Ruleset.ShortName == criteria.Ruleset.ShortName
+                || (
+                    BeatmapInfo.Ruleset.OnlineID == 0
+                    && criteria.Ruleset.OnlineID != 0
+                    && criteria.AllowConvertedBeatmaps
+                );
 
             if (BeatmapInfo.BeatmapSet?.Equals(criteria.SelectedBeatmapSet) == true)
             {
@@ -43,7 +48,8 @@ namespace osu.Game.Screens.Select.Carousel
                 return match;
             }
 
-            if (!match) return false;
+            if (!match)
+                return false;
 
             if (criteria.SearchTerms.Length > 0)
             {
@@ -53,39 +59,82 @@ namespace osu.Game.Screens.Select.Carousel
                 // this should be done after text matching so we can prioritise matching numbers in metadata.
                 if (!match && criteria.SearchNumber.HasValue)
                 {
-                    match = (BeatmapInfo.OnlineID == criteria.SearchNumber.Value) ||
-                            (BeatmapInfo.BeatmapSet?.OnlineID == criteria.SearchNumber.Value);
+                    match =
+                        (BeatmapInfo.OnlineID == criteria.SearchNumber.Value)
+                        || (BeatmapInfo.BeatmapSet?.OnlineID == criteria.SearchNumber.Value);
                 }
             }
 
-            if (!match) return false;
+            if (!match)
+                return false;
 
-            match &= !criteria.StarDifficulty.HasFilter || criteria.StarDifficulty.IsInRange(BeatmapInfo.StarRating.FloorToDecimalDigits(2));
-            match &= !criteria.ApproachRate.HasFilter || criteria.ApproachRate.IsInRange(BeatmapInfo.Difficulty.ApproachRate);
-            match &= !criteria.DrainRate.HasFilter || criteria.DrainRate.IsInRange(BeatmapInfo.Difficulty.DrainRate);
-            match &= !criteria.CircleSize.HasFilter || criteria.CircleSize.IsInRange(BeatmapInfo.Difficulty.CircleSize);
-            match &= !criteria.OverallDifficulty.HasFilter || criteria.OverallDifficulty.IsInRange(BeatmapInfo.Difficulty.OverallDifficulty);
+            match &=
+                !criteria.StarDifficulty.HasFilter
+                || criteria.StarDifficulty.IsInRange(
+                    BeatmapInfo.StarRating.FloorToDecimalDigits(2)
+                );
+            match &=
+                !criteria.ApproachRate.HasFilter
+                || criteria.ApproachRate.IsInRange(BeatmapInfo.Difficulty.ApproachRate);
+            match &=
+                !criteria.DrainRate.HasFilter
+                || criteria.DrainRate.IsInRange(BeatmapInfo.Difficulty.DrainRate);
+            match &=
+                !criteria.CircleSize.HasFilter
+                || criteria.CircleSize.IsInRange(BeatmapInfo.Difficulty.CircleSize);
+            match &=
+                !criteria.OverallDifficulty.HasFilter
+                || criteria.OverallDifficulty.IsInRange(BeatmapInfo.Difficulty.OverallDifficulty);
             match &= !criteria.Length.HasFilter || criteria.Length.IsInRange(BeatmapInfo.Length);
-            match &= !criteria.LastPlayed.HasFilter || criteria.LastPlayed.IsInRange(BeatmapInfo.LastPlayed ?? DateTimeOffset.MinValue);
-            match &= !criteria.DateRanked.HasFilter || (BeatmapInfo.BeatmapSet?.DateRanked != null && criteria.DateRanked.IsInRange(BeatmapInfo.BeatmapSet.DateRanked.Value));
-            match &= !criteria.DateSubmitted.HasFilter || (BeatmapInfo.BeatmapSet?.DateSubmitted != null && criteria.DateSubmitted.IsInRange(BeatmapInfo.BeatmapSet.DateSubmitted.Value));
+            match &=
+                !criteria.LastPlayed.HasFilter
+                || criteria.LastPlayed.IsInRange(BeatmapInfo.LastPlayed ?? DateTimeOffset.MinValue);
+            match &=
+                !criteria.DateRanked.HasFilter
+                || (
+                    BeatmapInfo.BeatmapSet?.DateRanked != null
+                    && criteria.DateRanked.IsInRange(BeatmapInfo.BeatmapSet.DateRanked.Value)
+                );
+            match &=
+                !criteria.DateSubmitted.HasFilter
+                || (
+                    BeatmapInfo.BeatmapSet?.DateSubmitted != null
+                    && criteria.DateSubmitted.IsInRange(BeatmapInfo.BeatmapSet.DateSubmitted.Value)
+                );
             match &= !criteria.BPM.HasFilter || criteria.BPM.IsInRange(BeatmapInfo.BPM);
 
-            match &= !criteria.BeatDivisor.HasFilter || criteria.BeatDivisor.IsInRange(BeatmapInfo.BeatDivisor);
-            match &= !criteria.OnlineStatus.HasFilter || criteria.OnlineStatus.IsInRange(BeatmapInfo.Status);
+            match &=
+                !criteria.BeatDivisor.HasFilter
+                || criteria.BeatDivisor.IsInRange(BeatmapInfo.BeatDivisor);
+            match &=
+                !criteria.OnlineStatus.HasFilter
+                || criteria.OnlineStatus.IsInRange(BeatmapInfo.Status);
 
-            if (!match) return false;
+            if (!match)
+                return false;
 
-            match &= !criteria.Creator.HasFilter || criteria.Creator.Matches(BeatmapInfo.Metadata.Author.Username);
-            match &= !criteria.Artist.HasFilter || criteria.Artist.Matches(BeatmapInfo.Metadata.Artist) ||
-                     criteria.Artist.Matches(BeatmapInfo.Metadata.ArtistUnicode);
-            match &= !criteria.Title.HasFilter || criteria.Title.Matches(BeatmapInfo.Metadata.Title) ||
-                     criteria.Title.Matches(BeatmapInfo.Metadata.TitleUnicode);
-            match &= !criteria.DifficultyName.HasFilter || criteria.DifficultyName.Matches(BeatmapInfo.DifficultyName);
-            match &= !criteria.Source.HasFilter || criteria.Source.Matches(BeatmapInfo.Metadata.Source);
-            match &= !criteria.UserStarDifficulty.HasFilter || criteria.UserStarDifficulty.IsInRange(BeatmapInfo.StarRating);
+            match &=
+                !criteria.Creator.HasFilter
+                || criteria.Creator.Matches(BeatmapInfo.Metadata.Author.Username);
+            match &=
+                !criteria.Artist.HasFilter
+                || criteria.Artist.Matches(BeatmapInfo.Metadata.Artist)
+                || criteria.Artist.Matches(BeatmapInfo.Metadata.ArtistUnicode);
+            match &=
+                !criteria.Title.HasFilter
+                || criteria.Title.Matches(BeatmapInfo.Metadata.Title)
+                || criteria.Title.Matches(BeatmapInfo.Metadata.TitleUnicode);
+            match &=
+                !criteria.DifficultyName.HasFilter
+                || criteria.DifficultyName.Matches(BeatmapInfo.DifficultyName);
+            match &=
+                !criteria.Source.HasFilter || criteria.Source.Matches(BeatmapInfo.Metadata.Source);
+            match &=
+                !criteria.UserStarDifficulty.HasFilter
+                || criteria.UserStarDifficulty.IsInRange(BeatmapInfo.StarRating);
 
-            if (!match) return false;
+            if (!match)
+                return false;
 
             match &= criteria.CollectionBeatmapMD5Hashes?.Contains(BeatmapInfo.MD5Hash) ?? true;
             if (match && criteria.RulesetCriteria != null)
@@ -111,7 +160,8 @@ namespace osu.Game.Screens.Select.Carousel
                 case SortMode.Difficulty:
                     int ruleset = BeatmapInfo.Ruleset.CompareTo(otherBeatmap.BeatmapInfo.Ruleset);
 
-                    if (ruleset != 0) return ruleset;
+                    if (ruleset != 0)
+                        return ruleset;
 
                     return BeatmapInfo.StarRating.CompareTo(otherBeatmap.BeatmapInfo.StarRating);
             }

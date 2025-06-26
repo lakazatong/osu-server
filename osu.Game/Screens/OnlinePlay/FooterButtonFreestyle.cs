@@ -23,7 +23,10 @@ namespace osu.Game.Screens.OnlinePlay
 
         public new Action Action
         {
-            set => throw new NotSupportedException("The click action is handled by the button itself.");
+            set =>
+                throw new NotSupportedException(
+                    "The click action is handled by the button itself."
+                );
         }
 
         private OsuSpriteText text = null!;
@@ -41,32 +44,34 @@ namespace osu.Game.Screens.OnlinePlay
         [BackgroundDependencyLoader]
         private void load()
         {
-            ButtonContentContainer.AddRange(new[]
-            {
-                new Container
+            ButtonContentContainer.AddRange(
+                new[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    new Container
                     {
-                        circle = new Circle
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Colour = colours.YellowDark,
-                            RelativeSizeAxes = Axes.Both,
+                            circle = new Circle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Colour = colours.YellowDark,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            text = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Padding = new MarginPadding(5),
+                                UseFullGlyphHeight = false,
+                            },
                         },
-                        text = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Padding = new MarginPadding(5),
-                            UseFullGlyphHeight = false,
-                        }
-                    }
+                    },
                 }
-            });
+            );
 
             SelectedColour = colours.Yellow;
             DeselectedColour = SelectedColour.Opacity(0.5f);

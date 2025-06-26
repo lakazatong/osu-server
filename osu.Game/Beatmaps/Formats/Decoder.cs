@@ -15,7 +15,10 @@ namespace osu.Game.Beatmaps.Formats
     {
         protected virtual TOutput CreateTemplateObject() => new TOutput();
 
-        public TOutput Decode(LineBufferedReader primaryStream, params LineBufferedReader[] otherStreams)
+        public TOutput Decode(
+            LineBufferedReader primaryStream,
+            params LineBufferedReader[] otherStreams
+        )
         {
             var output = CreateTemplateObject();
             foreach (LineBufferedReader stream in otherStreams.Prepend(primaryStream))
@@ -28,8 +31,12 @@ namespace osu.Game.Beatmaps.Formats
 
     public abstract class Decoder
     {
-        private static readonly Dictionary<Type, Dictionary<string, Func<string, Decoder>>> decoders = new Dictionary<Type, Dictionary<string, Func<string, Decoder>>>();
-        private static readonly Dictionary<Type, Func<Decoder>> fallback_decoders = new Dictionary<Type, Func<Decoder>>();
+        private static readonly Dictionary<
+            Type,
+            Dictionary<string, Func<string, Decoder>>
+        > decoders = new Dictionary<Type, Dictionary<string, Func<string, Decoder>>>();
+        private static readonly Dictionary<Type, Func<Decoder>> fallback_decoders =
+            new Dictionary<Type, Func<Decoder>>();
 
         static Decoder()
         {
@@ -44,7 +51,8 @@ namespace osu.Game.Beatmaps.Formats
         /// <param name="rulesets">A store containing all available rulesets (used by <see cref="LegacyBeatmapDecoder"/>).</param>
         public static void RegisterDependencies(RulesetStore rulesets)
         {
-            LegacyBeatmapDecoder.RulesetStore = rulesets ?? throw new ArgumentNullException(nameof(rulesets));
+            LegacyBeatmapDecoder.RulesetStore =
+                rulesets ?? throw new ArgumentNullException(nameof(rulesets));
         }
 
         /// <summary>
@@ -72,7 +80,10 @@ namespace osu.Game.Beatmaps.Formats
             if (line == null)
                 throw new IOException("Unknown file format (no content)");
 
-            var decoder = typedDecoders.Where(d => line.StartsWith(d.Key, StringComparison.InvariantCulture)).Select(d => d.Value).FirstOrDefault();
+            var decoder = typedDecoders
+                .Where(d => line.StartsWith(d.Key, StringComparison.InvariantCulture))
+                .Select(d => d.Value)
+                .FirstOrDefault();
 
             // it's important the magic does NOT get consumed here, since sometimes it's part of the structure
             // (see JsonBeatmapDecoder - the magic string is the opening brace)
@@ -94,7 +105,10 @@ namespace osu.Game.Beatmaps.Formats
         protected static void AddDecoder<T>(string magic, Func<string, Decoder> constructor)
         {
             if (!decoders.TryGetValue(typeof(T), out var typedDecoders))
-                decoders.Add(typeof(T), typedDecoders = new Dictionary<string, Func<string, Decoder>>());
+                decoders.Add(
+                    typeof(T),
+                    typedDecoders = new Dictionary<string, Func<string, Decoder>>()
+                );
 
             typedDecoders[magic] = constructor;
         }

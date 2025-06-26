@@ -18,9 +18,13 @@ namespace osu.Game.Screens.Edit.Compose.Components
             Presets = presets.ToArray();
         }
 
-        public static readonly BeatDivisorPresetCollection COMMON = new BeatDivisorPresetCollection(BeatDivisorType.Common, new[] { 1, 2, 4, 8, 16 });
+        public static readonly BeatDivisorPresetCollection COMMON = new BeatDivisorPresetCollection(
+            BeatDivisorType.Common,
+            new[] { 1, 2, 4, 8, 16 }
+        );
 
-        public static readonly BeatDivisorPresetCollection TRIPLETS = new BeatDivisorPresetCollection(BeatDivisorType.Triplets, new[] { 1, 3, 6, 12 });
+        public static readonly BeatDivisorPresetCollection TRIPLETS =
+            new BeatDivisorPresetCollection(BeatDivisorType.Triplets, new[] { 1, 3, 6, 12 });
 
         public static BeatDivisorPresetCollection Custom(int maxDivisor)
         {
@@ -35,7 +39,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 presets.Add(maxDivisor / candidate);
             }
 
-            return new BeatDivisorPresetCollection(BeatDivisorType.Custom, presets.Distinct().Order());
+            return new BeatDivisorPresetCollection(
+                BeatDivisorType.Custom,
+                presets.Distinct().Order()
+            );
         }
     }
 }

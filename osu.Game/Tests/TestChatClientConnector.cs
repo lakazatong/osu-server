@@ -35,7 +35,9 @@ namespace osu.Game.Tests
             Start();
         }
 
-        protected sealed override Task<PersistentEndpointClient> BuildConnectionAsync(CancellationToken cancellationToken)
+        protected sealed override Task<PersistentEndpointClient> BuildConnectionAsync(
+            CancellationToken cancellationToken
+        )
         {
             var client = new PollingChatClient(API);
 

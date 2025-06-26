@@ -57,11 +57,7 @@ namespace osu.Game.Graphics.UserInterface
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Padding = new MarginPadding
-                {
-                    Horizontal = 70,
-                    Top = -corner_radius
-                },
+                Padding = new MarginPadding { Horizontal = 70, Top = -corner_radius },
                 Children = new Drawable[]
                 {
                     underlayContainer = new InputBlockingContainer
@@ -71,10 +67,7 @@ namespace osu.Game.Graphics.UserInterface
                         CornerRadius = corner_radius,
                         Masking = true,
                         BorderThickness = 2,
-                        Child = underlayBackground = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = underlayBackground = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     contentContainer = new Container
                     {
@@ -88,14 +81,11 @@ namespace osu.Game.Graphics.UserInterface
                             Type = EdgeEffectType.Shadow,
                             Colour = Colour4.Black.Opacity(0.1f),
                             Offset = new Vector2(0, 1),
-                            Radius = 3
+                            Radius = 3,
                         },
                         Children = new Drawable[]
                         {
-                            contentBackground = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            contentBackground = new Box { RelativeSizeAxes = Axes.Both },
                             new FillFlowContainer
                             {
                                 RelativeSizeAxes = Axes.X,
@@ -109,7 +99,7 @@ namespace osu.Game.Graphics.UserInterface
                                 {
                                     titleSpriteText = new OsuSpriteText
                                     {
-                                        Font = OsuFont.TorusAlternate.With(size: 20)
+                                        Font = OsuFont.TorusAlternate.With(size: 20),
                                     },
                                     descriptionText = new OsuTextFlowContainer(t =>
                                     {
@@ -117,9 +107,9 @@ namespace osu.Game.Graphics.UserInterface
                                     })
                                     {
                                         RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y
-                                    }
-                                }
+                                        AutoSizeAxes = Axes.Y,
+                                    },
+                                },
                             },
                             closeButton = new IconButton
                             {
@@ -127,25 +117,27 @@ namespace osu.Game.Graphics.UserInterface
                                 Scale = new Vector2(0.6f),
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
-                                Margin = new MarginPadding
-                                {
-                                    Right = 21,
-                                    Top = corner_radius
-                                }
-                            }
-                        }
-                    }
-                }
+                                Margin = new MarginPadding { Right = 21, Top = corner_radius },
+                            },
+                        },
+                    },
+                },
             };
         }
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            underlayContainer.BorderColour = ColourInfo.GradientVertical(Colour4.Black, colourProvider.Dark4);
+            underlayContainer.BorderColour = ColourInfo.GradientVertical(
+                Colour4.Black,
+                colourProvider.Dark4
+            );
             underlayBackground.Colour = colourProvider.Dark4;
 
-            contentContainer.BorderColour = ColourInfo.GradientVertical(colourProvider.Dark3, colourProvider.Dark1);
+            contentContainer.BorderColour = ColourInfo.GradientVertical(
+                colourProvider.Dark3,
+                colourProvider.Dark1
+            );
             contentBackground.Colour = colourProvider.Dark3;
 
             closeButton.IconHoverColour = colourProvider.Highlight1;

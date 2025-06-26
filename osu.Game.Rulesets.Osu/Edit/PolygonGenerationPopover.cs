@@ -55,7 +55,8 @@ namespace osu.Game.Rulesets.Osu.Edit
         [BackgroundDependencyLoader]
         private void load()
         {
-            var selectionHandler = (EditorSelectionHandler)composer.BlueprintContainer.SelectionHandler;
+            var selectionHandler = (EditorSelectionHandler)
+                composer.BlueprintContainer.SelectionHandler;
             newComboState = selectionHandler.SelectionNewComboState.GetBoundCopy();
 
             AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight };
@@ -74,9 +75,12 @@ namespace osu.Game.Rulesets.Osu.Edit
                             MinValue = 0.1,
                             MaxValue = 6,
                             Precision = 0.1,
-                            Value = ((OsuHitObjectComposer)composer).DistanceSnapProvider.DistanceSpacingMultiplier.Value,
+                            Value = ((OsuHitObjectComposer)composer)
+                                .DistanceSnapProvider
+                                .DistanceSpacingMultiplier
+                                .Value,
                         },
-                        Instantaneous = true
+                        Instantaneous = true,
                     },
                     offsetAngleInput = new SliderWithTextBoxInput<int>("Offset angle:")
                     {
@@ -84,9 +88,9 @@ namespace osu.Game.Rulesets.Osu.Edit
                         {
                             MinValue = 0,
                             MaxValue = 180,
-                            Precision = 1
+                            Precision = 1,
                         },
-                        Instantaneous = true
+                        Instantaneous = true,
                     },
                     repeatCountInput = new SliderWithTextBoxInput<int>("Repeats:")
                     {
@@ -94,9 +98,9 @@ namespace osu.Game.Rulesets.Osu.Edit
                         {
                             MinValue = 1,
                             MaxValue = 10,
-                            Precision = 1
+                            Precision = 1,
                         },
-                        Instantaneous = true
+                        Instantaneous = true,
                     },
                     pointInput = new SliderWithTextBoxInput<int>("Vertices:")
                     {
@@ -106,15 +110,15 @@ namespace osu.Game.Rulesets.Osu.Edit
                             MaxValue = 32,
                             Precision = 1,
                         },
-                        Instantaneous = true
+                        Instantaneous = true,
                     },
                     commitButton = new RoundedButton
                     {
                         RelativeSizeAxes = Axes.X,
                         Text = "Create",
-                        Action = commit
-                    }
-                }
+                        Action = commit,
+                    },
+                },
             };
         }
 
@@ -136,19 +140,35 @@ namespace osu.Game.Rulesets.Osu.Edit
         private void tryCreatePolygon()
         {
             double startTime = beatSnapProvider.SnapTime(editorClock.CurrentTime);
-            TimingControlPoint timingPoint = editorBeatmap.ControlPointInfo.TimingPointAt(startTime);
+            TimingControlPoint timingPoint = editorBeatmap.ControlPointInfo.TimingPointAt(
+                startTime
+            );
             double timeSpacing = timingPoint.BeatLength / editorBeatmap.BeatDivisor;
-            IHasSliderVelocity lastWithSliderVelocity = editorBeatmap.HitObjects.Where(ho => ho.GetEndTime() <= startTime).OfType<IHasSliderVelocity>().LastOrDefault() ?? new Slider();
-            double velocity = OsuHitObject.BASE_SCORING_DISTANCE * editorBeatmap.Difficulty.SliderMultiplier
-                              / LegacyRulesetExtensions.GetPrecisionAdjustedBeatLength(lastWithSliderVelocity, timingPoint, OsuRuleset.SHORT_NAME);
+            IHasSliderVelocity lastWithSliderVelocity =
+                editorBeatmap
+                    .HitObjects.Where(ho => ho.GetEndTime() <= startTime)
+                    .OfType<IHasSliderVelocity>()
+                    .LastOrDefault() ?? new Slider();
+            double velocity =
+                OsuHitObject.BASE_SCORING_DISTANCE
+                * editorBeatmap.Difficulty.SliderMultiplier
+                / LegacyRulesetExtensions.GetPrecisionAdjustedBeatLength(
+                    lastWithSliderVelocity,
+                    timingPoint,
+                    OsuRuleset.SHORT_NAME
+                );
             double length = distanceSnapInput.Current.Value * velocity * timeSpacing;
-            float polygonRadius = (float)(length / (2 * Math.Sin(double.Pi / pointInput.Current.Value)));
+            float polygonRadius = (float)(
+                length / (2 * Math.Sin(double.Pi / pointInput.Current.Value))
+            );
 
             int totalPoints = pointInput.Current.Value * repeatCountInput.Current.Value;
 
             if (insertedCircles.Count > totalPoints)
             {
-                editorBeatmap.RemoveRange(insertedCircles.GetRange(totalPoints, insertedCircles.Count - totalPoints));
+                editorBeatmap.RemoveRange(
+                    insertedCircles.GetRange(totalPoints, insertedCircles.Count - totalPoints)
+                );
                 insertedCircles.RemoveRange(totalPoints, insertedCircles.Count - totalPoints);
             }
 
@@ -156,8 +176,15 @@ namespace osu.Game.Rulesets.Osu.Edit
 
             for (int i = 0; i < totalPoints; ++i)
             {
-                float angle = float.DegreesToRadians(offsetAngleInput.Current.Value) + (i + 1) * (2 * float.Pi / pointInput.Current.Value);
-                var position = OsuPlayfield.BASE_SIZE / 2 + new Vector2(polygonRadius * float.Cos(angle), polygonRadius * float.Sin(angle));
+                float angle =
+                    float.DegreesToRadians(offsetAngleInput.Current.Value)
+                    + (i + 1) * (2 * float.Pi / pointInput.Current.Value);
+                var position =
+                    OsuPlayfield.BASE_SIZE / 2
+                    + new Vector2(
+                        polygonRadius * float.Cos(angle),
+                        polygonRadius * float.Sin(angle)
+                    );
                 bool newCombo = i == 0 && newComboState.Value == TernaryState.True;
 
                 HitCircle circle;
@@ -187,7 +214,12 @@ namespace osu.Game.Rulesets.Osu.Edit
                     circle.Samples.Add(circle.CreateHitSampleInfo());
                 }
 
-                if (position.X < 0 || position.Y < 0 || position.X > OsuPlayfield.BASE_SIZE.X || position.Y > OsuPlayfield.BASE_SIZE.Y)
+                if (
+                    position.X < 0
+                    || position.Y < 0
+                    || position.X > OsuPlayfield.BASE_SIZE.X
+                    || position.Y > OsuPlayfield.BASE_SIZE.Y
+                )
                 {
                     commitButton.Enabled.Value = false;
                     editorBeatmap.RemoveRange(insertedCircles);

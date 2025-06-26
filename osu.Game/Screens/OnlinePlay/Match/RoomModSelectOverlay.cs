@@ -24,29 +24,33 @@ namespace osu.Game.Screens.OnlinePlay.Match
         private readonly List<Mod> roomRequiredMods = new List<Mod>();
 
         public RoomModSelectOverlay()
-            : base(OverlayColourScheme.Plum)
-        {
-        }
+            : base(OverlayColourScheme.Plum) { }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            SelectedItem.BindValueChanged(v =>
-            {
-                roomRequiredMods.Clear();
-
-                if (v.NewValue is PlaylistItem item)
+            SelectedItem.BindValueChanged(
+                v =>
                 {
-                    var rulesetInstance = rulesets.GetRuleset(item.RulesetID)?.CreateInstance();
-                    Debug.Assert(rulesetInstance != null);
-                    roomRequiredMods.AddRange(item.RequiredMods.Select(m => m.ToMod(rulesetInstance)));
-                }
+                    roomRequiredMods.Clear();
 
-                ActiveMods.Value = ComputeActiveMods();
-            }, true);
+                    if (v.NewValue is PlaylistItem item)
+                    {
+                        var rulesetInstance = rulesets.GetRuleset(item.RulesetID)?.CreateInstance();
+                        Debug.Assert(rulesetInstance != null);
+                        roomRequiredMods.AddRange(
+                            item.RequiredMods.Select(m => m.ToMod(rulesetInstance))
+                        );
+                    }
+
+                    ActiveMods.Value = ComputeActiveMods();
+                },
+                true
+            );
         }
 
-        protected override IReadOnlyList<Mod> ComputeActiveMods() => roomRequiredMods.Concat(base.ComputeActiveMods()).ToList();
+        protected override IReadOnlyList<Mod> ComputeActiveMods() =>
+            roomRequiredMods.Concat(base.ComputeActiveMods()).ToList();
     }
 }

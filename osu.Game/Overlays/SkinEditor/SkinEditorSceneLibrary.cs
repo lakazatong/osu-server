@@ -73,13 +73,17 @@ namespace osu.Game.Overlays.SkinEditor
                                     Text = SkinEditorStrings.SongSelect,
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                    Action = () => performer?.PerformFromScreen(screen =>
-                                    {
-                                        if (screen is SongSelect)
-                                            return;
+                                    Action = () =>
+                                        performer?.PerformFromScreen(
+                                            screen =>
+                                            {
+                                                if (screen is SongSelect)
+                                                    return;
 
-                                        screen.Push(new PlaySongSelect());
-                                    }, new[] { typeof(SongSelect) })
+                                                screen.Push(new PlaySongSelect());
+                                            },
+                                            new[] { typeof(SongSelect) }
+                                        ),
                                 },
                                 new SceneButton
                                 {
@@ -88,10 +92,10 @@ namespace osu.Game.Overlays.SkinEditor
                                     Origin = Anchor.CentreLeft,
                                     Action = () => skinEditorOverlay?.PresentGameplay(),
                                 },
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 

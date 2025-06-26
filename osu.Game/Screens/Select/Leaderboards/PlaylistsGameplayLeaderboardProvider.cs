@@ -14,10 +14,13 @@ using osu.Game.Screens.Play;
 namespace osu.Game.Screens.Select.Leaderboards
 {
     [LongRunningLoad]
-    public partial class PlaylistsGameplayLeaderboardProvider : Component, IGameplayLeaderboardProvider
+    public partial class PlaylistsGameplayLeaderboardProvider
+        : Component,
+            IGameplayLeaderboardProvider
     {
         public IBindableList<GameplayLeaderboardScore> Scores => scores;
-        private readonly BindableList<GameplayLeaderboardScore> scores = new BindableList<GameplayLeaderboardScore>();
+        private readonly BindableList<GameplayLeaderboardScore> scores =
+            new BindableList<GameplayLeaderboardScore>();
 
         private readonly Room room;
         private readonly PlaylistItem playlistItem;
@@ -45,11 +48,26 @@ namespace osu.Game.Screens.Select.Leaderboards
                 {
                     var score = response.Scores[i];
                     score.Position = i + 1;
-                    newScores.Add(new GameplayLeaderboardScore(score, tracked: false, GameplayLeaderboardScore.ComboDisplayMode.Highest));
+                    newScores.Add(
+                        new GameplayLeaderboardScore(
+                            score,
+                            tracked: false,
+                            GameplayLeaderboardScore.ComboDisplayMode.Highest
+                        )
+                    );
                 }
 
-                if (response.UserScore != null && response.Scores.All(s => s.ID != response.UserScore.ID))
-                    newScores.Add(new GameplayLeaderboardScore(response.UserScore, tracked: false, GameplayLeaderboardScore.ComboDisplayMode.Highest));
+                if (
+                    response.UserScore != null
+                    && response.Scores.All(s => s.ID != response.UserScore.ID)
+                )
+                    newScores.Add(
+                        new GameplayLeaderboardScore(
+                            response.UserScore,
+                            tracked: false,
+                            GameplayLeaderboardScore.ComboDisplayMode.Highest
+                        )
+                    );
 
                 scores.AddRange(newScores);
             };
@@ -57,7 +75,11 @@ namespace osu.Game.Screens.Select.Leaderboards
 
             if (gameplayState != null)
             {
-                var localScore = new GameplayLeaderboardScore(gameplayState, tracked: true, GameplayLeaderboardScore.ComboDisplayMode.Highest);
+                var localScore = new GameplayLeaderboardScore(
+                    gameplayState,
+                    tracked: true,
+                    GameplayLeaderboardScore.ComboDisplayMode.Highest
+                );
                 localScore.TotalScore.BindValueChanged(_ => sorting.Invalidate());
                 scores.Add(localScore);
             }
@@ -72,9 +94,9 @@ namespace osu.Game.Screens.Select.Leaderboards
                 return;
 
             var orderedByScore = scores
-                                 .OrderByDescending(i => i.TotalScore.Value)
-                                 .ThenBy(i => i.TotalScoreTiebreaker)
-                                 .ToList();
+                .OrderByDescending(i => i.TotalScore.Value)
+                .ThenBy(i => i.TotalScoreTiebreaker)
+                .ToList();
 
             int delta = 0;
 
@@ -97,12 +119,20 @@ namespace osu.Game.Screens.Select.Leaderboards
                     // the assumption here is that non-tracked scores here cannot move around, only tracked ones can.
                     if (score.Tracked)
                     {
-                        int? previousScorePosition = i > 0 ? orderedByScore[i - 1].InitialPosition : 0;
-                        int? nextScorePosition = i < orderedByScore.Count - 1 ? orderedByScore[i + 1].InitialPosition : null;
+                        int? previousScorePosition =
+                            i > 0 ? orderedByScore[i - 1].InitialPosition : 0;
+                        int? nextScorePosition =
+                            i < orderedByScore.Count - 1
+                                ? orderedByScore[i + 1].InitialPosition
+                                : null;
 
                         // if the tracked score is perfectly between two scores which have known neighbouring initial positions,
                         // we can assign it the position of the previous score plus one...
-                        if (previousScorePosition != null && nextScorePosition != null && previousScorePosition + 1 == nextScorePosition)
+                        if (
+                            previousScorePosition != null
+                            && nextScorePosition != null
+                            && previousScorePosition + 1 == nextScorePosition
+                        )
                         {
                             score.Position.Value = previousScorePosition + 1;
                             // but we also need to ensure all subsequent scores get shifted down one position, too.

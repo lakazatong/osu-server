@@ -55,7 +55,7 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
                             new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Colour = Color4Extensions.FromHex("#222")
+                                Colour = Color4Extensions.FromHex("#222"),
                             },
                             HeaderText = new OsuSpriteText
                             {
@@ -63,8 +63,8 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
                                 Origin = Anchor.Centre,
                                 Font = OsuFont.Torus.With(size: 12, weight: FontWeight.SemiBold),
                                 Text = header.ToUpper(),
-                            }
-                        }
+                            },
+                        },
                     },
                     new Container
                     {
@@ -73,16 +73,17 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
                         AutoSizeAxes = Axes.Both,
                         Children = new[]
                         {
-                            content = CreateContent().With(d =>
-                            {
-                                d.Anchor = Anchor.TopCentre;
-                                d.Origin = Anchor.TopCentre;
-                                d.Alpha = 0;
-                                d.AlwaysPresent = true;
-                            }),
-                        }
-                    }
-                }
+                            content = CreateContent()
+                                .With(d =>
+                                {
+                                    d.Anchor = Anchor.TopCentre;
+                                    d.Origin = Anchor.TopCentre;
+                                    d.Alpha = 0;
+                                    d.AlwaysPresent = true;
+                                }),
+                        },
+                    },
+                },
             };
         }
 

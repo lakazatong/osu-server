@@ -40,8 +40,14 @@ namespace osu.Game.Scoring
             }
         }
 
-        public ScoreManager(RulesetStore rulesets, Func<BeatmapManager> beatmaps, Storage storage, RealmAccess realm, IAPIProvider api,
-                            OsuConfigManager? configManager = null)
+        public ScoreManager(
+            RulesetStore rulesets,
+            Func<BeatmapManager> beatmaps,
+            Storage storage,
+            RealmAccess realm,
+            IAPIProvider api,
+            OsuConfigManager? configManager = null
+        )
             : base(storage, realm)
         {
             this.beatmaps = beatmaps;
@@ -49,12 +55,12 @@ namespace osu.Game.Scoring
 
             scoreImporter = new ScoreImporter(rulesets, beatmaps, storage, realm, api)
             {
-                PostNotification = obj => PostNotification?.Invoke(obj)
+                PostNotification = obj => PostNotification?.Invoke(obj),
             };
 
             scoreExporter = new LegacyScoreExporter(storage)
             {
-                PostNotification = obj => PostNotification?.Invoke(obj)
+                PostNotification = obj => PostNotification?.Invoke(obj),
             };
         }
 
@@ -101,11 +107,16 @@ namespace osu.Game.Scoring
                 databasedScoreInfo ??= Query(s => s.OnlineID == originalScoreInfo.OnlineID);
 
             if (originalScoreInfo.LegacyOnlineID > 0)
-                databasedScoreInfo ??= Query(s => s.LegacyOnlineID == originalScoreInfo.LegacyOnlineID);
+                databasedScoreInfo ??= Query(s =>
+                    s.LegacyOnlineID == originalScoreInfo.LegacyOnlineID
+                );
 
             if (databasedScoreInfo == null)
             {
-                Logger.Log("The requested score could not be found locally.", LoggingTarget.Information);
+                Logger.Log(
+                    "The requested score could not be found locally.",
+                    LoggingTarget.Information
+                );
                 return null;
             }
 
@@ -120,7 +131,8 @@ namespace osu.Game.Scoring
         /// </remarks>
         /// <param name="score">The <see cref="ScoreInfo"/> to retrieve the bindable for.</param>
         /// <returns>The bindable containing the total score.</returns>
-        public Bindable<long> GetBindableTotalScore(ScoreInfo score) => new TotalScoreBindable(score, configManager);
+        public Bindable<long> GetBindableTotalScore(ScoreInfo score) =>
+            new TotalScoreBindable(score, configManager);
 
         /// <summary>
         /// Retrieves a bindable that represents the formatted total score string of a <see cref="ScoreInfo"/>.
@@ -130,7 +142,8 @@ namespace osu.Game.Scoring
         /// </remarks>
         /// <param name="score">The <see cref="ScoreInfo"/> to retrieve the bindable for.</param>
         /// <returns>The bindable containing the formatted total score string.</returns>
-        public Bindable<string> GetBindableTotalScoreString(ScoreInfo score) => new TotalScoreStringBindable(GetBindableTotalScore(score));
+        public Bindable<string> GetBindableTotalScoreString(ScoreInfo score) =>
+            new TotalScoreStringBindable(GetBindableTotalScore(score));
 
         /// <summary>
         /// Provides the total score of a <see cref="ScoreInfo"/>. Responds to changes in the currently-selected <see cref="ScoringMode"/>.
@@ -147,7 +160,10 @@ namespace osu.Game.Scoring
             public TotalScoreBindable(ScoreInfo score, OsuConfigManager? configManager)
             {
                 configManager?.BindWith(OsuSetting.ScoreDisplayMode, scoringMode);
-                scoringMode.BindValueChanged(mode => Value = score.GetDisplayScore(mode.NewValue), true);
+                scoringMode.BindValueChanged(
+                    mode => Value = score.GetDisplayScore(mode.NewValue),
+                    true
+                );
             }
         }
 
@@ -170,8 +186,7 @@ namespace osu.Game.Scoring
         {
             Realm.Run(r =>
             {
-                var items = r.All<ScoreInfo>()
-                             .Where(s => !s.DeletePending);
+                var items = r.All<ScoreInfo>().Where(s => !s.DeletePending);
 
                 if (filter != null)
                     items = items.Where(filter);
@@ -191,17 +206,27 @@ namespace osu.Game.Scoring
 
         public Task Import(params string[] paths) => scoreImporter.Import(paths);
 
-        public Task Import(ImportTask[] imports, ImportParameters parameters = default) => scoreImporter.Import(imports, parameters);
+        public Task Import(ImportTask[] imports, ImportParameters parameters = default) =>
+            scoreImporter.Import(imports, parameters);
 
-        public override bool IsAvailableLocally(ScoreInfo model)
-            => Realm.Run(realm => realm.All<ScoreInfo>()
-                                       // this basically inlines `ModelExtension.MatchesOnlineID(IScoreInfo, IScoreInfo)`,
-                                       // because that method can't be used here, as realm can't translate it to its query language.
-                                       .Any(s => s.OnlineID == model.OnlineID || s.LegacyOnlineID == model.LegacyOnlineID));
+        public override bool IsAvailableLocally(ScoreInfo model) =>
+            Realm.Run(realm =>
+                realm
+                    .All<ScoreInfo>()
+                    // this basically inlines `ModelExtension.MatchesOnlineID(IScoreInfo, IScoreInfo)`,
+                    // because that method can't be used here, as realm can't translate it to its query language.
+                    .Any(s =>
+                        s.OnlineID == model.OnlineID || s.LegacyOnlineID == model.LegacyOnlineID
+                    )
+            );
 
         public IEnumerable<string> HandledExtensions => scoreImporter.HandledExtensions;
 
-        public Task<IEnumerable<Live<ScoreInfo>>> Import(ProgressNotification notification, ImportTask[] tasks, ImportParameters parameters = default) => scoreImporter.Import(notification, tasks);
+        public Task<IEnumerable<Live<ScoreInfo>>> Import(
+            ProgressNotification notification,
+            ImportTask[] tasks,
+            ImportParameters parameters = default
+        ) => scoreImporter.Import(notification, tasks);
 
         /// <summary>
         /// Export a replay from a given <see cref="IScoreInfo"/>.
@@ -216,14 +241,26 @@ namespace osu.Game.Scoring
         {
             ScoreInfo? databasedScoreInfo = getDatabasedScoreInfo(scoreInfo);
 
-            return databasedScoreInfo == null ? Task.CompletedTask : scoreExporter.ExportAsync(databasedScoreInfo.ToLive(Realm));
+            return databasedScoreInfo == null
+                ? Task.CompletedTask
+                : scoreExporter.ExportAsync(databasedScoreInfo.ToLive(Realm));
         }
 
-        public Task<Live<ScoreInfo>?> ImportAsUpdate(ProgressNotification notification, ImportTask task, ScoreInfo original) => scoreImporter.ImportAsUpdate(notification, task, original);
-        public Task<ExternalEditOperation<ScoreInfo>> BeginExternalEditing(ScoreInfo model) => scoreImporter.BeginExternalEditing(model);
+        public Task<Live<ScoreInfo>?> ImportAsUpdate(
+            ProgressNotification notification,
+            ImportTask task,
+            ScoreInfo original
+        ) => scoreImporter.ImportAsUpdate(notification, task, original);
 
-        public Live<ScoreInfo>? Import(ScoreInfo item, ArchiveReader? archive = null, ImportParameters parameters = default, CancellationToken cancellationToken = default) =>
-            scoreImporter.ImportModel(item, archive, parameters, cancellationToken);
+        public Task<ExternalEditOperation<ScoreInfo>> BeginExternalEditing(ScoreInfo model) =>
+            scoreImporter.BeginExternalEditing(model);
+
+        public Live<ScoreInfo>? Import(
+            ScoreInfo item,
+            ArchiveReader? archive = null,
+            ImportParameters parameters = default,
+            CancellationToken cancellationToken = default
+        ) => scoreImporter.ImportModel(item, archive, parameters, cancellationToken);
 
         /// <summary>
         /// Populates the <see cref="ScoreInfo.MaximumStatistics"/> for a given <see cref="ScoreInfo"/>.
@@ -232,7 +269,10 @@ namespace osu.Game.Scoring
         public void PopulateMaximumStatistics(ScoreInfo score)
         {
             Debug.Assert(score.BeatmapInfo != null);
-            LegacyScoreDecoder.PopulateMaximumStatistics(score, beatmaps().GetWorkingBeatmap(score.BeatmapInfo.Detach()));
+            LegacyScoreDecoder.PopulateMaximumStatistics(
+                score,
+                beatmaps().GetWorkingBeatmap(score.BeatmapInfo.Detach())
+            );
         }
 
         #region Implementation of IPresentImports<ScoreInfo>

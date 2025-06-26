@@ -26,35 +26,29 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public TestSceneContextMenu()
         {
-            Add(new OsuContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new OsuContextMenuContainer
                 {
-                    container = new MyContextMenuContainer
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Size = new Vector2(200),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Child = new Box
+                        container = new MyContextMenuContainer
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Green,
-                        }
+                            Size = new Vector2(200),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Green },
+                        },
+                        new AnotherContextMenuContainer
+                        {
+                            Size = new Vector2(200),
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Red },
+                        },
                     },
-                    new AnotherContextMenuContainer
-                    {
-                        Size = new Vector2(200),
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Red,
-                        }
-                    }
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -62,11 +56,14 @@ namespace osu.Game.Tests.Visual.UserInterface
             base.LoadComplete();
 
             // Move box along a square trajectory
-            container.Loop(c => c
-                                .MoveTo(new Vector2(0, 100), duration).Then()
-                                .MoveTo(new Vector2(100, 100), duration).Then()
-                                .MoveTo(new Vector2(100, 0), duration).Then()
-                                .MoveTo(Vector2.Zero, duration)
+            container.Loop(c =>
+                c.MoveTo(new Vector2(0, 100), duration)
+                    .Then()
+                    .MoveTo(new Vector2(100, 100), duration)
+                    .Then()
+                    .MoveTo(new Vector2(100, 0), duration)
+                    .Then()
+                    .MoveTo(Vector2.Zero, duration)
             );
         }
 
@@ -98,11 +95,11 @@ namespace osu.Game.Tests.Visual.UserInterface
                                         new OsuMenuItem(@"Too Deep One"),
                                         new OsuMenuItem(@"Too Deep Two"),
                                         new OsuMenuItem(@"Too Deep Three"),
-                                    }
-                                }
-                            }
+                                    },
+                                },
+                            },
                         },
-                    }
+                    },
                 },
                 new OsuMenuItem(@"Another nested option")
                 {
@@ -111,7 +108,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         new OsuMenuItem(@"Sub-One"),
                         new OsuMenuItem(@"Sub-Two"),
                         new OsuMenuItem(@"Sub-Three"),
-                    }
+                    },
                 },
                 new OsuMenuItem(@"Choose me please"),
                 new OsuMenuItem(@"And me too"),
@@ -132,13 +129,31 @@ namespace osu.Game.Tests.Visual.UserInterface
                 get
                 {
                     List<MenuItem> items = makeMenu().ToList();
-                    items.AddRange(new MenuItem[]
-                    {
-                        new OsuMenuItem(@"Change width", MenuItemType.Highlighted, () => this.ResizeWidthTo(Width * 2, 100, Easing.OutQuint)),
-                        new OsuMenuItem(@"Change height", MenuItemType.Highlighted, () => this.ResizeHeightTo(Height * 2, 100, Easing.OutQuint)),
-                        new OsuMenuItem(@"Change width back", MenuItemType.Destructive, () => this.ResizeWidthTo(Width / 2, 100, Easing.OutQuint)),
-                        new OsuMenuItem(@"Change height back", MenuItemType.Destructive, () => this.ResizeHeightTo(Height / 2, 100, Easing.OutQuint)),
-                    });
+                    items.AddRange(
+                        new MenuItem[]
+                        {
+                            new OsuMenuItem(
+                                @"Change width",
+                                MenuItemType.Highlighted,
+                                () => this.ResizeWidthTo(Width * 2, 100, Easing.OutQuint)
+                            ),
+                            new OsuMenuItem(
+                                @"Change height",
+                                MenuItemType.Highlighted,
+                                () => this.ResizeHeightTo(Height * 2, 100, Easing.OutQuint)
+                            ),
+                            new OsuMenuItem(
+                                @"Change width back",
+                                MenuItemType.Destructive,
+                                () => this.ResizeWidthTo(Width / 2, 100, Easing.OutQuint)
+                            ),
+                            new OsuMenuItem(
+                                @"Change height back",
+                                MenuItemType.Destructive,
+                                () => this.ResizeHeightTo(Height / 2, 100, Easing.OutQuint)
+                            ),
+                        }
+                    );
 
                     return items.ToArray();
                 }

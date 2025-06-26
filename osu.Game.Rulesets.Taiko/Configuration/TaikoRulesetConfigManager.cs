@@ -8,10 +8,12 @@ namespace osu.Game.Rulesets.Taiko.Configuration
 {
     public class TaikoRulesetConfigManager : RulesetConfigManager<TaikoRulesetSetting>
     {
-        public TaikoRulesetConfigManager(SettingsStore? settings, RulesetInfo ruleset, int? variant = null)
-            : base(settings, ruleset, variant)
-        {
-        }
+        public TaikoRulesetConfigManager(
+            SettingsStore? settings,
+            RulesetInfo ruleset,
+            int? variant = null
+        )
+            : base(settings, ruleset, variant) { }
 
         protected override void InitialiseDefaults()
         {
@@ -23,6 +25,6 @@ namespace osu.Game.Rulesets.Taiko.Configuration
 
     public enum TaikoRulesetSetting
     {
-        TouchControlScheme
+        TouchControlScheme,
     }
 }

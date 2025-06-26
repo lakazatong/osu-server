@@ -46,10 +46,16 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             AddStep("enable user provider", () => testUserSkin.Enabled = true);
 
-            AddStep("enable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true));
+            AddStep(
+                "enable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true)
+            );
             checkNextHitObject("beatmap");
 
-            AddStep("disable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false));
+            AddStep(
+                "disable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false)
+            );
             checkNextHitObject("user");
 
             AddStep("disable user provider", () => testUserSkin.Enabled = false);
@@ -61,20 +67,44 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             AddStep("enable user provider", () => testUserSkin.Enabled = true);
 
-            AddStep("enable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true));
-            AddStep("enable beatmap colours", () => LocalConfig.SetValue(OsuSetting.BeatmapColours, true));
+            AddStep(
+                "enable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true)
+            );
+            AddStep(
+                "enable beatmap colours",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapColours, true)
+            );
             checkNextHitObject("beatmap");
 
-            AddStep("enable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true));
-            AddStep("disable beatmap colours", () => LocalConfig.SetValue(OsuSetting.BeatmapColours, false));
+            AddStep(
+                "enable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, true)
+            );
+            AddStep(
+                "disable beatmap colours",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapColours, false)
+            );
             checkNextHitObject("beatmap");
 
-            AddStep("disable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false));
-            AddStep("enable beatmap colours", () => LocalConfig.SetValue(OsuSetting.BeatmapColours, true));
+            AddStep(
+                "disable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false)
+            );
+            AddStep(
+                "enable beatmap colours",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapColours, true)
+            );
             checkNextHitObject("user");
 
-            AddStep("disable beatmap skin", () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false));
-            AddStep("disable beatmap colours", () => LocalConfig.SetValue(OsuSetting.BeatmapColours, false));
+            AddStep(
+                "disable beatmap skin",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapSkins, false)
+            );
+            AddStep(
+                "disable beatmap colours",
+                () => LocalConfig.SetValue(OsuSetting.BeatmapColours, false)
+            );
             checkNextHitObject("user");
 
             AddStep("disable user provider", () => testUserSkin.Enabled = false);
@@ -82,36 +112,51 @@ namespace osu.Game.Rulesets.Osu.Tests
         }
 
         private void checkNextHitObject(string skin) =>
-            AddUntilStep($"check skin from {skin}", () =>
-            {
-                var firstObject = Player.DrawableRuleset.Playfield.HitObjectContainer.AliveObjects.OfType<DrawableHitCircle>().FirstOrDefault();
+            AddUntilStep(
+                $"check skin from {skin}",
+                () =>
+                {
+                    var firstObject = Player
+                        .DrawableRuleset.Playfield.HitObjectContainer.AliveObjects.OfType<DrawableHitCircle>()
+                        .FirstOrDefault();
 
-                if (firstObject == null)
-                    return false;
+                    if (firstObject == null)
+                        return false;
 
-                var skinnable = firstObject.ApproachCircle;
+                    var skinnable = firstObject.ApproachCircle;
 
-                if (skin == null && skinnable.Drawable is DefaultApproachCircle)
-                    // check for default skin provider
-                    return true;
+                    if (skin == null && skinnable.Drawable is DefaultApproachCircle)
+                        // check for default skin provider
+                        return true;
 
-                var text = skinnable.Drawable as SpriteText;
+                    var text = skinnable.Drawable as SpriteText;
 
-                return text?.Text == skin;
-            });
+                    return text?.Text == skin;
+                }
+            );
 
         [Resolved]
         private AudioManager audio { get; set; }
 
-        protected override TestPlayer CreatePlayer(Ruleset ruleset) => new SkinProvidingPlayer(testUserSkin);
+        protected override TestPlayer CreatePlayer(Ruleset ruleset) =>
+            new SkinProvidingPlayer(testUserSkin);
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null) => new CustomSkinWorkingBeatmap(beatmap, storyboard, Clock, audio, testBeatmapSkin);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) => new CustomSkinWorkingBeatmap(beatmap, storyboard, Clock, audio, testBeatmapSkin);
 
         public class CustomSkinWorkingBeatmap : ClockBackedTestWorkingBeatmap
         {
             private readonly ISkinSource skin;
 
-            public CustomSkinWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard, IFrameBasedClock frameBasedClock, AudioManager audio, ISkinSource skin)
+            public CustomSkinWorkingBeatmap(
+                IBeatmap beatmap,
+                Storyboard storyboard,
+                IFrameBasedClock frameBasedClock,
+                AudioManager audio,
+                ISkinSource skin
+            )
                 : base(beatmap, storyboard, frameBasedClock, audio)
             {
                 this.skin = skin;
@@ -131,7 +176,9 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             private DependencyContainer dependencies;
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
@@ -152,9 +199,13 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             public Drawable GetDrawableComponent(ISkinComponentLookup lookup)
             {
-                if (!enabled) return null;
+                if (!enabled)
+                    return null;
 
-                if (lookup is OsuSkinComponentLookup osuComponent && osuComponent.Component == OsuSkinComponents.SliderBody)
+                if (
+                    lookup is OsuSkinComponentLookup osuComponent
+                    && osuComponent.Component == OsuSkinComponents.SliderBody
+                )
                     return null;
 
                 return new OsuSpriteText
@@ -164,13 +215,18 @@ namespace osu.Game.Rulesets.Osu.Tests
                 };
             }
 
-            public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => null;
+            public Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            ) => null;
 
             public ISample GetSample(ISampleInfo sampleInfo) => null;
 
             public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => null;
 
-            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) => lookupFunction(this) ? this : null;
+            public ISkin FindProvider(Func<ISkin, bool> lookupFunction) =>
+                lookupFunction(this) ? this : null;
 
             public IEnumerable<ISkin> AllSources => new[] { this };
 

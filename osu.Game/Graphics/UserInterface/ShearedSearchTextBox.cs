@@ -58,10 +58,7 @@ namespace osu.Game.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -76,16 +73,16 @@ namespace osu.Game.Graphics.UserInterface
                                 Origin = Anchor.Centre,
                                 Anchor = Anchor.Centre,
                                 Size = new Vector2(16),
-                                Shear = -Shear
-                            }
-                        }
+                                Shear = -Shear,
+                            },
+                        },
                     },
                     ColumnDimensions = new[]
                     {
                         new Dimension(),
                         new Dimension(GridSizeMode.Absolute, 50),
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -128,24 +125,25 @@ namespace osu.Game.Graphics.UserInterface
             {
                 public override void Show()
                 {
-                    this
-                        .MoveToY(0, 250, Easing.OutQuint)
-                        .FadeIn(250, Easing.OutQuint);
+                    this.MoveToY(0, 250, Easing.OutQuint).FadeIn(250, Easing.OutQuint);
                 }
 
                 public override void Hide()
                 {
-                    this
-                        .MoveToY(3, 250, Easing.OutQuint)
-                        .FadeOut(250, Easing.OutQuint);
+                    this.MoveToY(3, 250, Easing.OutQuint).FadeOut(250, Easing.OutQuint);
                 }
             }
 
-            protected override Drawable GetDrawableCharacter(char c) => new FallingDownContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Child = new OsuSpriteText { Text = c.ToString(), Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold) },
-            };
+            protected override Drawable GetDrawableCharacter(char c) =>
+                new FallingDownContainer
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Child = new OsuSpriteText
+                    {
+                        Text = c.ToString(),
+                        Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold),
+                    },
+                };
         }
     }
 }

@@ -47,7 +47,9 @@ namespace osu.Game.Database
 
         protected LegacyExporter(Storage storage)
         {
-            exportStorage = (storage as OsuStorage)?.GetExportStorage() ?? storage.GetStorageForDirectory(@"exports");
+            exportStorage =
+                (storage as OsuStorage)?.GetExportStorage()
+                ?? storage.GetStorageForDirectory(@"exports");
             UserFileStorage = storage.GetStorageForDirectory(@"files");
         }
 
@@ -67,7 +69,10 @@ namespace osu.Game.Database
         /// </summary>
         /// <param name="model">The model to export.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        public async Task ExportAsync(Live<TModel> model, CancellationToken cancellationToken = default)
+        public async Task ExportAsync(
+            Live<TModel> model,
+            CancellationToken cancellationToken = default
+        )
         {
             string itemFilename = model.PerformRead(s => GetFilename(s).GetValidFilename());
 
@@ -75,10 +80,13 @@ namespace osu.Game.Database
                 itemFilename = itemFilename.Remove(MAX_FILENAME_LENGTH - FileExtension.Length);
 
             IEnumerable<string> existingExports = exportStorage
-                                                  .GetFiles(string.Empty, $"{itemFilename}*{FileExtension}")
-                                                  .Concat(exportStorage.GetDirectories(string.Empty));
+                .GetFiles(string.Empty, $"{itemFilename}*{FileExtension}")
+                .Concat(exportStorage.GetDirectories(string.Empty));
 
-            string filename = NamingUtils.GetNextBestFilename(existingExports, $"{itemFilename}{FileExtension}");
+            string filename = NamingUtils.GetNextBestFilename(
+                existingExports,
+                $"{itemFilename}{FileExtension}"
+            );
 
             ProgressNotification notification = new ProgressNotification
             {
@@ -88,13 +96,17 @@ namespace osu.Game.Database
 
             PostNotification?.Invoke(notification);
 
-            using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, notification.CancellationToken);
+            using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationToken,
+                notification.CancellationToken
+            );
 
             try
             {
                 using (var stream = exportStorage.CreateFileSafely(filename))
                 {
-                    await ExportToStreamAsync(model, stream, notification, linkedSource.Token).ConfigureAwait(false);
+                    await ExportToStreamAsync(model, stream, notification, linkedSource.Token)
+                        .ConfigureAwait(false);
                 }
             }
             catch
@@ -107,7 +119,8 @@ namespace osu.Game.Database
             }
 
             notification.CompletionText = $"Exported {itemFilename}! Click to view.";
-            notification.CompletionClickAction = () => exportStorage.PresentFileExternally(filename);
+            notification.CompletionClickAction = () =>
+                exportStorage.PresentFileExternally(filename);
             notification.State = ProgressNotificationState.Completed;
         }
 
@@ -118,8 +131,21 @@ namespace osu.Game.Database
         /// <param name="outputStream">The output stream to export to.</param>
         /// <param name="notification">An optional notification to be updated with export progress.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        public Task ExportToStreamAsync(Live<TModel> model, Stream outputStream, ProgressNotification? notification = null, CancellationToken cancellationToken = default) =>
-            Task.Run(() => { model.PerformRead(s => ExportToStream(s, outputStream, notification, cancellationToken)); }, cancellationToken);
+        public Task ExportToStreamAsync(
+            Live<TModel> model,
+            Stream outputStream,
+            ProgressNotification? notification = null,
+            CancellationToken cancellationToken = default
+        ) =>
+            Task.Run(
+                () =>
+                {
+                    model.PerformRead(s =>
+                        ExportToStream(s, outputStream, notification, cancellationToken)
+                    );
+                },
+                cancellationToken
+            );
 
         /// <summary>
         /// Exports a model to a provided stream.
@@ -128,6 +154,11 @@ namespace osu.Game.Database
         /// <param name="outputStream">The output stream to export to.</param>
         /// <param name="notification">An optional notification to be updated with export progress.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        public abstract void ExportToStream(TModel model, Stream outputStream, ProgressNotification? notification, CancellationToken cancellationToken = default);
+        public abstract void ExportToStream(
+            TModel model,
+            Stream outputStream,
+            ProgressNotification? notification,
+            CancellationToken cancellationToken = default
+        );
     }
 }

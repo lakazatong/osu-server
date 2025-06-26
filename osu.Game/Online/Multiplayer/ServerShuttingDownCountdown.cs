@@ -9,7 +9,5 @@ namespace osu.Game.Online.Multiplayer
     /// A countdown that indicates the current multiplayer server is shutting down.
     /// </summary>
     [MessagePackObject]
-    public class ServerShuttingDownCountdown : MultiplayerCountdown
-    {
-    }
+    public class ServerShuttingDownCountdown : MultiplayerCountdown { }
 }

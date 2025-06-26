@@ -28,18 +28,21 @@ namespace osu.Game.Rulesets.Mania.Mods
             mbc.TargetColumns = KeyCount;
         }
 
-        public override Type[] IncompatibleMods => new[]
-        {
-            typeof(ManiaModKey1),
-            typeof(ManiaModKey2),
-            typeof(ManiaModKey3),
-            typeof(ManiaModKey4),
-            typeof(ManiaModKey5),
-            typeof(ManiaModKey6),
-            typeof(ManiaModKey7),
-            typeof(ManiaModKey8),
-            typeof(ManiaModKey9),
-            typeof(ManiaModKey10),
-        }.Except(new[] { GetType() }).ToArray();
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(ManiaModKey1),
+                typeof(ManiaModKey2),
+                typeof(ManiaModKey3),
+                typeof(ManiaModKey4),
+                typeof(ManiaModKey5),
+                typeof(ManiaModKey6),
+                typeof(ManiaModKey7),
+                typeof(ManiaModKey8),
+                typeof(ManiaModKey9),
+                typeof(ManiaModKey10),
+            }
+                .Except(new[] { GetType() })
+                .ToArray();
     }
 }

@@ -26,10 +26,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public TestSceneKeyBindings()
         {
-            Add(new TestKeyBindingContainer
-            {
-                Child = receiver = new ActionReceiver()
-            });
+            Add(new TestKeyBindingContainer { Child = receiver = new ActionReceiver() });
         }
 
         [Test]
@@ -45,21 +42,21 @@ namespace osu.Game.Tests.Visual.Gameplay
             public override IEnumerable<Mod> GetModsFor(ModType type) =>
                 throw new System.NotImplementedException();
 
-            public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
-                throw new System.NotImplementedException();
+            public override DrawableRuleset CreateDrawableRulesetWith(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod> mods = null
+            ) => throw new System.NotImplementedException();
 
             public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
                 throw new System.NotImplementedException();
 
-            public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
-                throw new System.NotImplementedException();
+            public override DifficultyCalculator CreateDifficultyCalculator(
+                IWorkingBeatmap beatmap
+            ) => throw new System.NotImplementedException();
 
             public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0)
             {
-                return new[]
-                {
-                    new KeyBinding(InputKey.A, TestAction.Down),
-                };
+                return new[] { new KeyBinding(InputKey.A, TestAction.Down) };
             }
 
             public override string Description => "test";
@@ -74,9 +71,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         private partial class TestKeyBindingContainer : DatabasedKeyBindingContainer<TestAction>
         {
             public TestKeyBindingContainer()
-                : base(new TestRuleset().RulesetInfo, 0)
-            {
-            }
+                : base(new TestRuleset().RulesetInfo, 0) { }
         }
 
         private partial class ActionReceiver : CompositeDrawable, IKeyBindingHandler<TestAction>
@@ -92,9 +87,7 @@ namespace osu.Game.Tests.Visual.Gameplay
                 return true;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<TestAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<TestAction> e) { }
         }
     }
 }

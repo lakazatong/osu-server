@@ -1,21 +1,21 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
+using osu.Framework.Audio.Track;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
-using osuTK;
-using osuTK.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Framework.Extensions.Color4Extensions;
-using osu.Game.Graphics.Containers;
-using osu.Game.Beatmaps.ControlPoints;
-using osu.Framework.Audio.Track;
-using System;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Screens.Select;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -103,7 +103,7 @@ namespace osu.Game.Graphics.UserInterface
                                     RelativeSizeAxes = Axes.Both,
                                     EdgeSmoothness = new Vector2(2, 0),
                                 },
-                            }
+                            },
                         },
                         bouncingIcon = new BouncingIcon
                         {
@@ -111,7 +111,7 @@ namespace osu.Game.Graphics.UserInterface
                             Origin = Anchor.Centre,
                             Shear = -shear,
                         },
-                    }
+                    },
                 },
                 c1 = new Container
                 {
@@ -142,15 +142,15 @@ namespace osu.Game.Graphics.UserInterface
                                     RelativeSizeAxes = Axes.Both,
                                     EdgeSmoothness = new Vector2(2, 0),
                                 },
-                            }
+                            },
                         },
                         text = new OsuSpriteText
                         {
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
                             Shear = -shear,
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -165,7 +165,9 @@ namespace osu.Game.Graphics.UserInterface
             set => text.Text = value;
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => IconLayer.ReceivePositionalInputAt(screenSpacePos) || TextLayer.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            IconLayer.ReceivePositionalInputAt(screenSpacePos)
+            || TextLayer.ReceivePositionalInputAt(screenSpacePos);
 
         protected override bool OnHover(HoverEvent e)
         {
@@ -227,11 +229,16 @@ namespace osu.Game.Graphics.UserInterface
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Size = new Vector2(25),
-                    }
+                    },
                 };
             }
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
@@ -239,7 +246,8 @@ namespace osu.Game.Graphics.UserInterface
 
                 float amplitudeAdjust = Math.Min(1, 0.4f + amplitudes.Maximum);
 
-                if (beatIndex < 0) return;
+                if (beatIndex < 0)
+                    return;
 
                 icon.ScaleTo(1 - 0.1f * amplitudeAdjust, beat_in_time, Easing.Out)
                     .Then()

@@ -11,7 +11,11 @@ namespace osu.Game.Rulesets.Mods
 {
     public static class ModExtensions
     {
-        public static Score CreateScoreFromReplayData(this ICreateReplayData mod, IBeatmap beatmap, IReadOnlyList<Mod> mods)
+        public static Score CreateScoreFromReplayData(
+            this ICreateReplayData mod,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        )
         {
             var replayData = mod.CreateReplayData(beatmap, mods);
 
@@ -25,13 +29,12 @@ namespace osu.Game.Rulesets.Mods
                         Id = replayData.User.OnlineID,
                         Username = replayData.User.Username,
                         IsBot = replayData.User.IsBot,
-                    }
-                }
+                    },
+                },
             };
         }
 
-        public static IEnumerable<Mod> AsOrdered(this IEnumerable<Mod> mods) => mods
-                                                                                .OrderBy(m => m.Type)
-                                                                                .ThenBy(m => m.Acronym);
+        public static IEnumerable<Mod> AsOrdered(this IEnumerable<Mod> mods) =>
+            mods.OrderBy(m => m.Type).ThenBy(m => m.Acronym);
     }
 }

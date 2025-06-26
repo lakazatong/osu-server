@@ -12,22 +12,30 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "chat"
         /// </summary>
-        public static LocalisableString HeaderTitle => new TranslatableString(getKey(@"header_title"), @"chat");
+        public static LocalisableString HeaderTitle =>
+            new TranslatableString(getKey(@"header_title"), @"chat");
 
         /// <summary>
         /// "join the real-time discussion"
         /// </summary>
-        public static LocalisableString HeaderDescription => new TranslatableString(getKey(@"header_description"), @"join the real-time discussion");
+        public static LocalisableString HeaderDescription =>
+            new TranslatableString(getKey(@"header_description"), @"join the real-time discussion");
 
         /// <summary>
         /// "Mention"
         /// </summary>
-        public static LocalisableString MentionUser => new TranslatableString(getKey(@"mention_user"), @"Mention");
+        public static LocalisableString MentionUser =>
+            new TranslatableString(getKey(@"mention_user"), @"Mention");
 
         /// <summary>
         /// "press {0} to chat..."
         /// </summary>
-        public static LocalisableString InGameInputPlaceholder(LocalisableString keyBind) => new TranslatableString(getKey(@"in_game_input_placeholder"), @"press {0} to chat...", keyBind);
+        public static LocalisableString InGameInputPlaceholder(LocalisableString keyBind) =>
+            new TranslatableString(
+                getKey(@"in_game_input_placeholder"),
+                @"press {0} to chat...",
+                keyBind
+            );
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

@@ -50,8 +50,6 @@ namespace osu.Game.Collections
         }
 
         [UsedImplicitly]
-        private BeatmapCollection()
-        {
-        }
+        private BeatmapCollection() { }
     }
 }

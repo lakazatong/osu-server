@@ -23,59 +23,66 @@ namespace osu.Game.Tests.Visual.UserInterface
         private SettingsToolboxGroup group;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = group = new SettingsToolboxGroup("example")
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Scale = new Vector2(3),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Children = new Drawable[]
+                Child = group = new SettingsToolboxGroup("example")
                 {
-                    new RoundedButton
+                    Scale = new Vector2(3),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Text = @"Button",
-                        Enabled = { Value = true },
+                        new RoundedButton
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Text = @"Button",
+                            Enabled = { Value = true },
+                        },
+                        new OsuCheckbox { LabelText = @"Checkbox" },
+                        new OutlinedTextBox
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 30,
+                            PlaceholderText = @"Textbox",
+                        },
                     },
-                    new OsuCheckbox
-                    {
-                        LabelText = @"Checkbox",
-                    },
-                    new OutlinedTextBox
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 30,
-                        PlaceholderText = @"Textbox",
-                    }
-                },
-            };
-        });
+                };
+            });
 
         [Test]
         public void TestDisplay()
         {
-            AddRepeatStep("toggle expanded state", () =>
-            {
-                InputManager.MoveMouseTo(group.ChildrenOfType<IconButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            }, 5);
+            AddRepeatStep(
+                "toggle expanded state",
+                () =>
+                {
+                    InputManager.MoveMouseTo(group.ChildrenOfType<IconButton>().Single());
+                    InputManager.Click(MouseButton.Left);
+                },
+                5
+            );
         }
 
         [Test]
         public void TestClickExpandButtonMultipleTimes()
         {
             AddAssert("group expanded by default", () => group.Expanded.Value);
-            AddStep("click expand button multiple times", () =>
-            {
-                InputManager.MoveMouseTo(group.ChildrenOfType<IconButton>().Single());
-                Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 100);
-                Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 200);
-                Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 300);
-            });
+            AddStep(
+                "click expand button multiple times",
+                () =>
+                {
+                    InputManager.MoveMouseTo(group.ChildrenOfType<IconButton>().Single());
+                    Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 100);
+                    Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 200);
+                    Scheduler.AddDelayed(() => InputManager.Click(MouseButton.Left), 300);
+                }
+            );
             AddAssert("group contracted", () => !group.Expanded.Value);
         }
     }

@@ -22,15 +22,14 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time
-            }));
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre),
+                },
+                CreateBeatmap(new Hit { Type = HitType.Centre, StartTime = hit_time })
+            );
 
             AssertJudgementCount(1);
             AssertResult<Hit>(0, HitResult.Great);
@@ -39,19 +38,17 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         [Test]
         public void TestHitWithBothKeysOnSameFrameDoesNotFallThroughToNextObject()
         {
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(1000, TaikoAction.LeftCentre, TaikoAction.RightCentre),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = 1000,
-            }, new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = 1020
-            }));
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(1000, TaikoAction.LeftCentre, TaikoAction.RightCentre),
+                },
+                CreateBeatmap(
+                    new Hit { Type = HitType.Centre, StartTime = 1000 },
+                    new Hit { Type = HitType.Centre, StartTime = 1020 }
+                )
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Great);
@@ -63,15 +60,14 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time, TaikoAction.LeftRim),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Rim,
-                StartTime = hit_time
-            }));
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(hit_time, TaikoAction.LeftRim),
+                },
+                CreateBeatmap(new Hit { Type = HitType.Rim, StartTime = hit_time })
+            );
 
             AssertJudgementCount(1);
             AssertResult<Hit>(0, HitResult.Great);
@@ -82,14 +78,10 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0)
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time
-            }));
+            PerformTest(
+                new List<ReplayFrame> { new TaikoReplayFrame(0) },
+                CreateBeatmap(new Hit { Type = HitType.Centre, StartTime = hit_time })
+            );
 
             AssertJudgementCount(1);
             AssertResult<Hit>(0, HitResult.Miss);
@@ -100,16 +92,21 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-                IsStrong = true
-            }));
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre),
+                },
+                CreateBeatmap(
+                    new Hit
+                    {
+                        Type = HitType.Centre,
+                        StartTime = hit_time,
+                        IsStrong = true,
+                    }
+                )
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Great);
@@ -121,16 +118,21 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre, TaikoAction.RightCentre),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-                IsStrong = true
-            }));
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(hit_time, TaikoAction.LeftCentre, TaikoAction.RightCentre),
+                },
+                CreateBeatmap(
+                    new Hit
+                    {
+                        Type = HitType.Centre,
+                        StartTime = hit_time,
+                        IsStrong = true,
+                    }
+                )
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Great);
@@ -142,15 +144,17 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-            }, CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-                IsStrong = true
-            }));
+            PerformTest(
+                new List<ReplayFrame> { new TaikoReplayFrame(0) },
+                CreateBeatmap(
+                    new Hit
+                    {
+                        Type = HitType.Centre,
+                        StartTime = hit_time,
+                        IsStrong = true,
+                    }
+                )
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Miss);
@@ -162,11 +166,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            var beatmap = CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-            });
+            var beatmap = CreateBeatmap(new Hit { Type = HitType.Centre, StartTime = hit_time });
 
             beatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = 6 });
             beatmap.ControlPointInfo.Add(0, new EffectControlPoint { ScrollSpeed = 10 });
@@ -174,11 +174,17 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
             var hitWindows = new DefaultHitWindows();
             hitWindows.SetDifficulty(beatmap.Difficulty.OverallDifficulty);
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time - hitWindows.WindowFor(HitResult.Great), TaikoAction.LeftCentre),
-            }, beatmap);
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(
+                        hit_time - hitWindows.WindowFor(HitResult.Great),
+                        TaikoAction.LeftCentre
+                    ),
+                },
+                beatmap
+            );
 
             AssertJudgementCount(1);
             AssertResult<Hit>(0, HitResult.Ok);
@@ -189,21 +195,30 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            var beatmap = CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-                IsStrong = true
-            });
+            var beatmap = CreateBeatmap(
+                new Hit
+                {
+                    Type = HitType.Centre,
+                    StartTime = hit_time,
+                    IsStrong = true,
+                }
+            );
 
             var hitWindows = new TaikoHitWindows();
             hitWindows.SetDifficulty(beatmap.Difficulty.OverallDifficulty);
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time + hitWindows.WindowFor(HitResult.Ok) - 1, TaikoAction.LeftCentre),
-            }, beatmap, new Mod[] { new TaikoModHidden() });
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(
+                        hit_time + hitWindows.WindowFor(HitResult.Ok) - 1,
+                        TaikoAction.LeftCentre
+                    ),
+                },
+                beatmap,
+                new Mod[] { new TaikoModHidden() }
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Ok);
@@ -215,22 +230,38 @@ namespace osu.Game.Rulesets.Taiko.Tests.Judgements
         {
             const double hit_time = 1000;
 
-            var beatmap = CreateBeatmap(new Hit
-            {
-                Type = HitType.Centre,
-                StartTime = hit_time,
-                IsStrong = true
-            });
+            var beatmap = CreateBeatmap(
+                new Hit
+                {
+                    Type = HitType.Centre,
+                    StartTime = hit_time,
+                    IsStrong = true,
+                }
+            );
 
             var hitWindows = new TaikoHitWindows();
             hitWindows.SetDifficulty(beatmap.Difficulty.OverallDifficulty);
 
-            PerformTest(new List<ReplayFrame>
-            {
-                new TaikoReplayFrame(0),
-                new TaikoReplayFrame(hit_time + hitWindows.WindowFor(HitResult.Ok) - 1, TaikoAction.LeftCentre),
-                new TaikoReplayFrame(hit_time + hitWindows.WindowFor(HitResult.Ok) + DrawableHit.StrongNestedHit.SECOND_HIT_WINDOW - 2, TaikoAction.LeftCentre, TaikoAction.RightCentre),
-            }, beatmap, new Mod[] { new TaikoModHidden() });
+            PerformTest(
+                new List<ReplayFrame>
+                {
+                    new TaikoReplayFrame(0),
+                    new TaikoReplayFrame(
+                        hit_time + hitWindows.WindowFor(HitResult.Ok) - 1,
+                        TaikoAction.LeftCentre
+                    ),
+                    new TaikoReplayFrame(
+                        hit_time
+                            + hitWindows.WindowFor(HitResult.Ok)
+                            + DrawableHit.StrongNestedHit.SECOND_HIT_WINDOW
+                            - 2,
+                        TaikoAction.LeftCentre,
+                        TaikoAction.RightCentre
+                    ),
+                },
+                beatmap,
+                new Mod[] { new TaikoModHidden() }
+            );
 
             AssertJudgementCount(2);
             AssertResult<Hit>(0, HitResult.Ok);

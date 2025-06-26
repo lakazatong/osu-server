@@ -6,7 +6,5 @@ using osu.Framework.Configuration.Tracking;
 
 namespace osu.Game.Rulesets.Configuration
 {
-    public interface IRulesetConfigManager : ITrackableConfigManager, IDisposable
-    {
-    }
+    public interface IRulesetConfigManager : ITrackableConfigManager, IDisposable { }
 }

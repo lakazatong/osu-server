@@ -42,7 +42,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
 
         internal DrawableGameplayLeaderboard Leaderboard { get; private set; } = null!;
 
-        protected override UserActivity InitialActivity => new UserActivity.SpectatingMultiplayerGame(Beatmap.Value.BeatmapInfo, Ruleset.Value);
+        protected override UserActivity InitialActivity =>
+            new UserActivity.SpectatingMultiplayerGame(Beatmap.Value.BeatmapInfo, Ruleset.Value);
 
         [Resolved]
         private OsuColour colours { get; set; } = null!;
@@ -98,7 +99,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                                 scoreDisplayContainer = new Container
                                 {
                                     RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y
+                                    AutoSizeAxes = Axes.Y,
                                 },
                             },
                             new Drawable[]
@@ -106,7 +107,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                                 new GridContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                    ColumnDimensions = new[]
+                                    {
+                                        new Dimension(GridSizeMode.AutoSize),
+                                    },
                                     Content = new[]
                                     {
                                         new Drawable[]
@@ -117,50 +121,68 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                                                 Origin = Anchor.CentreLeft,
                                                 AutoSizeAxes = Axes.Both,
                                                 Direction = FillDirection.Vertical,
-                                                Spacing = new Vector2(5)
+                                                Spacing = new Vector2(5),
                                             },
-                                            grid = new PlayerGrid { RelativeSizeAxes = Axes.Both }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                            grid = new PlayerGrid { RelativeSizeAxes = Axes.Both },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
                 syncManager = new SpectatorSyncManager(masterClockContainer)
                 {
                     ReadyToStart = performInitialSeek,
                 },
-                new PlayerSettingsOverlay()
+                new PlayerSettingsOverlay(),
             };
 
             for (int i = 0; i < Users.Count; i++)
                 grid.Add(instances[i] = new PlayerArea(Users[i], syncManager.CreateManagedClock()));
 
-            LoadComponentAsync(leaderboardProvider, _ =>
-            {
-                AddInternal(leaderboardProvider);
-                foreach (var instance in instances)
-                    leaderboardProvider.AddClock(instance.UserId, instance.SpectatorPlayerClock);
-
-                if (leaderboardProvider.TeamScores.Count == 2)
+            LoadComponentAsync(
+                leaderboardProvider,
+                _ =>
                 {
-                    LoadComponentAsync(new MatchScoreDisplay
-                    {
-                        Team1Score = { BindTarget = leaderboardProvider.TeamScores.First().Value },
-                        Team2Score = { BindTarget = leaderboardProvider.TeamScores.Last().Value },
-                    }, scoreDisplayContainer.Add);
-                }
-            });
-            leaderboardFlow.Insert(0, Leaderboard = new DrawableGameplayLeaderboard
-            {
-                CollapseDuringGameplay = { Value = false }
-            });
+                    AddInternal(leaderboardProvider);
+                    foreach (var instance in instances)
+                        leaderboardProvider.AddClock(
+                            instance.UserId,
+                            instance.SpectatorPlayerClock
+                        );
 
-            LoadComponentAsync(new GameplayChatDisplay(room)
-            {
-                Expanded = { Value = true },
-            }, chat => leaderboardFlow.Insert(1, chat));
+                    if (leaderboardProvider.TeamScores.Count == 2)
+                    {
+                        LoadComponentAsync(
+                            new MatchScoreDisplay
+                            {
+                                Team1Score =
+                                {
+                                    BindTarget = leaderboardProvider.TeamScores.First().Value,
+                                },
+                                Team2Score =
+                                {
+                                    BindTarget = leaderboardProvider.TeamScores.Last().Value,
+                                },
+                            },
+                            scoreDisplayContainer.Add
+                        );
+                    }
+                }
+            );
+            leaderboardFlow.Insert(
+                0,
+                Leaderboard = new DrawableGameplayLeaderboard
+                {
+                    CollapseDuringGameplay = { Value = false },
+                }
+            );
+
+            LoadComponentAsync(
+                new GameplayChatDisplay(room) { Expanded = { Value = true } },
+                chat => leaderboardFlow.Insert(1, chat)
+            );
         }
 
         protected override void LoadComplete()
@@ -179,7 +201,11 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
 
             if (!isCandidateAudioSource(currentAudioSource?.SpectatorPlayerClock))
             {
-                currentAudioSource = instances.Where(i => isCandidateAudioSource(i.SpectatorPlayerClock)).MinBy(i => Math.Abs(i.SpectatorPlayerClock.CurrentTime - syncManager.CurrentMasterTime));
+                currentAudioSource = instances
+                    .Where(i => isCandidateAudioSource(i.SpectatorPlayerClock))
+                    .MinBy(i =>
+                        Math.Abs(i.SpectatorPlayerClock.CurrentTime - syncManager.CurrentMasterTime)
+                    );
 
                 // Only bind adjustments if there's actually a valid source, else just use the previous ones to ensure no sudden changes to audio.
                 if (currentAudioSource != null)
@@ -199,8 +225,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             masterClockContainer.AdjustmentsFromMods.BindAdjustments(boundAdjustments);
         }
 
-        private bool isCandidateAudioSource(SpectatorPlayerClock? clock)
-            => clock?.IsRunning == true && !clock.IsCatchingUp && !clock.WaitingOnFrames;
+        private bool isCandidateAudioSource(SpectatorPlayerClock? clock) =>
+            clock?.IsRunning == true && !clock.IsCatchingUp && !clock.WaitingOnFrames;
 
         private void performInitialSeek()
         {
@@ -229,49 +255,54 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             Logger.Log($"Multiplayer spectator seeking to initial time of {startTime}");
         }
 
-        protected override void OnNewPlayingUserState(int userId, SpectatorState spectatorState)
-        {
-        }
+        protected override void OnNewPlayingUserState(int userId, SpectatorState spectatorState) { }
 
-        protected override void StartGameplay(int userId, SpectatorGameplayState spectatorGameplayState) => Schedule(() =>
-        {
-            var playerArea = instances.Single(i => i.UserId == userId);
+        protected override void StartGameplay(
+            int userId,
+            SpectatorGameplayState spectatorGameplayState
+        ) =>
+            Schedule(() =>
+            {
+                var playerArea = instances.Single(i => i.UserId == userId);
 
-            // The multiplayer spectator flow requires the client to return to a higher level screen
-            // (ie. StartGameplay should only be called once per player).
-            //
-            // Meanwhile, the solo spectator flow supports multiple `StartGameplay` calls.
-            // To ensure we don't crash out in an edge case where this is called more than once in multiplayer,
-            // guard against re-entry for the same player.
-            if (playerArea.Score != null)
-                return;
+                // The multiplayer spectator flow requires the client to return to a higher level screen
+                // (ie. StartGameplay should only be called once per player).
+                //
+                // Meanwhile, the solo spectator flow supports multiple `StartGameplay` calls.
+                // To ensure we don't crash out in an edge case where this is called more than once in multiplayer,
+                // guard against re-entry for the same player.
+                if (playerArea.Score != null)
+                    return;
 
-            playerArea.LoadScore(spectatorGameplayState.Score);
-        });
+                playerArea.LoadScore(spectatorGameplayState.Score);
+            });
 
-        protected override void FailGameplay(int userId) => Schedule(() =>
-        {
-            // We probably want to visualise this in the future.
+        protected override void FailGameplay(int userId) =>
+            Schedule(() =>
+            {
+                // We probably want to visualise this in the future.
 
-            var instance = instances.Single(i => i.UserId == userId);
-            syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
-        });
+                var instance = instances.Single(i => i.UserId == userId);
+                syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
+            });
 
-        protected override void PassGameplay(int userId) => Schedule(() =>
-        {
-            var instance = instances.Single(i => i.UserId == userId);
-            syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
-        });
+        protected override void PassGameplay(int userId) =>
+            Schedule(() =>
+            {
+                var instance = instances.Single(i => i.UserId == userId);
+                syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
+            });
 
-        protected override void QuitGameplay(int userId) => Schedule(() =>
-        {
-            RemoveUser(userId);
+        protected override void QuitGameplay(int userId) =>
+            Schedule(() =>
+            {
+                RemoveUser(userId);
 
-            var instance = instances.Single(i => i.UserId == userId);
+                var instance = instances.Single(i => i.UserId == userId);
 
-            instance.FadeColour(colours.Gray4, 400, Easing.OutQuint);
-            syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
-        });
+                instance.FadeColour(colours.Gray4, 400, Easing.OutQuint);
+                syncManager.RemoveManagedClock(instance.SpectatorPlayerClock);
+            });
 
         public override bool OnBackButton()
         {

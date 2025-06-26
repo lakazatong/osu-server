@@ -14,7 +14,9 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
     /// <summary>
     /// A combo counter implementation that visually behaves almost similar to stable's osu!catch combo counter.
     /// </summary>
-    public partial class LegacyCatchComboCounter : UprightAspectMaintainingContainer, ICatchComboCounter
+    public partial class LegacyCatchComboCounter
+        : UprightAspectMaintainingContainer,
+            ICatchComboCounter
     {
         private readonly LegacyRollingCounter counter;
 
@@ -80,20 +82,17 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             {
                 this.FadeInFromZero().Then().Delay(1000).FadeOut(300);
 
-                counter.ScaleTo(1.5f)
-                       .ScaleTo(0.8f, 250, Easing.Out)
-                       .OnComplete(c => c.SetCountWithoutRolling(combo));
+                counter
+                    .ScaleTo(1.5f)
+                    .ScaleTo(0.8f, 250, Easing.Out)
+                    .OnComplete(c => c.SetCountWithoutRolling(combo));
 
-                counter.Delay(250)
-                       .ScaleTo(1f)
-                       .ScaleTo(1.1f, 60).Then().ScaleTo(1f, 30);
+                counter.Delay(250).ScaleTo(1f).ScaleTo(1.1f, 60).Then().ScaleTo(1f, 30);
 
                 explosion.Colour = hitObjectColour ?? Color4.White;
 
                 explosion.SetCountWithoutRolling(combo);
-                explosion.ScaleTo(1.5f)
-                         .ScaleTo(1.9f, 400, Easing.Out)
-                         .FadeOutFromOne(400);
+                explosion.ScaleTo(1.5f).ScaleTo(1.9f, 400, Easing.Out).FadeOutFromOne(400);
             }
         }
     }

@@ -37,7 +37,9 @@ namespace osu.Game.Tests.Beatmaps.Formats
     {
         private static readonly DllResourceStore beatmaps_resource_store = TestResources.GetStore();
 
-        private static IEnumerable<string> allBeatmaps = beatmaps_resource_store.GetAvailableResources().Where(res => res.EndsWith(".osu", StringComparison.Ordinal));
+        private static IEnumerable<string> allBeatmaps = beatmaps_resource_store
+            .GetAvailableResources()
+            .Where(res => res.EndsWith(".osu", StringComparison.Ordinal));
 
         [Test]
         public void TestUnsupportedStoryboardEvents()
@@ -46,11 +48,16 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             var decoded = decodeFromLegacy(beatmaps_resource_store.GetStream(name), name);
             Assert.That(decoded.beatmap.UnhandledEventLines.Count, Is.EqualTo(1));
-            Assert.That(decoded.beatmap.UnhandledEventLines.Single(), Is.EqualTo("Video,0,\"video.avi\""));
+            Assert.That(
+                decoded.beatmap.UnhandledEventLines.Single(),
+                Is.EqualTo("Video,0,\"video.avi\"")
+            );
 
             var memoryStream = encodeToLegacy(decoded);
 
-            var storyboard = new LegacyStoryboardDecoder().Decode(new LineBufferedReader(memoryStream));
+            var storyboard = new LegacyStoryboardDecoder().Decode(
+                new LineBufferedReader(memoryStream)
+            );
             StoryboardLayer video = storyboard.Layers.Single(l => l.Name == "Video");
             Assert.That(video.Elements.Count, Is.EqualTo(1));
         }
@@ -89,7 +96,9 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             // we are testing that the transfer of relevant data to hitobjects (from legacy control points) sticks through encode/decode.
             // before the encode step, the legacy information is removed here.
-            decoded.beatmap.ControlPointInfo = removeLegacyControlPointTypes(decoded.beatmap.ControlPointInfo);
+            decoded.beatmap.ControlPointInfo = removeLegacyControlPointTypes(
+                decoded.beatmap.ControlPointInfo
+            );
 
             var decodedAfterEncode = decodeFromLegacy(encodeToLegacy(decoded), name);
 
@@ -118,17 +127,31 @@ namespace osu.Game.Tests.Beatmaps.Formats
             }
         }
 
-        private void compareBeatmaps((IBeatmap beatmap, TestLegacySkin skin) expected, (IBeatmap beatmap, TestLegacySkin skin) actual)
+        private void compareBeatmaps(
+            (IBeatmap beatmap, TestLegacySkin skin) expected,
+            (IBeatmap beatmap, TestLegacySkin skin) actual
+        )
         {
             // Check all control points that are still considered to be at a global level.
-            Assert.That(actual.beatmap.ControlPointInfo.TimingPoints.Serialize(), Is.EqualTo(expected.beatmap.ControlPointInfo.TimingPoints.Serialize()));
-            Assert.That(actual.beatmap.ControlPointInfo.EffectPoints.Serialize(), Is.EqualTo(expected.beatmap.ControlPointInfo.EffectPoints.Serialize()));
+            Assert.That(
+                actual.beatmap.ControlPointInfo.TimingPoints.Serialize(),
+                Is.EqualTo(expected.beatmap.ControlPointInfo.TimingPoints.Serialize())
+            );
+            Assert.That(
+                actual.beatmap.ControlPointInfo.EffectPoints.Serialize(),
+                Is.EqualTo(expected.beatmap.ControlPointInfo.EffectPoints.Serialize())
+            );
 
             // Check all hitobjects.
-            Assert.That(actual.beatmap.HitObjects.Serialize(), Is.EqualTo(expected.beatmap.HitObjects.Serialize()));
+            Assert.That(
+                actual.beatmap.HitObjects.Serialize(),
+                Is.EqualTo(expected.beatmap.HitObjects.Serialize())
+            );
 
             // Check skin.
-            Assert.IsTrue(areComboColoursEqual(expected.skin.Configuration, actual.skin.Configuration));
+            Assert.IsTrue(
+                areComboColoursEqual(expected.skin.Configuration, actual.skin.Configuration)
+            );
         }
 
         [Test]
@@ -140,18 +163,25 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 {
                     new Slider
                     {
-                        Path = new SliderPath(new[]
-                        {
-                            new PathControlPoint(Vector2.Zero, PathType.BSpline(3)),
-                            new PathControlPoint(new Vector2(50)),
-                            new PathControlPoint(new Vector2(100), PathType.BSpline(3)),
-                            new PathControlPoint(new Vector2(150))
-                        })
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.BSpline(3)),
+                                new PathControlPoint(new Vector2(50)),
+                                new PathControlPoint(new Vector2(100), PathType.BSpline(3)),
+                                new PathControlPoint(new Vector2(150)),
+                            }
+                        ),
                     },
-                }
+                },
             };
 
-            var decodedAfterEncode = decodeFromLegacy(encodeToLegacy((beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty))), string.Empty);
+            var decodedAfterEncode = decodeFromLegacy(
+                encodeToLegacy(
+                    (beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty))
+                ),
+                string.Empty
+            );
             var decodedSlider = (Slider)decodedAfterEncode.beatmap.HitObjects[0];
             Assert.That(decodedSlider.Path.ControlPoints.Count, Is.EqualTo(4));
             Assert.That(decodedSlider.Path.ControlPoints[0].Type, Is.EqualTo(PathType.BSpline(3)));
@@ -168,19 +198,26 @@ namespace osu.Game.Tests.Beatmaps.Formats
                     new Slider
                     {
                         Position = new Vector2(0.6f),
-                        Path = new SliderPath(new[]
-                        {
-                            new PathControlPoint(Vector2.Zero, PathType.BEZIER),
-                            new PathControlPoint(new Vector2(0.5f)),
-                            new PathControlPoint(new Vector2(0.51f)), // This is actually on the same position as the previous one in legacy beatmaps (truncated to int).
-                            new PathControlPoint(new Vector2(1f), PathType.BEZIER),
-                            new PathControlPoint(new Vector2(2f))
-                        })
+                        Path = new SliderPath(
+                            new[]
+                            {
+                                new PathControlPoint(Vector2.Zero, PathType.BEZIER),
+                                new PathControlPoint(new Vector2(0.5f)),
+                                new PathControlPoint(new Vector2(0.51f)), // This is actually on the same position as the previous one in legacy beatmaps (truncated to int).
+                                new PathControlPoint(new Vector2(1f), PathType.BEZIER),
+                                new PathControlPoint(new Vector2(2f)),
+                            }
+                        ),
                     },
-                }
+                },
             };
 
-            var decodedAfterEncode = decodeFromLegacy(encodeToLegacy((beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty))), string.Empty);
+            var decodedAfterEncode = decodeFromLegacy(
+                encodeToLegacy(
+                    (beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty))
+                ),
+                string.Empty
+            );
             var decodedSlider = (Slider)decodedAfterEncode.beatmap.HitObjects[0];
             Assert.That(decodedSlider.Path.ControlPoints.Count, Is.EqualTo(5));
         }
@@ -203,12 +240,18 @@ namespace osu.Game.Tests.Beatmaps.Formats
                         new Color4(7, 7, 7, 255),
                         new Color4(8, 8, 8, 255),
                         new Color4(9, 9, 9, 255),
-                    }
-                }
+                    },
+                },
             };
 
-            var decodedAfterEncode = decodeFromLegacy(encodeToLegacy((new Beatmap(), beatmapSkin)), string.Empty);
-            Assert.That(decodedAfterEncode.skin.Configuration.CustomComboColours, Has.Count.EqualTo(8));
+            var decodedAfterEncode = decodeFromLegacy(
+                encodeToLegacy((new Beatmap(), beatmapSkin)),
+                string.Empty
+            );
+            Assert.That(
+                decodedAfterEncode.skin.Configuration.CustomComboColours,
+                Has.Count.EqualTo(8)
+            );
         }
 
         [Test]
@@ -217,23 +260,30 @@ namespace osu.Game.Tests.Beatmaps.Formats
             Slider originalSlider = new Slider
             {
                 Position = new Vector2(0.6f),
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
-                    new PathControlPoint(new Vector2(25.6f, 78.4f)),
-                    new PathControlPoint(new Vector2(55.8f, 34.2f)),
-                })
+                Path = new SliderPath(
+                    new[]
+                    {
+                        new PathControlPoint(Vector2.Zero, PathType.PERFECT_CURVE),
+                        new PathControlPoint(new Vector2(25.6f, 78.4f)),
+                        new PathControlPoint(new Vector2(55.8f, 34.2f)),
+                    }
+                ),
             };
-            var beatmap = new Beatmap
-            {
-                HitObjects = { originalSlider }
-            };
+            var beatmap = new Beatmap { HitObjects = { originalSlider } };
 
-            var encoded = encodeToLegacy((beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty)));
-            var decodedAfterEncode = decodeFromLegacy(encoded, string.Empty, version: LegacyBeatmapEncoder.FIRST_LAZER_VERSION);
+            var encoded = encodeToLegacy(
+                (beatmap, new TestLegacySkin(beatmaps_resource_store, string.Empty))
+            );
+            var decodedAfterEncode = decodeFromLegacy(
+                encoded,
+                string.Empty,
+                version: LegacyBeatmapEncoder.FIRST_LAZER_VERSION
+            );
             var decodedSlider = (Slider)decodedAfterEncode.beatmap.HitObjects[0];
-            Assert.That(decodedSlider.Path.ControlPoints.Select(p => p.Position),
-                Is.EquivalentTo(originalSlider.Path.ControlPoints.Select(p => p.Position)));
+            Assert.That(
+                decodedSlider.Path.ControlPoints.Select(p => p.Position),
+                Is.EquivalentTo(originalSlider.Path.ControlPoints.Select(p => p.Position))
+            );
         }
 
         private bool areComboColoursEqual(IHasComboColours a, IHasComboColours b)
@@ -253,16 +303,32 @@ namespace osu.Game.Tests.Beatmaps.Formats
             // Sort control points to ensure a sane ordering, as they may be parsed in different orders. This works because each group contains only uniquely-typed control points.
             foreach (var g in beatmap.ControlPointInfo.Groups)
             {
-                ArrayList.Adapter((IList)g.ControlPoints).Sort(
-                    Comparer<ControlPoint>.Create((c1, c2) => string.Compare(c1.GetType().ToString(), c2.GetType().ToString(), StringComparison.Ordinal)));
+                ArrayList
+                    .Adapter((IList)g.ControlPoints)
+                    .Sort(
+                        Comparer<ControlPoint>.Create(
+                            (c1, c2) =>
+                                string.Compare(
+                                    c1.GetType().ToString(),
+                                    c2.GetType().ToString(),
+                                    StringComparison.Ordinal
+                                )
+                        )
+                    );
             }
         }
 
-        private (IBeatmap beatmap, TestLegacySkin skin) decodeFromLegacy(Stream stream, string name, int version = LegacyDecoder<Beatmap>.LATEST_VERSION)
+        private (IBeatmap beatmap, TestLegacySkin skin) decodeFromLegacy(
+            Stream stream,
+            string name,
+            int version = LegacyDecoder<Beatmap>.LATEST_VERSION
+        )
         {
             using (var reader = new LineBufferedReader(stream))
             {
-                var beatmap = new LegacyBeatmapDecoder(version) { ApplyOffsets = false }.Decode(reader);
+                var beatmap = new LegacyBeatmapDecoder(version) { ApplyOffsets = false }.Decode(
+                    reader
+                );
                 var beatmapSkin = new TestLegacySkin(beatmaps_resource_store, name);
                 stream.Seek(0, SeekOrigin.Begin);
                 beatmapSkin.Configuration = new LegacySkinDecoder().Decode(reader);
@@ -273,9 +339,12 @@ namespace osu.Game.Tests.Beatmaps.Formats
         private class TestLegacySkin : LegacySkin
         {
             public TestLegacySkin(IResourceStore<byte[]> fallbackStore, string fileName)
-                : base(new SkinInfo { Name = "Test Skin", Creator = "Craftplacer" }, null, fallbackStore, fileName)
-            {
-            }
+                : base(
+                    new SkinInfo { Name = "Test Skin", Creator = "Craftplacer" },
+                    null,
+                    fallbackStore,
+                    fileName
+                ) { }
         }
 
         private MemoryStream encodeToLegacy((IBeatmap beatmap, ISkin skin) fullBeatmap)
@@ -333,7 +402,8 @@ namespace osu.Game.Tests.Beatmaps.Formats
 
             protected internal override ISkin GetSkin() => throw new NotImplementedException();
 
-            public override Stream GetStream(string storagePath) => throw new NotImplementedException();
+            public override Stream GetStream(string storagePath) =>
+                throw new NotImplementedException();
         }
     }
 }

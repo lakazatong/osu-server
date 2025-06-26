@@ -28,14 +28,22 @@ namespace osu.Game.Rulesets.Osu.Tests
         }
 
         [TestCaseSource(nameof(difficultyValuesToTest))]
-        public void TestOverallDifficultyIsUnchangedWithRateEqualToOne(float originalOverallDifficulty)
+        public void TestOverallDifficultyIsUnchangedWithRateEqualToOne(
+            float originalOverallDifficulty
+        )
         {
             var ruleset = new OsuRuleset();
-            var difficulty = new BeatmapDifficulty { OverallDifficulty = originalOverallDifficulty };
+            var difficulty = new BeatmapDifficulty
+            {
+                OverallDifficulty = originalOverallDifficulty,
+            };
 
             var adjustedDifficulty = ruleset.GetRateAdjustedDisplayDifficulty(difficulty, 1);
 
-            Assert.That(adjustedDifficulty.OverallDifficulty, Is.EqualTo(originalOverallDifficulty));
+            Assert.That(
+                adjustedDifficulty.OverallDifficulty,
+                Is.EqualTo(originalOverallDifficulty)
+            );
         }
 
         [Test]

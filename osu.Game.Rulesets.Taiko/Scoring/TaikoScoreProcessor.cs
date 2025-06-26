@@ -15,27 +15,36 @@ namespace osu.Game.Rulesets.Taiko.Scoring
         private const double combo_base = 4;
 
         public TaikoScoreProcessor()
-            : base(new TaikoRuleset())
-        {
-        }
+            : base(new TaikoRuleset()) { }
 
-        protected override double ComputeTotalScore(double comboProgress, double accuracyProgress, double bonusPortion)
+        protected override double ComputeTotalScore(
+            double comboProgress,
+            double accuracyProgress,
+            double bonusPortion
+        )
         {
             return 250000 * comboProgress
-                   + 750000 * Math.Pow(Accuracy.Value, 3.6) * accuracyProgress
-                   + bonusPortion;
+                + 750000 * Math.Pow(Accuracy.Value, 3.6) * accuracyProgress
+                + bonusPortion;
         }
 
-        protected override double GetBonusScoreChange(JudgementResult result) => base.GetBonusScoreChange(result) * strongScaleValue(result);
+        protected override double GetBonusScoreChange(JudgementResult result) =>
+            base.GetBonusScoreChange(result) * strongScaleValue(result);
 
         protected override double GetComboScoreChange(JudgementResult result)
         {
             return GetBaseScoreForResult(result.Type)
-                   * Math.Min(Math.Max(0.5, Math.Log(result.ComboAfterJudgement, combo_base)), Math.Log(400, combo_base))
-                   * strongScaleValue(result);
+                * Math.Min(
+                    Math.Max(0.5, Math.Log(result.ComboAfterJudgement, combo_base)),
+                    Math.Log(400, combo_base)
+                )
+                * strongScaleValue(result);
         }
 
-        public override ScoreRank RankFromScore(double accuracy, IReadOnlyDictionary<HitResult, int> results)
+        public override ScoreRank RankFromScore(
+            double accuracy,
+            IReadOnlyDictionary<HitResult, int> results
+        )
         {
             ScoreRank rank = base.RankFromScore(accuracy, results);
 

@@ -86,14 +86,20 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
                 ShowLoadingLayer();
 
-                APIRequest req = status.Value == FriendStatus.None ? new AddFriendRequest(User.Value.User.OnlineID) : new DeleteFriendRequest(User.Value.User.OnlineID);
+                APIRequest req =
+                    status.Value == FriendStatus.None
+                        ? new AddFriendRequest(User.Value.User.OnlineID)
+                        : new DeleteFriendRequest(User.Value.User.OnlineID);
 
                 req.Success += () =>
                 {
                     if (req is AddFriendRequest addedRequest)
                     {
                         SetValue(++followerCount);
-                        status.Value = addedRequest.Response?.UserRelation.Mutual == true ? FriendStatus.Mutual : FriendStatus.NotMutual;
+                        status.Value =
+                            addedRequest.Response?.UserRelation.Mutual == true
+                                ? FriendStatus.Mutual
+                                : FriendStatus.NotMutual;
                     }
                     else
                     {
@@ -107,11 +113,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
                 req.Failure += e =>
                 {
-                    notifications?.Post(new SimpleNotification
-                    {
-                        Text = e.Message,
-                        Icon = FontAwesome.Solid.Times,
-                    });
+                    notifications?.Post(
+                        new SimpleNotification { Text = e.Message, Icon = FontAwesome.Solid.Times }
+                    );
 
                     HideLoadingLayer();
                 };
@@ -127,11 +131,14 @@ namespace osu.Game.Overlays.Profile.Header.Components
             apiFriends.BindTo(api.Friends);
             apiFriends.BindCollectionChanged((_, _) => Schedule(updateStatus));
 
-            User.BindValueChanged(u =>
-            {
-                followerCount = u.NewValue?.User.FollowerCount ?? 0;
-                updateStatus();
-            }, true);
+            User.BindValueChanged(
+                u =>
+                {
+                    followerCount = u.NewValue?.User.FollowerCount ?? 0;
+                    updateStatus();
+                },
+                true
+            );
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -221,7 +228,13 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     throw new ArgumentOutOfRangeException();
             }
 
-            EffectTargets.ForEach(d => d.FadeColour(IsHovered ? HoverColour.Value : IdleColour.Value, FADE_DURATION, Easing.OutQuint));
+            EffectTargets.ForEach(d =>
+                d.FadeColour(
+                    IsHovered ? HoverColour.Value : IdleColour.Value,
+                    FADE_DURATION,
+                    Easing.OutQuint
+                )
+            );
         }
 
         private enum FriendStatus

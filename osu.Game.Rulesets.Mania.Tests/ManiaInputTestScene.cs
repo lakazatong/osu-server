@@ -24,19 +24,22 @@ namespace osu.Game.Rulesets.Mania.Tests
         private partial class LocalInputManager : ManiaInputManager
         {
             public LocalInputManager(int variant)
-                : base(new ManiaRuleset().RulesetInfo, variant)
-            {
-            }
+                : base(new ManiaRuleset().RulesetInfo, variant) { }
 
-            protected override KeyBindingContainer<ManiaAction> CreateKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                => new LocalKeyBindingContainer(ruleset, variant, unique);
+            protected override KeyBindingContainer<ManiaAction> CreateKeyBindingContainer(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            ) => new LocalKeyBindingContainer(ruleset, variant, unique);
 
             private partial class LocalKeyBindingContainer : RulesetKeyBindingContainer
             {
-                public LocalKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                    : base(ruleset, variant, unique)
-                {
-                }
+                public LocalKeyBindingContainer(
+                    RulesetInfo ruleset,
+                    int variant,
+                    SimultaneousBindingMode unique
+                )
+                    : base(ruleset, variant, unique) { }
 
                 protected override void ReloadMappings(IQueryable<RealmKeyBinding> realmKeyBindings)
                 {

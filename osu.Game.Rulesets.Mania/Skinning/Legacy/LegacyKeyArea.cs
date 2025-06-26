@@ -18,7 +18,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public partial class LegacyKeyArea : LegacyManiaColumnElement, IKeyBindingHandler<ManiaAction>
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container directionContainer = null!;
         private Sprite upSprite = null!;
@@ -35,11 +36,17 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            string upImage = GetColumnSkinConfig<string>(skin, LegacyManiaSkinConfigurationLookups.KeyImage)?.Value
-                             ?? $"mania-key{FallbackColumnIndex}";
+            string upImage =
+                GetColumnSkinConfig<string>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.KeyImage
+                )?.Value ?? $"mania-key{FallbackColumnIndex}";
 
-            string downImage = GetColumnSkinConfig<string>(skin, LegacyManiaSkinConfigurationLookups.KeyImageDown)?.Value
-                               ?? $"mania-key{FallbackColumnIndex}D";
+            string downImage =
+                GetColumnSkinConfig<string>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.KeyImageDown
+                )?.Value ?? $"mania-key{FallbackColumnIndex}D";
 
             InternalChild = directionContainer = new Container
             {
@@ -53,7 +60,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                         Origin = Anchor.BottomCentre,
                         Texture = skin.GetTexture(upImage, WrapMode.ClampToEdge, default),
                         RelativeSizeAxes = Axes.X,
-                        Width = 1
+                        Width = 1,
                     },
                     downSprite = new Sprite
                     {
@@ -61,15 +68,20 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                         Texture = skin.GetTexture(downImage, WrapMode.ClampToEdge, default),
                         RelativeSizeAxes = Axes.X,
                         Width = 1,
-                        Alpha = 0
-                    }
-                }
+                        Alpha = 0,
+                    },
+                },
             };
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);
 
-            if (GetColumnSkinConfig<bool>(skin, LegacyManiaSkinConfigurationLookups.KeysUnderNotes)?.Value ?? false)
+            if (
+                GetColumnSkinConfig<bool>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.KeysUnderNotes
+                )?.Value ?? false
+            )
                 Column.UnderlayElements.Add(CreateProxy());
         }
 

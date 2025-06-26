@@ -3,21 +3,21 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osuTK;
-using osu.Framework.Input.Events;
-using osu.Game.Graphics.UserInterface;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
-using osuTK.Graphics;
-using osu.Framework.Graphics.Cursor;
-using osu.Framework.Localisation;
-using osu.Game.Resources.Localisation.Web;
 using osu.Framework.Extensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Resources.Localisation.Web;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -25,7 +25,9 @@ namespace osu.Game.Overlays
     {
         protected override Dropdown<OverlayPanelDisplayStyle> CreateDropdown() => null;
 
-        protected override TabItem<OverlayPanelDisplayStyle> CreateTabItem(OverlayPanelDisplayStyle value) => new PanelDisplayTabItem(value);
+        protected override TabItem<OverlayPanelDisplayStyle> CreateTabItem(
+            OverlayPanelDisplayStyle value
+        ) => new PanelDisplayTabItem(value);
 
         protected override bool AddEnumEntriesAutomatically => false;
 
@@ -33,25 +35,32 @@ namespace osu.Game.Overlays
         {
             AutoSizeAxes = Axes.Both;
 
-            AddTabItem(new PanelDisplayTabItem(OverlayPanelDisplayStyle.Card)
-            {
-                Icon = FontAwesome.Solid.Square
-            });
-            AddTabItem(new PanelDisplayTabItem(OverlayPanelDisplayStyle.List)
-            {
-                Icon = FontAwesome.Solid.Bars
-            });
-            AddTabItem(new PanelDisplayTabItem(OverlayPanelDisplayStyle.Brick)
-            {
-                Icon = FontAwesome.Solid.Th
-            });
+            AddTabItem(
+                new PanelDisplayTabItem(OverlayPanelDisplayStyle.Card)
+                {
+                    Icon = FontAwesome.Solid.Square,
+                }
+            );
+            AddTabItem(
+                new PanelDisplayTabItem(OverlayPanelDisplayStyle.List)
+                {
+                    Icon = FontAwesome.Solid.Bars,
+                }
+            );
+            AddTabItem(
+                new PanelDisplayTabItem(OverlayPanelDisplayStyle.Brick)
+                {
+                    Icon = FontAwesome.Solid.Th,
+                }
+            );
         }
 
-        protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal
-        };
+        protected override TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+            };
 
         private partial class PanelDisplayTabItem : TabItem<OverlayPanelDisplayStyle>, IHasTooltip
         {
@@ -73,17 +82,19 @@ namespace osu.Game.Overlays
                 : base(value)
             {
                 Size = new Vector2(11);
-                AddRange(new Drawable[]
-                {
-                    icon = new SpriteIcon
+                AddRange(
+                    new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        FillMode = FillMode.Fit
-                    },
-                    new HoverSounds(HoverSampleSet.TabSelect)
-                });
+                        icon = new SpriteIcon
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            FillMode = FillMode.Fit,
+                        },
+                        new HoverSounds(HoverSampleSet.TabSelect),
+                    }
+                );
             }
 
             [BackgroundDependencyLoader]
@@ -110,7 +121,8 @@ namespace osu.Game.Overlays
                 base.OnHoverLost(e);
             }
 
-            private void updateState() => icon.Colour = Active.Value || IsHovered ? colourProvider.Light1 : Color4.White;
+            private void updateState() =>
+                icon.Colour = Active.Value || IsHovered ? colourProvider.Light1 : Color4.White;
         }
     }
 
@@ -123,6 +135,6 @@ namespace osu.Game.Overlays
         List,
 
         [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ViewModeBrick))]
-        Brick
+        Brick,
     }
 }

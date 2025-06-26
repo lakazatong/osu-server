@@ -9,11 +9,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
     public partial class TestSceneOsuModBubbles : OsuModTestScene
     {
         [Test]
-        public void TestOsuModBubbles() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModBubbles(),
-            Autoplay = true,
-            PassCondition = () => true
-        });
+        public void TestOsuModBubbles() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModBubbles(),
+                    Autoplay = true,
+                    PassCondition = () => true,
+                }
+            );
     }
 }

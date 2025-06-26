@@ -41,7 +41,11 @@ namespace osu.Game.Rulesets.UI
         }
 
         [BackgroundDependencyLoader]
-        private void load(TextureStore textures, OsuColour colours, OverlayColourProvider? colourProvider)
+        private void load(
+            TextureStore textures,
+            OsuColour colours,
+            OverlayColourProvider? colourProvider
+        )
         {
             FillFlowContainer contentFlow;
             ModSwitchTiny tinySwitch;
@@ -63,25 +67,29 @@ namespace osu.Game.Rulesets.UI
                     Origin = Anchor.Centre,
                     Spacing = new Vector2(0, 4),
                     Direction = FillDirection.Vertical,
-                    Child = tinySwitch = new ModSwitchTiny(mod)
-                    {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Scale = new Vector2(0.6f),
-                        Active = { BindTarget = Active }
-                    }
-                }
+                    Child = tinySwitch =
+                        new ModSwitchTiny(mod)
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Scale = new Vector2(0.6f),
+                            Active = { BindTarget = Active },
+                        },
+                },
             };
 
             if (mod.Icon != null)
             {
-                contentFlow.Insert(-1, modIcon = new SpriteIcon
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Size = new Vector2(21),
-                    Icon = mod.Icon.Value
-                });
+                contentFlow.Insert(
+                    -1,
+                    modIcon = new SpriteIcon
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Size = new Vector2(21),
+                        Icon = mod.Icon.Value,
+                    }
+                );
                 tinySwitch.Scale = new Vector2(0.3f);
             }
 
@@ -91,7 +99,13 @@ namespace osu.Game.Rulesets.UI
             activeForegroundColour = modTypeColour;
 
             inactiveBackgroundColour = colourProvider?.Background2 ?? colours.Gray5;
-            activeBackgroundColour = Interpolation.ValueAt<Colour4>(0.1f, Colour4.Black, modTypeColour, 0, 1);
+            activeBackgroundColour = Interpolation.ValueAt<Colour4>(
+                0.1f,
+                Colour4.Black,
+                modTypeColour,
+                0,
+                1
+            );
         }
 
         protected override void LoadComplete()
@@ -104,8 +118,16 @@ namespace osu.Game.Rulesets.UI
 
         private void updateState()
         {
-            modIcon?.FadeColour(Active.Value ? activeForegroundColour : inactiveForegroundColour, 200, Easing.OutQuint);
-            background.FadeColour(Active.Value ? activeBackgroundColour : inactiveBackgroundColour, 200, Easing.OutQuint);
+            modIcon?.FadeColour(
+                Active.Value ? activeForegroundColour : inactiveForegroundColour,
+                200,
+                Easing.OutQuint
+            );
+            background.FadeColour(
+                Active.Value ? activeBackgroundColour : inactiveBackgroundColour,
+                200,
+                Easing.OutQuint
+            );
         }
     }
 }

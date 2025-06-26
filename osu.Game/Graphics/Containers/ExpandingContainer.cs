@@ -54,11 +54,13 @@ namespace osu.Game.Graphics.Containers
         [BackgroundDependencyLoader]
         private void load()
         {
-            InternalChild = CreateScrollContainer().With(s =>
-            {
-                s.RelativeSizeAxes = Axes.Both;
-                s.ScrollbarVisible = false;
-            }).WithChild(FillFlow);
+            InternalChild = CreateScrollContainer()
+                .With(s =>
+                {
+                    s.RelativeSizeAxes = Axes.Both;
+                    s.ScrollbarVisible = false;
+                })
+                .WithChild(FillFlow);
         }
 
         protected virtual OsuScrollContainer CreateScrollContainer() => new OsuScrollContainer();
@@ -69,10 +71,17 @@ namespace osu.Game.Graphics.Containers
         {
             base.LoadComplete();
 
-            Expanded.BindValueChanged(v =>
-            {
-                this.ResizeWidthTo(v.NewValue ? expandedWidth : contractedWidth, TRANSITION_DURATION, Easing.OutQuint);
-            }, true);
+            Expanded.BindValueChanged(
+                v =>
+                {
+                    this.ResizeWidthTo(
+                        v.NewValue ? expandedWidth : contractedWidth,
+                        TRANSITION_DURATION,
+                        Easing.OutQuint
+                    );
+                },
+                true
+            );
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -109,7 +118,10 @@ namespace osu.Game.Graphics.Containers
             hoverExpandEvent?.Cancel();
 
             if (IsHovered && !Expanded.Value)
-                hoverExpandEvent = Scheduler.AddDelayed(() => Expanded.Value = true, HoverExpansionDelay);
+                hoverExpandEvent = Scheduler.AddDelayed(
+                    () => Expanded.Value = true,
+                    HoverExpansionDelay
+                );
         }
     }
 }

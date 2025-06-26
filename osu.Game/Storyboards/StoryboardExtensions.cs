@@ -16,7 +16,12 @@ namespace osu.Game.Storyboards
         /// <param name="flipH">Whether the element is flipped horizontally.</param>
         /// <param name="flipV">Whether the element is flipped vertically.</param>
         /// <returns>The adjusted origin.</returns>
-        public static Anchor AdjustOrigin(Anchor origin, Vector2 vectorScale, bool flipH, bool flipV)
+        public static Anchor AdjustOrigin(
+            Anchor origin,
+            Vector2 vectorScale,
+            bool flipH,
+            bool flipV
+        )
         {
             // Either flip horizontally or negative X scale, but not both.
             if (flipH ^ (vectorScale.X < 0))

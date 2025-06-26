@@ -34,66 +34,76 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource source)
         {
-            AddInternal(scaleContainer = new Container
-            {
-                Scale = new Vector2(SPRITE_SCALE),
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Y = SPINNER_Y_CENTRE,
-                Children = new Drawable[]
+            AddInternal(
+                scaleContainer = new Container
                 {
-                    glow = new Sprite
+                    Scale = new Vector2(SPRITE_SCALE),
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Y = SPINNER_Y_CENTRE,
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-glow"),
-                        Blending = BlendingParameters.Additive,
-                        Colour = glowColour,
-                    },
-                    discBottom = new Sprite
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-bottom"),
-                    },
-                    discTop = new Sprite
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-top"),
-                    },
-                    spinningMiddle = new Sprite
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-middle2"),
-                    },
-                    fixedMiddle = new Sprite
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-middle"),
+                        glow = new Sprite
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-glow"),
+                            Blending = BlendingParameters.Additive,
+                            Colour = glowColour,
+                        },
+                        discBottom = new Sprite
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-bottom"),
+                        },
+                        discTop = new Sprite
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-top"),
+                        },
+                        spinningMiddle = new Sprite
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-middle2"),
+                        },
+                        fixedMiddle = new Sprite
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Texture = source.GetTexture("spinner-middle"),
+                        },
                     },
                 }
-            });
+            );
 
             var topProvider = source.FindProvider(s => s.GetTexture("spinner-top") != null);
 
-            if (topProvider is ISkinTransformer transformer && !(transformer.Skin is DefaultLegacySkin))
+            if (
+                topProvider is ISkinTransformer transformer
+                && !(transformer.Skin is DefaultLegacySkin)
+            )
             {
-                AddInternal(ApproachCircle = new Sprite
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    Texture = source.GetTexture("spinner-approachcircle"),
-                    Scale = new Vector2(SPRITE_SCALE * 1.86f),
-                    Y = SPINNER_Y_CENTRE,
-                });
+                AddInternal(
+                    ApproachCircle = new Sprite
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.Centre,
+                        Texture = source.GetTexture("spinner-approachcircle"),
+                        Scale = new Vector2(SPRITE_SCALE * 1.86f),
+                        Y = SPINNER_Y_CENTRE,
+                    }
+                );
             }
         }
 
-        protected override void UpdateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)
+        protected override void UpdateStateTransforms(
+            DrawableHitObject drawableHitObject,
+            ArmedState state
+        )
         {
             base.UpdateStateTransforms(drawableHitObject, state);
 
@@ -144,7 +154,14 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             glow.Alpha = DrawableSpinner.Progress;
 
-            scaleContainer.Scale = new Vector2(SPRITE_SCALE * (0.8f + (float)Interpolation.ApplyEasing(Easing.Out, DrawableSpinner.Progress) * 0.2f));
+            scaleContainer.Scale = new Vector2(
+                SPRITE_SCALE
+                    * (
+                        0.8f
+                        + (float)Interpolation.ApplyEasing(Easing.Out, DrawableSpinner.Progress)
+                            * 0.2f
+                    )
+            );
         }
     }
 }

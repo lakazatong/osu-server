@@ -12,17 +12,24 @@ namespace osu.Game.Tests.Visual.UserInterface
 {
     public partial class TestSceneHotkeyDisplay : ThemeComparisonTestScene
     {
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Direction = FillDirection.Vertical,
-            Children = new[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                new HotkeyDisplay { Hotkey = new Hotkey(new KeyCombination(InputKey.MouseLeft)) },
-                new HotkeyDisplay { Hotkey = new Hotkey(GlobalAction.EditorDecreaseDistanceSpacing) },
-                new HotkeyDisplay { Hotkey = new Hotkey(PlatformAction.Save) },
-            }
-        };
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Direction = FillDirection.Vertical,
+                Children = new[]
+                {
+                    new HotkeyDisplay
+                    {
+                        Hotkey = new Hotkey(new KeyCombination(InputKey.MouseLeft)),
+                    },
+                    new HotkeyDisplay
+                    {
+                        Hotkey = new Hotkey(GlobalAction.EditorDecreaseDistanceSpacing),
+                    },
+                    new HotkeyDisplay { Hotkey = new Hotkey(PlatformAction.Save) },
+                },
+            };
     }
 }

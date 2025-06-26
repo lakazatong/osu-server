@@ -51,22 +51,19 @@ namespace osu.Game.Tournament.Screens.Setup
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = OsuColour.Gray(0.2f),
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) },
                 new OsuScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = fillFlow = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Padding = new MarginPadding(10),
-                        Spacing = new Vector2(10),
-                    },
+                    Child = fillFlow =
+                        new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Padding = new MarginPadding(10),
+                            Spacing = new Vector2(10),
+                        },
                 },
             };
 
@@ -88,7 +85,7 @@ namespace osu.Game.Tournament.Screens.Setup
                     Value = fileBasedIpc?.IPCStorage?.GetFullPath(string.Empty) ?? "Not found",
                     Failing = fileBasedIpc?.IPCStorage == null,
                     Description =
-                        "The osu!stable installation which is currently being used as a data source. If a source is not found, make sure you have created an empty ipc.txt in your stable cutting-edge installation."
+                        "The osu!stable installation which is currently being used as a data source. If a source is not found, make sure you have created an empty ipc.txt in your stable cutting-edge installation.",
                 },
                 new ActionableInfo
                 {
@@ -100,30 +97,35 @@ namespace osu.Game.Tournament.Screens.Setup
 
                         if (loginOverlay == null)
                         {
-                            AddInternal(loginOverlay = new LoginOverlay
-                            {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.TopRight,
-                            });
+                            AddInternal(
+                                loginOverlay = new LoginOverlay
+                                {
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+                                }
+                            );
                         }
 
                         loginOverlay.State.Value = Visibility.Visible;
                     },
                     Value = api.LocalUser.Value.Username,
                     Failing = api.IsLoggedIn != true,
-                    Description = "In order to access the API and display metadata, signing in is required."
+                    Description =
+                        "In order to access the API and display metadata, signing in is required.",
                 },
                 new LabelledDropdown<RulesetInfo?>
                 {
                     Label = "Ruleset",
-                    Description = "Decides what stats are displayed and which ranks are retrieved for players. This requires a restart to reload data for an existing bracket.",
+                    Description =
+                        "Decides what stats are displayed and which ranks are retrieved for players. This requires a restart to reload data for an existing bracket.",
                     Items = rulesets.AvailableRulesets,
                     Current = LadderInfo.Ruleset,
                 },
                 new TournamentSwitcher
                 {
                     Label = "Current tournament",
-                    Description = "Changes the background videos and bracket to match the selected tournament. This requires a restart to apply changes.",
+                    Description =
+                        "Changes the background videos and bracket to match the selected tournament. This requires a restart to apply changes.",
                 },
                 resolution = new ResolutionSelector
                 {
@@ -131,19 +133,29 @@ namespace osu.Game.Tournament.Screens.Setup
                     ButtonText = "Set height",
                     Action = height =>
                     {
-                        windowSize.Value = new Size((int)(height * aspect_ratio / TournamentSceneManager.STREAM_AREA_WIDTH * TournamentSceneManager.REQUIRED_WIDTH), height);
-                    }
+                        windowSize.Value = new Size(
+                            (int)(
+                                height
+                                * aspect_ratio
+                                / TournamentSceneManager.STREAM_AREA_WIDTH
+                                * TournamentSceneManager.REQUIRED_WIDTH
+                            ),
+                            height
+                        );
+                    },
                 },
                 new LabelledSwitchButton
                 {
                     Label = "Auto advance screens",
-                    Description = "Screens will progress automatically from gameplay -> results -> map pool",
+                    Description =
+                        "Screens will progress automatically from gameplay -> results -> map pool",
                     Current = LadderInfo.AutoProgressScreens,
                 },
                 new LabelledSwitchButton
                 {
                     Label = "Display team seeds",
-                    Description = "Team seeds will display alongside each team at the top in gameplay/map pool screens.",
+                    Description =
+                        "Team seeds will display alongside each team at the top in gameplay/map pool screens.",
                     Current = LadderInfo.DisplayTeamSeeds,
                 },
             };

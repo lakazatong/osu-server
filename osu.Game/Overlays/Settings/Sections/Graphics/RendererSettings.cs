@@ -22,7 +22,13 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
         private bool automaticRendererInUse;
 
         [BackgroundDependencyLoader]
-        private void load(FrameworkConfigManager config, OsuConfigManager osuConfig, IDialogOverlay? dialogOverlay, OsuGame? game, GameHost host)
+        private void load(
+            FrameworkConfigManager config,
+            OsuConfigManager osuConfig,
+            IDialogOverlay? dialogOverlay,
+            OsuGame? game,
+            GameHost host
+        )
         {
             var renderer = config.GetBindable<RendererType>(FrameworkSetting.Renderer);
             automaticRendererInUse = renderer.Value == RendererType.Automatic;
@@ -33,9 +39,10 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 {
                     LabelText = GraphicsSettingsStrings.Renderer,
                     Current = renderer,
-                    Items = host.GetPreferredRenderersForCurrentPlatform().Order()
+                    Items = host.GetPreferredRenderersForCurrentPlatform()
+                        .Order()
 #pragma warning disable CS0612 // Type or member is obsolete
-                                .Where(t => t != RendererType.Vulkan && t != RendererType.OpenGLLegacy),
+                        .Where(t => t != RendererType.Vulkan && t != RendererType.OpenGLLegacy),
 #pragma warning restore CS0612 // Type or member is obsolete
                     Keywords = new[] { @"compatibility", @"directx" },
                 },
@@ -49,12 +56,12 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 new SettingsEnumDropdown<ExecutionMode>
                 {
                     LabelText = GraphicsSettingsStrings.ThreadingMode,
-                    Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode)
+                    Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = GraphicsSettingsStrings.ShowFPS,
-                    Current = osuConfig.GetBindable<bool>(OsuSetting.ShowFpsDisplay)
+                    Current = osuConfig.GetBindable<bool>(OsuSetting.ShowFpsDisplay),
                 },
             };
 
@@ -73,10 +80,18 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 }
                 else
                 {
-                    dialogOverlay?.Push(new ConfirmDialog(GraphicsSettingsStrings.ChangeRendererConfirmation, () => game?.AttemptExit(), () =>
-                    {
-                        renderer.Value = automaticRendererInUse ? RendererType.Automatic : host.ResolvedRenderer;
-                    }));
+                    dialogOverlay?.Push(
+                        new ConfirmDialog(
+                            GraphicsSettingsStrings.ChangeRendererConfirmation,
+                            () => game?.AttemptExit(),
+                            () =>
+                            {
+                                renderer.Value = automaticRendererInUse
+                                    ? RendererType.Automatic
+                                    : host.ResolvedRenderer;
+                            }
+                        )
+                    );
                 }
             });
         }
@@ -101,7 +116,9 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 protected override LocalisableString GenerateItemText(RendererType item)
                 {
                     if (item == RendererType.Automatic && automaticRendererInUse)
-                        return LocalisableString.Interpolate($"{base.GenerateItemText(item)} ({hostResolvedRenderer.GetDescription()})");
+                        return LocalisableString.Interpolate(
+                            $"{base.GenerateItemText(item)} ({hostResolvedRenderer.GetDescription()})"
+                        );
 
                     return base.GenerateItemText(item);
                 }

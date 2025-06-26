@@ -11,9 +11,10 @@ namespace osu.Game.Tournament.Screens.Editors.Components
     {
         public DeleteTeamDialog(TournamentTeam team, Action action)
         {
-            HeaderText = team.FullName.Value.Length > 0 ? $@"Delete team ""{team.FullName.Value}""?" :
-                team.Acronym.Value.Length > 0 ? $@"Delete team ""{team.Acronym.Value}""?" :
-                @"Delete unnamed team?";
+            HeaderText =
+                team.FullName.Value.Length > 0 ? $@"Delete team ""{team.FullName.Value}""?"
+                : team.Acronym.Value.Length > 0 ? $@"Delete team ""{team.Acronym.Value}""?"
+                : @"Delete unnamed team?";
             DangerousAction = action;
         }
     }

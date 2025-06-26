@@ -30,24 +30,18 @@ namespace osu.Game.IO
         private readonly StorageConfigManager storageConfig;
         private readonly Storage defaultStorage;
 
-        public override string[] IgnoreDirectories => new[]
-        {
-            "cache",
-        };
+        public override string[] IgnoreDirectories => new[] { "cache" };
 
-        public override string[] IgnoreFiles => new[]
-        {
-            "framework.ini",
-            "storage.ini",
-        };
+        public override string[] IgnoreFiles => new[] { "framework.ini", "storage.ini" };
 
-        public override string[] IgnoreSuffixes => new[]
-        {
-            // Realm pipe files don't play well with copy operations
-            ".note",
-            ".lock",
-            ".management",
-        };
+        public override string[] IgnoreSuffixes =>
+            new[]
+            {
+                // Realm pipe files don't play well with copy operations
+                ".note",
+                ".lock",
+                ".management",
+            };
 
         public OsuStorage(GameHost host, Storage defaultStorage)
             : base(defaultStorage, string.Empty)

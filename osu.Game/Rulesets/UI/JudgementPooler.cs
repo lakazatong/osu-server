@@ -19,12 +19,16 @@ namespace osu.Game.Rulesets.UI
     public partial class JudgementPooler<T> : CompositeComponent
         where T : DrawableJudgement, new()
     {
-        private readonly IDictionary<HitResult, DrawablePool<T>> poolDictionary = new Dictionary<HitResult, DrawablePool<T>>();
+        private readonly IDictionary<HitResult, DrawablePool<T>> poolDictionary =
+            new Dictionary<HitResult, DrawablePool<T>>();
 
         private readonly IEnumerable<HitResult> usableHitResults;
         private readonly Action<T>? onJudgementInitialLoad;
 
-        public JudgementPooler(IEnumerable<HitResult> usableHitResults, Action<T>? onJudgementInitialLoad = null)
+        public JudgementPooler(
+            IEnumerable<HitResult> usableHitResults,
+            Action<T>? onJudgementInitialLoad = null
+        )
         {
             this.usableHitResults = usableHitResults;
             this.onJudgementInitialLoad = onJudgementInitialLoad;
@@ -66,7 +70,10 @@ namespace osu.Game.Rulesets.UI
                 var judgement = base.CreateNewDrawable();
 
                 // just a placeholder to initialise the correct drawable hierarchy for this pool.
-                judgement.Apply(new JudgementResult(new HitObject(), new Judgement()) { Type = result }, null);
+                judgement.Apply(
+                    new JudgementResult(new HitObject(), new Judgement()) { Type = result },
+                    null
+                );
 
                 onLoaded?.Invoke(judgement);
 

@@ -61,7 +61,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
                 Spacing = new Vector2(10),
-                Direction = FillDirection.Full
+                Direction = FillDirection.Full,
             };
         }
 
@@ -69,11 +69,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
         {
             base.LoadComplete();
 
-            Colours.BindCollectionChanged((_, args) =>
-            {
-                if (args.Action != NotifyCollectionChangedAction.Replace)
-                    updatePalette();
-            }, true);
+            Colours.BindCollectionChanged(
+                (_, args) =>
+                {
+                    if (args.Action != NotifyCollectionChangedAction.Replace)
+                        updatePalette();
+                },
+                true
+            );
             FinishTransforms(true);
         }
 
@@ -89,24 +92,21 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 int colourIndex = i;
                 ColourDisplay display;
 
-                palette.Add(display = new ColourDisplay
-                {
-                    Current = { Value = Colours[colourIndex] }
-                });
+                palette.Add(
+                    display = new ColourDisplay { Current = { Value = Colours[colourIndex] } }
+                );
 
                 display.Current.BindValueChanged(colour => Colours[colourIndex] = colour.NewValue);
                 display.DeleteRequested += colourDeletionRequested;
             }
 
-            palette.Add(new AddColourButton
-            {
-                Action = () => Colours.Add(Colour4.White)
-            });
+            palette.Add(new AddColourButton { Action = () => Colours.Add(Colour4.White) });
 
             reindexItems();
         }
 
-        private void colourDeletionRequested(ColourDisplay display) => Colours.RemoveAt(palette.IndexOf(display));
+        private void colourDeletionRequested(ColourDisplay display) =>
+            Colours.RemoveAt(palette.IndexOf(display));
 
         private void reindexItems()
         {
@@ -154,24 +154,24 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Colour = Colour4.Transparent,
-                                    AlwaysPresent = true
+                                    AlwaysPresent = true,
                                 },
                                 new SpriteIcon
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     Size = new Vector2(20),
-                                    Icon = FontAwesome.Solid.Plus
-                                }
-                            }
+                                    Icon = FontAwesome.Solid.Plus,
+                                },
+                            },
                         },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            Text = "New"
-                        }
-                    }
+                            Text = "New",
+                        },
+                    },
                 };
             }
 

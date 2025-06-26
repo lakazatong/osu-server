@@ -21,65 +21,46 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
         [Test]
         public void TestAlwaysHidden()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new CatchModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 0 },
-                },
-                Autoplay = true,
-                PassCondition = () => Player.ScoreProcessor.Combo.Value == 2,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new Fruit
+                    Mod = new CatchModNoScope { HiddenComboCount = { Value = 0 } },
+                    Autoplay = true,
+                    PassCondition = () => Player.ScoreProcessor.Combo.Value == 2,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            X = CatchPlayfield.CENTER_X * 0.5f,
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new Fruit { X = CatchPlayfield.CENTER_X * 0.5f, StartTime = 1000 },
+                                new Fruit { X = CatchPlayfield.CENTER_X * 1.5f, StartTime = 2000 },
+                            },
                         },
-                        new Fruit
-                        {
-                            X = CatchPlayfield.CENTER_X * 1.5f,
-                            StartTime = 2000,
-                        }
-                    }
                 }
-            });
+            );
         }
 
         [Test]
         public void TestVisibleDuringBreak()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new CatchModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 0 },
-                },
-                Autoplay = true,
-                PassCondition = () => true,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new Fruit
+                    Mod = new CatchModNoScope { HiddenComboCount = { Value = 0 } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            X = CatchPlayfield.CENTER_X,
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new Fruit { X = CatchPlayfield.CENTER_X, StartTime = 1000 },
+                                new Fruit { X = CatchPlayfield.CENTER_X, StartTime = 5000 },
+                            },
+                            Breaks = { new BreakPeriod(2000, 4000) },
                         },
-                        new Fruit
-                        {
-                            X = CatchPlayfield.CENTER_X,
-                            StartTime = 5000,
-                        }
-                    },
-                    Breaks =
-                    {
-                        new BreakPeriod(2000, 4000),
-                    }
                 }
-            });
+            );
 
             AddUntilStep("wait for catcher to hide", () => catcherAlphaAlmostEquals(0));
             AddUntilStep("wait for start of break", isBreak);
@@ -91,36 +72,24 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
         [Test]
         public void TestVisibleAfterComboBreak()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new CatchModNoScope
+            CreateModTest(
+                new ModTestData
                 {
-                    HiddenComboCount = { Value = 2 },
-                },
-                Autoplay = true,
-                PassCondition = () => true,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = new List<HitObject>
-                    {
-                        new Fruit
+                    Mod = new CatchModNoScope { HiddenComboCount = { Value = 2 } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                    CreateBeatmap = () =>
+                        new Beatmap
                         {
-                            X = 0,
-                            StartTime = 1000,
+                            HitObjects = new List<HitObject>
+                            {
+                                new Fruit { X = 0, StartTime = 1000 },
+                                new Fruit { X = CatchPlayfield.CENTER_X, StartTime = 3000 },
+                                new Fruit { X = CatchPlayfield.WIDTH, StartTime = 5000 },
+                            },
                         },
-                        new Fruit
-                        {
-                            X = CatchPlayfield.CENTER_X,
-                            StartTime = 3000,
-                        },
-                        new Fruit
-                        {
-                            X = CatchPlayfield.WIDTH,
-                            StartTime = 5000,
-                        },
-                    }
                 }
-            });
+            );
 
             AddAssert("catcher must start visible", () => catcherAlphaAlmostEquals(1));
             AddUntilStep("wait for combo", () => Player.ScoreProcessor.Combo.Value >= 2);

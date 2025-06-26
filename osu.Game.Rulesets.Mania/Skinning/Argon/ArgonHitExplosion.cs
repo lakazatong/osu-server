@@ -22,7 +22,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         [Resolved]
         private Column column { get; set; } = null!;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container largeFaint = null!;
 
@@ -48,11 +49,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     Masking = true,
                     CornerRadius = ArgonNotePiece.CORNER_RADIUS,
                     Blending = BlendingParameters.Additive,
-                    Child = new Box
-                    {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                 },
             };
 
@@ -60,18 +57,27 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
             direction.BindValueChanged(onDirectionChanged, true);
 
             accentColour = column.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour =>
-            {
-                largeFaint.Colour = Interpolation.ValueAt(0.8f, colour.NewValue, Color4.White, 0, 1);
-
-                largeFaint.EdgeEffect = new EdgeEffectParameters
+            accentColour.BindValueChanged(
+                colour =>
                 {
-                    Type = EdgeEffectType.Glow,
-                    Colour = colour.NewValue,
-                    Roundness = 40,
-                    Radius = 60,
-                };
-            }, true);
+                    largeFaint.Colour = Interpolation.ValueAt(
+                        0.8f,
+                        colour.NewValue,
+                        Color4.White,
+                        0,
+                        1
+                    );
+
+                    largeFaint.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = colour.NewValue,
+                        Roundness = 40,
+                        Radius = 60,
+                    };
+                },
+                true
+            );
         }
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)

@@ -28,7 +28,9 @@ namespace osu.Game.Tournament.Screens.Setup
         private MatchIPCInfo ipc { get; set; } = null!;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private OsuDirectorySelector directorySelector = null!;
         private DialogOverlay? overlay;
@@ -37,94 +39,98 @@ namespace osu.Game.Tournament.Screens.Setup
         private void load(Storage storage, OsuColour colours)
         {
             var initialStorage = (ipc as FileBasedIPC)?.IPCStorage ?? storage;
-            string? initialPath = new DirectoryInfo(initialStorage.GetFullPath(string.Empty)).Parent?.FullName;
+            string? initialPath = new DirectoryInfo(initialStorage.GetFullPath(string.Empty))
+                .Parent
+                ?.FullName;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Masking = true,
-                    CornerRadius = 10,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(0.5f, 0.8f),
-                    Children = new Drawable[]
+                    new Container
                     {
-                        new Box
+                        Masking = true,
+                        CornerRadius = 10,
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(0.5f, 0.8f),
+                        Children = new Drawable[]
                         {
-                            Colour = colours.GreySeaFoamDark,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        new GridContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            RowDimensions = new[]
+                            new Box
                             {
-                                new Dimension(),
-                                new Dimension(GridSizeMode.Relative, 0.8f),
-                                new Dimension(),
+                                Colour = colours.GreySeaFoamDark,
+                                RelativeSizeAxes = Axes.Both,
                             },
-                            Content = new[]
+                            new GridContainer
                             {
-                                new Drawable[]
+                                RelativeSizeAxes = Axes.Both,
+                                RowDimensions = new[]
                                 {
-                                    new OsuSpriteText
+                                    new Dimension(),
+                                    new Dimension(GridSizeMode.Relative, 0.8f),
+                                    new Dimension(),
+                                },
+                                Content = new[]
+                                {
+                                    new Drawable[]
                                     {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Text = "Please select a new location",
-                                        Font = OsuFont.Default.With(size: 40)
+                                        new OsuSpriteText
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Text = "Please select a new location",
+                                            Font = OsuFont.Default.With(size: 40),
+                                        },
+                                    },
+                                    new Drawable[]
+                                    {
+                                        directorySelector = new OsuDirectorySelector(initialPath)
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                        },
+                                    },
+                                    new Drawable[]
+                                    {
+                                        new FillFlowContainer
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Direction = FillDirection.Horizontal,
+                                            Spacing = new Vector2(20),
+                                            Children = new Drawable[]
+                                            {
+                                                new RoundedButton
+                                                {
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                    Width = 300,
+                                                    Text = "Select stable path",
+                                                    Action = ChangePath,
+                                                },
+                                                new RoundedButton
+                                                {
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                    Width = 300,
+                                                    Text = "Auto detect",
+                                                    Action = AutoDetect,
+                                                },
+                                            },
+                                        },
                                     },
                                 },
-                                new Drawable[]
-                                {
-                                    directorySelector = new OsuDirectorySelector(initialPath)
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                    }
-                                },
-                                new Drawable[]
-                                {
-                                    new FillFlowContainer
-                                    {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Direction = FillDirection.Horizontal,
-                                        Spacing = new Vector2(20),
-                                        Children = new Drawable[]
-                                        {
-                                            new RoundedButton
-                                            {
-                                                Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre,
-                                                Width = 300,
-                                                Text = "Select stable path",
-                                                Action = ChangePath
-                                            },
-                                            new RoundedButton
-                                            {
-                                                Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre,
-                                                Width = 300,
-                                                Text = "Auto detect",
-                                                Action = AutoDetect
-                                            },
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                            },
+                        },
                     },
-                },
-                new BackButton
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    State = { Value = Visibility.Visible },
-                    Action = () => sceneManager?.SetScreen(typeof(SetupScreen))
+                    new BackButton
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                        State = { Value = Visibility.Visible },
+                        Action = () => sceneManager?.SetScreen(typeof(SetupScreen)),
+                    },
                 }
-            });
+            );
         }
 
         protected virtual void ChangePath()
@@ -136,7 +142,12 @@ namespace osu.Game.Tournament.Screens.Setup
             if (!fileBasedIpc?.SetIPCLocation(target) ?? true)
             {
                 overlay = new DialogOverlay();
-                overlay.Push(new IPCErrorDialog("This is an invalid IPC Directory", "Select a directory that contains an osu! stable cutting edge installation and make sure it has an empty ipc.txt file in it."));
+                overlay.Push(
+                    new IPCErrorDialog(
+                        "This is an invalid IPC Directory",
+                        "Select a directory that contains an osu! stable cutting edge installation and make sure it has an empty ipc.txt file in it."
+                    )
+                );
                 AddInternal(overlay);
                 Logger.Log("Folder is not an osu! stable CE directory");
                 return;
@@ -152,7 +163,12 @@ namespace osu.Game.Tournament.Screens.Setup
             if (!fileBasedIpc?.AutoDetectIPCLocation() ?? true)
             {
                 overlay = new DialogOverlay();
-                overlay.Push(new IPCErrorDialog("Failed to auto detect", "An osu! stable cutting-edge installation could not be auto detected.\nPlease try and manually point to the directory."));
+                overlay.Push(
+                    new IPCErrorDialog(
+                        "Failed to auto detect",
+                        "An osu! stable cutting-edge installation could not be auto detected.\nPlease try and manually point to the directory."
+                    )
+                );
                 AddInternal(overlay);
             }
             else

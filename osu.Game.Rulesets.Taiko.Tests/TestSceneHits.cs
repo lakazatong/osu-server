@@ -48,11 +48,14 @@ namespace osu.Game.Rulesets.Taiko.Tests
             AddStep("Strong Rim", () => addRimHit(true));
             AddStep("Add bar line", () => addBarLine(false));
             AddStep("Add major bar line", () => addBarLine(true));
-            AddStep("Add centre w/ bar line", () =>
-            {
-                addCentreHit(false);
-                addBarLine(true);
-            });
+            AddStep(
+                "Add centre w/ bar line",
+                () =>
+                {
+                    addCentreHit(false);
+                    addBarLine(true);
+                }
+            );
             AddStep("Height test 1", () => changePlayfieldSize(1));
             AddStep("Height test 2", () => changePlayfieldSize(2));
             AddStep("Height test 3", () => changePlayfieldSize(3));
@@ -94,11 +97,15 @@ namespace osu.Game.Rulesets.Taiko.Tests
             switch (step)
             {
                 default:
-                    PlayfieldContainer.Delay(delay).ResizeTo(new Vector2(1, rng.Next(25, 400)), 500);
+                    PlayfieldContainer
+                        .Delay(delay)
+                        .ResizeTo(new Vector2(1, rng.Next(25, 400)), 500);
                     break;
 
                 case 6:
-                    PlayfieldContainer.Delay(delay).ResizeTo(new Vector2(1, DEFAULT_PLAYFIELD_CONTAINER_HEIGHT), 500);
+                    PlayfieldContainer
+                        .Delay(delay)
+                        .ResizeTo(new Vector2(1, DEFAULT_PLAYFIELD_CONTAINER_HEIGHT), 500);
                     break;
             }
         }
@@ -108,11 +115,20 @@ namespace osu.Game.Rulesets.Taiko.Tests
             HitResult hitResult = RNG.Next(2) == 0 ? HitResult.Ok : HitResult.Great;
 
             Hit hit = new Hit { StartTime = DrawableRuleset.Playfield.Time.Current };
-            var h = new DrawableTestHit(hit, kiai: kiai) { X = RNG.NextSingle(hitResult == HitResult.Ok ? -0.1f : -0.05f, hitResult == HitResult.Ok ? 0.1f : 0.05f) };
+            var h = new DrawableTestHit(hit, kiai: kiai)
+            {
+                X = RNG.NextSingle(
+                    hitResult == HitResult.Ok ? -0.1f : -0.05f,
+                    hitResult == HitResult.Ok ? 0.1f : 0.05f
+                ),
+            };
 
             DrawableRuleset.Playfield.Add(h);
 
-            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(h, new JudgementResult(hit, new TaikoJudgement()) { Type = hitResult });
+            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(
+                h,
+                new JudgementResult(hit, new TaikoJudgement()) { Type = hitResult }
+            );
         }
 
         private void addStrongHitJudgement(bool kiai)
@@ -123,24 +139,47 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 StartTime = DrawableRuleset.Playfield.Time.Current,
                 IsStrong = true,
-                Samples = createSamples(strong: true)
+                Samples = createSamples(strong: true),
             };
-            var h = new DrawableTestHit(hit, kiai: kiai) { X = RNG.NextSingle(hitResult == HitResult.Ok ? -0.1f : -0.05f, hitResult == HitResult.Ok ? 0.1f : 0.05f) };
+            var h = new DrawableTestHit(hit, kiai: kiai)
+            {
+                X = RNG.NextSingle(
+                    hitResult == HitResult.Ok ? -0.1f : -0.05f,
+                    hitResult == HitResult.Ok ? 0.1f : 0.05f
+                ),
+            };
 
             DrawableRuleset.Playfield.Add(h);
 
-            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(h, new JudgementResult(hit, new TaikoJudgement()) { Type = hitResult });
-            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(h.NestedHitObjects.Single(), new JudgementResult(hit.NestedHitObjects.Single(), new TaikoStrongJudgement()) { Type = HitResult.Great });
+            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(
+                h,
+                new JudgementResult(hit, new TaikoJudgement()) { Type = hitResult }
+            );
+            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(
+                h.NestedHitObjects.Single(),
+                new JudgementResult(hit.NestedHitObjects.Single(), new TaikoStrongJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
         }
 
         private void addMissJudgement()
         {
             DrawableTestHit h;
-            DrawableRuleset.Playfield.Add(h = new DrawableTestHit(new Hit { StartTime = DrawableRuleset.Playfield.Time.Current }, HitResult.Miss)
-            {
-                Alpha = 0
-            });
-            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(h, new JudgementResult(h.HitObject, new TaikoJudgement()) { Type = HitResult.Miss });
+            DrawableRuleset.Playfield.Add(
+                h = new DrawableTestHit(
+                    new Hit { StartTime = DrawableRuleset.Playfield.Time.Current },
+                    HitResult.Miss
+                )
+                {
+                    Alpha = 0,
+                }
+            );
+            ((TaikoPlayfield)DrawableRuleset.Playfield).OnNewResult(
+                h,
+                new JudgementResult(h.HitObject, new TaikoJudgement()) { Type = HitResult.Miss }
+            );
         }
 
         private void addBarLine(bool major, double delay = scroll_time)
@@ -148,7 +187,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
             BarLine bl = new BarLine
             {
                 StartTime = DrawableRuleset.Playfield.Time.Current + delay,
-                Major = major
+                Major = major,
             };
 
             DrawableRuleset.Playfield.Add(bl);
@@ -195,7 +234,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 StartTime = DrawableRuleset.Playfield.Time.Current + scroll_time,
                 IsStrong = strong,
-                Samples = createSamples(HitType.Centre, strong)
+                Samples = createSamples(HitType.Centre, strong),
             };
 
             h.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -209,7 +248,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 StartTime = DrawableRuleset.Playfield.Time.Current + scroll_time,
                 IsStrong = strong,
-                Samples = createSamples(HitType.Rim, strong)
+                Samples = createSamples(HitType.Rim, strong),
             };
 
             h.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());

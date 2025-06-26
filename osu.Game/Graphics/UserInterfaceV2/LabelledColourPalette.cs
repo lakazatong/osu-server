@@ -10,9 +10,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
     public partial class LabelledColourPalette : LabelledDrawable<ColourPalette>
     {
         public LabelledColourPalette()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
         public BindableList<Colour4> Colours => Component.Colours;
 

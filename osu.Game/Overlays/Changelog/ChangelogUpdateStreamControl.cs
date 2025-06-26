@@ -12,6 +12,8 @@ namespace osu.Game.Overlays.Changelog
             SelectFirstTabByDefault = false;
         }
 
-        protected override OverlayStreamItem<APIUpdateStream> CreateStreamItem(APIUpdateStream value) => new ChangelogUpdateStreamItem(value);
+        protected override OverlayStreamItem<APIUpdateStream> CreateStreamItem(
+            APIUpdateStream value
+        ) => new ChangelogUpdateStreamItem(value);
     }
 }

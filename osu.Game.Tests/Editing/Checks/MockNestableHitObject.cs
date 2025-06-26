@@ -12,7 +12,11 @@ namespace osu.Game.Tests.Editing.Checks
     {
         private readonly IEnumerable<HitObject> toBeNested;
 
-        public MockNestableHitObject(IEnumerable<HitObject> toBeNested, double startTime, double endTime)
+        public MockNestableHitObject(
+            IEnumerable<HitObject> toBeNested,
+            double startTime,
+            double endTime
+        )
         {
             this.toBeNested = toBeNested;
             StartTime = startTime;

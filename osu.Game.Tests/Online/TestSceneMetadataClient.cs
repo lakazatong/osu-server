@@ -16,10 +16,11 @@ namespace osu.Game.Tests.Online
         private TestMetadataClient client = null!;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = client = new TestMetadataClient();
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                Child = client = new TestMetadataClient();
+            });
 
         [Test]
         public void TestWatchingMultipleTimesInvokesServerMethodsOnce()
@@ -30,17 +31,30 @@ namespace osu.Game.Tests.Online
             IDisposable token1 = null!;
             IDisposable token2 = null!;
 
-            AddStep("setup", () =>
-            {
-                client.OnBeginWatchingUserPresence += () => countBegin++;
-                client.OnEndWatchingUserPresence += () => countEnd++;
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    client.OnBeginWatchingUserPresence += () => countBegin++;
+                    client.OnEndWatchingUserPresence += () => countEnd++;
+                }
+            );
 
-            AddStep("begin watching presence (1)", () => token1 = client.BeginWatchingUserPresence());
+            AddStep(
+                "begin watching presence (1)",
+                () => token1 = client.BeginWatchingUserPresence()
+            );
             AddAssert("server method invoked once", () => countBegin, () => Is.EqualTo(1));
 
-            AddStep("begin watching presence (2)", () => token2 = client.BeginWatchingUserPresence());
-            AddAssert("server method not invoked a second time", () => countBegin, () => Is.EqualTo(1));
+            AddStep(
+                "begin watching presence (2)",
+                () => token2 = client.BeginWatchingUserPresence()
+            );
+            AddAssert(
+                "server method not invoked a second time",
+                () => countBegin,
+                () => Is.EqualTo(1)
+            );
 
             AddStep("end watching presence (1)", () => token1.Dispose());
             AddAssert("server method not invoked", () => countEnd, () => Is.EqualTo(0));

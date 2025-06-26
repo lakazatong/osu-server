@@ -48,7 +48,7 @@ namespace osu.Game.Graphics.Containers.Markdown
                     RelativeSizeAxes = Axes.Both,
                     Action = OnLinkPressed,
                     TooltipText = title ?? Url,
-                }
+                },
             };
         }
 
@@ -57,9 +57,7 @@ namespace osu.Game.Graphics.Containers.Markdown
         private partial class OsuMarkdownLinkCompiler : DrawableLinkCompiler
         {
             public OsuMarkdownLinkCompiler(IEnumerable<Drawable> parts)
-                : base(parts)
-            {
-            }
+                : base(parts) { }
 
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colourProvider)

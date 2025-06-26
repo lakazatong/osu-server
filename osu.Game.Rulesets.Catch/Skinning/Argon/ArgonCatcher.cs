@@ -81,7 +81,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                             Width = (1 - Catcher.ALLOWED_CATCH_RANGE) / 2,
                             Height = 4,
                         },
-                    }
+                    },
                 },
             };
         }

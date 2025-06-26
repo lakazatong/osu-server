@@ -33,7 +33,9 @@ namespace osu.Game.Updater
         private void load(OsuGameBase game)
         {
             version = game.Version.Split('-').First();
-            stream = Enum.TryParse(game.Version.Split('-').Last(), true, out ReleaseStream s) ? s : Configuration.ReleaseStream.Lazer;
+            stream = Enum.TryParse(game.Version.Split('-').Last(), true, out ReleaseStream s)
+                ? s
+                : Configuration.ReleaseStream.Lazer;
         }
 
         protected override async Task<bool> PerformUpdateCheck(CancellationToken cancellationToken)
@@ -42,11 +44,16 @@ namespace osu.Game.Updater
             {
                 bool includePrerelease = stream == Configuration.ReleaseStream.Tachyon;
 
-                OsuJsonWebRequest<GitHubRelease[]> releasesRequest = new OsuJsonWebRequest<GitHubRelease[]>("https://api.github.com/repos/ppy/osu/releases?per_page=10&page=1");
+                OsuJsonWebRequest<GitHubRelease[]> releasesRequest =
+                    new OsuJsonWebRequest<GitHubRelease[]>(
+                        "https://api.github.com/repos/ppy/osu/releases?per_page=10&page=1"
+                    );
                 await releasesRequest.PerformAsync(cancellationToken).ConfigureAwait(false);
 
                 GitHubRelease[] releases = releasesRequest.ResponseObject;
-                GitHubRelease? latest = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault(r => includePrerelease || !r.Prerelease);
+                GitHubRelease? latest = releases
+                    .OrderByDescending(r => r.PublishedAt)
+                    .FirstOrDefault(r => includePrerelease || !r.Prerelease);
 
                 if (latest == null)
                     return false;
@@ -55,17 +62,20 @@ namespace osu.Game.Updater
 
                 if (latestTagName != version && tryGetBestUrl(latest, out string? url))
                 {
-                    Notifications.Post(new UpdateAvailableNotification(cancellationToken)
-                    {
-                        Text = $"A newer release of osu! has been found ({version} → {latestTagName}).\n\n"
-                               + "Click here to download the new version, which can be installed over the top of your existing installation",
-                        Icon = FontAwesome.Solid.Download,
-                        Activated = () =>
+                    Notifications.Post(
+                        new UpdateAvailableNotification(cancellationToken)
                         {
-                            host.OpenUrlExternally(url);
-                            return true;
+                            Text =
+                                $"A newer release of osu! has been found ({version} → {latestTagName}).\n\n"
+                                + "Click here to download the new version, which can be installed over the top of your existing installation",
+                            Icon = FontAwesome.Solid.Download,
+                            Activated = () =>
+                            {
+                                host.OpenUrlExternally(url);
+                                return true;
+                            },
                         }
-                    });
+                    );
 
                     return true;
                 }
@@ -87,7 +97,11 @@ namespace osu.Game.Updater
             switch (RuntimeInfo.OS)
             {
                 case RuntimeInfo.Platform.iOS:
-                    if (release.Assets?.Exists(f => f.Name.EndsWith(".ipa", StringComparison.Ordinal)) == true)
+                    if (
+                        release.Assets?.Exists(f =>
+                            f.Name.EndsWith(".ipa", StringComparison.Ordinal)
+                        ) == true
+                    )
                         // iOS releases are available via testflight. this link seems to work well enough for now.
                         // see https://stackoverflow.com/a/32960501
                         url = "itms-beta://beta.itunes.apple.com/v1/app/1447765923";
@@ -95,7 +109,11 @@ namespace osu.Game.Updater
                     break;
 
                 case RuntimeInfo.Platform.Android:
-                    if (release.Assets?.Exists(f => f.Name.EndsWith(".apk", StringComparison.Ordinal)) == true)
+                    if (
+                        release.Assets?.Exists(f =>
+                            f.Name.EndsWith(".apk", StringComparison.Ordinal)
+                        ) == true
+                    )
                         // on our testing device using the .apk URL causes the download to magically disappear.
                         url = release.HtmlUrl;
 

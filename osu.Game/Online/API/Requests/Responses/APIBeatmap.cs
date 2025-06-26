@@ -117,15 +117,17 @@ namespace osu.Game.Online.API.Requests.Responses
 
         #region Implementation of IBeatmapInfo
 
-        public IBeatmapMetadataInfo Metadata => (BeatmapSet as IBeatmapSetInfo)?.Metadata ?? new BeatmapMetadata();
+        public IBeatmapMetadataInfo Metadata =>
+            (BeatmapSet as IBeatmapSetInfo)?.Metadata ?? new BeatmapMetadata();
 
-        public IBeatmapDifficultyInfo Difficulty => new BeatmapDifficulty
-        {
-            DrainRate = DrainRate,
-            CircleSize = CircleSize,
-            ApproachRate = ApproachRate,
-            OverallDifficulty = OverallDifficulty
-        };
+        public IBeatmapDifficultyInfo Difficulty =>
+            new BeatmapDifficulty
+            {
+                DrainRate = DrainRate,
+                CircleSize = CircleSize,
+                ApproachRate = ApproachRate,
+                OverallDifficulty = OverallDifficulty,
+            };
 
         IBeatmapSetInfo? IBeatmapInfo.BeatmapSet => BeatmapSet;
 
@@ -153,15 +155,20 @@ namespace osu.Game.Online.API.Requests.Responses
                     // TODO: this should really not exist.
                     switch (OnlineID)
                     {
-                        case 0: return "osu";
+                        case 0:
+                            return "osu";
 
-                        case 1: return "taiko";
+                        case 1:
+                            return "taiko";
 
-                        case 2: return "fruits";
+                        case 2:
+                            return "fruits";
 
-                        case 3: return "mania";
+                        case 3:
+                            return "mania";
 
-                        default: throw new ArgumentOutOfRangeException();
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
             }
@@ -170,12 +177,16 @@ namespace osu.Game.Online.API.Requests.Responses
 
             public Ruleset CreateInstance() => throw new NotImplementedException();
 
-            public bool Equals(IRulesetInfo? other) => other is APIRuleset r && this.MatchesOnlineID(r);
+            public bool Equals(IRulesetInfo? other) =>
+                other is APIRuleset r && this.MatchesOnlineID(r);
 
             public int CompareTo(IRulesetInfo? other)
             {
                 if (!(other is APIRuleset ruleset))
-                    throw new ArgumentException($@"Object is not of type {nameof(APIRuleset)}.", nameof(other));
+                    throw new ArgumentException(
+                        $@"Object is not of type {nameof(APIRuleset)}.",
+                        nameof(other)
+                    );
 
                 return OnlineID.CompareTo(ruleset.OnlineID);
             }

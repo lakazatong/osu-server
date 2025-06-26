@@ -15,13 +15,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-            AddStep("create button", () => Child = button = new CreateMultiplayerMatchButton
-            {
-                Width = 200,
-                Height = 100,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            AddStep(
+                "create button",
+                () =>
+                    Child = button =
+                        new CreateMultiplayerMatchButton
+                        {
+                            Width = 200,
+                            Height = 100,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
         }
 
         [Test]
@@ -31,7 +36,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             assertButtonEnableState(true);
 
-            AddStep("begin joining room", () => joiningRoomOperation = OngoingOperationTracker.BeginOperation());
+            AddStep(
+                "begin joining room",
+                () => joiningRoomOperation = OngoingOperationTracker.BeginOperation()
+            );
             assertButtonEnableState(false);
 
             AddStep("end joining room", () => joiningRoomOperation.Dispose());
@@ -44,7 +52,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
             assertButtonEnableState(true);
         }
 
-        private void assertButtonEnableState(bool enabled)
-            => AddAssert($"button {(enabled ? "enabled" : "disabled")}", () => button.Enabled.Value == enabled);
+        private void assertButtonEnableState(bool enabled) =>
+            AddAssert(
+                $"button {(enabled ? "enabled" : "disabled")}",
+                () => button.Enabled.Value == enabled
+            );
     }
 }

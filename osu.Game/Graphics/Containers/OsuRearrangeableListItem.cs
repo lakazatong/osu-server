@@ -79,19 +79,20 @@ namespace osu.Game.Graphics.Containers
                                 Origin = Anchor.Centre,
                                 AutoSizeAxes = Axes.Both,
                                 Padding = new MarginPadding { Horizontal = 5 },
-                                Child = handle = new PlaylistItemHandle
-                                {
-                                    Size = new Vector2(12),
-                                    Colour = HandleColour,
-                                    AlwaysPresent = true,
-                                    Alpha = 0
-                                }
+                                Child = handle =
+                                    new PlaylistItemHandle
+                                    {
+                                        Size = new Vector2(12),
+                                        Colour = HandleColour,
+                                        AlwaysPresent = true,
+                                        Alpha = 0,
+                                    },
                             },
-                            CreateContent()
-                        }
+                            CreateContent(),
+                        },
                     },
                     ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) }
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                 },
             };
         }
@@ -99,7 +100,10 @@ namespace osu.Game.Graphics.Containers
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            ShowDragHandle.BindValueChanged(show => handleContainer.Alpha = show.NewValue ? 1 : 0, true);
+            ShowDragHandle.BindValueChanged(
+                show => handleContainer.Alpha = show.NewValue ? 1 : 0,
+                true
+            );
         }
 
         protected override bool OnDragStart(DragStartEvent e)

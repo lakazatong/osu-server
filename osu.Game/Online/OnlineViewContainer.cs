@@ -22,7 +22,8 @@ namespace osu.Game.Online
     {
         protected LoadingSpinner LoadingSpinner { get; private set; }
 
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         private readonly string placeholderMessage;
 
@@ -50,55 +51,60 @@ namespace osu.Game.Online
             InternalChildren = new[]
             {
                 Content,
-                placeholder = string.IsNullOrEmpty(placeholderMessage) ? Empty() : new LoginPlaceholder(placeholderMessage),
-                LoadingSpinner = new LoadingSpinner
-                {
-                    Alpha = 0,
-                }
+                placeholder = string.IsNullOrEmpty(placeholderMessage)
+                    ? Empty()
+                    : new LoginPlaceholder(placeholderMessage),
+                LoadingSpinner = new LoadingSpinner { Alpha = 0 },
             };
 
             apiState.BindTo(api.State);
             apiState.BindValueChanged(onlineStateChanged, true);
         }
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            switch (state.NewValue)
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
             {
-                case APIState.Offline:
-                    PopContentOut(Content);
-                    placeholder.ScaleTo(0.8f).Then().ScaleTo(1, 3 * transform_duration, Easing.OutQuint);
-                    placeholder.FadeInFromZero(2 * transform_duration, Easing.OutQuint);
-                    LoadingSpinner.Hide();
-                    break;
+                switch (state.NewValue)
+                {
+                    case APIState.Offline:
+                        PopContentOut(Content);
+                        placeholder
+                            .ScaleTo(0.8f)
+                            .Then()
+                            .ScaleTo(1, 3 * transform_duration, Easing.OutQuint);
+                        placeholder.FadeInFromZero(2 * transform_duration, Easing.OutQuint);
+                        LoadingSpinner.Hide();
+                        break;
 
-                case APIState.Online:
-                    PopContentIn(Content);
-                    placeholder.FadeOut(transform_duration / 2, Easing.OutQuint);
-                    LoadingSpinner.Hide();
-                    break;
+                    case APIState.Online:
+                        PopContentIn(Content);
+                        placeholder.FadeOut(transform_duration / 2, Easing.OutQuint);
+                        LoadingSpinner.Hide();
+                        break;
 
-                case APIState.Failing:
-                case APIState.Connecting:
-                case APIState.RequiresSecondFactorAuth:
-                    PopContentOut(Content);
-                    LoadingSpinner.Show();
-                    placeholder.FadeOut(transform_duration / 2, Easing.OutQuint);
-                    break;
+                    case APIState.Failing:
+                    case APIState.Connecting:
+                    case APIState.RequiresSecondFactorAuth:
+                        PopContentOut(Content);
+                        LoadingSpinner.Show();
+                        placeholder.FadeOut(transform_duration / 2, Easing.OutQuint);
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(state.NewValue));
-            }
-        });
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(state.NewValue));
+                }
+            });
 
         /// <summary>
         /// Applies a transform to the online content to make it hidden.
         /// </summary>
-        protected virtual void PopContentOut(Drawable content) => content.FadeOut(transform_duration / 2, Easing.OutQuint);
+        protected virtual void PopContentOut(Drawable content) =>
+            content.FadeOut(transform_duration / 2, Easing.OutQuint);
 
         /// <summary>
         /// Applies a transform to the online content to make it visible.
         /// </summary>
-        protected virtual void PopContentIn(Drawable content) => content.FadeIn(transform_duration, Easing.OutQuint);
+        protected virtual void PopContentIn(Drawable content) =>
+            content.FadeIn(transform_duration, Easing.OutQuint);
     }
 }

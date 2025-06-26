@@ -12,7 +12,8 @@ namespace osu.Game.Overlays.Mods
 {
     public partial class DeselectAllModsButton : ShearedButton
     {
-        private readonly Bindable<IReadOnlyList<Mod>> selectedMods = new Bindable<IReadOnlyList<Mod>>();
+        private readonly Bindable<IReadOnlyList<Mod>> selectedMods =
+            new Bindable<IReadOnlyList<Mod>>();
 
         public DeselectAllModsButton(ModSelectOverlay modSelectOverlay)
             : base(ModSelectOverlay.BUTTON_WIDTH)

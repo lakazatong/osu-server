@@ -28,9 +28,7 @@ namespace osu.Game.Rulesets.Mania.Edit
         private EditorScreenWithTimeline? screenWithTimeline { get; set; }
 
         public ManiaHitObjectComposer(Ruleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         public new ManiaPlayfield Playfield => drawableRuleset.Playfield;
 
@@ -39,32 +37,44 @@ namespace osu.Game.Rulesets.Mania.Edit
         protected override Playfield PlayfieldAtScreenSpacePosition(Vector2 screenSpacePosition) =>
             Playfield.GetColumnByPosition(screenSpacePosition);
 
-        protected override DrawableRuleset<ManiaHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods) =>
-            drawableRuleset = new DrawableManiaEditorRuleset(ruleset, beatmap, mods);
+        protected override DrawableRuleset<ManiaHitObject> CreateDrawableRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        ) => drawableRuleset = new DrawableManiaEditorRuleset(ruleset, beatmap, mods);
 
-        protected override ComposeBlueprintContainer CreateBlueprintContainer()
-            => new ManiaBlueprintContainer(this);
+        protected override ComposeBlueprintContainer CreateBlueprintContainer() =>
+            new ManiaBlueprintContainer(this);
 
         protected override BeatSnapGrid CreateBeatSnapGrid() => new ManiaBeatSnapGrid();
 
-        protected override IReadOnlyList<CompositionTool> CompositionTools => new CompositionTool[]
-        {
-            new NoteCompositionTool(),
-            new HoldNoteCompositionTool()
-        };
+        protected override IReadOnlyList<CompositionTool> CompositionTools =>
+            new CompositionTool[] { new NoteCompositionTool(), new HoldNoteCompositionTool() };
 
-        public override string ConvertSelectionToString()
-            => string.Join(',', EditorBeatmap.SelectedHitObjects.Cast<ManiaHitObject>().OrderBy(h => h.StartTime).Select(h => $"{h.StartTime}|{h.Column}"));
+        public override string ConvertSelectionToString() =>
+            string.Join(
+                ',',
+                EditorBeatmap
+                    .SelectedHitObjects.Cast<ManiaHitObject>()
+                    .OrderBy(h => h.StartTime)
+                    .Select(h => $"{h.StartTime}|{h.Column}")
+            );
 
         // 123|0,456|1,789|2 ...
-        private static readonly Regex selection_regex = new Regex(@"^\d+\|\d+(,\d+\|\d+)*$", RegexOptions.Compiled);
+        private static readonly Regex selection_regex = new Regex(
+            @"^\d+\|\d+(,\d+\|\d+)*$",
+            RegexOptions.Compiled
+        );
 
         public override void SelectFromTimestamp(double timestamp, string objectDescription)
         {
             if (!selection_regex.IsMatch(objectDescription))
                 return;
 
-            List<ManiaHitObject> remainingHitObjects = EditorBeatmap.HitObjects.Cast<ManiaHitObject>().Where(h => h.StartTime >= timestamp).ToList();
+            List<ManiaHitObject> remainingHitObjects = EditorBeatmap
+                .HitObjects.Cast<ManiaHitObject>()
+                .Where(h => h.StartTime >= timestamp)
+                .ToList();
             string[] objectDescriptions = objectDescription.Split(',');
 
             for (int i = 0; i < objectDescriptions.Length; i++)
@@ -73,10 +83,15 @@ namespace osu.Game.Rulesets.Mania.Edit
                 if (split.Length != 2)
                     continue;
 
-                if (!double.TryParse(split[0], out double time) || !int.TryParse(split[1], out int column))
+                if (
+                    !double.TryParse(split[0], out double time)
+                    || !int.TryParse(split[1], out int column)
+                )
                     continue;
 
-                ManiaHitObject? current = remainingHitObjects.FirstOrDefault(h => h.StartTime == time && h.Column == column);
+                ManiaHitObject? current = remainingHitObjects.FirstOrDefault(h =>
+                    h.StartTime == time && h.Column == column
+                );
 
                 if (current == null)
                     continue;
@@ -84,7 +99,9 @@ namespace osu.Game.Rulesets.Mania.Edit
                 EditorBeatmap.SelectedHitObjects.Add(current);
 
                 if (i < objectDescriptions.Length - 1)
-                    remainingHitObjects = remainingHitObjects.Where(h => h != current && h.StartTime >= current.StartTime).ToList();
+                    remainingHitObjects = remainingHitObjects
+                        .Where(h => h != current && h.StartTime >= current.StartTime)
+                        .ToList();
             }
         }
 
@@ -93,7 +110,10 @@ namespace osu.Game.Rulesets.Mania.Edit
             base.Update();
 
             if (screenWithTimeline?.TimelineArea.Timeline != null)
-                drawableRuleset.TimelineTimeRange = EditorClock.TrackLength / screenWithTimeline.TimelineArea.Timeline.CurrentZoom.Value / 2;
+                drawableRuleset.TimelineTimeRange =
+                    EditorClock.TrackLength
+                    / screenWithTimeline.TimelineArea.Timeline.CurrentZoom.Value
+                    / 2;
         }
     }
 }

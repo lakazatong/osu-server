@@ -15,7 +15,10 @@ namespace osu.Game.Utils
         /// <param name="gradient">The gradient, defining the colour stops and their positions (in [0-1] range) in the gradient.</param>
         /// <param name="point">The point to sample the colour at.</param>
         /// <returns>A <see cref="Color4"/> sampled from the linear gradient.</returns>
-        public static Color4 SampleFromLinearGradient(IReadOnlyList<(float position, Color4 colour)> gradient, float point)
+        public static Color4 SampleFromLinearGradient(
+            IReadOnlyList<(float position, Color4 colour)> gradient,
+            float point
+        )
         {
             if (point < gradient[0].position)
                 return gradient[0].colour;
@@ -28,7 +31,13 @@ namespace osu.Game.Utils
                 if (point >= endStop.position)
                     continue;
 
-                return Interpolation.ValueAt(point, startStop.colour, endStop.colour, startStop.position, endStop.position);
+                return Interpolation.ValueAt(
+                    point,
+                    startStop.colour,
+                    endStop.colour,
+                    startStop.position,
+                    endStop.position
+                );
             }
 
             return gradient[^1].colour;

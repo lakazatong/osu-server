@@ -6,7 +6,5 @@ using osu.Game.Rulesets.Osu.Objects;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModNightcore : ModNightcore<OsuHitObject>
-    {
-    }
+    public class OsuModNightcore : ModNightcore<OsuHitObject> { }
 }

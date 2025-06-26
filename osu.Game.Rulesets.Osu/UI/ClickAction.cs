@@ -13,6 +13,6 @@ namespace osu.Game.Rulesets.Osu.UI
     {
         Ignore,
         Shake,
-        Hit
+        Hit,
     }
 }

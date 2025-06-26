@@ -3,9 +3,9 @@
 
 #nullable disable
 
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace osu.Game.Online.API.Requests.Responses
 {
@@ -59,7 +59,9 @@ namespace osu.Game.Online.API.Requests.Responses
 
                 foreach (var user in value)
                 {
-                    foreach (var comment in Comments.Concat(IncludedComments).Concat(PinnedComments))
+                    foreach (
+                        var comment in Comments.Concat(IncludedComments).Concat(PinnedComments)
+                    )
                     {
                         if (comment.UserId == user.Id)
                             comment.User = user;

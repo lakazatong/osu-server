@@ -69,8 +69,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
             usageEventBuffer?.Update();
         }
 
-        protected override IEnumerable<SelectionBlueprint<HitObject>> SortForMovement(IReadOnlyList<SelectionBlueprint<HitObject>> blueprints)
-            => blueprints.OrderBy(b => b.Item.StartTime);
+        protected override IEnumerable<SelectionBlueprint<HitObject>> SortForMovement(
+            IReadOnlyList<SelectionBlueprint<HitObject>> blueprints
+        ) => blueprints.OrderBy(b => b.Item.StartTime);
 
         protected void ApplySnapResultTime(SnapResult result, double referenceTime)
         {
@@ -97,9 +98,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// </summary>
         /// <param name="hitObject">The hit object which has been assigned to a new drawable.</param>
         /// <param name="drawableObject">The new drawable that is representing the hit object.</param>
-        protected virtual void TransferBlueprintFor(HitObject hitObject, DrawableHitObject drawableObject)
-        {
-        }
+        protected virtual void TransferBlueprintFor(
+            HitObject hitObject,
+            DrawableHitObject drawableObject
+        ) { }
 
         protected override void DragOperationCompleted()
         {
@@ -119,9 +121,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
             return true;
         }
 
-        protected override SelectionBlueprintContainer CreateSelectionBlueprintContainer() => new HitObjectOrderedSelectionContainer { RelativeSizeAxes = Axes.Both };
+        protected override SelectionBlueprintContainer CreateSelectionBlueprintContainer() =>
+            new HitObjectOrderedSelectionContainer { RelativeSizeAxes = Axes.Both };
 
-        protected override SelectionHandler<HitObject> CreateSelectionHandler() => new EditorSelectionHandler();
+        protected override SelectionHandler<HitObject> CreateSelectionHandler() =>
+            new EditorSelectionHandler();
 
         protected override void SelectAll()
         {

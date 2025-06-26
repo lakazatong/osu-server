@@ -12,14 +12,16 @@ namespace osu.Game.Online.Multiplayer
         /// <summary>
         /// Returns all historical/expired items from the <paramref name="room"/>, in the order in which they were played.
         /// </summary>
-        public static IEnumerable<MultiplayerPlaylistItem> GetHistoricalItems(this MultiplayerRoom room)
-            => room.Playlist.Where(item => item.Expired).OrderBy(item => item.PlayedAt);
+        public static IEnumerable<MultiplayerPlaylistItem> GetHistoricalItems(
+            this MultiplayerRoom room
+        ) => room.Playlist.Where(item => item.Expired).OrderBy(item => item.PlayedAt);
 
         /// <summary>
         /// Returns all non-expired items from the <paramref name="room"/>, in the order in which they are to be played.
         /// </summary>
-        public static IEnumerable<MultiplayerPlaylistItem> GetUpcomingItems(this MultiplayerRoom room)
-            => room.Playlist.Where(item => !item.Expired).OrderBy(item => item.PlaylistOrder);
+        public static IEnumerable<MultiplayerPlaylistItem> GetUpcomingItems(
+            this MultiplayerRoom room
+        ) => room.Playlist.Where(item => !item.Expired).OrderBy(item => item.PlaylistOrder);
 
         /// <summary>
         /// Returns the first non-expired <see cref="MultiplayerPlaylistItem"/> in playlist order from the supplied <paramref name="room"/>,

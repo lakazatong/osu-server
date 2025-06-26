@@ -5,15 +5,15 @@
 
 using System;
 using System.Collections.Generic;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
-using osu.Framework.Graphics.Shapes;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Select
 {
@@ -62,13 +62,14 @@ namespace osu.Game.Screens.Select
                 tabsContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = tabs = new OsuTabControl<BeatmapDetailAreaTabItem>
-                    {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomLeft,
-                        RelativeSizeAxes = Axes.Both,
-                        IsSwitchable = true,
-                    },
+                    Child = tabs =
+                        new OsuTabControl<BeatmapDetailAreaTabItem>
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomLeft,
+                            RelativeSizeAxes = Axes.Both,
+                            IsSwitchable = true,
+                        },
                 },
                 modsCheckbox = new OsuTabControlCheckbox
                 {

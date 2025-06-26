@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets.Mods
         public override IconUsage? Icon => OsuIcon.ModHardRock;
         public override ModType Type => ModType.DifficultyIncrease;
         public override LocalisableString Description => "Everything just got a bit harder...";
-        public override Type[] IncompatibleMods => new[] { typeof(ModEasy), typeof(ModDifficultyAdjust) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModEasy), typeof(ModDifficultyAdjust) };
         public override bool Ranked => UsesDefaultConfiguration;
         public override bool ValidForFreestyleAsRequiredMod => true;
 
@@ -25,7 +26,10 @@ namespace osu.Game.Rulesets.Mods
         public virtual void ApplyToDifficulty(BeatmapDifficulty difficulty)
         {
             difficulty.DrainRate = Math.Min(difficulty.DrainRate * ADJUST_RATIO, 10.0f);
-            difficulty.OverallDifficulty = Math.Min(difficulty.OverallDifficulty * ADJUST_RATIO, 10.0f);
+            difficulty.OverallDifficulty = Math.Min(
+                difficulty.OverallDifficulty * ADJUST_RATIO,
+                10.0f
+            );
         }
     }
 }

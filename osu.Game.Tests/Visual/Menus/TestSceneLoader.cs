@@ -28,23 +28,22 @@ namespace osu.Game.Tests.Visual.Menus
 
         public TestSceneLoader()
         {
-            Child = logo = new OsuLogo
-            {
-                Alpha = 0,
-                Depth = float.MinValue
-            };
+            Child = logo = new OsuLogo { Alpha = 0, Depth = float.MinValue };
         }
 
         [Test]
         public void TestInstantLoad()
         {
-            AddStep("load immediately", () =>
-            {
-                loader = new TestLoader();
-                loader.AllowLoad.Set();
+            AddStep(
+                "load immediately",
+                () =>
+                {
+                    loader = new TestLoader();
+                    loader.AllowLoad.Set();
 
-                LoadScreen(loader);
-            });
+                    LoadScreen(loader);
+                }
+            );
 
             spinnerNotPresentOrHidden();
 
@@ -55,7 +54,10 @@ namespace osu.Game.Tests.Visual.Menus
         }
 
         private void spinnerNotPresentOrHidden() =>
-            AddAssert("spinner did not display", () => loader.LoadingSpinner == null || loader.LoadingSpinner.Alpha == 0);
+            AddAssert(
+                "spinner did not display",
+                () => loader.LoadingSpinner == null || loader.LoadingSpinner.Alpha == 0
+            );
 
         [Test]
         public void TestDelayedLoad()
@@ -72,13 +74,16 @@ namespace osu.Game.Tests.Visual.Menus
         {
             public readonly ManualResetEventSlim AllowLoad = new ManualResetEventSlim();
 
-            public LoadingSpinner LoadingSpinner => this.ChildrenOfType<LoadingSpinner>().FirstOrDefault();
+            public LoadingSpinner LoadingSpinner =>
+                this.ChildrenOfType<LoadingSpinner>().FirstOrDefault();
             private TestScreen screen;
 
             public bool ScreenLoaded => screen.IsCurrentScreen();
 
             protected override OsuScreen CreateLoadableScreen() => screen = new TestScreen();
-            protected override ShaderPrecompiler CreateShaderPrecompiler() => new TestShaderPrecompiler(AllowLoad);
+
+            protected override ShaderPrecompiler CreateShaderPrecompiler() =>
+                new TestShaderPrecompiler(AllowLoad);
 
             private partial class TestShaderPrecompiler : ShaderPrecompiler
             {

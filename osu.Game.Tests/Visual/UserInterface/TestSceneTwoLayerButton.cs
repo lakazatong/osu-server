@@ -13,14 +13,16 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         public TestSceneTwoLayerButton()
         {
-            Add(new TwoLayerButton
-            {
-                Position = new Vector2(100),
-                Text = "button",
-                Icon = FontAwesome.Solid.Check,
-                BackgroundColour = Color4.SlateGray,
-                HoverColour = Color4.SlateGray.Darken(0.2f)
-            });
+            Add(
+                new TwoLayerButton
+                {
+                    Position = new Vector2(100),
+                    Text = "button",
+                    Icon = FontAwesome.Solid.Check,
+                    BackgroundColour = Color4.SlateGray,
+                    HoverColour = Color4.SlateGray.Darken(0.2f),
+                }
+            );
         }
     }
 }

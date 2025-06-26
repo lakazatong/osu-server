@@ -12,20 +12,18 @@ namespace osu.Game.Tests.Visual.Menus
     {
         public TestSceneSongTicker()
         {
-            AddRange(new Drawable[]
-            {
-                new SongTicker
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                new NowPlayingOverlay
-                {
-                    Origin = Anchor.TopRight,
-                    Anchor = Anchor.TopRight,
-                    State = { Value = Visibility.Visible }
+                    new SongTicker { Anchor = Anchor.Centre, Origin = Anchor.Centre },
+                    new NowPlayingOverlay
+                    {
+                        Origin = Anchor.TopRight,
+                        Anchor = Anchor.TopRight,
+                        State = { Value = Visibility.Visible },
+                    },
                 }
-            });
+            );
         }
     }
 }

@@ -35,11 +35,7 @@ namespace osu.Game.Online.Leaderboards
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = rankColour,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = rankColour },
                         new Triangles
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -60,8 +56,8 @@ namespace osu.Game.Online.Leaderboards
                             ShadowOffset = new Vector2(0, 0.08f),
                             Shadow = true,
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -76,11 +72,17 @@ namespace osu.Game.Online.Leaderboards
             {
                 case ScoreRank.XH:
                 case ScoreRank.SH:
-                    return ColourInfo.GradientVertical(Color4.White, Color4Extensions.FromHex("afdff0"));
+                    return ColourInfo.GradientVertical(
+                        Color4.White,
+                        Color4Extensions.FromHex("afdff0")
+                    );
 
                 case ScoreRank.X:
                 case ScoreRank.S:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"ffe7a8"), Color4Extensions.FromHex(@"ffb800"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"ffe7a8"),
+                        Color4Extensions.FromHex(@"ffb800")
+                    );
 
                 case ScoreRank.A:
                     return Color4Extensions.FromHex(@"275227");

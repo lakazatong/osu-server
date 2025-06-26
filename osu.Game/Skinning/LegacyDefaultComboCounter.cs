@@ -77,8 +77,8 @@ namespace osu.Game.Skinning
                             Anchor = Anchor.BottomLeft,
                             BypassAutoSizeAxes = Axes.Both,
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -127,11 +127,23 @@ namespace osu.Game.Skinning
             const float font_height_ratio = 0.625f;
             const float vertical_offset = 9;
 
-            displayedCountSpriteText.OriginPosition = new Vector2(0, font_height_ratio * displayedCountSpriteText.Height + vertical_offset);
-            displayedCountSpriteText.Position = new Vector2(0, -(1 - font_height_ratio) * displayedCountSpriteText.Height + vertical_offset);
+            displayedCountSpriteText.OriginPosition = new Vector2(
+                0,
+                font_height_ratio * displayedCountSpriteText.Height + vertical_offset
+            );
+            displayedCountSpriteText.Position = new Vector2(
+                0,
+                -(1 - font_height_ratio) * displayedCountSpriteText.Height + vertical_offset
+            );
 
-            popOutCount.OriginPosition = new Vector2(3, font_height_ratio * popOutCount.Height + vertical_offset); // In stable, the bigger pop out scales a bit to the left
-            popOutCount.Position = new Vector2(0, -(1 - font_height_ratio) * popOutCount.Height + vertical_offset);
+            popOutCount.OriginPosition = new Vector2(
+                3,
+                font_height_ratio * popOutCount.Height + vertical_offset
+            ); // In stable, the bigger pop out scales a bit to the left
+            popOutCount.Position = new Vector2(
+                0,
+                -(1 - font_height_ratio) * popOutCount.Height + vertical_offset
+            );
 
             counterContainer.Size = displayedCountSpriteText.Size;
         }
@@ -166,11 +178,9 @@ namespace osu.Game.Skinning
         {
             ((IHasText)popOutCount).Text = formatCount(newValue);
 
-            popOutCount.ScaleTo(1.56f)
-                       .ScaleTo(1, big_pop_out_duration);
+            popOutCount.ScaleTo(1.56f).ScaleTo(1, big_pop_out_duration);
 
-            popOutCount.FadeTo(0.6f)
-                       .FadeOut(big_pop_out_duration);
+            popOutCount.FadeTo(0.6f).FadeOut(big_pop_out_duration);
         }
 
         private void transformNoPopOut(int newValue)
@@ -188,9 +198,12 @@ namespace osu.Game.Skinning
 
             counterContainer.Size = displayedCountSpriteText.Size;
 
-            displayedCountSpriteText.ScaleTo(1).Then()
-                                    .ScaleTo(1.1f, small_pop_out_duration / 2, Easing.In).Then()
-                                    .ScaleTo(1, small_pop_out_duration / 2, Easing.Out);
+            displayedCountSpriteText
+                .ScaleTo(1)
+                .Then()
+                .ScaleTo(1.1f, small_pop_out_duration / 2, Easing.In)
+                .Then()
+                .ScaleTo(1, small_pop_out_duration / 2, Easing.Out);
         }
 
         private void scheduledPopOutSmall(uint id)
@@ -215,10 +228,13 @@ namespace osu.Game.Skinning
 
             uint newTaskId = scheduledPopOutCurrentId;
 
-            Scheduler.AddDelayed(delegate
-            {
-                scheduledPopOutSmall(newTaskId);
-            }, big_pop_out_duration - 140);
+            Scheduler.AddDelayed(
+                delegate
+                {
+                    scheduledPopOutSmall(newTaskId);
+                },
+                big_pop_out_duration - 140
+            );
         }
 
         private void onCountRolling(int currentValue, int newValue)
@@ -265,13 +281,18 @@ namespace osu.Game.Skinning
         }
 
         private void transformRoll(int currentValue, int newValue) =>
-            this.TransformTo(nameof(DisplayedCount), newValue, getProportionalDuration(currentValue, newValue));
+            this.TransformTo(
+                nameof(DisplayedCount),
+                newValue,
+                getProportionalDuration(currentValue, newValue)
+            );
 
         private string formatCount(int count) => $@"{count}x";
 
         private double getProportionalDuration(int currentValue, int newValue)
         {
-            double difference = currentValue > newValue ? currentValue - newValue : newValue - currentValue;
+            double difference =
+                currentValue > newValue ? currentValue - newValue : newValue - currentValue;
             return difference * rolling_duration;
         }
     }

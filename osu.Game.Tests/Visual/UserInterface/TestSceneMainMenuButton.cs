@@ -29,153 +29,219 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestStandardButton()
         {
-            AddStep("add button", () => Child = new MainMenuButton(
-                ButtonSystemStrings.Solo, @"button-default-select", OsuIcon.Player, new Color4(102, 68, 204, 255), (_, _) => { }, 0, Key.P)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                ButtonSystemState = ButtonSystemState.TopLevel,
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new MainMenuButton(
+                        ButtonSystemStrings.Solo,
+                        @"button-default-select",
+                        OsuIcon.Player,
+                        new Color4(102, 68, 204, 255),
+                        (_, _) => { },
+                        0,
+                        Key.P
+                    )
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        ButtonSystemState = ButtonSystemState.TopLevel,
+                    }
+            );
         }
 
         [Test]
         public void TestDailyChallengeButton()
         {
-            AddStep("set up API", () => dummyAPI.HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case GetRoomRequest getRoomRequest:
-                        if (getRoomRequest.RoomId != 1234)
-                            return false;
-
-                        var beatmap = CreateAPIBeatmap();
-                        beatmap.OnlineID = 1001;
-                        getRoomRequest.TriggerSuccess(new Room
+            AddStep(
+                "set up API",
+                () =>
+                    dummyAPI.HandleRequest = req =>
+                    {
+                        switch (req)
                         {
-                            RoomID = 1234,
-                            Playlist =
-                            [
-                                new PlaylistItem(beatmap)
-                            ],
-                            StartDate = DateTimeOffset.Now.AddMinutes(-5),
-                            EndDate = DateTimeOffset.Now.AddSeconds(30)
-                        });
-                        return true;
+                            case GetRoomRequest getRoomRequest:
+                                if (getRoomRequest.RoomId != 1234)
+                                    return false;
 
-                    default:
-                        return false;
-                }
-            });
+                                var beatmap = CreateAPIBeatmap();
+                                beatmap.OnlineID = 1001;
+                                getRoomRequest.TriggerSuccess(
+                                    new Room
+                                    {
+                                        RoomID = 1234,
+                                        Playlist = [new PlaylistItem(beatmap)],
+                                        StartDate = DateTimeOffset.Now.AddMinutes(-5),
+                                        EndDate = DateTimeOffset.Now.AddSeconds(30),
+                                    }
+                                );
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+            );
 
             NotificationOverlay notificationOverlay = null!;
             DependencyProvidingContainer buttonContainer = null!;
 
-            AddStep("beatmap of the day active", () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234,
-            }));
-            AddStep("add content", () =>
-            {
-                notificationOverlay = new NotificationOverlay();
-                Children = new Drawable[]
+            AddStep(
+                "beatmap of the day active",
+                () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo { RoomID = 1234 })
+            );
+            AddStep(
+                "add content",
+                () =>
                 {
-                    notificationOverlay,
-                    buttonContainer = new DependencyProvidingContainer
+                    notificationOverlay = new NotificationOverlay();
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        AutoSizeAxes = Axes.Both,
-                        CachedDependencies = [(typeof(INotificationOverlay), notificationOverlay)],
-                        Child = new DailyChallengeButton(@"button-default-select", new Color4(102, 68, 204, 255), (_, _) => { }, 0, Key.D)
+                        notificationOverlay,
+                        buttonContainer = new DependencyProvidingContainer
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            ButtonSystemState = ButtonSystemState.TopLevel,
+                            AutoSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (typeof(INotificationOverlay), notificationOverlay),
+                            ],
+                            Child = new DailyChallengeButton(
+                                @"button-default-select",
+                                new Color4(102, 68, 204, 255),
+                                (_, _) => { },
+                                0,
+                                Key.D
+                            )
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                ButtonSystemState = ButtonSystemState.TopLevel,
+                            },
                         },
-                    },
-                };
-            });
-            AddAssert("notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.EqualTo(1));
+                    };
+                }
+            );
+            AddAssert(
+                "notification posted",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("clear notifications", () =>
-            {
-                foreach (var notification in notificationOverlay.AllNotifications)
-                    notification.Close(runFlingAnimation: false);
-            });
+            AddStep(
+                "clear notifications",
+                () =>
+                {
+                    foreach (var notification in notificationOverlay.AllNotifications)
+                        notification.Close(runFlingAnimation: false);
+                }
+            );
 
-            AddStep("beatmap of the day not active", () => metadataClient.DailyChallengeUpdated(null));
-            AddAssert("no notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
+            AddStep(
+                "beatmap of the day not active",
+                () => metadataClient.DailyChallengeUpdated(null)
+            );
+            AddAssert(
+                "no notification posted",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.Zero
+            );
 
             AddStep("hide button's parent", () => buttonContainer.Hide());
 
-            AddStep("beatmap of the day active", () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234,
-            }));
-            AddAssert("no notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
+            AddStep(
+                "beatmap of the day active",
+                () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo { RoomID = 1234 })
+            );
+            AddAssert(
+                "no notification posted",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.Zero
+            );
         }
 
         [Test]
         public void TestDailyChallengeButtonOldChallenge()
         {
-            AddStep("set up API", () => dummyAPI.HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case GetRoomRequest getRoomRequest:
-                        if (getRoomRequest.RoomId != 1234)
-                            return false;
-
-                        var beatmap = CreateAPIBeatmap();
-                        beatmap.OnlineID = 1001;
-                        getRoomRequest.TriggerSuccess(new Room
+            AddStep(
+                "set up API",
+                () =>
+                    dummyAPI.HandleRequest = req =>
+                    {
+                        switch (req)
                         {
-                            RoomID = 1234,
-                            Playlist =
-                            [
-                                new PlaylistItem(beatmap)
-                            ],
-                            StartDate = DateTimeOffset.Now.AddMinutes(-50),
-                            EndDate = DateTimeOffset.Now.AddSeconds(30)
-                        });
-                        return true;
+                            case GetRoomRequest getRoomRequest:
+                                if (getRoomRequest.RoomId != 1234)
+                                    return false;
 
-                    default:
-                        return false;
-                }
-            });
+                                var beatmap = CreateAPIBeatmap();
+                                beatmap.OnlineID = 1001;
+                                getRoomRequest.TriggerSuccess(
+                                    new Room
+                                    {
+                                        RoomID = 1234,
+                                        Playlist = [new PlaylistItem(beatmap)],
+                                        StartDate = DateTimeOffset.Now.AddMinutes(-50),
+                                        EndDate = DateTimeOffset.Now.AddSeconds(30),
+                                    }
+                                );
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+            );
 
             NotificationOverlay notificationOverlay = null!;
 
-            AddStep("beatmap of the day not active", () => metadataClient.DailyChallengeUpdated(null));
-            AddStep("add content", () =>
-            {
-                notificationOverlay = new NotificationOverlay();
-                Children = new Drawable[]
+            AddStep(
+                "beatmap of the day not active",
+                () => metadataClient.DailyChallengeUpdated(null)
+            );
+            AddStep(
+                "add content",
+                () =>
                 {
-                    notificationOverlay,
-                    new DependencyProvidingContainer
+                    notificationOverlay = new NotificationOverlay();
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        AutoSizeAxes = Axes.Both,
-                        CachedDependencies = [(typeof(INotificationOverlay), notificationOverlay)],
-                        Child = new DailyChallengeButton(@"button-default-select", new Color4(102, 68, 204, 255), (_, _) => { }, 0, Key.D)
+                        notificationOverlay,
+                        new DependencyProvidingContainer
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            ButtonSystemState = ButtonSystemState.TopLevel,
+                            AutoSizeAxes = Axes.Both,
+                            CachedDependencies =
+                            [
+                                (typeof(INotificationOverlay), notificationOverlay),
+                            ],
+                            Child = new DailyChallengeButton(
+                                @"button-default-select",
+                                new Color4(102, 68, 204, 255),
+                                (_, _) => { },
+                                0,
+                                Key.D
+                            )
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                ButtonSystemState = ButtonSystemState.TopLevel,
+                            },
                         },
-                    },
-                };
-            });
+                    };
+                }
+            );
 
-            AddStep("beatmap of the day active", () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234
-            }));
-            AddAssert("no notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
+            AddStep(
+                "beatmap of the day active",
+                () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo { RoomID = 1234 })
+            );
+            AddAssert(
+                "no notification posted",
+                () => notificationOverlay.AllNotifications.Count(),
+                () => Is.Zero
+            );
         }
     }
 }

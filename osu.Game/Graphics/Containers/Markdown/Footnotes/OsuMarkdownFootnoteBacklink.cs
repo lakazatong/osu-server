@@ -32,7 +32,11 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(OverlayColourProvider colourProvider, OsuMarkdownContainer markdownContainer, OverlayScrollContainer? scrollContainer)
+        private void load(
+            OverlayColourProvider colourProvider,
+            OsuMarkdownContainer markdownContainer,
+            OverlayScrollContainer? scrollContainer
+        )
         {
             float fontSize = parentTextComponent.CreateSpriteText().Font.Size;
             Size = new Vector2(fontSize);
@@ -40,20 +44,24 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
             IdleColour = colourProvider.Light2;
             HoverColour = colourProvider.Light1;
 
-            Add(spriteIcon = new SpriteIcon
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Margin = new MarginPadding { Left = 5 },
-                Size = new Vector2(fontSize / 2),
-                Icon = FontAwesome.Solid.ArrowUp,
-            });
+            Add(
+                spriteIcon = new SpriteIcon
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Margin = new MarginPadding { Left = 5 },
+                    Size = new Vector2(fontSize / 2),
+                    Icon = FontAwesome.Solid.ArrowUp,
+                }
+            );
 
             if (scrollContainer != null)
             {
                 Action = () =>
                 {
-                    var footnoteLink = markdownContainer.ChildrenOfType<OsuMarkdownFootnoteLink>().Single(footnoteLink => footnoteLink.FootnoteLink.Index == backlink.Index);
+                    var footnoteLink = markdownContainer
+                        .ChildrenOfType<OsuMarkdownFootnoteLink>()
+                        .Single(footnoteLink => footnoteLink.FootnoteLink.Index == backlink.Index);
                     scrollContainer.ScrollIntoView(footnoteLink);
                 };
             }

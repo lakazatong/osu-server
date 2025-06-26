@@ -86,30 +86,36 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                     RulesetID = item.RulesetID,
                     RequiredMods = item.RequiredMods.ToArray(),
                     AllowedMods = item.AllowedMods.ToArray(),
-                    Freestyle = item.Freestyle
+                    Freestyle = item.Freestyle,
                 };
 
-                Task task = itemToEdit != null ? client.EditPlaylistItem(multiplayerItem) : client.AddPlaylistItem(multiplayerItem);
+                Task task =
+                    itemToEdit != null
+                        ? client.EditPlaylistItem(multiplayerItem)
+                        : client.AddPlaylistItem(multiplayerItem);
 
-                task.FireAndForget(onSuccess: () =>
-                {
-                    selectionOperation.Dispose();
-
-                    Schedule(() =>
+                task.FireAndForget(
+                    onSuccess: () =>
                     {
-                        // If an error or server side trigger occurred this screen may have already exited by external means.
-                        if (this.IsCurrentScreen())
-                            this.Exit();
-                    });
-                }, onError: _ =>
-                {
-                    selectionOperation.Dispose();
+                        selectionOperation.Dispose();
 
-                    Schedule(() =>
+                        Schedule(() =>
+                        {
+                            // If an error or server side trigger occurred this screen may have already exited by external means.
+                            if (this.IsCurrentScreen())
+                                this.Exit();
+                        });
+                    },
+                    onError: _ =>
                     {
-                        Carousel.AllowSelection = true;
-                    });
-                });
+                        selectionOperation.Dispose();
+
+                        Schedule(() =>
+                        {
+                            Carousel.AllowSelection = true;
+                        });
+                    }
+                );
             }
             else
             {
@@ -120,6 +126,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             return true;
         }
 
-        protected override BeatmapDetailArea CreateBeatmapDetailArea() => new PlayBeatmapDetailArea();
+        protected override BeatmapDetailArea CreateBeatmapDetailArea() =>
+            new PlayBeatmapDetailArea();
     }
 }

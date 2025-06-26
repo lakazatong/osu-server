@@ -29,7 +29,8 @@ namespace osu.Game.Rulesets.UI
 
         public ModTooltip(OverlayColourProvider? colourProvider = null)
         {
-            this.colourProvider = colourProvider ?? new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+            this.colourProvider =
+                colourProvider ?? new OverlayColourProvider(OverlayColourScheme.Aquamarine);
         }
 
         [BackgroundDependencyLoader]
@@ -48,11 +49,7 @@ namespace osu.Game.Rulesets.UI
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background6,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background6 },
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
@@ -72,13 +69,19 @@ namespace osu.Game.Rulesets.UI
                             {
                                 nameText = new OsuSpriteText
                                 {
-                                    Font = OsuFont.Torus.With(size: 16f, weight: FontWeight.SemiBold),
+                                    Font = OsuFont.Torus.With(
+                                        size: 16f,
+                                        weight: FontWeight.SemiBold
+                                    ),
                                     Colour = colourProvider.Content1,
                                     UseFullGlyphHeight = false,
                                 },
                                 settingsLabelsFlow = new TextFlowContainer(t =>
                                 {
-                                    t.Font = OsuFont.Torus.With(size: 12f, weight: FontWeight.SemiBold);
+                                    t.Font = OsuFont.Torus.With(
+                                        size: 12f,
+                                        weight: FontWeight.SemiBold
+                                    );
                                 })
                                 {
                                     AutoSizeAxes = Axes.Both,
@@ -98,7 +101,7 @@ namespace osu.Game.Rulesets.UI
                             TextAnchor = Anchor.TopRight,
                         },
                     },
-                }
+                },
             };
         }
 
@@ -108,7 +111,10 @@ namespace osu.Game.Rulesets.UI
         {
             nameText.Text = content.Name;
 
-            if (displayedSettings == null || !displayedSettings.SequenceEqual(content.SettingDescription))
+            if (
+                displayedSettings == null
+                || !displayedSettings.SequenceEqual(content.SettingDescription)
+            )
             {
                 displayedSettings = content.SettingDescription.ToArray();
 
@@ -138,7 +144,9 @@ namespace osu.Game.Rulesets.UI
         }
 
         protected override void PopIn() => this.FadeIn(300, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(300, Easing.OutQuint);
+
         public void Move(Vector2 pos) => Position = pos;
     }
 }

@@ -35,10 +35,11 @@ namespace osu.Game.Tournament.Models
         {
             get
             {
-                int[] ranks = Players.Select(p => p.Rank)
-                                     .Where(i => i.HasValue)
-                                     .Select(i => i!.Value)
-                                     .ToArray();
+                int[] ranks = Players
+                    .Select(p => p.Rank)
+                    .Where(i => i.HasValue)
+                    .Select(i => i!.Value)
+                    .ToArray();
 
                 if (ranks.Length == 0)
                     return 0;
@@ -49,11 +50,7 @@ namespace osu.Game.Tournament.Models
 
         public Bindable<string> Seed = new Bindable<string>(string.Empty);
 
-        public Bindable<int> LastYearPlacing = new BindableInt
-        {
-            MinValue = 0,
-            MaxValue = 256
-        };
+        public Bindable<int> LastYearPlacing = new BindableInt { MinValue = 0, MaxValue = 256 };
 
         [JsonProperty]
         public BindableList<TournamentUser> Players { get; } = new BindableList<TournamentUser>();
@@ -63,15 +60,31 @@ namespace osu.Game.Tournament.Models
             Acronym.ValueChanged += val =>
             {
                 // use a sane default flag name based on acronym.
-                if (val.OldValue.StartsWith(FlagName.Value, StringComparison.InvariantCultureIgnoreCase))
-                    FlagName.Value = val.NewValue?.Length >= 2 ? val.NewValue.Substring(0, 2).ToUpperInvariant() : string.Empty;
+                if (
+                    val.OldValue.StartsWith(
+                        FlagName.Value,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+                )
+                    FlagName.Value =
+                        val.NewValue?.Length >= 2
+                            ? val.NewValue.Substring(0, 2).ToUpperInvariant()
+                            : string.Empty;
             };
 
             FullName.ValueChanged += val =>
             {
                 // use a sane acronym based on full name.
-                if (val.OldValue.StartsWith(Acronym.Value, StringComparison.InvariantCultureIgnoreCase))
-                    Acronym.Value = val.NewValue?.Length >= 3 ? val.NewValue.Substring(0, 3).ToUpperInvariant() : string.Empty;
+                if (
+                    val.OldValue.StartsWith(
+                        Acronym.Value,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+                )
+                    Acronym.Value =
+                        val.NewValue?.Length >= 3
+                            ? val.NewValue.Substring(0, 3).ToUpperInvariant()
+                            : string.Empty;
             };
         }
 

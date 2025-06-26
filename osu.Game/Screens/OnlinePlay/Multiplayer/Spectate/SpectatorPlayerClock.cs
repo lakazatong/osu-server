@@ -65,9 +65,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             return true;
         }
 
-        public void ResetSpeedAdjustments()
-        {
-        }
+        public void ResetSpeedAdjustments() { }
 
         public double Rate
         {
@@ -83,7 +81,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                 // In such a case, its elapsed time may be zero, which would cause catch-up to get stuck.
                 // To avoid this, use a constant 16ms elapsed time for now. Probably not too correct, but this whole logic isn't too correct anyway.
                 // Clamping is required to ensure that player clocks don't get too far ahead if ProcessFrame is run multiple times.
-                double elapsedSource = masterClock.ElapsedFrameTime != 0 ? masterClock.ElapsedFrameTime : Math.Clamp(masterClock.CurrentTime - CurrentTime, 0, 16);
+                double elapsedSource =
+                    masterClock.ElapsedFrameTime != 0
+                        ? masterClock.ElapsedFrameTime
+                        : Math.Clamp(masterClock.CurrentTime - CurrentTime, 0, 16);
                 double elapsed = elapsedSource * Rate;
 
                 CurrentTime += elapsed;
@@ -101,6 +102,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
 
         public double FramesPerSecond { get; private set; }
 
-        public FrameTimeInfo TimeInfo => new FrameTimeInfo { Elapsed = ElapsedFrameTime, Current = CurrentTime };
+        public FrameTimeInfo TimeInfo =>
+            new FrameTimeInfo { Elapsed = ElapsedFrameTime, Current = CurrentTime };
     }
 }

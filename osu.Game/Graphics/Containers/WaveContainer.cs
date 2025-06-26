@@ -76,48 +76,44 @@ namespace osu.Game.Graphics.Containers
         {
             Masking = true;
 
-            AddInternal(wavesContainer = new Container<Wave>
-            {
-                RelativeSizeAxes = Axes.X,
-                Origin = Anchor.TopCentre,
-                Anchor = Anchor.TopCentre,
-                Masking = true,
-                Children = new[]
+            AddInternal(
+                wavesContainer = new Container<Wave>
                 {
-                    firstWave = new Wave
+                    RelativeSizeAxes = Axes.X,
+                    Origin = Anchor.TopCentre,
+                    Anchor = Anchor.TopCentre,
+                    Masking = true,
+                    Children = new[]
                     {
-                        Rotation = 13,
-                        FinalPosition = -930,
+                        firstWave = new Wave { Rotation = 13, FinalPosition = -930 },
+                        secondWave = new Wave
+                        {
+                            Origin = Anchor.TopRight,
+                            Anchor = Anchor.TopRight,
+                            Rotation = -7,
+                            FinalPosition = -560,
+                        },
+                        thirdWave = new Wave { Rotation = 4, FinalPosition = -390 },
+                        fourthWave = new Wave
+                        {
+                            Origin = Anchor.TopRight,
+                            Anchor = Anchor.TopRight,
+                            Rotation = -2,
+                            FinalPosition = -220,
+                        },
                     },
-                    secondWave = new Wave
-                    {
-                        Origin = Anchor.TopRight,
-                        Anchor = Anchor.TopRight,
-                        Rotation = -7,
-                        FinalPosition = -560,
-                    },
-                    thirdWave = new Wave
-                    {
-                        Rotation = 4,
-                        FinalPosition = -390,
-                    },
-                    fourthWave = new Wave
-                    {
-                        Origin = Anchor.TopRight,
-                        Anchor = Anchor.TopRight,
-                        Rotation = -2,
-                        FinalPosition = -220,
-                    },
-                },
-            });
+                }
+            );
 
-            AddInternal(contentContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                RelativePositionAxes = Axes.Both,
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-            });
+            AddInternal(
+                contentContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                }
+            );
         }
 
         protected override void PopIn()
@@ -148,7 +144,10 @@ namespace osu.Game.Graphics.Containers
             // This is done as an optimization, such that invisible parts of the waves
             // are masked away, and thus do not consume fill rate.
             // todo: revert https://github.com/ppy/osu/commit/aff9e3617da0c8fe252169fae287e39b44575b5e after FTB is fixed on iOS.
-            wavesContainer.Height = Math.Max(0, DrawHeight - (contentContainer.DrawHeight - contentContainer.Y * DrawHeight));
+            wavesContainer.Height = Math.Max(
+                0,
+                DrawHeight - (contentContainer.DrawHeight - contentContainer.Y * DrawHeight)
+            );
         }
 
         private partial class Wave : VisibilityContainer
@@ -181,7 +180,8 @@ namespace osu.Game.Graphics.Containers
                 Height = Parent!.Parent!.DrawSize.Y * 1.5f;
             }
 
-            protected override void PopIn() => Schedule(() => this.MoveToY(FinalPosition, APPEAR_DURATION, easing_show));
+            protected override void PopIn() =>
+                Schedule(() => this.MoveToY(FinalPosition, APPEAR_DURATION, easing_show));
 
             protected override void PopOut()
             {

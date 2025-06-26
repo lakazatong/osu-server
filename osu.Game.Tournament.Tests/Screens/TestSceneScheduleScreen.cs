@@ -44,40 +44,50 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestUpcomingMatches()
         {
-            AddStep("Add upcoming match", () =>
-            {
-                var tournamentMatch = CreateSampleMatch();
+            AddStep(
+                "Add upcoming match",
+                () =>
+                {
+                    var tournamentMatch = CreateSampleMatch();
 
-                tournamentMatch.Date.Value = DateTimeOffset.UtcNow.AddMinutes(5);
-                tournamentMatch.Completed.Value = false;
+                    tournamentMatch.Date.Value = DateTimeOffset.UtcNow.AddMinutes(5);
+                    tournamentMatch.Completed.Value = false;
 
-                Ladder.Matches.Add(tournamentMatch);
-            });
+                    Ladder.Matches.Add(tournamentMatch);
+                }
+            );
         }
 
         [Test]
         public void TestRecentMatches()
         {
-            AddStep("Add recent match", () =>
-            {
-                var tournamentMatch = CreateSampleMatch();
+            AddStep(
+                "Add recent match",
+                () =>
+                {
+                    var tournamentMatch = CreateSampleMatch();
 
-                tournamentMatch.Date.Value = DateTimeOffset.UtcNow;
-                tournamentMatch.Completed.Value = true;
-                tournamentMatch.Team1Score.Value = tournamentMatch.PointsToWin;
-                tournamentMatch.Team2Score.Value = tournamentMatch.PointsToWin / 2;
+                    tournamentMatch.Date.Value = DateTimeOffset.UtcNow;
+                    tournamentMatch.Completed.Value = true;
+                    tournamentMatch.Team1Score.Value = tournamentMatch.PointsToWin;
+                    tournamentMatch.Team2Score.Value = tournamentMatch.PointsToWin / 2;
 
-                Ladder.Matches.Add(tournamentMatch);
-            });
+                    Ladder.Matches.Add(tournamentMatch);
+                }
+            );
         }
 
         private void setMatchDate(TimeSpan relativeTime)
             // Humanizer cannot handle negative timespans.
-            => AddStep($"start time is {relativeTime}", () =>
-            {
-                var match = CreateSampleMatch();
-                match.Date.Value = DateTimeOffset.Now + relativeTime;
-                Ladder.CurrentMatch.Value = match;
-            });
+            =>
+            AddStep(
+                $"start time is {relativeTime}",
+                () =>
+                {
+                    var match = CreateSampleMatch();
+                    match.Date.Value = DateTimeOffset.Now + relativeTime;
+                    Ladder.CurrentMatch.Value = match;
+                }
+            );
     }
 }

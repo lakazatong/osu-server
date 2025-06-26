@@ -24,21 +24,27 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         private const int animation_duration = 200;
         private const int drawable_judgement_size = 8;
 
-        [SettingSource(typeof(ColourHitErrorMeterStrings), nameof(ColourHitErrorMeterStrings.JudgementCount), nameof(ColourHitErrorMeterStrings.JudgementCountDescription))]
-        public BindableNumber<int> JudgementCount { get; } = new BindableNumber<int>(20)
-        {
-            MinValue = 1,
-            MaxValue = 50,
-        };
+        [SettingSource(
+            typeof(ColourHitErrorMeterStrings),
+            nameof(ColourHitErrorMeterStrings.JudgementCount),
+            nameof(ColourHitErrorMeterStrings.JudgementCountDescription)
+        )]
+        public BindableNumber<int> JudgementCount { get; } =
+            new BindableNumber<int>(20) { MinValue = 1, MaxValue = 50 };
 
-        [SettingSource(typeof(ColourHitErrorMeterStrings), nameof(ColourHitErrorMeterStrings.JudgementSpacing), nameof(ColourHitErrorMeterStrings.JudgementSpacingDescription))]
-        public BindableNumber<float> JudgementSpacing { get; } = new BindableNumber<float>(2)
-        {
-            MinValue = 0,
-            MaxValue = 10,
-        };
+        [SettingSource(
+            typeof(ColourHitErrorMeterStrings),
+            nameof(ColourHitErrorMeterStrings.JudgementSpacing),
+            nameof(ColourHitErrorMeterStrings.JudgementSpacingDescription)
+        )]
+        public BindableNumber<float> JudgementSpacing { get; } =
+            new BindableNumber<float>(2) { MinValue = 0, MaxValue = 10 };
 
-        [SettingSource(typeof(ColourHitErrorMeterStrings), nameof(ColourHitErrorMeterStrings.JudgementShape), nameof(ColourHitErrorMeterStrings.JudgementShapeDescription))]
+        [SettingSource(
+            typeof(ColourHitErrorMeterStrings),
+            nameof(ColourHitErrorMeterStrings.JudgementShape),
+            nameof(ColourHitErrorMeterStrings.JudgementShapeDescription)
+        )]
         public Bindable<ShapeStyle> JudgementShape { get; } = new Bindable<ShapeStyle>();
 
         private readonly DrawablePool<HitErrorShape> judgementShapePool;
@@ -54,8 +60,8 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                 {
                     JudgementShape = { BindTarget = JudgementShape },
                     JudgementSpacing = { BindTarget = JudgementSpacing },
-                    JudgementCount = { BindTarget = JudgementCount }
-                }
+                    JudgementCount = { BindTarget = JudgementCount },
+                },
             };
         }
 
@@ -64,7 +70,11 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             if (!judgement.Type.IsScorable() || judgement.Type.IsBonus())
                 return;
 
-            judgementsFlow.Push(judgementShapePool.Get(shape => shape.Colour = GetColourForHitResult(judgement.Type)));
+            judgementsFlow.Push(
+                judgementShapePool.Get(shape =>
+                    shape.Colour = GetColourForHitResult(judgement.Type)
+                )
+            );
         }
 
         public override void Clear()
@@ -123,7 +133,9 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
             private void updateMetrics()
             {
-                Height = JudgementCount.Value * (drawable_judgement_size + JudgementSpacing.Value) - JudgementSpacing.Value;
+                Height =
+                    JudgementCount.Value * (drawable_judgement_size + JudgementSpacing.Value)
+                    - JudgementSpacing.Value;
                 Spacing = new Vector2(0, JudgementSpacing.Value);
             }
         }
@@ -148,25 +160,25 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             {
                 base.LoadComplete();
 
-                InternalChild = content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                };
+                InternalChild = content = new Container { RelativeSizeAxes = Axes.Both };
 
                 Shape.BindTo(hitErrorMeter.JudgementShape);
-                Shape.BindValueChanged(shape =>
-                {
-                    switch (shape.NewValue)
+                Shape.BindValueChanged(
+                    shape =>
                     {
-                        case ShapeStyle.Circle:
-                            content.Child = new Circle { RelativeSizeAxes = Axes.Both };
-                            break;
+                        switch (shape.NewValue)
+                        {
+                            case ShapeStyle.Circle:
+                                content.Child = new Circle { RelativeSizeAxes = Axes.Both };
+                                break;
 
-                        case ShapeStyle.Square:
-                            content.Child = new Box { RelativeSizeAxes = Axes.Both };
-                            break;
-                    }
-                }, true);
+                            case ShapeStyle.Square:
+                                content.Child = new Box { RelativeSizeAxes = Axes.Both };
+                                break;
+                        }
+                    },
+                    true
+                );
             }
 
             protected override void PrepareForUse()
@@ -177,8 +189,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                     // On pool re-use, start flow animation from (0,0).
                     .MoveTo(Vector2.Zero);
 
-                content.MoveToY(-DrawSize.Y)
-                       .MoveToY(0, animation_duration, Easing.OutQuint);
+                content.MoveToY(-DrawSize.Y).MoveToY(0, animation_duration, Easing.OutQuint);
             }
 
             protected override void FreeAfterUse()
@@ -191,18 +202,23 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             {
                 IsRemoved = true;
 
-                this.FadeOut(animation_duration, Easing.OutQuint)
-                    .Expire();
+                this.FadeOut(animation_duration, Easing.OutQuint).Expire();
             }
         }
 
         public enum ShapeStyle
         {
-            [LocalisableDescription(typeof(ColourHitErrorMeterStrings), nameof(ColourHitErrorMeterStrings.ShapeStyleCircle))]
+            [LocalisableDescription(
+                typeof(ColourHitErrorMeterStrings),
+                nameof(ColourHitErrorMeterStrings.ShapeStyleCircle)
+            )]
             Circle,
 
-            [LocalisableDescription(typeof(ColourHitErrorMeterStrings), nameof(ColourHitErrorMeterStrings.ShapeStyleSquare))]
-            Square
+            [LocalisableDescription(
+                typeof(ColourHitErrorMeterStrings),
+                nameof(ColourHitErrorMeterStrings.ShapeStyleSquare)
+            )]
+            Square,
         }
     }
 }

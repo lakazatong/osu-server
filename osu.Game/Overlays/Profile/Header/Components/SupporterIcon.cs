@@ -41,12 +41,14 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
                     for (int i = 0; i < count; i++)
                     {
-                        iconContainer.Add(new SpriteIcon
-                        {
-                            Width = 12,
-                            RelativeSizeAxes = Axes.Y,
-                            Icon = FontAwesome.Solid.Heart,
-                        });
+                        iconContainer.Add(
+                            new SpriteIcon
+                            {
+                                Width = 12,
+                                RelativeSizeAxes = Axes.Y,
+                                Icon = FontAwesome.Solid.Heart,
+                            }
+                        );
                     }
 
                     iconContainer.Padding = new MarginPadding { Horizontal = DrawHeight / 2 };
@@ -74,9 +76,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                         AutoSizeAxes = Axes.X,
                         Height = 0.6f,
                         Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
-                    }
-                }
+                        Origin = Anchor.Centre,
+                    },
+                },
             };
         }
 

@@ -13,9 +13,7 @@ namespace osu.Game.Graphics.UserInterfaceV2.FileSelection
     internal partial class OsuDirectorySelectorDirectory : DirectorySelectorDirectory
     {
         public OsuDirectorySelectorDirectory(DirectoryInfo directory, string? displayName = null)
-            : base(directory, displayName)
-        {
-        }
+            : base(directory, displayName) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
@@ -28,10 +26,12 @@ namespace osu.Game.Graphics.UserInterfaceV2.FileSelection
             Colour = colours.Orange1;
         }
 
-        protected override SpriteText CreateSpriteText() => new OsuSpriteText().With(t => t.Font = OsuFont.Default.With(weight: FontWeight.Bold));
+        protected override SpriteText CreateSpriteText() =>
+            new OsuSpriteText().With(t => t.Font = OsuFont.Default.With(weight: FontWeight.Bold));
 
-        protected override IconUsage? Icon => Directory.Name.Contains(Path.DirectorySeparatorChar)
-            ? FontAwesome.Solid.Database
-            : FontAwesome.Regular.Folder;
+        protected override IconUsage? Icon =>
+            Directory.Name.Contains(Path.DirectorySeparatorChar)
+                ? FontAwesome.Solid.Database
+                : FontAwesome.Regular.Folder;
     }
 }

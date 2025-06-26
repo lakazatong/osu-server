@@ -50,7 +50,10 @@ namespace osu.Game.Overlays
             };
         }
 
-        private readonly Dictionary<(object, IConfigManager), TrackedSettings> trackedConfigManagers = new Dictionary<(object, IConfigManager), TrackedSettings>();
+        private readonly Dictionary<
+            (object, IConfigManager),
+            TrackedSettings
+        > trackedConfigManagers = new Dictionary<(object, IConfigManager), TrackedSettings>();
 
         /// <summary>
         /// Registers a <see cref="ConfigManager{T}"/> to have its settings tracked by this <see cref="OnScreenDisplay"/>.
@@ -67,7 +70,9 @@ namespace osu.Game.Overlays
             ArgumentNullException.ThrowIfNull(configManager);
 
             if (trackedConfigManagers.ContainsKey((source, configManager)))
-                throw new InvalidOperationException($"{nameof(configManager)} is already registered.");
+                throw new InvalidOperationException(
+                    $"{nameof(configManager)} is already registered."
+                );
 
             var trackedSettings = configManager.CreateTrackedSettings();
             if (trackedSettings == null)
@@ -89,13 +94,15 @@ namespace osu.Game.Overlays
         /// Displays the provided <see cref="Toast"/> temporarily.
         /// </summary>
         /// <param name="toast"></param>
-        public void Display(Toast toast) => Schedule(() =>
-        {
-            box.Child = toast;
-            DisplayTemporarily(box);
-        });
+        public void Display(Toast toast) =>
+            Schedule(() =>
+            {
+                box.Child = toast;
+                DisplayTemporarily(box);
+            });
 
-        private void displayTrackedSettingChange(SettingDescription description) => Scheduler.AddOnce(Display, new TrackedSettingToast(description));
+        private void displayTrackedSettingChange(SettingDescription description) =>
+            Scheduler.AddOnce(Display, new TrackedSettingToast(description));
 
         private TransformSequence<Drawable> fadeIn;
         private ScheduledDelegate fadeOut;
@@ -114,12 +121,16 @@ namespace osu.Game.Overlays
             }
 
             fadeOut?.Cancel();
-            fadeOut = Scheduler.AddDelayed(() =>
-            {
-                toDisplay.Animate(
-                    b => b.FadeOutFromOne(1500, Easing.InQuint),
-                    b => b.ResizeHeightTo(height_contracted, 1500, Easing.InQuint));
-            }, 500);
+            fadeOut = Scheduler.AddDelayed(
+                () =>
+                {
+                    toDisplay.Animate(
+                        b => b.FadeOutFromOne(1500, Easing.InQuint),
+                        b => b.ResizeHeightTo(height_contracted, 1500, Easing.InQuint)
+                    );
+                },
+                500
+            );
         }
     }
 }

@@ -24,15 +24,28 @@ namespace osu.Game.Rulesets.Scoring
         private double hpRecoveryAvailable;
 
         protected LegacyDrainingHealthProcessor(double drainStartTime)
-            : base(drainStartTime)
-        {
-        }
+            : base(drainStartTime) { }
 
         public override void ApplyBeatmap(IBeatmap beatmap)
         {
-            lowestHpEver = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, 0.975, 0.8, 0.3);
-            lowestHpEnd = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, 0.99, 0.9, 0.4);
-            hpRecoveryAvailable = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, 0.04, 0.02, 0);
+            lowestHpEver = IBeatmapDifficultyInfo.DifficultyRange(
+                beatmap.Difficulty.DrainRate,
+                0.975,
+                0.8,
+                0.3
+            );
+            lowestHpEnd = IBeatmapDifficultyInfo.DifficultyRange(
+                beatmap.Difficulty.DrainRate,
+                0.99,
+                0.9,
+                0.4
+            );
+            hpRecoveryAvailable = IBeatmapDifficultyInfo.DifficultyRange(
+                beatmap.Difficulty.DrainRate,
+                0.04,
+                0.02,
+                0
+            );
 
             base.ApplyBeatmap(beatmap);
         }
@@ -64,7 +77,10 @@ namespace osu.Game.Rulesets.Scoring
                 {
                     topLevelObjectCount++;
 
-                    while (currentBreak < Beatmap.Breaks.Count && Beatmap.Breaks[currentBreak].EndTime <= h.StartTime)
+                    while (
+                        currentBreak < Beatmap.Breaks.Count
+                        && Beatmap.Breaks[currentBreak].EndTime <= h.StartTime
+                    )
                     {
                         // If two hitobjects are separated by a break period, there is no drain for the full duration between the hitobjects.
                         // This differs from legacy (version < 8) beatmaps which continue draining until the break section is entered,
@@ -84,7 +100,9 @@ namespace osu.Game.Rulesets.Scoring
                     {
                         fail = true;
                         testDrop *= 0.96;
-                        OnIterationFail?.Invoke($"FAILED drop {testDrop}: hp too low ({currentHp} < {lowestHpEver})");
+                        OnIterationFail?.Invoke(
+                            $"FAILED drop {testDrop}: hp too low ({currentHp} < {lowestHpEver})"
+                        );
                         break;
                     }
 
@@ -101,7 +119,9 @@ namespace osu.Game.Rulesets.Scoring
                     {
                         fail = true;
                         testDrop *= 0.96;
-                        OnIterationFail?.Invoke($"FAILED drop {testDrop}: overkill ({currentHp} - {hpOverkill} <= {lowestHpEver})");
+                        OnIterationFail?.Invoke(
+                            $"FAILED drop {testDrop}: overkill ({currentHp} - {hpOverkill} <= {lowestHpEver})"
+                        );
                         break;
                     }
 
@@ -116,7 +136,9 @@ namespace osu.Game.Rulesets.Scoring
                     fail = true;
                     testDrop *= 0.94;
                     HpMultiplierNormal *= 1.01;
-                    OnIterationFail?.Invoke($"FAILED drop {testDrop}: end hp too low ({currentHp} < {lowestHpEnd})");
+                    OnIterationFail?.Invoke(
+                        $"FAILED drop {testDrop}: end hp too low ({currentHp} < {lowestHpEnd})"
+                    );
                 }
 
                 double recovery = (currentHpUncapped - 1) / Math.Max(1, topLevelObjectCount);
@@ -126,12 +148,16 @@ namespace osu.Game.Rulesets.Scoring
                     fail = true;
                     testDrop *= 0.96;
                     HpMultiplierNormal *= 1.01;
-                    OnIterationFail?.Invoke($"FAILED drop {testDrop}: recovery too low ({recovery} < {hpRecoveryAvailable})");
+                    OnIterationFail?.Invoke(
+                        $"FAILED drop {testDrop}: recovery too low ({recovery} < {hpRecoveryAvailable})"
+                    );
                 }
 
                 if (!fail && double.IsInfinity(HpMultiplierNormal))
                 {
-                    OnIterationSuccess?.Invoke("Drain computation algorithm diverged to infinity. PASSING with zero drop, resetting HP multiplier to 1.");
+                    OnIterationSuccess?.Invoke(
+                        "Drain computation algorithm diverged to infinity. PASSING with zero drop, resetting HP multiplier to 1."
+                    );
                     HpMultiplierNormal = 1;
                     return 0;
                 }
@@ -157,7 +183,8 @@ namespace osu.Game.Rulesets.Scoring
             }
         }
 
-        protected sealed override double GetHealthIncreaseFor(JudgementResult result) => GetHealthIncreaseFor(result.HitObject, result.Type);
+        protected sealed override double GetHealthIncreaseFor(JudgementResult result) =>
+            GetHealthIncreaseFor(result.HitObject, result.Type);
 
         protected abstract IEnumerable<HitObject> EnumerateTopLevelHitObjects();
 

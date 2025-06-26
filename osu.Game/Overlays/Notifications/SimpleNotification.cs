@@ -57,28 +57,30 @@ namespace osu.Game.Overlays.Notifications
         {
             Light.Colour = colours.Green;
 
-            IconContent.AddRange(new Drawable[]
-            {
-                new Box
+            IconContent.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5,
-                },
-                iconDrawable = new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Icon = icon,
-                    Size = new Vector2(16),
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background5 },
+                    iconDrawable = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Icon = icon,
+                        Size = new Vector2(16),
+                    },
                 }
-            });
+            );
 
-            Content.Add(textDrawable = new OsuTextFlowContainer(t => t.Font = t.Font.With(size: 14, weight: FontWeight.Medium))
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Text = text
-            });
+            Content.Add(
+                textDrawable = new OsuTextFlowContainer(t =>
+                    t.Font = t.Font.With(size: 14, weight: FontWeight.Medium)
+                )
+                {
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                    Text = text,
+                }
+            );
         }
 
         public override bool Read
@@ -86,7 +88,8 @@ namespace osu.Game.Overlays.Notifications
             get => base.Read;
             set
             {
-                if (value == base.Read) return;
+                if (value == base.Read)
+                    return;
 
                 base.Read = value;
                 Light.FadeTo(value ? 0 : 1, 100);

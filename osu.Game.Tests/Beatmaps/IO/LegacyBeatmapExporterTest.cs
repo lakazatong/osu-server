@@ -31,24 +31,57 @@ namespace osu.Game.Tests.Beatmaps.IO
             MemoryStream outStream = null!;
 
             // Ensure importer encoding is correct
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"decimal-timing-beatmap.olz"));
-            AddAssert("timing point has decimal offset", () => beatmap.Beatmap.ControlPointInfo.TimingPoints[0].Time, () => Is.EqualTo(284.725).Within(0.001));
-            AddAssert("kiai has decimal offset", () => beatmap.Beatmap.ControlPointInfo.EffectPoints[0].Time, () => Is.EqualTo(28520.019).Within(0.001));
-            AddAssert("hit object has decimal offset", () => beatmap.Beatmap.HitObjects[0].StartTime, () => Is.EqualTo(28520.019).Within(0.001));
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"decimal-timing-beatmap.olz")
+            );
+            AddAssert(
+                "timing point has decimal offset",
+                () => beatmap.Beatmap.ControlPointInfo.TimingPoints[0].Time,
+                () => Is.EqualTo(284.725).Within(0.001)
+            );
+            AddAssert(
+                "kiai has decimal offset",
+                () => beatmap.Beatmap.ControlPointInfo.EffectPoints[0].Time,
+                () => Is.EqualTo(28520.019).Within(0.001)
+            );
+            AddAssert(
+                "hit object has decimal offset",
+                () => beatmap.Beatmap.HitObjects[0].StartTime,
+                () => Is.EqualTo(28520.019).Within(0.001)
+            );
 
             // Ensure exporter legacy conversion is correct
-            AddStep("export", () =>
-            {
-                outStream = new MemoryStream();
+            AddStep(
+                "export",
+                () =>
+                {
+                    outStream = new MemoryStream();
 
-                new LegacyBeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, outStream, null);
-            });
+                    new LegacyBeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        outStream,
+                        null
+                    );
+                }
+            );
 
             AddStep("import beatmap again", () => beatmap = importBeatmapFromStream(outStream));
-            AddAssert("timing point has truncated offset", () => beatmap.Beatmap.ControlPointInfo.TimingPoints[0].Time, () => Is.EqualTo(284).Within(0.001));
-            AddAssert("kiai is snapped", () => beatmap.Beatmap.ControlPointInfo.EffectPoints[0].Time, () => Is.EqualTo(28519).Within(0.001));
-            AddAssert("hit object is snapped", () => beatmap.Beatmap.HitObjects[0].StartTime, () => Is.EqualTo(28519).Within(0.001));
+            AddAssert(
+                "timing point has truncated offset",
+                () => beatmap.Beatmap.ControlPointInfo.TimingPoints[0].Time,
+                () => Is.EqualTo(284).Within(0.001)
+            );
+            AddAssert(
+                "kiai is snapped",
+                () => beatmap.Beatmap.ControlPointInfo.EffectPoints[0].Time,
+                () => Is.EqualTo(28519).Within(0.001)
+            );
+            AddAssert(
+                "hit object is snapped",
+                () => beatmap.Beatmap.HitObjects[0].StartTime,
+                () => Is.EqualTo(28519).Within(0.001)
+            );
         }
 
         [Test]
@@ -58,20 +91,37 @@ namespace osu.Game.Tests.Beatmaps.IO
             MemoryStream outStream = null!;
 
             // Ensure importer encoding is correct
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"fractional-coordinates.olz"));
-            AddAssert("hit object has fractional position", () => ((IHasYPosition)beatmap.Beatmap.HitObjects[1]).Y, () => Is.EqualTo(383.99997).Within(0.00001));
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"fractional-coordinates.olz")
+            );
+            AddAssert(
+                "hit object has fractional position",
+                () => ((IHasYPosition)beatmap.Beatmap.HitObjects[1]).Y,
+                () => Is.EqualTo(383.99997).Within(0.00001)
+            );
 
             // Ensure exporter legacy conversion is correct
-            AddStep("export", () =>
-            {
-                outStream = new MemoryStream();
+            AddStep(
+                "export",
+                () =>
+                {
+                    outStream = new MemoryStream();
 
-                new LegacyBeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, outStream, null);
-            });
+                    new LegacyBeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        outStream,
+                        null
+                    );
+                }
+            );
 
             AddStep("import beatmap again", () => beatmap = importBeatmapFromStream(outStream));
-            AddAssert("hit object is snapped", () => ((IHasYPosition)beatmap.Beatmap.HitObjects[1]).Y, () => Is.EqualTo(384).Within(0.00001));
+            AddAssert(
+                "hit object is snapped",
+                () => ((IHasYPosition)beatmap.Beatmap.HitObjects[1]).Y,
+                () => Is.EqualTo(384).Within(0.00001)
+            );
         }
 
         [Test]
@@ -82,29 +132,46 @@ namespace osu.Game.Tests.Beatmaps.IO
             MemoryStream secondExport = null!;
 
             // Ensure importer encoding is correct
-            AddStep("import beatmap", () => beatmap = importBeatmapFromArchives(@"legacy-export-stability-test.olz"));
-            AddStep("export once", () =>
-            {
-                firstExport = new MemoryStream();
+            AddStep(
+                "import beatmap",
+                () => beatmap = importBeatmapFromArchives(@"legacy-export-stability-test.olz")
+            );
+            AddStep(
+                "export once",
+                () =>
+                {
+                    firstExport = new MemoryStream();
 
-                new LegacyBeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, firstExport, null);
-            });
+                    new LegacyBeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        firstExport,
+                        null
+                    );
+                }
+            );
 
             AddStep("import beatmap again", () => beatmap = importBeatmapFromStream(firstExport));
-            AddStep("export again", () =>
-            {
-                secondExport = new MemoryStream();
+            AddStep(
+                "export again",
+                () =>
+                {
+                    secondExport = new MemoryStream();
 
-                new LegacyBeatmapExporter(LocalStorage)
-                    .ExportToStream((BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!, secondExport, null);
-            });
+                    new LegacyBeatmapExporter(LocalStorage).ExportToStream(
+                        (BeatmapSetInfo)beatmap.BeatmapInfo.BeatmapSet!,
+                        secondExport,
+                        null
+                    );
+                }
+            );
 
             const string osu_filename = @"legacy export - stability test (spaceman_atlas) [].osu";
 
-            AddAssert("exports are identical",
+            AddAssert(
+                "exports are identical",
                 () => getStringContentsOf(osu_filename, firstExport.GetBuffer()),
-                () => Is.EqualTo(getStringContentsOf(osu_filename, secondExport.GetBuffer())));
+                () => Is.EqualTo(getStringContentsOf(osu_filename, secondExport.GetBuffer()))
+            );
 
             string getStringContentsOf(string filename, byte[] archiveBytes)
             {
@@ -117,13 +184,19 @@ namespace osu.Game.Tests.Beatmaps.IO
 
         private IWorkingBeatmap importBeatmapFromStream(Stream stream)
         {
-            var imported = beatmaps.Import(new ImportTask(stream, "filename.osz")).GetResultSafely();
+            var imported = beatmaps
+                .Import(new ImportTask(stream, "filename.osz"))
+                .GetResultSafely();
             return imported.AsNonNull().PerformRead(s => beatmaps.GetWorkingBeatmap(s.Beatmaps[0]));
         }
 
         private IWorkingBeatmap importBeatmapFromArchives(string filename)
         {
-            var imported = beatmaps.Import(new ImportTask(TestResources.OpenResource($@"Archives/{filename}"), filename)).GetResultSafely();
+            var imported = beatmaps
+                .Import(
+                    new ImportTask(TestResources.OpenResource($@"Archives/{filename}"), filename)
+                )
+                .GetResultSafely();
             return imported.AsNonNull().PerformRead(s => beatmaps.GetWorkingBeatmap(s.Beatmaps[0]));
         }
     }

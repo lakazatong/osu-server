@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
     public class OsuArgonSkinTransformer : SkinTransformer
     {
         public OsuArgonSkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
@@ -48,10 +46,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                             return new ArgonMainCirclePiece(false);
 
                         case OsuSkinComponents.SliderBody:
-                            return new ArgonSliderBody
-                            {
-                                BodyAlpha = isPro ? 0.92f : 0.98f
-                            };
+                            return new ArgonSliderBody { BodyAlpha = isPro ? 0.92f : 0.98f };
 
                         case OsuSkinComponents.SliderBall:
                             return new ArgonSliderBall();

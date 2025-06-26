@@ -1,9 +1,9 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Audio;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Game.Audio;
 
 namespace osu.Game.Rulesets.Objects.Types
 {
@@ -44,8 +44,8 @@ namespace osu.Game.Rulesets.Objects.Types
         /// <param name="nodeIndex">The node to attempt to retrieve the samples at.</param>
         /// <returns>The samples at the given node index, or <paramref name="obj"/>'s default samples if the given node doesn't exist.</returns>
         public static IList<HitSampleInfo> GetNodeSamples<T>(this T obj, int nodeIndex)
-            where T : HitObject, IHasRepeats
-            => nodeIndex < obj.NodeSamples.Count ? obj.NodeSamples[nodeIndex] : obj.Samples;
+            where T : HitObject, IHasRepeats =>
+            nodeIndex < obj.NodeSamples.Count ? obj.NodeSamples[nodeIndex] : obj.Samples;
 
         /// <summary>
         /// Ensures that the list of node samples is at least as long as the number of nodes.

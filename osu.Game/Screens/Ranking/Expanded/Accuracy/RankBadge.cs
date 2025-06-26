@@ -77,9 +77,9 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
                             AlwaysPresent = true,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -97,10 +97,12 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
             base.Update();
 
             // Starts at -90deg (top) and moves counter-clockwise by the accuracy
-            rankContainer.Position = circlePosition(-MathF.PI / 2 - (1 - (float)displayPosition) * MathF.PI * 2);
+            rankContainer.Position = circlePosition(
+                -MathF.PI / 2 - (1 - (float)displayPosition) * MathF.PI * 2
+            );
         }
 
-        private Vector2 circlePosition(float t)
-            => DrawSize / 2 + new Vector2(MathF.Cos(t), MathF.Sin(t)) * DrawSize / 2;
+        private Vector2 circlePosition(float t) =>
+            DrawSize / 2 + new Vector2(MathF.Cos(t), MathF.Sin(t)) * DrawSize / 2;
     }
 }

@@ -32,7 +32,12 @@ namespace osu.Game.Online.Rooms
             PlaylistItemId = playlistItemId;
         }
 
-        public IndexPlaylistScoresRequest(long roomId, long playlistItemId, [NotNull] Cursor cursor, [NotNull] IndexScoresParams indexParams)
+        public IndexPlaylistScoresRequest(
+            long roomId,
+            long playlistItemId,
+            [NotNull] Cursor cursor,
+            [NotNull] IndexScoresParams indexParams
+        )
             : this(roomId, playlistItemId)
         {
             Cursor = cursor;

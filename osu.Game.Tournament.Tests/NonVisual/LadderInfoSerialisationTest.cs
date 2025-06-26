@@ -33,32 +33,31 @@ namespace osu.Game.Tournament.Tests.NonVisual
             return new LadderInfo
             {
                 PlayersPerTeam = { Value = 4 },
-                Teams =
-                {
-                    match.Team1.Value!,
-                    match.Team2.Value!,
-                },
+                Teams = { match.Team1.Value!, match.Team2.Value! },
                 Rounds =
                 {
                     new TournamentRound
                     {
                         Beatmaps =
                         {
-                            new RoundBeatmap { Beatmap = TournamentTestScene.CreateSampleBeatmap() },
-                            new RoundBeatmap { Beatmap = TournamentTestScene.CreateSampleBeatmap() },
-                        }
-                    }
+                            new RoundBeatmap
+                            {
+                                Beatmap = TournamentTestScene.CreateSampleBeatmap(),
+                            },
+                            new RoundBeatmap
+                            {
+                                Beatmap = TournamentTestScene.CreateSampleBeatmap(),
+                            },
+                        },
+                    },
                 },
 
-                Matches =
-                {
-                    match,
-                },
+                Matches = { match },
                 Progressions =
                 {
                     new TournamentProgression(1, 2),
                     new TournamentProgression(1, 3, true),
-                }
+                },
             };
         }
     }

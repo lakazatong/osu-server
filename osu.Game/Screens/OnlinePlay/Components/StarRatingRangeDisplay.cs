@@ -48,36 +48,43 @@ namespace osu.Game.Screens.OnlinePlay.Components
                     Masking = true,
                     // Stops artifacting from boxes drawn behind wrong colour boxes (and edge pixels adding up to higher opacity).
                     Padding = new MarginPadding(-0.1f),
-                    Child = bufferedContent = new BufferedContainer(pixelSnapping: true, cachedFrameBuffer: true)
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new[]
+                    Child = bufferedContent =
+                        new BufferedContainer(pixelSnapping: true, cachedFrameBuffer: true)
                         {
-                            minBackground = new Box
+                            AutoSizeAxes = Axes.Both,
+                            Children = new[]
                             {
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                RelativeSizeAxes = Axes.Both,
-                                Size = new Vector2(1, 0.5f),
-                            },
-                            maxBackground = new Box
-                            {
-                                Anchor = Anchor.BottomCentre,
-                                Origin = Anchor.BottomCentre,
-                                RelativeSizeAxes = Axes.Both,
-                                Size = new Vector2(1, 0.5f),
-                            },
-                            new FillFlowContainer
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Children = new Drawable[]
+                                minBackground = new Box
                                 {
-                                    minDisplay = new StarRatingDisplay(default, StarRatingDisplaySize.Range),
-                                    maxDisplay = new StarRatingDisplay(default, StarRatingDisplaySize.Range)
-                                }
-                            }
-                        }
-                    }
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Size = new Vector2(1, 0.5f),
+                                },
+                                maxBackground = new Box
+                                {
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Size = new Vector2(1, 0.5f),
+                                },
+                                new FillFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Children = new Drawable[]
+                                    {
+                                        minDisplay = new StarRatingDisplay(
+                                            default,
+                                            StarRatingDisplaySize.Range
+                                        ),
+                                        maxDisplay = new StarRatingDisplay(
+                                            default,
+                                            StarRatingDisplaySize.Range
+                                        ),
+                                    },
+                                },
+                            },
+                        },
                 },
             };
         }
@@ -115,15 +122,29 @@ namespace osu.Game.Screens.OnlinePlay.Components
             else
             {
                 // When Playlist is not empty (in room) we compute actual range
-                var orderedDifficulties = room.Playlist.Select(p => p.Beatmap).OrderBy(b => b.StarRating).ToArray();
+                var orderedDifficulties = room
+                    .Playlist.Select(p => p.Beatmap)
+                    .OrderBy(b => b.StarRating)
+                    .ToArray();
 
-                minDifficulty = new StarDifficulty(orderedDifficulties.Length > 0 ? orderedDifficulties[0].StarRating : 0, 0);
-                maxDifficulty = new StarDifficulty(orderedDifficulties.Length > 0 ? orderedDifficulties[^1].StarRating : 0, 0);
+                minDifficulty = new StarDifficulty(
+                    orderedDifficulties.Length > 0 ? orderedDifficulties[0].StarRating : 0,
+                    0
+                );
+                maxDifficulty = new StarDifficulty(
+                    orderedDifficulties.Length > 0 ? orderedDifficulties[^1].StarRating : 0,
+                    0
+                );
             }
 
             minDisplay.Current.Value = minDifficulty;
             maxDisplay.Current.Value = maxDifficulty;
-            maxDisplay.Alpha = Precision.AlmostEquals(Math.Round(minDifficulty.Stars, 2), Math.Round(maxDifficulty.Stars, 2)) ? 0 : 1;
+            maxDisplay.Alpha = Precision.AlmostEquals(
+                Math.Round(minDifficulty.Stars, 2),
+                Math.Round(maxDifficulty.Stars, 2)
+            )
+                ? 0
+                : 1;
 
             minBackground.Colour = colours.ForStarDifficulty(minDifficulty.Stars);
             maxBackground.Colour = colours.ForStarDifficulty(maxDifficulty.Stars);

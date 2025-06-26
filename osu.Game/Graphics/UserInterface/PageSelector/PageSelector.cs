@@ -2,18 +2,18 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Graphics.UserInterface.PageSelector
 {
     public partial class PageSelector : CompositeDrawable
     {
-        public readonly BindableInt CurrentPage = new BindableInt { MinValue = 0, };
+        public readonly BindableInt CurrentPage = new BindableInt { MinValue = 0 };
 
-        public readonly BindableInt AvailablePages = new BindableInt(1) { MinValue = 1, };
+        public readonly BindableInt AvailablePages = new BindableInt(1) { MinValue = 1 };
 
         private readonly FillFlowContainer itemsFlow;
 
@@ -30,7 +30,10 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
                 Direction = FillDirection.Horizontal,
                 Children = new Drawable[]
                 {
-                    previousPageButton = new PageSelectorPrevNextButton(false, CommonStrings.PaginationPrevious)
+                    previousPageButton = new PageSelectorPrevNextButton(
+                        false,
+                        CommonStrings.PaginationPrevious
+                    )
                     {
                         Action = () => CurrentPage.Value -= 1,
                     },
@@ -39,11 +42,14 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
                         AutoSizeAxes = Axes.Both,
                         Direction = FillDirection.Horizontal,
                     },
-                    nextPageButton = new PageSelectorPrevNextButton(true, CommonStrings.PaginationNext)
+                    nextPageButton = new PageSelectorPrevNextButton(
+                        true,
+                        CommonStrings.PaginationNext
+                    )
                     {
-                        Action = () => CurrentPage.Value += 1
-                    }
-                }
+                        Action = () => CurrentPage.Value += 1,
+                    },
+                },
             };
         }
 
@@ -52,13 +58,16 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
             base.LoadComplete();
 
             CurrentPage.BindValueChanged(_ => Scheduler.AddOnce(redraw));
-            AvailablePages.BindValueChanged(_ =>
-            {
-                CurrentPage.Value = 0;
+            AvailablePages.BindValueChanged(
+                _ =>
+                {
+                    CurrentPage.Value = 0;
 
-                // AddOnce as the reset of CurrentPage may also trigger a redraw.
-                Scheduler.AddOnce(redraw);
-            }, true);
+                    // AddOnce as the reset of CurrentPage may also trigger a redraw.
+                    Scheduler.AddOnce(redraw);
+                },
+                true
+            );
         }
 
         private void redraw()
@@ -81,16 +90,21 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
             {
                 int pageIndex = i;
 
-                bool shouldShowPage = pageIndex == 0 || pageIndex == totalPages - 1 || Math.Abs(pageIndex - CurrentPage.Value) <= 2;
+                bool shouldShowPage =
+                    pageIndex == 0
+                    || pageIndex == totalPages - 1
+                    || Math.Abs(pageIndex - CurrentPage.Value) <= 2;
 
                 if (shouldShowPage)
                 {
                     lastWasEllipsis = false;
-                    itemsFlow.Add(new PageSelectorPageButton(pageIndex + 1)
-                    {
-                        Action = () => CurrentPage.Value = pageIndex,
-                        Selected = CurrentPage.Value == pageIndex,
-                    });
+                    itemsFlow.Add(
+                        new PageSelectorPageButton(pageIndex + 1)
+                        {
+                            Action = () => CurrentPage.Value = pageIndex,
+                            Selected = CurrentPage.Value == pageIndex,
+                        }
+                    );
                 }
                 else if (!lastWasEllipsis)
                 {

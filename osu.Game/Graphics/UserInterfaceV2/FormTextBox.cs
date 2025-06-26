@@ -100,11 +100,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     RelativeSizeAxes = Axes.Both,
                     Colour = colourProvider.Background5,
                 },
-                flashLayer = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.Transparent,
-                },
+                flashLayer = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Transparent },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -118,32 +114,39 @@ namespace osu.Game.Graphics.UserInterfaceV2
                             Caption = Caption,
                             TooltipText = HintText,
                         },
-                        textBox = CreateTextBox().With(t =>
-                        {
-                            t.Anchor = Anchor.BottomRight;
-                            t.Origin = Anchor.BottomRight;
-                            t.RelativeSizeAxes = Axes.X;
-                            t.Width = 1;
-                            t.PlaceholderText = PlaceholderText;
-                            t.Current = Current;
-                            t.CommitOnFocusLost = true;
-                            t.OnCommit += (textBox, newText) =>
+                        textBox = CreateTextBox()
+                            .With(t =>
                             {
-                                OnCommit?.Invoke(textBox, newText);
-
-                                if (!current.Disabled && !ReadOnly)
+                                t.Anchor = Anchor.BottomRight;
+                                t.Origin = Anchor.BottomRight;
+                                t.RelativeSizeAxes = Axes.X;
+                                t.Width = 1;
+                                t.PlaceholderText = PlaceholderText;
+                                t.Current = Current;
+                                t.CommitOnFocusLost = true;
+                                t.OnCommit += (textBox, newText) =>
                                 {
-                                    flashLayer.Colour = ColourInfo.GradientVertical(colourProvider.Dark2.Opacity(0), colourProvider.Dark2);
-                                    flashLayer.FadeOutFromOne(800, Easing.OutQuint);
-                                }
-                            };
-                            t.OnInputError = () =>
-                            {
-                                flashLayer.Colour = ColourInfo.GradientVertical(colours.Red3.Opacity(0), colours.Red3);
-                                flashLayer.FadeOutFromOne(200, Easing.OutQuint);
-                            };
-                            t.TabbableContentContainer = tabbableContentContainer;
-                        }),
+                                    OnCommit?.Invoke(textBox, newText);
+
+                                    if (!current.Disabled && !ReadOnly)
+                                    {
+                                        flashLayer.Colour = ColourInfo.GradientVertical(
+                                            colourProvider.Dark2.Opacity(0),
+                                            colourProvider.Dark2
+                                        );
+                                        flashLayer.FadeOutFromOne(800, Easing.OutQuint);
+                                    }
+                                };
+                                t.OnInputError = () =>
+                                {
+                                    flashLayer.Colour = ColourInfo.GradientVertical(
+                                        colours.Red3.Opacity(0),
+                                        colours.Red3
+                                    );
+                                    flashLayer.FadeOutFromOne(200, Easing.OutQuint);
+                                };
+                                t.TabbableContentContainer = tabbableContentContainer;
+                            }),
                     },
                 },
             };
@@ -191,12 +194,20 @@ namespace osu.Game.Graphics.UserInterfaceV2
             if (!disabled)
             {
                 BorderThickness = IsHovered || textBox.Focused.Value ? 2 : 0;
-                BorderColour = textBox.Focused.Value ? colourProvider.Highlight1 : colourProvider.Light4;
+                BorderColour = textBox.Focused.Value
+                    ? colourProvider.Highlight1
+                    : colourProvider.Light4;
 
                 if (textBox.Focused.Value)
-                    background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark3);
+                    background.Colour = ColourInfo.GradientVertical(
+                        colourProvider.Background5,
+                        colourProvider.Dark3
+                    );
                 else if (IsHovered)
-                    background.Colour = ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark4);
+                    background.Colour = ColourInfo.GradientVertical(
+                        colourProvider.Background5,
+                        colourProvider.Dark4
+                    );
                 else
                     background.Colour = colourProvider.Background5;
             }
@@ -224,7 +235,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 BackgroundUnfocused = BackgroundFocused = BackgroundCommit = Colour4.Transparent;
             }
 
-            protected override SpriteText CreatePlaceholder() => base.CreatePlaceholder().With(t => t.Margin = default);
+            protected override SpriteText CreatePlaceholder() =>
+                base.CreatePlaceholder().With(t => t.Margin = default);
 
             protected override void OnFocus(FocusEvent e)
             {

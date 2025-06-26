@@ -19,9 +19,7 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         protected internal DrawableHoldNote HoldNote => (DrawableHoldNote)ParentHitObject;
 
         public DrawableHoldNoteTail()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHoldNoteTail(TailNote tailNote)
             : base(tailNote)
@@ -49,8 +47,6 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
 
         public override bool OnPressed(KeyBindingPressEvent<ManiaAction> e) => false; // Handled by the hold note
 
-        public override void OnReleased(KeyBindingReleaseEvent<ManiaAction> e)
-        {
-        }
+        public override void OnReleased(KeyBindingReleaseEvent<ManiaAction> e) { }
     }
 }

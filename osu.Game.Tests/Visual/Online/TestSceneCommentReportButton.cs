@@ -19,28 +19,35 @@ namespace osu.Game.Tests.Visual.Online
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup API", () => ((DummyAPIAccess)API).HandleRequest += req =>
-            {
-                switch (req)
-                {
-                    case CommentReportRequest report:
-                        Scheduler.AddDelayed(report.TriggerSuccess, 1000);
-                        return true;
-                }
+            AddStep(
+                "setup API",
+                () =>
+                    ((DummyAPIAccess)API).HandleRequest += req =>
+                    {
+                        switch (req)
+                        {
+                            case CommentReportRequest report:
+                                Scheduler.AddDelayed(report.TriggerSuccess, 1000);
+                                return true;
+                        }
 
-                return false;
-            });
+                        return false;
+                    }
+            );
         }
 
-        protected override Drawable CreateContent() => new PopoverContainer
-        {
-            RelativeSizeAxes = Axes.Both,
-            Child = new CommentReportButton(new Comment { User = new APIUser { Username = "Someone" } })
+        protected override Drawable CreateContent() =>
+            new PopoverContainer
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(2f),
-            }.With(b => Schedule(b.ShowPopover)),
-        };
+                RelativeSizeAxes = Axes.Both,
+                Child = new CommentReportButton(
+                    new Comment { User = new APIUser { Username = "Someone" } }
+                )
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(2f),
+                }.With(b => Schedule(b.ShowPopover)),
+            };
     }
 }

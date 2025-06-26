@@ -20,7 +20,10 @@ namespace osu.Game.Tournament.Tests
     public abstract partial class TournamentTestScene : OsuManualInputManagerTestScene
     {
         [Cached(typeof(IDialogOverlay))]
-        protected readonly DialogOverlay DialogOverlay = new DialogOverlay { Depth = float.MinValue };
+        protected readonly DialogOverlay DialogOverlay = new DialogOverlay
+        {
+            Depth = float.MinValue,
+        };
 
         [Cached]
         protected LadderInfo Ladder { get; private set; } = new LadderInfo();
@@ -57,132 +60,131 @@ namespace osu.Game.Tournament.Tests
             AddStep("set current match", () => Ladder.CurrentMatch.Value = match);
         }
 
-        public static TournamentMatch CreateSampleMatch() => new TournamentMatch
-        {
-            Team1 =
+        public static TournamentMatch CreateSampleMatch() =>
+            new TournamentMatch
             {
-                Value = new TournamentTeam
+                Team1 =
                 {
-                    Acronym = { Value = "JPN" },
-                    FlagName = { Value = "JP" },
-                    FullName = { Value = "Japan" },
-                    LastYearPlacing = { Value = 10 },
-                    Seed = { Value = "#12" },
-                    SeedingResults =
+                    Value = new TournamentTeam
                     {
-                        new SeedingResult
+                        Acronym = { Value = "JPN" },
+                        FlagName = { Value = "JP" },
+                        FullName = { Value = "Japan" },
+                        LastYearPlacing = { Value = 10 },
+                        Seed = { Value = "#12" },
+                        SeedingResults =
                         {
-                            Mod = { Value = "NM" },
-                            Seed = { Value = 10 },
-                            Beatmaps =
+                            new SeedingResult
                             {
-                                new SeedingBeatmap
+                                Mod = { Value = "NM" },
+                                Seed = { Value = 10 },
+                                Beatmaps =
                                 {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 12345672,
-                                    Seed = { Value = 24 },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 12345672,
+                                        Seed = { Value = 24 },
+                                    },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 1234567,
+                                        Seed = { Value = 12 },
+                                    },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 1234567,
+                                        Seed = { Value = 16 },
+                                    },
                                 },
-                                new SeedingBeatmap
+                            },
+                            new SeedingResult
+                            {
+                                Mod = { Value = "DT" },
+                                Seed = { Value = 5 },
+                                Beatmaps =
                                 {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 1234567,
-                                    Seed = { Value = 12 },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 234567,
+                                        Seed = { Value = 3 },
+                                    },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 234567,
+                                        Seed = { Value = 6 },
+                                    },
+                                    new SeedingBeatmap
+                                    {
+                                        Beatmap = CreateSampleBeatmap(),
+                                        Score = 234567,
+                                        Seed = { Value = 12 },
+                                    },
                                 },
-                                new SeedingBeatmap
-                                {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 1234567,
-                                    Seed = { Value = 16 },
-                                }
-                            }
+                            },
                         },
-                        new SeedingResult
+                        Players =
                         {
-                            Mod = { Value = "DT" },
-                            Seed = { Value = 5 },
-                            Beatmaps =
-                            {
-                                new SeedingBeatmap
-                                {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 234567,
-                                    Seed = { Value = 3 },
-                                },
-                                new SeedingBeatmap
-                                {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 234567,
-                                    Seed = { Value = 6 },
-                                },
-                                new SeedingBeatmap
-                                {
-                                    Beatmap = CreateSampleBeatmap(),
-                                    Score = 234567,
-                                    Seed = { Value = 12 },
-                                }
-                            }
-                        }
+                            new TournamentUser { Username = "Hello", Rank = 12 },
+                            new TournamentUser { Username = "Hello", Rank = 16 },
+                            new TournamentUser { Username = "Hello", Rank = 20 },
+                            new TournamentUser { Username = "Hello", Rank = 24 },
+                            new TournamentUser { Username = "Hello", Rank = 30 },
+                        },
                     },
-                    Players =
-                    {
-                        new TournamentUser { Username = "Hello", Rank = 12 },
-                        new TournamentUser { Username = "Hello", Rank = 16 },
-                        new TournamentUser { Username = "Hello", Rank = 20 },
-                        new TournamentUser { Username = "Hello", Rank = 24 },
-                        new TournamentUser { Username = "Hello", Rank = 30 },
-                    }
-                }
-            },
-            Team2 =
-            {
-                Value = new TournamentTeam
+                },
+                Team2 =
                 {
-                    Acronym = { Value = "USA" },
-                    FlagName = { Value = "US" },
-                    FullName = { Value = "United States" },
-                    Seed = { Value = "#3" },
-                    Players =
+                    Value = new TournamentTeam
                     {
-                        new TournamentUser { Username = "Hello" },
-                        new TournamentUser { Username = "Hello" },
-                        new TournamentUser { Username = "Hello" },
-                        new TournamentUser { Username = "Hello" },
-                        new TournamentUser { Username = "Hello" },
-                    }
-                }
-            },
-            Round =
-            {
-                Value = new TournamentRound { Name = { Value = "Quarterfinals" } },
-            }
-        };
+                        Acronym = { Value = "USA" },
+                        FlagName = { Value = "US" },
+                        FullName = { Value = "United States" },
+                        Seed = { Value = "#3" },
+                        Players =
+                        {
+                            new TournamentUser { Username = "Hello" },
+                            new TournamentUser { Username = "Hello" },
+                            new TournamentUser { Username = "Hello" },
+                            new TournamentUser { Username = "Hello" },
+                            new TournamentUser { Username = "Hello" },
+                        },
+                    },
+                },
+                Round = { Value = new TournamentRound { Name = { Value = "Quarterfinals" } } },
+            };
 
         public static TournamentBeatmap CreateSampleBeatmap() =>
             new TournamentBeatmap
             {
-                Metadata = new BeatmapMetadata
-                {
-                    Title = "Test Title",
-                    Artist = "Test Artist",
-                },
+                Metadata = new BeatmapMetadata { Title = "Test Title", Artist = "Test Artist" },
                 OnlineID = RNG.Next(0, 1000000),
             };
 
-        protected override ITestSceneTestRunner CreateRunner() => new TournamentTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() =>
+            new TournamentTestSceneTestRunner();
 
-        public partial class TournamentTestSceneTestRunner : TournamentGameBase, ITestSceneTestRunner
+        public partial class TournamentTestSceneTestRunner
+            : TournamentGameBase,
+                ITestSceneTestRunner
         {
             private TestSceneTestRunner.TestRunner runner = null!;
 
             protected override void LoadAsyncComplete()
             {
-                BracketLoadTask.ContinueWith(_ => Schedule(() =>
-                {
-                    // this has to be run here rather than LoadComplete because
-                    // TestScene.cs is checking the IsLoaded state (on another thread) and expects
-                    // the runner to be loaded at that point.
-                    Add(runner = new TestSceneTestRunner.TestRunner());
-                }));
+                BracketLoadTask.ContinueWith(_ =>
+                    Schedule(() =>
+                    {
+                        // this has to be run here rather than LoadComplete because
+                        // TestScene.cs is checking the IsLoaded state (on another thread) and expects
+                        // the runner to be loaded at that point.
+                        Add(runner = new TestSceneTestRunner.TestRunner());
+                    })
+                );
             }
 
             public void RunTestBlocking(TestScene test)

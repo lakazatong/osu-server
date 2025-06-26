@@ -8,6 +8,7 @@ using osu.Game.Beatmaps;
 using osu.Game.BellaFiora.Endpoints;
 using osu.Game.BellaFiora.Utils;
 using osu.Game.Configuration;
+using osu.Game.Graphics;
 using osu.Game.Overlays.Mods;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Screens.Play;
@@ -36,7 +37,10 @@ namespace osu.Game.BellaFiora
         public BeatmapDifficultyCache BeatmapDifficultyCache = null!;
         public FrameworkConfigManager FrameworkConfigManager = null!;
         public BeatmapManager BeatmapManager = null!;
-        public Server(SynchronizationContext syncContext) : base()
+        public ScreenshotManager ScreenshotManager = null!;
+
+        public Server(SynchronizationContext syncContext)
+            : base()
         {
             UpdateThread = syncContext;
             // AddGET("/loadConfig", new loadConfigEndpoint(this).Handler);
@@ -47,11 +51,14 @@ namespace osu.Game.BellaFiora
             // AddGET("/loadOsuFile", new loadOsuFileEndpoint(this).Handler);
             // AddGET("/star", new starEndpoint(this).Handler);
             AddGET("/status", new statusEndpoint(this).Handler);
+            AddGET("/screenshot", new screenshotEndpoint(this).Handler);
         }
-        public static Func<object, string?> FormatPanel { get; } = o =>
-        {
-            var p = (ModPanel)o;
-            return $"{p.Mod.Acronym}: {p.Mod.Name}";
-        };
+
+        public static Func<object, string?> FormatPanel { get; } =
+            o =>
+            {
+                var p = (ModPanel)o;
+                return $"{p.Mod.Acronym}: {p.Mod.Name}";
+            };
     }
 }

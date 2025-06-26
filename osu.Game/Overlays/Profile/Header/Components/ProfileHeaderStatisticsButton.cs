@@ -38,9 +38,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Margin = new MarginPadding { Right = 10 },
-                        Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold)
-                    }
-                }
+                        Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold),
+                    },
+                },
             };
 
             SetIcon(Icon);
@@ -56,10 +56,11 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 Origin = Anchor.CentreLeft,
                 Icon = icon,
                 FillMode = FillMode.Fit,
-                Size = new Vector2(50, 14)
+                Size = new Vector2(50, 14),
             };
         }
 
-        protected void SetValue(int value) => drawableText.Text = value.ToLocalisableString("#,##0");
+        protected void SetValue(int value) =>
+            drawableText.Text = value.ToLocalisableString("#,##0");
     }
 }

@@ -24,7 +24,7 @@ namespace osu.Game.Beatmaps.ControlPoints
         public readonly BindableDouble SliderVelocityBindable = new BindableDouble(1)
         {
             MinValue = 0.1,
-            MaxValue = 10
+            MaxValue = 10,
         };
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace osu.Game.Beatmaps.ControlPoints
             SliderVelocityBindable.BindValueChanged(_ => RaiseChanged());
         }
 
-        public override bool IsRedundant(ControlPoint? existing)
-            => existing is DifficultyControlPoint existingDifficulty
-               && GenerateTicks == existingDifficulty.GenerateTicks
-               && SliderVelocity == existingDifficulty.SliderVelocity;
+        public override bool IsRedundant(ControlPoint? existing) =>
+            existing is DifficultyControlPoint existingDifficulty
+            && GenerateTicks == existingDifficulty.GenerateTicks
+            && SliderVelocity == existingDifficulty.SliderVelocity;
 
         public override void CopyFrom(ControlPoint other)
         {
@@ -62,16 +62,17 @@ namespace osu.Game.Beatmaps.ControlPoints
             base.CopyFrom(other);
         }
 
-        public override bool Equals(ControlPoint? other)
-            => other is DifficultyControlPoint otherDifficultyControlPoint
-               && Equals(otherDifficultyControlPoint);
+        public override bool Equals(ControlPoint? other) =>
+            other is DifficultyControlPoint otherDifficultyControlPoint
+            && Equals(otherDifficultyControlPoint);
 
-        public bool Equals(DifficultyControlPoint? other)
-            => base.Equals(other)
-               && GenerateTicks == other.GenerateTicks
-               && SliderVelocity == other.SliderVelocity;
+        public bool Equals(DifficultyControlPoint? other) =>
+            base.Equals(other)
+            && GenerateTicks == other.GenerateTicks
+            && SliderVelocity == other.SliderVelocity;
 
         // ReSharper disable once NonReadonlyMemberInGetHashCode
-        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), SliderVelocity, GenerateTicks);
+        public override int GetHashCode() =>
+            HashCode.Combine(base.GetHashCode(), SliderVelocity, GenerateTicks);
     }
 }

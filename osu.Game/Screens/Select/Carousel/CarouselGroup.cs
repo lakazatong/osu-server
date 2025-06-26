@@ -14,7 +14,8 @@ namespace osu.Game.Screens.Select.Carousel
     {
         protected CarouselGroup(List<CarouselItem>? items = null)
         {
-            if (items != null) this.items = items;
+            if (items != null)
+                this.items = items;
 
             State.ValueChanged += state =>
             {
@@ -28,7 +29,8 @@ namespace osu.Game.Screens.Select.Carousel
                     case CarouselItemState.Selected:
                         this.items.ForEach(c =>
                         {
-                            if (c.State.Value == CarouselItemState.Collapsed) c.State.Value = CarouselItemState.NotSelected;
+                            if (c.State.Value == CarouselItemState.Collapsed)
+                                c.State.Value = CarouselItemState.NotSelected;
                         });
                         break;
                 }
@@ -76,7 +78,8 @@ namespace osu.Game.Screens.Select.Carousel
                 i.Filter(lastCriteria);
 
                 int index = items.BinarySearch(i, criteriaComparer);
-                if (index < 0) index = ~index; // BinarySearch hacks multiple return values with 2's complement.
+                if (index < 0)
+                    index = ~index; // BinarySearch hacks multiple return values with 2's complement.
 
                 items.Insert(index, i);
             }
@@ -106,14 +109,16 @@ namespace osu.Game.Screens.Select.Carousel
             // Sorting is expensive, so only perform if it's actually changed.
             if (lastCriteria?.RequiresSorting(criteria) != false)
             {
-                criteriaComparer = Comparer<CarouselItem>.Create((x, y) =>
-                {
-                    int comparison = x.CompareTo(criteria, y);
-                    if (comparison != 0)
-                        return comparison;
+                criteriaComparer = Comparer<CarouselItem>.Create(
+                    (x, y) =>
+                    {
+                        int comparison = x.CompareTo(criteria, y);
+                        if (comparison != 0)
+                            return comparison;
 
-                    return x.ItemID.CompareTo(y.ItemID);
-                });
+                        return x.ItemID.CompareTo(y.ItemID);
+                    }
+                );
 
                 items.Sort(criteriaComparer);
             }
@@ -128,7 +133,8 @@ namespace osu.Game.Screens.Select.Carousel
             {
                 foreach (var b in items)
                 {
-                    if (item == b) continue;
+                    if (item == b)
+                        continue;
 
                     b.State.Value = CarouselItemState.NotSelected;
                 }

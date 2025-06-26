@@ -15,7 +15,9 @@ namespace osu.Game.Rulesets.Edit
     /// <summary>
     /// A blueprint which governs the placement of something.
     /// </summary>
-    public abstract partial class PlacementBlueprint : VisibilityContainer, IKeyBindingHandler<GlobalAction>
+    public abstract partial class PlacementBlueprint
+        : VisibilityContainer,
+            IKeyBindingHandler<GlobalAction>
     {
         /// <summary>
         /// Whether the <see cref="HitObject"/> is currently mid-placement, but has not necessarily finished being placed.
@@ -76,7 +78,10 @@ namespace osu.Game.Rulesets.Edit
             PlacementActive = PlacementState.Finished;
         }
 
-        public abstract SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime);
+        public abstract SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        );
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
@@ -94,9 +99,7 @@ namespace osu.Game.Rulesets.Edit
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         protected override bool Handle(UIEvent e)
         {
@@ -112,7 +115,8 @@ namespace osu.Game.Rulesets.Edit
 
                 case MouseButtonEvent mouse:
                     // placement blueprints should generally block mouse from reaching underlying components (ie. performing clicks on interface buttons).
-                    return mouse.Button == MouseButton.Left || PlacementActive == PlacementState.Active;
+                    return mouse.Button == MouseButton.Left
+                        || PlacementActive == PlacementState.Active;
 
                 default:
                     return false;
@@ -120,13 +124,14 @@ namespace osu.Game.Rulesets.Edit
         }
 
         protected override void PopIn() => this.FadeIn();
+
         protected override void PopOut() => this.FadeOut();
 
         public enum PlacementState
         {
             Waiting,
             Active,
-            Finished
+            Finished,
         }
     }
 }

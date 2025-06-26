@@ -14,10 +14,18 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// Snaps the provided <paramref name="hitObject"/>'s duration using the <paramref name="snapProvider"/>.
         /// </summary>
-        public static void SnapTo<THitObject>(this THitObject hitObject, IDistanceSnapProvider? snapProvider)
+        public static void SnapTo<THitObject>(
+            this THitObject hitObject,
+            IDistanceSnapProvider? snapProvider
+        )
             where THitObject : HitObject, IHasPath, IHasSliderVelocity
         {
-            hitObject.Path.ExpectedDistance.Value = snapProvider?.FindSnappedDistance((float)hitObject.Path.CalculatedDistance, hitObject.StartTime, hitObject) ?? hitObject.Path.CalculatedDistance;
+            hitObject.Path.ExpectedDistance.Value =
+                snapProvider?.FindSnappedDistance(
+                    (float)hitObject.Path.CalculatedDistance,
+                    hitObject.StartTime,
+                    hitObject
+                ) ?? hitObject.Path.CalculatedDistance;
         }
 
         /// <summary>
@@ -29,7 +37,11 @@ namespace osu.Game.Rulesets.Objects
         {
             var controlPoints = sliderPath.ControlPoints;
 
-            var inheritedLinearPoints = controlPoints.Where(p => sliderPath.PointsInSegment(p)[0].Type == PathType.LINEAR && p.Type == null).ToList();
+            var inheritedLinearPoints = controlPoints
+                .Where(p =>
+                    sliderPath.PointsInSegment(p)[0].Type == PathType.LINEAR && p.Type == null
+                )
+                .ToList();
 
             // Inherited points after a linear point, as well as the first control point if it inherited,
             // should be treated as linear points, so their types are temporarily changed to linear.
@@ -38,7 +50,11 @@ namespace osu.Game.Rulesets.Objects
             double[] segmentEnds = sliderPath.GetSegmentEnds().ToArray();
 
             // Remove segments after the end of the slider.
-            for (int numSegmentsToRemove = segmentEnds.Count(se => se >= 1) - 1; numSegmentsToRemove > 0 && controlPoints.Count > 0;)
+            for (
+                int numSegmentsToRemove = segmentEnds.Count(se => se >= 1) - 1;
+                numSegmentsToRemove > 0 && controlPoints.Count > 0;
+
+            )
             {
                 if (controlPoints.Last().Type is not null)
                 {
@@ -53,7 +69,12 @@ namespace osu.Game.Rulesets.Objects
             inheritedLinearPoints.ForEach(p => p.Type = null);
 
             // Recalculate middle perfect curve control points at the end of the slider path.
-            if (controlPoints.Count >= 3 && controlPoints[^3].Type == PathType.PERFECT_CURVE && controlPoints[^2].Type == null && segmentEnds.Any())
+            if (
+                controlPoints.Count >= 3
+                && controlPoints[^3].Type == PathType.PERFECT_CURVE
+                && controlPoints[^2].Type == null
+                && segmentEnds.Any()
+            )
             {
                 double lastSegmentStart = segmentEnds.Length > 1 ? segmentEnds[^2] : 0;
                 double lastSegmentEnd = segmentEnds[^1];
@@ -72,7 +93,10 @@ namespace osu.Game.Rulesets.Objects
         /// </summary>
         /// <param name="sliderPath">The <see cref="SliderPath"/>.</param>
         /// <param name="positionalOffset">The positional offset of the resulting path. It should be added to the start position of this path.</param>
-        private static void reverseControlPoints(this SliderPath sliderPath, out Vector2 positionalOffset)
+        private static void reverseControlPoints(
+            this SliderPath sliderPath,
+            out Vector2 positionalOffset
+        )
         {
             var points = sliderPath.ControlPoints.ToArray();
             positionalOffset = sliderPath.PositionAt(1);

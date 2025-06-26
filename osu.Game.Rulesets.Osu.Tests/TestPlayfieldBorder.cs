@@ -14,24 +14,28 @@ namespace osu.Game.Rulesets.Osu.Tests
     {
         public TestPlayfieldBorder()
         {
-            Bindable<PlayfieldBorderStyle> playfieldBorderStyle = new Bindable<PlayfieldBorderStyle>();
+            Bindable<PlayfieldBorderStyle> playfieldBorderStyle =
+                new Bindable<PlayfieldBorderStyle>();
 
-            AddStep("add drawables", () =>
-            {
-                Child = new Container
+            AddStep(
+                "add drawables",
+                () =>
                 {
-                    Size = new Vector2(400, 300),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
+                    Child = new Container
                     {
-                        new PlayfieldBorder
+                        Size = new Vector2(400, 300),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Children = new Drawable[]
                         {
-                            PlayfieldBorderStyle = { BindTarget = playfieldBorderStyle }
-                        }
-                    }
-                };
-            });
+                            new PlayfieldBorder
+                            {
+                                PlayfieldBorderStyle = { BindTarget = playfieldBorderStyle },
+                            },
+                        },
+                    };
+                }
+            );
 
             AddStep("Set none", () => playfieldBorderStyle.Value = PlayfieldBorderStyle.None);
             AddStep("Set corners", () => playfieldBorderStyle.Value = PlayfieldBorderStyle.Corners);

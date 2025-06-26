@@ -37,11 +37,12 @@ namespace osu.Game.Screens.Play.Break
             GlowColour = colours.BlueLighter;
         }
 
-        protected override Drawable CreateDrawable() => icon = new SpriteIcon
-        {
-            Origin = Anchor.Centre,
-            Anchor = Anchor.Centre,
-            Shadow = false,
-        };
+        protected override Drawable CreateDrawable() =>
+            icon = new SpriteIcon
+            {
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Shadow = false,
+            };
     }
 }

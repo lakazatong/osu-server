@@ -46,7 +46,9 @@ namespace osu.Game.Screens.Play.HUD
 
                 double progress = Math.Clamp(lastMouseX, 0, DrawWidth) / DrawWidth;
 
-                TimeSpan currentSpan = TimeSpan.FromMilliseconds(Math.Round((EndTime - StartTime) * progress));
+                TimeSpan currentSpan = TimeSpan.FromMilliseconds(
+                    Math.Round((EndTime - StartTime) * progress)
+                );
 
                 int seconds = currentSpan.Duration().Seconds;
                 int minutes = (int)Math.Floor(currentSpan.Duration().TotalMinutes);
@@ -78,7 +80,7 @@ namespace osu.Game.Screens.Play.HUD
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     CornerRadius = 5,
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
                 playfieldBar = new RoundedBar
                 {
@@ -87,7 +89,7 @@ namespace osu.Game.Screens.Play.HUD
                     Origin = Anchor.BottomLeft,
                     CornerRadius = 5,
                     AccentColour = mainColour = OsuColour.Gray(0.9f),
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
             };
         }
@@ -132,8 +134,18 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.Update();
 
-            playfieldBar.Length = (float)Interpolation.Lerp(playfieldBar.Length, Progress, Math.Clamp(Time.Elapsed / 40, 0, 1));
-            audioBar.Length = (float)Interpolation.Lerp(audioBar.Length, AudioProgress, Math.Clamp(Time.Elapsed / 40, 0, 1));
+            playfieldBar.Length = (float)
+                Interpolation.Lerp(
+                    playfieldBar.Length,
+                    Progress,
+                    Math.Clamp(Time.Elapsed / 40, 0, 1)
+                );
+            audioBar.Length = (float)
+                Interpolation.Lerp(
+                    audioBar.Length,
+                    AudioProgress,
+                    Math.Clamp(Time.Elapsed / 40, 0, 1)
+                );
 
             if (trackTime > AudioTime)
                 ChangeInternalChildDepth(audioBar, -1);
@@ -148,8 +160,10 @@ namespace osu.Game.Screens.Play.HUD
                 Math.Min(timeDelta, colour_transition_threshold),
                 mainColour,
                 catchUpColour,
-                0, colour_transition_threshold,
-                Easing.OutQuint);
+                0,
+                colour_transition_threshold,
+                Easing.OutQuint
+            );
         }
 
         private partial class RoundedBar : Container
@@ -168,12 +182,9 @@ namespace osu.Game.Screens.Play.HUD
                         Masking = true,
                         RelativeSizeAxes = Axes.Y,
                         Size = new Vector2(1),
-                        Child = fill = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Colour4.White
-                        }
-                    }
+                        Child = fill =
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.White },
+                    },
                 };
             }
 

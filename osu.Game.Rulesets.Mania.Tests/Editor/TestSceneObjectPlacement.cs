@@ -25,10 +25,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         {
             AddStep("Seek to 0", () => EditorClock.Seek(0));
             AddStep("Select note", () => InputManager.Key(Key.Number2));
-            AddStep("Hover negative span", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Container>().First(x => x.Name == "Icons").Children[0]);
-            });
+            AddStep(
+                "Hover negative span",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<Container>().First(x => x.Name == "Icons").Children[0]
+                    );
+                }
+            );
             AddStep("Click", () => InputManager.Click(MouseButton.Left));
             AddAssert("No notes placed", () => EditorBeatmap.HitObjects.All(x => x.StartTime >= 0));
         }
@@ -39,10 +44,17 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
             double? initialTime = null;
 
             AddStep("store initial time", () => initialTime = EditorClock.CurrentTime);
-            AddStep("change seek setting to true", () => config.SetValue(OsuSetting.EditorAutoSeekOnPlacement, true));
+            AddStep(
+                "change seek setting to true",
+                () => config.SetValue(OsuSetting.EditorAutoSeekOnPlacement, true)
+            );
             placeObject();
             AddUntilStep("wait for seek to complete", () => !EditorClock.IsSeeking);
-            AddAssert("seeked forward to object", () => EditorClock.CurrentTime, () => Is.GreaterThan(initialTime));
+            AddAssert(
+                "seeked forward to object",
+                () => EditorClock.CurrentTime,
+                () => Is.GreaterThan(initialTime)
+            );
         }
 
         [Test]
@@ -51,16 +63,29 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
             double? initialTime = null;
 
             AddStep("store initial time", () => initialTime = EditorClock.CurrentTime);
-            AddStep("change seek setting to false", () => config.SetValue(OsuSetting.EditorAutoSeekOnPlacement, false));
+            AddStep(
+                "change seek setting to false",
+                () => config.SetValue(OsuSetting.EditorAutoSeekOnPlacement, false)
+            );
             placeObject();
             AddAssert("not seeking", () => !EditorClock.IsSeeking);
-            AddAssert("time is unchanged", () => EditorClock.CurrentTime, () => Is.EqualTo(initialTime));
+            AddAssert(
+                "time is unchanged",
+                () => EditorClock.CurrentTime,
+                () => Is.EqualTo(initialTime)
+            );
         }
 
         private void placeObject()
         {
             AddStep("select note placement tool", () => InputManager.Key(Key.Number2));
-            AddStep("move mouse to centre of last column", () => InputManager.MoveMouseTo(this.ChildrenOfType<Column>().Last().ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move mouse to centre of last column",
+                () =>
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<Column>().Last().ScreenSpaceDrawQuad.Centre
+                    )
+            );
             AddStep("place note", () => InputManager.Click(MouseButton.Left));
         }
     }

@@ -15,10 +15,7 @@ namespace osu.Game.Tests.Online
         [Test]
         public void TestSerialiseRoom()
         {
-            var room = new MultiplayerRoom(1)
-            {
-                MatchState = new TeamVersusRoomState()
-            };
+            var room = new MultiplayerRoom(1) { MatchState = new TeamVersusRoomState() };
 
             byte[] serialized = MessagePackSerializer.Serialize(room);
 
@@ -50,7 +47,9 @@ namespace osu.Game.Tests.Online
             MessagePackSerializer.Deserialize<TeamVersusUserState>(serialized);
 
             // fails with base (union) type.
-            Assert.Throws<MessagePackSerializationException>(() => MessagePackSerializer.Deserialize<MatchUserState>(serialized));
+            Assert.Throws<MessagePackSerializationException>(() =>
+                MessagePackSerializer.Deserialize<MatchUserState>(serialized)
+            );
         }
 
         [Test]
@@ -59,13 +58,20 @@ namespace osu.Game.Tests.Online
             var state = new TeamVersusUserState();
 
             // SignalR serialises using the actual type, rather than a base specification.
-            byte[] serialized = MessagePackSerializer.Serialize(typeof(TeamVersusUserState), state, SignalRUnionWorkaroundResolver.OPTIONS);
+            byte[] serialized = MessagePackSerializer.Serialize(
+                typeof(TeamVersusUserState),
+                state,
+                SignalRUnionWorkaroundResolver.OPTIONS
+            );
 
             // works with explicit type specified.
             MessagePackSerializer.Deserialize<TeamVersusUserState>(serialized);
 
             // works with custom resolver.
-            var deserialized = MessagePackSerializer.Deserialize<MatchUserState>(serialized, SignalRUnionWorkaroundResolver.OPTIONS);
+            var deserialized = MessagePackSerializer.Deserialize<MatchUserState>(
+                serialized,
+                SignalRUnionWorkaroundResolver.OPTIONS
+            );
             Assert.IsTrue(deserialized is TeamVersusUserState);
         }
     }

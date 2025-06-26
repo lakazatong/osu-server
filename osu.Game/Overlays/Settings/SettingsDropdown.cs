@@ -40,7 +40,8 @@ namespace osu.Game.Overlays.Settings
             set => Control.ItemSource = value;
         }
 
-        public override IEnumerable<LocalisableString> FilterTerms => base.FilterTerms.Concat(Control.Items.Select(i => (LocalisableString)i.ToString()));
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            base.FilterTerms.Concat(Control.Items.Select(i => (LocalisableString)i.ToString()));
 
         protected sealed override Drawable CreateControl() => CreateDropdown();
 
@@ -53,7 +54,8 @@ namespace osu.Game.Overlays.Settings
                 RelativeSizeAxes = Axes.X;
             }
 
-            protected override DropdownMenu CreateMenu() => base.CreateMenu().With(m => m.MaxHeight = 200);
+            protected override DropdownMenu CreateMenu() =>
+                base.CreateMenu().With(m => m.MaxHeight = 200);
         }
     }
 }

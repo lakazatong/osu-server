@@ -41,39 +41,41 @@ namespace osu.Game.Overlays.FirstRunSetup
         {
             base.LoadComplete();
 
-            AddRange(new Drawable[]
-            {
-                progressBar = new ProgressBar(false)
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Blending = BlendingParameters.Additive,
-                    FillColour = BackgroundColour,
-                    Alpha = 0.5f,
-                    Depth = float.MinValue
-                },
-                new Container
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Margin = new MarginPadding(15),
-                    Size = new Vector2(20),
-                    Children = new Drawable[]
+                    progressBar = new ProgressBar(false)
                     {
-                        loading = new LoadingSpinner
+                        RelativeSizeAxes = Axes.Both,
+                        Blending = BlendingParameters.Additive,
+                        FillColour = BackgroundColour,
+                        Alpha = 0.5f,
+                        Depth = float.MinValue,
+                    },
+                    new Container
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        Margin = new MarginPadding(15),
+                        Size = new Vector2(20),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = Vector2.One,
+                            loading = new LoadingSpinner
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Size = Vector2.One,
+                            },
+                            tick = new SpriteIcon
+                            {
+                                Icon = FontAwesome.Solid.Check,
+                                RelativeSizeAxes = Axes.Both,
+                                Size = Vector2.One,
+                                Alpha = 0,
+                            },
                         },
-                        tick = new SpriteIcon
-                        {
-                            Icon = FontAwesome.Solid.Check,
-                            RelativeSizeAxes = Axes.Both,
-                            Size = Vector2.One,
-                            Alpha = 0,
-                        }
-                    }
-                },
-            });
+                    },
+                }
+            );
         }
 
         public void Complete()
@@ -96,7 +98,12 @@ namespace osu.Game.Overlays.FirstRunSetup
 
         public void SetProgress(double progress, bool animated)
         {
-            this.TransformBindableTo(progressBar.Current, progress, animated ? 500 : 0, Easing.OutQuint);
+            this.TransformBindableTo(
+                progressBar.Current,
+                progress,
+                animated ? 500 : 0,
+                Easing.OutQuint
+            );
         }
     }
 }

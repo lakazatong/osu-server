@@ -23,28 +23,24 @@ namespace osu.Game.Skinning
 {
     public class ArgonSkin : Skin
     {
-        public static SkinInfo CreateInfo() => new SkinInfo
-        {
-            ID = Skinning.SkinInfo.ARGON_SKIN,
-            Name = "osu! \"argon\" (2022)",
-            Creator = "team osu!",
-            Protected = true,
-            InstantiationInfo = typeof(ArgonSkin).GetInvariantInstantiationInfo()
-        };
+        public static SkinInfo CreateInfo() =>
+            new SkinInfo
+            {
+                ID = Skinning.SkinInfo.ARGON_SKIN,
+                Name = "osu! \"argon\" (2022)",
+                Creator = "team osu!",
+                Protected = true,
+                InstantiationInfo = typeof(ArgonSkin).GetInvariantInstantiationInfo(),
+            };
 
         protected readonly IStorageResourceProvider Resources;
 
         public ArgonSkin(IStorageResourceProvider resources)
-            : this(CreateInfo(), resources)
-        {
-        }
+            : this(CreateInfo(), resources) { }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
         public ArgonSkin(SkinInfo skin, IStorageResourceProvider resources)
-            : base(
-                skin,
-                resources
-            )
+            : base(skin, resources)
         {
             Resources = resources;
 
@@ -71,15 +67,22 @@ namespace osu.Game.Skinning
             };
         }
 
-        public override Texture? GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => Textures?.Get(componentName, wrapModeS, wrapModeT);
+        public override Texture? GetTexture(
+            string componentName,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT
+        ) => Textures?.Get(componentName, wrapModeS, wrapModeT);
 
         public override ISample? GetSample(ISampleInfo sampleInfo)
         {
             foreach (string lookup in sampleInfo.LookupNames)
             {
-                var sample = Samples?.Get(lookup)
-                             ?? Resources.AudioManager?.Samples.Get(lookup.Replace(@"Gameplay/", @"Gameplay/Argon/"))
-                             ?? Resources.AudioManager?.Samples.Get(lookup);
+                var sample =
+                    Samples?.Get(lookup)
+                    ?? Resources.AudioManager?.Samples.Get(
+                        lookup.Replace(@"Gameplay/", @"Gameplay/Argon/")
+                    )
+                    ?? Resources.AudioManager?.Samples.Get(lookup);
 
                 if (sample != null)
                     return sample;
@@ -91,7 +94,8 @@ namespace osu.Game.Skinning
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
             // Temporary until default skin has a valid hit lighting.
-            if ((lookup as SkinnableSprite.SpriteComponentLookup)?.LookupName == @"lighting") return Drawable.Empty();
+            if ((lookup as SkinnableSprite.SpriteComponentLookup)?.LookupName == @"lighting")
+                return Drawable.Empty();
 
             switch (lookup)
             {
@@ -111,9 +115,15 @@ namespace osu.Game.Skinning
                             {
                                 return new DefaultSkinComponentsContainer(container =>
                                 {
-                                    var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
-                                    var comboCounter = container.OfType<ArgonComboCounter>().FirstOrDefault();
-                                    var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
+                                    var leaderboard = container
+                                        .OfType<DrawableGameplayLeaderboard>()
+                                        .FirstOrDefault();
+                                    var comboCounter = container
+                                        .OfType<ArgonComboCounter>()
+                                        .FirstOrDefault();
+                                    var spectatorList = container
+                                        .OfType<SpectatorList>()
+                                        .FirstOrDefault();
 
                                     if (leaderboard != null)
                                         leaderboard.Position = new Vector2(36, 115);
@@ -144,21 +154,31 @@ namespace osu.Game.Skinning
                                         {
                                             Anchor = Anchor.BottomLeft,
                                             Origin = Anchor.BottomLeft,
-                                        }
+                                        },
                                     },
                                 };
                             }
 
                             var mainHUDComponents = new DefaultSkinComponentsContainer(container =>
                             {
-                                var health = container.OfType<ArgonHealthDisplay>().FirstOrDefault();
+                                var health = container
+                                    .OfType<ArgonHealthDisplay>()
+                                    .FirstOrDefault();
                                 var healthLine = container.OfType<BoxElement>().FirstOrDefault();
                                 var wedgePieces = container.OfType<ArgonWedgePiece>().ToArray();
                                 var score = container.OfType<ArgonScoreCounter>().FirstOrDefault();
-                                var accuracy = container.OfType<ArgonAccuracyCounter>().FirstOrDefault();
-                                var performancePoints = container.OfType<ArgonPerformancePointsCounter>().FirstOrDefault();
-                                var songProgress = container.OfType<ArgonSongProgress>().FirstOrDefault();
-                                var keyCounter = container.OfType<ArgonKeyCounterDisplay>().FirstOrDefault();
+                                var accuracy = container
+                                    .OfType<ArgonAccuracyCounter>()
+                                    .FirstOrDefault();
+                                var performancePoints = container
+                                    .OfType<ArgonPerformancePointsCounter>()
+                                    .FirstOrDefault();
+                                var songProgress = container
+                                    .OfType<ArgonSongProgress>()
+                                    .FirstOrDefault();
+                                var keyCounter = container
+                                    .OfType<ArgonKeyCounterDisplay>()
+                                    .FirstOrDefault();
 
                                 if (health != null)
                                 {
@@ -176,7 +196,8 @@ namespace osu.Game.Skinning
                                     {
                                         healthLine.Anchor = Anchor.TopLeft;
                                         healthLine.Origin = Anchor.CentreLeft;
-                                        healthLine.Y = health.Y + ArgonHealthDisplay.MAIN_PATH_RADIUS;
+                                        healthLine.Y =
+                                            health.Y + ArgonHealthDisplay.MAIN_PATH_RADIUS;
                                         healthLine.Size = new Vector2(45, 3);
                                     }
 
@@ -186,7 +207,10 @@ namespace osu.Game.Skinning
                                     if (score != null)
                                     {
                                         score.Origin = Anchor.TopRight;
-                                        score.Position = new Vector2(components_x_offset + 200, wedgePieces.Last().Y + 30);
+                                        score.Position = new Vector2(
+                                            components_x_offset + 200,
+                                            wedgePieces.Last().Y + 30
+                                        );
                                     }
 
                                     if (accuracy != null)
@@ -199,12 +223,17 @@ namespace osu.Game.Skinning
 
                                     if (performancePoints != null && accuracy != null)
                                     {
-                                        performancePoints.Position = new Vector2(accuracy.X, accuracy.Y + accuracy.DrawHeight + 10);
+                                        performancePoints.Position = new Vector2(
+                                            accuracy.X,
+                                            accuracy.Y + accuracy.DrawHeight + 10
+                                        );
                                         performancePoints.Anchor = Anchor.TopRight;
                                         performancePoints.Origin = Anchor.TopRight;
                                     }
 
-                                    var hitError = container.OfType<HitErrorMeter>().FirstOrDefault();
+                                    var hitError = container
+                                        .OfType<HitErrorMeter>()
+                                        .FirstOrDefault();
 
                                     if (hitError != null)
                                     {
@@ -212,7 +241,9 @@ namespace osu.Game.Skinning
                                         hitError.Origin = Anchor.CentreLeft;
                                     }
 
-                                    var hitError2 = container.OfType<HitErrorMeter>().LastOrDefault();
+                                    var hitError2 = container
+                                        .OfType<HitErrorMeter>()
+                                        .LastOrDefault();
 
                                     if (hitError2 != null)
                                     {
@@ -235,7 +266,10 @@ namespace osu.Game.Skinning
                                         {
                                             keyCounter.Anchor = Anchor.BottomRight;
                                             keyCounter.Origin = Anchor.BottomRight;
-                                            keyCounter.Position = new Vector2(-(hitError.Width + padding), -(padding * 2 + song_progress_offset_height));
+                                            keyCounter.Position = new Vector2(
+                                                -(hitError.Width + padding),
+                                                -(padding * 2 + song_progress_offset_height)
+                                            );
                                         }
                                     }
                                 }
@@ -243,34 +277,22 @@ namespace osu.Game.Skinning
                             {
                                 Children = new Drawable[]
                                 {
+                                    new ArgonWedgePiece { Size = new Vector2(380, 72) },
                                     new ArgonWedgePiece
                                     {
                                         Size = new Vector2(380, 72),
+                                        Position = new Vector2(4, 5),
                                     },
-                                    new ArgonWedgePiece
-                                    {
-                                        Size = new Vector2(380, 72),
-                                        Position = new Vector2(4, 5)
-                                    },
-                                    new ArgonScoreCounter
-                                    {
-                                        ShowLabel = { Value = false },
-                                    },
+                                    new ArgonScoreCounter { ShowLabel = { Value = false } },
                                     new ArgonHealthDisplay(),
-                                    new BoxElement
-                                    {
-                                        CornerRadius = { Value = 0.5f }
-                                    },
+                                    new BoxElement { CornerRadius = { Value = 0.5f } },
                                     new ArgonAccuracyCounter(),
-                                    new ArgonPerformancePointsCounter
-                                    {
-                                        Scale = new Vector2(0.8f),
-                                    },
+                                    new ArgonPerformancePointsCounter { Scale = new Vector2(0.8f) },
                                     new BarHitErrorMeter(),
                                     new BarHitErrorMeter(),
                                     new ArgonSongProgress(),
                                     new ArgonKeyCounterDisplay(),
-                                }
+                                },
                             };
 
                             return mainHUDComponents;
@@ -294,7 +316,9 @@ namespace osu.Game.Skinning
                         case GlobalSkinColours.ComboColours:
                         {
                             LogLookupDebug(this, lookup, LookupDebugType.Hit);
-                            return SkinUtils.As<TValue>(new Bindable<IReadOnlyList<Color4>?>(Configuration.ComboColours));
+                            return SkinUtils.As<TValue>(
+                                new Bindable<IReadOnlyList<Color4>?>(Configuration.ComboColours)
+                            );
                         }
                     }
 
@@ -302,14 +326,16 @@ namespace osu.Game.Skinning
 
                 case SkinComboColourLookup comboColour:
                     LogLookupDebug(this, lookup, LookupDebugType.Hit);
-                    return SkinUtils.As<TValue>(new Bindable<Color4>(getComboColour(Configuration, comboColour.ColourIndex)));
+                    return SkinUtils.As<TValue>(
+                        new Bindable<Color4>(getComboColour(Configuration, comboColour.ColourIndex))
+                    );
             }
 
             LogLookupDebug(this, lookup, LookupDebugType.Miss);
             return null;
         }
 
-        private static Color4 getComboColour(IHasComboColours source, int colourIndex)
-            => source.ComboColours![colourIndex % source.ComboColours.Count];
+        private static Color4 getComboColour(IHasComboColours source, int colourIndex) =>
+            source.ComboColours![colourIndex % source.ComboColours.Count];
     }
 }

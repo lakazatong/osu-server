@@ -16,7 +16,10 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 
         public APIUserHistoryCount[]? Values
         {
-            set => Data = value?.Select(v => new KeyValuePair<DateTime, long>(v.Date, v.Count)).ToArray();
+            set =>
+                Data = value
+                    ?.Select(v => new KeyValuePair<DateTime, long>(v.Date, v.Count))
+                    .ToArray();
         }
 
         public UserHistoryGraph(LocalisableString tooltipCounterName)
@@ -26,12 +29,15 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 
         protected override float GetDataPointHeight(long playCount) => playCount;
 
-        protected override UserGraphTooltipContent GetTooltipContent(DateTime date, long playCount) =>
+        protected override UserGraphTooltipContent GetTooltipContent(
+            DateTime date,
+            long playCount
+        ) =>
             new UserGraphTooltipContent
             {
                 Name = tooltipCounterName,
                 Count = playCount.ToLocalisableString("N0"),
-                Time = date.ToLocalisableString("MMMM yyyy")
+                Time = date.ToLocalisableString("MMMM yyyy"),
             };
     }
 }

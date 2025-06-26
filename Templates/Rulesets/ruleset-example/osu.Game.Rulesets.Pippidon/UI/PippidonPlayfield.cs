@@ -15,10 +15,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                HitObjectContainer,
-            });
+            AddRangeInternal(new Drawable[] { HitObjectContainer });
         }
     }
 }

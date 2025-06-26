@@ -8,10 +8,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Localisation;
 using osu.Game.Overlays.Settings;
 using osu.Game.Screens.Menu;
 using osuTK;
-using osu.Game.Localisation;
 
 namespace osu.Game.Overlays.AccountCreation
 {
@@ -59,9 +59,9 @@ namespace osu.Game.Overlays.AccountCreation
                     {
                         Text = AccountCreationStrings.LetsCreateAnAccount,
                         Margin = new MarginPadding { Vertical = 120 },
-                        Action = () => this.Push(new ScreenWarning())
-                    }
-                }
+                        Action = () => this.Push(new ScreenWarning()),
+                    },
+                },
             };
         }
     }

@@ -25,7 +25,8 @@ namespace osu.Game.Tests.Visual
     {
         protected Editor Editor => Game.ChildrenOfType<Editor>().FirstOrDefault();
 
-        protected EditorBeatmap EditorBeatmap => (EditorBeatmap)Editor.Dependencies.Get(typeof(EditorBeatmap));
+        protected EditorBeatmap EditorBeatmap =>
+            (EditorBeatmap)Editor.Dependencies.Get(typeof(EditorBeatmap));
 
         [CanBeNull]
         protected Func<WorkingBeatmap> CreateInitialBeatmap { get; set; }
@@ -39,7 +40,10 @@ namespace osu.Game.Tests.Visual
                 AddStep("set default beatmap", () => Game.Beatmap.SetDefault());
             else
             {
-                AddStep("set test beatmap", () => Game.Beatmap.Value = CreateInitialBeatmap?.Invoke());
+                AddStep(
+                    "set test beatmap",
+                    () => Game.Beatmap.Value = CreateInitialBeatmap?.Invoke()
+                );
             }
 
             PushAndConfirm(() => new EditorLoader());
@@ -47,12 +51,19 @@ namespace osu.Game.Tests.Visual
             AddUntilStep("wait for editor load", () => Editor?.IsLoaded == true);
 
             if (CreateInitialBeatmap == null)
-                AddUntilStep("wait for metadata screen load", () => Editor.ChildrenOfType<MetadataSection>().FirstOrDefault()?.IsLoaded == true);
+                AddUntilStep(
+                    "wait for metadata screen load",
+                    () =>
+                        Editor.ChildrenOfType<MetadataSection>().FirstOrDefault()?.IsLoaded == true
+                );
 
             // We intentionally switch away from the metadata screen, else there is a feedback loop with the textbox handling which causes metadata changes below to get overwritten.
 
             AddStep("Enter compose mode", () => InputManager.Key(Key.F1));
-            AddUntilStep("Wait for compose mode load", () => Editor.ChildrenOfType<HitObjectComposer>().FirstOrDefault()?.IsLoaded == true);
+            AddUntilStep(
+                "Wait for compose mode load",
+                () => Editor.ChildrenOfType<HitObjectComposer>().FirstOrDefault()?.IsLoaded == true
+            );
         }
 
         protected void SaveEditor()
@@ -65,11 +76,14 @@ namespace osu.Game.Tests.Visual
             Guid beatmapSetGuid = Guid.Empty;
             Guid beatmapGuid = Guid.Empty;
 
-            AddStep("Store beatmap GUIDs", () =>
-            {
-                beatmapSetGuid = EditorBeatmap.BeatmapInfo.BeatmapSet!.ID;
-                beatmapGuid = EditorBeatmap.BeatmapInfo.ID;
-            });
+            AddStep(
+                "Store beatmap GUIDs",
+                () =>
+                {
+                    beatmapSetGuid = EditorBeatmap.BeatmapInfo.BeatmapSet!.ID;
+                    beatmapGuid = EditorBeatmap.BeatmapInfo.ID;
+                }
+            );
             AddStep("Exit", () => InputManager.Key(Key.Escape));
 
             AddUntilStep("Wait for main menu", () => Game.ScreenStack.CurrentScreen is MainMenu);
@@ -79,8 +93,18 @@ namespace osu.Game.Tests.Visual
             PushAndConfirm(() => songSelect = new PlaySongSelect());
             AddUntilStep("wait for carousel load", () => songSelect.BeatmapSetsLoaded);
 
-            AddStep("Present same beatmap", () => Game.PresentBeatmap(Game.BeatmapManager.QueryBeatmapSet(set => set.ID == beatmapSetGuid)!.Value, beatmap => beatmap.ID == beatmapGuid));
-            AddUntilStep("Wait for beatmap selected", () => Game.Beatmap.Value.BeatmapInfo.ID == beatmapGuid);
+            AddStep(
+                "Present same beatmap",
+                () =>
+                    Game.PresentBeatmap(
+                        Game.BeatmapManager.QueryBeatmapSet(set => set.ID == beatmapSetGuid)!.Value,
+                        beatmap => beatmap.ID == beatmapGuid
+                    )
+            );
+            AddUntilStep(
+                "Wait for beatmap selected",
+                () => Game.Beatmap.Value.BeatmapInfo.ID == beatmapGuid
+            );
             AddStep("Open options", () => InputManager.Key(Key.F3));
             AddStep("Enter editor", () => InputManager.Key(Key.Number5));
 

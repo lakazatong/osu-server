@@ -56,7 +56,10 @@ namespace osu.Game.Overlays.Mods
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Text = Mod.Name,
-                                Font = OsuFont.TorusAlternate.With(size: 20, weight: FontWeight.SemiBold),
+                                Font = OsuFont.TorusAlternate.With(
+                                    size: 20,
+                                    weight: FontWeight.SemiBold
+                                ),
                             },
                             new ModSwitchTiny(Mod)
                             {
@@ -64,10 +67,10 @@ namespace osu.Game.Overlays.Mods
                                 Origin = Anchor.CentreRight,
                                 Active = { Value = true },
                                 Scale = new Vector2(0.5f),
-                            }
-                        }
+                            },
+                        },
                     },
-                }
+                },
             };
 
             flow.AddRange(settings);

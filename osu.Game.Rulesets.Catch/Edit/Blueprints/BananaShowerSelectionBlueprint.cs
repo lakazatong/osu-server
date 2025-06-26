@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
     public partial class BananaShowerSelectionBlueprint : CatchSelectionBlueprint<BananaShower>
     {
         public BananaShowerSelectionBlueprint(BananaShower hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
     }
 }

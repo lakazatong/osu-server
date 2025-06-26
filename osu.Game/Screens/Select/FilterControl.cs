@@ -68,7 +68,9 @@ namespace osu.Game.Screens.Select
                 AllowConvertedBeatmaps = showConverted.Value,
                 Ruleset = ruleset.Value,
                 Mods = mods.Value,
-                CollectionBeatmapMD5Hashes = collectionDropdown.Current.Value?.Collection?.PerformRead(c => c.BeatmapMD5Hashes).ToImmutableHashSet()
+                CollectionBeatmapMD5Hashes = collectionDropdown
+                    .Current.Value?.Collection?.PerformRead(c => c.BeatmapMD5Hashes)
+                    .ToImmutableHashSet(),
             };
 
             if (!minimumStars.IsDefault)
@@ -84,7 +86,8 @@ namespace osu.Game.Screens.Select
         }
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
-            base.ReceivePositionalInputAt(screenSpacePos) || sortTabs.ReceivePositionalInputAt(screenSpacePos);
+            base.ReceivePositionalInputAt(screenSpacePos)
+            || sortTabs.ReceivePositionalInputAt(screenSpacePos);
 
         [BackgroundDependencyLoader(permitNulls: true)]
         private void load(OsuColour colours, OsuConfigManager config)
@@ -115,10 +118,7 @@ namespace osu.Game.Screens.Select
                         Spacing = new Vector2(0, 5),
                         Children = new Drawable[]
                         {
-                            searchTextBox = new FilterControlTextBox
-                            {
-                                RelativeSizeAxes = Axes.X,
-                            },
+                            searchTextBox = new FilterControlTextBox { RelativeSizeAxes = Axes.X },
                             new Box
                             {
                                 RelativeSizeAxes = Axes.X,
@@ -132,9 +132,15 @@ namespace osu.Game.Screens.Select
                                 ColumnDimensions = new[]
                                 {
                                     new Dimension(GridSizeMode.AutoSize),
-                                    new Dimension(GridSizeMode.Absolute, OsuTabControl<SortMode>.HORIZONTAL_SPACING),
+                                    new Dimension(
+                                        GridSizeMode.Absolute,
+                                        OsuTabControl<SortMode>.HORIZONTAL_SPACING
+                                    ),
                                     new Dimension(),
-                                    new Dimension(GridSizeMode.Absolute, OsuTabControl<SortMode>.HORIZONTAL_SPACING),
+                                    new Dimension(
+                                        GridSizeMode.Absolute,
+                                        OsuTabControl<SortMode>.HORIZONTAL_SPACING
+                                    ),
                                     new Dimension(GridSizeMode.AutoSize),
                                 },
                                 RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
@@ -159,18 +165,20 @@ namespace osu.Game.Screens.Select
                                             Anchor = Anchor.BottomRight,
                                             Origin = Anchor.BottomRight,
                                             AccentColour = colours.GreenLight,
-                                            Current = { BindTarget = sortMode }
+                                            Current = { BindTarget = sortMode },
                                         },
                                         Empty(),
                                         new OsuTabControlCheckbox
                                         {
                                             Text = "Show converted",
-                                            Current = config.GetBindable<bool>(OsuSetting.ShowConvertedBeatmaps),
+                                            Current = config.GetBindable<bool>(
+                                                OsuSetting.ShowConvertedBeatmaps
+                                            ),
                                             Anchor = Anchor.BottomRight,
                                             Origin = Anchor.BottomRight,
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
                             new Container
                             {
@@ -183,14 +191,18 @@ namespace osu.Game.Screens.Select
                                         Anchor = Anchor.TopLeft,
                                         Origin = Anchor.TopLeft,
                                         Label = "Difficulty range",
-                                        LowerBound = config.GetBindable<double>(OsuSetting.DisplayStarsMinimum),
-                                        UpperBound = config.GetBindable<double>(OsuSetting.DisplayStarsMaximum),
+                                        LowerBound = config.GetBindable<double>(
+                                            OsuSetting.DisplayStarsMinimum
+                                        ),
+                                        UpperBound = config.GetBindable<double>(
+                                            OsuSetting.DisplayStarsMaximum
+                                        ),
                                         RelativeSizeAxes = Axes.Both,
                                         Width = 0.48f,
                                         DefaultStringLowerBound = "0",
                                         DefaultStringUpperBound = "∞",
                                         DefaultTooltipUpperBound = UserInterfaceStrings.NoLimit,
-                                        TooltipSuffix = "stars"
+                                        TooltipSuffix = "stars",
                                     },
                                     collectionDropdown = new CollectionDropdown
                                     {
@@ -200,12 +212,12 @@ namespace osu.Game.Screens.Select
                                         RelativeSizeAxes = Axes.X,
                                         Y = 4,
                                         Width = 0.5f,
-                                    }
-                                }
+                                    },
+                                },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             config.BindWith(OsuSetting.ShowConvertedBeatmaps, showConverted);
@@ -285,21 +297,30 @@ namespace osu.Game.Screens.Select
             [BackgroundDependencyLoader]
             private void load(OsuColour colours)
             {
-                TextContainer.Add(FilterText = new OsuSpriteText
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.TopLeft,
-                    Depth = float.MinValue,
-                    Font = OsuFont.Default.With(size: filter_text_size, weight: FontWeight.SemiBold),
-                    Margin = new MarginPadding { Top = 2, Left = 2 },
-                    Colour = colours.Yellow
-                });
+                TextContainer.Add(
+                    FilterText = new OsuSpriteText
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.TopLeft,
+                        Depth = float.MinValue,
+                        Font = OsuFont.Default.With(
+                            size: filter_text_size,
+                            weight: FontWeight.SemiBold
+                        ),
+                        Margin = new MarginPadding { Top = 2, Left = 2 },
+                        Colour = colours.Yellow,
+                    }
+                );
             }
 
             public override bool OnPressed(KeyBindingPressEvent<PlatformAction> e)
             {
                 // the "cut" platform key binding (shift-delete) conflicts with the beatmap deletion action.
-                if (e.Action == PlatformAction.Cut && e.ShiftPressed && e.CurrentState.Keyboard.Keys.IsPressed(Key.Delete))
+                if (
+                    e.Action == PlatformAction.Cut
+                    && e.ShiftPressed
+                    && e.CurrentState.Keyboard.Keys.IsPressed(Key.Delete)
+                )
                     return false;
 
                 return base.OnPressed(e);

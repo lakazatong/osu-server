@@ -20,7 +20,8 @@ namespace osu.Game.Users.Drawables
         public DrawableFlag(CountryCode countryCode)
         {
             this.countryCode = countryCode;
-            TooltipText = countryCode == CountryCode.Unknown ? string.Empty : countryCode.GetDescription();
+            TooltipText =
+                countryCode == CountryCode.Unknown ? string.Empty : countryCode.GetDescription();
         }
 
         [BackgroundDependencyLoader]

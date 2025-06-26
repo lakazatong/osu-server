@@ -16,7 +16,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
-    public abstract partial class FullscreenOverlay<T> : WaveOverlayContainer, INamedOverlayComponent
+    public abstract partial class FullscreenOverlay<T>
+        : WaveOverlayContainer,
+            INamedOverlayComponent
         where T : OverlayHeader
     {
         public virtual IconUsage Icon => Header.Title.Icon;
@@ -57,20 +59,16 @@ namespace osu.Game.Overlays
                 Colour = Color4.Black.Opacity(0),
                 Type = EdgeEffectType.Shadow,
                 Hollow = true,
-                Radius = 10
+                Radius = 10,
             };
 
-            base.Content.AddRange(new Drawable[]
-            {
-                background = new Box
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    content = new Container { RelativeSizeAxes = Axes.Both },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -115,17 +113,20 @@ namespace osu.Game.Overlays
         protected override void PopIn()
         {
             base.PopIn();
-            FadeEdgeEffectTo(WaveContainer.SHADOW_OPACITY, WaveContainer.APPEAR_DURATION, Easing.Out);
+            FadeEdgeEffectTo(
+                WaveContainer.SHADOW_OPACITY,
+                WaveContainer.APPEAR_DURATION,
+                Easing.Out
+            );
         }
 
         protected override void PopOut()
         {
             base.PopOut();
-            FadeEdgeEffectTo(0, WaveContainer.DISAPPEAR_DURATION, Easing.In).OnComplete(_ => PopOutComplete());
+            FadeEdgeEffectTo(0, WaveContainer.DISAPPEAR_DURATION, Easing.In)
+                .OnComplete(_ => PopOutComplete());
         }
 
-        protected virtual void PopOutComplete()
-        {
-        }
+        protected virtual void PopOutComplete() { }
     }
 }

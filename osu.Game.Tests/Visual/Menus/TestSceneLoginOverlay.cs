@@ -32,7 +32,8 @@ namespace osu.Game.Tests.Visual.Menus
         private OsuConfigManager localConfig = null!;
 
         [Cached(typeof(LocalUserStatisticsProvider))]
-        private readonly TestSceneUserPanel.TestUserStatisticsProvider statisticsProvider = new TestSceneUserPanel.TestUserStatisticsProvider();
+        private readonly TestSceneUserPanel.TestUserStatisticsProvider statisticsProvider =
+            new TestSceneUserPanel.TestUserStatisticsProvider();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -49,7 +50,10 @@ namespace osu.Game.Tests.Visual.Menus
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("reset online state", () => localConfig.SetValue(OsuSetting.UserOnlineStatus, UserStatus.Online));
+            AddStep(
+                "reset online state",
+                () => localConfig.SetValue(OsuSetting.UserOnlineStatus, UserStatus.Online)
+            );
             AddStep("show login overlay", () => loginOverlay.Show());
         }
 
@@ -59,48 +63,92 @@ namespace osu.Game.Tests.Visual.Menus
             AddStep("logout", () => API.Logout());
             assertAPIState(APIState.Offline);
 
-            AddStep("enter password", () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password");
-            AddStep("submit", () => loginOverlay.ChildrenOfType<OsuButton>().First(b => b.Text.ToString() == "Sign in").TriggerClick());
+            AddStep(
+                "enter password",
+                () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password"
+            );
+            AddStep(
+                "submit",
+                () =>
+                    loginOverlay
+                        .ChildrenOfType<OsuButton>()
+                        .First(b => b.Text.ToString() == "Sign in")
+                        .TriggerClick()
+            );
 
             assertAPIState(APIState.RequiresSecondFactorAuth);
-            AddUntilStep("wait for second factor auth form", () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(), () => Is.Not.Null);
+            AddUntilStep(
+                "wait for second factor auth form",
+                () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
 
-            AddStep("set up verification handling", () => dummyAPI.HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case VerifySessionRequest verifySessionRequest:
-                        if (verifySessionRequest.VerificationKey == "88800088")
-                            verifySessionRequest.TriggerSuccess();
-                        else
-                            verifySessionRequest.TriggerFailure(new WebException());
-                        return true;
-                }
+            AddStep(
+                "set up verification handling",
+                () =>
+                    dummyAPI.HandleRequest = req =>
+                    {
+                        switch (req)
+                        {
+                            case VerifySessionRequest verifySessionRequest:
+                                if (verifySessionRequest.VerificationKey == "88800088")
+                                    verifySessionRequest.TriggerSuccess();
+                                else
+                                    verifySessionRequest.TriggerFailure(new WebException());
+                                return true;
+                        }
 
-                return false;
-            });
+                        return false;
+                    }
+            );
 
-            AddStep("enter code", () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "88800088");
+            AddStep(
+                "enter code",
+                () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "88800088"
+            );
             assertAPIState(APIState.Online);
             assertDropdownState(UserAction.Online);
 
-            AddStep("set failing", () => { dummyAPI.SetState(APIState.Failing); });
-            AddStep("return to online", () => { dummyAPI.SetState(APIState.Online); });
+            AddStep(
+                "set failing",
+                () =>
+                {
+                    dummyAPI.SetState(APIState.Failing);
+                }
+            );
+            AddStep(
+                "return to online",
+                () =>
+                {
+                    dummyAPI.SetState(APIState.Online);
+                }
+            );
 
             AddStep("clear handler", () => dummyAPI.HandleRequest = null);
 
             assertDropdownState(UserAction.Online);
-            AddStep("change user state", () => localConfig.SetValue(OsuSetting.UserOnlineStatus, UserStatus.DoNotDisturb));
+            AddStep(
+                "change user state",
+                () => localConfig.SetValue(OsuSetting.UserOnlineStatus, UserStatus.DoNotDisturb)
+            );
             assertDropdownState(UserAction.DoNotDisturb);
         }
 
         private void assertDropdownState(UserAction state)
         {
-            AddAssert($"dropdown state is {state}", () => loginOverlay.ChildrenOfType<UserDropdown>().First().Current.Value, () => Is.EqualTo(state));
+            AddAssert(
+                $"dropdown state is {state}",
+                () => loginOverlay.ChildrenOfType<UserDropdown>().First().Current.Value,
+                () => Is.EqualTo(state)
+            );
         }
 
         private void assertAPIState(APIState expected) =>
-            AddUntilStep($"login state is {expected}", () => API.State.Value, () => Is.EqualTo(expected));
+            AddUntilStep(
+                $"login state is {expected}",
+                () => API.State.Value,
+                () => Is.EqualTo(expected)
+            );
 
         [Test]
         public void TestVerificationFailure()
@@ -110,28 +158,49 @@ namespace osu.Game.Tests.Visual.Menus
             AddStep("logout", () => API.Logout());
             assertAPIState(APIState.Offline);
 
-            AddStep("enter password", () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password");
-            AddStep("submit", () => loginOverlay.ChildrenOfType<OsuButton>().First(b => b.Text.ToString() == "Sign in").TriggerClick());
+            AddStep(
+                "enter password",
+                () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password"
+            );
+            AddStep(
+                "submit",
+                () =>
+                    loginOverlay
+                        .ChildrenOfType<OsuButton>()
+                        .First(b => b.Text.ToString() == "Sign in")
+                        .TriggerClick()
+            );
 
             assertAPIState(APIState.RequiresSecondFactorAuth);
-            AddUntilStep("wait for second factor auth form", () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(), () => Is.Not.Null);
+            AddUntilStep(
+                "wait for second factor auth form",
+                () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
 
-            AddStep("set up verification handling", () => dummyAPI.HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case VerifySessionRequest verifySessionRequest:
-                        if (verifySessionRequest.VerificationKey == "88800088")
-                            verifySessionRequest.TriggerSuccess();
-                        else
-                            verifySessionRequest.TriggerFailure(new WebException());
-                        verificationHandled = true;
-                        return true;
-                }
+            AddStep(
+                "set up verification handling",
+                () =>
+                    dummyAPI.HandleRequest = req =>
+                    {
+                        switch (req)
+                        {
+                            case VerifySessionRequest verifySessionRequest:
+                                if (verifySessionRequest.VerificationKey == "88800088")
+                                    verifySessionRequest.TriggerSuccess();
+                                else
+                                    verifySessionRequest.TriggerFailure(new WebException());
+                                verificationHandled = true;
+                                return true;
+                        }
 
-                return false;
-            });
-            AddStep("enter code", () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "abcdefgh");
+                        return false;
+                    }
+            );
+            AddStep(
+                "enter code",
+                () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "abcdefgh"
+            );
             AddUntilStep("wait for verification handled", () => verificationHandled);
             assertAPIState(APIState.RequiresSecondFactorAuth);
             AddStep("clear handler", () => dummyAPI.HandleRequest = null);
@@ -140,49 +209,101 @@ namespace osu.Game.Tests.Visual.Menus
         [Test]
         public void TestLoginFailure()
         {
-            AddStep("logout", () =>
-            {
-                API.Logout();
-                ((DummyAPIAccess)API).FailNextLogin();
-            });
+            AddStep(
+                "logout",
+                () =>
+                {
+                    API.Logout();
+                    ((DummyAPIAccess)API).FailNextLogin();
+                }
+            );
 
-            AddStep("enter password", () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password");
-            AddStep("submit", () => loginOverlay.ChildrenOfType<OsuButton>().First(b => b.Text.ToString() == "Sign in").TriggerClick());
+            AddStep(
+                "enter password",
+                () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password"
+            );
+            AddStep(
+                "submit",
+                () =>
+                    loginOverlay
+                        .ChildrenOfType<OsuButton>()
+                        .First(b => b.Text.ToString() == "Sign in")
+                        .TriggerClick()
+            );
         }
 
         [Test]
         public void TestLoginConnecting()
         {
-            AddStep("logout", () =>
-            {
-                API.Logout();
-                ((DummyAPIAccess)API).PauseOnConnectingNextLogin();
-            });
+            AddStep(
+                "logout",
+                () =>
+                {
+                    API.Logout();
+                    ((DummyAPIAccess)API).PauseOnConnectingNextLogin();
+                }
+            );
 
-            AddStep("enter password", () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password");
-            AddStep("submit", () => loginOverlay.ChildrenOfType<OsuButton>().First(b => b.Text.ToString() == "Sign in").TriggerClick());
+            AddStep(
+                "enter password",
+                () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password"
+            );
+            AddStep(
+                "submit",
+                () =>
+                    loginOverlay
+                        .ChildrenOfType<OsuButton>()
+                        .First(b => b.Text.ToString() == "Sign in")
+                        .TriggerClick()
+            );
         }
 
         [Test]
         public void TestClickingOnFlagClosesOverlay()
         {
             AddStep("logout", () => API.Logout());
-            AddStep("enter password", () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password");
-            AddStep("submit", () => loginOverlay.ChildrenOfType<OsuButton>().First(b => b.Text.ToString() == "Sign in").TriggerClick());
+            AddStep(
+                "enter password",
+                () => loginOverlay.ChildrenOfType<OsuPasswordTextBox>().First().Text = "password"
+            );
+            AddStep(
+                "submit",
+                () =>
+                    loginOverlay
+                        .ChildrenOfType<OsuButton>()
+                        .First(b => b.Text.ToString() == "Sign in")
+                        .TriggerClick()
+            );
 
             assertAPIState(APIState.RequiresSecondFactorAuth);
-            AddUntilStep("wait for second factor auth form", () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(), () => Is.Not.Null);
+            AddUntilStep(
+                "wait for second factor auth form",
+                () => loginOverlay.ChildrenOfType<SecondFactorAuthForm>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
 
-            AddStep("enter code", () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "88800088");
+            AddStep(
+                "enter code",
+                () => loginOverlay.ChildrenOfType<OsuTextBox>().First().Text = "88800088"
+            );
             assertAPIState(APIState.Online);
 
-            AddStep("feed statistics", () => statisticsProvider.UpdateStatistics(new UserStatistics(), Ruleset.Value));
-            AddStep("click on flag", () =>
-            {
-                InputManager.MoveMouseTo(loginOverlay.ChildrenOfType<UpdateableFlag>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("login overlay is hidden", () => loginOverlay.State.Value == Visibility.Hidden);
+            AddStep(
+                "feed statistics",
+                () => statisticsProvider.UpdateStatistics(new UserStatistics(), Ruleset.Value)
+            );
+            AddStep(
+                "click on flag",
+                () =>
+                {
+                    InputManager.MoveMouseTo(loginOverlay.ChildrenOfType<UpdateableFlag>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "login overlay is hidden",
+                () => loginOverlay.State.Value == Visibility.Hidden
+            );
         }
 
         [Test]
@@ -190,15 +311,35 @@ namespace osu.Game.Tests.Visual.Menus
         {
             AddStep("logout", () => API.Logout());
             AddStep("set username", () => localConfig.SetValue(OsuSetting.Username, "test_user"));
-            AddStep("set remember password", () => localConfig.SetValue(OsuSetting.SavePassword, true));
-            AddStep("uncheck remember username", () =>
-            {
-                InputManager.MoveMouseTo(loginOverlay.ChildrenOfType<SettingsCheckbox>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("remember username off", () => localConfig.Get<bool>(OsuSetting.SaveUsername), () => Is.False);
-            AddAssert("remember password off", () => localConfig.Get<bool>(OsuSetting.SavePassword), () => Is.False);
-            AddAssert("username cleared", () => localConfig.Get<string>(OsuSetting.Username), () => Is.Empty);
+            AddStep(
+                "set remember password",
+                () => localConfig.SetValue(OsuSetting.SavePassword, true)
+            );
+            AddStep(
+                "uncheck remember username",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        loginOverlay.ChildrenOfType<SettingsCheckbox>().First()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "remember username off",
+                () => localConfig.Get<bool>(OsuSetting.SaveUsername),
+                () => Is.False
+            );
+            AddAssert(
+                "remember password off",
+                () => localConfig.Get<bool>(OsuSetting.SavePassword),
+                () => Is.False
+            );
+            AddAssert(
+                "username cleared",
+                () => localConfig.Get<string>(OsuSetting.Username),
+                () => Is.Empty
+            );
         }
 
         [Test]
@@ -206,14 +347,30 @@ namespace osu.Game.Tests.Visual.Menus
         {
             AddStep("logout", () => API.Logout());
             AddStep("set token", () => localConfig.SetValue(OsuSetting.Token, "test_token"));
-            AddStep("set remember password", () => localConfig.SetValue(OsuSetting.SavePassword, true));
-            AddStep("uncheck remember token", () =>
-            {
-                InputManager.MoveMouseTo(loginOverlay.ChildrenOfType<SettingsCheckbox>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("remember password off", () => localConfig.Get<bool>(OsuSetting.SavePassword), () => Is.False);
-            AddAssert("token cleared", () => localConfig.Get<string>(OsuSetting.Token), () => Is.Empty);
+            AddStep(
+                "set remember password",
+                () => localConfig.SetValue(OsuSetting.SavePassword, true)
+            );
+            AddStep(
+                "uncheck remember token",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        loginOverlay.ChildrenOfType<SettingsCheckbox>().Last()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "remember password off",
+                () => localConfig.Get<bool>(OsuSetting.SavePassword),
+                () => Is.False
+            );
+            AddAssert(
+                "token cleared",
+                () => localConfig.Get<string>(OsuSetting.Token),
+                () => Is.Empty
+            );
         }
     }
 }

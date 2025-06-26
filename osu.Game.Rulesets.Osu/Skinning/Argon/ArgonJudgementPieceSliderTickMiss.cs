@@ -28,14 +28,16 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(piece = new Circle
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Blending = BlendingParameters.Additive,
-                Colour = colours.ForHitResult(result),
-                Size = new Vector2(ArgonSliderScorePoint.SIZE)
-            });
+            AddInternal(
+                piece = new Circle
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Blending = BlendingParameters.Additive,
+                    Colour = colours.ForHitResult(result),
+                    Size = new Vector2(ArgonSliderScorePoint.SIZE),
+                }
+            );
         }
 
         public void PlayAnimation()

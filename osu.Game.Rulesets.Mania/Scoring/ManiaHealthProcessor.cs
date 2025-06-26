@@ -11,9 +11,7 @@ namespace osu.Game.Rulesets.Mania.Scoring
     public partial class ManiaHealthProcessor : LegacyDrainingHealthProcessor
     {
         public ManiaHealthProcessor(double drainStartTime)
-            : base(drainStartTime)
-        {
-        }
+            : base(drainStartTime) { }
 
         protected override double ComputeDrainRate()
         {
@@ -24,9 +22,11 @@ namespace osu.Game.Rulesets.Mania.Scoring
             return 0;
         }
 
-        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() => Beatmap.HitObjects;
+        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() =>
+            Beatmap.HitObjects;
 
-        protected override IEnumerable<HitObject> EnumerateNestedHitObjects(HitObject hitObject) => hitObject.NestedHitObjects;
+        protected override IEnumerable<HitObject> EnumerateNestedHitObjects(HitObject hitObject) =>
+            hitObject.NestedHitObjects;
 
         protected override double GetHealthIncreaseFor(HitObject hitObject, HitResult result)
         {

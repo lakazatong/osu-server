@@ -18,13 +18,15 @@ namespace osu.Game.Overlays.Profile.Header.Components
     {
         public readonly BindableBool CoverExpanded = new BindableBool(true);
 
-        public override LocalisableString TooltipText => CoverExpanded.Value ? UsersStrings.ShowCoverTo0 : UsersStrings.ShowCoverTo1;
+        public override LocalisableString TooltipText =>
+            CoverExpanded.Value ? UsersStrings.ShowCoverTo0 : UsersStrings.ShowCoverTo1;
 
         private SpriteIcon icon = null!;
         private Sample? sampleOpen;
         private Sample? sampleClose;
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverClickSounds();
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverClickSounds();
 
         public ToggleCoverButton()
         {
@@ -57,6 +59,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
             CoverExpanded.BindValueChanged(visible => updateState(visible.NewValue), true);
         }
 
-        private void updateState(bool detailsVisible) => icon.ScaleTo(detailsVisible ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
+        private void updateState(bool detailsVisible) =>
+            icon.ScaleTo(detailsVisible ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
     }
 }

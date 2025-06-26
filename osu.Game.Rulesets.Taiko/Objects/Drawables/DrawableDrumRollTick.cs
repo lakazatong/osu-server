@@ -16,7 +16,8 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Taiko.Objects.Drawables
 {
-    public partial class DrawableDrumRollTick : DrawableTaikoStrongableHitObject<DrumRollTick, DrumRollTick.StrongNestedHit>
+    public partial class DrawableDrumRollTick
+        : DrawableTaikoStrongableHitObject<DrumRollTick, DrumRollTick.StrongNestedHit>
     {
         public BindableBool IsFirstTick = new BindableBool();
 
@@ -26,9 +27,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         public HitType JudgementType;
 
         public DrawableDrumRollTick()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableDrumRollTick([CanBeNull] DrumRollTick tick)
             : base(tick)
@@ -36,7 +35,11 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             FillMode = FillMode.Fit;
         }
 
-        protected override SkinnableDrawable CreateMainPiece() => new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.DrumRollTick), _ => new TickPiece());
+        protected override SkinnableDrawable CreateMainPiece() =>
+            new SkinnableDrawable(
+                new TaikoSkinComponentLookup(TaikoSkinComponents.DrumRollTick),
+                _ => new TickPiece()
+            );
 
         protected override void OnApply()
         {
@@ -48,7 +51,11 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         protected override void RecreatePieces()
         {
             base.RecreatePieces();
-            Size = new Vector2(HitObject.IsStrong ? TaikoStrongableHitObject.DEFAULT_STRONG_SIZE : TaikoHitObject.DEFAULT_SIZE);
+            Size = new Vector2(
+                HitObject.IsStrong
+                    ? TaikoStrongableHitObject.DEFAULT_STRONG_SIZE
+                    : TaikoHitObject.DEFAULT_SIZE
+            );
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -87,36 +94,42 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
 
         public override bool OnPressed(KeyBindingPressEvent<TaikoAction> e)
         {
-            JudgementType = e.Action == TaikoAction.LeftRim || e.Action == TaikoAction.RightRim ? HitType.Rim : HitType.Centre;
+            JudgementType =
+                e.Action == TaikoAction.LeftRim || e.Action == TaikoAction.RightRim
+                    ? HitType.Rim
+                    : HitType.Centre;
             return UpdateResult(true);
         }
 
-        protected override DrawableStrongNestedHit CreateStrongNestedHit(DrumRollTick.StrongNestedHit hitObject) => new StrongNestedHit(hitObject);
+        protected override DrawableStrongNestedHit CreateStrongNestedHit(
+            DrumRollTick.StrongNestedHit hitObject
+        ) => new StrongNestedHit(hitObject);
 
         public partial class StrongNestedHit : DrawableStrongNestedHit
         {
-            public new DrawableDrumRollTick ParentHitObject => (DrawableDrumRollTick)base.ParentHitObject;
+            public new DrawableDrumRollTick ParentHitObject =>
+                (DrawableDrumRollTick)base.ParentHitObject;
 
             public StrongNestedHit()
-                : this(null)
-            {
-            }
+                : this(null) { }
 
             public StrongNestedHit([CanBeNull] DrumRollTick.StrongNestedHit nestedHit)
-                : base(nestedHit)
-            {
-            }
+                : base(nestedHit) { }
 
             protected override void CheckForResult(bool userTriggered, double timeOffset)
             {
                 if (!ParentHitObject.Judged)
                     return;
 
-                ApplyResult(static (r, hitObject) =>
-                {
-                    var nestedHit = (StrongNestedHit)hitObject;
-                    r.Type = nestedHit.ParentHitObject!.IsHit ? r.Judgement.MaxResult : r.Judgement.MinResult;
-                });
+                ApplyResult(
+                    static (r, hitObject) =>
+                    {
+                        var nestedHit = (StrongNestedHit)hitObject;
+                        r.Type = nestedHit.ParentHitObject!.IsHit
+                            ? r.Judgement.MaxResult
+                            : r.Judgement.MinResult;
+                    }
+                );
             }
 
             public override bool OnPressed(KeyBindingPressEvent<TaikoAction> e) => false;

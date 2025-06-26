@@ -10,9 +10,9 @@ using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays;
 using osu.Game.Tournament.Components;
 using osu.Game.Tournament.Screens.Editors.Components;
@@ -48,60 +48,63 @@ namespace osu.Game.Tournament.Screens.Editors
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = OsuColour.Gray(0.2f),
-                },
-                new OsuScrollContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Child = flow = new FillFlowContainer<TDrawable>
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) },
+                    new OsuScrollContainer
                     {
-                        Direction = FillDirection.Vertical,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Spacing = new Vector2(20),
-                        Padding = new MarginPadding(20),
-                    },
-                },
-                ControlPanel = new ControlPanel
-                {
-                    Children = new Drawable[]
-                    {
-                        new TourneyButton
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Text = "Add new",
-                            Action = () => Storage.Add(new TModel())
-                        },
-                        new TourneyButton
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            BackgroundColour = colours.DangerousButtonColour,
-                            Text = "Clear all",
-                            Action = () =>
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Child = flow =
+                            new FillFlowContainer<TDrawable>
                             {
-                                dialogOverlay?.Push(new TournamentClearAllDialog(() => Storage.Clear()));
-                            }
+                                Direction = FillDirection.Vertical,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Spacing = new Vector2(20),
+                                Padding = new MarginPadding(20),
+                            },
+                    },
+                    ControlPanel = new ControlPanel
+                    {
+                        Children = new Drawable[]
+                        {
+                            new TourneyButton
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Text = "Add new",
+                                Action = () => Storage.Add(new TModel()),
+                            },
+                            new TourneyButton
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                BackgroundColour = colours.DangerousButtonColour,
+                                Text = "Clear all",
+                                Action = () =>
+                                {
+                                    dialogOverlay?.Push(
+                                        new TournamentClearAllDialog(() => Storage.Clear())
+                                    );
+                                },
+                            },
                         },
-                    }
+                    },
                 }
-            });
+            );
 
             if (parentScreen != null)
             {
-                AddInternal(backButton = new BackButton
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    State = { Value = Visibility.Visible },
-                    Action = () => sceneManager?.SetScreen(parentScreen.GetType())
-                });
+                AddInternal(
+                    backButton = new BackButton
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                        State = { Value = Visibility.Visible },
+                        Action = () => sceneManager?.SetScreen(parentScreen.GetType()),
+                    }
+                );
 
                 flow.Padding = new MarginPadding { Bottom = backButton.Height * 2 };
             }
@@ -119,7 +122,8 @@ namespace osu.Game.Tournament.Screens.Editors
                     case NotifyCollectionChangedAction.Remove:
                         Debug.Assert(args.OldItems != null);
 
-                        args.OldItems.Cast<TModel>().ForEach(i => flow.RemoveAll(d => d.Model == i, true));
+                        args.OldItems.Cast<TModel>()
+                            .ForEach(i => flow.RemoveAll(d => d.Model == i, true));
                         break;
                 }
             };

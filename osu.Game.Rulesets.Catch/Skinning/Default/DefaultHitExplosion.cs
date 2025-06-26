@@ -66,7 +66,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
                     Masking = true,
                     Size = new Vector2(0.01f, initial_height),
                     Blending = BlendingParameters.Additive,
-                }
+                },
             };
         }
 
@@ -91,8 +91,18 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
                 .FadeOut(duration * 2);
 
             const float angle_variance = 15; // should be less than 45
-            directionalGlow1.Rotation = StatelessRNG.NextSingle(-angle_variance, angle_variance, randomSeed, 4);
-            directionalGlow2.Rotation = StatelessRNG.NextSingle(-angle_variance, angle_variance, randomSeed, 5);
+            directionalGlow1.Rotation = StatelessRNG.NextSingle(
+                -angle_variance,
+                angle_variance,
+                randomSeed,
+                4
+            );
+            directionalGlow2.Rotation = StatelessRNG.NextSingle(
+                -angle_variance,
+                angle_variance,
+                randomSeed,
+                5
+            );
 
             this.FadeInFromZero(50).Then().FadeOut(duration, Easing.Out);
         }
@@ -104,7 +114,9 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
             largeFaint.EdgeEffect = new EdgeEffectParameters
             {
                 Type = EdgeEffectType.Glow,
-                Colour = Interpolation.ValueAt(0.1f, objectColour, Color4.White, 0, 1).Opacity(0.3f),
+                Colour = Interpolation
+                    .ValueAt(0.1f, objectColour, Color4.White, 0, 1)
+                    .Opacity(0.3f),
                 Roundness = 160,
                 Radius = 200,
             };

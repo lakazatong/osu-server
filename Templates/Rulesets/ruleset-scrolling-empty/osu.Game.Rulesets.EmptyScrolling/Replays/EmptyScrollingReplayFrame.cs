@@ -17,7 +17,9 @@ namespace osu.Game.Rulesets.EmptyScrolling.Replays
                 Actions.Add(button.Value);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is EmptyScrollingReplayFrame scrollingFrame && Time == scrollingFrame.Time && Actions.SequenceEqual(scrollingFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is EmptyScrollingReplayFrame scrollingFrame
+            && Time == scrollingFrame.Time
+            && Actions.SequenceEqual(scrollingFrame.Actions);
     }
 }

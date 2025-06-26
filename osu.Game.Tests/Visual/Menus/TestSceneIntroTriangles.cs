@@ -10,6 +10,7 @@ namespace osu.Game.Tests.Visual.Menus
     public partial class TestSceneIntroTriangles : IntroTestScene
     {
         protected override bool IntroReliesOnTrack => true;
+
         protected override IntroScreen CreateScreen() => new IntroTriangles();
     }
 }

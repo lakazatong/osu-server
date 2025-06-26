@@ -10,9 +10,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
     public partial class StoryboardIconPill : IconPill
     {
         public StoryboardIconPill()
-            : base(FontAwesome.Solid.Image)
-        {
-        }
+            : base(FontAwesome.Solid.Image) { }
 
         public override LocalisableString TooltipText => BeatmapsetsStrings.ShowInfoStoryboard;
     }

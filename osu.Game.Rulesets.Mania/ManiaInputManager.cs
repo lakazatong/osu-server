@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Mania
     public partial class ManiaInputManager : RulesetInputManager<ManiaAction>
     {
         public ManiaInputManager(RulesetInfo ruleset, int variant)
-            : base(ruleset, variant, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, variant, SimultaneousBindingMode.Unique) { }
     }
 
     public enum ManiaAction

@@ -21,32 +21,44 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneUserProfileDailyChallenge : OsuManualInputManagerTestScene
     {
         [Cached]
-        private readonly Bindable<UserProfileData?> userProfileData = new Bindable<UserProfileData?>(new UserProfileData(new APIUser(), new OsuRuleset().RulesetInfo));
+        private readonly Bindable<UserProfileData?> userProfileData =
+            new Bindable<UserProfileData?>(
+                new UserProfileData(new APIUser(), new OsuRuleset().RulesetInfo)
+            );
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         private DailyChallengeStatsDisplay display = null!;
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create", () =>
-            {
-                Clear();
-                Add(new Box
+            AddStep(
+                "create",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background2,
-                });
-                Add(display = new DailyChallengeStatsDisplay
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new Vector2(1f),
-                    User = { BindTarget = userProfileData },
-                });
-            });
+                    Clear();
+                    Add(
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = colourProvider.Background2,
+                        }
+                    );
+                    Add(
+                        display = new DailyChallengeStatsDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Scale = new Vector2(1f),
+                            User = { BindTarget = userProfileData },
+                        }
+                    );
+                }
+            );
 
             AddStep("set local user", () => update(s => s.UserID = API.LocalUser.Value.Id));
         }
@@ -68,8 +80,14 @@ namespace osu.Game.Tests.Visual.Online
         public void TestStates()
         {
             AddStep("played today", () => update(s => s.LastUpdate = DateTimeOffset.UtcNow.Date));
-            AddStep("played yesterday", () => update(s => s.LastUpdate = DateTimeOffset.UtcNow.Date.AddDays(-1)));
-            AddStep("change to non-local user", () => update(s => s.UserID = API.LocalUser.Value.Id + 1000));
+            AddStep(
+                "played yesterday",
+                () => update(s => s.LastUpdate = DateTimeOffset.UtcNow.Date.AddDays(-1))
+            );
+            AddStep(
+                "change to non-local user",
+                () => update(s => s.UserID = API.LocalUser.Value.Id + 1000)
+            );
 
             AddStep("hover", () => InputManager.MoveMouseTo(display));
         }
@@ -77,14 +95,23 @@ namespace osu.Game.Tests.Visual.Online
         private void update(Action<APIUserDailyChallengeStatistics> change)
         {
             change.Invoke(userProfileData.Value!.User.DailyChallengeStatistics);
-            userProfileData.Value = new UserProfileData(userProfileData.Value.User, userProfileData.Value.Ruleset);
+            userProfileData.Value = new UserProfileData(
+                userProfileData.Value.User,
+                userProfileData.Value.Ruleset
+            );
         }
 
         [Test]
         public void TestPlayCountRankingTier()
         {
-            AddAssert("1 before silver", () => DailyChallengeStatsTooltip.TierForPlayCount(29) == RankingTier.Bronze);
-            AddAssert("first silver", () => DailyChallengeStatsTooltip.TierForPlayCount(30) == RankingTier.Silver);
+            AddAssert(
+                "1 before silver",
+                () => DailyChallengeStatsTooltip.TierForPlayCount(29) == RankingTier.Bronze
+            );
+            AddAssert(
+                "first silver",
+                () => DailyChallengeStatsTooltip.TierForPlayCount(30) == RankingTier.Silver
+            );
         }
     }
 }

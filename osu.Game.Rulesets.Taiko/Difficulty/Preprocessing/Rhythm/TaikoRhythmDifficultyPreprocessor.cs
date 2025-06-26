@@ -29,22 +29,30 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm
             }
         }
 
-        private static List<SameRhythmHitObjectGrouping> createSameRhythmGroupedHitObjects(List<TaikoDifficultyHitObject> hitObjects)
+        private static List<SameRhythmHitObjectGrouping> createSameRhythmGroupedHitObjects(
+            List<TaikoDifficultyHitObject> hitObjects
+        )
         {
             var rhythmGroups = new List<SameRhythmHitObjectGrouping>();
 
             foreach (var grouped in IntervalGroupingUtils.GroupByInterval(hitObjects))
-                rhythmGroups.Add(new SameRhythmHitObjectGrouping(rhythmGroups.LastOrDefault(), grouped));
+                rhythmGroups.Add(
+                    new SameRhythmHitObjectGrouping(rhythmGroups.LastOrDefault(), grouped)
+                );
 
             return rhythmGroups;
         }
 
-        private static List<SamePatternsGroupedHitObjects> createSamePatternGroupedHitObjects(List<SameRhythmHitObjectGrouping> rhythmGroups)
+        private static List<SamePatternsGroupedHitObjects> createSamePatternGroupedHitObjects(
+            List<SameRhythmHitObjectGrouping> rhythmGroups
+        )
         {
             var patternGroups = new List<SamePatternsGroupedHitObjects>();
 
             foreach (var grouped in IntervalGroupingUtils.GroupByInterval(rhythmGroups))
-                patternGroups.Add(new SamePatternsGroupedHitObjects(patternGroups.LastOrDefault(), grouped));
+                patternGroups.Add(
+                    new SamePatternsGroupedHitObjects(patternGroups.LastOrDefault(), grouped)
+                );
 
             return patternGroups;
         }

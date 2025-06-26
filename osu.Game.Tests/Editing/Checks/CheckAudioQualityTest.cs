@@ -28,8 +28,8 @@ namespace osu.Game.Tests.Editing.Checks
             {
                 BeatmapInfo = new BeatmapInfo
                 {
-                    Metadata = new BeatmapMetadata { AudioFile = "abc123.jpg" }
-                }
+                    Metadata = new BeatmapMetadata { AudioFile = "abc123.jpg" },
+                },
             };
         }
 
@@ -109,7 +109,10 @@ namespace osu.Game.Tests.Editing.Checks
         /// <param name="audioBitrate">The bitrate of the audio file the beatmap uses.</param>
         private Mock<IWorkingBeatmap> getMockWorkingBeatmap(int? audioBitrate)
         {
-            var mockTrack = new Mock<OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualManual>(new FramedClock(), "virtual");
+            var mockTrack = new Mock<OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualManual>(
+                new FramedClock(),
+                "virtual"
+            );
             mockTrack.SetupGet(t => t.Bitrate).Returns(audioBitrate);
 
             var mockWorkingBeatmap = new Mock<IWorkingBeatmap>();

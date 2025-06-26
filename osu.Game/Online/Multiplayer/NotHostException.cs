@@ -10,8 +10,6 @@ namespace osu.Game.Online.Multiplayer
     public class NotHostException : HubException
     {
         public NotHostException()
-            : base("User is attempting to perform a host level operation while not the host")
-        {
-        }
+            : base("User is attempting to perform a host level operation while not the host") { }
     }
 }

@@ -64,11 +64,7 @@ namespace osu.Game.Overlays.Profile.Header
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background3,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background3 },
                 new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
@@ -76,10 +72,7 @@ namespace osu.Game.Overlays.Profile.Header
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        cover = new ProfileCoverBackground
-                        {
-                            RelativeSizeAxes = Axes.X,
-                        },
+                        cover = new ProfileCoverBackground { RelativeSizeAxes = Axes.X },
                         new Container
                         {
                             RelativeSizeAxes = Axes.X,
@@ -92,13 +85,16 @@ namespace osu.Game.Overlays.Profile.Header
                                     Padding = new MarginPadding
                                     {
                                         Left = WaveOverlayContainer.HORIZONTAL_PADDING,
-                                        Vertical = vertical_padding
+                                        Vertical = vertical_padding,
                                     },
                                     Height = content_height + 2 * vertical_padding,
                                     RelativeSizeAxes = Axes.X,
                                     Children = new Drawable[]
                                     {
-                                        avatar = new UpdateableAvatar(isInteractive: false, showGuestOnNull: false)
+                                        avatar = new UpdateableAvatar(
+                                            isInteractive: false,
+                                            showGuestOnNull: false
+                                        )
                                         {
                                             Anchor = Anchor.BottomLeft,
                                             Origin = Anchor.BottomLeft,
@@ -109,7 +105,7 @@ namespace osu.Game.Overlays.Profile.Header
                                                 Offset = new Vector2(0, 1),
                                                 Radius = 3,
                                                 Colour = Colour4.Black.Opacity(0.25f),
-                                            }
+                                            },
                                         },
                                         new FillFlowContainer
                                         {
@@ -128,7 +124,10 @@ namespace osu.Game.Overlays.Profile.Header
                                                     {
                                                         usernameText = new OsuSpriteText
                                                         {
-                                                            Font = OsuFont.GetFont(size: 24, weight: FontWeight.Regular)
+                                                            Font = OsuFont.GetFont(
+                                                                size: 24,
+                                                                weight: FontWeight.Regular
+                                                            ),
                                                         },
                                                         supporterTag = new SupporterIcon
                                                         {
@@ -149,13 +148,17 @@ namespace osu.Game.Overlays.Profile.Header
                                                         new Container
                                                         {
                                                             // Intentionally use a zero-size container, else the fill flow will adjust to (and cancel) the upwards animation.
-                                                            Child = previousUsernamesDisplay = new PreviousUsernamesDisplay(),
-                                                        }
-                                                    }
+                                                            Child = previousUsernamesDisplay =
+                                                                new PreviousUsernamesDisplay(),
+                                                        },
+                                                    },
                                                 },
                                                 titleText = new OsuSpriteText
                                                 {
-                                                    Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
+                                                    Font = OsuFont.GetFont(
+                                                        size: 16,
+                                                        weight: FontWeight.Regular
+                                                    ),
                                                     Margin = new MarginPadding { Bottom = 3 },
                                                 },
                                                 new FillFlowContainer
@@ -177,17 +180,23 @@ namespace osu.Game.Overlays.Profile.Header
                                                                 {
                                                                     Size = new Vector2(28, 20),
                                                                 },
-                                                                userCountryContainer = new OsuHoverContainer
-                                                                {
-                                                                    AutoSizeAxes = Axes.Both,
-                                                                    Anchor = Anchor.CentreLeft,
-                                                                    Origin = Anchor.CentreLeft,
-                                                                    Child = userCountryText = new OsuSpriteText
+                                                                userCountryContainer =
+                                                                    new OsuHoverContainer
                                                                     {
-                                                                        Font = OsuFont.GetFont(size: 14f, weight: FontWeight.Regular),
+                                                                        AutoSizeAxes = Axes.Both,
+                                                                        Anchor = Anchor.CentreLeft,
+                                                                        Origin = Anchor.CentreLeft,
+                                                                        Child = userCountryText =
+                                                                            new OsuSpriteText
+                                                                            {
+                                                                                Font =
+                                                                                    OsuFont.GetFont(
+                                                                                        size: 14f,
+                                                                                        weight: FontWeight.Regular
+                                                                                    ),
+                                                                            },
                                                                     },
-                                                                },
-                                                            }
+                                                            },
                                                         },
                                                         new FillFlowContainer
                                                         {
@@ -204,23 +213,26 @@ namespace osu.Game.Overlays.Profile.Header
                                                                 {
                                                                     Anchor = Anchor.CentreLeft,
                                                                     Origin = Anchor.CentreLeft,
-                                                                    Font = OsuFont.GetFont(size: 14f, weight: FontWeight.Regular),
+                                                                    Font = OsuFont.GetFont(
+                                                                        size: 14f,
+                                                                        weight: FontWeight.Regular
+                                                                    ),
                                                                 },
-                                                            }
-                                                        }
-                                                    }
+                                                            },
+                                                        },
+                                                    },
                                                 },
-                                            }
+                                            },
                                         },
-                                    }
+                                    },
                                 },
                                 coverToggle = new ToggleCoverButton
                                 {
                                     Anchor = Anchor.CentreRight,
                                     Origin = Anchor.CentreRight,
                                     Margin = new MarginPadding { Right = 10 },
-                                    CoverExpanded = { BindTarget = coverExpanded }
-                                }
+                                    CoverExpanded = { BindTarget = coverExpanded },
+                                },
                             },
                         },
                     },
@@ -247,7 +259,8 @@ namespace osu.Game.Overlays.Profile.Header
             openUserExternally.Link = $@"{api.Endpoints.WebsiteUrl}/users/{user?.Id ?? 0}";
             userFlag.CountryCode = user?.CountryCode ?? default;
             userCountryText.Text = (user?.CountryCode ?? default).GetDescription();
-            userCountryContainer.Action = () => rankingsOverlay?.ShowCountry(user?.CountryCode ?? default);
+            userCountryContainer.Action = () =>
+                rankingsOverlay?.ShowCountry(user?.CountryCode ?? default);
             teamFlag.Team = user?.Team;
             teamText.Text = user?.Team?.Name ?? string.Empty;
             supporterTag.SupportLevel = user?.SupportLevel ?? 0;
@@ -272,9 +285,23 @@ namespace osu.Game.Overlays.Profile.Header
             else
                 cover.FadeOut(transition_duration, Easing.InQuint);
 
-            avatar.ResizeTo(new Vector2(expanded ? 120 : content_height), transition_duration, Easing.OutQuint);
-            avatar.TransformTo(nameof(avatar.CornerRadius), expanded ? 40f : 20f, transition_duration, Easing.OutQuint);
-            flow.TransformTo(nameof(flow.Spacing), new Vector2(expanded ? 20f : 10f), transition_duration, Easing.OutQuint);
+            avatar.ResizeTo(
+                new Vector2(expanded ? 120 : content_height),
+                transition_duration,
+                Easing.OutQuint
+            );
+            avatar.TransformTo(
+                nameof(avatar.CornerRadius),
+                expanded ? 40f : 20f,
+                transition_duration,
+                Easing.OutQuint
+            );
+            flow.TransformTo(
+                nameof(flow.Spacing),
+                new Vector2(expanded ? 20f : 10f),
+                transition_duration,
+                Easing.OutQuint
+            );
         }
 
         private partial class ProfileCoverBackground : UserCoverBackground

@@ -13,8 +13,17 @@ namespace osu.Game.Rulesets.Osu.Edit
 {
     public partial class OsuDistanceSnapGrid : CircularDistanceSnapGrid
     {
-        public OsuDistanceSnapGrid(OsuHitObject hitObject, [CanBeNull] OsuHitObject nextHitObject = null, [CanBeNull] IHasSliderVelocity sliderVelocitySource = null)
-            : base(hitObject.StackedEndPosition, hitObject.GetEndTime(), nextHitObject?.StartTime - 1, sliderVelocitySource)
+        public OsuDistanceSnapGrid(
+            OsuHitObject hitObject,
+            [CanBeNull] OsuHitObject nextHitObject = null,
+            [CanBeNull] IHasSliderVelocity sliderVelocitySource = null
+        )
+            : base(
+                hitObject.StackedEndPosition,
+                hitObject.GetEndTime(),
+                nextHitObject?.StartTime - 1,
+                sliderVelocitySource
+            )
         {
             Masking = true;
         }

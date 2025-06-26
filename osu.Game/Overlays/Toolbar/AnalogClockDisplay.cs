@@ -39,17 +39,13 @@ namespace osu.Game.Overlays.Toolbar
                     {
                         AlwaysPresent = true,
                         Alpha = 0,
-                        RelativeSizeAxes = Axes.Both
+                        RelativeSizeAxes = Axes.Both,
                     },
                 },
                 hour = new LargeHand(0.34f),
                 minute = new LargeHand(0.48f),
                 second = new SecondHand(),
-                new CentreCircle
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                }
+                new CentreCircle { Anchor = Anchor.Centre, Origin = Anchor.Centre },
             };
         }
 
@@ -78,9 +74,7 @@ namespace osu.Game.Overlays.Toolbar
                 while (animRotation < hand.Rotation)
                     animRotation += 180;
 
-                hand.RotateTo(animRotation, duration, Easing.OutElastic)
-                    .Then()
-                    .RotateTo(rotation);
+                hand.RotateTo(animRotation, duration, Easing.OutElastic).Then().RotateTo(rotation);
             }
             else
                 hand.RotateTo(rotation, duration, Easing.OutElastic);
@@ -127,11 +121,7 @@ namespace osu.Game.Overlays.Toolbar
 
                 InternalChildren = new Drawable[]
                 {
-                    new Circle
-                    {
-                        Colour = colours.PinkLight,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Circle { Colour = colours.PinkLight, RelativeSizeAxes = Axes.Both },
                 };
             }
         }

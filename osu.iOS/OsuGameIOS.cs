@@ -19,11 +19,13 @@ namespace osu.iOS
     public partial class OsuGameIOS : OsuGame
     {
         private readonly AppDelegate appDelegate;
-        public override Version AssemblyVersion => new Version(NSBundle.MainBundle.InfoDictionary["CFBundleVersion"].ToString());
+        public override Version AssemblyVersion =>
+            new Version(NSBundle.MainBundle.InfoDictionary["CFBundleVersion"].ToString());
 
         public override bool HideUnlicensedContent => true;
 
-        public override Vector2 ScalingContainerTargetDrawSize => new Vector2(1024, 1024 * DrawHeight / DrawWidth);
+        public override Vector2 ScalingContainerTargetDrawSize =>
+            new Vector2(1024, 1024 * DrawHeight / DrawWidth);
 
         public OsuGameIOS(AppDelegate appDelegate)
         {
@@ -44,32 +46,40 @@ namespace osu.iOS
                 updateOrientation();
         }
 
-        private void updateOrientation() => UIApplication.SharedApplication.InvokeOnMainThread(() =>
-        {
-            bool iPad = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad;
-            var orientation = MobileUtils.GetOrientation(this, (IOsuScreen)ScreenStack.CurrentScreen, iPad);
-
-            switch (orientation)
+        private void updateOrientation() =>
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
-                case MobileUtils.Orientation.Locked:
-                    appDelegate.Orientations = (UIInterfaceOrientationMask)(1 << (int)appDelegate.CurrentOrientation);
-                    break;
+                bool iPad = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad;
+                var orientation = MobileUtils.GetOrientation(
+                    this,
+                    (IOsuScreen)ScreenStack.CurrentScreen,
+                    iPad
+                );
 
-                case MobileUtils.Orientation.Portrait:
-                    appDelegate.Orientations = UIInterfaceOrientationMask.Portrait;
-                    break;
+                switch (orientation)
+                {
+                    case MobileUtils.Orientation.Locked:
+                        appDelegate.Orientations = (UIInterfaceOrientationMask)(
+                            1 << (int)appDelegate.CurrentOrientation
+                        );
+                        break;
 
-                case MobileUtils.Orientation.Default:
-                    appDelegate.Orientations = null;
-                    break;
-            }
-        });
+                    case MobileUtils.Orientation.Portrait:
+                        appDelegate.Orientations = UIInterfaceOrientationMask.Portrait;
+                        break;
+
+                    case MobileUtils.Orientation.Default:
+                        appDelegate.Orientations = null;
+                        break;
+                }
+            });
 
         protected override UpdateManager CreateUpdateManager() => new MobileUpdateNotifier();
 
         protected override BatteryInfo CreateBatteryInfo() => new IOSBatteryInfo();
 
-        protected override Storage CreateStorage(GameHost host, Storage defaultStorage) => new OsuStorageIOS((IOSGameHost)host, defaultStorage);
+        protected override Storage CreateStorage(GameHost host, Storage defaultStorage) =>
+            new OsuStorageIOS((IOSGameHost)host, defaultStorage);
 
         protected override Edges SafeAreaOverrideEdges =>
             // iOS shows a home indicator at the bottom, and adds a safe area to account for this.

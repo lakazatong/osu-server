@@ -15,9 +15,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
     public partial class MultiSpectatorPlayerLoader : SpectatorPlayerLoader
     {
         public MultiSpectatorPlayerLoader(Score score, Func<MultiSpectatorPlayer> createPlayer)
-            : base(score, createPlayer)
-        {
-        }
+            : base(score, createPlayer) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -25,12 +23,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
             PlayerSettings.Expire();
         }
 
-        protected override void LogoArriving(OsuLogo logo, bool resuming)
-        {
-        }
+        protected override void LogoArriving(OsuLogo logo, bool resuming) { }
 
-        protected override void LogoExiting(OsuLogo logo)
-        {
-        }
+        protected override void LogoExiting(OsuLogo logo) { }
     }
 }

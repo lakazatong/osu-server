@@ -15,7 +15,10 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Catch.Mods
 {
-    public partial class CatchModRelax : ModRelax, IApplicableToDrawableRuleset<CatchHitObject>, IApplicableToPlayer
+    public partial class CatchModRelax
+        : ModRelax,
+            IApplicableToDrawableRuleset<CatchHitObject>,
+            IApplicableToPlayer
     {
         public override LocalisableString Description => @"Use the mouse to control the catcher.";
 
@@ -35,7 +38,10 @@ namespace osu.Game.Rulesets.Catch.Mods
             }
         }
 
-        private partial class MouseInputHelper : Drawable, IKeyBindingHandler<CatchAction>, IRequireHighFrequencyMousePosition
+        private partial class MouseInputHelper
+            : Drawable,
+                IKeyBindingHandler<CatchAction>,
+                IRequireHighFrequencyMousePosition
         {
             private readonly CatcherArea catcherArea;
 
@@ -51,13 +57,13 @@ namespace osu.Game.Rulesets.Catch.Mods
             // disable keyboard controls
             public bool OnPressed(KeyBindingPressEvent<CatchAction> e) => true;
 
-            public void OnReleased(KeyBindingReleaseEvent<CatchAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<CatchAction> e) { }
 
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                catcherArea.SetCatcherPosition(e.MousePosition.X / DrawSize.X * CatchPlayfield.WIDTH);
+                catcherArea.SetCatcherPosition(
+                    e.MousePosition.X / DrawSize.X * CatchPlayfield.WIDTH
+                );
                 return base.OnMouseMove(e);
             }
         }

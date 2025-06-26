@@ -43,7 +43,12 @@ namespace osu.Game.Screens.SelectV2
 
             public LocalisableString TooltipText { get; set; }
 
-            public Statistic(IconUsage icon, bool background = false, float leftPadding = 10f, float? minSize = null)
+            public Statistic(
+                IconUsage icon,
+                bool background = false,
+                float leftPadding = 10f,
+                float? minSize = null
+            )
             {
                 this.icon = icon;
                 this.background = background;
@@ -74,7 +79,12 @@ namespace osu.Game.Screens.SelectV2
                         Origin = Anchor.CentreLeft,
                         AutoSizeAxes = Axes.Both,
                         Direction = FillDirection.Horizontal,
-                        Margin = new MarginPadding { Left = background ? leftPadding : 0, Right = background ? 10f : 0f, Vertical = 5f },
+                        Margin = new MarginPadding
+                        {
+                            Left = background ? leftPadding : 0,
+                            Right = background ? 10f : 0f,
+                            Vertical = 5f,
+                        },
                         Spacing = new Vector2(4f, 0f),
                         Shear = background ? -OsuGame.SHEAR : Vector2.Zero,
                         Children = new Drawable[]
@@ -107,10 +117,16 @@ namespace osu.Game.Screens.SelectV2
                                         Anchor = Anchor.CentreLeft,
                                         Origin = Anchor.CentreLeft,
                                         AutoSizeAxes = Axes.Both,
-                                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                                        RowDimensions = new[]
+                                        {
+                                            new Dimension(GridSizeMode.AutoSize),
+                                        },
                                         ColumnDimensions = new[]
                                         {
-                                            new Dimension(GridSizeMode.AutoSize, minSize: minSize ?? 0),
+                                            new Dimension(
+                                                GridSizeMode.AutoSize,
+                                                minSize: minSize ?? 0
+                                            ),
                                         },
                                         Content = new[]
                                         {
@@ -125,13 +141,13 @@ namespace osu.Game.Screens.SelectV2
                                                     Margin = new MarginPadding { Bottom = 2f },
                                                     AlwaysPresent = true,
                                                 },
-                                            }
-                                        }
+                                            },
+                                        },
                                     },
                                 },
                             },
                         },
-                    }
+                    },
                 };
             }
 

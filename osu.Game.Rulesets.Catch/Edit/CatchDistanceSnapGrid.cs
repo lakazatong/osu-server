@@ -27,7 +27,8 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         public float StartX { get; set; }
 
-        private const double max_vertical_line_length_in_time = CatchPlayfield.WIDTH / Catcher.BASE_WALK_SPEED;
+        private const double max_vertical_line_length_in_time =
+            CatchPlayfield.WIDTH / Catcher.BASE_WALK_SPEED;
 
         private readonly double[] velocities;
 
@@ -38,7 +39,8 @@ namespace osu.Game.Rulesets.Catch.Edit
         [Resolved]
         private Playfield playfield { get; set; } = null!;
 
-        private ScrollingHitObjectContainer hitObjectContainer => (ScrollingHitObjectContainer)playfield.HitObjectContainer;
+        private ScrollingHitObjectContainer hitObjectContainer =>
+            (ScrollingHitObjectContainer)playfield.HitObjectContainer;
 
         public CatchDistanceSnapGrid(double[] velocities)
         {
@@ -49,11 +51,7 @@ namespace osu.Game.Rulesets.Catch.Edit
 
             for (int i = 0; i < velocities.Length; i++)
             {
-                verticalPaths.Add(new SmoothPath
-                {
-                    PathRadius = 2,
-                    Alpha = 0.5f,
-                });
+                verticalPaths.Add(new SmoothPath { PathRadius = 2, Alpha = 0.5f });
 
                 verticalLineVertices.Add(new[] { Vector2.Zero, Vector2.Zero });
             }
@@ -72,12 +70,18 @@ namespace osu.Game.Rulesets.Catch.Edit
                 double velocity = velocities[i];
 
                 // The line ends at the top of the playfield.
-                double endTime = hitObjectContainer.TimeAtPosition(-hitObjectContainer.DrawHeight, currentTime);
+                double endTime = hitObjectContainer.TimeAtPosition(
+                    -hitObjectContainer.DrawHeight,
+                    currentTime
+                );
 
                 // Non-vertical lines are cut at the sides of the playfield.
                 // Vertical lines are cut at some reasonable length.
                 if (velocity > 0)
-                    endTime = Math.Min(endTime, StartTime + (CatchPlayfield.WIDTH - StartX) / velocity);
+                    endTime = Math.Min(
+                        endTime,
+                        StartTime + (CatchPlayfield.WIDTH - StartX) / velocity
+                    );
                 else if (velocity < 0)
                     endTime = Math.Min(endTime, StartTime + StartX / -velocity);
                 else
@@ -117,7 +121,10 @@ namespace osu.Game.Rulesets.Catch.Edit
                 return new SnapResult(originPosition, StartTime);
             }
 
-            return enumerateSnappingCandidates(time).MinBy(pos => Vector2.DistanceSquared(screenSpacePosition, pos.ScreenSpacePosition));
+            return enumerateSnappingCandidates(time)
+                .MinBy(pos =>
+                    Vector2.DistanceSquared(screenSpacePosition, pos.ScreenSpacePosition)
+                );
         }
 
         private IEnumerable<SnapResult> enumerateSnappingCandidates(double time)
@@ -127,7 +134,9 @@ namespace osu.Game.Rulesets.Catch.Edit
             foreach (double velocity in velocities)
             {
                 float x = (float)(StartX + (time - StartTime) * velocity);
-                Vector2 screenSpacePosition = hitObjectContainer.ToScreenSpace(new Vector2(x, y + hitObjectContainer.DrawHeight));
+                Vector2 screenSpacePosition = hitObjectContainer.ToScreenSpace(
+                    new Vector2(x, y + hitObjectContainer.DrawHeight)
+                );
                 yield return new SnapResult(screenSpacePosition, time);
             }
         }

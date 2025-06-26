@@ -25,14 +25,17 @@ namespace osu.Game.Online.Leaderboards
             Rank = rank;
         }
 
-        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad)
+        protected override DelayedLoadWrapper CreateDelayedLoadWrapper(
+            Func<Drawable> createContentFunc,
+            double timeBeforeLoad
+        )
         {
             return base.CreateDelayedLoadWrapper(createContentFunc, timeBeforeLoad)
-                       .With(w =>
-                       {
-                           w.Anchor = Anchor.Centre;
-                           w.Origin = Anchor.Centre;
-                       });
+                .With(w =>
+                {
+                    w.Anchor = Anchor.Centre;
+                    w.Origin = Anchor.Centre;
+                });
         }
 
         protected override Drawable? CreateDrawable(ScoreRank? rank)

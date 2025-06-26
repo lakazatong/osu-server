@@ -16,36 +16,46 @@ namespace osu.Game.Tests.Visual.UserInterface
         private ModFlowDisplay modFlow;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = modFlow = new ModFlowDisplay
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.None,
-                Width = 200,
-                Current =
+                Child = modFlow = new ModFlowDisplay
                 {
-                    Value = new OsuRuleset().CreateAllMods().ToArray(),
-                }
-            };
-        });
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.None,
+                    Width = 200,
+                    Current = { Value = new OsuRuleset().CreateAllMods().ToArray() },
+                };
+            });
 
         [Test]
         public void TestWrapping()
         {
-            AddSliderStep("icon size", 0.1f, 2, 1, val =>
-            {
-                if (modFlow != null)
-                    modFlow.IconScale = val;
-            });
+            AddSliderStep(
+                "icon size",
+                0.1f,
+                2,
+                1,
+                val =>
+                {
+                    if (modFlow != null)
+                        modFlow.IconScale = val;
+                }
+            );
 
-            AddSliderStep("flow width", 100, 500, 200, val =>
-            {
-                if (modFlow != null)
-                    modFlow.Width = val;
-            });
+            AddSliderStep(
+                "flow width",
+                100,
+                500,
+                200,
+                val =>
+                {
+                    if (modFlow != null)
+                        modFlow.Width = val;
+                }
+            );
         }
     }
 }

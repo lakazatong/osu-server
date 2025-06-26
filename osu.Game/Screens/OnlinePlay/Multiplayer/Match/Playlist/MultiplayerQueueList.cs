@@ -24,16 +24,21 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
             ShowItemOwners = true;
         }
 
-        protected override FillFlowContainer<RearrangeableListItem<PlaylistItem>> CreateListFillFlowContainer() => new QueueFillFlowContainer
-        {
-            Spacing = new Vector2(0, 2)
-        };
+        protected override FillFlowContainer<
+            RearrangeableListItem<PlaylistItem>
+        > CreateListFillFlowContainer() =>
+            new QueueFillFlowContainer { Spacing = new Vector2(0, 2) };
 
-        protected override DrawableRoomPlaylistItem CreateDrawablePlaylistItem(PlaylistItem item) => new QueuePlaylistItem(item);
+        protected override DrawableRoomPlaylistItem CreateDrawablePlaylistItem(PlaylistItem item) =>
+            new QueuePlaylistItem(item);
 
-        private partial class QueueFillFlowContainer : FillFlowContainer<RearrangeableListItem<PlaylistItem>>
+        private partial class QueueFillFlowContainer
+            : FillFlowContainer<RearrangeableListItem<PlaylistItem>>
         {
-            public override IEnumerable<Drawable> FlowingChildren => base.FlowingChildren.OfType<RearrangeableListItem<PlaylistItem>>().OrderBy(item => item.Model.PlaylistOrder);
+            public override IEnumerable<Drawable> FlowingChildren =>
+                base
+                    .FlowingChildren.OfType<RearrangeableListItem<PlaylistItem>>()
+                    .OrderBy(item => item.Model.PlaylistOrder);
         }
 
         private partial class QueuePlaylistItem : DrawableRoomPlaylistItem
@@ -45,15 +50,14 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
             private MultiplayerClient multiplayerClient { get; set; } = null!;
 
             public QueuePlaylistItem(PlaylistItem item)
-                : base(item)
-            {
-            }
+                : base(item) { }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
 
-                RequestDeletion = item => multiplayerClient.RemovePlaylistItem(item.ID).FireAndForget();
+                RequestDeletion = item =>
+                    multiplayerClient.RemovePlaylistItem(item.ID).FireAndForget();
 
                 multiplayerClient.RoomUpdated += onRoomUpdated;
                 onRoomUpdated();
@@ -66,12 +70,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match.Playlist
                 if (multiplayerClient.Room == null)
                     return;
 
-                bool isItemOwner = Item.OwnerID == api.LocalUser.Value.OnlineID || multiplayerClient.IsHost;
+                bool isItemOwner =
+                    Item.OwnerID == api.LocalUser.Value.OnlineID || multiplayerClient.IsHost;
                 bool isValidItem = isItemOwner && !Item.Expired;
 
-                AllowDeletion = isValidItem
-                                && (Item.ID != multiplayerClient.Room.Settings.PlaylistItemId // This is an optimisation for the following check.
-                                    || multiplayerClient.Room.Playlist.Count(i => !i.Expired) > 1);
+                AllowDeletion =
+                    isValidItem
+                    && (
+                        Item.ID != multiplayerClient.Room.Settings.PlaylistItemId // This is an optimisation for the following check.
+                        || multiplayerClient.Room.Playlist.Count(i => !i.Expired) > 1
+                    );
 
                 AllowEditing = isValidItem;
             }

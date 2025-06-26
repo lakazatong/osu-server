@@ -9,7 +9,5 @@ namespace osu.Game.Rulesets.Mods
     /// <remarks>
     /// This will be used, for instance, to omit showing offset calibration UI post-gameplay.
     /// </remarks>
-    public interface IHasNoTimedInputs
-    {
-    }
+    public interface IHasNoTimedInputs { }
 }

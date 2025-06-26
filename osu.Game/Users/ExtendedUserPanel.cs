@@ -7,13 +7,13 @@ using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Users.Drawables;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Metadata;
+using osu.Game.Users.Drawables;
 
 namespace osu.Game.Users
 {
@@ -65,25 +65,31 @@ namespace osu.Game.Users
             var statusContainer = new FillFlowContainer
             {
                 AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Vertical
+                Direction = FillDirection.Vertical,
             };
 
             var alignment = rightAlignedChildren ? Anchor.CentreRight : Anchor.CentreLeft;
 
-            statusContainer.Add(LastVisitMessage = new TextFlowContainer(t => t.Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold)).With(text =>
-            {
-                text.Anchor = alignment;
-                text.Origin = alignment;
-                text.AutoSizeAxes = Axes.Both;
-                text.Alpha = 0;
-            }));
+            statusContainer.Add(
+                LastVisitMessage = new TextFlowContainer(t =>
+                    t.Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold)
+                ).With(text =>
+                {
+                    text.Anchor = alignment;
+                    text.Origin = alignment;
+                    text.AutoSizeAxes = Axes.Both;
+                    text.Alpha = 0;
+                })
+            );
 
-            statusContainer.Add(statusMessage = new StatusText
-            {
-                Anchor = alignment,
-                Origin = alignment,
-                Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold)
-            });
+            statusContainer.Add(
+                statusMessage = new StatusText
+                {
+                    Anchor = alignment,
+                    Origin = alignment,
+                    Font = OsuFont.GetFont(size: 14, weight: FontWeight.SemiBold),
+                }
+            );
 
             return statusContainer;
         }
@@ -103,10 +109,9 @@ namespace osu.Game.Users
                 LastVisitMessage.FadeTo(1);
                 LastVisitMessage.Clear();
                 LastVisitMessage.AddText(@"Last seen ");
-                LastVisitMessage.AddText(new DrawableDate(lastVisit.Value, italic: false)
-                {
-                    Shadow = false
-                });
+                LastVisitMessage.AddText(
+                    new DrawableDate(lastVisit.Value, italic: false) { Shadow = false }
+                );
             }
             else
                 LastVisitMessage.FadeTo(0);
@@ -118,7 +123,6 @@ namespace osu.Game.Users
                 statusMessage.TooltipText = activity.GetDetails() ?? string.Empty;
                 statusIcon.FadeColour(activity.GetAppropriateColour(Colours), 500, Easing.OutQuint);
             }
-
             // Otherwise use only status
             else
             {

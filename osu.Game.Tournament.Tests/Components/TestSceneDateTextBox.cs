@@ -14,28 +14,32 @@ namespace osu.Game.Tournament.Tests.Components
         private DateTextBox textBox = null!;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = textBox = new DateTextBox
+        public void Setup() =>
+            Schedule(() =>
             {
-                Width = 0.3f
-            };
-        });
+                Child = textBox = new DateTextBox { Width = 0.3f };
+            });
 
         [Test]
         public void TestCommitWithoutSettingBindable()
         {
-            AddStep("click textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("unfocus", () =>
-            {
-                InputManager.MoveMouseTo(Vector2.Zero);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "unfocus",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Vector2.Zero);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
         }
     }
 }

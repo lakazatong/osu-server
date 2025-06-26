@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.Rooms;
 using osu.Game.Overlays.Notifications;
-using osu.Game.Localisation;
 
 namespace osu.Game.Online.Multiplayer
 {
@@ -48,28 +48,94 @@ namespace osu.Game.Online.Multiplayer
                 {
                     // this is kind of SILLY
                     // https://github.com/dotnet/aspnetcore/issues/15198
-                    connection.On<MultiplayerRoomState>(nameof(IMultiplayerClient.RoomStateChanged), ((IMultiplayerClient)this).RoomStateChanged);
-                    connection.On<MultiplayerRoomUser>(nameof(IMultiplayerClient.UserJoined), ((IMultiplayerClient)this).UserJoined);
-                    connection.On<MultiplayerRoomUser>(nameof(IMultiplayerClient.UserLeft), ((IMultiplayerClient)this).UserLeft);
-                    connection.On<MultiplayerRoomUser>(nameof(IMultiplayerClient.UserKicked), ((IMultiplayerClient)this).UserKicked);
-                    connection.On<int, long, string>(nameof(IMultiplayerClient.Invited), ((IMultiplayerClient)this).Invited);
-                    connection.On<int>(nameof(IMultiplayerClient.HostChanged), ((IMultiplayerClient)this).HostChanged);
-                    connection.On<MultiplayerRoomSettings>(nameof(IMultiplayerClient.SettingsChanged), ((IMultiplayerClient)this).SettingsChanged);
-                    connection.On<int, MultiplayerUserState>(nameof(IMultiplayerClient.UserStateChanged), ((IMultiplayerClient)this).UserStateChanged);
-                    connection.On(nameof(IMultiplayerClient.LoadRequested), ((IMultiplayerClient)this).LoadRequested);
-                    connection.On(nameof(IMultiplayerClient.GameplayStarted), ((IMultiplayerClient)this).GameplayStarted);
-                    connection.On<GameplayAbortReason>(nameof(IMultiplayerClient.GameplayAborted), ((IMultiplayerClient)this).GameplayAborted);
-                    connection.On(nameof(IMultiplayerClient.ResultsReady), ((IMultiplayerClient)this).ResultsReady);
-                    connection.On<int, int?, int?>(nameof(IMultiplayerClient.UserStyleChanged), ((IMultiplayerClient)this).UserStyleChanged);
-                    connection.On<int, IEnumerable<APIMod>>(nameof(IMultiplayerClient.UserModsChanged), ((IMultiplayerClient)this).UserModsChanged);
-                    connection.On<int, BeatmapAvailability>(nameof(IMultiplayerClient.UserBeatmapAvailabilityChanged), ((IMultiplayerClient)this).UserBeatmapAvailabilityChanged);
-                    connection.On<MatchRoomState>(nameof(IMultiplayerClient.MatchRoomStateChanged), ((IMultiplayerClient)this).MatchRoomStateChanged);
-                    connection.On<int, MatchUserState>(nameof(IMultiplayerClient.MatchUserStateChanged), ((IMultiplayerClient)this).MatchUserStateChanged);
-                    connection.On<MatchServerEvent>(nameof(IMultiplayerClient.MatchEvent), ((IMultiplayerClient)this).MatchEvent);
-                    connection.On<MultiplayerPlaylistItem>(nameof(IMultiplayerClient.PlaylistItemAdded), ((IMultiplayerClient)this).PlaylistItemAdded);
-                    connection.On<long>(nameof(IMultiplayerClient.PlaylistItemRemoved), ((IMultiplayerClient)this).PlaylistItemRemoved);
-                    connection.On<MultiplayerPlaylistItem>(nameof(IMultiplayerClient.PlaylistItemChanged), ((IMultiplayerClient)this).PlaylistItemChanged);
-                    connection.On(nameof(IStatefulUserHubClient.DisconnectRequested), ((IMultiplayerClient)this).DisconnectRequested);
+                    connection.On<MultiplayerRoomState>(
+                        nameof(IMultiplayerClient.RoomStateChanged),
+                        ((IMultiplayerClient)this).RoomStateChanged
+                    );
+                    connection.On<MultiplayerRoomUser>(
+                        nameof(IMultiplayerClient.UserJoined),
+                        ((IMultiplayerClient)this).UserJoined
+                    );
+                    connection.On<MultiplayerRoomUser>(
+                        nameof(IMultiplayerClient.UserLeft),
+                        ((IMultiplayerClient)this).UserLeft
+                    );
+                    connection.On<MultiplayerRoomUser>(
+                        nameof(IMultiplayerClient.UserKicked),
+                        ((IMultiplayerClient)this).UserKicked
+                    );
+                    connection.On<int, long, string>(
+                        nameof(IMultiplayerClient.Invited),
+                        ((IMultiplayerClient)this).Invited
+                    );
+                    connection.On<int>(
+                        nameof(IMultiplayerClient.HostChanged),
+                        ((IMultiplayerClient)this).HostChanged
+                    );
+                    connection.On<MultiplayerRoomSettings>(
+                        nameof(IMultiplayerClient.SettingsChanged),
+                        ((IMultiplayerClient)this).SettingsChanged
+                    );
+                    connection.On<int, MultiplayerUserState>(
+                        nameof(IMultiplayerClient.UserStateChanged),
+                        ((IMultiplayerClient)this).UserStateChanged
+                    );
+                    connection.On(
+                        nameof(IMultiplayerClient.LoadRequested),
+                        ((IMultiplayerClient)this).LoadRequested
+                    );
+                    connection.On(
+                        nameof(IMultiplayerClient.GameplayStarted),
+                        ((IMultiplayerClient)this).GameplayStarted
+                    );
+                    connection.On<GameplayAbortReason>(
+                        nameof(IMultiplayerClient.GameplayAborted),
+                        ((IMultiplayerClient)this).GameplayAborted
+                    );
+                    connection.On(
+                        nameof(IMultiplayerClient.ResultsReady),
+                        ((IMultiplayerClient)this).ResultsReady
+                    );
+                    connection.On<int, int?, int?>(
+                        nameof(IMultiplayerClient.UserStyleChanged),
+                        ((IMultiplayerClient)this).UserStyleChanged
+                    );
+                    connection.On<int, IEnumerable<APIMod>>(
+                        nameof(IMultiplayerClient.UserModsChanged),
+                        ((IMultiplayerClient)this).UserModsChanged
+                    );
+                    connection.On<int, BeatmapAvailability>(
+                        nameof(IMultiplayerClient.UserBeatmapAvailabilityChanged),
+                        ((IMultiplayerClient)this).UserBeatmapAvailabilityChanged
+                    );
+                    connection.On<MatchRoomState>(
+                        nameof(IMultiplayerClient.MatchRoomStateChanged),
+                        ((IMultiplayerClient)this).MatchRoomStateChanged
+                    );
+                    connection.On<int, MatchUserState>(
+                        nameof(IMultiplayerClient.MatchUserStateChanged),
+                        ((IMultiplayerClient)this).MatchUserStateChanged
+                    );
+                    connection.On<MatchServerEvent>(
+                        nameof(IMultiplayerClient.MatchEvent),
+                        ((IMultiplayerClient)this).MatchEvent
+                    );
+                    connection.On<MultiplayerPlaylistItem>(
+                        nameof(IMultiplayerClient.PlaylistItemAdded),
+                        ((IMultiplayerClient)this).PlaylistItemAdded
+                    );
+                    connection.On<long>(
+                        nameof(IMultiplayerClient.PlaylistItemRemoved),
+                        ((IMultiplayerClient)this).PlaylistItemRemoved
+                    );
+                    connection.On<MultiplayerPlaylistItem>(
+                        nameof(IMultiplayerClient.PlaylistItemChanged),
+                        ((IMultiplayerClient)this).PlaylistItemChanged
+                    );
+                    connection.On(
+                        nameof(IStatefulUserHubClient.DisconnectRequested),
+                        ((IMultiplayerClient)this).DisconnectRequested
+                    );
                 };
 
                 IsConnected.BindTo(connector.IsConnected);
@@ -85,11 +151,15 @@ namespace osu.Game.Online.Multiplayer
 
             try
             {
-                return await connection.InvokeAsync<MultiplayerRoom>(nameof(IMultiplayerServer.CreateRoom), room).ConfigureAwait(false);
+                return await connection
+                    .InvokeAsync<MultiplayerRoom>(nameof(IMultiplayerServer.CreateRoom), room)
+                    .ConfigureAwait(false);
             }
             catch (HubException exception)
             {
-                if (exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE)
+                if (
+                    exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE
+                )
                 {
                     Debug.Assert(connector != null);
 
@@ -101,7 +171,10 @@ namespace osu.Game.Online.Multiplayer
             }
         }
 
-        protected override async Task<MultiplayerRoom> JoinRoomInternal(long roomId, string? password = null)
+        protected override async Task<MultiplayerRoom> JoinRoomInternal(
+            long roomId,
+            string? password = null
+        )
         {
             if (!IsConnected.Value)
                 throw new OperationCanceledException();
@@ -110,11 +183,19 @@ namespace osu.Game.Online.Multiplayer
 
             try
             {
-                return await connection.InvokeAsync<MultiplayerRoom>(nameof(IMultiplayerServer.JoinRoomWithPassword), roomId, password ?? string.Empty).ConfigureAwait(false);
+                return await connection
+                    .InvokeAsync<MultiplayerRoom>(
+                        nameof(IMultiplayerServer.JoinRoomWithPassword),
+                        roomId,
+                        password ?? string.Empty
+                    )
+                    .ConfigureAwait(false);
             }
             catch (HubException exception)
             {
-                if (exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE)
+                if (
+                    exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE
+                )
                 {
                     Debug.Assert(connector != null);
 
@@ -145,18 +226,30 @@ namespace osu.Game.Online.Multiplayer
 
             try
             {
-                await connection.InvokeAsync(nameof(IMultiplayerServer.InvitePlayer), userId).ConfigureAwait(false);
+                await connection
+                    .InvokeAsync(nameof(IMultiplayerServer.InvitePlayer), userId)
+                    .ConfigureAwait(false);
             }
             catch (HubException exception)
             {
                 switch (exception.GetHubExceptionMessage())
                 {
                     case UserBlockedException.MESSAGE:
-                        PostNotification?.Invoke(new SimpleErrorNotification { Text = OnlinePlayStrings.InviteFailedUserBlocked });
+                        PostNotification?.Invoke(
+                            new SimpleErrorNotification
+                            {
+                                Text = OnlinePlayStrings.InviteFailedUserBlocked,
+                            }
+                        );
                         break;
 
                     case UserBlocksPMsException.MESSAGE:
-                        PostNotification?.Invoke(new SimpleErrorNotification { Text = OnlinePlayStrings.InviteFailedUserOptOut });
+                        PostNotification?.Invoke(
+                            new SimpleErrorNotification
+                            {
+                                Text = OnlinePlayStrings.InviteFailedUserOptOut,
+                            }
+                        );
                         break;
                 }
             }
@@ -209,7 +302,10 @@ namespace osu.Game.Online.Multiplayer
 
             Debug.Assert(connection != null);
 
-            return connection.InvokeAsync(nameof(IMultiplayerServer.ChangeBeatmapAvailability), newBeatmapAvailability);
+            return connection.InvokeAsync(
+                nameof(IMultiplayerServer.ChangeBeatmapAvailability),
+                newBeatmapAvailability
+            );
         }
 
         public override Task ChangeUserStyle(int? beatmapId, int? rulesetId)
@@ -219,7 +315,11 @@ namespace osu.Game.Online.Multiplayer
 
             Debug.Assert(connection != null);
 
-            return connection.InvokeAsync(nameof(IMultiplayerServer.ChangeUserStyle), beatmapId, rulesetId);
+            return connection.InvokeAsync(
+                nameof(IMultiplayerServer.ChangeUserStyle),
+                beatmapId,
+                rulesetId
+            );
         }
 
         public override Task ChangeUserMods(IEnumerable<APIMod> newMods)
@@ -299,7 +399,10 @@ namespace osu.Game.Online.Multiplayer
 
             Debug.Assert(connection != null);
 
-            return connection.InvokeAsync(nameof(IMultiplayerServer.RemovePlaylistItem), playlistItemId);
+            return connection.InvokeAsync(
+                nameof(IMultiplayerServer.RemovePlaylistItem),
+                playlistItemId
+            );
         }
 
         public override Task DisconnectInternal()

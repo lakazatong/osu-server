@@ -31,8 +31,9 @@ namespace osu.Game.Graphics.UserInterface
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
-            sampleHover = audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-hover")
-                          ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-hover");
+            sampleHover =
+                audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-hover")
+                ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-hover");
         }
 
         public override void PlayHoverSample()

@@ -40,18 +40,18 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 {
                     count = new OsuSpriteText
                     {
-                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: text_size)
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: text_size),
                     },
                     slash = new OsuSpriteText
                     {
                         Text = @"/",
-                        Font = OsuFont.GetFont(weight: FontWeight.Light, size: text_size)
+                        Font = OsuFont.GetFont(weight: FontWeight.Light, size: text_size),
                     },
                     maxText = new OsuSpriteText
                     {
-                        Font = OsuFont.GetFont(weight: FontWeight.Light, size: text_size)
+                        Font = OsuFont.GetFont(weight: FontWeight.Light, size: text_size),
                     },
-                }
+                },
             };
         }
 
@@ -92,8 +92,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
         }
 
-        private void updateRoomParticipantCount()
-            => count.Text = room.ParticipantCount.ToString("#,0");
+        private void updateRoomParticipantCount() =>
+            count.Text = room.ParticipantCount.ToString("#,0");
 
         protected override void Dispose(bool isDisposing)
         {

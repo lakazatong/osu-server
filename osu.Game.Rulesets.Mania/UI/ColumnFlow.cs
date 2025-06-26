@@ -66,7 +66,8 @@ namespace osu.Game.Rulesets.Mania.UI
         [Resolved]
         private ISkinSource skin { get; set; } = null!;
 
-        private readonly Bindable<ManiaMobileLayout> mobileLayout = new Bindable<ManiaMobileLayout>();
+        private readonly Bindable<ManiaMobileLayout> mobileLayout =
+            new Bindable<ManiaMobileLayout>();
 
         [BackgroundDependencyLoader]
         private void load(ManiaRulesetConfigManager? rulesetConfig)
@@ -124,19 +125,30 @@ namespace osu.Game.Rulesets.Mania.UI
 
             for (int i = 0; i < stageDefinition.Columns; i++)
             {
-                float leftSpacing = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                            new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.LeftColumnSpacing, i))
-                                        ?.Value ?? Stage.COLUMN_SPACING;
+                float leftSpacing =
+                    skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                        new ManiaSkinConfigurationLookup(
+                            LegacyManiaSkinConfigurationLookups.LeftColumnSpacing,
+                            i
+                        )
+                    )?.Value ?? Stage.COLUMN_SPACING;
 
-                float rightSpacing = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                             new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.RightColumnSpacing, i))
-                                         ?.Value ?? Stage.COLUMN_SPACING;
+                float rightSpacing =
+                    skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                        new ManiaSkinConfigurationLookup(
+                            LegacyManiaSkinConfigurationLookups.RightColumnSpacing,
+                            i
+                        )
+                    )?.Value ?? Stage.COLUMN_SPACING;
 
                 columns[i].Margin = new MarginPadding { Left = leftSpacing, Right = rightSpacing };
 
                 float? width = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                       new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.ColumnWidth, i))
-                                   ?.Value;
+                    new ManiaSkinConfigurationLookup(
+                        LegacyManiaSkinConfigurationLookups.ColumnWidth,
+                        i
+                    )
+                )?.Value;
 
                 bool isSpecialColumn = stageDefinition.IsSpecialColumn(i);
 

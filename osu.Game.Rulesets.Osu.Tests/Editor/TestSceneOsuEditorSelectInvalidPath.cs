@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         protected override Ruleset CreateEditorRuleset() => new OsuRuleset();
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         [Test]
         public void TestSelectDoesNotModify()
@@ -27,16 +28,19 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             {
                 new PathControlPoint(new Vector2(0), PathType.PERFECT_CURVE),
                 new PathControlPoint(new Vector2(-100, 0)),
-                new PathControlPoint(new Vector2(100, 20))
+                new PathControlPoint(new Vector2(100, 20)),
             };
 
             int preSelectVersion = -1;
-            AddStep("add slider", () =>
-            {
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-                preSelectVersion = slider.Path.Version.Value;
-            });
+            AddStep(
+                "add slider",
+                () =>
+                {
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                    preSelectVersion = slider.Path.Version.Value;
+                }
+            );
 
             AddStep("select added slider", () => EditorBeatmap.SelectedHitObjects.Add(slider));
 

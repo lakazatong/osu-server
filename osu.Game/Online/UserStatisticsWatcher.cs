@@ -21,7 +21,8 @@ namespace osu.Game.Online
         private readonly LocalUserStatisticsProvider statisticsProvider;
 
         public IBindable<ScoreBasedUserStatisticsUpdate?> LatestUpdate => latestUpdate;
-        private readonly Bindable<ScoreBasedUserStatisticsUpdate?> latestUpdate = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        private readonly Bindable<ScoreBasedUserStatisticsUpdate?> latestUpdate =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
 
         [Resolved]
         private SpectatorClient spectatorClient { get; set; } = null!;
@@ -29,7 +30,8 @@ namespace osu.Game.Online
         [Resolved]
         private IAPIProvider api { get; set; } = null!;
 
-        private readonly Dictionary<long, ScoreInfo> watchedScores = new Dictionary<long, ScoreInfo>();
+        private readonly Dictionary<long, ScoreInfo> watchedScores =
+            new Dictionary<long, ScoreInfo>();
 
         public UserStatisticsWatcher(LocalUserStatisticsProvider statisticsProvider)
         {
@@ -69,11 +71,19 @@ namespace osu.Game.Online
             if (!watchedScores.Remove(scoreId, out var scoreInfo))
                 return;
 
-            statisticsProvider.RefetchStatistics(scoreInfo.Ruleset, u => Schedule(() =>
-            {
-                if (u.OldStatistics != null)
-                    latestUpdate.Value = new ScoreBasedUserStatisticsUpdate(scoreInfo, u.OldStatistics, u.NewStatistics);
-            }));
+            statisticsProvider.RefetchStatistics(
+                scoreInfo.Ruleset,
+                u =>
+                    Schedule(() =>
+                    {
+                        if (u.OldStatistics != null)
+                            latestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                                scoreInfo,
+                                u.OldStatistics,
+                                u.NewStatistics
+                            );
+                    })
+            );
         }
 
         protected override void Dispose(bool isDisposing)

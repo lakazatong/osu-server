@@ -47,26 +47,23 @@ namespace osu.Game.Skinning
                 Anchor = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    keySprite = new Sprite
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
+                    keySprite = new Sprite { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                     new UprightAspectMaintainingContainer
                     {
                         AutoSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Child = overlayKeyText = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = trigger.Name,
-                            Colour = textColour,
-                            Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
-                        },
+                        Child = overlayKeyText =
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = trigger.Name,
+                                Colour = textColour,
+                                Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
+                            },
                     },
-                }
+                },
             };
 
             // matches longest dimension of default skin asset

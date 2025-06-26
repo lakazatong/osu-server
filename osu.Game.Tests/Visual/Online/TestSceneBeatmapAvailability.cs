@@ -21,14 +21,18 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestUndownloadableWithLink()
         {
-            AddStep("set undownloadable beatmapset with link", () => container.BeatmapSet = new APIBeatmapSet
-            {
-                Availability = new BeatmapSetOnlineAvailability
-                {
-                    DownloadDisabled = true,
-                    ExternalLink = @"https://osu.ppy.sh",
-                },
-            });
+            AddStep(
+                "set undownloadable beatmapset with link",
+                () =>
+                    container.BeatmapSet = new APIBeatmapSet
+                    {
+                        Availability = new BeatmapSetOnlineAvailability
+                        {
+                            DownloadDisabled = true,
+                            ExternalLink = @"https://osu.ppy.sh",
+                        },
+                    }
+            );
 
             visibilityAssert(true);
         }
@@ -36,13 +40,14 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestUndownloadableNoLink()
         {
-            AddStep("set undownloadable beatmapset without link", () => container.BeatmapSet = new APIBeatmapSet
-            {
-                Availability = new BeatmapSetOnlineAvailability
-                {
-                    DownloadDisabled = true,
-                },
-            });
+            AddStep(
+                "set undownloadable beatmapset without link",
+                () =>
+                    container.BeatmapSet = new APIBeatmapSet
+                    {
+                        Availability = new BeatmapSetOnlineAvailability { DownloadDisabled = true },
+                    }
+            );
 
             visibilityAssert(true);
         }
@@ -50,14 +55,18 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestPartsRemovedWithLink()
         {
-            AddStep("set parts-removed beatmapset with link", () => container.BeatmapSet = new APIBeatmapSet
-            {
-                Availability = new BeatmapSetOnlineAvailability
-                {
-                    DownloadDisabled = false,
-                    ExternalLink = @"https://osu.ppy.sh",
-                },
-            });
+            AddStep(
+                "set parts-removed beatmapset with link",
+                () =>
+                    container.BeatmapSet = new APIBeatmapSet
+                    {
+                        Availability = new BeatmapSetOnlineAvailability
+                        {
+                            DownloadDisabled = false,
+                            ExternalLink = @"https://osu.ppy.sh",
+                        },
+                    }
+            );
 
             visibilityAssert(true);
         }
@@ -65,20 +74,27 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestNormal()
         {
-            AddStep("set normal beatmapset", () => container.BeatmapSet = new APIBeatmapSet
-            {
-                Availability = new BeatmapSetOnlineAvailability
-                {
-                    DownloadDisabled = false,
-                },
-            });
+            AddStep(
+                "set normal beatmapset",
+                () =>
+                    container.BeatmapSet = new APIBeatmapSet
+                    {
+                        Availability = new BeatmapSetOnlineAvailability
+                        {
+                            DownloadDisabled = false,
+                        },
+                    }
+            );
 
             visibilityAssert(false);
         }
 
         private void visibilityAssert(bool shown)
         {
-            AddAssert($"is container {(shown ? "visible" : "hidden")}", () => container.Alpha == (shown ? 1 : 0));
+            AddAssert(
+                $"is container {(shown ? "visible" : "hidden")}",
+                () => container.Alpha == (shown ? 1 : 0)
+            );
         }
     }
 }

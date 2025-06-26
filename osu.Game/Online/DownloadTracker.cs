@@ -23,7 +23,11 @@ namespace osu.Game.Online
         /// </summary>
         public IBindableNumber<double> Progress => progress;
 
-        private readonly BindableNumber<double> progress = new BindableNumber<double> { MinValue = 0, MaxValue = 1 };
+        private readonly BindableNumber<double> progress = new BindableNumber<double>
+        {
+            MinValue = 0,
+            MaxValue = 1,
+        };
 
         protected DownloadTracker(T trackedItem)
         {

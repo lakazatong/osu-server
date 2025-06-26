@@ -16,14 +16,16 @@ namespace osu.Game.Rulesets.Edit.Checks
         // There not existing a version with a bitrate of 128 kbps or higher is extremely rare.
         private const int min_bitrate = 128;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Audio, "Too high or low audio bitrate");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Audio, "Too high or low audio bitrate");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateTooHighBitrate(this),
-            new IssueTemplateTooLowBitrate(this),
-            new IssueTemplateNoBitrate(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateTooHighBitrate(this),
+                new IssueTemplateTooLowBitrate(this),
+                new IssueTemplateNoBitrate(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -45,8 +47,7 @@ namespace osu.Game.Rulesets.Edit.Checks
         {
             public IssueTemplateTooHighBitrate(ICheck check)
                 : base(check, IssueType.Problem, "The audio bitrate ({0} kbps) exceeds {1} kbps.")
-            {
-            }
+            { }
 
             public Issue Create(int bitrate) => new Issue(this, bitrate, max_bitrate);
         }
@@ -54,9 +55,11 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateTooLowBitrate : IssueTemplate
         {
             public IssueTemplateTooLowBitrate(ICheck check)
-                : base(check, IssueType.Problem, "The audio bitrate ({0} kbps) is lower than {1} kbps.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "The audio bitrate ({0} kbps) is lower than {1} kbps."
+                ) { }
 
             public Issue Create(int bitrate) => new Issue(this, bitrate, min_bitrate);
         }
@@ -64,9 +67,7 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateNoBitrate : IssueTemplate
         {
             public IssueTemplateNoBitrate(ICheck check)
-                : base(check, IssueType.Error, "The audio bitrate could not be retrieved.")
-            {
-            }
+                : base(check, IssueType.Error, "The audio bitrate could not be retrieved.") { }
 
             public Issue Create() => new Issue(this);
         }

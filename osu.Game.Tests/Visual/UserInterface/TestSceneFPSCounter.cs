@@ -22,36 +22,33 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create display", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create display",
+                () =>
                 {
-                    new Box
+                    Children = new Drawable[]
                     {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    new FillFlowContainer
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        AutoSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Children = new Drawable[]
+                        new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
+                        new FillFlowContainer
                         {
-                            new FPSCounter(),
-                            new FPSCounter { Scale = new Vector2(2) },
-                            new FPSCounter { Scale = new Vector2(4) },
-                        }
-                    },
-                };
-            });
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Children = new Drawable[]
+                            {
+                                new FPSCounter(),
+                                new FPSCounter { Scale = new Vector2(2) },
+                                new FPSCounter { Scale = new Vector2(4) },
+                            },
+                        },
+                    };
+                }
+            );
             AddToggleStep("toggle show", b => config.SetValue(OsuSetting.ShowFpsDisplay, b));
         }
 
         [Test]
-        public void TestBasic()
-        {
-        }
+        public void TestBasic() { }
     }
 }

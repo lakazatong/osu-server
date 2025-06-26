@@ -23,17 +23,11 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                     new Drawable?[]
                     {
                         null,
-                        new MultiplayerSpectateButton
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new MultiplayerSpectateButton { RelativeSizeAxes = Axes.Both },
                         null,
-                        new MatchStartControl
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        null
-                    }
+                        new MatchStartControl { RelativeSizeAxes = Axes.Both },
+                        null,
+                    },
                 },
                 ColumnDimensions = new[]
                 {
@@ -41,8 +35,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                     new Dimension(maxSize: spectate_button_width),
                     new Dimension(GridSizeMode.Absolute, 5),
                     new Dimension(maxSize: ready_button_width),
-                    new Dimension()
-                }
+                    new Dimension(),
+                },
             };
         }
     }

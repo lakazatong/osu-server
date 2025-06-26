@@ -56,7 +56,17 @@ namespace osu.Game.Tests.Visual.Background
             BeatmapStore beatmapStore;
 
             Dependencies.Cache(rulesets = new RealmRulesetStore(Realm));
-            Dependencies.Cache(manager = new BeatmapManager(LocalStorage, Realm, null, audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                manager = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
             Dependencies.Cache(new OsuConfigManager(LocalStorage));
             Dependencies.CacheAs(beatmapStore = new RealmDetachedBeatmapStore());
             Dependencies.Cache(Realm);
@@ -97,22 +107,44 @@ namespace osu.Game.Tests.Visual.Background
         public void TestPlayerLoaderSettingsHover()
         {
             setupUserSettings();
-            AddStep("Start player loader", () => songSelect.Push(playerLoader = new TestPlayerLoader(player = new LoadBlockingTestPlayer { BlockLoad = true })));
+            AddStep(
+                "Start player loader",
+                () =>
+                    songSelect.Push(
+                        playerLoader = new TestPlayerLoader(
+                            player = new LoadBlockingTestPlayer { BlockLoad = true }
+                        )
+                    )
+            );
             AddUntilStep("Wait for Player Loader to load", () => playerLoader?.IsLoaded ?? false);
-            AddAssert("Background retained from song select", () =>
-            {
-                InputManager.MoveMouseTo(playerLoader);
-                return songSelect.IsBackgroundCurrent();
-            });
+            AddAssert(
+                "Background retained from song select",
+                () =>
+                {
+                    InputManager.MoveMouseTo(playerLoader);
+                    return songSelect.IsBackgroundCurrent();
+                }
+            );
 
-            AddUntilStep("Screen is dimmed and blur applied", () =>
-            {
-                InputManager.MoveMouseTo(playerLoader.VisualSettingsPos);
-                return songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied();
-            });
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () =>
+                {
+                    InputManager.MoveMouseTo(playerLoader.VisualSettingsPos);
+                    return songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied();
+                }
+            );
 
-            AddStep("Stop background preview", () => InputManager.MoveMouseTo(playerLoader.ScreenPos));
-            AddUntilStep("Screen is undimmed and user blur removed", () => songSelect.IsBackgroundUndimmed() && songSelect.CheckBackgroundBlur(playerLoader.ExpectedBackgroundBlur));
+            AddStep(
+                "Stop background preview",
+                () => InputManager.MoveMouseTo(playerLoader.ScreenPos)
+            );
+            AddUntilStep(
+                "Screen is undimmed and user blur removed",
+                () =>
+                    songSelect.IsBackgroundUndimmed()
+                    && songSelect.CheckBackgroundBlur(playerLoader.ExpectedBackgroundBlur)
+            );
         }
 
         /// <summary>
@@ -125,8 +157,14 @@ namespace osu.Game.Tests.Visual.Background
         {
             performFullSetup();
             AddStep("Trigger hover event", () => playerLoader.TriggerOnHover());
-            AddAssert("Background retained from song select", () => songSelect.IsBackgroundCurrent());
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
+            AddAssert(
+                "Background retained from song select",
+                () => songSelect.IsBackgroundCurrent()
+            );
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
         }
 
         /// <summary>
@@ -136,20 +174,38 @@ namespace osu.Game.Tests.Visual.Background
         public void TestStoryboardBackgroundVisibility()
         {
             performFullSetup();
-            AddAssert("Background retained from song select", () => songSelect.IsBackgroundCurrent());
+            AddAssert(
+                "Background retained from song select",
+                () => songSelect.IsBackgroundCurrent()
+            );
             createFakeStoryboard();
-            AddStep("Enable Storyboard", () =>
-            {
-                player.StoryboardReplacesBackground.Value = true;
-                player.StoryboardEnabled.Value = true;
-            });
-            AddUntilStep("Background is black, storyboard is visible", () => songSelect.IsBackgroundVisible() && songSelect.IsBackgroundBlack() && player.IsStoryboardVisible);
-            AddStep("Disable Storyboard", () =>
-            {
-                player.StoryboardReplacesBackground.Value = false;
-                player.StoryboardEnabled.Value = false;
-            });
-            AddUntilStep("Background is visible, storyboard is invisible", () => songSelect.IsBackgroundVisible() && !player.IsStoryboardVisible);
+            AddStep(
+                "Enable Storyboard",
+                () =>
+                {
+                    player.StoryboardReplacesBackground.Value = true;
+                    player.StoryboardEnabled.Value = true;
+                }
+            );
+            AddUntilStep(
+                "Background is black, storyboard is visible",
+                () =>
+                    songSelect.IsBackgroundVisible()
+                    && songSelect.IsBackgroundBlack()
+                    && player.IsStoryboardVisible
+            );
+            AddStep(
+                "Disable Storyboard",
+                () =>
+                {
+                    player.StoryboardReplacesBackground.Value = false;
+                    player.StoryboardEnabled.Value = false;
+                }
+            );
+            AddUntilStep(
+                "Background is visible, storyboard is invisible",
+                () => songSelect.IsBackgroundVisible() && !player.IsStoryboardVisible
+            );
         }
 
         /// <summary>
@@ -171,11 +227,20 @@ namespace osu.Game.Tests.Visual.Background
         public void TestDisableUserDimBackground()
         {
             performFullSetup();
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
             AddStep("Disable user dim", () => songSelect.IgnoreUserSettings.Value = true);
-            AddUntilStep("Screen is undimmed and user blur removed", () => songSelect.IsBackgroundUndimmed() && songSelect.IsUserBlurDisabled());
+            AddUntilStep(
+                "Screen is undimmed and user blur removed",
+                () => songSelect.IsBackgroundUndimmed() && songSelect.IsUserBlurDisabled()
+            );
             AddStep("Enable user dim", () => songSelect.IgnoreUserSettings.Value = false);
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
         }
 
         /// <summary>
@@ -186,15 +251,24 @@ namespace osu.Game.Tests.Visual.Background
         {
             performFullSetup();
             createFakeStoryboard();
-            AddStep("Enable Storyboard", () =>
-            {
-                player.StoryboardReplacesBackground.Value = true;
-                player.StoryboardEnabled.Value = true;
-            });
-            AddStep("Enable user dim", () => player.DimmableStoryboard.IgnoreUserSettings.Value = false);
+            AddStep(
+                "Enable Storyboard",
+                () =>
+                {
+                    player.StoryboardReplacesBackground.Value = true;
+                    player.StoryboardEnabled.Value = true;
+                }
+            );
+            AddStep(
+                "Enable user dim",
+                () => player.DimmableStoryboard.IgnoreUserSettings.Value = false
+            );
             AddStep("Set dim level to 1", () => songSelect.DimLevel.Value = 1f);
             AddUntilStep("Storyboard is invisible", () => !player.IsStoryboardVisible);
-            AddStep("Disable user dim", () => player.DimmableStoryboard.IgnoreUserSettings.Value = true);
+            AddStep(
+                "Disable user dim",
+                () => player.DimmableStoryboard.IgnoreUserSettings.Value = true
+            );
             AddUntilStep("Storyboard is visible", () => player.IsStoryboardVisible);
         }
 
@@ -204,20 +278,31 @@ namespace osu.Game.Tests.Visual.Background
             performFullSetup();
             createFakeStoryboard();
 
-            AddStep("Enable fully dimmed storyboard", () =>
-            {
-                player.StoryboardReplacesBackground.Value = true;
-                player.StoryboardEnabled.Value = true;
-                player.DimmableStoryboard.IgnoreUserSettings.Value = false;
-                songSelect.DimLevel.Value = 1f;
-            });
+            AddStep(
+                "Enable fully dimmed storyboard",
+                () =>
+                {
+                    player.StoryboardReplacesBackground.Value = true;
+                    player.StoryboardEnabled.Value = true;
+                    player.DimmableStoryboard.IgnoreUserSettings.Value = false;
+                    songSelect.DimLevel.Value = 1f;
+                }
+            );
 
             AddUntilStep("Storyboard is invisible", () => !player.IsStoryboardVisible);
 
             AddWaitStep("wait some", 20);
 
-            AddUntilStep("Storyboard is always present", () => player.ChildrenOfType<DrawableStoryboard>().Single().AlwaysPresent, () => Is.True);
-            AddUntilStep("Dimmable storyboard content is being updated", () => storyboardUpdateCounter.StoryboardContentLastUpdated, () => Is.EqualTo(Time.Current).Within(100));
+            AddUntilStep(
+                "Storyboard is always present",
+                () => player.ChildrenOfType<DrawableStoryboard>().Single().AlwaysPresent,
+                () => Is.True
+            );
+            AddUntilStep(
+                "Dimmable storyboard content is being updated",
+                () => storyboardUpdateCounter.StoryboardContentLastUpdated,
+                () => Is.EqualTo(Time.Current).Within(100)
+            );
         }
 
         [Test]
@@ -225,22 +310,37 @@ namespace osu.Game.Tests.Visual.Background
         {
             performFullSetup();
             createFakeStoryboard();
-            AddStep("Enable replacing background", () => player.StoryboardReplacesBackground.Value = true);
+            AddStep(
+                "Enable replacing background",
+                () => player.StoryboardReplacesBackground.Value = true
+            );
 
             AddUntilStep("Storyboard is invisible", () => !player.IsStoryboardVisible);
             AddUntilStep("Background is visible", () => songSelect.IsBackgroundVisible());
 
-            AddStep("Ignore user settings", () =>
-            {
-                player.ApplyToBackground(b => b.IgnoreUserSettings.Value = true);
-                player.DimmableStoryboard.IgnoreUserSettings.Value = true;
-            });
+            AddStep(
+                "Ignore user settings",
+                () =>
+                {
+                    player.ApplyToBackground(b => b.IgnoreUserSettings.Value = true);
+                    player.DimmableStoryboard.IgnoreUserSettings.Value = true;
+                }
+            );
             AddUntilStep("Storyboard is visible", () => player.IsStoryboardVisible);
-            AddUntilStep("Background is dimmed", () => songSelect.IsBackgroundVisible() && songSelect.IsBackgroundBlack());
+            AddUntilStep(
+                "Background is dimmed",
+                () => songSelect.IsBackgroundVisible() && songSelect.IsBackgroundBlack()
+            );
 
-            AddStep("Disable background replacement", () => player.StoryboardReplacesBackground.Value = false);
+            AddStep(
+                "Disable background replacement",
+                () => player.StoryboardReplacesBackground.Value = false
+            );
             AddUntilStep("Storyboard is visible", () => player.IsStoryboardVisible);
-            AddUntilStep("Background is visible", () => songSelect.IsBackgroundVisible() && !songSelect.IsBackgroundBlack());
+            AddUntilStep(
+                "Background is visible",
+                () => songSelect.IsBackgroundVisible() && !songSelect.IsBackgroundBlack()
+            );
         }
 
         /// <summary>
@@ -251,9 +351,15 @@ namespace osu.Game.Tests.Visual.Background
         {
             performFullSetup(true);
             AddStep("Pause", () => player.Pause());
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
             AddStep("Unpause", () => player.Resume());
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
         }
 
         /// <summary>
@@ -266,12 +372,23 @@ namespace osu.Game.Tests.Visual.Background
 
             FadeAccessibleResults results = null;
 
-            AddStep("Transition to Results", () => player.Push(results = new FadeAccessibleResults(TestResources.CreateTestScoreInfo())));
+            AddStep(
+                "Transition to Results",
+                () =>
+                    player.Push(
+                        results = new FadeAccessibleResults(TestResources.CreateTestScoreInfo())
+                    )
+            );
 
             AddUntilStep("Wait for results is current", () => results.IsCurrentScreen());
 
-            AddUntilStep("Screen is undimmed, original background retained", () =>
-                songSelect.IsBackgroundUndimmed() && songSelect.IsBackgroundCurrent() && songSelect.CheckBackgroundBlur(results.ExpectedBackgroundBlur));
+            AddUntilStep(
+                "Screen is undimmed, original background retained",
+                () =>
+                    songSelect.IsBackgroundUndimmed()
+                    && songSelect.IsBackgroundCurrent()
+                    && songSelect.CheckBackgroundBlur(results.ExpectedBackgroundBlur)
+            );
         }
 
         /// <summary>
@@ -281,57 +398,98 @@ namespace osu.Game.Tests.Visual.Background
         public void TestResumeFromPlayer()
         {
             performFullSetup();
-            AddStep("Move mouse to Visual Settings location", () => InputManager.MoveMouseTo(playerLoader.ScreenSpaceDrawQuad.TopRight
-                                                                                             + new Vector2(-playerLoader.VisualSettingsPos.ScreenSpaceDrawQuad.Width,
-                                                                                                 playerLoader.VisualSettingsPos.ScreenSpaceDrawQuad.Height / 2
-                                                                                             )));
+            AddStep(
+                "Move mouse to Visual Settings location",
+                () =>
+                    InputManager.MoveMouseTo(
+                        playerLoader.ScreenSpaceDrawQuad.TopRight
+                            + new Vector2(
+                                -playerLoader.VisualSettingsPos.ScreenSpaceDrawQuad.Width,
+                                playerLoader.VisualSettingsPos.ScreenSpaceDrawQuad.Height / 2
+                            )
+                    )
+            );
             AddStep("Resume PlayerLoader", () => player.Restart());
-            AddUntilStep("Screen is dimmed and blur applied", () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied());
-            AddStep("Move mouse to center of screen", () => InputManager.MoveMouseTo(playerLoader.ScreenPos));
-            AddUntilStep("Screen is undimmed and user blur removed", () => songSelect.IsBackgroundUndimmed() && songSelect.CheckBackgroundBlur(playerLoader.ExpectedBackgroundBlur));
+            AddUntilStep(
+                "Screen is dimmed and blur applied",
+                () => songSelect.IsBackgroundDimmed() && songSelect.IsUserBlurApplied()
+            );
+            AddStep(
+                "Move mouse to center of screen",
+                () => InputManager.MoveMouseTo(playerLoader.ScreenPos)
+            );
+            AddUntilStep(
+                "Screen is undimmed and user blur removed",
+                () =>
+                    songSelect.IsBackgroundUndimmed()
+                    && songSelect.CheckBackgroundBlur(playerLoader.ExpectedBackgroundBlur)
+            );
         }
 
-        private void createFakeStoryboard() => AddStep("Create storyboard", () =>
-        {
-            player.StoryboardEnabled.Value = false;
-            player.StoryboardReplacesBackground.Value = false;
-            player.DimmableStoryboard.AddRange(new Drawable[]
-            {
-                storyboardUpdateCounter = new UpdateCounter(),
-                new OsuSpriteText
+        private void createFakeStoryboard() =>
+            AddStep(
+                "Create storyboard",
+                () =>
                 {
-                    Size = new Vector2(500, 50),
-                    Alpha = 1,
-                    Colour = Color4.White,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Text = "THIS IS A STORYBOARD",
-                    Font = new FontUsage(size: 50)
+                    player.StoryboardEnabled.Value = false;
+                    player.StoryboardReplacesBackground.Value = false;
+                    player.DimmableStoryboard.AddRange(
+                        new Drawable[]
+                        {
+                            storyboardUpdateCounter = new UpdateCounter(),
+                            new OsuSpriteText
+                            {
+                                Size = new Vector2(500, 50),
+                                Alpha = 1,
+                                Colour = Color4.White,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = "THIS IS A STORYBOARD",
+                                Font = new FontUsage(size: 50),
+                            },
+                        }
+                    );
                 }
-            });
-        });
+            );
 
         private void performFullSetup(bool allowPause = false)
         {
             setupUserSettings();
 
-            AddStep("Start player loader", () => songSelect.Push(playerLoader = new TestPlayerLoader(player = new LoadBlockingTestPlayer(allowPause))));
+            AddStep(
+                "Start player loader",
+                () =>
+                    songSelect.Push(
+                        playerLoader = new TestPlayerLoader(
+                            player = new LoadBlockingTestPlayer(allowPause)
+                        )
+                    )
+            );
 
             AddUntilStep("Wait for Player Loader to load", () => playerLoader.IsLoaded);
-            AddStep("Move mouse to center of screen", () => InputManager.MoveMouseTo(playerLoader.ScreenPos));
+            AddStep(
+                "Move mouse to center of screen",
+                () => InputManager.MoveMouseTo(playerLoader.ScreenPos)
+            );
             AddUntilStep("Wait for player to load", () => player.IsLoaded);
         }
 
         private void setupUserSettings()
         {
             AddUntilStep("Song select is current", () => songSelect.IsCurrentScreen());
-            AddUntilStep("Song select has selection", () => songSelect.Carousel?.SelectedBeatmapInfo != null);
-            AddStep("Set default user settings", () =>
-            {
-                SelectedMods.Value = new[] { new OsuModNoFail() };
-                songSelect.DimLevel.Value = 0.7f;
-                songSelect.BlurLevel.Value = 0.4f;
-            });
+            AddUntilStep(
+                "Song select has selection",
+                () => songSelect.Carousel?.SelectedBeatmapInfo != null
+            );
+            AddStep(
+                "Set default user settings",
+                () =>
+                {
+                    SelectedMods.Value = new[] { new OsuModNoFail() };
+                    songSelect.DimLevel.Value = 0.7f;
+                    songSelect.BlurLevel.Value = 0.4f;
+                }
+            );
         }
 
         protected override void Dispose(bool isDisposing)
@@ -366,19 +524,27 @@ namespace osu.Game.Tests.Visual.Background
 
             public bool IsBackgroundBlack() => background.CurrentColour == OsuColour.Gray(0);
 
-            public bool IsBackgroundDimmed() => background.CurrentColour == OsuColour.Gray(1f - background.CurrentDim);
+            public bool IsBackgroundDimmed() =>
+                background.CurrentColour == OsuColour.Gray(1f - background.CurrentDim);
 
             public bool IsBackgroundUndimmed() => background.CurrentColour == Color4.White;
 
-            public bool IsUserBlurApplied() => Precision.AlmostEquals(background.CurrentBlur, new Vector2((float)BlurLevel.Value * BackgroundScreenBeatmap.USER_BLUR_FACTOR), 0.1f);
+            public bool IsUserBlurApplied() =>
+                Precision.AlmostEquals(
+                    background.CurrentBlur,
+                    new Vector2((float)BlurLevel.Value * BackgroundScreenBeatmap.USER_BLUR_FACTOR),
+                    0.1f
+                );
 
             public bool IsUserBlurDisabled() => background.CurrentBlur == new Vector2(0);
 
             public bool IsBackgroundVisible() => background.CurrentAlpha == 1;
 
-            public bool IsBackgroundBlur() => Precision.AlmostEquals(background.CurrentBlur, new Vector2(BACKGROUND_BLUR), 0.1f);
+            public bool IsBackgroundBlur() =>
+                Precision.AlmostEquals(background.CurrentBlur, new Vector2(BACKGROUND_BLUR), 0.1f);
 
-            public bool CheckBackgroundBlur(Vector2 expected) => Precision.AlmostEquals(background.CurrentBlur, expected, 0.1f);
+            public bool CheckBackgroundBlur(Vector2 expected) =>
+                Precision.AlmostEquals(background.CurrentBlur, expected, 0.1f);
 
             /// <summary>
             /// Make sure every time a screen gets pushed, the background doesn't get replaced
@@ -395,7 +561,8 @@ namespace osu.Game.Tests.Visual.Background
                 AllowRetry = true;
             }
 
-            protected override BackgroundScreen CreateBackground() => new FadeAccessibleBackground(Beatmap.Value);
+            protected override BackgroundScreen CreateBackground() =>
+                new FadeAccessibleBackground(Beatmap.Value);
 
             public Vector2 ExpectedBackgroundBlur => new Vector2(BACKGROUND_BLUR);
         }
@@ -409,7 +576,9 @@ namespace osu.Game.Tests.Visual.Background
             {
                 base.OnEntering(e);
 
-                ApplyToBackground(b => StoryboardReplacesBackground.BindTo(b.StoryboardReplacesBackground));
+                ApplyToBackground(b =>
+                    StoryboardReplacesBackground.BindTo(b.StoryboardReplacesBackground)
+                );
             }
 
             public new DimmableStoryboard DimmableStoryboard => base.DimmableStoryboard;
@@ -422,9 +591,7 @@ namespace osu.Game.Tests.Visual.Background
             public readonly Bindable<bool> IsPaused = new Bindable<bool>();
 
             public LoadBlockingTestPlayer(bool allowPause = true)
-                : base(allowPause)
-            {
-            }
+                : base(allowPause) { }
 
             public bool IsStoryboardVisible => DimmableStoryboard.ContentDisplayed;
 
@@ -450,20 +617,20 @@ namespace osu.Game.Tests.Visual.Background
             public BackgroundScreen ScreenPos => background;
 
             public TestPlayerLoader(Player player)
-                : base(() => player)
-            {
-            }
+                : base(() => player) { }
 
             public void TriggerOnHover() => OnHover(new HoverEvent(new InputState()));
 
             public Vector2 ExpectedBackgroundBlur => new Vector2(BACKGROUND_BLUR);
 
-            protected override BackgroundScreen CreateBackground() => background = new FadeAccessibleBackground(Beatmap.Value);
+            protected override BackgroundScreen CreateBackground() =>
+                background = new FadeAccessibleBackground(Beatmap.Value);
         }
 
         private partial class FadeAccessibleBackground : BackgroundScreenBeatmap
         {
-            protected override DimmableBackground CreateFadeContainer() => dimmable = new TestDimmableBackground { RelativeSizeAxes = Axes.Both };
+            protected override DimmableBackground CreateFadeContainer() =>
+                dimmable = new TestDimmableBackground { RelativeSizeAxes = Axes.Both };
 
             public Color4 CurrentColour => dimmable.CurrentColour;
 
@@ -476,9 +643,7 @@ namespace osu.Game.Tests.Visual.Background
             private TestDimmableBackground dimmable;
 
             public FadeAccessibleBackground(WorkingBeatmap beatmap)
-                : base(beatmap)
-            {
-            }
+                : base(beatmap) { }
         }
 
         private partial class UpdateCounter : Drawable

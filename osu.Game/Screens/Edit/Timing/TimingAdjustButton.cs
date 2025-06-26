@@ -54,32 +54,36 @@ namespace osu.Game.Screens.Edit.Timing
             CornerRadius = 5;
             Masking = true;
 
-            AddInternal(Content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            AddInternal(
+                Content = new Container
                 {
-                    background = new Box
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Depth = float.MaxValue
+                        background = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                        },
+                        text = new OsuSpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Font = OsuFont.Default.With(weight: FontWeight.SemiBold),
+                            Padding = new MarginPadding(5),
+                            Depth = float.MinValue,
+                        },
                     },
-                    text = new OsuSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Font = OsuFont.Default.With(weight: FontWeight.SemiBold),
-                        Padding = new MarginPadding(5),
-                        Depth = float.MinValue
-                    }
                 }
-            });
+            );
 
-            AddInternal(repeatBehaviour = new RepeatingButtonBehaviour(this)
-            {
-                RepeatBegan = () => editorBeatmap.BeginChange(),
-                RepeatEnded = () => editorBeatmap.EndChange()
-            });
+            AddInternal(
+                repeatBehaviour = new RepeatingButtonBehaviour(this)
+                {
+                    RepeatBegan = () => editorBeatmap.BeginChange(),
+                    RepeatEnded = () => editorBeatmap.EndChange(),
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -106,7 +110,8 @@ namespace osu.Game.Screens.Edit.Timing
 
             hoveredBox.Flash();
 
-            repeatBehaviour.SampleFrequencyModifier = (hoveredBox.Multiplier / max_multiplier) * 0.2;
+            repeatBehaviour.SampleFrequencyModifier =
+                (hoveredBox.Multiplier / max_multiplier) * 0.2;
             return true;
         }
 
@@ -143,7 +148,7 @@ namespace osu.Game.Screens.Edit.Timing
                     box = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Blending = BlendingParameters.Additive
+                        Blending = BlendingParameters.Additive,
                     },
                     text = new OsuSpriteText
                     {
@@ -153,7 +158,7 @@ namespace osu.Game.Screens.Edit.Timing
                         Text = $"{(index > 0 ? "+" : "-")}{Math.Abs(Multiplier * amount)}",
                         Padding = new MarginPadding(2),
                         Alpha = 0,
-                    }
+                    },
                 };
             }
 
@@ -169,11 +174,14 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 switch (Math.Abs(m))
                 {
-                    default: return 1;
+                    default:
+                        return 1;
 
-                    case 2: return 2;
+                    case 2:
+                        return 2;
 
-                    case 3: return 5;
+                    case 3:
+                        return 5;
 
                     case 4:
                         return max_multiplier;
@@ -200,15 +208,9 @@ namespace osu.Game.Screens.Edit.Timing
 
             public void Flash()
             {
-                box
-                    .FadeTo(0.4f, 20, Easing.OutQuint)
-                    .Then()
-                    .FadeTo(0.2f, 400, Easing.OutQuint);
+                box.FadeTo(0.4f, 20, Easing.OutQuint).Then().FadeTo(0.2f, 400, Easing.OutQuint);
 
-                text
-                    .MoveToY(-5, 20, Easing.OutQuint)
-                    .Then()
-                    .MoveToY(0, 400, Easing.OutQuint);
+                text.MoveToY(-5, 20, Easing.OutQuint).Then().MoveToY(0, 400, Easing.OutQuint);
             }
         }
     }

@@ -29,17 +29,20 @@ namespace osu.Game.Tests.NonVisual
         [SetUpSteps]
         public void SetupSteps()
         {
-            AddStep("add manager", () =>
-            {
-                config = new OsuConfigManager(LocalStorage);
-                config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer);
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "add manager",
+                () =>
                 {
-                    CachedDependencies = [(typeof(OsuConfigManager), config)],
-                    Child = manager = new TestUpdateManager()
-                };
-            });
+                    config = new OsuConfigManager(LocalStorage);
+                    config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer);
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        CachedDependencies = [(typeof(OsuConfigManager), config)],
+                        Child = manager = new TestUpdateManager(),
+                    };
+                }
+            );
 
             // Updates should be checked when the object is loaded for the first time.
             AddUntilStep("check pending", () => manager.IsPending);
@@ -54,14 +57,20 @@ namespace osu.Game.Tests.NonVisual
         [Test]
         public void TestReleaseStreamChanged()
         {
-            AddStep("change release stream", () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon));
+            AddStep(
+                "change release stream",
+                () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon)
+            );
 
             AddUntilStep("check pending", () => manager.IsPending);
             AddStep("complete check", () => manager.Complete());
             AddUntilStep("2 checks completed", () => manager.Completions, () => Is.EqualTo(2));
             AddUntilStep("no check pending", () => !manager.IsPending);
 
-            AddStep("change release stream", () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer));
+            AddStep(
+                "change release stream",
+                () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer)
+            );
 
             AddUntilStep("check pending", () => manager.IsPending);
             AddStep("complete check", () => manager.Complete());
@@ -75,9 +84,15 @@ namespace osu.Game.Tests.NonVisual
         [Test]
         public void TestNewInvocationOnReleaseStreamChanged()
         {
-            AddStep("change release stream", () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon));
+            AddStep(
+                "change release stream",
+                () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon)
+            );
             AddUntilStep("check pending", () => manager.IsPending);
-            AddStep("change release stream", () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer));
+            AddStep(
+                "change release stream",
+                () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Lazer)
+            );
             AddUntilStep("3 invocations", () => manager.Invocations, () => Is.EqualTo(3));
 
             AddStep("complete check", () => manager.Complete());
@@ -126,7 +141,10 @@ namespace osu.Game.Tests.NonVisual
 
             // This next part tests for the user requesting an update during a background check, and is possible to occur in practice.
 
-            AddStep("change release stream", () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon));
+            AddStep(
+                "change release stream",
+                () => config.SetValue(OsuSetting.ReleaseStream, ReleaseStream.Tachyon)
+            );
             AddUntilStep("check pending", () => manager.IsPending);
             AddStep("request check", () => manager.CheckForUpdate());
             AddUntilStep("5 invocations", () => manager.Invocations, () => Is.EqualTo(5));
@@ -144,7 +162,9 @@ namespace osu.Game.Tests.NonVisual
 
             private TaskCompletionSource<bool>? pendingCheck;
 
-            protected override async Task<bool> PerformUpdateCheck(CancellationToken cancellationToken)
+            protected override async Task<bool> PerformUpdateCheck(
+                CancellationToken cancellationToken
+            )
             {
                 Invocations++;
 
@@ -153,7 +173,9 @@ namespace osu.Game.Tests.NonVisual
 
                 try
                 {
-                    bool result = await check.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    bool result = await check
+                        .Task.WaitAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     Completions++;
                     return result;
                 }
@@ -171,17 +193,14 @@ namespace osu.Game.Tests.NonVisual
 
         private partial class TestNotificationOverlay : INotificationOverlay
         {
-            public void Post(Notification notification)
-            {
-            }
+            public void Post(Notification notification) { }
 
-            public void Hide()
-            {
-            }
+            public void Hide() { }
 
             public IBindable<int> UnreadCount { get; } = new Bindable<int>();
 
-            public IEnumerable<Notification> AllNotifications { get; } = Enumerable.Empty<Notification>();
+            public IEnumerable<Notification> AllNotifications { get; } =
+                Enumerable.Empty<Notification>();
         }
     }
 }

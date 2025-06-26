@@ -26,14 +26,15 @@ namespace osu.Game.Beatmaps.Formats
         private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
 
         public LegacyStoryboardDecoder(int version = LATEST_VERSION)
-            : base(version)
-        {
-        }
+            : base(version) { }
 
         public static void Register()
         {
             // note that this isn't completely correct
-            AddDecoder<Storyboard>(@"osu file format v", m => new LegacyStoryboardDecoder(Parsing.ParseInt(m.Split('v').Last())));
+            AddDecoder<Storyboard>(
+                @"osu file format v",
+                m => new LegacyStoryboardDecoder(Parsing.ParseInt(m.Split('v').Last()))
+            );
             AddDecoder<Storyboard>(@"[Events]", _ => new LegacyStoryboardDecoder());
             SetFallbackDecoder<Storyboard>(() => new LegacyStoryboardDecoder());
         }
@@ -128,10 +129,16 @@ namespace osu.Game.Beatmaps.Formats
                         //
                         // This avoids potential weird crashes when ffmpeg attempts to parse an image file as a video
                         // (see https://github.com/ppy/osu/issues/22829#issuecomment-1465552451).
-                        if (!SupportedExtensions.VIDEO_EXTENSIONS.Contains(Path.GetExtension(path).ToLowerInvariant()))
+                        if (
+                            !SupportedExtensions.VIDEO_EXTENSIONS.Contains(
+                                Path.GetExtension(path).ToLowerInvariant()
+                            )
+                        )
                             break;
 
-                        storyboard.GetLayer("Video").Add(storyboardSprite = new StoryboardVideo(path, offset));
+                        storyboard
+                            .GetLayer("Video")
+                            .Add(storyboardSprite = new StoryboardVideo(path, offset));
                         break;
                     }
 
@@ -161,8 +168,18 @@ namespace osu.Game.Beatmaps.Formats
                             // this is random as hell but taken straight from osu-stable.
                             frameDelay = Math.Round(0.015 * frameDelay) * 1.186 * (1000 / 60f);
 
-                        var loopType = split.Length > 8 ? parseAnimationLoopType(split[8]) : AnimationLoopType.LoopForever;
-                        storyboardSprite = new StoryboardAnimation(path, origin, new Vector2(x, y), frameCount, frameDelay, loopType);
+                        var loopType =
+                            split.Length > 8
+                                ? parseAnimationLoopType(split[8])
+                                : AnimationLoopType.LoopForever;
+                        storyboardSprite = new StoryboardAnimation(
+                            path,
+                            origin,
+                            new Vector2(x, y),
+                            frameCount,
+                            frameDelay,
+                            loopType
+                        );
                         storyboard.GetLayer(layer).Add(storyboardSprite);
                         break;
                     }
@@ -173,7 +190,9 @@ namespace osu.Game.Beatmaps.Formats
                         string layer = parseLayer(split[2]);
                         string path = CleanFilename(split[3]);
                         float volume = split.Length > 4 ? Parsing.ParseFloat(split[4]) : 100;
-                        storyboard.GetLayer(layer).Add(new StoryboardSampleInfo(path, time, (int)volume));
+                        storyboard
+                            .GetLayer(layer)
+                            .Add(new StoryboardSampleInfo(path, time, (int)volume));
                         break;
                     }
                 }
@@ -190,10 +209,17 @@ namespace osu.Game.Beatmaps.Formats
                     case "T":
                     {
                         string triggerName = split[1];
-                        double startTime = split.Length > 2 ? Parsing.ParseDouble(split[2]) : double.MinValue;
-                        double endTime = split.Length > 3 ? Parsing.ParseDouble(split[3]) : double.MaxValue;
+                        double startTime =
+                            split.Length > 2 ? Parsing.ParseDouble(split[2]) : double.MinValue;
+                        double endTime =
+                            split.Length > 3 ? Parsing.ParseDouble(split[3]) : double.MaxValue;
                         int groupNumber = split.Length > 4 ? Parsing.ParseInt(split[4]) : 0;
-                        currentCommandsGroup = storyboardSprite?.AddTriggerGroup(triggerName, startTime, endTime, groupNumber);
+                        currentCommandsGroup = storyboardSprite?.AddTriggerGroup(
+                            triggerName,
+                            startTime,
+                            endTime,
+                            groupNumber
+                        );
                         break;
                     }
 
@@ -201,7 +227,10 @@ namespace osu.Game.Beatmaps.Formats
                     {
                         double startTime = Parsing.ParseDouble(split[1]);
                         int repeatCount = Parsing.ParseInt(split[2]);
-                        currentCommandsGroup = storyboardSprite?.AddLoopingGroup(startTime, Math.Max(0, repeatCount - 1));
+                        currentCommandsGroup = storyboardSprite?.AddLoopingGroup(
+                            startTime,
+                            Math.Max(0, repeatCount - 1)
+                        );
                         break;
                     }
 
@@ -219,16 +248,30 @@ namespace osu.Game.Beatmaps.Formats
                             case "F":
                             {
                                 float startValue = Parsing.ParseFloat(split[4]);
-                                float endValue = split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
-                                currentCommandsGroup?.AddAlpha(easing, startTime, endTime, startValue, endValue);
+                                float endValue =
+                                    split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
+                                currentCommandsGroup?.AddAlpha(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startValue,
+                                    endValue
+                                );
                                 break;
                             }
 
                             case "S":
                             {
                                 float startValue = Parsing.ParseFloat(split[4]);
-                                float endValue = split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
-                                currentCommandsGroup?.AddScale(easing, startTime, endTime, startValue, endValue);
+                                float endValue =
+                                    split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
+                                currentCommandsGroup?.AddScale(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startValue,
+                                    endValue
+                                );
                                 break;
                             }
 
@@ -236,17 +279,32 @@ namespace osu.Game.Beatmaps.Formats
                             {
                                 float startX = Parsing.ParseFloat(split[4]);
                                 float startY = Parsing.ParseFloat(split[5]);
-                                float endX = split.Length > 6 ? Parsing.ParseFloat(split[6]) : startX;
-                                float endY = split.Length > 7 ? Parsing.ParseFloat(split[7]) : startY;
-                                currentCommandsGroup?.AddVectorScale(easing, startTime, endTime, new Vector2(startX, startY), new Vector2(endX, endY));
+                                float endX =
+                                    split.Length > 6 ? Parsing.ParseFloat(split[6]) : startX;
+                                float endY =
+                                    split.Length > 7 ? Parsing.ParseFloat(split[7]) : startY;
+                                currentCommandsGroup?.AddVectorScale(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    new Vector2(startX, startY),
+                                    new Vector2(endX, endY)
+                                );
                                 break;
                             }
 
                             case "R":
                             {
                                 float startValue = Parsing.ParseFloat(split[4]);
-                                float endValue = split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
-                                currentCommandsGroup?.AddRotation(easing, startTime, endTime, float.RadiansToDegrees(startValue), float.RadiansToDegrees(endValue));
+                                float endValue =
+                                    split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
+                                currentCommandsGroup?.AddRotation(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    float.RadiansToDegrees(startValue),
+                                    float.RadiansToDegrees(endValue)
+                                );
                                 break;
                             }
 
@@ -254,26 +312,54 @@ namespace osu.Game.Beatmaps.Formats
                             {
                                 float startX = Parsing.ParseFloat(split[4]);
                                 float startY = Parsing.ParseFloat(split[5]);
-                                float endX = split.Length > 6 ? Parsing.ParseFloat(split[6]) : startX;
-                                float endY = split.Length > 7 ? Parsing.ParseFloat(split[7]) : startY;
-                                currentCommandsGroup?.AddX(easing, startTime, endTime, startX, endX);
-                                currentCommandsGroup?.AddY(easing, startTime, endTime, startY, endY);
+                                float endX =
+                                    split.Length > 6 ? Parsing.ParseFloat(split[6]) : startX;
+                                float endY =
+                                    split.Length > 7 ? Parsing.ParseFloat(split[7]) : startY;
+                                currentCommandsGroup?.AddX(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startX,
+                                    endX
+                                );
+                                currentCommandsGroup?.AddY(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startY,
+                                    endY
+                                );
                                 break;
                             }
 
                             case "MX":
                             {
                                 float startValue = Parsing.ParseFloat(split[4]);
-                                float endValue = split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
-                                currentCommandsGroup?.AddX(easing, startTime, endTime, startValue, endValue);
+                                float endValue =
+                                    split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
+                                currentCommandsGroup?.AddX(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startValue,
+                                    endValue
+                                );
                                 break;
                             }
 
                             case "MY":
                             {
                                 float startValue = Parsing.ParseFloat(split[4]);
-                                float endValue = split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
-                                currentCommandsGroup?.AddY(easing, startTime, endTime, startValue, endValue);
+                                float endValue =
+                                    split.Length > 5 ? Parsing.ParseFloat(split[5]) : startValue;
+                                currentCommandsGroup?.AddY(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    startValue,
+                                    endValue
+                                );
                                 break;
                             }
 
@@ -282,12 +368,24 @@ namespace osu.Game.Beatmaps.Formats
                                 float startRed = Parsing.ParseFloat(split[4]);
                                 float startGreen = Parsing.ParseFloat(split[5]);
                                 float startBlue = Parsing.ParseFloat(split[6]);
-                                float endRed = split.Length > 7 ? Parsing.ParseFloat(split[7]) : startRed;
-                                float endGreen = split.Length > 8 ? Parsing.ParseFloat(split[8]) : startGreen;
-                                float endBlue = split.Length > 9 ? Parsing.ParseFloat(split[9]) : startBlue;
-                                currentCommandsGroup?.AddColour(easing, startTime, endTime,
-                                    new Color4(startRed / 255f, startGreen / 255f, startBlue / 255f, 1),
-                                    new Color4(endRed / 255f, endGreen / 255f, endBlue / 255f, 1));
+                                float endRed =
+                                    split.Length > 7 ? Parsing.ParseFloat(split[7]) : startRed;
+                                float endGreen =
+                                    split.Length > 8 ? Parsing.ParseFloat(split[8]) : startGreen;
+                                float endBlue =
+                                    split.Length > 9 ? Parsing.ParseFloat(split[9]) : startBlue;
+                                currentCommandsGroup?.AddColour(
+                                    easing,
+                                    startTime,
+                                    endTime,
+                                    new Color4(
+                                        startRed / 255f,
+                                        startGreen / 255f,
+                                        startBlue / 255f,
+                                        1
+                                    ),
+                                    new Color4(endRed / 255f, endGreen / 255f, endBlue / 255f, 1)
+                                );
                                 break;
                             }
 
@@ -298,16 +396,35 @@ namespace osu.Game.Beatmaps.Formats
                                 switch (type)
                                 {
                                     case "A":
-                                        currentCommandsGroup?.AddBlendingParameters(easing, startTime, endTime, BlendingParameters.Additive,
-                                            startTime == endTime ? BlendingParameters.Additive : BlendingParameters.Inherit);
+                                        currentCommandsGroup?.AddBlendingParameters(
+                                            easing,
+                                            startTime,
+                                            endTime,
+                                            BlendingParameters.Additive,
+                                            startTime == endTime
+                                                ? BlendingParameters.Additive
+                                                : BlendingParameters.Inherit
+                                        );
                                         break;
 
                                     case "H":
-                                        currentCommandsGroup?.AddFlipH(easing, startTime, endTime, true, startTime == endTime);
+                                        currentCommandsGroup?.AddFlipH(
+                                            easing,
+                                            startTime,
+                                            endTime,
+                                            true,
+                                            startTime == endTime
+                                        );
                                         break;
 
                                     case "V":
-                                        currentCommandsGroup?.AddFlipV(easing, startTime, endTime, true, startTime == endTime);
+                                        currentCommandsGroup?.AddFlipV(
+                                            easing,
+                                            startTime,
+                                            endTime,
+                                            true,
+                                            startTime == endTime
+                                        );
                                         break;
                                 }
 
@@ -315,7 +432,9 @@ namespace osu.Game.Beatmaps.Formats
                             }
 
                             default:
-                                throw new InvalidDataException($@"Unknown command type: {commandType}");
+                                throw new InvalidDataException(
+                                    $@"Unknown command type: {commandType}"
+                                );
                         }
 
                         break;

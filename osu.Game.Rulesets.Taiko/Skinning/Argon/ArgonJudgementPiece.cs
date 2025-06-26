@@ -36,11 +36,13 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
         {
             if (Result.IsHit())
             {
-                AddInternal(ringExplosion = new RingExplosion(Result)
-                {
-                    Colour = colours.ForHitResult(Result),
-                    RelativePositionAxes = Axes.Y,
-                });
+                AddInternal(
+                    ringExplosion = new RingExplosion(Result)
+                    {
+                        Colour = colours.ForHitResult(Result),
+                        RelativePositionAxes = Axes.Y,
+                    }
+                );
             }
         }
 
@@ -69,8 +71,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             switch (Result)
             {
                 default:
-                    JudgementText.MoveToY(-0.6f)
-                                 .MoveToY(-1.0f, duration, Easing.OutQuint);
+                    JudgementText.MoveToY(-0.6f).MoveToY(-1.0f, duration, Easing.OutQuint);
 
                     JudgementText
                         .ScaleTo(Vector2.One)
@@ -151,15 +152,21 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                     float direction = RNG.NextSingle(0, 360);
                     float distance = RNG.NextSingle(travel / 2, travel);
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance * start_position_ratio,
-                        MathF.Sin(direction) * distance * start_position_ratio
-                    ));
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance * start_position_ratio,
+                            MathF.Sin(direction) * distance * start_position_ratio
+                        )
+                    );
 
-                    c.MoveTo(new Vector2(
-                        MathF.Cos(direction) * distance,
-                        MathF.Sin(direction) * distance
-                    ), 600, Easing.OutQuint);
+                    c.MoveTo(
+                        new Vector2(
+                            MathF.Cos(direction) * distance,
+                            MathF.Sin(direction) * distance
+                        ),
+                        600,
+                        Easing.OutQuint
+                    );
                 }
 
                 this.FadeOutFromOne(1000, Easing.OutQuint);
@@ -180,7 +187,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                     {
                         AlwaysPresent = true,
                         Alpha = 0,
-                        RelativeSizeAxes = Axes.Both
+                        RelativeSizeAxes = Axes.Both,
                     };
                 }
             }

@@ -24,23 +24,27 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
     public partial class TestSceneNotePlacementBlueprint : ManiaPlacementBlueprintTestScene
     {
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            this.ChildrenOfType<HitObjectContainer>().ForEach(c => c.Clear());
+        public void Setup() =>
+            Schedule(() =>
+            {
+                this.ChildrenOfType<HitObjectContainer>().ForEach(c => c.Clear());
 
-            ResetPlacement();
+                ResetPlacement();
 
-            ((ScrollingTestContainer)HitObjectContainer).Direction = ScrollingDirection.Down;
-        });
+                ((ScrollingTestContainer)HitObjectContainer).Direction = ScrollingDirection.Down;
+            });
 
         [Test]
         public void TestPlaceBeforeCurrentTimeDownwards()
         {
-            AddStep("move mouse before current time", () =>
-            {
-                var column = this.ChildrenOfType<Column>().Single();
-                InputManager.MoveMouseTo(column.ScreenSpacePositionAtTime(-100));
-            });
+            AddStep(
+                "move mouse before current time",
+                () =>
+                {
+                    var column = this.ChildrenOfType<Column>().Single();
+                    InputManager.MoveMouseTo(column.ScreenSpacePositionAtTime(-100));
+                }
+            );
 
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
@@ -50,11 +54,14 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         [Test]
         public void TestPlaceAfterCurrentTimeDownwards()
         {
-            AddStep("move mouse after current time", () =>
-            {
-                var column = this.ChildrenOfType<Column>().Single();
-                InputManager.MoveMouseTo(column.ScreenSpacePositionAtTime(100));
-            });
+            AddStep(
+                "move mouse after current time",
+                () =>
+                {
+                    var column = this.ChildrenOfType<Column>().Single();
+                    InputManager.MoveMouseTo(column.ScreenSpacePositionAtTime(100));
+                }
+            );
 
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
@@ -63,7 +70,10 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
 
         private Note getNote() => this.ChildrenOfType<DrawableNote>().FirstOrDefault()?.HitObject;
 
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableNote((Note)hitObject);
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new NotePlacementBlueprint();
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableNote((Note)hitObject);
+
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new NotePlacementBlueprint();
     }
 }

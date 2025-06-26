@@ -23,7 +23,7 @@ namespace osu.Game.Screens.Edit.Setup
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.X,
                 CornerRadius = CORNER_RADIUS,
-                OnFocused = this.ShowPopover
+                OnFocused = this.ShowPopover,
             };
 
         internal partial class PopoverTextBox : OsuTextBox

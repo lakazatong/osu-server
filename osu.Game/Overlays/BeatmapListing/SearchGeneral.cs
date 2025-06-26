@@ -9,7 +9,10 @@ namespace osu.Game.Overlays.BeatmapListing
 {
     public enum SearchGeneral
     {
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.GeneralRecommended))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.GeneralRecommended)
+        )]
         [Description("Recommended difficulty")]
         Recommended,
 
@@ -24,8 +27,11 @@ namespace osu.Game.Overlays.BeatmapListing
         [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.GeneralSpotlights))]
         Spotlights,
 
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.GeneralFeaturedArtists))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.GeneralFeaturedArtists)
+        )]
         [Description("Featured artists")]
-        FeaturedArtists
+        FeaturedArtists,
     }
 }

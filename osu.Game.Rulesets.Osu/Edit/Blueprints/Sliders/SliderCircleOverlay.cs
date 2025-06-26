@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             {
                 var result = CirclePiece.ScreenSpaceDrawQuad.AABBFloat;
 
-                if (endDragMarkerContainer == null) return result;
+                if (endDragMarkerContainer == null)
+                    return result;
 
                 var size = result.Size * 1.4f;
                 var location = result.TopLeft - result.Size * 0.2f;
@@ -47,14 +48,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             if (position == SliderPosition.End)
             {
-                AddInternal(endDragMarkerContainer = new Container
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Padding = new MarginPadding(-2.5f),
-                    Child = EndDragMarker = new SliderEndDragMarker()
-                });
+                AddInternal(
+                    endDragMarkerContainer = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Padding = new MarginPadding(-2.5f),
+                        Child = EndDragMarker = new SliderEndDragMarker(),
+                    }
+                );
             }
         }
 
@@ -62,8 +65,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         {
             base.Update();
 
-            var circle = position == SliderPosition.Start ? (HitCircle)slider.HeadCircle :
-                slider.RepeatCount % 2 == 0 ? slider.TailCircle : slider.LastRepeat!;
+            var circle =
+                position == SliderPosition.Start ? (HitCircle)slider.HeadCircle
+                : slider.RepeatCount % 2 == 0 ? slider.TailCircle
+                : slider.LastRepeat!;
 
             CirclePiece.UpdateFrom(circle);
             marker?.UpdateFrom(circle);
@@ -73,7 +78,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 endDragMarkerContainer.Position = circle.Position + slider.StackOffset;
                 endDragMarkerContainer.Scale = CirclePiece.Scale * 1.2f;
                 var diff = slider.Path.PositionAt(1) - slider.Path.PositionAt(0.99f);
-                endDragMarkerContainer.Rotation = float.RadiansToDegrees(MathF.Atan2(diff.Y, diff.X));
+                endDragMarkerContainer.Rotation = float.RadiansToDegrees(
+                    MathF.Atan2(diff.Y, diff.X)
+                );
             }
         }
 

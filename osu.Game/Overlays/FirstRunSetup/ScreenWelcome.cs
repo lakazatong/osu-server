@@ -22,7 +22,10 @@ using osuTK;
 
 namespace osu.Game.Overlays.FirstRunSetup
 {
-    [LocalisableDescription(typeof(FirstRunSetupOverlayStrings), nameof(FirstRunSetupOverlayStrings.WelcomeTitle))]
+    [LocalisableDescription(
+        typeof(FirstRunSetupOverlayStrings),
+        nameof(FirstRunSetupOverlayStrings.WelcomeTitle)
+    )]
     public partial class ScreenWelcome : WizardScreen
     {
         [BackgroundDependencyLoader]
@@ -43,25 +46,23 @@ namespace osu.Game.Overlays.FirstRunSetup
                     {
                         new Drawable[]
                         {
-                            new OsuTextFlowContainer(cp => cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE))
+                            new OsuTextFlowContainer(cp =>
+                                cp.Font = OsuFont.Default.With(size: CONTENT_FONT_SIZE)
+                            )
                             {
                                 Text = FirstRunSetupOverlayStrings.WelcomeDescription,
                                 RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y
+                                AutoSizeAxes = Axes.Y,
                             },
                         },
-                    }
+                    },
                 },
                 new SettingsCheckbox
                 {
                     LabelText = GeneralSettingsStrings.PreferOriginalMetadataLanguage,
-                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowUnicode)
+                    Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowUnicode),
                 },
-                new LanguageSelectionFlow
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
-                }
+                new LanguageSelectionFlow { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y },
             };
         }
 
@@ -80,20 +81,23 @@ namespace osu.Game.Overlays.FirstRunSetup
                 Spacing = new Vector2(5);
 
                 ChildrenEnumerable = Enum.GetValues<Language>()
-                                         .Select(l => new LanguageButton(l)
-                                         {
-                                             Action = () => language.Value = l,
-                                         });
+                    .Select(l => new LanguageButton(l) { Action = () => language.Value = l });
 
                 language = game.CurrentLanguage.GetBoundCopy();
-                language.BindValueChanged(v =>
-                {
-                    // Changing language may cause a short period of blocking the UI thread while the new glyphs are loaded.
-                    // Scheduling ensures the button animation plays smoothly after any blocking operation completes.
-                    // Note that a delay is required (the alternative would be a double-schedule; delay feels better).
-                    updateSelectedDelegate?.Cancel();
-                    updateSelectedDelegate = Scheduler.AddDelayed(() => updateSelectedStates(v.NewValue), 50);
-                }, true);
+                language.BindValueChanged(
+                    v =>
+                    {
+                        // Changing language may cause a short period of blocking the UI thread while the new glyphs are loaded.
+                        // Scheduling ensures the button animation plays smoothly after any blocking operation completes.
+                        // Note that a delay is required (the alternative would be a double-schedule; delay feels better).
+                        updateSelectedDelegate?.Cancel();
+                        updateSelectedDelegate = Scheduler.AddDelayed(
+                            () => updateSelectedStates(v.NewValue),
+                            50
+                        );
+                    },
+                    true
+                );
             }
 
             private void updateSelectedStates(Language language)
@@ -142,22 +146,24 @@ namespace osu.Game.Overlays.FirstRunSetup
                 [BackgroundDependencyLoader]
                 private void load()
                 {
-                    AddRange(new Drawable[]
-                    {
-                        backgroundBox = new Box
+                    AddRange(
+                        new Drawable[]
                         {
-                            Alpha = 0,
-                            Colour = colourProvider.Background5,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        text = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Colour = colourProvider.Light1,
-                            Text = Language.GetDescription(),
+                            backgroundBox = new Box
+                            {
+                                Alpha = 0,
+                                Colour = colourProvider.Background5,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            text = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Colour = colourProvider.Light1,
+                                Text = Language.GetDescription(),
+                            },
                         }
-                    });
+                    );
                 }
 
                 protected override void LoadComplete()
@@ -187,8 +193,16 @@ namespace osu.Game.Overlays.FirstRunSetup
                         const double selected_duration = 1000;
 
                         backgroundBox.FadeTo(1, selected_duration, Easing.OutQuint);
-                        backgroundBox.FadeColour(colourProvider.Background2, selected_duration, Easing.OutQuint);
-                        text.FadeColour(colourProvider.Content1, selected_duration, Easing.OutQuint);
+                        backgroundBox.FadeColour(
+                            colourProvider.Background2,
+                            selected_duration,
+                            Easing.OutQuint
+                        );
+                        text.FadeColour(
+                            colourProvider.Content1,
+                            selected_duration,
+                            Easing.OutQuint
+                        );
                         text.ScaleTo(1.2f, selected_duration, Easing.OutQuint);
                     }
                     else
@@ -196,7 +210,11 @@ namespace osu.Game.Overlays.FirstRunSetup
                         const double duration = 500;
 
                         backgroundBox.FadeTo(IsHovered ? 1 : 0, duration, Easing.OutQuint);
-                        backgroundBox.FadeColour(colourProvider.Background5, duration, Easing.OutQuint);
+                        backgroundBox.FadeColour(
+                            colourProvider.Background5,
+                            duration,
+                            Easing.OutQuint
+                        );
                         text.FadeColour(colourProvider.Light1, duration, Easing.OutQuint);
                         text.ScaleTo(1, duration, Easing.OutQuint);
                     }

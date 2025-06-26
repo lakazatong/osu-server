@@ -84,14 +84,26 @@ namespace osu.Game.Tests.NonVisual
 
             public override event Action<JudgementResult> NewResult
             {
-                add => throw new InvalidOperationException($"{nameof(NewResult)} operations not supported in test context");
-                remove => throw new InvalidOperationException($"{nameof(NewResult)} operations not supported in test context");
+                add =>
+                    throw new InvalidOperationException(
+                        $"{nameof(NewResult)} operations not supported in test context"
+                    );
+                remove =>
+                    throw new InvalidOperationException(
+                        $"{nameof(NewResult)} operations not supported in test context"
+                    );
             }
 
             public override event Action<JudgementResult> RevertResult
             {
-                add => throw new InvalidOperationException($"{nameof(RevertResult)} operations not supported in test context");
-                remove => throw new InvalidOperationException($"{nameof(RevertResult)} operations not supported in test context");
+                add =>
+                    throw new InvalidOperationException(
+                        $"{nameof(RevertResult)} operations not supported in test context"
+                    );
+                remove =>
+                    throw new InvalidOperationException(
+                        $"{nameof(RevertResult)} operations not supported in test context"
+                    );
             }
 
             public override IAdjustableAudioComponent Audio { get; }
@@ -108,15 +120,16 @@ namespace osu.Game.Tests.NonVisual
             public override GameplayCursorContainer Cursor { get; }
 
             public TestDrawableRuleset()
-                : base(new OsuRuleset())
-            {
-            }
+                : base(new OsuRuleset()) { }
 
-            public override void SetReplayScore(Score replayScore) => throw new NotImplementedException();
+            public override void SetReplayScore(Score replayScore) =>
+                throw new NotImplementedException();
 
-            public override void SetRecordTarget(Score score) => throw new NotImplementedException();
+            public override void SetRecordTarget(Score score) =>
+                throw new NotImplementedException();
 
-            public override void RequestResume(Action continueResume) => throw new NotImplementedException();
+            public override void RequestResume(Action continueResume) =>
+                throw new NotImplementedException();
 
             public override void CancelResume() => throw new NotImplementedException();
         }

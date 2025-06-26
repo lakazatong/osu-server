@@ -39,7 +39,11 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
     /// <summary>
     /// A <see cref="RoomPanel"/> with lounge-specific interactions such as selection and hover sounds.
     /// </summary>
-    public partial class LoungeRoomPanel : RoomPanel, IFilterable, IHasPopover, IKeyBindingHandler<GlobalAction>
+    public partial class LoungeRoomPanel
+        : RoomPanel,
+            IFilterable,
+            IHasPopover,
+            IKeyBindingHandler<GlobalAction>
     {
         private const float transition_duration = 60;
         private const float selection_border_width = 4;
@@ -73,32 +77,37 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
-            sampleSelect = audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select");
+            sampleSelect = audio.Samples.Get(
+                $@"UI/{HoverSampleSet.Default.GetDescription()}-select"
+            );
             sampleJoin = audio.Samples.Get($@"UI/{HoverSampleSet.Button.GetDescription()}-select");
 
-            AddRangeInternal(new Drawable[]
-            {
-                new StatusColouredContainer(Room, transition_duration)
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = selectionBox = new Container
+                    new StatusColouredContainer(Room, transition_duration)
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                        Masking = true,
-                        CornerRadius = CORNER_RADIUS,
-                        BorderThickness = selection_border_width,
-                        BorderColour = Color4.White,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
-                },
-                new HoverSounds()
-            });
+                        Child = selectionBox =
+                            new Container
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Alpha = 0,
+                                Masking = true,
+                                CornerRadius = CORNER_RADIUS,
+                                BorderThickness = selection_border_width,
+                                BorderColour = Color4.White,
+                                Child = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Alpha = 0,
+                                    AlwaysPresent = true,
+                                },
+                            },
+                    },
+                    new HoverSounds(),
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -120,8 +129,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
                 updateSelectedItem();
         }
 
-        private void updateSelectedItem()
-            => SelectedItem.Value = Room.CurrentPlaylistItem;
+        private void updateSelectedItem() => SelectedItem.Value = Room.CurrentPlaylistItem;
 
         private void updateSelectedRoom(ValueChangedEvent<Room?> selected)
         {
@@ -165,14 +173,33 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
                 items.AddRange(base.ContextMenuItems);
 
                 items.Add(new OsuMenuItemSpacer());
-                items.Add(new OsuMenuItem("Create copy", MenuItemType.Standard, () => lounge?.OpenCopy(Room)));
+                items.Add(
+                    new OsuMenuItem(
+                        "Create copy",
+                        MenuItemType.Standard,
+                        () => lounge?.OpenCopy(Room)
+                    )
+                );
 
-                if (Room.Type == MatchType.Playlists && Room.Host?.Id == api.LocalUser.Value.Id && Room.StartDate?.AddMinutes(5) >= DateTimeOffset.Now && !Room.HasEnded)
+                if (
+                    Room.Type == MatchType.Playlists
+                    && Room.Host?.Id == api.LocalUser.Value.Id
+                    && Room.StartDate?.AddMinutes(5) >= DateTimeOffset.Now
+                    && !Room.HasEnded
+                )
                 {
-                    items.Add(new OsuMenuItem("Close playlist", MenuItemType.Destructive, () =>
-                    {
-                        dialogOverlay?.Push(new ClosePlaylistDialog(Room, () => lounge?.Close(Room)));
-                    }));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Close playlist",
+                            MenuItemType.Destructive,
+                            () =>
+                            {
+                                dialogOverlay?.Push(
+                                    new ClosePlaylistDialog(Room, () => lounge?.Close(Room))
+                                );
+                            }
+                        )
+                    );
                 }
 
                 return items.ToArray();
@@ -197,11 +224,10 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
-        protected override bool ShouldBeConsideredForInput(Drawable child) => selectedRoom.Value == Room || child is HoverSounds;
+        protected override bool ShouldBeConsideredForInput(Drawable child) =>
+            selectedRoom.Value == Room || child is HoverSounds;
 
         protected override bool OnClick(ClickEvent e)
         {
@@ -275,18 +301,11 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
                                     Width = 200,
                                     PlaceholderText = "password",
                                 },
-                                joinButton = new RoundedButton
-                                {
-                                    Width = 80,
-                                    Text = "Join Room",
-                                }
-                            }
+                                joinButton = new RoundedButton { Width = 80, Text = "Join Room" },
+                            },
                         },
-                        errorText = new OsuSpriteText
-                        {
-                            Colour = colours.Red,
-                        },
-                    }
+                        errorText = new OsuSpriteText { Colour = colours.Red },
+                    },
                 };
 
                 sampleJoinFail = audio.Samples.Get(@"UI/generic-error");
@@ -298,7 +317,9 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
             {
                 base.LoadComplete();
 
-                ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(passwordTextBox));
+                ScheduleAfterChildren(() =>
+                    GetContainingFocusManager()!.ChangeFocus(passwordTextBox)
+                );
                 passwordTextBox.OnCommit += (_, _) => performJoin();
             }
 
@@ -308,24 +329,25 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
                 GetContainingFocusManager()?.TriggerFocusContention(passwordTextBox);
             }
 
-            private void joinFailed(string message, Exception? exception) => Schedule(() =>
-            {
-                passwordTextBox.Text = string.Empty;
+            private void joinFailed(string message, Exception? exception) =>
+                Schedule(() =>
+                {
+                    passwordTextBox.Text = string.Empty;
 
-                GetContainingFocusManager()!.ChangeFocus(passwordTextBox);
+                    GetContainingFocusManager()!.ChangeFocus(passwordTextBox);
 
-                Logger.Log($"Failed to join room with password. {exception}");
-                errorText.Text = message;
-                errorText
-                    .FadeIn()
-                    .FlashColour(Color4.White, 200)
-                    .Delay(1000)
-                    .FadeOutFromOne(1000, Easing.In);
+                    Logger.Log($"Failed to join room with password. {exception}");
+                    errorText.Text = message;
+                    errorText
+                        .FadeIn()
+                        .FlashColour(Color4.White, 200)
+                        .Delay(1000)
+                        .FadeOutFromOne(1000, Easing.In);
 
-                Body.Shake();
+                    Body.Shake();
 
-                sampleJoinFail?.Play();
-            });
+                    sampleJoinFail?.Play();
+                });
         }
     }
 }

@@ -19,16 +19,14 @@ namespace osu.Game.Online.API
     {
         public const int DUMMY_USER_ID = 1001;
 
-        public Bindable<APIUser> LocalUser { get; } = new Bindable<APIUser>(new APIUser
-        {
-            Username = @"Local user",
-            Id = DUMMY_USER_ID,
-        });
+        public Bindable<APIUser> LocalUser { get; } =
+            new Bindable<APIUser>(new APIUser { Username = @"Local user", Id = DUMMY_USER_ID });
 
         public BindableList<APIRelation> Friends { get; } = new BindableList<APIRelation>();
         public BindableList<APIRelation> Blocks { get; } = new BindableList<APIRelation>();
 
-        public DummyNotificationsClient NotificationsClient { get; } = new DummyNotificationsClient();
+        public DummyNotificationsClient NotificationsClient { get; } =
+            new DummyNotificationsClient();
         INotificationsClient IAPIProvider.NotificationsClient => NotificationsClient;
 
         public Language Language => Language.en;
@@ -42,11 +40,12 @@ namespace osu.Game.Online.API
 
         public string ProvidedUsername => LocalUser.Value.Username;
 
-        public EndpointConfiguration Endpoints { get; } = new EndpointConfiguration
-        {
-            APIUrl = "http://localhost",
-            WebsiteUrl = "http://localhost",
-        };
+        public EndpointConfiguration Endpoints { get; } =
+            new EndpointConfiguration
+            {
+                APIUrl = "http://localhost",
+                WebsiteUrl = "http://localhost",
+            };
 
         public int APIVersion => int.Parse(DateTime.Now.ToString("yyyyMMdd"));
 
@@ -84,7 +83,11 @@ namespace osu.Game.Online.API
                         return;
                     }
 
-                    request.Fail(new InvalidOperationException($@"{nameof(DummyAPIAccess)} cannot process this request."));
+                    request.Fail(
+                        new InvalidOperationException(
+                            $@"{nameof(DummyAPIAccess)} cannot process this request."
+                        )
+                    );
                 }
             });
         }
@@ -116,7 +119,10 @@ namespace osu.Game.Online.API
 
             if (shouldFailNextLogin)
             {
-                LastLoginError = new APIException("Not powerful enough to login.", new ArgumentException(nameof(shouldFailNextLogin)));
+                LastLoginError = new APIException(
+                    "Not powerful enough to login.",
+                    new ArgumentException(nameof(shouldFailNextLogin))
+                );
 
                 state.Value = APIState.Offline;
                 shouldFailNextLogin = false;
@@ -124,11 +130,7 @@ namespace osu.Game.Online.API
             }
 
             LastLoginError = null;
-            LocalUser.Value = new APIUser
-            {
-                Username = username,
-                Id = DUMMY_USER_ID,
-            };
+            LocalUser.Value = new APIUser { Username = username, Id = DUMMY_USER_ID };
 
             if (requiredSecondFactorAuth)
             {
@@ -177,19 +179,23 @@ namespace osu.Game.Online.API
             LocalUser.Value = new GuestUser();
         }
 
-        public void UpdateLocalFriends()
-        {
-        }
+        public void UpdateLocalFriends() { }
 
-        public void UpdateLocalBlocks()
-        {
-        }
+        public void UpdateLocalBlocks() { }
 
-        public IHubClientConnector? GetHubConnector(string clientName, string endpoint, bool preferMessagePack) => null;
+        public IHubClientConnector? GetHubConnector(
+            string clientName,
+            string endpoint,
+            bool preferMessagePack
+        ) => null;
 
         public IChatClient GetChatClient() => new TestChatClientConnector(this);
 
-        public RegistrationRequest.RegistrationRequestErrors? CreateAccount(string email, string username, string password)
+        public RegistrationRequest.RegistrationRequestErrors? CreateAccount(
+            string email,
+            string username,
+            string password
+        )
         {
             Thread.Sleep(200);
             return null;

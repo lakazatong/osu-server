@@ -18,6 +18,7 @@ namespace osu.Game.Graphics
     public class OsuColour
     {
         public static Color4 Gray(float amt) => new Color4(amt, amt, amt, 1f);
+
         public static Color4 Gray(byte amt) => new Color4(amt, amt, amt, 255);
 
         /// <summary>
@@ -45,7 +46,11 @@ namespace osu.Game.Graphics
         /// <summary>
         /// Retrieves the colour for a given point in the star range.
         /// </summary>
-        public Color4 ForStarDifficulty(double starDifficulty) => ColourUtils.SampleFromLinearGradient(STAR_DIFFICULTY_SPECTRUM, (float)Math.Round(starDifficulty, 2, MidpointRounding.AwayFromZero));
+        public Color4 ForStarDifficulty(double starDifficulty) =>
+            ColourUtils.SampleFromLinearGradient(
+                STAR_DIFFICULTY_SPECTRUM,
+                (float)Math.Round(starDifficulty, 2, MidpointRounding.AwayFromZero)
+            );
 
         /// <summary>
         /// Retrieves the colour for a <see cref="ScoreRank"/>.
@@ -184,7 +189,11 @@ namespace osu.Game.Graphics
                     return Yellow;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(modType), modType, "Unknown mod type");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(modType),
+                        modType,
+                        "Unknown mod type"
+                    );
             }
         }
 
@@ -240,25 +249,46 @@ namespace osu.Game.Graphics
                     return Color4Extensions.FromHex(@"BAB3AB");
 
                 case RankingTier.Bronze:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"B88F7A"), Color4Extensions.FromHex(@"855C47"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"B88F7A"),
+                        Color4Extensions.FromHex(@"855C47")
+                    );
 
                 case RankingTier.Silver:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"E0E0EB"), Color4Extensions.FromHex(@"A3A3C2"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"E0E0EB"),
+                        Color4Extensions.FromHex(@"A3A3C2")
+                    );
 
                 case RankingTier.Gold:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"F0E4A8"), Color4Extensions.FromHex(@"E0C952"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"F0E4A8"),
+                        Color4Extensions.FromHex(@"E0C952")
+                    );
 
                 case RankingTier.Platinum:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"A8F0EF"), Color4Extensions.FromHex(@"52E0DF"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"A8F0EF"),
+                        Color4Extensions.FromHex(@"52E0DF")
+                    );
 
                 case RankingTier.Rhodium:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"D9F8D3"), Color4Extensions.FromHex(@"A0CF96"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"D9F8D3"),
+                        Color4Extensions.FromHex(@"A0CF96")
+                    );
 
                 case RankingTier.Radiant:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"97DCFF"), Color4Extensions.FromHex(@"ED82FF"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"97DCFF"),
+                        Color4Extensions.FromHex(@"ED82FF")
+                    );
 
                 case RankingTier.Lustrous:
-                    return ColourInfo.GradientVertical(Color4Extensions.FromHex(@"FFE600"), Color4Extensions.FromHex(@"ED82FF"));
+                    return ColourInfo.GradientVertical(
+                        Color4Extensions.FromHex(@"FFE600"),
+                        Color4Extensions.FromHex(@"ED82FF")
+                    );
             }
         }
 
@@ -270,7 +300,10 @@ namespace osu.Game.Graphics
         {
             // formula taken from the RGB->YIQ conversions: https://en.wikipedia.org/wiki/YIQ
             // brightness here is equivalent to the Y component in the above colour model, which is a rough estimate of lightness.
-            float brightness = 0.299f * backgroundColour.R + 0.587f * backgroundColour.G + 0.114f * backgroundColour.B;
+            float brightness =
+                0.299f * backgroundColour.R
+                + 0.587f * backgroundColour.G
+                + 0.114f * backgroundColour.B;
             return Gray(brightness > 0.5f ? 0.2f : 0.9f);
         }
 

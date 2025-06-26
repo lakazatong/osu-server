@@ -27,7 +27,10 @@ using NotificationsStrings = osu.Game.Localisation.NotificationsStrings;
 
 namespace osu.Game.Overlays
 {
-    public partial class NotificationOverlay : OsuFocusedOverlayContainer, INamedOverlayComponent, INotificationOverlay
+    public partial class NotificationOverlay
+        : OsuFocusedOverlayContainer,
+            INamedOverlayComponent,
+            INotificationOverlay
     {
         public IconUsage Icon => OsuIcon.Notification;
         public LocalisableString Title => NotificationsStrings.HeaderTitle;
@@ -40,7 +43,9 @@ namespace osu.Game.Overlays
         public const float TRANSITION_LENGTH = 600;
 
         public IEnumerable<Notification> AllNotifications =>
-            IsLoaded ? toastTray.Notifications.Concat(sections.SelectMany(s => s.Notifications)) : Array.Empty<Notification>();
+            IsLoaded
+                ? toastTray.Notifications.Concat(sections.SelectMany(s => s.Notifications))
+                : Array.Empty<Notification>();
 
         private FlowContainer<NotificationSection> sections = null!;
 
@@ -51,7 +56,9 @@ namespace osu.Game.Overlays
         private OsuGame? game { get; set; }
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
         {
@@ -64,7 +71,8 @@ namespace osu.Game.Overlays
             return false;
         }
 
-        public override bool PropagatePositionalInputSubTree => base.PropagatePositionalInputSubTree || toastTray.IsDisplayingToasts;
+        public override bool PropagatePositionalInputSubTree =>
+            base.PropagatePositionalInputSubTree || toastTray.IsDisplayingToasts;
 
         private NotificationOverlayToastTray toastTray = null!;
 
@@ -117,12 +125,15 @@ namespace osu.Game.Overlays
                                     {
                                         // The main section adds as a catch-all for notifications which don't group into other sections.
                                         new NotificationSection(AccountsStrings.NotificationsTitle),
-                                        new NotificationSection(NotificationsStrings.RunningTasks, new[] { typeof(ProgressNotification) }),
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                        new NotificationSection(
+                                            NotificationsStrings.RunningTasks,
+                                            new[] { typeof(ProgressNotification) }
+                                        ),
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             };
         }
@@ -131,13 +142,18 @@ namespace osu.Game.Overlays
 
         private void updateProcessingMode()
         {
-            bool enabled = OverlayActivationMode.Value != OverlayActivation.Disabled || State.Value == Visibility.Visible;
+            bool enabled =
+                OverlayActivationMode.Value != OverlayActivation.Disabled
+                || State.Value == Visibility.Visible;
 
             notificationsEnabler?.Cancel();
 
             if (enabled)
                 // we want a slight delay before toggling notifications on to avoid the user becoming overwhelmed.
-                notificationsEnabler = Scheduler.AddDelayed(() => processingPosts = true, State.Value == Visibility.Visible ? 0 : 250);
+                notificationsEnabler = Scheduler.AddDelayed(
+                    () => processingPosts = true,
+                    State.Value == Visibility.Visible ? 0 : 250
+                );
             else
             {
                 processingPosts = false;
@@ -165,41 +181,45 @@ namespace osu.Game.Overlays
 
         public override bool IsPresent =>
             // Delegate presence as we need to consider the toast tray in addition to the main overlay.
-            State.Value == Visibility.Visible || mainContent.IsPresent || toastTray.IsPresent || postScheduler.HasPendingTasks;
+            State.Value == Visibility.Visible
+            || mainContent.IsPresent
+            || toastTray.IsPresent
+            || postScheduler.HasPendingTasks;
 
         private bool processingPosts = true;
 
         private double? lastSamplePlayback;
 
-        public void Post(Notification notification) => postScheduler.Add(() =>
-        {
-            ++runningDepth;
-
-            Logger.Log($"⚠️ {notification.Text}");
-
-            notification.Closed += () => notificationClosed(notification);
-
-            if (notification is IHasCompletionTarget hasCompletionTarget)
-                hasCompletionTarget.CompletionTarget = Post;
-
-            playDebouncedSample(notification.PopInSampleName);
-
-            if (notification.IsImportant)
+        public void Post(Notification notification) =>
+            postScheduler.Add(() =>
             {
-                game?.Window?.Flash();
-                notification.Closed += () => game?.Window?.CancelFlash();
-            }
+                ++runningDepth;
 
-            if (State.Value == Visibility.Hidden)
-            {
-                notification.IsInToastTray = true;
-                toastTray.Post(notification);
-            }
-            else
-                addPermanently(notification);
+                Logger.Log($"⚠️ {notification.Text}");
 
-            updateCounts();
-        });
+                notification.Closed += () => notificationClosed(notification);
+
+                if (notification is IHasCompletionTarget hasCompletionTarget)
+                    hasCompletionTarget.CompletionTarget = Post;
+
+                playDebouncedSample(notification.PopInSampleName);
+
+                if (notification.IsImportant)
+                {
+                    game?.Window?.Flash();
+                    notification.Closed += () => game?.Window?.CancelFlash();
+                }
+
+                if (State.Value == Visibility.Hidden)
+                {
+                    notification.IsInToastTray = true;
+                    toastTray.Post(notification);
+                }
+                else
+                    addPermanently(notification);
+
+                updateCounts();
+            });
 
         private void addPermanently(Notification notification)
         {
@@ -208,8 +228,11 @@ namespace osu.Game.Overlays
             var ourType = notification.GetType();
             int depth = notification.DisplayOnTop ? -runningDepth : runningDepth;
 
-            var section = sections.Children.FirstOrDefault(s => s.AcceptedNotificationTypes?.Any(accept => accept.IsAssignableFrom(ourType)) == true)
-                          ?? sections.First();
+            var section =
+                sections.Children.FirstOrDefault(s =>
+                    s.AcceptedNotificationTypes?.Any(accept => accept.IsAssignableFrom(ourType))
+                    == true
+                ) ?? sections.First();
 
             section.Add(notification, depth);
 
@@ -228,7 +251,11 @@ namespace osu.Game.Overlays
         {
             this.MoveToX(0, TRANSITION_LENGTH, Easing.OutQuint);
             mainContent.FadeTo(1, TRANSITION_LENGTH / 2, Easing.OutQuint);
-            mainContent.FadeEdgeEffectTo(WaveContainer.SHADOW_OPACITY, WaveContainer.APPEAR_DURATION, Easing.Out);
+            mainContent.FadeEdgeEffectTo(
+                WaveContainer.SHADOW_OPACITY,
+                WaveContainer.APPEAR_DURATION,
+                Easing.Out
+            );
 
             toastTray.FlushAllToasts();
         }
@@ -244,21 +271,25 @@ namespace osu.Game.Overlays
             mainContent.FadeEdgeEffectTo(0, WaveContainer.DISAPPEAR_DURATION, Easing.In);
         }
 
-        private void notificationClosed(Notification notification) => Schedule(() =>
-        {
-            updateCounts();
+        private void notificationClosed(Notification notification) =>
+            Schedule(() =>
+            {
+                updateCounts();
 
-            // this debounce is currently shared between popin/popout sounds, which means one could potentially not play when the user is expecting it.
-            // popout is constant across all notification types, and should therefore be handled using playback concurrency instead, but seems broken at the moment.
-            playDebouncedSample(notification.PopOutSampleName);
-        });
+                // this debounce is currently shared between popin/popout sounds, which means one could potentially not play when the user is expecting it.
+                // popout is constant across all notification types, and should therefore be handled using playback concurrency instead, but seems broken at the moment.
+                playDebouncedSample(notification.PopOutSampleName);
+            });
 
         private void playDebouncedSample(string sampleName)
         {
             if (string.IsNullOrEmpty(sampleName))
                 return;
 
-            if (lastSamplePlayback == null || Time.Current - lastSamplePlayback > OsuGameBase.SAMPLE_DEBOUNCE_TIME)
+            if (
+                lastSamplePlayback == null
+                || Time.Current - lastSamplePlayback > OsuGameBase.SAMPLE_DEBOUNCE_TIME
+            )
             {
                 audio.Samples.Get(sampleName)?.Play();
                 lastSamplePlayback = Time.Current;

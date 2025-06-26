@@ -31,13 +31,10 @@ namespace osu.Game.Tests.Online
                     {
                         Artist = "test author",
                         Title = "test title",
-                        Author = new RealmUser
-                        {
-                            Username = "mapper"
-                        }
-                    }
-                }
-            }
+                        Author = new RealmUser { Username = "mapper" },
+                    },
+                },
+            },
         };
 
         private static readonly APIBeatmapSet test_online_model = new APIBeatmapSet
@@ -45,10 +42,7 @@ namespace osu.Game.Tests.Online
             OnlineID = 2,
             Artist = "test author",
             Title = "test title",
-            Author = new APIUser
-            {
-                Username = "mapper"
-            }
+            Author = new APIUser { Username = "mapper" },
         };
 
         [BackgroundDependencyLoader]
@@ -62,7 +56,7 @@ namespace osu.Game.Tests.Online
         private static readonly object[][] notification_test_cases =
         {
             new object[] { test_db_model },
-            new object[] { test_online_model }
+            new object[] { test_online_model },
         };
 
         [TestCaseSource(nameof(notification_test_cases))]
@@ -72,7 +66,12 @@ namespace osu.Game.Tests.Online
             AddStep("download beatmap", () => beatmaps.Download(model));
 
             AddUntilStep("wait for notification", () => recentNotification != null);
-            AddUntilStep("notification text correct", () => recentNotification.Text.ToString() == "Downloading test author - test title (mapper)");
+            AddUntilStep(
+                "notification text correct",
+                () =>
+                    recentNotification.Text.ToString()
+                    == "Downloading test author - test title (mapper)"
+            );
         }
 
         [Test]
@@ -80,10 +79,19 @@ namespace osu.Game.Tests.Online
         {
             AddStep("download beatmap", () => beatmaps.Download(test_db_model));
 
-            AddStep("cancel download from request", () => beatmaps.GetExistingDownload(test_db_model)!.Cancel());
+            AddStep(
+                "cancel download from request",
+                () => beatmaps.GetExistingDownload(test_db_model)!.Cancel()
+            );
 
-            AddUntilStep("is removed from download list", () => beatmaps.GetExistingDownload(test_db_model) == null);
-            AddAssert("is notification cancelled", () => recentNotification.State == ProgressNotificationState.Cancelled);
+            AddUntilStep(
+                "is removed from download list",
+                () => beatmaps.GetExistingDownload(test_db_model) == null
+            );
+            AddAssert(
+                "is notification cancelled",
+                () => recentNotification.State == ProgressNotificationState.Cancelled
+            );
         }
 
         [Test]
@@ -93,8 +101,14 @@ namespace osu.Game.Tests.Online
 
             AddStep("cancel download from notification", () => recentNotification.Close(true));
 
-            AddUntilStep("is removed from download list", () => beatmaps.GetExistingDownload(test_db_model) == null);
-            AddAssert("is notification cancelled", () => recentNotification.State == ProgressNotificationState.Cancelled);
+            AddUntilStep(
+                "is removed from download list",
+                () => beatmaps.GetExistingDownload(test_db_model) == null
+            );
+            AddAssert(
+                "is notification cancelled",
+                () => recentNotification.State == ProgressNotificationState.Cancelled
+            );
         }
     }
 }

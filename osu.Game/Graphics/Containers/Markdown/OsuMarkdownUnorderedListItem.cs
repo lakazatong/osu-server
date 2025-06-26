@@ -19,14 +19,16 @@ namespace osu.Game.Graphics.Containers.Markdown
             Padding = new MarginPadding { Left = left_padding };
         }
 
-        protected override SpriteText CreateMarker() => base.CreateMarker().With(t =>
-        {
-            t.Text = GetTextMarker(level);
-            t.Font = t.Font.With(size: t.Font.Size / 2);
-            t.Origin = Anchor.Centre;
-            t.X = -left_padding / 2;
-            t.Y = t.Font.Size;
-        });
+        protected override SpriteText CreateMarker() =>
+            base.CreateMarker()
+                .With(t =>
+                {
+                    t.Text = GetTextMarker(level);
+                    t.Font = t.Font.With(size: t.Font.Size / 2);
+                    t.Origin = Anchor.Centre;
+                    t.X = -left_padding / 2;
+                    t.Y = t.Font.Size;
+                });
 
         /// <summary>
         /// Get text marker based on <paramref name="level"/>

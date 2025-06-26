@@ -29,41 +29,48 @@ namespace osu.Game.Tests.Visual.Navigation
         [SetUpSteps]
         public new void SetUpSteps()
         {
-            AddStep("import beatmap", () =>
-            {
-                beatmap = Game.BeatmapManager.Import(new BeatmapSetInfo
+            AddStep(
+                "import beatmap",
+                () =>
                 {
-                    Hash = Guid.NewGuid().ToString(),
-                    OnlineID = 1,
-                    Beatmaps =
-                    {
-                        new BeatmapInfo
-                        {
-                            OnlineID = 1 * 1024,
-                            Metadata = new BeatmapMetadata
+                    beatmap = Game
+                        .BeatmapManager.Import(
+                            new BeatmapSetInfo
                             {
-                                Artist = "SomeArtist",
-                                Author = { Username = "SomeAuthor" },
-                                Title = "import"
-                            },
-                            Difficulty = new BeatmapDifficulty(),
-                            Ruleset = new OsuRuleset().RulesetInfo
-                        },
-                        new BeatmapInfo
-                        {
-                            OnlineID = 1 * 2048,
-                            Metadata = new BeatmapMetadata
-                            {
-                                Artist = "SomeArtist",
-                                Author = { Username = "SomeAuthor" },
-                                Title = "import"
-                            },
-                            Difficulty = new BeatmapDifficulty(),
-                            Ruleset = new OsuRuleset().RulesetInfo
-                        },
-                    }
-                })!.Value;
-            });
+                                Hash = Guid.NewGuid().ToString(),
+                                OnlineID = 1,
+                                Beatmaps =
+                                {
+                                    new BeatmapInfo
+                                    {
+                                        OnlineID = 1 * 1024,
+                                        Metadata = new BeatmapMetadata
+                                        {
+                                            Artist = "SomeArtist",
+                                            Author = { Username = "SomeAuthor" },
+                                            Title = "import",
+                                        },
+                                        Difficulty = new BeatmapDifficulty(),
+                                        Ruleset = new OsuRuleset().RulesetInfo,
+                                    },
+                                    new BeatmapInfo
+                                    {
+                                        OnlineID = 1 * 2048,
+                                        Metadata = new BeatmapMetadata
+                                        {
+                                            Artist = "SomeArtist",
+                                            Author = { Username = "SomeAuthor" },
+                                            Title = "import",
+                                        },
+                                        Difficulty = new BeatmapDifficulty(),
+                                        Ruleset = new OsuRuleset().RulesetInfo,
+                                    },
+                                },
+                            }
+                        )!
+                        .Value;
+                }
+            );
         }
 
         [Test]
@@ -95,10 +102,25 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestFromSongSelectWithFilter([Values] ScorePresentType type)
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
-            AddStep("filter to nothing", () => ((PlaySongSelect)Game.ScreenStack.CurrentScreen).FilterControl.CurrentTextSearch.Value = "fdsajkl;fgewq");
+            AddStep(
+                "filter to nothing",
+                () =>
+                    ((PlaySongSelect)Game.ScreenStack.CurrentScreen)
+                        .FilterControl
+                        .CurrentTextSearch
+                        .Value = "fdsajkl;fgewq"
+            );
             AddUntilStep("wait for no results", () => Beatmap.IsDefault);
 
             var firstImport = importScore(1, new CatchRuleset().RulesetInfo);
@@ -108,10 +130,21 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestFromSongSelectWithConvertRulesetChange([Values] ScorePresentType type)
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
-            AddStep("set convert to false", () => Game.LocalConfig.SetValue(OsuSetting.ShowConvertedBeatmaps, false));
+            AddStep(
+                "set convert to false",
+                () => Game.LocalConfig.SetValue(OsuSetting.ShowConvertedBeatmaps, false)
+            );
 
             var firstImport = importScore(1, new CatchRuleset().RulesetInfo);
             presentAndConfirm(firstImport, type);
@@ -120,8 +153,16 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestFromSongSelect([Values] ScorePresentType type)
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
             var firstImport = importScore(1);
             presentAndConfirm(firstImport, type);
@@ -133,8 +174,16 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestFromSongSelectDifferentRuleset([Values] ScorePresentType type)
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
             var firstImport = importScore(1);
             presentAndConfirm(firstImport, type);
@@ -144,10 +193,20 @@ namespace osu.Game.Tests.Visual.Navigation
         }
 
         [Test]
-        public void TestPresentTwoImportsWithSameOnlineIDButDifferentHashes([Values] ScorePresentType type)
+        public void TestPresentTwoImportsWithSameOnlineIDButDifferentHashes(
+            [Values] ScorePresentType type
+        )
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
             var firstImport = importScore(1);
             presentAndConfirm(firstImport, type);
@@ -159,32 +218,54 @@ namespace osu.Game.Tests.Visual.Navigation
         [Test]
         public void TestScoreRefetchIgnoresEmptyHash()
         {
-            AddStep("enter song select", () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke());
-            AddUntilStep("song select is current", () => Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect && songSelect.BeatmapSetsLoaded);
+            AddStep(
+                "enter song select",
+                () => Game.ChildrenOfType<ButtonSystem>().Single().OnSolo?.Invoke()
+            );
+            AddUntilStep(
+                "song select is current",
+                () =>
+                    Game.ScreenStack.CurrentScreen is PlaySongSelect songSelect
+                    && songSelect.BeatmapSetsLoaded
+            );
 
             importScore(-1, hash: string.Empty);
             importScore(3, hash: @"deadbeef");
 
             // oftentimes a `PresentScore()` call will be given a `ScoreInfo` which is converted from an online score,
             // in which cases the hash will generally not be available.
-            AddStep("present score", () => Game.PresentScore(new ScoreInfo { OnlineID = 3, Hash = string.Empty }));
+            AddStep(
+                "present score",
+                () => Game.PresentScore(new ScoreInfo { OnlineID = 3, Hash = string.Empty })
+            );
 
-            AddUntilStep("wait for results", () => lastWaitedScreen != Game.ScreenStack.CurrentScreen && Game.ScreenStack.CurrentScreen is ResultsScreen);
-            AddUntilStep("correct score displayed", () =>
-            {
-                var score = ((ResultsScreen)Game.ScreenStack.CurrentScreen).Score!;
-                return score.OnlineID == 3 && score.Hash == "deadbeef";
-            });
+            AddUntilStep(
+                "wait for results",
+                () =>
+                    lastWaitedScreen != Game.ScreenStack.CurrentScreen
+                    && Game.ScreenStack.CurrentScreen is ResultsScreen
+            );
+            AddUntilStep(
+                "correct score displayed",
+                () =>
+                {
+                    var score = ((ResultsScreen)Game.ScreenStack.CurrentScreen).Score!;
+                    return score.OnlineID == 3 && score.Hash == "deadbeef";
+                }
+            );
         }
 
         private void returnToMenu()
         {
             // if we don't pause, there's a chance the track may change at the main menu out of our control (due to reaching the end of the track).
-            AddStep("pause audio", () =>
-            {
-                if (Game.MusicController.IsPlaying)
-                    Game.MusicController.TogglePause();
-            });
+            AddStep(
+                "pause audio",
+                () =>
+                {
+                    if (Game.MusicController.IsPlaying)
+                        Game.MusicController.TogglePause();
+                }
+            );
 
             AddStep("return to menu", () => Game.ScreenStack.CurrentScreen.Exit());
             AddUntilStep("wait for menu", () => Game.ScreenStack.CurrentScreen is MainMenu);
@@ -193,17 +274,24 @@ namespace osu.Game.Tests.Visual.Navigation
         private Func<ScoreInfo> importScore(int i, RulesetInfo? ruleset = null, string? hash = null)
         {
             ScoreInfo? imported = null;
-            AddStep($"import score {i}", () =>
-            {
-                imported = Game.ScoreManager.Import(new ScoreInfo
+            AddStep(
+                $"import score {i}",
+                () =>
                 {
-                    Hash = hash ?? Guid.NewGuid().ToString(),
-                    OnlineID = i,
-                    BeatmapInfo = beatmap.Beatmaps.First(),
-                    Ruleset = ruleset ?? new OsuRuleset().RulesetInfo,
-                    User = new GuestUser(),
-                })!.Value;
-            });
+                    imported = Game
+                        .ScoreManager.Import(
+                            new ScoreInfo
+                            {
+                                Hash = hash ?? Guid.NewGuid().ToString(),
+                                OnlineID = i,
+                                BeatmapInfo = beatmap.Beatmaps.First(),
+                                Ruleset = ruleset ?? new OsuRuleset().RulesetInfo,
+                                User = new GuestUser(),
+                            }
+                        )!
+                        .Value;
+                }
+            );
 
             AddAssert($"import {i} succeeded", () => imported != null);
 
@@ -223,17 +311,51 @@ namespace osu.Game.Tests.Visual.Navigation
             switch (type)
             {
                 case ScorePresentType.Results:
-                    AddUntilStep("wait for results", () => lastWaitedScreen != Game.ScreenStack.CurrentScreen && Game.ScreenStack.CurrentScreen is ResultsScreen);
-                    AddStep("store last waited screen", () => lastWaitedScreen = Game.ScreenStack.CurrentScreen);
-                    AddUntilStep("correct score displayed", () => ((ResultsScreen)Game.ScreenStack.CurrentScreen).Score!.Equals(getImport()));
-                    AddAssert("correct ruleset selected", () => Game.Ruleset.Value.Equals(getImport().Ruleset));
+                    AddUntilStep(
+                        "wait for results",
+                        () =>
+                            lastWaitedScreen != Game.ScreenStack.CurrentScreen
+                            && Game.ScreenStack.CurrentScreen is ResultsScreen
+                    );
+                    AddStep(
+                        "store last waited screen",
+                        () => lastWaitedScreen = Game.ScreenStack.CurrentScreen
+                    );
+                    AddUntilStep(
+                        "correct score displayed",
+                        () =>
+                            ((ResultsScreen)Game.ScreenStack.CurrentScreen).Score!.Equals(
+                                getImport()
+                            )
+                    );
+                    AddAssert(
+                        "correct ruleset selected",
+                        () => Game.Ruleset.Value.Equals(getImport().Ruleset)
+                    );
                     break;
 
                 case ScorePresentType.Gameplay:
-                    AddUntilStep("wait for player loader", () => lastWaitedScreen != Game.ScreenStack.CurrentScreen && Game.ScreenStack.CurrentScreen is ReplayPlayerLoader);
-                    AddStep("store last waited screen", () => lastWaitedScreen = Game.ScreenStack.CurrentScreen);
-                    AddUntilStep("correct score displayed", () => ((ReplayPlayerLoader)Game.ScreenStack.CurrentScreen).Score.Equals(getImport()));
-                    AddAssert("correct ruleset selected", () => Game.Ruleset.Value.Equals(getImport().Ruleset));
+                    AddUntilStep(
+                        "wait for player loader",
+                        () =>
+                            lastWaitedScreen != Game.ScreenStack.CurrentScreen
+                            && Game.ScreenStack.CurrentScreen is ReplayPlayerLoader
+                    );
+                    AddStep(
+                        "store last waited screen",
+                        () => lastWaitedScreen = Game.ScreenStack.CurrentScreen
+                    );
+                    AddUntilStep(
+                        "correct score displayed",
+                        () =>
+                            ((ReplayPlayerLoader)Game.ScreenStack.CurrentScreen).Score.Equals(
+                                getImport()
+                            )
+                    );
+                    AddAssert(
+                        "correct ruleset selected",
+                        () => Game.Ruleset.Value.Equals(getImport().Ruleset)
+                    );
                     break;
             }
         }

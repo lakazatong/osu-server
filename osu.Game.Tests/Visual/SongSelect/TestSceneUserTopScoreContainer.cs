@@ -6,14 +6,14 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Online.API.Requests.Responses;
-using osuTK.Graphics;
 using osu.Game.Online.Leaderboards;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu;
-using osu.Game.Scoring;
 using osu.Game.Rulesets.Osu.Mods;
+using osu.Game.Scoring;
 using osu.Game.Users;
+using osuTK.Graphics;
 
 namespace osu.Game.Tests.Visual.SongSelect
 {
@@ -26,31 +26,28 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             UserTopScoreContainer<ScoreInfo> topScoreContainer;
 
-            Add(dialogOverlay = new DialogOverlay
-            {
-                Depth = -1
-            });
+            Add(dialogOverlay = new DialogOverlay { Depth = -1 });
 
-            Add(new Container
-            {
-                Origin = Anchor.BottomCentre,
-                Anchor = Anchor.Centre,
-                AutoSizeAxes = Axes.Y,
-                Width = 500,
-                Children = new Drawable[]
+            Add(
+                new Container
                 {
-                    new Box
+                    Origin = Anchor.BottomCentre,
+                    Anchor = Anchor.Centre,
+                    AutoSizeAxes = Axes.Y,
+                    Width = 500,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.DarkGreen,
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.DarkGreen },
+                        topScoreContainer = new UserTopScoreContainer<ScoreInfo>(
+                            s => new LeaderboardScore(s, s.Position, false)
+                        )
+                        {
+                            Origin = Anchor.BottomCentre,
+                            Anchor = Anchor.BottomCentre,
+                        },
                     },
-                    topScoreContainer = new UserTopScoreContainer<ScoreInfo>(s => new LeaderboardScore(s, s.Position, false))
-                    {
-                        Origin = Anchor.BottomCentre,
-                        Anchor = Anchor.BottomCentre,
-                    }
                 }
-            });
+            );
 
             var scores = new[]
             {
@@ -61,7 +58,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     Accuracy = 1,
                     MaxCombo = 244,
                     TotalScore = 1707827,
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     Ruleset = new OsuRuleset().RulesetInfo,
                     User = new APIUser
                     {
@@ -99,7 +96,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                         Username = @"Toukai",
                         CountryCode = CountryCode.CA,
                     },
-                }
+                },
             };
 
             AddStep(@"Trigger visibility", topScoreContainer.ToggleVisibility);

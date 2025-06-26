@@ -29,7 +29,8 @@ namespace osu.Game.Graphics.Cursor
 
         public bool ProvidingUserCursor => true;
 
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         private Bindable<bool> showDuringTouch = null!;
 
@@ -42,11 +43,13 @@ namespace osu.Game.Graphics.Cursor
 
         public GlobalCursorDisplay()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                Content = new Container { RelativeSizeAxes = Axes.Both },
-                MenuCursor = new MenuCursorContainer { State = { Value = Visibility.Hidden } }
-            });
+            AddRangeInternal(
+                new Drawable[]
+                {
+                    Content = new Container { RelativeSizeAxes = Axes.Both },
+                    MenuCursor = new MenuCursorContainer { State = { Value = Visibility.Hidden } },
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -62,7 +65,9 @@ namespace osu.Game.Graphics.Cursor
             base.Update();
 
             var lastMouseSource = inputManager.CurrentState.Mouse.LastSource;
-            bool hasValidInput = lastMouseSource != null && (showDuringTouch.Value || lastMouseSource is not ISourcedFromTouch);
+            bool hasValidInput =
+                lastMouseSource != null
+                && (showDuringTouch.Value || lastMouseSource is not ISourcedFromTouch);
 
             if (!hasValidInput || !ShowCursor)
             {

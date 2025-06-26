@@ -16,23 +16,26 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Can you keep up?";
         public override IconUsage? Icon => FontAwesome.Solid.ChevronCircleUp;
 
-        public override BindableNumber<double> InitialRate { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.5,
-            MaxValue = 1.99,
-            Precision = 0.01,
-        };
+        public override BindableNumber<double> InitialRate { get; } =
+            new BindableDouble(1)
+            {
+                MinValue = 0.5,
+                MaxValue = 1.99,
+                Precision = 0.01,
+            };
 
-        public override BindableNumber<double> FinalRate { get; } = new BindableDouble(1.5)
-        {
-            MinValue = 0.51,
-            MaxValue = 2,
-            Precision = 0.01,
-        };
+        public override BindableNumber<double> FinalRate { get; } =
+            new BindableDouble(1.5)
+            {
+                MinValue = 0.51,
+                MaxValue = 2,
+                Precision = 0.01,
+            };
 
         public override BindableBool AdjustPitch { get; } = new BindableBool(true);
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(ModWindDown)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(ModWindDown)).ToArray();
 
         public ModWindUp()
         {

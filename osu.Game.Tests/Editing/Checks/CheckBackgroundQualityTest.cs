@@ -32,11 +32,8 @@ namespace osu.Game.Tests.Editing.Checks
                 BeatmapInfo = new BeatmapInfo
                 {
                     Metadata = new BeatmapMetadata { BackgroundFile = file.Filename },
-                    BeatmapSet = new BeatmapSetInfo
-                    {
-                        Files = { file }
-                    }
-                }
+                    BeatmapSet = new BeatmapSetInfo { Files = { file } },
+                },
             };
         }
 
@@ -66,7 +63,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooHighResolution);
+            Assert.That(
+                issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooHighResolution
+            );
         }
 
         [Test]
@@ -77,7 +76,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckBackgroundQuality.IssueTemplateLowResolution);
+            Assert.That(
+                issues.Single().Template is CheckBackgroundQuality.IssueTemplateLowResolution
+            );
         }
 
         [Test]
@@ -88,18 +89,25 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooLowResolution);
+            Assert.That(
+                issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooLowResolution
+            );
         }
 
         [Test]
         public void TestTooUncompressed()
         {
-            var context = getContext(new DummyRenderer().CreateTexture(1920, 1080), new MemoryStream(new byte[1024 * 1024 * 3]));
+            var context = getContext(
+                new DummyRenderer().CreateTexture(1920, 1080),
+                new MemoryStream(new byte[1024 * 1024 * 3])
+            );
 
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooUncompressed);
+            Assert.That(
+                issues.Single().Template is CheckBackgroundQuality.IssueTemplateTooUncompressed
+            );
         }
 
         [Test]
@@ -117,7 +125,10 @@ namespace osu.Game.Tests.Editing.Checks
 
         private BeatmapVerifierContext getContext(Texture background, Stream? stream = null)
         {
-            return new BeatmapVerifierContext(beatmap, getMockWorkingBeatmap(background, stream).Object);
+            return new BeatmapVerifierContext(
+                beatmap,
+                getMockWorkingBeatmap(background, stream).Object
+            );
         }
 
         /// <summary>
@@ -125,7 +136,10 @@ namespace osu.Game.Tests.Editing.Checks
         /// </summary>
         /// <param name="background">The texture of the background.</param>
         /// <param name="stream">The stream representing the background file.</param>
-        private Mock<IWorkingBeatmap> getMockWorkingBeatmap(Texture background, Stream? stream = null)
+        private Mock<IWorkingBeatmap> getMockWorkingBeatmap(
+            Texture background,
+            Stream? stream = null
+        )
         {
             stream ??= new MemoryStream(new byte[1024 * 1024]);
 

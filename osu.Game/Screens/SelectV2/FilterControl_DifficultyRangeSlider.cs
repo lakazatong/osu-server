@@ -30,9 +30,10 @@ namespace osu.Game.Screens.SelectV2
 
             private readonly LayoutValue drawSizeLayout = new LayoutValue(Invalidation.DrawSize);
 
-            private static readonly (float, Color4)[] spectrum = OsuColour.STAR_DIFFICULTY_SPECTRUM
-                                                                          .Skip(1)
-                                                                          .Prepend((0.0f, OsuColour.STAR_DIFFICULTY_SPECTRUM.ElementAt(1).Item2)).ToArray();
+            private static readonly (float, Color4)[] spectrum = OsuColour
+                .STAR_DIFFICULTY_SPECTRUM.Skip(1)
+                .Prepend((0.0f, OsuColour.STAR_DIFFICULTY_SPECTRUM.ElementAt(1).Item2))
+                .ToArray();
 
             public DifficultyRangeSlider()
                 : base(BeatmapsetsStrings.ShowStatsStars)
@@ -46,46 +47,52 @@ namespace osu.Game.Screens.SelectV2
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colourProvider, OsuColour colours)
             {
-                SliderContainer.AddRange(new Drawable[]
-                {
-                    new Container
+                SliderContainer.AddRange(
+                    new Drawable[]
                     {
-                        Depth = 1,
-                        RelativeSizeAxes = Axes.Both,
-                        Shear = OsuGame.SHEAR,
-                        CornerRadius = 5f,
-                        Masking = true,
-                        ChildrenEnumerable = spectrum.Zip(spectrum.Skip(1))
-                                                     .Select(p => new Box
-                                                     {
-                                                         RelativePositionAxes = Axes.X,
-                                                         X = p.First.Item1 / 10f,
-                                                         RelativeSizeAxes = Axes.Both,
-                                                         Width = (p.Second.Item1 - p.First.Item1) / 10f,
-                                                         Colour = ColourInfo.GradientHorizontal(p.First.Item2, p.Second.Item2),
-                                                     }),
-                    },
-                    borderContainer = new Container
-                    {
-                        Depth = -1,
-                        RelativePositionAxes = Axes.X,
-                        RelativeSizeAxes = Axes.Both,
-                        Child = new Container
+                        new Container
                         {
+                            Depth = 1,
                             RelativeSizeAxes = Axes.Both,
-                            BorderColour = colourProvider.Highlight1,
-                            BorderThickness = 2,
-                            Masking = true,
                             Shear = OsuGame.SHEAR,
                             CornerRadius = 5f,
-                            Child = new Box
+                            Masking = true,
+                            ChildrenEnumerable = spectrum
+                                .Zip(spectrum.Skip(1))
+                                .Select(p => new Box
+                                {
+                                    RelativePositionAxes = Axes.X,
+                                    X = p.First.Item1 / 10f,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Width = (p.Second.Item1 - p.First.Item1) / 10f,
+                                    Colour = ColourInfo.GradientHorizontal(
+                                        p.First.Item2,
+                                        p.Second.Item2
+                                    ),
+                                }),
+                        },
+                        borderContainer = new Container
+                        {
+                            Depth = -1,
+                            RelativePositionAxes = Axes.X,
+                            RelativeSizeAxes = Axes.Both,
+                            Child = new Container
                             {
-                                Colour = Color4.Transparent,
                                 RelativeSizeAxes = Axes.Both,
-                            }
+                                BorderColour = colourProvider.Highlight1,
+                                BorderThickness = 2,
+                                Masking = true,
+                                Shear = OsuGame.SHEAR,
+                                CornerRadius = 5f,
+                                Child = new Box
+                                {
+                                    Colour = Color4.Transparent,
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                            },
                         },
                     }
-                });
+                );
             }
 
             protected override void LoadComplete()
@@ -109,15 +116,26 @@ namespace osu.Game.Screens.SelectV2
 
             private void updateBorderDisplay(bool instant)
             {
-                float borderStart = LowerBoundSlider.NormalizedValue * LowerBoundSlider.UsableWidth / LowerBoundSlider.DrawWidth;
-                float borderEnd = UpperBoundSlider.NormalizedValue * UpperBoundSlider.UsableWidth / UpperBoundSlider.DrawWidth;
+                float borderStart =
+                    LowerBoundSlider.NormalizedValue
+                    * LowerBoundSlider.UsableWidth
+                    / LowerBoundSlider.DrawWidth;
+                float borderEnd =
+                    UpperBoundSlider.NormalizedValue
+                    * UpperBoundSlider.UsableWidth
+                    / UpperBoundSlider.DrawWidth;
                 borderEnd += UpperBoundSlider.NubWidth / UpperBoundSlider.DrawWidth;
 
                 borderContainer.MoveToX(borderStart, instant ? 0 : 250, Easing.OutQuint);
-                borderContainer.ResizeWidthTo(borderEnd - borderStart, instant ? 0 : 250, Easing.OutQuint);
+                borderContainer.ResizeWidthTo(
+                    borderEnd - borderStart,
+                    instant ? 0 : 250,
+                    Easing.OutQuint
+                );
             }
 
-            protected override BoundSliderBar CreateBoundSlider(bool isUpper) => new DifficultyBoundSliderBar(this, isUpper);
+            protected override BoundSliderBar CreateBoundSlider(bool isUpper) =>
+                new DifficultyBoundSliderBar(this, isUpper);
 
             private partial class DifficultyBoundSliderBar : BoundSliderBar
             {
@@ -163,7 +181,10 @@ namespace osu.Game.Screens.SelectV2
 
                 protected override void UpdateDisplay(double value)
                 {
-                    Colour4 nubColour = ColourUtils.SampleFromLinearGradient(spectrum, (float)Math.Round(value, 2, MidpointRounding.AwayFromZero));
+                    Colour4 nubColour = ColourUtils.SampleFromLinearGradient(
+                        spectrum,
+                        (float)Math.Round(value, 2, MidpointRounding.AwayFromZero)
+                    );
                     nubColour = nubColour.Lighten(0.4f);
 
                     if (value >= 8.0)

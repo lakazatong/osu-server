@@ -20,7 +20,8 @@ namespace osu.Game.Online.API
         {
             var req = base.CreateWebRequest();
 
-            if (sinceId.HasValue) req.AddParameter(@"since", sinceId.Value.ToString());
+            if (sinceId.HasValue)
+                req.AddParameter(@"since", sinceId.Value.ToString());
 
             return req;
         }

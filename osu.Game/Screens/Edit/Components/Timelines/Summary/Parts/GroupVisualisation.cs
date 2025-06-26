@@ -14,7 +14,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
     {
         public readonly ControlPointGroup Group;
 
-        private readonly IBindableList<ControlPoint> controlPoints = new BindableList<ControlPoint>();
+        private readonly IBindableList<ControlPoint> controlPoints =
+            new BindableList<ControlPoint>();
 
         private bool showScrollSpeed;
 
@@ -35,45 +36,56 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
             showScrollSpeed = beatmap.BeatmapInfo.Ruleset.CreateInstance().EditorShowScrollSpeed;
 
             controlPoints.BindTo(Group.ControlPoints);
-            controlPoints.BindCollectionChanged((_, _) =>
-            {
-                ClearInternal();
-
-                if (controlPoints.Count == 0)
-                    return;
-
-                foreach (var point in Group.ControlPoints)
+            controlPoints.BindCollectionChanged(
+                (_, _) =>
                 {
-                    switch (point)
+                    ClearInternal();
+
+                    if (controlPoints.Count == 0)
+                        return;
+
+                    foreach (var point in Group.ControlPoints)
                     {
-                        case TimingControlPoint:
-                            AddInternal(new ControlPointVisualisation(point)
-                            {
-                                // importantly, override the x position being set since we do that above.
-                                X = 0,
-                                Y = -0.4f,
-                            });
-                            break;
+                        switch (point)
+                        {
+                            case TimingControlPoint:
+                                AddInternal(
+                                    new ControlPointVisualisation(point)
+                                    {
+                                        // importantly, override the x position being set since we do that above.
+                                        X = 0,
+                                        Y = -0.4f,
+                                    }
+                                );
+                                break;
 
-                        case EffectControlPoint:
-                            if (!showScrollSpeed)
-                                return;
+                            case EffectControlPoint:
+                                if (!showScrollSpeed)
+                                    return;
 
-                            AddInternal(new ControlPointVisualisation(point)
-                            {
-                                // importantly, override the x position being set since we do that above.
-                                X = 0,
-                            });
-                            break;
+                                AddInternal(
+                                    new ControlPointVisualisation(point)
+                                    {
+                                        // importantly, override the x position being set since we do that above.
+                                        X = 0,
+                                    }
+                                );
+                                break;
+                        }
                     }
-                }
-            }, true);
+                },
+                true
+            );
         }
 
         /// <summary>
         /// For display purposes, check whether the proposed group is made redundant by this visualisation group.
         /// </summary>
         public bool IsVisuallyRedundant(ControlPointGroup other) =>
-            other.ControlPoints.All(c => InternalChildren.OfType<IControlPointVisualisation>().Any(c2 => c2.IsVisuallyRedundant(c)));
+            other.ControlPoints.All(c =>
+                InternalChildren
+                    .OfType<IControlPointVisualisation>()
+                    .Any(c2 => c2.IsVisuallyRedundant(c))
+            );
     }
 }

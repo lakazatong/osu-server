@@ -105,7 +105,11 @@ namespace osu.Game.Beatmaps
         /// <param name="cancellationToken">Cancellation token that cancels the beatmap loading process.</param>
         /// <returns>The converted <see cref="IBeatmap"/>.</returns>
         /// <exception cref="BeatmapInvalidForRulesetException">If <see cref="Beatmap"/> could not be converted to <paramref name="ruleset"/>.</exception>
-        IBeatmap GetPlayableBeatmap(IRulesetInfo ruleset, IReadOnlyList<Mod> mods, CancellationToken cancellationToken);
+        IBeatmap GetPlayableBeatmap(
+            IRulesetInfo ruleset,
+            IReadOnlyList<Mod> mods,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Load a new audio track instance for this beatmap. This should be called once before accessing <see cref="Track"/>.

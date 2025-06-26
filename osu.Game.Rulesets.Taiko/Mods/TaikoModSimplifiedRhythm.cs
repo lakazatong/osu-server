@@ -44,9 +44,12 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
             var conversions = new List<(int, int)>();
 
-            if (OneEighthConversion.Value) conversions.Add((8, 4));
-            if (OneSixthConversion.Value) conversions.Add((6, 4));
-            if (OneThirdConversion.Value) conversions.Add((3, 2));
+            if (OneEighthConversion.Value)
+                conversions.Add((8, 4));
+            if (OneSixthConversion.Value)
+                conversions.Add((6, 4));
+            if (OneThirdConversion.Value)
+                conversions.Add((3, 2));
 
             bool inPattern = false;
 
@@ -108,7 +111,11 @@ namespace osu.Game.Rulesets.Taiko.Mods
                                 if (indexInPattern % 3 == 1)
                                     taikoBeatmap.HitObjects.Remove(hits[j]);
                                 else if (indexInPattern % 3 == 2)
-                                    hits[j].StartTime = hits[j - 2].StartTime + controlPointInfo.TimingPointAt(hits[j].StartTime).BeatLength / adjustedRhythm;
+                                    hits[j].StartTime =
+                                        hits[j - 2].StartTime
+                                        + controlPointInfo
+                                            .TimingPointAt(hits[j].StartTime)
+                                            .BeatLength / adjustedRhythm;
 
                                 break;
                             }
@@ -121,10 +128,16 @@ namespace osu.Game.Rulesets.Taiko.Mods
             }
         }
 
-        private int getSnapBetweenNotes(ControlPointInfo controlPointInfo, Hit currentNote, Hit nextNote)
+        private int getSnapBetweenNotes(
+            ControlPointInfo controlPointInfo,
+            Hit currentNote,
+            Hit nextNote
+        )
         {
             var currentTimingPoint = controlPointInfo.TimingPointAt(currentNote.StartTime);
-            return controlPointInfo.GetClosestBeatDivisor(currentTimingPoint.Time + (nextNote.StartTime - currentNote.StartTime));
+            return controlPointInfo.GetClosestBeatDivisor(
+                currentTimingPoint.Time + (nextNote.StartTime - currentNote.StartTime)
+            );
         }
     }
 }

@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using NUnit.Framework;
-using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Taiko.Skinning.Legacy;
 
 namespace osu.Game.Rulesets.Taiko.Tests.Skinning
@@ -26,10 +26,9 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
             if (withKiai)
                 controlPointInfo.Add(0, new EffectControlPoint { KiaiMode = true });
 
-            Beatmap.Value = CreateWorkingBeatmap(new Beatmap
-            {
-                ControlPointInfo = controlPointInfo
-            });
+            Beatmap.Value = CreateWorkingBeatmap(
+                new Beatmap { ControlPointInfo = controlPointInfo }
+            );
 
             Beatmap.Value.Track.Start();
         }

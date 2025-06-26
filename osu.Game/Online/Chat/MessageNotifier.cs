@@ -92,13 +92,19 @@ namespace osu.Game.Online.Chat
             if (!messages.Any())
                 return;
 
-            var channel = channelManager.JoinedChannels.SingleOrDefault(c => c.Id > 0 && c.Id == messages.First().ChannelId);
+            var channel = channelManager.JoinedChannels.SingleOrDefault(c =>
+                c.Id > 0 && c.Id == messages.First().ChannelId
+            );
 
             if (channel == null)
                 return;
 
             // Only send notifications if ChatOverlay or the target channel aren't visible, or if the window is unfocused
-            if (chatOverlay.IsPresent && channelManager.CurrentChannel.Value == channel && host.IsActive.Value)
+            if (
+                chatOverlay.IsPresent
+                && channelManager.CurrentChannel.Value == channel
+                && host.IsActive.Value
+            )
                 return;
 
             foreach (var message in messages.OrderByDescending(m => m.Id))
@@ -136,7 +142,11 @@ namespace osu.Game.Online.Chat
 
         private void checkForMentions(Channel channel, Message message)
         {
-            if (!notifyOnUsername.Value || !CheckContainsUsername(message.Content, localUser.Value.Username)) return;
+            if (
+                !notifyOnUsername.Value
+                || !CheckContainsUsername(message.Content, localUser.Value.Username)
+            )
+                return;
 
             notifications.Post(new MentionNotification(message, channel));
         }
@@ -149,7 +159,11 @@ namespace osu.Game.Online.Chat
         {
             string fullName = Regex.Escape(username);
             string underscoreName = Regex.Escape(username.Replace(' ', '_'));
-            return Regex.IsMatch(message, $@"(^|\W)({fullName}|{underscoreName})($|\W)", RegexOptions.IgnoreCase);
+            return Regex.IsMatch(
+                message,
+                $@"(^|\W)({fullName}|{underscoreName})($|\W)",
+                RegexOptions.IgnoreCase
+            );
         }
 
         public partial class PrivateMessageNotification : HighlightMessageNotification
@@ -186,7 +200,11 @@ namespace osu.Game.Online.Chat
             private readonly Channel channel;
 
             [BackgroundDependencyLoader]
-            private void load(OsuColour colours, ChatOverlay chatOverlay, INotificationOverlay notificationOverlay)
+            private void load(
+                OsuColour colours,
+                ChatOverlay chatOverlay,
+                INotificationOverlay notificationOverlay
+            )
             {
                 IconContent.Colour = colours.PurpleDark;
 

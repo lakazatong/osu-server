@@ -23,12 +23,18 @@ namespace osu.Game.Rulesets.Catch.Tests
             Add(new TestDrawableCatchHitObjectSpecimen(drawableFruit) { X = -200 });
             Add(new TestDrawableCatchHitObjectSpecimen(drawableBanana));
 
-            AddSliderStep("start time", 500, 600, 0, x =>
-            {
-                drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime = x;
-                drawableFruit.RefreshStateTransforms();
-                drawableBanana.RefreshStateTransforms();
-            });
+            AddSliderStep(
+                "start time",
+                500,
+                600,
+                0,
+                x =>
+                {
+                    drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime = x;
+                    drawableFruit.RefreshStateTransforms();
+                    drawableBanana.RefreshStateTransforms();
+                }
+            );
         }
 
         [Test]
@@ -43,42 +49,66 @@ namespace osu.Game.Rulesets.Catch.Tests
             Vector2 bananaSize = new Vector2();
             Color4 bananaColour = new Color4();
 
-            AddStep("Initialize start time", () =>
-            {
-                drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime = initial_start_time;
-                drawableFruit.RefreshStateTransforms();
-                drawableBanana.RefreshStateTransforms();
+            AddStep(
+                "Initialize start time",
+                () =>
+                {
+                    drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime =
+                        initial_start_time;
+                    drawableFruit.RefreshStateTransforms();
+                    drawableBanana.RefreshStateTransforms();
 
-                fruitRotation = drawableFruit.DisplayRotation;
-                bananaRotation = drawableBanana.DisplayRotation;
-                bananaSize = drawableBanana.DisplaySize;
-                bananaColour = drawableBanana.AccentColour.Value;
-            });
+                    fruitRotation = drawableFruit.DisplayRotation;
+                    bananaRotation = drawableBanana.DisplayRotation;
+                    bananaSize = drawableBanana.DisplaySize;
+                    bananaColour = drawableBanana.AccentColour.Value;
+                }
+            );
 
-            AddStep("change start time", () =>
-            {
-                drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime = another_start_time;
-                drawableFruit.RefreshStateTransforms();
-                drawableBanana.RefreshStateTransforms();
-            });
+            AddStep(
+                "change start time",
+                () =>
+                {
+                    drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime =
+                        another_start_time;
+                    drawableFruit.RefreshStateTransforms();
+                    drawableBanana.RefreshStateTransforms();
+                }
+            );
 
-            AddAssert("fruit rotation is changed", () => drawableFruit.DisplayRotation != fruitRotation);
-            AddAssert("banana rotation is changed", () => drawableBanana.DisplayRotation != bananaRotation);
+            AddAssert(
+                "fruit rotation is changed",
+                () => drawableFruit.DisplayRotation != fruitRotation
+            );
+            AddAssert(
+                "banana rotation is changed",
+                () => drawableBanana.DisplayRotation != bananaRotation
+            );
             AddAssert("banana size is changed", () => drawableBanana.DisplaySize != bananaSize);
-            AddAssert("banana colour is changed", () => drawableBanana.AccentColour.Value != bananaColour);
+            AddAssert(
+                "banana colour is changed",
+                () => drawableBanana.AccentColour.Value != bananaColour
+            );
 
-            AddStep("reset start time", () =>
-            {
-                drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime = initial_start_time;
-                drawableFruit.RefreshStateTransforms();
-                drawableBanana.RefreshStateTransforms();
-            });
+            AddStep(
+                "reset start time",
+                () =>
+                {
+                    drawableFruit.HitObject.StartTime = drawableBanana.HitObject.StartTime =
+                        initial_start_time;
+                    drawableFruit.RefreshStateTransforms();
+                    drawableBanana.RefreshStateTransforms();
+                }
+            );
 
-            AddAssert("rotation and size restored", () =>
-                drawableFruit.DisplayRotation == fruitRotation &&
-                drawableBanana.DisplayRotation == bananaRotation &&
-                drawableBanana.DisplaySize == bananaSize &&
-                drawableBanana.AccentColour.Value == bananaColour);
+            AddAssert(
+                "rotation and size restored",
+                () =>
+                    drawableFruit.DisplayRotation == fruitRotation
+                    && drawableBanana.DisplayRotation == bananaRotation
+                    && drawableBanana.DisplaySize == bananaSize
+                    && drawableBanana.AccentColour.Value == bananaColour
+            );
         }
     }
 }

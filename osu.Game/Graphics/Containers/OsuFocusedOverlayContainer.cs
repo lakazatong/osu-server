@@ -6,19 +6,23 @@ using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
-using osuTK;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Audio;
 using osu.Game.Input.Bindings;
 using osu.Game.Overlays;
+using osuTK;
 
 namespace osu.Game.Graphics.Containers
 {
     [Cached(typeof(IPreviewTrackOwner))]
-    public abstract partial class OsuFocusedOverlayContainer : FocusedOverlayContainer, IPreviewTrackOwner, IKeyBindingHandler<GlobalAction>
+    public abstract partial class OsuFocusedOverlayContainer
+        : FocusedOverlayContainer,
+            IPreviewTrackOwner,
+            IKeyBindingHandler<GlobalAction>
     {
-        protected readonly IBindable<OverlayActivation> OverlayActivationMode = new Bindable<OverlayActivation>(OverlayActivation.All);
+        protected readonly IBindable<OverlayActivation> OverlayActivationMode =
+            new Bindable<OverlayActivation>(OverlayActivation.All);
 
         protected virtual string? PopInSampleName => @"UI/overlay-pop-in";
         protected virtual string? PopOutSampleName => @"UI/overlay-pop-out";
@@ -56,11 +60,14 @@ namespace osu.Game.Graphics.Containers
             if (overlayManager != null)
                 OverlayActivationMode.BindTo(overlayManager.OverlayActivationMode);
 
-            OverlayActivationMode.BindValueChanged(mode =>
-            {
-                if (mode.NewValue == OverlayActivation.Disabled)
-                    State.Value = Visibility.Hidden;
-            }, true);
+            OverlayActivationMode.BindValueChanged(
+                mode =>
+                {
+                    if (mode.NewValue == OverlayActivation.Disabled)
+                        State.Value = Visibility.Hidden;
+                },
+                true
+            );
 
             base.LoadComplete();
         }
@@ -72,7 +79,8 @@ namespace osu.Game.Graphics.Containers
         public virtual bool BlockScreenWideMouse => BlockPositionalInput;
 
         // receive input outside our bounds so we can trigger a close event on ourselves.
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => BlockScreenWideMouse || base.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            BlockScreenWideMouse || base.ReceivePositionalInputAt(screenSpacePos);
 
         private bool closeOnMouseUp;
 
@@ -95,7 +103,8 @@ namespace osu.Game.Graphics.Containers
         {
             // allow for controlling volume when alt is held.
             // mostly for compatibility with osu-stable.
-            if (e.AltPressed) return false;
+            if (e.AltPressed)
+                return false;
 
             return true;
         }
@@ -118,9 +127,7 @@ namespace osu.Game.Graphics.Containers
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         protected override void UpdateState(ValueChangedEvent<Visibility> state)
         {
@@ -142,7 +149,8 @@ namespace osu.Game.Graphics.Containers
                         samplePopIn.Play();
                     }
 
-                    if (BlockScreenWideMouse && DimMainContent) overlayManager?.ShowBlockingOverlay(this);
+                    if (BlockScreenWideMouse && DimMainContent)
+                        overlayManager?.ShowBlockingOverlay(this);
                     break;
 
                 case Visibility.Hidden:
@@ -152,7 +160,8 @@ namespace osu.Game.Graphics.Containers
                         samplePopOut.Play();
                     }
 
-                    if (BlockScreenWideMouse) overlayManager?.HideBlockingOverlay(this);
+                    if (BlockScreenWideMouse)
+                        overlayManager?.HideBlockingOverlay(this);
                     break;
             }
 

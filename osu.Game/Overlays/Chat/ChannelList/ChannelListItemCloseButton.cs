@@ -27,15 +27,17 @@ namespace osu.Game.Overlays.Chat.ChannelList
 
             Alpha = 0f;
             Size = new Vector2(20);
-            Add(icon = new SpriteIcon
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(0.75f),
-                Icon = FontAwesome.Solid.TimesCircle,
-                RelativeSizeAxes = Axes.Both,
-                Colour = normalColour,
-            });
+            Add(
+                icon = new SpriteIcon
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(0.75f),
+                    Icon = FontAwesome.Solid.TimesCircle,
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = normalColour,
+                }
+            );
         }
 
         // Transforms matching OsuAnimatedButton

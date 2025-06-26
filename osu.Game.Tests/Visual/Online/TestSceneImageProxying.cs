@@ -12,7 +12,9 @@ using osu.Game.Overlays.Comments;
 
 namespace osu.Game.Tests.Visual.Online
 {
-    [Ignore("This test hits online resources (and online retrieval can fail at any time), and also performs network calls to the production instance of the website. Un-ignore this test when it's actually actively needed.")]
+    [Ignore(
+        "This test hits online resources (and online retrieval can fail at any time), and also performs network calls to the production instance of the website. Un-ignore this test when it's actually actively needed."
+    )]
     public partial class TestSceneImageProxying : OsuTestScene
     {
         [Test]
@@ -21,20 +23,38 @@ namespace osu.Game.Tests.Visual.Online
             MarkdownContainer markdown = null!;
 
             // use base MarkdownContainer as a method of directly attempting to load an image without proxying logic.
-            AddStep("load external without proxying", () => Child = markdown = new MarkdownContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Text = "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
-            });
+            AddStep(
+                "load external without proxying",
+                () =>
+                    Child = markdown =
+                        new MarkdownContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Text =
+                                "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
+                        }
+            );
             AddWaitStep("wait", 5);
-            AddAssert("image not loaded", () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture == null);
+            AddAssert(
+                "image not loaded",
+                () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture == null
+            );
 
-            AddStep("load external with proxying", () => Child = markdown = new OsuMarkdownContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Text = "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
-            });
-            AddUntilStep("image loaded", () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture != null);
+            AddStep(
+                "load external with proxying",
+                () =>
+                    Child = markdown =
+                        new OsuMarkdownContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Text =
+                                "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
+                        }
+            );
+            AddUntilStep(
+                "image loaded",
+                () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture != null
+            );
         }
 
         [Test]
@@ -42,12 +62,21 @@ namespace osu.Game.Tests.Visual.Online
         {
             MarkdownContainer markdown = null!;
 
-            AddStep("load external with proxying", () => Child = markdown = new CommentMarkdownContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Text = "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
-            });
-            AddUntilStep("image loaded", () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture != null);
+            AddStep(
+                "load external with proxying",
+                () =>
+                    Child = markdown =
+                        new CommentMarkdownContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Text =
+                                "![](https://github.com/ppy/osu-wiki/blob/master/wiki/Announcement_messages/img/notification.png?raw=true)",
+                        }
+            );
+            AddUntilStep(
+                "image loaded",
+                () => markdown.ChildrenOfType<Sprite>().SingleOrDefault()?.Texture != null
+            );
         }
     }
 }

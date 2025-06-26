@@ -26,13 +26,7 @@ namespace osu.Game.Tests.Editing.Checks
         [Test]
         public void TestBreakTooShort()
         {
-            var beatmap = new Beatmap<HitObject>
-            {
-                Breaks =
-                {
-                    new BreakPeriod(0, 649)
-                }
-            };
+            var beatmap = new Beatmap<HitObject> { Breaks = { new BreakPeriod(0, 649) } };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
             var issues = check.Run(context).ToList();
@@ -49,12 +43,9 @@ namespace osu.Game.Tests.Editing.Checks
                 HitObjects =
                 {
                     new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 1_200 }
+                    new HitCircle { StartTime = 1_200 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(100, 751)
-                }
+                Breaks = { new BreakPeriod(100, 751) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
@@ -72,12 +63,9 @@ namespace osu.Game.Tests.Editing.Checks
                 HitObjects =
                 {
                     new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 1_298 }
+                    new HitCircle { StartTime = 1_298 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(200, 850)
-                }
+                Breaks = { new BreakPeriod(200, 850) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
@@ -95,12 +83,9 @@ namespace osu.Game.Tests.Editing.Checks
                 HitObjects =
                 {
                     new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 1200 }
+                    new HitCircle { StartTime = 1200 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(1398, 2300)
-                }
+                Breaks = { new BreakPeriod(1398, 2300) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
@@ -118,12 +103,9 @@ namespace osu.Game.Tests.Editing.Checks
                 HitObjects =
                 {
                     new HitCircle { StartTime = 1100 },
-                    new HitCircle { StartTime = 1500 }
+                    new HitCircle { StartTime = 1500 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(0, 652)
-                }
+                Breaks = { new BreakPeriod(0, 652) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
@@ -142,12 +124,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     new HitCircle { StartTime = 0 },
                     new HitCircle { StartTime = 1_297 },
-                    new HitCircle { StartTime = 1_298 }
+                    new HitCircle { StartTime = 1_298 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(200, 850)
-                }
+                Breaks = { new BreakPeriod(200, 850) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 
@@ -165,12 +144,9 @@ namespace osu.Game.Tests.Editing.Checks
                 HitObjects =
                 {
                     new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 1_300 }
+                    new HitCircle { StartTime = 1_300 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(200, 850)
-                }
+                Breaks = { new BreakPeriod(200, 850) },
             };
             var context = new BeatmapVerifierContext(beatmap, new TestWorkingBeatmap(beatmap));
 

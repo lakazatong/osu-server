@@ -32,7 +32,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         protected ManiaSelectionBlueprintTestScene(int columns)
         {
             var stageDefinitions = new List<StageDefinition> { new StageDefinition(columns) };
-            base.Content.Child = scrollingTestContainer = new ScrollingTestContainer(ScrollingDirection.Up)
+            base.Content.Child = scrollingTestContainer = new ScrollingTestContainer(
+                ScrollingDirection.Up
+            )
             {
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
@@ -41,14 +43,14 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
                     {
                         RelativeSizeAxes = Axes.Both,
                     },
-                    blueprints = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
-                }
+                    blueprints = new Container { RelativeSizeAxes = Axes.Both },
+                },
             };
 
-            AddToggleStep("Downward scroll", b => Direction = b ? ScrollingDirection.Down : ScrollingDirection.Up);
+            AddToggleStep(
+                "Downward scroll",
+                b => Direction = b ? ScrollingDirection.Down : ScrollingDirection.Up
+            );
         }
     }
 }

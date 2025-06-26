@@ -59,14 +59,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             base.LoadComplete();
 
-            accentColour.BindValueChanged(colour =>
-            {
-                explode.Colour = colour.NewValue;
-                glow.Colour = colour.NewValue;
-                circle.Colour = colour.NewValue;
-            }, true);
+            accentColour.BindValueChanged(
+                colour =>
+                {
+                    explode.Colour = colour.NewValue;
+                    glow.Colour = colour.NewValue;
+                    circle.Colour = colour.NewValue;
+                },
+                true
+            );
 
-            indexInCurrentCombo.BindValueChanged(index => number.Text = (index.NewValue + 1).ToString(), true);
+            indexInCurrentCombo.BindValueChanged(
+                index => number.Text = (index.NewValue + 1).ToString(),
+                true
+            );
 
             drawableObject.ApplyCustomUpdateState += updateStateTransforms;
             updateStateTransforms(drawableObject, drawableObject.State.Value);
@@ -85,9 +91,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                         const double flash_in = 40;
                         const double flash_out = 100;
 
-                        flash.FadeTo(0.8f, flash_in)
-                             .Then()
-                             .FadeOut(flash_out);
+                        flash.FadeTo(0.8f, flash_in).Then().FadeOut(flash_out);
 
                         explode.FadeIn(flash_in);
                         this.ScaleTo(1.5f, 400, Easing.OutQuad);

@@ -30,8 +30,10 @@ namespace osu.Game.Overlays.Dashboard
         private const float search_textbox_height = 40;
         private const float padding = 10;
 
-        private readonly IBindableDictionary<int, UserPresence> onlineUserPresences = new BindableDictionary<int, UserPresence>();
-        private readonly Dictionary<int, OnlineUserPanel> userPanels = new Dictionary<int, OnlineUserPanel>();
+        private readonly IBindableDictionary<int, UserPresence> onlineUserPresences =
+            new BindableDictionary<int, UserPresence>();
+        private readonly Dictionary<int, OnlineUserPanel> userPanels =
+            new Dictionary<int, OnlineUserPanel>();
 
         private SearchContainer<OnlineUserPanel> userFlow = null!;
         private BasicSearchTextBox searchTextBox = null!;
@@ -59,17 +61,22 @@ namespace osu.Game.Overlays.Dashboard
                 new Container<BasicSearchTextBox>
                 {
                     RelativeSizeAxes = Axes.X,
-                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING, Vertical = padding },
-                    Child = searchTextBox = new BasicSearchTextBox
+                    Padding = new MarginPadding
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Height = search_textbox_height,
-                        ReleaseFocusOnCommit = false,
-                        HoldFocus = true,
-                        PlaceholderText = HomeStrings.SearchPlaceholder,
+                        Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                        Vertical = padding,
                     },
+                    Child = searchTextBox =
+                        new BasicSearchTextBox
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Height = search_textbox_height,
+                            ReleaseFocusOnCommit = false,
+                            HoldFocus = true,
+                            PlaceholderText = HomeStrings.SearchPlaceholder,
+                        },
                 },
                 userFlow = new SearchContainer<OnlineUserPanel>
                 {
@@ -104,39 +111,47 @@ namespace osu.Game.Overlays.Dashboard
             searchTextBox.TakeFocus();
         }
 
-        private void onUserPresenceUpdated(object? sender, NotifyDictionaryChangedEventArgs<int, UserPresence> e) => Schedule(() =>
-        {
-            switch (e.Action)
+        private void onUserPresenceUpdated(
+            object? sender,
+            NotifyDictionaryChangedEventArgs<int, UserPresence> e
+        ) =>
+            Schedule(() =>
             {
-                case NotifyDictionaryChangedAction.Add:
-                    Debug.Assert(e.NewItems != null);
+                switch (e.Action)
+                {
+                    case NotifyDictionaryChangedAction.Add:
+                        Debug.Assert(e.NewItems != null);
 
-                    foreach (var kvp in e.NewItems)
-                    {
-                        int userId = kvp.Key;
-
-                        users.GetUserAsync(userId).ContinueWith(task =>
+                        foreach (var kvp in e.NewItems)
                         {
-                            if (task.GetResultSafely() is APIUser user)
-                                Schedule(() => userFlow.Add(userPanels[userId] = createUserPanel(user)));
-                        });
-                    }
+                            int userId = kvp.Key;
 
-                    break;
+                            users
+                                .GetUserAsync(userId)
+                                .ContinueWith(task =>
+                                {
+                                    if (task.GetResultSafely() is APIUser user)
+                                        Schedule(() =>
+                                            userFlow.Add(userPanels[userId] = createUserPanel(user))
+                                        );
+                                });
+                        }
 
-                case NotifyDictionaryChangedAction.Remove:
-                    Debug.Assert(e.OldItems != null);
+                        break;
 
-                    foreach (var kvp in e.OldItems)
-                    {
-                        int userId = kvp.Key;
-                        if (userPanels.Remove(userId, out var userPanel))
-                            userPanel.Expire();
-                    }
+                    case NotifyDictionaryChangedAction.Remove:
+                        Debug.Assert(e.OldItems != null);
 
-                    break;
-            }
-        });
+                        foreach (var kvp in e.OldItems)
+                        {
+                            int userId = kvp.Key;
+                            if (userPanels.Remove(userId, out var userPanel))
+                                userPanel.Expire();
+                        }
+
+                        break;
+                }
+            });
 
         private OnlineUserPanel createUserPanel(APIUser user) =>
             new OnlineUserPanel(user).With(panel =>
@@ -220,7 +235,7 @@ namespace osu.Game.Overlays.Dashboard
                             {
                                 RelativeSizeAxes = Axes.X,
                                 Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre
+                                Origin = Anchor.TopCentre,
                             },
                             spectateButton = new PurpleRoundedButton
                             {
@@ -228,9 +243,12 @@ namespace osu.Game.Overlays.Dashboard
                                 Text = "Spectate",
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
-                                Action = () => performer?.PerformFromScreen(s => s.Push(new SoloSpectatorScreen(User))),
-                            }
-                        }
+                                Action = () =>
+                                    performer?.PerformFromScreen(s =>
+                                        s.Push(new SoloSpectatorScreen(User))
+                                    ),
+                            },
+                        },
                     },
                 };
             }

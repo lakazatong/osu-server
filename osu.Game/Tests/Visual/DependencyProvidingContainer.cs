@@ -20,7 +20,9 @@ namespace osu.Game.Tests.Visual
         /// </summary>
         public (Type, object)[] CachedDependencies { get; init; } = Array.Empty<(Type, object)>();
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencyContainer = new DependencyContainer(base.CreateChildDependencies(parent));
 

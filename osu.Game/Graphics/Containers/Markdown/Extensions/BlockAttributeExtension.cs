@@ -17,7 +17,8 @@ namespace osu.Game.Graphics.Containers.Markdown.Extensions
     /// </remarks>
     public class BlockAttributeExtension : IMarkdownExtension
     {
-        private readonly GenericAttributesExtension genericAttributesExtension = new GenericAttributesExtension();
+        private readonly GenericAttributesExtension genericAttributesExtension =
+            new GenericAttributesExtension();
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
@@ -29,6 +30,7 @@ namespace osu.Game.Graphics.Containers.Markdown.Extensions
             pipeline.InlineParsers.RemoveAll(parser => parser is GenericAttributesParser);
         }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer) => genericAttributesExtension.Setup(pipeline, renderer);
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer) =>
+            genericAttributesExtension.Setup(pipeline, renderer);
     }
 }

@@ -53,11 +53,17 @@ namespace osu.Game.Overlays.Mods
         private void rulesetChanged()
         {
             presetSubscription?.Dispose();
-            presetSubscription = realm.RegisterForNotifications(r =>
-                r.All<ModPreset>()
-                 .Filter($"{nameof(ModPreset.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $0"
-                         + $" && {nameof(ModPreset.DeletePending)} == false", ruleset.Value.ShortName)
-                 .OrderBy(preset => preset.Name), asyncLoadPanels);
+            presetSubscription = realm.RegisterForNotifications(
+                r =>
+                    r.All<ModPreset>()
+                        .Filter(
+                            $"{nameof(ModPreset.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $0"
+                                + $" && {nameof(ModPreset.DeletePending)} == false",
+                            ruleset.Value.ShortName
+                        )
+                        .OrderBy(preset => preset.Name),
+                asyncLoadPanels
+            );
         }
 
         private CancellationTokenSource? cancellationTokenSource;
@@ -79,14 +85,15 @@ namespace osu.Game.Overlays.Mods
                 return;
             }
 
-            latestLoadTask = LoadComponentsAsync(presets.Select(p => new ModPresetPanel(p.ToLive(realm))
-            {
-                Shear = Vector2.Zero
-            }), loaded =>
-            {
-                removeAndDisposePresetPanels();
-                ItemsFlow.AddRange(loaded);
-            }, (cancellationTokenSource = new CancellationTokenSource()).Token);
+            latestLoadTask = LoadComponentsAsync(
+                presets.Select(p => new ModPresetPanel(p.ToLive(realm)) { Shear = Vector2.Zero }),
+                loaded =>
+                {
+                    removeAndDisposePresetPanels();
+                    ItemsFlow.AddRange(loaded);
+                },
+                (cancellationTokenSource = new CancellationTokenSource()).Token
+            );
 
             void removeAndDisposePresetPanels()
             {

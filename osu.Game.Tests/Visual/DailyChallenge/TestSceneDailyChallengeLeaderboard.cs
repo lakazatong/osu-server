@@ -23,47 +23,63 @@ namespace osu.Game.Tests.Visual.DailyChallenge
         private DummyAPIAccess dummyAPI => (DummyAPIAccess)API;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         [Test]
         public void TestBasicBehaviour()
         {
             DailyChallengeLeaderboard leaderboard = null!;
 
-            AddStep("set up response without user best", () =>
-            {
-                dummyAPI.HandleRequest = req =>
+            AddStep(
+                "set up response without user best",
+                () =>
                 {
-                    if (req is IndexPlaylistScoresRequest indexRequest)
+                    dummyAPI.HandleRequest = req =>
                     {
-                        indexRequest.TriggerSuccess(createResponse(50, false));
-                        return true;
-                    }
+                        if (req is IndexPlaylistScoresRequest indexRequest)
+                        {
+                            indexRequest.TriggerSuccess(createResponse(50, false));
+                            return true;
+                        }
 
-                    return false;
-                };
-            });
-            AddStep("create leaderboard", () => Child = leaderboard = new DailyChallengeLeaderboard(new Room { RoomID = 1 }, new PlaylistItem(Beatmap.Value.BeatmapInfo))
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(0.8f),
-            });
+                        return false;
+                    };
+                }
+            );
+            AddStep(
+                "create leaderboard",
+                () =>
+                    Child = leaderboard =
+                        new DailyChallengeLeaderboard(
+                            new Room { RoomID = 1 },
+                            new PlaylistItem(Beatmap.Value.BeatmapInfo)
+                        )
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(0.8f),
+                        }
+            );
 
-            AddStep("set up response with user best", () =>
-            {
-                dummyAPI.HandleRequest = req =>
+            AddStep(
+                "set up response with user best",
+                () =>
                 {
-                    if (req is IndexPlaylistScoresRequest indexRequest)
+                    dummyAPI.HandleRequest = req =>
                     {
-                        indexRequest.TriggerSuccess(createResponse(50, true));
-                        return true;
-                    }
+                        if (req is IndexPlaylistScoresRequest indexRequest)
+                        {
+                            indexRequest.TriggerSuccess(createResponse(50, true));
+                            return true;
+                        }
 
-                    return false;
-                };
-            });
+                        return false;
+                    };
+                }
+            );
             AddStep("force refetch", () => leaderboard.RefetchScores());
         }
 
@@ -73,26 +89,37 @@ namespace osu.Game.Tests.Visual.DailyChallenge
             IndexPlaylistScoresRequest pendingRequest = null!;
             DailyChallengeLeaderboard leaderboard = null!;
 
-            AddStep("set up requests handler", () =>
-            {
-                dummyAPI.HandleRequest = req =>
+            AddStep(
+                "set up requests handler",
+                () =>
                 {
-                    if (req is IndexPlaylistScoresRequest indexRequest)
+                    dummyAPI.HandleRequest = req =>
                     {
-                        pendingRequest = indexRequest;
-                        return true;
-                    }
+                        if (req is IndexPlaylistScoresRequest indexRequest)
+                        {
+                            pendingRequest = indexRequest;
+                            return true;
+                        }
 
-                    return false;
-                };
-            });
-            AddStep("create leaderboard", () => Child = leaderboard = new DailyChallengeLeaderboard(new Room { RoomID = 1 }, new PlaylistItem(Beatmap.Value.BeatmapInfo))
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(0.8f),
-            });
+                        return false;
+                    };
+                }
+            );
+            AddStep(
+                "create leaderboard",
+                () =>
+                    Child = leaderboard =
+                        new DailyChallengeLeaderboard(
+                            new Room { RoomID = 1 },
+                            new PlaylistItem(Beatmap.Value.BeatmapInfo)
+                        )
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(0.8f),
+                        }
+            );
             AddStep("complete load", () => pendingRequest.TriggerSuccess(createResponse(3, true)));
             AddStep("force refetch", () => leaderboard.RefetchScores());
             AddStep("complete load", () => pendingRequest.TriggerSuccess(createResponse(4, true)));
@@ -104,19 +131,21 @@ namespace osu.Game.Tests.Visual.DailyChallenge
 
             for (int i = 0; i < scoreCount; ++i)
             {
-                result.Scores.Add(new MultiplayerScore
-                {
-                    ID = i,
-                    Accuracy = 1 - (float)i / (2 * scoreCount),
-                    Position = i + 1,
-                    EndedAt = DateTimeOffset.Now,
-                    Passed = true,
-                    Rank = (ScoreRank)RNG.Next((int)ScoreRank.D, (int)ScoreRank.XH),
-                    MaxCombo = 1000 - i,
-                    TotalScore = (long)(1_000_000 * (1 - (float)i / (2 * scoreCount))),
-                    User = new APIUser { Username = $"user {i}" },
-                    Statistics = new Dictionary<HitResult, int>()
-                });
+                result.Scores.Add(
+                    new MultiplayerScore
+                    {
+                        ID = i,
+                        Accuracy = 1 - (float)i / (2 * scoreCount),
+                        Position = i + 1,
+                        EndedAt = DateTimeOffset.Now,
+                        Passed = true,
+                        Rank = (ScoreRank)RNG.Next((int)ScoreRank.D, (int)ScoreRank.XH),
+                        MaxCombo = 1000 - i,
+                        TotalScore = (long)(1_000_000 * (1 - (float)i / (2 * scoreCount))),
+                        User = new APIUser { Username = $"user {i}" },
+                        Statistics = new Dictionary<HitResult, int>(),
+                    }
+                );
             }
 
             if (returnUserBest)
@@ -132,7 +161,7 @@ namespace osu.Game.Tests.Visual.DailyChallenge
                     MaxCombo = 100,
                     TotalScore = 800000,
                     User = dummyAPI.LocalUser.Value,
-                    Statistics = new Dictionary<HitResult, int>()
+                    Statistics = new Dictionary<HitResult, int>(),
                 };
             }
 

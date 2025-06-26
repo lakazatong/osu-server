@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Taiko
     public partial class TaikoInputManager : RulesetInputManager<TaikoAction>
     {
         public TaikoInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
     }
 
     public enum TaikoAction
@@ -29,6 +27,6 @@ namespace osu.Game.Rulesets.Taiko
         RightCentre,
 
         [Description("Right (rim)")]
-        RightRim
+        RightRim,
     }
 }

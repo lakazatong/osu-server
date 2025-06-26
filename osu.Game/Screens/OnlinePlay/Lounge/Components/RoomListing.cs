@@ -40,7 +40,8 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
 
         private readonly Bindable<Room?> selectedRoom = new Bindable<Room?>();
 
-        public IReadOnlyList<RoomPanel> DrawableRooms => roomFlow.FlowingChildren.Cast<RoomPanel>().ToArray();
+        public IReadOnlyList<RoomPanel> DrawableRooms =>
+            roomFlow.FlowingChildren.Cast<RoomPanel>().ToArray();
 
         private readonly ScrollContainer<Drawable> scroll;
         private readonly FillFlowContainer<LoungeRoomPanel> roomFlow;
@@ -65,15 +66,16 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Child = roomFlow = new FillFlowContainer<LoungeRoomPanel>
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(5),
-                        Margin = new MarginPadding { Vertical = 10 },
-                    }
-                }
+                    Child = roomFlow =
+                        new FillFlowContainer<LoungeRoomPanel>
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(5),
+                            Margin = new MarginPadding { Vertical = 10 },
+                        },
+                },
             };
         }
 
@@ -99,13 +101,22 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 {
                     bool matchingFilter = true;
 
-                    matchingFilter &= criteria.Ruleset == null || r.Room.PlaylistItemStats?.RulesetIDs.Any(id => id == criteria.Ruleset.OnlineID) != false;
+                    matchingFilter &=
+                        criteria.Ruleset == null
+                        || r.Room.PlaylistItemStats?.RulesetIDs.Any(id =>
+                            id == criteria.Ruleset.OnlineID
+                        ) != false;
                     matchingFilter &= matchPermissions(r, criteria.Permissions);
 
                     // Room name isn't translatable, so ToString() is used here for simplicity.
                     string[] filterTerms = r.FilterTerms.Select(t => t.ToString()).ToArray();
-                    string[] searchTerms = criteria.SearchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    matchingFilter &= searchTerms.All(searchTerm => filterTerms.Any(filterTerm => checkTerm(filterTerm, searchTerm)));
+                    string[] searchTerms = criteria.SearchString.Split(
+                        ' ',
+                        StringSplitOptions.RemoveEmptyEntries
+                    );
+                    matchingFilter &= searchTerms.All(searchTerm =>
+                        filterTerms.Any(filterTerm => checkTerm(filterTerm, searchTerm))
+                    );
 
                     r.MatchingFilter = matchingFilter;
                 }
@@ -118,7 +129,12 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
 
                 for (int i = 0; i < needle.Length; i++)
                 {
-                    int found = CultureInfo.InvariantCulture.CompareInfo.IndexOf(haystack, needle[i], index, CompareOptions.OrdinalIgnoreCase);
+                    int found = CultureInfo.InvariantCulture.CompareInfo.IndexOf(
+                        haystack,
+                        needle[i],
+                        index,
+                        CompareOptions.OrdinalIgnoreCase
+                    );
                     if (found < 0)
                         return false;
 
@@ -142,7 +158,11 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                         return room.Room.HasPassword;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(accessType), accessType, $"Unsupported {nameof(RoomPermissionsFilter)} in filter");
+                        throw new ArgumentOutOfRangeException(
+                            nameof(accessType),
+                            accessType,
+                            $"Unsupported {nameof(RoomPermissionsFilter)} in filter"
+                        );
                 }
             }
         }
@@ -195,7 +215,10 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 roomFlow.Add(drawableRoom);
 
                 // Always show spotlight playlists at the top of the listing.
-                roomFlow.SetLayoutPosition(drawableRoom, room.Category > RoomCategory.Normal ? float.MinValue : -(room.RoomID ?? 0));
+                roomFlow.SetLayoutPosition(
+                    drawableRoom,
+                    room.Category > RoomCategory.Normal ? float.MinValue : -(room.RoomID ?? 0)
+                );
             }
 
             applyFilterCriteria(Filter.Value);
@@ -247,9 +270,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void selectNext(int direction)
         {
@@ -267,7 +288,11 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 if (direction < 0)
                     visibleRooms = visibleRooms.Reverse();
 
-                room = visibleRooms.SkipWhile(r => r.Room != SelectedRoom.Value).Skip(1).FirstOrDefault()?.Room;
+                room = visibleRooms
+                    .SkipWhile(r => r.Room != SelectedRoom.Value)
+                    .Skip(1)
+                    .FirstOrDefault()
+                    ?.Room;
             }
 
             // we already have a valid selection only change selection if we still have a room to switch to.

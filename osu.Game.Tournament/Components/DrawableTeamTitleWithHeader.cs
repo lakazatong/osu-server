@@ -24,7 +24,7 @@ namespace osu.Game.Tournament.Components
                     new DrawableTeamHeader(colour),
                     new DrawableTeamTitle(team),
                     new DrawableTeamSeed(team),
-                }
+                },
             };
         }
     }

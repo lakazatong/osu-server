@@ -9,9 +9,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
     public class CatchArgonSkinTransformer : SkinTransformer
     {
         public CatchArgonSkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {

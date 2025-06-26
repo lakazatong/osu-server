@@ -1,10 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
-using osu.Framework.Bindables;
 
 namespace osu.Game.Overlays.Dashboard.Friends
 {
@@ -21,25 +21,27 @@ namespace osu.Game.Overlays.Dashboard.Friends
         {
             AutoSizeAxes = Axes.Both;
 
-            AddInternal(new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Both,
-                Direction = FillDirection.Horizontal,
-                Spacing = new Vector2(10, 0),
-                Children = new Drawable[]
+            AddInternal(
+                new FillFlowContainer
                 {
-                    sortControl = new UserSortTabControl
+                    AutoSizeAxes = Axes.Both,
+                    Direction = FillDirection.Horizontal,
+                    Spacing = new Vector2(10, 0),
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
+                        sortControl = new UserSortTabControl
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                        styleControl = new OverlayPanelDisplayStyleControl
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
                     },
-                    styleControl = new OverlayPanelDisplayStyleControl
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
                 }
-            });
+            );
         }
     }
 }

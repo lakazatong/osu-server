@@ -31,196 +31,283 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneScoresContainer : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private TestScoresContainer scoresContainer;
 
         [SetUpSteps]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new Container
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                RelativeSizeAxes = Axes.Both,
-                Width = 0.8f,
-                Children = new Drawable[]
+                Child = new Container
                 {
-                    new Box
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.Both,
+                    Width = 0.8f,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black,
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
+                        scoresContainer = new TestScoresContainer
+                        {
+                            Beatmap = { Value = CreateAPIBeatmap() },
+                        },
                     },
-                    scoresContainer = new TestScoresContainer
-                    {
-                        Beatmap = { Value = CreateAPIBeatmap() }
-                    }
-                }
-            };
-        });
+                };
+            });
 
         [Test]
         public void TestNoUserBest()
         {
-            AddStep("Scores with no user best", () =>
-            {
-                var allScores = createScores();
+            AddStep(
+                "Scores with no user best",
+                () =>
+                {
+                    var allScores = createScores();
 
-                allScores.UserScore = null;
+                    allScores.UserScore = null;
 
-                scoresContainer.Scores = allScores;
-            });
+                    scoresContainer.Scores = allScores;
+                }
+            );
 
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("no user best displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1);
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "no user best displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1
+            );
 
             AddStep("Load null scores", () => scoresContainer.Scores = null);
 
-            AddUntilStep("wait for scores not displayed", () => !scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("no best score displayed", () => !scoresContainer.ChildrenOfType<DrawableTopScore>().Any());
+            AddUntilStep(
+                "wait for scores not displayed",
+                () => !scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "no best score displayed",
+                () => !scoresContainer.ChildrenOfType<DrawableTopScore>().Any()
+            );
 
-            AddStep("Load only one score", () =>
-            {
-                var allScores = createScores();
+            AddStep(
+                "Load only one score",
+                () =>
+                {
+                    var allScores = createScores();
 
-                allScores.Scores.RemoveRange(1, allScores.Scores.Count - 1);
+                    allScores.Scores.RemoveRange(1, allScores.Scores.Count - 1);
 
-                scoresContainer.Scores = allScores;
-            });
+                    scoresContainer.Scores = allScores;
+                }
+            );
 
-            AddUntilStep("wait for scores not displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Count() == 1);
-            AddAssert("no best score displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1);
+            AddUntilStep(
+                "wait for scores not displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Count() == 1
+            );
+            AddAssert(
+                "no best score displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1
+            );
         }
 
         [Test]
         public void TestHitResultsWithSameNameAreGrouped()
         {
-            AddStep("Load scores without user best", () =>
-            {
-                var allScores = createScores();
-                allScores.UserScore = null;
-                scoresContainer.Scores = allScores;
-            });
-
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("only one column for slider end", () =>
-            {
-                ScoreTable scoreTable = scoresContainer.ChildrenOfType<ScoreTable>().First();
-                return scoreTable.Columns.Count(c => c.Header.Equals("slider end")) == 1;
-            });
-
-            AddAssert("all rows show non-zero slider ends", () =>
-            {
-                ScoreTable scoreTable = scoresContainer.ChildrenOfType<ScoreTable>().First();
-                int sliderEndColumnIndex = Array.FindIndex(scoreTable.Columns, c => c != null && c.Header.Equals("slider end"));
-                bool sliderEndFilledInEachRow = true;
-
-                for (int i = 0; i < scoreTable.Content?.GetLength(0); i++)
+            AddStep(
+                "Load scores without user best",
+                () =>
                 {
-                    switch (scoreTable.Content[i, sliderEndColumnIndex])
-                    {
-                        case OsuSpriteText text:
-                            if (text.Text.Equals(0.0d.ToLocalisableString(@"N0")))
-                                sliderEndFilledInEachRow = false;
-                            break;
-
-                        default:
-                            sliderEndFilledInEachRow = false;
-                            break;
-                    }
+                    var allScores = createScores();
+                    allScores.UserScore = null;
+                    scoresContainer.Scores = allScores;
                 }
+            );
 
-                return sliderEndFilledInEachRow;
-            });
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "only one column for slider end",
+                () =>
+                {
+                    ScoreTable scoreTable = scoresContainer.ChildrenOfType<ScoreTable>().First();
+                    return scoreTable.Columns.Count(c => c.Header.Equals("slider end")) == 1;
+                }
+            );
+
+            AddAssert(
+                "all rows show non-zero slider ends",
+                () =>
+                {
+                    ScoreTable scoreTable = scoresContainer.ChildrenOfType<ScoreTable>().First();
+                    int sliderEndColumnIndex = Array.FindIndex(
+                        scoreTable.Columns,
+                        c => c != null && c.Header.Equals("slider end")
+                    );
+                    bool sliderEndFilledInEachRow = true;
+
+                    for (int i = 0; i < scoreTable.Content?.GetLength(0); i++)
+                    {
+                        switch (scoreTable.Content[i, sliderEndColumnIndex])
+                        {
+                            case OsuSpriteText text:
+                                if (text.Text.Equals(0.0d.ToLocalisableString(@"N0")))
+                                    sliderEndFilledInEachRow = false;
+                                break;
+
+                            default:
+                                sliderEndFilledInEachRow = false;
+                                break;
+                        }
+                    }
+
+                    return sliderEndFilledInEachRow;
+                }
+            );
         }
 
         [Test]
         public void TestUserBest()
         {
-            AddStep("Load scores with personal best", () =>
-            {
-                var allScores = createScores();
-                allScores.UserScore = createUserBest();
-                scoresContainer.Scores = allScores;
-            });
-
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("best score displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2);
-
-            AddStep("Load scores with personal best FC", () =>
-            {
-                var allScores = createScores();
-                allScores.UserScore = createUserBest();
-                allScores.UserScore.Score.Accuracy = 1;
-                scoresContainer.Beatmap.Value.MaxCombo = allScores.UserScore.Score.MaxCombo = 1337;
-                scoresContainer.Scores = allScores;
-            });
-
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("best score displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2);
-
-            AddStep("Load scores with personal best (null position)", () =>
-            {
-                var allScores = createScores();
-                var userBest = createUserBest();
-                userBest.Position = null;
-                allScores.UserScore = userBest;
-                scoresContainer.Scores = allScores;
-            });
-
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("best score displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2);
-
-            AddStep("Load scores with personal best (first place)", () =>
-            {
-                var allScores = createScores();
-                allScores.UserScore = new APIScoreWithPosition
+            AddStep(
+                "Load scores with personal best",
+                () =>
                 {
-                    Score = allScores.Scores.First(),
-                    Position = 1,
-                };
-                scoresContainer.Scores = allScores;
-            });
+                    var allScores = createScores();
+                    allScores.UserScore = createUserBest();
+                    scoresContainer.Scores = allScores;
+                }
+            );
 
-            AddUntilStep("wait for scores displayed", () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any());
-            AddAssert("best score displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1);
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "best score displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2
+            );
 
-            AddStep("Scores with no user best", () =>
-            {
-                var allScores = createScores();
+            AddStep(
+                "Load scores with personal best FC",
+                () =>
+                {
+                    var allScores = createScores();
+                    allScores.UserScore = createUserBest();
+                    allScores.UserScore.Score.Accuracy = 1;
+                    scoresContainer.Beatmap.Value.MaxCombo = allScores.UserScore.Score.MaxCombo =
+                        1337;
+                    scoresContainer.Scores = allScores;
+                }
+            );
 
-                allScores.UserScore = null;
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "best score displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2
+            );
 
-                scoresContainer.Scores = allScores;
-            });
+            AddStep(
+                "Load scores with personal best (null position)",
+                () =>
+                {
+                    var allScores = createScores();
+                    var userBest = createUserBest();
+                    userBest.Position = null;
+                    allScores.UserScore = userBest;
+                    scoresContainer.Scores = allScores;
+                }
+            );
 
-            AddUntilStep("best score not displayed", () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1);
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "best score displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 2
+            );
+
+            AddStep(
+                "Load scores with personal best (first place)",
+                () =>
+                {
+                    var allScores = createScores();
+                    allScores.UserScore = new APIScoreWithPosition
+                    {
+                        Score = allScores.Scores.First(),
+                        Position = 1,
+                    };
+                    scoresContainer.Scores = allScores;
+                }
+            );
+
+            AddUntilStep(
+                "wait for scores displayed",
+                () => scoresContainer.ChildrenOfType<ScoreTableRowBackground>().Any()
+            );
+            AddAssert(
+                "best score displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1
+            );
+
+            AddStep(
+                "Scores with no user best",
+                () =>
+                {
+                    var allScores = createScores();
+
+                    allScores.UserScore = null;
+
+                    scoresContainer.Scores = allScores;
+                }
+            );
+
+            AddUntilStep(
+                "best score not displayed",
+                () => scoresContainer.ChildrenOfType<DrawableTopScore>().Count() == 1
+            );
         }
 
         [Test]
         public void TestUnprocessedPP()
         {
-            AddStep("Load scores with unprocessed PP", () =>
-            {
-                var allScores = createScores();
-                allScores.Scores[0].PP = null;
-                allScores.UserScore = createUserBest();
-                allScores.UserScore.Score.PP = null;
-                scoresContainer.Scores = allScores;
-            });
+            AddStep(
+                "Load scores with unprocessed PP",
+                () =>
+                {
+                    var allScores = createScores();
+                    allScores.Scores[0].PP = null;
+                    allScores.UserScore = createUserBest();
+                    allScores.UserScore.Score.PP = null;
+                    scoresContainer.Scores = allScores;
+                }
+            );
         }
 
         [Test]
         public void TestUnrankedPP()
         {
-            AddStep("Load scores with unranked PP", () =>
-            {
-                var allScores = createScores();
-                allScores.Scores[0].Ranked = false;
-                allScores.UserScore = createUserBest();
-                allScores.UserScore.Score.Ranked = false;
-                scoresContainer.Scores = allScores;
-            });
+            AddStep(
+                "Load scores with unranked PP",
+                () =>
+                {
+                    var allScores = createScores();
+                    allScores.Scores[0].Ranked = false;
+                    allScores.UserScore = createUserBest();
+                    allScores.UserScore.Score.Ranked = false;
+                    scoresContainer.Scores = allScores;
+                }
+            );
         }
 
         private ulong onlineID = 1;
@@ -310,10 +397,7 @@ namespace osu.Game.Tests.Visual.Online
                             Username = @"Toukai",
                             CountryCode = CountryCode.CA,
                         },
-                        Mods = new[]
-                        {
-                            new APIMod { Acronym = new OsuModDoubleTime().Acronym },
-                        },
+                        Mods = new[] { new APIMod { Acronym = new OsuModDoubleTime().Acronym } },
                         Rank = ScoreRank.C,
                         PP = 170,
                         MaxCombo = 1234,
@@ -338,7 +422,7 @@ namespace osu.Game.Tests.Visual.Online
                         Accuracy = 0.6543,
                         Ranked = true,
                     },
-                }
+                },
             };
 
             const int initial_great_count = 2000;
@@ -351,7 +435,8 @@ namespace osu.Game.Tests.Visual.Online
 
             foreach (var (score, index) in scores.Scores.Select((s, i) => (s, i)))
             {
-                HitResult sliderEndResult = index % 2 == 0 ? HitResult.SliderTailHit : HitResult.SmallTickHit;
+                HitResult sliderEndResult =
+                    index % 2 == 0 ? HitResult.SliderTailHit : HitResult.SmallTickHit;
 
                 score.Statistics = new Dictionary<HitResult, int>
                 {
@@ -379,27 +464,28 @@ namespace osu.Game.Tests.Visual.Online
             return scores;
         }
 
-        private APIScoreWithPosition createUserBest() => new APIScoreWithPosition
-        {
-            Score = new SoloScoreInfo
+        private APIScoreWithPosition createUserBest() =>
+            new APIScoreWithPosition
             {
-                EndedAt = DateTimeOffset.Now,
-                ID = onlineID++,
-                User = new APIUser
+                Score = new SoloScoreInfo
                 {
-                    Id = 7151382,
-                    Username = @"Mayuri Hana",
-                    CountryCode = CountryCode.TH,
+                    EndedAt = DateTimeOffset.Now,
+                    ID = onlineID++,
+                    User = new APIUser
+                    {
+                        Id = 7151382,
+                        Username = @"Mayuri Hana",
+                        CountryCode = CountryCode.TH,
+                    },
+                    Rank = ScoreRank.D,
+                    PP = 160,
+                    MaxCombo = 1234,
+                    TotalScore = 123456,
+                    Accuracy = 0.6543,
+                    Ranked = true,
                 },
-                Rank = ScoreRank.D,
-                PP = 160,
-                MaxCombo = 1234,
-                TotalScore = 123456,
-                Accuracy = 0.6543,
-                Ranked = true,
-            },
-            Position = 1337,
-        };
+                Position = 1337,
+            };
 
         private partial class TestScoresContainer : ScoresContainer
         {

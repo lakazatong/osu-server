@@ -10,12 +10,10 @@ namespace osu.Game.Storyboards
     public partial class StoryboardVideoLayer : StoryboardLayer
     {
         public StoryboardVideoLayer(string name, int depth, bool masking)
-            : base(name, depth, masking)
-        {
-        }
+            : base(name, depth, masking) { }
 
-        public override DrawableStoryboardLayer CreateDrawable()
-            => new DrawableStoryboardVideoLayer(this) { Depth = Depth, Name = Name };
+        public override DrawableStoryboardLayer CreateDrawable() =>
+            new DrawableStoryboardVideoLayer(this) { Depth = Depth, Name = Name };
 
         public partial class DrawableStoryboardVideoLayer : DrawableStoryboardLayer
         {

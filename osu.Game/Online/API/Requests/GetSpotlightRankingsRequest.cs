@@ -12,7 +12,11 @@ namespace osu.Game.Online.API.Requests
         private readonly int spotlight;
         private readonly RankingsSortCriteria sort;
 
-        public GetSpotlightRankingsRequest(RulesetInfo ruleset, int spotlight, RankingsSortCriteria sort)
+        public GetSpotlightRankingsRequest(
+            RulesetInfo ruleset,
+            int spotlight,
+            RankingsSortCriteria sort
+        )
             : base(ruleset)
         {
             this.spotlight = spotlight;

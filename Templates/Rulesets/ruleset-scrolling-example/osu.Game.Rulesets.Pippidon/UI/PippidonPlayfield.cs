@@ -29,35 +29,34 @@ namespace osu.Game.Rulesets.Pippidon.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new LaneContainer
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Child = new Container
+                    new LaneContainer
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Child = new Container
                         {
-                            Left = 200,
-                            Top = LANE_HEIGHT / 2,
-                            Bottom = LANE_HEIGHT / 2
-                        },
-                        Children = new Drawable[]
-                        {
-                            HitObjectContainer,
-                            pippidon = new PippidonCharacter
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding
                             {
-                                Origin = Anchor.Centre,
+                                Left = 200,
+                                Top = LANE_HEIGHT / 2,
+                                Bottom = LANE_HEIGHT / 2,
                             },
-                        }
+                            Children = new Drawable[]
+                            {
+                                HitObjectContainer,
+                                pippidon = new PippidonCharacter { Origin = Anchor.Centre },
+                            },
+                        },
                     },
-                },
-            });
+                }
+            );
         }
 
         private partial class LaneContainer : BeatSyncedContainer
@@ -65,10 +64,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
             private OsuColour colours;
             private FillFlowContainer fill;
 
-            private readonly Container content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            private readonly Container content = new Container { RelativeSizeAxes = Axes.Both };
 
             protected override Container<Drawable> Content => content;
 
@@ -91,11 +87,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
                 for (int i = 0; i < LANE_COUNT; i++)
                 {
-                    fill.Add(new Lane
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = LANE_HEIGHT,
-                    });
+                    fill.Add(new Lane { RelativeSizeAxes = Axes.X, Height = LANE_HEIGHT });
                 }
             }
 
@@ -117,7 +109,12 @@ namespace osu.Game.Rulesets.Pippidon.UI
                 }
             }
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 if (effectPoint.KiaiMode)
                     fill.FlashColour(colours.PinkLight, 800, Easing.In);

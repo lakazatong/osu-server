@@ -28,13 +28,15 @@ namespace osu.Game.Overlays.SkinEditor
         {
             this.component = component;
 
-            base.Content.Add(Content = new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(10),
-            });
+            base.Content.Add(
+                Content = new FillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(10),
+                }
+            );
         }
 
         [BackgroundDependencyLoader]

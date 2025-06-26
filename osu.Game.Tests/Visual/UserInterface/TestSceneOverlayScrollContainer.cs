@@ -3,14 +3,14 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Game.Overlays;
-using osu.Framework.Graphics;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Shapes;
-using osuTK.Graphics;
 using NUnit.Framework;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
+using osu.Game.Overlays;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace osu.Game.Tests.Visual.UserInterface
@@ -18,34 +18,33 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneOverlayScrollContainer : OsuManualInputManagerTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private TestScrollContainer scroll;
 
         private int invocationCount;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = scroll = new TestScrollContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Child = new Container
+                Child = scroll = new TestScrollContainer
                 {
-                    Height = 3000,
-                    RelativeSizeAxes = Axes.X,
-                    Child = new Box
+                    RelativeSizeAxes = Axes.Both,
+                    Child = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Gray
-                    }
-                }
-            };
+                        Height = 3000,
+                        RelativeSizeAxes = Axes.X,
+                        Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray },
+                    },
+                };
 
-            invocationCount = 0;
+                invocationCount = 0;
 
-            scroll.Button.Action += () => invocationCount++;
-        });
+                scroll.Button.Action += () => invocationCount++;
+            });
 
         [Test]
         public void TestButtonVisibility()
@@ -59,14 +58,20 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert("button is hidden", () => scroll.Button.State == Visibility.Hidden);
 
             AddStep("scroll to 500", () => scroll.ScrollTo(500));
-            AddUntilStep("scrolled to 500", () => Precision.AlmostEquals(scroll.Current, 500, 0.1f));
+            AddUntilStep(
+                "scrolled to 500",
+                () => Precision.AlmostEquals(scroll.Current, 500, 0.1f)
+            );
             AddAssert("button is visible", () => scroll.Button.State == Visibility.Visible);
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(scroll.Button);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(scroll.Button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("button is visible", () => scroll.Button.State == Visibility.Visible);
 
@@ -82,7 +87,10 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("invoke action", () => scroll.Button.Action.Invoke());
 
-            AddUntilStep("scrolled back to start", () => Precision.AlmostEquals(scroll.Current, 0, 0.1f));
+            AddUntilStep(
+                "scrolled back to start",
+                () => Precision.AlmostEquals(scroll.Current, 0, 0.1f)
+            );
 
             AddStep("invoke action", () => scroll.Button.Action.Invoke());
 
@@ -94,19 +102,28 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             AddStep("scroll to end", () => scroll.ScrollToEnd(false));
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(scroll.Button);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(scroll.Button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddUntilStep("scrolled back to start", () => Precision.AlmostEquals(scroll.Current, 0, 0.1f));
+            AddUntilStep(
+                "scrolled back to start",
+                () => Precision.AlmostEquals(scroll.Current, 0, 0.1f)
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(scroll.Button);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(scroll.Button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("scrolled to end", () => scroll.IsScrolledToEnd());
         }

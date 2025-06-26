@@ -26,36 +26,39 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private UserModSelectOverlay modOverlay = null!;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            screenFooter = new ScreenFooter();
-
-            Child = contentContainer = new DependencyProvidingContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                CachedDependencies = new (Type, object)[]
+                screenFooter = new ScreenFooter();
+
+                Child = contentContainer = new DependencyProvidingContainer
                 {
-                    (typeof(ScreenFooter), screenFooter)
-                },
-                Children = new Drawable[]
-                {
-                    modOverlay = new UserModSelectOverlay { ShowPresets = true },
-                    new PopoverContainer
+                    RelativeSizeAxes = Axes.Both,
+                    CachedDependencies = new (Type, object)[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Depth = float.MinValue,
-                        Child = screenFooter,
+                        (typeof(ScreenFooter), screenFooter),
                     },
-                },
-            };
+                    Children = new Drawable[]
+                    {
+                        modOverlay = new UserModSelectOverlay { ShowPresets = true },
+                        new PopoverContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MinValue,
+                            Child = screenFooter,
+                        },
+                    },
+                };
 
-            screenFooter.SetButtons(new ScreenFooterButton[]
-            {
-                new FooterButtonMods(modOverlay) { Current = SelectedMods },
-                new FooterButtonRandom(),
-                new FooterButtonOptions(),
+                screenFooter.SetButtons(
+                    new ScreenFooterButton[]
+                    {
+                        new FooterButtonMods(modOverlay) { Current = SelectedMods },
+                        new FooterButtonRandom(),
+                        new FooterButtonOptions(),
+                    }
+                );
             });
-        });
 
         [SetUpSteps]
         public void SetUpSteps()
@@ -67,9 +70,7 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         /// Transition when moving from a screen with no buttons to a screen with buttons.
         /// </summary>
         [Test]
-        public void TestButtonsIn()
-        {
-        }
+        public void TestButtonsIn() { }
 
         /// <summary>
         /// Transition when moving from a screen with buttons to a screen with no buttons.
@@ -77,7 +78,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestButtonsOut()
         {
-            AddStep("clear buttons", () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>()));
+            AddStep(
+                "clear buttons",
+                () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>())
+            );
         }
 
         /// <summary>
@@ -86,12 +90,18 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestReplaceButtons()
         {
-            AddStep("replace buttons", () => screenFooter.SetButtons(new[]
-            {
-                new ScreenFooterButton { Text = "One", Action = () => { } },
-                new ScreenFooterButton { Text = "Two", Action = () => { } },
-                new ScreenFooterButton { Text = "Three", Action = () => { } },
-            }));
+            AddStep(
+                "replace buttons",
+                () =>
+                    screenFooter.SetButtons(
+                        new[]
+                        {
+                            new ScreenFooterButton { Text = "One", Action = () => { } },
+                            new ScreenFooterButton { Text = "Two", Action = () => { } },
+                            new ScreenFooterButton { Text = "Three", Action = () => { } },
+                        }
+                    )
+            );
         }
 
         [Test]
@@ -99,27 +109,50 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             TestShearedOverlayContainer externalOverlay = null!;
 
-            AddStep("add overlay", () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer()));
-            AddStep("set buttons", () => screenFooter.SetButtons(new[]
-            {
-                new ScreenFooterButton(externalOverlay)
-                {
-                    AccentColour = Dependencies.Get<OsuColour>().Orange1,
-                    Icon = FontAwesome.Solid.Toolbox,
-                    Text = "One",
-                },
-                new ScreenFooterButton { Text = "Two", Action = () => { } },
-                new ScreenFooterButton { Text = "Three", Action = () => { } },
-            }));
+            AddStep(
+                "add overlay",
+                () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer())
+            );
+            AddStep(
+                "set buttons",
+                () =>
+                    screenFooter.SetButtons(
+                        new[]
+                        {
+                            new ScreenFooterButton(externalOverlay)
+                            {
+                                AccentColour = Dependencies.Get<OsuColour>().Orange1,
+                                Icon = FontAwesome.Solid.Toolbox,
+                                Text = "One",
+                            },
+                            new ScreenFooterButton { Text = "Two", Action = () => { } },
+                            new ScreenFooterButton { Text = "Three", Action = () => { } },
+                        }
+                    )
+            );
             AddWaitStep("wait for transition", 3);
 
             AddStep("show overlay", () => externalOverlay.Show());
             contentDisplayed();
-            AddUntilStep("other buttons hidden", () => screenFooter.ChildrenOfType<ScreenFooterButton>().Skip(1).All(b => b.Child.Parent!.Y > 0));
+            AddUntilStep(
+                "other buttons hidden",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<ScreenFooterButton>()
+                        .Skip(1)
+                        .All(b => b.Child.Parent!.Y > 0)
+            );
 
             AddStep("hide overlay", () => externalOverlay.Hide());
             contentHidden();
-            AddUntilStep("other buttons returned", () => screenFooter.ChildrenOfType<ScreenFooterButton>().Skip(1).All(b => b.ChildrenOfType<Container>().First().Y == 0));
+            AddUntilStep(
+                "other buttons returned",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<ScreenFooterButton>()
+                        .Skip(1)
+                        .All(b => b.ChildrenOfType<Container>().First().Y == 0)
+            );
         }
 
         [Test]
@@ -128,9 +161,15 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             TestShearedOverlayContainer externalOverlay = null!;
 
             AddStep("hide footer", () => screenFooter.Hide());
-            AddStep("remove buttons", () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>()));
+            AddStep(
+                "remove buttons",
+                () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>())
+            );
 
-            AddStep("add external overlay", () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer()));
+            AddStep(
+                "add external overlay",
+                () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer())
+            );
             AddStep("show external overlay", () => externalOverlay.Show());
             AddAssert("footer shown", () => screenFooter.State.Value == Visibility.Visible);
             contentDisplayed();
@@ -140,7 +179,14 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             contentHidden();
 
             AddStep("show footer", () => screenFooter.Show());
-            AddAssert("content still hidden from footer", () => screenFooter.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>().SingleOrDefault()?.IsPresent != true);
+            AddAssert(
+                "content still hidden from footer",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>()
+                        .SingleOrDefault()
+                        ?.IsPresent != true
+            );
 
             AddStep("show external overlay", () => externalOverlay.Show());
             AddAssert("footer still visible", () => screenFooter.State.Value == Visibility.Visible);
@@ -158,22 +204,40 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             TestShearedOverlayContainer externalOverlay = null!;
 
             AddStep("hide footer", () => screenFooter.Hide());
-            AddStep("remove buttons", () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>()));
+            AddStep(
+                "remove buttons",
+                () => screenFooter.SetButtons(Array.Empty<ScreenFooterButton>())
+            );
 
-            AddStep("add external overlay", () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer()));
+            AddStep(
+                "add external overlay",
+                () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer())
+            );
             AddStep("show external overlay", () => externalOverlay.Show());
             AddAssert("footer shown", () => screenFooter.State.Value == Visibility.Visible);
 
-            AddStep("press back", () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick());
+            AddStep(
+                "press back",
+                () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick()
+            );
             AddAssert("overlay hidden", () => externalOverlay.State.Value == Visibility.Hidden);
             AddAssert("footer hidden", () => screenFooter.State.Value == Visibility.Hidden);
 
             AddStep("show external overlay", () => externalOverlay.Show());
             AddStep("set block count", () => externalOverlay.BackButtonCount = 1);
-            AddStep("press back", () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick());
-            AddAssert("overlay still visible", () => externalOverlay.State.Value == Visibility.Visible);
+            AddStep(
+                "press back",
+                () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick()
+            );
+            AddAssert(
+                "overlay still visible",
+                () => externalOverlay.State.Value == Visibility.Visible
+            );
             AddAssert("footer still shown", () => screenFooter.State.Value == Visibility.Visible);
-            AddStep("press back again", () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick());
+            AddStep(
+                "press back again",
+                () => this.ChildrenOfType<ScreenBackButton>().Single().TriggerClick()
+            );
             AddAssert("overlay hidden", () => externalOverlay.State.Value == Visibility.Hidden);
             AddAssert("footer hidden", () => screenFooter.State.Value == Visibility.Hidden);
         }
@@ -184,16 +248,45 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             TestShearedOverlayContainer externalOverlay = null!;
 
             AddStep("show mod overlay", () => modOverlay.Show());
-            AddUntilStep("mod footer content shown", () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent, () => Is.True);
+            AddUntilStep(
+                "mod footer content shown",
+                () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent,
+                () => Is.True
+            );
 
-            AddStep("add external overlay", () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer()));
+            AddStep(
+                "add external overlay",
+                () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer())
+            );
             AddUntilStep("wait for load", () => externalOverlay.IsLoaded);
-            AddAssert("mod footer content still shown", () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent, () => Is.True);
-            AddAssert("external overlay content not shown", () => this.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>().SingleOrDefault()?.IsPresent, () => Is.Not.True);
+            AddAssert(
+                "mod footer content still shown",
+                () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent,
+                () => Is.True
+            );
+            AddAssert(
+                "external overlay content not shown",
+                () =>
+                    this.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>()
+                        .SingleOrDefault()
+                        ?.IsPresent,
+                () => Is.Not.True
+            );
 
             AddStep("hide mod overlay", () => modOverlay.Hide());
-            AddUntilStep("mod footer content hidden", () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent, () => Is.Not.True);
-            AddAssert("external overlay content still not shown", () => this.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>().SingleOrDefault()?.IsPresent, () => Is.Not.True);
+            AddUntilStep(
+                "mod footer content hidden",
+                () => this.ChildrenOfType<ModSelectFooterContent>().SingleOrDefault()?.IsPresent,
+                () => Is.Not.True
+            );
+            AddAssert(
+                "external overlay content still not shown",
+                () =>
+                    this.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>()
+                        .SingleOrDefault()
+                        ?.IsPresent,
+                () => Is.Not.True
+            );
         }
 
         [Test]
@@ -201,48 +294,95 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             TestShearedOverlayContainer externalOverlay = null!;
 
-            AddStep("add overlay", () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer()));
-            AddStep("set buttons", () => screenFooter.SetButtons(new[]
-            {
-                new ScreenFooterButton(externalOverlay)
-                {
-                    AccentColour = Dependencies.Get<OsuColour>().Orange1,
-                    Icon = FontAwesome.Solid.Toolbox,
-                    Text = "One",
-                },
-                new ScreenFooterButton { Text = "Two", Action = () => { } },
-                new ScreenFooterButton { Text = "Three", Action = () => { } },
-            }));
+            AddStep(
+                "add overlay",
+                () => contentContainer.Add(externalOverlay = new TestShearedOverlayContainer())
+            );
+            AddStep(
+                "set buttons",
+                () =>
+                    screenFooter.SetButtons(
+                        new[]
+                        {
+                            new ScreenFooterButton(externalOverlay)
+                            {
+                                AccentColour = Dependencies.Get<OsuColour>().Orange1,
+                                Icon = FontAwesome.Solid.Toolbox,
+                                Text = "One",
+                            },
+                            new ScreenFooterButton { Text = "Two", Action = () => { } },
+                            new ScreenFooterButton { Text = "Three", Action = () => { } },
+                        }
+                    )
+            );
             AddWaitStep("wait for transition", 3);
 
             AddStep("show overlay", () => externalOverlay.Show());
             contentDisplayed();
-            AddUntilStep("other buttons hidden", () => screenFooter.ChildrenOfType<ScreenFooterButton>().Skip(1).All(b => b.Child.Parent!.Y > 0));
+            AddUntilStep(
+                "other buttons hidden",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<ScreenFooterButton>()
+                        .Skip(1)
+                        .All(b => b.Child.Parent!.Y > 0)
+            );
 
-            AddStep("resize active button", () => this.ChildrenOfType<ScreenFooterButton>().First().ResizeWidthTo(240, 300, Easing.OutQuint));
-            AddStep("resize active button back", () => this.ChildrenOfType<ScreenFooterButton>().First().ResizeWidthTo(116, 300, Easing.OutQuint));
+            AddStep(
+                "resize active button",
+                () =>
+                    this.ChildrenOfType<ScreenFooterButton>()
+                        .First()
+                        .ResizeWidthTo(240, 300, Easing.OutQuint)
+            );
+            AddStep(
+                "resize active button back",
+                () =>
+                    this.ChildrenOfType<ScreenFooterButton>()
+                        .First()
+                        .ResizeWidthTo(116, 300, Easing.OutQuint)
+            );
 
             AddStep("hide overlay", () => externalOverlay.Hide());
             contentHidden();
-            AddUntilStep("other buttons returned", () => screenFooter.ChildrenOfType<ScreenFooterButton>().Skip(1).All(b => b.ChildrenOfType<Container>().First().Y == 0));
+            AddUntilStep(
+                "other buttons returned",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<ScreenFooterButton>()
+                        .Skip(1)
+                        .All(b => b.ChildrenOfType<Container>().First().Y == 0)
+            );
         }
 
         private void contentHidden()
         {
-            AddUntilStep("content hidden from footer", () => screenFooter.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>().SingleOrDefault()?.IsPresent != true);
+            AddUntilStep(
+                "content hidden from footer",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>()
+                        .SingleOrDefault()
+                        ?.IsPresent != true
+            );
         }
 
         private void contentDisplayed()
         {
-            AddUntilStep("content displayed in footer", () => screenFooter.ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>().Single().IsPresent);
+            AddUntilStep(
+                "content displayed in footer",
+                () =>
+                    screenFooter
+                        .ChildrenOfType<TestShearedOverlayContainer.TestFooterContent>()
+                        .Single()
+                        .IsPresent
+            );
         }
 
         private partial class TestShearedOverlayContainer : ShearedOverlayContainer
         {
             public TestShearedOverlayContainer()
-                : base(OverlayColourScheme.Orange)
-            {
-            }
+                : base(OverlayColourScheme.Orange) { }
 
             [BackgroundDependencyLoader]
             private void load()
@@ -280,20 +420,18 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                         {
                             new ShearedButton(200) { Text = "Action #1", Action = () => { } },
                             new ShearedButton(140) { Text = "Action #2", Action = () => { } },
-                        }
+                        },
                     };
                 }
 
                 protected override void PopIn()
                 {
-                    this.MoveToY(0, 400, Easing.OutQuint)
-                        .FadeIn(400, Easing.OutQuint);
+                    this.MoveToY(0, 400, Easing.OutQuint).FadeIn(400, Easing.OutQuint);
                 }
 
                 protected override void PopOut()
                 {
-                    this.MoveToY(-20f, 200, Easing.OutQuint)
-                        .FadeOut(200, Easing.OutQuint);
+                    this.MoveToY(-20f, 200, Easing.OutQuint).FadeOut(200, Easing.OutQuint);
                 }
             }
         }

@@ -65,7 +65,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
         [Resolved]
         private BindableBeatDivisor beatDivisor { get; set; }
 
-        private readonly LayoutValue gridCache = new LayoutValue(Invalidation.RequiredParentSizeToFit);
+        private readonly LayoutValue gridCache = new LayoutValue(
+            Invalidation.RequiredParentSizeToFit
+        );
 
         /// <summary>
         /// Creates a new <see cref="DistanceSnapGrid"/>.
@@ -74,7 +76,12 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <param name="startTime">The snapping time at <see cref="StartPosition"/>.</param>
         /// <param name="endTime">The time at which the snapping grid should end. If null, the grid will continue until the bounds of the screen are exceeded.</param>
         /// <param name="sliderVelocitySource">The reference object with slider velocity to include in the calculations for distance snapping.</param>
-        protected DistanceSnapGrid(Vector2 startPosition, double startTime, double? endTime = null, [CanBeNull] IHasSliderVelocity sliderVelocitySource = null)
+        protected DistanceSnapGrid(
+            Vector2 startPosition,
+            double startTime,
+            double? endTime = null,
+            [CanBeNull] IHasSliderVelocity sliderVelocitySource = null
+        )
         {
             LatestEndTime = endTime;
             SliderVelocitySource = sliderVelocitySource;
@@ -107,7 +114,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (LatestEndTime == null)
                 MaxIntervals = int.MaxValue;
             else
-                MaxIntervals = (int)((LatestEndTime.Value - StartTime) / SnapProvider.DistanceToDuration(beatSnapDistance, StartTime, SliderVelocitySource));
+                MaxIntervals = (int)(
+                    (LatestEndTime.Value - StartTime)
+                    / SnapProvider.DistanceToDuration(
+                        beatSnapDistance,
+                        StartTime,
+                        SliderVelocitySource
+                    )
+                );
 
             gridCache.Invalidate();
         }
@@ -138,7 +152,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// thus fixing the possible positions to a set distance relative from the <see cref="StartTime"/>.
         /// </param>
         /// <returns>A tuple containing the snapped position in coordinate space local to this <see cref="DistanceSnapGrid"/> and the respective time value.</returns>
-        public abstract (Vector2 position, double time) GetSnappedPosition(Vector2 position, double? fixedTime = null);
+        public abstract (Vector2 position, double time) GetSnappedPosition(
+            Vector2 position,
+            double? fixedTime = null
+        );
 
         /// <summary>
         /// Retrieves the applicable colour for a beat index.
@@ -162,7 +179,13 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (Precision.DefinitelyBigger(beatIndex, fractionalBeatIndex, 0.01))
                 beatIndex = (int)Math.Floor(fractionalBeatIndex);
 
-            var colour = BindableBeatDivisor.GetColourFor(BindableBeatDivisor.GetDivisorForBeatIndex(beatIndex + placementIndex + 1, beatDivisor.Value), Colours);
+            var colour = BindableBeatDivisor.GetColourFor(
+                BindableBeatDivisor.GetDivisorForBeatIndex(
+                    beatIndex + placementIndex + 1,
+                    beatDivisor.Value
+                ),
+                Colours
+            );
 
             int repeatIndex = placementIndex / beatDivisor.Value;
             return colour.Opacity(0.5f / (repeatIndex + 1));

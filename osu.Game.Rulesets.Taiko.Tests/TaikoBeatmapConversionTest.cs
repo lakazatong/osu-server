@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
                 IsCentre = (hitObject as Hit)?.Type == HitType.Centre,
                 IsDrumRoll = hitObject is DrumRoll,
                 IsSwell = hitObject is Swell,
-                IsStrong = (hitObject as TaikoStrongableHitObject)?.IsStrong == true
+                IsStrong = (hitObject as TaikoStrongableHitObject)?.IsStrong == true,
             };
         }
 
@@ -58,13 +58,13 @@ namespace osu.Game.Rulesets.Taiko.Tests
         public bool IsSwell;
         public bool IsStrong;
 
-        public bool Equals(ConvertValue other)
-            => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
-               && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
-               && IsRim == other.IsRim
-               && IsCentre == other.IsCentre
-               && IsDrumRoll == other.IsDrumRoll
-               && IsSwell == other.IsSwell
-               && IsStrong == other.IsStrong;
+        public bool Equals(ConvertValue other) =>
+            Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
+            && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
+            && IsRim == other.IsRim
+            && IsCentre == other.IsCentre
+            && IsDrumRoll == other.IsDrumRoll
+            && IsSwell == other.IsSwell
+            && IsStrong == other.IsStrong;
     }
 }

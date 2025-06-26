@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
         /// <summary>
         /// The <see cref="AlternatingMonoPattern"/>s that are grouped together within this <see cref="RepeatingHitPatterns"/>.
         /// </summary>
-        public readonly List<AlternatingMonoPattern> AlternatingMonoPatterns = new List<AlternatingMonoPattern>();
+        public readonly List<AlternatingMonoPattern> AlternatingMonoPatterns =
+            new List<AlternatingMonoPattern>();
 
         /// <summary>
         /// The first <see cref="TaikoDifficultyHitObject"/> in this <see cref="RepeatingHitPatterns"/>
@@ -49,11 +50,16 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
         /// </summary>
         private bool isRepetitionOf(RepeatingHitPatterns other)
         {
-            if (AlternatingMonoPatterns.Count != other.AlternatingMonoPatterns.Count) return false;
+            if (AlternatingMonoPatterns.Count != other.AlternatingMonoPatterns.Count)
+                return false;
 
             for (int i = 0; i < Math.Min(AlternatingMonoPatterns.Count, 2); i++)
             {
-                if (!AlternatingMonoPatterns[i].HasIdenticalMonoLength(other.AlternatingMonoPatterns[i])) return false;
+                if (
+                    !AlternatingMonoPatterns[i]
+                        .HasIdenticalMonoLength(other.AlternatingMonoPatterns[i])
+                )
+                    return false;
             }
 
             return true;
@@ -83,7 +89,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour.Data
                 }
 
                 other = other.Previous;
-                if (other == null) break;
+                if (other == null)
+                    break;
 
                 ++interval;
             }

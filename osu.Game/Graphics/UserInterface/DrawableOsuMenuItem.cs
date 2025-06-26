@@ -34,9 +34,7 @@ namespace osu.Game.Graphics.UserInterface
         private HoverClickSounds hoverClickSounds;
 
         public DrawableOsuMenuItem(MenuItem item)
-            : base(item)
-        {
-        }
+            : base(item) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -44,27 +42,31 @@ namespace osu.Game.Graphics.UserInterface
             BackgroundColour = Color4.Transparent;
             BackgroundColourHover = Color4Extensions.FromHex(@"172023");
 
-            AddInternal(hotkey = new HotkeyDisplay
-            {
-                Alpha = 0,
-                Anchor = Anchor.CentreRight,
-                Origin = Anchor.CentreRight,
-                Margin = new MarginPadding { Right = 10, Top = 1 },
-            });
+            AddInternal(
+                hotkey = new HotkeyDisplay
+                {
+                    Alpha = 0,
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Margin = new MarginPadding { Right = 10, Top = 1 },
+                }
+            );
             AddInternal(hoverClickSounds = new HoverClickSounds());
 
             updateText();
 
             if (showChevron)
             {
-                AddInternal(new SpriteIcon
-                {
-                    Margin = new MarginPadding { Horizontal = 10, },
-                    Size = new Vector2(8),
-                    Icon = FontAwesome.Solid.ChevronRight,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                });
+                AddInternal(
+                    new SpriteIcon
+                    {
+                        Margin = new MarginPadding { Horizontal = 10 },
+                        Size = new Vector2(8),
+                        Icon = FontAwesome.Solid.ChevronRight,
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                    }
+                );
             }
         }
 
@@ -112,7 +114,10 @@ namespace osu.Game.Graphics.UserInterface
             // the gist of it is that while the hotkey display is not in the text / "content" that determines sizing
             // (because it cannot be, because we want the hotkey display to align to the *right* and not the left),
             // enough padding to fit the hotkey with _its_ spacing is added as padding of the text to compensate.
-            text.Padding = new MarginPadding { Right = hotkey.Alpha > 0 || showChevron ? hotkey.DrawWidth + 15 : 0 };
+            text.Padding = new MarginPadding
+            {
+                Right = hotkey.Alpha > 0 || showChevron ? hotkey.DrawWidth + 15 : 0,
+            };
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -147,6 +152,7 @@ namespace osu.Game.Graphics.UserInterface
         }
 
         protected sealed override Drawable CreateContent() => text = CreateTextContainer();
+
         protected virtual TextContainer CreateTextContainer() => new TextContainer();
 
         protected partial class TextContainer : Container, IHasText
@@ -177,7 +183,11 @@ namespace osu.Game.Graphics.UserInterface
                     AutoSizeAxes = Axes.Both,
                     Spacing = new Vector2(10),
                     Direction = FillDirection.Horizontal,
-                    Padding = new MarginPadding { Horizontal = MARGIN_HORIZONTAL, Vertical = MARGIN_VERTICAL, },
+                    Padding = new MarginPadding
+                    {
+                        Horizontal = MARGIN_HORIZONTAL,
+                        Vertical = MARGIN_VERTICAL,
+                    },
 
                     Children = new Drawable[]
                     {
@@ -206,11 +216,14 @@ namespace osu.Game.Graphics.UserInterface
                                     Alpha = 0,
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                    Font = OsuFont.GetFont(size: TEXT_SIZE, weight: FontWeight.Bold),
-                                }
-                            }
+                                    Font = OsuFont.GetFont(
+                                        size: TEXT_SIZE,
+                                        weight: FontWeight.Bold
+                                    ),
+                                },
+                            },
                         },
-                    }
+                    },
                 };
             }
         }

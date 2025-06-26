@@ -17,12 +17,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Playing"
         /// </summary>
-        public static LocalisableString Playing => new TranslatableString(getKey(@"playing"), @"Playing");
+        public static LocalisableString Playing =>
+            new TranslatableString(getKey(@"playing"), @"Playing");
 
         /// <summary>
         /// "Open (Private)"
         /// </summary>
-        public static LocalisableString OpenPrivate => new TranslatableString(getKey(@"open_private"), @"Open (Private)");
+        public static LocalisableString OpenPrivate =>
+            new TranslatableString(getKey(@"open_private"), @"Open (Private)");
 
         /// <summary>
         /// "Open"

@@ -45,11 +45,7 @@ namespace osu.Game.Tournament.Models
                 CoverUrl = CoverUrl,
             };
 
-            user.Statistics = new UserStatistics
-            {
-                User = user,
-                GlobalRank = Rank
-            };
+            user.Statistics = new UserStatistics { User = user, GlobalRank = Rank };
 
             return user;
         }

@@ -20,6 +20,8 @@ namespace osu.Desktop
             }
         }
 
-        public override bool OnBattery => SDL2.SDL.SDL_GetPowerInfo(out _, out _) == SDL2.SDL.SDL_PowerState.SDL_POWERSTATE_ON_BATTERY;
+        public override bool OnBattery =>
+            SDL2.SDL.SDL_GetPowerInfo(out _, out _)
+            == SDL2.SDL.SDL_PowerState.SDL_POWERSTATE_ON_BATTERY;
     }
 }

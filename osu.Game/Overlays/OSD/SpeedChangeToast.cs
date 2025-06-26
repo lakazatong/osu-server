@@ -10,8 +10,12 @@ namespace osu.Game.Overlays.OSD
     public partial class SpeedChangeToast : Toast
     {
         public SpeedChangeToast(RealmKeyBindingStore keyBindingStore, double newSpeed)
-            : base(ModSelectOverlayStrings.ModCustomisation, ToastStrings.SpeedChangedTo(newSpeed), keyBindingStore.GetBindingsStringFor(GlobalAction.IncreaseModSpeed) + " / " + keyBindingStore.GetBindingsStringFor(GlobalAction.DecreaseModSpeed))
-        {
-        }
+            : base(
+                ModSelectOverlayStrings.ModCustomisation,
+                ToastStrings.SpeedChangedTo(newSpeed),
+                keyBindingStore.GetBindingsStringFor(GlobalAction.IncreaseModSpeed)
+                    + " / "
+                    + keyBindingStore.GetBindingsStringFor(GlobalAction.DecreaseModSpeed)
+            ) { }
     }
 }

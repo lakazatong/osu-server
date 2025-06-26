@@ -16,7 +16,9 @@ namespace osu.Game.Tests.Beatmaps
         [Test]
         public void TestSingleSpan()
         {
-            var events = SliderEventGenerator.Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 1).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 1)
+                .ToArray();
 
             Assert.That(events[0].Type, Is.EqualTo(SliderEventType.Head));
             Assert.That(events[0].Time, Is.EqualTo(start_time));
@@ -31,7 +33,9 @@ namespace osu.Game.Tests.Beatmaps
         [Test]
         public void TestRepeat()
         {
-            var events = SliderEventGenerator.Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 2).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 2)
+                .ToArray();
 
             Assert.That(events[0].Type, Is.EqualTo(SliderEventType.Head));
             Assert.That(events[0].Time, Is.EqualTo(start_time));
@@ -52,7 +56,9 @@ namespace osu.Game.Tests.Beatmaps
         [Test]
         public void TestNonEvenTicks()
         {
-            var events = SliderEventGenerator.Generate(start_time, span_duration, 1, 300, span_duration, 2).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, 1, 300, span_duration, 2)
+                .ToArray();
 
             Assert.That(events[0].Type, Is.EqualTo(SliderEventType.Head));
             Assert.That(events[0].Time, Is.EqualTo(start_time));
@@ -85,10 +91,15 @@ namespace osu.Game.Tests.Beatmaps
         [Test]
         public void TestLastTickOffset()
         {
-            var events = SliderEventGenerator.Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 1).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, 1, span_duration / 2, span_duration, 1)
+                .ToArray();
 
             Assert.That(events[2].Type, Is.EqualTo(SliderEventType.LegacyLastTick));
-            Assert.That(events[2].Time, Is.EqualTo(span_duration + SliderEventGenerator.TAIL_LENIENCY));
+            Assert.That(
+                events[2].Time,
+                Is.EqualTo(span_duration + SliderEventGenerator.TAIL_LENIENCY)
+            );
         }
 
         [Test]
@@ -97,7 +108,9 @@ namespace osu.Game.Tests.Beatmaps
             const double velocity = 5;
             const double min_distance = velocity * 10;
 
-            var events = SliderEventGenerator.Generate(start_time, span_duration, velocity, velocity, span_duration, 2).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, velocity, velocity, span_duration, 2)
+                .ToArray();
 
             Assert.Multiple(() =>
             {
@@ -108,7 +121,11 @@ namespace osu.Game.Tests.Beatmaps
                     if (events[tickIndex].Type != SliderEventType.Tick)
                         continue;
 
-                    Assert.That(events[tickIndex].Time, Is.LessThan(span_duration - min_distance).Or.GreaterThan(span_duration + min_distance));
+                    Assert.That(
+                        events[tickIndex].Time,
+                        Is.LessThan(span_duration - min_distance)
+                            .Or.GreaterThan(span_duration + min_distance)
+                    );
                 }
             });
         }
@@ -116,7 +133,9 @@ namespace osu.Game.Tests.Beatmaps
         [Test]
         public void TestRepeatsGeneratedEvenForZeroLengthSlider()
         {
-            var events = SliderEventGenerator.Generate(start_time, span_duration, 1, span_duration / 2, 0, 2).ToArray();
+            var events = SliderEventGenerator
+                .Generate(start_time, span_duration, 1, span_duration / 2, 0, 2)
+                .ToArray();
 
             Assert.That(events[0].Type, Is.EqualTo(SliderEventType.Head));
             Assert.That(events[0].Time, Is.EqualTo(start_time));

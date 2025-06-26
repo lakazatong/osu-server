@@ -23,7 +23,8 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private readonly double startTime;
         private readonly float startAngle;
-        private readonly List<(float deltaAngle, double duration)> sequences = new List<(float deltaAngle, double duration)>();
+        private readonly List<(float deltaAngle, double duration)> sequences =
+            new List<(float deltaAngle, double duration)>();
 
         /// <summary>
         /// Creates a new <see cref="SpinFramesGenerator"/> that can be used to generate spinner spin frames.
@@ -85,10 +86,26 @@ namespace osu.Game.Rulesets.Osu.Tests
 
                 // Intermediate spin frames.
                 for (; lastTime < seqEndTime; lastTime += 10)
-                    frames.Add(new OsuReplayFrame(lastTime, calcOffsetAt((lastTime - seqStartTime) / (seqEndTime - seqStartTime), seqStartAngle, seqEndAngle), OsuAction.LeftButton));
+                    frames.Add(
+                        new OsuReplayFrame(
+                            lastTime,
+                            calcOffsetAt(
+                                (lastTime - seqStartTime) / (seqEndTime - seqStartTime),
+                                seqStartAngle,
+                                seqEndAngle
+                            ),
+                            OsuAction.LeftButton
+                        )
+                    );
 
                 // Final frame at the end of the current spin.
-                frames.Add(new OsuReplayFrame(seqEndTime, calcOffsetAt(1, seqStartAngle, seqEndAngle), OsuAction.LeftButton));
+                frames.Add(
+                    new OsuReplayFrame(
+                        seqEndTime,
+                        calcOffsetAt(1, seqStartAngle, seqEndAngle),
+                        OsuAction.LeftButton
+                    )
+                );
 
                 lastTime = seqEndTime;
                 lastAngle = seqEndAngle;
@@ -97,7 +114,9 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             // Key release frame.
             if (frames.Count > 0)
-                frames.Add(new OsuReplayFrame(frames[^1].Time, ((OsuReplayFrame)frames[^1]).Position));
+                frames.Add(
+                    new OsuReplayFrame(frames[^1].Time, ((OsuReplayFrame)frames[^1]).Position)
+                );
 
             return frames;
         }
@@ -105,7 +124,8 @@ namespace osu.Game.Rulesets.Osu.Tests
         private static Vector2 calcOffsetAt(double p, float startAngle, float endAngle)
         {
             float angle = startAngle + (endAngle - startAngle) * (float)p;
-            return new Vector2(256, 192) + centre_spin_offset * new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+            return new Vector2(256, 192)
+                + centre_spin_offset * new Vector2(MathF.Cos(angle), MathF.Sin(angle));
         }
     }
 }

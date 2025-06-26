@@ -43,7 +43,9 @@ namespace osu.Game.Input.Handlers
             public void Apply(InputState state, IInputStateChangeHandler handler)
             {
                 if (!(state is RulesetInputManagerInputState<T> inputState))
-                    throw new InvalidOperationException($"{nameof(ReplayState<T>)} should only be applied to a {nameof(RulesetInputManagerInputState<T>)}");
+                    throw new InvalidOperationException(
+                        $"{nameof(ReplayState<T>)} should only be applied to a {nameof(RulesetInputManagerInputState<T>)}"
+                    );
 
                 T[] released = Array.Empty<T>();
                 T[] pressed = Array.Empty<T>();
@@ -66,7 +68,9 @@ namespace osu.Game.Input.Handlers
 
                 inputState.LastReplayState = this;
 
-                handler.HandleInputStateChange(new ReplayStateChangeEvent<T>(state, this, released, pressed));
+                handler.HandleInputStateChange(
+                    new ReplayStateChangeEvent<T>(state, this, released, pressed)
+                );
             }
         }
 
@@ -75,7 +79,12 @@ namespace osu.Game.Input.Handlers
             public readonly T[] ReleasedActions;
             public readonly T[] PressedActions;
 
-            public ReplayStateChangeEvent(InputState state, IInput input, T[] releasedActions, T[] pressedActions)
+            public ReplayStateChangeEvent(
+                InputState state,
+                IInput input,
+                T[] releasedActions,
+                T[] pressedActions
+            )
                 : base(state, input)
             {
                 ReleasedActions = releasedActions;

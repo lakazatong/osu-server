@@ -13,10 +13,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// The spacing between grid lines of this <see cref="TriangularPositionSnapGrid"/>.
         /// </summary>
-        public BindableFloat Spacing { get; } = new BindableFloat(1f)
-        {
-            MinValue = 0f,
-        };
+        public BindableFloat Spacing { get; } = new BindableFloat(1f) { MinValue = 0f };
 
         /// <summary>
         /// The rotation in degrees of the grid lines of this <see cref="TriangularPositionSnapGrid"/>.
@@ -37,9 +34,18 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             var drawSize = DrawSize;
             float stepSpacing = Spacing.Value * sqrt3_over2;
-            var step1 = GeometryUtils.RotateVector(new Vector2(stepSpacing, 0), -GridLineRotation.Value - 30);
-            var step2 = GeometryUtils.RotateVector(new Vector2(stepSpacing, 0), -GridLineRotation.Value - 90);
-            var step3 = GeometryUtils.RotateVector(new Vector2(stepSpacing, 0), -GridLineRotation.Value - 150);
+            var step1 = GeometryUtils.RotateVector(
+                new Vector2(stepSpacing, 0),
+                -GridLineRotation.Value - 30
+            );
+            var step2 = GeometryUtils.RotateVector(
+                new Vector2(stepSpacing, 0),
+                -GridLineRotation.Value - 90
+            );
+            var step3 = GeometryUtils.RotateVector(
+                new Vector2(stepSpacing, 0),
+                -GridLineRotation.Value - 150
+            );
 
             GenerateGridLines(step1, drawSize);
             GenerateGridLines(-step1, drawSize);
@@ -55,10 +61,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
         public override Vector2 GetSnappedPosition(Vector2 original)
         {
-            Vector2 relativeToStart = GeometryUtils.RotateVector(original - StartPosition.Value, GridLineRotation.Value);
+            Vector2 relativeToStart = GeometryUtils.RotateVector(
+                original - StartPosition.Value,
+                GridLineRotation.Value
+            );
             Vector2 hex = pixelToHex(relativeToStart);
 
-            return StartPosition.Value + GeometryUtils.RotateVector(hexToPixel(hex), -GridLineRotation.Value);
+            return StartPosition.Value
+                + GeometryUtils.RotateVector(hexToPixel(hex), -GridLineRotation.Value);
         }
 
         private Vector2 pixelToHex(Vector2 pixel)
@@ -83,7 +93,10 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             // Taken from <https://www.redblobgames.com/grids/hexagons/#hex-to-pixel>
             // with modifications for the different definition of size.
-            return new Vector2(Spacing.Value * (hex.X - hex.Y / 2), Spacing.Value * one_over_sqrt3 * 1.5f * hex.Y);
+            return new Vector2(
+                Spacing.Value * (hex.X - hex.Y / 2),
+                Spacing.Value * one_over_sqrt3 * 1.5f * hex.Y
+            );
         }
     }
 }

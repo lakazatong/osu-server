@@ -34,7 +34,10 @@ namespace osu.Game.Tests.Visual.Editing
         [Resolved]
         private AudioManager audio { get; set; }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null) => new WaveformTestBeatmap(audio);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) => new WaveformTestBeatmap(audio);
 
         protected override void LoadComplete()
         {
@@ -51,31 +54,33 @@ namespace osu.Game.Tests.Visual.Editing
 
             Composer.Alpha = 0;
 
-            Add(new OsuContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new OsuContextMenuContainer
                 {
-                    EditorBeatmap,
-                    Composer,
-                    new FillFlowContainer
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        AutoSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 5),
-                        Children = new Drawable[]
+                        EditorBeatmap,
+                        Composer,
+                        new FillFlowContainer
                         {
-                            new StartStopButton(),
-                            new AudioVisualiser(),
-                        }
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 5),
+                            Children = new Drawable[]
+                            {
+                                new StartStopButton(),
+                                new AudioVisualiser(),
+                            },
+                        },
+                        TimelineArea = new TimelineArea(CreateTestComponent())
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
                     },
-                    TimelineArea = new TimelineArea(CreateTestComponent())
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
                 }
-            });
+            );
         }
 
         [SetUpSteps]
@@ -103,17 +108,13 @@ namespace osu.Game.Tests.Visual.Editing
 
                 InternalChildren = new[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.25f,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.25f },
                     marker = new Box
                     {
                         RelativePositionAxes = Axes.X,
                         RelativeSizeAxes = Axes.Y,
                         Width = 2,
-                    }
+                    },
                 };
             }
 

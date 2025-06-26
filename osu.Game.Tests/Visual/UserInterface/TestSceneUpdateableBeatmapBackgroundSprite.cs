@@ -41,7 +41,12 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             TestUpdateableBeatmapBackgroundSprite background = null;
 
-            AddStep("load null beatmap", () => Child = background = new TestUpdateableBeatmapBackgroundSprite { RelativeSizeAxes = Axes.Both });
+            AddStep(
+                "load null beatmap",
+                () =>
+                    Child = background =
+                        new TestUpdateableBeatmapBackgroundSprite { RelativeSizeAxes = Axes.Both }
+            );
             AddUntilStep("content loaded", () => background.ContentLoaded);
         }
 
@@ -50,14 +55,17 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             TestUpdateableBeatmapBackgroundSprite background = null;
 
-            AddStep("load local beatmap", () =>
-            {
-                Child = background = new TestUpdateableBeatmapBackgroundSprite
+            AddStep(
+                "load local beatmap",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Beatmap = { Value = testBeatmap.Beatmaps.First() }
-                };
-            });
+                    Child = background = new TestUpdateableBeatmapBackgroundSprite
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Beatmap = { Value = testBeatmap.Beatmaps.First() },
+                    };
+                }
+            );
 
             AddUntilStep("wait for load", () => background.ContentLoaded);
         }
@@ -74,14 +82,17 @@ namespace osu.Game.Tests.Visual.UserInterface
 
                 TestUpdateableBeatmapBackgroundSprite background = null;
 
-                AddStep("load online beatmap", () =>
-                {
-                    Child = background = new TestUpdateableBeatmapBackgroundSprite
+                AddStep(
+                    "load online beatmap",
+                    () =>
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Beatmap = { Value = new APIBeatmap { BeatmapSet = req.Response } }
-                    };
-                });
+                        Child = background = new TestUpdateableBeatmapBackgroundSprite
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Beatmap = { Value = new APIBeatmap { BeatmapSet = req.Response } },
+                        };
+                    }
+                );
 
                 AddUntilStep("wait for load", () => background.ContentLoaded);
             }
@@ -95,41 +106,50 @@ namespace osu.Game.Tests.Visual.UserInterface
             var backgrounds = new List<TestUpdateableBeatmapBackgroundSprite>();
             OsuScrollContainer scrollContainer = null;
 
-            AddStep("create backgrounds hierarchy", () =>
-            {
-                FillFlowContainer backgroundFlow;
-
-                Child = scrollContainer = new OsuScrollContainer
+            AddStep(
+                "create backgrounds hierarchy",
+                () =>
                 {
-                    Size = new Vector2(500),
-                    Child = backgroundFlow = new FillFlowContainer
+                    FillFlowContainer backgroundFlow;
+
+                    Child = scrollContainer = new OsuScrollContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(10),
-                        Padding = new MarginPadding { Bottom = 550 }
+                        Size = new Vector2(500),
+                        Child = backgroundFlow =
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(10),
+                                Padding = new MarginPadding { Bottom = 550 },
+                            },
+                    };
+
+                    for (int i = 0; i < 25; i++)
+                    {
+                        var background = new TestUpdateableBeatmapBackgroundSprite
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        };
+
+                        if (i % 2 == 0)
+                            background.Beatmap.Value = testBeatmap.Beatmaps.First();
+
+                        backgroundFlow.Add(
+                            new Container
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Height = 100,
+                                Masking = true,
+                                Child = background,
+                            }
+                        );
+
+                        backgrounds.Add(background);
                     }
-                };
-
-                for (int i = 0; i < 25; i++)
-                {
-                    var background = new TestUpdateableBeatmapBackgroundSprite { RelativeSizeAxes = Axes.Both };
-
-                    if (i % 2 == 0)
-                        background.Beatmap.Value = testBeatmap.Beatmaps.First();
-
-                    backgroundFlow.Add(new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 100,
-                        Masking = true,
-                        Child = background
-                    });
-
-                    backgrounds.Add(background);
                 }
-            });
+            );
 
             var loadedBackgrounds = backgrounds.Where(b => b.ContentLoaded);
 
@@ -138,11 +158,14 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddUntilStep("all unloaded", () => !loadedBackgrounds.Any());
         }
 
-        private partial class TestUpdateableBeatmapBackgroundSprite : UpdateableBeatmapBackgroundSprite
+        private partial class TestUpdateableBeatmapBackgroundSprite
+            : UpdateableBeatmapBackgroundSprite
         {
             protected override double UnloadDelay => 2000;
 
-            public bool ContentLoaded => ((DelayedLoadUnloadWrapper)InternalChildren.LastOrDefault())?.Content?.IsLoaded ?? false;
+            public bool ContentLoaded =>
+                ((DelayedLoadUnloadWrapper)InternalChildren.LastOrDefault())?.Content?.IsLoaded
+                ?? false;
         }
     }
 }

@@ -108,7 +108,11 @@ namespace osu.Game.Graphics.UserInterfaceV2
             {
                 updateState();
                 playSamples();
-                background.FlashColour(ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark2), 800, Easing.OutQuint);
+                background.FlashColour(
+                    ColourInfo.GradientVertical(colourProvider.Background5, colourProvider.Dark2),
+                    800,
+                    Easing.OutQuint
+                );
             });
             current.BindDisabledChanged(_ => updateState(), true);
         }
@@ -142,9 +146,15 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateState()
         {
-            background.Colour = Current.Disabled ? colourProvider.Background4 : colourProvider.Background5;
-            caption.Colour = Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content2;
-            checkbox.Colour = Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content1;
+            background.Colour = Current.Disabled
+                ? colourProvider.Background4
+                : colourProvider.Background5;
+            caption.Colour = Current.Disabled
+                ? colourProvider.Foreground1
+                : colourProvider.Content2;
+            checkbox.Colour = Current.Disabled
+                ? colourProvider.Foreground1
+                : colourProvider.Content1;
             text.Colour = Current.Disabled ? colourProvider.Foreground1 : colourProvider.Content1;
 
             text.Text = Current.Value ? CommonStrings.Enabled : CommonStrings.Disabled;

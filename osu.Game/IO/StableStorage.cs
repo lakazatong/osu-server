@@ -41,8 +41,9 @@ namespace osu.Game.IO
             // GetFiles returns case insensitive results, so multiple files could exist.
             // Prefer a case-correct match, but fallback to any available.
             string usableConfigFile =
-                configurationFiles.FirstOrDefault(f => f.Contains(Environment.UserName, StringComparison.Ordinal))
-                ?? configurationFiles.FirstOrDefault();
+                configurationFiles.FirstOrDefault(f =>
+                    f.Contains(Environment.UserName, StringComparison.Ordinal)
+                ) ?? configurationFiles.FirstOrDefault();
 
             if (usableConfigFile != null)
             {
@@ -53,7 +54,10 @@ namespace osu.Game.IO
 
                     while ((line = textReader.ReadLine()) != null)
                     {
-                        if (!line.StartsWith("BeatmapDirectory", StringComparison.OrdinalIgnoreCase)) continue;
+                        if (
+                            !line.StartsWith("BeatmapDirectory", StringComparison.OrdinalIgnoreCase)
+                        )
+                            continue;
 
                         string customDirectory = line.Split('=').LastOrDefault()?.Trim();
                         if (customDirectory != null && Path.IsPathFullyQualified(customDirectory))

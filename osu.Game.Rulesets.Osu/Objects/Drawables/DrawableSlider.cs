@@ -41,13 +41,14 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
         private ShakeContainer shakeContainer;
 
-        protected override IEnumerable<Drawable> DimmablePieces => new Drawable[]
-        {
-            // HeadCircle should not be added to this list, as it handles dimming itself
-            TailCircle,
-            repeatContainer,
-            Body,
-        };
+        protected override IEnumerable<Drawable> DimmablePieces =>
+            new Drawable[]
+            {
+                // HeadCircle should not be added to this list, as it handles dimming itself
+                TailCircle,
+                repeatContainer,
+                Body,
+            };
 
         /// <summary>
         /// A target container which can be used to add top level elements to the slider's display.
@@ -74,9 +75,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private readonly LayoutValue relativeAnchorPositionLayout;
 
         public DrawableSlider()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableSlider([CanBeNull] Slider s = null)
             : base(s)
@@ -87,9 +86,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 BypassAutoSizeAxes = Axes.Both,
                 AlwaysPresent = true,
-                Alpha = 0
+                Alpha = 0,
             };
-            AddLayout(relativeAnchorPositionLayout = new LayoutValue(Invalidation.DrawSize | Invalidation.MiscGeometry));
+            AddLayout(
+                relativeAnchorPositionLayout = new LayoutValue(
+                    Invalidation.DrawSize | Invalidation.MiscGeometry
+                )
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -97,48 +100,67 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         {
             tailContainer = new Container<DrawableSliderTail> { RelativeSizeAxes = Axes.Both };
 
-            AddRangeInternal(new Drawable[]
-            {
-                SliderInputManager,
-                shakeContainer = new ShakeContainer
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    ShakeDuration = 30,
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new[]
+                    SliderInputManager,
+                    shakeContainer = new ShakeContainer
                     {
-                        Body = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderBody), _ => new DefaultSliderBody(), confineMode: ConfineMode.NoScaling),
-                        // proxied here so that the tail is drawn under repeats/ticks - legacy skins rely on this
-                        tailContainer.CreateProxy(),
-                        tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
-                        repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
-                        // actual tail container is placed here to ensure that tail hitobjects are processed after ticks/repeats.
-                        // this is required for the correct operation of Score V2.
-                        tailContainer,
-                    }
-                },
-                // slider head is not included in shake as it handles hit detection, and handles its own shaking.
-                headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
-                OverlayElementContainer = new Container { RelativeSizeAxes = Axes.Both, },
-                Ball,
-                slidingSample = new PausableSkinnableSound
-                {
-                    Looping = true,
-                    MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                        ShakeDuration = 30,
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new[]
+                        {
+                            Body = new SkinnableDrawable(
+                                new OsuSkinComponentLookup(OsuSkinComponents.SliderBody),
+                                _ => new DefaultSliderBody(),
+                                confineMode: ConfineMode.NoScaling
+                            ),
+                            // proxied here so that the tail is drawn under repeats/ticks - legacy skins rely on this
+                            tailContainer.CreateProxy(),
+                            tickContainer = new Container<DrawableSliderTick>
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            repeatContainer = new Container<DrawableSliderRepeat>
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            // actual tail container is placed here to ensure that tail hitobjects are processed after ticks/repeats.
+                            // this is required for the correct operation of Score V2.
+                            tailContainer,
+                        },
+                    },
+                    // slider head is not included in shake as it handles hit detection, and handles its own shaking.
+                    headContainer = new Container<DrawableSliderHead>
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    OverlayElementContainer = new Container { RelativeSizeAxes = Axes.Both },
+                    Ball,
+                    slidingSample = new PausableSkinnableSound
+                    {
+                        Looping = true,
+                        MinimumSampleVolume = MINIMUM_SAMPLE_VOLUME,
+                    },
                 }
-            });
+            );
 
             PositionBindable.BindValueChanged(_ => Position = HitObject.StackedPosition);
             StackHeightBindable.BindValueChanged(_ => Position = HitObject.StackedPosition);
             ScaleBindable.BindValueChanged(scale => Ball.Scale = new Vector2(scale.NewValue));
 
-            AccentColour.BindValueChanged(colour =>
-            {
-                foreach (var drawableHitObject in NestedHitObjects)
-                    drawableHitObject.AccentColour.Value = colour.NewValue;
-            }, true);
+            AccentColour.BindValueChanged(
+                colour =>
+                {
+                    foreach (var drawableHitObject in NestedHitObjects)
+                        drawableHitObject.AccentColour.Value = colour.NewValue;
+                },
+                true
+            );
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new OsuSliderJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new OsuSliderJudgementResult(HitObject, judgement);
 
         protected override void OnApply()
         {
@@ -247,7 +269,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                     // keep the sliding sample playing at the current tracking position
                     if (!slidingSample.RequestedPlaying)
                         slidingSample.Play();
-                    slidingSample.Balance.Value = CalculateSamplePlaybackBalance(CalculateDrawableRelativePosition(Ball));
+                    slidingSample.Balance.Value = CalculateSamplePlaybackBalance(
+                        CalculateDrawableRelativePosition(Ball)
+                    );
                 }
                 else if (slidingSample.IsPlaying || slidingSample.RequestedPlaying)
                     slidingSample.Stop();
@@ -262,13 +286,20 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             // It is crucial to perform the code below in UpdateAfterChildren. This ensures that the SliderBody has the opportunity
             // to update its Size and PathOffset beforehand, ensuring correct placement.
 
-            double completionProgress = Math.Clamp((Time.Current - HitObject.StartTime) / HitObject.Duration, 0, 1);
+            double completionProgress = Math.Clamp(
+                (Time.Current - HitObject.StartTime) / HitObject.Duration,
+                0,
+                1
+            );
 
             Ball.UpdateProgress(completionProgress);
             SliderBody?.UpdateProgress(HeadCircle.IsHit ? completionProgress : 0);
 
             foreach (DrawableSliderRepeat repeat in repeatContainer)
-                repeat.UpdateSnakingPosition(HitObject.Path.PositionAt(SliderBody?.SnakedStart ?? 0), HitObject.Path.PositionAt(SliderBody?.SnakedEnd ?? 0));
+                repeat.UpdateSnakingPosition(
+                    HitObject.Path.PositionAt(SliderBody?.SnakedStart ?? 0),
+                    HitObject.Path.PositionAt(SliderBody?.SnakedEnd ?? 0)
+                );
 
             Size = SliderBody?.Size ?? Vector2.Zero;
             OriginPosition = SliderBody?.PathOffset ?? Vector2.Zero;
@@ -298,30 +329,36 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             if (HitObject.ClassicSliderBehaviour)
             {
                 // Classic behaviour means a slider is judged proportionally to the number of nested hitobjects hit. This is the classic osu!stable scoring.
-                ApplyResult(static (r, hitObject) =>
-                {
-                    int totalTicks = hitObject.NestedHitObjects.Count;
-                    int hitTicks = hitObject.NestedHitObjects.Count(h => h.IsHit);
-
-                    if (hitTicks == totalTicks)
-                        r.Type = HitResult.Great;
-                    else if (hitTicks == 0)
-                        r.Type = HitResult.Miss;
-                    else
+                ApplyResult(
+                    static (r, hitObject) =>
                     {
-                        double hitFraction = (double)hitTicks / totalTicks;
-                        r.Type = hitFraction >= 0.5 ? HitResult.Ok : HitResult.Meh;
+                        int totalTicks = hitObject.NestedHitObjects.Count;
+                        int hitTicks = hitObject.NestedHitObjects.Count(h => h.IsHit);
+
+                        if (hitTicks == totalTicks)
+                            r.Type = HitResult.Great;
+                        else if (hitTicks == 0)
+                            r.Type = HitResult.Miss;
+                        else
+                        {
+                            double hitFraction = (double)hitTicks / totalTicks;
+                            r.Type = hitFraction >= 0.5 ? HitResult.Ok : HitResult.Meh;
+                        }
                     }
-                });
+                );
             }
             else
             {
                 // If only the nested hitobjects are judged, then the slider's own judgement is ignored for scoring purposes.
                 // But the slider needs to still be judged with a reasonable hit/miss result for visual purposes (hit/miss transforms, etc).
-                ApplyResult(static (r, hitObject) =>
-                {
-                    r.Type = hitObject.NestedHitObjects.Any(h => h.Result.IsHit) ? r.Judgement.MaxResult : r.Judgement.MinResult;
-                });
+                ApplyResult(
+                    static (r, hitObject) =>
+                    {
+                        r.Type = hitObject.NestedHitObjects.Any(h => h.Result.IsHit)
+                            ? r.Judgement.MaxResult
+                            : r.Judgement.MinResult;
+                    }
+                );
             }
         }
 
@@ -365,11 +402,11 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             this.FadeOut(fade_out_time).Expire();
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => SliderBody?.ReceivePositionalInputAt(screenSpacePos) ?? base.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            SliderBody?.ReceivePositionalInputAt(screenSpacePos)
+            ?? base.ReceivePositionalInputAt(screenSpacePos);
 
-        private partial class DefaultSliderBody : PlaySliderBody
-        {
-        }
+        private partial class DefaultSliderBody : PlaySliderBody { }
 
         #region FOR EDITOR USE ONLY, DO NOT USE FOR ANY OTHER PURPOSE
 

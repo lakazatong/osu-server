@@ -32,61 +32,55 @@ namespace osu.Game.Tests.Visual.UserInterface
             TestPopupDialog firstDialog = null;
             TestPopupDialog secondDialog = null;
 
-            AddStep("dialog #1", () => overlay.Push(firstDialog = new TestPopupDialog
-            {
-                Icon = FontAwesome.Regular.TrashAlt,
-                HeaderText = @"Confirm deletion of",
-                BodyText = @"Ayase Rie - Yuima-ru*World TVver.",
-                Buttons = new PopupDialogButton[]
-                {
-                    new PopupDialogOkButton
-                    {
-                        Text = @"I never want to see this again.",
-                        Action = () => Console.WriteLine(@"OK"),
-                    },
-                    new PopupDialogCancelButton
-                    {
-                        Text = @"Firetruck, I still want quick ranks!",
-                        Action = () => Console.WriteLine(@"Cancel"),
-                    },
-                },
-            }));
+            AddStep(
+                "dialog #1",
+                () =>
+                    overlay.Push(
+                        firstDialog = new TestPopupDialog
+                        {
+                            Icon = FontAwesome.Regular.TrashAlt,
+                            HeaderText = @"Confirm deletion of",
+                            BodyText = @"Ayase Rie - Yuima-ru*World TVver.",
+                            Buttons = new PopupDialogButton[]
+                            {
+                                new PopupDialogOkButton
+                                {
+                                    Text = @"I never want to see this again.",
+                                    Action = () => Console.WriteLine(@"OK"),
+                                },
+                                new PopupDialogCancelButton
+                                {
+                                    Text = @"Firetruck, I still want quick ranks!",
+                                    Action = () => Console.WriteLine(@"Cancel"),
+                                },
+                            },
+                        }
+                    )
+            );
 
             AddAssert("first dialog displayed", () => overlay.CurrentDialog == firstDialog);
 
-            AddStep("dialog #2", () => overlay.Push(secondDialog = new TestPopupDialog
-            {
-                Icon = FontAwesome.Solid.Cog,
-                HeaderText = @"What do you want to do with",
-                BodyText = "Camellia as \"Bang Riot\" - Blastix Riotz",
-                Buttons = new PopupDialogButton[]
-                {
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Manage collections",
-                    },
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Delete...",
-                    },
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Remove from unplayed",
-                    },
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Clear local scores",
-                    },
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Edit",
-                    },
-                    new PopupDialogCancelButton
-                    {
-                        Text = @"Cancel",
-                    },
-                },
-            }));
+            AddStep(
+                "dialog #2",
+                () =>
+                    overlay.Push(
+                        secondDialog = new TestPopupDialog
+                        {
+                            Icon = FontAwesome.Solid.Cog,
+                            HeaderText = @"What do you want to do with",
+                            BodyText = "Camellia as \"Bang Riot\" - Blastix Riotz",
+                            Buttons = new PopupDialogButton[]
+                            {
+                                new PopupDialogOkButton { Text = @"Manage collections" },
+                                new PopupDialogOkButton { Text = @"Delete..." },
+                                new PopupDialogOkButton { Text = @"Remove from unplayed" },
+                                new PopupDialogOkButton { Text = @"Clear local scores" },
+                                new PopupDialogOkButton { Text = @"Edit" },
+                                new PopupDialogCancelButton { Text = @"Cancel" },
+                            },
+                        }
+                    )
+            );
 
             AddAssert("second dialog displayed", () => overlay.CurrentDialog == secondDialog);
             AddUntilStep("first dialog is not part of hierarchy", () => firstDialog.Parent == null);
@@ -95,25 +89,33 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestTooMuchText()
         {
-            AddStep("dialog #1", () => overlay.Push(new TestPopupDialog
-            {
-                Icon = FontAwesome.Regular.TrashAlt,
-                HeaderText = @"Confirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion of",
-                BodyText = @"Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver. ",
-                Buttons = new PopupDialogButton[]
-                {
-                    new PopupDialogOkButton
-                    {
-                        Text = @"I never want to see this again.",
-                        Action = () => Console.WriteLine(@"OK"),
-                    },
-                    new PopupDialogCancelButton
-                    {
-                        Text = @"Firetruck, I still want quick ranks!",
-                        Action = () => Console.WriteLine(@"Cancel"),
-                    },
-                },
-            }));
+            AddStep(
+                "dialog #1",
+                () =>
+                    overlay.Push(
+                        new TestPopupDialog
+                        {
+                            Icon = FontAwesome.Regular.TrashAlt,
+                            HeaderText =
+                                @"Confirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion of",
+                            BodyText =
+                                @"Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver. ",
+                            Buttons = new PopupDialogButton[]
+                            {
+                                new PopupDialogOkButton
+                                {
+                                    Text = @"I never want to see this again.",
+                                    Action = () => Console.WriteLine(@"OK"),
+                                },
+                                new PopupDialogCancelButton
+                                {
+                                    Text = @"Firetruck, I still want quick ranks!",
+                                    Action = () => Console.WriteLine(@"Cancel"),
+                                },
+                            },
+                        }
+                    )
+            );
         }
 
         [Test]
@@ -121,20 +123,28 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             PopupDialog dialog = null;
 
-            AddStep("create slow loading dialog overlay", () => overlay = new SlowLoadingDialogOverlay());
+            AddStep(
+                "create slow loading dialog overlay",
+                () => overlay = new SlowLoadingDialogOverlay()
+            );
 
             AddStep("start loading overlay", () => LoadComponentAsync(overlay, Add));
 
-            AddStep("push dialog before loaded", () =>
-            {
-                overlay.Push(dialog = new TestPopupDialog
+            AddStep(
+                "push dialog before loaded",
+                () =>
                 {
-                    Buttons = new PopupDialogButton[]
-                    {
-                        new PopupDialogOkButton { Text = @"OK" },
-                    },
-                });
-            });
+                    overlay.Push(
+                        dialog = new TestPopupDialog
+                        {
+                            Buttons = new PopupDialogButton[]
+                            {
+                                new PopupDialogOkButton { Text = @"OK" },
+                            },
+                        }
+                    );
+                }
+            );
 
             AddStep("complete load", () => ((SlowLoadingDialogOverlay)overlay).LoadEvent.Set());
 
@@ -158,13 +168,15 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestDismissBeforePush()
         {
             TestPopupDialog testDialog = null;
-            AddStep("dismissed dialog push", () =>
-            {
-                overlay.Push(testDialog = new TestPopupDialog
+            AddStep(
+                "dismissed dialog push",
+                () =>
                 {
-                    State = { Value = Visibility.Hidden }
-                });
-            });
+                    overlay.Push(
+                        testDialog = new TestPopupDialog { State = { Value = Visibility.Hidden } }
+                    );
+                }
+            );
 
             AddAssert("no dialog pushed", () => overlay.CurrentDialog == null);
             AddAssert("dialog is not part of hierarchy", () => testDialog.Parent == null);
@@ -174,25 +186,28 @@ namespace osu.Game.Tests.Visual.UserInterface
         public void TestDismissBeforePushViaButtonPress()
         {
             TestPopupDialog testDialog = null;
-            AddStep("dismissed dialog push", () =>
-            {
-                overlay.Push(testDialog = new TestPopupDialog
+            AddStep(
+                "dismissed dialog push",
+                () =>
                 {
-                    Buttons = new PopupDialogButton[]
-                    {
-                        new PopupDialogOkButton { Text = @"OK" },
-                    },
-                });
+                    overlay.Push(
+                        testDialog = new TestPopupDialog
+                        {
+                            Buttons = new PopupDialogButton[]
+                            {
+                                new PopupDialogOkButton { Text = @"OK" },
+                            },
+                        }
+                    );
 
-                testDialog.PerformOkAction();
-            });
+                    testDialog.PerformOkAction();
+                }
+            );
 
             AddAssert("no dialog pushed", () => overlay.CurrentDialog == null);
             AddUntilStep("dialog is not part of hierarchy", () => testDialog.Parent == null);
         }
 
-        private partial class TestPopupDialog : PopupDialog
-        {
-        }
+        private partial class TestPopupDialog : PopupDialog { }
     }
 }

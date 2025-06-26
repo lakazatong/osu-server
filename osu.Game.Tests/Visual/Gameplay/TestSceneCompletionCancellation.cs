@@ -56,7 +56,10 @@ namespace osu.Game.Tests.Visual.Gameplay
             cancel();
             complete();
 
-            AddUntilStep("attempted to push ranking", () => ((FakeRankingPushPlayer)Player).ResultsCreated);
+            AddUntilStep(
+                "attempted to push ranking",
+                () => ((FakeRankingPushPlayer)Player).ResultsCreated
+            );
         }
 
         /// <summary>
@@ -87,24 +90,41 @@ namespace osu.Game.Tests.Visual.Gameplay
         private void complete()
         {
             AddStep("seek to completion", () => Beatmap.Value.Track.Seek(5000));
-            AddUntilStep("completion set by processor", () => Player.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "completion set by processor",
+                () => Player.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private void cancel()
         {
             AddStep("rewind to cancel", () => Beatmap.Value.Track.Seek(4000));
-            AddUntilStep("completion cleared by processor", () => !Player.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "completion cleared by processor",
+                () => !Player.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private void checkNoRanking()
         {
             // wait to ensure there was no attempt of pushing the results screen.
             AddWaitStep("wait", resultsDisplayWaitCount);
-            AddAssert("no attempt to push ranking", () => !((FakeRankingPushPlayer)Player).ResultsCreated);
+            AddAssert(
+                "no attempt to push ranking",
+                () => !((FakeRankingPushPlayer)Player).ResultsCreated
+            );
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
-            => new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audio);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audio
+            );
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
@@ -112,11 +132,9 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             for (int i = 1; i <= 19; i++)
             {
-                beatmap.HitObjects.Add(new HitCircle
-                {
-                    Position = new Vector2(256, 192),
-                    StartTime = i * 250,
-                });
+                beatmap.HitObjects.Add(
+                    new HitCircle { Position = new Vector2(256, 192), StartTime = i * 250 }
+                );
             }
 
             return beatmap;

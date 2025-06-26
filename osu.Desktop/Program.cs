@@ -44,7 +44,10 @@ namespace osu.Desktop
 
                 // While .NET 8 only supports Windows 10 and above, running on Windows 7/8.1 may still work. We are limited by realm currently, as they choose to only support 8.1 and higher.
                 // See https://www.mongodb.com/docs/realm/sdk/dotnet/compatibility/
-                if (windowsVersion.Major < 6 || (windowsVersion.Major == 6 && windowsVersion.Minor <= 2))
+                if (
+                    windowsVersion.Major < 6
+                    || (windowsVersion.Major == 6 && windowsVersion.Minor <= 2)
+                )
                 {
                     unsafe
                     {
@@ -52,11 +55,14 @@ namespace osu.Desktop
                         // disabling it ourselves.
                         // We could also better detect compatibility mode if required:
                         // https://stackoverflow.com/questions/10744651/how-i-can-detect-if-my-application-is-running-under-compatibility-mode#comment58183249_10744730
-                        SDL3.SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR,
+                        SDL3.SDL_ShowSimpleMessageBox(
+                            SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR,
                             "Your operating system is too old to run osu!"u8,
                             "This version of osu! requires at least Windows 8.1 to run.\n"u8
-                            + "Please upgrade your operating system or consider using an older version of osu!.\n\n"u8
-                            + "If you are running a newer version of windows, please check you don't have \"Compatibility mode\" turned on for osu!"u8, null);
+                                + "Please upgrade your operating system or consider using an older version of osu!.\n\n"u8
+                                + "If you are running a newer version of windows, please check you don't have \"Compatibility mode\" turned on for osu!"u8,
+                            null
+                        );
                         return;
                     }
                 }
@@ -89,7 +95,9 @@ namespace osu.Desktop
 
                     case "--debug-client-id":
                         if (!DebugUtils.IsDebugBuild)
-                            throw new InvalidOperationException("Cannot use this argument in a non-debug build.");
+                            throw new InvalidOperationException(
+                                "Cannot use this argument in a non-debug build."
+                            );
 
                         if (!int.TryParse(val, out int clientID))
                             throw new ArgumentException("Provided client ID must be an integer.");
@@ -115,7 +123,11 @@ namespace osu.Desktop
                     // we want to allow multiple instances to be started when in debug.
                     if (!DebugUtils.IsDebugBuild)
                     {
-                        Logger.Log(@"osu! does not support multiple running instances.", LoggingTarget.Runtime, LogLevel.Error);
+                        Logger.Log(
+                            @"osu! does not support multiple running instances.",
+                            LoggingTarget.Runtime,
+                            LogLevel.Error
+                        );
                         return;
                     }
                 }
@@ -138,17 +150,17 @@ namespace osu.Desktop
                     host.Run(new TournamentGame());
                 else
                 {
-                    host.Run(new OsuGameDesktop(args)
-                    {
-                        IsFirstRun = isFirstRun
-                    });
+                    host.Run(new OsuGameDesktop(args) { IsFirstRun = isFirstRun });
                 }
             }
         }
 
         private static bool trySendIPCMessage(IIpcHost host, string cwd, string[] args)
         {
-            if (args.Length == 1 && args[0].StartsWith(OsuGameBase.OSU_PROTOCOL, StringComparison.Ordinal))
+            if (
+                args.Length == 1
+                && args[0].StartsWith(OsuGameBase.OSU_PROTOCOL, StringComparison.Ordinal)
+            )
             {
                 var osuSchemeLinkHandler = new OsuSchemeLinkIPCChannel(host);
                 if (!osuSchemeLinkHandler.HandleLinkAsync(args[0]).Wait(3000))
@@ -178,7 +190,9 @@ namespace osu.Desktop
         {
             if (OsuGameDesktop.IsPackageManaged)
             {
-                Logger.Log("Updates are being managed by an external provider. Skipping Velopack setup.");
+                Logger.Log(
+                    "Updates are being managed by an external provider. Skipping Velopack setup."
+                );
                 return;
             }
 
@@ -197,7 +211,9 @@ namespace osu.Desktop
         {
             app.OnFirstRun(_ => WindowsAssociationManager.InstallAssociations());
             app.OnAfterUpdateFastCallback(_ => WindowsAssociationManager.UpdateAssociations());
-            app.OnBeforeUninstallFastCallback(_ => WindowsAssociationManager.UninstallAssociations());
+            app.OnBeforeUninstallFastCallback(_ =>
+                WindowsAssociationManager.UninstallAssociations()
+            );
         }
     }
 }

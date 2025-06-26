@@ -18,7 +18,8 @@ namespace osu.Game.Database
         /// <param name="userId">The user to lookup.</param>
         /// <param name="token">An optional cancellation token.</param>
         /// <returns>The populated user, or null if the user does not exist or the request could not be satisfied.</returns>
-        public Task<APIUser?> GetUserAsync(int userId, CancellationToken token = default) => LookupAsync(userId, token);
+        public Task<APIUser?> GetUserAsync(int userId, CancellationToken token = default) =>
+            LookupAsync(userId, token);
 
         /// <summary>
         /// Perform an API lookup on the specified users, populating a <see cref="APIUser"/> model.
@@ -26,10 +27,13 @@ namespace osu.Game.Database
         /// <param name="userIds">The users to lookup.</param>
         /// <param name="token">An optional cancellation token.</param>
         /// <returns>The populated users. May include null results for failed retrievals.</returns>
-        public Task<APIUser?[]> GetUsersAsync(int[] userIds, CancellationToken token = default) => LookupAsync(userIds, token);
+        public Task<APIUser?[]> GetUsersAsync(int[] userIds, CancellationToken token = default) =>
+            LookupAsync(userIds, token);
 
-        protected override LookupUsersRequest CreateRequest(IEnumerable<int> ids) => new LookupUsersRequest(ids.ToArray());
+        protected override LookupUsersRequest CreateRequest(IEnumerable<int> ids) =>
+            new LookupUsersRequest(ids.ToArray());
 
-        protected override IEnumerable<APIUser>? RetrieveResults(LookupUsersRequest request) => request.Response?.Users;
+        protected override IEnumerable<APIUser>? RetrieveResults(LookupUsersRequest request) =>
+            request.Response?.Users;
     }
 }

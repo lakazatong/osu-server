@@ -25,7 +25,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             AddBeatmaps(2, 10, true);
 
-            ApplyToFilterAndWaitForFilter("filter", c => c.SearchText = BeatmapSets[0].Beatmaps.Last().DifficultyName);
+            ApplyToFilterAndWaitForFilter(
+                "filter",
+                c => c.SearchText = BeatmapSets[0].Beatmaps.Last().DifficultyName
+            );
 
             CheckDisplayedBeatmapSetsCount(1);
             CheckDisplayedBeatmapsCount(1);
@@ -50,12 +53,19 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             nextRandom();
             ensureRandomDidNotRepeat();
 
-            AddStep("store selection", () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!);
+            AddStep(
+                "store selection",
+                () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!
+            );
 
             SortAndGroupBy(SortMode.Artist, GroupMode.Difficulty);
             WaitForFiltering();
 
-            AddAssert("selection not changed", () => Carousel.CurrentSelection, () => Is.EqualTo(originalSelected));
+            AddAssert(
+                "selection not changed",
+                () => Carousel.CurrentSelection,
+                () => Is.EqualTo(originalSelected)
+            );
 
             storeExpandedGroup();
 
@@ -75,9 +85,15 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                 ensureRandomDidNotRepeat();
             }
 
-            void storeExpandedGroup() => AddStep("store open group", () => expanded = Carousel.ExpandedGroup);
+            void storeExpandedGroup() =>
+                AddStep("store open group", () => expanded = Carousel.ExpandedGroup);
 
-            void checkExpandedGroupUnchanged() => AddAssert("expanded did not change", () => Carousel.ExpandedGroup, () => Is.EqualTo(expanded));
+            void checkExpandedGroupUnchanged() =>
+                AddAssert(
+                    "expanded did not change",
+                    () => Carousel.ExpandedGroup,
+                    () => Is.EqualTo(expanded)
+                );
         }
 
         /// <summary>
@@ -126,7 +142,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                 return null;
             }
 
-            void checkExpandedGroupUnchanged() => AddAssert("expanded did not change", () => Carousel.ExpandedGroup, () => Is.EqualTo(expanded));
+            void checkExpandedGroupUnchanged() =>
+                AddAssert(
+                    "expanded did not change",
+                    () => Carousel.ExpandedGroup,
+                    () => Is.EqualTo(expanded)
+                );
         }
 
         /// <summary>
@@ -175,7 +196,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                 return null;
             }
 
-            void checkExpandedGroupUnchanged() => AddAssert("expanded did not change", () => Carousel.ExpandedGroup, () => Is.EqualTo(expanded));
+            void checkExpandedGroupUnchanged() =>
+                AddAssert(
+                    "expanded did not change",
+                    () => Carousel.ExpandedGroup,
+                    () => Is.EqualTo(expanded)
+                );
         }
 
         /// <summary>
@@ -223,7 +249,12 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                 return null;
             }
 
-            void checkExpandedGroupUnchanged() => AddAssert("expanded did not change", () => Carousel.ExpandedGroup, () => Is.EqualTo(expanded));
+            void checkExpandedGroupUnchanged() =>
+                AddAssert(
+                    "expanded did not change",
+                    () => Carousel.ExpandedGroup,
+                    () => Is.EqualTo(expanded)
+                );
         }
 
         [Test]
@@ -258,15 +289,25 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             nextRandom();
 
             CheckHasSelection();
-            AddStep("store selection", () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!);
+            AddStep(
+                "store selection",
+                () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!
+            );
 
-            AddStep("random then rewind", () =>
-            {
-                Carousel.NextRandom();
-                Carousel.PreviousRandom();
-            });
+            AddStep(
+                "random then rewind",
+                () =>
+                {
+                    Carousel.NextRandom();
+                    Carousel.PreviousRandom();
+                }
+            );
 
-            AddAssert("selection not changed", () => Carousel.CurrentSelection, () => Is.EqualTo(originalSelected));
+            AddAssert(
+                "selection not changed",
+                () => Carousel.CurrentSelection,
+                () => Is.EqualTo(originalSelected)
+            );
         }
 
         [Test]
@@ -281,55 +322,107 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             nextRandom();
 
             CheckHasSelection();
-            AddStep("store selection", () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!);
+            AddStep(
+                "store selection",
+                () => originalSelected = (BeatmapInfo)Carousel.CurrentSelection!
+            );
 
             nextRandom();
-            AddStep("store selection", () => postRandomSelection = (BeatmapInfo)Carousel.CurrentSelection!);
+            AddStep(
+                "store selection",
+                () => postRandomSelection = (BeatmapInfo)Carousel.CurrentSelection!
+            );
 
-            AddAssert("selection changed", () => originalSelected, () => Is.Not.SameAs(postRandomSelection));
+            AddAssert(
+                "selection changed",
+                () => originalSelected,
+                () => Is.Not.SameAs(postRandomSelection)
+            );
 
-            AddStep("delete previous selection beatmaps", () => BeatmapSets.Remove(originalSelected!.BeatmapSet!));
+            AddStep(
+                "delete previous selection beatmaps",
+                () => BeatmapSets.Remove(originalSelected!.BeatmapSet!)
+            );
             WaitForFiltering();
 
-            AddAssert("selection not changed", () => Carousel.CurrentSelection, () => Is.EqualTo(postRandomSelection));
+            AddAssert(
+                "selection not changed",
+                () => Carousel.CurrentSelection,
+                () => Is.EqualTo(postRandomSelection)
+            );
 
             prevRandomSet();
-            AddAssert("selection not changed", () => Carousel.CurrentSelection, () => Is.EqualTo(postRandomSelection));
+            AddAssert(
+                "selection not changed",
+                () => Carousel.CurrentSelection,
+                () => Is.EqualTo(postRandomSelection)
+            );
         }
 
-        private void nextRandom() =>
-            AddStep("select random next", () => Carousel.NextRandom());
+        private void nextRandom() => AddStep("select random next", () => Carousel.NextRandom());
 
         private void ensureRandomDidRepeat() =>
-            AddAssert("did repeat", () => BeatmapRequestedSelections.Distinct().Count(), () => Is.LessThan(BeatmapRequestedSelections.Count));
+            AddAssert(
+                "did repeat",
+                () => BeatmapRequestedSelections.Distinct().Count(),
+                () => Is.LessThan(BeatmapRequestedSelections.Count)
+            );
 
         private void ensureRandomDidNotRepeat() =>
-            AddAssert("no repeats", () => BeatmapRequestedSelections.Distinct().Count(), () => Is.EqualTo(BeatmapRequestedSelections.Count));
+            AddAssert(
+                "no repeats",
+                () => BeatmapRequestedSelections.Distinct().Count(),
+                () => Is.EqualTo(BeatmapRequestedSelections.Count)
+            );
 
         private void ensureSetRandomDidRepeat() =>
-            AddAssert("did repeat", () => BeatmapSetRequestedSelections.Distinct().Count(), () => Is.LessThan(BeatmapSetRequestedSelections.Count));
+            AddAssert(
+                "did repeat",
+                () => BeatmapSetRequestedSelections.Distinct().Count(),
+                () => Is.LessThan(BeatmapSetRequestedSelections.Count)
+            );
 
         private void ensureSetRandomDidNotRepeat() =>
-            AddAssert("no repeats", () => BeatmapSetRequestedSelections.Distinct().Count(), () => Is.EqualTo(BeatmapSetRequestedSelections.Count));
+            AddAssert(
+                "no repeats",
+                () => BeatmapSetRequestedSelections.Distinct().Count(),
+                () => Is.EqualTo(BeatmapSetRequestedSelections.Count)
+            );
 
         private void checkRewindCorrect() =>
-            AddAssert("rewind matched expected beatmap", () => BeatmapRequestedSelections.Peek(), () => Is.EqualTo(Carousel.SelectedBeatmapInfo));
+            AddAssert(
+                "rewind matched expected beatmap",
+                () => BeatmapRequestedSelections.Peek(),
+                () => Is.EqualTo(Carousel.SelectedBeatmapInfo)
+            );
 
         private void checkRewindCorrectSet() =>
-            AddAssert("rewind matched expected set", () => BeatmapSetRequestedSelections.Peek(), () => Is.EqualTo(Carousel.SelectedBeatmapSet));
+            AddAssert(
+                "rewind matched expected set",
+                () => BeatmapSetRequestedSelections.Peek(),
+                () => Is.EqualTo(Carousel.SelectedBeatmapSet)
+            );
 
-        private void prevRandom() => AddStep("select last random", () =>
-        {
-            Carousel.PreviousRandom();
-            BeatmapRequestedSelections.Pop();
-            // Pop twice because the PreviousRandom call also requests selection.
-            BeatmapRequestedSelections.Pop();
-        });
+        private void prevRandom() =>
+            AddStep(
+                "select last random",
+                () =>
+                {
+                    Carousel.PreviousRandom();
+                    BeatmapRequestedSelections.Pop();
+                    // Pop twice because the PreviousRandom call also requests selection.
+                    BeatmapRequestedSelections.Pop();
+                }
+            );
 
-        private void prevRandomSet() => AddStep("select last random set", () =>
-        {
-            Carousel.PreviousRandom();
-            BeatmapSetRequestedSelections.Pop();
-        });
+        private void prevRandomSet() =>
+            AddStep(
+                "select last random set",
+                () =>
+                {
+                    Carousel.PreviousRandom();
+                    BeatmapSetRequestedSelections.Pop();
+                }
+            );
     }
 }

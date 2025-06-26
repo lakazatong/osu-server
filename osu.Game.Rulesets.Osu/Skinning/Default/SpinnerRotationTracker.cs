@@ -52,7 +52,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         /// <summary>
         /// Whether currently in the correct time range to allow spinning.
         /// </summary>
-        public bool IsSpinnableTime => drawableSpinner.HitObject.StartTime <= Time.Current && drawableSpinner.HitObject.EndTime > Time.Current;
+        public bool IsSpinnableTime =>
+            drawableSpinner.HitObject.StartTime <= Time.Current
+            && drawableSpinner.HitObject.EndTime > Time.Current;
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
@@ -66,12 +68,16 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
             if (mousePosition is Vector2 pos)
             {
-                float thisAngle = -float.RadiansToDegrees(MathF.Atan2(pos.X - DrawSize.X / 2, pos.Y - DrawSize.Y / 2));
+                float thisAngle = -float.RadiansToDegrees(
+                    MathF.Atan2(pos.X - DrawSize.X / 2, pos.Y - DrawSize.Y / 2)
+                );
                 float delta = lastAngle == null ? 0 : thisAngle - lastAngle.Value;
 
                 // Normalise the delta to -180 .. 180
-                if (delta > 180) delta -= 360;
-                if (delta < -180) delta += 360;
+                if (delta > 180)
+                    delta -= 360;
+                if (delta < -180)
+                    delta += 360;
 
                 if (Tracking)
                     AddRotation(delta);
@@ -80,7 +86,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             }
 
             IsSpinning.Value = IsSpinnableTime && Math.Abs(currentRotation - Rotation) > 10f;
-            Rotation = (float)Interpolation.Damp(Rotation, currentRotation, 0.99, Math.Abs(Time.Elapsed));
+            Rotation = (float)
+                Interpolation.Damp(Rotation, currentRotation, 0.99, Math.Abs(Time.Elapsed));
         }
 
         /// <summary>

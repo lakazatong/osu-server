@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                         {
                             RelativeSizeAxes = Axes.Both,
                             Child = new HitObjectContainer(),
-                        }
+                        },
                     },
                     new ColumnTestContainer(1, ManiaAction.Key2)
                     {
@@ -42,9 +42,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                         {
                             RelativeSizeAxes = Axes.Both,
                             Child = new HitObjectContainer(),
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             });
         }
     }

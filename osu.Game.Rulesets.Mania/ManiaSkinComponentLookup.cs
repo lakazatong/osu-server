@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Mania
         /// </summary>
         /// <param name="component">The component.</param>
         public ManiaSkinComponentLookup(ManiaSkinComponents component)
-            : base(component)
-        {
-        }
+            : base(component) { }
     }
 
     public enum ManiaSkinComponents
@@ -29,6 +27,6 @@ namespace osu.Game.Rulesets.Mania
         HitExplosion,
         StageBackground,
         StageForeground,
-        BarLine
+        BarLine,
     }
 }

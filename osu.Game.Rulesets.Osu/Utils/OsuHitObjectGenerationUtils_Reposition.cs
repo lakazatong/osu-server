@@ -27,7 +27,9 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// </summary>
         /// <param name="hitObjects">A list of <see cref="OsuHitObject"/>s to process.</param>
         /// <returns>A list of <see cref="ObjectPositionInfo"/>s describing how each hit object is positioned relative to the previous one.</returns>
-        public static List<ObjectPositionInfo> GeneratePositionInfos(IEnumerable<OsuHitObject> hitObjects)
+        public static List<ObjectPositionInfo> GeneratePositionInfos(
+            IEnumerable<OsuHitObject> hitObjects
+        )
         {
             var positionInfos = new List<ObjectPositionInfo>();
             Vector2 previousPosition = playfield_centre;
@@ -40,11 +42,13 @@ namespace osu.Game.Rulesets.Osu.Utils
                 float relativeAngle = absoluteAngle - previousAngle;
 
                 ObjectPositionInfo positionInfo;
-                positionInfos.Add(positionInfo = new ObjectPositionInfo(hitObject)
-                {
-                    RelativeAngle = relativeAngle,
-                    DistanceFromPrevious = relativePosition.Length
-                });
+                positionInfos.Add(
+                    positionInfo = new ObjectPositionInfo(hitObject)
+                    {
+                        RelativeAngle = relativeAngle,
+                        DistanceFromPrevious = relativePosition.Length,
+                    }
+                );
 
                 if (hitObject is Slider slider)
                 {
@@ -65,9 +69,13 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// </summary>
         /// <param name="objectPositionInfos">Position information for each hit object.</param>
         /// <returns>The repositioned hit objects.</returns>
-        public static List<OsuHitObject> RepositionHitObjects(IEnumerable<ObjectPositionInfo> objectPositionInfos)
+        public static List<OsuHitObject> RepositionHitObjects(
+            IEnumerable<ObjectPositionInfo> objectPositionInfos
+        )
         {
-            List<WorkingObject> workingObjects = objectPositionInfos.Select(o => new WorkingObject(o)).ToList();
+            List<WorkingObject> workingObjects = objectPositionInfos
+                .Select(o => new WorkingObject(o))
+                .ToList();
             WorkingObject? previous = null;
 
             for (int i = 0; i < workingObjects.Count; i++)
@@ -104,7 +112,8 @@ namespace osu.Game.Rulesets.Osu.Utils
                     for (int j = i - 1; j >= i - preceding_hitobjects_to_shift && j >= 0; j--)
                     {
                         // only shift hit circles
-                        if (!(workingObjects[j].HitObject is HitCircle)) break;
+                        if (!(workingObjects[j].HitObject is HitCircle))
+                            break;
 
                         toBeShifted.Add(workingObjects[j].HitObject);
                     }
@@ -125,7 +134,11 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="current">The <see cref="WorkingObject"/> representing the hit object to have the modified position computed for.</param>
         /// <param name="previous">The <see cref="WorkingObject"/> representing the hit object immediately preceding the current one.</param>
         /// <param name="beforePrevious">The <see cref="WorkingObject"/> representing the hit object immediately preceding the <paramref name="previous"/> one.</param>
-        private static void computeModifiedPosition(WorkingObject current, WorkingObject? previous, WorkingObject? beforePrevious)
+        private static void computeModifiedPosition(
+            WorkingObject current,
+            WorkingObject? previous,
+            WorkingObject? beforePrevious
+        )
         {
             float previousAbsoluteAngle = 0f;
 
@@ -137,7 +150,8 @@ namespace osu.Game.Rulesets.Osu.Utils
                 }
                 else
                 {
-                    Vector2 earliestPosition = beforePrevious?.HitObject.EndPosition ?? playfield_centre;
+                    Vector2 earliestPosition =
+                        beforePrevious?.HitObject.EndPosition ?? playfield_centre;
                     Vector2 relativePosition = previous.HitObject.Position - earliestPosition;
                     previousAbsoluteAngle = MathF.Atan2(relativePosition.Y, relativePosition.X);
                 }
@@ -162,10 +176,18 @@ namespace osu.Game.Rulesets.Osu.Utils
             absoluteAngle = MathF.Atan2(posRelativeToPrev.Y, posRelativeToPrev.X);
 
             Vector2 centreOfMassOriginal = calculateCentreOfMass(slider);
-            Vector2 centreOfMassModified = rotateVector(centreOfMassOriginal, current.PositionInfo.Rotation + absoluteAngle - getSliderRotation(slider));
-            centreOfMassModified = RotateAwayFromEdge(current.PositionModified, centreOfMassModified);
+            Vector2 centreOfMassModified = rotateVector(
+                centreOfMassOriginal,
+                current.PositionInfo.Rotation + absoluteAngle - getSliderRotation(slider)
+            );
+            centreOfMassModified = RotateAwayFromEdge(
+                current.PositionModified,
+                centreOfMassModified
+            );
 
-            float relativeRotation = MathF.Atan2(centreOfMassModified.Y, centreOfMassModified.X) - MathF.Atan2(centreOfMassOriginal.Y, centreOfMassOriginal.X);
+            float relativeRotation =
+                MathF.Atan2(centreOfMassModified.Y, centreOfMassModified.X)
+                - MathF.Atan2(centreOfMassOriginal.Y, centreOfMassOriginal.X);
             if (!Precision.AlmostEquals(relativeRotation, 0))
                 RotateSlider(slider, relativeRotation);
         }
@@ -177,10 +199,11 @@ namespace osu.Game.Rulesets.Osu.Utils
         private static Vector2 clampHitCircleToPlayfield(WorkingObject workingObject)
         {
             var previousPosition = workingObject.PositionModified;
-            workingObject.EndPositionModified = workingObject.PositionModified = clampToPlayfieldWithPadding(
-                workingObject.PositionModified,
-                (float)workingObject.HitObject.Radius
-            );
+            workingObject.EndPositionModified = workingObject.PositionModified =
+                clampToPlayfieldWithPadding(
+                    workingObject.PositionModified,
+                    (float)workingObject.HitObject.Radius
+                );
 
             workingObject.HitObject.Position = workingObject.PositionModified;
 
@@ -203,15 +226,24 @@ namespace osu.Game.Rulesets.Osu.Utils
             {
                 float currentRotation = getSliderRotation(slider);
                 float diff1 = getAngleDifference(workingObject.RotationOriginal, currentRotation);
-                float diff2 = getAngleDifference(workingObject.RotationOriginal + MathF.PI, currentRotation);
+                float diff2 = getAngleDifference(
+                    workingObject.RotationOriginal + MathF.PI,
+                    currentRotation
+                );
 
                 if (diff1 < diff2)
                 {
-                    RotateSlider(slider, workingObject.RotationOriginal - getSliderRotation(slider));
+                    RotateSlider(
+                        slider,
+                        workingObject.RotationOriginal - getSliderRotation(slider)
+                    );
                 }
                 else
                 {
-                    RotateSlider(slider, workingObject.RotationOriginal + MathF.PI - getSliderRotation(slider));
+                    RotateSlider(
+                        slider,
+                        workingObject.RotationOriginal + MathF.PI - getSliderRotation(slider)
+                    );
                 }
 
                 possibleMovementBounds = CalculatePossibleMovementBounds(slider);
@@ -221,13 +253,23 @@ namespace osu.Game.Rulesets.Osu.Utils
 
             // Clamp slider position to the placement area
             // If the slider is larger than the playfield, at least make sure that the head circle is inside the playfield
-            float newX = possibleMovementBounds.Width < 0
-                ? Math.Clamp(possibleMovementBounds.Left, 0, OsuPlayfield.BASE_SIZE.X)
-                : Math.Clamp(previousPosition.X, possibleMovementBounds.Left, possibleMovementBounds.Right);
+            float newX =
+                possibleMovementBounds.Width < 0
+                    ? Math.Clamp(possibleMovementBounds.Left, 0, OsuPlayfield.BASE_SIZE.X)
+                    : Math.Clamp(
+                        previousPosition.X,
+                        possibleMovementBounds.Left,
+                        possibleMovementBounds.Right
+                    );
 
-            float newY = possibleMovementBounds.Height < 0
-                ? Math.Clamp(possibleMovementBounds.Top, 0, OsuPlayfield.BASE_SIZE.Y)
-                : Math.Clamp(previousPosition.Y, possibleMovementBounds.Top, possibleMovementBounds.Bottom);
+            float newY =
+                possibleMovementBounds.Height < 0
+                    ? Math.Clamp(possibleMovementBounds.Top, 0, OsuPlayfield.BASE_SIZE.Y)
+                    : Math.Clamp(
+                        previousPosition.Y,
+                        possibleMovementBounds.Top,
+                        possibleMovementBounds.Bottom
+                    );
 
             slider.Position = workingObject.PositionModified = new Vector2(newX, newY);
             workingObject.EndPositionModified = slider.EndPosition;
@@ -248,7 +290,9 @@ namespace osu.Game.Rulesets.Osu.Utils
                 var hitObject = hitObjects[i];
                 // The first object is shifted by a vector slightly smaller than shift
                 // The last object is shifted by a vector slightly larger than zero
-                Vector2 position = hitObject.Position + shift * ((hitObjects.Count - i) / (float)(hitObjects.Count + 1));
+                Vector2 position =
+                    hitObject.Position
+                    + shift * ((hitObjects.Count - i) / (float)(hitObjects.Count + 1));
 
                 hitObject.Position = clampToPlayfieldWithPadding(position, (float)hitObject.Radius);
             }

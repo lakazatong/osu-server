@@ -21,62 +21,70 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private BeatmapTitleWedge.Statistic statistic4 = null!;
 
         public TestSceneBeatmapTitleWedgeStatistic()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         [Test]
         public void TestLoading()
         {
             AddStep("setup", () => CreateThemedContent(OverlayColourScheme.Aquamarine));
-            AddStep("set loading", () => this.ChildrenOfType<BeatmapTitleWedge.Statistic>().ForEach(s => s.Text = null));
+            AddStep(
+                "set loading",
+                () => this.ChildrenOfType<BeatmapTitleWedge.Statistic>().ForEach(s => s.Text = null)
+            );
             AddWaitStep("wait", 3);
-            AddStep("set values", () =>
-            {
-                playCount.Value = new BeatmapTitleWedge.StatisticPlayCount.Data(1234, 12);
-                statistic2.Text = "3,234";
-                statistic3.Text = "12:34";
-                statistic4.Text = "123";
-            });
+            AddStep(
+                "set values",
+                () =>
+                {
+                    playCount.Value = new BeatmapTitleWedge.StatisticPlayCount.Data(1234, 12);
+                    statistic2.Text = "3,234";
+                    statistic3.Text = "12:34";
+                    statistic4.Text = "123";
+                }
+            );
 
-            AddStep("set large values", () =>
-            {
-                playCount.Value = new BeatmapTitleWedge.StatisticPlayCount.Data(134587921, 502);
-                statistic2.Text = "1,048,576";
-                statistic3.Text = "2:50:23";
-                statistic4.Text = "1238014";
-            });
+            AddStep(
+                "set large values",
+                () =>
+                {
+                    playCount.Value = new BeatmapTitleWedge.StatisticPlayCount.Data(134587921, 502);
+                    statistic2.Text = "1,048,576";
+                    statistic3.Text = "2:50:23";
+                    statistic4.Text = "1238014";
+                }
+            );
         }
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Direction = FillDirection.Horizontal,
-            AutoSizeAxes = Axes.Both,
-            Children = new[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                playCount = new BeatmapTitleWedge.StatisticPlayCount(true, minSize: 50)
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Direction = FillDirection.Horizontal,
+                AutoSizeAxes = Axes.Both,
+                Children = new[]
                 {
-                    Value = new BeatmapTitleWedge.StatisticPlayCount.Data(1234, 12),
+                    playCount = new BeatmapTitleWedge.StatisticPlayCount(true, minSize: 50)
+                    {
+                        Value = new BeatmapTitleWedge.StatisticPlayCount.Data(1234, 12),
+                    },
+                    statistic2 = new BeatmapTitleWedge.Statistic(OsuIcon.Clock, true, minSize: 30)
+                    {
+                        Text = "3,234",
+                        TooltipText = "Statistic 2",
+                    },
+                    statistic3 = new BeatmapTitleWedge.Statistic(OsuIcon.Metronome)
+                    {
+                        Text = "12:34",
+                        Margin = new MarginPadding { Right = 10f },
+                        TooltipText = "Statistic 3",
+                    },
+                    statistic4 = new BeatmapTitleWedge.Statistic(OsuIcon.Graphics)
+                    {
+                        Text = "123",
+                        TooltipText = "Statistic 4",
+                    },
                 },
-                statistic2 = new BeatmapTitleWedge.Statistic(OsuIcon.Clock, true, minSize: 30)
-                {
-                    Text = "3,234",
-                    TooltipText = "Statistic 2",
-                },
-                statistic3 = new BeatmapTitleWedge.Statistic(OsuIcon.Metronome)
-                {
-                    Text = "12:34",
-                    Margin = new MarginPadding { Right = 10f },
-                    TooltipText = "Statistic 3",
-                },
-                statistic4 = new BeatmapTitleWedge.Statistic(OsuIcon.Graphics)
-                {
-                    Text = "123",
-                    TooltipText = "Statistic 4",
-                },
-            },
-        };
+            };
     }
 }

@@ -16,12 +16,13 @@ namespace osu.Game.Rulesets.Mania.Mods
         public override double ScoreMultiplier => 1;
         public override Type[] IncompatibleMods => new[] { typeof(ModHidden) };
 
-        public override BindableFloat SizeMultiplier { get; } = new BindableFloat(1)
-        {
-            MinValue = 0.5f,
-            MaxValue = 3f,
-            Precision = 0.1f
-        };
+        public override BindableFloat SizeMultiplier { get; } =
+            new BindableFloat(1)
+            {
+                MinValue = 0.5f,
+                MaxValue = 3f,
+                Precision = 0.1f,
+            };
 
         public override BindableBool ComboBasedSize { get; } = new BindableBool();
 
@@ -31,7 +32,9 @@ namespace osu.Game.Rulesets.Mania.Mods
 
         private partial class ManiaFlashlight : Flashlight
         {
-            private readonly LayoutValue flashlightProperties = new LayoutValue(Invalidation.DrawSize);
+            private readonly LayoutValue flashlightProperties = new LayoutValue(
+                Invalidation.DrawSize
+            );
 
             public ManiaFlashlight(ManiaModFlashlight modFlashlight)
                 : base(modFlashlight)
@@ -56,7 +59,11 @@ namespace osu.Game.Rulesets.Mania.Mods
 
             protected override void UpdateFlashlightSize(float size)
             {
-                this.TransformTo(nameof(FlashlightSize), new Vector2(DrawWidth, size), FLASHLIGHT_FADE_DURATION);
+                this.TransformTo(
+                    nameof(FlashlightSize),
+                    new Vector2(DrawWidth, size),
+                    FLASHLIGHT_FADE_DURATION
+                );
             }
 
             protected override string FragmentShader => "RectangularFlashlight";

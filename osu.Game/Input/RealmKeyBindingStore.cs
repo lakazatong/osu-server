@@ -19,7 +19,10 @@ namespace osu.Game.Input
         private readonly RealmAccess realm;
         private readonly ReadableKeyCombinationProvider keyCombinationProvider;
 
-        public RealmKeyBindingStore(RealmAccess realm, ReadableKeyCombinationProvider keyCombinationProvider)
+        public RealmKeyBindingStore(
+            RealmAccess realm,
+            ReadableKeyCombinationProvider keyCombinationProvider
+        )
         {
             this.realm = realm;
             this.keyCombinationProvider = keyCombinationProvider;
@@ -49,7 +52,14 @@ namespace osu.Game.Input
 
             realm.Run(context =>
             {
-                foreach (var action in context.All<RealmKeyBinding>().Where(b => string.IsNullOrEmpty(b.RulesetName) && (GlobalAction)b.ActionInt == globalAction))
+                foreach (
+                    var action in context
+                        .All<RealmKeyBinding>()
+                        .Where(b =>
+                            string.IsNullOrEmpty(b.RulesetName)
+                            && (GlobalAction)b.ActionInt == globalAction
+                        )
+                )
                 {
                     string str = keyCombinationProvider.GetReadableString(action.KeyCombination);
 
@@ -83,7 +93,13 @@ namespace osu.Game.Input
                     {
                         var instance = ruleset.CreateInstance();
                         foreach (int variant in instance.AvailableVariants)
-                            insertDefaults(r, existingBindings, instance.GetDefaultKeyBindings(variant), ruleset.ShortName, variant);
+                            insertDefaults(
+                                r,
+                                existingBindings,
+                                instance.GetDefaultKeyBindings(variant),
+                                ruleset.ShortName,
+                                variant
+                            );
                     }
 
                     transaction.Commit();
@@ -91,7 +107,13 @@ namespace osu.Game.Input
             });
         }
 
-        private void insertDefaults(Realm realm, List<RealmKeyBinding> existingBindings, IEnumerable<IKeyBinding> defaults, string? rulesetName = null, int? variant = null)
+        private void insertDefaults(
+            Realm realm,
+            List<RealmKeyBinding> existingBindings,
+            IEnumerable<IKeyBinding> defaults,
+            string? rulesetName = null,
+            int? variant = null
+        )
         {
             // compare counts in database vs defaults for each action type.
             foreach (var defaultsForAction in defaults.GroupBy(k => k.Action))
@@ -99,7 +121,8 @@ namespace osu.Game.Input
                 IEnumerable<RealmKeyBinding> existing = existingBindings.Where(k =>
                     k.RulesetName == rulesetName
                     && k.Variant == variant
-                    && k.ActionInt == (int)defaultsForAction.Key);
+                    && k.ActionInt == (int)defaultsForAction.Key
+                );
 
                 int defaultsCount = defaultsForAction.Count();
                 int existingCount = existing.Count();
@@ -107,7 +130,16 @@ namespace osu.Game.Input
                 if (defaultsCount > existingCount)
                 {
                     // insert any defaults which are missing.
-                    realm.Add(defaultsForAction.Skip(existingCount).Select(k => new RealmKeyBinding(k.Action, k.KeyCombination, rulesetName, variant)));
+                    realm.Add(
+                        defaultsForAction
+                            .Skip(existingCount)
+                            .Select(k => new RealmKeyBinding(
+                                k.Action,
+                                k.KeyCombination,
+                                rulesetName,
+                                variant
+                            ))
+                    );
                 }
                 else if (defaultsCount < existingCount)
                 {
@@ -132,7 +164,7 @@ namespace osu.Game.Input
             InputKey.MouseWheelDown,
             InputKey.MouseWheelLeft,
             InputKey.MouseWheelUp,
-            InputKey.MouseWheelRight
+            InputKey.MouseWheelRight,
         };
 
         public static bool CheckValidForGameplay(KeyCombination combination)

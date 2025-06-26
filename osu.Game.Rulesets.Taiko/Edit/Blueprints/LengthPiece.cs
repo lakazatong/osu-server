@@ -21,19 +21,15 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 8,
-                    },
+                    new Box { RelativeSizeAxes = Axes.X, Height = 8 },
                     new Box
                     {
                         Origin = Anchor.BottomLeft,
                         Anchor = Anchor.BottomLeft,
                         RelativeSizeAxes = Axes.X,
                         Height = 8,
-                    }
-                }
+                    },
+                },
             };
         }
     }

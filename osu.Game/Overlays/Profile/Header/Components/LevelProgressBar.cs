@@ -40,20 +40,21 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 {
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
-                    Child = levelProgressBar = new Bar
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        BackgroundColour = Color4.Black,
-                        Direction = BarDirection.LeftToRight,
-                        AccentColour = colourProvider.Highlight1
-                    }
+                    Child = levelProgressBar =
+                        new Bar
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            BackgroundColour = Color4.Black,
+                            Direction = BarDirection.LeftToRight,
+                            AccentColour = colourProvider.Highlight1,
+                        },
                 },
                 levelProgressText = new OsuSpriteText
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.TopRight,
-                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold)
-                }
+                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
+                },
             };
 
             User.BindValueChanged(user => updateProgress(user.NewValue?.User));
@@ -62,7 +63,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
         private void updateProgress(APIUser? user)
         {
             levelProgressBar.Length = user?.Statistics?.Level.Progress / 100f ?? 0;
-            levelProgressText.Text = user?.Statistics?.Level.Progress.ToLocalisableString("0'%'") ?? default;
+            levelProgressText.Text =
+                user?.Statistics?.Level.Progress.ToLocalisableString("0'%'") ?? default;
         }
     }
 }

@@ -17,7 +17,9 @@ namespace osu.Game.Rulesets.Pippidon.Replays
                 Actions.Add(button.Value);
         }
 
-        public override bool IsEquivalentTo(ReplayFrame other)
-            => other is PippidonReplayFrame pippidonFrame && Time == pippidonFrame.Time && Actions.SequenceEqual(pippidonFrame.Actions);
+        public override bool IsEquivalentTo(ReplayFrame other) =>
+            other is PippidonReplayFrame pippidonFrame
+            && Time == pippidonFrame.Time
+            && Actions.SequenceEqual(pippidonFrame.Actions);
     }
 }

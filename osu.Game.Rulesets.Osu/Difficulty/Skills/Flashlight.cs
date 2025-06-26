@@ -31,18 +31,23 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
         private double strainDecay(double ms) => Math.Pow(strainDecayBase, ms / 1000);
 
-        protected override double CalculateInitialStrain(double time, DifficultyHitObject current) => currentStrain * strainDecay(time - current.Previous(0).StartTime);
+        protected override double CalculateInitialStrain(
+            double time,
+            DifficultyHitObject current
+        ) => currentStrain * strainDecay(time - current.Previous(0).StartTime);
 
         protected override double StrainValueAt(DifficultyHitObject current)
         {
             currentStrain *= strainDecay(current.DeltaTime);
-            currentStrain += FlashlightEvaluator.EvaluateDifficultyOf(current, hasHiddenMod) * skillMultiplier;
+            currentStrain +=
+                FlashlightEvaluator.EvaluateDifficultyOf(current, hasHiddenMod) * skillMultiplier;
 
             return currentStrain;
         }
 
         public override double DifficultyValue() => GetCurrentStrainPeaks().Sum();
 
-        public static double DifficultyToPerformance(double difficulty) => 25 * Math.Pow(difficulty, 2);
+        public static double DifficultyToPerformance(double difficulty) =>
+            25 * Math.Pow(difficulty, 2);
     }
 }

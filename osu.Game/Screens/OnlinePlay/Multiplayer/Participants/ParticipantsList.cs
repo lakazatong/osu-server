@@ -12,7 +12,8 @@ using osu.Game.Online.Multiplayer;
 
 namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
 {
-    public partial class ParticipantsList : VirtualisedListContainer<MultiplayerRoomUser, ParticipantPanel>
+    public partial class ParticipantsList
+        : VirtualisedListContainer<MultiplayerRoomUser, ParticipantPanel>
     {
         private BindableList<MultiplayerRoomUser> participants => RowData;
 
@@ -22,14 +23,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
         private MultiplayerClient client { get; set; } = null!;
 
         public ParticipantsList()
-            : base(ParticipantPanel.HEIGHT, initialPoolSize: 20)
-        {
-        }
+            : base(ParticipantPanel.HEIGHT, initialPoolSize: 20) { }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new OsuScrollContainer
-        {
-            ScrollbarVisible = false,
-        };
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new OsuScrollContainer { ScrollbarVisible = false };
 
         protected override void LoadComplete()
         {

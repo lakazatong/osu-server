@@ -28,11 +28,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         /// <summary>
         /// The action that caused this <see cref="DrawableHit"/> to be hit.
         /// </summary>
-        public TaikoAction? HitAction
-        {
-            get;
-            private set;
-        }
+        public TaikoAction? HitAction { get; private set; }
 
         private bool validActionPressed;
 
@@ -41,9 +37,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         private readonly Bindable<HitType> type = new Bindable<HitType>();
 
         public DrawableHit()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHit([CanBeNull] Hit hit)
             : base(hit)
@@ -64,7 +58,11 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         {
             updateActionsFromType();
             base.RecreatePieces();
-            Size = new Vector2(HitObject.IsStrong ? TaikoStrongableHitObject.DEFAULT_STRONG_SIZE : TaikoHitObject.DEFAULT_SIZE);
+            Size = new Vector2(
+                HitObject.IsStrong
+                    ? TaikoStrongableHitObject.DEFAULT_STRONG_SIZE
+                    : TaikoHitObject.DEFAULT_SIZE
+            );
         }
 
         protected override void OnFree()
@@ -90,9 +88,18 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
                     : new[] { TaikoAction.LeftRim, TaikoAction.RightRim };
         }
 
-        protected override SkinnableDrawable CreateMainPiece() => HitObject.Type == HitType.Centre
-            ? new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.CentreHit), _ => new CentreHitCirclePiece(), confineMode: ConfineMode.ScaleToFit)
-            : new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.RimHit), _ => new RimHitCirclePiece(), confineMode: ConfineMode.ScaleToFit);
+        protected override SkinnableDrawable CreateMainPiece() =>
+            HitObject.Type == HitType.Centre
+                ? new SkinnableDrawable(
+                    new TaikoSkinComponentLookup(TaikoSkinComponents.CentreHit),
+                    _ => new CentreHitCirclePiece(),
+                    confineMode: ConfineMode.ScaleToFit
+                )
+                : new SkinnableDrawable(
+                    new TaikoSkinComponentLookup(TaikoSkinComponents.RimHit),
+                    _ => new RimHitCirclePiece(),
+                    confineMode: ConfineMode.ScaleToFit
+                );
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
@@ -179,7 +186,9 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             }
         }
 
-        protected override DrawableStrongNestedHit CreateStrongNestedHit(Hit.StrongNestedHit hitObject) => new StrongNestedHit(hitObject);
+        protected override DrawableStrongNestedHit CreateStrongNestedHit(
+            Hit.StrongNestedHit hitObject
+        ) => new StrongNestedHit(hitObject);
 
         public partial class StrongNestedHit : DrawableStrongNestedHit
         {
@@ -192,14 +201,10 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             public const double SECOND_HIT_WINDOW = 30;
 
             public StrongNestedHit()
-                : this(null)
-            {
-            }
+                : this(null) { }
 
             public StrongNestedHit([CanBeNull] Hit.StrongNestedHit nestedHit)
-                : base(nestedHit)
-            {
-            }
+                : base(nestedHit) { }
 
             protected override void CheckForResult(bool userTriggered, double timeOffset)
             {

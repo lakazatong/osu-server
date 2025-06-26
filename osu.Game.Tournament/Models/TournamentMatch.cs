@@ -25,8 +25,10 @@ namespace osu.Game.Tournament.Models
             get
             {
                 List<string> acronyms = new List<string>();
-                if (Team1Acronym != null) acronyms.Add(Team1Acronym);
-                if (Team2Acronym != null) acronyms.Add(Team2Acronym);
+                if (Team1Acronym != null)
+                    acronyms.Add(Team1Acronym);
+                if (Team2Acronym != null)
+                    acronyms.Add(Team2Acronym);
                 return acronyms;
             }
         }
@@ -49,7 +51,8 @@ namespace osu.Game.Tournament.Models
 
         public readonly Bindable<bool> Losers = new Bindable<bool>();
 
-        public readonly ObservableCollection<BeatmapChoice> PicksBans = new ObservableCollection<BeatmapChoice>();
+        public readonly ObservableCollection<BeatmapChoice> PicksBans =
+            new ObservableCollection<BeatmapChoice>();
 
         [JsonIgnore]
         public readonly Bindable<TournamentRound?> Round = new Bindable<TournamentRound?>();
@@ -58,17 +61,21 @@ namespace osu.Game.Tournament.Models
         public readonly Bindable<TournamentMatch?> Progression = new Bindable<TournamentMatch?>();
 
         [JsonIgnore]
-        public readonly Bindable<TournamentMatch?> LosersProgression = new Bindable<TournamentMatch?>();
+        public readonly Bindable<TournamentMatch?> LosersProgression =
+            new Bindable<TournamentMatch?>();
 
         /// <summary>
         /// Should not be set directly. Use LadderInfo.CurrentMatch.Value = this instead.
         /// </summary>
         public readonly Bindable<bool> Current = new Bindable<bool>();
 
-        public readonly Bindable<DateTimeOffset> Date = new Bindable<DateTimeOffset>(DateTimeOffset.Now);
+        public readonly Bindable<DateTimeOffset> Date = new Bindable<DateTimeOffset>(
+            DateTimeOffset.Now
+        );
 
         [JsonProperty]
-        public readonly BindableList<ConditionalTournamentMatch> ConditionalMatches = new BindableList<ConditionalTournamentMatch>();
+        public readonly BindableList<ConditionalTournamentMatch> ConditionalMatches =
+            new BindableList<ConditionalTournamentMatch>();
 
         public readonly Bindable<Point> Position = new Bindable<Point>();
 
@@ -86,10 +93,16 @@ namespace osu.Game.Tournament.Models
         }
 
         [JsonIgnore]
-        public TournamentTeam? Winner => !Completed.Value ? null : Team1Score.Value > Team2Score.Value ? Team1.Value : Team2.Value;
+        public TournamentTeam? Winner =>
+            !Completed.Value ? null
+            : Team1Score.Value > Team2Score.Value ? Team1.Value
+            : Team2.Value;
 
         [JsonIgnore]
-        public TournamentTeam? Loser => !Completed.Value ? null : Team1Score.Value > Team2Score.Value ? Team2.Value : Team1.Value;
+        public TournamentTeam? Loser =>
+            !Completed.Value ? null
+            : Team1Score.Value > Team2Score.Value ? Team2.Value
+            : Team1.Value;
 
         public TeamColour WinnerColour => Winner == Team1.Value ? TeamColour.Red : TeamColour.Blue;
 

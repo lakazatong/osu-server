@@ -27,17 +27,37 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             Quad positionBefore = default;
 
-            AddStep("select middle beatmap", () => Carousel.CurrentSelection = BeatmapSets.ElementAt(BeatmapSets.Count - 2).Beatmaps.First());
+            AddStep(
+                "select middle beatmap",
+                () =>
+                    Carousel.CurrentSelection = BeatmapSets
+                        .ElementAt(BeatmapSets.Count - 2)
+                        .Beatmaps.First()
+            );
 
             WaitForScrolling();
 
-            AddStep("save selected screen position", () => positionBefore = Carousel.ChildrenOfType<PanelBeatmap>().FirstOrDefault(p => p.Selected.Value)!.ScreenSpaceDrawQuad);
+            AddStep(
+                "save selected screen position",
+                () =>
+                    positionBefore = Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .FirstOrDefault(p => p.Selected.Value)!
+                        .ScreenSpaceDrawQuad
+            );
 
             RemoveFirstBeatmap();
             WaitForFiltering();
 
-            AddAssert("select screen position unchanged", () => Carousel.ChildrenOfType<PanelBeatmap>().Single(p => p.Selected.Value).ScreenSpaceDrawQuad,
-                () => Is.EqualTo(positionBefore));
+            AddAssert(
+                "select screen position unchanged",
+                () =>
+                    Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .Single(p => p.Selected.Value)
+                        .ScreenSpaceDrawQuad,
+                () => Is.EqualTo(positionBefore)
+            );
         }
 
         [Test]
@@ -45,23 +65,46 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             Quad positionBefore = default;
 
-            AddStep("select middle beatmap", () => Carousel.CurrentSelection = BeatmapSets.ElementAt(BeatmapSets.Count - 2).Beatmaps.First());
+            AddStep(
+                "select middle beatmap",
+                () =>
+                    Carousel.CurrentSelection = BeatmapSets
+                        .ElementAt(BeatmapSets.Count - 2)
+                        .Beatmaps.First()
+            );
             WaitForScrolling();
 
-            AddStep("override scroll with user scroll", () =>
-            {
-                InputManager.MoveMouseTo(Scroll.ScreenSpaceDrawQuad.Centre);
-                InputManager.ScrollVerticalBy(-1);
-            });
+            AddStep(
+                "override scroll with user scroll",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Scroll.ScreenSpaceDrawQuad.Centre);
+                    InputManager.ScrollVerticalBy(-1);
+                }
+            );
             WaitForScrolling();
 
-            AddStep("save selected screen position", () => positionBefore = Carousel.ChildrenOfType<PanelBeatmap>().FirstOrDefault(p => p.Selected.Value)!.ScreenSpaceDrawQuad);
+            AddStep(
+                "save selected screen position",
+                () =>
+                    positionBefore = Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .FirstOrDefault(p => p.Selected.Value)!
+                        .ScreenSpaceDrawQuad
+            );
 
             RemoveFirstBeatmap();
             WaitForFiltering();
 
-            AddAssert("select screen position unchanged", () => Carousel.ChildrenOfType<PanelBeatmap>().Single(p => p.Selected.Value).ScreenSpaceDrawQuad,
-                () => Is.EqualTo(positionBefore));
+            AddAssert(
+                "select screen position unchanged",
+                () =>
+                    Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .Single(p => p.Selected.Value)
+                        .ScreenSpaceDrawQuad,
+                () => Is.EqualTo(positionBefore)
+            );
         }
 
         [Test]
@@ -71,16 +114,33 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             AddStep("scroll to end", () => Scroll.ScrollToEnd(false));
 
-            AddStep("select last beatmap", () => Carousel.CurrentSelection = BeatmapSets.Last().Beatmaps.Last());
+            AddStep(
+                "select last beatmap",
+                () => Carousel.CurrentSelection = BeatmapSets.Last().Beatmaps.Last()
+            );
 
             WaitForScrolling();
 
-            AddStep("save selected screen position", () => positionBefore = Carousel.ChildrenOfType<PanelBeatmap>().FirstOrDefault(p => p.Selected.Value)!.ScreenSpaceDrawQuad);
+            AddStep(
+                "save selected screen position",
+                () =>
+                    positionBefore = Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .FirstOrDefault(p => p.Selected.Value)!
+                        .ScreenSpaceDrawQuad
+            );
 
             RemoveFirstBeatmap();
             WaitForFiltering();
-            AddAssert("select screen position unchanged", () => Carousel.ChildrenOfType<PanelBeatmap>().Single(p => p.Selected.Value).ScreenSpaceDrawQuad,
-                () => Is.EqualTo(positionBefore));
+            AddAssert(
+                "select screen position unchanged",
+                () =>
+                    Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .Single(p => p.Selected.Value)
+                        .ScreenSpaceDrawQuad,
+                () => Is.EqualTo(positionBefore)
+            );
         }
 
         [Test]
@@ -88,19 +148,36 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             Quad positionBefore = default;
 
-            AddStep("select first beatmap", () => Carousel.CurrentSelection = BeatmapSets.First().Beatmaps.First());
+            AddStep(
+                "select first beatmap",
+                () => Carousel.CurrentSelection = BeatmapSets.First().Beatmaps.First()
+            );
 
             WaitForScrolling();
 
-            AddStep("save selected screen position", () => positionBefore = Carousel.ChildrenOfType<PanelBeatmap>().FirstOrDefault(p => p.Selected.Value)!.ScreenSpaceDrawQuad);
+            AddStep(
+                "save selected screen position",
+                () =>
+                    positionBefore = Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .FirstOrDefault(p => p.Selected.Value)!
+                        .ScreenSpaceDrawQuad
+            );
 
             AddStep("scroll to end", () => Scroll.ScrollToEnd());
             WaitForScrolling();
 
             ApplyToFilterAndWaitForFilter("search", f => f.SearchText = "Some");
 
-            AddUntilStep("select screen position returned to selection", () => Carousel.ChildrenOfType<PanelBeatmap>().Single(p => p.Selected.Value).ScreenSpaceDrawQuad,
-                () => Is.EqualTo(positionBefore));
+            AddUntilStep(
+                "select screen position returned to selection",
+                () =>
+                    Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .Single(p => p.Selected.Value)
+                        .ScreenSpaceDrawQuad,
+                () => Is.EqualTo(positionBefore)
+            );
         }
 
         [Test]
@@ -108,22 +185,42 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             Quad positionBefore = default;
 
-            AddStep("select first beatmap", () => Carousel.CurrentSelection = BeatmapSets.First().Beatmaps.First());
+            AddStep(
+                "select first beatmap",
+                () => Carousel.CurrentSelection = BeatmapSets.First().Beatmaps.First()
+            );
             WaitForScrolling();
 
-            AddStep("override scroll with user scroll", () =>
-            {
-                InputManager.MoveMouseTo(Scroll.ScreenSpaceDrawQuad.Centre);
-                InputManager.ScrollVerticalBy(-1);
-            });
+            AddStep(
+                "override scroll with user scroll",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Scroll.ScreenSpaceDrawQuad.Centre);
+                    InputManager.ScrollVerticalBy(-1);
+                }
+            );
             WaitForScrolling();
 
-            AddStep("save selected screen position", () => positionBefore = Carousel.ChildrenOfType<PanelBeatmap>().FirstOrDefault(p => p.Selected.Value)!.ScreenSpaceDrawQuad);
+            AddStep(
+                "save selected screen position",
+                () =>
+                    positionBefore = Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .FirstOrDefault(p => p.Selected.Value)!
+                        .ScreenSpaceDrawQuad
+            );
 
             ApplyToFilterAndWaitForFilter("search", f => f.SearchText = "Some");
 
-            AddUntilStep("select screen position returned to selection", () => Carousel.ChildrenOfType<PanelBeatmap>().Single(p => p.Selected.Value).ScreenSpaceDrawQuad,
-                () => Is.EqualTo(positionBefore));
+            AddUntilStep(
+                "select screen position returned to selection",
+                () =>
+                    Carousel
+                        .ChildrenOfType<PanelBeatmap>()
+                        .Single(p => p.Selected.Value)
+                        .ScreenSpaceDrawQuad,
+                () => Is.EqualTo(positionBefore)
+            );
         }
     }
 }

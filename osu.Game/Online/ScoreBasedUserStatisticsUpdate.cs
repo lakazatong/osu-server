@@ -32,7 +32,11 @@ namespace osu.Game.Online
         /// <param name="score">The score set by the user that triggered the update.</param>
         /// <param name="before">The user's profile statistics prior to the score being set.</param>
         /// <param name="after">The user's profile statistics after the score was set.</param>
-        public ScoreBasedUserStatisticsUpdate(ScoreInfo score, UserStatistics before, UserStatistics after)
+        public ScoreBasedUserStatisticsUpdate(
+            ScoreInfo score,
+            UserStatistics before,
+            UserStatistics after
+        )
         {
             Score = score;
             Before = before;

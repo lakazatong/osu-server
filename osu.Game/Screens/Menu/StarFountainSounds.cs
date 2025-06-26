@@ -29,7 +29,10 @@ namespace osu.Game.Screens.Menu
             InternalChildren = new Drawable[]
             {
                 shootSample = new SkinnableSound(new SampleInfo("Gameplay/fountain-shoot")),
-                loopSample = new PausableSkinnableSound(new SampleInfo("Gameplay/fountain-loop")) { Looping = true },
+                loopSample = new PausableSkinnableSound(new SampleInfo("Gameplay/fountain-loop"))
+                {
+                    Looping = true,
+                },
             };
         }
 
@@ -56,11 +59,17 @@ namespace osu.Game.Screens.Menu
                 }
 
                 // Schedule a volume fadeout, followed by a `Stop()`.
-                loopFadeDelegate = Scheduler.AddDelayed(() =>
-                {
-                    this.TransformBindableTo(loopSample.Volume, 0, loop_fade_duration);
-                    loopStopDelegate = Scheduler.AddDelayed(() => loopSample.Stop(), loop_fade_duration);
-                }, shoot_retrigger_delay);
+                loopFadeDelegate = Scheduler.AddDelayed(
+                    () =>
+                    {
+                        this.TransformBindableTo(loopSample.Volume, 0, loop_fade_duration);
+                        loopStopDelegate = Scheduler.AddDelayed(
+                            () => loopSample.Stop(),
+                            loop_fade_duration
+                        );
+                    },
+                    shoot_retrigger_delay
+                );
             }
             finally
             {

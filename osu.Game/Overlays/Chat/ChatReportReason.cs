@@ -23,7 +23,10 @@ namespace osu.Game.Overlays.Chat
         Spam,
 
         [Description("Unwanted Content")]
-        [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsUnwantedContent))]
+        [LocalisableDescription(
+            typeof(UsersStrings),
+            nameof(UsersStrings.ReportOptionsUnwantedContent)
+        )]
         UnwantedContent,
 
         [Description("Nonsense")]
@@ -32,6 +35,6 @@ namespace osu.Game.Overlays.Chat
 
         [Description("Other")]
         [LocalisableDescription(typeof(UsersStrings), nameof(UsersStrings.ReportOptionsOther))]
-        Other
+        Other,
     }
 }

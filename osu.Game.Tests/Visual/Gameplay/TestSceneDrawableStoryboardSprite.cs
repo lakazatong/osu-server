@@ -31,39 +31,62 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Cached(typeof(Storyboard))]
         private TestStoryboard storyboard { get; set; } = new TestStoryboard();
 
-        private IEnumerable<DrawableStoryboardSprite> sprites => this.ChildrenOfType<DrawableStoryboardSprite>();
+        private IEnumerable<DrawableStoryboardSprite> sprites =>
+            this.ChildrenOfType<DrawableStoryboardSprite>();
 
         private const string lookup_name = "hitcircleoverlay";
 
         [Test]
         public void TestSkinSpriteDisallowedByDefault()
         {
-            AddStep("disallow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = false;
-                storyboard.ProvideResources = false;
-            });
+            AddStep(
+                "disallow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = false;
+                    storyboard.ProvideResources = false;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
 
-            AddAssert("sprite didn't find texture", () =>
-                sprites.All(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Texture == null)));
+            AddAssert(
+                "sprite didn't find texture",
+                () =>
+                    sprites.All(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Texture == null)
+                    )
+            );
         }
 
         [Test]
         public void TestLookupFromStoryboard()
         {
-            AddStep("allow storyboard lookup", () =>
-            {
-                storyboard.UseSkinSprites = false;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow storyboard lookup",
+                () =>
+                {
+                    storyboard.UseSkinSprites = false;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
 
             // Only checking for at least one sprite that succeeded, as not all skins in this test provide the hitcircleoverlay texture.
-            AddAssert("sprite found texture", () =>
-                sprites.Any(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)));
+            AddAssert(
+                "sprite found texture",
+                () =>
+                    sprites.Any(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)
+                    )
+            );
 
             assertStoryboardSourced();
         }
@@ -72,51 +95,78 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(true)]
         public void TestVideo(bool scaleTransformProvided)
         {
-            AddStep("allow storyboard lookup", () =>
-            {
-                storyboard.ProvideResources = true;
-            });
-
-            AddStep("create video", () => SetContents(_ =>
-            {
-                var layer = storyboard.GetLayer("Video");
-
-                var sprite = new StoryboardVideo("Videos/test-video.mp4", Time.Current);
-
-                if (scaleTransformProvided)
+            AddStep(
+                "allow storyboard lookup",
+                () =>
                 {
-                    sprite.Commands.AddScale(Easing.None, Time.Current, Time.Current + 1000, 1, 2);
-                    sprite.Commands.AddScale(Easing.None, Time.Current + 1000, Time.Current + 2000, 2, 1);
+                    storyboard.ProvideResources = true;
                 }
+            );
 
-                layer.Elements.Clear();
-                layer.Add(sprite);
-
-                return new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+            AddStep(
+                "create video",
+                () =>
+                    SetContents(_ =>
                     {
-                        storyboard.CreateDrawable()
-                    }
-                };
-            }));
+                        var layer = storyboard.GetLayer("Video");
+
+                        var sprite = new StoryboardVideo("Videos/test-video.mp4", Time.Current);
+
+                        if (scaleTransformProvided)
+                        {
+                            sprite.Commands.AddScale(
+                                Easing.None,
+                                Time.Current,
+                                Time.Current + 1000,
+                                1,
+                                2
+                            );
+                            sprite.Commands.AddScale(
+                                Easing.None,
+                                Time.Current + 1000,
+                                Time.Current + 2000,
+                                2,
+                                1
+                            );
+                        }
+
+                        layer.Elements.Clear();
+                        layer.Add(sprite);
+
+                        return new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Children = new Drawable[] { storyboard.CreateDrawable() },
+                        };
+                    })
+            );
         }
 
         [Test]
         public void TestSkinLookupPreferredOverStoryboard()
         {
-            AddStep("allow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
 
             // Only checking for at least one sprite that succeeded, as not all skins in this test provide the hitcircleoverlay texture.
-            AddAssert("sprite found texture", () =>
-                sprites.Any(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)));
+            AddAssert(
+                "sprite found texture",
+                () =>
+                    sprites.Any(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)
+                    )
+            );
 
             assertSkinSourced();
         }
@@ -124,17 +174,28 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestAllowLookupFromSkin()
         {
-            AddStep("allow skin lookup", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = false;
-            });
+            AddStep(
+                "allow skin lookup",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = false;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
 
             // Only checking for at least one sprite that succeeded, as not all skins in this test provide the hitcircleoverlay texture.
-            AddAssert("sprite found texture", () =>
-                sprites.Any(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)));
+            AddAssert(
+                "sprite found texture",
+                () =>
+                    sprites.Any(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Texture != null)
+                    )
+            );
 
             assertSkinSourced();
         }
@@ -142,31 +203,47 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestFlippedSprite()
         {
-            AddStep("allow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
-            AddStep("flip sprites", () => sprites.ForEach(s =>
-            {
-                s.FlipH = true;
-                s.FlipV = true;
-            }));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
+            AddStep(
+                "flip sprites",
+                () =>
+                    sprites.ForEach(s =>
+                    {
+                        s.FlipH = true;
+                        s.FlipV = true;
+                    })
+            );
             AddAssert("origin flipped", () => sprites.All(s => s.Origin == Anchor.BottomRight));
         }
 
         [Test]
         public void TestZeroScale()
         {
-            AddStep("allow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
             AddAssert("sprites present", () => sprites.All(s => s.IsPresent));
             AddStep("scale sprite", () => sprites.ForEach(s => s.VectorScale = new Vector2(0, 1)));
             AddAssert("sprites not present", () => sprites.All(s => !s.IsPresent));
@@ -175,13 +252,19 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestNegativeScale()
         {
-            AddStep("allow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
             AddStep("scale sprite", () => sprites.ForEach(s => s.VectorScale = new Vector2(-1)));
             AddAssert("origin flipped", () => sprites.All(s => s.Origin == Anchor.BottomRight));
         }
@@ -189,20 +272,30 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestNegativeScaleWithFlippedSprite()
         {
-            AddStep("allow all lookups", () =>
-            {
-                storyboard.UseSkinSprites = true;
-                storyboard.ProvideResources = true;
-            });
+            AddStep(
+                "allow all lookups",
+                () =>
+                {
+                    storyboard.UseSkinSprites = true;
+                    storyboard.ProvideResources = true;
+                }
+            );
 
-            AddStep("create sprites", () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero)));
+            AddStep(
+                "create sprites",
+                () => SetContents(_ => createSprite(lookup_name, Anchor.TopLeft, Vector2.Zero))
+            );
             AddStep("scale sprite", () => sprites.ForEach(s => s.VectorScale = new Vector2(-1)));
             AddAssert("origin flipped", () => sprites.All(s => s.Origin == Anchor.BottomRight));
-            AddStep("flip sprites", () => sprites.ForEach(s =>
-            {
-                s.FlipH = true;
-                s.FlipV = true;
-            }));
+            AddStep(
+                "flip sprites",
+                () =>
+                    sprites.ForEach(s =>
+                    {
+                        s.FlipH = true;
+                        s.FlipV = true;
+                    })
+            );
             AddAssert("origin back", () => sprites.All(s => s.Origin == Anchor.TopLeft));
         }
 
@@ -220,23 +313,30 @@ namespace osu.Game.Tests.Visual.Gameplay
             return new Container
             {
                 RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
-                {
-                    storyboard.CreateDrawable()
-                }
+                Children = new Drawable[] { storyboard.CreateDrawable() },
             };
         }
 
         private void assertStoryboardSourced()
         {
-            AddAssert("sprite came from storyboard", () =>
-                sprites.Any(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Size == new Vector2(200))));
+            AddAssert(
+                "sprite came from storyboard",
+                () =>
+                    sprites.Any(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Size == new Vector2(200))
+                    )
+            );
         }
 
         private void assertSkinSourced()
         {
-            AddAssert("sprite came from skin", () =>
-                sprites.Any(sprite => sprite.ChildrenOfType<Sprite>().All(s => s.Size == new Vector2(128))));
+            AddAssert(
+                "sprite came from skin",
+                () =>
+                    sprites.Any(sprite =>
+                        sprite.ChildrenOfType<Sprite>().All(s => s.Size == new Vector2(128))
+                    )
+            );
         }
 
         private partial class TestStoryboard : Storyboard
@@ -248,7 +348,8 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public bool ProvideResources { get; set; }
 
-            public override string GetStoragePathFromStoryboardPath(string path) => ProvideResources ? path : string.Empty;
+            public override string GetStoragePathFromStoryboardPath(string path) =>
+                ProvideResources ? path : string.Empty;
 
             private partial class TestDrawableStoryboard : DrawableStoryboard
             {
@@ -260,9 +361,8 @@ namespace osu.Game.Tests.Visual.Gameplay
                     provideResources = storyboard.ProvideResources;
                 }
 
-                protected override IResourceStore<byte[]> CreateResourceLookupStore() => provideResources
-                    ? new ResourcesTextureStore()
-                    : new ResourceStore<byte[]>();
+                protected override IResourceStore<byte[]> CreateResourceLookupStore() =>
+                    provideResources ? new ResourcesTextureStore() : new ResourceStore<byte[]>();
 
                 internal class ResourcesTextureStore : IResourceStore<byte[]>
                 {
@@ -277,7 +377,10 @@ namespace osu.Game.Tests.Visual.Gameplay
 
                     public byte[] Get(string name) => store.Get(map(name));
 
-                    public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = new CancellationToken()) => store.GetAsync(map(name), cancellationToken);
+                    public Task<byte[]> GetAsync(
+                        string name,
+                        CancellationToken cancellationToken = new CancellationToken()
+                    ) => store.GetAsync(map(name), cancellationToken);
 
                     public Stream GetStream(string name) => store.GetStream(map(name));
 
@@ -293,7 +396,8 @@ namespace osu.Game.Tests.Visual.Gameplay
                         }
                     }
 
-                    public IEnumerable<string> GetAvailableResources() => store.GetAvailableResources();
+                    public IEnumerable<string> GetAvailableResources() =>
+                        store.GetAvailableResources();
                 }
             }
         }

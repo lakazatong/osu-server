@@ -69,7 +69,10 @@ namespace osu.Game.Rulesets.Osu.Skinning
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         protected override void LoadComplete()
@@ -96,7 +99,8 @@ namespace osu.Game.Rulesets.Osu.Skinning
                 Vector2 increment = position - (Vector2)lastPosition;
                 increment.NormalizeFast();
 
-                Vector2 pointPos = (pointInterval - (totalDistance - delta)) * increment + (Vector2)lastPosition;
+                Vector2 pointPos =
+                    (pointInterval - (totalDistance - delta)) * increment + (Vector2)lastPosition;
                 increment *= pointInterval;
 
                 totalDistance %= pointInterval;
@@ -105,12 +109,14 @@ namespace osu.Game.Rulesets.Osu.Skinning
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        SmokePoints.Add(new SmokePoint
-                        {
-                            Position = pointPos,
-                            Time = time,
-                            Angle = RNG.NextSingle(0, 2 * MathF.PI),
-                        });
+                        SmokePoints.Add(
+                            new SmokePoint
+                            {
+                                Position = pointPos,
+                                Time = time,
+                                Angle = RNG.NextSingle(0, 2 * MathF.PI),
+                            }
+                        );
 
                         pointPos += increment;
                     }
@@ -126,8 +132,15 @@ namespace osu.Game.Rulesets.Osu.Skinning
         {
             smokeEndTime = time;
 
-            double initialFadeOutDurationTrunc = Math.Min(initial_fade_out_duration, smokeEndTime - smokeStartTime);
-            LifetimeEnd = smokeEndTime + final_fade_out_duration + initialFadeOutDurationTrunc / re_fade_in_speed + initialFadeOutDurationTrunc / final_fade_out_speed;
+            double initialFadeOutDurationTrunc = Math.Min(
+                initial_fade_out_duration,
+                smokeEndTime - smokeStartTime
+            );
+            LifetimeEnd =
+                smokeEndTime
+                + final_fade_out_duration
+                + initialFadeOutDurationTrunc / re_fade_in_speed
+                + initialFadeOutDurationTrunc / final_fade_out_speed;
         }
 
         protected override DrawNode CreateDrawNode() => new SmokeDrawNode(this);
@@ -196,9 +209,7 @@ namespace osu.Game.Rulesets.Osu.Skinning
             private double finalFadeOutTime;
 
             public SmokeDrawNode(ITexturedShaderDrawable source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -215,16 +226,32 @@ namespace osu.Game.Rulesets.Osu.Skinning
 
                 rotationSeed = Source.rotationSeed;
 
-                initialFadeOutDurationTrunc = Math.Min(initial_fade_out_duration, SmokeEndTime - SmokeStartTime);
+                initialFadeOutDurationTrunc = Math.Min(
+                    initial_fade_out_duration,
+                    SmokeEndTime - SmokeStartTime
+                );
                 firstVisiblePointTimeAfterSmokeEnded = SmokeEndTime - initialFadeOutDurationTrunc;
 
                 initialFadeOutTime = Math.Min(CurrentTime, SmokeEndTime);
-                reFadeInTime = CurrentTime - initialFadeOutDurationTrunc - firstVisiblePointTimeAfterSmokeEnded * (1 - 1 / re_fade_in_speed);
-                finalFadeOutTime = CurrentTime - initialFadeOutDurationTrunc - firstVisiblePointTimeAfterSmokeEnded * (1 - 1 / final_fade_out_speed);
+                reFadeInTime =
+                    CurrentTime
+                    - initialFadeOutDurationTrunc
+                    - firstVisiblePointTimeAfterSmokeEnded * (1 - 1 / re_fade_in_speed);
+                finalFadeOutTime =
+                    CurrentTime
+                    - initialFadeOutDurationTrunc
+                    - firstVisiblePointTimeAfterSmokeEnded * (1 - 1 / final_fade_out_speed);
 
-                double firstVisiblePointTime = Math.Min(SmokeEndTime, CurrentTime) - initialFadeOutDurationTrunc;
-                firstVisiblePointIndex = ~Source.SmokePoints.BinarySearch(new SmokePoint { Time = firstVisiblePointTime }, new SmokePoint.LowerBoundComparer());
-                int futurePointIndex = ~Source.SmokePoints.BinarySearch(new SmokePoint { Time = CurrentTime }, new SmokePoint.UpperBoundComparer());
+                double firstVisiblePointTime =
+                    Math.Min(SmokeEndTime, CurrentTime) - initialFadeOutDurationTrunc;
+                firstVisiblePointIndex = ~Source.SmokePoints.BinarySearch(
+                    new SmokePoint { Time = firstVisiblePointTime },
+                    new SmokePoint.LowerBoundComparer()
+                );
+                int futurePointIndex = ~Source.SmokePoints.BinarySearch(
+                    new SmokePoint { Time = CurrentTime },
+                    new SmokePoint.UpperBoundComparer()
+                );
 
                 points.Clear();
 
@@ -264,9 +291,10 @@ namespace osu.Game.Rulesets.Osu.Skinning
                 renderer.PopLocalMatrix();
             }
 
-            protected Color4 ColourAtPosition(Vector2 localPos) => DrawColourInfo.Colour.HasSingleColour
-                ? ((SRGBColour)DrawColourInfo.Colour).Linear
-                : DrawColourInfo.Colour.Interpolate(Vector2.Divide(localPos, drawSize)).Linear;
+            protected Color4 ColourAtPosition(Vector2 localPos) =>
+                DrawColourInfo.Colour.HasSingleColour
+                    ? ((SRGBColour)DrawColourInfo.Colour).Linear
+                    : DrawColourInfo.Colour.Interpolate(Vector2.Divide(localPos, drawSize)).Linear;
 
             protected virtual Color4 PointColour(SmokePoint point)
             {
@@ -276,7 +304,11 @@ namespace osu.Game.Rulesets.Osu.Skinning
 
                 if (timeDoingFinalFadeOut > 0 && point.Time >= firstVisiblePointTimeAfterSmokeEnded)
                 {
-                    float fraction = Math.Clamp((float)(timeDoingFinalFadeOut / final_fade_out_duration), 0, 1);
+                    float fraction = Math.Clamp(
+                        (float)(timeDoingFinalFadeOut / final_fade_out_duration),
+                        0,
+                        1
+                    );
                     fraction = MathF.Pow(fraction, 5);
                     color.A = (1 - fraction) * re_fade_in_alpha;
                 }
@@ -286,7 +318,11 @@ namespace osu.Game.Rulesets.Osu.Skinning
 
                     if (timeDoingInitialFadeOut > 0)
                     {
-                        float fraction = Math.Clamp((float)(timeDoingInitialFadeOut / initial_fade_out_duration), 0, 1);
+                        float fraction = Math.Clamp(
+                            (float)(timeDoingInitialFadeOut / initial_fade_out_duration),
+                            0,
+                            1
+                        );
                         color.A = (1 - fraction) * initial_alpha;
                     }
 
@@ -296,7 +332,11 @@ namespace osu.Game.Rulesets.Osu.Skinning
 
                         if (timeDoingReFadeIn > 0)
                         {
-                            float fraction = Math.Clamp((float)(timeDoingReFadeIn / re_fade_in_duration), 0, 1);
+                            float fraction = Math.Clamp(
+                                (float)(timeDoingReFadeIn / re_fade_in_duration),
+                                0,
+                                1
+                            );
                             fraction = 1 - MathF.Pow(1 - fraction, 5);
                             color.A = fraction * (re_fade_in_alpha - color.A) + color.A;
                         }
@@ -324,9 +364,15 @@ namespace osu.Game.Rulesets.Osu.Skinning
                 return new Vector2(MathF.Sin(angle), -MathF.Cos(angle));
             }
 
-            private float getRotation(int index) => max_rotation * (StatelessRNG.NextSingle(rotationSeed, index) * 2 - 1);
+            private float getRotation(int index) =>
+                max_rotation * (StatelessRNG.NextSingle(rotationSeed, index) * 2 - 1);
 
-            private void drawPointQuad(IRenderer renderer, SmokePoint point, RectangleF textureRect, int index)
+            private void drawPointQuad(
+                IRenderer renderer,
+                SmokePoint point,
+                RectangleF textureRect,
+                int index
+            )
             {
                 Debug.Assert(quadBatch != null);
 
@@ -348,30 +394,38 @@ namespace osu.Game.Rulesets.Osu.Skinning
                 var localBotLeft = point.Position + ortho - dir;
                 var localBotRight = point.Position + ortho + dir;
 
-                quadBatch.Add(new TexturedVertex2D(renderer)
-                {
-                    Position = localTopLeft,
-                    TexturePosition = textureRect.TopLeft,
-                    Colour = Color4Extensions.Multiply(ColourAtPosition(localTopLeft), colour),
-                });
-                quadBatch.Add(new TexturedVertex2D(renderer)
-                {
-                    Position = localTopRight,
-                    TexturePosition = textureRect.TopRight,
-                    Colour = Color4Extensions.Multiply(ColourAtPosition(localTopRight), colour),
-                });
-                quadBatch.Add(new TexturedVertex2D(renderer)
-                {
-                    Position = localBotRight,
-                    TexturePosition = textureRect.BottomRight,
-                    Colour = Color4Extensions.Multiply(ColourAtPosition(localBotRight), colour),
-                });
-                quadBatch.Add(new TexturedVertex2D(renderer)
-                {
-                    Position = localBotLeft,
-                    TexturePosition = textureRect.BottomLeft,
-                    Colour = Color4Extensions.Multiply(ColourAtPosition(localBotLeft), colour),
-                });
+                quadBatch.Add(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = localTopLeft,
+                        TexturePosition = textureRect.TopLeft,
+                        Colour = Color4Extensions.Multiply(ColourAtPosition(localTopLeft), colour),
+                    }
+                );
+                quadBatch.Add(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = localTopRight,
+                        TexturePosition = textureRect.TopRight,
+                        Colour = Color4Extensions.Multiply(ColourAtPosition(localTopRight), colour),
+                    }
+                );
+                quadBatch.Add(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = localBotRight,
+                        TexturePosition = textureRect.BottomRight,
+                        Colour = Color4Extensions.Multiply(ColourAtPosition(localBotRight), colour),
+                    }
+                );
+                quadBatch.Add(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = localBotLeft,
+                        TexturePosition = textureRect.BottomLeft,
+                        Colour = Color4Extensions.Multiply(ColourAtPosition(localBotLeft), colour),
+                    }
+                );
             }
 
             protected override void Dispose(bool isDisposing)

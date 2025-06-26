@@ -33,11 +33,16 @@ namespace osu.Game.Rulesets.Osu.Edit
         {
             base.OnSelectionChanged();
 
-            Quad quad = selectedMovableObjects.Length > 0 ? GeometryUtils.GetSurroundingQuad(selectedMovableObjects) : new Quad();
+            Quad quad =
+                selectedMovableObjects.Length > 0
+                    ? GeometryUtils.GetSurroundingQuad(selectedMovableObjects)
+                    : new Quad();
 
             SelectionBox.CanFlipX = quad.Width > 0;
             SelectionBox.CanFlipY = quad.Height > 0;
-            SelectionBox.CanReverse = EditorBeatmap.SelectedHitObjects.Count > 1 || EditorBeatmap.SelectedHitObjects.Any(s => s is Slider);
+            SelectionBox.CanReverse =
+                EditorBeatmap.SelectedHitObjects.Count > 1
+                || EditorBeatmap.SelectedHitObjects.Any(s => s is Slider);
         }
 
         private bool nudgeMovementActive;
@@ -149,10 +154,10 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         public override bool HandleReverse()
         {
-            var hitObjects = EditorBeatmap.SelectedHitObjects
-                                          .OfType<OsuHitObject>()
-                                          .OrderBy(obj => obj.StartTime)
-                                          .ToList();
+            var hitObjects = EditorBeatmap
+                .SelectedHitObjects.OfType<OsuHitObject>()
+                .OrderBy(obj => obj.StartTime)
+                .ToList();
 
             double endTime = hitObjects.Max(h => h.GetEndTime());
             double startTime = hitObjects.Min(h => h.StartTime);
@@ -190,7 +195,9 @@ namespace osu.Game.Rulesets.Osu.Edit
             var hitObjects = selectedMovableObjects;
 
             // If we're flipping over the origin, we take the grid origin position from the grid toolbox.
-            var flipQuad = flipOverOrigin ? new Quad(gridToolbox.StartPositionX.Value, gridToolbox.StartPositionY.Value, 0, 0) : GeometryUtils.GetSurroundingQuad(hitObjects);
+            var flipQuad = flipOverOrigin
+                ? new Quad(gridToolbox.StartPositionX.Value, gridToolbox.StartPositionY.Value, 0, 0)
+                : GeometryUtils.GetSurroundingQuad(hitObjects);
             Vector2 flipAxis = direction == Direction.Vertical ? Vector2.UnitY : Vector2.UnitX;
 
             if (flipOverOrigin)
@@ -200,8 +207,12 @@ namespace osu.Game.Rulesets.Osu.Edit
                 switch (gridToolbox.GridType.Value)
                 {
                     case PositionSnapGridType.Square:
-                        flipAxis = GeometryUtils.RotateVector(Vector2.UnitX, -((gridToolbox.GridLinesRotation.Value + 360 + 45) % 90 - 45));
-                        flipAxis = direction == Direction.Vertical ? flipAxis.PerpendicularLeft : flipAxis;
+                        flipAxis = GeometryUtils.RotateVector(
+                            Vector2.UnitX,
+                            -((gridToolbox.GridLinesRotation.Value + 360 + 45) % 90 - 45)
+                        );
+                        flipAxis =
+                            direction == Direction.Vertical ? flipAxis.PerpendicularLeft : flipAxis;
                         break;
 
                     case PositionSnapGridType.Triangle:
@@ -209,9 +220,16 @@ namespace osu.Game.Rulesets.Osu.Edit
                         // however it's still possible to achieve that flip by combining multiple flips over the other axes.
                         // Angle degree range for vertical = (-120, -60]
                         // Angle degree range for horizontal = [-30, 30)
-                        flipAxis = direction == Direction.Vertical
-                            ? GeometryUtils.RotateVector(Vector2.UnitX, -((gridToolbox.GridLinesRotation.Value + 360 + 30) % 60 + 60))
-                            : GeometryUtils.RotateVector(Vector2.UnitX, -((gridToolbox.GridLinesRotation.Value + 360) % 60 - 30));
+                        flipAxis =
+                            direction == Direction.Vertical
+                                ? GeometryUtils.RotateVector(
+                                    Vector2.UnitX,
+                                    -((gridToolbox.GridLinesRotation.Value + 360 + 30) % 60 + 60)
+                                )
+                                : GeometryUtils.RotateVector(
+                                    Vector2.UnitX,
+                                    -((gridToolbox.GridLinesRotation.Value + 360) % 60 - 30)
+                                );
                         break;
                 }
             }
@@ -222,10 +240,18 @@ namespace osu.Game.Rulesets.Osu.Edit
 
             foreach (var h in hitObjects)
             {
-                var flippedPosition = GeometryUtils.GetFlippedPosition(flipAxis, flipQuad, h.Position);
+                var flippedPosition = GeometryUtils.GetFlippedPosition(
+                    flipAxis,
+                    flipQuad,
+                    h.Position
+                );
 
                 // Clamp the flipped position inside the playfield bounds, because the flipped position might be outside the playfield bounds if the origin is not centered.
-                flippedPosition = Vector2.Clamp(flippedPosition, Vector2.Zero, OsuPlayfield.BASE_SIZE);
+                flippedPosition = Vector2.Clamp(
+                    flippedPosition,
+                    Vector2.Zero,
+                    OsuPlayfield.BASE_SIZE
+                );
 
                 if (!Precision.AlmostEquals(flippedPosition, h.Position))
                 {
@@ -238,16 +264,22 @@ namespace osu.Game.Rulesets.Osu.Edit
                     didFlip = true;
 
                     foreach (var cp in slider.Path.ControlPoints)
-                        cp.Position = GeometryUtils.GetFlippedPosition(flipAxis, controlPointFlipQuad, cp.Position);
+                        cp.Position = GeometryUtils.GetFlippedPosition(
+                            flipAxis,
+                            controlPointFlipQuad,
+                            cp.Position
+                        );
                 }
             }
 
             return didFlip;
         }
 
-        public override SelectionRotationHandler CreateRotationHandler() => new OsuSelectionRotationHandler();
+        public override SelectionRotationHandler CreateRotationHandler() =>
+            new OsuSelectionRotationHandler();
 
-        public override SelectionScaleHandler CreateScaleHandler() => new OsuSelectionScaleHandler();
+        public override SelectionScaleHandler CreateScaleHandler() =>
+            new OsuSelectionScaleHandler();
 
         private void moveSelectionInBounds()
         {
@@ -274,17 +306,18 @@ namespace osu.Game.Rulesets.Osu.Edit
         /// <summary>
         /// All osu! hitobjects which can be moved/rotated/scaled.
         /// </summary>
-        private OsuHitObject[] selectedMovableObjects => SelectedItems.OfType<OsuHitObject>()
-                                                                      .Where(h => h is not Spinner)
-                                                                      .ToArray();
+        private OsuHitObject[] selectedMovableObjects =>
+            SelectedItems.OfType<OsuHitObject>().Where(h => h is not Spinner).ToArray();
 
         /// <summary>
         /// All osu! hitobjects which can be merged.
         /// </summary>
-        private OsuHitObject[] selectedMergeableObjects => SelectedItems.OfType<OsuHitObject>()
-                                                                        .Where(h => h is HitCircle or Slider)
-                                                                        .OrderBy(h => h.StartTime)
-                                                                        .ToArray();
+        private OsuHitObject[] selectedMergeableObjects =>
+            SelectedItems
+                .OfType<OsuHitObject>()
+                .Where(h => h is HitCircle or Slider)
+                .OrderBy(h => h.StartTime)
+                .ToArray();
 
         private void mergeSelection()
         {
@@ -297,17 +330,21 @@ namespace osu.Game.Rulesets.Osu.Edit
 
             // Have an initial slider object.
             var firstHitObject = mergeableObjects[0];
-            var mergedHitObject = firstHitObject as Slider ?? new Slider
-            {
-                StartTime = firstHitObject.StartTime,
-                Position = firstHitObject.Position,
-                NewCombo = firstHitObject.NewCombo,
-                Samples = firstHitObject.Samples,
-            };
+            var mergedHitObject =
+                firstHitObject as Slider
+                ?? new Slider
+                {
+                    StartTime = firstHitObject.StartTime,
+                    Position = firstHitObject.Position,
+                    NewCombo = firstHitObject.NewCombo,
+                    Samples = firstHitObject.Samples,
+                };
 
             if (mergedHitObject.Path.ControlPoints.Count == 0)
             {
-                mergedHitObject.Path.ControlPoints.Add(new PathControlPoint(Vector2.Zero, PathType.LINEAR));
+                mergedHitObject.Path.ControlPoints.Add(
+                    new PathControlPoint(Vector2.Zero, PathType.LINEAR)
+                );
             }
 
             // Merge all the selected hit objects into one slider path.
@@ -317,19 +354,34 @@ namespace osu.Game.Rulesets.Osu.Edit
             {
                 if (selectedMergeableObject is IHasPath hasPath)
                 {
-                    var offset = lastCircle ? selectedMergeableObject.Position - mergedHitObject.Position : mergedHitObject.Path.ControlPoints[^1].Position;
-                    float distanceToLastControlPoint = Vector2.Distance(mergedHitObject.Path.ControlPoints[^1].Position, offset);
+                    var offset = lastCircle
+                        ? selectedMergeableObject.Position - mergedHitObject.Position
+                        : mergedHitObject.Path.ControlPoints[^1].Position;
+                    float distanceToLastControlPoint = Vector2.Distance(
+                        mergedHitObject.Path.ControlPoints[^1].Position,
+                        offset
+                    );
 
                     // Calculate the distance required to travel to the expected distance of the merging slider.
-                    mergedHitObject.Path.ExpectedDistance.Value = mergedHitObject.Path.CalculatedDistance + distanceToLastControlPoint + hasPath.Path.Distance;
+                    mergedHitObject.Path.ExpectedDistance.Value =
+                        mergedHitObject.Path.CalculatedDistance
+                        + distanceToLastControlPoint
+                        + hasPath.Path.Distance;
 
                     // Remove the last control point if it sits exactly on the start of the next control point.
                     if (Precision.AlmostEquals(distanceToLastControlPoint, 0))
                     {
-                        mergedHitObject.Path.ControlPoints.RemoveAt(mergedHitObject.Path.ControlPoints.Count - 1);
+                        mergedHitObject.Path.ControlPoints.RemoveAt(
+                            mergedHitObject.Path.ControlPoints.Count - 1
+                        );
                     }
 
-                    mergedHitObject.Path.ControlPoints.AddRange(hasPath.Path.ControlPoints.Select(o => new PathControlPoint(o.Position + offset, o.Type)));
+                    mergedHitObject.Path.ControlPoints.AddRange(
+                        hasPath.Path.ControlPoints.Select(o => new PathControlPoint(
+                            o.Position + offset,
+                            o.Type
+                        ))
+                    );
                     lastCircle = false;
                 }
                 else
@@ -340,7 +392,11 @@ namespace osu.Game.Rulesets.Osu.Edit
                         mergedHitObject.Path.ControlPoints.Last().Type = PathType.LINEAR;
                     }
 
-                    mergedHitObject.Path.ControlPoints.Add(new PathControlPoint(selectedMergeableObject.Position - mergedHitObject.Position));
+                    mergedHitObject.Path.ControlPoints.Add(
+                        new PathControlPoint(
+                            selectedMergeableObject.Position - mergedHitObject.Position
+                        )
+                    );
                     mergedHitObject.Path.ExpectedDistance.Value = null;
                     lastCircle = true;
                 }
@@ -371,18 +427,35 @@ namespace osu.Game.Rulesets.Osu.Edit
             EditorBeatmap.EndChange();
         }
 
-        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(IEnumerable<SelectionBlueprint<HitObject>> selection)
+        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(
+            IEnumerable<SelectionBlueprint<HitObject>> selection
+        )
         {
             foreach (var item in base.GetContextMenuItemsForSelection(selection))
                 yield return item;
 
             if (canMerge(selectedMergeableObjects))
-                yield return new OsuMenuItem("Merge selection", MenuItemType.Destructive, mergeSelection);
+                yield return new OsuMenuItem(
+                    "Merge selection",
+                    MenuItemType.Destructive,
+                    mergeSelection
+                );
         }
 
         private bool canMerge(IReadOnlyList<OsuHitObject> objects) =>
             objects.Count > 1
-            && (objects.Any(h => h is Slider)
-                || objects.Zip(objects.Skip(1), (h1, h2) => Precision.DefinitelyBigger(Vector2.DistanceSquared(h1.Position, h2.Position), 1)).Any(x => x));
+            && (
+                objects.Any(h => h is Slider)
+                || objects
+                    .Zip(
+                        objects.Skip(1),
+                        (h1, h2) =>
+                            Precision.DefinitelyBigger(
+                                Vector2.DistanceSquared(h1.Position, h2.Position),
+                                1
+                            )
+                    )
+                    .Any(x => x)
+            );
     }
 }

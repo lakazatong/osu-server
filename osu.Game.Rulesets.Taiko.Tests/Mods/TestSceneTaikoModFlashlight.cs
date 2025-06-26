@@ -16,38 +16,59 @@ namespace osu.Game.Rulesets.Taiko.Tests.Mods
         [TestCase(0.5f)]
         [TestCase(1.25f)]
         [TestCase(1.5f)]
-        public void TestSizeMultiplier(float sizeMultiplier) => CreateModTest(new ModTestData { Mod = new TaikoModFlashlight { SizeMultiplier = { Value = sizeMultiplier } }, PassCondition = () => true });
+        public void TestSizeMultiplier(float sizeMultiplier) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new TaikoModFlashlight { SizeMultiplier = { Value = sizeMultiplier } },
+                    PassCondition = () => true,
+                }
+            );
 
         [Test]
-        public void TestComboBasedSize([Values] bool comboBasedSize) => CreateModTest(new ModTestData { Mod = new TaikoModFlashlight { ComboBasedSize = { Value = comboBasedSize } }, PassCondition = () => true });
+        public void TestComboBasedSize([Values] bool comboBasedSize) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new TaikoModFlashlight { ComboBasedSize = { Value = comboBasedSize } },
+                    PassCondition = () => true,
+                }
+            );
 
         [Test]
         public void TestFlashlightAlwaysHasNonZeroSize()
         {
             bool failed = false;
 
-            CreateModTest(new ModTestData
-            {
-                Mod = new TestTaikoModFlashlight { ComboBasedSize = { Value = true } },
-                Autoplay = false,
-                PassCondition = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    failed |= this.ChildrenOfType<TestTaikoModFlashlight.TestTaikoFlashlight>().SingleOrDefault()?.FlashlightSize.Y == 0;
-                    return !failed;
+                    Mod = new TestTaikoModFlashlight { ComboBasedSize = { Value = true } },
+                    Autoplay = false,
+                    PassCondition = () =>
+                    {
+                        failed |=
+                            this.ChildrenOfType<TestTaikoModFlashlight.TestTaikoFlashlight>()
+                                .SingleOrDefault()
+                                ?.FlashlightSize.Y == 0;
+                        return !failed;
+                    },
                 }
-            });
+            );
         }
 
         private partial class TestTaikoModFlashlight : TaikoModFlashlight
         {
-            protected override Flashlight CreateFlashlight() => new TestTaikoFlashlight(this, Playfield);
+            protected override Flashlight CreateFlashlight() =>
+                new TestTaikoFlashlight(this, Playfield);
 
             public partial class TestTaikoFlashlight : TaikoFlashlight
             {
-                public TestTaikoFlashlight(TaikoModFlashlight modFlashlight, TaikoPlayfield taikoPlayfield)
-                    : base(modFlashlight, taikoPlayfield)
-                {
-                }
+                public TestTaikoFlashlight(
+                    TaikoModFlashlight modFlashlight,
+                    TaikoPlayfield taikoPlayfield
+                )
+                    : base(modFlashlight, taikoPlayfield) { }
 
                 public new Vector2 FlashlightSize => base.FlashlightSize;
             }

@@ -3,20 +3,20 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Game.Rulesets.Mods;
-using osu.Framework.Bindables;
-using osu.Game.Rulesets;
-using osuTK;
-using osu.Game.Rulesets.UI;
-using osu.Framework.Input.Events;
-using osu.Game.Graphics.UserInterface;
-using osuTK.Graphics;
 using System;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Input.Events;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Rulesets;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.UI;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays.BeatmapSet
 {
@@ -65,7 +65,9 @@ namespace osu.Game.Overlays.BeatmapSet
                 return;
 
             modsContainer.Add(new ModButton(new ModNoMod()));
-            modsContainer.AddRange(rulesetInstance.AllMods.Where(m => m.UserPlayable).Select(m => new ModButton(m)));
+            modsContainer.AddRange(
+                rulesetInstance.AllMods.Where(m => m.UserPlayable).Select(m => new ModButton(m))
+            );
 
             modsContainer.ForEach(button =>
             {
@@ -102,7 +104,9 @@ namespace osu.Game.Overlays.BeatmapSet
             if (SelectedMods.Any())
                 return;
 
-            modsContainer.Children.Where(button => !button.IsHovered).ForEach(button => button.Highlighted.Value = !IsHovered);
+            modsContainer
+                .Children.Where(button => !button.IsHovered)
+                .ForEach(button => button.Highlighted.Value = !IsHovered);
         }
 
         public void DeselectAll() => modsContainer.ForEach(mod => mod.Selected.Value = false);
@@ -125,19 +129,29 @@ namespace osu.Game.Overlays.BeatmapSet
             {
                 base.LoadComplete();
 
-                Highlighted.BindValueChanged(highlighted =>
-                {
-                    if (Selected.Value)
-                        return;
+                Highlighted.BindValueChanged(
+                    highlighted =>
+                    {
+                        if (Selected.Value)
+                            return;
 
-                    this.FadeColour(highlighted.NewValue ? Color4.White : Color4.DimGray, duration, Easing.OutQuint);
-                }, true);
+                        this.FadeColour(
+                            highlighted.NewValue ? Color4.White : Color4.DimGray,
+                            duration,
+                            Easing.OutQuint
+                        );
+                    },
+                    true
+                );
 
-                Selected.BindValueChanged(selected =>
-                {
-                    OnSelectionChanged?.Invoke(Mod, selected.NewValue);
-                    Highlighted.TriggerChange();
-                }, true);
+                Selected.BindValueChanged(
+                    selected =>
+                    {
+                        OnSelectionChanged?.Invoke(Mod, selected.NewValue);
+                        Highlighted.TriggerChange();
+                    },
+                    true
+                );
             }
 
             protected override bool OnClick(ClickEvent e)

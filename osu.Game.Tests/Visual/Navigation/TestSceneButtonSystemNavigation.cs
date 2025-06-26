@@ -12,7 +12,8 @@ namespace osu.Game.Tests.Visual.Navigation
 {
     public partial class TestSceneButtonSystemNavigation : OsuGameTestScene
     {
-        private ButtonSystem buttons => ((MainMenu)Game.ScreenStack.CurrentScreen).ChildrenOfType<ButtonSystem>().Single();
+        private ButtonSystem buttons =>
+            ((MainMenu)Game.ScreenStack.CurrentScreen).ChildrenOfType<ButtonSystem>().Single();
 
         [Test]
         public void TestGlobalActionHasPriority()
@@ -33,14 +34,20 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             AddAssert("state is initial", () => buttons.State == ButtonSystemState.Initial);
 
-            AddStep("press P three times", () =>
-            {
-                InputManager.Key(Key.P);
-                InputManager.Key(Key.P);
-                InputManager.Key(Key.P);
-            });
+            AddStep(
+                "press P three times",
+                () =>
+                {
+                    InputManager.Key(Key.P);
+                    InputManager.Key(Key.P);
+                    InputManager.Key(Key.P);
+                }
+            );
 
-            AddAssert("entered song select", () => Game.ScreenStack.CurrentScreen is PlaySongSelect);
+            AddAssert(
+                "entered song select",
+                () => Game.ScreenStack.CurrentScreen is PlaySongSelect
+            );
         }
 
         [Test]
@@ -55,7 +62,10 @@ namespace osu.Game.Tests.Visual.Navigation
             AddAssert("state is play", () => buttons.State == ButtonSystemState.Play);
 
             AddStep("press P", () => InputManager.Key(Key.P));
-            AddAssert("entered song select", () => Game.ScreenStack.CurrentScreen is PlaySongSelect);
+            AddAssert(
+                "entered song select",
+                () => Game.ScreenStack.CurrentScreen is PlaySongSelect
+            );
         }
     }
 }

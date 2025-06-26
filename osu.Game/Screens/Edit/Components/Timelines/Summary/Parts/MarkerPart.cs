@@ -99,8 +99,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Y,
                         Width = 1.4f,
-                        EdgeSmoothness = new Vector2(1, 0)
-                    }
+                        EdgeSmoothness = new Vector2(1, 0),
+                    },
                 };
             }
 

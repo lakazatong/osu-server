@@ -32,33 +32,43 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         {
             ScrollingInfo.Direction.Value = ScrollingDirection.Down;
 
-            Add(new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = Color4.SlateGray.Opacity(0.2f),
-                Depth = 1
-            });
+            Add(
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.SlateGray.Opacity(0.2f),
+                    Depth = 1,
+                }
+            );
         }
 
         [Test]
         public void TestScrollingDown()
         {
-            AddStep("change direction to down", () => ScrollingInfo.Direction.Value = ScrollingDirection.Down);
+            AddStep(
+                "change direction to down",
+                () => ScrollingInfo.Direction.Value = ScrollingDirection.Down
+            );
         }
 
         [Test]
         public void TestScrollingUp()
         {
-            AddStep("change direction to up", () => ScrollingInfo.Direction.Value = ScrollingDirection.Up);
+            AddStep(
+                "change direction to up",
+                () => ScrollingInfo.Direction.Value = ScrollingDirection.Up
+            );
         }
 
         protected class TestScrollingInfo : IScrollingInfo
         {
-            public readonly Bindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
+            public readonly Bindable<ScrollingDirection> Direction =
+                new Bindable<ScrollingDirection>();
 
             IBindable<ScrollingDirection> IScrollingInfo.Direction => Direction;
             IBindable<double> IScrollingInfo.TimeRange { get; } = new Bindable<double>(5000);
-            IBindable<IScrollAlgorithm> IScrollingInfo.Algorithm { get; } = new Bindable<IScrollAlgorithm>(new ConstantScrollAlgorithm());
+            IBindable<IScrollAlgorithm> IScrollingInfo.Algorithm { get; } =
+                new Bindable<IScrollAlgorithm>(new ConstantScrollAlgorithm());
         }
     }
 }

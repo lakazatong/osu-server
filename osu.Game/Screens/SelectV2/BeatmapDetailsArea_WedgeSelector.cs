@@ -38,13 +38,15 @@ namespace osu.Game.Screens.SelectV2
             [BackgroundDependencyLoader]
             private void load(OverlayColourProvider colourProvider)
             {
-                AddInternal(strip = new Circle
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Height = 2,
-                    Colour = colourProvider.Highlight1,
-                });
+                AddInternal(
+                    strip = new Circle
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                        Height = 2,
+                        Colour = colourProvider.Highlight1,
+                    }
+                );
 
                 foreach (var type in Enum.GetValues<T>())
                     AddItem(type);
@@ -65,7 +67,11 @@ namespace osu.Game.Screens.SelectV2
 
             private void updateDisplay()
             {
-                strip.MoveToX(SelectedTab.Text.ToSpaceOfOtherDrawable(Vector2.Zero, this).X, 300, Easing.OutQuint);
+                strip.MoveToX(
+                    SelectedTab.Text.ToSpaceOfOtherDrawable(Vector2.Zero, this).X,
+                    300,
+                    Easing.OutQuint
+                );
                 strip.ResizeWidthTo(SelectedTab.Text.Width, 0, Easing.OutQuint);
             }
 
@@ -92,7 +98,7 @@ namespace osu.Game.Screens.SelectV2
                             Text = value.ToString(),
                             Font = OsuFont.Style.Body,
                         },
-                        new HoverSounds(HoverSampleSet.TabSelect)
+                        new HoverSounds(HoverSampleSet.TabSelect),
                     };
                 }
 
@@ -129,7 +135,9 @@ namespace osu.Game.Screens.SelectV2
                     else
                         Text.FadeColour(colourProvider.Content2, 300, Easing.OutQuint);
 
-                    Text.Font = Text.Font.With(weight: Active.Value ? FontWeight.SemiBold : FontWeight.Regular);
+                    Text.Font = Text.Font.With(
+                        weight: Active.Value ? FontWeight.SemiBold : FontWeight.Regular
+                    );
                 }
             }
         }

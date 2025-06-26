@@ -19,13 +19,9 @@ namespace osu.Game.Tests.Beatmaps
                 {
                     new HitCircle { StartTime = 5_000 },
                     new HitCircle { StartTime = 300_000 },
-                    new Spinner { StartTime = 280_000, Duration = 40_000 }
+                    new Spinner { StartTime = 280_000, Duration = 40_000 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(50_000, 75_000),
-                    new BreakPeriod(100_000, 150_000),
-                }
+                Breaks = { new BreakPeriod(50_000, 75_000), new BreakPeriod(100_000, 150_000) },
             };
 
             Assert.That(beatmap.CalculatePlayableBounds(), Is.EqualTo((5_000, 320_000)));
@@ -42,12 +38,9 @@ namespace osu.Game.Tests.Beatmaps
                 {
                     new HitCircle { StartTime = 5_000 },
                     new HitCircle { StartTime = 300_000 },
-                    new Spinner { StartTime = 280_000, Duration = 40_000 }
+                    new Spinner { StartTime = 280_000, Duration = 40_000 },
                 },
-                Breaks =
-                {
-                    new BreakPeriod(0, 350_000),
-                }
+                Breaks = { new BreakPeriod(0, 350_000) },
             };
 
             Assert.That(beatmap.CalculatePlayableBounds(), Is.EqualTo((5_000, 320_000)));

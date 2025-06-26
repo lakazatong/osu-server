@@ -29,9 +29,13 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm.Data
 
         public TaikoDifficultyHitObject FirstHitObject => Groups[0].FirstHitObject;
 
-        public IEnumerable<TaikoDifficultyHitObject> AllHitObjects => Groups.SelectMany(hitObject => hitObject.HitObjects);
+        public IEnumerable<TaikoDifficultyHitObject> AllHitObjects =>
+            Groups.SelectMany(hitObject => hitObject.HitObjects);
 
-        public SamePatternsGroupedHitObjects(SamePatternsGroupedHitObjects? previous, List<SameRhythmHitObjectGrouping> groups)
+        public SamePatternsGroupedHitObjects(
+            SamePatternsGroupedHitObjects? previous,
+            List<SameRhythmHitObjectGrouping> groups
+        )
         {
             Previous = previous;
             Groups = groups;

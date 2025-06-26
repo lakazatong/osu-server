@@ -17,17 +17,23 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneBeatmapRulesetSelector : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private BeatmapRulesetSelector selector;
 
         [SetUp]
-        public void SetUp() => Schedule(() => Child = selector = new BeatmapRulesetSelector
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            BeatmapSet = new APIBeatmapSet(),
-        });
+        public void SetUp() =>
+            Schedule(() =>
+                Child = selector =
+                    new BeatmapRulesetSelector
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        BeatmapSet = new APIBeatmapSet(),
+                    }
+            );
 
         [Test]
         public void TestDisplay()
@@ -44,10 +50,14 @@ namespace osu.Game.Tests.Visual.Online
 
                 selector.BeatmapSet = new APIBeatmapSet
                 {
-                    Beatmaps = selector.BeatmapSet!.Beatmaps
-                                       .Where(b => b.Ruleset.OnlineID != ruleset)
-                                       .Concat(Enumerable.Range(0, count).Select(_ => new APIBeatmap { RulesetID = ruleset }))
-                                       .ToArray(),
+                    Beatmaps = selector
+                        .BeatmapSet!.Beatmaps.Where(b => b.Ruleset.OnlineID != ruleset)
+                        .Concat(
+                            Enumerable
+                                .Range(0, count)
+                                .Select(_ => new APIBeatmap { RulesetID = ruleset })
+                        )
+                        .ToArray(),
                 };
             }
         }
@@ -55,50 +65,96 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestMultipleRulesetsBeatmapSet()
         {
-            AddStep("load multiple rulesets beatmapset", () =>
-            {
-                selector.BeatmapSet = new APIBeatmapSet
+            AddStep(
+                "load multiple rulesets beatmapset",
+                () =>
                 {
-                    Beatmaps = new[]
+                    selector.BeatmapSet = new APIBeatmapSet
                     {
-                        new APIBeatmap { RulesetID = 1 },
-                        new APIBeatmap { RulesetID = 2 },
-                    }
-                };
-            });
+                        Beatmaps = new[]
+                        {
+                            new APIBeatmap { RulesetID = 1 },
+                            new APIBeatmap { RulesetID = 2 },
+                        },
+                    };
+                }
+            );
 
-            AddAssert("osu disabled", () => !selector.ChildrenOfType<BeatmapRulesetTabItem>().Single(t => t.Value.OnlineID == 0).Enabled.Value);
-            AddAssert("mania disabled", () => !selector.ChildrenOfType<BeatmapRulesetTabItem>().Single(t => t.Value.OnlineID == 3).Enabled.Value);
+            AddAssert(
+                "osu disabled",
+                () =>
+                    !selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .Single(t => t.Value.OnlineID == 0)
+                        .Enabled.Value
+            );
+            AddAssert(
+                "mania disabled",
+                () =>
+                    !selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .Single(t => t.Value.OnlineID == 3)
+                        .Enabled.Value
+            );
 
-            AddAssert("taiko selected", () => selector.ChildrenOfType<BeatmapRulesetTabItem>().Single(t => t.Active.Value).Value.OnlineID == 1);
+            AddAssert(
+                "taiko selected",
+                () =>
+                    selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .Single(t => t.Active.Value)
+                        .Value.OnlineID == 1
+            );
         }
 
         [Test]
         public void TestSingleRulesetBeatmapSet()
         {
-            AddStep("load single ruleset beatmapset", () =>
-            {
-                selector.BeatmapSet = new APIBeatmapSet
+            AddStep(
+                "load single ruleset beatmapset",
+                () =>
                 {
-                    Beatmaps = new[] { new APIBeatmap { RulesetID = 3 } }
-                };
-            });
+                    selector.BeatmapSet = new APIBeatmapSet
+                    {
+                        Beatmaps = new[] { new APIBeatmap { RulesetID = 3 } },
+                    };
+                }
+            );
 
-            AddAssert("single ruleset selected", () => selector.ChildrenOfType<BeatmapRulesetTabItem>().Single(t => t.Active.Value).Value.OnlineID == 3);
+            AddAssert(
+                "single ruleset selected",
+                () =>
+                    selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .Single(t => t.Active.Value)
+                        .Value.OnlineID == 3
+            );
         }
 
         [Test]
         public void TestEmptyBeatmapSet()
         {
             AddStep("load empty beatmapset", () => selector.BeatmapSet = new APIBeatmapSet());
-            AddAssert("all rulesets disabled", () => selector.ChildrenOfType<BeatmapRulesetTabItem>().All(t => !t.Active.Value && !t.Enabled.Value));
+            AddAssert(
+                "all rulesets disabled",
+                () =>
+                    selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .All(t => !t.Active.Value && !t.Enabled.Value)
+            );
         }
 
         [Test]
         public void TestNullBeatmapSet()
         {
             AddStep("load null beatmapset", () => selector.BeatmapSet = null);
-            AddAssert("all rulesets disabled", () => selector.ChildrenOfType<BeatmapRulesetTabItem>().All(t => !t.Active.Value && !t.Enabled.Value));
+            AddAssert(
+                "all rulesets disabled",
+                () =>
+                    selector
+                        .ChildrenOfType<BeatmapRulesetTabItem>()
+                        .All(t => !t.Active.Value && !t.Enabled.Value)
+            );
         }
     }
 }

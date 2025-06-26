@@ -41,7 +41,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
         private string formatTime(int? secondsNull)
         {
-            if (secondsNull == null) return "0h 0m";
+            if (secondsNull == null)
+                return "0h 0m";
 
             int seconds = secondsNull.Value;
             string time = "";

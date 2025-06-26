@@ -82,68 +82,82 @@ namespace osu.Game.Overlays.BeatmapListing
         {
             AutoSizeAxes = Axes.Y;
             RelativeSizeAxes = Axes.X;
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    Child = beatmapCover = new TopSearchBeatmapSetCover
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                    }
-                },
-                new Container
-                {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Padding = new MarginPadding
-                    {
-                        Vertical = 20,
-                        Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                        Masking = true,
+                        Child = beatmapCover =
+                            new TopSearchBeatmapSetCover
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Alpha = 0,
+                            },
                     },
-                    Child = new FillFlowContainer
+                    new Container
                     {
                         AutoSizeAxes = Axes.Y,
                         RelativeSizeAxes = Axes.X,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 20),
-                        Children = new Drawable[]
+                        Padding = new MarginPadding
                         {
-                            textBox = new BeatmapSearchTextBox
+                            Vertical = 20,
+                            Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                        },
+                        Child = new FillFlowContainer
+                        {
+                            AutoSizeAxes = Axes.Y,
+                            RelativeSizeAxes = Axes.X,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 20),
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                TextChanged = () => TypingStarted?.Invoke(),
-                            },
-                            new ReverseChildIDFillFlowContainer<Drawable>
-                            {
-                                AutoSizeAxes = Axes.Y,
-                                RelativeSizeAxes = Axes.X,
-                                Direction = FillDirection.Vertical,
-                                Padding = new MarginPadding { Horizontal = 10 },
-                                Spacing = new Vector2(5),
-                                Children = new Drawable[]
+                                textBox = new BeatmapSearchTextBox
                                 {
-                                    generalFilter = new BeatmapSearchGeneralFilterRow(),
-                                    modeFilter = new BeatmapSearchRulesetFilterRow(),
-                                    categoryFilter = new BeatmapSearchFilterRow<SearchCategory>(BeatmapsStrings.ListingSearchFiltersStatus),
-                                    genreFilter = new BeatmapSearchFilterRow<SearchGenre>(BeatmapsStrings.ListingSearchFiltersGenre),
-                                    languageFilter = new BeatmapSearchFilterRow<SearchLanguage>(BeatmapsStrings.ListingSearchFiltersLanguage),
-                                    extraFilter = new BeatmapSearchMultipleSelectionFilterRow<SearchExtra>(BeatmapsStrings.ListingSearchFiltersExtra),
-                                    ranksFilter = new BeatmapSearchScoreFilterRow(),
-                                    playedFilter = new BeatmapSearchFilterRow<SearchPlayed>(BeatmapsStrings.ListingSearchFiltersPlayed),
-                                    explicitContentFilter = new BeatmapSearchFilterRow<SearchExplicit>(BeatmapsStrings.ListingSearchFiltersNsfw),
-                                }
-                            }
-                        }
-                    }
+                                    RelativeSizeAxes = Axes.X,
+                                    TextChanged = () => TypingStarted?.Invoke(),
+                                },
+                                new ReverseChildIDFillFlowContainer<Drawable>
+                                {
+                                    AutoSizeAxes = Axes.Y,
+                                    RelativeSizeAxes = Axes.X,
+                                    Direction = FillDirection.Vertical,
+                                    Padding = new MarginPadding { Horizontal = 10 },
+                                    Spacing = new Vector2(5),
+                                    Children = new Drawable[]
+                                    {
+                                        generalFilter = new BeatmapSearchGeneralFilterRow(),
+                                        modeFilter = new BeatmapSearchRulesetFilterRow(),
+                                        categoryFilter = new BeatmapSearchFilterRow<SearchCategory>(
+                                            BeatmapsStrings.ListingSearchFiltersStatus
+                                        ),
+                                        genreFilter = new BeatmapSearchFilterRow<SearchGenre>(
+                                            BeatmapsStrings.ListingSearchFiltersGenre
+                                        ),
+                                        languageFilter = new BeatmapSearchFilterRow<SearchLanguage>(
+                                            BeatmapsStrings.ListingSearchFiltersLanguage
+                                        ),
+                                        extraFilter =
+                                            new BeatmapSearchMultipleSelectionFilterRow<SearchExtra>(
+                                                BeatmapsStrings.ListingSearchFiltersExtra
+                                            ),
+                                        ranksFilter = new BeatmapSearchScoreFilterRow(),
+                                        playedFilter = new BeatmapSearchFilterRow<SearchPlayed>(
+                                            BeatmapsStrings.ListingSearchFiltersPlayed
+                                        ),
+                                        explicitContentFilter =
+                                            new BeatmapSearchFilterRow<SearchExplicit>(
+                                                BeatmapsStrings.ListingSearchFiltersNsfw
+                                            ),
+                                    },
+                                },
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             generalFilter.Current.Add(SearchGeneral.FeaturedArtists);
             categoryFilter.Current.Value = SearchCategory.Leaderboard;
@@ -157,10 +171,15 @@ namespace osu.Game.Overlays.BeatmapListing
             background.Colour = colourProvider.Dark6;
 
             allowExplicitContent = config.GetBindable<bool>(OsuSetting.ShowOnlineExplicitContent);
-            allowExplicitContent.BindValueChanged(allow =>
-            {
-                ExplicitContent.Value = allow.NewValue ? SearchExplicit.Show : SearchExplicit.Hide;
-            }, true);
+            allowExplicitContent.BindValueChanged(
+                allow =>
+                {
+                    ExplicitContent.Value = allow.NewValue
+                        ? SearchExplicit.Show
+                        : SearchExplicit.Hide;
+                },
+                true
+            );
         }
 
         protected override void LoadComplete()

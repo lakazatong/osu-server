@@ -44,14 +44,18 @@ namespace osu.Game.Overlays.Wiki
                 if (lastSubTitle != null)
                     lastSubTitle.Margin = new MarginPadding(0);
 
-                content.Add(lastSubTitle = entry.With(d => d.Margin = new MarginPadding { Bottom = 10 }));
+                content.Add(
+                    lastSubTitle = entry.With(d => d.Margin = new MarginPadding { Bottom = 10 })
+                );
 
                 return;
             }
 
             lastSubTitle = null;
 
-            content.Add(lastMainTitle = entry.With(d => d.Margin = new MarginPadding { Bottom = 5 }));
+            content.Add(
+                lastMainTitle = entry.With(d => d.Margin = new MarginPadding { Bottom = 5 })
+            );
         }
 
         private partial class TableOfContentsEntry : OsuHoverContainer
@@ -82,7 +86,10 @@ namespace osu.Game.Overlays.Wiki
             protected override IEnumerable<Drawable> EffectTargets => new Drawable[] { textFlow };
 
             [BackgroundDependencyLoader]
-            private void load(OverlayColourProvider colourProvider, OverlayScrollContainer scrollContainer)
+            private void load(
+                OverlayColourProvider colourProvider,
+                OverlayScrollContainer scrollContainer
+            )
             {
                 IdleColour = colourProvider.Light2;
                 HoverColour = colourProvider.Light1;

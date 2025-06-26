@@ -16,7 +16,6 @@ namespace osu.Game.Rulesets.Taiko.Edit
         {
             // Compose
             new CheckConcurrentObjects(),
-
             // Settings
             new CheckTaikoAbnormalDifficultySettings(),
         };

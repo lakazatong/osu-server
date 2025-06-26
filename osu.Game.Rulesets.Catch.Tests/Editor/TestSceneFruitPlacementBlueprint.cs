@@ -17,9 +17,11 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 {
     public partial class TestSceneFruitPlacementBlueprint : CatchPlacementBlueprintTestScene
     {
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableFruit((Fruit)hitObject);
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableFruit((Fruit)hitObject);
 
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new FruitPlacementBlueprint();
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new FruitPlacementBlueprint();
 
         [Test]
         public void TestFruitPlacementPosition()
@@ -30,14 +32,23 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             AddMoveStep(time, x);
             AddClickStep(MouseButton.Left);
 
-            AddAssert("outline position is correct", () =>
-            {
-                var outline = FruitOutlines.Single();
-                return Precision.AlmostEquals(outline.X, x) &&
-                       Precision.AlmostEquals(outline.Y, HitObjectContainer.PositionAtTime(time));
-            });
+            AddAssert(
+                "outline position is correct",
+                () =>
+                {
+                    var outline = FruitOutlines.Single();
+                    return Precision.AlmostEquals(outline.X, x)
+                        && Precision.AlmostEquals(
+                            outline.Y,
+                            HitObjectContainer.PositionAtTime(time)
+                        );
+                }
+            );
 
-            AddAssert("fruit time is correct", () => Precision.AlmostEquals(LastObject.StartTimeBindable.Value, time));
+            AddAssert(
+                "fruit time is correct",
+                () => Precision.AlmostEquals(LastObject.StartTimeBindable.Value, time)
+            );
             AddAssert("fruit position is correct", () => Precision.AlmostEquals(LastObject.X, x));
         }
     }

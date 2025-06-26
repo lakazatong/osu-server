@@ -34,14 +34,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private Drawable scaleContainer;
 
         public DrawableSliderRepeat()
-            : base(null)
-        {
-        }
+            : base(null) { }
 
         public DrawableSliderRepeat(SliderRepeat sliderRepeat)
-            : base(sliderRepeat)
-        {
-        }
+            : base(sliderRepeat) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -49,28 +45,38 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Origin = Anchor.Centre;
             Size = OsuHitObject.OBJECT_DIMENSIONS;
 
-            AddInternal(scaleContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Children = new Drawable[]
+            AddInternal(
+                scaleContainer = new Container
                 {
-                    // no default for this; only visible in legacy skins.
-                    CirclePiece = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderTailHitCircle), _ => Empty())
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                    Arrow = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.ReverseArrow), _ => new DefaultReverseArrow())
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
+                        // no default for this; only visible in legacy skins.
+                        CirclePiece = new SkinnableDrawable(
+                            new OsuSkinComponentLookup(OsuSkinComponents.SliderTailHitCircle),
+                            _ => Empty()
+                        )
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                        Arrow = new SkinnableDrawable(
+                            new OsuSkinComponentLookup(OsuSkinComponents.ReverseArrow),
+                            _ => new DefaultReverseArrow()
+                        )
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
                     },
                 }
-            });
+            );
 
-            ScaleBindable.BindValueChanged(scale => scaleContainer.Scale = new Vector2(scale.NewValue));
+            ScaleBindable.BindValueChanged(scale =>
+                scaleContainer.Scale = new Vector2(scale.NewValue)
+            );
         }
 
         protected override void OnApply()
@@ -81,7 +87,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             hasRotation = false;
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset) => DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
+        protected override void CheckForResult(bool userTriggered, double timeOffset) =>
+            DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
 
         protected override void UpdateInitialTransforms()
         {
@@ -118,7 +125,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         public void UpdateSnakingPosition(Vector2 start, Vector2 end)
         {
             // When the repeat is hit, the arrow should fade out on spot rather than following the slider
-            if (IsHit) return;
+            if (IsHit)
+                return;
 
             bool isRepeatAtEnd = HitObject.RepeatIndex % 2 == 0;
             List<Vector2> curve = ((PlaySliderBody)DrawableSlider.Body.Drawable).CurrentCurve;
@@ -143,7 +151,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                 break;
             }
 
-            float aimRotation = float.RadiansToDegrees(MathF.Atan2(aimRotationVector.Y - Position.Y, aimRotationVector.X - Position.X));
+            float aimRotation = float.RadiansToDegrees(
+                MathF.Atan2(aimRotationVector.Y - Position.Y, aimRotationVector.X - Position.X)
+            );
             while (Math.Abs(aimRotation - Arrow.Rotation) > 180)
                 aimRotation += aimRotation < Arrow.Rotation ? 360 : -360;
 
@@ -156,7 +166,14 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             else
             {
                 // If we're already snaking, interpolate to smooth out sharp curves (linear sliders, mainly).
-                Arrow.Rotation = Interpolation.ValueAt(Math.Clamp(Clock.ElapsedFrameTime, 0, 100), Arrow.Rotation, aimRotation, 0, 50, Easing.OutQuint);
+                Arrow.Rotation = Interpolation.ValueAt(
+                    Math.Clamp(Clock.ElapsedFrameTime, 0, 100),
+                    Arrow.Rotation,
+                    aimRotation,
+                    0,
+                    50,
+                    Easing.OutQuint
+                );
             }
         }
 
@@ -175,7 +192,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 // More or less matches stable (see https://github.com/peppy/osu-stable-reference/blob/bb57924c1552adbed11ee3d96cdcde47cf96f2b6/osu!/GameplayElements/HitObjects/Osu/HitCircleOsu.cs#L336-L338)
                 AccentColour.Value = Color4.White;
-                Alpha = Interpolation.ValueAt(Time.Current, 1f, 0f, HitStateUpdateTime, HitStateUpdateTime + 700);
+                Alpha = Interpolation.ValueAt(
+                    Time.Current,
+                    1f,
+                    0f,
+                    HitStateUpdateTime,
+                    HitStateUpdateTime + 700
+                );
                 Arrow.Alpha = 0;
             }
 

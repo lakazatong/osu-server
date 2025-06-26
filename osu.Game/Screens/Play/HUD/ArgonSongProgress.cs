@@ -24,16 +24,31 @@ namespace osu.Game.Screens.Play.HUD
 
         private const float bar_height = 10;
 
-        [SettingSource(typeof(SongProgressStrings), nameof(SongProgressStrings.ShowGraph), nameof(SongProgressStrings.ShowGraphDescription))]
+        [SettingSource(
+            typeof(SongProgressStrings),
+            nameof(SongProgressStrings.ShowGraph),
+            nameof(SongProgressStrings.ShowGraphDescription)
+        )]
         public Bindable<bool> ShowGraph { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SongProgressStrings), nameof(SongProgressStrings.ShowTime), nameof(SongProgressStrings.ShowTimeDescription))]
+        [SettingSource(
+            typeof(SongProgressStrings),
+            nameof(SongProgressStrings.ShowTime),
+            nameof(SongProgressStrings.ShowTimeDescription)
+        )]
         public Bindable<bool> ShowTime { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.UseRelativeSize))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.UseRelativeSize)
+        )]
         public BindableBool UseRelativeSize { get; } = new BindableBool(true);
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.Colour), nameof(SkinnableComponentStrings.ColourDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.Colour),
+            nameof(SkinnableComponentStrings.ColourDescription)
+        )]
         public BindableColour4 AccentColour { get; } = new BindableColour4(Colour4.White);
 
         [Resolved]
@@ -60,7 +75,7 @@ namespace osu.Game.Screens.Play.HUD
                         Name = "Info",
                         Anchor = Anchor.TopLeft,
                         RelativeSizeAxes = Axes.X,
-                        ShowProgress = false
+                        ShowProgress = false,
                     },
                     bar = new ArgonSongProgressBar(bar_height)
                     {
@@ -75,15 +90,16 @@ namespace osu.Game.Screens.Play.HUD
                         Origin = Anchor.BottomLeft,
                         Masking = true,
                         CornerRadius = 5,
-                        Child = graph = new ArgonSongProgressGraph
-                        {
-                            Name = "Difficulty graph",
-                            RelativeSizeAxes = Axes.Both,
-                            Blending = BlendingParameters.Additive
-                        },
+                        Child = graph =
+                            new ArgonSongProgressGraph
+                            {
+                                Name = "Difficulty graph",
+                                RelativeSizeAxes = Axes.Both,
+                                Blending = BlendingParameters.Additive,
+                            },
                         RelativeSizeAxes = Axes.X,
                     },
-                }
+                },
             };
         }
 
@@ -100,12 +116,18 @@ namespace osu.Game.Screens.Play.HUD
 
             Interactive.BindValueChanged(_ => bar.Interactive = Interactive.Value, true);
             ShowGraph.BindValueChanged(_ => updateGraphVisibility(), true);
-            ShowTime.BindValueChanged(_ => info.FadeTo(ShowTime.Value ? 1 : 0, 200, Easing.In), true);
+            ShowTime.BindValueChanged(
+                _ => info.FadeTo(ShowTime.Value ? 1 : 0, 200, Easing.In),
+                true
+            );
             AccentColour.BindValueChanged(_ => Colour = AccentColour.Value, true);
 
             // see comment in ArgonHealthDisplay.cs regarding RelativeSizeAxes
             float previousWidth = Width;
-            UseRelativeSize.BindValueChanged(v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None, true);
+            UseRelativeSize.BindValueChanged(
+                v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None,
+                true
+            );
             Width = previousWidth;
         }
 

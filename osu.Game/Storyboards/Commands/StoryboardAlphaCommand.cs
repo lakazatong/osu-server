@@ -8,16 +8,20 @@ namespace osu.Game.Storyboards.Commands
 {
     public class StoryboardAlphaCommand : StoryboardCommand<float>
     {
-        public StoryboardAlphaCommand(Easing easing, double startTime, double endTime, float startValue, float endValue)
-            : base(easing, startTime, endTime, startValue, endValue)
-        {
-        }
+        public StoryboardAlphaCommand(
+            Easing easing,
+            double startTime,
+            double endTime,
+            float startValue,
+            float endValue
+        )
+            : base(easing, startTime, endTime, startValue, endValue) { }
 
         public override string PropertyName => nameof(Drawable.Alpha);
 
         public override void ApplyInitialValue<TDrawable>(TDrawable d) => d.Alpha = StartValue;
 
-        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d)
-            => d.FadeTo(StartValue).Then().FadeTo(EndValue, Duration, Easing);
+        public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d) =>
+            d.FadeTo(StartValue).Then().FadeTo(EndValue, Duration, Easing);
     }
 }

@@ -44,7 +44,7 @@ namespace osu.Game.Overlays.Mods
                             Active = { Value = true },
                             Scale = new Vector2(0.6f),
                             Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft
+                            Origin = Anchor.CentreLeft,
                         },
                         new OsuSpriteText
                         {
@@ -55,7 +55,7 @@ namespace osu.Game.Overlays.Mods
                             UseFullGlyphHeight = false,
                             Text = mod.Name,
                         },
-                    }
+                    },
                 },
                 new Container
                 {
@@ -72,7 +72,10 @@ namespace osu.Game.Overlays.Mods
                         {
                             AutoSizeAxes = Axes.Both,
                             Colour = colourProvider.Content2,
-                            Text = string.Join('\n', mod.SettingDescription.Select(svp => svp.setting)),
+                            Text = string.Join(
+                                '\n',
+                                mod.SettingDescription.Select(svp => svp.setting)
+                            ),
                         },
                         new TextFlowContainer(t =>
                         {
@@ -84,10 +87,13 @@ namespace osu.Game.Overlays.Mods
                             AutoSizeAxes = Axes.Both,
                             Colour = colourProvider.Content1,
                             TextAnchor = Anchor.TopRight,
-                            Text = string.Join('\n', mod.SettingDescription.Select(svp => svp.value)),
+                            Text = string.Join(
+                                '\n',
+                                mod.SettingDescription.Select(svp => svp.value)
+                            ),
                         },
-                    }
-                }
+                    },
+                },
             };
         }
     }

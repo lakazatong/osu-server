@@ -68,7 +68,10 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                 column -= stage.Columns;
             }
 
-            throw new ArgumentOutOfRangeException(nameof(column), "Provided index exceeds all available stages");
+            throw new ArgumentOutOfRangeException(
+                nameof(column),
+                "Provided index exceeds all available stages"
+            );
         }
     }
 }

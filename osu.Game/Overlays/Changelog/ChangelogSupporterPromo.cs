@@ -37,7 +37,11 @@ namespace osu.Game.Overlays.Changelog
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuColour colour, TextureStore textures, OverlayColourProvider colourProvider)
+        private void load(
+            OsuColour colour,
+            TextureStore textures,
+            OverlayColourProvider colourProvider
+        )
         {
             SupporterPromoLinkFlowContainer supportLinkText;
 
@@ -77,13 +81,21 @@ namespace osu.Game.Overlays.Changelog
                                     Direction = FillDirection.Vertical,
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                    Padding = new MarginPadding { Right = WaveOverlayContainer.HORIZONTAL_PADDING + image_container_width },
+                                    Padding = new MarginPadding
+                                    {
+                                        Right =
+                                            WaveOverlayContainer.HORIZONTAL_PADDING
+                                            + image_container_width,
+                                    },
                                     Children = new Drawable[]
                                     {
                                         new OsuSpriteText
                                         {
                                             Text = ChangelogStrings.SupportHeading,
-                                            Font = OsuFont.GetFont(size: 20, weight: FontWeight.Light),
+                                            Font = OsuFont.GetFont(
+                                                size: 20,
+                                                weight: FontWeight.Light
+                                            ),
                                             Margin = new MarginPadding { Bottom = 20 },
                                         },
                                         supportLinkText = new SupporterPromoLinkFlowContainer(t =>
@@ -105,7 +117,7 @@ namespace osu.Game.Overlays.Changelog
                                             Margin = new MarginPadding { Top = 10 },
                                             RelativeSizeAxes = Axes.X,
                                             AutoSizeAxes = Axes.Y,
-                                        }
+                                        },
                                     },
                                 },
                                 new Container
@@ -145,34 +157,35 @@ namespace osu.Game.Overlays.Changelog
                                                 Texture = textures.Get(@"Online/supporter-heart"),
                                             },
                                         },
-                                    }
-                                }
-                            }
+                                    },
+                                },
+                            },
                         },
-                    }
+                    },
                 },
             };
 
             supportLinkText.AddText("Support further development of osu! and ");
-            supportLinkText.AddLink("become an osu!supporter", @"https://osu.ppy.sh/home/support", t => t.Font = t.Font.With(weight: FontWeight.Bold));
+            supportLinkText.AddLink(
+                "become an osu!supporter",
+                @"https://osu.ppy.sh/home/support",
+                t => t.Font = t.Font.With(weight: FontWeight.Bold)
+            );
             supportLinkText.AddText(" today!");
         }
 
         private partial class SupporterPromoLinkFlowContainer : LinkFlowContainer
         {
             public SupporterPromoLinkFlowContainer(Action<SpriteText> defaultCreationParameters)
-                : base(defaultCreationParameters)
-            {
-            }
+                : base(defaultCreationParameters) { }
 
-            protected override DrawableLinkCompiler CreateLinkCompiler(ITextPart textPart) => new SupporterPromoLinkCompiler(textPart);
+            protected override DrawableLinkCompiler CreateLinkCompiler(ITextPart textPart) =>
+                new SupporterPromoLinkCompiler(textPart);
 
             private partial class SupporterPromoLinkCompiler : DrawableLinkCompiler
             {
                 public SupporterPromoLinkCompiler(ITextPart part)
-                    : base(part)
-                {
-                }
+                    : base(part) { }
 
                 [BackgroundDependencyLoader]
                 private void load(OsuColour colour)

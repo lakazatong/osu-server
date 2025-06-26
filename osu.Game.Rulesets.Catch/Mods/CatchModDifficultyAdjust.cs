@@ -14,25 +14,37 @@ namespace osu.Game.Rulesets.Catch.Mods
 {
     public class CatchModDifficultyAdjust : ModDifficultyAdjust, IApplicableToBeatmapProcessor
     {
-        [SettingSource("Circle Size", "Override a beatmap's set CS.", FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable CircleSize { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.CircleSize,
-        };
+        [SettingSource(
+            "Circle Size",
+            "Override a beatmap's set CS.",
+            FIRST_SETTING_ORDER - 1,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable CircleSize { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.CircleSize,
+            };
 
-        [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
-        public DifficultyBindable ApproachRate { get; } = new DifficultyBindable
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 10,
-            ExtendedMaxValue = 11,
-            ReadCurrentFromDifficulty = diff => diff.ApproachRate,
-        };
+        [SettingSource(
+            "Approach Rate",
+            "Override a beatmap's set AR.",
+            LAST_SETTING_ORDER + 1,
+            SettingControlType = typeof(DifficultyAdjustSettingsControl)
+        )]
+        public DifficultyBindable ApproachRate { get; } =
+            new DifficultyBindable
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 10,
+                ExtendedMaxValue = 11,
+                ReadCurrentFromDifficulty = diff => diff.ApproachRate,
+            };
 
         [SettingSource("Spicy Patterns", "Adjust the patterns as if Hard Rock is enabled.")]
         public BindableBool HardRockOffsets { get; } = new BindableBool();
@@ -44,18 +56,26 @@ namespace osu.Game.Rulesets.Catch.Mods
                 if (UserAdjustedSettingsCount != 1)
                     return string.Empty;
 
-                if (!CircleSize.IsDefault) return format("CS", CircleSize);
-                if (!ApproachRate.IsDefault) return format("AR", ApproachRate);
-                if (!OverallDifficulty.IsDefault) return format("OD", OverallDifficulty);
-                if (!DrainRate.IsDefault) return format("HP", DrainRate);
+                if (!CircleSize.IsDefault)
+                    return format("CS", CircleSize);
+                if (!ApproachRate.IsDefault)
+                    return format("AR", ApproachRate);
+                if (!OverallDifficulty.IsDefault)
+                    return format("OD", OverallDifficulty);
+                if (!DrainRate.IsDefault)
+                    return format("HP", DrainRate);
 
                 return string.Empty;
 
-                string format(string acronym, DifficultyBindable bindable) => $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
+                string format(string acronym, DifficultyBindable bindable) =>
+                    $"{acronym}{bindable.Value!.Value.ToStandardFormattedString(1)}";
             }
         }
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -77,8 +97,10 @@ namespace osu.Game.Rulesets.Catch.Mods
         {
             base.ApplySettings(difficulty);
 
-            if (CircleSize.Value != null) difficulty.CircleSize = CircleSize.Value.Value;
-            if (ApproachRate.Value != null) difficulty.ApproachRate = ApproachRate.Value.Value;
+            if (CircleSize.Value != null)
+                difficulty.CircleSize = CircleSize.Value.Value;
+            if (ApproachRate.Value != null)
+                difficulty.ApproachRate = ApproachRate.Value.Value;
         }
 
         public void ApplyToBeatmapProcessor(IBeatmapProcessor beatmapProcessor)

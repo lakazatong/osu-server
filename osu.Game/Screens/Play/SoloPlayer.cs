@@ -20,7 +20,8 @@ namespace osu.Game.Screens.Play
     public partial class SoloPlayer : SubmittingPlayer
     {
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private readonly SoloGameplayLeaderboardProvider leaderboardProvider = new SoloGameplayLeaderboardProvider();
+        private readonly SoloGameplayLeaderboardProvider leaderboardProvider =
+            new SoloGameplayLeaderboardProvider();
 
         public SoloPlayer([CanBeNull] PlayerConfiguration configuration = null)
             : base(configuration)
@@ -45,12 +46,19 @@ namespace osu.Game.Screens.Play
             if (!Ruleset.Value.IsLegacyRuleset())
                 return null;
 
-            return new CreateSoloScoreRequest(Beatmap.Value.BeatmapInfo, rulesetId, Game.VersionHash);
+            return new CreateSoloScoreRequest(
+                Beatmap.Value.BeatmapInfo,
+                rulesetId,
+                Game.VersionHash
+            );
         }
 
         protected override bool ShouldExitOnTokenRetrievalFailure(Exception exception) => false;
 
-        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(Score score, long token)
+        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(
+            Score score,
+            long token
+        )
         {
             IBeatmapInfo beatmap = score.ScoreInfo.BeatmapInfo!;
 

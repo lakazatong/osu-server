@@ -29,22 +29,24 @@ namespace osu.Game.Graphics.UserInterface
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRange(new Drawable[]
-            {
-                Background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    Colour = colours.Gray4,
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue
-                },
-                Icon = new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(13),
-                    Icon = icon,
-                },
-            });
+                    Background = new Box
+                    {
+                        Colour = colours.Gray4,
+                        RelativeSizeAxes = Axes.Both,
+                        Depth = float.MaxValue,
+                    },
+                    Icon = new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(13),
+                        Icon = icon,
+                    },
+                }
+            );
         }
     }
 }

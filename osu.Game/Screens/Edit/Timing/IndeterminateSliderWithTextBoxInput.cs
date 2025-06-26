@@ -1,8 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Numerics;
 using System.Globalization;
+using System.Numerics;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -21,7 +21,9 @@ namespace osu.Game.Screens.Edit.Timing
     /// where multiple objects with multiple different property values are selected
     /// by providing an "indeterminate state".
     /// </summary>
-    public partial class IndeterminateSliderWithTextBoxInput<T> : CompositeDrawable, IHasCurrentValue<T?>
+    public partial class IndeterminateSliderWithTextBoxInput<T>
+        : CompositeDrawable,
+            IHasCurrentValue<T?>
         where T : struct, INumber<T>, IMinMaxValue<T>
     {
         /// <summary>
@@ -57,7 +59,10 @@ namespace osu.Game.Screens.Edit.Timing
         /// Bindable to use for the slider until a non-null value is set for <see cref="Current"/>.
         /// In particular, it can be used to control min/max bounds and precision in the case of <see cref="BindableNumber{T}"/>s.
         /// </param>
-        public IndeterminateSliderWithTextBoxInput(LocalisableString labelText, Bindable<T> indeterminateValue)
+        public IndeterminateSliderWithTextBoxInput(
+            LocalisableString labelText,
+            Bindable<T> indeterminateValue
+        )
         {
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
@@ -81,15 +86,16 @@ namespace osu.Game.Screens.Edit.Timing
                         {
                             TransferValueOnCommit = true,
                             RelativeSizeAxes = Axes.X,
-                            Current = indeterminateValue
-                        }
-                    }
+                            Current = indeterminateValue,
+                        },
+                    },
                 },
             };
 
             textBox.OnCommit += (t, isNew) =>
             {
-                if (!isNew) return;
+                if (!isNew)
+                    return;
 
                 try
                 {
@@ -138,7 +144,9 @@ namespace osu.Game.Screens.Edit.Timing
 
                 // use the value from the slider to ensure that any precision/min/max set on it via the initial indeterminate value have been applied correctly.
                 decimal decimalValue = decimal.CreateTruncating(slider.Current.Value);
-                textBox.Text = decimalValue.ToString($@"N{FormatUtils.FindPrecision(decimalValue)}");
+                textBox.Text = decimalValue.ToString(
+                    $@"N{FormatUtils.FindPrecision(decimalValue)}"
+                );
                 textBox.PlaceholderText = string.Empty;
             }
             else

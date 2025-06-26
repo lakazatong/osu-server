@@ -19,7 +19,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
     /// <summary>
     /// The part of the timeline that displays the control points.
     /// </summary>
-    public partial class TimelineTimingChangeDisplay : TimelinePart<TimelineTimingChangeDisplay.TimingPointPiece>
+    public partial class TimelineTimingChangeDisplay
+        : TimelinePart<TimelineTimingChangeDisplay.TimingPointPiece>
     {
         [Resolved]
         private Timeline timeline { get; set; } = null!;
@@ -45,11 +46,17 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             base.Update();
 
-            if (DrawWidth <= 0) return;
+            if (DrawWidth <= 0)
+                return;
 
             (float, float) newRange = (
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X - TimingPointPiece.WIDTH) / DrawWidth * Content.RelativeChildSize.X,
-                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X + TimingPointPiece.WIDTH) / DrawWidth * Content.RelativeChildSize.X);
+                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopLeft).X - TimingPointPiece.WIDTH)
+                    / DrawWidth
+                    * Content.RelativeChildSize.X,
+                (ToLocalSpace(timeline.ScreenSpaceDrawQuad.TopRight).X + TimingPointPiece.WIDTH)
+                    / DrawWidth
+                    * Content.RelativeChildSize.X
+            );
 
             if (visibleRange != newRange)
             {
@@ -69,7 +76,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             // Remove groups outside the visible range (or timing points which have since been removed from the beatmap).
             foreach (TimingPointPiece drawableGroup in this)
             {
-                if (!controlPointInfo.TimingPoints.Contains(drawableGroup.Point) || !shouldBeVisible(drawableGroup.Point))
+                if (
+                    !controlPointInfo.TimingPoints.Contains(drawableGroup.Point)
+                    || !shouldBeVisible(drawableGroup.Point)
+                )
                     drawableGroup.Expire();
             }
 
@@ -92,7 +102,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             Add(new TimingPointPiece(point));
         }
 
-        private bool shouldBeVisible(TimingControlPoint point) => point.Time >= visibleRange.min && point.Time <= visibleRange.max;
+        private bool shouldBeVisible(TimingControlPoint point) =>
+            point.Time >= visibleRange.min && point.Time <= visibleRange.max;
 
         public partial class TimingPointPiece : CompositeDrawable
         {
@@ -129,11 +140,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                         Colour = Point.GetRepresentingColour(colours),
                         Masking = true,
                         CornerRadius = TimelineTickDisplay.TICK_WIDTH / 2,
-                        Child = new Box
-                        {
-                            Colour = Color4.White,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        Child = new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                     },
                     Label = new OsuSpriteText
                     {
@@ -142,13 +149,16 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                         Rotation = 90,
                         Padding = new MarginPadding { Horizontal = 2 },
                         Font = OsuFont.Default.With(size: 12, weight: FontWeight.SemiBold),
-                    }
+                    },
                 };
 
-                beatLength.BindValueChanged(beatLength =>
-                {
-                    Label.Text = $"{60000 / beatLength.NewValue:n1} BPM";
-                }, true);
+                beatLength.BindValueChanged(
+                    beatLength =>
+                    {
+                        Label.Text = $"{60000 / beatLength.NewValue:n1} BPM";
+                    },
+                    true
+                );
             }
 
             protected override void Update()

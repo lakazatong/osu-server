@@ -20,7 +20,9 @@ namespace osu.Game.Tests.Visual.Editing
     public partial class TestSceneSubmissionStageProgress : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [Resolved]
         private AudioManager audio { get; set; } = null!;
@@ -34,45 +36,65 @@ namespace osu.Game.Tests.Visual.Editing
 
             SubmissionStageProgress progress = null!;
 
-            AddStep("create content", () => Child = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.8f),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Child = progress = new SubmissionStageProgress
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    StageDescription = "Frobnicating the foobarator...",
-                }
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Child = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.8f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Child = progress =
+                            new SubmissionStageProgress
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                StageDescription = "Frobnicating the foobarator...",
+                            },
+                    }
+            );
             AddStep("not started", () => progress.SetNotStarted());
             AddStep("indeterminate progress", () => progress.SetInProgress());
-            AddStep("increase progress to 100", () =>
-            {
-                incrementingProgress = 0;
-
-                ScheduledDelegate? task = null;
-
-                task = Scheduler.AddDelayed(() =>
+            AddStep(
+                "increase progress to 100",
+                () =>
                 {
-                    if (incrementingProgress >= 1)
-                    {
-                        // ReSharper disable once AccessToModifiedClosure
-                        task?.Cancel();
-                        return;
-                    }
+                    incrementingProgress = 0;
 
-                    if (RNG.NextDouble() < 0.01)
-                        progress.SetInProgress(incrementingProgress += RNG.NextSingle(0.08f));
-                }, 0, true);
-            });
+                    ScheduledDelegate? task = null;
+
+                    task = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            if (incrementingProgress >= 1)
+                            {
+                                // ReSharper disable once AccessToModifiedClosure
+                                task?.Cancel();
+                                return;
+                            }
+
+                            if (RNG.NextDouble() < 0.01)
+                                progress.SetInProgress(
+                                    incrementingProgress += RNG.NextSingle(0.08f)
+                                );
+                        },
+                        0,
+                        true
+                    );
+                }
+            );
 
             AddUntilStep("wait for completed", () => incrementingProgress >= 1);
             AddStep("completed", () => progress.SetCompleted());
             AddStep("failed", () => progress.SetFailed("the foobarator has defrobnicated"));
-            AddStep("failed with long message", () => progress.SetFailed("this is a very very very very VERY VEEEEEEEEEEEEEEEEEEEEEEEEERY long error message like you would never believe"));
+            AddStep(
+                "failed with long message",
+                () =>
+                    progress.SetFailed(
+                        "this is a very very very very VERY VEEEEEEEEEEEEEEEEEEEEEEEEERY long error message like you would never believe"
+                    )
+            );
             AddStep("canceled", () => progress.SetCanceled());
         }
 
@@ -82,63 +104,66 @@ namespace osu.Game.Tests.Visual.Editing
             SubmissionStageProgress[] stages = new SubmissionStageProgress[4];
             Container? cardContainer = null;
 
-            AddStep("prepare", () =>
-            {
-                Child = new Container
+            AddStep(
+                "prepare",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Child = new FillFlowContainer
+                    Child = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(0.8f),
+                        Size = new Vector2(1),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 5),
-                        Children = new Drawable[]
+                        Child = new FillFlowContainer
                         {
-                            stages[0] = new SubmissionStageProgress
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.8f),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 5),
+                            Children = new Drawable[]
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                StageDescription = "Export...",
-                                StageIndex = 0
+                                stages[0] = new SubmissionStageProgress
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    StageDescription = "Export...",
+                                    StageIndex = 0,
+                                },
+                                stages[1] = new SubmissionStageProgress
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    StageDescription = "CreateSet...",
+                                    StageIndex = 1,
+                                },
+                                stages[2] = new SubmissionStageProgress
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    StageDescription = "Upload...",
+                                    StageIndex = 2,
+                                },
+                                stages[3] = new SubmissionStageProgress
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    StageDescription = "Update...",
+                                    StageIndex = 3,
+                                },
+                                cardContainer = new Container
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
                             },
-                            stages[1] = new SubmissionStageProgress
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                StageDescription = "CreateSet...",
-                                StageIndex = 1
-                            },
-                            stages[2] = new SubmissionStageProgress
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                StageDescription = "Upload...",
-                                StageIndex = 2
-                            },
-                            stages[3] = new SubmissionStageProgress
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                StageDescription = "Update...",
-                                StageIndex = 3
-                            },
-                            cardContainer = new Container
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                            }
-                        }
-                    }
-                };
+                        },
+                    };
 
-                completeSample = audio.Samples.Get(@"UI/bss-complete");
-            });
+                    completeSample = audio.Samples.Get(@"UI/bss-complete");
+                }
+            );
 
             for (int i = 0; i < stages.Length; i++)
             {
@@ -152,16 +177,24 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddWaitStep("pause for timing", 2);
 
-            AddStep("Sequence Complete", () =>
-            {
-                var beatmapSet = CreateAPIBeatmapSet(Ruleset.Value);
-                beatmapSet.Beatmaps = Enumerable.Repeat(beatmapSet.Beatmaps.First(), 100).ToArray();
-                LoadComponentAsync(new BeatmapCardExtra(beatmapSet, false), loaded =>
+            AddStep(
+                "Sequence Complete",
+                () =>
                 {
-                    cardContainer?.Add(loaded);
-                    completeSample?.Play();
-                });
-            });
+                    var beatmapSet = CreateAPIBeatmapSet(Ruleset.Value);
+                    beatmapSet.Beatmaps = Enumerable
+                        .Repeat(beatmapSet.Beatmaps.First(), 100)
+                        .ToArray();
+                    LoadComponentAsync(
+                        new BeatmapCardExtra(beatmapSet, false),
+                        loaded =>
+                        {
+                            cardContainer?.Add(loaded);
+                            completeSample?.Play();
+                        }
+                    );
+                }
+            );
         }
     }
 }

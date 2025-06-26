@@ -15,7 +15,12 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
         /// <param name="password">The password.</param>
         /// <param name="onSuccess">A delegate to invoke if the user joined the room.</param>
         /// <param name="onFailure">A delegate to invoke if the user is not able to join the room.</param>
-        void Join(Room room, string? password, Action<Room>? onSuccess = null, Action<string, Exception?>? onFailure = null);
+        void Join(
+            Room room,
+            string? password,
+            Action<Room>? onSuccess = null,
+            Action<string, Exception?>? onFailure = null
+        );
 
         /// <summary>
         /// Copies the given room and opens it as a fresh (not-yet-created) one.

@@ -34,10 +34,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
             // Without AlwaysPresent, a movement in a parent container (ie. the editor composer area resizing) could cause incorrect input handling.
             AlwaysPresent = true;
 
-            InternalChild = body = new ManualSliderBody
-            {
-                AccentColour = Color4.Transparent
-            };
+            InternalChild = body = new ManualSliderBody { AccentColour = Color4.Transparent };
         }
 
         [BackgroundDependencyLoader]
@@ -69,6 +66,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
 
         public void RecyclePath() => body.RecyclePath();
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => body.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            body.ReceivePositionalInputAt(screenSpacePos);
     }
 }

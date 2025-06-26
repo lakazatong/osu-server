@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Objects.Pooling
     /// A <see cref="PoolableDrawable"/> that is controlled by <see cref="Entry"/> to implement drawable pooling and replay rewinding.
     /// </summary>
     /// <typeparam name="TEntry">The <see cref="LifetimeEntry"/> type storing state and controlling this drawable.</typeparam>
-    public abstract partial class PoolableDrawableWithLifetime<TEntry> : PoolableDrawable where TEntry : LifetimeEntry
+    public abstract partial class PoolableDrawableWithLifetime<TEntry> : PoolableDrawable
+        where TEntry : LifetimeEntry
     {
         private TEntry? entry;
 
@@ -50,7 +51,9 @@ namespace osu.Game.Rulesets.Objects.Pooling
             set
             {
                 if (Entry == null && LifetimeStart != value)
-                    throw new InvalidOperationException($"Cannot modify lifetime of {nameof(PoolableDrawableWithLifetime<TEntry>)} when entry is not set");
+                    throw new InvalidOperationException(
+                        $"Cannot modify lifetime of {nameof(PoolableDrawableWithLifetime<TEntry>)} when entry is not set"
+                    );
 
                 if (Entry != null)
                     Entry.LifetimeStart = value;
@@ -63,7 +66,9 @@ namespace osu.Game.Rulesets.Objects.Pooling
             set
             {
                 if (Entry == null && LifetimeEnd != value)
-                    throw new InvalidOperationException($"Cannot modify lifetime of {nameof(PoolableDrawableWithLifetime<TEntry>)} when entry is not set");
+                    throw new InvalidOperationException(
+                        $"Cannot modify lifetime of {nameof(PoolableDrawableWithLifetime<TEntry>)} when entry is not set"
+                    );
 
                 if (Entry != null)
                     Entry.LifetimeEnd = value;
@@ -94,7 +99,9 @@ namespace osu.Game.Rulesets.Objects.Pooling
         public void Apply(TEntry entry)
         {
             if (LoadState == LoadState.Loading)
-                throw new InvalidOperationException($"Cannot apply a new {nameof(TEntry)} while currently loading.");
+                throw new InvalidOperationException(
+                    $"Cannot apply a new {nameof(TEntry)} while currently loading."
+                );
 
             apply(entry);
         }
@@ -111,16 +118,12 @@ namespace osu.Game.Rulesets.Objects.Pooling
         /// <summary>
         /// Invoked to apply a new entry to this drawable.
         /// </summary>
-        protected virtual void OnApply(TEntry entry)
-        {
-        }
+        protected virtual void OnApply(TEntry entry) { }
 
         /// <summary>
         /// Invoked to revert application of the entry to this drawable.
         /// </summary>
-        protected virtual void OnFree(TEntry entry)
-        {
-        }
+        protected virtual void OnFree(TEntry entry) { }
 
         private void apply(TEntry entry)
         {

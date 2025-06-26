@@ -11,7 +11,10 @@ namespace osu.Game.Tournament.Screens.Editors.Components
     {
         public DeleteRoundDialog(TournamentRound round, Action action)
         {
-            HeaderText = round.Name.Value.Length > 0 ? $@"Delete round ""{round.Name.Value}""?" : @"Delete unnamed round?";
+            HeaderText =
+                round.Name.Value.Length > 0
+                    ? $@"Delete round ""{round.Name.Value}""?"
+                    : @"Delete unnamed round?";
             DangerousAction = action;
         }
     }

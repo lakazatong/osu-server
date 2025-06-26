@@ -54,7 +54,7 @@ namespace osu.Game.Graphics.UserInterface
             {
                 AutoSizeAxes = Axes.Both,
                 Direction = FillDirection.Horizontal,
-                Spacing = new Vector2(5)
+                Spacing = new Vector2(5),
             };
 
             updateState();
@@ -69,7 +69,13 @@ namespace osu.Game.Graphics.UserInterface
         private void updateState()
         {
             flow.Clear();
-            foreach (string h in hotkey.ResolveKeyCombination(readableKeyCombinationProvider, realmKeyBindingStore, gameHost))
+            foreach (
+                string h in hotkey.ResolveKeyCombination(
+                    readableKeyCombinationProvider,
+                    realmKeyBindingStore,
+                    gameHost
+                )
+            )
                 flow.Add(new HotkeyBox(h));
         }
 
@@ -98,11 +104,11 @@ namespace osu.Game.Graphics.UserInterface
                     },
                     new OsuSpriteText
                     {
-                        Margin = new MarginPadding { Horizontal = 5, Bottom = 1, },
+                        Margin = new MarginPadding { Horizontal = 5, Bottom = 1 },
                         Text = hotkey.ToUpperInvariant(),
                         Font = OsuFont.Default.With(size: 12, weight: FontWeight.Bold),
                         Colour = colourProvider?.Light1 ?? colours.GrayA,
-                    }
+                    },
                 };
             }
         }

@@ -26,7 +26,16 @@ namespace osu.Game.Benchmarks
                 // Ensure the object has hit windows populated.
                 var hitObject = new HitCircle();
                 hitObject.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
-                events.Add(new HitEvent(RNG.NextDouble(-200.0, 200.0), RNG.NextDouble(1.0, 2.0), HitResult.Great, hitObject, null, null));
+                events.Add(
+                    new HitEvent(
+                        RNG.NextDouble(-200.0, 200.0),
+                        RNG.NextDouble(1.0, 2.0),
+                        HitResult.Great,
+                        hitObject,
+                        null,
+                        null
+                    )
+                );
 
                 incrementalEventLists.Add(new List<HitEvent>(events));
             }

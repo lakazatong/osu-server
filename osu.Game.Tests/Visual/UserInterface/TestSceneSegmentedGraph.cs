@@ -39,7 +39,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Colour4.Orange,
                 Colour4.Yellow,
                 Colour4.YellowGreen,
-                Colour4.Green
+                Colour4.Green,
             };
 
             AddStep("values from 1-10", () => graph.Values = Enumerable.Range(1, 10).ToArray());
@@ -53,34 +53,49 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("500 random values", () => randomValues(500));
             AddStep("beatmap density with granularity of 200", () => beatmapDensity());
             AddStep("beatmap density with granularity of 300", () => beatmapDensity(300));
-            AddStep("reversed values from 1-10", () => graph.Values = Enumerable.Range(1, 10).Reverse().ToArray());
-            AddStep("change tier colours", () =>
-            {
-                graph.TierColours = new[]
+            AddStep(
+                "reversed values from 1-10",
+                () => graph.Values = Enumerable.Range(1, 10).Reverse().ToArray()
+            );
+            AddStep(
+                "change tier colours",
+                () =>
                 {
-                    Colour4.White,
-                    Colour4.LightBlue,
-                    Colour4.Aqua,
-                    Colour4.Blue
-                };
-            });
-            AddStep("reset tier colours", () =>
-            {
-                graph.TierColours = new[]
+                    graph.TierColours = new[]
+                    {
+                        Colour4.White,
+                        Colour4.LightBlue,
+                        Colour4.Aqua,
+                        Colour4.Blue,
+                    };
+                }
+            );
+            AddStep(
+                "reset tier colours",
+                () =>
                 {
-                    Colour4.Red,
-                    Colour4.OrangeRed,
-                    Colour4.Orange,
-                    Colour4.Yellow,
-                    Colour4.YellowGreen,
-                    Colour4.Green
-                };
-            });
+                    graph.TierColours = new[]
+                    {
+                        Colour4.Red,
+                        Colour4.OrangeRed,
+                        Colour4.Orange,
+                        Colour4.Yellow,
+                        Colour4.YellowGreen,
+                        Colour4.Green,
+                    };
+                }
+            );
 
             AddStep("set graph colour to blue", () => graph.Colour = Colour4.Blue);
             AddStep("set graph colour to transparent", () => graph.Colour = Colour4.Transparent);
-            AddStep("set graph colour to vertical gradient", () => graph.Colour = ColourInfo.GradientVertical(Colour4.White, Colour4.Black));
-            AddStep("set graph colour to horizontal gradient", () => graph.Colour = ColourInfo.GradientHorizontal(Colour4.White, Colour4.Black));
+            AddStep(
+                "set graph colour to vertical gradient",
+                () => graph.Colour = ColourInfo.GradientVertical(Colour4.White, Colour4.Black)
+            );
+            AddStep(
+                "set graph colour to horizontal gradient",
+                () => graph.Colour = ColourInfo.GradientHorizontal(Colour4.White, Colour4.Black)
+            );
             AddStep("reset graph colour", () => graph.Colour = Colour4.White);
         }
 

@@ -15,11 +15,7 @@ namespace osu.Game.Tests.Beatmaps
         {
             var beatmap = new BeatmapInfo
             {
-                Metadata = new BeatmapMetadata
-                {
-                    Artist = "artist",
-                    Title = "title"
-                }
+                Metadata = new BeatmapMetadata { Artist = "artist", Title = "title" },
             };
 
             Assert.That(beatmap.ToString(), Is.EqualTo("artist - title"));
@@ -34,8 +30,8 @@ namespace osu.Game.Tests.Beatmaps
                 {
                     Artist = "artist",
                     Title = "title",
-                    Author = new RealmUser { Username = "creator" }
-                }
+                    Author = new RealmUser { Username = "creator" },
+                },
             };
 
             Assert.That(beatmap.ToString(), Is.EqualTo("artist - title (creator)"));
@@ -50,9 +46,9 @@ namespace osu.Game.Tests.Beatmaps
                 {
                     Artist = "artist",
                     Title = "title",
-                    Author = new RealmUser { Username = "creator" }
+                    Author = new RealmUser { Username = "creator" },
                 },
-                DifficultyName = "difficulty"
+                DifficultyName = "difficulty",
             };
 
             Assert.That(beatmap.ToString(), Is.EqualTo("artist - title (creator) [difficulty]"));

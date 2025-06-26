@@ -18,10 +18,12 @@ namespace osu.Game.Tournament.Tests.Screens
         {
             var match = CreateSampleMatch();
 
-            Add(new SeedingEditorScreen(match.Team1.Value.AsNonNull(), new TeamEditorScreen())
-            {
-                Width = 0.85f // create room for control panel
-            });
+            Add(
+                new SeedingEditorScreen(match.Team1.Value.AsNonNull(), new TeamEditorScreen())
+                {
+                    Width = 0.85f, // create room for control panel
+                }
+            );
         }
     }
 }

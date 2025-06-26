@@ -16,11 +16,10 @@ namespace osu.Game.Rulesets.Osu.Objects
         public bool ClassicSliderBehaviour;
 
         public SliderTailCircle(Slider slider)
-            : base(slider)
-        {
-        }
+            : base(slider) { }
 
-        public override Judgement CreateJudgement() => ClassicSliderBehaviour ? new LegacyTailJudgement() : new TailJudgement();
+        public override Judgement CreateJudgement() =>
+            ClassicSliderBehaviour ? new LegacyTailJudgement() : new TailJudgement();
 
         public class LegacyTailJudgement : OsuJudgement
         {

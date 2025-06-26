@@ -10,6 +10,7 @@ namespace osu.Game.Rulesets.Catch.Objects
     {
         public override Judgement CreateJudgement() => new CatchJudgement();
 
-        public static FruitVisualRepresentation GetVisualRepresentation(int indexInBeatmap) => (FruitVisualRepresentation)(indexInBeatmap % 4);
+        public static FruitVisualRepresentation GetVisualRepresentation(int indexInBeatmap) =>
+            (FruitVisualRepresentation)(indexInBeatmap % 4);
     }
 }

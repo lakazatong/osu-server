@@ -21,18 +21,26 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Zoooooooooom...";
         public override bool Ranked => SpeedChange.IsDefault;
 
-        [SettingSource("Speed increase", "The actual increase to apply", SettingControlType = typeof(MultiplierSettingsSlider))]
-        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
-        {
-            MinValue = 1.01,
-            MaxValue = 2,
-            Precision = 0.01,
-        };
+        [SettingSource(
+            "Speed increase",
+            "The actual increase to apply",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
+        public override BindableNumber<double> SpeedChange { get; } =
+            new BindableDouble(1.5)
+            {
+                MinValue = 1.01,
+                MaxValue = 2,
+                Precision = 0.01,
+            };
 
         [SettingSource("Adjust pitch", "Should pitch be adjusted with speed")]
         public virtual BindableBool AdjustPitch { get; } = new BindableBool();
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {

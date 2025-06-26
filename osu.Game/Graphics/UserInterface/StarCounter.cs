@@ -1,13 +1,13 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Utils;
 using System;
 using System.Linq;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Utils;
+using osuTK;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -43,10 +43,10 @@ namespace osu.Game.Graphics.UserInterface
         public float Current
         {
             get => current;
-
             set
             {
-                if (current == value) return;
+                if (current == value)
+                    return;
 
                 if (IsLoaded)
                     animate(value);
@@ -70,8 +70,8 @@ namespace osu.Game.Graphics.UserInterface
                 {
                     AutoSizeAxes = Axes.Both,
                     Spacing = new Vector2(star_spacing),
-                    ChildrenEnumerable = Enumerable.Range(0, StarCount).Select(_ => CreateStar())
-                }
+                    ChildrenEnumerable = Enumerable.Range(0, StarCount).Select(_ => CreateStar()),
+                },
             };
         }
 
@@ -105,7 +105,8 @@ namespace osu.Game.Graphics.UserInterface
                 star.FinishTransforms(true);
         }
 
-        private float getStarScale(int i, float value) => i + 1 <= value ? 1.0f : Interpolation.ValueAt(value, 0, 1.0f, i, i + 1);
+        private float getStarScale(int i, float value) =>
+            i + 1 <= value ? 1.0f : Interpolation.ValueAt(value, 0, 1.0f, i, i + 1);
 
         private void animate(float newValue)
         {
@@ -115,7 +116,11 @@ namespace osu.Game.Graphics.UserInterface
 
                 star.ClearTransforms(true);
 
-                double delay = Math.Max(current <= newValue ? i - current : Math.Min(current, StarCount) - 1 - i, 0) * AnimationDelay;
+                double delay =
+                    Math.Max(
+                        current <= newValue ? i - current : Math.Min(current, StarCount) - 1 - i,
+                        0
+                    ) * AnimationDelay;
 
                 using (star.BeginDelayedSequence(delay))
                     star.DisplayAt(getStarScale(i, newValue));

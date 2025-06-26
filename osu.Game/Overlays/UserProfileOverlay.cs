@@ -56,29 +56,35 @@ namespace osu.Game.Overlays
         public UserProfileOverlay()
             : base(OverlayColourScheme.Pink)
         {
-            base.Content.Add(new PopoverContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            base.Content.Add(
+                new PopoverContainer
                 {
-                    onlineViewContainer = new OnlineViewContainer($"Sign in to view the {Header.Title.Title}")
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both
+                        onlineViewContainer = new OnlineViewContainer(
+                            $"Sign in to view the {Header.Title.Title}"
+                        )
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                        loadingLayer = new LoadingLayer(true),
                     },
-                    loadingLayer = new LoadingLayer(true)
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             apiState.BindTo(API.State);
-            apiState.BindValueChanged(state => Schedule(() =>
-            {
-                if (state.NewValue == APIState.Online && user != null)
-                    Scheduler.AddOnce(fetchAndSetContent);
-            }));
+            apiState.BindValueChanged(state =>
+                Schedule(() =>
+                {
+                    if (state.NewValue == APIState.Online && user != null)
+                        Scheduler.AddOnce(fetchAndSetContent);
+                })
+            );
         }
 
         protected override ProfileHeader CreateHeader() => new ProfileHeader();
@@ -120,7 +126,7 @@ namespace osu.Game.Overlays
                     //new MedalsSection(),
                     new HistoricalSection(),
                     new BeatmapsSection(),
-                    new KudosuSection()
+                    new KudosuSection(),
                 }
                 : Array.Empty<ProfileSection>();
 
@@ -131,7 +137,10 @@ namespace osu.Game.Overlays
 
             if (API.State.Value != APIState.Offline)
             {
-                userReq = user.OnlineID > 1 ? new GetUserRequest(user.OnlineID, ruleset) : new GetUserRequest(user.Username, ruleset);
+                userReq =
+                    user.OnlineID > 1
+                        ? new GetUserRequest(user.OnlineID, ruleset)
+                        : new GetUserRequest(user.Username, ruleset);
                 userReq.Success += u => userLoadComplete(u, ruleset);
 
                 API.Queue(userReq);
@@ -149,7 +158,9 @@ namespace osu.Game.Overlays
             if (changeOverlayColours(profileHue))
                 recreateBaseContent();
 
-            var actualRuleset = rulesets.GetRuleset(userRuleset?.ShortName ?? loadedUser.PlayMode).AsNonNull();
+            var actualRuleset = rulesets
+                .GetRuleset(userRuleset?.ShortName ?? loadedUser.PlayMode)
+                .AsNonNull();
 
             var userProfile = new UserProfileData(loadedUser, actualRuleset);
             Header.User.Value = userProfile;
@@ -178,22 +189,24 @@ namespace osu.Game.Overlays
             Child = new OsuContextMenuContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = sectionsContainer = new ProfileSectionsContainer
-                {
-                    ExpandableHeader = Header,
-                    FixedHeader = tabs = new ProfileSectionTabControl
+                Child = sectionsContainer =
+                    new ProfileSectionsContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
+                        ExpandableHeader = Header,
+                        FixedHeader = tabs =
+                            new ProfileSectionTabControl
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                            },
+                        HeaderBackground = new Box
+                        {
+                            // this is only visible as the ProfileTabControl background
+                            Colour = ColourProvider.Background5,
+                            RelativeSizeAxes = Axes.Both,
+                        },
                     },
-                    HeaderBackground = new Box
-                    {
-                        // this is only visible as the ProfileTabControl background
-                        Colour = ColourProvider.Background5,
-                        RelativeSizeAxes = Axes.Both
-                    },
-                }
             };
 
             sectionsContainer.SelectedSection.ValueChanged += section =>
@@ -244,7 +257,8 @@ namespace osu.Game.Overlays
                 TabContainer.Spacing = new Vector2(20);
             }
 
-            protected override TabItem<ProfileSection> CreateTabItem(ProfileSection value) => new ProfileSectionTabItem(value);
+            protected override TabItem<ProfileSection> CreateTabItem(ProfileSection value) =>
+                new ProfileSectionTabItem(value);
 
             protected override bool OnClick(ClickEvent e) => true;
 
@@ -258,9 +272,7 @@ namespace osu.Game.Overlays
                 private OverlayColourProvider colourProvider { get; set; } = null!;
 
                 public ProfileSectionTabItem(ProfileSection value)
-                    : base(value)
-                {
-                }
+                    : base(value) { }
 
                 [BackgroundDependencyLoader]
                 private void load()
@@ -269,10 +281,7 @@ namespace osu.Game.Overlays
                     Anchor = Anchor.CentreLeft;
                     Origin = Anchor.CentreLeft;
 
-                    InternalChild = text = new OsuSpriteText
-                    {
-                        Text = Value.Title
-                    };
+                    InternalChild = text = new OsuSpriteText { Text = Value.Title };
 
                     updateState();
                 }
@@ -291,7 +300,10 @@ namespace osu.Game.Overlays
 
                 private void updateState()
                 {
-                    text.Font = OsuFont.Default.With(size: 14, weight: Active.Value ? FontWeight.SemiBold : FontWeight.Regular);
+                    text.Font = OsuFont.Default.With(
+                        size: 14,
+                        weight: Active.Value ? FontWeight.SemiBold : FontWeight.Regular
+                    );
 
                     Colour4 textColour;
 
@@ -314,19 +326,21 @@ namespace osu.Game.Overlays
                 RelativeSizeAxes = Axes.Both;
             }
 
-            protected override UserTrackingScrollContainer CreateScrollContainer() => scroll = new OverlayScrollContainer();
+            protected override UserTrackingScrollContainer CreateScrollContainer() =>
+                scroll = new OverlayScrollContainer();
 
             // Reverse child ID is required so expanding beatmap panels can appear above sections below them.
             // This can also be done by setting Depth when adding new sections above if using ReverseChildID turns out to have any issues.
-            protected override FlowContainer<ProfileSection> CreateScrollContentContainer() => new ReverseChildIDFillFlowContainer<ProfileSection>
-            {
-                Direction = FillDirection.Vertical,
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Spacing = new Vector2(0, 10),
-                Padding = new MarginPadding { Horizontal = 10 },
-                Margin = new MarginPadding { Bottom = 10 },
-            };
+            protected override FlowContainer<ProfileSection> CreateScrollContentContainer() =>
+                new ReverseChildIDFillFlowContainer<ProfileSection>
+                {
+                    Direction = FillDirection.Vertical,
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                    Spacing = new Vector2(0, 10),
+                    Padding = new MarginPadding { Horizontal = 10 },
+                    Margin = new MarginPadding { Bottom = 10 },
+                };
 
             protected override void LoadComplete()
             {

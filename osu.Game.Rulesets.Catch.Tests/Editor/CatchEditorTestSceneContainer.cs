@@ -27,10 +27,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             Origin = Anchor.Centre;
             Width = CatchPlayfield.WIDTH;
             Height = 1000;
-            Padding = new MarginPadding
-            {
-                Bottom = 100
-            };
+            Padding = new MarginPadding { Bottom = 100 };
 
             InternalChildren = new Drawable[]
             {
@@ -38,29 +35,21 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
                 {
                     TimeRange = 1000,
                     RelativeSizeAxes = Axes.Both,
-                    Child = Playfield = new TestCatchPlayfield
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    Child = Playfield = new TestCatchPlayfield { RelativeSizeAxes = Axes.Both },
                 },
                 new PlayfieldBorder
                 {
                     PlayfieldBorderStyle = { Value = PlayfieldBorderStyle.Full },
-                    Clock = new FramedClock(new StopwatchClock(true))
+                    Clock = new FramedClock(new StopwatchClock(true)),
                 },
-                Content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
+                Content = new Container { RelativeSizeAxes = Axes.Both },
             };
         }
 
         private partial class TestCatchPlayfield : CatchEditorPlayfield
         {
             public TestCatchPlayfield()
-                : base(new BeatmapDifficulty { CircleSize = 0 })
-            {
-            }
+                : base(new BeatmapDifficulty { CircleSize = 0 }) { }
         }
     }
 }

@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
     {
         protected new THitObject HitObject => (THitObject)base.HitObject;
 
-        protected ScrollingHitObjectContainer HitObjectContainer => (ScrollingHitObjectContainer)playfield.HitObjectContainer;
+        protected ScrollingHitObjectContainer HitObjectContainer =>
+            (ScrollingHitObjectContainer)playfield.HitObjectContainer;
 
         [Resolved]
         private Playfield playfield { get; set; } = null!;
@@ -23,8 +24,6 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
         protected CatchHitObjectComposer? Composer { get; private set; }
 
         protected CatchPlacementBlueprint()
-            : base(new THitObject())
-        {
-        }
+            : base(new THitObject()) { }
     }
 }

@@ -8,7 +8,8 @@ using osu.Game.Screens.Edit.Compose.Components;
 
 namespace osu.Game.Rulesets.Catch.Edit
 {
-    public partial class CatchHitObjectInspector(CatchDistanceSnapProvider snapProvider) : HitObjectInspector
+    public partial class CatchHitObjectInspector(CatchDistanceSnapProvider snapProvider)
+        : HitObjectInspector
     {
         protected override void AddInspectorValues(HitObject[] objects)
         {
@@ -19,19 +20,29 @@ namespace osu.Game.Rulesets.Catch.Edit
                 HitObject firstSelectedHitObject = objects.MinBy(ho => ho.StartTime)!;
                 HitObject lastSelectedHitObject = objects.MaxBy(ho => ho.GetEndTime())!;
 
-                HitObject? precedingObject = EditorBeatmap.HitObjects.LastOrDefault(ho => ho.GetEndTime() < firstSelectedHitObject.StartTime);
-                HitObject? nextObject = EditorBeatmap.HitObjects.FirstOrDefault(ho => ho.StartTime > lastSelectedHitObject.GetEndTime());
+                HitObject? precedingObject = EditorBeatmap.HitObjects.LastOrDefault(ho =>
+                    ho.GetEndTime() < firstSelectedHitObject.StartTime
+                );
+                HitObject? nextObject = EditorBeatmap.HitObjects.FirstOrDefault(ho =>
+                    ho.StartTime > lastSelectedHitObject.GetEndTime()
+                );
 
                 if (precedingObject != null && precedingObject is not BananaShower)
                 {
-                    double previousSnap = snapProvider.ReadCurrentDistanceSnap(precedingObject, firstSelectedHitObject);
+                    double previousSnap = snapProvider.ReadCurrentDistanceSnap(
+                        precedingObject,
+                        firstSelectedHitObject
+                    );
                     AddHeader("To previous");
                     AddValue($"{previousSnap:#,0.##}x");
                 }
 
                 if (nextObject != null && nextObject is not BananaShower)
                 {
-                    double nextSnap = snapProvider.ReadCurrentDistanceSnap(lastSelectedHitObject, nextObject);
+                    double nextSnap = snapProvider.ReadCurrentDistanceSnap(
+                        lastSelectedHitObject,
+                        nextObject
+                    );
                     AddHeader("To next");
                     AddValue($"{nextSnap:#,0.##}x");
                 }

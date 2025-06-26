@@ -25,7 +25,13 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         /// </summary>
         protected readonly LegacyRandom Random;
 
-        protected LegacyPatternGenerator(LegacyRandom random, HitObject hitObject, IBeatmap beatmap, Pattern previousPattern, int totalColumns)
+        protected LegacyPatternGenerator(
+            LegacyRandom random,
+            HitObject hitObject,
+            IBeatmap beatmap,
+            Pattern previousPattern,
+            int totalColumns
+        )
             : base(hitObject, beatmap, totalColumns, previousPattern)
         {
             ArgumentNullException.ThrowIfNull(random);
@@ -61,13 +67,24 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         /// <param name="p5">Probability for 5 notes to be generated.</param>
         /// <param name="p6">Probability for 6 notes to be generated.</param>
         /// <returns>The amount of notes to be generated.</returns>
-        protected int GetRandomNoteCount(double p2, double p3, double p4 = 0, double p5 = 0, double p6 = 0)
+        protected int GetRandomNoteCount(
+            double p2,
+            double p3,
+            double p4 = 0,
+            double p5 = 0,
+            double p6 = 0
+        )
         {
-            if (p2 < 0 || p2 > 1) throw new ArgumentOutOfRangeException(nameof(p2));
-            if (p3 < 0 || p3 > 1) throw new ArgumentOutOfRangeException(nameof(p3));
-            if (p4 < 0 || p4 > 1) throw new ArgumentOutOfRangeException(nameof(p4));
-            if (p5 < 0 || p5 > 1) throw new ArgumentOutOfRangeException(nameof(p5));
-            if (p6 < 0 || p6 > 1) throw new ArgumentOutOfRangeException(nameof(p6));
+            if (p2 < 0 || p2 > 1)
+                throw new ArgumentOutOfRangeException(nameof(p2));
+            if (p3 < 0 || p3 > 1)
+                throw new ArgumentOutOfRangeException(nameof(p3));
+            if (p4 < 0 || p4 > 1)
+                throw new ArgumentOutOfRangeException(nameof(p4));
+            if (p5 < 0 || p5 > 1)
+                throw new ArgumentOutOfRangeException(nameof(p5));
+            if (p6 < 0 || p6 > 1)
+                throw new ArgumentOutOfRangeException(nameof(p6));
 
             double val = Random.NextDouble();
             if (val >= 1 - p6)
@@ -98,13 +115,26 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
                 HitObject? firstObject = Beatmap.HitObjects.FirstOrDefault();
 
                 // Drain time in seconds
-                int drainTime = (int)(((lastObject?.StartTime ?? 0) - (firstObject?.StartTime ?? 0) - Beatmap.TotalBreakTime) / 1000);
+                int drainTime = (int)(
+                    (
+                        (lastObject?.StartTime ?? 0)
+                        - (firstObject?.StartTime ?? 0)
+                        - Beatmap.TotalBreakTime
+                    ) / 1000
+                );
 
                 if (drainTime == 0)
                     drainTime = 10000;
 
                 IBeatmapDifficultyInfo difficulty = Beatmap.Difficulty;
-                conversionDifficulty = ((difficulty.DrainRate + Math.Clamp(difficulty.ApproachRate, 4, 7)) / 1.5 + (double)Beatmap.HitObjects.Count / drainTime * 9f) / 38f * 5f / 1.15;
+                conversionDifficulty =
+                    (
+                        (difficulty.DrainRate + Math.Clamp(difficulty.ApproachRate, 4, 7)) / 1.5
+                        + (double)Beatmap.HitObjects.Count / drainTime * 9f
+                    )
+                    / 38f
+                    * 5f
+                    / 1.15;
                 conversionDifficulty = Math.Min(conversionDifficulty.Value, 12);
 
                 return conversionDifficulty.Value;
@@ -120,8 +150,8 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         /// A column is not a valid candidate if a <see cref="HitObject"/> occupies the same column in any of the patterns.</param>
         /// <returns>A column for which there are no <see cref="HitObject"/>s in any of <paramref name="patterns"/> occupying the same column.</returns>
         /// <exception cref="NotEnoughColumnsException">If there are no valid candidate columns.</exception>
-        protected int FindAvailableColumn(int initialColumn, params Pattern[] patterns)
-            => FindAvailableColumn(initialColumn, null, patterns: patterns);
+        protected int FindAvailableColumn(int initialColumn, params Pattern[] patterns) =>
+            FindAvailableColumn(initialColumn, null, patterns: patterns);
 
         /// <summary>
         /// Finds a new column in which a <see cref="HitObject"/> can be placed.
@@ -136,8 +166,14 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         /// <returns>A column which has passed the <paramref name="validation"/> check and for which there are no
         /// <see cref="HitObject"/>s in any of <paramref name="patterns"/> occupying the same column.</returns>
         /// <exception cref="NotEnoughColumnsException">If there are no valid candidate columns.</exception>
-        protected int FindAvailableColumn(int initialColumn, int? lowerBound = null, int? upperBound = null, Func<int, int>? nextColumn = null, [InstantHandle] Func<int, bool>? validation = null,
-                                          params Pattern[] patterns)
+        protected int FindAvailableColumn(
+            int initialColumn,
+            int? lowerBound = null,
+            int? upperBound = null,
+            Func<int, int>? nextColumn = null,
+            [InstantHandle] Func<int, bool>? validation = null,
+            params Pattern[] patterns
+        )
         {
             lowerBound ??= RandomStart;
             upperBound ??= TotalColumns;
@@ -188,7 +224,8 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         /// </summary>
         /// <param name="lowerBound">The minimum column index. If null, <see cref="RandomStart"/> is used.</param>
         /// <param name="upperBound">The maximum column index. If null, <see cref="PatternGenerator.TotalColumns"/> is used.</param>
-        protected int GetRandomColumn(int? lowerBound = null, int? upperBound = null) => Random.Next(lowerBound ?? RandomStart, upperBound ?? TotalColumns);
+        protected int GetRandomColumn(int? lowerBound = null, int? upperBound = null) =>
+            Random.Next(lowerBound ?? RandomStart, upperBound ?? TotalColumns);
 
         /// <summary>
         /// Occurs when mania conversion is stuck in an infinite loop unable to find columns to place new hitobjects in.
@@ -196,9 +233,7 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns.Legacy
         public class NotEnoughColumnsException : Exception
         {
             public NotEnoughColumnsException()
-                : base("There were not enough columns to complete conversion.")
-            {
-            }
+                : base("There were not enough columns to complete conversion.") { }
         }
     }
 }

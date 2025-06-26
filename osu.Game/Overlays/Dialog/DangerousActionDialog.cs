@@ -39,13 +39,13 @@ namespace osu.Game.Overlays.Dialog
                 new PopupDialogDangerousButton
                 {
                     Text = DialogStrings.Confirm,
-                    Action = () => DangerousAction?.Invoke()
+                    Action = () => DangerousAction?.Invoke(),
                 },
                 new PopupDialogCancelButton
                 {
                     Text = DialogStrings.Cancel,
-                    Action = () => CancelAction?.Invoke()
-                }
+                    Action = () => CancelAction?.Invoke(),
+                },
             };
         }
     }

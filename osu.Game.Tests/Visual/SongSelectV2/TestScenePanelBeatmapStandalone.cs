@@ -34,19 +34,19 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         private BeatmapInfo beatmap = null!;
 
         public TestScenePanelBeatmapStandalone()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            var beatmapSet = beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => b.OnlineID == 241526)
-                             ?? beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => !b.Protected)
-                             ?? TestResources.CreateTestBeatmapSetInfo();
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                var beatmapSet =
+                    beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => b.OnlineID == 241526)
+                    ?? beatmaps.GetAllUsableBeatmapSets().FirstOrDefault(b => !b.Protected)
+                    ?? TestResources.CreateTestBeatmapSetInfo();
 
-            beatmap = beatmapSet.Beatmaps.First();
-        });
+                beatmap = beatmapSet.Beatmaps.First();
+            });
 
         [Test]
         public void TestDisplay()
@@ -57,20 +57,29 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestRandomBeatmap()
         {
-            AddStep("random beatmap", () =>
-            {
-                var randomSet = beatmaps.GetAllUsableBeatmapSets().MinBy(_ => RNG.Next());
-                randomSet ??= TestResources.CreateTestBeatmapSetInfo();
-                beatmap = randomSet.Beatmaps.MinBy(_ => RNG.Next())!;
+            AddStep(
+                "random beatmap",
+                () =>
+                {
+                    var randomSet = beatmaps.GetAllUsableBeatmapSets().MinBy(_ => RNG.Next());
+                    randomSet ??= TestResources.CreateTestBeatmapSetInfo();
+                    beatmap = randomSet.Beatmaps.MinBy(_ => RNG.Next())!;
 
-                CreateThemedContent(OverlayColourScheme.Aquamarine);
-            });
+                    CreateThemedContent(OverlayColourScheme.Aquamarine);
+                }
+            );
         }
 
         [Test]
         public void TestManiaRuleset()
         {
-            AddToggleStep("mania ruleset", v => Ruleset.Value = v ? new ManiaRuleset().RulesetInfo : new OsuRuleset().RulesetInfo);
+            AddToggleStep(
+                "mania ruleset",
+                v =>
+                    Ruleset.Value = v
+                        ? new ManiaRuleset().RulesetInfo
+                        : new OsuRuleset().RulesetInfo
+            );
         }
 
         [Test]
@@ -78,11 +87,16 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             foreach (var rank in Enum.GetValues<ScoreRank>())
             {
-                AddStep($"set {rank.GetDescription()} rank", () => this.ChildrenOfType<UpdateableRank>().ForEach(p =>
-                {
-                    p.Show();
-                    p.Rank = rank;
-                }));
+                AddStep(
+                    $"set {rank.GetDescription()} rank",
+                    () =>
+                        this.ChildrenOfType<UpdateableRank>()
+                            .ForEach(p =>
+                            {
+                                p.Show();
+                                p.Rank = rank;
+                            })
+                );
             }
         }
 
@@ -102,28 +116,25 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                     Spacing = new Vector2(0f, 5f),
                     Children = new Drawable[]
                     {
+                        new PanelBeatmapStandalone { Item = new CarouselItem(beatmap) },
                         new PanelBeatmapStandalone
                         {
-                            Item = new CarouselItem(beatmap)
+                            Item = new CarouselItem(beatmap),
+                            KeyboardSelected = { Value = true },
                         },
                         new PanelBeatmapStandalone
                         {
                             Item = new CarouselItem(beatmap),
-                            KeyboardSelected = { Value = true }
-                        },
-                        new PanelBeatmapStandalone
-                        {
-                            Item = new CarouselItem(beatmap),
-                            Selected = { Value = true }
+                            Selected = { Value = true },
                         },
                         new PanelBeatmapStandalone
                         {
                             Item = new CarouselItem(beatmap),
                             KeyboardSelected = { Value = true },
-                            Selected = { Value = true }
+                            Selected = { Value = true },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
     }

@@ -13,9 +13,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
     public class TaikoArgonSkinTransformer : SkinTransformer
     {
         public TaikoArgonSkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
@@ -31,9 +29,15 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                         case GlobalSkinnableContainers.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
-                                var comboCounter = container.OfType<ArgonComboCounter>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
+                                var comboCounter = container
+                                    .OfType<ArgonComboCounter>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
 
                                 if (leaderboard != null)
                                 {
@@ -67,7 +71,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                                     {
                                         Anchor = Anchor.BottomLeft,
                                         Origin = Anchor.BottomLeft,
-                                    }
+                                    },
                                 },
                             };
                     }

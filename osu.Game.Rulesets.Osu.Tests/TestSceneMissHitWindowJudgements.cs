@@ -26,22 +26,28 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             var beatmap = new Beatmap
             {
-                HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
+                HitObjects = { new HitCircle { Position = new Vector2(256, 192) } },
             };
 
             var hitWindows = new OsuHitWindows();
             hitWindows.SetDifficulty(beatmap.Difficulty.OverallDifficulty);
 
-            CreateModTest(new ModTestData
-            {
-                Autoplay = false,
-                Mod = new TestAutoMod(),
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
-                },
-                PassCondition = () => Player.Results.Count > 0 && Player.Results[0].TimeOffset < -hitWindows.WindowFor(HitResult.Meh) && !Player.Results[0].IsHit
-            });
+                    Autoplay = false,
+                    Mod = new TestAutoMod(),
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = { new HitCircle { Position = new Vector2(256, 192) } },
+                        },
+                    PassCondition = () =>
+                        Player.Results.Count > 0
+                        && Player.Results[0].TimeOffset < -hitWindows.WindowFor(HitResult.Meh)
+                        && !Player.Results[0].IsHit,
+                }
+            );
         }
 
         [Test]
@@ -50,21 +56,33 @@ namespace osu.Game.Rulesets.Osu.Tests
             var hitWindows = new OsuHitWindows();
             hitWindows.SetDifficulty(IBeatmapDifficultyInfo.DEFAULT_DIFFICULTY);
 
-            CreateModTest(new ModTestData
-            {
-                Autoplay = false,
-                CreateBeatmap = () => new Beatmap
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
-                },
-                PassCondition = () => Player.Results.Count > 0 && Player.Results[0].TimeOffset >= hitWindows.WindowFor(HitResult.Meh) && !Player.Results[0].IsHit
-            });
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = { new HitCircle { Position = new Vector2(256, 192) } },
+                        },
+                    PassCondition = () =>
+                        Player.Results.Count > 0
+                        && Player.Results[0].TimeOffset >= hitWindows.WindowFor(HitResult.Meh)
+                        && !Player.Results[0].IsHit,
+                }
+            );
         }
 
         private class TestAutoMod : OsuModAutoplay
         {
-            public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods)
-                => new ModReplayData(new MissingAutoGenerator(beatmap, mods).Generate(), new ModCreatedUser { Username = "Autoplay" });
+            public override ModReplayData CreateReplayData(
+                IBeatmap beatmap,
+                IReadOnlyList<Mod> mods
+            ) =>
+                new ModReplayData(
+                    new MissingAutoGenerator(beatmap, mods).Generate(),
+                    new ModCreatedUser { Username = "Autoplay" }
+                );
         }
 
         private class MissingAutoGenerator : OsuAutoGeneratorBase
@@ -72,19 +90,43 @@ namespace osu.Game.Rulesets.Osu.Tests
             public new OsuBeatmap Beatmap => (OsuBeatmap)base.Beatmap;
 
             public MissingAutoGenerator(IBeatmap beatmap, IReadOnlyList<Mod> mods)
-                : base(beatmap, mods)
-            {
-            }
+                : base(beatmap, mods) { }
 
             public override Replay Generate()
             {
                 AddFrameToReplay(new OsuReplayFrame(-100000, new Vector2(256, 500)));
-                AddFrameToReplay(new OsuReplayFrame(Beatmap.HitObjects[0].StartTime - 1500, new Vector2(256, 500)));
-                AddFrameToReplay(new OsuReplayFrame(Beatmap.HitObjects[0].StartTime - 1500, new Vector2(256, 500)));
+                AddFrameToReplay(
+                    new OsuReplayFrame(
+                        Beatmap.HitObjects[0].StartTime - 1500,
+                        new Vector2(256, 500)
+                    )
+                );
+                AddFrameToReplay(
+                    new OsuReplayFrame(
+                        Beatmap.HitObjects[0].StartTime - 1500,
+                        new Vector2(256, 500)
+                    )
+                );
 
-                AddFrameToReplay(new OsuReplayFrame(Beatmap.HitObjects[0].StartTime - 450, Beatmap.HitObjects[0].StackedPosition));
-                AddFrameToReplay(new OsuReplayFrame(Beatmap.HitObjects[0].StartTime - 350, Beatmap.HitObjects[0].StackedPosition, OsuAction.LeftButton));
-                AddFrameToReplay(new OsuReplayFrame(Beatmap.HitObjects[0].StartTime - 325, Beatmap.HitObjects[0].StackedPosition));
+                AddFrameToReplay(
+                    new OsuReplayFrame(
+                        Beatmap.HitObjects[0].StartTime - 450,
+                        Beatmap.HitObjects[0].StackedPosition
+                    )
+                );
+                AddFrameToReplay(
+                    new OsuReplayFrame(
+                        Beatmap.HitObjects[0].StartTime - 350,
+                        Beatmap.HitObjects[0].StackedPosition,
+                        OsuAction.LeftButton
+                    )
+                );
+                AddFrameToReplay(
+                    new OsuReplayFrame(
+                        Beatmap.HitObjects[0].StartTime - 325,
+                        Beatmap.HitObjects[0].StackedPosition
+                    )
+                );
 
                 return Replay;
             }

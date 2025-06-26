@@ -33,7 +33,8 @@ namespace osu.Game.Collections
 
         public Action? RequestFilter { private get; set; }
 
-        private readonly BindableList<CollectionFilterMenuItem> filters = new BindableList<CollectionFilterMenuItem>();
+        private readonly BindableList<CollectionFilterMenuItem> filters =
+            new BindableList<CollectionFilterMenuItem>();
 
         [Resolved]
         private ManageCollectionsDialog? manageCollectionsDialog { get; set; }
@@ -43,7 +44,8 @@ namespace osu.Game.Collections
 
         private IDisposable? realmSubscription;
 
-        private readonly CollectionFilterMenuItem allBeatmapsItem = new AllBeatmapsCollectionFilterMenuItem();
+        private readonly CollectionFilterMenuItem allBeatmapsItem =
+            new AllBeatmapsCollectionFilterMenuItem();
 
         public CollectionDropdown()
         {
@@ -57,18 +59,26 @@ namespace osu.Game.Collections
         {
             base.LoadComplete();
 
-            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapCollection>().OrderBy(c => c.Name), collectionsChanged);
+            realmSubscription = realm.RegisterForNotifications(
+                r => r.All<BeatmapCollection>().OrderBy(c => c.Name),
+                collectionsChanged
+            );
 
             Current.BindValueChanged(selectionChanged);
         }
 
-        private void collectionsChanged(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
+        private void collectionsChanged(
+            IRealmCollection<BeatmapCollection> collections,
+            ChangeSet? changes
+        )
         {
             if (changes == null)
             {
                 filters.Clear();
                 filters.Add(allBeatmapsItem);
-                filters.AddRange(collections.Select(c => new CollectionFilterMenuItem(c.ToLive(realm))));
+                filters.AddRange(
+                    collections.Select(c => new CollectionFilterMenuItem(c.ToLive(realm)))
+                );
                 if (ShowManageCollectionsItem)
                     filters.Add(new ManageCollectionsFilterMenuItem());
             }
@@ -78,7 +88,10 @@ namespace osu.Game.Collections
                     filters.RemoveAt(i + 1);
 
                 foreach (int i in changes.InsertedIndices)
-                    filters.Insert(i + 1, new CollectionFilterMenuItem(collections[i].ToLive(realm)));
+                    filters.Insert(
+                        i + 1,
+                        new CollectionFilterMenuItem(collections[i].ToLive(realm))
+                    );
 
                 var selectedItem = SelectedItem?.Value;
 
@@ -103,7 +116,10 @@ namespace osu.Game.Collections
                             if (Current.Value != allBeatmapsItem)
                                 return;
 
-                            Current.Value = filters.SingleOrDefault(f => f.Collection?.ID == selectedItem.Collection?.ID) ?? filters[0];
+                            Current.Value =
+                                filters.SingleOrDefault(f =>
+                                    f.Collection?.ID == selectedItem.Collection?.ID
+                                ) ?? filters[0];
                         });
 
                         // Trigger an external re-filter if the current item was in the change set.
@@ -148,15 +164,18 @@ namespace osu.Game.Collections
             realmSubscription?.Dispose();
         }
 
-        protected override LocalisableString GenerateItemText(CollectionFilterMenuItem item) => item.CollectionName;
+        protected override LocalisableString GenerateItemText(CollectionFilterMenuItem item) =>
+            item.CollectionName;
 
         protected sealed override DropdownHeader CreateHeader() => CreateCollectionHeader();
 
         protected sealed override DropdownMenu CreateMenu() => CreateCollectionMenu();
 
-        protected virtual CollectionDropdownHeader CreateCollectionHeader() => new CollectionDropdownHeader();
+        protected virtual CollectionDropdownHeader CreateCollectionHeader() =>
+            new CollectionDropdownHeader();
 
-        protected virtual CollectionDropdownMenu CreateCollectionMenu() => new CollectionDropdownMenu();
+        protected virtual CollectionDropdownMenu CreateCollectionMenu() =>
+            new CollectionDropdownMenu();
 
         public partial class CollectionDropdownHeader : OsuDropdownHeader
         {
@@ -164,7 +183,13 @@ namespace osu.Game.Collections
             {
                 Height = 25;
                 Chevron.Size = new Vector2(12);
-                Foreground.Padding = new MarginPadding { Top = 4, Bottom = 4, Left = 8, Right = 8 };
+                Foreground.Padding = new MarginPadding
+                {
+                    Top = 4,
+                    Bottom = 4,
+                    Left = 8,
+                    Right = 8,
+                };
             }
         }
 
@@ -175,14 +200,18 @@ namespace osu.Game.Collections
                 MaxHeight = 200;
             }
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new CollectionDropdownDrawableMenuItem(item)
-            {
-                BackgroundColourHover = HoverColour,
-                BackgroundColourSelected = SelectionColour
-            };
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) =>
+                new CollectionDropdownDrawableMenuItem(item)
+                {
+                    BackgroundColourHover = HoverColour,
+                    BackgroundColourSelected = SelectionColour,
+                };
         }
 
-        protected partial class CollectionDropdownDrawableMenuItem : OsuDropdownMenu.DrawableOsuDropdownMenuItem
+        protected partial class CollectionDropdownDrawableMenuItem
+            : OsuDropdownMenu.DrawableOsuDropdownMenuItem
         {
             private IconButton addOrRemoveButton = null!;
 
@@ -202,14 +231,16 @@ namespace osu.Game.Collections
             [BackgroundDependencyLoader]
             private void load()
             {
-                AddInternal(addOrRemoveButton = new NoFocusChangeIconButton
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    X = -OsuScrollContainer.SCROLL_BAR_WIDTH,
-                    Scale = new Vector2(0.65f),
-                    Action = addOrRemove,
-                });
+                AddInternal(
+                    addOrRemoveButton = new NoFocusChangeIconButton
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        X = -OsuScrollContainer.SCROLL_BAR_WIDTH,
+                        Scale = new Vector2(0.65f),
+                        Action = addOrRemove,
+                    }
+                );
             }
 
             protected override void LoadComplete()
@@ -218,16 +249,25 @@ namespace osu.Game.Collections
 
                 if (collection != null)
                 {
-                    beatmap.BindValueChanged(_ =>
-                    {
-                        beatmapInCollection = collection.PerformRead(c => c.BeatmapMD5Hashes.Contains(beatmap.Value.BeatmapInfo.MD5Hash));
+                    beatmap.BindValueChanged(
+                        _ =>
+                        {
+                            beatmapInCollection = collection.PerformRead(c =>
+                                c.BeatmapMD5Hashes.Contains(beatmap.Value.BeatmapInfo.MD5Hash)
+                            );
 
-                        addOrRemoveButton.Enabled.Value = !beatmap.IsDefault;
-                        addOrRemoveButton.Icon = beatmapInCollection ? FontAwesome.Solid.MinusSquare : FontAwesome.Solid.PlusSquare;
-                        addOrRemoveButton.TooltipText = beatmapInCollection ? "Remove selected beatmap" : "Add selected beatmap";
+                            addOrRemoveButton.Enabled.Value = !beatmap.IsDefault;
+                            addOrRemoveButton.Icon = beatmapInCollection
+                                ? FontAwesome.Solid.MinusSquare
+                                : FontAwesome.Solid.PlusSquare;
+                            addOrRemoveButton.TooltipText = beatmapInCollection
+                                ? "Remove selected beatmap"
+                                : "Add selected beatmap";
 
-                        updateButtonVisibility();
-                    }, true);
+                            updateButtonVisibility();
+                        },
+                        true
+                    );
                 }
 
                 updateButtonVisibility();
@@ -256,7 +296,8 @@ namespace osu.Game.Collections
                 if (collection == null)
                     addOrRemoveButton.Alpha = 0;
                 else
-                    addOrRemoveButton.Alpha = IsHovered || IsPreSelected || beatmapInCollection ? 1 : 0;
+                    addOrRemoveButton.Alpha =
+                        IsHovered || IsPreSelected || beatmapInCollection ? 1 : 0;
             }
 
             private void addOrRemove()

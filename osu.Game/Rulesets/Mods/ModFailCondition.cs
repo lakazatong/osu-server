@@ -9,7 +9,10 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModFailCondition : Mod, IApplicableToHealthProcessor, IApplicableFailOverride
+    public abstract class ModFailCondition
+        : Mod,
+            IApplicableToHealthProcessor,
+            IApplicableFailOverride
     {
         public override Type[] IncompatibleMods => new[] { typeof(ModNoFail), typeof(ModCinema) };
 
@@ -45,6 +48,9 @@ namespace osu.Game.Rulesets.Mods
         /// Using outside values to evaluate failure may introduce event ordering discrepancies, use
         /// an <see cref="IApplicableMod"/> with <see cref="TriggerFailure"/> instead.
         /// </remarks>
-        protected abstract bool FailCondition(HealthProcessor healthProcessor, JudgementResult result);
+        protected abstract bool FailCondition(
+            HealthProcessor healthProcessor,
+            JudgementResult result
+        );
     }
 }

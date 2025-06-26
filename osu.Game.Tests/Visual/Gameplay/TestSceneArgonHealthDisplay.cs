@@ -29,41 +29,52 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.LoadComplete();
 
-            AddSliderStep("Height", 0, 64, 0, val =>
-            {
-                if (healthDisplay.IsNotNull())
-                    healthDisplay.BarHeight.Value = val;
-            });
+            AddSliderStep(
+                "Height",
+                0,
+                64,
+                0,
+                val =>
+                {
+                    if (healthDisplay.IsNotNull())
+                        healthDisplay.BarHeight.Value = val;
+                }
+            );
 
-            AddSliderStep("Width", 0, 1f, 0.98f, val =>
-            {
-                if (healthDisplay.IsNotNull())
-                    healthDisplay.Width = val;
-            });
+            AddSliderStep(
+                "Width",
+                0,
+                1f,
+                0.98f,
+                val =>
+                {
+                    if (healthDisplay.IsNotNull())
+                        healthDisplay.Width = val;
+                }
+            );
         }
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep(@"Reset all", delegate
-            {
-                healthProcessor.Health.Value = 1;
-                healthProcessor.Failed += () => false; // health won't be updated if the processor gets into a "fail" state.
-
-                Children = new Drawable[]
+            AddStep(
+                @"Reset all",
+                delegate
                 {
-                    new Box
+                    healthProcessor.Health.Value = 1;
+                    healthProcessor.Failed += () => false; // health won't be updated if the processor gets into a "fail" state.
+
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Gray,
-                    },
-                    healthDisplay = new ArgonHealthDisplay
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                };
-            });
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray },
+                        healthDisplay = new ArgonHealthDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    };
+                }
+            );
         }
 
         [Test]
@@ -71,34 +82,49 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddRepeatStep("apply miss judgement", applyMiss, 5);
 
-            AddRepeatStep(@"decrease hp slightly", delegate
-            {
-                healthProcessor.Health.Value -= 0.01f;
-            }, 10);
+            AddRepeatStep(
+                @"decrease hp slightly",
+                delegate
+                {
+                    healthProcessor.Health.Value -= 0.01f;
+                },
+                10
+            );
 
-            AddRepeatStep(@"increase hp without flash", delegate
-            {
-                healthProcessor.Health.Value += 0.1f;
-            }, 3);
+            AddRepeatStep(
+                @"increase hp without flash",
+                delegate
+                {
+                    healthProcessor.Health.Value += 0.1f;
+                },
+                3
+            );
 
-            AddRepeatStep(@"increase hp with flash", delegate
-            {
-                healthProcessor.Health.Value += 0.1f;
-                applyPerfectHit();
-            }, 3);
+            AddRepeatStep(
+                @"increase hp with flash",
+                delegate
+                {
+                    healthProcessor.Health.Value += 0.1f;
+                    applyPerfectHit();
+                },
+                3
+            );
         }
 
         [Test]
         public void TestLateMissAfterConsequentMisses()
         {
             AddUntilStep("wait for health", () => healthDisplay.Current.Value == 1);
-            AddStep("apply sequence", () =>
-            {
-                for (int i = 0; i < 10; i++)
-                    applyMiss();
+            AddStep(
+                "apply sequence",
+                () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        applyMiss();
 
-                Scheduler.AddDelayed(applyMiss, 500 + 30);
-            });
+                    Scheduler.AddDelayed(applyMiss, 500 + 30);
+                }
+            );
             AddUntilStep("wait for sequence", () => !Scheduler.HasPendingTasks);
         }
 
@@ -106,21 +132,24 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestMissAlmostExactlyAfterLastMissAnimation()
         {
             AddUntilStep("wait for health", () => healthDisplay.Current.Value == 1);
-            AddStep("apply sequence", () =>
-            {
-                const double interval = 500 + 15;
-
-                for (int i = 0; i < 5; i++)
+            AddStep(
+                "apply sequence",
+                () =>
                 {
-                    if (i % 2 == 0)
-                        Scheduler.AddDelayed(applyMiss, i * interval);
-                    else
+                    const double interval = 500 + 15;
+
+                    for (int i = 0; i < 5; i++)
                     {
-                        Scheduler.AddDelayed(applyMiss, i * interval);
-                        Scheduler.AddDelayed(applyMiss, i * interval);
+                        if (i % 2 == 0)
+                            Scheduler.AddDelayed(applyMiss, i * interval);
+                        else
+                        {
+                            Scheduler.AddDelayed(applyMiss, i * interval);
+                            Scheduler.AddDelayed(applyMiss, i * interval);
+                        }
                     }
                 }
-            });
+            );
             AddUntilStep("wait for sequence", () => !Scheduler.HasPendingTasks);
         }
 
@@ -130,37 +159,47 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddUntilStep("wait for health", () => healthDisplay.Current.Value == 1);
             AddStep("set half health", () => healthProcessor.Health.Value = 0.5f);
 
-            AddStep("apply miss and hit", () =>
-            {
-                applyMiss();
-                applyMiss();
-                applyPerfectHit();
-                applyPerfectHit();
-            });
+            AddStep(
+                "apply miss and hit",
+                () =>
+                {
+                    applyMiss();
+                    applyMiss();
+                    applyPerfectHit();
+                    applyPerfectHit();
+                }
+            );
 
             AddWaitStep("wait", 3);
 
-            AddStep("apply miss and cancel with hit", () =>
-            {
-                applyMiss();
-                applyPerfectHit();
-                applyPerfectHit();
-                applyPerfectHit();
-                applyPerfectHit();
-            });
+            AddStep(
+                "apply miss and cancel with hit",
+                () =>
+                {
+                    applyMiss();
+                    applyPerfectHit();
+                    applyPerfectHit();
+                    applyPerfectHit();
+                    applyPerfectHit();
+                }
+            );
         }
 
         private void applyMiss()
         {
-            healthProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss });
+            healthProcessor.ApplyResult(
+                new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss }
+            );
         }
 
         private void applyPerfectHit()
         {
-            healthProcessor.ApplyResult(new JudgementResult(new HitCircle(), new OsuJudgement())
-            {
-                Type = HitResult.Perfect
-            });
+            healthProcessor.ApplyResult(
+                new JudgementResult(new HitCircle(), new OsuJudgement())
+                {
+                    Type = HitResult.Perfect,
+                }
+            );
         }
 
         [Test]
@@ -168,7 +207,15 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             ScheduledDelegate del = null!;
 
-            AddStep("simulate drain", () => del = Scheduler.AddDelayed(() => healthProcessor.Health.Value -= 0.00025f * Time.Elapsed, 0, true));
+            AddStep(
+                "simulate drain",
+                () =>
+                    del = Scheduler.AddDelayed(
+                        () => healthProcessor.Health.Value -= 0.00025f * Time.Elapsed,
+                        0,
+                        true
+                    )
+            );
             AddUntilStep("wait until zero", () => healthProcessor.Health.Value == 0);
             AddStep("cancel drain", () => del.Cancel());
         }

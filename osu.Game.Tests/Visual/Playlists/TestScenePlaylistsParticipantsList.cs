@@ -20,48 +20,60 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             base.SetUpSteps();
 
-            AddStep("create room", () =>
-            {
-                room = new Room
+            AddStep(
+                "create room",
+                () =>
                 {
-                    RoomID = 7,
-                    RecentParticipants = Enumerable.Range(0, 50).Select(_ => new APIUser
+                    room = new Room
                     {
-                        Username = "peppy",
-                        Statistics = new UserStatistics { GlobalRank = 1234 },
-                        Id = 2
-                    }).ToArray()
-                };
-            });
+                        RoomID = 7,
+                        RecentParticipants = Enumerable
+                            .Range(0, 50)
+                            .Select(_ => new APIUser
+                            {
+                                Username = "peppy",
+                                Statistics = new UserStatistics { GlobalRank = 1234 },
+                                Id = 2,
+                            })
+                            .ToArray(),
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestHorizontalLayout()
         {
-            AddStep("create component", () =>
-            {
-                Child = new ParticipantsDisplay(room, Direction.Horizontal)
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 0.2f,
-                };
-            });
+                    Child = new ParticipantsDisplay(room, Direction.Horizontal)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 0.2f,
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestVerticalLayout()
         {
-            AddStep("create component", () =>
-            {
-                Child = new ParticipantsDisplay(room, Direction.Vertical)
+            AddStep(
+                "create component",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 0.2f,
-                    Height = 0.2f,
-                };
-            });
+                    Child = new ParticipantsDisplay(room, Direction.Vertical)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 0.2f,
+                        Height = 0.2f,
+                    };
+                }
+            );
         }
     }
 }

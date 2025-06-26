@@ -13,16 +13,18 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModEasyWithExtraLives : ModEasy, IApplicableFailOverride, IApplicableToHealthProcessor
+    public abstract class ModEasyWithExtraLives
+        : ModEasy,
+            IApplicableFailOverride,
+            IApplicableToHealthProcessor
     {
         [SettingSource("Extra Lives", "Number of extra lives")]
-        public Bindable<int> Retries { get; } = new BindableInt(2)
-        {
-            MinValue = 0,
-            MaxValue = 10
-        };
+        public Bindable<int> Retries { get; } = new BindableInt(2) { MinValue = 0, MaxValue = 10 };
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
@@ -31,7 +33,8 @@ namespace osu.Game.Rulesets.Mods
             }
         }
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(ModAccuracyChallenge)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(ModAccuracyChallenge)).ToArray();
 
         private int retries;
 
@@ -45,7 +48,8 @@ namespace osu.Game.Rulesets.Mods
 
         public bool PerformFail()
         {
-            if (retries == 0) return true;
+            if (retries == 0)
+                return true;
 
             health.Value = health.MaxValue;
             retries--;

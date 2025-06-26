@@ -13,6 +13,7 @@ namespace osu.Game.Seasonal
 
         protected override float Intensity => 4;
 
-        protected override Color4 GetBaseColour() => RNG.NextBool() ? SeasonalUIConfig.PRIMARY_COLOUR_1 : SeasonalUIConfig.PRIMARY_COLOUR_2;
+        protected override Color4 GetBaseColour() =>
+            RNG.NextBool() ? SeasonalUIConfig.PRIMARY_COLOUR_1 : SeasonalUIConfig.PRIMARY_COLOUR_2;
     }
 }

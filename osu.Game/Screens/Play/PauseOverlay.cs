@@ -26,26 +26,30 @@ namespace osu.Game.Screens.Play
 
         private SkinnableSound pauseLoop = null!;
 
-        protected override Action BackAction => () =>
-        {
-            if (Buttons.Any())
-                Buttons.First().TriggerClick();
-            else
-                OnResume?.Invoke();
-        };
+        protected override Action BackAction =>
+            () =>
+            {
+                if (Buttons.Any())
+                    Buttons.First().TriggerClick();
+                else
+                    OnResume?.Invoke();
+            };
 
         private readonly IBindable<bool> windowActive = new Bindable<bool>(true);
 
-        private float targetVolume => windowActive.Value && State.Value == Visibility.Visible ? 1.0f : 0;
+        private float targetVolume =>
+            windowActive.Value && State.Value == Visibility.Visible ? 1.0f : 0;
 
         [BackgroundDependencyLoader]
         private void load(GameHost? host)
         {
-            AddInternal(pauseLoop = new SkinnableSound(new SampleInfo("Gameplay/pause-loop"))
-            {
-                Looping = true,
-                Volume = { Value = 0 }
-            });
+            AddInternal(
+                pauseLoop = new SkinnableSound(new SampleInfo("Gameplay/pause-loop"))
+                {
+                    Looping = true,
+                    Volume = { Value = 0 },
+                }
+            );
 
             if (host != null)
                 windowActive.BindTo(host.IsActive);
@@ -56,7 +60,9 @@ namespace osu.Game.Screens.Play
             base.LoadComplete();
 
             // Schedule required because host.IsActive doesn't seem to always run on the update thread.
-            windowActive.BindValueChanged(_ => Schedule(() => pauseLoop.VolumeTo(targetVolume, 1000, Easing.Out)));
+            windowActive.BindValueChanged(_ =>
+                Schedule(() => pauseLoop.VolumeTo(targetVolume, 1000, Easing.Out))
+            );
         }
 
         public void StopAllSamples()
@@ -79,7 +85,9 @@ namespace osu.Game.Screens.Play
         {
             base.PopOut();
 
-            pauseLoop.VolumeTo(targetVolume, TRANSITION_DURATION, Easing.OutQuad).Finally(_ => pauseLoop.Stop());
+            pauseLoop
+                .VolumeTo(targetVolume, TRANSITION_DURATION, Easing.OutQuad)
+                .Finally(_ => pauseLoop.Stop());
         }
 
         public override bool OnPressed(KeyBindingPressEvent<GlobalAction> e)

@@ -40,14 +40,16 @@ namespace osu.Game.Overlays
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(Button = new ScrollBackButton
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                Margin = new MarginPadding(20),
-                Action = scrollBack,
-                LastScrollTarget = { BindTarget = lastScrollTarget }
-            });
+            AddInternal(
+                Button = new ScrollBackButton
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Margin = new MarginPadding(20),
+                    Action = scrollBack,
+                    LastScrollTarget = { BindTarget = lastScrollTarget },
+                }
+            );
         }
 
         protected override void UpdateAfterChildren()
@@ -60,10 +62,17 @@ namespace osu.Game.Overlays
                 return;
             }
 
-            Button.State = Target > button_scroll_position || lastScrollTarget.Value != null ? Visibility.Visible : Visibility.Hidden;
+            Button.State =
+                Target > button_scroll_position || lastScrollTarget.Value != null
+                    ? Visibility.Visible
+                    : Visibility.Hidden;
         }
 
-        protected override void OnUserScroll(double value, bool animated = true, double? distanceDecay = default)
+        protected override void OnUserScroll(
+            double value,
+            bool animated = true,
+            double? distanceDecay = default
+        )
         {
             base.OnUserScroll(value, animated, distanceDecay);
 
@@ -100,7 +109,11 @@ namespace osu.Game.Overlays
 
                     state = value;
                     Enabled.Value = state == Visibility.Visible;
-                    this.FadeTo(state == Visibility.Visible ? 1 : 0, fade_duration, Easing.OutQuint);
+                    this.FadeTo(
+                        state == Visibility.Visible ? 1 : 0,
+                        fade_duration,
+                        Easing.OutQuint
+                    );
                 }
             }
 
@@ -114,7 +127,8 @@ namespace osu.Game.Overlays
 
             public Bindable<double?> LastScrollTarget = new Bindable<double?>();
 
-            protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds();
+            protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+                new HoverSounds();
 
             private Sample scrollToTopSample;
             private Sample scrollToPreviousSample;
@@ -123,34 +137,33 @@ namespace osu.Game.Overlays
             {
                 Size = new Vector2(50);
                 Alpha = 0;
-                Add(content = new CircularContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Masking = true,
-                    EdgeEffect = new EdgeEffectParameters
+                Add(
+                    content = new CircularContainer
                     {
-                        Type = EdgeEffectType.Shadow,
-                        Offset = new Vector2(0f, 1f),
-                        Radius = 3f,
-                        Colour = Color4.Black.Opacity(0.25f),
-                    },
-                    Children = new Drawable[]
-                    {
-                        background = new Box
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Masking = true,
+                        EdgeEffect = new EdgeEffectParameters
                         {
-                            RelativeSizeAxes = Axes.Both
+                            Type = EdgeEffectType.Shadow,
+                            Offset = new Vector2(0f, 1f),
+                            Radius = 3f,
+                            Colour = Color4.Black.Opacity(0.25f),
                         },
-                        spriteIcon = new SpriteIcon
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(15),
-                            Icon = FontAwesome.Solid.ChevronUp
-                        }
+                            background = new Box { RelativeSizeAxes = Axes.Both },
+                            spriteIcon = new SpriteIcon
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(15),
+                                Icon = FontAwesome.Solid.ChevronUp,
+                            },
+                        },
                     }
-                });
+                );
 
                 TooltipText = CommonStrings.ButtonsBackToTop;
             }
@@ -170,11 +183,21 @@ namespace osu.Game.Overlays
             {
                 base.LoadComplete();
 
-                LastScrollTarget.BindValueChanged(target =>
-                {
-                    spriteIcon.ScaleTo(target.NewValue != null ? new Vector2(1f, -1f) : Vector2.One, fade_duration, Easing.OutQuint);
-                    TooltipText = target.NewValue != null ? CommonStrings.ButtonsBackToPrevious : CommonStrings.ButtonsBackToTop;
-                }, true);
+                LastScrollTarget.BindValueChanged(
+                    target =>
+                    {
+                        spriteIcon.ScaleTo(
+                            target.NewValue != null ? new Vector2(1f, -1f) : Vector2.One,
+                            fade_duration,
+                            Easing.OutQuint
+                        );
+                        TooltipText =
+                            target.NewValue != null
+                                ? CommonStrings.ButtonsBackToPrevious
+                                : CommonStrings.ButtonsBackToTop;
+                    },
+                    true
+                );
             }
 
             protected override bool OnClick(ClickEvent e)

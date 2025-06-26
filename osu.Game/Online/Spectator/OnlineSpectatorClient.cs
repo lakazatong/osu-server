@@ -38,13 +38,34 @@ namespace osu.Game.Online.Spectator
                 {
                     // until strong typed client support is added, each method must be manually bound
                     // (see https://github.com/dotnet/aspnetcore/issues/15198)
-                    connection.On<int, SpectatorState>(nameof(ISpectatorClient.UserBeganPlaying), ((ISpectatorClient)this).UserBeganPlaying);
-                    connection.On<int, FrameDataBundle>(nameof(ISpectatorClient.UserSentFrames), ((ISpectatorClient)this).UserSentFrames);
-                    connection.On<int, SpectatorState>(nameof(ISpectatorClient.UserFinishedPlaying), ((ISpectatorClient)this).UserFinishedPlaying);
-                    connection.On<int, long>(nameof(ISpectatorClient.UserScoreProcessed), ((ISpectatorClient)this).UserScoreProcessed);
-                    connection.On<SpectatorUser[]>(nameof(ISpectatorClient.UserStartedWatching), ((ISpectatorClient)this).UserStartedWatching);
-                    connection.On<int>(nameof(ISpectatorClient.UserEndedWatching), ((ISpectatorClient)this).UserEndedWatching);
-                    connection.On(nameof(IStatefulUserHubClient.DisconnectRequested), ((IStatefulUserHubClient)this).DisconnectRequested);
+                    connection.On<int, SpectatorState>(
+                        nameof(ISpectatorClient.UserBeganPlaying),
+                        ((ISpectatorClient)this).UserBeganPlaying
+                    );
+                    connection.On<int, FrameDataBundle>(
+                        nameof(ISpectatorClient.UserSentFrames),
+                        ((ISpectatorClient)this).UserSentFrames
+                    );
+                    connection.On<int, SpectatorState>(
+                        nameof(ISpectatorClient.UserFinishedPlaying),
+                        ((ISpectatorClient)this).UserFinishedPlaying
+                    );
+                    connection.On<int, long>(
+                        nameof(ISpectatorClient.UserScoreProcessed),
+                        ((ISpectatorClient)this).UserScoreProcessed
+                    );
+                    connection.On<SpectatorUser[]>(
+                        nameof(ISpectatorClient.UserStartedWatching),
+                        ((ISpectatorClient)this).UserStartedWatching
+                    );
+                    connection.On<int>(
+                        nameof(ISpectatorClient.UserEndedWatching),
+                        ((ISpectatorClient)this).UserEndedWatching
+                    );
+                    connection.On(
+                        nameof(IStatefulUserHubClient.DisconnectRequested),
+                        ((IStatefulUserHubClient)this).DisconnectRequested
+                    );
                 };
 
                 IsConnected.BindTo(connector.IsConnected);
@@ -60,11 +81,15 @@ namespace osu.Game.Online.Spectator
 
             try
             {
-                await connection.InvokeAsync(nameof(ISpectatorServer.BeginPlaySession), scoreToken, state).ConfigureAwait(false);
+                await connection
+                    .InvokeAsync(nameof(ISpectatorServer.BeginPlaySession), scoreToken, state)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                if (exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE)
+                if (
+                    exception.GetHubExceptionMessage() == HubClientConnector.SERVER_SHUTDOWN_MESSAGE
+                )
                 {
                     Debug.Assert(connector != null);
 

@@ -5,7 +5,9 @@
     <OutputType>Exe</OutputType>
     <Version>0.1.0</Version>
     <ApplicationVersion Condition=" '$(ApplicationVersion)' == '' ">$(Version)</ApplicationVersion>
-    <ApplicationDisplayVersion Condition=" '$(ApplicationDisplayVersion)' == '' ">$(Version)</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion Condition=" '$(ApplicationDisplayVersion)' == '' "
+      >$(Version)</ApplicationDisplayVersion
+    >
   </PropertyGroup>
   <Import Project="..\osu.iOS.props" />
   <ItemGroup>

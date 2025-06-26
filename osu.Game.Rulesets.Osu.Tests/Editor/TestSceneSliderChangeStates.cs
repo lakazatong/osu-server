@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 {
     public partial class TestSceneSliderChangeStates : TestSceneOsuEditor
     {
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         [TestCase(SplineType.Catmull)]
         [TestCase(SplineType.BSpline)]
@@ -25,21 +26,41 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             Slider? slider = null;
             PathType pathType = new PathType(splineType);
 
-            AddStep("add slider", () => EditorBeatmap.Add(slider = new Slider
-            {
-                StartTime = 500,
-                Path = new SliderPath(new[]
-                {
-                    new PathControlPoint(Vector2.Zero, pathType),
-                    new PathControlPoint(new Vector2(200, 0), pathType),
-                })
-            }));
-            AddAssert("slider has correct spline type", () => ((Slider)EditorBeatmap.HitObjects[0]).Path.ControlPoints.All(p => p.Type == pathType));
+            AddStep(
+                "add slider",
+                () =>
+                    EditorBeatmap.Add(
+                        slider = new Slider
+                        {
+                            StartTime = 500,
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(Vector2.Zero, pathType),
+                                    new PathControlPoint(new Vector2(200, 0), pathType),
+                                }
+                            ),
+                        }
+                    )
+            );
+            AddAssert(
+                "slider has correct spline type",
+                () =>
+                    ((Slider)EditorBeatmap.HitObjects[0]).Path.ControlPoints.All(p =>
+                        p.Type == pathType
+                    )
+            );
             AddStep("remove object", () => EditorBeatmap.Remove(slider));
             AddAssert("slider removed", () => EditorBeatmap.HitObjects.Count == 0);
             addUndoSteps();
             AddAssert("slider not removed", () => EditorBeatmap.HitObjects.Count == 1);
-            AddAssert("slider has correct spline type", () => ((Slider)EditorBeatmap.HitObjects[0]).Path.ControlPoints.All(p => p.Type == pathType));
+            AddAssert(
+                "slider has correct spline type",
+                () =>
+                    ((Slider)EditorBeatmap.HitObjects[0]).Path.ControlPoints.All(p =>
+                        p.Type == pathType
+                    )
+            );
         }
 
         private void addUndoSteps() => AddStep("undo", () => Editor.Undo());

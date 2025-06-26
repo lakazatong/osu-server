@@ -16,14 +16,16 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestNoBreak()
         {
             OsuLegacyHealthProcessor hp = new OsuLegacyHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<OsuHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<OsuHitObject>
                 {
-                    new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 2000 }
+                    HitObjects =
+                    {
+                        new HitCircle { StartTime = 0 },
+                        new HitCircle { StartTime = 2000 },
+                    },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(1.4E-5).Within(0.1E-5));
         }
@@ -32,18 +34,17 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestSingleBreak()
         {
             OsuLegacyHealthProcessor hp = new OsuLegacyHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<OsuHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<OsuHitObject>
                 {
-                    new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1500)
+                    HitObjects =
+                    {
+                        new HitCircle { StartTime = 0 },
+                        new HitCircle { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(4.3E-5).Within(0.1E-5));
         }
@@ -52,19 +53,17 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestOverlappingBreak()
         {
             OsuLegacyHealthProcessor hp = new OsuLegacyHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<OsuHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<OsuHitObject>
                 {
-                    new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1400),
-                    new BreakPeriod(750, 1500),
+                    HitObjects =
+                    {
+                        new HitCircle { StartTime = 0 },
+                        new HitCircle { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1400), new BreakPeriod(750, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(4.3E-5).Within(0.1E-5));
         }
@@ -73,19 +72,17 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestSequentialBreak()
         {
             OsuLegacyHealthProcessor hp = new OsuLegacyHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<OsuHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<OsuHitObject>
                 {
-                    new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1000),
-                    new BreakPeriod(1000, 1500),
+                    HitObjects =
+                    {
+                        new HitCircle { StartTime = 0 },
+                        new HitCircle { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1000), new BreakPeriod(1000, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(4.3E-5).Within(0.1E-5));
         }

@@ -10,13 +10,9 @@ namespace osu.Game.Tests.Visual.Settings
     public partial class TestSceneDirectorySelector : ThemeComparisonTestScene
     {
         public TestSceneDirectorySelector()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
-        protected override Drawable CreateContent() => new OsuDirectorySelector
-        {
-            RelativeSizeAxes = Axes.Both
-        };
+        protected override Drawable CreateContent() =>
+            new OsuDirectorySelector { RelativeSizeAxes = Axes.Both };
     }
 }

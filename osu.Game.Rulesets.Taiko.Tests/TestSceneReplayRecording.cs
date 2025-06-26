@@ -22,19 +22,28 @@ namespace osu.Game.Rulesets.Taiko.Tests
         [Resolved]
         private AudioManager audioManager { get; set; } = null!;
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap
-        {
-            HitObjects =
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap
             {
-                new Hit { StartTime = 0, },
-                new Hit { StartTime = 5000, },
-                new Hit { StartTime = 10000, },
-                new Hit { StartTime = 15000, }
-            }
-        };
+                HitObjects =
+                {
+                    new Hit { StartTime = 0 },
+                    new Hit { StartTime = 5000 },
+                    new Hit { StartTime = 10000 },
+                    new Hit { StartTime = 15000 },
+                },
+            };
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null) =>
-            new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audioManager);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audioManager
+            );
 
         [Test]
         public void TestRecording()
@@ -43,31 +52,59 @@ namespace osu.Game.Rulesets.Taiko.Tests
             AddStep("press D", () => InputManager.PressKey(Key.D));
             seekTo(15);
             AddStep("release D", () => InputManager.ReleaseKey(Key.D));
-            AddAssert("left rim press recorded to replay", () => Player.Score.Replay.Frames.OfType<TaikoReplayFrame>().Any(f => f.Actions.SequenceEqual([TaikoAction.LeftRim])));
+            AddAssert(
+                "left rim press recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<TaikoReplayFrame>()
+                        .Any(f => f.Actions.SequenceEqual([TaikoAction.LeftRim]))
+            );
 
             seekTo(5000);
             AddStep("press F", () => InputManager.PressKey(Key.F));
             seekTo(5015);
             AddStep("release F", () => InputManager.ReleaseKey(Key.F));
-            AddAssert("left centre press recorded to replay", () => Player.Score.Replay.Frames.OfType<TaikoReplayFrame>().Any(f => f.Actions.SequenceEqual([TaikoAction.LeftCentre])));
+            AddAssert(
+                "left centre press recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<TaikoReplayFrame>()
+                        .Any(f => f.Actions.SequenceEqual([TaikoAction.LeftCentre]))
+            );
 
             seekTo(10000);
             AddStep("press J", () => InputManager.PressKey(Key.J));
             seekTo(10015);
             AddStep("release J", () => InputManager.ReleaseKey(Key.J));
-            AddAssert("right centre press recorded to replay", () => Player.Score.Replay.Frames.OfType<TaikoReplayFrame>().Any(f => f.Actions.SequenceEqual([TaikoAction.RightCentre])));
+            AddAssert(
+                "right centre press recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<TaikoReplayFrame>()
+                        .Any(f => f.Actions.SequenceEqual([TaikoAction.RightCentre]))
+            );
 
             seekTo(15000);
             AddStep("press K", () => InputManager.PressKey(Key.K));
             seekTo(15015);
             AddStep("release K", () => InputManager.ReleaseKey(Key.K));
-            AddAssert("right rim press recorded to replay", () => Player.Score.Replay.Frames.OfType<TaikoReplayFrame>().Any(f => f.Actions.SequenceEqual([TaikoAction.RightRim])));
+            AddAssert(
+                "right rim press recorded to replay",
+                () =>
+                    Player
+                        .Score.Replay.Frames.OfType<TaikoReplayFrame>()
+                        .Any(f => f.Actions.SequenceEqual([TaikoAction.RightRim]))
+            );
         }
 
         private void seekTo(double time)
         {
             AddStep($"seek to {time}ms", () => Player.GameplayClockContainer.Seek(time));
-            AddUntilStep("wait for seek to finish", () => Player.DrawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(time).Within(500));
+            AddUntilStep(
+                "wait for seek to finish",
+                () => Player.DrawableRuleset.FrameStableClock.CurrentTime,
+                () => Is.EqualTo(time).Within(500)
+            );
         }
     }
 }

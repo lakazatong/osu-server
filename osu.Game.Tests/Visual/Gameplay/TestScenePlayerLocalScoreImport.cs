@@ -48,8 +48,20 @@ namespace osu.Game.Tests.Visual.Gameplay
         private void load(GameHost host, AudioManager audio)
         {
             Dependencies.Cache(rulesets = new RealmRulesetStore(Realm));
-            Dependencies.Cache(beatmaps = new BeatmapManager(LocalStorage, Realm, null, audio, Resources, host, Beatmap.Default));
-            Dependencies.Cache(new ScoreManager(rulesets, () => beatmaps, LocalStorage, Realm, API));
+            Dependencies.Cache(
+                beatmaps = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
+            Dependencies.Cache(
+                new ScoreManager(rulesets, () => beatmaps, LocalStorage, Realm, API)
+            );
             Dependencies.Cache(Realm);
         }
 
@@ -57,14 +69,18 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.SetUpSteps();
 
-            AddStep("import beatmap", () =>
-            {
-                beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
-                importedSet = beatmaps.GetAllUsableBeatmapSets().First();
-            });
+            AddStep(
+                "import beatmap",
+                () =>
+                {
+                    beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
+                    importedSet = beatmaps.GetAllUsableBeatmapSets().First();
+                }
+            );
         }
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => beatmaps.GetWorkingBeatmap(importedSet?.Beatmaps.First()).Beatmap;
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            beatmaps.GetWorkingBeatmap(importedSet?.Beatmaps.First()).Beatmap;
 
         private Ruleset? customRuleset;
 
@@ -92,20 +108,54 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             CreateTest();
 
-            AddUntilStep("fail screen displayed", () => Player.ChildrenOfType<FailOverlay>().First().State.Value == Visibility.Visible);
-            AddUntilStep("wait for button clickable", () => Player.ChildrenOfType<SaveFailedScoreButton>().First().ChildrenOfType<OsuClickableContainer>().First().Enabled.Value);
+            AddUntilStep(
+                "fail screen displayed",
+                () => Player.ChildrenOfType<FailOverlay>().First().State.Value == Visibility.Visible
+            );
+            AddUntilStep(
+                "wait for button clickable",
+                () =>
+                    Player
+                        .ChildrenOfType<SaveFailedScoreButton>()
+                        .First()
+                        .ChildrenOfType<OsuClickableContainer>()
+                        .First()
+                        .Enabled.Value
+            );
 
-            AddUntilStep("score not in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) == null));
-            AddStep("click save button", () => Player.ChildrenOfType<SaveFailedScoreButton>().First().ChildrenOfType<OsuClickableContainer>().First().TriggerClick());
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
+            AddUntilStep(
+                "score not in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) == null)
+            );
+            AddStep(
+                "click save button",
+                () =>
+                    Player
+                        .ChildrenOfType<SaveFailedScoreButton>()
+                        .First()
+                        .ChildrenOfType<OsuClickableContainer>()
+                        .First()
+                        .TriggerClick()
+            );
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
         }
 
         [Test]
         public void TestLastPlayedUpdated()
         {
-            DateTimeOffset? getLastPlayed() => Realm.Run(r => r.Find<BeatmapInfo>(Beatmap.Value.BeatmapInfo.ID)?.LastPlayed);
+            DateTimeOffset? getLastPlayed() =>
+                Realm.Run(r => r.Find<BeatmapInfo>(Beatmap.Value.BeatmapInfo.ID)?.LastPlayed);
 
-            AddStep("reset last played", () => Realm.Write(r => r.Find<BeatmapInfo>(Beatmap.Value.BeatmapInfo.ID)!.LastPlayed = null));
+            AddStep(
+                "reset last played",
+                () =>
+                    Realm.Write(r =>
+                        r.Find<BeatmapInfo>(Beatmap.Value.BeatmapInfo.ID)!.LastPlayed = null
+                    )
+            );
             AddAssert("last played is null", () => getLastPlayed() == null);
 
             CreateTest();
@@ -125,24 +175,56 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("load player with mods", () => LoadPlayer(originalMods));
             AddUntilStep("player loaded", () => Player.IsLoaded && Player.Alpha == 1);
 
-            AddStep("get mods at start of gameplay", () => playerMods = Player.Score.ScoreInfo.Mods.ToArray());
+            AddStep(
+                "get mods at start of gameplay",
+                () => playerMods = Player.Score.ScoreInfo.Mods.ToArray()
+            );
 
             // Player creates new instance of mods during load.
-            AddAssert("player score has copied mods", () => playerMods.First(), () => Is.Not.SameAs(originalMods.First()));
-            AddAssert("player score has matching mods", () => playerMods.First(), () => Is.EqualTo(originalMods.First()));
+            AddAssert(
+                "player score has copied mods",
+                () => playerMods.First(),
+                () => Is.Not.SameAs(originalMods.First())
+            );
+            AddAssert(
+                "player score has matching mods",
+                () => playerMods.First(),
+                () => Is.EqualTo(originalMods.First())
+            );
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
 
             AddUntilStep("results displayed", () => Player.GetChildScreen() is ResultsScreen);
 
             // Player creates new instance of mods after gameplay to ensure any runtime references to drawables etc. are not retained.
-            AddAssert("results screen score has copied mods", () => (Player.GetChildScreen() as ResultsScreen)?.Score?.Mods.First(), () => Is.Not.SameAs(playerMods.First()));
-            AddAssert("results screen score has matching", () => (Player.GetChildScreen() as ResultsScreen)?.Score?.Mods.First(), () => Is.EqualTo(playerMods.First()));
+            AddAssert(
+                "results screen score has copied mods",
+                () => (Player.GetChildScreen() as ResultsScreen)?.Score?.Mods.First(),
+                () => Is.Not.SameAs(playerMods.First())
+            );
+            AddAssert(
+                "results screen score has matching",
+                () => (Player.GetChildScreen() as ResultsScreen)?.Score?.Mods.First(),
+                () => Is.EqualTo(playerMods.First())
+            );
 
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
-            AddUntilStep("databased score has correct mods", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID))!.Mods.First(), () => Is.EqualTo(playerMods.First()));
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
+            AddUntilStep(
+                "databased score has correct mods",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID))!.Mods.First(),
+                () => Is.EqualTo(playerMods.First())
+            );
         }
 
         [Test]
@@ -152,49 +234,85 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
 
             AddUntilStep("results displayed", () => Player.GetChildScreen() is ResultsScreen);
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
-            AddUntilStep("score has correct version", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID)!.ClientVersion), () => Is.EqualTo(osu.Version));
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
+            AddUntilStep(
+                "score has correct version",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID)!.ClientVersion),
+                () => Is.EqualTo(osu.Version)
+            );
         }
 
         [Test]
         public void TestGuestScoreIsStoredAsGuest()
         {
-            AddStep("set up API", () => ((DummyAPIAccess)API).HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case GetUserRequest userRequest:
-                        userRequest.TriggerSuccess(new APIUser
+            AddStep(
+                "set up API",
+                () =>
+                    ((DummyAPIAccess)API).HandleRequest = req =>
+                    {
+                        switch (req)
                         {
-                            Username = "Guest",
-                            CountryCode = CountryCode.JP,
-                            Id = 1234
-                        });
-                        return true;
+                            case GetUserRequest userRequest:
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Username = "Guest",
+                                        CountryCode = CountryCode.JP,
+                                        Id = 1234,
+                                    }
+                                );
+                                return true;
 
-                    default:
-                        return false;
-                }
-            });
+                            default:
+                                return false;
+                        }
+                    }
+            );
 
             AddStep("log out", () => API.Logout());
             CreateTest();
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
-            AddStep("log back in", () =>
-            {
-                API.Login("username", "password");
-                ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
-            });
+            AddStep(
+                "log back in",
+                () =>
+                {
+                    API.Login("username", "password");
+                    ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
+                }
+            );
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
 
             AddUntilStep("results displayed", () => Player.GetChildScreen() is ResultsScreen);
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
-            AddAssert("score is not associated with online user", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID))!.UserID == APIUser.SYSTEM_USER_ID);
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
+            AddAssert(
+                "score is not associated with online user",
+                () =>
+                    Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID))!.UserID
+                    == APIUser.SYSTEM_USER_ID
+            );
         }
 
         [Test]
@@ -204,15 +322,33 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
 
-            AddUntilStep("results displayed", () => (Player.GetChildScreen() as ResultsScreen)?.IsLoaded == true);
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
+            AddUntilStep(
+                "results displayed",
+                () => (Player.GetChildScreen() as ResultsScreen)?.IsLoaded == true
+            );
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
 
-            AddUntilStep("wait for button clickable", () => ((OsuScreen)Player.GetChildScreen())
-                                                            .ChildrenOfType<ReplayDownloadButton>().FirstOrDefault()?
-                                                            .ChildrenOfType<OsuClickableContainer>().FirstOrDefault()?
-                                                            .Enabled.Value == true);
+            AddUntilStep(
+                "wait for button clickable",
+                () =>
+                    ((OsuScreen)Player.GetChildScreen())
+                        .ChildrenOfType<ReplayDownloadButton>()
+                        .FirstOrDefault()
+                        ?.ChildrenOfType<OsuClickableContainer>()
+                        .FirstOrDefault()
+                        ?.Enabled.Value == true
+            );
 
             AddAssert("no export files", () => !LocalStorage.GetFiles("exports").Any());
 
@@ -221,20 +357,31 @@ namespace osu.Game.Tests.Visual.Gameplay
             string? filePath = null;
 
             // Files starting with _ are temporary, created by CreateFileSafely call.
-            AddUntilStep("wait for export file", () => filePath = LocalStorage.GetFiles("exports").SingleOrDefault(f => !Path.GetFileName(f).StartsWith('_')), () => Is.Not.Null);
-            AddUntilStep("filesize is non-zero", () =>
-            {
-                try
+            AddUntilStep(
+                "wait for export file",
+                () =>
+                    filePath = LocalStorage
+                        .GetFiles("exports")
+                        .SingleOrDefault(f => !Path.GetFileName(f).StartsWith('_')),
+                () => Is.Not.Null
+            );
+            AddUntilStep(
+                "filesize is non-zero",
+                () =>
                 {
-                    using (var stream = LocalStorage.GetStream(filePath))
-                        return stream.Length;
-                }
-                catch (IOException)
-                {
-                    // file move may still be in progress.
-                    return 0;
-                }
-            }, () => Is.Not.Zero);
+                    try
+                    {
+                        using (var stream = LocalStorage.GetStream(filePath))
+                            return stream.Length;
+                    }
+                    catch (IOException)
+                    {
+                        // file move may still be in progress.
+                        return 0;
+                    }
+                },
+                () => Is.Not.Zero
+            );
         }
 
         [Test]
@@ -242,19 +389,34 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             Ruleset createCustomRuleset() => new CustomRuleset();
 
-            AddStep("import custom ruleset", () => Realm.Write(r => r.Add(createCustomRuleset().RulesetInfo)));
+            AddStep(
+                "import custom ruleset",
+                () => Realm.Write(r => r.Add(createCustomRuleset().RulesetInfo))
+            );
             AddStep("set custom ruleset", () => customRuleset = createCustomRuleset());
 
             CreateTest();
 
-            AddAssert("score has custom ruleset", () => Player.Score.ScoreInfo.Ruleset.Equals(customRuleset.AsNonNull().RulesetInfo));
+            AddAssert(
+                "score has custom ruleset",
+                () => Player.Score.ScoreInfo.Ruleset.Equals(customRuleset.AsNonNull().RulesetInfo)
+            );
 
             AddUntilStep("wait for track to start running", () => Beatmap.Value.Track.IsRunning);
 
-            AddStep("seek to completion", () => Player.GameplayClockContainer.Seek(Player.DrawableRuleset.Objects.Last().GetEndTime()));
+            AddStep(
+                "seek to completion",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        Player.DrawableRuleset.Objects.Last().GetEndTime()
+                    )
+            );
 
             AddUntilStep("results displayed", () => Player.GetChildScreen() is ResultsScreen);
-            AddUntilStep("score in database", () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null));
+            AddUntilStep(
+                "score in database",
+                () => Realm.Run(r => r.Find<ScoreInfo>(Player.Score.ScoreInfo.ID) != null)
+            );
         }
 
         private class CustomRuleset : OsuRuleset, ILegacyRuleset

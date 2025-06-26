@@ -66,25 +66,28 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                 },
             };
 
-            accentColour.BindValueChanged(colour =>
-            {
-                tallExplosion.EdgeEffect = new EdgeEffectParameters
+            accentColour.BindValueChanged(
+                colour =>
                 {
-                    Type = EdgeEffectType.Glow,
-                    Colour = colour.NewValue,
-                    Hollow = false,
-                    Roundness = 15,
-                    Radius = 15,
-                };
+                    tallExplosion.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = colour.NewValue,
+                        Hollow = false,
+                        Roundness = 15,
+                        Radius = 15,
+                    };
 
-                largeFaint.EdgeEffect = new EdgeEffectParameters
-                {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Interpolation.ValueAt(0.2f, colour.NewValue, Color4.White, 0, 1),
-                    Hollow = false,
-                    Radius = 50,
-                };
-            }, true);
+                    largeFaint.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Interpolation.ValueAt(0.2f, colour.NewValue, Color4.White, 0, 1),
+                        Hollow = false,
+                        Radius = 50,
+                    };
+                },
+                true
+            );
         }
 
         public void Animate(HitExplosionEntry entry)
@@ -99,7 +102,11 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
 
                 if (!(entry.HitObject is Droplet))
                 {
-                    float scale = Math.Clamp(entry.JudgementResult.ComboAtJudgement / 200f, 0.35f, 1.125f);
+                    float scale = Math.Clamp(
+                        entry.JudgementResult.ComboAtJudgement / 200f,
+                        0.35f,
+                        1.125f
+                    );
 
                     tallExplosion
                         .ScaleTo(new Vector2(1.1f, 20 * scale), 200, Easing.OutQuint)

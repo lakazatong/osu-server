@@ -27,14 +27,18 @@ namespace osu.Game.Screens.Play.HUD
         public bool UsesFixedAnchor { get; set; }
 
         [SettingSource("Bar height")]
-        public BindableFloat BarHeight { get; } = new BindableFloat(20)
-        {
-            MinValue = 0,
-            MaxValue = 64,
-            Precision = 1
-        };
+        public BindableFloat BarHeight { get; } =
+            new BindableFloat(20)
+            {
+                MinValue = 0,
+                MaxValue = 64,
+                Precision = 1,
+            };
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.UseRelativeSize))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.UseRelativeSize)
+        )]
         public BindableBool UseRelativeSize { get; } = new BindableBool(true);
 
         private ArgonHealthDisplayBar mainBar = null!;
@@ -47,7 +51,9 @@ namespace osu.Game.Screens.Play.HUD
         private Container content = null!;
 
         private static readonly Colour4 main_bar_colour = Colour4.White;
-        private static readonly Colour4 main_bar_glow_colour = Color4Extensions.FromHex("#7ED7FD").Opacity(0.5f);
+        private static readonly Colour4 main_bar_glow_colour = Color4Extensions
+            .FromHex("#7ED7FD")
+            .Opacity(0.5f);
 
         private ScheduledDelegate? resetMissBarDelegate;
 
@@ -85,25 +91,30 @@ namespace osu.Game.Screens.Play.HUD
             {
                 Children = new Drawable[]
                 {
-                    new ArgonHealthDisplayBackground
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    new ArgonHealthDisplayBackground { RelativeSizeAxes = Axes.Both },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
                         // since we are using bigger path radius we need to expand the draw area outwards to preserve the curve placement
                         Padding = new MarginPadding(MAIN_PATH_RADIUS - glow_path_radius),
-                        Child = glowBar = new ArgonHealthDisplayBar
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            BarColour = Color4.White,
-                            GlowColour = main_bar_glow_colour,
-                            Blending = BlendingParameters.Additive,
-                            Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.8f), Color4.White),
-                            PathRadius = glow_path_radius,
-                            GlowPortion = (glow_path_radius - MAIN_PATH_RADIUS * (1f - main_path_glow_portion)) / glow_path_radius,
-                        }
+                        Child = glowBar =
+                            new ArgonHealthDisplayBar
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                BarColour = Color4.White,
+                                GlowColour = main_bar_glow_colour,
+                                Blending = BlendingParameters.Additive,
+                                Colour = ColourInfo.GradientHorizontal(
+                                    Color4.White.Opacity(0.8f),
+                                    Color4.White
+                                ),
+                                PathRadius = glow_path_radius,
+                                GlowPortion =
+                                    (
+                                        glow_path_radius
+                                        - MAIN_PATH_RADIUS * (1f - main_path_glow_portion)
+                                    ) / glow_path_radius,
+                            },
                     },
                     mainBar = new ArgonHealthDisplayBar
                     {
@@ -112,9 +123,9 @@ namespace osu.Game.Screens.Play.HUD
                         BarColour = main_bar_colour,
                         GlowColour = main_bar_glow_colour,
                         PathRadius = MAIN_PATH_RADIUS,
-                        GlowPortion = main_path_glow_portion
-                    }
-                }
+                        GlowPortion = main_path_glow_portion,
+                    },
+                },
             };
         }
 
@@ -131,7 +142,10 @@ namespace osu.Game.Screens.Play.HUD
             // but that is not what we want in this case, since the width at this point is valid in the *target* sizing mode.
             // to counteract this, store the numerical value here, and restore it after setting the correct initial relative sizing axes.
             float previousWidth = Width;
-            UseRelativeSize.BindValueChanged(v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None, true);
+            UseRelativeSize.BindValueChanged(
+                v => RelativeSizeAxes = v.NewValue ? Axes.X : Axes.None,
+                true
+            );
             Width = previousWidth;
 
             BarHeight.BindValueChanged(_ => updateContentSize(), true);
@@ -154,12 +168,34 @@ namespace osu.Game.Screens.Play.HUD
                 drawSizeLayout.Validate();
             }
 
-            healthBarValue = Interpolation.DampContinuously(healthBarValue, Current.Value, 50, Time.Elapsed);
+            healthBarValue = Interpolation.DampContinuously(
+                healthBarValue,
+                Current.Value,
+                50,
+                Time.Elapsed
+            );
             if (!displayingMiss)
-                glowBarValue = Interpolation.DampContinuously(glowBarValue, Current.Value, 50, Time.Elapsed);
+                glowBarValue = Interpolation.DampContinuously(
+                    glowBarValue,
+                    Current.Value,
+                    50,
+                    Time.Elapsed
+                );
 
-            mainBar.Alpha = (float)Interpolation.DampContinuously(mainBar.Alpha, Current.Value > 0 ? 1 : 0, 40, Time.Elapsed);
-            glowBar.Alpha = (float)Interpolation.DampContinuously(glowBar.Alpha, glowBarValue > 0 ? 1 : 0, 40, Time.Elapsed);
+            mainBar.Alpha = (float)
+                Interpolation.DampContinuously(
+                    mainBar.Alpha,
+                    Current.Value > 0 ? 1 : 0,
+                    40,
+                    Time.Elapsed
+                );
+            glowBar.Alpha = (float)
+                Interpolation.DampContinuously(
+                    glowBar.Alpha,
+                    glowBarValue > 0 ? 1 : 0,
+                    40,
+                    Time.Elapsed
+                );
 
             updatePathProgress();
         }
@@ -191,9 +227,20 @@ namespace osu.Game.Screens.Play.HUD
 
             if (!displayingMiss)
             {
-                glowBar.TransformTo(nameof(ArgonHealthDisplayBar.GlowColour), Colour4.White, 30, Easing.OutQuint)
-                       .Then()
-                       .TransformTo(nameof(ArgonHealthDisplayBar.GlowColour), main_bar_glow_colour, 300, Easing.OutQuint);
+                glowBar
+                    .TransformTo(
+                        nameof(ArgonHealthDisplayBar.GlowColour),
+                        Colour4.White,
+                        30,
+                        Easing.OutQuint
+                    )
+                    .Then()
+                    .TransformTo(
+                        nameof(ArgonHealthDisplayBar.GlowColour),
+                        main_bar_glow_colour,
+                        300,
+                        Easing.OutQuint
+                    );
             }
         }
 
@@ -202,17 +249,42 @@ namespace osu.Game.Screens.Play.HUD
             resetMissBarDelegate?.Cancel();
             resetMissBarDelegate = null;
 
-            this.Delay(500).Schedule(() =>
-            {
-                this.TransformTo(nameof(glowBarValue), Current.Value, 300, Easing.OutQuint);
-                finishMissDisplay();
-            }, out resetMissBarDelegate);
+            this.Delay(500)
+                .Schedule(
+                    () =>
+                    {
+                        this.TransformTo(nameof(glowBarValue), Current.Value, 300, Easing.OutQuint);
+                        finishMissDisplay();
+                    },
+                    out resetMissBarDelegate
+                );
 
-            glowBar.TransformTo(nameof(ArgonHealthDisplayBar.BarColour), new Colour4(255, 147, 147, 255), 100, Easing.OutQuint).Then()
-                   .TransformTo(nameof(ArgonHealthDisplayBar.BarColour), new Colour4(255, 93, 93, 255), 800, Easing.OutQuint);
+            glowBar
+                .TransformTo(
+                    nameof(ArgonHealthDisplayBar.BarColour),
+                    new Colour4(255, 147, 147, 255),
+                    100,
+                    Easing.OutQuint
+                )
+                .Then()
+                .TransformTo(
+                    nameof(ArgonHealthDisplayBar.BarColour),
+                    new Colour4(255, 93, 93, 255),
+                    800,
+                    Easing.OutQuint
+                );
 
-            glowBar.TransformTo(nameof(ArgonHealthDisplayBar.GlowColour), new Colour4(253, 0, 0, 255).Lighten(0.2f))
-                   .TransformTo(nameof(ArgonHealthDisplayBar.GlowColour), new Colour4(253, 0, 0, 255), 800, Easing.OutQuint);
+            glowBar
+                .TransformTo(
+                    nameof(ArgonHealthDisplayBar.GlowColour),
+                    new Colour4(253, 0, 0, 255).Lighten(0.2f)
+                )
+                .TransformTo(
+                    nameof(ArgonHealthDisplayBar.GlowColour),
+                    new Colour4(253, 0, 0, 255),
+                    800,
+                    Easing.OutQuint
+                );
         }
 
         private void finishMissDisplay()
@@ -222,8 +294,18 @@ namespace osu.Game.Screens.Play.HUD
 
             if (Current.Value > 0)
             {
-                glowBar.TransformTo(nameof(ArgonHealthDisplayBar.BarColour), main_bar_colour, 300, Easing.In);
-                glowBar.TransformTo(nameof(ArgonHealthDisplayBar.GlowColour), main_bar_glow_colour, 300, Easing.In);
+                glowBar.TransformTo(
+                    nameof(ArgonHealthDisplayBar.BarColour),
+                    main_bar_colour,
+                    300,
+                    Easing.In
+                );
+                glowBar.TransformTo(
+                    nameof(ArgonHealthDisplayBar.GlowColour),
+                    main_bar_glow_colour,
+                    300,
+                    Easing.In
+                );
             }
 
             resetMissBarDelegate?.Cancel();
@@ -234,7 +316,8 @@ namespace osu.Game.Screens.Play.HUD
         {
             float usableWidth = DrawWidth - padding;
 
-            if (usableWidth < 0) enforceMinimumWidth();
+            if (usableWidth < 0)
+                enforceMinimumWidth();
 
             content.Size = new Vector2(DrawWidth, BarHeight.Value + padding);
             updatePathProgress();
@@ -255,7 +338,10 @@ namespace osu.Game.Screens.Play.HUD
         private void updatePathProgress()
         {
             mainBar.ProgressRange = new Vector2(0f, (float)healthBarValue);
-            glowBar.ProgressRange = new Vector2((float)healthBarValue, (float)Math.Max(glowBarValue, healthBarValue));
+            glowBar.ProgressRange = new Vector2(
+                (float)healthBarValue,
+                (float)Math.Max(glowBarValue, healthBarValue)
+            );
         }
 
         protected override void Dispose(bool isDisposing)

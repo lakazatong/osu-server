@@ -70,50 +70,52 @@ namespace osu.Game.Screens.SelectV2
             Content.Anchor = Anchor.Centre;
             Content.Origin = Anchor.Centre;
 
-            Content.AddRange(new Drawable[]
-            {
-                progressFill = new Box
+            Content.AddRange(
+                new Drawable[]
                 {
-                    Colour = Color4.White,
-                    Alpha = 0.2f,
-                    Blending = BlendingParameters.Additive,
-                    RelativeSizeAxes = Axes.Both,
-                    Width = 0,
-                },
-                new FillFlowContainer
-                {
-                    Padding = new MarginPadding { Horizontal = 5, Vertical = 3 },
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(4),
-                    Children = new Drawable[]
+                    progressFill = new Box
                     {
-                        new Container
+                        Colour = Color4.White,
+                        Alpha = 0.2f,
+                        Blending = BlendingParameters.Additive,
+                        RelativeSizeAxes = Axes.Both,
+                        Width = 0,
+                    },
+                    new FillFlowContainer
+                    {
+                        Padding = new MarginPadding { Horizontal = 5, Vertical = 3 },
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(4),
+                        Children = new Drawable[]
                         {
-                            Size = new Vector2(icon_size),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Children = new Drawable[]
+                            new Container
                             {
-                                icon = new SpriteIcon
+                                Size = new Vector2(icon_size),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Icon = FontAwesome.Solid.SyncAlt,
-                                    Size = new Vector2(icon_size),
+                                    icon = new SpriteIcon
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        Icon = FontAwesome.Solid.SyncAlt,
+                                        Size = new Vector2(icon_size),
+                                    },
                                 },
-                            }
+                            },
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
+                                Text = "Update",
+                            },
                         },
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
-                            Text = "Update",
-                        }
-                    }
-                },
-            });
+                    },
+                }
+            );
 
             Action = performUpdate;
         }
@@ -154,13 +156,19 @@ namespace osu.Game.Screens.SelectV2
                 return;
             }
 
-            if (dialogOverlay != null && beatmapSet.Status == BeatmapOnlineStatus.LocallyModified && !updateConfirmed)
+            if (
+                dialogOverlay != null
+                && beatmapSet.Status == BeatmapOnlineStatus.LocallyModified
+                && !updateConfirmed
+            )
             {
-                dialogOverlay.Push(new UpdateLocalConfirmationDialog(() =>
-                {
-                    updateConfirmed = true;
-                    performUpdate();
-                }));
+                dialogOverlay.Push(
+                    new UpdateLocalConfirmationDialog(() =>
+                    {
+                        updateConfirmed = true;
+                        performUpdate();
+                    })
+                );
 
                 return;
             }
@@ -181,7 +189,8 @@ namespace osu.Game.Screens.SelectV2
                 Enabled.Value = false;
                 TooltipText = string.Empty;
 
-                download.DownloadProgressed += progress => progressFill.ResizeWidthTo(progress, 100, Easing.OutQuint);
+                download.DownloadProgressed += progress =>
+                    progressFill.ResizeWidthTo(progress, 100, Easing.OutQuint);
                 download.Failure += _ => attachExistingDownload();
             }
             else

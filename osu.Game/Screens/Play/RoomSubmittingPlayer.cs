@@ -17,7 +17,11 @@ namespace osu.Game.Screens.Play
         protected readonly PlaylistItem PlaylistItem;
         protected readonly Room Room;
 
-        protected RoomSubmittingPlayer(Room room, PlaylistItem playlistItem, PlayerConfiguration? configuration = null)
+        protected RoomSubmittingPlayer(
+            Room room,
+            PlaylistItem playlistItem,
+            PlayerConfiguration? configuration = null
+        )
             : base(configuration)
         {
             Room = room;
@@ -38,13 +42,27 @@ namespace osu.Game.Screens.Play
             if (!Ruleset.Value.IsLegacyRuleset())
                 return null;
 
-            return new CreateRoomScoreRequest(roomId, PlaylistItem.ID, Beatmap.Value.BeatmapInfo, rulesetId, Game.VersionHash);
+            return new CreateRoomScoreRequest(
+                roomId,
+                PlaylistItem.ID,
+                Beatmap.Value.BeatmapInfo,
+                rulesetId,
+                Game.VersionHash
+            );
         }
 
-        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(Score score, long token)
+        protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(
+            Score score,
+            long token
+        )
         {
             Debug.Assert(Room.RoomID != null);
-            return new SubmitRoomScoreRequest(score.ScoreInfo, token, Room.RoomID.Value, PlaylistItem.ID);
+            return new SubmitRoomScoreRequest(
+                score.ScoreInfo,
+                token,
+                Room.RoomID.Value,
+                PlaylistItem.ID
+            );
         }
     }
 }

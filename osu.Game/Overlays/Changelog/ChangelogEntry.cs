@@ -51,11 +51,7 @@ namespace osu.Game.Overlays.Changelog
             fontLarge = OsuFont.GetFont(size: 16);
             fontMedium = OsuFont.GetFont(size: 12);
 
-            Children = new[]
-            {
-                createTitle(),
-                createMessage()
-            };
+            Children = new[] { createTitle(), createMessage() };
         }
 
         private Drawable createTitle()
@@ -85,24 +81,32 @@ namespace osu.Game.Overlays.Changelog
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         TextAnchor = Anchor.BottomLeft,
-                    }
-                }
+                    },
+                },
             };
 
             if (string.IsNullOrEmpty(entry.Url))
             {
-                title.AddText(entry.Title, t =>
-                {
-                    t.Font = fontLarge;
-                    t.Colour = entryColour;
-                });
+                title.AddText(
+                    entry.Title,
+                    t =>
+                    {
+                        t.Font = fontLarge;
+                        t.Colour = entryColour;
+                    }
+                );
             }
             else
             {
-                title.AddLink(entry.Title, () => linkHandler?.HandleLink(entry.Url), entry.Url, t =>
-                {
-                    t.Font = fontLarge;
-                });
+                title.AddLink(
+                    entry.Title,
+                    () => linkHandler?.HandleLink(entry.Url),
+                    entry.Url,
+                    t =>
+                    {
+                        t.Font = fontLarge;
+                    }
+                );
             }
 
             if (!string.IsNullOrEmpty(entry.Repository) && !string.IsNullOrEmpty(entry.GithubUrl))
@@ -119,62 +123,84 @@ namespace osu.Game.Overlays.Changelog
             Debug.Assert(!string.IsNullOrEmpty(entry.Repository));
             Debug.Assert(!string.IsNullOrEmpty(entry.GithubUrl));
 
-            title.AddText(" (", t =>
-            {
-                t.Font = fontLarge;
-                t.Colour = entryColour;
-            });
-
-            title.AddLink($"{entry.Repository.Replace("ppy/", "")}#{entry.GithubPullRequestId}", entry.GithubUrl,
+            title.AddText(
+                " (",
                 t =>
                 {
                     t.Font = fontLarge;
                     t.Colour = entryColour;
-                });
+                }
+            );
 
-            title.AddText(")", t =>
-            {
-                t.Font = fontLarge;
-                t.Colour = entryColour;
-            });
+            title.AddLink(
+                $"{entry.Repository.Replace("ppy/", "")}#{entry.GithubPullRequestId}",
+                entry.GithubUrl,
+                t =>
+                {
+                    t.Font = fontLarge;
+                    t.Colour = entryColour;
+                }
+            );
+
+            title.AddText(
+                ")",
+                t =>
+                {
+                    t.Font = fontLarge;
+                    t.Colour = entryColour;
+                }
+            );
         }
 
         private void addGithubAuthorReference(LinkFlowContainer title, Color4 entryColour)
         {
-            title.AddText("by ", t =>
-            {
-                t.Font = fontMedium;
-                t.Colour = entryColour;
-                t.Padding = new MarginPadding { Left = 10 };
-            });
+            title.AddText(
+                "by ",
+                t =>
+                {
+                    t.Font = fontMedium;
+                    t.Colour = entryColour;
+                    t.Padding = new MarginPadding { Left = 10 };
+                }
+            );
 
             if (entry.GithubUser.UserId != null)
             {
-                title.AddUserLink(new APIUser
-                {
-                    Username = entry.GithubUser.OsuUsername,
-                    Id = entry.GithubUser.UserId.Value
-                }, t =>
-                {
-                    t.Font = fontMedium;
-                    t.Colour = entryColour;
-                });
+                title.AddUserLink(
+                    new APIUser
+                    {
+                        Username = entry.GithubUser.OsuUsername,
+                        Id = entry.GithubUser.UserId.Value,
+                    },
+                    t =>
+                    {
+                        t.Font = fontMedium;
+                        t.Colour = entryColour;
+                    }
+                );
             }
             else if (entry.GithubUser.GithubUrl != null)
             {
-                title.AddLink(entry.GithubUser.DisplayName, entry.GithubUser.GithubUrl, t =>
-                {
-                    t.Font = fontMedium;
-                    t.Colour = entryColour;
-                });
+                title.AddLink(
+                    entry.GithubUser.DisplayName,
+                    entry.GithubUser.GithubUrl,
+                    t =>
+                    {
+                        t.Font = fontMedium;
+                        t.Colour = entryColour;
+                    }
+                );
             }
             else
             {
-                title.AddText(entry.GithubUser.DisplayName, t =>
-                {
-                    t.Font = fontMedium;
-                    t.Colour = entryColour;
-                });
+                title.AddText(
+                    entry.GithubUser.DisplayName,
+                    t =>
+                    {
+                        t.Font = fontMedium;
+                        t.Colour = entryColour;
+                    }
+                );
             }
         }
 
@@ -190,11 +216,16 @@ namespace osu.Game.Overlays.Changelog
             };
 
             // todo: use markdown parsing once API returns markdown
-            message.AddText(WebUtility.HtmlDecode(Regex.Replace(entry.MessageHtml, @"<(.|\n)*?>", string.Empty)), t =>
-            {
-                t.Font = fontMedium;
-                t.Colour = colourProvider.Foreground1;
-            });
+            message.AddText(
+                WebUtility.HtmlDecode(
+                    Regex.Replace(entry.MessageHtml, @"<(.|\n)*?>", string.Empty)
+                ),
+                t =>
+                {
+                    t.Font = fontMedium;
+                    t.Colour = colourProvider.Foreground1;
+                }
+            );
 
             return message;
         }
@@ -214,7 +245,10 @@ namespace osu.Game.Overlays.Changelog
                     return FontAwesome.Regular.Circle;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(entryType), $"Unrecognised entry type {entryType}");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(entryType),
+                        $"Unrecognised entry type {entryType}"
+                    );
             }
         }
     }

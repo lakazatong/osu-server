@@ -104,9 +104,7 @@ namespace osu.Game.Online.Rooms
 
         [JsonConstructor]
         private PlaylistItem()
-            : this(new APIBeatmap())
-        {
-        }
+            : this(new APIBeatmap()) { }
 
         public PlaylistItem(IBeatmapInfo beatmap)
         {
@@ -120,7 +118,14 @@ namespace osu.Game.Online.Rooms
         /// This will create unique instances of the <see cref="RequiredMods"/> and <see cref="AllowedMods"/> arrays but NOT unique instances of the contained <see cref="APIMod"/>s.
         /// </remarks>
         public PlaylistItem(MultiplayerPlaylistItem item)
-            : this(new APIBeatmap { OnlineID = item.BeatmapID, StarRating = item.StarRating, Checksum = item.BeatmapChecksum })
+            : this(
+                new APIBeatmap
+                {
+                    OnlineID = item.BeatmapID,
+                    StarRating = item.StarRating,
+                    Checksum = item.BeatmapChecksum,
+                }
+            )
         {
             ID = item.ID;
             OwnerID = item.OwnerID;
@@ -152,7 +157,12 @@ namespace osu.Game.Online.Rooms
 
         #endregion
 
-        public PlaylistItem With(Optional<long> id = default, Optional<IBeatmapInfo> beatmap = default, Optional<ushort?> playlistOrder = default, Optional<int> ruleset = default)
+        public PlaylistItem With(
+            Optional<long> id = default,
+            Optional<IBeatmapInfo> beatmap = default,
+            Optional<ushort?> playlistOrder = default,
+            Optional<int> ruleset = default
+        )
         {
             return new PlaylistItem(beatmap.GetOr(Beatmap))
             {
@@ -169,14 +179,14 @@ namespace osu.Game.Online.Rooms
             };
         }
 
-        public bool Equals(PlaylistItem? other)
-            => ID == other?.ID
-               && Beatmap.OnlineID == other.Beatmap.OnlineID
-               && RulesetID == other.RulesetID
-               && Expired == other.Expired
-               && PlaylistOrder == other.PlaylistOrder
-               && AllowedMods.SequenceEqual(other.AllowedMods)
-               && RequiredMods.SequenceEqual(other.RequiredMods)
-               && Freestyle == other.Freestyle;
+        public bool Equals(PlaylistItem? other) =>
+            ID == other?.ID
+            && Beatmap.OnlineID == other.Beatmap.OnlineID
+            && RulesetID == other.RulesetID
+            && Expired == other.Expired
+            && PlaylistOrder == other.PlaylistOrder
+            && AllowedMods.SequenceEqual(other.AllowedMods)
+            && RequiredMods.SequenceEqual(other.RequiredMods)
+            && Freestyle == other.Freestyle;
     }
 }

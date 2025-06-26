@@ -8,11 +8,7 @@ namespace osu.Game.Screens.Edit.Timing
 {
     public partial class ControlPointSettings : EditorRoundedScreenSettings
     {
-        protected override IReadOnlyList<Drawable> CreateSections() => new Drawable[]
-        {
-            new GroupSection(),
-            new TimingSection(),
-            new EffectSection(),
-        };
+        protected override IReadOnlyList<Drawable> CreateSections() =>
+            new Drawable[] { new GroupSection(), new TimingSection(), new EffectSection() };
     }
 }

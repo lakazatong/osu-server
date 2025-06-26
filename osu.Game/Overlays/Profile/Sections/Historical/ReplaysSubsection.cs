@@ -10,13 +10,13 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 {
     public partial class ReplaysSubsection : ChartProfileSubsection
     {
-        protected override LocalisableString GraphCounterName => UsersStrings.ShowExtraHistoricalReplaysWatchedCountsCountLabel;
+        protected override LocalisableString GraphCounterName =>
+            UsersStrings.ShowExtraHistoricalReplaysWatchedCountsCountLabel;
 
         public ReplaysSubsection(Bindable<UserProfileData?> user)
-            : base(user, UsersStrings.ShowExtraHistoricalReplaysWatchedCountsTitle)
-        {
-        }
+            : base(user, UsersStrings.ShowExtraHistoricalReplaysWatchedCountsTitle) { }
 
-        protected override APIUserHistoryCount[]? GetValues(APIUser? user) => user?.ReplaysWatchedCounts;
+        protected override APIUserHistoryCount[]? GetValues(APIUser? user) =>
+            user?.ReplaysWatchedCounts;
     }
 }

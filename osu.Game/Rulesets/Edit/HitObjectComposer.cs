@@ -77,7 +77,10 @@ namespace osu.Game.Rulesets.Edit
 
         private DrawableEditorRulesetWrapper<TObject> drawableRulesetWrapper;
 
-        protected readonly Container LayerBelowRuleset = new Container { RelativeSizeAxes = Axes.Both };
+        protected readonly Container LayerBelowRuleset = new Container
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
 
         protected InputManager InputManager { get; private set; }
 
@@ -98,12 +101,11 @@ namespace osu.Game.Rulesets.Edit
         protected DrawableRuleset<TObject> DrawableRuleset { get; private set; }
 
         protected HitObjectComposer(Ruleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
-            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
         [BackgroundDependencyLoader(true)]
         private void load(OsuConfigManager config, [CanBeNull] Editor editor)
@@ -117,11 +119,15 @@ namespace osu.Game.Rulesets.Edit
 
             try
             {
-                DrawableRuleset = CreateDrawableRuleset(Ruleset, EditorBeatmap.PlayableBeatmap, new[] { Ruleset.GetAutoplayMod() });
+                DrawableRuleset = CreateDrawableRuleset(
+                    Ruleset,
+                    EditorBeatmap.PlayableBeatmap,
+                    new[] { Ruleset.GetAutoplayMod() }
+                );
                 drawableRulesetWrapper = new DrawableEditorRulesetWrapper<TObject>(DrawableRuleset)
                 {
                     Clock = EditorClock,
-                    ProcessCustomClock = false
+                    ProcessCustomClock = false,
                 };
             }
             catch (Exception e)
@@ -144,12 +150,15 @@ namespace osu.Game.Rulesets.Edit
                     Children = new Drawable[]
                     {
                         // layers below playfield
-                        drawableRulesetWrapper.CreatePlayfieldAdjustmentContainer().WithChild(LayerBelowRuleset),
+                        drawableRulesetWrapper
+                            .CreatePlayfieldAdjustmentContainer()
+                            .WithChild(LayerBelowRuleset),
                         drawableRulesetWrapper,
                         // layers above playfield
-                        drawableRulesetWrapper.CreatePlayfieldAdjustmentContainer()
-                                              .WithChild(blueprintContainer = CreateBlueprintContainer())
-                    }
+                        drawableRulesetWrapper
+                            .CreatePlayfieldAdjustmentContainer()
+                            .WithChild(blueprintContainer = CreateBlueprintContainer()),
+                    },
                 },
                 new Container
                 {
@@ -162,23 +171,31 @@ namespace osu.Game.Rulesets.Edit
                             Colour = colourProvider.Background5,
                             RelativeSizeAxes = Axes.Both,
                         },
-                        LeftToolbox = new ExpandingToolboxContainer(TOOLBOX_CONTRACTED_SIZE_LEFT, 200)
+                        LeftToolbox = new ExpandingToolboxContainer(
+                            TOOLBOX_CONTRACTED_SIZE_LEFT,
+                            200
+                        )
                         {
                             Children = new Drawable[]
                             {
                                 new EditorToolboxGroup("toolbox (1-9)")
                                 {
-                                    Child = toolboxCollection = new EditorRadioButtonCollection { RelativeSizeAxes = Axes.X }
+                                    Child = toolboxCollection =
+                                        new EditorRadioButtonCollection
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                        },
                                 },
                                 new EditorToolboxGroup("toggles (Q~P)")
                                 {
-                                    Child = togglesCollection = new FillFlowContainer
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Direction = FillDirection.Vertical,
-                                        Spacing = new Vector2(0, 5),
-                                    },
+                                    Child = togglesCollection =
+                                        new FillFlowContainer
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Direction = FillDirection.Vertical,
+                                            Spacing = new Vector2(0, 5),
+                                        },
                                 },
                                 new EditorToolboxGroup("bank (Shift/Alt-Q~R)")
                                 {
@@ -205,7 +222,10 @@ namespace osu.Game.Rulesets.Edit
                                                         X = 0.25f,
                                                         Origin = Anchor.TopCentre,
                                                         Anchor = Anchor.TopLeft,
-                                                        Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 17),
+                                                        Font = OsuFont.GetFont(
+                                                            weight: FontWeight.Regular,
+                                                            size: 17
+                                                        ),
                                                     },
                                                     new ExpandableSpriteText
                                                     {
@@ -216,9 +236,12 @@ namespace osu.Game.Rulesets.Edit
                                                         X = 0.75f,
                                                         Origin = Anchor.TopCentre,
                                                         Anchor = Anchor.TopLeft,
-                                                        Font = OsuFont.GetFont(weight: FontWeight.Regular, size: 17),
+                                                        Font = OsuFont.GetFont(
+                                                            weight: FontWeight.Regular,
+                                                            size: 17
+                                                        ),
                                                     },
-                                                }
+                                                },
                                             },
                                             sampleBankTogglesCollection = new FillFlowContainer
                                             {
@@ -227,12 +250,12 @@ namespace osu.Game.Rulesets.Edit
                                                 Direction = FillDirection.Vertical,
                                                 Spacing = new Vector2(0, 5),
                                             },
-                                        }
-                                    }
+                                        },
+                                    },
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
                 new Container
                 {
@@ -247,26 +270,31 @@ namespace osu.Game.Rulesets.Edit
                             Colour = colourProvider.Background5,
                             RelativeSizeAxes = Axes.Both,
                         },
-                        RightToolbox = new ExpandingToolboxContainer(TOOLBOX_CONTRACTED_SIZE_RIGHT, 250)
+                        RightToolbox = new ExpandingToolboxContainer(
+                            TOOLBOX_CONTRACTED_SIZE_RIGHT,
+                            250
+                        )
                         {
                             Child = new EditorToolboxGroup("inspector")
                             {
-                                Child = CreateHitObjectInspector()
+                                Child = CreateHitObjectInspector(),
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
             toolboxCollection.Items = (CompositionTools.Prepend(new SelectTool()))
-                                      .Select(t => new HitObjectCompositionToolButton(t, () => toolSelected(t)))
-                                      .ToList();
+                .Select(t => new HitObjectCompositionToolButton(t, () => toolSelected(t)))
+                .ToList();
 
             foreach (var item in toolboxCollection.Items)
             {
                 item.Selected.DisabledChanged += isDisabled =>
                 {
-                    item.TooltipText = isDisabled ? "Add at least one timing point first!" : ((HitObjectCompositionToolButton)item).TooltipText;
+                    item.TooltipText = isDisabled
+                        ? "Add at least one timing point first!"
+                        : ((HitObjectCompositionToolButton)item).TooltipText;
                 };
             }
 
@@ -302,28 +330,34 @@ namespace osu.Game.Rulesets.Edit
                     SetSelectTool();
             });
 
-            EditorBeatmap.HasTiming.BindValueChanged(hasTiming =>
-            {
-                foreach (var item in toolboxCollection.Items)
+            EditorBeatmap.HasTiming.BindValueChanged(
+                hasTiming =>
                 {
-                    item.Selected.Disabled = !hasTiming.NewValue;
-                }
-            }, true);
+                    foreach (var item in toolboxCollection.Items)
+                    {
+                        item.Selected.Disabled = !hasTiming.NewValue;
+                    }
+                },
+                true
+            );
 
-            composerFocusMode.BindValueChanged(_ =>
-            {
-                // Transforms should be kept in sync with other usages of composer focus mode.
-                if (!composerFocusMode.Value)
+            composerFocusMode.BindValueChanged(
+                _ =>
                 {
-                    leftToolboxBackground.FadeIn(750, Easing.OutQuint);
-                    rightToolboxBackground.FadeIn(750, Easing.OutQuint);
-                }
-                else
-                {
-                    leftToolboxBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
-                    rightToolboxBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
-                }
-            }, true);
+                    // Transforms should be kept in sync with other usages of composer focus mode.
+                    if (!composerFocusMode.Value)
+                    {
+                        leftToolboxBackground.FadeIn(750, Easing.OutQuint);
+                        rightToolboxBackground.FadeIn(750, Easing.OutQuint);
+                    }
+                    else
+                    {
+                        leftToolboxBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
+                        rightToolboxBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
+                    }
+                },
+                true
+            );
         }
 
         protected override void Update()
@@ -336,7 +370,8 @@ namespace osu.Game.Rulesets.Edit
                 PlayfieldContentContainer.Origin = Anchor.Centre;
 
                 // Ensure that the playfield is always centered but also doesn't get cut off by toolboxes.
-                PlayfieldContentContainer.Width = Math.Max(1024, DrawWidth) - TOOLBOX_CONTRACTED_SIZE_RIGHT * 2;
+                PlayfieldContentContainer.Width =
+                    Math.Max(1024, DrawWidth) - TOOLBOX_CONTRACTED_SIZE_RIGHT * 2;
                 PlayfieldContentContainer.X = 0;
             }
             else
@@ -348,16 +383,21 @@ namespace osu.Game.Rulesets.Edit
                 PlayfieldContentContainer.X = LeftToolbox.DrawWidth;
             }
 
-            composerFocusMode.Value = PlayfieldContentContainer.Contains(InputManager.CurrentState.Mouse.Position)
-                                      && !LeftToolbox.Contains(InputManager.CurrentState.Mouse.Position)
-                                      && !RightToolbox.Contains(InputManager.CurrentState.Mouse.Position);
+            composerFocusMode.Value =
+                PlayfieldContentContainer.Contains(InputManager.CurrentState.Mouse.Position)
+                && !LeftToolbox.Contains(InputManager.CurrentState.Mouse.Position)
+                && !RightToolbox.Contains(InputManager.CurrentState.Mouse.Position);
         }
 
         public override Playfield Playfield => drawableRulesetWrapper.Playfield;
 
-        public override IEnumerable<DrawableHitObject> HitObjects => drawableRulesetWrapper.Playfield.AllHitObjects;
+        public override IEnumerable<DrawableHitObject> HitObjects =>
+            drawableRulesetWrapper.Playfield.AllHitObjects;
 
-        public override bool CursorInPlacementArea => drawableRulesetWrapper.Playfield.ReceivePositionalInputAt(InputManager.CurrentState.Mouse.Position);
+        public override bool CursorInPlacementArea =>
+            drawableRulesetWrapper.Playfield.ReceivePositionalInputAt(
+                InputManager.CurrentState.Mouse.Position
+            );
 
         /// <summary>
         /// Defines all available composition tools, listed on the left side of the editor screen as button controls.
@@ -371,7 +411,8 @@ namespace osu.Game.Rulesets.Edit
         /// <summary>
         /// Create all ternary states required to be displayed to the user.
         /// </summary>
-        protected virtual IEnumerable<Drawable> CreateTernaryButtons() => BlueprintContainer.MainTernaryStates;
+        protected virtual IEnumerable<Drawable> CreateTernaryButtons() =>
+            BlueprintContainer.MainTernaryStates;
 
         /// <summary>
         /// Construct a relevant blueprint container. This will manage hitobject selection/placement input handling and display logic.
@@ -391,8 +432,11 @@ namespace osu.Game.Rulesets.Edit
         /// <param name="beatmap">The loaded beatmap.</param>
         /// <param name="mods">The mods to be applied.</param>
         /// <returns>An editor-relevant <see cref="DrawableRuleset{TObject}"/>.</returns>
-        protected virtual DrawableRuleset<TObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
-            => (DrawableRuleset<TObject>)ruleset.CreateDrawableRulesetWith(beatmap, mods);
+        protected virtual DrawableRuleset<TObject> CreateDrawableRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        ) => (DrawableRuleset<TObject>)ruleset.CreateDrawableRulesetWith(beatmap, mods);
 
         #region Tool selection logic
 
@@ -417,7 +461,10 @@ namespace osu.Game.Rulesets.Edit
             {
                 if (e.ShiftPressed || e.AltPressed)
                 {
-                    if (sampleBankTogglesCollection.ElementAtOrDefault(rightIndex) is SampleBankTernaryButton sampleBankTernaryButton)
+                    if (
+                        sampleBankTogglesCollection.ElementAtOrDefault(rightIndex)
+                        is SampleBankTernaryButton sampleBankTernaryButton
+                    )
                     {
                         if (e.ShiftPressed)
                             sampleBankTernaryButton.NormalButton.Toggle();
@@ -430,7 +477,12 @@ namespace osu.Game.Rulesets.Edit
                 }
                 else
                 {
-                    if (togglesCollection.ChildrenOfType<DrawableTernaryButton>().ElementAtOrDefault(rightIndex) is DrawableTernaryButton button)
+                    if (
+                        togglesCollection
+                            .ChildrenOfType<DrawableTernaryButton>()
+                            .ElementAtOrDefault(rightIndex)
+                        is DrawableTernaryButton button
+                    )
                     {
                         button.Toggle();
                         return true;
@@ -520,7 +572,9 @@ namespace osu.Game.Rulesets.Edit
 
         private void toolSelected(CompositionTool tool)
         {
-            lastTool = toolboxCollection.Items.OfType<HitObjectCompositionToolButton>().FirstOrDefault(i => i.Tool == BlueprintContainer.CurrentTool);
+            lastTool = toolboxCollection
+                .Items.OfType<HitObjectCompositionToolButton>()
+                .FirstOrDefault(i => i.Tool == BlueprintContainer.CurrentTool);
 
             BlueprintContainer.CurrentTool = tool;
 
@@ -564,7 +618,8 @@ namespace osu.Game.Rulesets.Edit
         /// </summary>
         /// <param name="screenSpacePosition">The screen-space position to query.</param>
         /// <returns>The most relevant <see cref="Playfield"/>.</returns>
-        protected virtual Playfield PlayfieldAtScreenSpacePosition(Vector2 screenSpacePosition) => drawableRulesetWrapper.Playfield;
+        protected virtual Playfield PlayfieldAtScreenSpacePosition(Vector2 screenSpacePosition) =>
+            drawableRulesetWrapper.Playfield;
 
         #endregion
     }

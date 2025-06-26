@@ -15,11 +15,7 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
         {
             RelativeSizeAxes = Axes.None;
 
-            AddInternal(new HitPiece
-            {
-                RelativeSizeAxes = Axes.Both,
-                Origin = Anchor.TopLeft
-            });
+            AddInternal(new HitPiece { RelativeSizeAxes = Axes.Both, Origin = Anchor.TopLeft });
         }
 
         protected override void Update()
@@ -30,8 +26,14 @@ namespace osu.Game.Rulesets.Taiko.Edit.Blueprints
             var topLeft = new Vector2(float.MaxValue, float.MaxValue);
             var bottomRight = new Vector2(float.MinValue, float.MinValue);
 
-            topLeft = Vector2.ComponentMin(topLeft, Parent!.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.TopLeft));
-            bottomRight = Vector2.ComponentMax(bottomRight, Parent!.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.BottomRight));
+            topLeft = Vector2.ComponentMin(
+                topLeft,
+                Parent!.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.TopLeft)
+            );
+            bottomRight = Vector2.ComponentMax(
+                bottomRight,
+                Parent!.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.BottomRight)
+            );
 
             Size = bottomRight - topLeft;
             Position = topLeft;

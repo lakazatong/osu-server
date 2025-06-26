@@ -15,7 +15,9 @@ namespace osu.Game.Rulesets.Osu.Mods
     /// <summary>
     /// Adjusts the size of hit objects during their fade in animation.
     /// </summary>
-    public abstract class OsuModObjectScaleTween : ModWithVisibilityAdjustment, IHidesApproachCircles
+    public abstract class OsuModObjectScaleTween
+        : ModWithVisibilityAdjustment,
+            IHidesApproachCircles
     {
         public override ModType Type => ModType.Fun;
 
@@ -26,13 +28,24 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         protected virtual float EndScale => 1;
 
-        public override Type[] IncompatibleMods => new[] { typeof(IRequiresApproachCircles), typeof(OsuModSpinIn), typeof(OsuModObjectScaleTween), typeof(OsuModDepth) };
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(IRequiresApproachCircles),
+                typeof(OsuModSpinIn),
+                typeof(OsuModObjectScaleTween),
+                typeof(OsuModDepth),
+            };
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
-        {
-        }
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) { }
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyCustomState(hitObject, state);
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyCustomState(hitObject, state);
 
         private void applyCustomState(DrawableHitObject drawable, ArmedState state)
         {
@@ -53,7 +66,10 @@ namespace osu.Game.Rulesets.Osu.Mods
                 case DrawableHitCircle:
                 {
                     using (drawable.BeginAbsoluteSequence(h.StartTime - h.TimePreempt))
-                        drawable.ScaleTo(StartScale.Value).Then().ScaleTo(EndScale, h.TimePreempt, Easing.OutSine);
+                        drawable
+                            .ScaleTo(StartScale.Value)
+                            .Then()
+                            .ScaleTo(EndScale, h.TimePreempt, Easing.OutSine);
                     break;
                 }
             }

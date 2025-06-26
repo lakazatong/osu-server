@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Rulesets.Objects.Types;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
@@ -9,6 +8,7 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps.Legacy;
+using osu.Game.Rulesets.Objects.Types;
 
 namespace osu.Game.Rulesets.Objects.Legacy
 {
@@ -18,7 +18,11 @@ namespace osu.Game.Rulesets.Objects.Legacy
     /// <remarks>
     /// Only used for parsing beatmaps and not gameplay.
     /// </remarks>
-    internal class ConvertSlider : ConvertHitObject, IHasPathWithRepeats, IHasSliderVelocity, IHasGenerateTicks
+    internal class ConvertSlider
+        : ConvertHitObject,
+            IHasPathWithRepeats,
+            IHasSliderVelocity,
+            IHasGenerateTicks
     {
         /// <summary>
         /// Scoring distance with a speed-adjusted beat length of 1 second.
@@ -40,14 +44,16 @@ namespace osu.Game.Rulesets.Objects.Legacy
         public double Duration
         {
             get => this.SpanCount() * Distance / Velocity;
-            set => throw new System.NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
+            set =>
+                throw new System.NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
         }
 
         public double EndTime => StartTime + Duration;
 
         public double Velocity = 1;
 
-        public BindableNumber<double> SliderVelocityMultiplierBindable { get; } = new BindableDouble(1);
+        public BindableNumber<double> SliderVelocityMultiplierBindable { get; } =
+            new BindableDouble(1);
 
         public double SliderVelocityMultiplier
         {
@@ -62,13 +68,17 @@ namespace osu.Game.Rulesets.Objects.Legacy
             LegacyType = LegacyHitObjectType.Slider;
         }
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(StartTime);
 
-            double scoringDistance = base_scoring_distance * difficulty.SliderMultiplier * SliderVelocityMultiplier;
+            double scoringDistance =
+                base_scoring_distance * difficulty.SliderMultiplier * SliderVelocityMultiplier;
 
             Velocity = scoringDistance / timingPoint.BeatLength;
         }

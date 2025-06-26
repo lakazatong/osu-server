@@ -31,7 +31,10 @@ namespace osu.Game.Rulesets.Catch.Tests
         [TestCase("tiny-ticks")]
         [TestCase("v8-tick-distance")]
         [TestCase("spinner-precision")]
-        [TestCase("37902", new[] { typeof(CatchModDoubleTime), typeof(CatchModHardRock), typeof(CatchModHidden) })]
+        [TestCase(
+            "37902",
+            new[] { typeof(CatchModDoubleTime), typeof(CatchModHardRock), typeof(CatchModHidden) }
+        )]
         [TestCase("39206", new[] { typeof(CatchModDoubleTime), typeof(CatchModHidden) })]
         [TestCase("42587")]
         [TestCase("50859", new[] { typeof(CatchModDoubleTime), typeof(CatchModHidden) })]
@@ -40,7 +43,10 @@ namespace osu.Game.Rulesets.Catch.Tests
         [TestCase("104973", new[] { typeof(CatchModHardRock), typeof(CatchModHidden) })]
         [TestCase("871815", new[] { typeof(CatchModDoubleTime), typeof(CatchModHidden) })]
         [TestCase("1284935", new[] { typeof(CatchModDoubleTime), typeof(CatchModHardRock) })]
-        [TestCase("1431386", new[] { typeof(CatchModDoubleTime), typeof(CatchModHardRock), typeof(CatchModHidden) })]
+        [TestCase(
+            "1431386",
+            new[] { typeof(CatchModDoubleTime), typeof(CatchModHardRock), typeof(CatchModHidden) }
+        )]
         [TestCase("1597806", new[] { typeof(CatchModDoubleTime), typeof(CatchModHidden) })]
         [TestCase("2190499", new[] { typeof(CatchModDoubleTime), typeof(CatchModHidden) })]
         [TestCase("2571731", new[] { typeof(CatchModHardRock), typeof(CatchModHidden) })]
@@ -125,9 +131,9 @@ namespace osu.Game.Rulesets.Catch.Tests
             set => hyperDash = value;
         }
 
-        public bool Equals(ConvertValue other)
-            => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
-               && Precision.AlmostEquals(Position, other.Position, conversion_lenience)
-               && HyperDash == other.HyperDash;
+        public bool Equals(ConvertValue other) =>
+            Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
+            && Precision.AlmostEquals(Position, other.Position, conversion_lenience)
+            && HyperDash == other.HyperDash;
     }
 }

@@ -20,11 +20,14 @@ namespace osu.Game.Screens.OnlinePlay
     public abstract partial class OnlinePlayScreen : OsuScreen, IHasSubScreenStack
     {
         [Cached]
-        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         public IScreen CurrentSubScreen => screenStack.CurrentScreen;
 
-        public override bool CursorVisible => (screenStack.CurrentScreen as IOnlinePlaySubScreen)?.CursorVisible ?? true;
+        public override bool CursorVisible =>
+            (screenStack.CurrentScreen as IOnlinePlaySubScreen)?.CursorVisible ?? true;
 
         // this is required due to PlayerLoader eventually being pushed to the main stack
         // while leases may be taken out by a subscreen.
@@ -32,11 +35,15 @@ namespace osu.Game.Screens.OnlinePlay
 
         protected LoungeSubScreen Lounge { get; private set; } = null!;
 
-        private readonly ScreenStack screenStack = new OnlinePlaySubScreenStack { RelativeSizeAxes = Axes.Both };
+        private readonly ScreenStack screenStack = new OnlinePlaySubScreenStack
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
         private OnlinePlayScreenWaveContainer waves = null!;
 
         [Cached]
-        private readonly OngoingOperationTracker ongoingOperationTracker = new OngoingOperationTracker();
+        private readonly OngoingOperationTracker ongoingOperationTracker =
+            new OngoingOperationTracker();
 
         [Resolved]
         protected IAPIProvider API { get; private set; } = null!;
@@ -62,15 +69,16 @@ namespace osu.Game.Screens.OnlinePlay
                     screenStack,
                     new Header(ScreenTitle, screenStack),
                     ongoingOperationTracker,
-                }
+                },
             };
         }
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            if (state.NewValue != APIState.Online)
-                Schedule(forcefullyExit);
-        });
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
+            {
+                if (state.NewValue != APIState.Online)
+                    Schedule(forcefullyExit);
+            });
 
         protected override void LoadComplete()
         {
@@ -149,7 +157,10 @@ namespace osu.Game.Screens.OnlinePlay
 
         public override bool OnExiting(ScreenExitEvent e)
         {
-            while (screenStack.CurrentScreen != null && screenStack.CurrentScreen is not LoungeSubScreen)
+            while (
+                screenStack.CurrentScreen != null
+                && screenStack.CurrentScreen is not LoungeSubScreen
+            )
             {
                 var subScreen = (Screen)screenStack.CurrentScreen;
                 if (subScreen.IsLoaded && subScreen.OnExiting(e))
@@ -171,10 +182,17 @@ namespace osu.Game.Screens.OnlinePlay
             if (!(screenStack.CurrentScreen is IOnlinePlaySubScreen onlineSubScreen))
                 return false;
 
-            if (((Drawable)onlineSubScreen).IsLoaded && onlineSubScreen.AllowUserExit && onlineSubScreen.OnBackButton())
+            if (
+                ((Drawable)onlineSubScreen).IsLoaded
+                && onlineSubScreen.AllowUserExit
+                && onlineSubScreen.OnBackButton()
+            )
                 return true;
 
-            if (screenStack.CurrentScreen != null && !(screenStack.CurrentScreen is LoungeSubScreen))
+            if (
+                screenStack.CurrentScreen != null
+                && !(screenStack.CurrentScreen is LoungeSubScreen)
+            )
             {
                 screenStack.Exit();
                 return true;

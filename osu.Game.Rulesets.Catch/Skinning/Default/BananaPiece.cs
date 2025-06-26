@@ -15,10 +15,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
 
             InternalChildren = new[]
             {
-                new BananaPulpFormation
-                {
-                    AccentColour = { BindTarget = AccentColour },
-                },
+                new BananaPulpFormation { AccentColour = { BindTarget = AccentColour } },
                 BorderPiece = new BorderPiece(),
             };
         }

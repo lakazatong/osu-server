@@ -89,11 +89,16 @@ namespace osu.Game.Online
             retryDelay = 3000;
 
             if (!await connectionLock.WaitAsync(10000).ConfigureAwait(false))
-                throw new TimeoutException("Could not obtain a lock to connect. A previous attempt is likely stuck.");
+                throw new TimeoutException(
+                    "Could not obtain a lock to connect. A previous attempt is likely stuck."
+                );
 
             try
             {
-                while (apiState.Value == APIState.RequiresSecondFactorAuth || apiState.Value == APIState.Online)
+                while (
+                    apiState.Value == APIState.RequiresSecondFactorAuth
+                    || apiState.Value == APIState.Online
+                )
                 {
                     // ensure any previous connection was disposed.
                     // this will also create a new cancellation token source.
@@ -110,12 +115,15 @@ namespace osu.Game.Online
                     try
                     {
                         // importantly, rebuild the connection each attempt to get an updated access token.
-                        CurrentConnection = await BuildConnectionAsync(cancellationToken).ConfigureAwait(false);
+                        CurrentConnection = await BuildConnectionAsync(cancellationToken)
+                            .ConfigureAwait(false);
                         CurrentConnection.Closed += ex => onConnectionClosed(ex, cancellationToken);
 
                         cancellationToken.ThrowIfCancellationRequested();
 
-                        await CurrentConnection.ConnectAsync(cancellationToken).ConfigureAwait(false);
+                        await CurrentConnection
+                            .ConnectAsync(cancellationToken)
+                            .ConfigureAwait(false);
 
                         Logger.Log($"{ClientName} connected!", LoggingTarget.Network);
                         isConnected.Value = true;
@@ -141,7 +149,10 @@ namespace osu.Game.Online
         /// <summary>
         /// Handles an exception and delays an async flow.
         /// </summary>
-        private async Task handleErrorAndDelay(Exception exception, CancellationToken cancellationToken)
+        private async Task handleErrorAndDelay(
+            Exception exception,
+            CancellationToken cancellationToken
+        )
         {
             // random stagger factor to avoid mass incidental synchronisation
             // compare: https://github.com/peppy/osu-stable-reference/blob/013c3010a9d495e3471a9c59518de17006f9ad89/osu!/Online/BanchoClient.cs#L331
@@ -150,7 +161,10 @@ namespace osu.Game.Online
             // compare: https://github.com/peppy/osu-stable-reference/blob/013c3010a9d495e3471a9c59518de17006f9ad89/osu!/Online/BanchoClient.cs#L539
             retryDelay = Math.Min(120000, (int)(retryDelay * 1.5));
 
-            Logger.Log($"{ClientName} connect attempt failed: {exception.Message}. Next attempt in {thisDelay / 1000:N0} seconds.", LoggingTarget.Network);
+            Logger.Log(
+                $"{ClientName} connect attempt failed: {exception.Message}. Next attempt in {thisDelay / 1000:N0} seconds.",
+                LoggingTarget.Network
+            );
             await Task.Delay(thisDelay, cancellationToken).ConfigureAwait(false);
         }
 
@@ -158,7 +172,9 @@ namespace osu.Game.Online
         /// Creates a new <see cref="PersistentEndpointClient"/>.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token to stop the process.</param>
-        protected abstract Task<PersistentEndpointClient> BuildConnectionAsync(CancellationToken cancellationToken);
+        protected abstract Task<PersistentEndpointClient> BuildConnectionAsync(
+            CancellationToken cancellationToken
+        );
 
         private async Task onConnectionClosed(Exception? ex, CancellationToken cancellationToken)
         {
@@ -185,7 +201,9 @@ namespace osu.Game.Online
             if (takeLock)
             {
                 if (!await connectionLock.WaitAsync(10000).ConfigureAwait(false))
-                    throw new TimeoutException("Could not obtain a lock to disconnect. A previous attempt is likely stuck.");
+                    throw new TimeoutException(
+                        "Could not obtain a lock to disconnect. A previous attempt is likely stuck."
+                    );
             }
 
             try
@@ -211,7 +229,8 @@ namespace osu.Game.Online
 
         protected virtual string ClientName => GetType().ReadableName();
 
-        public override string ToString() => $"{ClientName} ({(IsConnected.Value ? "connected" : "not connected")})";
+        public override string ToString() =>
+            $"{ClientName} ({(IsConnected.Value ? "connected" : "not connected")})";
 
         private bool isDisposed;
 

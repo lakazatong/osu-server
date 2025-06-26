@@ -54,7 +54,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             InternalChild = grid = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = createColumns(preset_count).ToArray()
+                ColumnDimensions = createColumns(preset_count).ToArray(),
             };
 
             grid.Content = new[] { new Drawable[preset_count * 2 - 1] };
@@ -79,11 +79,14 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             base.LoadComplete();
 
             rotation = tabletHandler.Rotation.GetBoundCopy();
-            rotation.BindValueChanged(val =>
-            {
-                foreach (var b in rotationPresets)
-                    b.IsSelected = b.Preset == val.NewValue;
-            }, true);
+            rotation.BindValueChanged(
+                val =>
+                {
+                    foreach (var b in rotationPresets)
+                        b.IsSelected = b.Preset == val.NewValue;
+                },
+                true
+            );
         }
 
         public partial class RotationButton : RoundedButton

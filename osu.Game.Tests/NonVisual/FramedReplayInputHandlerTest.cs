@@ -21,10 +21,7 @@ namespace osu.Game.Tests.NonVisual
         [SetUp]
         public void SetUp()
         {
-            handler = new TestInputHandler(replay = new Replay
-            {
-                HasReceivedAllFrames = false
-            });
+            handler = new TestInputHandler(replay = new Replay { HasReceivedAllFrames = false });
         }
 
         [Test]
@@ -290,30 +287,32 @@ namespace osu.Game.Tests.NonVisual
             // data is hand-picked and breaks if the unstable List<T>.Sort() is used.
             // in theory this can still return a false-positive with another unstable algorithm if extremely unlucky,
             // but there is no conceivable fool-proof way to prevent that anyways.
-            replay.Frames.AddRange(new[]
-            {
-                repeating_time,
-                0,
-                3000,
-                repeating_time,
-                repeating_time,
-                6000,
-                9000,
-                repeating_time,
-                repeating_time,
-                1000,
-                11000,
-                21000,
-                4000,
-                repeating_time,
-                repeating_time,
-                8000,
-                2000,
-                7000,
-                repeating_time,
-                repeating_time,
-                10000
-            }.Select((time, index) => new TestReplayFrame(time, true, index)));
+            replay.Frames.AddRange(
+                new[]
+                {
+                    repeating_time,
+                    0,
+                    3000,
+                    repeating_time,
+                    repeating_time,
+                    6000,
+                    9000,
+                    repeating_time,
+                    repeating_time,
+                    1000,
+                    11000,
+                    21000,
+                    4000,
+                    repeating_time,
+                    repeating_time,
+                    8000,
+                    2000,
+                    7000,
+                    repeating_time,
+                    repeating_time,
+                    10000,
+                }.Select((time, index) => new TestReplayFrame(time, true, index))
+            );
 
             replay.HasReceivedAllFrames = true;
 
@@ -321,10 +320,10 @@ namespace osu.Game.Tests.NonVisual
             handler = new TestInputHandler(replay);
 
             // ensure sort stability by checking that the frames with time == repeating_time are sorted in ascending frame index order themselves.
-            var repeatingTimeFramesData = replay.Frames
-                                                .Cast<TestReplayFrame>()
-                                                .Where(f => f.Time == repeating_time)
-                                                .Select(f => f.FrameIndex);
+            var repeatingTimeFramesData = replay
+                .Frames.Cast<TestReplayFrame>()
+                .Where(f => f.Time == repeating_time)
+                .Select(f => f.FrameIndex);
 
             Assert.That(repeatingTimeFramesData, Is.Ordered.Ascending);
         }
@@ -364,12 +363,20 @@ namespace osu.Game.Tests.NonVisual
 
         private void confirmCurrentFrame(int? frame)
         {
-            Assert.AreEqual(frame is int x ? replay.Frames[x].Time : null, handler.CurrentFrame?.Time, "Unexpected current frame");
+            Assert.AreEqual(
+                frame is int x ? replay.Frames[x].Time : null,
+                handler.CurrentFrame?.Time,
+                "Unexpected current frame"
+            );
         }
 
         private void confirmNextFrame(int? frame)
         {
-            Assert.AreEqual(frame is int x ? replay.Frames[x].Time : null, handler.NextFrame?.Time, "Unexpected next frame");
+            Assert.AreEqual(
+                frame is int x ? replay.Frames[x].Time : null,
+                handler.NextFrame?.Time,
+                "Unexpected next frame"
+            );
         }
 
         private class TestReplayFrame : ReplayFrame
@@ -384,8 +391,11 @@ namespace osu.Game.Tests.NonVisual
                 FrameIndex = frameIndex;
             }
 
-            public override bool IsEquivalentTo(ReplayFrame other)
-                => other is TestReplayFrame testFrame && Time == testFrame.Time && IsImportant == testFrame.IsImportant && FrameIndex == testFrame.FrameIndex;
+            public override bool IsEquivalentTo(ReplayFrame other) =>
+                other is TestReplayFrame testFrame
+                && Time == testFrame.Time
+                && IsImportant == testFrame.IsImportant
+                && FrameIndex == testFrame.FrameIndex;
         }
 
         private class TestInputHandler : FramedReplayInputHandler<TestReplayFrame>

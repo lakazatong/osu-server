@@ -36,7 +36,8 @@ namespace osu.Game.Screens.Menu
 
             if (notifications.HasOngoingOperations)
             {
-                string text = "There are currently some background operations which will be aborted if you continue:\n\n";
+                string text =
+                    "There are currently some background operations which will be aborted if you continue:\n\n";
 
                 var ongoingOperations = notifications.OngoingOperations.ToArray();
 
@@ -52,16 +53,8 @@ namespace osu.Game.Screens.Menu
 
                 Buttons = new PopupDialogButton[]
                 {
-                    new PopupDialogDangerousButton
-                    {
-                        Text = @"Let me out!",
-                        Action = onConfirm
-                    },
-                    new PopupDialogCancelButton
-                    {
-                        Text = CommonStrings.Back,
-                        Action = onCancel
-                    },
+                    new PopupDialogDangerousButton { Text = @"Let me out!", Action = onConfirm },
+                    new PopupDialogCancelButton { Text = CommonStrings.Back, Action = onCancel },
                 };
             }
             else
@@ -70,15 +63,11 @@ namespace osu.Game.Screens.Menu
 
                 Buttons = new PopupDialogButton[]
                 {
-                    new PopupDialogOkButton
-                    {
-                        Text = @"Let me out!",
-                        Action = onConfirm
-                    },
+                    new PopupDialogOkButton { Text = @"Let me out!", Action = onConfirm },
                     new PopupDialogCancelButton
                     {
                         Text = @"Just a little more...",
-                        Action = onCancel
+                        Action = onCancel,
                     },
                 };
             }

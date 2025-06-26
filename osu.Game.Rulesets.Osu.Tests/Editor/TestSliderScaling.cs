@@ -26,13 +26,23 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         private OsuPlayfield playfield;
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(Ruleset.Value, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(Ruleset.Value, false);
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-            AddStep("get playfield", () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First());
-            AddStep("seek to first timing point", () => EditorClock.Seek(Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time));
+            AddStep(
+                "get playfield",
+                () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First()
+            );
+            AddStep(
+                "seek to first timing point",
+                () =>
+                    EditorClock.Seek(
+                        Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time
+                    )
+            );
         }
 
         [Test]
@@ -40,19 +50,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("Add slider", () =>
-            {
-                slider = new Slider { StartTime = EditorClock.CurrentTime, Position = new Vector2(300) };
-
-                PathControlPoint[] points =
+            AddStep(
+                "Add slider",
+                () =>
                 {
-                    new PathControlPoint(new Vector2(0), PathType.LINEAR),
-                    new PathControlPoint(new Vector2(100, 0)),
-                };
+                    slider = new Slider
+                    {
+                        StartTime = EditorClock.CurrentTime,
+                        Position = new Vector2(300),
+                    };
 
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-            });
+                    PathControlPoint[] points =
+                    {
+                        new PathControlPoint(new Vector2(0), PathType.LINEAR),
+                        new PathControlPoint(new Vector2(100, 0)),
+                    };
+
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
             AddAssert("ensure object placed", () => EditorBeatmap.HitObjects.Count == 1);
 
@@ -63,7 +80,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
             AddStep("store distance", () => distanceBefore = slider.Path.Distance);
 
-            AddStep("move mouse to handle", () => InputManager.MoveMouseTo(Editor.ChildrenOfType<SelectionBoxDragHandle>().Skip(1).First()));
+            AddStep(
+                "move mouse to handle",
+                () =>
+                    InputManager.MoveMouseTo(
+                        Editor.ChildrenOfType<SelectionBoxDragHandle>().Skip(1).First()
+                    )
+            );
             AddStep("begin drag", () => InputManager.PressButton(MouseButton.Left));
             moveMouse(new Vector2(300, 300));
             AddStep("end drag", () => InputManager.ReleaseButton(MouseButton.Left));
@@ -72,7 +95,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         }
 
         private void moveMouse(Vector2 pos) =>
-            AddStep($"move mouse to {pos}", () => InputManager.MoveMouseTo(playfield.ToScreenSpace(pos)));
+            AddStep(
+                $"move mouse to {pos}",
+                () => InputManager.MoveMouseTo(playfield.ToScreenSpace(pos))
+            );
     }
 
     [TestFixture]
@@ -84,25 +110,32 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         public void TestScalingSliderFlat()
         {
             SliderPath sliderPathPerfect = new SliderPath(
-            [
-                new PathControlPoint(new Vector2(0), PathType.PERFECT_CURVE),
-                new PathControlPoint(new Vector2(50, 25)),
-                new PathControlPoint(new Vector2(25, 100)),
-            ]);
+                [
+                    new PathControlPoint(new Vector2(0), PathType.PERFECT_CURVE),
+                    new PathControlPoint(new Vector2(50, 25)),
+                    new PathControlPoint(new Vector2(25, 100)),
+                ]
+            );
 
             SliderPath sliderPathBezier = new SliderPath(
-            [
-                new PathControlPoint(new Vector2(0), PathType.BEZIER),
-                new PathControlPoint(new Vector2(50, 25)),
-                new PathControlPoint(new Vector2(25, 100)),
-            ]);
+                [
+                    new PathControlPoint(new Vector2(0), PathType.BEZIER),
+                    new PathControlPoint(new Vector2(50, 25)),
+                    new PathControlPoint(new Vector2(25, 100)),
+                ]
+            );
 
             scaleSlider(sliderPathPerfect, new Vector2(0.000001f, 1));
             scaleSlider(sliderPathBezier, new Vector2(0.000001f, 1));
 
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(Precision.AlmostEquals(sliderPathPerfect.PositionAt(i / 100.0f), sliderPathBezier.PositionAt(i / 100.0f)));
+                Assert.True(
+                    Precision.AlmostEquals(
+                        sliderPathPerfect.PositionAt(i / 100.0f),
+                        sliderPathBezier.PositionAt(i / 100.0f)
+                    )
+                );
             }
         }
 
@@ -118,11 +151,12 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 float p1Y = 480.0f * (float)rng.NextDouble();
                 float p2Y = 480.0f * (float)rng.NextDouble();
                 SliderPath sliderPathPerfect = new SliderPath(
-                [
-                    new PathControlPoint(new Vector2(0, 0), PathType.PERFECT_CURVE),
-                    new PathControlPoint(new Vector2(p1X, p1Y)),
-                    new PathControlPoint(new Vector2(p2X, p2Y)),
-                ]);
+                    [
+                        new PathControlPoint(new Vector2(0, 0), PathType.PERFECT_CURVE),
+                        new PathControlPoint(new Vector2(p1X, p1Y)),
+                        new PathControlPoint(new Vector2(p2X, p2Y)),
+                    ]
+                );
 
                 assertMatchesPerfectCircle(sliderPathPerfect);
 
@@ -138,18 +172,32 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 return;
 
             //Replication of PathApproximator.CircularArcToPiecewiseLinear
-            CircularArcProperties circularArcProperties = new CircularArcProperties(path.ControlPoints.Select(x => x.Position).ToArray());
+            CircularArcProperties circularArcProperties = new CircularArcProperties(
+                path.ControlPoints.Select(x => x.Position).ToArray()
+            );
 
             if (!circularArcProperties.IsValid)
                 return;
 
             //Addresses cases where circularArcProperties.ThetaRange>0.5
             //Occurs in code in PathControlPointVisualiser.ensureValidPathType
-            RectangleF boundingBox = PathApproximator.CircularArcBoundingBox(path.ControlPoints.Select(x => x.Position).ToArray());
+            RectangleF boundingBox = PathApproximator.CircularArcBoundingBox(
+                path.ControlPoints.Select(x => x.Position).ToArray()
+            );
             if (boundingBox.Width >= 640 || boundingBox.Height >= 480)
                 return;
 
-            int subpoints = (2f * circularArcProperties.Radius <= 0.1f) ? 2 : Math.Max(2, (int)Math.Ceiling(circularArcProperties.ThetaRange / (2.0 * Math.Acos(1f - (0.1f / circularArcProperties.Radius)))));
+            int subpoints =
+                (2f * circularArcProperties.Radius <= 0.1f)
+                    ? 2
+                    : Math.Max(
+                        2,
+                        (int)
+                            Math.Ceiling(
+                                circularArcProperties.ThetaRange
+                                    / (2.0 * Math.Acos(1f - (0.1f / circularArcProperties.Radius)))
+                            )
+                    );
 
             //ignore cases where subpoints is int.MaxValue, result will be garbage
             //as well, having this many subpoints will cause an out of memory error, so can't happen during normal useage
@@ -171,13 +219,36 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 if (progress == 0.0f || progress >= (subpoints - 2) / (float)(subpoints - 1))
                     continue;
 
-                double theta = circularArcProperties.ThetaStart + (circularArcProperties.Direction * progress * circularArcProperties.ThetaRange);
-                Vector2 vector = new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * circularArcProperties.Radius;
+                double theta =
+                    circularArcProperties.ThetaStart
+                    + (
+                        circularArcProperties.Direction
+                        * progress
+                        * circularArcProperties.ThetaRange
+                    );
+                Vector2 vector =
+                    new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta))
+                    * circularArcProperties.Radius;
 
-                Assert.True(Precision.AlmostEquals(circularArcProperties.Centre + vector, path.PositionAt(progress), 0.01f),
-                    "A perfect circle with points " + string.Join(", ", path.ControlPoints.Select(x => x.Position)) + " and radius" + circularArcProperties.Radius + "from SliderPath does not almost equal a theoretical perfect circle with " + subpoints + " subpoints"
-                    + ": " + (circularArcProperties.Centre + vector) + " - " + path.PositionAt(progress)
-                    + " = " + (circularArcProperties.Centre + vector - path.PositionAt(progress))
+                Assert.True(
+                    Precision.AlmostEquals(
+                        circularArcProperties.Centre + vector,
+                        path.PositionAt(progress),
+                        0.01f
+                    ),
+                    "A perfect circle with points "
+                        + string.Join(", ", path.ControlPoints.Select(x => x.Position))
+                        + " and radius"
+                        + circularArcProperties.Radius
+                        + "from SliderPath does not almost equal a theoretical perfect circle with "
+                        + subpoints
+                        + " subpoints"
+                        + ": "
+                        + (circularArcProperties.Centre + vector)
+                        + " - "
+                        + path.PositionAt(progress)
+                        + " = "
+                        + (circularArcProperties.Centre + vector - path.PositionAt(progress))
                 );
             }
         }

@@ -26,7 +26,7 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
                     Colour = colourProvider.Light3,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                }
+                },
             };
         }
     }

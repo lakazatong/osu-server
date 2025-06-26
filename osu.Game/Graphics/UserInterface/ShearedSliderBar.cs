@@ -3,7 +3,6 @@
 
 using System;
 using System.Numerics;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -12,6 +11,7 @@ using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Overlays;
+using osuTK.Graphics;
 using Vector2 = osuTK.Vector2;
 
 namespace osu.Game.Graphics.UserInterface
@@ -99,19 +99,20 @@ namespace osu.Game.Graphics.UserInterface
                 {
                     Shear = -OsuGame.SHEAR,
                     RelativeSizeAxes = Axes.Both,
-                    Child = Nub = new ShearedNub
-                    {
-                        Origin = Anchor.TopCentre,
-                        RelativePositionAxes = Axes.X,
-                        Current = { Value = true },
-                        OnDoubleClicked = () =>
+                    Child = Nub =
+                        new ShearedNub
                         {
-                            if (!Current.Disabled)
-                                Current.SetDefault();
+                            Origin = Anchor.TopCentre,
+                            RelativePositionAxes = Axes.X,
+                            Current = { Value = true },
+                            OnDoubleClicked = () =>
+                            {
+                                if (!Current.Disabled)
+                                    Current.SetDefault();
+                            },
                         },
-                    },
                 },
-                hoverClickSounds = new HoverClickSounds()
+                hoverClickSounds = new HoverClickSounds(),
             };
         }
 
@@ -133,11 +134,14 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            Current.BindDisabledChanged(disabled =>
-            {
-                Alpha = disabled ? 0.3f : 1;
-                hoverClickSounds.Enabled.Value = !disabled;
-            }, true);
+            Current.BindDisabledChanged(
+                disabled =>
+                {
+                    Alpha = disabled ? 0.3f : 1;
+                    hoverClickSounds.Enabled.Value = !disabled;
+                },
+                true
+            );
         }
 
         protected override void OnFocus(FocusEvent e)
@@ -175,8 +179,8 @@ namespace osu.Game.Graphics.UserInterface
             base.OnHoverLost(e);
         }
 
-        protected override bool ShouldHandleAsRelativeDrag(MouseDownEvent e)
-            => Nub.ReceivePositionalInputAt(e.ScreenSpaceMouseDownPosition);
+        protected override bool ShouldHandleAsRelativeDrag(MouseDownEvent e) =>
+            Nub.ReceivePositionalInputAt(e.ScreenSpaceMouseDownPosition);
 
         protected override void OnDragEnd(DragEndEvent e)
         {
@@ -193,8 +197,31 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.UpdateAfterChildren();
 
-            LeftBox.Size = new Vector2(Math.Clamp(RangePadding + Nub.DrawPosition.X - Nub.DrawWidth / 2f + ShearedNub.CORNER_RADIUS - 0.5f, 0, Math.Max(0, DrawWidth)), 1);
-            RightBox.Size = new Vector2(Math.Clamp(DrawWidth - RangePadding - Nub.DrawPosition.X - Nub.DrawWidth / 2f + ShearedNub.CORNER_RADIUS - 0.5f, 0, Math.Max(0, DrawWidth)), 1);
+            LeftBox.Size = new Vector2(
+                Math.Clamp(
+                    RangePadding
+                        + Nub.DrawPosition.X
+                        - Nub.DrawWidth / 2f
+                        + ShearedNub.CORNER_RADIUS
+                        - 0.5f,
+                    0,
+                    Math.Max(0, DrawWidth)
+                ),
+                1
+            );
+            RightBox.Size = new Vector2(
+                Math.Clamp(
+                    DrawWidth
+                        - RangePadding
+                        - Nub.DrawPosition.X
+                        - Nub.DrawWidth / 2f
+                        + ShearedNub.CORNER_RADIUS
+                        - 0.5f,
+                    0,
+                    Math.Max(0, DrawWidth)
+                ),
+                1
+            );
         }
 
         protected override void UpdateValue(float value)

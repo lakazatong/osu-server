@@ -21,11 +21,11 @@ using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Framework.Utils;
 using osu.Game.Audio;
+using osu.Game.BellaFiora;
 using osu.Game.Database;
 using osu.Game.IO;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Utils;
-using osu.Game.BellaFiora;
 
 namespace osu.Game.Skinning
 {
@@ -36,7 +36,11 @@ namespace osu.Game.Skinning
     /// This is also exposed and cached as <see cref="ISkinSource"/> to allow for any component to potentially have skinning support.
     /// For gameplay components, see <see cref="RulesetSkinProvidingContainer"/> which adds extra legacy and toggle logic that may affect the lookup process.
     /// </remarks>
-    public class SkinManager : ModelManager<SkinInfo>, ISkinSource, IStorageResourceProvider, IModelImporter<SkinInfo>
+    public class SkinManager
+        : ModelManager<SkinInfo>,
+            ISkinSource,
+            IStorageResourceProvider,
+            IModelImporter<SkinInfo>
     {
         /// <summary>
         /// The default "classic" skin.
@@ -53,7 +57,9 @@ namespace osu.Game.Skinning
 
         public readonly Bindable<Skin> CurrentSkin = new Bindable<Skin>();
 
-        public readonly Bindable<Live<SkinInfo>> CurrentSkinInfo = new Bindable<Live<SkinInfo>>(ArgonSkin.CreateInfo().ToLiveUnmanaged());
+        public readonly Bindable<Live<SkinInfo>> CurrentSkinInfo = new Bindable<Live<SkinInfo>>(
+            ArgonSkin.CreateInfo().ToLiveUnmanaged()
+        );
 
         private readonly SkinImporter skinImporter;
 
@@ -75,7 +81,14 @@ namespace osu.Game.Skinning
             }
         }
 
-        public SkinManager(Storage storage, RealmAccess realm, GameHost host, IResourceStore<byte[]> resources, AudioManager audio, Scheduler scheduler)
+        public SkinManager(
+            Storage storage,
+            RealmAccess realm,
+            GameHost host,
+            IResourceStore<byte[]> resources,
+            AudioManager audio,
+            Scheduler scheduler
+        )
             : base(storage, realm)
         {
             this.audio = audio;
@@ -117,14 +130,16 @@ namespace osu.Game.Skinning
             CurrentSkin.ValueChanged += skin =>
             {
                 if (!skin.NewValue.SkinInfo.Equals(CurrentSkinInfo.Value))
-                    throw new InvalidOperationException($"Setting {nameof(CurrentSkin)}'s value directly is not supported. Use {nameof(CurrentSkinInfo)} instead.");
+                    throw new InvalidOperationException(
+                        $"Setting {nameof(CurrentSkin)}'s value directly is not supported. Use {nameof(CurrentSkinInfo)} instead."
+                    );
 
                 SourceChanged?.Invoke();
             };
 
             skinExporter = new LegacySkinExporter(storage)
             {
-                PostNotification = obj => PostNotification?.Invoke(obj)
+                PostNotification = obj => PostNotification?.Invoke(obj),
             };
 
             scheduler.Add(() => Triggers.SkinManagerCreated(this, defaultSkins));
@@ -139,8 +154,8 @@ namespace osu.Game.Skinning
 
                 // choose from only user skins, removing the current selection to ensure a new one is chosen.
                 var randomChoices = r.All<SkinInfo>()
-                                     .Where(s => !s.DeletePending && s.ID != currentSkinId)
-                                     .ToArray();
+                    .Where(s => !s.DeletePending && s.ID != currentSkinId)
+                    .ToArray();
 
                 if (randomChoices.Length == 0)
                 {
@@ -175,23 +190,29 @@ namespace osu.Game.Skinning
                 if (!s.Protected)
                     return false;
 
-                string[] existingSkinNames = Realm.Run(r => r.All<SkinInfo>()
-                                                             .Where(skin => !skin.DeletePending)
-                                                             .AsEnumerable()
-                                                             .Select(skin => skin.Name).ToArray());
+                string[] existingSkinNames = Realm.Run(r =>
+                    r.All<SkinInfo>()
+                        .Where(skin => !skin.DeletePending)
+                        .AsEnumerable()
+                        .Select(skin => skin.Name)
+                        .ToArray()
+                );
 
                 // if the user is attempting to save one of the default skin implementations, create a copy first.
                 var skinInfo = new SkinInfo
                 {
                     Creator = s.Creator,
                     InstantiationInfo = s.InstantiationInfo,
-                    Name = NamingUtils.GetNextBestName(existingSkinNames, $@"{s.Name} (modified)")
+                    Name = NamingUtils.GetNextBestName(existingSkinNames, $@"{s.Name} (modified)"),
                 };
 
-                var result = skinImporter.ImportModel(skinInfo, parameters: new ImportParameters
-                {
-                    ImportImmediately = true // to avoid possible deadlocks when editing skin during gameplay.
-                });
+                var result = skinImporter.ImportModel(
+                    skinInfo,
+                    parameters: new ImportParameters
+                    {
+                        ImportImmediately = true, // to avoid possible deadlocks when editing skin during gameplay.
+                    }
+                );
 
                 if (result != null)
                 {
@@ -213,7 +234,9 @@ namespace osu.Game.Skinning
         public bool Save(Skin skin)
         {
             if (!skin.SkinInfo.IsManaged)
-                throw new InvalidOperationException($"Attempting to save a skin which is not yet tracked. Call {nameof(EnsureMutableSkin)} first.");
+                throw new InvalidOperationException(
+                    $"Attempting to save a skin which is not yet tracked. Call {nameof(EnsureMutableSkin)} first."
+                );
 
             return skinImporter.Save(skin);
         }
@@ -230,13 +253,17 @@ namespace osu.Game.Skinning
 
         public event Action SourceChanged;
 
-        public Drawable GetDrawableComponent(ISkinComponentLookup lookup) => lookupWithFallback(s => s.GetDrawableComponent(lookup));
+        public Drawable GetDrawableComponent(ISkinComponentLookup lookup) =>
+            lookupWithFallback(s => s.GetDrawableComponent(lookup));
 
-        public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) => lookupWithFallback(s => s.GetTexture(componentName, wrapModeS, wrapModeT));
+        public Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT) =>
+            lookupWithFallback(s => s.GetTexture(componentName, wrapModeS, wrapModeT));
 
-        public ISample GetSample(ISampleInfo sampleInfo) => lookupWithFallback(s => s.GetSample(sampleInfo));
+        public ISample GetSample(ISampleInfo sampleInfo) =>
+            lookupWithFallback(s => s.GetSample(sampleInfo));
 
-        public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) => lookupWithFallback(s => s.GetConfig<TLookup, TValue>(lookup));
+        public IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup) =>
+            lookupWithFallback(s => s.GetConfig<TLookup, TValue>(lookup));
 
         public ISkin FindProvider(Func<ISkin, bool> lookupFunction)
         {
@@ -295,7 +322,10 @@ namespace osu.Game.Skinning
         IResourceStore<byte[]> IStorageResourceProvider.Resources => resources;
         IResourceStore<byte[]> IStorageResourceProvider.Files => userFiles;
         RealmAccess IStorageResourceProvider.RealmAccess => Realm;
-        IResourceStore<TextureUpload> IStorageResourceProvider.CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => host.CreateTextureLoaderStore(underlyingStore);
+
+        IResourceStore<TextureUpload> IStorageResourceProvider.CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => host.CreateTextureLoaderStore(underlyingStore);
 
         #endregion
 
@@ -308,20 +338,31 @@ namespace osu.Game.Skinning
 
         public Task Import(params string[] paths) => skinImporter.Import(paths);
 
-        public Task Import(ImportTask[] imports, ImportParameters parameters = default) => skinImporter.Import(imports, parameters);
+        public Task Import(ImportTask[] imports, ImportParameters parameters = default) =>
+            skinImporter.Import(imports, parameters);
 
         public IEnumerable<string> HandledExtensions => skinImporter.HandledExtensions;
 
-        public Task<IEnumerable<Live<SkinInfo>>> Import(ProgressNotification notification, ImportTask[] tasks, ImportParameters parameters = default) =>
-            skinImporter.Import(notification, tasks, parameters);
+        public Task<IEnumerable<Live<SkinInfo>>> Import(
+            ProgressNotification notification,
+            ImportTask[] tasks,
+            ImportParameters parameters = default
+        ) => skinImporter.Import(notification, tasks, parameters);
 
-        public Task<Live<SkinInfo>> ImportAsUpdate(ProgressNotification notification, ImportTask task, SkinInfo original) =>
-            skinImporter.ImportAsUpdate(notification, task, original);
+        public Task<Live<SkinInfo>> ImportAsUpdate(
+            ProgressNotification notification,
+            ImportTask task,
+            SkinInfo original
+        ) => skinImporter.ImportAsUpdate(notification, task, original);
 
-        public Task<ExternalEditOperation<SkinInfo>> BeginExternalEditing(SkinInfo model) => skinImporter.BeginExternalEditing(model);
+        public Task<ExternalEditOperation<SkinInfo>> BeginExternalEditing(SkinInfo model) =>
+            skinImporter.BeginExternalEditing(model);
 
-        public Task<Live<SkinInfo>> Import(ImportTask task, ImportParameters parameters = default, CancellationToken cancellationToken = default) =>
-            skinImporter.Import(task, parameters, cancellationToken);
+        public Task<Live<SkinInfo>> Import(
+            ImportTask task,
+            ImportParameters parameters = default,
+            CancellationToken cancellationToken = default
+        ) => skinImporter.Import(task, parameters, cancellationToken);
 
         public Task ExportCurrentSkin() => ExportSkin(CurrentSkinInfo.Value);
 
@@ -329,12 +370,14 @@ namespace osu.Game.Skinning
 
         #endregion
 
-        public void Delete([CanBeNull] Expression<Func<SkinInfo, bool>> filter = null, bool silent = false)
+        public void Delete(
+            [CanBeNull] Expression<Func<SkinInfo, bool>> filter = null,
+            bool silent = false
+        )
         {
             Realm.Run(r =>
             {
-                var items = r.All<SkinInfo>()
-                             .Where(s => !s.Protected && !s.DeletePending);
+                var items = r.All<SkinInfo>().Where(s => !s.Protected && !s.DeletePending);
                 if (filter != null)
                     items = items.Where(filter);
 
@@ -342,7 +385,9 @@ namespace osu.Game.Skinning
                 Guid currentUserSkin = CurrentSkinInfo.Value.ID;
 
                 if (items.Any(s => s.ID == currentUserSkin))
-                    scheduler.Add(() => CurrentSkinInfo.Value = ArgonSkin.CreateInfo().ToLiveUnmanaged());
+                    scheduler.Add(() =>
+                        CurrentSkinInfo.Value = ArgonSkin.CreateInfo().ToLiveUnmanaged()
+                    );
 
                 Delete(items.ToList(), silent);
             });

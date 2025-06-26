@@ -12,7 +12,11 @@ namespace osu.Game.Online.Multiplayer
 {
     public static class MultiplayerClientExtensions
     {
-        public static void FireAndForget(this Task task, Action? onSuccess = null, Action<Exception>? onError = null) =>
+        public static void FireAndForget(
+            this Task task,
+            Action? onSuccess = null,
+            Action<Exception>? onError = null
+        ) =>
             task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
@@ -24,7 +28,10 @@ namespace osu.Game.Online.Multiplayer
                         // Hub exceptions generally contain something we can show the user directly.
                         Logger.Log(message, level: LogLevel.Important);
                     else
-                        Logger.Error(exception, $"Unobserved exception occurred via {nameof(FireAndForget)} call: {exception.Message}");
+                        Logger.Error(
+                            exception,
+                            $"Unobserved exception occurred via {nameof(FireAndForget)} call: {exception.Message}"
+                        );
 
                     onError?.Invoke(exception);
                 }

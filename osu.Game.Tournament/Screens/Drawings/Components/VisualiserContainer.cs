@@ -106,18 +106,20 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
 
             private void addLine()
             {
-                Add(new Sprite
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
+                Add(
+                    new Sprite
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
 
-                    RelativePositionAxes = Axes.Both,
-                    RelativeSizeAxes = Axes.Both,
+                        RelativePositionAxes = Axes.Both,
+                        RelativeSizeAxes = Axes.Both,
 
-                    Texture = texture,
+                        Texture = texture,
 
-                    X = leftPos + 1
-                });
+                        X = leftPos + 1,
+                    }
+                );
             }
         }
     }

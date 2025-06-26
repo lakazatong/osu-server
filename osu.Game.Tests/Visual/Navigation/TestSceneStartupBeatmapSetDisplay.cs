@@ -16,37 +16,54 @@ namespace osu.Game.Tests.Visual.Navigation
     {
         private const int requested_beatmap_set_id = 1;
 
-        protected override TestOsuGame CreateTestGame() => new TestOsuGame(LocalStorage, API, new[] { $"osu://s/{requested_beatmap_set_id}" });
+        protected override TestOsuGame CreateTestGame() =>
+            new TestOsuGame(LocalStorage, API, new[] { $"osu://s/{requested_beatmap_set_id}" });
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            ((DummyAPIAccess)API).HandleRequest = request =>
+        public void Setup() =>
+            Schedule(() =>
             {
-                switch (request)
+                ((DummyAPIAccess)API).HandleRequest = request =>
                 {
-                    case GetBeatmapSetRequest gbr:
+                    switch (request)
+                    {
+                        case GetBeatmapSetRequest gbr:
 
-                        var apiBeatmapSet = CreateAPIBeatmapSet();
-                        apiBeatmapSet.OnlineID = requested_beatmap_set_id;
-                        apiBeatmapSet.Beatmaps = apiBeatmapSet.Beatmaps.Append(new APIBeatmap
-                        {
-                            DifficultyName = "Target difficulty",
-                            OnlineID = 75,
-                        }).ToArray();
-                        gbr.TriggerSuccess(apiBeatmapSet);
-                        return true;
-                }
+                            var apiBeatmapSet = CreateAPIBeatmapSet();
+                            apiBeatmapSet.OnlineID = requested_beatmap_set_id;
+                            apiBeatmapSet.Beatmaps = apiBeatmapSet
+                                .Beatmaps.Append(
+                                    new APIBeatmap
+                                    {
+                                        DifficultyName = "Target difficulty",
+                                        OnlineID = 75,
+                                    }
+                                )
+                                .ToArray();
+                            gbr.TriggerSuccess(apiBeatmapSet);
+                            return true;
+                    }
 
-                return false;
-            };
-        });
+                    return false;
+                };
+            });
 
         [Test]
         public void TestBeatmapSetLink()
         {
-            AddUntilStep("Beatmap overlay displayed", () => Game.ChildrenOfType<BeatmapSetOverlay>().FirstOrDefault()?.State.Value == Visibility.Visible);
-            AddUntilStep("Beatmap overlay showing content", () => Game.ChildrenOfType<BeatmapSetOverlay>().FirstOrDefault()?.Header.BeatmapSet.Value.OnlineID == requested_beatmap_set_id);
+            AddUntilStep(
+                "Beatmap overlay displayed",
+                () =>
+                    Game.ChildrenOfType<BeatmapSetOverlay>().FirstOrDefault()?.State.Value
+                    == Visibility.Visible
+            );
+            AddUntilStep(
+                "Beatmap overlay showing content",
+                () =>
+                    Game.ChildrenOfType<BeatmapSetOverlay>()
+                        .FirstOrDefault()
+                        ?.Header.BeatmapSet.Value.OnlineID == requested_beatmap_set_id
+            );
         }
     }
 }

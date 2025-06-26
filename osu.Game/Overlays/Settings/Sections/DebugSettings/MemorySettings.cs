@@ -26,30 +26,18 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
 
             Children = new Drawable[]
             {
-                new SettingsButton
-                {
-                    Text = @"Clear all caches",
-                    Action = host.Collect
-                },
+                new SettingsButton { Text = @"Clear all caches", Action = host.Collect },
                 new SettingsButton
                 {
                     Text = @"Compact realm",
                     Action = () =>
                     {
                         // Blocking operations implicitly causes a Compact().
-                        using (realm.BlockAllOperations(@"compact"))
-                        {
-                        }
-                    }
+                        using (realm.BlockAllOperations(@"compact")) { }
+                    },
                 },
-                blockAction = new SettingsButton
-                {
-                    Text = @"Block realm",
-                },
-                unblockAction = new SettingsButton
-                {
-                    Text = @"Unblock realm",
-                },
+                blockAction = new SettingsButton { Text = @"Block realm" },
+                unblockAction = new SettingsButton { Text = @"Unblock realm" },
             };
 
             blockAction.Action = () =>

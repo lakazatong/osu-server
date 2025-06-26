@@ -21,9 +21,7 @@ namespace osu.Game.IO.Archives
 
         public override Stream GetStream(string name) => new MemoryStream(content);
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
         public override IEnumerable<string> Filenames => new[] { Name };
     }

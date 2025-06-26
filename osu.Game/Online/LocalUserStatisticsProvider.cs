@@ -35,25 +35,30 @@ namespace osu.Game.Online
         [Resolved]
         private IAPIProvider api { get; set; } = null!;
 
-        private readonly Dictionary<string, UserStatistics> statisticsCache = new Dictionary<string, UserStatistics>();
+        private readonly Dictionary<string, UserStatistics> statisticsCache =
+            new Dictionary<string, UserStatistics>();
 
         /// <summary>
         /// Returns the <see cref="UserStatistics"/> currently available for the given ruleset.
         /// This may return null if the requested statistics has not been fetched before yet.
         /// </summary>
         /// <param name="ruleset">The ruleset to return the corresponding <see cref="UserStatistics"/> for.</param>
-        public UserStatistics? GetStatisticsFor(RulesetInfo ruleset) => statisticsCache.GetValueOrDefault(ruleset.ShortName);
+        public UserStatistics? GetStatisticsFor(RulesetInfo ruleset) =>
+            statisticsCache.GetValueOrDefault(ruleset.ShortName);
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            api.LocalUser.BindValueChanged(_ =>
-            {
-                // queuing up requests directly on user change is unsafe, as the API status may have not been updated yet.
-                // schedule a frame to allow the API to be in its correct state sending requests.
-                Schedule(initialiseStatistics);
-            }, true);
+            api.LocalUser.BindValueChanged(
+                _ =>
+                {
+                    // queuing up requests directly on user change is unsafe, as the API status may have not been updated yet.
+                    // schedule a frame to allow the API to be in its correct state sending requests.
+                    Schedule(initialiseStatistics);
+                },
+                true
+            );
         }
 
         private void initialiseStatistics()
@@ -67,17 +72,26 @@ namespace osu.Game.Online
                 RefetchStatistics(ruleset);
         }
 
-        public void RefetchStatistics(RulesetInfo ruleset, Action<UserStatisticsUpdate>? callback = null)
+        public void RefetchStatistics(
+            RulesetInfo ruleset,
+            Action<UserStatisticsUpdate>? callback = null
+        )
         {
             if (!ruleset.IsLegacyRuleset())
-                throw new InvalidOperationException($@"Retrieving statistics is not supported for ruleset {ruleset.ShortName}");
+                throw new InvalidOperationException(
+                    $@"Retrieving statistics is not supported for ruleset {ruleset.ShortName}"
+                );
 
             var request = new GetUserRequest(api.LocalUser.Value.Id, ruleset);
             request.Success += u => UpdateStatistics(u.Statistics, ruleset, callback);
             api.Queue(request);
         }
 
-        protected void UpdateStatistics(UserStatistics newStatistics, RulesetInfo ruleset, Action<UserStatisticsUpdate>? callback = null)
+        protected void UpdateStatistics(
+            UserStatistics newStatistics,
+            RulesetInfo ruleset,
+            Action<UserStatisticsUpdate>? callback = null
+        )
         {
             var oldStatistics = statisticsCache.GetValueOrDefault(ruleset.ShortName);
             statisticsCache[ruleset.ShortName] = newStatistics;
@@ -88,5 +102,9 @@ namespace osu.Game.Online
         }
     }
 
-    public record UserStatisticsUpdate(RulesetInfo Ruleset, UserStatistics? OldStatistics, UserStatistics NewStatistics);
+    public record UserStatisticsUpdate(
+        RulesetInfo Ruleset,
+        UserStatistics? OldStatistics,
+        UserStatistics NewStatistics
+    );
 }

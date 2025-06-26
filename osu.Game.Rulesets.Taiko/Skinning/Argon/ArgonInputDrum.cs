@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                         Origin = Anchor.CentreRight,
                         RelativeSizeAxes = Axes.Both,
                         RimAction = TaikoAction.LeftRim,
-                        CentreAction = TaikoAction.LeftCentre
+                        CentreAction = TaikoAction.LeftCentre,
                     },
                     new TaikoHalfDrum(true)
                     {
@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                         Origin = Anchor.CentreLeft,
                         RelativeSizeAxes = Axes.Both,
                         RimAction = TaikoAction.RightRim,
-                        CentreAction = TaikoAction.RightCentre
+                        CentreAction = TaikoAction.RightCentre,
                     },
                     new CircularContainer
                     {
@@ -97,8 +97,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                                 RelativeSizeAxes = Axes.Y,
                             },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -148,7 +148,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                                 Anchor = anchor,
                                 Colour = OsuColour.Gray(51 / 255f),
                                 Origin = Anchor.Centre,
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
                             },
                             rimHit = new Circle
                             {
@@ -170,7 +170,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                                 Origin = Anchor.Centre,
                                 Colour = OsuColour.Gray(64 / 255f),
                                 RelativeSizeAxes = Axes.Both,
-                                Size = new Vector2(1 - rim_size)
+                                Size = new Vector2(1 - rim_size),
                             },
                             centreHit = new Circle
                             {
@@ -186,7 +186,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                                 },
                                 Size = new Vector2(1 - rim_size),
                                 Alpha = 0,
-                            }
+                            },
                         },
                     },
                 };
@@ -208,19 +208,21 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                     const float down_time = 40;
                     const float up_time = 750;
 
-                    target.Animate(
-                        t => t.FadeTo(Math.Min(target.Alpha + alpha_amount, 1), down_time, Easing.OutQuint)
-                    ).Then(
-                        t => t.FadeOut(up_time, Easing.OutQuint)
-                    );
+                    target
+                        .Animate(t =>
+                            t.FadeTo(
+                                Math.Min(target.Alpha + alpha_amount, 1),
+                                down_time,
+                                Easing.OutQuint
+                            )
+                        )
+                        .Then(t => t.FadeOut(up_time, Easing.OutQuint));
                 }
 
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<TaikoAction> e) { }
         }
     }
 }

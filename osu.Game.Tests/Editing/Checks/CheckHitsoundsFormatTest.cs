@@ -33,9 +33,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files = { CheckTestHelpers.CreateMockFile("wav") }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("wav") },
+                    },
+                },
             };
 
             // 0 = No output device. This still allows decoding.
@@ -50,7 +50,9 @@ namespace osu.Game.Tests.Editing.Checks
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckHitsoundsFormat.IssueTemplateIncorrectFormat);
+                Assert.That(
+                    issues.Single().Template is CheckHitsoundsFormat.IssueTemplateIncorrectFormat
+                );
             }
         }
 
@@ -81,7 +83,9 @@ namespace osu.Game.Tests.Editing.Checks
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckHitsoundsFormat.IssueTemplateFormatUnsupported);
+                Assert.That(
+                    issues.Single().Template is CheckHitsoundsFormat.IssueTemplateFormatUnsupported
+                );
             }
         }
 
@@ -94,9 +98,9 @@ namespace osu.Game.Tests.Editing.Checks
                 {
                     BeatmapSet = new BeatmapSetInfo
                     {
-                        Files = { CheckTestHelpers.CreateMockFile("png") }
-                    }
-                }
+                        Files = { CheckTestHelpers.CreateMockFile("png") },
+                    },
+                },
             };
 
             using (var resourceStream = TestResources.OpenResource("Textures/test-image.png"))
@@ -113,7 +117,9 @@ namespace osu.Game.Tests.Editing.Checks
             {
                 var issues = check.Run(getContext(resourceStream)).ToList();
                 Assert.That(issues, Has.Count.EqualTo(1));
-                Assert.That(issues.Single().Template is CheckHitsoundsFormat.IssueTemplateFormatUnsupported);
+                Assert.That(
+                    issues.Single().Template is CheckHitsoundsFormat.IssueTemplateFormatUnsupported
+                );
             }
         }
 

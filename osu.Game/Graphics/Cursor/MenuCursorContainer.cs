@@ -54,7 +54,11 @@ namespace osu.Game.Graphics.Cursor
         private bool visible;
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config, ScreenshotManager? screenshotManager, AudioManager audio)
+        private void load(
+            OsuConfigManager config,
+            ScreenshotManager? screenshotManager,
+            AudioManager audio
+        )
         {
             cursorRotate = config.GetBindable<bool>(OsuSetting.CursorRotation);
 
@@ -132,11 +136,19 @@ namespace osu.Game.Graphics.Cursor
         {
             base.Update();
 
-            if (dragRotationState != DragRotationState.NotDragging
-                && Vector2.Distance(positionMouseDown, lastMovePosition) > 60)
+            if (
+                dragRotationState != DragRotationState.NotDragging
+                && Vector2.Distance(positionMouseDown, lastMovePosition) > 60
+            )
             {
                 // make the rotation centre point floating.
-                positionMouseDown = Interpolation.ValueAt(0.04f, positionMouseDown, lastMovePosition, 0, Clock.ElapsedFrameTime);
+                positionMouseDown = Interpolation.ValueAt(
+                    0.04f,
+                    positionMouseDown,
+                    lastMovePosition,
+                    0,
+                    Clock.ElapsedFrameTime
+                );
             }
         }
 
@@ -157,12 +169,15 @@ namespace osu.Game.Graphics.Cursor
                 if (dragRotationState == DragRotationState.Rotating && distance > 0)
                 {
                     Vector2 offset = e.MousePosition - positionMouseDown;
-                    float degrees = float.RadiansToDegrees(MathF.Atan2(-offset.X, offset.Y)) + 24.3f;
+                    float degrees =
+                        float.RadiansToDegrees(MathF.Atan2(-offset.X, offset.Y)) + 24.3f;
 
                     // Always rotate in the direction of least distance
                     float diff = (degrees - activeCursor.Rotation) % 360;
-                    if (diff < -180) diff += 360;
-                    if (diff > 180) diff -= 360;
+                    if (diff < -180)
+                        diff += 360;
+                    if (diff > 180)
+                        diff -= 360;
                     degrees = activeCursor.Rotation + diff;
 
                     activeCursor.RotateTo(degrees, 120, Easing.OutQuint);
@@ -205,7 +220,11 @@ namespace osu.Game.Graphics.Cursor
 
                 if (dragRotationState != DragRotationState.NotDragging)
                 {
-                    activeCursor.RotateTo(0, 400 * (0.5f + Math.Abs(activeCursor.Rotation / 960)), Easing.OutElasticQuarter);
+                    activeCursor.RotateTo(
+                        0,
+                        400 * (0.5f + Math.Abs(activeCursor.Rotation / 960)),
+                        Easing.OutElasticQuarter
+                    );
                     dragRotationState = DragRotationState.NotDragging;
                 }
 
@@ -238,8 +257,10 @@ namespace osu.Game.Graphics.Cursor
             SampleChannel channel = tapSample.GetChannel();
 
             // Scale to [-0.75, 0.75] so that the sample isn't fully panned left or right (sounds weird)
-            channel.Balance.Value = ((activeCursor.X / DrawWidth) * 2 - 1) * OsuGameBase.SFX_STEREO_STRENGTH;
-            channel.Frequency.Value = baseFrequency - (random_range / 2f) + RNG.NextDouble(random_range);
+            channel.Balance.Value =
+                ((activeCursor.X / DrawWidth) * 2 - 1) * OsuGameBase.SFX_STEREO_STRENGTH;
+            channel.Frequency.Value =
+                baseFrequency - (random_range / 2f) + RNG.NextDouble(random_range);
             channel.Volume.Value = baseFrequency;
 
             channel.Play();
@@ -268,10 +289,7 @@ namespace osu.Game.Graphics.Cursor
                         AutoSizeAxes = Axes.Both,
                         Children = new Drawable[]
                         {
-                            new Sprite
-                            {
-                                Texture = textures.Get(@"Cursor/menu-cursor"),
-                            },
+                            new Sprite { Texture = textures.Get(@"Cursor/menu-cursor") },
                             AdditiveLayer = new Sprite
                             {
                                 Blending = BlendingParameters.Additive,
@@ -279,12 +297,15 @@ namespace osu.Game.Graphics.Cursor
                                 Alpha = 0,
                                 Texture = textures.Get(@"Cursor/menu-cursor-additive"),
                             },
-                        }
-                    }
+                        },
+                    },
                 };
 
                 cursorScale = config.GetBindable<float>(OsuSetting.MenuCursorSize);
-                cursorScale.BindValueChanged(scale => cursorContainer.Scale = new Vector2(scale.NewValue * base_scale), true);
+                cursorScale.BindValueChanged(
+                    scale => cursorContainer.Scale = new Vector2(scale.NewValue * base_scale),
+                    true
+                );
             }
         }
 

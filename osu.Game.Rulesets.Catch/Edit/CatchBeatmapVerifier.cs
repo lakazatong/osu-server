@@ -17,7 +17,6 @@ namespace osu.Game.Rulesets.Catch.Edit
             // Compose
             new CheckBananaShowerGap(),
             new CheckConcurrentObjects(),
-
             // Settings
             new CheckCatchAbnormalDifficultySettings(),
         };

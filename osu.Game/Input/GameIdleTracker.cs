@@ -12,9 +12,7 @@ namespace osu.Game.Input
         private InputManager inputManager;
 
         public GameIdleTracker(int time)
-            : base(time)
-        {
-        }
+            : base(time) { }
 
         protected override void LoadComplete()
         {

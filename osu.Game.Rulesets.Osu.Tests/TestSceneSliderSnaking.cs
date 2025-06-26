@@ -44,13 +44,22 @@ namespace osu.Game.Rulesets.Osu.Tests
         private const double duration_of_span = 3605;
         private const double fade_in_modifier = -1200;
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => new ClockBackedTestWorkingBeatmap(this.beatmap = beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audioManager);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                this.beatmap = beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audioManager
+            );
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (OsuRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
+            var config = (OsuRulesetConfigManager)
+                RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
             config.BindWith(OsuRulesetSetting.SnakingInSliders, snakingIn);
             config.BindWith(OsuRulesetSetting.SnakingOutSliders, snakingOut);
         }
@@ -140,115 +149,176 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             AddStep("retrieve slider at index", () => slider = (Slider)beatmap.HitObjects[index]);
             addSeekStep(() => slider.StartTime);
-            AddUntilStep("retrieve drawable slider", () =>
-                (drawableSlider = (DrawableSlider?)Player.DrawableRuleset.Playfield.AllHitObjects.SingleOrDefault(d => d.HitObject == slider)) != null);
+            AddUntilStep(
+                "retrieve drawable slider",
+                () =>
+                    (
+                        drawableSlider = (DrawableSlider?)
+                            Player.DrawableRuleset.Playfield.AllHitObjects.SingleOrDefault(d =>
+                                d.HitObject == slider
+                            )
+                    ) != null
+            );
         }
 
-        private void addEnsureSnakingInSteps(Func<double> startTime) => addCheckPositionChangeSteps(startTime, getSliderEnd, positionIncreased);
-        private void addEnsureNoSnakingInSteps(Func<double> startTime) => addCheckPositionChangeSteps(startTime, getSliderEnd, positionRemainsSame);
+        private void addEnsureSnakingInSteps(Func<double> startTime) =>
+            addCheckPositionChangeSteps(startTime, getSliderEnd, positionIncreased);
+
+        private void addEnsureNoSnakingInSteps(Func<double> startTime) =>
+            addCheckPositionChangeSteps(startTime, getSliderEnd, positionRemainsSame);
 
         private void addEnsureSnakingOutSteps(Func<double> startTime, int repeatIndex)
         {
             if (repeatIndex % 2 == 0)
-                addCheckPositionChangeSteps(timeAtRepeat(startTime, repeatIndex), getSliderStart, positionIncreased);
+                addCheckPositionChangeSteps(
+                    timeAtRepeat(startTime, repeatIndex),
+                    getSliderStart,
+                    positionIncreased
+                );
             else
-                addCheckPositionChangeSteps(timeAtRepeat(startTime, repeatIndex), getSliderEnd, positionDecreased);
+                addCheckPositionChangeSteps(
+                    timeAtRepeat(startTime, repeatIndex),
+                    getSliderEnd,
+                    positionDecreased
+                );
         }
 
-        private void addEnsureNoSnakingOutStep(Func<double> startTime, int repeatIndex)
-            => addCheckPositionChangeSteps(timeAtRepeat(startTime, repeatIndex), positionAtRepeat(repeatIndex), positionRemainsSame);
+        private void addEnsureNoSnakingOutStep(Func<double> startTime, int repeatIndex) =>
+            addCheckPositionChangeSteps(
+                timeAtRepeat(startTime, repeatIndex),
+                positionAtRepeat(repeatIndex),
+                positionRemainsSame
+            );
 
-        private Func<double> timeAtRepeat(Func<double> startTime, int repeatIndex) => () => startTime() + 100 + duration_of_span * repeatIndex;
-        private Func<Vector2> positionAtRepeat(int repeatIndex) => repeatIndex % 2 == 0 ? getSliderStart : getSliderEnd;
+        private Func<double> timeAtRepeat(Func<double> startTime, int repeatIndex) =>
+            () => startTime() + 100 + duration_of_span * repeatIndex;
 
-        private List<Vector2> getSliderCurve() => ((PlaySliderBody)drawableSlider!.Body.Drawable).CurrentCurve;
+        private Func<Vector2> positionAtRepeat(int repeatIndex) =>
+            repeatIndex % 2 == 0 ? getSliderStart : getSliderEnd;
+
+        private List<Vector2> getSliderCurve() =>
+            ((PlaySliderBody)drawableSlider!.Body.Drawable).CurrentCurve;
+
         private Vector2 getSliderStart() => getSliderCurve().First();
+
         private Vector2 getSliderEnd() => getSliderCurve().Last();
 
         private Vector2 getSliderRepeat()
         {
-            var drawable = Player.DrawableRuleset.Playfield.AllHitObjects.SingleOrDefault(d => d.HitObject == beatmap.HitObjects[1]);
-            var repeat = drawable.ChildrenOfType<Container<DrawableSliderRepeat>>().First().Children.First();
+            var drawable = Player.DrawableRuleset.Playfield.AllHitObjects.SingleOrDefault(d =>
+                d.HitObject == beatmap.HitObjects[1]
+            );
+            var repeat = drawable
+                .ChildrenOfType<Container<DrawableSliderRepeat>>()
+                .First()
+                .Children.First();
             return repeat.Position;
         }
 
         private bool positionRemainsSame(Vector2 previous, Vector2 current) => previous == current;
-        private bool positionIncreased(Vector2 previous, Vector2 current) => current.X > previous.X && current.Y > previous.Y;
-        private bool positionDecreased(Vector2 previous, Vector2 current) => current.X < previous.X && current.Y < previous.Y;
-        private bool positionAlmostSame(Vector2 previous, Vector2 current) => Precision.AlmostEquals(previous, current, 1);
 
-        private void addCheckPositionChangeSteps(Func<double> startTime, Func<Vector2> positionToCheck, Func<Vector2, Vector2, bool> positionAssertion)
+        private bool positionIncreased(Vector2 previous, Vector2 current) =>
+            current.X > previous.X && current.Y > previous.Y;
+
+        private bool positionDecreased(Vector2 previous, Vector2 current) =>
+            current.X < previous.X && current.Y < previous.Y;
+
+        private bool positionAlmostSame(Vector2 previous, Vector2 current) =>
+            Precision.AlmostEquals(previous, current, 1);
+
+        private void addCheckPositionChangeSteps(
+            Func<double> startTime,
+            Func<Vector2> positionToCheck,
+            Func<Vector2, Vector2, bool> positionAssertion
+        )
         {
             Vector2 previousPosition = Vector2.Zero;
 
-            string positionDescription = positionToCheck.Method.Name.Humanize(LetterCasing.LowerCase);
-            string assertionDescription = positionAssertion.Method.Name.Humanize(LetterCasing.LowerCase);
+            string positionDescription = positionToCheck.Method.Name.Humanize(
+                LetterCasing.LowerCase
+            );
+            string assertionDescription = positionAssertion.Method.Name.Humanize(
+                LetterCasing.LowerCase
+            );
 
             addSeekStep(startTime);
-            AddStep($"save {positionDescription} position", () => previousPosition = positionToCheck.Invoke());
+            AddStep(
+                $"save {positionDescription} position",
+                () => previousPosition = positionToCheck.Invoke()
+            );
             addSeekStep(() => startTime() + 100);
-            AddAssert($"{positionDescription} {assertionDescription}", () =>
-            {
-                var currentPosition = positionToCheck.Invoke();
-                return positionAssertion.Invoke(previousPosition, currentPosition);
-            });
+            AddAssert(
+                $"{positionDescription} {assertionDescription}",
+                () =>
+                {
+                    var currentPosition = positionToCheck.Invoke();
+                    return positionAssertion.Invoke(previousPosition, currentPosition);
+                }
+            );
         }
 
         private void setSnaking(bool value)
         {
-            AddStep($"{(value ? "enable" : "disable")} snaking", () =>
-            {
-                snakingIn.Value = value;
-                snakingOut.Value = value;
-            });
+            AddStep(
+                $"{(value ? "enable" : "disable")} snaking",
+                () =>
+                {
+                    snakingIn.Value = value;
+                    snakingOut.Value = value;
+                }
+            );
         }
 
         private void addSeekStep(Func<double> getTime)
         {
             AddStep("seek to time", () => Player.GameplayClockContainer.Seek(getTime()));
-            AddUntilStep("wait for seek to finish", () => Precision.AlmostEquals(getTime(), Player.DrawableRuleset.FrameStableClock.CurrentTime, 100));
+            AddUntilStep(
+                "wait for seek to finish",
+                () =>
+                    Precision.AlmostEquals(
+                        getTime(),
+                        Player.DrawableRuleset.FrameStableClock.CurrentTime,
+                        100
+                    )
+            );
         }
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new Beatmap { HitObjects = createHitObjects() };
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new Beatmap { HitObjects = createHitObjects() };
 
-        private static List<HitObject> createHitObjects() => new List<HitObject>
-        {
-            new Slider
+        private static List<HitObject> createHitObjects() =>
+            new List<HitObject>
             {
-                StartTime = 3000,
-                Position = new Vector2(100, 100),
-                Path = new SliderPath(PathType.PERFECT_CURVE, new[]
+                new Slider
                 {
-                    Vector2.Zero,
-                    new Vector2(300, 200)
-                }),
-            },
-            new Slider
-            {
-                StartTime = 13000,
-                Position = new Vector2(100, 100),
-                Path = new SliderPath(PathType.PERFECT_CURVE, new[]
+                    StartTime = 3000,
+                    Position = new Vector2(100, 100),
+                    Path = new SliderPath(
+                        PathType.PERFECT_CURVE,
+                        new[] { Vector2.Zero, new Vector2(300, 200) }
+                    ),
+                },
+                new Slider
                 {
-                    Vector2.Zero,
-                    new Vector2(300, 200)
-                }),
-                RepeatCount = 1,
-            },
-            new Slider
-            {
-                StartTime = 23000,
-                Position = new Vector2(100, 100),
-                Path = new SliderPath(PathType.PERFECT_CURVE, new[]
+                    StartTime = 13000,
+                    Position = new Vector2(100, 100),
+                    Path = new SliderPath(
+                        PathType.PERFECT_CURVE,
+                        new[] { Vector2.Zero, new Vector2(300, 200) }
+                    ),
+                    RepeatCount = 1,
+                },
+                new Slider
                 {
-                    Vector2.Zero,
-                    new Vector2(300, 200)
-                }),
-                RepeatCount = 2,
-            },
-            new HitCircle
-            {
-                StartTime = 199999,
-            }
-        };
+                    StartTime = 23000,
+                    Position = new Vector2(100, 100),
+                    Path = new SliderPath(
+                        PathType.PERFECT_CURVE,
+                        new[] { Vector2.Zero, new Vector2(300, 200) }
+                    ),
+                    RepeatCount = 2,
+                },
+                new HitCircle { StartTime = 199999 },
+            };
     }
 }

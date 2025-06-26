@@ -9,9 +9,9 @@ using osu.Framework.Graphics;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Game.Database;
+using osu.Game.Localisation;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Localisation;
 
 namespace osu.Game.Overlays.Settings.Sections.Maintenance
 {
@@ -31,26 +31,36 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [BackgroundDependencyLoader]
         private void load(IDialogOverlay? dialogOverlay)
         {
-            AddRange(new Drawable[]
-            {
-                deleteAllButton = new DangerousSettingsButton
+            AddRange(
+                new Drawable[]
                 {
-                    Text = MaintenanceSettingsStrings.DeleteAllModPresets,
-                    Action = () =>
+                    deleteAllButton = new DangerousSettingsButton
                     {
-                        dialogOverlay?.Push(new MassDeleteConfirmationDialog(() =>
+                        Text = MaintenanceSettingsStrings.DeleteAllModPresets,
+                        Action = () =>
                         {
-                            deleteAllButton.Enabled.Value = false;
-                            Task.Run(deleteAllModPresets).ContinueWith(t => Schedule(onAllModPresetsDeleted, t));
-                        }, DeleteConfirmationContentStrings.ModPresets));
-                    }
-                },
-                undeleteButton = new SettingsButton
-                {
-                    Text = MaintenanceSettingsStrings.RestoreAllRecentlyDeletedModPresets,
-                    Action = () => Task.Run(undeleteModPresets).ContinueWith(t => Schedule(onModPresetsUndeleted, t))
+                            dialogOverlay?.Push(
+                                new MassDeleteConfirmationDialog(
+                                    () =>
+                                    {
+                                        deleteAllButton.Enabled.Value = false;
+                                        Task.Run(deleteAllModPresets)
+                                            .ContinueWith(t => Schedule(onAllModPresetsDeleted, t));
+                                    },
+                                    DeleteConfirmationContentStrings.ModPresets
+                                )
+                            );
+                        },
+                    },
+                    undeleteButton = new SettingsButton
+                    {
+                        Text = MaintenanceSettingsStrings.RestoreAllRecentlyDeletedModPresets,
+                        Action = () =>
+                            Task.Run(undeleteModPresets)
+                                .ContinueWith(t => Schedule(onModPresetsUndeleted, t)),
+                    },
                 }
-            });
+            );
         }
 
         private bool deleteAllModPresets() =>
@@ -72,7 +82,14 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
             deleteAllButton.Enabled.Value = true;
 
             if (deletionTask.IsCompletedSuccessfully)
-                notificationOverlay?.Post(new ProgressCompletionNotification { Text = deletionTask.GetResultSafely() ? MaintenanceSettingsStrings.DeletedAllModPresets : MaintenanceSettingsStrings.NoModPresetsFoundToDelete });
+                notificationOverlay?.Post(
+                    new ProgressCompletionNotification
+                    {
+                        Text = deletionTask.GetResultSafely()
+                            ? MaintenanceSettingsStrings.DeletedAllModPresets
+                            : MaintenanceSettingsStrings.NoModPresetsFoundToDelete,
+                    }
+                );
             else if (deletionTask.IsFaulted)
                 Logger.Error(deletionTask.Exception, "Failed to delete all mod presets");
         }
@@ -96,7 +113,14 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
             undeleteButton.Enabled.Value = true;
 
             if (undeletionTask.IsCompletedSuccessfully)
-                notificationOverlay?.Post(new ProgressCompletionNotification { Text = undeletionTask.GetResultSafely() ? MaintenanceSettingsStrings.RestoredAllDeletedModPresets : MaintenanceSettingsStrings.NoModPresetsFoundToRestore });
+                notificationOverlay?.Post(
+                    new ProgressCompletionNotification
+                    {
+                        Text = undeletionTask.GetResultSafely()
+                            ? MaintenanceSettingsStrings.RestoredAllDeletedModPresets
+                            : MaintenanceSettingsStrings.NoModPresetsFoundToRestore,
+                    }
+                );
             else if (undeletionTask.IsFaulted)
                 Logger.Error(undeletionTask.Exception, "Failed to restore mod presets");
         }

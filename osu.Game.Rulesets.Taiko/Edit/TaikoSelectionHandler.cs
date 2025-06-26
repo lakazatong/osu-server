@@ -59,7 +59,8 @@ namespace osu.Game.Rulesets.Taiko.Edit
 
             EditorBeatmap.PerformOnSelection(h =>
             {
-                if (h is not TaikoStrongableHitObject strongable) return;
+                if (h is not TaikoStrongableHitObject strongable)
+                    return;
 
                 if (strongable.IsStrong != state)
                     strongable.IsStrong = state;
@@ -68,7 +69,11 @@ namespace osu.Game.Rulesets.Taiko.Edit
 
         public void SetRimState(bool state)
         {
-            if (SelectedItems.OfType<Hit>().All(h => h.Type == (state ? HitType.Rim : HitType.Centre)))
+            if (
+                SelectedItems
+                    .OfType<Hit>()
+                    .All(h => h.Type == (state ? HitType.Rim : HitType.Centre))
+            )
                 return;
 
             EditorBeatmap.PerformOnSelection(h =>
@@ -78,14 +83,19 @@ namespace osu.Game.Rulesets.Taiko.Edit
             });
         }
 
-        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(IEnumerable<SelectionBlueprint<HitObject>> selection)
+        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(
+            IEnumerable<SelectionBlueprint<HitObject>> selection
+        )
         {
             if (selection.All(s => s.Item is Hit))
             {
                 yield return new TernaryStateToggleMenuItem("Rim")
                 {
                     State = { BindTarget = selectionRimState },
-                    Hotkey = new Hotkey(new KeyCombination(InputKey.W), new KeyCombination(InputKey.R)),
+                    Hotkey = new Hotkey(
+                        new KeyCombination(InputKey.W),
+                        new KeyCombination(InputKey.R)
+                    ),
                 };
             }
 
@@ -108,8 +118,14 @@ namespace osu.Game.Rulesets.Taiko.Edit
         {
             base.UpdateTernaryStates();
 
-            selectionRimState.Value = GetStateFromSelection(EditorBeatmap.SelectedHitObjects.OfType<Hit>(), h => h.Type == HitType.Rim);
-            selectionStrongState.Value = GetStateFromSelection(EditorBeatmap.SelectedHitObjects.OfType<TaikoStrongableHitObject>(), h => h.IsStrong);
+            selectionRimState.Value = GetStateFromSelection(
+                EditorBeatmap.SelectedHitObjects.OfType<Hit>(),
+                h => h.Type == HitType.Rim
+            );
+            selectionStrongState.Value = GetStateFromSelection(
+                EditorBeatmap.SelectedHitObjects.OfType<TaikoStrongableHitObject>(),
+                h => h.IsStrong
+            );
         }
     }
 }

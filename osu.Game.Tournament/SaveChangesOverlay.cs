@@ -16,7 +16,9 @@ using osuTK;
 
 namespace osu.Game.Tournament
 {
-    internal partial class SaveChangesOverlay : CompositeDrawable, IKeyBindingHandler<PlatformAction>
+    internal partial class SaveChangesOverlay
+        : CompositeDrawable,
+            IKeyBindingHandler<PlatformAction>
     {
         [Resolved]
         private TournamentGame tournamentGame { get; set; } = null!;
@@ -37,11 +39,7 @@ namespace osu.Game.Tournament
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = OsuColour.Gray(0.2f),
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = OsuColour.Gray(0.2f), RelativeSizeAxes = Axes.Both },
                     saveChangesButton = new TourneyButton
                     {
                         Text = "Save Changes",
@@ -52,7 +50,7 @@ namespace osu.Game.Tournament
                         Action = saveChanges,
                         // Enabled = { Value = false },
                     },
-                }
+                },
             };
         }
 
@@ -64,7 +62,8 @@ namespace osu.Game.Tournament
 
         private async Task checkForChanges()
         {
-            string serialisedLadder = await Task.Run(() => tournamentGame.GetSerialisedLadder()).ConfigureAwait(true);
+            string serialisedLadder = await Task.Run(() => tournamentGame.GetSerialisedLadder())
+                .ConfigureAwait(true);
 
             // If a save hasn't been triggered by the user yet, populate the initial value
             lastSerialisedLadder ??= serialisedLadder;
@@ -72,10 +71,15 @@ namespace osu.Game.Tournament
             if (lastSerialisedLadder != serialisedLadder && !saveChangesButton.Enabled.Value)
             {
                 saveChangesButton.Enabled.Value = true;
-                saveChangesButton.Background
-                                 .FadeColour(saveChangesButton.BackgroundColour.Lighten(0.5f), 500, Easing.In).Then()
-                                 .FadeColour(saveChangesButton.BackgroundColour, 500, Easing.Out)
-                                 .Loop();
+                saveChangesButton
+                    .Background.FadeColour(
+                        saveChangesButton.BackgroundColour.Lighten(0.5f),
+                        500,
+                        Easing.In
+                    )
+                    .Then()
+                    .FadeColour(saveChangesButton.BackgroundColour, 500, Easing.Out)
+                    .Loop();
             }
 
             scheduleNextCheck();
@@ -92,11 +96,10 @@ namespace osu.Game.Tournament
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
-        private void scheduleNextCheck() => Scheduler.AddDelayed(() => checkForChanges().FireAndForget(), 1000);
+        private void scheduleNextCheck() =>
+            Scheduler.AddDelayed(() => checkForChanges().FireAndForget(), 1000);
 
         private void saveChanges()
         {

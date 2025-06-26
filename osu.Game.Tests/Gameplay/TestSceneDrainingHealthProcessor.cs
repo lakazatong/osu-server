@@ -6,9 +6,9 @@
 using System.Threading;
 using NUnit.Framework;
 using osu.Framework.Graphics;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps.Timing;
@@ -144,7 +144,16 @@ namespace osu.Game.Tests.Gameplay
             setTime(10); // Decrease health slightly
             assertHealthNotEqualTo(1);
 
-            AddStep("apply hit result", () => processor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = HitResult.Perfect }));
+            AddStep(
+                "apply hit result",
+                () =>
+                    processor.ApplyResult(
+                        new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    )
+            );
             assertHealthEqualTo(1);
         }
 
@@ -156,7 +165,16 @@ namespace osu.Game.Tests.Gameplay
 
             createProcessor(beatmap);
             setTime(10); // Decrease health slightly
-            AddStep("apply hit result", () => processor.ApplyResult(result = new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = HitResult.Perfect }));
+            AddStep(
+                "apply hit result",
+                () =>
+                    processor.ApplyResult(
+                        result = new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    )
+            );
 
             AddStep("revert hit result", () => processor.RevertResult(result));
             assertHealthNotEqualTo(1);
@@ -168,11 +186,32 @@ namespace osu.Game.Tests.Gameplay
             var beatmap = createBeatmap(0, 1000);
             createProcessor(beatmap);
 
-            AddStep("setup fail conditions", () => processor.FailConditions += ((_, result) => result.Type == HitResult.Miss));
+            AddStep(
+                "setup fail conditions",
+                () => processor.FailConditions += ((_, result) => result.Type == HitResult.Miss)
+            );
 
-            AddStep("apply perfect hit result", () => processor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = HitResult.Perfect }));
+            AddStep(
+                "apply perfect hit result",
+                () =>
+                    processor.ApplyResult(
+                        new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    )
+            );
             AddAssert("not failed", () => !processor.HasFailed);
-            AddStep("apply miss hit result", () => processor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = HitResult.Miss }));
+            AddStep(
+                "apply miss hit result",
+                () =>
+                    processor.ApplyResult(
+                        new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = HitResult.Miss,
+                        }
+                    )
+            );
             AddAssert("failed", () => processor.HasFailed);
         }
 
@@ -183,31 +222,50 @@ namespace osu.Game.Tests.Gameplay
             var beatmap = createBeatmap(0, 1000);
             createProcessor(beatmap);
 
-            AddStep("setup multiple fail conditions", () =>
-            {
-                processor.FailConditions += ((_, result) => result.Type == HitResult.Miss);
-                processor.FailConditions += ((_, result) => result.Type == HitResult.Meh);
-            });
+            AddStep(
+                "setup multiple fail conditions",
+                () =>
+                {
+                    processor.FailConditions += ((_, result) => result.Type == HitResult.Miss);
+                    processor.FailConditions += ((_, result) => result.Type == HitResult.Meh);
+                }
+            );
 
-            AddStep("apply perfect hit result", () => processor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = HitResult.Perfect }));
+            AddStep(
+                "apply perfect hit result",
+                () =>
+                    processor.ApplyResult(
+                        new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = HitResult.Perfect,
+                        }
+                    )
+            );
             AddAssert("not failed", () => !processor.HasFailed);
 
-            AddStep($"apply {resultApplied.ToString().ToLowerInvariant()} hit result",
-                () => processor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new Judgement()) { Type = resultApplied }));
+            AddStep(
+                $"apply {resultApplied.ToString().ToLowerInvariant()} hit result",
+                () =>
+                    processor.ApplyResult(
+                        new JudgementResult(beatmap.HitObjects[0], new Judgement())
+                        {
+                            Type = resultApplied,
+                        }
+                    )
+            );
             AddAssert("failed", () => processor.HasFailed);
         }
 
         [Test]
         public void TestBonusObjectsExcludedFromDrain()
         {
-            var beatmap = new Beatmap
-            {
-                Difficulty = { DrainRate = 10 }
-            };
+            var beatmap = new Beatmap { Difficulty = { DrainRate = 10 } };
 
             beatmap.HitObjects.Add(new JudgeableHitObject { StartTime = 0 });
             for (double time = 0; time < 5000; time += 100)
-                beatmap.HitObjects.Add(new JudgeableHitObject(HitResult.LargeBonus) { StartTime = time });
+                beatmap.HitObjects.Add(
+                    new JudgeableHitObject(HitResult.LargeBonus) { StartTime = time }
+                );
             beatmap.HitObjects.Add(new JudgeableHitObject { StartTime = 5000 });
 
             createProcessor(beatmap);
@@ -218,10 +276,7 @@ namespace osu.Game.Tests.Gameplay
         [Test]
         public void TestSingleLongObjectDoesNotDrain()
         {
-            var beatmap = new Beatmap
-            {
-                HitObjects = { new JudgeableLongHitObject() }
-            };
+            var beatmap = new Beatmap { HitObjects = { new JudgeableLongHitObject() } };
 
             beatmap.HitObjects[0].ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
@@ -237,14 +292,16 @@ namespace osu.Game.Tests.Gameplay
         public void TestNoBreakDrainRate()
         {
             DrainingHealthProcessor hp = new DrainingHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<JudgeableHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<JudgeableHitObject>
                 {
-                    new JudgeableHitObject { StartTime = 0 },
-                    new JudgeableHitObject { StartTime = 2000 }
+                    HitObjects =
+                    {
+                        new JudgeableHitObject { StartTime = 0 },
+                        new JudgeableHitObject { StartTime = 2000 },
+                    },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(4.5E-5).Within(0.1E-5));
         }
@@ -253,18 +310,17 @@ namespace osu.Game.Tests.Gameplay
         public void TestSingleBreakDrainRate()
         {
             DrainingHealthProcessor hp = new DrainingHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<JudgeableHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<JudgeableHitObject>
                 {
-                    new JudgeableHitObject { StartTime = 0 },
-                    new JudgeableHitObject { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1500)
+                    HitObjects =
+                    {
+                        new JudgeableHitObject { StartTime = 0 },
+                        new JudgeableHitObject { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(9.1E-5).Within(0.1E-5));
         }
@@ -273,19 +329,17 @@ namespace osu.Game.Tests.Gameplay
         public void TestOverlappingBreakDrainRate()
         {
             DrainingHealthProcessor hp = new DrainingHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<JudgeableHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<JudgeableHitObject>
                 {
-                    new JudgeableHitObject { StartTime = 0 },
-                    new JudgeableHitObject { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1400),
-                    new BreakPeriod(750, 1500),
+                    HitObjects =
+                    {
+                        new JudgeableHitObject { StartTime = 0 },
+                        new JudgeableHitObject { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1400), new BreakPeriod(750, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(9.1E-5).Within(0.1E-5));
         }
@@ -294,29 +348,24 @@ namespace osu.Game.Tests.Gameplay
         public void TestSequentialBreakDrainRate()
         {
             DrainingHealthProcessor hp = new DrainingHealthProcessor(-1000);
-            hp.ApplyBeatmap(new Beatmap<JudgeableHitObject>
-            {
-                HitObjects =
+            hp.ApplyBeatmap(
+                new Beatmap<JudgeableHitObject>
                 {
-                    new JudgeableHitObject { StartTime = 0 },
-                    new JudgeableHitObject { StartTime = 2000 }
-                },
-                Breaks =
-                {
-                    new BreakPeriod(500, 1000),
-                    new BreakPeriod(1000, 1500),
+                    HitObjects =
+                    {
+                        new JudgeableHitObject { StartTime = 0 },
+                        new JudgeableHitObject { StartTime = 2000 },
+                    },
+                    Breaks = { new BreakPeriod(500, 1000), new BreakPeriod(1000, 1500) },
                 }
-            });
+            );
 
             Assert.That(hp.DrainRate, Is.EqualTo(9.1E-5).Within(0.1E-5));
         }
 
         private Beatmap createBeatmap(double startTime, double endTime, params BreakPeriod[] breaks)
         {
-            var beatmap = new Beatmap
-            {
-                Difficulty = { DrainRate = 10 }
-            };
+            var beatmap = new Beatmap { Difficulty = { DrainRate = 10 } };
 
             for (double time = startTime; time <= endTime; time += 100)
             {
@@ -328,26 +377,40 @@ namespace osu.Game.Tests.Gameplay
             return beatmap;
         }
 
-        private void createProcessor(Beatmap beatmap) => AddStep("create processor", () =>
-        {
-            Child = processor = new DrainingHealthProcessor(beatmap.HitObjects[0].StartTime).With(d =>
-            {
-                d.RelativeSizeAxes = Axes.Both;
-                d.Clock = new FramedClock(clock = new ManualClock());
-            });
+        private void createProcessor(Beatmap beatmap) =>
+            AddStep(
+                "create processor",
+                () =>
+                {
+                    Child = processor = new DrainingHealthProcessor(
+                        beatmap.HitObjects[0].StartTime
+                    ).With(d =>
+                    {
+                        d.RelativeSizeAxes = Axes.Both;
+                        d.Clock = new FramedClock(clock = new ManualClock());
+                    });
 
-            processor.ApplyBeatmap(beatmap);
-        });
+                    processor.ApplyBeatmap(beatmap);
+                }
+            );
 
-        private void setTime(double time) => AddStep($"set time = {time}", () => clock.CurrentTime = time);
+        private void setTime(double time) =>
+            AddStep($"set time = {time}", () => clock.CurrentTime = time);
 
-        private void setHealth(double health) => AddStep($"set health = {health}", () => processor.Health.Value = health);
+        private void setHealth(double health) =>
+            AddStep($"set health = {health}", () => processor.Health.Value = health);
 
-        private void assertHealthEqualTo(double value)
-            => AddAssert($"health = {value}", () => Precision.AlmostEquals(value, processor.Health.Value, 0.0001f));
+        private void assertHealthEqualTo(double value) =>
+            AddAssert(
+                $"health = {value}",
+                () => Precision.AlmostEquals(value, processor.Health.Value, 0.0001f)
+            );
 
-        private void assertHealthNotEqualTo(double value)
-            => AddAssert($"health != {value}", () => !Precision.AlmostEquals(value, processor.Health.Value, 0.0001f));
+        private void assertHealthNotEqualTo(double value) =>
+            AddAssert(
+                $"health != {value}",
+                () => !Precision.AlmostEquals(value, processor.Health.Value, 0.0001f)
+            );
 
         private class JudgeableHitObject : HitObject
         {
@@ -359,6 +422,7 @@ namespace osu.Game.Tests.Gameplay
             }
 
             public override Judgement CreateJudgement() => new TestJudgement(maxResult);
+
             protected override HitWindows CreateHitWindows() => new DefaultHitWindows();
 
             private class TestJudgement : Judgement
@@ -378,9 +442,7 @@ namespace osu.Game.Tests.Gameplay
             public double Duration { get; set; } = 5000;
 
             public JudgeableLongHitObject()
-                : base(HitResult.LargeBonus)
-            {
-            }
+                : base(HitResult.LargeBonus) { }
 
             protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
             {

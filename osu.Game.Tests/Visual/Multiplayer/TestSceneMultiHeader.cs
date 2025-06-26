@@ -20,13 +20,12 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             screenStack.Push(new TestOnlinePlaySubScreen(index));
 
-            Children = new Drawable[]
-            {
-                screenStack,
-                new Header("Multiplayer", screenStack)
-            };
+            Children = new Drawable[] { screenStack, new Header("Multiplayer", screenStack) };
 
-            AddStep("push multi screen", () => screenStack.CurrentScreen.Push(new TestOnlinePlaySubScreen(++index)));
+            AddStep(
+                "push multi screen",
+                () => screenStack.CurrentScreen.Push(new TestOnlinePlaySubScreen(++index))
+            );
         }
 
         private partial class TestOnlinePlaySubScreen : OsuScreen, IOnlinePlaySubScreen

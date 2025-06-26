@@ -28,7 +28,11 @@ namespace osu.Game.Screens.Play.HUD
 
         public DrawableGameplayLeaderboardScore? TrackedScore { get; private set; }
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.CollapseDuringGameplay), nameof(SkinnableComponentStrings.CollapseDuringGameplayDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.CollapseDuringGameplay),
+            nameof(SkinnableComponentStrings.CollapseDuringGameplayDescription)
+        )]
         public Bindable<bool> CollapseDuringGameplay { get; } = new BindableBool(true);
 
         [Resolved]
@@ -37,9 +41,11 @@ namespace osu.Game.Screens.Play.HUD
         [Resolved]
         private IGameplayLeaderboardProvider leaderboardProvider { get; set; } = null!;
 
-        private readonly IBindableList<GameplayLeaderboardScore> scores = new BindableList<GameplayLeaderboardScore>();
+        private readonly IBindableList<GameplayLeaderboardScore> scores =
+            new BindableList<GameplayLeaderboardScore>();
         private readonly Bindable<bool> configVisibility = new Bindable<bool>();
-        private readonly IBindable<LocalUserPlayingState> userPlayingState = new Bindable<LocalUserPlayingState>();
+        private readonly IBindable<LocalUserPlayingState> userPlayingState =
+            new Bindable<LocalUserPlayingState>();
         private readonly IBindable<bool> holdingForHUD = new Bindable<bool>();
 
         private readonly Bindable<bool> expanded = new Bindable<bool>();
@@ -49,7 +55,9 @@ namespace osu.Game.Screens.Play.HUD
         /// </summary>
         public DrawableGameplayLeaderboard()
         {
-            Width = DrawableGameplayLeaderboardScore.EXTENDED_WIDTH + DrawableGameplayLeaderboardScore.SHEAR_WIDTH;
+            Width =
+                DrawableGameplayLeaderboardScore.EXTENDED_WIDTH
+                + DrawableGameplayLeaderboardScore.SHEAR_WIDTH;
             Height = 300;
 
             InternalChildren = new Drawable[]
@@ -58,22 +66,27 @@ namespace osu.Game.Screens.Play.HUD
                 {
                     ClampExtension = 0,
                     RelativeSizeAxes = Axes.Both,
-                    Child = Flow = new FillFlowContainer<DrawableGameplayLeaderboardScore>
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        X = DrawableGameplayLeaderboardScore.SHEAR_WIDTH,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(2.5f),
-                        LayoutDuration = 450,
-                        LayoutEasing = Easing.OutQuint,
-                    }
-                }
+                    Child = Flow =
+                        new FillFlowContainer<DrawableGameplayLeaderboardScore>
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            X = DrawableGameplayLeaderboardScore.SHEAR_WIDTH,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(2.5f),
+                            LayoutDuration = 450,
+                            LayoutEasing = Easing.OutQuint,
+                        },
+                },
             };
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config, GameplayState? gameplayState, HUDOverlay? hudOverlay)
+        private void load(
+            OsuConfigManager config,
+            GameplayState? gameplayState,
+            HUDOverlay? hudOverlay
+        )
         {
             config.BindWith(OsuSetting.GameplayLeaderboard, configVisibility);
 
@@ -89,12 +102,15 @@ namespace osu.Game.Screens.Play.HUD
             base.LoadComplete();
 
             scores.BindTo(leaderboardProvider.Scores);
-            scores.BindCollectionChanged((_, _) =>
-            {
-                Clear();
-                foreach (var score in scores)
-                    Add(score);
-            }, true);
+            scores.BindCollectionChanged(
+                (_, _) =>
+                {
+                    Clear();
+                    foreach (var score in scores)
+                        Add(score);
+                },
+                true
+            );
 
             configVisibility.BindValueChanged(_ => Scheduler.AddOnce(updateState));
             userPlayingState.BindValueChanged(_ => Scheduler.AddOnce(updateState));
@@ -109,8 +125,15 @@ namespace osu.Game.Screens.Play.HUD
             if (Flow.Alpha < 1)
                 scroll.ScrollToStart(false);
 
-            Flow.FadeTo(player?.Configuration.ShowLeaderboard != false && configVisibility.Value ? 1 : 0, 100, Easing.OutQuint);
-            expanded.Value = !CollapseDuringGameplay.Value || userPlayingState.Value != LocalUserPlayingState.Playing || holdingForHUD.Value;
+            Flow.FadeTo(
+                player?.Configuration.ShowLeaderboard != false && configVisibility.Value ? 1 : 0,
+                100,
+                Easing.OutQuint
+            );
+            expanded.Value =
+                !CollapseDuringGameplay.Value
+                || userPlayingState.Value != LocalUserPlayingState.Playing
+                || holdingForHUD.Value;
         }
 
         /// <summary>
@@ -142,8 +165,9 @@ namespace osu.Game.Screens.Play.HUD
             scroll.ScrollToStart(false);
         }
 
-        protected virtual DrawableGameplayLeaderboardScore CreateLeaderboardScoreDrawable(GameplayLeaderboardScore score) =>
-            new DrawableGameplayLeaderboardScore(score);
+        protected virtual DrawableGameplayLeaderboardScore CreateLeaderboardScoreDrawable(
+            GameplayLeaderboardScore score
+        ) => new DrawableGameplayLeaderboardScore(score);
 
         protected override void Update()
         {
@@ -153,7 +177,10 @@ namespace osu.Game.Screens.Play.HUD
 
             if (requiresScroll && TrackedScore != null)
             {
-                double scrollTarget = scroll.GetChildPosInContent(TrackedScore) + TrackedScore.DrawHeight / 2 - scroll.DrawHeight / 2;
+                double scrollTarget =
+                    scroll.GetChildPosInContent(TrackedScore)
+                    + TrackedScore.DrawHeight / 2
+                    - scroll.DrawHeight / 2;
 
                 scroll.ScrollTo(scrollTarget);
             }
@@ -163,8 +190,10 @@ namespace osu.Game.Screens.Play.HUD
             float fadeBottom = (float)(scroll.Current + scroll.DrawHeight);
             float fadeTop = (float)(scroll.Current + panel_height);
 
-            if (scroll.IsScrolledToStart()) fadeTop -= panel_height;
-            if (!scroll.IsScrolledToEnd()) fadeBottom -= panel_height;
+            if (scroll.IsScrolledToStart())
+                fadeTop -= panel_height;
+            if (!scroll.IsScrolledToEnd())
+                fadeBottom -= panel_height;
 
             // logic is mostly shared with Leaderboard, copied here for simplicity.
             foreach (var c in Flow)
@@ -184,14 +213,22 @@ namespace osu.Game.Screens.Play.HUD
                     if (requireBottomFade)
                     {
                         c.Colour = ColourInfo.GradientVertical(
-                            Color4.White.Opacity(Math.Min(1 - (topY - fadeBottom) / panel_height, 1)),
-                            Color4.White.Opacity(Math.Min(1 - (bottomY - fadeBottom) / panel_height, 1)));
+                            Color4.White.Opacity(
+                                Math.Min(1 - (topY - fadeBottom) / panel_height, 1)
+                            ),
+                            Color4.White.Opacity(
+                                Math.Min(1 - (bottomY - fadeBottom) / panel_height, 1)
+                            )
+                        );
                     }
                     else if (requiresScroll)
                     {
                         c.Colour = ColourInfo.GradientVertical(
                             Color4.White.Opacity(Math.Min(1 - (fadeTop - topY) / panel_height, 1)),
-                            Color4.White.Opacity(Math.Min(1 - (fadeTop - bottomY) / panel_height, 1)));
+                            Color4.White.Opacity(
+                                Math.Min(1 - (fadeTop - bottomY) / panel_height, 1)
+                            )
+                        );
                     }
                 }
             }

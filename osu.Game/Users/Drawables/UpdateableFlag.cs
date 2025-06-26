@@ -57,12 +57,9 @@ namespace osu.Game.Users.Drawables
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new DrawableFlag(countryCode)
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
-                    new HoverClickSounds()
-                }
+                    new DrawableFlag(countryCode) { RelativeSizeAxes = Axes.Both },
+                    new HoverClickSounds(),
+                },
             };
         }
 

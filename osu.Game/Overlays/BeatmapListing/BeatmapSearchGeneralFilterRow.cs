@@ -24,19 +24,16 @@ using CommonStrings = osu.Game.Resources.Localisation.Web.CommonStrings;
 
 namespace osu.Game.Overlays.BeatmapListing
 {
-    public partial class BeatmapSearchGeneralFilterRow : BeatmapSearchMultipleSelectionFilterRow<SearchGeneral>
+    public partial class BeatmapSearchGeneralFilterRow
+        : BeatmapSearchMultipleSelectionFilterRow<SearchGeneral>
     {
         public readonly IBindable<RulesetInfo> Ruleset = new Bindable<RulesetInfo>();
 
         public BeatmapSearchGeneralFilterRow()
-            : base(BeatmapsStrings.ListingSearchFiltersGeneral)
-        {
-        }
+            : base(BeatmapsStrings.ListingSearchFiltersGeneral) { }
 
-        protected override MultipleSelectionFilter CreateMultipleSelectionFilter() => new GeneralFilter
-        {
-            Ruleset = { BindTarget = Ruleset }
-        };
+        protected override MultipleSelectionFilter CreateMultipleSelectionFilter() =>
+            new GeneralFilter { Ruleset = { BindTarget = Ruleset } };
 
         private partial class GeneralFilter : MultipleSelectionFilter
         {
@@ -49,7 +46,7 @@ namespace osu.Game.Overlays.BeatmapListing
                     case SearchGeneral.Recommended:
                         return new RecommendedDifficultyTabItem
                         {
-                            Ruleset = { BindTarget = Ruleset }
+                            Ruleset = { BindTarget = Ruleset },
                         };
 
                     case SearchGeneral.FeaturedArtists:
@@ -75,9 +72,7 @@ namespace osu.Game.Overlays.BeatmapListing
             private RulesetStore rulesets { get; set; } = null!;
 
             public RecommendedDifficultyTabItem()
-                : base(SearchGeneral.Recommended)
-            {
-            }
+                : base(SearchGeneral.Recommended) { }
 
             protected override void LoadComplete()
             {
@@ -93,14 +88,19 @@ namespace osu.Game.Overlays.BeatmapListing
             {
                 // fallback to profile default game mode if beatmap listing mode filter is set to Any
                 // TODO: find a way to update `PlayMode` when the profile default game mode has changed
-                RulesetInfo? ruleset = Ruleset.Value.IsLegacyRuleset() ? Ruleset.Value : rulesets.GetRuleset(api.LocalUser.Value.PlayMode);
+                RulesetInfo? ruleset = Ruleset.Value.IsLegacyRuleset()
+                    ? Ruleset.Value
+                    : rulesets.GetRuleset(api.LocalUser.Value.PlayMode);
 
-                if (ruleset == null) return;
+                if (ruleset == null)
+                    return;
 
                 double? starRating = recommender?.GetRecommendedStarRatingFor(ruleset);
 
                 if (starRating != null)
-                    Text.Text = LocalisableString.Interpolate($"{Value.GetLocalisableDescription()} ({starRating.Value.FormatStarRating()})");
+                    Text.Text = LocalisableString.Interpolate(
+                        $"{Value.GetLocalisableDescription()} ({starRating.Value.FormatStarRating()})"
+                    );
                 else
                     Text.Text = Value.GetLocalisableDescription();
             }
@@ -119,9 +119,7 @@ namespace osu.Game.Overlays.BeatmapListing
             private Bindable<bool> disclaimerShown = null!;
 
             public FeaturedArtistsTabItem()
-                : base(SearchGeneral.FeaturedArtists)
-            {
-            }
+                : base(SearchGeneral.FeaturedArtists) { }
 
             [Resolved]
             private OsuColour colours { get; set; } = null!;
@@ -145,7 +143,9 @@ namespace osu.Game.Overlays.BeatmapListing
                 base.LoadComplete();
 
                 config.BindWith(OsuSetting.BeatmapListingFeaturedArtistFilter, Active);
-                disclaimerShown = sessionStatics.GetBindable<bool>(Static.FeaturedArtistDisclaimerShownOnce);
+                disclaimerShown = sessionStatics.GetBindable<bool>(
+                    Static.FeaturedArtistDisclaimerShownOnce
+                );
 
                 // no need to show the disclaimer if the user already had it toggled off in config.
                 if (!Active.Value)
@@ -168,11 +168,13 @@ namespace osu.Game.Overlays.BeatmapListing
 
                 if (!disclaimerShown.Value && dialogOverlay != null)
                 {
-                    dialogOverlay.Push(new FeaturedArtistConfirmDialog(() =>
-                    {
-                        disclaimerShown.Value = true;
-                        base.OnClick(e);
-                    }));
+                    dialogOverlay.Push(
+                        new FeaturedArtistConfirmDialog(() =>
+                        {
+                            disclaimerShown.Value = true;
+                            base.OnClick(e);
+                        })
+                    );
 
                     return true;
                 }
@@ -196,12 +198,9 @@ namespace osu.Game.Overlays.BeatmapListing
                 new PopupDialogDangerousButton
                 {
                     Text = BeatmapOverlayStrings.UserContentConfirmButtonText,
-                    Action = confirm
+                    Action = confirm,
                 },
-                new PopupDialogCancelButton
-                {
-                    Text = CommonStrings.ButtonsCancel,
-                },
+                new PopupDialogCancelButton { Text = CommonStrings.ButtonsCancel },
             };
         }
     }

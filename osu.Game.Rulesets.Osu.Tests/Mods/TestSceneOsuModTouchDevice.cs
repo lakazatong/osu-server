@@ -32,8 +32,16 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         private ScoreAccessibleSoloPlayer currentPlayer = null!;
         private readonly ManualClock manualClock = new ManualClock { Rate = 1 };
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(manualClock), Audio);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(manualClock),
+                Audio
+            );
 
         [BackgroundDependencyLoader]
         private void load()
@@ -51,29 +59,55 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         public void TestUserAlreadyHasTouchDeviceActive()
         {
             loadPlayer();
-            AddStep("set up touchscreen user", () =>
-            {
-                currentPlayer.Score.ScoreInfo.Mods = currentPlayer.Score.ScoreInfo.Mods.Append(new OsuModTouchDevice()).ToArray();
-                statics.SetValue(Static.TouchInputActive, true);
-            });
+            AddStep(
+                "set up touchscreen user",
+                () =>
+                {
+                    currentPlayer.Score.ScoreInfo.Mods = currentPlayer
+                        .Score.ScoreInfo.Mods.Append(new OsuModTouchDevice())
+                        .ToArray();
+                    statics.SetValue(Static.TouchInputActive, true);
+                }
+            );
 
             AddStep("seek to 0", () => currentPlayer.GameplayClockContainer.Seek(0));
-            AddUntilStep("wait until 0", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(0));
-            AddStep("touch circle", () =>
-            {
-                var touch = new Touch(TouchSource.Touch1, currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.BeginTouch(touch);
-                InputManager.EndTouch(touch);
-            });
-            AddAssert("touch device mod activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.One.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "wait until 0",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(0)
+            );
+            AddStep(
+                "touch circle",
+                () =>
+                {
+                    var touch = new Touch(
+                        TouchSource.Touch1,
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.BeginTouch(touch);
+                    InputManager.EndTouch(touch);
+                }
+            );
+            AddAssert(
+                "touch device mod activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.One.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         [Test]
         public void TestTouchActivePriorToPlayerLoad()
         {
-            AddStep("set touch input active", () => statics.SetValue(Static.TouchInputActive, true));
+            AddStep(
+                "set touch input active",
+                () => statics.SetValue(Static.TouchInputActive, true)
+            );
             loadPlayer();
-            AddUntilStep("touch device mod activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.One.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "touch device mod activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.One.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         [Test]
@@ -81,15 +115,29 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         {
             loadPlayer();
             AddStep("seek to 2000", () => currentPlayer.GameplayClockContainer.Seek(2000));
-            AddUntilStep("wait until 2000", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(2000));
+            AddUntilStep(
+                "wait until 2000",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(2000)
+            );
             AddUntilStep("wait until break entered", () => currentPlayer.IsBreakTime.Value);
-            AddStep("touch playfield", () =>
-            {
-                var touch = new Touch(TouchSource.Touch1, currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.BeginTouch(touch);
-                InputManager.EndTouch(touch);
-            });
-            AddAssert("touch device mod not activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.None.InstanceOf<OsuModTouchDevice>());
+            AddStep(
+                "touch playfield",
+                () =>
+                {
+                    var touch = new Touch(
+                        TouchSource.Touch1,
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.BeginTouch(touch);
+                    InputManager.EndTouch(touch);
+                }
+            );
+            AddAssert(
+                "touch device mod not activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.None.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         [Test]
@@ -100,14 +148,28 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             AddStep("click mouse", () => InputManager.Click(MouseButton.Left));
 
             AddStep("seek to 200", () => currentPlayer.GameplayClockContainer.Seek(200));
-            AddUntilStep("wait until 200", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(200));
-            AddStep("touch playfield", () =>
-            {
-                var touch = new Touch(TouchSource.Touch1, currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.BeginTouch(touch);
-                InputManager.EndTouch(touch);
-            });
-            AddAssert("touch device mod activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.One.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "wait until 200",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(200)
+            );
+            AddStep(
+                "touch playfield",
+                () =>
+                {
+                    var touch = new Touch(
+                        TouchSource.Touch1,
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.BeginTouch(touch);
+                    InputManager.EndTouch(touch);
+                }
+            );
+            AddAssert(
+                "touch device mod activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.One.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         [Test]
@@ -116,17 +178,34 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             loadPlayer();
             // this is only a veneer of enabling autopilot as having it actually active from the start is annoying to make happen
             // given the tests' structure.
-            AddStep("enable autopilot", () => currentPlayer.Score.ScoreInfo.Mods = new Mod[] { new OsuModAutopilot() });
+            AddStep(
+                "enable autopilot",
+                () => currentPlayer.Score.ScoreInfo.Mods = new Mod[] { new OsuModAutopilot() }
+            );
 
             AddStep("seek to 0", () => currentPlayer.GameplayClockContainer.Seek(0));
-            AddUntilStep("wait until 0", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(0));
-            AddStep("touch playfield", () =>
-            {
-                var touch = new Touch(TouchSource.Touch1, currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.BeginTouch(touch);
-                InputManager.EndTouch(touch);
-            });
-            AddAssert("touch device mod not activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.None.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "wait until 0",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(0)
+            );
+            AddStep(
+                "touch playfield",
+                () =>
+                {
+                    var touch = new Touch(
+                        TouchSource.Touch1,
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.BeginTouch(touch);
+                    InputManager.EndTouch(touch);
+                }
+            );
+            AddAssert(
+                "touch device mod not activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.None.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         [Test]
@@ -137,54 +216,83 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             AddStep("click mouse", () => InputManager.Click(MouseButton.Left));
 
             AddStep("seek to 0", () => currentPlayer.GameplayClockContainer.Seek(0));
-            AddUntilStep("wait until 0", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(0));
-            AddStep("click circle", () =>
-            {
-                InputManager.MoveMouseTo(currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("touch device mod not activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.None.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "wait until 0",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(0)
+            );
+            AddStep(
+                "click circle",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "touch device mod not activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.None.InstanceOf<OsuModTouchDevice>()
+            );
 
             AddStep("seek to 5000", () => currentPlayer.GameplayClockContainer.Seek(5000));
-            AddUntilStep("wait until 5000", () => currentPlayer.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(5000));
-            AddStep("touch playfield", () =>
-            {
-                var touch = new Touch(TouchSource.Touch1, currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre);
-                InputManager.BeginTouch(touch);
-                InputManager.EndTouch(touch);
-            });
-            AddAssert("touch device mod activated", () => currentPlayer.Score.ScoreInfo.Mods, () => Has.One.InstanceOf<OsuModTouchDevice>());
+            AddUntilStep(
+                "wait until 5000",
+                () => currentPlayer.GameplayClockContainer.CurrentTime,
+                () => Is.GreaterThanOrEqualTo(5000)
+            );
+            AddStep(
+                "touch playfield",
+                () =>
+                {
+                    var touch = new Touch(
+                        TouchSource.Touch1,
+                        currentPlayer.DrawableRuleset.Playfield.ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.BeginTouch(touch);
+                    InputManager.EndTouch(touch);
+                }
+            );
+            AddAssert(
+                "touch device mod activated",
+                () => currentPlayer.Score.ScoreInfo.Mods,
+                () => Has.One.InstanceOf<OsuModTouchDevice>()
+            );
         }
 
         private void loadPlayer()
         {
-            AddStep("load player", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new OsuBeatmap
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects =
-                    {
-                        new HitCircle
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new OsuBeatmap
                         {
-                            Position = OsuPlayfield.BASE_SIZE / 2,
-                            StartTime = 0,
-                        },
-                        new HitCircle
-                        {
-                            Position = OsuPlayfield.BASE_SIZE / 2,
-                            StartTime = 5000,
-                        },
-                    },
-                    Breaks =
-                    {
-                        new BreakPeriod(2000, 3000)
-                    }
-                });
+                            HitObjects =
+                            {
+                                new HitCircle
+                                {
+                                    Position = OsuPlayfield.BASE_SIZE / 2,
+                                    StartTime = 0,
+                                },
+                                new HitCircle
+                                {
+                                    Position = OsuPlayfield.BASE_SIZE / 2,
+                                    StartTime = 5000,
+                                },
+                            },
+                            Breaks = { new BreakPeriod(2000, 3000) },
+                        }
+                    );
 
-                var p = new ScoreAccessibleSoloPlayer();
+                    var p = new ScoreAccessibleSoloPlayer();
 
-                LoadScreen(currentPlayer = p);
-            });
+                    LoadScreen(currentPlayer = p);
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
@@ -199,13 +307,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleSoloPlayer()
-                : base(new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(new PlayerConfiguration { AllowPause = false, ShowResults = false }) { }
         }
     }
 }

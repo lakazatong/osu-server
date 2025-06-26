@@ -60,22 +60,24 @@ namespace osu.Game.Overlays
         {
             Size = new Vector2(14);
 
-            AddRange(new Drawable[]
-            {
-                circle = new Circle
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                icon = new SpriteIcon
-                {
-                    Icon = FontAwesome.Solid.Undo,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(8),
+                    circle = new Circle
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    icon = new SpriteIcon
+                    {
+                        Icon = FontAwesome.Solid.Undo,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(8),
+                    },
                 }
-            });
+            );
 
             Action += () =>
             {
@@ -144,8 +146,16 @@ namespace osu.Game.Overlays
             {
                 icon.RotateTo(-40, 500, Easing.OutQuint);
 
-                icon.FadeColour(colourProvider?.Light1 ?? colours.YellowLight, 300, Easing.OutQuint);
-                circle.FadeColour(colourProvider?.Background2 ?? colours.Gray6, 300, Easing.OutQuint);
+                icon.FadeColour(
+                    colourProvider?.Light1 ?? colours.YellowLight,
+                    300,
+                    Easing.OutQuint
+                );
+                circle.FadeColour(
+                    colourProvider?.Background2 ?? colours.Gray6,
+                    300,
+                    Easing.OutQuint
+                );
                 this.ScaleTo(1.2f, 300, Easing.OutQuint);
             }
             else
@@ -153,7 +163,11 @@ namespace osu.Game.Overlays
                 icon.RotateTo(0, 100, Easing.OutQuint);
 
                 icon.FadeColour(colourProvider?.Colour0 ?? colours.Yellow, 100, Easing.OutQuint);
-                circle.FadeColour(colourProvider?.Background3 ?? colours.Gray3, 100, Easing.OutQuint);
+                circle.FadeColour(
+                    colourProvider?.Background3 ?? colours.Gray3,
+                    100,
+                    Easing.OutQuint
+                );
                 this.ScaleTo(1f, 100, Easing.OutQuint);
             }
         }

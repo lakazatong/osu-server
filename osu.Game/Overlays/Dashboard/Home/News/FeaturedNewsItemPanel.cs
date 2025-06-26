@@ -45,15 +45,12 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            RowDimensions = new[]
-                            {
-                                new Dimension(GridSizeMode.AutoSize)
-                            },
+                            RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                             ColumnDimensions = new[]
                             {
                                 new Dimension(GridSizeMode.Absolute, size: 60),
                                 new Dimension(GridSizeMode.Absolute, size: 20),
-                                new Dimension()
+                                new Dimension(),
                             },
                             Content = new[]
                             {
@@ -70,8 +67,8 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                                             Origin = Anchor.TopRight,
                                             Width = 1,
                                             RelativeSizeAxes = Axes.Y,
-                                            Colour = colourProvider.Light1
-                                        }
+                                            Colour = colourProvider.Light1,
+                                        },
                                     },
                                     new FillFlowContainer
                                     {
@@ -86,20 +83,23 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                                             new NewsTitleLink(post),
                                             new TextFlowContainer(f =>
                                             {
-                                                f.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular);
+                                                f.Font = OsuFont.GetFont(
+                                                    size: 12,
+                                                    weight: FontWeight.Regular
+                                                );
                                             })
                                             {
                                                 RelativeSizeAxes = Axes.X,
                                                 AutoSizeAxes = Axes.Y,
-                                                Text = post.Preview
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                                Text = post.Preview,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -118,15 +118,17 @@ namespace osu.Game.Overlays.Dashboard.Home.News
             [BackgroundDependencyLoader]
             private void load(GameHost host)
             {
-                Child = new DelayedLoadUnloadWrapper(() => new NewsPostBackground(post.FirstImage)
+                Child = new DelayedLoadUnloadWrapper(() =>
+                    new NewsPostBackground(post.FirstImage)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        FillMode = FillMode.Fill,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                )
                 {
                     RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fill,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                })
-                {
-                    RelativeSizeAxes = Axes.Both
                 };
 
                 TooltipText = "view in browser";
@@ -166,7 +168,7 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                             Origin = Anchor.TopRight,
                             Font = OsuFont.GetFont(weight: FontWeight.Bold), // using Bold since there is no 800 weight alternative
                             Colour = colourProvider.Light1,
-                            Text = date.ToLocalisableString(@"dd")
+                            Text = date.ToLocalisableString(@"dd"),
                         },
                         new TextFlowContainer(f =>
                         {
@@ -177,13 +179,14 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
                             AutoSizeAxes = Axes.Both,
-                            Text = date.ToLocalisableString(@"MMM yyyy")
-                        }
-                    }
+                            Text = date.ToLocalisableString(@"MMM yyyy"),
+                        },
+                    },
                 };
             }
 
-            ITooltip<DateTimeOffset> IHasCustomTooltip<DateTimeOffset>.GetCustomTooltip() => new DateTooltip();
+            ITooltip<DateTimeOffset> IHasCustomTooltip<DateTimeOffset>.GetCustomTooltip() =>
+                new DateTooltip();
 
             DateTimeOffset IHasCustomTooltip<DateTimeOffset>.TooltipContent => date;
         }

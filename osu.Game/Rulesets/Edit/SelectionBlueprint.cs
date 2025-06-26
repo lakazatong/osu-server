@@ -19,7 +19,9 @@ namespace osu.Game.Rulesets.Edit
     /// <summary>
     /// A blueprint placed above a displaying item adding editing functionality.
     /// </summary>
-    public abstract partial class SelectionBlueprint<T> : CompositeDrawable, IStateful<SelectionState>
+    public abstract partial class SelectionBlueprint<T>
+        : CompositeDrawable,
+            IStateful<SelectionState>
     {
         public readonly T Item;
 
@@ -103,7 +105,8 @@ namespace osu.Game.Rulesets.Edit
         }
 
         // When not selected, input is only required for the blueprint itself to receive IsHovering
-        protected override bool ShouldBeConsideredForInput(Drawable child) => State == SelectionState.Selected;
+        protected override bool ShouldBeConsideredForInput(Drawable child) =>
+            State == SelectionState.Selected;
 
         /// <summary>
         /// Selects this <see cref="SelectionBlueprint{T}"/>, causing it to become visible.
@@ -118,7 +121,8 @@ namespace osu.Game.Rulesets.Edit
         /// <summary>
         /// Toggles the selection state of this <see cref="HitObjectSelectionBlueprint"/>.
         /// </summary>
-        public void ToggleSelection() => State = IsSelected ? SelectionState.NotSelected : SelectionState.Selected;
+        public void ToggleSelection() =>
+            State = IsSelected ? SelectionState.NotSelected : SelectionState.Selected;
 
         public bool IsSelected => State == SelectionState.Selected;
 
@@ -146,7 +150,8 @@ namespace osu.Game.Rulesets.Edit
         /// The screen-space collection of base points on this <see cref="HitObjectSelectionBlueprint"/> that other objects can be snapped to.
         /// The first element of this collection is <see cref="ScreenSpaceSelectionPoint"/>
         /// </summary>
-        public Vector2[] ScreenSpaceSnapPoints => ScreenSpaceAdditionalNodes.Prepend(ScreenSpaceSelectionPoint).ToArray();
+        public Vector2[] ScreenSpaceSnapPoints =>
+            ScreenSpaceAdditionalNodes.Prepend(ScreenSpaceSelectionPoint).ToArray();
 
         /// <summary>
         /// The screen-space quad that outlines this <see cref="HitObjectSelectionBlueprint"/> for selections.

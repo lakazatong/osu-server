@@ -40,9 +40,15 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                         case GlobalSkinnableContainers.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
-                                var combo = container.ChildrenOfType<ArgonManiaComboCounter>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
+                                var combo = container
+                                    .ChildrenOfType<ArgonManiaComboCounter>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
 
                                 if (leaderboard != null)
                                     leaderboard.Position = new Vector2(36, 115);
@@ -65,7 +71,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                                 {
                                     Anchor = Anchor.BottomLeft,
                                     Origin = Anchor.BottomLeft,
-                                }
+                                },
                             };
                     }
 
@@ -176,163 +182,226 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                 case 2:
                     switch (columnIndex)
                     {
-                        case 0: return colour_green;
+                        case 0:
+                            return colour_green;
 
-                        case 1: return colour_cyan;
+                        case 1:
+                            return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 3:
                     switch (columnIndex)
                     {
-                        case 0: return colour_green;
+                        case 0:
+                            return colour_green;
 
-                        case 1: return colour_special_column;
+                        case 1:
+                            return colour_special_column;
 
-                        case 2: return colour_cyan;
+                        case 2:
+                            return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 4:
                     switch (columnIndex)
                     {
-                        case 0: return colour_yellow;
+                        case 0:
+                            return colour_yellow;
 
-                        case 1: return colour_orange;
+                        case 1:
+                            return colour_orange;
 
-                        case 2: return colour_pink;
+                        case 2:
+                            return colour_pink;
 
-                        case 3: return colour_purple;
+                        case 3:
+                            return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 5:
                     switch (columnIndex)
                     {
-                        case 0: return colour_pink;
+                        case 0:
+                            return colour_pink;
 
-                        case 1: return colour_orange;
+                        case 1:
+                            return colour_orange;
 
-                        case 2: return colour_yellow;
+                        case 2:
+                            return colour_yellow;
 
-                        case 3: return colour_green;
+                        case 3:
+                            return colour_green;
 
-                        case 4: return colour_cyan;
+                        case 4:
+                            return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 6:
                     switch (columnIndex)
                     {
-                        case 0: return colour_pink;
+                        case 0:
+                            return colour_pink;
 
-                        case 1: return colour_orange;
+                        case 1:
+                            return colour_orange;
 
-                        case 2: return colour_green;
+                        case 2:
+                            return colour_green;
 
-                        case 3: return colour_cyan;
+                        case 3:
+                            return colour_cyan;
 
-                        case 4: return colour_orange;
+                        case 4:
+                            return colour_orange;
 
-                        case 5: return colour_pink;
+                        case 5:
+                            return colour_pink;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 7:
                     switch (columnIndex)
                     {
-                        case 0: return colour_pink;
+                        case 0:
+                            return colour_pink;
 
-                        case 1: return colour_orange;
+                        case 1:
+                            return colour_orange;
 
-                        case 2: return colour_pink;
+                        case 2:
+                            return colour_pink;
 
-                        case 3: return colour_special_column;
+                        case 3:
+                            return colour_special_column;
 
-                        case 4: return colour_pink;
+                        case 4:
+                            return colour_pink;
 
-                        case 5: return colour_orange;
+                        case 5:
+                            return colour_orange;
 
-                        case 6: return colour_pink;
+                        case 6:
+                            return colour_pink;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 8:
                     switch (columnIndex)
                     {
-                        case 0: return colour_purple;
+                        case 0:
+                            return colour_purple;
 
-                        case 1: return colour_pink;
+                        case 1:
+                            return colour_pink;
 
-                        case 2: return colour_orange;
+                        case 2:
+                            return colour_orange;
 
-                        case 3: return colour_green;
+                        case 3:
+                            return colour_green;
 
-                        case 4: return colour_cyan;
+                        case 4:
+                            return colour_cyan;
 
-                        case 5: return colour_orange;
+                        case 5:
+                            return colour_orange;
 
-                        case 6: return colour_pink;
+                        case 6:
+                            return colour_pink;
 
-                        case 7: return colour_purple;
+                        case 7:
+                            return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 9:
                     switch (columnIndex)
                     {
-                        case 0: return colour_purple;
+                        case 0:
+                            return colour_purple;
 
-                        case 1: return colour_pink;
+                        case 1:
+                            return colour_pink;
 
-                        case 2: return colour_orange;
+                        case 2:
+                            return colour_orange;
 
-                        case 3: return colour_yellow;
+                        case 3:
+                            return colour_yellow;
 
-                        case 4: return colour_special_column;
+                        case 4:
+                            return colour_special_column;
 
-                        case 5: return colour_yellow;
+                        case 5:
+                            return colour_yellow;
 
-                        case 6: return colour_orange;
+                        case 6:
+                            return colour_orange;
 
-                        case 7: return colour_pink;
+                        case 7:
+                            return colour_pink;
 
-                        case 8: return colour_purple;
+                        case 8:
+                            return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
 
                 case 10:
                     switch (columnIndex)
                     {
-                        case 0: return colour_purple;
+                        case 0:
+                            return colour_purple;
 
-                        case 1: return colour_pink;
+                        case 1:
+                            return colour_pink;
 
-                        case 2: return colour_orange;
+                        case 2:
+                            return colour_orange;
 
-                        case 3: return colour_yellow;
+                        case 3:
+                            return colour_yellow;
 
-                        case 4: return colour_green;
+                        case 4:
+                            return colour_green;
 
-                        case 5: return colour_cyan;
+                        case 5:
+                            return colour_cyan;
 
-                        case 6: return colour_yellow;
+                        case 6:
+                            return colour_yellow;
 
-                        case 7: return colour_orange;
+                        case 7:
+                            return colour_orange;
 
-                        case 8: return colour_pink;
+                        case 8:
+                            return colour_pink;
 
-                        case 9: return colour_purple;
+                        case 9:
+                            return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex));
                     }
             }
 
@@ -343,19 +412,26 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
             switch (columnIndex % total_colours)
             {
-                case 0: return colour_yellow;
+                case 0:
+                    return colour_yellow;
 
-                case 1: return colour_orange;
+                case 1:
+                    return colour_orange;
 
-                case 2: return colour_pink;
+                case 2:
+                    return colour_pink;
 
-                case 3: return colour_purple;
+                case 3:
+                    return colour_purple;
 
-                case 4: return colour_cyan;
+                case 4:
+                    return colour_cyan;
 
-                case 5: return colour_green;
+                case 5:
+                    return colour_green;
 
-                default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(columnIndex));
             }
         }
     }

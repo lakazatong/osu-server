@@ -23,7 +23,8 @@ namespace osu.Game.Tournament
     [Cached]
     public partial class TournamentGame : TournamentGameBase
     {
-        public static ColourInfo GetTeamColour(TeamColour teamColour) => teamColour == TeamColour.Red ? COLOUR_RED : COLOUR_BLUE;
+        public static ColourInfo GetTeamColour(TeamColour teamColour) =>
+            teamColour == TeamColour.Red ? COLOUR_RED : COLOUR_BLUE;
 
         public static readonly Color4 COLOUR_RED = new OsuColour().TeamColourRed;
         public static readonly Color4 COLOUR_BLUE = new OsuColour().TeamColourBlue;
@@ -49,12 +50,14 @@ namespace osu.Game.Tournament
 
             windowMode = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
 
-            Add(loadingSpinner = new LoadingSpinner(true, true)
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                Margin = new MarginPadding(40),
-            });
+            Add(
+                loadingSpinner = new LoadingSpinner(true, true)
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Margin = new MarginPadding(40),
+                }
+            );
 
             // in order to have the OS mouse cursor visible, relative mode needs to be disabled.
             // can potentially be removed when https://github.com/ppy/osu-framework/issues/4309 is resolved.
@@ -65,55 +68,75 @@ namespace osu.Game.Tournament
 
             loadingSpinner.Show();
 
-            BracketLoadTask.ContinueWith(t => Schedule(() =>
-            {
-                if (t.IsFaulted)
+            BracketLoadTask.ContinueWith(t =>
+                Schedule(() =>
                 {
-                    loadingSpinner.Hide();
-                    loadingSpinner.Expire();
-
-                    Logger.Error(t.Exception, "Couldn't load bracket with error");
-                    Add(new WarningBox($"Your {BRACKET_FILENAME} file could not be parsed. Please check runtime.log for more details."));
-
-                    return;
-                }
-
-                LoadComponentsAsync(new[]
-                {
-                    new SaveChangesOverlay
+                    if (t.IsFaulted)
                     {
-                        Depth = float.MinValue,
-                    },
-                    heightWarning = new WarningBox("Please make the window wider")
-                    {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        Margin = new MarginPadding(20),
-                    },
-                    new OsuContextMenuContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Child = new TournamentSceneManager()
-                    },
-                    dialogOverlay
-                }, drawables =>
-                {
-                    loadingSpinner.Hide();
-                    loadingSpinner.Expire();
-                    AddRange(drawables);
+                        loadingSpinner.Hide();
+                        loadingSpinner.Expire();
 
-                    windowSize.BindValueChanged(size => ScheduleAfterChildren(() =>
-                    {
-                        int minWidth = (int)(size.NewValue.Height / 768f * TournamentSceneManager.REQUIRED_WIDTH) - 1;
-                        heightWarning.Alpha = size.NewValue.Width < minWidth ? 1 : 0;
-                    }), true);
+                        Logger.Error(t.Exception, "Couldn't load bracket with error");
+                        Add(
+                            new WarningBox(
+                                $"Your {BRACKET_FILENAME} file could not be parsed. Please check runtime.log for more details."
+                            )
+                        );
 
-                    windowMode.BindValueChanged(_ => ScheduleAfterChildren(() =>
-                    {
-                        windowMode.Value = WindowMode.Windowed;
-                    }), true);
-                });
-            }));
+                        return;
+                    }
+
+                    LoadComponentsAsync(
+                        new[]
+                        {
+                            new SaveChangesOverlay { Depth = float.MinValue },
+                            heightWarning = new WarningBox("Please make the window wider")
+                            {
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.BottomCentre,
+                                Margin = new MarginPadding(20),
+                            },
+                            new OsuContextMenuContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = new TournamentSceneManager(),
+                            },
+                            dialogOverlay,
+                        },
+                        drawables =>
+                        {
+                            loadingSpinner.Hide();
+                            loadingSpinner.Expire();
+                            AddRange(drawables);
+
+                            windowSize.BindValueChanged(
+                                size =>
+                                    ScheduleAfterChildren(() =>
+                                    {
+                                        int minWidth =
+                                            (int)(
+                                                size.NewValue.Height
+                                                / 768f
+                                                * TournamentSceneManager.REQUIRED_WIDTH
+                                            ) - 1;
+                                        heightWarning.Alpha =
+                                            size.NewValue.Width < minWidth ? 1 : 0;
+                                    }),
+                                true
+                            );
+
+                            windowMode.BindValueChanged(
+                                _ =>
+                                    ScheduleAfterChildren(() =>
+                                    {
+                                        windowMode.Value = WindowMode.Windowed;
+                                    }),
+                                true
+                            );
+                        }
+                    );
+                })
+            );
         }
     }
 }

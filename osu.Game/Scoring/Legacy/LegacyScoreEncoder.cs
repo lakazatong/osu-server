@@ -71,10 +71,16 @@ namespace osu.Game.Scoring.Legacy
             this.beatmap = beatmap;
 
             if (beatmap == null && !score.Replay.Frames.All(f => f is LegacyReplayFrame))
-                throw new ArgumentException(@"Beatmap must be provided if frames are not already legacy frames.", nameof(beatmap));
+                throw new ArgumentException(
+                    @"Beatmap must be provided if frames are not already legacy frames.",
+                    nameof(beatmap)
+                );
 
             if (!score.ScoreInfo.Ruleset.IsLegacyRuleset())
-                throw new ArgumentException(@"Only scores in the osu, taiko, catch, or mania rulesets can be encoded to the legacy score format.", nameof(score));
+                throw new ArgumentException(
+                    @"Only scores in the osu, taiko, catch, or mania rulesets can be encoded to the legacy score format.",
+                    nameof(score)
+                );
         }
 
         public void Encode(Stream stream, bool leaveOpen = false)
@@ -85,7 +91,11 @@ namespace osu.Game.Scoring.Legacy
                 sw.Write(LATEST_VERSION);
                 sw.Write(score.ScoreInfo.BeatmapInfo!.MD5Hash);
                 sw.Write(score.ScoreInfo.User.Username);
-                sw.Write(FormattableString.Invariant($"lazer-{score.ScoreInfo.User.Username}-{score.ScoreInfo.Date}").ComputeMD5Hash());
+                sw.Write(
+                    FormattableString
+                        .Invariant($"lazer-{score.ScoreInfo.User.Username}-{score.ScoreInfo.Date}")
+                        .ComputeMD5Hash()
+                );
                 sw.Write((ushort)(score.ScoreInfo.GetCount300() ?? 0));
                 sw.Write((ushort)(score.ScoreInfo.GetCount100() ?? 0));
                 sw.Write((ushort)(score.ScoreInfo.GetCount50() ?? 0));
@@ -95,7 +105,12 @@ namespace osu.Game.Scoring.Legacy
                 sw.Write((int)(score.ScoreInfo.TotalScore));
                 sw.Write((ushort)score.ScoreInfo.MaxCombo);
                 sw.Write(score.ScoreInfo.MaxCombo == score.ScoreInfo.GetMaximumAchievableCombo());
-                sw.Write((int)score.ScoreInfo.Ruleset.CreateInstance().ConvertToLegacyMods(score.ScoreInfo.Mods));
+                sw.Write(
+                    (int)
+                        score
+                            .ScoreInfo.Ruleset.CreateInstance()
+                            .ConvertToLegacyMods(score.ScoreInfo.Mods)
+                );
 
                 sw.Write(getHpGraphFormatted());
                 sw.Write(score.ScoreInfo.Date.DateTime);
@@ -106,13 +121,12 @@ namespace osu.Game.Scoring.Legacy
             }
         }
 
-        private void writeModSpecificData(ScoreInfo score, SerializationWriter sw)
-        {
-        }
+        private void writeModSpecificData(ScoreInfo score, SerializationWriter sw) { }
 
         private byte[] createReplayData() => compress(replayStringContent);
 
-        private byte[] createScoreInfoData() => compress(LegacyReplaySoloScoreInfo.FromScore(score.ScoreInfo).Serialize());
+        private byte[] createScoreInfoData() =>
+            compress(LegacyReplaySoloScoreInfo.FromScore(score.ScoreInfo).Serialize());
 
         private byte[] compress(string data)
         {
@@ -120,7 +134,13 @@ namespace osu.Game.Scoring.Legacy
 
             using (var outStream = new MemoryStream())
             {
-                using (var lzma = new LzmaStream(new LzmaEncoderProperties(false, 1 << 21, 255), false, outStream))
+                using (
+                    var lzma = new LzmaStream(
+                        new LzmaEncoderProperties(false, 1 << 21, 255),
+                        false,
+                        outStream
+                    )
+                )
                 {
                     outStream.Write(lzma.Properties);
 
@@ -142,7 +162,10 @@ namespace osu.Game.Scoring.Legacy
                 StringBuilder replayData = new StringBuilder();
 
                 // As this is baked into hitobject timing (see `LegacyBeatmapDecoder`) we also need to apply this to replay frame timing.
-                double offset = beatmap?.BeatmapVersion < 5 ? -LegacyBeatmapDecoder.EARLY_VERSION_TIMING_OFFSET : 0;
+                double offset =
+                    beatmap?.BeatmapVersion < 5
+                        ? -LegacyBeatmapDecoder.EARLY_VERSION_TIMING_OFFSET
+                        : 0;
 
                 int lastTime = 0;
 
@@ -154,7 +177,11 @@ namespace osu.Game.Scoring.Legacy
 
                         // Rounding because stable could only parse integral values
                         int time = (int)Math.Round(legacyFrame.Time + offset);
-                        replayData.Append(FormattableString.Invariant($"{time - lastTime}|{legacyFrame.MouseX ?? 0}|{legacyFrame.MouseY ?? 0}|{(int)legacyFrame.ButtonState},"));
+                        replayData.Append(
+                            FormattableString.Invariant(
+                                $"{time - lastTime}|{legacyFrame.MouseX ?? 0}|{legacyFrame.MouseY ?? 0}|{(int)legacyFrame.ButtonState},"
+                            )
+                        );
                         lastTime = time;
                     }
                 }
@@ -178,7 +205,10 @@ namespace osu.Game.Scoring.Legacy
                     return convertibleFrame.ToLegacy(beatmap);
 
                 default:
-                    throw new ArgumentException(@"Frame could not be converted to legacy frames", nameof(replayFrame));
+                    throw new ArgumentException(
+                        @"Frame could not be converted to legacy frames",
+                        nameof(replayFrame)
+                    );
             }
         }
 

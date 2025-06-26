@@ -36,7 +36,9 @@ namespace osu.Game.Rulesets.Catch.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
             // only check the X position; handle all vertical space.
-            base.ReceivePositionalInputAt(new Vector2(screenSpacePos.X, ScreenSpaceDrawQuad.Centre.Y));
+            base.ReceivePositionalInputAt(
+                new Vector2(screenSpacePos.X, ScreenSpaceDrawQuad.Centre.Y)
+            );
 
         internal Catcher Catcher { get; private set; } = null!;
 
@@ -58,30 +60,26 @@ namespace osu.Game.Rulesets.Catch.UI
         {
             var droppedObjectContainer = new DroppedObjectContainer();
 
-            Catcher = new Catcher(droppedObjectContainer, difficulty)
-            {
-                X = CENTER_X
-            };
+            Catcher = new Catcher(droppedObjectContainer, difficulty) { X = CENTER_X };
 
-            AddRangeInternal(new[]
-            {
-                UnderlayElements = new Container
+            AddRangeInternal(
+                new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                droppedObjectContainer,
-                Catcher.CreateProxiedContent(),
-                HitObjectContainer.CreateProxy(),
-                // This ordering (`CatcherArea` before `HitObjectContainer`) is important to
-                // make sure the up-to-date catcher position is used for the catcher catching logic of hit objects.
-                CatcherArea = new CatcherArea
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.TopLeft,
-                    Catcher = Catcher,
-                },
-                HitObjectContainer,
-            });
+                    UnderlayElements = new Container { RelativeSizeAxes = Axes.Both },
+                    droppedObjectContainer,
+                    Catcher.CreateProxiedContent(),
+                    HitObjectContainer.CreateProxy(),
+                    // This ordering (`CatcherArea` before `HitObjectContainer`) is important to
+                    // make sure the up-to-date catcher position is used for the catcher catching logic of hit objects.
+                    CatcherArea = new CatcherArea
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.TopLeft,
+                        Catcher = Catcher,
+                    },
+                    HitObjectContainer,
+                }
+            );
 
             RegisterPool<Droplet, DrawableDroplet>(50);
             RegisterPool<TinyDroplet, DrawableTinyDroplet>(50);
@@ -107,10 +105,9 @@ namespace osu.Game.Rulesets.Catch.UI
 
         private bool checkIfWeCanCatch(CatchHitObject obj) => Catcher.CanCatch(obj);
 
-        private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
-            => CatcherArea.OnNewResult((DrawableCatchHitObject)judgedObject, result);
+        private void onNewResult(DrawableHitObject judgedObject, JudgementResult result) =>
+            CatcherArea.OnNewResult((DrawableCatchHitObject)judgedObject, result);
 
-        private void onRevertResult(JudgementResult result)
-            => CatcherArea.OnRevertResult(result);
+        private void onRevertResult(JudgementResult result) => CatcherArea.OnRevertResult(result);
     }
 }

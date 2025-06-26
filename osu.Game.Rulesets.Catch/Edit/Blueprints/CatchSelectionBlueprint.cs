@@ -10,7 +10,8 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Catch.Edit.Blueprints
 {
-    public abstract partial class CatchSelectionBlueprint<THitObject> : HitObjectSelectionBlueprint<THitObject>
+    public abstract partial class CatchSelectionBlueprint<THitObject>
+        : HitObjectSelectionBlueprint<THitObject>
         where THitObject : CatchHitObject
     {
         protected override bool AlwaysShowWhenSelected => true;
@@ -19,21 +20,26 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
         {
             get
             {
-                Vector2 position = CatchHitObjectUtils.GetStartPosition(HitObjectContainer, HitObject);
-                return HitObjectContainer.ToScreenSpace(position + new Vector2(0, HitObjectContainer.DrawHeight));
+                Vector2 position = CatchHitObjectUtils.GetStartPosition(
+                    HitObjectContainer,
+                    HitObject
+                );
+                return HitObjectContainer.ToScreenSpace(
+                    position + new Vector2(0, HitObjectContainer.DrawHeight)
+                );
             }
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => SelectionQuad.Contains(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            SelectionQuad.Contains(screenSpacePos);
 
-        protected ScrollingHitObjectContainer HitObjectContainer => (ScrollingHitObjectContainer)playfield.HitObjectContainer;
+        protected ScrollingHitObjectContainer HitObjectContainer =>
+            (ScrollingHitObjectContainer)playfield.HitObjectContainer;
 
         [Resolved]
         private Playfield playfield { get; set; } = null!;
 
         protected CatchSelectionBlueprint(THitObject hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
     }
 }

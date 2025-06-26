@@ -16,63 +16,87 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestRelativeSized()
         {
-            AddStep("add button", () => Child = new BaseContainer("relative sized")
-            {
-                RelativeSizeAxes = Axes.Both,
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("relative sized")
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
         public void TestAutoSized()
         {
-            AddStep("add button", () => Child = new BaseContainer("auto sized")
-            {
-                AutoSizeAxes = Axes.Both,
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("auto sized")
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
         public void TestRelativeYAutoX()
         {
-            AddStep("add button", () => Child = new BaseContainer("relative Y auto X")
-            {
-                RelativeSizeAxes = Axes.Y,
-                AutoSizeAxes = Axes.X,
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("relative Y auto X")
+                    {
+                        RelativeSizeAxes = Axes.Y,
+                        AutoSizeAxes = Axes.X,
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
         public void TestRelativeXAutoY()
         {
-            AddStep("add button", () => Child = new BaseContainer("relative X auto Y")
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("relative X auto Y")
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
         public void TestFixed1()
         {
-            AddStep("add button", () => Child = new BaseContainer("fixed")
-            {
-                Size = new Vector2(100),
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("fixed")
+                    {
+                        Size = new Vector2(100),
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
         public void TestFixed2()
         {
-            AddStep("add button", () => Child = new BaseContainer("fixed")
-            {
-                Size = new Vector2(100, 50),
-                Action = () => { }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    Child = new BaseContainer("fixed")
+                    {
+                        Size = new Vector2(100, 50),
+                        Action = () => { },
+                    }
+            );
         }
 
         [Test]
@@ -80,28 +104,31 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             BaseContainer button = null;
 
-            AddStep("add button", () => Child = button = new BaseContainer("fixed")
-            {
-                Size = new Vector2(200),
-            });
+            AddStep(
+                "add button",
+                () => Child = button = new BaseContainer("fixed") { Size = new Vector2(200) }
+            );
 
-            AddToggleStep("toggle enabled", toggle =>
-            {
-                for (int i = 0; i < 6; i++)
-                    button.Action = toggle ? () => { } : null;
-            });
+            AddToggleStep(
+                "toggle enabled",
+                toggle =>
+                {
+                    for (int i = 0; i < 6; i++)
+                        button.Action = toggle ? () => { } : null;
+                }
+            );
         }
 
         [Test]
         public void TestInitiallyDisabled()
         {
-            AddStep("add disabled button", () =>
-            {
-                Child = new BaseContainer("disabled")
+            AddStep(
+                "add disabled button",
+                () =>
                 {
-                    Size = new Vector2(100)
-                };
-            });
+                    Child = new BaseContainer("disabled") { Size = new Vector2(100) };
+                }
+            );
         }
 
         public partial class BaseContainer : OsuAnimatedButton
@@ -111,12 +138,14 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 
-                Add(new OsuSpriteText
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Text = text
-                });
+                Add(
+                    new OsuSpriteText
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Text = text,
+                    }
+                );
             }
         }
     }

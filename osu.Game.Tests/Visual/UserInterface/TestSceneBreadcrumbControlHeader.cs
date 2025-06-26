@@ -16,19 +16,18 @@ namespace osu.Game.Tests.Visual.UserInterface
         private static readonly string[] items = { "first", "second", "third", "fourth", "fifth" };
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Red);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Red
+        );
 
         private TestHeader header;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = header = new TestHeader
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
-        });
+                Child = header = new TestHeader { Anchor = Anchor.Centre, Origin = Anchor.Centre };
+            });
 
         [Test]
         public void TestAddAndRemoveItem()

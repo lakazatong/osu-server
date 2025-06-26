@@ -55,7 +55,12 @@ namespace osu.Game.Overlays.Chat
 
         public float FontSize
         {
-            set => drawableText.Font = OsuFont.GetFont(size: value, weight: FontWeight.Bold, italics: true);
+            set =>
+                drawableText.Font = OsuFont.GetFont(
+                    size: value,
+                    weight: FontWeight.Bold,
+                    italics: true
+                );
         }
 
         public LocalisableString Text
@@ -124,41 +129,46 @@ namespace osu.Game.Overlays.Chat
             }
             else
             {
-                Add(new Container
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    AutoSizeAxes = Axes.Both,
-                    Masking = true,
-                    CornerRadius = 4,
-                    EdgeEffect = new EdgeEffectParameters
+                Add(
+                    new Container
                     {
-                        Roundness = 1,
-                        Radius = 1,
-                        Colour = Color4.Black.Opacity(0.3f),
-                        Offset = new Vector2(0, 1),
-                        Type = EdgeEffectType.Shadow,
-                    },
-                    Child = new Container
-                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
                         AutoSizeAxes = Axes.Both,
                         Masking = true,
                         CornerRadius = 4,
-                        Children = new[]
+                        EdgeEffect = new EdgeEffectParameters
                         {
-                            colouredDrawable = new Box
+                            Roundness = 1,
+                            Radius = 1,
+                            Colour = Color4.Black.Opacity(0.3f),
+                            Offset = new Vector2(0, 1),
+                            Type = EdgeEffectType.Shadow,
+                        },
+                        Child = new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Masking = true,
+                            CornerRadius = 4,
+                            Children = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
+                                colouredDrawable = new Box { RelativeSizeAxes = Axes.Both },
+                                new Container
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Padding = new MarginPadding
+                                    {
+                                        Left = 4,
+                                        Right = 4,
+                                        Bottom = 1,
+                                        Top = -2,
+                                    },
+                                    Child = drawableText,
+                                },
                             },
-                            new Container
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Padding = new MarginPadding { Left = 4, Right = 4, Bottom = 1, Top = -2 },
-                                Child = drawableText,
-                            }
-                        }
+                        },
                     }
-                });
+                );
             }
         }
 
@@ -183,15 +193,33 @@ namespace osu.Game.Overlays.Chat
 
                 if (currentChannel?.Value != null)
                 {
-                    items.Add(new OsuMenuItem(ChatStrings.MentionUser, MenuItemType.Standard, () =>
-                    {
-                        currentChannel.Value.TextBoxMessage.Value += $"@{user.Username} ";
-                    }));
+                    items.Add(
+                        new OsuMenuItem(
+                            ChatStrings.MentionUser,
+                            MenuItemType.Standard,
+                            () =>
+                            {
+                                currentChannel.Value.TextBoxMessage.Value += $"@{user.Username} ";
+                            }
+                        )
+                    );
                 }
 
-                items.Add(new OsuMenuItem(ContextMenuStrings.ViewProfile, MenuItemType.Highlighted, openUserProfile));
+                items.Add(
+                    new OsuMenuItem(
+                        ContextMenuStrings.ViewProfile,
+                        MenuItemType.Highlighted,
+                        openUserProfile
+                    )
+                );
 
-                items.Add(new OsuMenuItem(UsersStrings.CardSendMessage, MenuItemType.Standard, openUserChannel));
+                items.Add(
+                    new OsuMenuItem(
+                        UsersStrings.CardSendMessage,
+                        MenuItemType.Standard,
+                        openUserChannel
+                    )
+                );
 
                 // We should probably be checking against an online state here.
                 // But we can't use MetadataClient.GetPresence because we may not be requesting/receiving presences.
@@ -199,22 +227,52 @@ namespace osu.Game.Overlays.Chat
                 {
                     items.Add(new OsuMenuItemSpacer());
 
-                    items.Add(new OsuMenuItem(ContextMenuStrings.SpectatePlayer, MenuItemType.Standard, () =>
-                    {
-                        performer?.PerformFromScreen(s => s.Push(new SoloSpectatorScreen(user)));
-                    }));
+                    items.Add(
+                        new OsuMenuItem(
+                            ContextMenuStrings.SpectatePlayer,
+                            MenuItemType.Standard,
+                            () =>
+                            {
+                                performer?.PerformFromScreen(s =>
+                                    s.Push(new SoloSpectatorScreen(user))
+                                );
+                            }
+                        )
+                    );
 
                     if (multiplayerClient?.Room?.Users.All(u => u.UserID != user.Id) == true)
                     {
-                        items.Add(new OsuMenuItem(ContextMenuStrings.InvitePlayer, MenuItemType.Standard, () => multiplayerClient.InvitePlayer(user.Id)));
+                        items.Add(
+                            new OsuMenuItem(
+                                ContextMenuStrings.InvitePlayer,
+                                MenuItemType.Standard,
+                                () => multiplayerClient.InvitePlayer(user.Id)
+                            )
+                        );
                     }
                 }
 
                 items.Add(new OsuMenuItemSpacer());
-                items.Add(new OsuMenuItem(UsersStrings.ReportButtonText, MenuItemType.Destructive, ReportRequested));
-                items.Add(api.Blocks.Any(b => b.TargetID == user.OnlineID)
-                    ? new OsuMenuItem(UsersStrings.BlocksButtonUnblock, MenuItemType.Standard, () => dialogOverlay?.Push(ConfirmBlockActionDialog.Unblock(user)))
-                    : new OsuMenuItem(UsersStrings.BlocksButtonBlock, MenuItemType.Destructive, () => dialogOverlay?.Push(ConfirmBlockActionDialog.Block(user))));
+                items.Add(
+                    new OsuMenuItem(
+                        UsersStrings.ReportButtonText,
+                        MenuItemType.Destructive,
+                        ReportRequested
+                    )
+                );
+                items.Add(
+                    api.Blocks.Any(b => b.TargetID == user.OnlineID)
+                        ? new OsuMenuItem(
+                            UsersStrings.BlocksButtonUnblock,
+                            MenuItemType.Standard,
+                            () => dialogOverlay?.Push(ConfirmBlockActionDialog.Unblock(user))
+                        )
+                        : new OsuMenuItem(
+                            UsersStrings.BlocksButtonBlock,
+                            MenuItemType.Destructive,
+                            () => dialogOverlay?.Push(ConfirmBlockActionDialog.Block(user))
+                        )
+                );
 
                 return items.ToArray();
             }

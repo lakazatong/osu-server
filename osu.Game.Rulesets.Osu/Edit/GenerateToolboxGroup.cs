@@ -26,16 +26,19 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    polygonButton = new EditorToolButton("Polygon",
+                    polygonButton = new EditorToolButton(
+                        "Polygon",
                         () => new SpriteIcon { Icon = FontAwesome.Solid.Spinner },
-                        () => new PolygonGenerationPopover()),
-                }
+                        () => new PolygonGenerationPopover()
+                    ),
+                },
             };
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Repeat) return false;
+            if (e.Repeat)
+                return false;
 
             switch (e.Key)
             {

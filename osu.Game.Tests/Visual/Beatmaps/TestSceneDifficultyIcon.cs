@@ -34,27 +34,39 @@ namespace osu.Game.Tests.Visual.Beatmaps
         [Test]
         public void CreateDifficultyIcon()
         {
-            AddRepeatStep("create difficulty icon", () =>
-            {
-                var rulesetInfo = new OsuRuleset().RulesetInfo;
-                var beatmapInfo = new TestBeatmap(rulesetInfo).BeatmapInfo;
-
-                beatmapInfo.Difficulty.ApproachRate = RNG.Next(0, 10);
-                beatmapInfo.Difficulty.CircleSize = RNG.Next(0, 10);
-                beatmapInfo.Difficulty.OverallDifficulty = RNG.Next(0, 10);
-                beatmapInfo.Difficulty.DrainRate = RNG.Next(0, 10);
-                beatmapInfo.StarRating = RNG.NextSingle(0, 10);
-                beatmapInfo.BPM = RNG.Next(60, 300);
-
-                fill.Add(new DifficultyIcon(beatmapInfo, rulesetInfo)
+            AddRepeatStep(
+                "create difficulty icon",
+                () =>
                 {
-                    Scale = new Vector2(2),
-                });
-            }, 10);
+                    var rulesetInfo = new OsuRuleset().RulesetInfo;
+                    var beatmapInfo = new TestBeatmap(rulesetInfo).BeatmapInfo;
 
-            AddStep("no tooltip", () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.None));
-            AddStep("basic tooltip", () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.StarRating));
-            AddStep("extended tooltip", () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.Extended));
+                    beatmapInfo.Difficulty.ApproachRate = RNG.Next(0, 10);
+                    beatmapInfo.Difficulty.CircleSize = RNG.Next(0, 10);
+                    beatmapInfo.Difficulty.OverallDifficulty = RNG.Next(0, 10);
+                    beatmapInfo.Difficulty.DrainRate = RNG.Next(0, 10);
+                    beatmapInfo.StarRating = RNG.NextSingle(0, 10);
+                    beatmapInfo.BPM = RNG.Next(60, 300);
+
+                    fill.Add(
+                        new DifficultyIcon(beatmapInfo, rulesetInfo) { Scale = new Vector2(2) }
+                    );
+                },
+                10
+            );
+
+            AddStep(
+                "no tooltip",
+                () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.None)
+            );
+            AddStep(
+                "basic tooltip",
+                () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.StarRating)
+            );
+            AddStep(
+                "extended tooltip",
+                () => fill.ForEach(icon => icon.TooltipType = DifficultyIconTooltipType.Extended)
+            );
         }
     }
 }

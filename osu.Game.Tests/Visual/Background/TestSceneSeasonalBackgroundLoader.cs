@@ -40,10 +40,12 @@ namespace osu.Game.Tests.Visual.Background
         {
             "Backgrounds/bg2",
             "Backgrounds/bg4",
-            "Backgrounds/bg3"
+            "Backgrounds/bg3",
         };
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
@@ -62,25 +64,23 @@ namespace osu.Game.Tests.Visual.Background
             {
                 CachedDependencies = new (Type, object)[]
                 {
-                    (typeof(LargeTextureStore), textureStore)
+                    (typeof(LargeTextureStore), textureStore),
                 },
-                Child = backgroundContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
+                Child = backgroundContainer = new Container { RelativeSizeAxes = Axes.Both },
             };
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            // reset API response in statics to avoid test crosstalk.
-            statics.SetValue<APISeasonalBackgrounds>(Static.SeasonalBackgrounds, null);
-            textureStore.PerformedLookups.Clear();
-            dummyAPI.SetState(APIState.Online);
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                // reset API response in statics to avoid test crosstalk.
+                statics.SetValue<APISeasonalBackgrounds>(Static.SeasonalBackgrounds, null);
+                textureStore.PerformedLookups.Clear();
+                dummyAPI.SetState(APIState.Online);
 
-            backgroundContainer.Clear();
-        });
+                backgroundContainer.Clear();
+            });
 
         [TestCase(-5)]
         [TestCase(5)]
@@ -94,7 +94,13 @@ namespace osu.Game.Tests.Visual.Background
             for (int i = 0; i < 4; ++i)
                 loadNextBackground();
 
-            AddAssert("all backgrounds cycled", () => new HashSet<string>(textureStore.PerformedLookups).SetEquals(seasonal_background_urls));
+            AddAssert(
+                "all backgrounds cycled",
+                () =>
+                    new HashSet<string>(textureStore.PerformedLookups).SetEquals(
+                        seasonal_background_urls
+                    )
+            );
         }
 
         [TestCase(-5)]
@@ -131,48 +137,67 @@ namespace osu.Game.Tests.Visual.Background
             assertNoBackgrounds();
         }
 
-        private void registerBackgroundsResponse(DateTimeOffset endDate)
-            => AddStep("setup request handler", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+        private void registerBackgroundsResponse(DateTimeOffset endDate) =>
+            AddStep(
+                "setup request handler",
+                () =>
                 {
-                    if (dummyAPI.State.Value != APIState.Online || !(request is GetSeasonalBackgroundsRequest backgroundsRequest))
-                        return false;
-
-                    backgroundsRequest.TriggerSuccess(new APISeasonalBackgrounds
+                    dummyAPI.HandleRequest = request =>
                     {
-                        Backgrounds = seasonal_background_urls.Select(url => new APISeasonalBackground { Url = url }).ToList(),
-                        EndDate = endDate
-                    });
+                        if (
+                            dummyAPI.State.Value != APIState.Online
+                            || !(request is GetSeasonalBackgroundsRequest backgroundsRequest)
+                        )
+                            return false;
 
-                    return true;
-                };
-            });
+                        backgroundsRequest.TriggerSuccess(
+                            new APISeasonalBackgrounds
+                            {
+                                Backgrounds = seasonal_background_urls
+                                    .Select(url => new APISeasonalBackground { Url = url })
+                                    .ToList(),
+                                EndDate = endDate,
+                            }
+                        );
 
-        private void setSeasonalBackgroundMode(SeasonalBackgroundMode mode)
-            => AddStep($"set seasonal mode to {mode}", () => config.SetValue(OsuSetting.SeasonalBackgroundMode, mode));
+                        return true;
+                    };
+                }
+            );
 
-        private void createLoader()
-            => AddStep("create loader", () =>
-            {
-                if (backgroundLoader != null)
-                    Remove(backgroundLoader, true);
+        private void setSeasonalBackgroundMode(SeasonalBackgroundMode mode) =>
+            AddStep(
+                $"set seasonal mode to {mode}",
+                () => config.SetValue(OsuSetting.SeasonalBackgroundMode, mode)
+            );
 
-                Add(backgroundLoader = new SeasonalBackgroundLoader());
-            });
+        private void createLoader() =>
+            AddStep(
+                "create loader",
+                () =>
+                {
+                    if (backgroundLoader != null)
+                        Remove(backgroundLoader, true);
+
+                    Add(backgroundLoader = new SeasonalBackgroundLoader());
+                }
+            );
 
         private void loadNextBackground()
         {
             SeasonalBackground previousBackground = null;
             SeasonalBackground background = null;
 
-            AddStep("create next background", () =>
-            {
-                previousBackground = (SeasonalBackground)backgroundContainer.SingleOrDefault();
-                background = backgroundLoader.LoadNextBackground();
-                if (background != null)
-                    LoadComponentAsync(background, bg => backgroundContainer.Child = bg);
-            });
+            AddStep(
+                "create next background",
+                () =>
+                {
+                    previousBackground = (SeasonalBackground)backgroundContainer.SingleOrDefault();
+                    background = backgroundLoader.LoadNextBackground();
+                    if (background != null)
+                        LoadComponentAsync(background, bg => backgroundContainer.Child = bg);
+                }
+            );
 
             AddUntilStep("background loaded", () => background.IsLoaded);
             AddAssert("background is different", () => !background.Equals(previousBackground));
@@ -186,7 +211,10 @@ namespace osu.Game.Tests.Visual.Background
 
         private void assertNoBackgrounds()
         {
-            AddAssert("no background available", () => backgroundLoader.LoadNextBackground() == null);
+            AddAssert(
+                "no background available",
+                () => backgroundLoader.LoadNextBackground() == null
+            );
             AddAssert("no lookups performed", () => !textureStore.PerformedLookups.Any());
         }
 
@@ -195,9 +223,7 @@ namespace osu.Game.Tests.Visual.Background
             public List<string> PerformedLookups { get; } = new List<string>();
 
             public LookupLoggingTextureStore(IRenderer renderer)
-                : base(renderer)
-            {
-            }
+                : base(renderer) { }
 
             public override Texture Get(string name, WrapMode wrapModeS, WrapMode wrapModeT)
             {

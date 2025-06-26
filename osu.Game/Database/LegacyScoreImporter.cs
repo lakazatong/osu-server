@@ -19,14 +19,17 @@ namespace osu.Game.Database
             if (!storage.ExistsDirectory(ImportFromStablePath))
                 return Enumerable.Empty<string>();
 
-            return storage.GetFiles(ImportFromStablePath)
-                          .Where(p => Importer.HandledExtensions.Any(ext => Path.GetExtension(p).Equals(ext, StringComparison.OrdinalIgnoreCase)))
-                          .Select(path => storage.GetFullPath(path));
+            return storage
+                .GetFiles(ImportFromStablePath)
+                .Where(p =>
+                    Importer.HandledExtensions.Any(ext =>
+                        Path.GetExtension(p).Equals(ext, StringComparison.OrdinalIgnoreCase)
+                    )
+                )
+                .Select(path => storage.GetFullPath(path));
         }
 
         public LegacyScoreImporter(IModelImporter<ScoreInfo> importer)
-            : base(importer)
-        {
-        }
+            : base(importer) { }
     }
 }

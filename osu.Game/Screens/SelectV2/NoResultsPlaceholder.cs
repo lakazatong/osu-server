@@ -77,17 +77,14 @@ namespace osu.Game.Screens.SelectV2
                             Origin = Anchor.TopCentre,
                             Margin = new MarginPadding(10),
                             Size = new Vector2(50),
-                            Child = icon = new GhostIcon
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
+                            Child = icon = new GhostIcon { RelativeSizeAxes = Axes.Both },
                         },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Font = OsuFont.Style.Title,
-                            Text = "No matching beatmaps"
+                            Text = "No matching beatmaps",
                         },
                         textFlow = new LinkFlowContainer
                         {
@@ -98,8 +95,8 @@ namespace osu.Game.Screens.SelectV2
                             Padding = new MarginPadding { Top = 20 },
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -109,9 +106,7 @@ namespace osu.Game.Screens.SelectV2
             base.LoadComplete();
 
             icon.Loop(t =>
-                t.MoveToY(-10, 2000, Easing.InOutSine)
-                 .Then()
-                 .MoveToY(0, 2000, Easing.InOutSine)
+                t.MoveToY(-10, 2000, Easing.InOutSine).Then().MoveToY(0, 2000, Easing.InOutSine)
             );
         }
 
@@ -132,8 +127,7 @@ namespace osu.Game.Screens.SelectV2
             // TODO: Refresh this text when new beatmaps are imported. Right now it won't get up-to-date suggestions.
 
             // Bounce should play every time the filter criteria is updated.
-            this.ScaleTo(0.9f)
-                .ScaleTo(1f, 1000, Easing.OutQuint);
+            this.ScaleTo(0.9f).ScaleTo(1f, 1000, Easing.OutQuint);
 
             textFlow.FadeInFromZero(800, Easing.OutQuint);
 
@@ -143,7 +137,10 @@ namespace osu.Game.Screens.SelectV2
             {
                 addBulletPoint();
                 textFlow.AddText("Consider running the \"");
-                textFlow.AddLink(FirstRunSetupOverlayStrings.FirstRunSetupTitle, () => firstRunSetupOverlay?.Show());
+                textFlow.AddLink(
+                    FirstRunSetupOverlayStrings.FirstRunSetupTitle,
+                    () => firstRunSetupOverlay?.Show()
+                );
                 textFlow.AddText("\" to download or import some beatmaps!");
             }
             else
@@ -155,10 +152,13 @@ namespace osu.Game.Screens.SelectV2
                 {
                     addBulletPoint();
                     textFlow.AddText("Try ");
-                    textFlow.AddLink("clearing", () =>
-                    {
-                        RequestClearFilterText?.Invoke();
-                    });
+                    textFlow.AddLink(
+                        "clearing",
+                        () =>
+                        {
+                            RequestClearFilterText?.Invoke();
+                        }
+                    );
 
                     textFlow.AddText(" your current search criteria.");
                 }
@@ -167,14 +167,20 @@ namespace osu.Game.Screens.SelectV2
                 {
                     addBulletPoint();
                     textFlow.AddText("Try ");
-                    textFlow.AddLink("removing", () =>
-                    {
-                        config.SetValue(OsuSetting.DisplayStarsMinimum, 0.0);
-                        config.SetValue(OsuSetting.DisplayStarsMaximum, 10.1);
-                    });
+                    textFlow.AddLink(
+                        "removing",
+                        () =>
+                        {
+                            config.SetValue(OsuSetting.DisplayStarsMinimum, 0.0);
+                            config.SetValue(OsuSetting.DisplayStarsMaximum, 10.1);
+                        }
+                    );
 
                     string lowerStar = $"{filter.UserStarDifficulty.Min ?? 0:N1}";
-                    string upperStar = filter.UserStarDifficulty.Max == null ? "∞" : $"{filter.UserStarDifficulty.Max:N1}";
+                    string upperStar =
+                        filter.UserStarDifficulty.Max == null
+                            ? "∞"
+                            : $"{filter.UserStarDifficulty.Max:N1}";
 
                     textFlow.AddText($" the {lowerStar} - {upperStar} star difficulty filter.");
                 }
@@ -185,7 +191,10 @@ namespace osu.Game.Screens.SelectV2
                 {
                     addBulletPoint();
                     textFlow.AddText("Try ");
-                    textFlow.AddLink("enabling ", () => config.SetValue(OsuSetting.ShowConvertedBeatmaps, true));
+                    textFlow.AddLink(
+                        "enabling ",
+                        () => config.SetValue(OsuSetting.ShowConvertedBeatmaps, true)
+                    );
                     textFlow.AddText("automatic conversion!");
                 }
             }
@@ -194,7 +203,11 @@ namespace osu.Game.Screens.SelectV2
             {
                 addBulletPoint();
                 textFlow.AddText("Try ");
-                textFlow.AddLink("searching online", LinkAction.SearchBeatmapSet, filter.SearchText);
+                textFlow.AddLink(
+                    "searching online",
+                    LinkAction.SearchBeatmapSet,
+                    filter.SearchText
+                );
                 textFlow.AddText($" for \"{filter.SearchText}\".");
             }
             // TODO: add clickable link to reset criteria.
@@ -203,11 +216,14 @@ namespace osu.Game.Screens.SelectV2
         private void addBulletPoint()
         {
             textFlow.NewLine();
-            textFlow.AddIcon(FontAwesome.Solid.Circle, i =>
-            {
-                i.Padding = new MarginPadding { Top = 24, Right = 15 };
-                i.Scale *= 0.3f;
-            });
+            textFlow.AddIcon(
+                FontAwesome.Solid.Circle,
+                i =>
+                {
+                    i.Padding = new MarginPadding { Top = 24, Right = 15 };
+                    i.Scale *= 0.3f;
+                }
+            );
         }
     }
 }

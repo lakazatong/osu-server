@@ -35,7 +35,8 @@ namespace osu.Game.Overlays.Chat
             get => message;
             set
             {
-                if (message == value) return;
+                if (message == value)
+                    return;
 
                 message = MessageFormatter.FormatMessage(value);
 
@@ -159,11 +160,7 @@ namespace osu.Game.Overlays.Chat
                 },
                 new GridContainer
                 {
-                    Padding = new MarginPadding
-                    {
-                        Horizontal = 2,
-                        Vertical = 2,
-                    },
+                    Padding = new MarginPadding { Horizontal = 2, Vertical = 2 },
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
@@ -183,7 +180,11 @@ namespace osu.Game.Overlays.Chat
                                 Anchor = Anchor.TopLeft,
                                 Origin = Anchor.TopLeft,
                                 Spacing = new Vector2(-1, 0),
-                                Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold, fixedWidth: true),
+                                Font = OsuFont.GetFont(
+                                    size: font_size,
+                                    weight: FontWeight.SemiBold,
+                                    fixedWidth: true
+                                ),
                                 AlwaysPresent = true,
                             },
                             drawableUsername = new DrawableChatUsername(message.Sender)
@@ -201,10 +202,10 @@ namespace osu.Game.Overlays.Chat
                             {
                                 AutoSizeAxes = Axes.Y,
                                 RelativeSizeAxes = Axes.X,
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
 
             updateBackground();
@@ -240,15 +241,17 @@ namespace osu.Game.Overlays.Chat
         {
             if (highlight?.IsAlive != true)
             {
-                AddInternal(highlight = new Container
-                {
-                    CornerRadius = 2f,
-                    Masking = true,
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = drawableUsername.AccentColour.Darken(1f),
-                    Depth = float.MaxValue,
-                    Child = new Box { RelativeSizeAxes = Axes.Both }
-                });
+                AddInternal(
+                    highlight = new Container
+                    {
+                        CornerRadius = 2f,
+                        Masking = true,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = drawableUsername.AccentColour.Darken(1f),
+                        Depth = float.MaxValue,
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
+                    }
+                );
             }
 
             highlight.FadeTo(0.5f).FadeOut(1500, Easing.InQuint);
@@ -258,7 +261,11 @@ namespace osu.Game.Overlays.Chat
         private void styleMessageContent(SpriteText text)
         {
             text.Shadow = false;
-            text.Font = text.Font.With(size: font_size, italics: Message.IsAction, weight: isMention ? FontWeight.SemiBold : FontWeight.Medium);
+            text.Font = text.Font.With(
+                size: font_size,
+                italics: Message.IsAction,
+                weight: isMention ? FontWeight.SemiBold : FontWeight.Medium
+            );
 
             Color4 messageColour = colourProvider?.Content1 ?? Colour4.White;
 
@@ -290,9 +297,16 @@ namespace osu.Game.Overlays.Chat
             drawableUsername.Text = $@"{message.Sender.Username}";
 
             // remove non-existent channels from the link list
-            message.Links.RemoveAll(link => link.Action == LinkAction.OpenChannel && chatManager?.AvailableChannels.Any(c => c.Name == link.Argument.ToString()) != true);
+            message.Links.RemoveAll(link =>
+                link.Action == LinkAction.OpenChannel
+                && chatManager?.AvailableChannels.Any(c => c.Name == link.Argument.ToString())
+                    != true
+            );
 
-            isMention = MessageNotifier.CheckContainsUsername(message.DisplayContent, api.LocalUser.Value.Username);
+            isMention = MessageNotifier.CheckContainsUsername(
+                message.DisplayContent,
+                api.LocalUser.Value.Username
+            );
 
             drawableContentFlow.Clear();
             drawableContentFlow.AddLinks(message.DisplayContent, message.Links);
@@ -300,7 +314,9 @@ namespace osu.Game.Overlays.Chat
 
         private void updateTimestamp()
         {
-            drawableTimestamp.Text = message.Timestamp.LocalDateTime.ToLocalisableString(prefer24HourTime.Value ? @"HH:mm" : @"hh:mm tt");
+            drawableTimestamp.Text = message.Timestamp.LocalDateTime.ToLocalisableString(
+                prefer24HourTime.Value ? @"HH:mm" : @"hh:mm tt"
+            );
         }
 
         private static readonly Color4[] default_username_colours =
@@ -313,7 +329,6 @@ namespace osu.Game.Overlays.Chat
             Color4Extensions.FromHex("7f6ab7"),
             Color4Extensions.FromHex("a368ad"),
             Color4Extensions.FromHex("aa6880"),
-
             Color4Extensions.FromHex("6fad9b"),
             Color4Extensions.FromHex("f2e394"),
             Color4Extensions.FromHex("f2ae72"),
@@ -322,7 +337,6 @@ namespace osu.Game.Overlays.Chat
             Color4Extensions.FromHex("a691f2"),
             Color4Extensions.FromHex("c894d3"),
             Color4Extensions.FromHex("d895b0"),
-
             Color4Extensions.FromHex("53c4a1"),
             Color4Extensions.FromHex("eace5c"),
             Color4Extensions.FromHex("ea8c47"),
@@ -331,7 +345,6 @@ namespace osu.Game.Overlays.Chat
             Color4Extensions.FromHex("7760ea"),
             Color4Extensions.FromHex("af52c6"),
             Color4Extensions.FromHex("e25696"),
-
             Color4Extensions.FromHex("677c66"),
             Color4Extensions.FromHex("9b8732"),
             Color4Extensions.FromHex("8c5129"),

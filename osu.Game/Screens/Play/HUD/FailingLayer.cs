@@ -59,18 +59,24 @@ namespace osu.Game.Screens.Play.HUD
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ColourInfo.GradientHorizontal(Color4.White, Color4.White.Opacity(0)),
+                            Colour = ColourInfo.GradientHorizontal(
+                                Color4.White,
+                                Color4.White.Opacity(0)
+                            ),
                             Width = gradient_size,
                         },
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
                             Width = gradient_size,
-                            Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0), Color4.White),
+                            Colour = ColourInfo.GradientHorizontal(
+                                Color4.White.Opacity(0),
+                                Color4.White
+                            ),
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
                         },
-                    }
+                    },
                 },
             };
         }
@@ -80,7 +86,9 @@ namespace osu.Game.Screens.Play.HUD
         {
             boxes.Colour = color.Red;
 
-            fadePlayfieldWhenHealthLow = config.GetBindable<bool>(OsuSetting.FadePlayfieldWhenHealthLow);
+            fadePlayfieldWhenHealthLow = config.GetBindable<bool>(
+                OsuSetting.FadePlayfieldWhenHealthLow
+            );
             fadePlayfieldWhenHealthLow.BindValueChanged(_ => updateState());
             ShowHealth.BindValueChanged(_ => updateState());
         }
@@ -94,7 +102,10 @@ namespace osu.Game.Screens.Play.HUD
         private void updateState()
         {
             // Don't display ever if the ruleset is not using a draining health display.
-            bool showLayer = HealthProcessor is DrainingHealthProcessor && fadePlayfieldWhenHealthLow.Value && ShowHealth.Value;
+            bool showLayer =
+                HealthProcessor is DrainingHealthProcessor
+                && fadePlayfieldWhenHealthLow.Value
+                && ShowHealth.Value;
             this.FadeTo(showLayer ? 1 : 0, fade_time, Easing.OutQuint);
         }
 
@@ -102,9 +113,14 @@ namespace osu.Game.Screens.Play.HUD
         {
             base.Update();
 
-            double target = Math.Clamp(max_alpha * (1 - Current.Value / low_health_threshold), 0, max_alpha);
+            double target = Math.Clamp(
+                max_alpha * (1 - Current.Value / low_health_threshold),
+                0,
+                max_alpha
+            );
 
-            boxes.Alpha = (float)Interpolation.Lerp(boxes.Alpha, target, Clock.ElapsedFrameTime * 0.01f);
+            boxes.Alpha = (float)
+                Interpolation.Lerp(boxes.Alpha, target, Clock.ElapsedFrameTime * 0.01f);
         }
     }
 }

@@ -3,7 +3,6 @@
 
 using System;
 using System.Numerics;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -13,6 +12,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Overlays;
+using osuTK.Graphics;
 using Vector2 = osuTK.Vector2;
 
 namespace osu.Game.Graphics.UserInterface
@@ -77,47 +77,49 @@ namespace osu.Game.Graphics.UserInterface
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Padding = new MarginPadding { Horizontal = 2 },
-                    Child = mainContent = new CircularContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Masking = true,
-                        CornerRadius = 5f,
-                        Children = new Drawable[]
+                    Child = mainContent =
+                        new CircularContainer
                         {
-                            LeftBox = new Box
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Masking = true,
+                            CornerRadius = 5f,
+                            Children = new Drawable[]
                             {
-                                Height = 5,
-                                EdgeSmoothness = new Vector2(0, 0.5f),
-                                RelativeSizeAxes = Axes.None,
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                            },
-                            RightBox = new Box
-                            {
-                                Height = 5,
-                                EdgeSmoothness = new Vector2(0, 0.5f),
-                                RelativeSizeAxes = Axes.None,
-                                Anchor = Anchor.CentreRight,
-                                Origin = Anchor.CentreRight,
+                                LeftBox = new Box
+                                {
+                                    Height = 5,
+                                    EdgeSmoothness = new Vector2(0, 0.5f),
+                                    RelativeSizeAxes = Axes.None,
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
+                                },
+                                RightBox = new Box
+                                {
+                                    Height = 5,
+                                    EdgeSmoothness = new Vector2(0, 0.5f),
+                                    RelativeSizeAxes = Axes.None,
+                                    Anchor = Anchor.CentreRight,
+                                    Origin = Anchor.CentreRight,
+                                },
                             },
                         },
-                    },
                 },
                 nubContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = Nub = new SliderNub
-                    {
-                        Origin = Anchor.TopCentre,
-                        RelativePositionAxes = Axes.X,
-                        Current = { Value = true },
-                        OnDoubleClicked = () => ResetToDefault.Invoke(),
-                    },
+                    Child = Nub =
+                        new SliderNub
+                        {
+                            Origin = Anchor.TopCentre,
+                            RelativePositionAxes = Axes.X,
+                            Current = { Value = true },
+                            OnDoubleClicked = () => ResetToDefault.Invoke(),
+                        },
                 },
-                hoverClickSounds = new HoverClickSounds()
+                hoverClickSounds = new HoverClickSounds(),
             };
         }
 
@@ -139,11 +141,14 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            Current.BindDisabledChanged(disabled =>
-            {
-                Alpha = disabled ? 0.3f : 1;
-                hoverClickSounds.Enabled.Value = !disabled;
-            }, true);
+            Current.BindDisabledChanged(
+                disabled =>
+                {
+                    Alpha = disabled ? 0.3f : 1;
+                    hoverClickSounds.Enabled.Value = !disabled;
+                },
+                true
+            );
         }
 
         protected override void OnFocus(FocusEvent e)
@@ -178,8 +183,8 @@ namespace osu.Game.Graphics.UserInterface
             base.OnHoverLost(e);
         }
 
-        protected override bool ShouldHandleAsRelativeDrag(MouseDownEvent e)
-            => Nub.ReceivePositionalInputAt(e.ScreenSpaceMouseDownPosition);
+        protected override bool ShouldHandleAsRelativeDrag(MouseDownEvent e) =>
+            Nub.ReceivePositionalInputAt(e.ScreenSpaceMouseDownPosition);
 
         protected override void OnDragEnd(DragEndEvent e)
         {
@@ -195,8 +200,22 @@ namespace osu.Game.Graphics.UserInterface
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
-            LeftBox.Scale = new Vector2(Math.Clamp(RangePadding + Nub.DrawPosition.X - Nub.DrawWidth / 2, 0, Math.Max(0, DrawWidth)), 1);
-            RightBox.Scale = new Vector2(Math.Clamp(DrawWidth - Nub.DrawPosition.X - RangePadding - Nub.DrawWidth / 2, 0, Math.Max(0, DrawWidth)), 1);
+            LeftBox.Scale = new Vector2(
+                Math.Clamp(
+                    RangePadding + Nub.DrawPosition.X - Nub.DrawWidth / 2,
+                    0,
+                    Math.Max(0, DrawWidth)
+                ),
+                1
+            );
+            RightBox.Scale = new Vector2(
+                Math.Clamp(
+                    DrawWidth - Nub.DrawPosition.X - RangePadding - Nub.DrawWidth / 2,
+                    0,
+                    Math.Max(0, DrawWidth)
+                ),
+                1
+            );
         }
 
         protected override void UpdateValue(float value)

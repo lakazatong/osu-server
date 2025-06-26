@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Catch.Edit
     public class FruitCompositionTool : CompositionTool
     {
         public FruitCompositionTool()
-            : base(nameof(Fruit))
-        {
-        }
+            : base(nameof(Fruit)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new FruitPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new FruitPlacementBlueprint();
     }
 }

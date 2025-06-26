@@ -17,7 +17,5 @@ namespace osu.Game.Online.Multiplayer
     [Union(0, typeof(ChangeTeamRequest))]
     [Union(1, typeof(StartMatchCountdownRequest))]
     [Union(2, typeof(StopCountdownRequest))]
-    public abstract class MatchUserRequest
-    {
-    }
+    public abstract class MatchUserRequest { }
 }

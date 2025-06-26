@@ -16,11 +16,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         {
             for (int i = 0; i < 4; i++)
             {
-                var note = new Note
-                {
-                    Column = i,
-                    StartTime = i * 200,
-                };
+                var note = new Note { Column = i, StartTime = i * 200 };
                 note.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
                 var drawableHitObject = new DrawableNote(note);

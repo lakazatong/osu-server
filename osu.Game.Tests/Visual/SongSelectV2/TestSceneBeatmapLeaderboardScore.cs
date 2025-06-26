@@ -32,7 +32,8 @@ namespace osu.Game.Tests.Visual.SongSelectV2
     public partial class TestSceneBeatmapLeaderboardScore : SongSelectComponentsTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider { get; set; } = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider { get; set; } =
+            new OverlayColourProvider(OverlayColourScheme.Aquamarine);
 
         [Resolved]
         private OsuConfigManager config { get; set; } = null!;
@@ -43,104 +44,114 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         [Test]
         public void TestSheared()
         {
-            AddStep("create content", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    Child = new PopoverContainer
                     {
-                        fillFlow = new FillFlowContainer
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            X = 100,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Spacing = new Vector2(0f, 2f),
-                            Shear = OsuGame.SHEAR,
+                            fillFlow = new FillFlowContainer
+                            {
+                                X = 100,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Spacing = new Vector2(0f, 2f),
+                                Shear = OsuGame.SHEAR,
+                            },
+                            drawWidthText = new OsuSpriteText(),
                         },
-                        drawWidthText = new OsuSpriteText(),
-                    }
-                };
+                    };
 
-                foreach (var scoreInfo in getTestScores())
-                {
-                    BeatmapLeaderboardScore.HighlightType? highlightType = null;
-
-                    switch (scoreInfo.User.Id)
+                    foreach (var scoreInfo in getTestScores())
                     {
-                        case 2:
-                            highlightType = BeatmapLeaderboardScore.HighlightType.Own;
-                            break;
+                        BeatmapLeaderboardScore.HighlightType? highlightType = null;
 
-                        case 1541390:
-                            highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
-                            break;
+                        switch (scoreInfo.User.Id)
+                        {
+                            case 2:
+                                highlightType = BeatmapLeaderboardScore.HighlightType.Own;
+                                break;
+
+                            case 1541390:
+                                highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
+                                break;
+                        }
+
+                        fillFlow.Add(
+                            new BeatmapLeaderboardScore(scoreInfo)
+                            {
+                                Rank = scoreInfo.Position,
+                                Highlight = highlightType,
+                                Shear = Vector2.Zero,
+                            }
+                        );
                     }
 
-                    fillFlow.Add(new BeatmapLeaderboardScore(scoreInfo)
-                    {
-                        Rank = scoreInfo.Position,
-                        Highlight = highlightType,
-                        Shear = Vector2.Zero,
-                    });
+                    foreach (var score in fillFlow.Children)
+                        score.Show();
                 }
-
-                foreach (var score in fillFlow.Children)
-                    score.Show();
-            });
+            );
         }
 
         [Test]
         public void TestNonSheared()
         {
-            AddStep("create content", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    Child = new PopoverContainer
                     {
-                        fillFlow = new FillFlowContainer
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Spacing = new Vector2(0f, 2f),
+                            fillFlow = new FillFlowContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Spacing = new Vector2(0f, 2f),
+                            },
+                            drawWidthText = new OsuSpriteText(),
                         },
-                        drawWidthText = new OsuSpriteText(),
-                    }
-                };
+                    };
 
-                foreach (var scoreInfo in getTestScores())
-                {
-                    BeatmapLeaderboardScore.HighlightType? highlightType = null;
-
-                    switch (scoreInfo.User.Id)
+                    foreach (var scoreInfo in getTestScores())
                     {
-                        case 2:
-                            highlightType = BeatmapLeaderboardScore.HighlightType.Own;
-                            break;
+                        BeatmapLeaderboardScore.HighlightType? highlightType = null;
 
-                        case 1541390:
-                            highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
-                            break;
+                        switch (scoreInfo.User.Id)
+                        {
+                            case 2:
+                                highlightType = BeatmapLeaderboardScore.HighlightType.Own;
+                                break;
+
+                            case 1541390:
+                                highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
+                                break;
+                        }
+
+                        fillFlow.Add(
+                            new BeatmapLeaderboardScore(scoreInfo, sheared: false)
+                            {
+                                Rank = scoreInfo.Position,
+                                Highlight = highlightType,
+                            }
+                        );
                     }
 
-                    fillFlow.Add(new BeatmapLeaderboardScore(scoreInfo, sheared: false)
-                    {
-                        Rank = scoreInfo.Position,
-                        Highlight = highlightType,
-                    });
+                    foreach (var score in fillFlow.Children)
+                        score.Show();
                 }
-
-                foreach (var score in fillFlow.Children)
-                    score.Show();
-            });
+            );
         }
 
         [Test]
@@ -148,79 +159,104 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         {
             BeatmapLeaderboardScore score = null!;
 
-            AddStep("create content", () =>
-            {
-                Child = new PopoverContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = new Drawable[]
+                    Child = new PopoverContainer
                     {
-                        fillFlow = new FillFlowContainer
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Spacing = new Vector2(0f, 2f),
-                            Shear = OsuGame.SHEAR,
+                            fillFlow = new FillFlowContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Spacing = new Vector2(0f, 2f),
+                                Shear = OsuGame.SHEAR,
+                            },
+                            drawWidthText = new OsuSpriteText(),
                         },
-                        drawWidthText = new OsuSpriteText(),
-                    }
-                };
+                    };
 
-                var scoreInfo = new ScoreInfo
-                {
-                    Position = 999,
-                    Rank = ScoreRank.X,
-                    Accuracy = 1,
-                    MaxCombo = 244,
-                    TotalScore = RNG.Next(1_800_000, 2_000_000),
-                    MaximumStatistics = { { HitResult.Great, 3000 } },
-                    Mods = new Mod[] { new OsuModHidden(), new ModScoreV2(), },
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                    User = new APIUser
+                    var scoreInfo = new ScoreInfo
                     {
-                        Id = 6602580,
-                        Username = @"waaiiru",
-                        CountryCode = CountryCode.ES,
-                        CoverUrl = TestResources.COVER_IMAGE_1,
-                    },
-                    Date = DateTimeOffset.Now.AddYears(-2),
-                };
+                        Position = 999,
+                        Rank = ScoreRank.X,
+                        Accuracy = 1,
+                        MaxCombo = 244,
+                        TotalScore = RNG.Next(1_800_000, 2_000_000),
+                        MaximumStatistics = { { HitResult.Great, 3000 } },
+                        Mods = new Mod[] { new OsuModHidden(), new ModScoreV2() },
+                        Ruleset = new OsuRuleset().RulesetInfo,
+                        User = new APIUser
+                        {
+                            Id = 6602580,
+                            Username = @"waaiiru",
+                            CountryCode = CountryCode.ES,
+                            CoverUrl = TestResources.COVER_IMAGE_1,
+                        },
+                        Date = DateTimeOffset.Now.AddYears(-2),
+                    };
 
-                fillFlow.Add(score = new BeatmapLeaderboardScore(scoreInfo)
+                    fillFlow.Add(
+                        score = new BeatmapLeaderboardScore(scoreInfo)
+                        {
+                            Rank = scoreInfo.Position,
+                            Shear = Vector2.Zero,
+                        }
+                    );
+
+                    score.Show();
+                }
+            );
+            AddStep(
+                "right click panel",
+                () =>
                 {
-                    Rank = scoreInfo.Position,
-                    Shear = Vector2.Zero,
-                });
-
-                score.Show();
-            });
-            AddStep("right click panel", () =>
-            {
-                InputManager.MoveMouseTo(score);
-                InputManager.Click(MouseButton.Right);
-            });
-            AddStep("click use these mods", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("mods received HD", () => score.SelectedMods.Value.Any(m => m is OsuModHidden));
-            AddAssert("mods did not receive SV2", () => !score.SelectedMods.Value.Any(m => m is ModScoreV2));
+                    InputManager.MoveMouseTo(score);
+                    InputManager.Click(MouseButton.Right);
+                }
+            );
+            AddStep(
+                "click use these mods",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "mods received HD",
+                () => score.SelectedMods.Value.Any(m => m is OsuModHidden)
+            );
+            AddAssert(
+                "mods did not receive SV2",
+                () => !score.SelectedMods.Value.Any(m => m is ModScoreV2)
+            );
         }
 
         public override void SetUpSteps()
         {
-            AddToggleStep("toggle scoring mode", v => config.SetValue(OsuSetting.ScoreDisplayMode, v ? ScoringMode.Classic : ScoringMode.Standardised));
+            AddToggleStep(
+                "toggle scoring mode",
+                v =>
+                    config.SetValue(
+                        OsuSetting.ScoreDisplayMode,
+                        v ? ScoringMode.Classic : ScoringMode.Standardised
+                    )
+            );
         }
 
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
 
-            if (drawWidthText != null) drawWidthText.Text = $"DrawWidth: {fillFlow?.DrawWidth}";
+            if (drawWidthText != null)
+                drawWidthText.Text = $"DrawWidth: {fillFlow?.DrawWidth}";
         }
 
         private static ScoreInfo[] getTestScores()
@@ -273,11 +309,7 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                     TotalScore = RNG.Next(1_000_000, 1_200_000),
                     MaximumStatistics = { { HitResult.Great, 3000 } },
                     Ruleset = new ManiaRuleset().RulesetInfo,
-                    User = new APIUser
-                    {
-                        Username = @"No cover",
-                        CountryCode = CountryCode.BR,
-                    },
+                    User = new APIUser { Username = @"No cover", CountryCode = CountryCode.BR },
                     Date = DateTimeOffset.Now,
                 },
                 new ScoreInfo
@@ -303,10 +335,30 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             scores[2].TotalScore = RNG.Next(120_000, 400_000);
             scores[2].MaximumStatistics[HitResult.Great] = 3000;
 
-            scores[1].Mods = new Mod[] { new OsuModHidden(), new OsuModDoubleTime { SpeedChange = { Value = 2 } }, new OsuModHardRock(), new OsuModFlashlight() };
-            scores[2].Mods = new Mod[] { new OsuModHidden(), new OsuModDoubleTime(), new OsuModHardRock(), new OsuModFlashlight(), new OsuModClassic() };
+            scores[1].Mods = new Mod[]
+            {
+                new OsuModHidden(),
+                new OsuModDoubleTime { SpeedChange = { Value = 2 } },
+                new OsuModHardRock(),
+                new OsuModFlashlight(),
+            };
+            scores[2].Mods = new Mod[]
+            {
+                new OsuModHidden(),
+                new OsuModDoubleTime(),
+                new OsuModHardRock(),
+                new OsuModFlashlight(),
+                new OsuModClassic(),
+            };
             scores[3].Mods = new Mod[]
-                { new OsuModHidden(), new OsuModDoubleTime(), new OsuModHardRock(), new OsuModFlashlight { ComboBasedSize = { Value = false } }, new OsuModClassic(), new OsuModDifficultyAdjust { CircleSize = { Value = 3.2f } } };
+            {
+                new OsuModHidden(),
+                new OsuModDoubleTime(),
+                new OsuModHardRock(),
+                new OsuModFlashlight { ComboBasedSize = { Value = false } },
+                new OsuModClassic(),
+                new OsuModDifficultyAdjust { CircleSize = { Value = 3.2f } },
+            };
             scores[4].Mods = new ManiaRuleset().CreateAllMods().ToArray();
 
             return scores;

@@ -22,7 +22,8 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
 
-        protected override float SamplePlaybackPosition => HitObject.EffectiveX / CatchPlayfield.WIDTH;
+        protected override float SamplePlaybackPosition =>
+            HitObject.EffectiveX / CatchPlayfield.WIDTH;
 
         public int RandomSeed => HitObject?.RandomSeed ?? 0;
 
@@ -56,11 +57,13 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         [CanBeNull]
         public Func<CatchHitObject, bool> CheckPosition;
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new CatchJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new CatchJudgementResult(HitObject, judgement);
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (CheckPosition == null) return;
+            if (CheckPosition == null)
+                return;
 
             if (timeOffset >= 0 && Result != null)
             {

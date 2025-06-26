@@ -59,8 +59,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         Alpha = TooltipText == default ? 0 : 1,
                         Size = new Vector2(10),
                         Icon = FontAwesome.Solid.QuestionCircle,
-                        Margin = new MarginPadding { Top = 1, },
-                    }
+                        Margin = new MarginPadding { Top = 1 },
+                    },
                 },
             };
         }

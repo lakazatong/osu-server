@@ -21,7 +21,9 @@ namespace osu.Game.Screens.SelectV2
 {
     public partial class BeatmapTitleWedge
     {
-        public partial class StatisticPlayCount : Statistic, IHasCustomTooltip<StatisticPlayCount.Data>
+        public partial class StatisticPlayCount
+            : Statistic,
+                IHasCustomTooltip<StatisticPlayCount.Data>
         {
             public Data? Value
             {
@@ -42,12 +44,15 @@ namespace osu.Game.Screens.SelectV2
             [Resolved]
             private OverlayColourProvider colourProvider { get; set; } = null!;
 
-            public StatisticPlayCount(bool background = false, float leftPadding = 10, float? minSize = null)
-                : base(OsuIcon.Play, background, leftPadding, minSize)
-            {
-            }
+            public StatisticPlayCount(
+                bool background = false,
+                float leftPadding = 10,
+                float? minSize = null
+            )
+                : base(OsuIcon.Play, background, leftPadding, minSize) { }
 
-            ITooltip<Data> IHasCustomTooltip<Data>.GetCustomTooltip() => new PlayCountTooltip(colourProvider);
+            ITooltip<Data> IHasCustomTooltip<Data>.GetCustomTooltip() =>
+                new PlayCountTooltip(colourProvider);
 
             public record Data(int Total, int User);
 
@@ -101,15 +106,19 @@ namespace osu.Game.Screens.SelectV2
                                         new OsuSpriteText
                                         {
                                             Colour = colourProvider.Content2,
-                                            Font = OsuFont.Style.Caption1.With(weight: FontWeight.SemiBold),
+                                            Font = OsuFont.Style.Caption1.With(
+                                                weight: FontWeight.SemiBold
+                                            ),
                                             Text = "Total Plays",
                                         },
                                         totalPlaysText = new OsuSpriteText
                                         {
                                             Colour = colourProvider.Content1,
-                                            Font = OsuFont.Style.Heading1.With(weight: FontWeight.Regular),
+                                            Font = OsuFont.Style.Heading1.With(
+                                                weight: FontWeight.Regular
+                                            ),
                                         },
-                                    }
+                                    },
                                 },
                                 new FillFlowContainer
                                 {
@@ -120,30 +129,37 @@ namespace osu.Game.Screens.SelectV2
                                         new OsuSpriteText
                                         {
                                             Colour = colourProvider.Content2,
-                                            Font = OsuFont.Style.Caption1.With(weight: FontWeight.SemiBold),
+                                            Font = OsuFont.Style.Caption1.With(
+                                                weight: FontWeight.SemiBold
+                                            ),
                                             Text = "Personal Plays",
                                         },
                                         personalPlaysText = new OsuSpriteText
                                         {
                                             Colour = colourProvider.Content1,
-                                            Font = OsuFont.Style.Heading1.With(weight: FontWeight.Regular),
+                                            Font = OsuFont.Style.Heading1.With(
+                                                weight: FontWeight.Regular
+                                            ),
                                         },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
                     };
                 }
 
                 public void SetContent(Data content)
                 {
-                    totalPlaysText.Text = content.Total < 0 ? "-" : content.Total.ToLocalisableString("N0");
-                    personalPlaysText.Text = content.User < 0 ? "-" : content.User.ToLocalisableString("N0");
+                    totalPlaysText.Text =
+                        content.Total < 0 ? "-" : content.Total.ToLocalisableString("N0");
+                    personalPlaysText.Text =
+                        content.User < 0 ? "-" : content.User.ToLocalisableString("N0");
                 }
 
                 public void Move(Vector2 pos) => Position = pos;
 
                 protected override void PopIn() => this.FadeIn(300, Easing.OutQuint);
+
                 protected override void PopOut() => this.FadeOut(300, Easing.OutQuint);
             }
         }

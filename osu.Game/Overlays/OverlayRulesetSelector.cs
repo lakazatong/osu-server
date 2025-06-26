@@ -19,13 +19,15 @@ namespace osu.Game.Overlays
             AutoSizeAxes = Axes.Both;
         }
 
-        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) => new OverlayRulesetTabItem(value);
+        protected override TabItem<RulesetInfo> CreateTabItem(RulesetInfo value) =>
+            new OverlayRulesetTabItem(value);
 
-        protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(20, 0),
-        };
+        protected override TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(20, 0),
+            };
     }
 }

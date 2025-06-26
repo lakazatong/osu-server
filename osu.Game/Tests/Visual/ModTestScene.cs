@@ -22,25 +22,30 @@ namespace osu.Game.Tests.Visual
 
         protected ModTestData CurrentTestData { get; private set; }
 
-        protected void CreateModTest(ModTestData testData) => CreateTest(() =>
-        {
-            AddStep("set test data", () => CurrentTestData = testData);
-        });
+        protected void CreateModTest(ModTestData testData) =>
+            CreateTest(() =>
+            {
+                AddStep("set test data", () => CurrentTestData = testData);
+            });
 
         public override void TearDownSteps()
         {
-            AddUntilStep("test passed", () =>
-            {
-                if (CurrentTestData == null)
-                    return true;
+            AddUntilStep(
+                "test passed",
+                () =>
+                {
+                    if (CurrentTestData == null)
+                        return true;
 
-                return CurrentTestData.PassCondition?.Invoke() ?? false;
-            });
+                    return CurrentTestData.PassCondition?.Invoke() ?? false;
+                }
+            );
 
             base.TearDownSteps();
         }
 
-        protected sealed override IBeatmap CreateBeatmap(RulesetInfo ruleset) => CurrentTestData?.CreateBeatmap?.Invoke() ?? base.CreateBeatmap(ruleset);
+        protected sealed override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            CurrentTestData?.CreateBeatmap?.Invoke() ?? base.CreateBeatmap(ruleset);
 
         protected sealed override TestPlayer CreatePlayer(Ruleset ruleset)
         {
@@ -56,7 +61,8 @@ namespace osu.Game.Tests.Visual
             return CreateModPlayer(ruleset);
         }
 
-        protected virtual TestPlayer CreateModPlayer(Ruleset ruleset) => new ModTestPlayer(CurrentTestData, AllowFail);
+        protected virtual TestPlayer CreateModPlayer(Ruleset ruleset) =>
+            new ModTestPlayer(CurrentTestData, AllowFail);
 
         protected partial class ModTestPlayer : TestPlayer
         {
@@ -75,15 +81,19 @@ namespace osu.Game.Tests.Visual
             protected override void PrepareReplay()
             {
                 if (currentTestData.Autoplay && currentTestData.ReplayFrames?.Count > 0)
-                    throw new InvalidOperationException(@$"{nameof(ModTestData.Autoplay)} must be false when {nameof(ModTestData.ReplayFrames)} is specified.");
+                    throw new InvalidOperationException(
+                        @$"{nameof(ModTestData.Autoplay)} must be false when {nameof(ModTestData.ReplayFrames)} is specified."
+                    );
 
                 if (currentTestData.ReplayFrames != null)
                 {
-                    DrawableRuleset?.SetReplayScore(new Score
-                    {
-                        Replay = new Replay { Frames = currentTestData.ReplayFrames },
-                        ScoreInfo = new ScoreInfo { User = new APIUser { Username = @"Test" } },
-                    });
+                    DrawableRuleset?.SetReplayScore(
+                        new Score
+                        {
+                            Replay = new Replay { Frames = currentTestData.ReplayFrames },
+                            ScoreInfo = new ScoreInfo { User = new APIUser { Username = @"Test" } },
+                        }
+                    );
                 }
 
                 base.PrepareReplay();

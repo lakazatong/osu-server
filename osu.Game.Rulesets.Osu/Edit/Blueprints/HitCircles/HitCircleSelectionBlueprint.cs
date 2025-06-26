@@ -59,7 +59,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.HitCircles
                 DrawableObject.SuppressHitAnimations();
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => DrawableObject.HitArea.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            DrawableObject.HitArea.ReceivePositionalInputAt(screenSpacePos);
 
         public override Quad SelectionQuad => CirclePiece.ScreenSpaceDrawQuad;
     }

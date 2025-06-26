@@ -31,11 +31,13 @@ namespace osu.Game.Tournament.Tests.Components
 
         private void success(APIBeatmap beatmap)
         {
-            Add(new TournamentBeatmapPanel(new TournamentBeatmap(beatmap))
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            Add(
+                new TournamentBeatmapPanel(new TournamentBeatmap(beatmap))
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
         }
     }
 }

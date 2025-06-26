@@ -122,20 +122,23 @@ namespace osu.Game.Overlays.SkinEditor
 
             skinEditor = editor;
 
-            LoadComponentAsync(editor, _ =>
-            {
-                if (editor != skinEditor)
-                    return;
+            LoadComponentAsync(
+                editor,
+                _ =>
+                {
+                    if (editor != skinEditor)
+                        return;
 
-                AddInternal(editor);
+                    AddInternal(editor);
 
-                if (lastTargetScreen is MainMenu)
-                    PresentGameplay();
+                    if (lastTargetScreen is MainMenu)
+                        PresentGameplay();
 
-                Debug.Assert(lastTargetScreen != null);
+                    Debug.Assert(lastTargetScreen != null);
 
-                SetTarget(lastTargetScreen);
-            });
+                    SetTarget(lastTargetScreen);
+                }
+            );
         }
 
         protected override void PopOut()
@@ -152,49 +155,57 @@ namespace osu.Game.Overlays.SkinEditor
 
         private void presentGameplay(bool attemptedBeatmapSwitch)
         {
-            performer?.PerformFromScreen(screen =>
-            {
-                if (State.Value != Visibility.Visible)
-                    return;
-
-                if (beatmap.Value is DummyWorkingBeatmap)
+            performer?.PerformFromScreen(
+                screen =>
                 {
-                    // presume we don't have anything good to play and just bail.
-                    return;
-                }
+                    if (State.Value != Visibility.Visible)
+                        return;
 
-                // If we're playing the intro, switch away to another beatmap.
-                if (beatmap.Value.BeatmapSetInfo.Protected)
-                {
-                    if (!attemptedBeatmapSwitch)
+                    if (beatmap.Value is DummyWorkingBeatmap)
                     {
-                        music.NextTrack();
-                        Schedule(() => presentGameplay(true));
+                        // presume we don't have anything good to play and just bail.
+                        return;
                     }
 
-                    return;
-                }
+                    // If we're playing the intro, switch away to another beatmap.
+                    if (beatmap.Value.BeatmapSetInfo.Protected)
+                    {
+                        if (!attemptedBeatmapSwitch)
+                        {
+                            music.NextTrack();
+                            Schedule(() => presentGameplay(true));
+                        }
 
-                if (screen is Player)
-                    return;
+                        return;
+                    }
 
-                // the validity of the current game-wide beatmap + ruleset combination is enforced by song select.
-                // if we're anywhere else, the state is unknown and may not make sense, so forcibly set something that does.
-                if (screen is not PlaySongSelect)
-                    ruleset.Value = beatmap.Value.BeatmapInfo.Ruleset;
-                var replayGeneratingMod = ruleset.Value.CreateInstance().GetAutoplayMod();
+                    if (screen is Player)
+                        return;
 
-                IReadOnlyList<Mod> usableMods = mods.Value;
+                    // the validity of the current game-wide beatmap + ruleset combination is enforced by song select.
+                    // if we're anywhere else, the state is unknown and may not make sense, so forcibly set something that does.
+                    if (screen is not PlaySongSelect)
+                        ruleset.Value = beatmap.Value.BeatmapInfo.Ruleset;
+                    var replayGeneratingMod = ruleset.Value.CreateInstance().GetAutoplayMod();
 
-                if (replayGeneratingMod != null)
-                    usableMods = usableMods.Append(replayGeneratingMod).ToArray();
+                    IReadOnlyList<Mod> usableMods = mods.Value;
 
-                if (!ModUtils.CheckCompatibleSet(usableMods, out var invalid))
-                    mods.Value = mods.Value.Except(invalid).ToArray();
+                    if (replayGeneratingMod != null)
+                        usableMods = usableMods.Append(replayGeneratingMod).ToArray();
 
-                if (replayGeneratingMod != null)
-                    screen.Push(new EndlessPlayer((beatmap, mods) => replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods)));
-            }, new[] { typeof(Player), typeof(PlaySongSelect) });
+                    if (!ModUtils.CheckCompatibleSet(usableMods, out var invalid))
+                        mods.Value = mods.Value.Except(invalid).ToArray();
+
+                    if (replayGeneratingMod != null)
+                        screen.Push(
+                            new EndlessPlayer(
+                                (beatmap, mods) =>
+                                    replayGeneratingMod.CreateScoreFromReplayData(beatmap, mods)
+                            )
+                        );
+                },
+                new[] { typeof(Player), typeof(PlaySongSelect) }
+            );
         }
 
         protected override void Update()
@@ -210,18 +221,21 @@ namespace osu.Game.Overlays.SkinEditor
 
         private void updateScreenSizing()
         {
-            if (skinEditor?.State.Value != Visibility.Visible) return;
+            if (skinEditor?.State.Value != Visibility.Visible)
+                return;
 
             const float padding = 10;
 
             float relativeSidebarWidth = (EditorSidebar.WIDTH + padding) / DrawWidth;
-            float relativeToolbarHeight = (SkinEditorSceneLibrary.HEIGHT + SkinEditor.MENU_HEIGHT + padding) / DrawHeight;
+            float relativeToolbarHeight =
+                (SkinEditorSceneLibrary.HEIGHT + SkinEditor.MENU_HEIGHT + padding) / DrawHeight;
 
             var rect = new RectangleF(
                 relativeSidebarWidth,
                 relativeToolbarHeight,
                 1 - relativeSidebarWidth * 2,
-                1f - relativeToolbarHeight - padding / DrawHeight);
+                1f - relativeToolbarHeight - padding / DrawHeight
+            );
 
             scalingContainer.SetCustomRect(rect, true);
         }
@@ -246,9 +260,7 @@ namespace osu.Game.Overlays.SkinEditor
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         /// <summary>
         /// Set a new target screen which will be used to find skinnable components.
@@ -260,7 +272,8 @@ namespace osu.Game.Overlays.SkinEditor
 
             lastTargetScreen = screen;
 
-            if (skinEditor == null) return;
+            if (skinEditor == null)
+                return;
 
             // ensure the toolbar is re-hidden even if a new screen decides to try and show it.
             updateComponentVisibility();
@@ -301,7 +314,10 @@ namespace osu.Game.Overlays.SkinEditor
             if (lastTargetScreen == null)
                 return;
 
-            var nestedInputManagers = lastTargetScreen.ChildrenOfType<PassThroughInputManager>().Where(manager => manager.UseParentInput).ToArray();
+            var nestedInputManagers = lastTargetScreen
+                .ChildrenOfType<PassThroughInputManager>()
+                .Where(manager => manager.UseParentInput)
+                .ToArray();
             foreach (var inputManager in nestedInputManagers)
                 inputManager.UseParentInput = false;
             nestedInputManagerDisable = new InvokeOnDisposal(() =>
@@ -343,13 +359,10 @@ namespace osu.Game.Overlays.SkinEditor
             public override bool? AllowGlobalTrackControl => false;
 
             public EndlessPlayer(Func<IBeatmap, IReadOnlyList<Mod>, Score> createScore)
-                : base(createScore, new PlayerConfiguration
-                {
-                    ShowResults = false,
-                    AutomaticallySkipIntro = true,
-                })
-            {
-            }
+                : base(
+                    createScore,
+                    new PlayerConfiguration { ShowResults = false, AutomaticallySkipIntro = true }
+                ) { }
 
             protected override void LoadComplete()
             {

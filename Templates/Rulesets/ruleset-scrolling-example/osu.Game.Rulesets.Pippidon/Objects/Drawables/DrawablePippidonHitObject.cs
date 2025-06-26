@@ -31,19 +31,15 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load(PippidonPlayfield playfield, TextureStore textures)
         {
-            AddInternal(new Sprite
-            {
-                RelativeSizeAxes = Axes.Both,
-                Texture = textures.Get("coin"),
-            });
+            AddInternal(
+                new Sprite { RelativeSizeAxes = Axes.Both, Texture = textures.Get("coin") }
+            );
 
             currentLane = playfield.CurrentLane.GetBoundCopy();
         }
 
-        public override IEnumerable<HitSampleInfo> GetSamples() => new[]
-        {
-            new HitSampleInfo(HitSampleInfo.HIT_NORMAL)
-        };
+        public override IEnumerable<HitSampleInfo> GetSamples() =>
+            new[] { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) };
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
@@ -70,7 +66,10 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 
                     this.ScaleTo(0.8f, duration, Easing.OutQuint);
                     this.MoveToOffset(new Vector2(0, 10), duration, Easing.In);
-                    this.FadeColour(Color4.Red, duration / 2, Easing.OutQuint).Then().FadeOut(duration / 2, Easing.InQuint).Expire();
+                    this.FadeColour(Color4.Red, duration / 2, Easing.OutQuint)
+                        .Then()
+                        .FadeOut(duration / 2, Easing.InQuint)
+                        .Expire();
                     break;
             }
         }

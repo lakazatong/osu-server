@@ -47,7 +47,11 @@ namespace osu.Game.Online.Leaderboards
         /// </summary>
         public void FetchWithCriteria(LeaderboardCriteria newCriteria, bool forceRefresh = false)
         {
-            if (!forceRefresh && CurrentCriteria?.Equals(newCriteria) == true && scores.Value?.FailState == null)
+            if (
+                !forceRefresh
+                && CurrentCriteria?.Equals(newCriteria) == true
+                && scores.Value?.FailState == null
+            )
                 return;
 
             CurrentCriteria = newCriteria;
@@ -65,12 +69,19 @@ namespace osu.Game.Online.Leaderboards
             {
                 case BeatmapLeaderboardScope.Local:
                 {
-                    localScoreSubscription = realm.RegisterForNotifications(r =>
-                        r.All<ScoreInfo>().Filter($"{nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $0"
-                                                  + $" AND {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
-                                                  + $" AND {nameof(ScoreInfo.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $1"
-                                                  + $" AND {nameof(ScoreInfo.DeletePending)} == false"
-                            , newCriteria.Beatmap.ID, newCriteria.Ruleset.ShortName), localScoresChanged);
+                    localScoreSubscription = realm.RegisterForNotifications(
+                        r =>
+                            r.All<ScoreInfo>()
+                                .Filter(
+                                    $"{nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $0"
+                                        + $" AND {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
+                                        + $" AND {nameof(ScoreInfo.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $1"
+                                        + $" AND {nameof(ScoreInfo.DeletePending)} == false",
+                                    newCriteria.Beatmap.ID,
+                                    newCriteria.Ruleset.ShortName
+                                ),
+                        localScoresChanged
+                    );
                     return;
                 }
 
@@ -84,23 +95,36 @@ namespace osu.Game.Online.Leaderboards
 
                     if (!newCriteria.Ruleset.IsLegacyRuleset())
                     {
-                        scores.Value = LeaderboardScores.Failure(LeaderboardFailState.RulesetUnavailable);
+                        scores.Value = LeaderboardScores.Failure(
+                            LeaderboardFailState.RulesetUnavailable
+                        );
                         return;
                     }
 
-                    if (newCriteria.Beatmap.OnlineID <= 0 || newCriteria.Beatmap.Status <= BeatmapOnlineStatus.Pending)
+                    if (
+                        newCriteria.Beatmap.OnlineID <= 0
+                        || newCriteria.Beatmap.Status <= BeatmapOnlineStatus.Pending
+                    )
                     {
-                        scores.Value = LeaderboardScores.Failure(LeaderboardFailState.BeatmapUnavailable);
+                        scores.Value = LeaderboardScores.Failure(
+                            LeaderboardFailState.BeatmapUnavailable
+                        );
                         return;
                     }
 
-                    if ((newCriteria.Scope.RequiresSupporter(newCriteria.ExactMods != null)) && !api.LocalUser.Value.IsSupporter)
+                    if (
+                        (newCriteria.Scope.RequiresSupporter(newCriteria.ExactMods != null))
+                        && !api.LocalUser.Value.IsSupporter
+                    )
                     {
                         scores.Value = LeaderboardScores.Failure(LeaderboardFailState.NotSupporter);
                         return;
                     }
 
-                    if (newCriteria.Scope == BeatmapLeaderboardScope.Team && api.LocalUser.Value.Team == null)
+                    if (
+                        newCriteria.Scope == BeatmapLeaderboardScope.Team
+                        && api.LocalUser.Value.Team == null
+                    )
                     {
                         scores.Value = LeaderboardScores.Failure(LeaderboardFailState.NoTeam);
                         return;
@@ -117,22 +141,32 @@ namespace osu.Game.Online.Leaderboards
                             requestMods = newCriteria.ExactMods;
                     }
 
-                    var newRequest = new GetScoresRequest(newCriteria.Beatmap, newCriteria.Ruleset, newCriteria.Scope, requestMods);
+                    var newRequest = new GetScoresRequest(
+                        newCriteria.Beatmap,
+                        newCriteria.Ruleset,
+                        newCriteria.Scope,
+                        requestMods
+                    );
                     newRequest.Success += response =>
                     {
-                        if (inFlightOnlineRequest != null && !newRequest.Equals(inFlightOnlineRequest))
+                        if (
+                            inFlightOnlineRequest != null
+                            && !newRequest.Equals(inFlightOnlineRequest)
+                        )
                             return;
 
-                        var result = LeaderboardScores.Success
-                        (
-                            response.Scores.Select(s => s.ToScoreInfo(rulesets, newCriteria.Beatmap))
-                                    .OrderByTotalScore()
-                                    .Select((s, idx) =>
+                        var result = LeaderboardScores.Success(
+                            response
+                                .Scores.Select(s => s.ToScoreInfo(rulesets, newCriteria.Beatmap))
+                                .OrderByTotalScore()
+                                .Select(
+                                    (s, idx) =>
                                     {
                                         s.Position = idx + 1;
                                         return s;
-                                    })
-                                    .ToArray(),
+                                    }
+                                )
+                                .ToArray(),
                             response.ScoresCount,
                             response.UserScore?.CreateScoreInfo(rulesets, newCriteria.Beatmap)
                         );
@@ -141,9 +175,14 @@ namespace osu.Game.Online.Leaderboards
                     };
                     newRequest.Failure += ex =>
                     {
-                        Logger.Log($@"Failed to fetch leaderboards when displaying results: {ex}", LoggingTarget.Network);
+                        Logger.Log(
+                            $@"Failed to fetch leaderboards when displaying results: {ex}",
+                            LoggingTarget.Network
+                        );
                         if (ex is not OperationCanceledException)
-                            scores.Value = LeaderboardScores.Failure(LeaderboardFailState.NetworkFailure);
+                            scores.Value = LeaderboardScores.Failure(
+                                LeaderboardFailState.NetworkFailure
+                            );
                     };
 
                     api.Queue(inFlightOnlineRequest = newRequest);
@@ -176,7 +215,9 @@ namespace osu.Game.Online.Leaderboards
                     // we're creating and using a string HashSet representation of selected mods so that it can be translated into the DB query itself
                     var selectedMods = CurrentCriteria.ExactMods.Select(m => m.Acronym).ToHashSet();
 
-                    newScores = newScores.Where(s => selectedMods.SetEquals(s.Mods.Select(m => m.Acronym)));
+                    newScores = newScores.Where(s =>
+                        selectedMods.SetEquals(s.Mods.Select(m => m.Acronym))
+                    );
                 }
             }
 
@@ -208,12 +249,22 @@ namespace osu.Game.Online.Leaderboards
                 foreach (var score in TopScores)
                     yield return score;
 
-                if (UserScore != null && TopScores.All(topScore => !topScore.Equals(UserScore) && !topScore.MatchesOnlineID(UserScore)))
+                if (
+                    UserScore != null
+                    && TopScores.All(topScore =>
+                        !topScore.Equals(UserScore) && !topScore.MatchesOnlineID(UserScore)
+                    )
+                )
                     yield return UserScore;
             }
         }
 
-        private LeaderboardScores(ICollection<ScoreInfo> topScores, int totalScores, ScoreInfo? userScore, LeaderboardFailState? failState)
+        private LeaderboardScores(
+            ICollection<ScoreInfo> topScores,
+            int totalScores,
+            ScoreInfo? userScore,
+            LeaderboardFailState? failState
+        )
         {
             TopScores = topScores;
             TotalScores = totalScores;
@@ -221,8 +272,14 @@ namespace osu.Game.Online.Leaderboards
             FailState = failState;
         }
 
-        public static LeaderboardScores Success(ICollection<ScoreInfo> topScores, int totalScores, ScoreInfo? userScore) => new LeaderboardScores(topScores, totalScores, userScore, null);
-        public static LeaderboardScores Failure(LeaderboardFailState failState) => new LeaderboardScores([], 0, null, failState);
+        public static LeaderboardScores Success(
+            ICollection<ScoreInfo> topScores,
+            int totalScores,
+            ScoreInfo? userScore
+        ) => new LeaderboardScores(topScores, totalScores, userScore, null);
+
+        public static LeaderboardScores Failure(LeaderboardFailState failState) =>
+            new LeaderboardScores([], 0, null, failState);
     }
 
     public enum LeaderboardFailState
@@ -233,6 +290,6 @@ namespace osu.Game.Online.Leaderboards
         NoneSelected = -4,
         NotLoggedIn = -5,
         NotSupporter = -6,
-        NoTeam = -7
+        NoTeam = -7,
     }
 }

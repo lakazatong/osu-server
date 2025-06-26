@@ -23,13 +23,23 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
     {
         private OsuPlayfield playfield;
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(Ruleset.Value, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(Ruleset.Value, false);
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-            AddStep("get playfield", () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First());
-            AddStep("seek to first timing point", () => EditorClock.Seek(Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time));
+            AddStep(
+                "get playfield",
+                () => playfield = Editor.ChildrenOfType<OsuPlayfield>().First()
+            );
+            AddStep(
+                "seek to first timing point",
+                () =>
+                    EditorClock.Seek(
+                        Beatmap.Value.Beatmap.ControlPointInfo.TimingPoints.First().Time
+                    )
+            );
         }
 
         [Test]
@@ -37,19 +47,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("Add slider", () =>
-            {
-                slider = new Slider { StartTime = EditorClock.CurrentTime, Position = new Vector2(300) };
-
-                PathControlPoint[] points =
+            AddStep(
+                "Add slider",
+                () =>
                 {
-                    new PathControlPoint(new Vector2(0), PathType.LINEAR),
-                    new PathControlPoint(new Vector2(100, 0)),
-                };
+                    slider = new Slider
+                    {
+                        StartTime = EditorClock.CurrentTime,
+                        Position = new Vector2(300),
+                    };
 
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-            });
+                    PathControlPoint[] points =
+                    {
+                        new PathControlPoint(new Vector2(0), PathType.LINEAR),
+                        new PathControlPoint(new Vector2(100, 0)),
+                    };
+
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
             AddAssert("ensure object placed", () => EditorBeatmap.HitObjects.Count == 1);
 
@@ -76,19 +93,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("Add slider", () =>
-            {
-                slider = new Slider { StartTime = EditorClock.CurrentTime, Position = new Vector2(300) };
-
-                PathControlPoint[] points =
+            AddStep(
+                "Add slider",
+                () =>
                 {
-                    new PathControlPoint(new Vector2(0), PathType.LINEAR),
-                    new PathControlPoint(new Vector2(100, 0)),
-                };
+                    slider = new Slider
+                    {
+                        StartTime = EditorClock.CurrentTime,
+                        Position = new Vector2(300),
+                    };
 
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-            });
+                    PathControlPoint[] points =
+                    {
+                        new PathControlPoint(new Vector2(0), PathType.LINEAR),
+                        new PathControlPoint(new Vector2(100, 0)),
+                    };
+
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
             AddAssert("ensure object placed", () => EditorBeatmap.HitObjects.Count == 1);
 
@@ -120,32 +144,42 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         [Test]
         public void TestDeletingPointCausesSliderDeletion()
         {
-            AddStep("Add slider", () =>
-            {
-                Slider slider = new Slider { StartTime = EditorClock.CurrentTime, Position = new Vector2(300) };
-
-                PathControlPoint[] points =
+            AddStep(
+                "Add slider",
+                () =>
                 {
-                    new PathControlPoint(new Vector2(0), PathType.PERFECT_CURVE),
-                    new PathControlPoint(new Vector2(100, 0)),
-                    new PathControlPoint(new Vector2(0, 10))
-                };
+                    Slider slider = new Slider
+                    {
+                        StartTime = EditorClock.CurrentTime,
+                        Position = new Vector2(300),
+                    };
 
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-            });
+                    PathControlPoint[] points =
+                    {
+                        new PathControlPoint(new Vector2(0), PathType.PERFECT_CURVE),
+                        new PathControlPoint(new Vector2(100, 0)),
+                        new PathControlPoint(new Vector2(0, 10)),
+                    };
+
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
             AddAssert("ensure object placed", () => EditorBeatmap.HitObjects.Count == 1);
 
             AddStep("select slider", () => InputManager.Click(MouseButton.Left));
 
             moveMouse(new Vector2(400, 300));
-            AddStep("delete second point", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.Click(MouseButton.Right);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "delete second point",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.Click(MouseButton.Right);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
 
             AddAssert("ensure object deleted", () => EditorBeatmap.HitObjects.Count == 0);
         }
@@ -159,20 +193,27 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Slider slider = null;
 
-            AddStep("Add slider", () =>
-            {
-                slider = new Slider { StartTime = EditorClock.CurrentTime, Position = new Vector2(300, 200) };
-
-                PathControlPoint[] points =
+            AddStep(
+                "Add slider",
+                () =>
                 {
-                    new PathControlPoint(new Vector2(0), PathType.LINEAR),
-                    new PathControlPoint(new Vector2(0, 50)),
-                    new PathControlPoint(new Vector2(0, 100))
-                };
+                    slider = new Slider
+                    {
+                        StartTime = EditorClock.CurrentTime,
+                        Position = new Vector2(300, 200),
+                    };
 
-                slider.Path = new SliderPath(points);
-                EditorBeatmap.Add(slider);
-            });
+                    PathControlPoint[] points =
+                    {
+                        new PathControlPoint(new Vector2(0), PathType.LINEAR),
+                        new PathControlPoint(new Vector2(0, 50)),
+                        new PathControlPoint(new Vector2(0, 100)),
+                    };
+
+                    slider.Path = new SliderPath(points);
+                    EditorBeatmap.Add(slider);
+                }
+            );
 
             AddAssert("ensure object placed", () => EditorBeatmap.HitObjects.Count == 1);
 
@@ -183,7 +224,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
             AddStep("store distance", () => distanceBefore = slider.Path.Distance);
 
-            AddStep("move mouse to handle", () => InputManager.MoveMouseTo(Editor.ChildrenOfType<SelectionBoxDragHandle>().Skip(1).First()));
+            AddStep(
+                "move mouse to handle",
+                () =>
+                    InputManager.MoveMouseTo(
+                        Editor.ChildrenOfType<SelectionBoxDragHandle>().Skip(1).First()
+                    )
+            );
             AddStep("begin drag", () => InputManager.PressButton(MouseButton.Left));
             moveMouse(new Vector2(300, 300));
             moveMouse(new Vector2(300, 250));
@@ -195,6 +242,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         }
 
         private void moveMouse(Vector2 pos) =>
-            AddStep($"move mouse to {pos}", () => InputManager.MoveMouseTo(playfield.ToScreenSpace(pos)));
+            AddStep(
+                $"move mouse to {pos}",
+                () => InputManager.MoveMouseTo(playfield.ToScreenSpace(pos))
+            );
     }
 }

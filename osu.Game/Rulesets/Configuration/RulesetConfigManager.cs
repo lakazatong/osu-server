@@ -15,7 +15,9 @@ using osu.Game.Database;
 
 namespace osu.Game.Rulesets.Configuration
 {
-    public abstract class RulesetConfigManager<TLookup> : ConfigManager<TLookup>, IRulesetConfigManager
+    public abstract class RulesetConfigManager<TLookup>
+        : ConfigManager<TLookup>,
+            IRulesetConfigManager
         where TLookup : struct, Enum
     {
         private readonly RealmAccess realm;
@@ -26,7 +28,11 @@ namespace osu.Game.Rulesets.Configuration
 
         private readonly string rulesetName;
 
-        protected RulesetConfigManager(SettingsStore store, RulesetInfo ruleset, int? variant = null)
+        protected RulesetConfigManager(
+            SettingsStore store,
+            RulesetInfo ruleset,
+            int? variant = null
+        )
         {
             realm = store?.Realm;
 
@@ -44,7 +50,10 @@ namespace osu.Game.Rulesets.Configuration
             if (realm != null)
             {
                 // As long as RulesetConfigCache exists, there is no need to subscribe to realm events.
-                databasedSettings = realm.Realm.All<RealmRulesetSetting>().Where(b => b.RulesetName == rulesetName && b.Variant == variant).ToList();
+                databasedSettings = realm
+                    .Realm.All<RealmRulesetSetting>()
+                    .Where(b => b.RulesetName == rulesetName && b.Variant == variant)
+                    .ToList();
             }
         }
 
@@ -67,7 +76,12 @@ namespace osu.Game.Rulesets.Configuration
             {
                 foreach (var c in changed)
                 {
-                    var setting = r.All<RealmRulesetSetting>().First(s => s.RulesetName == rulesetName && s.Variant == variant && s.Key == c.ToString());
+                    var setting = r.All<RealmRulesetSetting>()
+                        .First(s =>
+                            s.RulesetName == rulesetName
+                            && s.Variant == variant
+                            && s.Key == c.ToString()
+                        );
 
                     setting.Value = ConfigStore[c].ToString(CultureInfo.InvariantCulture);
                 }

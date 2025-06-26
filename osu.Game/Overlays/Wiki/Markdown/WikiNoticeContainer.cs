@@ -53,25 +53,16 @@ namespace osu.Game.Overlays.Wiki.Markdown
             // TODO : add notice box for fallback translation, legal translation and outdated translation after implement wiki locale in the future.
             if (isOutdated)
             {
-                Add(new NoticeBox
-                {
-                    Text = WikiStrings.ShowIncompleteOrOutdated,
-                });
+                Add(new NoticeBox { Text = WikiStrings.ShowIncompleteOrOutdated });
             }
             else if (needsCleanup)
             {
-                Add(new NoticeBox
-                {
-                    Text = WikiStrings.ShowNeedsCleanupOrRewrite,
-                });
+                Add(new NoticeBox { Text = WikiStrings.ShowNeedsCleanupOrRewrite });
             }
 
             if (isStub)
             {
-                Add(new NoticeBox
-                {
-                    Text = WikiStrings.ShowStub,
-                });
+                Add(new NoticeBox { Text = WikiStrings.ShowStub });
             }
         }
 
@@ -91,20 +82,14 @@ namespace osu.Game.Overlays.Wiki.Markdown
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background4,
-                    },
-                    textFlow = parentFlowComponent.CreateTextFlow().With(t =>
-                    {
-                        t.Colour = colour.Orange1;
-                        t.Padding = new MarginPadding
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background4 },
+                    textFlow = parentFlowComponent
+                        .CreateTextFlow()
+                        .With(t =>
                         {
-                            Vertical = 10,
-                            Horizontal = 15,
-                        };
-                    })
+                            t.Colour = colour.Orange1;
+                            t.Padding = new MarginPadding { Vertical = 10, Horizontal = 15 };
+                        }),
                 };
 
                 textFlow.AddText(Text);

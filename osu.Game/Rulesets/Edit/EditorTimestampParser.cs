@@ -17,7 +17,10 @@ namespace osu.Game.Rulesets.Edit
         /// <example>
         /// 00:00:000 (...) - test
         /// </example>
-        public static readonly Regex TIME_REGEX_STRICT = new Regex(@"\b(((?<minutes>\d{2,}):(?<seconds>[0-5]\d)[:.](?<milliseconds>\d{3}))(?<selection>\s\([^)]+\))?)", RegexOptions.Compiled);
+        public static readonly Regex TIME_REGEX_STRICT = new Regex(
+            @"\b(((?<minutes>\d{2,}):(?<seconds>[0-5]\d)[:.](?<milliseconds>\d{3}))(?<selection>\s\([^)]+\))?)",
+            RegexOptions.Compiled
+        );
 
         /// <summary>
         /// Used for editor-specific context wherein we want to try as hard as we can to process user input as a timestamp.
@@ -38,7 +41,11 @@ namespace osu.Game.Rulesets.Edit
             RegexOptions.Compiled | RegexOptions.Singleline
         );
 
-        public static bool TryParse(string timestamp, [NotNullWhen(true)] out TimeSpan? parsedTime, out string? parsedSelection)
+        public static bool TryParse(
+            string timestamp,
+            [NotNullWhen(true)] out TimeSpan? parsedTime,
+            out string? parsedSelection
+        )
         {
             if (double.TryParse(timestamp, out double msec))
             {
@@ -56,7 +63,9 @@ namespace osu.Game.Rulesets.Edit
                 return false;
             }
 
-            int timeMin, timeSec, timeMsec;
+            int timeMin,
+                timeSec,
+                timeMsec;
 
             int.TryParse(match.Groups[@"minutes"].Value, out timeMin);
             int.TryParse(match.Groups[@"seconds"].Value, out timeSec);
@@ -70,9 +79,14 @@ namespace osu.Game.Rulesets.Edit
                 return false;
             }
 
-            parsedTime = TimeSpan.FromMinutes(timeMin) + TimeSpan.FromSeconds(timeSec) + TimeSpan.FromMilliseconds(timeMsec);
+            parsedTime =
+                TimeSpan.FromMinutes(timeMin)
+                + TimeSpan.FromSeconds(timeSec)
+                + TimeSpan.FromMilliseconds(timeMsec);
             parsedSelection = match.Groups[@"selection"].Value.Trim();
-            parsedSelection = !string.IsNullOrEmpty(parsedSelection) ? parsedSelection[1..^1] : null;
+            parsedSelection = !string.IsNullOrEmpty(parsedSelection)
+                ? parsedSelection[1..^1]
+                : null;
             return true;
         }
     }

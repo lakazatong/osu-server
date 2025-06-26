@@ -3,30 +3,31 @@
 
 #nullable disable
 
+using System;
+using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Online.API.Requests.Responses;
-using osuTK;
-using System;
-using System.Collections.Generic;
-using osu.Framework.Graphics.UserInterface;
 using osu.Game.Online.API.Requests;
-using osu.Framework.Extensions.Color4Extensions;
-using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Framework.Localisation;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Overlays.Rankings
 {
     public partial class SpotlightSelector : CompositeDrawable, IHasCurrentValue<APISpotlight>
     {
-        private readonly BindableWithCurrent<APISpotlight> current = new BindableWithCurrent<APISpotlight>();
+        private readonly BindableWithCurrent<APISpotlight> current =
+            new BindableWithCurrent<APISpotlight>();
         public readonly Bindable<RankingsSortCriteria> Sort = new Bindable<RankingsSortCriteria>();
 
         public Bindable<APISpotlight> Current
@@ -55,15 +56,15 @@ namespace osu.Game.Overlays.Rankings
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Padding = new MarginPadding { Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING },
+                    Padding = new MarginPadding
+                    {
+                        Horizontal = WaveOverlayContainer.HORIZONTAL_PADDING,
+                    },
                     Child = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
@@ -77,11 +78,12 @@ namespace osu.Game.Overlays.Rankings
                                 RelativeSizeAxes = Axes.X,
                                 Height = 40,
                                 Depth = -float.MaxValue,
-                                Child = dropdown = new SpotlightsDropdown
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Current = Current
-                                }
+                                Child = dropdown =
+                                    new SpotlightsDropdown
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        Current = Current,
+                                    },
                             },
                             new Container
                             {
@@ -97,23 +99,31 @@ namespace osu.Game.Overlays.Rankings
                                         Margin = new MarginPadding { Bottom = 5 },
                                         Children = new Drawable[]
                                         {
-                                            startDateColumn = new InfoColumn(RankingsStrings.SpotlightStartDate),
-                                            endDateColumn = new InfoColumn(RankingsStrings.SpotlightEndDate),
-                                            mapCountColumn = new InfoColumn(RankingsStrings.SpotlightMapCount),
-                                            participantsColumn = new InfoColumn(RankingsStrings.SpotlightParticipants)
-                                        }
+                                            startDateColumn = new InfoColumn(
+                                                RankingsStrings.SpotlightStartDate
+                                            ),
+                                            endDateColumn = new InfoColumn(
+                                                RankingsStrings.SpotlightEndDate
+                                            ),
+                                            mapCountColumn = new InfoColumn(
+                                                RankingsStrings.SpotlightMapCount
+                                            ),
+                                            participantsColumn = new InfoColumn(
+                                                RankingsStrings.SpotlightParticipants
+                                            ),
+                                        },
                                     },
                                     new RankingsSortTabControl
                                     {
                                         Anchor = Anchor.CentreRight,
                                         Origin = Anchor.CentreRight,
-                                        Current = Sort
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                        Current = Sort,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -128,10 +138,12 @@ namespace osu.Game.Overlays.Rankings
             startDateColumn.Value = dateToString(response.Spotlight.StartDate);
             endDateColumn.Value = dateToString(response.Spotlight.EndDate);
             mapCountColumn.Value = response.BeatmapSets.Count.ToLocalisableString(@"N0");
-            participantsColumn.Value = response.Spotlight.Participants?.ToLocalisableString(@"N0") ?? default;
+            participantsColumn.Value =
+                response.Spotlight.Participants?.ToLocalisableString(@"N0") ?? default;
         }
 
-        private LocalisableString dateToString(DateTimeOffset date) => date.ToLocalisableString(@"yyyy-MM-dd");
+        private LocalisableString dateToString(DateTimeOffset date) =>
+            date.ToLocalisableString(@"yyyy-MM-dd");
 
         private partial class InfoColumn : FillFlowContainer
         {
@@ -158,13 +170,14 @@ namespace osu.Game.Overlays.Rankings
                     {
                         AutoSizeAxes = Axes.X,
                         Height = 25,
-                        Child = valueText = new OsuSpriteText
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Font = OsuFont.GetFont(size: 20, weight: FontWeight.Light),
-                        }
-                    }
+                        Child = valueText =
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Font = OsuFont.GetFont(size: 20, weight: FontWeight.Light),
+                            },
+                    },
                 };
             }
 
@@ -179,7 +192,8 @@ namespace osu.Game.Overlays.Rankings
         {
             private OsuDropdownMenu menu;
 
-            protected override DropdownMenu CreateMenu() => menu = (OsuDropdownMenu)base.CreateMenu().With(m => m.MaxHeight = 400);
+            protected override DropdownMenu CreateMenu() =>
+                menu = (OsuDropdownMenu)base.CreateMenu().With(m => m.MaxHeight = 400);
 
             protected override DropdownHeader CreateHeader() => new SpotlightsDropdownHeader();
 

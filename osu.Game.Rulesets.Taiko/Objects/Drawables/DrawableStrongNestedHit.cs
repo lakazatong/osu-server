@@ -11,12 +11,11 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
     /// </summary>
     public abstract partial class DrawableStrongNestedHit : DrawableTaikoHitObject
     {
-        public new DrawableTaikoHitObject? ParentHitObject => base.ParentHitObject as DrawableTaikoHitObject;
+        public new DrawableTaikoHitObject? ParentHitObject =>
+            base.ParentHitObject as DrawableTaikoHitObject;
 
         protected DrawableStrongNestedHit(StrongNestedHitObject? nestedHit)
-            : base(nestedHit)
-        {
-        }
+            : base(nestedHit) { }
 
         public override void OnKilled()
         {

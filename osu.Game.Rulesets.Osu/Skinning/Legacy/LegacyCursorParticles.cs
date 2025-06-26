@@ -43,7 +43,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         private void load(ISkinSource skin)
         {
             var texture = skin.GetTexture("star2");
-            var starBreakAdditive = skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.StarBreakAdditive)?.Value ?? new Color4(255, 182, 193, 255);
+            var starBreakAdditive =
+                skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.StarBreakAdditive)?.Value
+                ?? new Color4(255, 182, 193, 255);
 
             if (texture != null)
             {
@@ -75,13 +77,16 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
         protected override void Update()
         {
-            if (playfield == null || gameplayState == null) return;
+            if (playfield == null || gameplayState == null)
+                return;
 
             DrawableHitObject? kiaiHitObject = null;
 
             // Check whether currently in a kiai section first. This is only done as an optimisation to avoid enumerating AliveObjects when not necessary.
             if (gameplayState.Beatmap.ControlPointInfo.EffectPointAt(Time.Current).KiaiMode)
-                kiaiHitObject = playfield.HitObjectContainer.AliveObjects.FirstOrDefault(isTracking);
+                kiaiHitObject = playfield.HitObjectContainer.AliveObjects.FirstOrDefault(
+                    isTracking
+                );
 
             kiaiSpewer.Active.Value = kiaiHitObject != null;
         }
@@ -140,14 +145,17 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 breakSpewer.Direction = SpewDirection.None;
         }
 
-        private partial class LegacyCursorParticleSpewer : ParticleSpewer, IRequireHighFrequencyMousePosition
+        private partial class LegacyCursorParticleSpewer
+            : ParticleSpewer,
+                IRequireHighFrequencyMousePosition
         {
             private const int particle_duration_min = 300;
             private const int particle_duration_max = 1000;
 
             public SpewDirection Direction { get; set; }
 
-            protected override bool CanSpawnParticles => base.CanSpawnParticles && cursorScreenPosition.HasValue;
+            protected override bool CanSpawnParticles =>
+                base.CanSpawnParticles && cursorScreenPosition.HasValue;
             protected override float ParticleGravity => 240;
 
             public LegacyCursorParticleSpewer(Texture? texture, int perSecond)
@@ -215,17 +223,11 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 switch (Direction)
                 {
                     case SpewDirection.Left:
-                        velocity = new Vector2(
-                            RNG.NextSingle(-460f, 0),
-                            RNG.NextSingle(-40f, 40f)
-                        );
+                        velocity = new Vector2(RNG.NextSingle(-460f, 0), RNG.NextSingle(-40f, 40f));
                         break;
 
                     case SpewDirection.Right:
-                        velocity = new Vector2(
-                            RNG.NextSingle(0, 460f),
-                            RNG.NextSingle(-40f, 40f)
-                        );
+                        velocity = new Vector2(RNG.NextSingle(0, 460f), RNG.NextSingle(-40f, 40f));
                         break;
 
                     case SpewDirection.Omni:

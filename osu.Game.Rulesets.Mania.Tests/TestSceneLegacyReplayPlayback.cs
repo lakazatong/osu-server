@@ -19,7 +19,9 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Mania.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneLegacyReplayPlayback : LegacyReplayPlaybackTestScene
     {
         protected override Ruleset CreateRuleset() => new ManiaRuleset();
@@ -79,7 +81,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 5f, 136d, HitResult.Miss },
             new object[] { 5f, 137d, HitResult.Miss },
             new object[] { 5f, 138d, HitResult.Miss },
-
             // OD = 9.3 test cases.
             // PERFECT hit window is [ -14ms,  14ms]
             // GREAT   hit window is [ -36ms,  36ms]
@@ -152,7 +153,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 5f, 136d, HitResult.Miss },
             new object[] { 5f, 137d, HitResult.Miss },
             new object[] { 5f, 138d, HitResult.Miss },
-
             // OD = 9.3 test cases.
             // PERFECT hit window is [ -16ms,  16ms]
             // GREAT   hit window is [ -36ms,  36ms]
@@ -187,7 +187,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 9.3f, -123d, HitResult.Meh },
             new object[] { 9.3f, -124d, HitResult.Miss },
             new object[] { 9.3f, -125d, HitResult.Miss },
-
             // OD = 3.1 test cases.
             // PERFECT hit window is [ -16ms,  16ms]
             // GREAT   hit window is [ -54ms,  54ms]
@@ -260,7 +259,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 5f, 121d, HitResult.Miss },
             new object[] { 5f, 122d, HitResult.Miss },
             new object[] { 5f, 123d, HitResult.Miss },
-
             // OD = 3.1 test cases.
             // PERFECT hit window is [ -16ms,  16ms]
             // GREAT   hit window is [ -47ms,  47ms]
@@ -334,7 +332,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 5f, 97d, HitResult.Miss },
             new object[] { 5f, 98d, HitResult.Miss },
             new object[] { 5f, 99d, HitResult.Miss },
-
             // OD = 9.3 test cases.
             // This leads to "effective" OD of 13.02.
             // Note that contrary to other rulesets this does NOT cap out to OD 10!
@@ -490,7 +487,11 @@ namespace osu.Game.Rulesets.Mania.Tests
         private const double note_time = 300;
 
         [TestCaseSource(nameof(score_v2_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV2(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV2(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -501,7 +502,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -510,15 +511,25 @@ namespace osu.Game.Rulesets.Mania.Tests
                 ScoreInfo = new ScoreInfo
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
-                    Mods = [new ModScoreV2()]
-                }
+                    Mods = [new ModScoreV2()],
+                },
             };
 
-            RunTest($@"SV2 single note @ OD{overallDifficulty}", beatmap, $@"SV2 {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV2 single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV2 {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_non_convert_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1NonConvert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1NonConvert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -529,23 +540,30 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
             {
                 Replay = replay,
-                ScoreInfo = new ScoreInfo
-                {
-                    Ruleset = CreateRuleset().RulesetInfo,
-                }
+                ScoreInfo = new ScoreInfo { Ruleset = CreateRuleset().RulesetInfo },
             };
 
-            RunTest($@"SV1 single note @ OD{overallDifficulty}", beatmap, $@"SV1 {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1 single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1 {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_convert_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1Convert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1Convert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createConvertBeatmap(overallDifficulty);
 
@@ -556,7 +574,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -566,14 +584,24 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
                     Mods = [new ManiaModKey1()],
-                }
+                },
             };
 
-            RunTest($@"SV1 convert single note @ OD{overallDifficulty}", beatmap, $@"SV1 convert {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1 convert single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1 convert {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_non_convert_hard_rock_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1AndHardRockNonConvert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1AndHardRockNonConvert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -584,7 +612,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -594,14 +622,24 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
                     Mods = [new ManiaModHardRock()],
-                }
+                },
             };
 
-            RunTest($@"SV1+HR single note @ OD{overallDifficulty}", beatmap, $@"SV1+HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1+HR single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1+HR {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_non_convert_easy_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1AndEasyNonConvert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1AndEasyNonConvert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -612,7 +650,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -622,14 +660,24 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
                     Mods = [new ManiaModEasy()],
-                }
+                },
             };
 
-            RunTest($@"SV1+EZ single note @ OD{overallDifficulty}", beatmap, $@"SV1+EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1+EZ single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1+EZ {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_non_convert_double_time_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1AndDoubleTimeNonConvert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1AndDoubleTimeNonConvert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -640,7 +688,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -650,14 +698,24 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
                     Mods = [new ManiaModDoubleTime()],
-                }
+                },
             };
 
-            RunTest($@"SV1+DT single note @ OD{overallDifficulty}", beatmap, $@"SV1+DT {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1+DT single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1+DT {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         [TestCaseSource(nameof(score_v1_non_convert_half_time_test_cases))]
-        public void TestHitWindowTreatmentWithScoreV1AndHalfTimeNonConvert(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowTreatmentWithScoreV1AndHalfTimeNonConvert(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             var beatmap = createNonConvertBeatmap(overallDifficulty);
 
@@ -668,7 +726,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             var score = new Score
@@ -678,10 +736,16 @@ namespace osu.Game.Rulesets.Mania.Tests
                 {
                     Ruleset = CreateRuleset().RulesetInfo,
                     Mods = [new ManiaModHalfTime()],
-                }
+                },
             };
 
-            RunTest($@"SV1+HT single note @ OD{overallDifficulty}", beatmap, $@"SV1+HT {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}", score, [expectedResult]);
+            RunTest(
+                $@"SV1+HT single note @ OD{overallDifficulty}",
+                beatmap,
+                $@"SV1+HT {hitOffset}ms @ OD{overallDifficulty} = {expectedResult}",
+                score,
+                [expectedResult]
+            );
         }
 
         private static ManiaBeatmap createNonConvertBeatmap(float overallDifficulty)
@@ -692,21 +756,14 @@ namespace osu.Game.Rulesets.Mania.Tests
             {
                 HitObjects =
                 {
-                    new Note
-                    {
-                        StartTime = note_time,
-                        Column = 0,
-                    }
+                    new Note { StartTime = note_time, Column = 0 },
                 },
                 Difficulty = new BeatmapDifficulty
                 {
                     OverallDifficulty = overallDifficulty,
                     CircleSize = 1,
                 },
-                BeatmapInfo =
-                {
-                    Ruleset = new ManiaRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
                 ControlPointInfo = cpi,
             };
             return beatmap;
@@ -718,21 +775,9 @@ namespace osu.Game.Rulesets.Mania.Tests
             cpi.Add(0, new TimingControlPoint { BeatLength = 1000 });
             var beatmap = new Beatmap
             {
-                HitObjects =
-                {
-                    new FakeCircle
-                    {
-                        StartTime = note_time,
-                    }
-                },
-                Difficulty = new BeatmapDifficulty
-                {
-                    OverallDifficulty = overallDifficulty,
-                },
-                BeatmapInfo =
-                {
-                    Ruleset = new RulesetInfo { OnlineID = 0 }
-                },
+                HitObjects = { new FakeCircle { StartTime = note_time } },
+                Difficulty = new BeatmapDifficulty { OverallDifficulty = overallDifficulty },
+                BeatmapInfo = { Ruleset = new RulesetInfo { OnlineID = 0 } },
                 ControlPointInfo = cpi,
             };
             return beatmap;

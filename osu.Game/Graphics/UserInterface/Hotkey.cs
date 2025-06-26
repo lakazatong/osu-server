@@ -32,7 +32,11 @@ namespace osu.Game.Graphics.UserInterface
             PlatformAction = platformAction;
         }
 
-        public IEnumerable<string> ResolveKeyCombination(ReadableKeyCombinationProvider keyCombinationProvider, RealmKeyBindingStore keyBindingStore, GameHost gameHost)
+        public IEnumerable<string> ResolveKeyCombination(
+            ReadableKeyCombinationProvider keyCombinationProvider,
+            RealmKeyBindingStore keyBindingStore,
+            GameHost gameHost
+        )
         {
             var result = new List<string>();
 
@@ -49,8 +53,12 @@ namespace osu.Game.Graphics.UserInterface
             if (PlatformAction != null)
             {
                 var action = PlatformAction.Value;
-                var bindings = gameHost.PlatformKeyBindings.Where(kb => (PlatformAction)kb.Action == action);
-                result.AddRange(bindings.Select(b => keyCombinationProvider.GetReadableString(b.KeyCombination)));
+                var bindings = gameHost.PlatformKeyBindings.Where(kb =>
+                    (PlatformAction)kb.Action == action
+                );
+                result.AddRange(
+                    bindings.Select(b => keyCombinationProvider.GetReadableString(b.KeyCombination))
+                );
             }
 
             return result;

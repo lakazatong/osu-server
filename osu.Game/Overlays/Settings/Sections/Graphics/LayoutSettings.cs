@@ -37,8 +37,11 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
         private Bindable<ScalingMode> scalingMode = null!;
         private Bindable<Size> sizeFullscreen = null!;
 
-        private readonly BindableList<Size> resolutions = new BindableList<Size>(new[] { new Size(9999, 9999) });
-        private readonly IBindable<FullscreenCapability> fullscreenCapability = new Bindable<FullscreenCapability>(FullscreenCapability.Capable);
+        private readonly BindableList<Size> resolutions = new BindableList<Size>(
+            new[] { new Size(9999, 9999) }
+        );
+        private readonly IBindable<FullscreenCapability> fullscreenCapability =
+            new Bindable<FullscreenCapability>(FullscreenCapability.Capable);
 
         [Resolved]
         private OsuGameBase game { get; set; } = null!;
@@ -105,12 +108,14 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                     LabelText = GraphicsSettingsStrings.Resolution,
                     ShowsDefaultIndicator = false,
                     ItemSource = resolutions,
-                    Current = sizeFullscreen
+                    Current = sizeFullscreen,
                 },
                 minimiseOnFocusLossCheckbox = new SettingsCheckbox
                 {
                     LabelText = GraphicsSettingsStrings.MinimiseOnFocusLoss,
-                    Current = config.GetBindable<bool>(FrameworkSetting.MinimiseOnFocusLossInFullscreen),
+                    Current = config.GetBindable<bool>(
+                        FrameworkSetting.MinimiseOnFocusLossInFullscreen
+                    ),
                     Keywords = new[] { "alt-tab", "minimize", "focus", "hide" },
                 },
                 safeAreaConsiderationsCheckbox = new SettingsCheckbox
@@ -146,7 +151,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             Keywords = new[] { "screen", "scaling" },
                             Current = scalingPositionX,
                             KeyboardStep = 0.01f,
-                            DisplayAsPercentage = true
+                            DisplayAsPercentage = true,
                         },
                         new SettingsSlider<float>
                         {
@@ -154,7 +159,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             Keywords = new[] { "screen", "scaling" },
                             Current = scalingPositionY,
                             KeyboardStep = 0.01f,
-                            DisplayAsPercentage = true
+                            DisplayAsPercentage = true,
                         },
                         new SettingsSlider<float>
                         {
@@ -162,7 +167,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             Keywords = new[] { "screen", "scaling" },
                             Current = scalingSizeX,
                             KeyboardStep = 0.01f,
-                            DisplayAsPercentage = true
+                            DisplayAsPercentage = true,
                         },
                         new SettingsSlider<float>
                         {
@@ -170,7 +175,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             Keywords = new[] { "screen", "scaling" },
                             Current = scalingSizeY,
                             KeyboardStep = 0.01f,
-                            DisplayAsPercentage = true
+                            DisplayAsPercentage = true,
                         },
                         dimSlider = new SettingsSlider<float>
                         {
@@ -179,7 +184,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             KeyboardStep = 0.01f,
                             DisplayAsPercentage = true,
                         },
-                    }
+                    },
                 },
             };
 
@@ -192,28 +197,41 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
 
             scalingSettings.ForEach(s => bindPreviewEvent(s.Current));
 
-            windowModeDropdown.Current.BindValueChanged(_ =>
-            {
-                updateDisplaySettingsVisibility();
-                updateScreenModeWarning();
-            }, true);
-
-            currentDisplay.BindValueChanged(display => Schedule(() =>
-            {
-                if (display.NewValue == null)
+            windowModeDropdown.Current.BindValueChanged(
+                _ =>
                 {
-                    resolutions.Clear();
-                    return;
-                }
+                    updateDisplaySettingsVisibility();
+                    updateScreenModeWarning();
+                },
+                true
+            );
 
-                resolutions.ReplaceRange(1, resolutions.Count - 1, display.NewValue.DisplayModes
-                                                                          .Where(m => m.Size.Width >= 800 && m.Size.Height >= 600)
-                                                                          .OrderByDescending(m => Math.Max(m.Size.Height, m.Size.Width))
-                                                                          .Select(m => m.Size)
-                                                                          .Distinct());
+            currentDisplay.BindValueChanged(
+                display =>
+                    Schedule(() =>
+                    {
+                        if (display.NewValue == null)
+                        {
+                            resolutions.Clear();
+                            return;
+                        }
 
-                updateDisplaySettingsVisibility();
-            }), true);
+                        resolutions.ReplaceRange(
+                            1,
+                            resolutions.Count - 1,
+                            display
+                                .NewValue.DisplayModes.Where(m =>
+                                    m.Size.Width >= 800 && m.Size.Height >= 600
+                                )
+                                .OrderByDescending(m => Math.Max(m.Size.Height, m.Size.Width))
+                                .Select(m => m.Size)
+                                .Distinct()
+                        );
+
+                        updateDisplaySettingsVisibility();
+                    }),
+                true
+            );
 
             scalingMode.BindValueChanged(_ =>
             {
@@ -232,12 +250,15 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 if (scalingMode.Value == ScalingMode.Off)
                     scalingSettings.ResizeHeightTo(0, transition_duration, Easing.OutQuint);
 
-                scalingSettings.AutoSizeAxes = scalingMode.Value != ScalingMode.Off ? Axes.Y : Axes.None;
+                scalingSettings.AutoSizeAxes =
+                    scalingMode.Value != ScalingMode.Off ? Axes.Y : Axes.None;
                 scalingSettings.ForEach(s =>
                 {
                     if (s == dimSlider)
                     {
-                        s.CanBeShown.Value = scalingMode.Value == ScalingMode.Everything || scalingMode.Value == ScalingMode.ExcludeOverlays;
+                        s.CanBeShown.Value =
+                            scalingMode.Value == ScalingMode.Everything
+                            || scalingMode.Value == ScalingMode.ExcludeOverlays;
                     }
                     else
                     {
@@ -250,20 +271,26 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
 
         private void onDisplaysChanged(IEnumerable<Display> displays)
         {
-            Scheduler.AddOnce(d =>
-            {
-                if (!displayDropdown.Items.SequenceEqual(d, DisplayListComparer.DEFAULT))
-                    displayDropdown.Items = d;
-                updateDisplaySettingsVisibility();
-            }, displays);
+            Scheduler.AddOnce(
+                d =>
+                {
+                    if (!displayDropdown.Items.SequenceEqual(d, DisplayListComparer.DEFAULT))
+                        displayDropdown.Items = d;
+                    updateDisplaySettingsVisibility();
+                },
+                displays
+            );
         }
 
         private void updateDisplaySettingsVisibility()
         {
-            resolutionDropdown.CanBeShown.Value = resolutions.Count > 1 && windowModeDropdown.Current.Value == WindowMode.Fullscreen;
+            resolutionDropdown.CanBeShown.Value =
+                resolutions.Count > 1 && windowModeDropdown.Current.Value == WindowMode.Fullscreen;
             displayDropdown.CanBeShown.Value = displayDropdown.Items.Count() > 1;
-            minimiseOnFocusLossCheckbox.CanBeShown.Value = RuntimeInfo.IsDesktop && windowModeDropdown.Current.Value == WindowMode.Fullscreen;
-            safeAreaConsiderationsCheckbox.CanBeShown.Value = host.Window?.SafeAreaPadding.Value.Total != Vector2.Zero;
+            minimiseOnFocusLossCheckbox.CanBeShown.Value =
+                RuntimeInfo.IsDesktop && windowModeDropdown.Current.Value == WindowMode.Fullscreen;
+            safeAreaConsiderationsCheckbox.CanBeShown.Value =
+                host.Window?.SafeAreaPadding.Value.Total != Vector2.Zero;
         }
 
         private void updateScreenModeWarning()
@@ -272,7 +299,10 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
             if (RuntimeInfo.OS == RuntimeInfo.Platform.macOS && !FrameworkEnvironment.UseSDL3)
             {
                 if (windowModeDropdown.Current.Value == WindowMode.Fullscreen)
-                    windowModeDropdown.SetNoticeText(LayoutSettingsStrings.FullscreenMacOSNote, true);
+                    windowModeDropdown.SetNoticeText(
+                        LayoutSettingsStrings.FullscreenMacOSNote,
+                        true
+                    );
                 else
                     windowModeDropdown.ClearNoticeText();
 
@@ -290,15 +320,23 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 switch (fullscreenCapability.Value)
                 {
                     case FullscreenCapability.Unknown:
-                        windowModeDropdown.SetNoticeText(LayoutSettingsStrings.CheckingForFullscreenCapabilities, true);
+                        windowModeDropdown.SetNoticeText(
+                            LayoutSettingsStrings.CheckingForFullscreenCapabilities,
+                            true
+                        );
                         break;
 
                     case FullscreenCapability.Capable:
-                        windowModeDropdown.SetNoticeText(LayoutSettingsStrings.OsuIsRunningExclusiveFullscreen);
+                        windowModeDropdown.SetNoticeText(
+                            LayoutSettingsStrings.OsuIsRunningExclusiveFullscreen
+                        );
                         break;
 
                     case FullscreenCapability.Incapable:
-                        windowModeDropdown.SetNoticeText(LayoutSettingsStrings.UnableToRunExclusiveFullscreen, true);
+                        windowModeDropdown.SetNoticeText(
+                            LayoutSettingsStrings.UnableToRunExclusiveFullscreen,
+                            true
+                        );
                         break;
                 }
             }
@@ -361,7 +399,8 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
 
         private partial class DisplaySettingsDropdown : SettingsDropdown<Display>
         {
-            protected override OsuDropdown<Display> CreateDropdown() => new DisplaySettingsDropdownControl();
+            protected override OsuDropdown<Display> CreateDropdown() =>
+                new DisplaySettingsDropdownControl();
 
             private partial class DisplaySettingsDropdownControl : DropdownControl
             {
@@ -374,7 +413,8 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
 
         private partial class ResolutionSettingsDropdown : SettingsDropdown<Size>
         {
-            protected override OsuDropdown<Size> CreateDropdown() => new ResolutionDropdownControl();
+            protected override OsuDropdown<Size> CreateDropdown() =>
+                new ResolutionDropdownControl();
 
             private partial class ResolutionDropdownControl : DropdownControl
             {
@@ -403,13 +443,16 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
 
             public bool Equals(Display? x, Display? y)
             {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
+                if (ReferenceEquals(x, y))
+                    return true;
+                if (ReferenceEquals(x, null))
+                    return false;
+                if (ReferenceEquals(y, null))
+                    return false;
 
                 return x.Index == y.Index
-                       && x.Name == y.Name
-                       && x.DisplayModes.SequenceEqual(y.DisplayModes);
+                    && x.Name == y.Name
+                    && x.DisplayModes.SequenceEqual(y.DisplayModes);
             }
 
             public int GetHashCode(Display obj)

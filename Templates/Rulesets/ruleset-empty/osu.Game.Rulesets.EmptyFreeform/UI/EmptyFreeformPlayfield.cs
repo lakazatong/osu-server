@@ -13,10 +13,7 @@ namespace osu.Game.Rulesets.EmptyFreeform.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                HitObjectContainer,
-            });
+            AddRangeInternal(new Drawable[] { HitObjectContainer });
         }
     }
 }

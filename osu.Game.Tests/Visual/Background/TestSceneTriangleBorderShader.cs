@@ -2,14 +2,14 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics.Backgrounds;
 using osuTK;
 using osuTK.Graphics;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Rendering;
-using osu.Game.Graphics.Backgrounds;
 
 namespace osu.Game.Tests.Visual.Background
 {
@@ -21,17 +21,13 @@ namespace osu.Game.Tests.Visual.Background
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.DarkGreen
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.DarkGreen },
                 triangle = new TestTriangle
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Size = new Vector2(200)
-                }
+                    Size = new Vector2(200),
+                },
             };
         }
 
@@ -83,9 +79,7 @@ namespace osu.Game.Tests.Visual.Background
                 public new TestTriangle Source => (TestTriangle)base.Source;
 
                 public TriangleDrawNode(TestTriangle source)
-                    : base(source)
-                {
-                }
+                    : base(source) { }
 
                 private float thickness;
                 private float texelSize;
@@ -108,7 +102,7 @@ namespace osu.Game.Tests.Visual.Background
                     borderDataBuffer.Data = borderDataBuffer.Data with
                     {
                         Thickness = thickness,
-                        TexelSize = texelSize
+                        TexelSize = texelSize,
                     };
 
                     shader.BindUniformBlock("m_BorderData", borderDataBuffer);

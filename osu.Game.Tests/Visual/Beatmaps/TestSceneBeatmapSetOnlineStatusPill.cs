@@ -22,79 +22,99 @@ namespace osu.Game.Tests.Visual.Beatmaps
         private bool showUnknownStatus;
         private bool animated = true;
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Direction = FillDirection.Vertical,
-            Spacing = new Vector2(0, 10),
-            ChildrenEnumerable = Enum.GetValues(typeof(BeatmapOnlineStatus)).Cast<BeatmapOnlineStatus>().Select(status => new Container
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                RelativeSizeAxes = Axes.X,
-                Height = 20,
-                Children = new Drawable[]
-                {
-                    new BeatmapSetOnlineStatusPill
+                AutoSizeAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Direction = FillDirection.Vertical,
+                Spacing = new Vector2(0, 10),
+                ChildrenEnumerable = Enum.GetValues(typeof(BeatmapOnlineStatus))
+                    .Cast<BeatmapOnlineStatus>()
+                    .Select(status => new Container
                     {
-                        ShowUnknownStatus = showUnknownStatus,
-                        Animated = animated,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Status = status
-                    },
-                }
-            })
-        };
+                        RelativeSizeAxes = Axes.X,
+                        Height = 20,
+                        Children = new Drawable[]
+                        {
+                            new BeatmapSetOnlineStatusPill
+                            {
+                                ShowUnknownStatus = showUnknownStatus,
+                                Animated = animated,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Status = status,
+                            },
+                        },
+                    }),
+            };
 
-        private IEnumerable<BeatmapSetOnlineStatusPill> statusPills => this.ChildrenOfType<BeatmapSetOnlineStatusPill>();
+        private IEnumerable<BeatmapSetOnlineStatusPill> statusPills =>
+            this.ChildrenOfType<BeatmapSetOnlineStatusPill>();
 
         [Test]
         public void TestFixedWidth()
         {
             AddStep("create themed content", () => CreateThemedContent(OverlayColourScheme.Red));
 
-            AddStep("set fixed width", () => statusPills.ForEach(pill =>
-            {
-                pill.AutoSizeAxes = Axes.Y;
-                pill.Width = 90;
-            }));
+            AddStep(
+                "set fixed width",
+                () =>
+                    statusPills.ForEach(pill =>
+                    {
+                        pill.AutoSizeAxes = Axes.Y;
+                        pill.Width = 90;
+                    })
+            );
 
-            AddStep("toggle show unknown", () =>
-            {
-                showUnknownStatus = !showUnknownStatus;
-                CreateThemedContent(OverlayColourScheme.Red);
-            });
+            AddStep(
+                "toggle show unknown",
+                () =>
+                {
+                    showUnknownStatus = !showUnknownStatus;
+                    CreateThemedContent(OverlayColourScheme.Red);
+                }
+            );
 
-            AddStep("toggle animate", () =>
-            {
-                animated = !animated;
-                CreateThemedContent(OverlayColourScheme.Red);
-            });
+            AddStep(
+                "toggle animate",
+                () =>
+                {
+                    animated = !animated;
+                    CreateThemedContent(OverlayColourScheme.Red);
+                }
+            );
 
-            AddStep("unset fixed width", () => statusPills.ForEach(pill => pill.AutoSizeAxes = Axes.Both));
+            AddStep(
+                "unset fixed width",
+                () => statusPills.ForEach(pill => pill.AutoSizeAxes = Axes.Both)
+            );
         }
 
         [Test]
         public void TestChangeLabels()
         {
-            AddStep("Change labels", () =>
-            {
-                foreach (var pill in this.ChildrenOfType<BeatmapSetOnlineStatusPill>())
+            AddStep(
+                "Change labels",
+                () =>
                 {
-                    switch (pill.Status)
+                    foreach (var pill in this.ChildrenOfType<BeatmapSetOnlineStatusPill>())
                     {
-                        // cycle at end
-                        case BeatmapOnlineStatus.Loved:
-                            pill.Status = BeatmapOnlineStatus.LocallyModified;
-                            break;
+                        switch (pill.Status)
+                        {
+                            // cycle at end
+                            case BeatmapOnlineStatus.Loved:
+                                pill.Status = BeatmapOnlineStatus.LocallyModified;
+                                break;
 
-                        default:
-                            pill.Status = (pill.Status + 1);
-                            break;
+                            default:
+                                pill.Status = (pill.Status + 1);
+                                break;
+                        }
                     }
                 }
-            });
+            );
         }
     }
 }

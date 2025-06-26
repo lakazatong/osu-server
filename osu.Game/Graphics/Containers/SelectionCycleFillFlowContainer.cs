@@ -16,9 +16,11 @@ namespace osu.Game.Graphics.Containers
     /// A FillFlowContainer that provides functionality to cycle selection between children
     /// The selection wraps around when overflowing past the first or last child.
     /// </summary>
-    public partial class SelectionCycleFillFlowContainer<T> : FillFlowContainer<T> where T : Drawable, IStateful<SelectionState>
+    public partial class SelectionCycleFillFlowContainer<T> : FillFlowContainer<T>
+        where T : Drawable, IStateful<SelectionState>
     {
-        public T Selected => (selectedIndex >= 0 && selectedIndex < Count) ? this[selectedIndex.Value] : null;
+        public T Selected =>
+            (selectedIndex >= 0 && selectedIndex < Count) ? this[selectedIndex.Value] : null;
 
         private int? selectedIndex;
 
@@ -59,8 +61,10 @@ namespace osu.Game.Graphics.Containers
             drawable.StateChanged += state => selectionChanged(drawable, state);
         }
 
-        public override bool Remove(T drawable, bool disposeImmediately)
-            => throw new NotSupportedException($"Cannot remove drawables from {nameof(SelectionCycleFillFlowContainer<T>)}");
+        public override bool Remove(T drawable, bool disposeImmediately) =>
+            throw new NotSupportedException(
+                $"Cannot remove drawables from {nameof(SelectionCycleFillFlowContainer<T>)}"
+            );
 
         private void setSelected(int? value)
         {

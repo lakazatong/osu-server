@@ -27,7 +27,8 @@ namespace osu.Game.Screens.Menu
 {
     public partial class IntroTriangles : IntroScreen
     {
-        protected override string BeatmapHash => "a1556d0801b3a6b175dda32ef546f0ec812b400499f575c44fccbe9c67f9b1e5";
+        protected override string BeatmapHash =>
+            "a1556d0801b3a6b175dda32ef546f0ec812b400499f575c44fccbe9c67f9b1e5";
 
         protected override string BeatmapFile => "triangles.osz";
 
@@ -39,9 +40,7 @@ namespace osu.Game.Screens.Menu
         private TrianglesIntroSequence intro;
 
         public IntroTriangles([CanBeNull] Func<MainMenu> createNextScreen = null)
-            : base(createNextScreen)
-        {
-        }
+            : base(createNextScreen) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -60,35 +59,38 @@ namespace osu.Game.Screens.Menu
 
                 var decouplingClock = new DecouplingFramedClock(UsingThemedIntro ? Track : null);
 
-                LoadComponentAsync(intro = new TrianglesIntroSequence(logo, () => FadeInBackground())
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Clock = new InterpolatingFramedClock(decouplingClock),
-                    LoadMenu = LoadMenu
-                }, _ =>
-                {
-                    AddInternal(intro);
-
-                    // There is a chance that the intro timed out before being displayed, and this scheduled callback could
-                    // happen during the outro rather than intro.
-                    // In such a scenario, we don't want to play the intro sample, nor attempt to start the intro track
-                    // (that may have already been since disposed by MusicController).
-                    if (DidLoadMenu)
-                        return;
-
-                    if (!UsingThemedIntro)
+                LoadComponentAsync(
+                    intro = new TrianglesIntroSequence(logo, () => FadeInBackground())
                     {
-                        // If the user has requested no theme, fallback to the same intro voice and delay as IntroCircles.
-                        // The triangles intro voice and theme are combined which makes it impossible to use.
-                        welcome?.Play();
-                        Scheduler.AddDelayed(StartTrack, IntroCircles.TRACK_START_DELAY);
-                    }
-                    else
-                        StartTrack();
+                        RelativeSizeAxes = Axes.Both,
+                        Clock = new InterpolatingFramedClock(decouplingClock),
+                        LoadMenu = LoadMenu,
+                    },
+                    _ =>
+                    {
+                        AddInternal(intro);
 
-                    // no-op for the case of themed intro, no harm in calling for both scenarios as a safety measure.
-                    decouplingClock.Start();
-                });
+                        // There is a chance that the intro timed out before being displayed, and this scheduled callback could
+                        // happen during the outro rather than intro.
+                        // In such a scenario, we don't want to play the intro sample, nor attempt to start the intro track
+                        // (that may have already been since disposed by MusicController).
+                        if (DidLoadMenu)
+                            return;
+
+                        if (!UsingThemedIntro)
+                        {
+                            // If the user has requested no theme, fallback to the same intro voice and delay as IntroCircles.
+                            // The triangles intro voice and theme are combined which makes it impossible to use.
+                            welcome?.Play();
+                            Scheduler.AddDelayed(StartTrack, IntroCircles.TRACK_START_DELAY);
+                        }
+                        else
+                            StartTrack();
+
+                        // no-op for the case of themed intro, no harm in calling for both scenarios as a safety measure.
+                        decouplingClock.Start();
+                    }
+                );
             }
         }
 
@@ -134,7 +136,7 @@ namespace osu.Game.Screens.Menu
                         Alpha = 0,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Size = new Vector2(0.4f, 0.16f)
+                        Size = new Vector2(0.4f, 0.16f),
                     },
                     welcomeText = new OsuSpriteText
                     {
@@ -150,21 +152,15 @@ namespace osu.Game.Screens.Menu
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Children = new Drawable[]
-                        {
-                            rulesets = new RulesetFlow()
-                        }
+                        Children = new Drawable[] { rulesets = new RulesetFlow() },
                     },
                     logoContainerSecondary = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Child = lazerLogo = new LazerLogo
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        }
+                        Child = lazerLogo =
+                            new LazerLogo { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                     },
                 };
             }
@@ -207,7 +203,11 @@ namespace osu.Game.Screens.Menu
                     using (BeginDelayedSequence(text_4))
                     {
                         welcomeText.FadeIn().OnComplete(t => t.Text = "welcome to osu!");
-                        welcomeText.TransformTo(nameof(welcomeText.Spacing), new Vector2(50, 0), 5000);
+                        welcomeText.TransformTo(
+                            nameof(welcomeText.Spacing),
+                            new Vector2(50, 0),
+                            5000
+                        );
                     }
 
                     using (BeginDelayedSequence(text_glitch))
@@ -237,27 +237,45 @@ namespace osu.Game.Screens.Menu
                         rulesets.FadeOut();
 
                         // matching flyte curve y = 0.25x^2 + (max(0, x - 0.7) / 0.3) ^ 5
-                        lazerLogo.FadeIn().ScaleTo(scale_start).Then().Delay(logo_scale_duration * 0.7f).ScaleTo(scale_start - scale_adjust, logo_scale_duration * 0.3f, Easing.InQuint);
+                        lazerLogo
+                            .FadeIn()
+                            .ScaleTo(scale_start)
+                            .Then()
+                            .Delay(logo_scale_duration * 0.7f)
+                            .ScaleTo(
+                                scale_start - scale_adjust,
+                                logo_scale_duration * 0.3f,
+                                Easing.InQuint
+                            );
 
                         lazerLogo.TransformTo(nameof(LazerLogo.Progress), 1f, logo_scale_duration);
 
-                        logoContainerSecondary.ScaleTo(scale_start).Then().ScaleTo(scale_start - scale_adjust * 0.25f, logo_scale_duration, Easing.InQuad);
+                        logoContainerSecondary
+                            .ScaleTo(scale_start)
+                            .Then()
+                            .ScaleTo(
+                                scale_start - scale_adjust * 0.25f,
+                                logo_scale_duration,
+                                Easing.InQuad
+                            );
                     }
 
                     using (BeginDelayedSequence(logo_2))
                     {
-                        lazerLogo.FadeOut().OnComplete(_ =>
-                        {
-                            logoContainerSecondary.Remove(lazerLogo, true);
+                        lazerLogo
+                            .FadeOut()
+                            .OnComplete(_ =>
+                            {
+                                logoContainerSecondary.Remove(lazerLogo, true);
 
-                            logo.FadeIn();
+                                logo.FadeIn();
 
-                            showBackgroundAction();
+                                showBackgroundAction();
 
-                            game.Add(new GameWideFlash());
+                                game.Add(new GameWideFlash());
 
-                            LoadMenu();
-                        });
+                                LoadMenu();
+                            });
                     }
                 }
             }
@@ -282,7 +300,8 @@ namespace osu.Game.Screens.Menu
 
             private partial class LazerLogo : CompositeDrawable
             {
-                private LogoAnimation highlight, background;
+                private LogoAnimation highlight,
+                    background;
 
                 public float Progress
                 {
@@ -344,7 +363,10 @@ namespace osu.Game.Screens.Menu
                         }
                         catch
                         {
-                            Logger.Log($"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.", level: LogLevel.Error);
+                            Logger.Log(
+                                $"Could not create ruleset icon for {ruleset.Name}. Please check for an update from the developer.",
+                                level: LogLevel.Error
+                            );
                         }
                     }
                 }
@@ -369,7 +391,10 @@ namespace osu.Game.Screens.Menu
                     {
                         lastGenTime = (lastGenTime ?? Time.Current) + time_between_triangles;
 
-                        Drawable triangle = new OutlineTriangle(RNG.NextBool(), (RNG.NextSingle() + 0.2f) * 80)
+                        Drawable triangle = new OutlineTriangle(
+                            RNG.NextBool(),
+                            (RNG.NextSingle() + 0.2f) * 80
+                        )
                         {
                             RelativePositionAxes = Axes.Both,
                             Position = new Vector2(RNG.NextSingle(), RNG.NextSingle()),
@@ -398,14 +423,16 @@ namespace osu.Game.Screens.Menu
 
                         if (outlineOnly)
                         {
-                            AddInternal(new Triangle
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Colour = Color4.Black,
-                                Size = new Vector2(size - 5),
-                                Blending = BlendingParameters.None,
-                            });
+                            AddInternal(
+                                new Triangle
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = Color4.Black,
+                                    Size = new Vector2(size - 5),
+                                    Blending = BlendingParameters.None,
+                                }
+                            );
                         }
 
                         Blending = BlendingParameters.Additive;

@@ -13,21 +13,18 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
     public partial class DrawableBanana : DrawablePalpableCatchHitObject
     {
         public DrawableBanana()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableBanana(Banana? h)
-            : base(h)
-        {
-        }
+            : base(h) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             ScalingContainer.Child = new SkinnableDrawable(
                 new CatchSkinComponentLookup(CatchSkinComponents.Banana),
-                _ => new BananaPiece());
+                _ => new BananaPiece()
+            );
         }
 
         protected override void LoadComplete()
@@ -65,14 +62,19 @@ namespace osu.Game.Rulesets.Catch.Objects.Drawables
         {
             base.Update();
 
-            double preemptProgress = (Time.Current - (HitObject.StartTime - InitialLifetimeOffset)) / HitObject.TimePreempt;
+            double preemptProgress =
+                (Time.Current - (HitObject.StartTime - InitialLifetimeOffset))
+                / HitObject.TimePreempt;
 
             // Clamp scale and rotation at the point of bananas being caught, else let them freely extrapolate.
             if (Result.IsHit)
                 preemptProgress = Math.Min(1, preemptProgress);
 
-            ScalingContainer.Scale = new Vector2(HitObject.Scale * (float)Interpolation.Lerp(startScale, endScale, preemptProgress));
-            ScalingContainer.Rotation = (float)Interpolation.Lerp(startAngle, endAngle, preemptProgress);
+            ScalingContainer.Scale = new Vector2(
+                HitObject.Scale * (float)Interpolation.Lerp(startScale, endScale, preemptProgress)
+            );
+            ScalingContainer.Rotation = (float)
+                Interpolation.Lerp(startAngle, endAngle, preemptProgress);
         }
 
         public override void PlaySamples()

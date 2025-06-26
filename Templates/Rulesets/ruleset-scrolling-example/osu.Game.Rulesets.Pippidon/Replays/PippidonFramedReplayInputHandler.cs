@@ -12,18 +12,18 @@ namespace osu.Game.Rulesets.Pippidon.Replays
     public class PippidonFramedReplayInputHandler : FramedReplayInputHandler<PippidonReplayFrame>
     {
         public PippidonFramedReplayInputHandler(Replay replay)
-            : base(replay)
-        {
-        }
+            : base(replay) { }
 
         protected override bool IsImportant(PippidonReplayFrame frame) => frame.Actions.Any();
 
         protected override void CollectReplayInputs(List<IInput> inputs)
         {
-            inputs.Add(new ReplayState<PippidonAction>
-            {
-                PressedActions = CurrentFrame?.Actions ?? new List<PippidonAction>(),
-            });
+            inputs.Add(
+                new ReplayState<PippidonAction>
+                {
+                    PressedActions = CurrentFrame?.Actions ?? new List<PippidonAction>(),
+                }
+            );
         }
     }
 }

@@ -64,9 +64,7 @@ namespace osu.Game.Skinning
         /// Called when a change is made to the skin.
         /// </summary>
         /// <param name="skin">The new skin.</param>
-        protected virtual void SkinChanged(ISkinSource skin)
-        {
-        }
+        protected virtual void SkinChanged(ISkinSource skin) { }
 
         private void onChange()
         {

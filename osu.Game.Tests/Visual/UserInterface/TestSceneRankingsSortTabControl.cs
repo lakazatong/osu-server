@@ -11,15 +11,13 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneRankingsSortTabControl : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         public TestSceneRankingsSortTabControl()
         {
-            Child = new RankingsSortTabControl
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            };
+            Child = new RankingsSortTabControl { Anchor = Anchor.Centre, Origin = Anchor.Centre };
         }
     }
 }

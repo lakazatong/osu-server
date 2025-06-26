@@ -29,144 +29,204 @@ namespace osu.Game.Tests.Visual.Online
         private TestMarkdownContainer markdownContainer;
 
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public void Setup() =>
+            Schedule(() =>
             {
-                new Box
+                Children = new Drawable[]
                 {
-                    Colour = overlayColour.Background5,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                scrollContainer = new OverlayScrollContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding(20),
-                }
-            };
+                    new Box { Colour = overlayColour.Background5, RelativeSizeAxes = Axes.Both },
+                    scrollContainer = new OverlayScrollContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding(20),
+                    },
+                };
 
-            scrollContainer.Child = new DependencyProvidingContainer
-            {
-                CachedDependencies = new (Type, object)[]
+                scrollContainer.Child = new DependencyProvidingContainer
                 {
-                    (typeof(OverlayScrollContainer), scrollContainer)
-                },
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Child = markdownContainer = new TestMarkdownContainer
-                {
+                    CachedDependencies = new (Type, object)[]
+                    {
+                        (typeof(OverlayScrollContainer), scrollContainer),
+                    },
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                }
-            };
-        });
+                    Child = markdownContainer =
+                        new TestMarkdownContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                        },
+                };
+            });
 
         [Test]
         public void TestLink()
         {
-            AddStep("set current path", () => markdownContainer.CurrentPath = $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/");
+            AddStep(
+                "set current path",
+                () =>
+                    markdownContainer.CurrentPath =
+                        $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/"
+            );
 
-            AddStep("set '/wiki/Main_page''", () => markdownContainer.Text = "[wiki main page](/wiki/Main_page)");
-            AddAssert("check url", () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/Main_page");
+            AddStep(
+                "set '/wiki/Main_page''",
+                () => markdownContainer.Text = "[wiki main page](/wiki/Main_page)"
+            );
+            AddAssert(
+                "check url",
+                () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/Main_page"
+            );
 
             AddStep("set '../FAQ''", () => markdownContainer.Text = "[FAQ](../FAQ)");
-            AddAssert("check url", () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/FAQ");
+            AddAssert(
+                "check url",
+                () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/FAQ"
+            );
 
-            AddStep("set './Writing''", () => markdownContainer.Text = "[wiki writing guidline](./Writing)");
-            AddAssert("check url", () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/Writing");
+            AddStep(
+                "set './Writing''",
+                () => markdownContainer.Text = "[wiki writing guidline](./Writing)"
+            );
+            AddAssert(
+                "check url",
+                () =>
+                    markdownContainer.Link.Url
+                    == $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/Writing"
+            );
 
-            AddStep("set 'Formatting''", () => markdownContainer.Text = "[wiki formatting guidline](Formatting)");
-            AddAssert("check url", () => markdownContainer.Link.Url == $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/Formatting");
+            AddStep(
+                "set 'Formatting''",
+                () => markdownContainer.Text = "[wiki formatting guidline](Formatting)"
+            );
+            AddAssert(
+                "check url",
+                () =>
+                    markdownContainer.Link.Url
+                    == $"{API.Endpoints.WebsiteUrl}/wiki/Article_styling_criteria/Formatting"
+            );
         }
 
         [Test]
         public void TestOutdatedNoticeBox()
         {
-            AddStep("Add outdated yaml header", () =>
-            {
-                markdownContainer.Text = @"---
+            AddStep(
+                "Add outdated yaml header",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"---
 outdated: true
 ---";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestNeedsCleanupNoticeBox()
         {
-            AddStep("Add needs cleanup yaml header", () =>
-            {
-                markdownContainer.Text = @"---
+            AddStep(
+                "Add needs cleanup yaml header",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"---
 needs_cleanup: true
 ---";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestOnlyShowOutdatedNoticeBox()
         {
-            AddStep("Add outdated and needs cleanup yaml", () =>
-            {
-                markdownContainer.Text = @"---
+            AddStep(
+                "Add outdated and needs cleanup yaml",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"---
 outdated: true
 needs_cleanup: true
 ---";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestAbsoluteImage()
         {
-            AddStep("Add absolute image", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh";
-                markdownContainer.Text = "![intro](/wiki/images/Client/Interface/img/intro-screen.jpg)";
-            });
+            AddStep(
+                "Add absolute image",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh";
+                    markdownContainer.Text =
+                        "![intro](/wiki/images/Client/Interface/img/intro-screen.jpg)";
+                }
+            );
         }
 
         [Test]
         public void TestRelativeImage()
         {
-            AddStep("Add relative image", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/Interface/";
-                markdownContainer.Text = "![intro](../images/Client/Interface/img/intro-screen.jpg)";
-            });
+            AddStep(
+                "Add relative image",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/Interface/";
+                    markdownContainer.Text =
+                        "![intro](../images/Client/Interface/img/intro-screen.jpg)";
+                }
+            );
         }
 
         [Test]
         public void TestBlockImage()
         {
-            AddStep("Add paragraph with block image", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/Interface/";
-                markdownContainer.Text = @"Line before image
+            AddStep(
+                "Add paragraph with block image",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/Interface/";
+                    markdownContainer.Text =
+                        @"Line before image
 
 ![play menu](../images/Client/Interface/img/play-menu.jpg ""Main Menu in osu!"")
 
 Line after image";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestInlineImage()
         {
-            AddStep("Add inline image", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh";
-                markdownContainer.Text = "![osu! mode icon](/wiki/shared/mode/osu.png) osu!";
-            });
+            AddStep(
+                "Add inline image",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh";
+                    markdownContainer.Text = "![osu! mode icon](/wiki/shared/mode/osu.png) osu!";
+                }
+            );
         }
 
         [Test]
         public void TestTableWithImageContent()
         {
-            AddStep("Add Table", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh";
-                markdownContainer.Text = @"
+            AddStep(
+                "Add Table",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh";
+                    markdownContainer.Text =
+                        @"
 | Image | Name | Effect |
 | :-: | :-: | :-- |
 | ![](/wiki/images/shared/judgement/osu!/hit300.png ""300"") | 300 | A possible score when tapping a hit circle precisely on time, completing a Slider and keeping the cursor over every tick, or completing a Spinner with the Spinner Metre full. A score of 300 appears in an blue score by default. Scoring nothing except 300s in a beatmap will award the player with the SS or SSH grade. |
@@ -176,57 +236,98 @@ Line after image";
 | ![](/wiki/images/shared/judgement/osu!/hit50.png ""50"") | 50 | A possible score one can get when tapping a hit circle rather early or late but not early or late enough to cause a miss, completing a Slider and missing a lot of ticks, or completing a Spinner with the Spinner Metre close to full. A score of 50 appears in a orange score by default. Scoring a 50 in a combo will prevent the appearance of a Katu or a Geki at the combo's end. |
 | ![](/wiki/images/shared/judgement/osu!/hit0.png ""Miss"") | Miss | A possible score one can get when not tapping a hit circle or too early (based on OD and AR, it may *shake* instead), not tapping or holding the Slider at least once, or completing a Spinner with low Spinner Metre fill. Scoring a Miss will reset the current combo to 0 and will prevent the appearance of a Katu or a Geki at the combo's end. |
 ";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestWideImageNotExceedContainer()
         {
-            AddStep("Add image", () =>
-            {
-                markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/osu!_Program_Files/";
-                markdownContainer.Text = "![](../images/Client/Program_files/img/file_structure.jpg \"The file structure of osu!'s installation folder, on Windows and macOS\")";
-            });
+            AddStep(
+                "Add image",
+                () =>
+                {
+                    markdownContainer.CurrentPath = "https://dev.ppy.sh/wiki/osu!_Program_Files/";
+                    markdownContainer.Text =
+                        "![](../images/Client/Program_files/img/file_structure.jpg \"The file structure of osu!'s installation folder, on Windows and macOS\")";
+                }
+            );
 
-            AddUntilStep("Wait image to load", () => markdownContainer.ChildrenOfType<DelayedLoadWrapper>().First().DelayedLoadCompleted);
+            AddUntilStep(
+                "Wait image to load",
+                () =>
+                    markdownContainer
+                        .ChildrenOfType<DelayedLoadWrapper>()
+                        .First()
+                        .DelayedLoadCompleted
+            );
 
-            AddStep("Change container width", () =>
-            {
-                markdownContainer.Width = 0.5f;
-            });
+            AddStep(
+                "Change container width",
+                () =>
+                {
+                    markdownContainer.Width = 0.5f;
+                }
+            );
 
-            AddAssert("Image not exceed container width", () =>
-            {
-                var spriteImage = markdownContainer.ChildrenOfType<Sprite>().First();
-                return Precision.DefinitelyBigger(markdownContainer.DrawWidth, spriteImage.DrawWidth);
-            });
+            AddAssert(
+                "Image not exceed container width",
+                () =>
+                {
+                    var spriteImage = markdownContainer.ChildrenOfType<Sprite>().First();
+                    return Precision.DefinitelyBigger(
+                        markdownContainer.DrawWidth,
+                        spriteImage.DrawWidth
+                    );
+                }
+            );
         }
 
         [Test]
         public void TestFlag()
         {
-            AddStep("Add flag", () =>
-            {
-                markdownContainer.CurrentPath = @"https://dev.ppy.sh";
-                markdownContainer.Text = "::{flag=\"AU\"}:: ::{flag=\"ZZ\"}::";
-            });
-            AddAssert("Two flags visible", () => markdownContainer.ChildrenOfType<DrawableFlag>().Count(), () => Is.EqualTo(2));
+            AddStep(
+                "Add flag",
+                () =>
+                {
+                    markdownContainer.CurrentPath = @"https://dev.ppy.sh";
+                    markdownContainer.Text = "::{flag=\"AU\"}:: ::{flag=\"ZZ\"}::";
+                }
+            );
+            AddAssert(
+                "Two flags visible",
+                () => markdownContainer.ChildrenOfType<DrawableFlag>().Count(),
+                () => Is.EqualTo(2)
+            );
         }
 
         [Test]
         public void TestHeadingWithIdAttribute()
         {
-            AddStep("Add heading with ID", () =>
-            {
-                markdownContainer.Text = "# This is a heading with an ID {#this-is-the-id}";
-            });
-            AddAssert("ID not visible", () => markdownContainer.ChildrenOfType<SpriteText>().All(spriteText => spriteText.Text != "{#this-is-the-id}"));
+            AddStep(
+                "Add heading with ID",
+                () =>
+                {
+                    markdownContainer.Text = "# This is a heading with an ID {#this-is-the-id}";
+                }
+            );
+            AddAssert(
+                "ID not visible",
+                () =>
+                    markdownContainer
+                        .ChildrenOfType<SpriteText>()
+                        .All(spriteText => spriteText.Text != "{#this-is-the-id}")
+            );
         }
 
         [Test]
         public void TestFootnotes()
         {
-            AddStep("set content", () => markdownContainer.Text = @"This text has a footnote[^test].
+            AddStep(
+                "set content",
+                () =>
+                    markdownContainer.Text =
+                        @"This text has a footnote[^test].
 
 Here's some more text[^test2] with another footnote!
 
@@ -241,40 +342,72 @@ Donec ipsum felis, feugiat vel fermentum at, commodo eu sapien. Suspendisse nec 
 Phasellus eu nunc nec ligula semper fringilla. Aliquam magna neque, placerat sed urna tristique, laoreet pharetra nulla. Vivamus maximus turpis purus, eu viverra dolor sodales porttitor. Praesent bibendum sapien purus, sed ultricies dolor iaculis sed. Fusce congue hendrerit malesuada. Nulla nulla est, auctor ac fringilla sed, ornare a lorem. Donec quis velit imperdiet, imperdiet sem non, pellentesque sapien. Maecenas in orci id ipsum placerat facilisis non sed nisi. Duis dictum lorem sodales odio dictum eleifend. Vestibulum bibendum euismod quam, eget pharetra orci facilisis sed. Vivamus at diam non ipsum consequat tristique. Pellentesque gravida dignissim pellentesque. Donec ullamcorper lacinia orci, id consequat purus faucibus quis. Phasellus metus nunc, iaculis a interdum vel, congue sed erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam eros libero, hendrerit luctus nulla vitae, luctus maximus nunc.
 
 [^test]: This is a **footnote**.
-[^test2]: This is another footnote [with a link](https://google.com/)!");
+[^test2]: This is another footnote [with a link](https://google.com/)!"
+            );
             AddStep("shrink scroll height", () => scrollContainer.Height = 0.5f);
 
-            AddStep("press second footnote link", () =>
-            {
-                InputManager.MoveMouseTo(markdownContainer.ChildrenOfType<OsuMarkdownFootnoteLink>().ElementAt(1));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("second footnote scrolled into view", () =>
-            {
-                var footnote = markdownContainer.ChildrenOfType<OsuMarkdownFootnote>().ElementAt(1);
-                return scrollContainer.ScreenSpaceDrawQuad.Contains(footnote.ScreenSpaceDrawQuad.TopLeft)
-                       && scrollContainer.ScreenSpaceDrawQuad.Contains(footnote.ScreenSpaceDrawQuad.BottomRight);
-            });
+            AddStep(
+                "press second footnote link",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        markdownContainer.ChildrenOfType<OsuMarkdownFootnoteLink>().ElementAt(1)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "second footnote scrolled into view",
+                () =>
+                {
+                    var footnote = markdownContainer
+                        .ChildrenOfType<OsuMarkdownFootnote>()
+                        .ElementAt(1);
+                    return scrollContainer.ScreenSpaceDrawQuad.Contains(
+                            footnote.ScreenSpaceDrawQuad.TopLeft
+                        )
+                        && scrollContainer.ScreenSpaceDrawQuad.Contains(
+                            footnote.ScreenSpaceDrawQuad.BottomRight
+                        );
+                }
+            );
 
-            AddStep("press first footnote backlink", () =>
-            {
-                InputManager.MoveMouseTo(markdownContainer.ChildrenOfType<OsuMarkdownFootnoteBacklink>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("first footnote link scrolled into view", () =>
-            {
-                var footnote = markdownContainer.ChildrenOfType<OsuMarkdownFootnoteLink>().First();
-                return scrollContainer.ScreenSpaceDrawQuad.Contains(footnote.ScreenSpaceDrawQuad.TopLeft)
-                       && scrollContainer.ScreenSpaceDrawQuad.Contains(footnote.ScreenSpaceDrawQuad.BottomRight);
-            });
+            AddStep(
+                "press first footnote backlink",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        markdownContainer.ChildrenOfType<OsuMarkdownFootnoteBacklink>().First()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "first footnote link scrolled into view",
+                () =>
+                {
+                    var footnote = markdownContainer
+                        .ChildrenOfType<OsuMarkdownFootnoteLink>()
+                        .First();
+                    return scrollContainer.ScreenSpaceDrawQuad.Contains(
+                            footnote.ScreenSpaceDrawQuad.TopLeft
+                        )
+                        && scrollContainer.ScreenSpaceDrawQuad.Contains(
+                            footnote.ScreenSpaceDrawQuad.BottomRight
+                        );
+                }
+            );
         }
 
         [Test]
         public void TestCodeSyntax()
         {
-            AddStep("set content", () =>
-            {
-                markdownContainer.Text = @"
+            AddStep(
+                "set content",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"
 This is a paragraph containing `inline code` syntax.
 Oh wow I do love the `WikiMarkdownContainer`, it is very cool!
 
@@ -290,17 +423,16 @@ public class WikiMarkdownContainer : MarkdownContainer
 ```
 This is a line after the fenced code block!
 ";
-            });
+                }
+            );
         }
 
         private partial class TestMarkdownContainer : WikiMarkdownContainer
         {
             public LinkInline Link;
 
-            public override OsuMarkdownTextFlowContainer CreateTextFlow() => new TestMarkdownTextFlowContainer
-            {
-                UrlAdded = link => Link = link,
-            };
+            public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+                new TestMarkdownTextFlowContainer { UrlAdded = link => Link = link };
 
             private partial class TestMarkdownTextFlowContainer : OsuMarkdownTextFlowContainer
             {
@@ -313,7 +445,8 @@ This is a line after the fenced code block!
                     UrlAdded?.Invoke(linkInline);
                 }
 
-                protected override void AddImage(LinkInline linkInline) => AddDrawable(new WikiMarkdownImage(linkInline));
+                protected override void AddImage(LinkInline linkInline) =>
+                    AddDrawable(new WikiMarkdownImage(linkInline));
             }
         }
     }

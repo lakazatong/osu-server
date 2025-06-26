@@ -5,8 +5,8 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Tournament.Components;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Tournament.Components;
 using osu.Game.Tournament.Models;
 using osuTK.Graphics;
 
@@ -17,29 +17,27 @@ namespace osu.Game.Tournament.Screens.Showcase
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                new TournamentLogo(),
-                new TourneyVideo("showcase")
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Loop = true,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new Container
-                {
-                    Padding = new MarginPadding { Bottom = SongBar.HEIGHT },
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new Box
+                    new TournamentLogo(),
+                    new TourneyVideo("showcase") { Loop = true, RelativeSizeAxes = Axes.Both },
+                    new Container
                     {
-                        // chroma key area for stable gameplay
-                        Name = "chroma",
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
+                        Padding = new MarginPadding { Bottom = SongBar.HEIGHT },
                         RelativeSizeAxes = Axes.Both,
-                        Colour = new Color4(0, 255, 0, 255),
-                    }
+                        Child = new Box
+                        {
+                            // chroma key area for stable gameplay
+                            Name = "chroma",
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = new Color4(0, 255, 0, 255),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         protected override void CurrentMatchChanged(ValueChangedEvent<TournamentMatch?> match)

@@ -54,7 +54,9 @@ namespace osu.Game.Configuration
                 if (member == null)
                     return null;
 
-                var property = declaringType.GetMember(member, BindingFlags.Static | BindingFlags.Public).FirstOrDefault();
+                var property = declaringType
+                    .GetMember(member, BindingFlags.Static | BindingFlags.Public)
+                    .FirstOrDefault();
 
                 if (property == null)
                     return null;
@@ -68,7 +70,9 @@ namespace osu.Game.Configuration
                         return (LocalisableString)p.GetValue(null).AsNonNull();
 
                     default:
-                        throw new InvalidOperationException($"Member \"{member}\" was not found in type {declaringType} (must be a static field or property)");
+                        throw new InvalidOperationException(
+                            $"Member \"{member}\" was not found in type {declaringType} (must be a static field or property)"
+                        );
                 }
             }
         }
@@ -79,7 +83,12 @@ namespace osu.Game.Configuration
             Description = description ?? string.Empty;
         }
 
-        public SettingSourceAttribute(Type declaringType, string label, string description, int orderPosition)
+        public SettingSourceAttribute(
+            Type declaringType,
+            string label,
+            string description,
+            int orderPosition
+        )
             : this(declaringType, label, description)
         {
             OrderPosition = orderPosition;
@@ -118,14 +127,31 @@ namespace osu.Game.Configuration
                 if (attr.SettingControlType != null)
                 {
                     var controlType = attr.SettingControlType;
-                    if (controlType.EnumerateBaseTypes().All(t => !t.IsGenericType || t.GetGenericTypeDefinition() != typeof(SettingsItem<>)))
-                        throw new InvalidOperationException($"{nameof(SettingSourceAttribute)} had an unsupported custom control type ({controlType.ReadableName()})");
+                    if (
+                        controlType
+                            .EnumerateBaseTypes()
+                            .All(t =>
+                                !t.IsGenericType
+                                || t.GetGenericTypeDefinition() != typeof(SettingsItem<>)
+                            )
+                    )
+                        throw new InvalidOperationException(
+                            $"{nameof(SettingSourceAttribute)} had an unsupported custom control type ({controlType.ReadableName()})"
+                        );
 
                     var control = (Drawable)Activator.CreateInstance(controlType)!;
-                    controlType.GetProperty(nameof(SettingsItem<object>.SettingSourceObject))?.SetValue(control, obj);
-                    controlType.GetProperty(nameof(SettingsItem<object>.LabelText))?.SetValue(control, attr.Label);
-                    controlType.GetProperty(nameof(SettingsItem<object>.TooltipText))?.SetValue(control, attr.Description);
-                    controlType.GetProperty(nameof(SettingsItem<object>.Current))?.SetValue(control, value);
+                    controlType
+                        .GetProperty(nameof(SettingsItem<object>.SettingSourceObject))
+                        ?.SetValue(control, obj);
+                    controlType
+                        .GetProperty(nameof(SettingsItem<object>.LabelText))
+                        ?.SetValue(control, attr.Label);
+                    controlType
+                        .GetProperty(nameof(SettingsItem<object>.TooltipText))
+                        ?.SetValue(control, attr.Description);
+                    controlType
+                        .GetProperty(nameof(SettingsItem<object>.Current))
+                        ?.SetValue(control, value);
 
                     yield return control;
 
@@ -161,7 +187,7 @@ namespace osu.Game.Configuration
                         {
                             LabelText = attr.Label,
                             TooltipText = attr.Description,
-                            Current = bNumber
+                            Current = bNumber,
                         };
 
                         break;
@@ -171,7 +197,7 @@ namespace osu.Game.Configuration
                         {
                             LabelText = attr.Label,
                             TooltipText = attr.Description,
-                            Current = bBool
+                            Current = bBool,
                         };
 
                         break;
@@ -181,7 +207,7 @@ namespace osu.Game.Configuration
                         {
                             LabelText = attr.Label,
                             TooltipText = attr.Description,
-                            Current = bString
+                            Current = bString,
                         };
 
                         break;
@@ -191,30 +217,44 @@ namespace osu.Game.Configuration
                         {
                             LabelText = attr.Label,
                             TooltipText = attr.Description,
-                            Current = bColour
+                            Current = bColour,
                         };
 
                         break;
 
                     case IBindable bindable:
-                        var dropdownType = typeof(ModSettingsEnumDropdown<>).MakeGenericType(bindable.GetType().GetGenericArguments()[0]);
+                        var dropdownType = typeof(ModSettingsEnumDropdown<>).MakeGenericType(
+                            bindable.GetType().GetGenericArguments()[0]
+                        );
                         var dropdown = (Drawable)Activator.CreateInstance(dropdownType)!;
 
-                        dropdownType.GetProperty(nameof(SettingsDropdown<object>.LabelText))?.SetValue(dropdown, attr.Label);
-                        dropdownType.GetProperty(nameof(SettingsDropdown<object>.TooltipText))?.SetValue(dropdown, attr.Description);
-                        dropdownType.GetProperty(nameof(SettingsDropdown<object>.Current))?.SetValue(dropdown, bindable);
+                        dropdownType
+                            .GetProperty(nameof(SettingsDropdown<object>.LabelText))
+                            ?.SetValue(dropdown, attr.Label);
+                        dropdownType
+                            .GetProperty(nameof(SettingsDropdown<object>.TooltipText))
+                            ?.SetValue(dropdown, attr.Description);
+                        dropdownType
+                            .GetProperty(nameof(SettingsDropdown<object>.Current))
+                            ?.SetValue(dropdown, bindable);
 
                         yield return dropdown;
 
                         break;
 
                     default:
-                        throw new InvalidOperationException($"{nameof(SettingSourceAttribute)} was attached to an unsupported type ({value})");
+                        throw new InvalidOperationException(
+                            $"{nameof(SettingSourceAttribute)} was attached to an unsupported type ({value})"
+                        );
                 }
             }
         }
 
-        private static readonly ConcurrentDictionary<Type, (SettingSourceAttribute, PropertyInfo)[]> property_info_cache = new ConcurrentDictionary<Type, (SettingSourceAttribute, PropertyInfo)[]>();
+        private static readonly ConcurrentDictionary<
+            Type,
+            (SettingSourceAttribute, PropertyInfo)[]
+        > property_info_cache =
+            new ConcurrentDictionary<Type, (SettingSourceAttribute, PropertyInfo)[]>();
 
         /// <summary>
         /// Returns the underlying value of the given mod setting object.
@@ -249,19 +289,30 @@ namespace osu.Game.Configuration
             }
         }
 
-        public static IEnumerable<(SettingSourceAttribute, PropertyInfo)> GetSettingsSourceProperties(this object obj)
+        public static IEnumerable<(
+            SettingSourceAttribute,
+            PropertyInfo
+        )> GetSettingsSourceProperties(this object obj)
         {
             var type = obj.GetType();
 
             if (!property_info_cache.TryGetValue(type, out var properties))
-                property_info_cache[type] = properties = getSettingsSourceProperties(type).ToArray();
+                property_info_cache[type] = properties = getSettingsSourceProperties(type)
+                    .ToArray();
 
             return properties;
         }
 
-        private static IEnumerable<(SettingSourceAttribute, PropertyInfo)> getSettingsSourceProperties(Type type)
+        private static IEnumerable<(
+            SettingSourceAttribute,
+            PropertyInfo
+        )> getSettingsSourceProperties(Type type)
         {
-            foreach (var property in type.GetProperties(BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance))
+            foreach (
+                var property in type.GetProperties(
+                    BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance
+                )
+            )
             {
                 var attr = property.GetCustomAttribute<SettingSourceAttribute>(true);
 
@@ -272,10 +323,11 @@ namespace osu.Game.Configuration
             }
         }
 
-        public static ICollection<(SettingSourceAttribute, PropertyInfo)> GetOrderedSettingsSourceProperties(this object obj)
-            => obj.GetSettingsSourceProperties()
-                  .OrderBy(attr => attr.Item1)
-                  .ToArray();
+        public static ICollection<(
+            SettingSourceAttribute,
+            PropertyInfo
+        )> GetOrderedSettingsSourceProperties(this object obj) =>
+            obj.GetSettingsSourceProperties().OrderBy(attr => attr.Item1).ToArray();
 
         private partial class ModSettingsEnumDropdown<T> : SettingsEnumDropdown<T>
             where T : struct, Enum
@@ -285,7 +337,8 @@ namespace osu.Game.Configuration
             private partial class ModDropdownControl : DropdownControl
             {
                 // Set menu's max height low enough to workaround nested scroll issues (see https://github.com/ppy/osu-framework/issues/4536).
-                protected override DropdownMenu CreateMenu() => base.CreateMenu().With(m => m.MaxHeight = 100);
+                protected override DropdownMenu CreateMenu() =>
+                    base.CreateMenu().With(m => m.MaxHeight = 100);
             }
         }
     }

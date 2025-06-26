@@ -28,7 +28,8 @@ namespace osu.Game.Screens
             InternalChild = parallaxContainer = new ParallaxContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = backgroundScreenStack = new BackgroundScreenStack { RelativeSizeAxes = Axes.Both },
+                Child = backgroundScreenStack =
+                    new BackgroundScreenStack { RelativeSizeAxes = Axes.Both },
             };
 
             ScreenPushed += screenPushed;
@@ -53,7 +54,9 @@ namespace osu.Game.Screens
             }
 
             // create dependencies synchronously to ensure leases are in a sane state.
-            ((OsuScreen)next).CreateLeasedDependencies((prev as OsuScreen)?.Dependencies ?? Dependencies);
+            ((OsuScreen)next).CreateLeasedDependencies(
+                (prev as OsuScreen)?.Dependencies ?? Dependencies
+            );
 
             ScreenChanged(prev, next);
         }
@@ -64,6 +67,8 @@ namespace osu.Game.Screens
         }
 
         private void setParallax(IScreen? next) =>
-            parallaxContainer.ParallaxAmount = ParallaxContainer.DEFAULT_PARALLAX_AMOUNT * ((next as IOsuScreen)?.BackgroundParallaxAmount ?? 1.0f);
+            parallaxContainer.ParallaxAmount =
+                ParallaxContainer.DEFAULT_PARALLAX_AMOUNT
+                * ((next as IOsuScreen)?.BackgroundParallaxAmount ?? 1.0f);
     }
 }

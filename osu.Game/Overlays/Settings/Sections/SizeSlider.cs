@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Numerics;
 using System.Globalization;
+using System.Numerics;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterface;
 
@@ -15,6 +15,7 @@ namespace osu.Game.Overlays.Settings.Sections
     public partial class SizeSlider<T> : RoundedSliderBar<T>
         where T : struct, INumber<T>, IMinMaxValue<T>, IFormattable
     {
-        public override LocalisableString TooltipText => Current.Value.ToString(@"0.##x", NumberFormatInfo.CurrentInfo);
+        public override LocalisableString TooltipText =>
+            Current.Value.ToString(@"0.##x", NumberFormatInfo.CurrentInfo);
     }
 }

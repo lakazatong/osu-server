@@ -19,11 +19,7 @@ namespace osu.Game.Tournament.Screens.Setup
         protected override Drawable CreateComponent()
         {
             var drawable = base.CreateComponent();
-            FlowContainer.Insert(-1, numberBox = new OsuNumberBox
-            {
-                Text = "1080",
-                Width = 100
-            });
+            FlowContainer.Insert(-1, numberBox = new OsuNumberBox { Text = "1080", Width = 100 });
 
             base.Action = () =>
             {

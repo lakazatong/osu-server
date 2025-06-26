@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using osu.Game.Overlays;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,6 +15,7 @@ using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Overlays;
 using osu.Game.Overlays.Comments;
 using osu.Game.Overlays.Comments.Buttons;
 
@@ -25,7 +25,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneCommentsContainer : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         private DummyAPIAccess dummyAPI => (DummyAPIAccess)API;
 
@@ -34,21 +36,24 @@ namespace osu.Game.Tests.Visual.Online
         private TextBox editorTextBox = null!;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new BasicScrollContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Child = commentsContainer = new CommentsContainer()
-            };
-            editorTextBox = commentsContainer.ChildrenOfType<TextBox>().First();
-        });
+                Child = new BasicScrollContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = commentsContainer = new CommentsContainer(),
+                };
+                editorTextBox = commentsContainer.ChildrenOfType<TextBox>().First();
+            });
 
         [Test]
         public void TestIdleState()
         {
-            AddUntilStep("loading spinner shown",
-                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().IsLoading);
+            AddUntilStep(
+                "loading spinner shown",
+                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().IsLoading
+            );
         }
 
         [TestCase(false)]
@@ -56,14 +61,35 @@ namespace osu.Game.Tests.Visual.Online
         public void TestSingleCommentsPage(bool withPinned)
         {
             setUpCommentsResponse(getExampleComments(withPinned));
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddUntilStep("show more button hidden",
-                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().Alpha == 0);
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddUntilStep(
+                "show more button hidden",
+                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().Alpha == 0
+            );
 
             if (withPinned)
-                AddAssert("pinned comment replies collapsed", () => commentsContainer.ChildrenOfType<ShowRepliesButton>().First().Expanded.Value, () => Is.False);
+                AddAssert(
+                    "pinned comment replies collapsed",
+                    () =>
+                        commentsContainer
+                            .ChildrenOfType<ShowRepliesButton>()
+                            .First()
+                            .Expanded.Value,
+                    () => Is.False
+                );
             else
-                AddAssert("first comment replies expanded", () => commentsContainer.ChildrenOfType<ShowRepliesButton>().First().Expanded.Value, () => Is.True);
+                AddAssert(
+                    "first comment replies expanded",
+                    () =>
+                        commentsContainer
+                            .ChildrenOfType<ShowRepliesButton>()
+                            .First()
+                            .Expanded.Value,
+                    () => Is.True
+                );
         }
 
         [TestCase(false)]
@@ -75,9 +101,14 @@ namespace osu.Game.Tests.Visual.Online
             comments.TopLevelCount = 10;
 
             setUpCommentsResponse(comments);
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddUntilStep("show more button visible",
-                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().Alpha == 1);
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddUntilStep(
+                "show more button visible",
+                () => commentsContainer.ChildrenOfType<CommentsShowMoreButton>().Single().Alpha == 1
+            );
         }
 
         [TestCase(false)]
@@ -89,11 +120,18 @@ namespace osu.Game.Tests.Visual.Online
 
             AddStep("hide container", () => commentsContainer.Hide());
             setUpCommentsResponse(comments);
-            AddRepeatStep("show comments multiple times",
-                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 456), 2);
+            AddRepeatStep(
+                "show comments multiple times",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 456),
+                2
+            );
             AddStep("show container", () => commentsContainer.Show());
-            AddUntilStep("comment count is correct",
-                () => commentsContainer.ChildrenOfType<DrawableComment>().Count() == topLevelCommentCount);
+            AddUntilStep(
+                "comment count is correct",
+                () =>
+                    commentsContainer.ChildrenOfType<DrawableComment>().Count()
+                    == topLevelCommentCount
+            );
         }
 
         [Test]
@@ -103,8 +141,14 @@ namespace osu.Game.Tests.Visual.Online
             comments.Comments.Clear();
 
             setUpCommentsResponse(comments);
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddAssert("no comment shown", () => !commentsContainer.ChildrenOfType<DrawableComment>().Any());
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddAssert(
+                "no comment shown",
+                () => !commentsContainer.ChildrenOfType<DrawableComment>().Any()
+            );
         }
 
         [TestCase(false)]
@@ -132,125 +176,215 @@ namespace osu.Game.Tests.Visual.Online
                 bundle.PinnedComments.Add(comment);
 
             setUpCommentsResponse(bundle);
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddUntilStep("wait comment load", () => commentsContainer.ChildrenOfType<DrawableComment>().Any());
-            AddAssert("only one comment shown", () =>
-                commentsContainer.ChildrenOfType<DrawableComment>().Count(d => d.Comment.Pinned == withPinned) == 1);
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddUntilStep(
+                "wait comment load",
+                () => commentsContainer.ChildrenOfType<DrawableComment>().Any()
+            );
+            AddAssert(
+                "only one comment shown",
+                () =>
+                    commentsContainer
+                        .ChildrenOfType<DrawableComment>()
+                        .Count(d => d.Comment.Pinned == withPinned) == 1
+            );
         }
 
         [Test]
         public void TestPost()
         {
             setUpCommentsResponse(new CommentBundle { Comments = new List<Comment>() });
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddAssert("no comments placeholder shown", () => commentsContainer.ChildrenOfType<CommentsContainer.NoCommentsPlaceholder>().Any());
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddAssert(
+                "no comments placeholder shown",
+                () =>
+                    commentsContainer
+                        .ChildrenOfType<CommentsContainer.NoCommentsPlaceholder>()
+                        .Any()
+            );
 
             setUpPostResponse();
             AddStep("enter text", () => editorTextBox.Current.Value = "comm");
-            AddStep("submit", () => commentsContainer.ChildrenOfType<RoundedButton>().First().TriggerClick());
+            AddStep(
+                "submit",
+                () => commentsContainer.ChildrenOfType<RoundedButton>().First().TriggerClick()
+            );
 
-            AddUntilStep("comment sent", () =>
-            {
-                string writtenText = editorTextBox.Current.Value;
-                var comment = commentsContainer.ChildrenOfType<DrawableComment>().LastOrDefault();
-                return comment != null && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText);
-            });
-            AddAssert("no comments placeholder removed", () => !commentsContainer.ChildrenOfType<CommentsContainer.NoCommentsPlaceholder>().Any());
+            AddUntilStep(
+                "comment sent",
+                () =>
+                {
+                    string writtenText = editorTextBox.Current.Value;
+                    var comment = commentsContainer
+                        .ChildrenOfType<DrawableComment>()
+                        .LastOrDefault();
+                    return comment != null
+                        && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText);
+                }
+            );
+            AddAssert(
+                "no comments placeholder removed",
+                () =>
+                    !commentsContainer
+                        .ChildrenOfType<CommentsContainer.NoCommentsPlaceholder>()
+                        .Any()
+            );
         }
 
         [Test]
         public void TestPostWithExistingComments()
         {
             setUpCommentsResponse(getExampleComments());
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddUntilStep("comments shown", () => commentsContainer.ChildrenOfType<DrawableComment>().Any());
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddUntilStep(
+                "comments shown",
+                () => commentsContainer.ChildrenOfType<DrawableComment>().Any()
+            );
 
             setUpPostResponse();
             AddStep("enter text", () => editorTextBox.Current.Value = "comm");
-            AddStep("submit", () => commentsContainer.ChildrenOfType<CommentEditor>().Single().ChildrenOfType<RoundedButton>().First().TriggerClick());
+            AddStep(
+                "submit",
+                () =>
+                    commentsContainer
+                        .ChildrenOfType<CommentEditor>()
+                        .Single()
+                        .ChildrenOfType<RoundedButton>()
+                        .First()
+                        .TriggerClick()
+            );
 
-            AddUntilStep("comment sent", () =>
-            {
-                string writtenText = editorTextBox.Current.Value;
-                var comment = commentsContainer.ChildrenOfType<DrawableComment>().LastOrDefault();
-                return comment != null && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText);
-            });
+            AddUntilStep(
+                "comment sent",
+                () =>
+                {
+                    string writtenText = editorTextBox.Current.Value;
+                    var comment = commentsContainer
+                        .ChildrenOfType<DrawableComment>()
+                        .LastOrDefault();
+                    return comment != null
+                        && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText);
+                }
+            );
         }
 
         [Test]
         public void TestPostAsOwner()
         {
             setUpCommentsResponse(getExampleComments());
-            AddStep("show comments", () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123));
-            AddUntilStep("comments shown", () => commentsContainer.ChildrenOfType<DrawableComment>().Any());
+            AddStep(
+                "show comments",
+                () => commentsContainer.ShowComments(CommentableType.Beatmapset, 123)
+            );
+            AddUntilStep(
+                "comments shown",
+                () => commentsContainer.ChildrenOfType<DrawableComment>().Any()
+            );
 
             setUpPostResponse(true);
             AddStep("enter text", () => editorTextBox.Current.Value = "comm");
-            AddStep("submit", () => commentsContainer.ChildrenOfType<CommentEditor>().Single().ChildrenOfType<RoundedButton>().First().TriggerClick());
+            AddStep(
+                "submit",
+                () =>
+                    commentsContainer
+                        .ChildrenOfType<CommentEditor>()
+                        .Single()
+                        .ChildrenOfType<RoundedButton>()
+                        .First()
+                        .TriggerClick()
+            );
 
-            AddUntilStep("comment sent", () =>
-            {
-                string writtenText = editorTextBox.Current.Value;
-                var comment = commentsContainer.ChildrenOfType<DrawableComment>().LastOrDefault();
-                return comment != null && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText) && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == "MAPPER");
-            });
+            AddUntilStep(
+                "comment sent",
+                () =>
+                {
+                    string writtenText = editorTextBox.Current.Value;
+                    var comment = commentsContainer
+                        .ChildrenOfType<DrawableComment>()
+                        .LastOrDefault();
+                    return comment != null
+                        && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == writtenText)
+                        && comment.ChildrenOfType<SpriteText>().Any(y => y.Text == "MAPPER");
+                }
+            );
         }
 
-        private void setUpCommentsResponse(CommentBundle commentBundle)
-            => AddStep("set up response", () =>
-            {
-                dummyAPI.HandleRequest = request =>
+        private void setUpCommentsResponse(CommentBundle commentBundle) =>
+            AddStep(
+                "set up response",
+                () =>
                 {
-                    if (!(request is GetCommentsRequest getCommentsRequest))
-                        return false;
-
-                    getCommentsRequest.TriggerSuccess(commentBundle);
-                    return true;
-                };
-            });
-
-        private void setUpPostResponse(bool asOwner = false)
-            => AddStep("set up response", () =>
-            {
-                dummyAPI.HandleRequest = request =>
-                {
-                    if (!(request is CommentPostRequest req))
-                        return false;
-
-                    var bundle = new CommentBundle
+                    dummyAPI.HandleRequest = request =>
                     {
-                        Comments = new List<Comment>
-                        {
-                            new Comment
-                            {
-                                Id = 98,
-                                Message = req.Message,
-                                LegacyName = "FirstUser",
-                                CreatedAt = DateTimeOffset.Now,
-                                VotesCount = 98,
-                                CommentableId = 2001,
-                                CommentableType = "test",
-                            }
-                        }
+                        if (!(request is GetCommentsRequest getCommentsRequest))
+                            return false;
+
+                        getCommentsRequest.TriggerSuccess(commentBundle);
+                        return true;
                     };
+                }
+            );
 
-                    if (asOwner)
+        private void setUpPostResponse(bool asOwner = false) =>
+            AddStep(
+                "set up response",
+                () =>
+                {
+                    dummyAPI.HandleRequest = request =>
                     {
-                        bundle.Comments[0].UserId = 1001;
-                        bundle.Comments[0].User = new APIUser { Id = 1001, Username = "FirstUser" };
-                        bundle.CommentableMeta.Add(new CommentableMeta
-                        {
-                            Id = 2001,
-                            OwnerId = 1001,
-                            OwnerTitle = "MAPPER",
-                            Type = "test",
-                        });
-                    }
+                        if (!(request is CommentPostRequest req))
+                            return false;
 
-                    req.TriggerSuccess(bundle);
-                    return true;
-                };
-            });
+                        var bundle = new CommentBundle
+                        {
+                            Comments = new List<Comment>
+                            {
+                                new Comment
+                                {
+                                    Id = 98,
+                                    Message = req.Message,
+                                    LegacyName = "FirstUser",
+                                    CreatedAt = DateTimeOffset.Now,
+                                    VotesCount = 98,
+                                    CommentableId = 2001,
+                                    CommentableType = "test",
+                                },
+                            },
+                        };
+
+                        if (asOwner)
+                        {
+                            bundle.Comments[0].UserId = 1001;
+                            bundle.Comments[0].User = new APIUser
+                            {
+                                Id = 1001,
+                                Username = "FirstUser",
+                            };
+                            bundle.CommentableMeta.Add(
+                                new CommentableMeta
+                                {
+                                    Id = 2001,
+                                    OwnerId = 1001,
+                                    OwnerTitle = "MAPPER",
+                                    Type = "test",
+                                }
+                            );
+                        }
+
+                        req.TriggerSuccess(bundle);
+                        return true;
+                    };
+                }
+            );
 
         private static CommentBundle getExampleComments(bool withPinned = false)
         {
@@ -265,7 +399,7 @@ namespace osu.Game.Tests.Visual.Online
                         LegacyName = "FirstUser",
                         CreatedAt = DateTimeOffset.Now,
                         VotesCount = 19,
-                        RepliesCount = 1
+                        RepliesCount = 1,
                     },
                     new Comment
                     {
@@ -282,7 +416,7 @@ namespace osu.Game.Tests.Visual.Online
                         Message = "This is another comment",
                         LegacyName = "ThirdUser",
                         CreatedAt = DateTimeOffset.Now,
-                        VotesCount = 0
+                        VotesCount = 0,
                     },
                 },
                 IncludedComments = new List<Comment>(),
@@ -305,15 +439,17 @@ namespace osu.Game.Tests.Visual.Online
                 bundle.Comments.Add(pinnedComment);
                 bundle.PinnedComments.Add(pinnedComment);
 
-                bundle.Comments.Add(new Comment
-                {
-                    Id = 20,
-                    Message = "Reply to pinned comment initially hidden",
-                    LegacyName = "AbandonedUser",
-                    CreatedAt = DateTimeOffset.Now,
-                    VotesCount = 0,
-                    ParentId = 15,
-                });
+                bundle.Comments.Add(
+                    new Comment
+                    {
+                        Id = 20,
+                        Message = "Reply to pinned comment initially hidden",
+                        LegacyName = "AbandonedUser",
+                        CreatedAt = DateTimeOffset.Now,
+                        VotesCount = 0,
+                        ParentId = 15,
+                    }
+                );
             }
 
             return bundle;

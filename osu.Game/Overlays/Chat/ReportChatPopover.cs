@@ -27,13 +27,17 @@ namespace osu.Game.Overlays.Chat
             Action = report;
         }
 
-        protected override bool IsCommentRequired(ChatReportReason reason) => reason == ChatReportReason.Other;
+        protected override bool IsCommentRequired(ChatReportReason reason) =>
+            reason == ChatReportReason.Other;
 
         private void report(ChatReportReason reason, string comments)
         {
             var request = new ChatReportRequest(message.Id, reason, comments);
 
-            request.Success += () => channelManager.CurrentChannel.Value.AddNewMessages(new InfoMessage(UsersStrings.ReportThanks.ToString()));
+            request.Success += () =>
+                channelManager.CurrentChannel.Value.AddNewMessages(
+                    new InfoMessage(UsersStrings.ReportThanks.ToString())
+                );
 
             api.Queue(request);
         }

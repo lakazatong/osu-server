@@ -42,37 +42,40 @@ namespace osu.Game.Screens.Edit.Setup
 
         public void UpdateBackground()
         {
-            LoadComponentAsync(new BeatmapBackgroundSprite(working.Value)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                FillMode = FillMode.Fill,
-            }, background =>
-            {
-                if (background.Texture != null)
-                    content.Child = background;
-                else
+            LoadComponentAsync(
+                new BeatmapBackgroundSprite(working.Value)
                 {
-                    content.Children = new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fill,
+                },
+                background =>
+                {
+                    if (background.Texture != null)
+                        content.Child = background;
+                    else
                     {
-                        new Box
+                        content.Children = new Drawable[]
                         {
-                            Colour = colours.GreySeaFoamDarker,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(size: 24))
-                        {
-                            Text = EditorSetupStrings.DragToSetBackground,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            AutoSizeAxes = Axes.Both
-                        }
-                    };
-                }
+                            new Box
+                            {
+                                Colour = colours.GreySeaFoamDarker,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(size: 24))
+                            {
+                                Text = EditorSetupStrings.DragToSetBackground,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                AutoSizeAxes = Axes.Both,
+                            },
+                        };
+                    }
 
-                background.FadeInFromZero(500);
-            });
+                    background.FadeInFromZero(500);
+                }
+            );
         }
     }
 }

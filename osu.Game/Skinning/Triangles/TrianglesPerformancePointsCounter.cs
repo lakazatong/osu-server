@@ -14,7 +14,9 @@ using osuTK;
 
 namespace osu.Game.Skinning.Triangles
 {
-    public partial class TrianglesPerformancePointsCounter : PerformancePointsCounter, ISerialisableDrawable
+    public partial class TrianglesPerformancePointsCounter
+        : PerformancePointsCounter,
+            ISerialisableDrawable
     {
         protected override bool IsRollingProportional => true;
 
@@ -43,10 +45,8 @@ namespace osu.Game.Skinning.Triangles
 
         protected override LocalisableString FormatCount(int count) => count.ToString(@"D");
 
-        protected override IHasText CreateText() => new TextComponent
-        {
-            Alpha = alpha_when_invalid
-        };
+        protected override IHasText CreateText() =>
+            new TextComponent { Alpha = alpha_when_invalid };
 
         private partial class TextComponent : CompositeDrawable, IHasText
         {
@@ -72,7 +72,7 @@ namespace osu.Game.Skinning.Triangles
                         {
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true)
+                            Font = OsuFont.Numeric.With(size: 16, fixedWidth: true),
                         },
                         new OsuSpriteText
                         {
@@ -81,8 +81,8 @@ namespace osu.Game.Skinning.Triangles
                             Text = BeatmapsetsStrings.ShowScoreboardHeaderspp,
                             Font = OsuFont.Numeric.With(size: 8),
                             Padding = new MarginPadding { Bottom = 1.5f }, // align baseline better
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

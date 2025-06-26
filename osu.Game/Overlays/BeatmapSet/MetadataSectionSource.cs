@@ -10,16 +10,18 @@ namespace osu.Game.Overlays.BeatmapSet
     public partial class MetadataSectionSource : MetadataSection
     {
         public MetadataSectionSource(Action<string>? searchAction = null)
-            : base(MetadataType.Source, searchAction)
-        {
-        }
+            : base(MetadataType.Source, searchAction) { }
 
         protected override void AddMetadata(string metadata, LinkFlowContainer loaded)
         {
             if (SearchAction != null)
                 loaded.AddLink(metadata, () => SearchAction($@"source=""""{metadata}"""""));
             else
-                loaded.AddLink(metadata, LinkAction.SearchBeatmapSet, $@"source=""""{metadata}""""");
+                loaded.AddLink(
+                    metadata,
+                    LinkAction.SearchBeatmapSet,
+                    $@"source=""""{metadata}"""""
+                );
         }
     }
 }

@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Edit.Tools
     public class SelectTool : CompositionTool
     {
         public SelectTool()
-            : base("Select")
-        {
-        }
+            : base("Select") { }
 
         public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.EditorSelect };
 

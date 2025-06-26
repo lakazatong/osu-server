@@ -17,7 +17,13 @@ namespace osu.Game.Online.Rooms
         private readonly int rulesetId;
         private readonly string versionHash;
 
-        public CreateRoomScoreRequest(long roomId, long playlistItemId, BeatmapInfo beatmapInfo, int rulesetId, string versionHash)
+        public CreateRoomScoreRequest(
+            long roomId,
+            long playlistItemId,
+            BeatmapInfo beatmapInfo,
+            int rulesetId,
+            string versionHash
+        )
         {
             this.roomId = roomId;
             this.playlistItemId = playlistItemId;
@@ -31,7 +37,10 @@ namespace osu.Game.Online.Rooms
             var req = base.CreateWebRequest();
             req.Method = HttpMethod.Post;
             req.AddParameter("version_hash", versionHash);
-            req.AddParameter("beatmap_id", beatmapInfo.OnlineID.ToString(CultureInfo.InvariantCulture));
+            req.AddParameter(
+                "beatmap_id",
+                beatmapInfo.OnlineID.ToString(CultureInfo.InvariantCulture)
+            );
             req.AddParameter("beatmap_hash", beatmapInfo.MD5Hash);
             req.AddParameter("ruleset_id", rulesetId.ToString(CultureInfo.InvariantCulture));
             return req;

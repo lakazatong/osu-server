@@ -25,7 +25,7 @@ namespace osu.Game.Tournament.Tests.Components
         {
             Username = "HappyStick",
             Id = 2,
-            Colour = "f2ca34"
+            Colour = "f2ca34",
         };
 
         private readonly TournamentUser redUser = new TournamentUser
@@ -56,11 +56,13 @@ namespace osu.Game.Tournament.Tests.Components
 
         public TestSceneTournamentMatchChatDisplay()
         {
-            Add(chatDisplay = new TournamentMatchChatDisplay
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            Add(
+                chatDisplay = new TournamentMatchChatDisplay
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
 
             chatDisplay.Channel.Value = testChannel;
         }
@@ -69,95 +71,144 @@ namespace osu.Game.Tournament.Tests.Components
         {
             base.LoadComplete();
 
-            AddStep("message from admin", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = admin,
-                Content = "I am a wang!"
-            }));
+            AddStep(
+                "message from admin",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId()) { Sender = admin, Content = "I am a wang!" }
+                    )
+            );
 
-            AddStep("set current match", () => ladderInfo.CurrentMatch.Value = new TournamentMatch
-            {
-                Team1 =
-                {
-                    Value = new TournamentTeam { Players = { redUser } }
-                },
-                Team2 =
-                {
-                    Value = new TournamentTeam { Players = { blueUser, blueUserWithCustomColour } }
-                }
-            });
+            AddStep(
+                "set current match",
+                () =>
+                    ladderInfo.CurrentMatch.Value = new TournamentMatch
+                    {
+                        Team1 = { Value = new TournamentTeam { Players = { redUser } } },
+                        Team2 =
+                        {
+                            Value = new TournamentTeam
+                            {
+                                Players = { blueUser, blueUserWithCustomColour },
+                            },
+                        },
+                    }
+            );
 
-            AddStep("message from team red", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = redUser.ToAPIUser(),
-                Content = "I am team red."
-            }));
+            AddStep(
+                "message from team red",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = redUser.ToAPIUser(),
+                            Content = "I am team red.",
+                        }
+                    )
+            );
 
-            AddUntilStep("message from team red is red color", () =>
-                this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour, () => Is.EqualTo(TournamentGame.COLOUR_RED));
+            AddUntilStep(
+                "message from team red is red color",
+                () => this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour,
+                () => Is.EqualTo(TournamentGame.COLOUR_RED)
+            );
 
-            AddStep("message from team red", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = redUser.ToAPIUser(),
-                Content = "I plan to win!"
-            }));
+            AddStep(
+                "message from team red",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = redUser.ToAPIUser(),
+                            Content = "I plan to win!",
+                        }
+                    )
+            );
 
-            AddStep("message from team blue", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = blueUser.ToAPIUser(),
-                Content = "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand."
-            }));
+            AddStep(
+                "message from team blue",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = blueUser.ToAPIUser(),
+                            Content =
+                                "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand.",
+                        }
+                    )
+            );
 
-            AddUntilStep("message from team blue is blue color", () =>
-                this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour, () => Is.EqualTo(TournamentGame.COLOUR_BLUE));
+            AddUntilStep(
+                "message from team blue is blue color",
+                () => this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour,
+                () => Is.EqualTo(TournamentGame.COLOUR_BLUE)
+            );
 
             var userWithCustomColour = blueUserWithCustomColour.ToAPIUser();
             userWithCustomColour.Colour = "#e45678";
 
-            AddStep("message from team blue with custom colour", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = userWithCustomColour,
-                Content = "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand."
-            }));
+            AddStep(
+                "message from team blue with custom colour",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = userWithCustomColour,
+                            Content =
+                                "Not on my watch. Prepare to eat saaaaaaaaaand. Lots and lots of saaaaaaand.",
+                        }
+                    )
+            );
 
-            AddUntilStep("message from team blue is blue color", () =>
-                this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour, () => Is.EqualTo(TournamentGame.COLOUR_BLUE));
+            AddUntilStep(
+                "message from team blue is blue color",
+                () => this.ChildrenOfType<DrawableChatUsername>().Last().AccentColour,
+                () => Is.EqualTo(TournamentGame.COLOUR_BLUE)
+            );
 
-            AddUntilStep("message from user with custom colour is inverted", () =>
-                this.ChildrenOfType<DrawableChatUsername>().Last().Inverted, () => Is.EqualTo(true));
+            AddUntilStep(
+                "message from user with custom colour is inverted",
+                () => this.ChildrenOfType<DrawableChatUsername>().Last().Inverted,
+                () => Is.EqualTo(true)
+            );
 
-            AddStep("message from admin", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = admin,
-                Content = "Okay okay, calm down guys. Let's do this!"
-            }));
+            AddStep(
+                "message from admin",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = admin,
+                            Content = "Okay okay, calm down guys. Let's do this!",
+                        }
+                    )
+            );
 
-            AddStep("multiple messages", () => testChannel.AddNewMessages(
-                new Message(nextMessageId())
-                {
-                    Sender = admin,
-                    Content = "I spam you!"
-                },
-                new Message(nextMessageId())
-                {
-                    Sender = admin,
-                    Content = "I spam you!!!1"
-                },
-                new Message(nextMessageId())
-                {
-                    Sender = admin,
-                    Content = "I spam you!1!1"
-                }));
+            AddStep(
+                "multiple messages",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId()) { Sender = admin, Content = "I spam you!" },
+                        new Message(nextMessageId()) { Sender = admin, Content = "I spam you!!!1" },
+                        new Message(nextMessageId()) { Sender = admin, Content = "I spam you!1!1" }
+                    )
+            );
 
             AddStep("change channel to 2", () => chatDisplay.Channel.Value = testChannel2);
 
             AddStep("change channel to 1", () => chatDisplay.Channel.Value = testChannel);
 
-            AddStep("!mp message (shouldn't display)", () => testChannel.AddNewMessages(new Message(nextMessageId())
-            {
-                Sender = redUser.ToAPIUser(),
-                Content = "!mp wangs"
-            }));
+            AddStep(
+                "!mp message (shouldn't display)",
+                () =>
+                    testChannel.AddNewMessages(
+                        new Message(nextMessageId())
+                        {
+                            Sender = redUser.ToAPIUser(),
+                            Content = "!mp wangs",
+                        }
+                    )
+            );
         }
 
         private int messageId;

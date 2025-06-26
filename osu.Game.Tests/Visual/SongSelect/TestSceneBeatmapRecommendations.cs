@@ -35,29 +35,34 @@ namespace osu.Game.Tests.Visual.SongSelect
         [SetUpSteps]
         public override void SetUpSteps()
         {
-            AddStep("populate ruleset statistics", () =>
-            {
-                ((DummyAPIAccess)API).HandleRequest = r =>
+            AddStep(
+                "populate ruleset statistics",
+                () =>
                 {
-                    switch (r)
+                    ((DummyAPIAccess)API).HandleRequest = r =>
                     {
-                        case GetUserRequest userRequest:
-                            userRequest.TriggerSuccess(new APIUser
-                            {
-                                Id = 99,
-                                Statistics = new UserStatistics
-                                {
-                                    PP = getNecessaryPP(userRequest.Ruleset?.OnlineID ?? 0)
-                                }
-                            });
+                        switch (r)
+                        {
+                            case GetUserRequest userRequest:
+                                userRequest.TriggerSuccess(
+                                    new APIUser
+                                    {
+                                        Id = 99,
+                                        Statistics = new UserStatistics
+                                        {
+                                            PP = getNecessaryPP(userRequest.Ruleset?.OnlineID ?? 0),
+                                        },
+                                    }
+                                );
 
-                            return true;
+                                return true;
 
-                        default:
-                            return false;
-                    }
-                };
-            });
+                            default:
+                                return false;
+                        }
+                    };
+                }
+            );
 
             decimal getNecessaryPP(int? rulesetID)
             {
@@ -90,15 +95,20 @@ namespace osu.Game.Tests.Visual.SongSelect
             List<BeatmapSetInfo> beatmapSets = null;
             const int import_count = 5;
 
-            AddStep("import 5 maps", () =>
-            {
-                beatmapSets = new List<BeatmapSetInfo>();
-
-                for (int i = 0; i < import_count; ++i)
+            AddStep(
+                "import 5 maps",
+                () =>
                 {
-                    beatmapSets.Add(importBeatmapSet(Enumerable.Repeat(new OsuRuleset().RulesetInfo, 5)));
+                    beatmapSets = new List<BeatmapSetInfo>();
+
+                    for (int i = 0; i < import_count; ++i)
+                    {
+                        beatmapSets.Add(
+                            importBeatmapSet(Enumerable.Repeat(new OsuRuleset().RulesetInfo, 5))
+                        );
+                    }
                 }
-            });
+            );
 
             AddAssert("all sets imported", () => ensureAllBeatmapSetsImported(beatmapSets));
 
@@ -109,17 +119,38 @@ namespace osu.Game.Tests.Visual.SongSelect
         [FlakyTest]
         public void TestCurrentRulesetIsRecommended()
         {
-            BeatmapSetInfo catchSet = null, mixedSet = null;
+            BeatmapSetInfo catchSet = null,
+                mixedSet = null;
 
-            AddStep("create catch beatmapset", () => catchSet = importBeatmapSet(new[] { new CatchRuleset().RulesetInfo }));
-            AddStep("create mixed beatmapset", () => mixedSet = importBeatmapSet(new[] { new TaikoRuleset().RulesetInfo, new CatchRuleset().RulesetInfo, new ManiaRuleset().RulesetInfo }));
+            AddStep(
+                "create catch beatmapset",
+                () => catchSet = importBeatmapSet(new[] { new CatchRuleset().RulesetInfo })
+            );
+            AddStep(
+                "create mixed beatmapset",
+                () =>
+                    mixedSet = importBeatmapSet(
+                        new[]
+                        {
+                            new TaikoRuleset().RulesetInfo,
+                            new CatchRuleset().RulesetInfo,
+                            new ManiaRuleset().RulesetInfo,
+                        }
+                    )
+            );
 
-            AddAssert("all sets imported", () => ensureAllBeatmapSetsImported(new[] { catchSet, mixedSet }));
+            AddAssert(
+                "all sets imported",
+                () => ensureAllBeatmapSetsImported(new[] { catchSet, mixedSet })
+            );
 
             // Switch to catch
             presentAndConfirm(() => catchSet, 1);
 
-            AddAssert("game-wide ruleset changed", () => Game.Ruleset.Value.Equals(catchSet.Beatmaps.First().Ruleset));
+            AddAssert(
+                "game-wide ruleset changed",
+                () => Game.Ruleset.Value.Equals(catchSet.Beatmaps.First().Ruleset)
+            );
 
             // Present mixed difficulty set, expect current ruleset to be selected
             presentAndConfirm(() => mixedSet, 2);
@@ -128,12 +159,30 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestBestRulesetIsRecommended()
         {
-            BeatmapSetInfo osuSet = null, mixedSet = null;
+            BeatmapSetInfo osuSet = null,
+                mixedSet = null;
 
-            AddStep("create osu! beatmapset", () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo }));
-            AddStep("create mixed beatmapset", () => mixedSet = importBeatmapSet(new[] { new TaikoRuleset().RulesetInfo, new CatchRuleset().RulesetInfo, new ManiaRuleset().RulesetInfo }));
+            AddStep(
+                "create osu! beatmapset",
+                () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo })
+            );
+            AddStep(
+                "create mixed beatmapset",
+                () =>
+                    mixedSet = importBeatmapSet(
+                        new[]
+                        {
+                            new TaikoRuleset().RulesetInfo,
+                            new CatchRuleset().RulesetInfo,
+                            new ManiaRuleset().RulesetInfo,
+                        }
+                    )
+            );
 
-            AddAssert("all sets imported", () => ensureAllBeatmapSetsImported(new[] { osuSet, mixedSet }));
+            AddAssert(
+                "all sets imported",
+                () => ensureAllBeatmapSetsImported(new[] { osuSet, mixedSet })
+            );
 
             // Make sure we are on standard ruleset
             presentAndConfirm(() => osuSet, 1);
@@ -146,12 +195,30 @@ namespace osu.Game.Tests.Visual.SongSelect
         [FlakyTest]
         public void TestSecondBestRulesetIsRecommended()
         {
-            BeatmapSetInfo osuSet = null, mixedSet = null;
+            BeatmapSetInfo osuSet = null,
+                mixedSet = null;
 
-            AddStep("create osu! beatmapset", () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo }));
-            AddStep("create mixed beatmapset", () => mixedSet = importBeatmapSet(new[] { new TaikoRuleset().RulesetInfo, new CatchRuleset().RulesetInfo, new TaikoRuleset().RulesetInfo }));
+            AddStep(
+                "create osu! beatmapset",
+                () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo })
+            );
+            AddStep(
+                "create mixed beatmapset",
+                () =>
+                    mixedSet = importBeatmapSet(
+                        new[]
+                        {
+                            new TaikoRuleset().RulesetInfo,
+                            new CatchRuleset().RulesetInfo,
+                            new TaikoRuleset().RulesetInfo,
+                        }
+                    )
+            );
 
-            AddAssert("all sets imported", () => ensureAllBeatmapSetsImported(new[] { osuSet, mixedSet }));
+            AddAssert(
+                "all sets imported",
+                () => ensureAllBeatmapSetsImported(new[] { osuSet, mixedSet })
+            );
 
             // Make sure we are on standard ruleset
             presentAndConfirm(() => osuSet, 1);
@@ -164,12 +231,25 @@ namespace osu.Game.Tests.Visual.SongSelect
         [FlakyTest]
         public void TestCorrectStarRatingIsUsed()
         {
-            BeatmapSetInfo osuSet = null, maniaSet = null;
+            BeatmapSetInfo osuSet = null,
+                maniaSet = null;
 
-            AddStep("create osu! beatmapset", () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo }));
-            AddStep("create mania beatmapset", () => maniaSet = importBeatmapSet(Enumerable.Repeat(new ManiaRuleset().RulesetInfo, 10)));
+            AddStep(
+                "create osu! beatmapset",
+                () => osuSet = importBeatmapSet(new[] { new OsuRuleset().RulesetInfo })
+            );
+            AddStep(
+                "create mania beatmapset",
+                () =>
+                    maniaSet = importBeatmapSet(
+                        Enumerable.Repeat(new ManiaRuleset().RulesetInfo, 10)
+                    )
+            );
 
-            AddAssert("all sets imported", () => ensureAllBeatmapSetsImported(new[] { osuSet, maniaSet }));
+            AddAssert(
+                "all sets imported",
+                () => ensureAllBeatmapSetsImported(new[] { osuSet, maniaSet })
+            );
 
             // Make sure we are on standard ruleset
             presentAndConfirm(() => osuSet, 1);
@@ -182,40 +262,89 @@ namespace osu.Game.Tests.Visual.SongSelect
         [FlakyTest]
         public void TestBeatmapListingFilter()
         {
-            AddStep("set playmode to taiko", () => ((DummyAPIAccess)API).LocalUser.Value.PlayMode = "taiko");
+            AddStep(
+                "set playmode to taiko",
+                () => ((DummyAPIAccess)API).LocalUser.Value.PlayMode = "taiko"
+            );
 
-            AddStep("open beatmap listing", () =>
-            {
-                InputManager.PressKey(Key.ControlLeft);
-                InputManager.PressKey(Key.B);
-                InputManager.ReleaseKey(Key.B);
-                InputManager.ReleaseKey(Key.ControlLeft);
-            });
+            AddStep(
+                "open beatmap listing",
+                () =>
+                {
+                    InputManager.PressKey(Key.ControlLeft);
+                    InputManager.PressKey(Key.B);
+                    InputManager.ReleaseKey(Key.B);
+                    InputManager.ReleaseKey(Key.ControlLeft);
+                }
+            );
 
-            AddUntilStep("wait for load", () => Game.ChildrenOfType<BeatmapListingOverlay>().SingleOrDefault()?.IsLoaded, () => Is.True);
+            AddUntilStep(
+                "wait for load",
+                () => Game.ChildrenOfType<BeatmapListingOverlay>().SingleOrDefault()?.IsLoaded,
+                () => Is.True
+            );
 
             checkRecommendedDifficulty(3);
 
-            AddStep("change mode filter to osu!", () => Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>().Single().ChildrenOfType<FilterTabItem<RulesetInfo>>().ElementAt(1).TriggerClick());
+            AddStep(
+                "change mode filter to osu!",
+                () =>
+                    Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>()
+                        .Single()
+                        .ChildrenOfType<FilterTabItem<RulesetInfo>>()
+                        .ElementAt(1)
+                        .TriggerClick()
+            );
 
             checkRecommendedDifficulty(2);
 
-            AddStep("change mode filter to osu!taiko", () => Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>().Single().ChildrenOfType<FilterTabItem<RulesetInfo>>().ElementAt(2).TriggerClick());
+            AddStep(
+                "change mode filter to osu!taiko",
+                () =>
+                    Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>()
+                        .Single()
+                        .ChildrenOfType<FilterTabItem<RulesetInfo>>()
+                        .ElementAt(2)
+                        .TriggerClick()
+            );
 
             checkRecommendedDifficulty(3);
 
-            AddStep("change mode filter to osu!catch", () => Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>().Single().ChildrenOfType<FilterTabItem<RulesetInfo>>().ElementAt(3).TriggerClick());
+            AddStep(
+                "change mode filter to osu!catch",
+                () =>
+                    Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>()
+                        .Single()
+                        .ChildrenOfType<FilterTabItem<RulesetInfo>>()
+                        .ElementAt(3)
+                        .TriggerClick()
+            );
 
             checkRecommendedDifficulty(4);
 
-            AddStep("change mode filter to osu!mania", () => Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>().Single().ChildrenOfType<FilterTabItem<RulesetInfo>>().ElementAt(4).TriggerClick());
+            AddStep(
+                "change mode filter to osu!mania",
+                () =>
+                    Game.ChildrenOfType<BeatmapSearchRulesetFilterRow>()
+                        .Single()
+                        .ChildrenOfType<FilterTabItem<RulesetInfo>>()
+                        .ElementAt(4)
+                        .TriggerClick()
+            );
 
             checkRecommendedDifficulty(5);
 
-            void checkRecommendedDifficulty(double starRating)
-                => AddAssert($"recommended difficulty is {starRating}",
-                    () => Game.ChildrenOfType<BeatmapSearchGeneralFilterRow>().Single().ChildrenOfType<OsuSpriteText>().ElementAt(1).Text.ToString(),
-                    () => Is.EqualTo($"Recommended difficulty ({starRating.FormatStarRating()})"));
+            void checkRecommendedDifficulty(double starRating) =>
+                AddAssert(
+                    $"recommended difficulty is {starRating}",
+                    () =>
+                        Game.ChildrenOfType<BeatmapSearchGeneralFilterRow>()
+                            .Single()
+                            .ChildrenOfType<OsuSpriteText>()
+                            .ElementAt(1)
+                            .Text.ToString(),
+                    () => Is.EqualTo($"Recommended difficulty ({starRating.FormatStarRating()})")
+                );
         }
 
         private BeatmapSetInfo importBeatmapSet(IEnumerable<RulesetInfo> difficultyRulesets)
@@ -242,44 +371,54 @@ namespace osu.Game.Tests.Visual.SongSelect
             return importedBeatmapSet.Value;
         }
 
-        private bool ensureAllBeatmapSetsImported(IEnumerable<BeatmapSetInfo> beatmapSets) => beatmapSets.All(set => set != null);
+        private bool ensureAllBeatmapSetsImported(IEnumerable<BeatmapSetInfo> beatmapSets) =>
+            beatmapSets.All(set => set != null);
 
         private void presentAndConfirm(Func<BeatmapSetInfo> getImport, int expectedDiff)
         {
             AddStep("present beatmap", () => Game.PresentBeatmap(getImport()));
 
-            AddUntilStep("wait for song select", () => Game.ScreenStack.CurrentScreen is Screens.Select.SongSelect select && select.BeatmapSetsLoaded);
-            AddUntilStep("recommended beatmap displayed", () => Game.Beatmap.Value.BeatmapInfo.OnlineID, () => Is.EqualTo(getImport().Beatmaps[expectedDiff - 1].OnlineID));
+            AddUntilStep(
+                "wait for song select",
+                () =>
+                    Game.ScreenStack.CurrentScreen is Screens.Select.SongSelect select
+                    && select.BeatmapSetsLoaded
+            );
+            AddUntilStep(
+                "recommended beatmap displayed",
+                () => Game.Beatmap.Value.BeatmapInfo.OnlineID,
+                () => Is.EqualTo(getImport().Beatmaps[expectedDiff - 1].OnlineID)
+            );
         }
 
-        protected override TestOsuGame CreateTestGame() => new NoBeatmapUpdateGame(LocalStorage, API);
+        protected override TestOsuGame CreateTestGame() =>
+            new NoBeatmapUpdateGame(LocalStorage, API);
 
         private partial class NoBeatmapUpdateGame : TestOsuGame
         {
             public NoBeatmapUpdateGame(Storage storage, IAPIProvider api, string[] args = null)
-                : base(storage, api, args)
-            {
-            }
+                : base(storage, api, args) { }
 
             protected override IBeatmapUpdater CreateBeatmapUpdater() => new TestBeatmapUpdater();
 
             private class TestBeatmapUpdater : IBeatmapUpdater
             {
-                public void Queue(Live<BeatmapSetInfo> beatmapSet, MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst)
-                {
-                }
+                public void Queue(
+                    Live<BeatmapSetInfo> beatmapSet,
+                    MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst
+                ) { }
 
-                public void Process(BeatmapSetInfo beatmapSet, MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst)
-                {
-                }
+                public void Process(
+                    BeatmapSetInfo beatmapSet,
+                    MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst
+                ) { }
 
-                public void ProcessObjectCounts(BeatmapInfo beatmapInfo, MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst)
-                {
-                }
+                public void ProcessObjectCounts(
+                    BeatmapInfo beatmapInfo,
+                    MetadataLookupScope lookupScope = MetadataLookupScope.LocalCacheFirst
+                ) { }
 
-                public void Dispose()
-                {
-                }
+                public void Dispose() { }
             }
         }
     }

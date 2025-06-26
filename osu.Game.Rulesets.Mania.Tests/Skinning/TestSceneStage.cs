@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
 
                 return new ManiaInputManager(new ManiaRuleset().RulesetInfo, 4)
                 {
-                    Child = new Stage(0, new StageDefinition(4), ref action)
+                    Child = new Stage(0, new StageDefinition(4), ref action),
                 };
             });
         }

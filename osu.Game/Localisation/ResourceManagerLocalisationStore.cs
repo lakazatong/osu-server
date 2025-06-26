@@ -17,16 +17,15 @@ namespace osu.Game.Localisation
 {
     public class ResourceManagerLocalisationStore : ILocalisationStore
     {
-        private readonly Dictionary<string, ResourceManager> resourceManagers = new Dictionary<string, ResourceManager>();
+        private readonly Dictionary<string, ResourceManager> resourceManagers =
+            new Dictionary<string, ResourceManager>();
 
         public ResourceManagerLocalisationStore(string cultureCode)
         {
             EffectiveCulture = new CultureInfo(cultureCode);
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         public string Get(string lookup)
         {
@@ -49,11 +48,16 @@ namespace osu.Game.Localisation
 
                     while (!string.IsNullOrEmpty(assemblyName))
                     {
-                        var matchingAssembly = loadedAssemblies.FirstOrDefault(asm => asm.GetName().Name == assemblyName);
+                        var matchingAssembly = loadedAssemblies.FirstOrDefault(asm =>
+                            asm.GetName().Name == assemblyName
+                        );
 
                         if (matchingAssembly != null)
                         {
-                            resourceManagers[ns] = manager = new ResourceManager(ns, matchingAssembly);
+                            resourceManagers[ns] = manager = new ResourceManager(
+                                ns,
+                                matchingAssembly
+                            );
                             break;
                         }
 

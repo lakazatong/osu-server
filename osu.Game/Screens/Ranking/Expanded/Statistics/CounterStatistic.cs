@@ -46,23 +46,22 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
             {
                 AutoSizeAxes = Axes.Both,
                 Direction = FillDirection.Horizontal,
-                Child = counter = new StatisticCounter
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre
-                }
+                Child = counter =
+                    new StatisticCounter { Anchor = Anchor.TopCentre, Origin = Anchor.TopCentre },
             };
 
             if (maxCount != null)
             {
-                container.Add(new OsuSpriteText
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Font = OsuFont.Torus.With(size: 12, fixedWidth: true),
-                    Spacing = new Vector2(-2, 0),
-                    Text = $"/{maxCount}"
-                });
+                container.Add(
+                    new OsuSpriteText
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Font = OsuFont.Torus.With(size: 12, fixedWidth: true),
+                        Spacing = new Vector2(-2, 0),
+                        Text = $"/{maxCount}",
+                    }
+                );
             }
 
             return container;

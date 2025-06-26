@@ -13,7 +13,8 @@ namespace osu.Game.Beatmaps.ControlPoints
         public event Action<ControlPoint>? ItemChanged;
         public event Action<ControlPoint>? ItemRemoved;
 
-        private void raiseItemChanged(ControlPoint controlPoint) => ItemChanged?.Invoke(controlPoint);
+        private void raiseItemChanged(ControlPoint controlPoint) =>
+            ItemChanged?.Invoke(controlPoint);
 
         /// <summary>
         /// The time at which the control point takes effect.
@@ -22,7 +23,8 @@ namespace osu.Game.Beatmaps.ControlPoints
 
         public IBindableList<ControlPoint> ControlPoints => controlPoints;
 
-        private readonly BindableList<ControlPoint> controlPoints = new BindableList<ControlPoint>();
+        private readonly BindableList<ControlPoint> controlPoints =
+            new BindableList<ControlPoint>();
 
         public ControlPointGroup(double time)
         {
@@ -52,14 +54,11 @@ namespace osu.Game.Beatmaps.ControlPoints
             point.Changed -= raiseItemChanged;
         }
 
-        public sealed override bool Equals(object? obj)
-            => obj is ControlPointGroup otherGroup
-               && Equals(otherGroup);
+        public sealed override bool Equals(object? obj) =>
+            obj is ControlPointGroup otherGroup && Equals(otherGroup);
 
-        public virtual bool Equals(ControlPointGroup? other)
-            => other != null
-               && Time == other.Time
-               && ControlPoints.SequenceEqual(other.ControlPoints);
+        public virtual bool Equals(ControlPointGroup? other) =>
+            other != null && Time == other.Time && ControlPoints.SequenceEqual(other.ControlPoints);
 
         public override int GetHashCode()
         {

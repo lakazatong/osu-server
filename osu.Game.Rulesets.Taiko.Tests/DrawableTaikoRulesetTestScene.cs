@@ -31,16 +31,26 @@ namespace osu.Game.Rulesets.Taiko.Tests
             controlPointInfo = new ControlPointInfo();
             controlPointInfo.Add(0, new TimingControlPoint());
 
-            IWorkingBeatmap beatmap = CreateWorkingBeatmap(CreateBeatmap(new TaikoRuleset().RulesetInfo));
+            IWorkingBeatmap beatmap = CreateWorkingBeatmap(
+                CreateBeatmap(new TaikoRuleset().RulesetInfo)
+            );
 
-            Add(PlayfieldContainer = new Container
-            {
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                RelativeSizeAxes = Axes.X,
-                Height = DEFAULT_PLAYFIELD_CONTAINER_HEIGHT,
-                Children = new[] { DrawableRuleset = new DrawableTaikoRuleset(new TaikoRuleset(), beatmap.GetPlayableBeatmap(beatmap.BeatmapInfo.Ruleset)) }
-            });
+            Add(
+                PlayfieldContainer = new Container
+                {
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.X,
+                    Height = DEFAULT_PLAYFIELD_CONTAINER_HEIGHT,
+                    Children = new[]
+                    {
+                        DrawableRuleset = new DrawableTaikoRuleset(
+                            new TaikoRuleset(),
+                            beatmap.GetPlayableBeatmap(beatmap.BeatmapInfo.Ruleset)
+                        ),
+                    },
+                }
+            );
         }
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
@@ -57,9 +67,9 @@ namespace osu.Game.Rulesets.Taiko.Tests
                         Title = @"Sample Beatmap",
                         Author = { Username = @"peppy" },
                     },
-                    Ruleset = ruleset
+                    Ruleset = ruleset,
                 },
-                ControlPointInfo = controlPointInfo
+                ControlPointInfo = controlPointInfo,
             };
         }
     }

@@ -84,12 +84,8 @@ namespace osu.Game.Graphics.UserInterface
                             Alpha = idle_background_alpha,
                             Children = new Drawable[]
                             {
-                                new Box
-                                {
-                                    Colour = colours.Gray0,
-                                    RelativeSizeAxes = Axes.Both,
-                                },
-                            }
+                                new Box { Colour = colours.Gray0, RelativeSizeAxes = Axes.Both },
+                            },
                         },
                         counters = new Container
                         {
@@ -103,7 +99,11 @@ namespace osu.Game.Graphics.UserInterface
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Margin = new MarginPadding(1),
-                                    Font = OsuFont.Default.With(fixedWidth: true, size: 16, weight: FontWeight.SemiBold),
+                                    Font = OsuFont.Default.With(
+                                        fixedWidth: true,
+                                        size: 16,
+                                        weight: FontWeight.SemiBold
+                                    ),
                                     Spacing = new Vector2(-1),
                                     Y = -2,
                                 },
@@ -112,13 +112,17 @@ namespace osu.Game.Graphics.UserInterface
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Margin = new MarginPadding(2),
-                                    Font = OsuFont.Default.With(fixedWidth: true, size: 13, weight: FontWeight.SemiBold),
+                                    Font = OsuFont.Default.With(
+                                        fixedWidth: true,
+                                        size: 13,
+                                        weight: FontWeight.SemiBold
+                                    ),
                                     Spacing = new Vector2(-2),
                                     Y = 10,
-                                }
-                            }
+                                },
+                            },
                         },
-                    }
+                    },
                 },
             };
 
@@ -135,14 +139,19 @@ namespace osu.Game.Graphics.UserInterface
 
             requestDisplay();
 
-            showFpsDisplay.BindValueChanged(showFps =>
-            {
-                State.Value = showFps.NewValue ? Visibility.Visible : Visibility.Hidden;
-                if (showFps.NewValue)
-                    requestDisplay();
-            }, true);
+            showFpsDisplay.BindValueChanged(
+                showFps =>
+                {
+                    State.Value = showFps.NewValue ? Visibility.Visible : Visibility.Hidden;
+                    if (showFps.NewValue)
+                        requestDisplay();
+                },
+                true
+            );
 
-            State.BindValueChanged(state => showFpsDisplay.Value = state.NewValue == Visibility.Visible);
+            State.BindValueChanged(state =>
+                showFpsDisplay.Value = state.NewValue == Visibility.Visible
+            );
         }
 
         protected override void PopIn() => this.FadeIn(100);
@@ -181,19 +190,31 @@ namespace osu.Game.Graphics.UserInterface
             // frame limiter (we want to show the FPS as it's changing, even if it isn't an outlier).
             bool aimRatesChanged = updateAimFPS();
 
-            bool hasUpdateSpike = displayedFrameTime < spike_time_ms && elapsedUpdateFrameTime > spike_time_ms;
+            bool hasUpdateSpike =
+                displayedFrameTime < spike_time_ms && elapsedUpdateFrameTime > spike_time_ms;
             // use elapsed frame time rather then FramesPerSecond to better catch stutter frames.
-            bool hasDrawSpike = displayedFpsCount > (1000 / spike_time_ms) && elapsedDrawFrameTime > spike_time_ms;
+            bool hasDrawSpike =
+                displayedFpsCount > (1000 / spike_time_ms) && elapsedDrawFrameTime > spike_time_ms;
 
             const float damp_time = 100;
 
-            displayedFrameTime = Interpolation.DampContinuously(displayedFrameTime, elapsedUpdateFrameTime, hasUpdateSpike ? 0 : damp_time, elapsedUpdateFrameTime);
+            displayedFrameTime = Interpolation.DampContinuously(
+                displayedFrameTime,
+                elapsedUpdateFrameTime,
+                hasUpdateSpike ? 0 : damp_time,
+                elapsedUpdateFrameTime
+            );
 
             if (hasDrawSpike)
                 // show spike time using raw elapsed value, to account for `FramesPerSecond` being so averaged spike frames don't show.
                 displayedFpsCount = 1000 / elapsedDrawFrameTime;
             else
-                displayedFpsCount = Interpolation.DampContinuously(displayedFpsCount, drawClock.FramesPerSecond, damp_time, Time.Elapsed);
+                displayedFpsCount = Interpolation.DampContinuously(
+                    displayedFpsCount,
+                    drawClock.FramesPerSecond,
+                    damp_time,
+                    Time.Elapsed
+                );
 
             if (Time.Current - lastUpdate > min_time_between_updates)
             {
@@ -203,11 +224,12 @@ namespace osu.Game.Graphics.UserInterface
                 lastUpdate = Time.Current;
             }
 
-            bool hasSignificantChanges = aimRatesChanged
-                                         || hasDrawSpike
-                                         || hasUpdateSpike
-                                         || displayedFpsCount < aimDrawFPS * 0.8
-                                         || 1000 / displayedFrameTime < aimUpdateFPS * 0.8;
+            bool hasSignificantChanges =
+                aimRatesChanged
+                || hasDrawSpike
+                || hasUpdateSpike
+                || displayedFpsCount < aimDrawFPS * 0.8
+                || 1000 / displayedFrameTime < aimUpdateFPS * 0.8;
 
             if (hasSignificantChanges)
                 requestDisplay();
@@ -237,9 +259,10 @@ namespace osu.Game.Graphics.UserInterface
 
         private void updateFrameTimeDisplay()
         {
-            counterUpdateFrameTime.Text = displayedFrameTime < 5
-                ? $"{displayedFrameTime:N1}ms"
-                : $"{displayedFrameTime:N0}ms";
+            counterUpdateFrameTime.Text =
+                displayedFrameTime < 5
+                    ? $"{displayedFrameTime:N1}ms"
+                    : $"{displayedFrameTime:N0}ms";
 
             counterUpdateFrameTime.Colour = getColour((1000 / displayedFrameTime) / aimUpdateFPS);
         }
@@ -275,9 +298,21 @@ namespace osu.Game.Graphics.UserInterface
         private ColourInfo getColour(double performanceRatio)
         {
             if (performanceRatio < 0.5f)
-                return Interpolation.ValueAt(performanceRatio, colours.Red, colours.Orange2, 0, 0.5);
+                return Interpolation.ValueAt(
+                    performanceRatio,
+                    colours.Red,
+                    colours.Orange2,
+                    0,
+                    0.5
+                );
 
-            return Interpolation.ValueAt(performanceRatio, colours.Orange2, colours.Lime0, 0.5, 0.9);
+            return Interpolation.ValueAt(
+                performanceRatio,
+                colours.Orange2,
+                colours.Lime0,
+                0.5,
+                0.9
+            );
         }
 
         public ITooltip GetCustomTooltip() => new FPSCounterTooltip();

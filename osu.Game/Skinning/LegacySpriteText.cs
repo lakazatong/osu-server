@@ -30,8 +30,11 @@ namespace osu.Game.Skinning
         public new FontUsage Font
         {
             get => base.Font;
-            set => throw new InvalidOperationException(@"Attempting to use this setter will not work correctly. "
-                                                       + $@"Use specific init-only properties exposed by {nameof(LegacySpriteText)} instead.");
+            set =>
+                throw new InvalidOperationException(
+                    @"Attempting to use this setter will not work correctly. "
+                        + $@"Use specific init-only properties exposed by {nameof(LegacySpriteText)} instead."
+                );
         }
 
         public LegacySpriteText(LegacyFont font)
@@ -58,7 +61,8 @@ namespace osu.Game.Skinning
                 glyphStore.Get(fontPrefix, (char)('0' + i));
         }
 
-        protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) => base.CreateTextBuilder(glyphStore);
+        protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) =>
+            base.CreateTextBuilder(glyphStore);
 
         private class LegacyGlyphStore : ITexturedGlyphLookupStore
         {
@@ -67,7 +71,8 @@ namespace osu.Game.Skinning
 
             private readonly string fontName;
 
-            private readonly Dictionary<char, ITexturedCharacterGlyph?> cache = new Dictionary<char, ITexturedCharacterGlyph?>();
+            private readonly Dictionary<char, ITexturedCharacterGlyph?> cache =
+                new Dictionary<char, ITexturedCharacterGlyph?>();
 
             public LegacyGlyphStore(string fontName, ISkin skin, Vector2? maxSize)
             {
@@ -96,7 +101,11 @@ namespace osu.Game.Skinning
                     if (maxSize != null)
                         texture = texture.WithMaximumSize(maxSize.Value);
 
-                    glyph = new TexturedCharacterGlyph(new CharacterGlyph(character, 0, 0, texture.Width, 0, null), texture, 1f / texture.ScaleAdjust);
+                    glyph = new TexturedCharacterGlyph(
+                        new CharacterGlyph(character, 0, 0, texture.Width, 0, null),
+                        texture,
+                        1f / texture.ScaleAdjust
+                    );
                 }
 
                 cache[character] = glyph;
@@ -121,7 +130,8 @@ namespace osu.Game.Skinning
                 }
             }
 
-            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) => Task.Run(() => Get(fontName, character));
+            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) =>
+                Task.Run(() => Get(fontName, character));
         }
     }
 }

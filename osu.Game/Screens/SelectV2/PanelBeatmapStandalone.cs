@@ -88,10 +88,7 @@ namespace osu.Game.Screens.SelectV2
                 Colour = colourProvider.Background5,
             };
 
-            Background = background = new PanelSetBackground
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            Background = background = new PanelSetBackground { RelativeSizeAxes = Axes.Both };
 
             Content.Child = new FillFlowContainer
             {
@@ -120,7 +117,10 @@ namespace osu.Game.Screens.SelectV2
                         {
                             titleText = new OsuSpriteText
                             {
-                                Font = OsuFont.Style.Heading2.With(typeface: Typeface.TorusAlternate, weight: FontWeight.Bold),
+                                Font = OsuFont.Style.Heading2.With(
+                                    typeface: Typeface.TorusAlternate,
+                                    weight: FontWeight.Bold
+                                ),
                             },
                             artistText = new OsuSpriteText
                             {
@@ -166,11 +166,13 @@ namespace osu.Game.Screens.SelectV2
                                     authorText = new OsuSpriteText
                                     {
                                         Colour = colourProvider.Content2,
-                                        Font = OsuFont.Style.Caption1.With(weight: FontWeight.SemiBold),
+                                        Font = OsuFont.Style.Caption1.With(
+                                            weight: FontWeight.SemiBold
+                                        ),
                                         Anchor = Anchor.BottomLeft,
-                                        Origin = Anchor.BottomLeft
-                                    }
-                                }
+                                        Origin = Anchor.BottomLeft,
+                                    },
+                                },
                             },
                             new FillFlowContainer
                             {
@@ -179,7 +181,11 @@ namespace osu.Game.Screens.SelectV2
                                 AutoSizeAxes = Axes.Both,
                                 Children = new Drawable[]
                                 {
-                                    starRatingDisplay = new StarRatingDisplay(default, StarRatingDisplaySize.Small, animated: true)
+                                    starRatingDisplay = new StarRatingDisplay(
+                                        default,
+                                        StarRatingDisplaySize.Small,
+                                        animated: true
+                                    )
                                     {
                                         Origin = Anchor.CentreLeft,
                                         Anchor = Anchor.CentreLeft,
@@ -189,13 +195,13 @@ namespace osu.Game.Screens.SelectV2
                                     {
                                         Anchor = Anchor.CentreLeft,
                                         Origin = Anchor.CentreLeft,
-                                        Scale = new Vector2(0.4f)
-                                    }
+                                        Scale = new Vector2(0.4f),
+                                    },
                                 },
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -209,11 +215,14 @@ namespace osu.Game.Screens.SelectV2
                 updateKeyCount();
             });
 
-            mods.BindValueChanged(_ =>
-            {
-                computeStarRating();
-                updateKeyCount();
-            }, true);
+            mods.BindValueChanged(
+                _ =>
+                {
+                    computeStarRating();
+                    updateKeyCount();
+                },
+                true
+            );
 
             Selected.BindValueChanged(s => Expanded.Value = s.NewValue, true);
         }
@@ -228,10 +237,18 @@ namespace osu.Game.Screens.SelectV2
             var beatmapSet = beatmap.BeatmapSet!;
 
             // Choice of background image matches BSS implementation (always uses the lowest `beatmap_id` from the set).
-            background.Beatmap = beatmaps.GetWorkingBeatmap(beatmapSet.Beatmaps.MinBy(b => b.OnlineID));
+            background.Beatmap = beatmaps.GetWorkingBeatmap(
+                beatmapSet.Beatmaps.MinBy(b => b.OnlineID)
+            );
 
-            titleText.Text = new RomanisableString(beatmapSet.Metadata.TitleUnicode, beatmapSet.Metadata.Title);
-            artistText.Text = new RomanisableString(beatmapSet.Metadata.ArtistUnicode, beatmapSet.Metadata.Artist);
+            titleText.Text = new RomanisableString(
+                beatmapSet.Metadata.TitleUnicode,
+                beatmapSet.Metadata.Title
+            );
+            artistText.Text = new RomanisableString(
+                beatmapSet.Metadata.ArtistUnicode,
+                beatmapSet.Metadata.Artist
+            );
             updateButton.BeatmapSet = beatmapSet;
             statusPill.Status = beatmapSet.Status;
 
@@ -240,7 +257,9 @@ namespace osu.Game.Screens.SelectV2
 
             localRank.Beatmap = beatmap;
             difficultyText.Text = beatmap.DifficultyName;
-            authorText.Text = BeatmapsetsStrings.ShowDetailsMappedBy(beatmap.Metadata.Author.Username);
+            authorText.Text = BeatmapsetsStrings.ShowDetailsMappedBy(
+                beatmap.Metadata.Author.Username
+            );
 
             computeStarRating();
             updateKeyCount();
@@ -268,12 +287,19 @@ namespace osu.Game.Screens.SelectV2
 
             var beatmap = (BeatmapInfo)Item.Model;
 
-            starDifficultyBindable = difficultyCache.GetBindableDifficulty(beatmap, starDifficultyCancellationSource.Token, SongSelect.SELECTION_DEBOUNCE);
-            starDifficultyBindable.BindValueChanged(starDifficulty =>
-            {
-                starRatingDisplay.Current.Value = starDifficulty.NewValue;
-                starCounter.Current = (float)starDifficulty.NewValue.Stars;
-            }, true);
+            starDifficultyBindable = difficultyCache.GetBindableDifficulty(
+                beatmap,
+                starDifficultyCancellationSource.Token,
+                SongSelect.SELECTION_DEBOUNCE
+            );
+            starDifficultyBindable.BindValueChanged(
+                starDifficulty =>
+                {
+                    starRatingDisplay.Current.Value = starDifficulty.NewValue;
+                    starCounter.Current = (float)starDifficulty.NewValue.Stars;
+                },
+                true
+            );
         }
 
         protected override void Update()
@@ -288,14 +314,21 @@ namespace osu.Game.Screens.SelectV2
 
             // Dirty hack to make sure we don't take up spacing in parent fill flow when not displaying a rank.
             // I can't find a better way to do this.
-            mainFill.Margin = new MarginPadding { Left = 1 / starRatingDisplay.Scale.X * (localRank.HasRank ? 0 : -3) };
+            mainFill.Margin = new MarginPadding
+            {
+                Left = 1 / starRatingDisplay.Scale.X * (localRank.HasRank ? 0 : -3),
+            };
 
             var diffColour = starRatingDisplay.DisplayedDifficultyColour;
 
             AccentColour = diffColour;
             starCounter.Colour = diffColour;
 
-            difficultyIcon.Colour = starRatingDisplay.DisplayedStars.Value > OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF ? colours.Orange1 : colourProvider.Background5;
+            difficultyIcon.Colour =
+                starRatingDisplay.DisplayedStars.Value
+                > OsuColour.STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF
+                    ? colours.Orange1
+                    : colourProvider.Background5;
         }
 
         private void updateKeyCount()

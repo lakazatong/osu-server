@@ -39,9 +39,7 @@ namespace osu.Game.Overlays
         private bool displayUpdateRequired = true;
 
         public WikiOverlay()
-            : base(OverlayColourScheme.Orange, false)
-        {
-        }
+            : base(OverlayColourScheme.Orange, false) { }
 
         protected override void LoadComplete()
         {
@@ -60,11 +58,8 @@ namespace osu.Game.Overlays
             Show();
         }
 
-        protected override WikiHeader CreateHeader() => new WikiHeader
-        {
-            ShowIndexPage = () => ShowPage(),
-            ShowParentPage = showParentPage,
-        };
+        protected override WikiHeader CreateHeader() =>
+            new WikiHeader { ShowIndexPage = () => ShowPage(), ShowParentPage = showParentPage };
 
         protected override void PopIn()
         {
@@ -86,11 +81,15 @@ namespace osu.Game.Overlays
         protected void LoadDisplay(Drawable display)
         {
             ScrollFlow.ScrollToStart();
-            LoadComponentAsync(display, loaded =>
-            {
-                Child = loaded;
-                Loading.Hide();
-            }, (cancellationToken = new CancellationTokenSource()).Token);
+            LoadComponentAsync(
+                display,
+                loaded =>
+                {
+                    Child = loaded;
+                    Loading.Hide();
+                },
+                (cancellationToken = new CancellationTokenSource()).Token
+            );
         }
 
         protected override void UpdateAfterChildren()
@@ -100,7 +99,15 @@ namespace osu.Game.Overlays
             if (articlePage != null)
             {
                 articlePage.SidebarContainer.Height = DrawHeight;
-                articlePage.SidebarContainer.Y = (float)Math.Clamp(ScrollFlow.Current - Header.DrawHeight, 0, Math.Max(ScrollFlow.ScrollContent.DrawHeight - DrawHeight - Header.DrawHeight, 0));
+                articlePage.SidebarContainer.Y = (float)
+                    Math.Clamp(
+                        ScrollFlow.Current - Header.DrawHeight,
+                        0,
+                        Math.Max(
+                            ScrollFlow.ScrollContent.DrawHeight - DrawHeight - Header.DrawHeight,
+                            0
+                        )
+                    );
             }
         }
 
@@ -112,7 +119,10 @@ namespace osu.Game.Overlays
             // Language code + path, or just path1 + path2 in case
             string[] values = path.Split('/', 2);
 
-            if (values.Length > 1 && LanguageExtensions.TryParseCultureCode(values[0], out var parsedLang))
+            if (
+                values.Length > 1
+                && LanguageExtensions.TryParseCultureCode(values[0], out var parsedLang)
+            )
                 request = new GetWikiRequest(values[1], parsedLang);
             else
                 request = new GetWikiRequest(path, lang);
@@ -155,19 +165,26 @@ namespace osu.Game.Overlays
 
             if (response.Layout.Equals(INDEX_PATH, StringComparison.OrdinalIgnoreCase))
             {
-                LoadDisplay(new WikiMainPage
-                {
-                    Markdown = response.Markdown,
-                    Padding = new MarginPadding
+                LoadDisplay(
+                    new WikiMainPage
                     {
-                        Vertical = 20,
-                        Horizontal = HORIZONTAL_PADDING,
-                    },
-                });
+                        Markdown = response.Markdown,
+                        Padding = new MarginPadding
+                        {
+                            Vertical = 20,
+                            Horizontal = HORIZONTAL_PADDING,
+                        },
+                    }
+                );
             }
             else
             {
-                LoadDisplay(articlePage = new WikiArticlePage($@"{api.Endpoints.WebsiteUrl}/wiki/{path.Value}/", response.Markdown));
+                LoadDisplay(
+                    articlePage = new WikiArticlePage(
+                        $@"{api.Endpoints.WebsiteUrl}/wiki/{path.Value}/",
+                        response.Markdown
+                    )
+                );
             }
         }
 
@@ -176,8 +193,12 @@ namespace osu.Game.Overlays
             wikiData.Value = null;
             path.Value = "error";
 
-            LoadDisplay(articlePage = new WikiArticlePage($@"{api.Endpoints.WebsiteUrl}/wiki/",
-                $"Something went wrong when trying to fetch page \"{originalPath}\".\n\n[Return to the main page]({INDEX_PATH})."));
+            LoadDisplay(
+                articlePage = new WikiArticlePage(
+                    $@"{api.Endpoints.WebsiteUrl}/wiki/",
+                    $"Something went wrong when trying to fetch page \"{originalPath}\".\n\n[Return to the main page]({INDEX_PATH})."
+                )
+            );
         }
 
         private void showParentPage()

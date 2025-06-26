@@ -16,11 +16,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
             };
         }
     }

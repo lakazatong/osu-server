@@ -28,36 +28,37 @@ namespace osu.Game.Tests.Visual.Components
         private int count;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            count = 0;
-
-            Children = new Drawable[]
+        public void SetUp() =>
+            Schedule(() =>
             {
-                pollBox = new Container
+                count = 0;
+
+                Children = new Drawable[]
                 {
-                    Alpha = 0,
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    pollBox = new Container
                     {
-                        new Box
+                        Alpha = 0,
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Scale = new Vector2(0.4f),
-                            Colour = Color4.LimeGreen,
-                            RelativeSizeAxes = Axes.Both,
+                            new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Scale = new Vector2(0.4f),
+                                Colour = Color4.LimeGreen,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = "Poll!",
+                            },
                         },
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = "Poll!",
-                        }
-                    }
-                }
-            };
-        });
+                    },
+                };
+            });
 
         [Test]
         [Ignore("polling is threaded, and it's very hard to hook into it correctly")]
@@ -65,12 +66,18 @@ namespace osu.Game.Tests.Visual.Components
         {
             createPoller(true);
 
-            AddStep("set poll interval to 1", () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust);
+            AddStep(
+                "set poll interval to 1",
+                () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust
+            );
             checkCount(1);
             checkCount(2);
             checkCount(3);
 
-            AddStep("set poll interval to 5", () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust * 5);
+            AddStep(
+                "set poll interval to 5",
+                () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust * 5
+            );
             checkCount(4);
             checkCount(4);
             checkCount(4);
@@ -80,7 +87,10 @@ namespace osu.Game.Tests.Visual.Components
             checkCount(5);
             checkCount(5);
 
-            AddStep("set poll interval to 1", () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust);
+            AddStep(
+                "set poll interval to 1",
+                () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust
+            );
             checkCount(6);
             checkCount(7);
         }
@@ -91,7 +101,10 @@ namespace osu.Game.Tests.Visual.Components
         {
             createPoller(false);
 
-            AddStep("set poll interval to 1", () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust * 5);
+            AddStep(
+                "set poll interval to 1",
+                () => poller.TimeBetweenPolls.Value = TimePerAction * safety_adjust * 5
+            );
             checkCount(0);
             skip();
             checkCount(0);
@@ -103,32 +116,42 @@ namespace osu.Game.Tests.Visual.Components
             checkCount(0);
         }
 
-        private void skip() => AddStep("skip", () =>
-        {
-            // could be 4 or 5 at this point due to timing discrepancies (safety_adjust @ 0.2 * 5 ~= 1)
-            // easiest to just ignore the value at this point and move on.
-        });
+        private void skip() =>
+            AddStep(
+                "skip",
+                () => {
+                    // could be 4 or 5 at this point due to timing discrepancies (safety_adjust @ 0.2 * 5 ~= 1)
+                    // easiest to just ignore the value at this point and move on.
+                }
+            );
 
         private void checkCount(int checkValue)
         {
-            AddAssert($"count is {checkValue}", () =>
-            {
-                Logger.Log($"value is {count}");
-                return count == checkValue;
-            });
+            AddAssert(
+                $"count is {checkValue}",
+                () =>
+                {
+                    Logger.Log($"value is {count}");
+                    return count == checkValue;
+                }
+            );
         }
 
-        private void createPoller(bool instant) => AddStep("create poller", () =>
-        {
-            poller?.Expire();
+        private void createPoller(bool instant) =>
+            AddStep(
+                "create poller",
+                () =>
+                {
+                    poller?.Expire();
 
-            Add(poller = instant ? new TestPoller() : new TestSlowPoller());
-            poller.OnPoll += () =>
-            {
-                pollBox.FadeOutFromOne(500);
-                count++;
-            };
-        });
+                    Add(poller = instant ? new TestPoller() : new TestSlowPoller());
+                    poller.OnPoll += () =>
+                    {
+                        pollBox.FadeOutFromOne(500);
+                        count++;
+                    };
+                }
+            );
 
         protected override double TimePerAction => 500;
 
@@ -145,7 +168,9 @@ namespace osu.Game.Tests.Visual.Components
 
         public partial class TestSlowPoller : TestPoller
         {
-            protected override Task Poll() => Task.Delay((int)(TimeBetweenPolls.Value / 2f / Clock.Rate)).ContinueWith(_ => base.Poll());
+            protected override Task Poll() =>
+                Task.Delay((int)(TimeBetweenPolls.Value / 2f / Clock.Rate))
+                    .ContinueWith(_ => base.Poll());
         }
     }
 }

@@ -15,10 +15,13 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         {
             base.LoadComplete();
 
-            IndexInBeatmap.BindValueChanged(index =>
-            {
-                setTexture(Fruit.GetVisualRepresentation(index.NewValue));
-            }, true);
+            IndexInBeatmap.BindValueChanged(
+                index =>
+                {
+                    setTexture(Fruit.GetVisualRepresentation(index.NewValue));
+                },
+                true
+            );
         }
 
         private void setTexture(FruitVisualRepresentation visualRepresentation)
@@ -42,10 +45,11 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                     break;
             }
 
-            void setTextures(string fruitName) => SetTexture(
-                Skin.GetTexture($"fruit-{fruitName}")?.WithMaximumSize(fruit_max_size),
-                Skin.GetTexture($"fruit-{fruitName}-overlay")?.WithMaximumSize(fruit_max_size)
-            );
+            void setTextures(string fruitName) =>
+                SetTexture(
+                    Skin.GetTexture($"fruit-{fruitName}")?.WithMaximumSize(fruit_max_size),
+                    Skin.GetTexture($"fruit-{fruitName}-overlay")?.WithMaximumSize(fruit_max_size)
+                );
         }
     }
 }

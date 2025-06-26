@@ -27,7 +27,9 @@ namespace osu.Game.Tests.Visual.Multiplayer
     public partial class TestSceneRoomPanel : OsuTestScene
     {
         [Cached]
-        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         private readonly Bindable<Room?> selectedRoom = new Bindable<Room?>();
 
@@ -36,94 +38,134 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             FillFlowContainer rooms = null!;
 
-            AddStep("create rooms", () =>
-            {
-                PlaylistItem item1 = new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo)
+            AddStep(
+                "create rooms",
+                () =>
                 {
-                    BeatmapInfo = { StarRating = 2.5 }
-                }.BeatmapInfo);
+                    PlaylistItem item1 = new PlaylistItem(
+                        new TestBeatmap(new OsuRuleset().RulesetInfo)
+                        {
+                            BeatmapInfo = { StarRating = 2.5 },
+                        }.BeatmapInfo
+                    );
 
-                PlaylistItem item2 = new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo)
-                {
-                    BeatmapInfo = { StarRating = 4.5 }
-                }.BeatmapInfo);
+                    PlaylistItem item2 = new PlaylistItem(
+                        new TestBeatmap(new OsuRuleset().RulesetInfo)
+                        {
+                            BeatmapInfo = { StarRating = 4.5 },
+                        }.BeatmapInfo
+                    );
 
-                PlaylistItem item3 = new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo)
-                {
-                    BeatmapInfo =
+                    PlaylistItem item3 = new PlaylistItem(
+                        new TestBeatmap(new OsuRuleset().RulesetInfo)
+                        {
+                            BeatmapInfo =
+                            {
+                                StarRating = 2.5,
+                                Metadata =
+                                {
+                                    Artist =
+                                        "very very very very very very very very very long artist",
+                                    ArtistUnicode =
+                                        "very very very very very very very very very long artist",
+                                    Title =
+                                        "very very very very very very very very very very very long title",
+                                    TitleUnicode =
+                                        "very very very very very very very very very very very long title",
+                                },
+                            },
+                        }.BeatmapInfo
+                    );
+
+                    Child = rooms = new FillFlowContainer
                     {
-                        StarRating = 2.5,
-                        Metadata =
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.9f),
+                        Spacing = new Vector2(10),
+                        Children = new Drawable[]
                         {
-                            Artist = "very very very very very very very very very long artist",
-                            ArtistUnicode = "very very very very very very very very very long artist",
-                            Title = "very very very very very very very very very very very long title",
-                            TitleUnicode = "very very very very very very very very very very very long title",
-                        }
-                    }
-                }.BeatmapInfo);
-
-                Child = rooms = new FillFlowContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.9f),
-                    Spacing = new Vector2(10),
-                    Children = new Drawable[]
-                    {
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Multiplayer room",
-                            EndDate = DateTimeOffset.Now.AddDays(1),
-                            Type = MatchType.HeadToHead,
-                            Playlist = [item1],
-                            CurrentPlaylistItem = item1
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Private room",
-                            Password = "*",
-                            EndDate = DateTimeOffset.Now.AddDays(1),
-                            Type = MatchType.HeadToHead,
-                            Playlist = [item3],
-                            CurrentPlaylistItem = item3
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Playlist room with multiple beatmaps",
-                            Status = RoomStatus.Playing,
-                            EndDate = DateTimeOffset.Now.AddDays(1),
-                            Playlist = [item1, item2],
-                            CurrentPlaylistItem = item1
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Closing soon",
-                            EndDate = DateTimeOffset.Now.AddSeconds(5),
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Closed room",
-                            EndDate = DateTimeOffset.Now,
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Spotlight room",
-                            Category = RoomCategory.Spotlight,
-                        }),
-                        createLoungeRoom(new Room
-                        {
-                            Name = "Featured artist room",
-                            Category = RoomCategory.FeaturedArtist,
-                        }),
-                    }
-                };
-            });
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Multiplayer room",
+                                    EndDate = DateTimeOffset.Now.AddDays(1),
+                                    Type = MatchType.HeadToHead,
+                                    Playlist = [item1],
+                                    CurrentPlaylistItem = item1,
+                                }
+                            ),
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Private room",
+                                    Password = "*",
+                                    EndDate = DateTimeOffset.Now.AddDays(1),
+                                    Type = MatchType.HeadToHead,
+                                    Playlist = [item3],
+                                    CurrentPlaylistItem = item3,
+                                }
+                            ),
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Playlist room with multiple beatmaps",
+                                    Status = RoomStatus.Playing,
+                                    EndDate = DateTimeOffset.Now.AddDays(1),
+                                    Playlist = [item1, item2],
+                                    CurrentPlaylistItem = item1,
+                                }
+                            ),
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Closing soon",
+                                    EndDate = DateTimeOffset.Now.AddSeconds(5),
+                                }
+                            ),
+                            createLoungeRoom(
+                                new Room { Name = "Closed room", EndDate = DateTimeOffset.Now }
+                            ),
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Spotlight room",
+                                    Category = RoomCategory.Spotlight,
+                                }
+                            ),
+                            createLoungeRoom(
+                                new Room
+                                {
+                                    Name = "Featured artist room",
+                                    Category = RoomCategory.FeaturedArtist,
+                                }
+                            ),
+                        },
+                    };
+                }
+            );
 
             AddUntilStep("wait for panel load", () => rooms.Count == 7);
-            AddUntilStep("correct status text", () => rooms.ChildrenOfType<OsuSpriteText>().Count(s => s.Text.ToString().StartsWith("Currently playing", StringComparison.Ordinal)) == 2);
-            AddUntilStep("correct status text", () => rooms.ChildrenOfType<OsuSpriteText>().Count(s => s.Text.ToString().StartsWith("Ready to play", StringComparison.Ordinal)) == 5);
+            AddUntilStep(
+                "correct status text",
+                () =>
+                    rooms
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Count(s =>
+                            s.Text.ToString()
+                                .StartsWith("Currently playing", StringComparison.Ordinal)
+                        ) == 2
+            );
+            AddUntilStep(
+                "correct status text",
+                () =>
+                    rooms
+                        .ChildrenOfType<OsuSpriteText>()
+                        .Count(s =>
+                            s.Text.ToString().StartsWith("Ready to play", StringComparison.Ordinal)
+                        ) == 5
+            );
         }
 
         [Test]
@@ -132,79 +174,127 @@ namespace osu.Game.Tests.Visual.Multiplayer
             RoomPanel panel = null!;
             Room room = null!;
 
-            AddStep("create room", () => Child = panel = createLoungeRoom(room = new Room
-            {
-                Name = "Room with password",
-                Type = MatchType.HeadToHead,
-            }));
+            AddStep(
+                "create room",
+                () =>
+                    Child = panel =
+                        createLoungeRoom(
+                            room = new Room
+                            {
+                                Name = "Room with password",
+                                Type = MatchType.HeadToHead,
+                            }
+                        )
+            );
 
-            AddUntilStep("wait for panel load", () => panel.ChildrenOfType<DrawableRoomParticipantsList>().Any());
+            AddUntilStep(
+                "wait for panel load",
+                () => panel.ChildrenOfType<DrawableRoomParticipantsList>().Any()
+            );
 
-            AddAssert("password icon hidden", () => Precision.AlmostEquals(0, panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha));
+            AddAssert(
+                "password icon hidden",
+                () =>
+                    Precision.AlmostEquals(
+                        0,
+                        panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha
+                    )
+            );
 
             AddStep("set password", () => room.Password = "password");
-            AddAssert("password icon visible", () => Precision.AlmostEquals(1, panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha));
+            AddAssert(
+                "password icon visible",
+                () =>
+                    Precision.AlmostEquals(
+                        1,
+                        panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha
+                    )
+            );
 
             AddStep("unset password", () => room.Password = string.Empty);
-            AddAssert("password icon hidden", () => Precision.AlmostEquals(0, panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha));
+            AddAssert(
+                "password icon hidden",
+                () =>
+                    Precision.AlmostEquals(
+                        0,
+                        panel.ChildrenOfType<RoomPanel.PasswordProtectedIcon>().Single().Alpha
+                    )
+            );
         }
 
         [Test]
         public void TestMultiplayerRooms()
         {
-            AddStep("create rooms", () => Child = new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(5),
-                Children = new[]
-                {
-                    new MultiplayerRoomPanel(new Room
+            AddStep(
+                "create rooms",
+                () =>
+                    Child = new FillFlowContainer
                     {
-                        Name = "A host-only room",
-                        QueueMode = QueueMode.HostOnly,
-                        Type = MatchType.HeadToHead,
-                        RoomID = 1337,
-                    }),
-                    new MultiplayerRoomPanel(new Room
-                    {
-                        Name = "An all-players, team-versus room",
-                        QueueMode = QueueMode.AllPlayers,
-                        Type = MatchType.TeamVersus,
-                        RoomID = 1338,
-                    }),
-                    new MultiplayerRoomPanel(new Room
-                    {
-                        Name = "A round-robin room",
-                        QueueMode = QueueMode.AllPlayersRoundRobin,
-                        Type = MatchType.HeadToHead,
-                        RoomID = 1339,
-                    }),
-                }
-            });
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(5),
+                        Children = new[]
+                        {
+                            new MultiplayerRoomPanel(
+                                new Room
+                                {
+                                    Name = "A host-only room",
+                                    QueueMode = QueueMode.HostOnly,
+                                    Type = MatchType.HeadToHead,
+                                    RoomID = 1337,
+                                }
+                            ),
+                            new MultiplayerRoomPanel(
+                                new Room
+                                {
+                                    Name = "An all-players, team-versus room",
+                                    QueueMode = QueueMode.AllPlayers,
+                                    Type = MatchType.TeamVersus,
+                                    RoomID = 1338,
+                                }
+                            ),
+                            new MultiplayerRoomPanel(
+                                new Room
+                                {
+                                    Name = "A round-robin room",
+                                    QueueMode = QueueMode.AllPlayersRoundRobin,
+                                    Type = MatchType.HeadToHead,
+                                    RoomID = 1339,
+                                }
+                            ),
+                        },
+                    }
+            );
         }
 
         [Test]
         public void TestRoomWithLongTitle()
         {
-            AddStep("create rooms", () => Child = new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(5),
-                Children = new[]
-                {
-                    new MultiplayerRoomPanel(new Room
+            AddStep(
+                "create rooms",
+                () =>
+                    Child = new FillFlowContainer
                     {
-                        Name = "This room has a very very long title enough to make the external link button reach the participants list on the right side unless the test window is very wide, at which point I don't know, hi.",
-                        QueueMode = QueueMode.HostOnly,
-                        Type = MatchType.HeadToHead,
-                        RoomID = 1337,
-                    }),
-                }
-            });
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(5),
+                        Children = new[]
+                        {
+                            new MultiplayerRoomPanel(
+                                new Room
+                                {
+                                    Name =
+                                        "This room has a very very long title enough to make the external link button reach the participants list on the right side unless the test window is very wide, at which point I don't know, hi.",
+                                    QueueMode = QueueMode.HostOnly,
+                                    Type = MatchType.HeadToHead,
+                                    RoomID = 1337,
+                                }
+                            ),
+                        },
+                    }
+            );
         }
 
         [Test]
@@ -212,22 +302,29 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             Room room = null!;
 
-            AddStep("create rooms", () => Child = new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(5),
-                Children = new[]
-                {
-                    new MultiplayerRoomPanel(room = new Room
+            AddStep(
+                "create rooms",
+                () =>
+                    Child = new FillFlowContainer
                     {
-                        Name = "This room has a very very long title enough to make the external link button reach the participants list on the right side unless the test window is very wide, at which point I don't know, hi.",
-                        QueueMode = QueueMode.HostOnly,
-                        Type = MatchType.HeadToHead,
-                    }),
-                }
-            });
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(5),
+                        Children = new[]
+                        {
+                            new MultiplayerRoomPanel(
+                                room = new Room
+                                {
+                                    Name =
+                                        "This room has a very very long title enough to make the external link button reach the participants list on the right side unless the test window is very wide, at which point I don't know, hi.",
+                                    QueueMode = QueueMode.HostOnly,
+                                    Type = MatchType.HeadToHead,
+                                }
+                            ),
+                        },
+                    }
+            );
             AddWaitStep("wait", 3);
             AddStep("set room ID", () => room.RoomID = 1337);
             AddWaitStep("wait", 3);
@@ -240,18 +337,13 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             if (room.RecentParticipants.Count == 0)
             {
-                room.RecentParticipants = Enumerable.Range(0, 20).Select(i => new APIUser
-                {
-                    Id = i,
-                    Username = $"User {i}"
-                }).ToArray();
+                room.RecentParticipants = Enumerable
+                    .Range(0, 20)
+                    .Select(i => new APIUser { Id = i, Username = $"User {i}" })
+                    .ToArray();
             }
 
-            return new LoungeRoomPanel(room)
-            {
-                MatchingFilter = true,
-                SelectedRoom = selectedRoom
-            };
+            return new LoungeRoomPanel(room) { MatchingFilter = true, SelectedRoom = selectedRoom };
         }
     }
 }

@@ -13,7 +13,12 @@ namespace osu.Game.Online.API.Requests
 
         private readonly CountryCode countryCode;
 
-        public GetUserRankingsRequest(RulesetInfo ruleset, UserRankingsType type = UserRankingsType.Performance, int page = 1, CountryCode countryCode = CountryCode.Unknown)
+        public GetUserRankingsRequest(
+            RulesetInfo ruleset,
+            UserRankingsType type = UserRankingsType.Performance,
+            int page = 1,
+            CountryCode countryCode = CountryCode.Unknown
+        )
             : base(ruleset, page)
         {
             Type = type;
@@ -36,6 +41,6 @@ namespace osu.Game.Online.API.Requests
     public enum UserRankingsType
     {
         Performance,
-        Score
+        Score,
     }
 }

@@ -95,12 +95,14 @@ namespace osu.Game.Screens.SelectV2
                             contentLink = new OsuHoverContainer
                             {
                                 AutoSizeAxes = Axes.Both,
-                                Child = contentLinkText = new TruncatingSpriteText
-                                {
-                                    Font = OsuFont.Style.Caption1,
-                                },
+                                Child = contentLinkText =
+                                    new TruncatingSpriteText { Font = OsuFont.Style.Caption1 },
                             },
-                            contentDate = new DrawableDate(default, OsuFont.Style.Caption1.Size, false),
+                            contentDate = new DrawableDate(
+                                default,
+                                OsuFont.Style.Caption1.Size,
+                                false
+                            ),
                             contentTags = new TagsLine(),
                             contentLoading = new LoadingSpinner
                             {
@@ -109,7 +111,7 @@ namespace osu.Game.Screens.SelectV2
                                 Size = new Vector2(10),
                                 Margin = new MarginPadding { Top = 3f },
                                 State = { Value = Visibility.Visible },
-                            }
+                            },
                         },
                     },
                 };
@@ -145,13 +147,14 @@ namespace osu.Game.Screens.SelectV2
                 contentText.Text = text;
             }
 
-            private void setLink(LocalisableString text, Action action) => Schedule(() =>
-            {
-                clear();
+            private void setLink(LocalisableString text, Action action) =>
+                Schedule(() =>
+                {
+                    clear();
 
-                contentLinkText.Text = text;
-                contentLink.Action = action;
-            });
+                    contentLinkText.Text = text;
+                    contentLink.Action = action;
+                });
 
             private void setDate(DateTimeOffset date)
             {

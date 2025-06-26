@@ -21,9 +21,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
         protected abstract partial class DisableableTabItem : TabItem<T>
         {
             protected DisableableTabItem(T value)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             protected override bool OnClick(ClickEvent e)
             {

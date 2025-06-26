@@ -27,7 +27,9 @@ namespace osu.Game.Screens.Select
         private const float transition_duration = 250;
 
         private readonly UserRatings ratingsDisplay;
-        private readonly MetadataSection description, source, tags;
+        private readonly MetadataSection description,
+            source,
+            tags;
         private readonly Container failRetryContainer;
         private readonly FailRetryGraph failRetryGraph;
         private readonly LoadingLayer loading;
@@ -49,7 +51,8 @@ namespace osu.Game.Screens.Select
             get => beatmapInfo;
             set
             {
-                if (value == beatmapInfo) return;
+                if (value == beatmapInfo)
+                    return;
 
                 beatmapInfo = value;
 
@@ -70,20 +73,12 @@ namespace osu.Game.Screens.Select
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.Black.Opacity(0.3f),
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Black.Opacity(0.3f) },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Horizontal = spacing },
-                    RowDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize),
-                        new Dimension()
-                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                     Content = new[]
                     {
                         new Drawable[]
@@ -104,16 +99,23 @@ namespace osu.Game.Screens.Select
                                         Padding = new MarginPadding { Right = spacing / 2 },
                                         Children = new[]
                                         {
-                                            new DetailBox().WithChild(new OnlineViewContainer(string.Empty)
-                                            {
-                                                RelativeSizeAxes = Axes.X,
-                                                Height = 134,
-                                                Padding = new MarginPadding { Horizontal = spacing, Top = spacing },
-                                                Child = ratingsDisplay = new UserRatings
+                                            new DetailBox().WithChild(
+                                                new OnlineViewContainer(string.Empty)
                                                 {
-                                                    RelativeSizeAxes = Axes.Both,
-                                                },
-                                            }),
+                                                    RelativeSizeAxes = Axes.X,
+                                                    Height = 134,
+                                                    Padding = new MarginPadding
+                                                    {
+                                                        Horizontal = spacing,
+                                                        Top = spacing,
+                                                    },
+                                                    Child = ratingsDisplay =
+                                                        new UserRatings
+                                                        {
+                                                            RelativeSizeAxes = Axes.Both,
+                                                        },
+                                                }
+                                            ),
                                         },
                                     },
                                     new OsuScrollContainer
@@ -131,9 +133,15 @@ namespace osu.Game.Screens.Select
                                             LayoutEasing = Easing.OutQuad,
                                             Children = new[]
                                             {
-                                                description = new MetadataSectionDescription(query => songSelect?.Search(query)),
-                                                source = new MetadataSectionSource(query => songSelect?.Search(query)),
-                                                tags = new MetadataSectionMapperTags(query => songSelect?.Search(query)),
+                                                description = new MetadataSectionDescription(
+                                                    query => songSelect?.Search(query)
+                                                ),
+                                                source = new MetadataSectionSource(query =>
+                                                    songSelect?.Search(query)
+                                                ),
+                                                tags = new MetadataSectionMapperTags(query =>
+                                                    songSelect?.Search(query)
+                                                ),
                                             },
                                         },
                                     },
@@ -142,7 +150,9 @@ namespace osu.Game.Screens.Select
                         },
                         new Drawable[]
                         {
-                            failRetryContainer = new OnlineViewContainer("Sign in to view more details")
+                            failRetryContainer = new OnlineViewContainer(
+                                "Sign in to view more details"
+                            )
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Children = new Drawable[]
@@ -159,10 +169,10 @@ namespace osu.Game.Screens.Select
                                     },
                                 },
                             },
-                        }
-                    }
+                        },
+                    },
                 },
-                loading = new LoadingLayer(true)
+                loading = new LoadingLayer(true),
             };
         }
 
@@ -180,7 +190,11 @@ namespace osu.Game.Screens.Select
             }
 
             // for now, let's early abort if an OnlineID is not present (should have been populated at import time).
-            if (BeatmapInfo == null || BeatmapInfo.OnlineID <= 0 || api.State.Value == APIState.Offline)
+            if (
+                BeatmapInfo == null
+                || BeatmapInfo.OnlineID <= 0
+                || api.State.Value == APIState.Offline
+            )
             {
                 updateMetrics();
                 return;
@@ -223,7 +237,8 @@ namespace osu.Game.Screens.Select
 
         private void updateMetrics()
         {
-            bool hasMetrics = (failTimes?.Retries?.Any() ?? false) || (failTimes?.Fails?.Any() ?? false);
+            bool hasMetrics =
+                (failTimes?.Retries?.Any() ?? false) || (failTimes?.Fails?.Any() ?? false);
 
             if (ratings?.Any() ?? false)
             {
@@ -266,11 +281,7 @@ namespace osu.Game.Screens.Select
 
                 InternalChildren = new Drawable[]
                 {
-                    content = new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                    },
+                    content = new Container { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y },
                 };
             }
         }

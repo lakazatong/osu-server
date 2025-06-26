@@ -21,11 +21,7 @@ namespace osu.Game.Screens.Edit
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Background6,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Background6, RelativeSizeAxes = Axes.Both },
                 new OsuScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -36,9 +32,9 @@ namespace osu.Game.Screens.Edit
                         Direction = FillDirection.Vertical,
                         Padding = new MarginPadding(10),
                         Spacing = new Vector2(10),
-                        Children = CreateSections()
+                        Children = CreateSections(),
                     },
-                }
+                },
             };
         }
 

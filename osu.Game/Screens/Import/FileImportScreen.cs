@@ -38,7 +38,9 @@ namespace osu.Game.Screens.Import
         private OsuGameBase game { get; set; }
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         [BackgroundDependencyLoader(true)]
         private void load()
@@ -53,10 +55,12 @@ namespace osu.Game.Screens.Import
                 Size = new Vector2(0.9f, 0.8f),
                 Children = new Drawable[]
                 {
-                    fileSelector = new OsuFileSelector(validFileExtensions: game.HandledExtensions.ToArray())
+                    fileSelector = new OsuFileSelector(
+                        validFileExtensions: game.HandledExtensions.ToArray()
+                    )
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Width = 0.65f
+                        Width = 0.65f,
                     },
                     new Container
                     {
@@ -69,30 +73,36 @@ namespace osu.Game.Screens.Import
                             new Box
                             {
                                 Colour = colourProvider.Background4,
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
                             },
                             new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Padding = new MarginPadding { Bottom = button_height + button_vertical_margin * 2 },
+                                Padding = new MarginPadding
+                                {
+                                    Bottom = button_height + button_vertical_margin * 2,
+                                },
                                 Child = new OsuScrollContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Anchor = Anchor.TopCentre,
                                     Origin = Anchor.TopCentre,
-                                    Child = currentFileText = new TextFlowContainer(t => t.Font = OsuFont.Default.With(size: 30))
-                                    {
-                                        AutoSizeAxes = Axes.Y,
-                                        RelativeSizeAxes = Axes.X,
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        TextAnchor = Anchor.Centre
-                                    },
+                                    Child = currentFileText =
+                                        new TextFlowContainer(t =>
+                                            t.Font = OsuFont.Default.With(size: 30)
+                                        )
+                                        {
+                                            AutoSizeAxes = Axes.Y,
+                                            RelativeSizeAxes = Axes.X,
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            TextAnchor = Anchor.Centre,
+                                        },
                                     ScrollContent =
                                     {
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                    }
+                                    },
                                 },
                             },
                             importButton = new RoundedButton
@@ -104,11 +114,12 @@ namespace osu.Game.Screens.Import
                                 Height = button_height,
                                 Width = 0.9f,
                                 Margin = new MarginPadding { Vertical = button_vertical_margin },
-                                Action = () => startImport(fileSelector.CurrentFile.Value?.FullName)
-                            }
-                        }
-                    }
-                }
+                                Action = () =>
+                                    startImport(fileSelector.CurrentFile.Value?.FullName),
+                            },
+                        },
+                    },
+                },
             };
 
             fileSelector.CurrentFile.BindValueChanged(fileChanged, true);
@@ -148,17 +159,20 @@ namespace osu.Game.Screens.Import
             if (string.IsNullOrEmpty(path))
                 return;
 
-            Task.Factory.StartNew(async () =>
-            {
-                await game.Import(path).ConfigureAwait(false);
-
-                // some files will be deleted after successful import, so we want to refresh the view.
-                Schedule(() =>
+            Task.Factory.StartNew(
+                async () =>
                 {
-                    // should probably be exposed as a refresh method.
-                    fileSelector.CurrentPath.TriggerChange();
-                });
-            }, TaskCreationOptions.LongRunning);
+                    await game.Import(path).ConfigureAwait(false);
+
+                    // some files will be deleted after successful import, so we want to refresh the view.
+                    Schedule(() =>
+                    {
+                        // should probably be exposed as a refresh method.
+                        fileSelector.CurrentPath.TriggerChange();
+                    });
+                },
+                TaskCreationOptions.LongRunning
+            );
         }
     }
 }

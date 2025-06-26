@@ -24,7 +24,9 @@ using osuTK;
 namespace osu.Game.Rulesets.Catch.Edit
 {
     [Cached]
-    public partial class CatchHitObjectComposer : ScrollingHitObjectComposer<CatchHitObject>, IKeyBindingHandler<GlobalAction>
+    public partial class CatchHitObjectComposer
+        : ScrollingHitObjectComposer<CatchHitObject>,
+            IKeyBindingHandler<GlobalAction>
     {
         public const float DISTANCE_SNAP_RADIUS = 50;
 
@@ -37,12 +39,11 @@ namespace osu.Game.Rulesets.Catch.Edit
         };
 
         [Cached(typeof(IDistanceSnapProvider))]
-        protected readonly CatchDistanceSnapProvider DistanceSnapProvider = new CatchDistanceSnapProvider();
+        protected readonly CatchDistanceSnapProvider DistanceSnapProvider =
+            new CatchDistanceSnapProvider();
 
         public CatchHitObjectComposer(CatchRuleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -53,45 +54,59 @@ namespace osu.Game.Rulesets.Catch.Edit
             // todo: enable distance spacing once catch supports applying it to its existing distance snap grid implementation.
             DistanceSnapProvider.DistanceSpacingMultiplier.Disabled = true;
 
-            LayerBelowRuleset.Add(new PlayfieldBorder
-            {
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-                RelativeSizeAxes = Axes.X,
-                Height = CatchPlayfield.HEIGHT,
-                PlayfieldBorderStyle = { Value = PlayfieldBorderStyle.Corners }
-            });
+            LayerBelowRuleset.Add(
+                new PlayfieldBorder
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.X,
+                    Height = CatchPlayfield.HEIGHT,
+                    PlayfieldBorderStyle = { Value = PlayfieldBorderStyle.Corners },
+                }
+            );
 
-            LayerBelowRuleset.Add(distanceSnapGrid = new CatchDistanceSnapGrid(new[]
-            {
-                0.0,
-                Catcher.BASE_DASH_SPEED, -Catcher.BASE_DASH_SPEED,
-                Catcher.BASE_WALK_SPEED, -Catcher.BASE_WALK_SPEED,
-            }));
+            LayerBelowRuleset.Add(
+                distanceSnapGrid = new CatchDistanceSnapGrid(
+                    new[]
+                    {
+                        0.0,
+                        Catcher.BASE_DASH_SPEED,
+                        -Catcher.BASE_DASH_SPEED,
+                        Catcher.BASE_WALK_SPEED,
+                        -Catcher.BASE_WALK_SPEED,
+                    }
+                )
+            );
         }
 
-        protected override Drawable CreateHitObjectInspector() => new CatchHitObjectInspector(DistanceSnapProvider);
+        protected override Drawable CreateHitObjectInspector() =>
+            new CatchHitObjectInspector(DistanceSnapProvider);
 
-        protected override IEnumerable<Drawable> CreateTernaryButtons()
-            => base.CreateTernaryButtons()
-                   .Concat(DistanceSnapProvider.CreateTernaryButtons());
+        protected override IEnumerable<Drawable> CreateTernaryButtons() =>
+            base.CreateTernaryButtons().Concat(DistanceSnapProvider.CreateTernaryButtons());
 
-        protected override DrawableRuleset<CatchHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods) =>
+        protected override DrawableRuleset<CatchHitObject> CreateDrawableRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        ) =>
             new DrawableCatchEditorRuleset(ruleset, beatmap, mods)
             {
-                TimeRangeMultiplier = { BindTarget = timeRangeMultiplier, }
+                TimeRangeMultiplier = { BindTarget = timeRangeMultiplier },
             };
 
-        protected override ComposeBlueprintContainer CreateBlueprintContainer() => new CatchBlueprintContainer(this);
+        protected override ComposeBlueprintContainer CreateBlueprintContainer() =>
+            new CatchBlueprintContainer(this);
 
         protected override BeatSnapGrid CreateBeatSnapGrid() => new CatchBeatSnapGrid();
 
-        protected override IReadOnlyList<CompositionTool> CompositionTools => new CompositionTool[]
-        {
-            new FruitCompositionTool(),
-            new JuiceStreamCompositionTool(),
-            new BananaShowerCompositionTool()
-        };
+        protected override IReadOnlyList<CompositionTool> CompositionTools =>
+            new CompositionTool[]
+            {
+                new FruitCompositionTool(),
+                new JuiceStreamCompositionTool(),
+                new BananaShowerCompositionTool(),
+            };
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
@@ -101,20 +116,28 @@ namespace osu.Game.Rulesets.Catch.Edit
                 // In the future we will want to expose this via UI and potentially change the key bindings to be editor-specific.
                 // May be worth considering standardising "zoom" behaviour with what the timeline uses (ie. alt-wheel) but that may cause new conflicts.
                 case GlobalAction.IncreaseScrollSpeed:
-                    this.TransformBindableTo(timeRangeMultiplier, timeRangeMultiplier.Value - 1, 200, Easing.OutQuint);
+                    this.TransformBindableTo(
+                        timeRangeMultiplier,
+                        timeRangeMultiplier.Value - 1,
+                        200,
+                        Easing.OutQuint
+                    );
                     return true;
 
                 case GlobalAction.DecreaseScrollSpeed:
-                    this.TransformBindableTo(timeRangeMultiplier, timeRangeMultiplier.Value + 1, 200, Easing.OutQuint);
+                    this.TransformBindableTo(
+                        timeRangeMultiplier,
+                        timeRangeMultiplier.Value + 1,
+                        200,
+                        Easing.OutQuint
+                    );
                     return true;
             }
 
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
@@ -138,7 +161,10 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         public SnapResult? TryDistanceSnap(Vector2 screenSpacePosition)
         {
-            if (distanceSnapGrid.IsPresent && distanceSnapGrid.GetSnappedPosition(screenSpacePosition) is SnapResult snapResult)
+            if (
+                distanceSnapGrid.IsPresent
+                && distanceSnapGrid.GetSnappedPosition(screenSpacePosition) is SnapResult snapResult
+            )
                 return snapResult;
 
             return null;
@@ -146,7 +172,9 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         private PalpableCatchHitObject? getLastSnappableHitObject(double time)
         {
-            var hitObject = EditorBeatmap.HitObjects.OfType<CatchHitObject>().LastOrDefault(h => h.GetEndTime() < time && !(h is BananaShower));
+            var hitObject = EditorBeatmap
+                .HitObjects.OfType<CatchHitObject>()
+                .LastOrDefault(h => h.GetEndTime() < time && !(h is BananaShower));
 
             switch (hitObject)
             {
@@ -154,7 +182,9 @@ namespace osu.Game.Rulesets.Catch.Edit
                     return fruit;
 
                 case JuiceStream juiceStream:
-                    return juiceStream.NestedHitObjects.OfType<PalpableCatchHitObject>().LastOrDefault(h => !(h is TinyDroplet));
+                    return juiceStream
+                        .NestedHitObjects.OfType<PalpableCatchHitObject>()
+                        .LastOrDefault(h => !(h is TinyDroplet));
 
                 default:
                     return null;
@@ -169,7 +199,9 @@ namespace osu.Game.Rulesets.Catch.Edit
                     if (EditorBeatmap.SelectedHitObjects.Count == 0)
                         return null;
 
-                    double minTime = EditorBeatmap.SelectedHitObjects.Min(hitObject => hitObject.StartTime);
+                    double minTime = EditorBeatmap.SelectedHitObjects.Min(hitObject =>
+                        hitObject.StartTime
+                    );
                     return getLastSnappableHitObject(minTime);
 
                 case FruitCompositionTool:
@@ -180,11 +212,16 @@ namespace osu.Game.Rulesets.Catch.Edit
                     if (EditorBeatmap.PlacementObject.Value is JuiceStream)
                     {
                         // Juice stream path is not subject to snapping.
-                        if (BlueprintContainer.CurrentPlacement.PlacementActive is PlacementBlueprint.PlacementState.Active)
+                        if (
+                            BlueprintContainer.CurrentPlacement.PlacementActive
+                            is PlacementBlueprint.PlacementState.Active
+                        )
                             return null;
                     }
 
-                    double timeAtCursor = ((CatchPlayfield)Playfield).TimeAtScreenSpacePosition(InputManager.CurrentState.Mouse.Position);
+                    double timeAtCursor = ((CatchPlayfield)Playfield).TimeAtScreenSpacePosition(
+                        InputManager.CurrentState.Mouse.Position
+                    );
                     return getLastSnappableHitObject(timeAtCursor);
 
                 default:

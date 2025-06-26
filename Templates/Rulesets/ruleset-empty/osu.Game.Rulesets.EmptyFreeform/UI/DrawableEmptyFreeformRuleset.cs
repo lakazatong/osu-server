@@ -19,17 +19,23 @@ namespace osu.Game.Rulesets.EmptyFreeform.UI
     [Cached]
     public partial class DrawableEmptyFreeformRuleset : DrawableRuleset<EmptyFreeformHitObject>
     {
-        public DrawableEmptyFreeformRuleset(EmptyFreeformRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawableEmptyFreeformRuleset(
+            EmptyFreeformRuleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        )
+            : base(ruleset, beatmap, mods) { }
 
         protected override Playfield CreatePlayfield() => new EmptyFreeformPlayfield();
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new EmptyFreeformFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new EmptyFreeformFramedReplayInputHandler(replay);
 
-        public override DrawableHitObject<EmptyFreeformHitObject> CreateDrawableRepresentation(EmptyFreeformHitObject h) => new DrawableEmptyFreeformHitObject(h);
+        public override DrawableHitObject<EmptyFreeformHitObject> CreateDrawableRepresentation(
+            EmptyFreeformHitObject h
+        ) => new DrawableEmptyFreeformHitObject(h);
 
-        protected override PassThroughInputManager CreateInputManager() => new EmptyFreeformInputManager(Ruleset?.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new EmptyFreeformInputManager(Ruleset?.RulesetInfo);
     }
 }

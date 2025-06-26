@@ -12,7 +12,10 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
 {
     public partial class TestSceneHoldNotePlacementBlueprint : ManiaPlacementBlueprintTestScene
     {
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableHoldNote((HoldNote)hitObject);
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new HoldNotePlacementBlueprint();
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableHoldNote((HoldNote)hitObject);
+
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new HoldNotePlacementBlueprint();
     }
 }

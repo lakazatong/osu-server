@@ -3,19 +3,19 @@
 
 #nullable disable
 
+using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Overlays;
-using osuTK;
-using System.Collections.Generic;
-using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Framework.Localisation;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -49,52 +49,46 @@ namespace osu.Game.Graphics.UserInterface
             HoverColour = colourProvider.Background1;
         }
 
-        protected override Drawable CreateContent() => new CircularContainer
-        {
-            Masking = true,
-            AutoSizeAxes = Axes.Both,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new CircularContainer
             {
-                background = new Box
+                Masking = true,
+                AutoSizeAxes = Axes.Both,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                textContainer = new FillFlowContainer
-                {
-                    AlwaysPresent = true,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(10),
-                    Margin = new MarginPadding
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    textContainer = new FillFlowContainer
                     {
-                        Horizontal = 20,
-                        Vertical = 5
+                        AlwaysPresent = true,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(10),
+                        Margin = new MarginPadding { Horizontal = 20, Vertical = 5 },
+                        Children = new Drawable[]
+                        {
+                            leftIcon = new ChevronIcon
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                            text = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                                Text = CommonStrings.ButtonsShowMore.ToUpper(),
+                            },
+                            rightIcon = new ChevronIcon
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                        },
                     },
-                    Children = new Drawable[]
-                    {
-                        leftIcon = new ChevronIcon
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        },
-                        text = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                            Text = CommonStrings.ButtonsShowMore.ToUpper(),
-                        },
-                        rightIcon = new ChevronIcon
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        }
-                    }
-                }
-            }
-        };
+                },
+            };
 
         protected override void OnLoadStarted() => textContainer.FadeOut(duration, Easing.OutQuint);
 
@@ -133,7 +127,11 @@ namespace osu.Game.Graphics.UserInterface
             }
 
             public void SetHoveredState(bool hovered) =>
-                this.FadeColour(hovered ? colourProvider.Light1 : colourProvider.Foreground1, 200, Easing.OutQuint);
+                this.FadeColour(
+                    hovered ? colourProvider.Light1 : colourProvider.Foreground1,
+                    200,
+                    Easing.OutQuint
+                );
         }
     }
 }

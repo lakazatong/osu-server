@@ -79,7 +79,7 @@ namespace osu.Game.Screens.SelectV2
                     {
                         Anchor = Anchor.TopRight,
                         Scale = new Vector2(-1, 1),
-                    }
+                    },
                 },
                 new ReverseChildIDFillFlowContainer<Drawable>
                 {
@@ -87,7 +87,13 @@ namespace osu.Game.Screens.SelectV2
                     AutoSizeAxes = Axes.Y,
                     Direction = FillDirection.Vertical,
                     Spacing = new Vector2(0f, 5f),
-                    Padding = new MarginPadding { Top = corner_radius + 5, Bottom = 2, Right = 40f, Left = 2f },
+                    Padding = new MarginPadding
+                    {
+                        Top = corner_radius + 5,
+                        Bottom = 2,
+                        Right = 40f,
+                        Left = 2f,
+                    },
                     Children = new Drawable[]
                     {
                         new Container
@@ -95,11 +101,12 @@ namespace osu.Game.Screens.SelectV2
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                             Shear = -OsuGame.SHEAR,
-                            Child = searchTextBox = new SongSelectSearchTextBox
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                HoldFocus = true,
-                            },
+                            Child = searchTextBox =
+                                new SongSelectSearchTextBox
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    HoldFocus = true,
+                                },
                         },
                         new GridContainer
                         {
@@ -131,7 +138,7 @@ namespace osu.Game.Screens.SelectV2
                                         Height = 30f,
                                     },
                                 },
-                            }
+                            },
                         },
                         new GridContainer
                         {
@@ -168,11 +175,11 @@ namespace osu.Game.Screens.SelectV2
                                     {
                                         RelativeSizeAxes = Axes.X,
                                     },
-                                }
-                            }
+                                },
+                            },
                         },
                     },
-                }
+                },
             };
         }
 
@@ -180,8 +187,12 @@ namespace osu.Game.Screens.SelectV2
         {
             base.LoadComplete();
 
-            difficultyRangeSlider.LowerBound = config.GetBindable<double>(OsuSetting.DisplayStarsMinimum);
-            difficultyRangeSlider.UpperBound = config.GetBindable<double>(OsuSetting.DisplayStarsMaximum);
+            difficultyRangeSlider.LowerBound = config.GetBindable<double>(
+                OsuSetting.DisplayStarsMinimum
+            );
+            difficultyRangeSlider.UpperBound = config.GetBindable<double>(
+                OsuSetting.DisplayStarsMaximum
+            );
             config.BindWith(OsuSetting.ShowConvertedBeatmaps, showConvertedBeatmapsButton.Active);
             config.BindWith(OsuSetting.SongSelectSortingMode, sortDropdown.Current);
             config.BindWith(OsuSetting.SongSelectGroupMode, groupDropdown.Current);
@@ -227,7 +238,9 @@ namespace osu.Game.Screens.SelectV2
                 AllowConvertedBeatmaps = showConvertedBeatmapsButton.Active.Value,
                 Ruleset = ruleset.Value,
                 Mods = mods.Value,
-                CollectionBeatmapMD5Hashes = collectionDropdown.Current.Value?.Collection?.PerformRead(c => c.BeatmapMD5Hashes).ToImmutableHashSet()
+                CollectionBeatmapMD5Hashes = collectionDropdown
+                    .Current.Value?.Collection?.PerformRead(c => c.BeatmapMD5Hashes)
+                    .ToImmutableHashSet(),
             };
 
             if (!difficultyRangeSlider.LowerBound.IsDefault)
@@ -280,11 +293,18 @@ namespace osu.Game.Screens.SelectV2
                 public override bool OnPressed(KeyBindingPressEvent<PlatformAction> e)
                 {
                     // Conflicts with default group navigation keys (shift-left shift-right).
-                    if (e.Action == PlatformAction.SelectBackwardChar || e.Action == PlatformAction.SelectForwardChar)
+                    if (
+                        e.Action == PlatformAction.SelectBackwardChar
+                        || e.Action == PlatformAction.SelectForwardChar
+                    )
                         return false;
 
                     // the "cut" platform key binding (shift-delete) conflicts with the beatmap deletion action.
-                    if (e.Action == PlatformAction.Cut && e.ShiftPressed && e.CurrentState.Keyboard.Keys.IsPressed(Key.Delete))
+                    if (
+                        e.Action == PlatformAction.Cut
+                        && e.ShiftPressed
+                        && e.CurrentState.Keyboard.Keys.IsPressed(Key.Delete)
+                    )
                         return false;
 
                     return base.OnPressed(e);

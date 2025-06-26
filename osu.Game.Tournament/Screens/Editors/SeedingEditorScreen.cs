@@ -18,7 +18,8 @@ using osuTK;
 
 namespace osu.Game.Tournament.Screens.Editors
 {
-    public partial class SeedingEditorScreen : TournamentEditorScreen<SeedingEditorScreen.SeedingResultRow, SeedingResult>
+    public partial class SeedingEditorScreen
+        : TournamentEditorScreen<SeedingEditorScreen.SeedingResultRow, SeedingResult>
     {
         private readonly TournamentTeam team;
 
@@ -43,16 +44,12 @@ namespace osu.Game.Tournament.Screens.Editors
 
                 SeedingBeatmapEditor beatmapEditor = new SeedingBeatmapEditor(round)
                 {
-                    Width = 0.95f
+                    Width = 0.95f,
                 };
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = OsuColour.Gray(0.1f),
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = OsuColour.Gray(0.1f), RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         Margin = new MarginPadding(5),
@@ -67,23 +64,23 @@ namespace osu.Game.Tournament.Screens.Editors
                             {
                                 LabelText = "Mod",
                                 Width = 0.33f,
-                                Current = Model.Mod
+                                Current = Model.Mod,
                             },
                             new SettingsSlider<int>
                             {
                                 LabelText = "Seed",
                                 Width = 0.33f,
-                                Current = Model.Seed
+                                Current = Model.Seed,
                             },
                             new SettingsButton
                             {
                                 Width = 0.2f,
                                 Margin = new MarginPadding(10),
                                 Text = "Add beatmap",
-                                Action = () => beatmapEditor.CreateNew()
+                                Action = () => beatmapEditor.CreateNew(),
                             },
-                            beatmapEditor
-                        }
+                            beatmapEditor,
+                        },
                     },
                     new DangerousSettingsButton
                     {
@@ -97,7 +94,7 @@ namespace osu.Game.Tournament.Screens.Editors
                             Expire();
                             team.SeedingResults.Remove(Model);
                         },
-                    }
+                    },
                 };
 
                 RelativeSizeAxes = Axes.X;
@@ -121,7 +118,10 @@ namespace osu.Game.Tournament.Screens.Editors
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
-                        ChildrenEnumerable = round.Beatmaps.Select(p => new SeedingBeatmapRow(round, p))
+                        ChildrenEnumerable = round.Beatmaps.Select(p => new SeedingBeatmapRow(
+                            round,
+                            p
+                        )),
                     };
                 }
 
@@ -161,11 +161,7 @@ namespace osu.Game.Tournament.Screens.Editors
 
                         InternalChildren = new Drawable[]
                         {
-                            new Box
-                            {
-                                Colour = OsuColour.Gray(0.2f),
-                                RelativeSizeAxes = Axes.Both,
-                            },
+                            new Box { Colour = OsuColour.Gray(0.2f), RelativeSizeAxes = Axes.Both },
                             new FillFlowContainer
                             {
                                 Margin = new MarginPadding(5),
@@ -187,7 +183,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                         LabelText = "Seed",
                                         RelativeSizeAxes = Axes.None,
                                         Width = 200,
-                                        Current = beatmap.Seed
+                                        Current = beatmap.Seed,
                                     },
                                     new SettingsTextBox
                                     {
@@ -200,7 +196,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                     {
                                         Size = new Vector2(100, 70),
                                     },
-                                }
+                                },
                             },
                             new DangerousSettingsButton
                             {
@@ -214,7 +210,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                     Expire();
                                     result.Beatmaps.Remove(beatmap);
                                 },
-                            }
+                            },
                         };
                     }
 
@@ -222,35 +218,42 @@ namespace osu.Game.Tournament.Screens.Editors
                     private void load()
                     {
                         beatmapId.Value = Model.ID;
-                        beatmapId.BindValueChanged(id =>
-                        {
-                            Model.ID = id.NewValue ?? 0;
-
-                            if (id.NewValue != id.OldValue)
-                                Model.Beatmap = null;
-
-                            if (Model.Beatmap != null)
+                        beatmapId.BindValueChanged(
+                            id =>
                             {
-                                updatePanel();
-                                return;
-                            }
+                                Model.ID = id.NewValue ?? 0;
 
-                            var req = new GetBeatmapRequest(new APIBeatmap { OnlineID = Model.ID });
+                                if (id.NewValue != id.OldValue)
+                                    Model.Beatmap = null;
 
-                            req.Success += res => Schedule(() =>
-                            {
-                                Model.Beatmap = new TournamentBeatmap(res);
-                                updatePanel();
-                            });
+                                if (Model.Beatmap != null)
+                                {
+                                    updatePanel();
+                                    return;
+                                }
 
-                            req.Failure += _ => Schedule(() =>
-                            {
-                                Model.Beatmap = null;
-                                updatePanel();
-                            });
+                                var req = new GetBeatmapRequest(
+                                    new APIBeatmap { OnlineID = Model.ID }
+                                );
 
-                            API.Queue(req);
-                        }, true);
+                                req.Success += res =>
+                                    Schedule(() =>
+                                    {
+                                        Model.Beatmap = new TournamentBeatmap(res);
+                                        updatePanel();
+                                    });
+
+                                req.Failure += _ =>
+                                    Schedule(() =>
+                                    {
+                                        Model.Beatmap = null;
+                                        updatePanel();
+                                    });
+
+                                API.Queue(req);
+                            },
+                            true
+                        );
 
                         score.Value = Model.Score.ToString();
                         score.BindValueChanged(str => long.TryParse(str.NewValue, out Model.Score));
@@ -262,11 +265,14 @@ namespace osu.Game.Tournament.Screens.Editors
 
                         if (Model.Beatmap != null)
                         {
-                            drawableContainer.Child = new TournamentBeatmapPanel(Model.Beatmap, result.Mod.Value)
+                            drawableContainer.Child = new TournamentBeatmapPanel(
+                                Model.Beatmap,
+                                result.Mod.Value
+                            )
                             {
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
-                                Width = 300
+                                Width = 300,
                             };
                         }
                     }
@@ -274,6 +280,7 @@ namespace osu.Game.Tournament.Screens.Editors
             }
         }
 
-        protected override SeedingResultRow CreateDrawable(SeedingResult model) => new SeedingResultRow(team, model);
+        protected override SeedingResultRow CreateDrawable(SeedingResult model) =>
+            new SeedingResultRow(team, model);
     }
 }

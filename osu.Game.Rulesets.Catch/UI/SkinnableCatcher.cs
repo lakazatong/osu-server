@@ -19,10 +19,14 @@ namespace osu.Game.Rulesets.Catch.UI
         /// This is used by skin elements to determine which texture of the catcher is used.
         /// </summary>
         [Cached]
-        public readonly Bindable<CatcherAnimationState> AnimationState = new Bindable<CatcherAnimationState>();
+        public readonly Bindable<CatcherAnimationState> AnimationState =
+            new Bindable<CatcherAnimationState>();
 
         public SkinnableCatcher()
-            : base(new CatchSkinComponentLookup(CatchSkinComponents.Catcher), _ => new DefaultCatcher())
+            : base(
+                new CatchSkinComponentLookup(CatchSkinComponents.Catcher),
+                _ => new DefaultCatcher()
+            )
         {
             Anchor = Anchor.TopCentre;
             Origin = Anchor.TopCentre;

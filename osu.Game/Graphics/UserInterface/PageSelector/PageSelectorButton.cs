@@ -3,13 +3,13 @@
 
 #nullable disable
 
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics.Containers;
-using osu.Framework.Input.Events;
 using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Events;
+using osu.Game.Graphics.Containers;
 using osu.Game.Overlays;
 
 namespace osu.Game.Graphics.UserInterface.PageSelector
@@ -32,25 +32,25 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new CircularContainer
-            {
-                RelativeSizeAxes = Axes.Y,
-                AutoSizeAxes = Axes.X,
-                Masking = true,
-                Children = new[]
+            Add(
+                new CircularContainer
                 {
-                    Background = new Box
+                    RelativeSizeAxes = Axes.Y,
+                    AutoSizeAxes = Axes.X,
+                    Masking = true,
+                    Children = new[]
                     {
-                        RelativeSizeAxes = Axes.Both
+                        Background = new Box { RelativeSizeAxes = Axes.Both },
+                        CreateContent()
+                            .With(content =>
+                            {
+                                content.Anchor = Anchor.Centre;
+                                content.Origin = Anchor.Centre;
+                                content.Margin = new MarginPadding { Horizontal = 10 };
+                            }),
                     },
-                    CreateContent().With(content =>
-                    {
-                        content.Anchor = Anchor.Centre;
-                        content.Origin = Anchor.Centre;
-                        content.Margin = new MarginPadding { Horizontal = 10 };
-                    })
                 }
-            });
+            );
         }
 
         [NotNull]

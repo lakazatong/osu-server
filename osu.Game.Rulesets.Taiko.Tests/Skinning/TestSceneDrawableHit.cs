@@ -48,29 +48,45 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
 
         private void addHitSteps()
         {
-            AddStep("Centre hit", () => SetContents(_ => new DrawableHit(createHitAtCurrentTime())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            }));
+            AddStep(
+                "Centre hit",
+                () =>
+                    SetContents(_ => new DrawableHit(createHitAtCurrentTime())
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    })
+            );
 
-            AddStep("Centre hit (strong)", () => SetContents(_ => new DrawableHit(createHitAtCurrentTime(true))
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            }));
+            AddStep(
+                "Centre hit (strong)",
+                () =>
+                    SetContents(_ => new DrawableHit(createHitAtCurrentTime(true))
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    })
+            );
 
-            AddStep("Rim hit", () => SetContents(_ => new DrawableHit(createHitAtCurrentTime(rim: true))
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            }));
+            AddStep(
+                "Rim hit",
+                () =>
+                    SetContents(_ => new DrawableHit(createHitAtCurrentTime(rim: true))
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    })
+            );
 
-            AddStep("Rim hit (strong)", () => SetContents(_ => new DrawableHit(createHitAtCurrentTime(true, true))
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            }));
+            AddStep(
+                "Rim hit (strong)",
+                () =>
+                    SetContents(_ => new DrawableHit(createHitAtCurrentTime(true, true))
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    })
+            );
         }
 
         private Hit createHitAtCurrentTime(bool strong = false, bool rim = false)
@@ -96,10 +112,9 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
             if (withKiai)
                 controlPointInfo.Add(0, new EffectControlPoint { KiaiMode = true });
 
-            Beatmap.Value = CreateWorkingBeatmap(new Beatmap
-            {
-                ControlPointInfo = controlPointInfo
-            });
+            Beatmap.Value = CreateWorkingBeatmap(
+                new Beatmap { ControlPointInfo = controlPointInfo }
+            );
 
             Beatmap.Value.Track.Start();
         }

@@ -13,7 +13,8 @@ using osu.Game.Screens.Select.Leaderboards;
 
 namespace osu.Game.Tests.Visual.Multiplayer
 {
-    public partial class TestSceneMultiplayerGameplayLeaderboard : MultiplayerGameplayLeaderboardTestScene
+    public partial class TestSceneMultiplayerGameplayLeaderboard
+        : MultiplayerGameplayLeaderboardTestScene
     {
         protected override MultiplayerRoomUser CreateUser(int userId)
         {
@@ -35,22 +36,33 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestPerUserMods()
         {
-            AddStep("first user has no mods", () => Assert.That(((TestLeaderboard)LeaderboardProvider!).UserMods[0], Is.Empty));
-            AddStep("last user has NF mod", () =>
-            {
-                Assert.That(((TestLeaderboard)LeaderboardProvider!).UserMods[TOTAL_USERS - 1], Has.One.Items);
-                Assert.That(((TestLeaderboard)LeaderboardProvider).UserMods[TOTAL_USERS - 1].Single(), Is.TypeOf<OsuModNoFail>());
-            });
+            AddStep(
+                "first user has no mods",
+                () => Assert.That(((TestLeaderboard)LeaderboardProvider!).UserMods[0], Is.Empty)
+            );
+            AddStep(
+                "last user has NF mod",
+                () =>
+                {
+                    Assert.That(
+                        ((TestLeaderboard)LeaderboardProvider!).UserMods[TOTAL_USERS - 1],
+                        Has.One.Items
+                    );
+                    Assert.That(
+                        ((TestLeaderboard)LeaderboardProvider).UserMods[TOTAL_USERS - 1].Single(),
+                        Is.TypeOf<OsuModNoFail>()
+                    );
+                }
+            );
         }
 
         private partial class TestLeaderboard : MultiplayerLeaderboardProvider
         {
-            public Dictionary<int, IReadOnlyList<Mod>> UserMods => UserScores.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ScoreProcessor.Mods);
+            public Dictionary<int, IReadOnlyList<Mod>> UserMods =>
+                UserScores.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ScoreProcessor.Mods);
 
             public TestLeaderboard(MultiplayerRoomUser[] users)
-                : base(users)
-            {
-            }
+                : base(users) { }
         }
     }
 }

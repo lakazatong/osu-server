@@ -87,11 +87,11 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                     Font = OsuFont.Default.With(size: 20),
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                }
-                            }
-                        }
-                    }
-                }
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -145,15 +145,21 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                 timeText.Colour = progress.Colour = colours.Red1;
                 timeText
                     .FadeColour(colours.Red1)
-                    .Then().FlashColour(colours.Red0, transition_duration, Easing.OutQuint);
+                    .Then()
+                    .FlashColour(colours.Red0, transition_duration, Easing.OutQuint);
                 progress
                     .FadeColour(colours.Red1)
-                    .Then().FlashColour(colours.Red0, transition_duration, Easing.OutQuint);
+                    .Then()
+                    .FlashColour(colours.Red0, transition_duration, Easing.OutQuint);
             }
             else
             {
                 timeText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                progress.FadeColour(colourProvider.Highlight1, transition_duration, Easing.OutQuint);
+                progress.FadeColour(
+                    colourProvider.Highlight1,
+                    transition_duration,
+                    Easing.OutQuint
+                );
             }
 
             scheduledUpdate = Scheduler.AddDelayed(updateState, 1000);

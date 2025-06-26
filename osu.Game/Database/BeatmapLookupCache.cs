@@ -18,7 +18,10 @@ namespace osu.Game.Database
         /// <param name="beatmapId">The beatmap to lookup.</param>
         /// <param name="token">An optional cancellation token.</param>
         /// <returns>The populated beatmap, or null if the beatmap does not exist or the request could not be satisfied.</returns>
-        public Task<APIBeatmap?> GetBeatmapAsync(int beatmapId, CancellationToken token = default) => LookupAsync(beatmapId, token);
+        public Task<APIBeatmap?> GetBeatmapAsync(
+            int beatmapId,
+            CancellationToken token = default
+        ) => LookupAsync(beatmapId, token);
 
         /// <summary>
         /// Perform an API lookup on the specified beatmaps, populating a <see cref="APIBeatmap"/> model.
@@ -26,10 +29,15 @@ namespace osu.Game.Database
         /// <param name="beatmapIds">The beatmaps to lookup.</param>
         /// <param name="token">An optional cancellation token.</param>
         /// <returns>The populated beatmaps. May include null results for failed retrievals.</returns>
-        public Task<APIBeatmap?[]> GetBeatmapsAsync(int[] beatmapIds, CancellationToken token = default) => LookupAsync(beatmapIds, token);
+        public Task<APIBeatmap?[]> GetBeatmapsAsync(
+            int[] beatmapIds,
+            CancellationToken token = default
+        ) => LookupAsync(beatmapIds, token);
 
-        protected override GetBeatmapsRequest CreateRequest(IEnumerable<int> ids) => new GetBeatmapsRequest(ids.ToArray());
+        protected override GetBeatmapsRequest CreateRequest(IEnumerable<int> ids) =>
+            new GetBeatmapsRequest(ids.ToArray());
 
-        protected override IEnumerable<APIBeatmap>? RetrieveResults(GetBeatmapsRequest request) => request.Response?.Beatmaps;
+        protected override IEnumerable<APIBeatmap>? RetrieveResults(GetBeatmapsRequest request) =>
+            request.Response?.Beatmaps;
     }
 }

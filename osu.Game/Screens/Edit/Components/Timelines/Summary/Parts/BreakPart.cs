@@ -41,12 +41,15 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
         {
             base.LoadComplete();
 
-            breaks.BindCollectionChanged((_, _) =>
-            {
-                Clear(disposeChildren: false);
-                foreach (var breakPeriod in breaks)
-                    Add(pool.Get(v => v.BreakPeriod = breakPeriod));
-            }, true);
+            breaks.BindCollectionChanged(
+                (_, _) =>
+                {
+                    Clear(disposeChildren: false);
+                    foreach (var breakPeriod in breaks)
+                        Add(pool.Get(v => v.BreakPeriod = breakPeriod));
+                },
+                true
+            );
         }
 
         private partial class BreakVisualisation : PoolableDrawable, IHasTooltip
@@ -74,7 +77,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
                 Alpha = 0.4f;
             }
 
-            public LocalisableString TooltipText => $"{breakPeriod.StartTime.ToEditorFormattedString()} - {breakPeriod.EndTime.ToEditorFormattedString()} break time";
+            public LocalisableString TooltipText =>
+                $"{breakPeriod.StartTime.ToEditorFormattedString()} - {breakPeriod.EndTime.ToEditorFormattedString()} break time";
         }
     }
 }

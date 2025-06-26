@@ -12,20 +12,23 @@ namespace osu.Game.Rulesets.Pippidon.Replays
     public class PippidonFramedReplayInputHandler : FramedReplayInputHandler<PippidonReplayFrame>
     {
         public PippidonFramedReplayInputHandler(Replay replay)
-            : base(replay)
-        {
-        }
+            : base(replay) { }
 
         protected override bool IsImportant(PippidonReplayFrame frame) => true;
 
         protected override void CollectReplayInputs(List<IInput> inputs)
         {
-            var position = Interpolation.ValueAt(CurrentTime, StartFrame.Position, EndFrame.Position, StartFrame.Time, EndFrame.Time);
+            var position = Interpolation.ValueAt(
+                CurrentTime,
+                StartFrame.Position,
+                EndFrame.Position,
+                StartFrame.Time,
+                EndFrame.Time
+            );
 
-            inputs.Add(new MousePositionAbsoluteInput
-            {
-                Position = GamefieldToScreenSpace(position)
-            });
+            inputs.Add(
+                new MousePositionAbsoluteInput { Position = GamefieldToScreenSpace(position) }
+            );
         }
     }
 }

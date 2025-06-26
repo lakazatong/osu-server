@@ -31,7 +31,7 @@ namespace osu.Game.Tests.Editing.Checks
             hitsounded = new List<HitSampleInfo>
             {
                 new HitSampleInfo(HitSampleInfo.HIT_NORMAL),
-                new HitSampleInfo(HitSampleInfo.HIT_FINISH)
+                new HitSampleInfo(HitSampleInfo.HIT_FINISH),
             };
         }
 
@@ -42,7 +42,10 @@ namespace osu.Game.Tests.Editing.Checks
 
             for (int i = 0; i < 16; ++i)
             {
-                var samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) };
+                var samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL),
+                };
 
                 if ((i + 1) % 2 == 0)
                     samples.Add(new HitSampleInfo(HitSampleInfo.HIT_CLAP));
@@ -64,7 +67,10 @@ namespace osu.Game.Tests.Editing.Checks
 
             for (int i = 0; i < 32; ++i)
             {
-                var samples = new List<HitSampleInfo> { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) };
+                var samples = new List<HitSampleInfo>
+                {
+                    new HitSampleInfo(HitSampleInfo.HIT_NORMAL),
+                };
 
                 if ((i + 1) % 2 == 0)
                     samples.Add(new HitSampleInfo(HitSampleInfo.HIT_CLAP));
@@ -149,7 +155,7 @@ namespace osu.Game.Tests.Editing.Checks
 
             var nested = new MockNestableHitObject(ticks.ToList(), 0, 16000)
             {
-                Samples = hitsounded
+                Samples = hitsounded,
             };
             nested.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
@@ -161,11 +167,17 @@ namespace osu.Game.Tests.Editing.Checks
         {
             var ticks = new List<HitObject>();
             for (int i = 1; i < 16; ++i)
-                ticks.Add(new SliderTick { StartTime = 1000 * i, Samples = i == 0 ? hitsounded : notHitsounded });
+                ticks.Add(
+                    new SliderTick
+                    {
+                        StartTime = 1000 * i,
+                        Samples = i == 0 ? hitsounded : notHitsounded,
+                    }
+                );
 
             var nested = new MockNestableHitObject(ticks.ToList(), 0, 16000)
             {
-                Samples = hitsounded
+                Samples = hitsounded,
             };
             nested.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
@@ -183,7 +195,7 @@ namespace osu.Game.Tests.Editing.Checks
 
             var nested = new MockNestableHitObject(ticks.ToList(), 0, 50000)
             {
-                Samples = notHitsounded
+                Samples = notHitsounded,
             };
             nested.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
             hitObjects.Add(nested);
@@ -204,7 +216,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodProblem));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodProblem
+                )
+            );
         }
 
         private void assertLongPeriodWarning(List<HitObject> hitObjects, int count = 1)
@@ -212,7 +228,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodWarning));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodWarning
+                )
+            );
         }
 
         private void assertLongPeriodNegligible(List<HitObject> hitObjects, int count = 1)
@@ -220,7 +240,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(count));
-            Assert.That(issues.All(issue => issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodNegligible));
+            Assert.That(
+                issues.All(issue =>
+                    issue.Template is CheckFewHitsounds.IssueTemplateLongPeriodNegligible
+                )
+            );
         }
 
         private void assertNoHitsounds(List<HitObject> hitObjects)
@@ -228,7 +252,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(hitObjects)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Any(issue => issue.Template is CheckFewHitsounds.IssueTemplateNoHitsounds));
+            Assert.That(
+                issues.Any(issue => issue.Template is CheckFewHitsounds.IssueTemplateNoHitsounds)
+            );
         }
 
         private BeatmapVerifierContext getContext(List<HitObject> hitObjects)

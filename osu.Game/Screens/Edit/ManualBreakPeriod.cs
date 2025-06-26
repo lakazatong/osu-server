@@ -8,8 +8,6 @@ namespace osu.Game.Screens.Edit
     public class ManualBreakPeriod : BreakPeriod
     {
         public ManualBreakPeriod(double startTime, double endTime)
-            : base(startTime, endTime)
-        {
-        }
+            : base(startTime, endTime) { }
     }
 }

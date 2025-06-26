@@ -23,7 +23,8 @@ namespace osu.Game.Overlays.Comments
 {
     public abstract partial class CommentEditor : CompositeDrawable
     {
-        public Bindable<CommentableMeta?> CommentableMeta { get; set; } = new Bindable<CommentableMeta?>();
+        public Bindable<CommentableMeta?> CommentableMeta { get; set; } =
+            new Bindable<CommentableMeta?>();
 
         private const int side_padding = 8;
 
@@ -82,86 +83,87 @@ namespace osu.Game.Overlays.Comments
             BorderThickness = 3;
             BorderColour = colourProvider.Background3;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background3
-                },
-                new FillFlowContainer
-                {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background3 },
+                    new FillFlowContainer
                     {
-                        TextBox = new EditorTextBox
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            Height = 40,
-                            RelativeSizeAxes = Axes.X,
-                            Current = Current
-                        },
-                        new Container
-                        {
-                            Name = @"Footer",
-                            RelativeSizeAxes = Axes.X,
-                            Height = 35,
-                            Padding = new MarginPadding { Horizontal = side_padding },
-                            Children = new Drawable[]
+                            TextBox = new EditorTextBox
                             {
-                                new OsuSpriteText
+                                Height = 40,
+                                RelativeSizeAxes = Axes.X,
+                                Current = Current,
+                            },
+                            new Container
+                            {
+                                Name = @"Footer",
+                                RelativeSizeAxes = Axes.X,
+                                Height = 35,
+                                Padding = new MarginPadding { Horizontal = side_padding },
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.CentreLeft,
-                                    Origin = Anchor.CentreLeft,
-                                    Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                                    Text = FooterText
-                                },
-                                new FillFlowContainer
-                                {
-                                    Anchor = Anchor.CentreRight,
-                                    Origin = Anchor.CentreRight,
-                                    AutoSizeAxes = Axes.Both,
-                                    Direction = FillDirection.Horizontal,
-                                    Spacing = new Vector2(5, 0),
-                                    Children = new Drawable[]
+                                    new OsuSpriteText
                                     {
-                                        ButtonsContainer = new FillFlowContainer
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                        Font = OsuFont.GetFont(
+                                            size: 12,
+                                            weight: FontWeight.SemiBold
+                                        ),
+                                        Text = FooterText,
+                                    },
+                                    new FillFlowContainer
+                                    {
+                                        Anchor = Anchor.CentreRight,
+                                        Origin = Anchor.CentreRight,
+                                        AutoSizeAxes = Axes.Both,
+                                        Direction = FillDirection.Horizontal,
+                                        Spacing = new Vector2(5, 0),
+                                        Children = new Drawable[]
                                         {
-                                            Name = @"Buttons",
-                                            Anchor = Anchor.CentreRight,
-                                            Origin = Anchor.CentreRight,
-                                            AutoSizeAxes = Axes.Both,
-                                            Direction = FillDirection.Horizontal,
-                                            Spacing = new Vector2(5, 0),
-                                            Children = new Drawable[]
+                                            ButtonsContainer = new FillFlowContainer
                                             {
-                                                commitButton = new EditorButton
+                                                Name = @"Buttons",
+                                                Anchor = Anchor.CentreRight,
+                                                Origin = Anchor.CentreRight,
+                                                AutoSizeAxes = Axes.Both,
+                                                Direction = FillDirection.Horizontal,
+                                                Spacing = new Vector2(5, 0),
+                                                Children = new Drawable[]
                                                 {
-                                                    Action = () => OnCommit(Current.Value),
-                                                    Text = GetButtonText(true)
+                                                    commitButton = new EditorButton
+                                                    {
+                                                        Action = () => OnCommit(Current.Value),
+                                                        Text = GetButtonText(true),
+                                                    },
+                                                    logInButton = new EditorButton
+                                                    {
+                                                        Width = 100,
+                                                        Action = () => loginOverlay?.Show(),
+                                                        Text = GetButtonText(false),
+                                                    },
                                                 },
-                                                logInButton = new EditorButton
-                                                {
-                                                    Width = 100,
-                                                    Action = () => loginOverlay?.Show(),
-                                                    Text = GetButtonText(false)
-                                                }
-                                            }
+                                            },
+                                            loadingSpinner = new LoadingSpinner
+                                            {
+                                                Anchor = Anchor.CentreRight,
+                                                Origin = Anchor.CentreRight,
+                                                Size = new Vector2(18),
+                                            },
                                         },
-                                        loadingSpinner = new LoadingSpinner
-                                        {
-                                            Anchor = Anchor.CentreRight,
-                                            Origin = Anchor.CentreRight,
-                                            Size = new Vector2(18),
-                                        },
-                                    }
+                                    },
                                 },
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             TextBox.OnCommit += (_, _) => commitButton.TriggerClick();
             apiState.BindTo(API.State);
@@ -181,7 +183,9 @@ namespace osu.Game.Overlays.Comments
         private void updateState()
         {
             bool isOnline = apiState.Value > APIState.Offline;
-            LocalisableString? canNewCommentReason = CommentEditor.canNewCommentReason(CommentableMeta.Value);
+            LocalisableString? canNewCommentReason = CommentEditor.canNewCommentReason(
+                CommentableMeta.Value
+            );
             bool commentsDisabled = canNewCommentReason != null;
             bool canComment = isOnline && !commentsDisabled;
 
@@ -196,7 +200,10 @@ namespace osu.Game.Overlays.Comments
             if (isOnline)
             {
                 commitButton.Show();
-                commitButton.Enabled.Value = !commentsDisabled && loadingSpinner.State.Value == Visibility.Hidden && !string.IsNullOrEmpty(Current.Value);
+                commitButton.Enabled.Value =
+                    !commentsDisabled
+                    && loadingSpinner.State.Value == Visibility.Hidden
+                    && !string.IsNullOrEmpty(Current.Value);
                 logInButton.Hide();
             }
             else
@@ -246,10 +253,11 @@ namespace osu.Game.Overlays.Comments
                 BackgroundCommit = colourProvider.Background3;
             }
 
-            protected override SpriteText CreatePlaceholder() => placeholder = new OsuSpriteText
-            {
-                Font = OsuFont.GetFont(weight: FontWeight.Regular),
-            };
+            protected override SpriteText CreatePlaceholder() =>
+                placeholder = new OsuSpriteText
+                {
+                    Font = OsuFont.GetFont(weight: FontWeight.Regular),
+                };
         }
 
         protected partial class EditorButton : RoundedButton

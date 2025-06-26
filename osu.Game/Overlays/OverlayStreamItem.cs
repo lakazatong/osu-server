@@ -1,20 +1,20 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics;
-using osu.Framework.Input.Events;
-using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.UserInterface;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
-using osuTK.Graphics;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays
 {
@@ -54,45 +54,51 @@ namespace osu.Game.Overlays
         }
 
         [BackgroundDependencyLoader]
-        private void load(OverlayColourProvider colourProvider, OsuColour colours, AudioManager audio)
+        private void load(
+            OverlayColourProvider colourProvider,
+            OsuColour colours,
+            AudioManager audio
+        )
         {
-            AddRange(new Drawable[]
-            {
-                text = new FillFlowContainer<SpriteText>
+            AddRange(
+                new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Margin = new MarginPadding { Top = 6 },
-                    Children = new[]
+                    text = new FillFlowContainer<SpriteText>
                     {
-                        mainTextPiece = new OsuSpriteText
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Margin = new MarginPadding { Top = 6 },
+                        Children = new[]
                         {
-                            Text = MainText,
-                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
+                            mainTextPiece = new OsuSpriteText
+                            {
+                                Text = MainText,
+                                Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
+                            },
+                            additionalTextPiece = new OsuSpriteText
+                            {
+                                Text = AdditionalText,
+                                Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
+                            },
+                            infoTextPiece = new OsuSpriteText
+                            {
+                                Text = InfoText,
+                                Font = OsuFont.GetFont(size: 10),
+                                Colour = colourProvider.Foreground1,
+                            },
                         },
-                        additionalTextPiece = new OsuSpriteText
-                        {
-                            Text = AdditionalText,
-                            Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
-                        },
-                        infoTextPiece = new OsuSpriteText
-                        {
-                            Text = InfoText,
-                            Font = OsuFont.GetFont(size: 10),
-                            Colour = colourProvider.Foreground1
-                        },
-                    }
-                },
-                expandingBar = new ExpandingBar
-                {
-                    Anchor = Anchor.TopCentre,
-                    Colour = GetBarColour(colours),
-                    ExpandedSize = 4,
-                    CollapsedSize = 2,
-                    Expanded = true
-                },
-                new HoverSounds(HoverSampleSet.TabSelect)
-            });
+                    },
+                    expandingBar = new ExpandingBar
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Colour = GetBarColour(colours),
+                        ExpandedSize = 4,
+                        CollapsedSize = 2,
+                        Expanded = true,
+                    },
+                    new HoverSounds(HoverSampleSet.TabSelect),
+                }
+            );
 
             selectSample = audio.Samples.Get(@"UI/tabselect-select");
 

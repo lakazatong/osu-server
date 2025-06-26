@@ -39,7 +39,12 @@ namespace osu.Game.Screens.Edit
         public void Patch(byte[] currentState, byte[] newState)
         {
             // Diff the beatmaps
-            var result = new Differ().CreateLineDiffs(readString(currentState), readString(newState), true, false);
+            var result = new Differ().CreateLineDiffs(
+                readString(currentState),
+                readString(newState),
+                true,
+                false
+            );
             IBeatmap newBeatmap = null;
 
             editorBeatmap.BeginChange();
@@ -53,7 +58,9 @@ namespace osu.Game.Screens.Edit
 
         private void processTimingPoints(Func<IBeatmap> getNewBeatmap)
         {
-            ControlPointInfo newControlPoints = EditorBeatmap.ConvertControlPoints(getNewBeatmap().ControlPointInfo);
+            ControlPointInfo newControlPoints = EditorBeatmap.ConvertControlPoints(
+                getNewBeatmap().ControlPointInfo
+            );
 
             // Remove all groups from the current beatmap which don't have a corresponding equal group in the new beatmap.
             foreach (var oldGroup in editorBeatmap.ControlPointInfo.Groups.ToArray())
@@ -123,7 +130,12 @@ namespace osu.Game.Screens.Edit
 
         private void processHitObjects(DiffResult result, Func<IBeatmap> getNewBeatmap)
         {
-            findChangedIndices(result, LegacyDecoder<Beatmap>.Section.HitObjects, out var removedIndices, out var addedIndices);
+            findChangedIndices(
+                result,
+                LegacyDecoder<Beatmap>.Section.HitObjects,
+                out var removedIndices,
+                out var addedIndices
+            );
 
             for (int i = removedIndices.Count - 1; i >= 0; i--)
                 editorBeatmap.RemoveAt(removedIndices[i]);
@@ -159,12 +171,19 @@ namespace osu.Game.Screens.Edit
                 if (ReferenceEquals(oldObject, newObject))
                     continue;
 
-                if (oldObject is IHasSliderVelocity oldWithVelocity && newObject is IHasSliderVelocity newWithVelocity)
-                    oldWithVelocity.SliderVelocityMultiplier = newWithVelocity.SliderVelocityMultiplier;
+                if (
+                    oldObject is IHasSliderVelocity oldWithVelocity
+                    && newObject is IHasSliderVelocity newWithVelocity
+                )
+                    oldWithVelocity.SliderVelocityMultiplier =
+                        newWithVelocity.SliderVelocityMultiplier;
 
                 oldObject.Samples = newObject.Samples;
 
-                if (oldObject is IHasRepeats oldWithRepeats && newObject is IHasRepeats newWithRepeats)
+                if (
+                    oldObject is IHasRepeats oldWithRepeats
+                    && newObject is IHasRepeats newWithRepeats
+                )
                 {
                     oldWithRepeats.NodeSamples.Clear();
                     oldWithRepeats.NodeSamples.AddRange(newWithRepeats.NodeSamples);
@@ -174,7 +193,12 @@ namespace osu.Game.Screens.Edit
             }
         }
 
-        private void findChangedIndices(DiffResult result, LegacyDecoder<Beatmap>.Section section, out List<int> removedIndices, out List<int> addedIndices)
+        private void findChangedIndices(
+            DiffResult result,
+            LegacyDecoder<Beatmap>.Section section,
+            out List<int> removedIndices,
+            out List<int> addedIndices
+        )
         {
             removedIndices = new List<int>();
             addedIndices = new List<int>();
@@ -184,7 +208,11 @@ namespace osu.Game.Screens.Edit
             if (oldSectionStartIndex == -1)
                 return;
 
-            int oldSectionEndIndex = Array.FindIndex(result.PiecesOld, oldSectionStartIndex + 1, s => s.StartsWith('['));
+            int oldSectionEndIndex = Array.FindIndex(
+                result.PiecesOld,
+                oldSectionStartIndex + 1,
+                s => s.StartsWith('[')
+            );
             if (oldSectionEndIndex == -1)
                 oldSectionEndIndex = result.PiecesOld.Length;
 
@@ -192,7 +220,11 @@ namespace osu.Game.Screens.Edit
             if (newSectionStartIndex == -1)
                 return;
 
-            int newSectionEndIndex = Array.FindIndex(result.PiecesNew, newSectionStartIndex + 1, s => s.StartsWith('['));
+            int newSectionEndIndex = Array.FindIndex(
+                result.PiecesNew,
+                newSectionStartIndex + 1,
+                s => s.StartsWith('[')
+            );
             if (newSectionEndIndex == -1)
                 newSectionEndIndex = result.PiecesNew.Length;
 
@@ -236,7 +268,9 @@ namespace osu.Game.Screens.Edit
             {
                 var decoded = Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
                 decoded.BeatmapInfo.Ruleset = editorBeatmap.BeatmapInfo.Ruleset;
-                return new PassThroughWorkingBeatmap(decoded).GetPlayableBeatmap(editorBeatmap.BeatmapInfo.Ruleset);
+                return new PassThroughWorkingBeatmap(decoded).GetPlayableBeatmap(
+                    editorBeatmap.BeatmapInfo.Ruleset
+                );
             }
         }
 
@@ -258,7 +292,8 @@ namespace osu.Game.Screens.Edit
 
             protected internal override ISkin GetSkin() => throw new NotImplementedException();
 
-            public override Stream GetStream(string storagePath) => throw new NotImplementedException();
+            public override Stream GetStream(string storagePath) =>
+                throw new NotImplementedException();
         }
     }
 }

@@ -39,23 +39,24 @@ namespace osu.Game.Screens.Edit
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Text = HeaderText,
-                        Font = new FontUsage(size: 25, weight: "bold")
-                    }
+                        Font = new FontUsage(size: 25, weight: "bold"),
+                    },
                 },
                 new Container
                 {
                     Y = header_height,
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Child = Flow = new FillFlowContainer
-                    {
-                        Padding = new MarginPadding { Horizontal = 20 },
-                        Spacing = new Vector2(10),
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                    }
-                }
+                    Child = Flow =
+                        new FillFlowContainer
+                        {
+                            Padding = new MarginPadding { Horizontal = 20 },
+                            Spacing = new Vector2(10),
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                        },
+                },
             };
         }
     }

@@ -32,7 +32,8 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
                     case NotifyCollectionChangedAction.Remove:
                         Debug.Assert(args.OldItems != null);
 
-                        args.OldItems.Cast<TournamentTeam>().ForEach(i => Control.RemoveDropdownItem(i));
+                        args.OldItems.Cast<TournamentTeam>()
+                            .ForEach(i => Control.RemoveDropdownItem(i));
                         break;
                 }
             };
@@ -51,11 +52,12 @@ namespace osu.Game.Tournament.Screens.Ladder.Components
         private void add(TournamentTeam team)
         {
             Control.AddDropdownItem(team);
-            boundReference(team.FullName).BindValueChanged(_ =>
-            {
-                Control.RemoveDropdownItem(team);
-                Control.AddDropdownItem(team);
-            });
+            boundReference(team.FullName)
+                .BindValueChanged(_ =>
+                {
+                    Control.RemoveDropdownItem(team);
+                    Control.AddDropdownItem(team);
+                });
         }
     }
 }

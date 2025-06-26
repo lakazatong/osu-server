@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                     RelativeSizeAxes = Axes.Both,
                     Size = Vector2.One,
                     Alpha = 0,
-                }
+                },
             };
         }
 
@@ -47,12 +47,19 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             base.Update();
 
             if (isKiaiActive)
-                kiai.Alpha = (float)Math.Min(1, kiai.Alpha + Math.Abs(Clock.ElapsedFrameTime) / 200f);
+                kiai.Alpha = (float)
+                    Math.Min(1, kiai.Alpha + Math.Abs(Clock.ElapsedFrameTime) / 200f);
             else
-                kiai.Alpha = (float)Math.Max(0, kiai.Alpha - Math.Abs(Clock.ElapsedFrameTime) / 200f);
+                kiai.Alpha = (float)
+                    Math.Max(0, kiai.Alpha - Math.Abs(Clock.ElapsedFrameTime) / 200f);
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             isKiaiActive = effectPoint.KiaiMode;
         }

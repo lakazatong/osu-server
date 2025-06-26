@@ -52,7 +52,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// <summary>
         /// The current spin, from -360..360.
         /// </summary>
-        private float currentSpinRotation => totalAccumulatedRotation - totalAccumulatedRotationAtLastCompletion;
+        private float currentSpinRotation =>
+            totalAccumulatedRotation - totalAccumulatedRotationAtLastCompletion;
 
         private double lastReportTime = double.NegativeInfinity;
 
@@ -80,7 +81,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
             if (currentTime >= lastReportTime)
             {
-                currentSpinMaxRotation = Math.Max(currentSpinMaxRotation, Math.Abs(currentSpinRotation));
+                currentSpinMaxRotation = Math.Max(
+                    currentSpinMaxRotation,
+                    Math.Abs(currentSpinRotation)
+                );
 
                 // Handle the case where the user has completed another spin.
                 // Note that this does could be an `if` rather than `while` if the above assertion held true.
@@ -104,7 +108,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 // When rewinding, the main thing we care about is getting `totalAbsoluteRotationsAtLastCompletion`
                 // to the correct value. We can used the stored history for this.
-                while (completedSpins.TryPeek(out var segment) && segment.CompletionTime > currentTime)
+                while (
+                    completedSpins.TryPeek(out var segment) && segment.CompletionTime > currentTime
+                )
                 {
                     completedSpins.Pop();
                     totalAccumulatedRotationAtLastCompletion -= segment.Direction * 360;

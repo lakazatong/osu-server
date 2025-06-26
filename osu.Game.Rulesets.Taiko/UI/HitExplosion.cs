@@ -2,7 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Pooling;
@@ -12,6 +11,7 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Rulesets.Taiko.Skinning.Default;
 using osu.Game.Skinning;
+using osuTK;
 
 namespace osu.Game.Rulesets.Taiko.UI
 {
@@ -35,9 +35,7 @@ namespace osu.Game.Rulesets.Taiko.UI
         /// This constructor only exists to meet the <c>new()</c> type constraint of <see cref="DrawablePool{T}"/>.
         /// </summary>
         public HitExplosion()
-            : this(HitResult.Great)
-        {
-        }
+            : this(HitResult.Great) { }
 
         public HitExplosion(HitResult result)
         {
@@ -55,7 +53,10 @@ namespace osu.Game.Rulesets.Taiko.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            InternalChild = skinnable = new SkinnableDrawable(new TaikoSkinComponentLookup(getComponentName(result)), _ => new DefaultHitExplosion(result));
+            InternalChild = skinnable = new SkinnableDrawable(
+                new TaikoSkinComponentLookup(getComponentName(result)),
+                _ => new DefaultHitExplosion(result)
+            );
             skinnable.OnSkinChanged += runAnimation;
         }
 

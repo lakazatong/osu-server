@@ -28,11 +28,8 @@ namespace osu.Game.Rulesets.Catch.Objects
 
         public int RepeatCount { get; set; }
 
-        public BindableNumber<double> SliderVelocityMultiplierBindable { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.1,
-            MaxValue = 10
-        };
+        public BindableNumber<double> SliderVelocityMultiplierBindable { get; } =
+            new BindableDouble(1) { MinValue = 0.1, MaxValue = 10 };
 
         public double SliderVelocityMultiplier
         {
@@ -57,13 +54,23 @@ namespace osu.Game.Rulesets.Catch.Objects
         /// </summary>
         public double SpanDuration => Duration / this.SpanCount();
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(StartTime);
 
-            Velocity = base_scoring_distance * difficulty.SliderMultiplier / LegacyRulesetExtensions.GetPrecisionAdjustedBeatLength(this, timingPoint, CatchRuleset.SHORT_NAME);
+            Velocity =
+                base_scoring_distance
+                * difficulty.SliderMultiplier
+                / LegacyRulesetExtensions.GetPrecisionAdjustedBeatLength(
+                    this,
+                    timingPoint,
+                    CatchRuleset.SHORT_NAME
+                );
 
             // WARNING: this is intentionally not computed as `BASE_SCORING_DISTANCE * difficulty.SliderMultiplier`
             // for backwards compatibility reasons (intentionally introducing floating point errors to match stable).
@@ -83,7 +90,17 @@ namespace osu.Game.Rulesets.Catch.Objects
             int nodeIndex = 0;
             SliderEventDescriptor? lastEvent = null;
 
-            foreach (var e in SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.Distance, this.SpanCount(), cancellationToken))
+            foreach (
+                var e in SliderEventGenerator.Generate(
+                    StartTime,
+                    SpanDuration,
+                    Velocity,
+                    TickDistance,
+                    Path.Distance,
+                    this.SpanCount(),
+                    cancellationToken
+                )
+            )
             {
                 // generate tiny droplets since the last point
                 if (lastEvent != null)
@@ -100,11 +117,22 @@ namespace osu.Game.Rulesets.Catch.Objects
                         {
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            AddNested(new TinyDroplet
-                            {
-                                StartTime = t + lastEvent.Value.Time,
-                                X = EffectiveX + Path.PositionAt(lastEvent.Value.PathProgress + (t / sinceLastTick) * (e.PathProgress - lastEvent.Value.PathProgress)).X,
-                            });
+                            AddNested(
+                                new TinyDroplet
+                                {
+                                    StartTime = t + lastEvent.Value.Time,
+                                    X =
+                                        EffectiveX
+                                        + Path.PositionAt(
+                                            lastEvent.Value.PathProgress
+                                                + (t / sinceLastTick)
+                                                    * (
+                                                        e.PathProgress
+                                                        - lastEvent.Value.PathProgress
+                                                    )
+                                        ).X,
+                                }
+                            );
                         }
                     }
                 }
@@ -116,23 +144,27 @@ namespace osu.Game.Rulesets.Catch.Objects
                 switch (e.Type)
                 {
                     case SliderEventType.Tick:
-                        AddNested(new Droplet
-                        {
-                            Samples = dropletSamples,
-                            StartTime = e.Time,
-                            X = EffectiveX + Path.PositionAt(e.PathProgress).X,
-                        });
+                        AddNested(
+                            new Droplet
+                            {
+                                Samples = dropletSamples,
+                                StartTime = e.Time,
+                                X = EffectiveX + Path.PositionAt(e.PathProgress).X,
+                            }
+                        );
                         break;
 
                     case SliderEventType.Head:
                     case SliderEventType.Tail:
                     case SliderEventType.Repeat:
-                        AddNested(new Fruit
-                        {
-                            Samples = this.GetNodeSamples(nodeIndex++),
-                            StartTime = e.Time,
-                            X = EffectiveX + Path.PositionAt(e.PathProgress).X,
-                        });
+                        AddNested(
+                            new Fruit
+                            {
+                                Samples = this.GetNodeSamples(nodeIndex++),
+                                StartTime = e.Time,
+                                X = EffectiveX + Path.PositionAt(e.PathProgress).X,
+                            }
+                        );
                         break;
                 }
             }
@@ -157,13 +189,16 @@ namespace osu.Game.Rulesets.Catch.Objects
             set
             {
                 path.ControlPoints.Clear();
-                path.ControlPoints.AddRange(value.ControlPoints.Select(c => new PathControlPoint(c.Position, c.Type)));
+                path.ControlPoints.AddRange(
+                    value.ControlPoints.Select(c => new PathControlPoint(c.Position, c.Type))
+                );
                 path.ExpectedDistance.Value = value.ExpectedDistance.Value;
             }
         }
 
         public double Distance => Path.Distance;
 
-        public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
+        public IList<IList<HitSampleInfo>> NodeSamples { get; set; } =
+            new List<IList<HitSampleInfo>>();
     }
 }

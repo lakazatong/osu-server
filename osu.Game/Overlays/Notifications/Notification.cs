@@ -86,7 +86,8 @@ namespace osu.Game.Overlays.Notifications
         [Resolved]
         private OverlayColourProvider colourProvider { get; set; } = null!;
 
-        public override bool PropagatePositionalInputSubTree => base.PropagatePositionalInputSubTree && !WasClosed;
+        public override bool PropagatePositionalInputSubTree =>
+            base.PropagatePositionalInputSubTree && !WasClosed;
 
         private bool isInToastTray;
 
@@ -134,85 +135,89 @@ namespace osu.Game.Overlays.Notifications
                     Padding = new MarginPadding { Vertical = 3f },
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                }.WithChild(MainContent = new Container
-                {
-                    CornerRadius = CORNER_RADIUS,
-                    Masking = true,
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    AutoSizeDuration = 400,
-                    AutoSizeEasing = Easing.OutQuint,
-                    Children = new Drawable[]
+                }.WithChild(
+                    MainContent = new Container
                     {
-                        new GridContainer
+                        CornerRadius = CORNER_RADIUS,
+                        Masking = true,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        AutoSizeDuration = 400,
+                        AutoSizeEasing = Easing.OutQuint,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            RowDimensions = new[]
+                            new GridContainer
                             {
-                                new Dimension(GridSizeMode.AutoSize, minSize: 60)
-                            },
-                            ColumnDimensions = new[]
-                            {
-                                new Dimension(GridSizeMode.AutoSize),
-                                new Dimension(),
-                                new Dimension(GridSizeMode.AutoSize),
-                            },
-                            Content = new[]
-                            {
-                                new Drawable[]
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                RowDimensions = new[]
                                 {
-                                    IconContent = new Container
+                                    new Dimension(GridSizeMode.AutoSize, minSize: 60),
+                                },
+                                ColumnDimensions = new[]
+                                {
+                                    new Dimension(GridSizeMode.AutoSize),
+                                    new Dimension(),
+                                    new Dimension(GridSizeMode.AutoSize),
+                                },
+                                Content = new[]
+                                {
+                                    new Drawable[]
                                     {
-                                        Width = 40,
-                                        RelativeSizeAxes = Axes.Y,
-                                    },
-                                    new Container
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Padding = new MarginPadding(10),
-                                        Children = new Drawable[]
+                                        IconContent = new Container
                                         {
-                                            content = new FillFlowContainer
+                                            Width = 40,
+                                            RelativeSizeAxes = Axes.Y,
+                                        },
+                                        new Container
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Padding = new MarginPadding(10),
+                                            Children = new Drawable[]
                                             {
-                                                Masking = true,
-                                                RelativeSizeAxes = Axes.X,
-                                                AutoSizeAxes = Axes.Y,
-                                                Direction = FillDirection.Vertical,
-                                                Spacing = new Vector2(15)
+                                                content = new FillFlowContainer
+                                                {
+                                                    Masking = true,
+                                                    RelativeSizeAxes = Axes.X,
+                                                    AutoSizeAxes = Axes.Y,
+                                                    Direction = FillDirection.Vertical,
+                                                    Spacing = new Vector2(15),
+                                                },
                                             },
-                                        }
+                                        },
+                                        new CloseButton(CloseButtonIcon)
+                                        {
+                                            Action = () => Close(true),
+                                            Anchor = Anchor.TopRight,
+                                            Origin = Anchor.TopRight,
+                                        },
                                     },
-                                    new CloseButton(CloseButtonIcon)
-                                    {
-                                        Action = () => Close(true),
-                                        Anchor = Anchor.TopRight,
-                                        Origin = Anchor.TopRight,
-                                    }
-                                }
+                                },
                             },
-                        },
-                        initialFlash = new Box
-                        {
-                            Colour = Color4.White.Opacity(0.8f),
-                            RelativeSizeAxes = Axes.Both,
-                            Blending = BlendingParameters.Additive,
+                            initialFlash = new Box
+                            {
+                                Colour = Color4.White.Opacity(0.8f),
+                                RelativeSizeAxes = Axes.Both,
+                                Blending = BlendingParameters.Additive,
+                            },
                         },
                     }
-                })
+                ),
             };
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            MainContent.Add(background = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = colourProvider.Background3,
-                Depth = float.MaxValue
-            });
+            MainContent.Add(
+                background = new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = colourProvider.Background3,
+                    Depth = float.MaxValue,
+                }
+            );
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -263,7 +268,8 @@ namespace osu.Game.Overlays.Notifications
 
         public virtual void Close(bool runFlingAnimation)
         {
-            if (WasClosed) return;
+            if (WasClosed)
+                return;
 
             WasClosed = true;
 
@@ -298,8 +304,10 @@ namespace osu.Game.Overlays.Notifications
                 {
                     var childBounding = Children.First().BoundingBox;
 
-                    if (X < 0) childBounding *= new Vector2(1, Math.Max(0, 1 + (X / 300)));
-                    if (Y > 0) childBounding *= new Vector2(1, Math.Max(0, 1 - (Y / 200)));
+                    if (X < 0)
+                        childBounding *= new Vector2(1, Math.Max(0, 1 + (X / 300)));
+                    if (Y > 0)
+                        childBounding *= new Vector2(1, Math.Max(0, 1 - (Y / 200)));
 
                     return childBounding;
                 }
@@ -321,7 +329,8 @@ namespace osu.Game.Overlays.Notifications
                 if (change.X >= 0)
                     change.Y = 0;
                 else
-                    change.Y *= (float)Interpolation.ApplyEasing(Easing.InOutQuart, Math.Min(1, -change.X / 200));
+                    change.Y *= (float)
+                        Interpolation.ApplyEasing(Easing.InOutQuart, Math.Min(1, -change.X / 200));
 
                 this.MoveTo(change);
             }
@@ -360,8 +369,20 @@ namespace osu.Game.Overlays.Notifications
                     else
                     {
                         velocity = new Vector2(
-                            (float)Interpolation.DampContinuously(velocity.X, change.X, 40, Clock.ElapsedFrameTime),
-                            (float)Interpolation.DampContinuously(velocity.Y, change.Y, 40, Clock.ElapsedFrameTime)
+                            (float)
+                                Interpolation.DampContinuously(
+                                    velocity.X,
+                                    change.X,
+                                    40,
+                                    Clock.ElapsedFrameTime
+                                ),
+                            (float)
+                                Interpolation.DampContinuously(
+                                    velocity.Y,
+                                    change.Y,
+                                    40,
+                                    Clock.ElapsedFrameTime
+                                )
                         );
                     }
 
@@ -428,7 +449,7 @@ namespace osu.Game.Overlays.Notifications
                         Icon = iconUsage,
                         Size = new Vector2(12),
                         Colour = colourProvider.Foreground1,
-                    }
+                    },
                 };
             }
 
@@ -457,7 +478,8 @@ namespace osu.Game.Overlays.Notifications
                 get => pulsate;
                 set
                 {
-                    if (pulsate == value) return;
+                    if (pulsate == value)
+                        return;
 
                     pulsate = value;
 
@@ -467,8 +489,12 @@ namespace osu.Game.Overlays.Notifications
                     if (pulsate)
                     {
                         const float length = 1000;
-                        pulsateLayer.Loop(length / 2,
-                            p => p.FadeTo(0.4f, length, Easing.In).Then().FadeTo(1, length, Easing.Out)
+                        pulsateLayer.Loop(
+                            length / 2,
+                            p =>
+                                p.FadeTo(0.4f, length, Easing.In)
+                                    .Then()
+                                    .FadeTo(1, length, Easing.Out)
                         );
                     }
                 }
@@ -501,14 +527,8 @@ namespace osu.Game.Overlays.Notifications
                         Origin = Anchor.CentreLeft,
                         Masking = true,
                         RelativeSizeAxes = Axes.Both,
-                        Children = new[]
-                        {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                        }
-                    }
+                        Children = new[] { new Box { RelativeSizeAxes = Axes.Both } },
+                    },
                 };
             }
         }

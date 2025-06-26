@@ -22,32 +22,38 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Finish"
         /// </summary>
-        public static LocalisableString Finish => new TranslatableString(getKey(@"finish"), @"Finish");
+        public static LocalisableString Finish =>
+            new TranslatableString(getKey(@"finish"), @"Finish");
 
         /// <summary>
         /// "Enabled"
         /// </summary>
-        public static LocalisableString Enabled => new TranslatableString(getKey(@"enabled"), @"Enabled");
+        public static LocalisableString Enabled =>
+            new TranslatableString(getKey(@"enabled"), @"Enabled");
 
         /// <summary>
         /// "Disabled"
         /// </summary>
-        public static LocalisableString Disabled => new TranslatableString(getKey(@"disabled"), @"Disabled");
+        public static LocalisableString Disabled =>
+            new TranslatableString(getKey(@"disabled"), @"Disabled");
 
         /// <summary>
         /// "Default"
         /// </summary>
-        public static LocalisableString Default => new TranslatableString(getKey(@"default"), @"Default");
+        public static LocalisableString Default =>
+            new TranslatableString(getKey(@"default"), @"Default");
 
         /// <summary>
         /// "Rename"
         /// </summary>
-        public static LocalisableString Rename => new TranslatableString(getKey(@"rename"), @"Rename");
+        public static LocalisableString Rename =>
+            new TranslatableString(getKey(@"rename"), @"Rename");
 
         /// <summary>
         /// "Export"
         /// </summary>
-        public static LocalisableString Export => new TranslatableString(getKey(@"export"), @"Export");
+        public static LocalisableString Export =>
+            new TranslatableString(getKey(@"export"), @"Export");
 
         /// <summary>
         /// "Width"
@@ -57,37 +63,44 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Height"
         /// </summary>
-        public static LocalisableString Height => new TranslatableString(getKey(@"height"), @"Height");
+        public static LocalisableString Height =>
+            new TranslatableString(getKey(@"height"), @"Height");
 
         /// <summary>
         /// "Downloading..."
         /// </summary>
-        public static LocalisableString Downloading => new TranslatableString(getKey(@"downloading"), @"Downloading...");
+        public static LocalisableString Downloading =>
+            new TranslatableString(getKey(@"downloading"), @"Downloading...");
 
         /// <summary>
         /// "Importing..."
         /// </summary>
-        public static LocalisableString Importing => new TranslatableString(getKey(@"importing"), @"Importing...");
+        public static LocalisableString Importing =>
+            new TranslatableString(getKey(@"importing"), @"Importing...");
 
         /// <summary>
         /// "Deselect All"
         /// </summary>
-        public static LocalisableString DeselectAll => new TranslatableString(getKey(@"deselect_all"), @"Deselect All");
+        public static LocalisableString DeselectAll =>
+            new TranslatableString(getKey(@"deselect_all"), @"Deselect All");
 
         /// <summary>
         /// "Select All"
         /// </summary>
-        public static LocalisableString SelectAll => new TranslatableString(getKey(@"select_all"), @"Select All");
+        public static LocalisableString SelectAll =>
+            new TranslatableString(getKey(@"select_all"), @"Select All");
 
         /// <summary>
         /// "Beatmaps"
         /// </summary>
-        public static LocalisableString Beatmaps => new TranslatableString(getKey(@"beatmaps"), @"Beatmaps");
+        public static LocalisableString Beatmaps =>
+            new TranslatableString(getKey(@"beatmaps"), @"Beatmaps");
 
         /// <summary>
         /// "Scores"
         /// </summary>
-        public static LocalisableString Scores => new TranslatableString(getKey(@"scores"), @"Scores");
+        public static LocalisableString Scores =>
+            new TranslatableString(getKey(@"scores"), @"Scores");
 
         /// <summary>
         /// "Skins"
@@ -97,12 +110,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Collections"
         /// </summary>
-        public static LocalisableString Collections => new TranslatableString(getKey(@"collections"), @"Collections");
+        public static LocalisableString Collections =>
+            new TranslatableString(getKey(@"collections"), @"Collections");
 
         /// <summary>
         /// "Mod presets"
         /// </summary>
-        public static LocalisableString ModPresets => new TranslatableString(getKey(@"mod_presets"), @"Mod presets");
+        public static LocalisableString ModPresets =>
+            new TranslatableString(getKey(@"mod_presets"), @"Mod presets");
 
         /// <summary>
         /// "Name"
@@ -112,22 +127,26 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Description"
         /// </summary>
-        public static LocalisableString Description => new TranslatableString(getKey(@"description"), @"Description");
+        public static LocalisableString Description =>
+            new TranslatableString(getKey(@"description"), @"Description");
 
         /// <summary>
         /// "File"
         /// </summary>
-        public static LocalisableString MenuBarFile => new TranslatableString(getKey(@"menu_bar_file"), @"File");
+        public static LocalisableString MenuBarFile =>
+            new TranslatableString(getKey(@"menu_bar_file"), @"File");
 
         /// <summary>
         /// "Edit"
         /// </summary>
-        public static LocalisableString MenuBarEdit => new TranslatableString(getKey(@"menu_bar_edit"), @"Edit");
+        public static LocalisableString MenuBarEdit =>
+            new TranslatableString(getKey(@"menu_bar_edit"), @"Edit");
 
         /// <summary>
         /// "View"
         /// </summary>
-        public static LocalisableString MenuBarView => new TranslatableString(getKey(@"menu_bar_view"), @"View");
+        public static LocalisableString MenuBarView =>
+            new TranslatableString(getKey(@"menu_bar_view"), @"View");
 
         /// <summary>
         /// "Undo"
@@ -167,22 +186,26 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Caps lock is active"
         /// </summary>
-        public static LocalisableString CapsLockIsActive => new TranslatableString(getKey(@"caps_lock_is_active"), @"Caps lock is active");
+        public static LocalisableString CapsLockIsActive =>
+            new TranslatableString(getKey(@"caps_lock_is_active"), @"Caps lock is active");
 
         /// <summary>
         /// "Revert to default"
         /// </summary>
-        public static LocalisableString RevertToDefault => new TranslatableString(getKey(@"revert_to_default"), @"Revert to default");
+        public static LocalisableString RevertToDefault =>
+            new TranslatableString(getKey(@"revert_to_default"), @"Revert to default");
 
         /// <summary>
         /// "General"
         /// </summary>
-        public static LocalisableString General => new TranslatableString(getKey(@"general"), @"General");
+        public static LocalisableString General =>
+            new TranslatableString(getKey(@"general"), @"General");
 
         /// <summary>
         /// "Copy link"
         /// </summary>
-        public static LocalisableString CopyLink => new TranslatableString(getKey(@"copy_link"), @"Copy link");
+        public static LocalisableString CopyLink =>
+            new TranslatableString(getKey(@"copy_link"), @"Copy link");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

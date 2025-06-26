@@ -69,9 +69,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                             Position = new Vector2(0, triangle_offset),
                             Size = new Vector2(triangle_size),
                             EdgeSmoothness = new Vector2(1),
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             major = ((DrawableBarLine)drawableHitObject).Major.GetBoundCopy();

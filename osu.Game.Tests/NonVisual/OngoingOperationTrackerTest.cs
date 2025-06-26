@@ -26,7 +26,10 @@ namespace osu.Game.Tests.NonVisual
         public void SetUp()
         {
             AddStep("create tracker", () => Child = tracker = new OngoingOperationTracker());
-            AddStep("bind to operation status", () => operationInProgress = tracker.InProgress.GetBoundCopy());
+            AddStep(
+                "bind to operation status",
+                () => operationInProgress = tracker.InProgress.GetBoundCopy()
+            );
         }
 
         [Test]
@@ -38,8 +41,10 @@ namespace osu.Game.Tests.NonVisual
             AddStep("begin first operation", () => firstOperation = tracker.BeginOperation());
             AddAssert("first operation in progress", () => operationInProgress.Value);
 
-            AddStep("cannot start another operation",
-                () => Assert.Throws<InvalidOperationException>(() => tracker.BeginOperation()));
+            AddStep(
+                "cannot start another operation",
+                () => Assert.Throws<InvalidOperationException>(() => tracker.BeginOperation())
+            );
 
             AddStep("end first operation", () => firstOperation.Dispose());
             AddAssert("first operation is ended", () => !operationInProgress.Value);
@@ -72,25 +77,34 @@ namespace osu.Game.Tests.NonVisual
             OsuScreenStack stack;
             IDisposable operation = null;
 
-            AddStep("create screen with tracker", () =>
-            {
-                Child = stack = new OsuScreenStack
+            AddStep(
+                "create screen with tracker",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both
-                };
+                    Child = stack = new OsuScreenStack { RelativeSizeAxes = Axes.Both };
 
-                stack.Push(screen = new TestScreenWithTracker());
-            });
+                    stack.Push(screen = new TestScreenWithTracker());
+                }
+            );
             AddUntilStep("wait for loaded", () => screen.IsLoaded);
 
-            AddStep("begin operation", () => operation = screen.OngoingOperationTracker.BeginOperation());
-            AddAssert("operation in progress", () => screen.OngoingOperationTracker.InProgress.Value);
+            AddStep(
+                "begin operation",
+                () => operation = screen.OngoingOperationTracker.BeginOperation()
+            );
+            AddAssert(
+                "operation in progress",
+                () => screen.OngoingOperationTracker.InProgress.Value
+            );
 
-            AddStep("dispose after screen exit", () =>
-            {
-                screen.Exit();
-                operation.Dispose();
-            });
+            AddStep(
+                "dispose after screen exit",
+                () =>
+                {
+                    screen.Exit();
+                    operation.Dispose();
+                }
+            );
             AddAssert("operation ended", () => !screen.OngoingOperationTracker.InProgress.Value);
         }
 

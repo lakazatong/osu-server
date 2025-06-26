@@ -30,9 +30,9 @@ namespace osu.Game.Tests.Editing.Checks
                     Metadata = new BeatmapMetadata
                     {
                         Title = "Egao no Kanata",
-                        TitleUnicode = "エガオノカナタ"
-                    }
-                }
+                        TitleUnicode = "エガオノカナタ",
+                    },
+                },
             };
         }
 
@@ -63,7 +63,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -86,7 +90,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -109,7 +117,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -132,7 +144,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -155,7 +171,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -178,7 +198,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -201,7 +225,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         [Test]
@@ -224,7 +252,11 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(getContext(beatmap)).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(2));
-            Assert.That(issues.Any(issue => issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker));
+            Assert.That(
+                issues.Any(issue =>
+                    issue.Template is CheckTitleMarkers.IssueTemplateIncorrectMarker
+                )
+            );
         }
 
         private BeatmapVerifierContext getContext(IBeatmap beatmap)

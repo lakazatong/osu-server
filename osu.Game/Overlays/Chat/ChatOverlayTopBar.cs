@@ -25,11 +25,7 @@ namespace osu.Game.Overlays.Chat
         {
             Children = new[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background3,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background3 },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -67,7 +63,7 @@ namespace osu.Game.Overlays.Chat
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Colour = colourProvider.Background4,
-                }
+                },
             };
         }
 
@@ -101,7 +97,7 @@ namespace osu.Game.Overlays.Chat
                         Origin = Anchor.Centre,
                         Size = new Vector2(150, 7),
                         Margin = new MarginPadding(12),
-                    }
+                    },
                 };
             }
 

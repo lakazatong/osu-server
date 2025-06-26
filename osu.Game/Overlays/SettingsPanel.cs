@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -22,6 +21,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Overlays
@@ -70,7 +70,9 @@ namespace osu.Game.Overlays
         public IBindable<SettingsSection> CurrentSection = new Bindable<SettingsSection>();
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         protected SettingsPanel(bool showBackButton)
         {
@@ -100,57 +102,60 @@ namespace osu.Game.Overlays
                         Colour = colourProvider.Background4,
                         Alpha = 1,
                     },
-                    loading = new LoadingLayer
-                    {
-                        State = { Value = Visibility.Visible }
-                    }
-                }
+                    loading = new LoadingLayer { State = { Value = Visibility.Visible } },
+                },
             };
 
-            Add(new PopoverContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = SectionsContainer = new SettingsSectionsContainer
+            Add(
+                new PopoverContainer
                 {
-                    Masking = true,
-                    EdgeEffect = new EdgeEffectParameters
-                    {
-                        Colour = Color4.Black.Opacity(0),
-                        Type = EdgeEffectType.Shadow,
-                        Hollow = true,
-                        Radius = 10
-                    },
-                    MaskingSmoothness = 0,
                     RelativeSizeAxes = Axes.Both,
-                    ExpandableHeader = CreateHeader(),
-                    SelectedSection = { BindTarget = CurrentSection },
-                    FixedHeader = new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding
+                    Child = SectionsContainer =
+                        new SettingsSectionsContainer
                         {
-                            Vertical = 20,
-                            Horizontal = CONTENT_MARGINS
+                            Masking = true,
+                            EdgeEffect = new EdgeEffectParameters
+                            {
+                                Colour = Color4.Black.Opacity(0),
+                                Type = EdgeEffectType.Shadow,
+                                Hollow = true,
+                                Radius = 10,
+                            },
+                            MaskingSmoothness = 0,
+                            RelativeSizeAxes = Axes.Both,
+                            ExpandableHeader = CreateHeader(),
+                            SelectedSection = { BindTarget = CurrentSection },
+                            FixedHeader = new Container
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding
+                                {
+                                    Vertical = 20,
+                                    Horizontal = CONTENT_MARGINS,
+                                },
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Child = SearchTextBox =
+                                    new SettingsSearchTextBox
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        Origin = Anchor.TopCentre,
+                                        Anchor = Anchor.TopCentre,
+                                    },
+                            },
+                            Footer = CreateFooter().With(f => f.Alpha = 0),
                         },
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Child = SearchTextBox = new SettingsSearchTextBox
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Origin = Anchor.TopCentre,
-                            Anchor = Anchor.TopCentre,
-                        }
-                    },
-                    Footer = CreateFooter().With(f => f.Alpha = 0)
                 }
-            });
+            );
 
-            AddInternal(Sidebar = new SettingsSidebar(showBackButton)
-            {
-                BackButtonAction = Hide,
-                Width = sidebar_width
-            });
+            AddInternal(
+                Sidebar = new SettingsSidebar(showBackButton)
+                {
+                    BackButtonAction = Hide,
+                    Width = sidebar_width,
+                }
+            );
 
             CreateSections()?.ForEach(AddSection);
         }
@@ -159,7 +164,9 @@ namespace osu.Game.Overlays
         {
             if (IsLoaded)
                 // just to keep things simple. can be accommodated for if we ever need it.
-                throw new InvalidOperationException("All sections must be added before the panel is loaded.");
+                throw new InvalidOperationException(
+                    "All sections must be added before the panel is loaded."
+                );
 
             loadableSections.Add(section);
         }
@@ -172,7 +179,11 @@ namespace osu.Game.Overlays
         {
             ContentContainer.MoveToX(ExpandedPosition, TRANSITION_LENGTH, Easing.OutQuint);
 
-            SectionsContainer.FadeEdgeEffectTo(WaveContainer.SHADOW_OPACITY, WaveContainer.APPEAR_DURATION, Easing.Out);
+            SectionsContainer.FadeEdgeEffectTo(
+                WaveContainer.SHADOW_OPACITY,
+                WaveContainer.APPEAR_DURATION,
+                Easing.Out
+            );
 
             // delay load enough to ensure it doesn't overlap with the initial animation.
             // this is done as there is still a brief stutter during load completion which is more visible if the transition is in progress.
@@ -226,18 +237,27 @@ namespace osu.Game.Overlays
             if (sectionsLoadingTask != null)
                 return;
 
-            sectionsLoadingTask = LoadComponentsAsync(loadableSections, sections =>
-            {
-                SectionsContainer.AddRange(sections);
-                SectionsContainer.Footer.FadeInFromZero(fade_in_duration, Easing.OutQuint);
-                SectionsContainer.SearchContainer.FadeInFromZero(fade_in_duration, Easing.OutQuint);
+            sectionsLoadingTask = LoadComponentsAsync(
+                loadableSections,
+                sections =>
+                {
+                    SectionsContainer.AddRange(sections);
+                    SectionsContainer.Footer.FadeInFromZero(fade_in_duration, Easing.OutQuint);
+                    SectionsContainer.SearchContainer.FadeInFromZero(
+                        fade_in_duration,
+                        Easing.OutQuint
+                    );
 
-                loading.Hide();
+                    loading.Hide();
 
-                SearchTextBox.Current.BindValueChanged(term => SectionsContainer.SearchTerm = term.NewValue, true);
+                    SearchTextBox.Current.BindValueChanged(
+                        term => SectionsContainer.SearchTerm = term.NewValue,
+                        true
+                    );
 
-                loadSidebarButtons();
-            });
+                    loadSidebarButtons();
+                }
+            );
         }
 
         private void loadSidebarButtons()
@@ -245,32 +265,41 @@ namespace osu.Game.Overlays
             if (Sidebar == null)
                 return;
 
-            LoadComponentsAsync(createSidebarButtons(), buttons =>
-            {
-                float delay = 0;
-
-                foreach (var button in buttons)
+            LoadComponentsAsync(
+                createSidebarButtons(),
+                buttons =>
                 {
-                    Sidebar.Add(button);
+                    float delay = 0;
 
-                    button.FadeOut()
-                          .Delay(delay)
-                          .FadeInFromZero(fade_in_duration, Easing.OutQuint);
+                    foreach (var button in buttons)
+                    {
+                        Sidebar.Add(button);
 
-                    delay += 40;
+                        button
+                            .FadeOut()
+                            .Delay(delay)
+                            .FadeInFromZero(fade_in_duration, Easing.OutQuint);
+
+                        delay += 40;
+                    }
+
+                    SectionsContainer.SelectedSection.BindValueChanged(
+                        section =>
+                        {
+                            if (selectedSidebarButton != null)
+                                selectedSidebarButton.Selected = false;
+
+                            selectedSidebarButton = Sidebar
+                                .Children.OfType<SidebarIconButton>()
+                                .FirstOrDefault(b => b.Section == section.NewValue);
+
+                            if (selectedSidebarButton != null)
+                                selectedSidebarButton.Selected = true;
+                        },
+                        true
+                    );
                 }
-
-                SectionsContainer.SelectedSection.BindValueChanged(section =>
-                {
-                    if (selectedSidebarButton != null)
-                        selectedSidebarButton.Selected = false;
-
-                    selectedSidebarButton = Sidebar.Children.OfType<SidebarIconButton>().FirstOrDefault(b => b.Section == section.NewValue);
-
-                    if (selectedSidebarButton != null)
-                        selectedSidebarButton.Selected = true;
-                }, true);
-            });
+            );
         }
 
         private IEnumerable<SidebarIconButton> createSidebarButtons()
@@ -307,8 +336,8 @@ namespace osu.Game.Overlays
                 set => SearchContainer.SearchTerm = value;
             }
 
-            protected override FlowContainer<SettingsSection> CreateScrollContentContainer()
-                => SearchContainer = new SearchContainer<SettingsSection>
+            protected override FlowContainer<SettingsSection> CreateScrollContentContainer() =>
+                SearchContainer = new SearchContainer<SettingsSection>
                 {
                     AutoSizeAxes = Axes.Y,
                     RelativeSizeAxes = Axes.X,
@@ -321,7 +350,7 @@ namespace osu.Game.Overlays
                 HeaderBackground = new Box
                 {
                     Colour = colourProvider.Background4,
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 };
 
                 SearchContainer.FilterCompleted += InvalidateScrollPosition;

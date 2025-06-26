@@ -29,8 +29,10 @@ namespace osu.Game.Storyboards.Commands
             TotalIterations = repeatCount + 1;
         }
 
-        protected override void AddCommand<T>(ICollection<StoryboardCommand<T>> list, StoryboardCommand<T> command)
-            => base.AddCommand(list, new StoryboardLoopingCommand<T>(command, this));
+        protected override void AddCommand<T>(
+            ICollection<StoryboardCommand<T>> list,
+            StoryboardCommand<T> command
+        ) => base.AddCommand(list, new StoryboardLoopingCommand<T>(command, this));
 
         public override string ToString() => $"{loopStartTime} x{TotalIterations}";
 
@@ -39,11 +41,20 @@ namespace osu.Game.Storyboards.Commands
             private readonly StoryboardCommand<T> command;
             private readonly StoryboardLoopingGroup loopingGroup;
 
-            public StoryboardLoopingCommand(StoryboardCommand<T> command, StoryboardLoopingGroup loopingGroup)
+            public StoryboardLoopingCommand(
+                StoryboardCommand<T> command,
+                StoryboardLoopingGroup loopingGroup
+            )
                 // In an ideal world, we would multiply the command duration by TotalIterations in command end time.
                 // Unfortunately this would clash with how stable handled end times, and results in some storyboards playing outro
                 // sequences for minutes or hours.
-                : base(command.Easing, loopingGroup.loopStartTime + command.StartTime, loopingGroup.loopStartTime + command.EndTime, command.StartValue, command.EndValue)
+                : base(
+                    command.Easing,
+                    loopingGroup.loopStartTime + command.StartTime,
+                    loopingGroup.loopStartTime + command.EndTime,
+                    command.StartValue,
+                    command.EndValue
+                )
             {
                 this.command = command;
                 this.loopingGroup = loopingGroup;
@@ -51,7 +62,8 @@ namespace osu.Game.Storyboards.Commands
 
             public override string PropertyName => command.PropertyName;
 
-            public override void ApplyInitialValue<TDrawable>(TDrawable d) => command.ApplyInitialValue(d);
+            public override void ApplyInitialValue<TDrawable>(TDrawable d) =>
+                command.ApplyInitialValue(d);
 
             public override TransformSequence<TDrawable> ApplyTransforms<TDrawable>(TDrawable d)
             {
@@ -59,7 +71,9 @@ namespace osu.Game.Storyboards.Commands
                     return command.ApplyTransforms(d);
 
                 double loopingGroupDuration = loopingGroup.Duration;
-                return command.ApplyTransforms(d).Loop(loopingGroupDuration - Duration, loopingGroup.TotalIterations);
+                return command
+                    .ApplyTransforms(d)
+                    .Loop(loopingGroupDuration - Duration, loopingGroup.TotalIterations);
             }
         }
     }

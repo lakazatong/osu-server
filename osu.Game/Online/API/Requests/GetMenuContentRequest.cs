@@ -8,8 +8,6 @@ namespace osu.Game.Online.API.Requests
     public class GetMenuContentRequest : OsuJsonWebRequest<APIMenuContent>
     {
         public GetMenuContentRequest()
-            : base(@"https://assets.ppy.sh/menu-content.json")
-        {
-        }
+            : base(@"https://assets.ppy.sh/menu-content.json") { }
     }
 }

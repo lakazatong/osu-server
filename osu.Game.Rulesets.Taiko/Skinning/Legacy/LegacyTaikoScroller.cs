@@ -37,19 +37,22 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
         {
             base.LoadComplete();
 
-            LastResult.BindValueChanged(result =>
-            {
-                var r = result.NewValue;
+            LastResult.BindValueChanged(
+                result =>
+                {
+                    var r = result.NewValue;
 
-                // always ignore hitobjects that don't affect combo (drumroll ticks etc.)
-                if (r?.Type.AffectsCombo() == false)
-                    return;
+                    // always ignore hitobjects that don't affect combo (drumroll ticks etc.)
+                    if (r?.Type.AffectsCombo() == false)
+                        return;
 
-                passing = r == null || r.IsHit;
+                    passing = r == null || r.IsHit;
 
-                foreach (var sprite in InternalChildren.OfType<ScrollerSprite>())
-                    sprite.Passing = passing;
-            }, true);
+                    foreach (var sprite in InternalChildren.OfType<ScrollerSprite>())
+                        sprite.Passing = passing;
+                },
+                true
+            );
         }
 
         protected override void Update()
@@ -57,11 +60,15 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
             base.Update();
 
             // store X before checking wide enough so if we perform layout there is no positional discrepancy.
-            float currentX = (InternalChildren.FirstOrDefault()?.X ?? 0) - (float)Clock.ElapsedFrameTime * 0.1f;
+            float currentX =
+                (InternalChildren.FirstOrDefault()?.X ?? 0) - (float)Clock.ElapsedFrameTime * 0.1f;
 
             // ensure we have enough sprites
-            if (!InternalChildren.Any()
-                || InternalChildren.First().ScreenSpaceDrawQuad.Width * InternalChildren.Count < ScreenSpaceDrawQuad.Width * 2)
+            if (
+                !InternalChildren.Any()
+                || InternalChildren.First().ScreenSpaceDrawQuad.Width * InternalChildren.Count
+                    < ScreenSpaceDrawQuad.Width * 2
+            )
                 AddInternal(new ScrollerSprite { Passing = passing });
 
             var first = InternalChildren.First();
@@ -120,7 +127,11 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 InternalChildren = new Drawable[]
                 {
                     passingSprite = new Sprite { Texture = skin.GetTexture("taiko-slider") },
-                    failingSprite = new Sprite { Texture = skin.GetTexture("taiko-slider-fail"), Alpha = 0 },
+                    failingSprite = new Sprite
+                    {
+                        Texture = skin.GetTexture("taiko-slider-fail"),
+                        Alpha = 0,
+                    },
                 };
 
                 updatePassing();

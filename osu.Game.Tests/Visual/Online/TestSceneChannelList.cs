@@ -23,7 +23,9 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneChannelList : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         [Cached]
         private readonly Bindable<Channel> selected = new Bindable<Channel>();
@@ -93,72 +95,101 @@ namespace osu.Game.Tests.Visual.Online
                     channelList.RemoveChannel(channel);
                 };
 
-                selected.BindValueChanged(change =>
-                {
-                    selectedText.Text = $"Selected Channel: {change.NewValue?.Name ?? "[null]"}";
-                }, true);
+                selected.BindValueChanged(
+                    change =>
+                    {
+                        selectedText.Text =
+                            $"Selected Channel: {change.NewValue?.Name ?? "[null]"}";
+                    },
+                    true
+                );
             });
         }
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Add Public Channels", () =>
-            {
-                for (int i = 0; i < 10; i++)
-                    channelList.AddChannel(createRandomPublicChannel());
-            });
+            AddStep(
+                "Add Public Channels",
+                () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        channelList.AddChannel(createRandomPublicChannel());
+                }
+            );
 
-            AddStep("Add Private Channels", () =>
-            {
-                for (int i = 0; i < 10; i++)
-                    channelList.AddChannel(createRandomPrivateChannel());
-            });
+            AddStep(
+                "Add Private Channels",
+                () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        channelList.AddChannel(createRandomPrivateChannel());
+                }
+            );
 
             AddStep("Add Team Channel", () => channelList.AddChannel(createRandomTeamChannel()));
 
-            AddStep("Add Announce Channels", () =>
-            {
-                for (int i = 0; i < 2; i++)
-                    channelList.AddChannel(createRandomAnnounceChannel());
-            });
+            AddStep(
+                "Add Announce Channels",
+                () =>
+                {
+                    for (int i = 0; i < 2; i++)
+                        channelList.AddChannel(createRandomAnnounceChannel());
+                }
+            );
         }
 
         [Test]
         public void TestVisual()
         {
-            AddStep("Unread Selected", () =>
-            {
-                if (validItem)
-                    channelList.GetItem(selected.Value).Unread.Value = true;
-            });
+            AddStep(
+                "Unread Selected",
+                () =>
+                {
+                    if (validItem)
+                        channelList.GetItem(selected.Value).Unread.Value = true;
+                }
+            );
 
-            AddStep("Read Selected", () =>
-            {
-                if (validItem)
-                    channelList.GetItem(selected.Value).Unread.Value = false;
-            });
+            AddStep(
+                "Read Selected",
+                () =>
+                {
+                    if (validItem)
+                        channelList.GetItem(selected.Value).Unread.Value = false;
+                }
+            );
 
-            AddStep("Add Mention Selected", () =>
-            {
-                if (validItem)
-                    channelList.GetItem(selected.Value).Mentions.Value++;
-            });
+            AddStep(
+                "Add Mention Selected",
+                () =>
+                {
+                    if (validItem)
+                        channelList.GetItem(selected.Value).Mentions.Value++;
+                }
+            );
 
-            AddStep("Add 98 Mentions Selected", () =>
-            {
-                if (validItem)
-                    channelList.GetItem(selected.Value).Mentions.Value += 98;
-            });
+            AddStep(
+                "Add 98 Mentions Selected",
+                () =>
+                {
+                    if (validItem)
+                        channelList.GetItem(selected.Value).Mentions.Value += 98;
+                }
+            );
 
-            AddStep("Clear Mentions Selected", () =>
-            {
-                if (validItem)
-                    channelList.GetItem(selected.Value).Mentions.Value = 0;
-            });
+            AddStep(
+                "Clear Mentions Selected",
+                () =>
+                {
+                    if (validItem)
+                        channelList.GetItem(selected.Value).Mentions.Value = 0;
+                }
+            );
         }
 
-        private bool validItem => selected.Value != null && !(selected.Value is ChannelListing.ChannelListingChannel);
+        private bool validItem =>
+            selected.Value != null && !(selected.Value is ChannelListing.ChannelListingChannel);
 
         private Channel createRandomPublicChannel()
         {
@@ -174,11 +205,7 @@ namespace osu.Game.Tests.Visual.Online
         private Channel createRandomPrivateChannel()
         {
             int id = TestResources.GetNextTestID();
-            return new Channel(new APIUser
-            {
-                Id = id,
-                Username = $"test user {id}",
-            });
+            return new Channel(new APIUser { Id = id, Username = $"test user {id}" });
         }
 
         private Channel createRandomAnnounceChannel()

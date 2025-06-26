@@ -41,7 +41,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             EditorBeatmap?.EndChange();
         }
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => InternalChildren.Any(d => d.ReceivePositionalInputAt(screenSpacePos));
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            InternalChildren.Any(d => d.ReceivePositionalInputAt(screenSpacePos));
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
@@ -89,7 +90,8 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
         protected override void OnDrag(DragEvent e)
         {
             Vector2 mousePosition = ToRelativePosition(e.ScreenSpaceMousePosition);
-            double timeDelta = PositionToTime(mousePosition.Y) - PositionToTime(dragStartPosition.Y);
+            double timeDelta =
+                PositionToTime(mousePosition.Y) - PositionToTime(dragStartPosition.Y);
             float xDelta = mousePosition.X - dragStartPosition.X;
             MoveSelectedVertices(timeDelta, xDelta);
         }
@@ -103,7 +105,10 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
         {
             for (int i = InternalChildren.Count - 1; i >= 0; i--)
             {
-                if (i < VertexCount && InternalChildren[i].ReceivePositionalInputAt(screenSpacePosition))
+                if (
+                    i < VertexCount
+                    && InternalChildren[i].ReceivePositionalInputAt(screenSpacePosition)
+                )
                     return i;
             }
 
@@ -115,7 +120,11 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             int selectedCount = VertexStates.Count(state => state.IsSelected);
 
             if (selectedCount != 0)
-                yield return new OsuMenuItem($"Delete selected {(selectedCount == 1 ? "vertex" : $"{selectedCount} vertices")}", MenuItemType.Destructive, deleteSelectedVertices);
+                yield return new OsuMenuItem(
+                    $"Delete selected {(selectedCount == 1 ? "vertex" : $"{selectedCount} vertices")}",
+                    MenuItemType.Destructive,
+                    deleteSelectedVertices
+                );
         }
 
         private void selectOnly(int index)
@@ -143,7 +152,10 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
         {
             base.UpdateHitObjectFromPath(hitObject);
 
-            if (hitObject.Path.ControlPoints.Count <= 1 || !hitObject.Path.HasValidLengthForPlacement)
+            if (
+                hitObject.Path.ControlPoints.Count <= 1
+                || !hitObject.Path.HasValidLengthForPlacement
+            )
                 EditorBeatmap?.Remove(hitObject);
         }
     }

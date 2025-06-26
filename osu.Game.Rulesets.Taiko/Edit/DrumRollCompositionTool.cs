@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Taiko.Edit
     public class DrumRollCompositionTool : CompositionTool
     {
         public DrumRollCompositionTool()
-            : base(nameof(DrumRoll))
-        {
-        }
+            : base(nameof(DrumRoll)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new DrumRollPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new DrumRollPlacementBlueprint();
     }
 }

@@ -57,7 +57,8 @@ namespace osu.Game.Screens.Play
         public override bool? AllowGlobalTrackControl => false;
 
         // this makes the game stay in portrait mode when restarting gameplay rather than switching back to landscape.
-        public override bool RequiresPortraitOrientation => CurrentPlayer?.RequiresPortraitOrientation == true;
+        public override bool RequiresPortraitOrientation =>
+            CurrentPlayer?.RequiresPortraitOrientation == true;
 
         public override float BackgroundParallaxAmount => quickRestart ? 0 : 1;
 
@@ -72,7 +73,8 @@ namespace osu.Game.Screens.Play
         /// <summary>
         /// A fill flow containing the player settings groups, exposed for the ability to hide it from inheritors of the player loader.
         /// </summary>
-        protected FillFlowContainer<PlayerSettingsGroup> PlayerSettings { get; private set; } = null!;
+        protected FillFlowContainer<PlayerSettingsGroup> PlayerSettings { get; private set; } =
+            null!;
 
         protected VisualSettings VisualSettings { get; private set; } = null!;
 
@@ -99,7 +101,9 @@ namespace osu.Game.Screens.Play
         private Box? quickRestartBlackLayer;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         private const double quick_restart_initial_delay = 500;
 
@@ -112,7 +116,9 @@ namespace osu.Game.Screens.Play
 
                 backgroundBrightnessReduction = value;
 
-                ApplyToBackground(b => b.FadeColour(OsuColour.Gray(backgroundBrightnessReduction ? 0.8f : 1), 200));
+                ApplyToBackground(b =>
+                    b.FadeColour(OsuColour.Gray(backgroundBrightnessReduction ? 0.8f : 1), 200)
+                );
             }
         }
 
@@ -131,7 +137,8 @@ namespace osu.Game.Screens.Play
             // not ready if a focused overlay is visible, like settings.
             && inputManager.FocusedDrawable is not OsuFocusedOverlayContainer
             // or if a child of a focused overlay is focused, like settings' search textbox.
-            && inputManager.FocusedDrawable?.FindClosestParent<OsuFocusedOverlayContainer>() == null;
+            && inputManager.FocusedDrawable?.FindClosestParent<OsuFocusedOverlayContainer>()
+                == null;
 
         private readonly Func<Player> createPlayer;
 
@@ -188,8 +195,12 @@ namespace osu.Game.Screens.Play
         [BackgroundDependencyLoader]
         private void load(SessionStatics sessionStatics, OsuConfigManager config)
         {
-            muteWarningShownOnce = sessionStatics.GetBindable<bool>(Static.MutedAudioNotificationShownOnce);
-            batteryWarningShownOnce = sessionStatics.GetBindable<bool>(Static.LowBatteryNotificationShownOnce);
+            muteWarningShownOnce = sessionStatics.GetBindable<bool>(
+                Static.MutedAudioNotificationShownOnce
+            );
+            batteryWarningShownOnce = sessionStatics.GetBindable<bool>(
+                Static.LowBatteryNotificationShownOnce
+            );
             showStoryboards = config.GetBindable<bool>(OsuSetting.ShowStoryboard);
 
             const float padding = 25;
@@ -197,20 +208,28 @@ namespace osu.Game.Screens.Play
             InternalChildren = new Drawable[]
             {
                 new GlobalScrollAdjustsVolume(),
-                (content = new LogoTrackingContainer
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                }).WithChildren(new Drawable[]
-                {
-                    MetadataInfo = new BeatmapMetadataDisplay(Beatmap.Value, Mods, content.LogoFacade)
+                (
+                    content = new LogoTrackingContainer
                     {
-                        Alpha = 0,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    },
-                }),
+                        RelativeSizeAxes = Axes.Both,
+                    }
+                ).WithChildren(
+                    new Drawable[]
+                    {
+                        MetadataInfo = new BeatmapMetadataDisplay(
+                            Beatmap.Value,
+                            Mods,
+                            content.LogoFacade
+                        )
+                        {
+                            Alpha = 0,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    }
+                ),
                 disclaimers = new FillFlowContainer
                 {
                     Anchor = Anchor.TopLeft,
@@ -231,37 +250,55 @@ namespace osu.Game.Screens.Play
                     Width = SettingsToolboxGroup.CONTAINER_WIDTH + padding * 2,
                     Padding = new MarginPadding { Vertical = padding },
                     Masking = false,
-                    Child = PlayerSettings = new FillFlowContainer<PlayerSettingsGroup>
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 20),
-                        Padding = new MarginPadding { Horizontal = padding },
-                        Children = new PlayerSettingsGroup[]
+                    Child = PlayerSettings =
+                        new FillFlowContainer<PlayerSettingsGroup>
                         {
-                            VisualSettings = new VisualSettings(),
-                            AudioSettings = new AudioSettings(),
-                            new InputSettings()
-                        }
-                    },
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 20),
+                            Padding = new MarginPadding { Horizontal = padding },
+                            Children = new PlayerSettingsGroup[]
+                            {
+                                VisualSettings = new VisualSettings(),
+                                AudioSettings = new AudioSettings(),
+                                new InputSettings(),
+                            },
+                        },
                 },
                 idleTracker = new IdleTracker(1500),
-                sampleRestart = new SkinnableSound(new SampleInfo(@"Gameplay/restart", @"pause-retry-click"))
+                sampleRestart = new SkinnableSound(
+                    new SampleInfo(@"Gameplay/restart", @"pause-retry-click")
+                ),
             };
 
             if (Beatmap.Value.Beatmap.EpilepsyWarning)
             {
-                disclaimers.Add(epilepsyWarning = new PlayerLoaderDisclaimer(PlayerLoaderStrings.EpilepsyWarningTitle, PlayerLoaderStrings.EpilepsyWarningContent));
+                disclaimers.Add(
+                    epilepsyWarning = new PlayerLoaderDisclaimer(
+                        PlayerLoaderStrings.EpilepsyWarningTitle,
+                        PlayerLoaderStrings.EpilepsyWarningContent
+                    )
+                );
             }
 
             switch (Beatmap.Value.BeatmapInfo.Status)
             {
                 case BeatmapOnlineStatus.Loved:
-                    disclaimers.Add(new PlayerLoaderDisclaimer(PlayerLoaderStrings.LovedBeatmapDisclaimerTitle, PlayerLoaderStrings.LovedBeatmapDisclaimerContent));
+                    disclaimers.Add(
+                        new PlayerLoaderDisclaimer(
+                            PlayerLoaderStrings.LovedBeatmapDisclaimerTitle,
+                            PlayerLoaderStrings.LovedBeatmapDisclaimerContent
+                        )
+                    );
                     break;
 
                 case BeatmapOnlineStatus.Qualified:
-                    disclaimers.Add(new PlayerLoaderDisclaimer(PlayerLoaderStrings.QualifiedBeatmapDisclaimerTitle, PlayerLoaderStrings.QualifiedBeatmapDisclaimerContent));
+                    disclaimers.Add(
+                        new PlayerLoaderDisclaimer(
+                            PlayerLoaderStrings.QualifiedBeatmapDisclaimerTitle,
+                            PlayerLoaderStrings.QualifiedBeatmapDisclaimerContent
+                        )
+                    );
                     break;
             }
         }
@@ -272,14 +309,20 @@ namespace osu.Game.Screens.Play
 
             inputManager = GetContainingInputManager()!;
 
-            showStoryboards.BindValueChanged(val => epilepsyWarning?.FadeTo(val.NewValue ? 1 : 0, 250, Easing.OutQuint), true);
+            showStoryboards.BindValueChanged(
+                val => epilepsyWarning?.FadeTo(val.NewValue ? 1 : 0, 250, Easing.OutQuint),
+                true
+            );
             epilepsyWarning?.FinishTransforms(true);
 
-            leaderboardManager?.FetchWithCriteria(new LeaderboardCriteria(
-                Beatmap.Value.BeatmapInfo,
-                Ruleset.Value,
-                leaderboardManager?.CurrentCriteria?.Scope ?? BeatmapLeaderboardScope.Global,
-                leaderboardManager?.CurrentCriteria?.ExactMods));
+            leaderboardManager?.FetchWithCriteria(
+                new LeaderboardCriteria(
+                    Beatmap.Value.BeatmapInfo,
+                    Ruleset.Value,
+                    leaderboardManager?.CurrentCriteria?.Scope ?? BeatmapLeaderboardScope.Global,
+                    leaderboardManager?.CurrentCriteria?.ExactMods
+                )
+            );
         }
 
         #region Screen handling
@@ -303,7 +346,9 @@ namespace osu.Game.Screens.Play
 
             // after an initial delay, start the debounced load check.
             // this will continue to execute even after resuming back on restart.
-            Scheduler.Add(new ScheduledDelegate(pushWhenLoaded, Clock.CurrentTime + PlayerPushDelay, 0));
+            Scheduler.Add(
+                new ScheduledDelegate(pushWhenLoaded, Clock.CurrentTime + PlayerPushDelay, 0)
+            );
 
             showMuteWarningIfNeeded();
             showBatteryWarningIfNeeded();
@@ -376,23 +421,30 @@ namespace osu.Game.Screens.Play
 
             const double duration = 300;
 
-            if (!resuming) logo.MoveTo(new Vector2(0.5f), duration, Easing.OutQuint);
+            if (!resuming)
+                logo.MoveTo(new Vector2(0.5f), duration, Easing.OutQuint);
 
             logo.ScaleTo(new Vector2(0.15f), duration, Easing.OutQuint);
 
             if (quickRestart)
             {
-                logo.Delay(quick_restart_initial_delay)
-                    .FadeIn(350);
+                logo.Delay(quick_restart_initial_delay).FadeIn(350);
             }
             else
                 logo.FadeIn(350);
 
-            Scheduler.AddDelayed(() =>
-            {
-                if (this.IsCurrentScreen())
-                    logoTracking = content.StartTracking(logo, resuming ? 0 : 500, Easing.InOutExpo);
-            }, resuming ? 0 : 250);
+            Scheduler.AddDelayed(
+                () =>
+                {
+                    if (this.IsCurrentScreen())
+                        logoTracking = content.StartTracking(
+                            logo,
+                            resuming ? 0 : 500,
+                            Easing.InOutExpo
+                        );
+                },
+                resuming ? 0 : 250
+            );
         }
 
         protected override void LogoExiting(OsuLogo logo)
@@ -412,8 +464,7 @@ namespace osu.Game.Screens.Play
             logoTracking?.Dispose();
             logoTracking = null;
 
-            logo
-                .FadeOut(CONTENT_OUT_DURATION / 2, Easing.OutQuint)
+            logo.FadeOut(CONTENT_OUT_DURATION / 2, Easing.OutQuint)
                 .ScaleTo(logo.Scale * 0.8f, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
 
             osuLogo = null;
@@ -473,16 +524,17 @@ namespace osu.Game.Screens.Play
             CurrentPlayer.RestartCount = restartCount++;
             CurrentPlayer.PrepareLoaderForRestart = prepareForRestart;
 
-            LoadTask = LoadComponentAsync(CurrentPlayer, _ =>
-            {
-                MetadataInfo.Loading = false;
-                OnPlayerLoaded();
-            });
+            LoadTask = LoadComponentAsync(
+                CurrentPlayer,
+                _ =>
+                {
+                    MetadataInfo.Loading = false;
+                    OnPlayerLoaded();
+                }
+            );
         }
 
-        protected virtual void OnPlayerLoaded()
-        {
-        }
+        protected virtual void OnPlayerLoaded() { }
 
         private void prepareForRestart(bool quickRestartRequested)
         {
@@ -500,16 +552,16 @@ namespace osu.Game.Screens.Play
                 BackButtonVisibility.Value = false;
 
                 // A quick restart starts by triggering a fade to black
-                AddInternal(quickRestartBlackLayer = new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = float.MaxValue
-                });
+                AddInternal(
+                    quickRestartBlackLayer = new Box
+                    {
+                        Colour = Color4.Black,
+                        RelativeSizeAxes = Axes.Both,
+                        Depth = float.MaxValue,
+                    }
+                );
 
-                quickRestartBlackLayer
-                    .Delay(50)
-                    .FadeOut(5000, Easing.OutQuint);
+                quickRestartBlackLayer.Delay(50).FadeOut(5000, Easing.OutQuint);
 
                 prepareNewPlayer();
 
@@ -518,7 +570,8 @@ namespace osu.Game.Screens.Play
                     .ScaleTo(1)
                     .FadeInFromZero(500, Easing.OutQuint);
 
-                this.Delay(quick_restart_initial_delay).Schedule(() => BackButtonVisibility.Value = true);
+                this.Delay(quick_restart_initial_delay)
+                    .Schedule(() => BackButtonVisibility.Value = true);
             }
             else
             {
@@ -532,19 +585,19 @@ namespace osu.Game.Screens.Play
 
                 using (BeginDelayedSequence(delayBeforeSideDisplays))
                 {
-                    settingsScroll.FadeInFromZero(500, Easing.Out)
-                                  .MoveToX(0, 500, Easing.OutQuint);
+                    settingsScroll.FadeInFromZero(500, Easing.Out).MoveToX(0, 500, Easing.OutQuint);
 
-                    disclaimers.FadeInFromZero(500, Easing.Out)
-                               .MoveToX(0, 500, Easing.OutQuint);
+                    disclaimers.FadeInFromZero(500, Easing.Out).MoveToX(0, 500, Easing.OutQuint);
                 }
             }
 
-            AddRangeInternal(new[]
-            {
-                lowPassFilter = new AudioFilter(audioManager.TrackMixer),
-                highPassFilter = new AudioFilter(audioManager.TrackMixer, BQFType.HighPass),
-            });
+            AddRangeInternal(
+                new[]
+                {
+                    lowPassFilter = new AudioFilter(audioManager.TrackMixer),
+                    highPassFilter = new AudioFilter(audioManager.TrackMixer, BQFType.HighPass),
+                }
+            );
 
             lowPassFilter.CutoffTo(1000, 650, Easing.OutQuint);
             highPassFilter.CutoffTo(300).Then().CutoffTo(0, 1250); // 1250 is to line up with the appearance of MetadataInfo (750 delay + 500 fade-in)
@@ -559,22 +612,25 @@ namespace osu.Game.Screens.Play
             logoTracking = null;
 
             content.ScaleTo(0.7f, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
-            content.FadeOut(CONTENT_OUT_DURATION, Easing.OutQuint)
-                   // Safety for filter potentially getting stuck in applied state due to
-                   // transforms on `this` causing children to no longer be updated.
-                   .OnComplete(_ =>
-                   {
-                       highPassFilter?.RemoveAndDisposeImmediately();
-                       highPassFilter = null;
+            content
+                .FadeOut(CONTENT_OUT_DURATION, Easing.OutQuint)
+                // Safety for filter potentially getting stuck in applied state due to
+                // transforms on `this` causing children to no longer be updated.
+                .OnComplete(_ =>
+                {
+                    highPassFilter?.RemoveAndDisposeImmediately();
+                    highPassFilter = null;
 
-                       lowPassFilter?.RemoveAndDisposeImmediately();
-                       lowPassFilter = null;
-                   });
+                    lowPassFilter?.RemoveAndDisposeImmediately();
+                    lowPassFilter = null;
+                });
 
-            disclaimers.FadeOut(CONTENT_OUT_DURATION, Easing.Out)
-                       .MoveToX(-disclaimers.DrawWidth, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
-            settingsScroll.FadeOut(CONTENT_OUT_DURATION, Easing.OutQuint)
-                          .MoveToX(settingsScroll.DrawWidth, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
+            disclaimers
+                .FadeOut(CONTENT_OUT_DURATION, Easing.Out)
+                .MoveToX(-disclaimers.DrawWidth, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
+            settingsScroll
+                .FadeOut(CONTENT_OUT_DURATION, Easing.OutQuint)
+                .MoveToX(settingsScroll.DrawWidth, CONTENT_OUT_DURATION * 2, Easing.OutQuint);
 
             lowPassFilter?.CutoffTo(AudioFilter.MAX_LOWPASS_CUTOFF, CONTENT_OUT_DURATION);
             highPassFilter?.CutoffTo(0, CONTENT_OUT_DURATION);
@@ -584,7 +640,8 @@ namespace osu.Game.Screens.Play
         {
             Debug.Assert(ThreadSafety.IsUpdateThread);
 
-            if (!this.IsCurrentScreen()) return;
+            if (!this.IsCurrentScreen())
+                return;
 
             if (!readyForPush)
             {
@@ -603,7 +660,8 @@ namespace osu.Game.Screens.Play
             // Doing this prior to the game being pushed gives us a bit of time to stabilise into the high performance mode before gameplay starts.
             highPerformanceSession ??= highPerformanceSessionManager?.BeginSession();
 
-            scheduledPushPlayer = Scheduler.AddDelayed(() =>
+            scheduledPushPlayer = Scheduler.AddDelayed(
+                () =>
                 {
                     // ensure that once we have reached this "point of no return", readyForPush will be false for all future checks (until a new player instance is prepared).
                     Player consumedPlayer = consumePlayer();
@@ -615,11 +673,17 @@ namespace osu.Game.Screens.Play
                     TransformSequence<PlayerLoader> pushSequence = this.Delay(0);
 
                     // This goes hand-in-hand with the restoration of low pass filter in contentOut().
-                    this.TransformBindableTo(volumeAdjustment, 0, CONTENT_OUT_DURATION, Easing.OutCubic);
+                    this.TransformBindableTo(
+                        volumeAdjustment,
+                        0,
+                        CONTENT_OUT_DURATION,
+                        Easing.OutCubic
+                    );
 
                     pushSequence.Schedule(() =>
                     {
-                        if (!this.IsCurrentScreen()) return;
+                        if (!this.IsCurrentScreen())
+                            return;
 
                         LoadTask = null;
 
@@ -635,7 +699,10 @@ namespace osu.Game.Screens.Play
                 },
                 // When a quick restart is activated, the metadata content will display some time later if it's taking too long.
                 // To avoid it appearing too briefly, if it begins to fade in let's induce a standard delay.
-                quickRestart && content.Alpha == 0 ? 0 : 500);
+                quickRestart && content.Alpha == 0
+                    ? 0
+                    : 500
+            );
         }
 
         private void cancelLoad()
@@ -682,10 +749,14 @@ namespace osu.Game.Screens.Play
         {
             if (!muteWarningShownOnce.Value)
             {
-                double aggregateVolumeTrack = audioManager.Volume.Value * audioManager.VolumeTrack.Value;
+                double aggregateVolumeTrack =
+                    audioManager.Volume.Value * audioManager.VolumeTrack.Value;
 
                 // Checks if the notification has not been shown yet and also if master volume is muted, track/music volume is muted or if the whole game is muted.
-                if (volumeOverlay?.IsMuted.Value == true || Precision.AlmostBigger(volume_requirement, aggregateVolumeTrack))
+                if (
+                    volumeOverlay?.IsMuted.Value == true
+                    || Precision.AlmostBigger(volume_requirement, aggregateVolumeTrack)
+                )
                 {
                     notificationOverlay?.Post(new MutedNotification());
                     muteWarningShownOnce.Value = true;
@@ -701,7 +772,12 @@ namespace osu.Game.Screens.Play
             }
 
             [BackgroundDependencyLoader]
-            private void load(OsuColour colours, AudioManager audioManager, INotificationOverlay notificationOverlay, VolumeOverlay volumeOverlay)
+            private void load(
+                OsuColour colours,
+                AudioManager audioManager,
+                INotificationOverlay notificationOverlay,
+                VolumeOverlay volumeOverlay
+            )
             {
                 Icon = FontAwesome.Solid.VolumeMute;
                 IconContent.Colour = colours.RedDark;
@@ -736,7 +812,8 @@ namespace osu.Game.Screens.Play
 
         private void showBatteryWarningIfNeeded()
         {
-            if (batteryInfo == null) return;
+            if (batteryInfo == null)
+                return;
 
             if (!batteryWarningShownOnce.Value)
             {

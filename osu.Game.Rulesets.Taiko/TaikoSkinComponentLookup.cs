@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Taiko
     public class TaikoSkinComponentLookup : SkinComponentLookup<TaikoSkinComponents>
     {
         public TaikoSkinComponentLookup(TaikoSkinComponents component)
-            : base(component)
-        {
-        }
+            : base(component) { }
     }
 }

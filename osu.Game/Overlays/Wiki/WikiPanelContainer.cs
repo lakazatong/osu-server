@@ -43,10 +43,7 @@ namespace osu.Game.Overlays.Wiki
             AutoSizeAxes = Axes.Y;
             InternalChildren = new Drawable[]
             {
-                background = new PanelBackground
-                {
-                    BypassAutoSizeAxes = Axes.Both
-                },
+                background = new PanelBackground { BypassAutoSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.X,
@@ -57,9 +54,9 @@ namespace osu.Game.Overlays.Wiki
                         CurrentPath = $@"{api.Endpoints.WebsiteUrl}/wiki/",
                         Text = text,
                         RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y
-                    }
-                }
+                        AutoSizeAxes = Axes.Y,
+                    },
+                },
             };
         }
 
@@ -91,7 +88,7 @@ namespace osu.Game.Overlays.Wiki
                     {
                         Colour = colourProvider.Background4,
                         RelativeSizeAxes = Axes.Both,
-                    }
+                    },
                 };
             }
         }
@@ -109,17 +106,22 @@ namespace osu.Game.Overlays.Wiki
                 DocumentMargin = new MarginPadding(0);
             }
 
-            public override SpriteText CreateSpriteText() => base.CreateSpriteText().With(t => t.Font = t.Font.With(Typeface.Torus, weight: FontWeight.Bold));
+            public override SpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(t => t.Font = t.Font.With(Typeface.Torus, weight: FontWeight.Bold));
 
-            public override OsuMarkdownTextFlowContainer CreateTextFlow() => base.CreateTextFlow().With(f => f.TextAnchor = Anchor.TopCentre);
+            public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+                base.CreateTextFlow().With(f => f.TextAnchor = Anchor.TopCentre);
 
-            protected override MarkdownParagraph CreateParagraph(ParagraphBlock paragraphBlock, int level)
-                => base.CreateParagraph(paragraphBlock, level).With(p => p.Margin = new MarginPadding { Bottom = 10 });
+            protected override MarkdownParagraph CreateParagraph(
+                ParagraphBlock paragraphBlock,
+                int level
+            ) =>
+                base.CreateParagraph(paragraphBlock, level)
+                    .With(p => p.Margin = new MarginPadding { Bottom = 10 });
 
-            protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) => new WikiPanelHeading(headingBlock)
-            {
-                IsFullWidth = isFullWidth,
-            };
+            protected override MarkdownHeading CreateHeading(HeadingBlock headingBlock) =>
+                new WikiPanelHeading(headingBlock) { IsFullWidth = isFullWidth };
         }
 
         private partial class WikiPanelHeading : OsuMarkdownHeading
@@ -132,16 +134,19 @@ namespace osu.Game.Overlays.Wiki
                 Margin = new MarginPadding { Bottom = 40 };
             }
 
-            public override MarkdownTextFlowContainer CreateTextFlow() => base.CreateTextFlow().With(f =>
-            {
-                f.Anchor = Anchor.TopCentre;
-                f.Origin = Anchor.TopCentre;
-                f.TextAnchor = Anchor.TopCentre;
-            });
+            public override MarkdownTextFlowContainer CreateTextFlow() =>
+                base.CreateTextFlow()
+                    .With(f =>
+                    {
+                        f.Anchor = Anchor.TopCentre;
+                        f.Origin = Anchor.TopCentre;
+                        f.TextAnchor = Anchor.TopCentre;
+                    });
 
             protected override FontWeight GetFontWeightByLevel(int level) => FontWeight.Light;
 
-            protected override float GetFontSizeByLevel(int level) => base.GetFontSizeByLevel(IsFullWidth ? level : 3);
+            protected override float GetFontSizeByLevel(int level) =>
+                base.GetFontSizeByLevel(IsFullWidth ? level : 3);
         }
     }
 }

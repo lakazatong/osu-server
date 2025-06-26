@@ -27,28 +27,29 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             FillFlowContainer<Icon> flow;
 
-            AddRange(new Drawable[]
-            {
-                new Box
+            AddRange(
+                new Drawable[]
                 {
-                    Colour = Color4.Teal,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new OsuScrollContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = flow = new FillFlowContainer<Icon>
+                    new Box { Colour = Color4.Teal, RelativeSizeAxes = Axes.Both },
+                    new OsuScrollContainer
                     {
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.TopRight,
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Full,
+                        RelativeSizeAxes = Axes.Both,
+                        Child = flow =
+                            new FillFlowContainer<Icon>
+                            {
+                                Anchor = Anchor.TopRight,
+                                Origin = Anchor.TopRight,
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Full,
+                            },
                     },
                 }
-            });
+            );
 
-            foreach (var p in typeof(OsuIcon).GetProperties(BindingFlags.Public | BindingFlags.Static))
+            foreach (
+                var p in typeof(OsuIcon).GetProperties(BindingFlags.Public | BindingFlags.Static)
+            )
             {
                 object propValue = p.GetValue(null);
                 Debug.Assert(propValue != null);
@@ -56,8 +57,17 @@ namespace osu.Game.Tests.Visual.UserInterface
                 flow.Add(new Icon($"{nameof(OsuIcon)}.{p.Name}", (IconUsage)propValue));
             }
 
-            AddStep("toggle shadows", () => flow.Children.ForEach(i => i.SpriteIcon.Shadow = !i.SpriteIcon.Shadow));
-            AddStep("change icons", () => flow.Children.ForEach(i => i.SpriteIcon.Icon = new IconUsage((char)(i.SpriteIcon.Icon.Icon + 1))));
+            AddStep(
+                "toggle shadows",
+                () => flow.Children.ForEach(i => i.SpriteIcon.Shadow = !i.SpriteIcon.Shadow)
+            );
+            AddStep(
+                "change icons",
+                () =>
+                    flow.Children.ForEach(i =>
+                        i.SpriteIcon.Icon = new IconUsage((char)(i.SpriteIcon.Icon.Icon + 1))
+                    )
+            );
         }
 
         private partial class Icon : Container, IHasTooltip
@@ -71,11 +81,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 TooltipText = name;
 
                 AutoSizeAxes = Axes.Both;
-                Child = SpriteIcon = new SpriteIcon
-                {
-                    Icon = icon,
-                    Size = new Vector2(60),
-                };
+                Child = SpriteIcon = new SpriteIcon { Icon = icon, Size = new Vector2(60) };
             }
         }
     }

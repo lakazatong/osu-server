@@ -86,9 +86,12 @@ namespace osu.Game.Graphics.Containers
         [Resolved]
         protected IBeatSyncProvider BeatSyncSource { get; private set; } = null!;
 
-        protected virtual void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
-        {
-        }
+        protected virtual void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        ) { }
 
         protected override void Update()
         {
@@ -109,8 +112,12 @@ namespace osu.Game.Graphics.Containers
 
                 currentTrackTime = BeatSyncSource.Clock.CurrentTime + early;
 
-                TimingPoint = BeatSyncSource.ControlPoints?.TimingPointAt(currentTrackTime) ?? TimingControlPoint.DEFAULT;
-                EffectPoint = BeatSyncSource.ControlPoints?.EffectPointAt(currentTrackTime) ?? EffectControlPoint.DEFAULT;
+                TimingPoint =
+                    BeatSyncSource.ControlPoints?.TimingPointAt(currentTrackTime)
+                    ?? TimingControlPoint.DEFAULT;
+                EffectPoint =
+                    BeatSyncSource.ControlPoints?.EffectPointAt(currentTrackTime)
+                    ?? EffectControlPoint.DEFAULT;
             }
             else
             {
@@ -127,7 +134,9 @@ namespace osu.Game.Graphics.Containers
             while (beatLength < MinimumBeatLength)
                 beatLength *= 2;
 
-            int beatIndex = (int)((currentTrackTime - TimingPoint.Time) / beatLength) - (TimingPoint.OmitFirstBarLine ? 1 : 0);
+            int beatIndex =
+                (int)((currentTrackTime - TimingPoint.Time) / beatLength)
+                - (TimingPoint.OmitFirstBarLine ? 1 : 0);
 
             // The beats before the start of the first control point are off by 1, this should do the trick
             if (currentTrackTime < TimingPoint.Time)
@@ -147,7 +156,12 @@ namespace osu.Game.Graphics.Containers
             if (AllowMistimedEventFiring || Math.Abs(TimeSinceLastBeat) < MISTIMED_ALLOWANCE)
             {
                 using (BeginDelayedSequence(-TimeSinceLastBeat))
-                    OnNewBeat(beatIndex, TimingPoint, EffectPoint, BeatSyncSource.CurrentAmplitudes);
+                    OnNewBeat(
+                        beatIndex,
+                        TimingPoint,
+                        EffectPoint,
+                        BeatSyncSource.CurrentAmplitudes
+                    );
             }
 
             lastBeat = beatIndex;

@@ -3,14 +3,14 @@
 
 #nullable disable
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using System;
-using osu.Framework.Graphics.Sprites;
 
 namespace osu.Game.Screens.Play.HUD
 {
@@ -83,14 +83,15 @@ namespace osu.Game.Screens.Play.HUD
                         AutoSizeAxes = Axes.Both,
                         Scaling = ScaleMode.Vertical,
                         ScalingFactor = 0.5f,
-                        Child = timeCurrent = new SizePreservingSpriteText
-                        {
-                            Origin = Anchor.Centre,
-                            Anchor = Anchor.Centre,
-                            Colour = colours.BlueLighter,
-                            Font = OsuFont.Numeric,
-                        }
-                    }
+                        Child = timeCurrent =
+                            new SizePreservingSpriteText
+                            {
+                                Origin = Anchor.Centre,
+                                Anchor = Anchor.Centre,
+                                Colour = colours.BlueLighter,
+                                Font = OsuFont.Numeric,
+                            },
+                    },
                 },
                 new Container
                 {
@@ -105,14 +106,15 @@ namespace osu.Game.Screens.Play.HUD
                         AutoSizeAxes = Axes.Both,
                         Scaling = ScaleMode.Vertical,
                         ScalingFactor = 0.5f,
-                        Child = progress = new SizePreservingSpriteText
-                        {
-                            Origin = Anchor.Centre,
-                            Anchor = Anchor.Centre,
-                            Colour = colours.BlueLighter,
-                            Font = OsuFont.Numeric,
-                        }
-                    }
+                        Child = progress =
+                            new SizePreservingSpriteText
+                            {
+                                Origin = Anchor.Centre,
+                                Anchor = Anchor.Centre,
+                                Colour = colours.BlueLighter,
+                                Font = OsuFont.Numeric,
+                            },
+                    },
                 },
                 new Container
                 {
@@ -126,15 +128,16 @@ namespace osu.Game.Screens.Play.HUD
                         AutoSizeAxes = Axes.Both,
                         Scaling = ScaleMode.Vertical,
                         ScalingFactor = 0.5f,
-                        Child = timeLeft = new SizePreservingSpriteText
-                        {
-                            Origin = Anchor.CentreRight,
-                            Anchor = Anchor.CentreRight,
-                            Colour = colours.BlueLighter,
-                            Font = OsuFont.Numeric,
-                        }
-                    }
-                }
+                        Child = timeLeft =
+                            new SizePreservingSpriteText
+                            {
+                                Origin = Anchor.CentreRight,
+                                Anchor = Anchor.CentreRight,
+                                Colour = colours.BlueLighter,
+                                Font = OsuFont.Numeric,
+                            },
+                    },
+                },
             };
         }
 
@@ -145,7 +148,10 @@ namespace osu.Game.Screens.Play.HUD
             double time = gameplayClock?.CurrentTime ?? Time.Current;
 
             double songCurrentTime = time - startTime;
-            int currentPercent = songLength == 0 ? 0 : Math.Max(0, Math.Min(100, (int)(songCurrentTime / songLength * 100)));
+            int currentPercent =
+                songLength == 0
+                    ? 0
+                    : Math.Max(0, Math.Min(100, (int)(songCurrentTime / songLength * 100)));
             int currentSecond = (int)Math.Floor(songCurrentTime / 1000.0);
 
             if (currentPercent != previousPercent)
@@ -163,6 +169,7 @@ namespace osu.Game.Screens.Play.HUD
             }
         }
 
-        private string formatTime(TimeSpan timeSpan) => $"{(timeSpan < TimeSpan.Zero ? "-" : "")}{Math.Floor(timeSpan.Duration().TotalMinutes)}:{timeSpan.Duration().Seconds:D2}";
+        private string formatTime(TimeSpan timeSpan) =>
+            $"{(timeSpan < TimeSpan.Zero ? "-" : "")}{Math.Floor(timeSpan.Duration().TotalMinutes)}:{timeSpan.Duration().Seconds:D2}";
     }
 }

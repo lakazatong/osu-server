@@ -46,7 +46,9 @@ namespace osu.Game.Screens.Ranking.Expanded
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
-            AddInternal(sampleTick = new DrawableSample(audio.Samples.Get(@"Results/score-tick-lesser")));
+            AddInternal(
+                sampleTick = new DrawableSample(audio.Samples.Get(@"Results/score-tick-lesser"))
+            );
         }
 
         protected override void LoadComplete()
@@ -59,14 +61,20 @@ namespace osu.Game.Screens.Ranking.Expanded
 
         protected override LocalisableString FormatCount(long count) => count.ToString("N0");
 
-        protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(s =>
-        {
-            s.Anchor = Anchor.TopCentre;
-            s.Origin = Anchor.TopCentre;
+        protected override OsuSpriteText CreateSpriteText() =>
+            base.CreateSpriteText()
+                .With(s =>
+                {
+                    s.Anchor = Anchor.TopCentre;
+                    s.Origin = Anchor.TopCentre;
 
-            s.Font = OsuFont.Torus.With(size: 60, weight: FontWeight.Light, fixedWidth: true);
-            s.Spacing = new Vector2(-5, 0);
-        });
+                    s.Font = OsuFont.Torus.With(
+                        size: 60,
+                        weight: FontWeight.Light,
+                        fixedWidth: true
+                    );
+                    s.Spacing = new Vector2(-5, 0);
+                });
 
         public override long DisplayedCount
         {
@@ -94,8 +102,16 @@ namespace osu.Game.Screens.Ranking.Expanded
             const double tick_volume_end = 1.0f;
 
             this.TransformBindableTo(tickPlaybackRate, tick_debounce_rate_start);
-            this.TransformBindableTo(tickPlaybackRate, tick_debounce_rate_end, RollingDuration, Easing.OutSine);
-            sampleTick.VolumeTo(tick_volume_start).Then().VolumeTo(tick_volume_end, RollingDuration, Easing.OutSine);
+            this.TransformBindableTo(
+                tickPlaybackRate,
+                tick_debounce_rate_end,
+                RollingDuration,
+                Easing.OutSine
+            );
+            sampleTick
+                .VolumeTo(tick_volume_start)
+                .Then()
+                .VolumeTo(tick_volume_end, RollingDuration, Easing.OutSine);
         }
     }
 }

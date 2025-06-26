@@ -31,7 +31,7 @@ namespace osu.Game.Tournament.Components
                     Font = OsuFont.Torus.With(weight: FontWeight.SemiBold, size: 50),
                     Padding = new MarginPadding { Left = 10, Right = 20 },
                     Text = text,
-                }
+                },
             };
         }
     }

@@ -87,7 +87,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (IsHeld)
                 Circle.FadeColour(Colours.GrayF, TRANSFORM_DURATION, Easing.OutQuint);
             else
-                Circle.FadeColour(IsHovered ? Colours.Red : Colours.YellowDark, TRANSFORM_DURATION, Easing.OutQuint);
+                Circle.FadeColour(
+                    IsHovered ? Colours.Red : Colours.YellowDark,
+                    TRANSFORM_DURATION,
+                    Easing.OutQuint
+                );
 
             this.ScaleTo(IsHeld || IsHovered ? 1.5f : 1, TRANSFORM_DURATION, Easing.OutQuint);
         }

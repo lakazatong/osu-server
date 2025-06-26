@@ -9,9 +9,7 @@ namespace osu.Game.Overlays.Wiki.Markdown
     public partial class WikiMarkdownImage : OsuMarkdownImage
     {
         public WikiMarkdownImage(LinkInline linkInline)
-            : base(linkInline)
-        {
-        }
+            : base(linkInline) { }
 
         protected override ImageContainer CreateImageContainer(string url)
         {

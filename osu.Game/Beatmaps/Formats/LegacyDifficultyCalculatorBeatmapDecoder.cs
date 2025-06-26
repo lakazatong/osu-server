@@ -20,9 +20,12 @@ namespace osu.Game.Beatmaps.Formats
             ApplyOffsets = false;
         }
 
-        public new static void Register()
+        public static new void Register()
         {
-            AddDecoder<Beatmap>(@"osu file format v", m => new LegacyDifficultyCalculatorBeatmapDecoder(int.Parse(m.Split('v').Last())));
+            AddDecoder<Beatmap>(
+                @"osu file format v",
+                m => new LegacyDifficultyCalculatorBeatmapDecoder(int.Parse(m.Split('v').Last()))
+            );
             SetFallbackDecoder<Beatmap>(() => new LegacyDifficultyCalculatorBeatmapDecoder());
         }
     }

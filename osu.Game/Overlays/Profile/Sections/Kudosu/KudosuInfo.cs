@@ -2,16 +2,16 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Game.Resources.Localisation.Web;
-using osu.Framework.Localisation;
 using osu.Game.Online.Chat;
+using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Overlays.Profile.Sections.Kudosu
 {
@@ -39,7 +39,9 @@ namespace osu.Game.Overlays.Profile.Sections.Kudosu
             public CountTotal()
                 : base(UsersStrings.ShowExtraKudosuTotal)
             {
-                DescriptionText.AddText("Based on how much of a contribution the user has made to beatmap moderation. See ");
+                DescriptionText.AddText(
+                    "Based on how much of a contribution the user has made to beatmap moderation. See "
+                );
                 DescriptionText.AddLink("this page", LinkAction.OpenWiki, @"Modding/Kudosu");
                 DescriptionText.AddText(" for more information.");
             }
@@ -70,7 +72,7 @@ namespace osu.Game.Overlays.Profile.Sections.Kudosu
                         new OsuSpriteText
                         {
                             Text = header,
-                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold)
+                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
                         },
                         valueText = new OsuSpriteText
                         {
@@ -81,8 +83,8 @@ namespace osu.Game.Overlays.Profile.Sections.Kudosu
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

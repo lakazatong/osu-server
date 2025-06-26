@@ -33,13 +33,18 @@ namespace osu.Game.Tests.Visual.Gameplay
         private GameplayState gameplayState = TestGameplayState.Create(new OsuRuleset());
 
         [Cached(typeof(IGameplayClock))]
-        private readonly IGameplayClock gameplayClock = new GameplayClockContainer(new TrackVirtual(60000), false, false);
+        private readonly IGameplayClock gameplayClock = new GameplayClockContainer(
+            new TrackVirtual(60000),
+            false,
+            false
+        );
 
         [Cached]
         public readonly EditorClipboard Clipboard = new EditorClipboard();
 
         [Cached(typeof(IGameplayLeaderboardProvider))]
-        private EmptyGameplayLeaderboardProvider leaderboardProvider = new EmptyGameplayLeaderboardProvider();
+        private EmptyGameplayLeaderboardProvider leaderboardProvider =
+            new EmptyGameplayLeaderboardProvider();
 
         public TestSceneSkinEditorMultipleSkins()
         {
@@ -49,39 +54,44 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create editor overlay", () =>
-            {
-                SetContents(_ =>
+            AddStep(
+                "create editor overlay",
+                () =>
                 {
-                    var ruleset = new OsuRuleset();
-                    var mods = new[] { ruleset.GetAutoplayMod() };
-                    var working = CreateWorkingBeatmap(ruleset.RulesetInfo);
-                    var beatmap = working.GetPlayableBeatmap(ruleset.RulesetInfo, mods);
-
-                    var drawableRuleset = ruleset.CreateDrawableRulesetWith(beatmap, mods);
-
-                    var hudOverlay = new HUDOverlay(drawableRuleset, mods)
+                    SetContents(_ =>
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    };
+                        var ruleset = new OsuRuleset();
+                        var mods = new[] { ruleset.GetAutoplayMod() };
+                        var working = CreateWorkingBeatmap(ruleset.RulesetInfo);
+                        var beatmap = working.GetPlayableBeatmap(ruleset.RulesetInfo, mods);
 
-                    // Add any key just to display the key counter visually.
-                    hudOverlay.InputCountController.Add(new KeyCounterKeyboardTrigger(Key.Space));
-                    scoreProcessor.Combo.Value = 1;
+                        var drawableRuleset = ruleset.CreateDrawableRulesetWith(beatmap, mods);
 
-                    return new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Children = new Drawable[]
+                        var hudOverlay = new HUDOverlay(drawableRuleset, mods)
                         {
-                            drawableRuleset,
-                            hudOverlay,
-                            new SkinEditor(hudOverlay),
-                        }
-                    };
-                });
-            });
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        };
+
+                        // Add any key just to display the key counter visually.
+                        hudOverlay.InputCountController.Add(
+                            new KeyCounterKeyboardTrigger(Key.Space)
+                        );
+                        scoreProcessor.Combo.Value = 1;
+
+                        return new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                drawableRuleset,
+                                hudOverlay,
+                                new SkinEditor(hudOverlay),
+                            },
+                        };
+                    });
+                }
+            );
         }
 
         protected override Ruleset CreateRulesetForSkinProvider() => new OsuRuleset();

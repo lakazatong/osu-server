@@ -34,25 +34,32 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Set beatmap", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-            });
-
-            AddStep("Create beat sync container", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "Set beatmap",
+                () =>
                 {
-                    gameplayClockContainer = new MasterGameplayClockContainer(Beatmap.Value, 0)
+                    Beatmap.Value = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
+                }
+            );
+
+            AddStep(
+                "Create beat sync container",
+                () =>
+                {
+                    Children = new Drawable[]
                     {
-                        Child = beatContainer = new TestBeatSyncedContainer
+                        gameplayClockContainer = new MasterGameplayClockContainer(Beatmap.Value, 0)
                         {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
+                            Child = beatContainer =
+                                new TestBeatSyncedContainer
+                                {
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                },
                         },
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddStep("Start playback", () => gameplayClockContainer.Start());
         }
@@ -65,34 +72,56 @@ namespace osu.Game.Tests.Visual.UserInterface
             double? lastActuationTime = null;
             TimingControlPoint lastTimingPoint = null;
 
-            AddStep($"set mistimed to {(allowMistimed ? "allowed" : "disallowed")}", () => beatContainer.AllowMistimedEventFiring = allowMistimed);
+            AddStep(
+                $"set mistimed to {(allowMistimed ? "allowed" : "disallowed")}",
+                () => beatContainer.AllowMistimedEventFiring = allowMistimed
+            );
 
-            AddStep("Set time before zero", () =>
-            {
-                beatContainer.NewBeat = (i, timingControlPoint, _, _) =>
+            AddStep(
+                "Set time before zero",
+                () =>
                 {
-                    lastActuationTime = gameplayClockContainer.CurrentTime;
-                    lastTimingPoint = timingControlPoint;
-                    lastBeatIndex = i;
-                    beatContainer.NewBeat = null;
-                };
+                    beatContainer.NewBeat = (i, timingControlPoint, _, _) =>
+                    {
+                        lastActuationTime = gameplayClockContainer.CurrentTime;
+                        lastTimingPoint = timingControlPoint;
+                        lastBeatIndex = i;
+                        beatContainer.NewBeat = null;
+                    };
 
-                gameplayClockContainer.Seek(-1000);
-            });
+                    gameplayClockContainer.Seek(-1000);
+                }
+            );
 
             AddUntilStep("wait for trigger", () => lastBeatIndex != null);
 
             if (!allowMistimed)
             {
-                AddAssert("trigger is near beat length",
-                    () => lastActuationTime != null && lastBeatIndex != null && Precision.AlmostEquals(lastTimingPoint.Time + lastBeatIndex.Value * lastTimingPoint.BeatLength, lastActuationTime.Value,
-                        BeatSyncedContainer.MISTIMED_ALLOWANCE));
+                AddAssert(
+                    "trigger is near beat length",
+                    () =>
+                        lastActuationTime != null
+                        && lastBeatIndex != null
+                        && Precision.AlmostEquals(
+                            lastTimingPoint.Time + lastBeatIndex.Value * lastTimingPoint.BeatLength,
+                            lastActuationTime.Value,
+                            BeatSyncedContainer.MISTIMED_ALLOWANCE
+                        )
+                );
             }
             else
             {
-                AddAssert("trigger is not near beat length",
-                    () => lastActuationTime != null && lastBeatIndex != null && !Precision.AlmostEquals(lastTimingPoint.Time + lastBeatIndex.Value * lastTimingPoint.BeatLength,
-                        lastActuationTime.Value, BeatSyncedContainer.MISTIMED_ALLOWANCE));
+                AddAssert(
+                    "trigger is not near beat length",
+                    () =>
+                        lastActuationTime != null
+                        && lastBeatIndex != null
+                        && !Precision.AlmostEquals(
+                            lastTimingPoint.Time + lastBeatIndex.Value * lastTimingPoint.BeatLength,
+                            lastActuationTime.Value,
+                            BeatSyncedContainer.MISTIMED_ALLOWANCE
+                        )
+                );
             }
         }
 
@@ -102,19 +131,25 @@ namespace osu.Game.Tests.Visual.UserInterface
             int? lastBeatIndex = null;
             double? lastBpm = null;
 
-            AddStep("Set time before zero", () =>
-            {
-                beatContainer.NewBeat = (i, timingControlPoint, _, _) =>
+            AddStep(
+                "Set time before zero",
+                () =>
                 {
-                    lastBeatIndex = i;
-                    lastBpm = timingControlPoint.BPM;
-                };
+                    beatContainer.NewBeat = (i, timingControlPoint, _, _) =>
+                    {
+                        lastBeatIndex = i;
+                        lastBpm = timingControlPoint.BPM;
+                    };
 
-                gameplayClockContainer.Seek(-1000);
-            });
+                    gameplayClockContainer.Seek(-1000);
+                }
+            );
 
             AddUntilStep("wait for trigger", () => lastBpm != null);
-            AddAssert("bpm is from beatmap", () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 128));
+            AddAssert(
+                "bpm is from beatmap",
+                () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 128)
+            );
             AddAssert("beat index is less than zero", () => lastBeatIndex < 0);
         }
 
@@ -123,22 +158,35 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             double? lastBpm = null;
 
-            AddStep("bind event", () =>
-            {
-                beatContainer.NewBeat = (_, timingControlPoint, _, _) => lastBpm = timingControlPoint.BPM;
-            });
+            AddStep(
+                "bind event",
+                () =>
+                {
+                    beatContainer.NewBeat = (_, timingControlPoint, _, _) =>
+                        lastBpm = timingControlPoint.BPM;
+                }
+            );
 
             AddUntilStep("wait for trigger", () => lastBpm != null);
-            AddAssert("bpm is from beatmap", () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 128));
+            AddAssert(
+                "bpm is from beatmap",
+                () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 128)
+            );
 
-            AddStep("pause gameplay clock", () =>
-            {
-                lastBpm = null;
-                gameplayClockContainer.Stop();
-            });
+            AddStep(
+                "pause gameplay clock",
+                () =>
+                {
+                    lastBpm = null;
+                    gameplayClockContainer.Stop();
+                }
+            );
 
             AddUntilStep("wait for trigger", () => lastBpm != null);
-            AddAssert("bpm is default", () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 60));
+            AddAssert(
+                "bpm is default",
+                () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 60)
+            );
         }
 
         [TestCase(true)]
@@ -148,26 +196,46 @@ namespace osu.Game.Tests.Visual.UserInterface
             double earlyActivationMilliseconds = earlyActivating ? 100 : 0;
             ControlPoint actualEffectPoint = null;
 
-            AddStep($"set early activation to {earlyActivationMilliseconds}", () => beatContainer.EarlyActivationMilliseconds = earlyActivationMilliseconds);
+            AddStep(
+                $"set early activation to {earlyActivationMilliseconds}",
+                () => beatContainer.EarlyActivationMilliseconds = earlyActivationMilliseconds
+            );
 
-            AddStep("seek before kiai effect point", () =>
-            {
-                ControlPoint expectedEffectPoint = Beatmap.Value.Beatmap.ControlPointInfo.EffectPoints.First(ep => ep.KiaiMode);
-                actualEffectPoint = null;
-                beatContainer.AllowMistimedEventFiring = false;
-
-                beatContainer.NewBeat = (_, _, effectControlPoint, _) =>
+            AddStep(
+                "seek before kiai effect point",
+                () =>
                 {
-                    if (Precision.AlmostEquals(gameplayClockContainer.CurrentTime + earlyActivationMilliseconds, expectedEffectPoint.Time, BeatSyncedContainer.MISTIMED_ALLOWANCE))
-                        actualEffectPoint = effectControlPoint;
-                };
+                    ControlPoint expectedEffectPoint =
+                        Beatmap.Value.Beatmap.ControlPointInfo.EffectPoints.First(ep =>
+                            ep.KiaiMode
+                        );
+                    actualEffectPoint = null;
+                    beatContainer.AllowMistimedEventFiring = false;
 
-                gameplayClockContainer.Seek(expectedEffectPoint.Time - earlyActivationMilliseconds);
-            });
+                    beatContainer.NewBeat = (_, _, effectControlPoint, _) =>
+                    {
+                        if (
+                            Precision.AlmostEquals(
+                                gameplayClockContainer.CurrentTime + earlyActivationMilliseconds,
+                                expectedEffectPoint.Time,
+                                BeatSyncedContainer.MISTIMED_ALLOWANCE
+                            )
+                        )
+                            actualEffectPoint = effectControlPoint;
+                    };
+
+                    gameplayClockContainer.Seek(
+                        expectedEffectPoint.Time - earlyActivationMilliseconds
+                    );
+                }
+            );
 
             AddUntilStep("wait for effect point", () => actualEffectPoint != null);
 
-            AddAssert("effect has kiai", () => actualEffectPoint != null && ((EffectControlPoint)actualEffectPoint).KiaiMode);
+            AddAssert(
+                "effect has kiai",
+                () => actualEffectPoint != null && ((EffectControlPoint)actualEffectPoint).KiaiMode
+            );
         }
 
         private partial class TestBeatSyncedContainer : BeatSyncedContainer
@@ -229,15 +297,17 @@ namespace osu.Game.Tests.Visual.UserInterface
                                     currentTime = new InfoString(@"Current time"),
                                     timingPointCount = new InfoString(@"Timing points amount"),
                                     currentTimingPoint = new InfoString(@"Current timing point"),
-                                    beatCount = new InfoString(@"Beats amount (in the current timing point)"),
+                                    beatCount = new InfoString(
+                                        @"Beats amount (in the current timing point)"
+                                    ),
                                     currentBeat = new InfoString(@"Current beat"),
                                     beatsPerMinute = new InfoString(@"BPM"),
                                     adjustedBeatLength = new InfoString(@"Adjusted beat length"),
                                     timeUntilNextBeat = new InfoString(@"Time until next beat"),
                                     timeSinceLastBeat = new InfoString(@"Time since last beat"),
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
                     new Container
                     {
@@ -248,23 +318,20 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Height = flash_layer_height,
                         Children = new Drawable[]
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Black,
-                            },
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
                             flashLayer = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Colour = Color4.White,
                                 Alpha = 0,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 
-            private List<TimingControlPoint> timingPoints => BeatSyncSource.ControlPoints?.TimingPoints.ToList();
+            private List<TimingControlPoint> timingPoints =>
+                BeatSyncSource.ControlPoints?.TimingPoints.ToList();
 
             private TimingControlPoint getNextTimingPoint(TimingControlPoint current)
             {
@@ -278,14 +345,21 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             private int calculateBeatCount(TimingControlPoint current)
             {
-                if (timingPoints.Count == 0) return 0;
+                if (timingPoints.Count == 0)
+                    return 0;
 
                 if (ReferenceEquals(timingPoints[^1], current))
                 {
-                    return (int)Math.Ceiling((BeatSyncSource.Clock.CurrentTime - current.Time) / current.BeatLength);
+                    return (int)
+                        Math.Ceiling(
+                            (BeatSyncSource.Clock.CurrentTime - current.Time) / current.BeatLength
+                        );
                 }
 
-                return (int)Math.Ceiling((getNextTimingPoint(current).Time - current.Time) / current.BeatLength);
+                return (int)
+                    Math.Ceiling(
+                        (getNextTimingPoint(current).Time - current.Time) / current.BeatLength
+                    );
             }
 
             protected override void Update()
@@ -299,7 +373,12 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             public Action<int, TimingControlPoint, EffectControlPoint, ChannelAmplitudes> NewBeat;
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
@@ -332,7 +411,13 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 AutoSizeAxes = Axes.Both;
                 Direction = FillDirection.Horizontal;
-                Add(new OsuSpriteText { Text = header + @": ", Font = OsuFont.GetFont(size: text_size) });
+                Add(
+                    new OsuSpriteText
+                    {
+                        Text = header + @": ",
+                        Font = OsuFont.GetFont(size: text_size),
+                    }
+                );
                 Add(valueText = new OsuSpriteText { Font = OsuFont.GetFont(size: text_size) });
                 Margin = new MarginPadding(margin);
             }

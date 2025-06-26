@@ -6,6 +6,6 @@ namespace osu.Game.Online.Multiplayer
     public enum GameplayAbortReason
     {
         LoadTookTooLong,
-        HostAbortedTheMatch
+        HostAbortedTheMatch,
     }
 }

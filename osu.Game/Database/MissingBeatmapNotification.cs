@@ -44,7 +44,11 @@ namespace osu.Game.Database
         /// <param name="beatmap">The online-retrieved beatmap to download.</param>
         /// <param name="beatmapHash">The hash of the beatmap that is required to proceed.</param>
         /// <param name="scoreArchive">Optional archive with a score. If not <see langword="null"/>, a re-import of this archive will be attempted after the missing beatmap is downloaded.</param>
-        public MissingBeatmapNotification(APIBeatmap beatmap, string beatmapHash, ArchiveReader? scoreArchive)
+        public MissingBeatmapNotification(
+            APIBeatmap beatmap,
+            string beatmapHash,
+            ArchiveReader? scoreArchive
+        )
         {
             beatmapSetInfo = beatmap.BeatmapSet!;
 
@@ -56,9 +60,13 @@ namespace osu.Game.Database
         private void load(OsuConfigManager config)
         {
             realmSubscription = realm.RegisterForNotifications(
-                realm => realm.All<BeatmapSetInfo>().Where(s => !s.DeletePending), beatmapsChanged);
+                realm => realm.All<BeatmapSetInfo>().Where(s => !s.DeletePending),
+                beatmapsChanged
+            );
 
-            autoDownloadConfig = config.GetBindable<bool>(OsuSetting.AutomaticallyDownloadMissingBeatmaps);
+            autoDownloadConfig = config.GetBindable<bool>(
+                OsuSetting.AutomaticallyDownloadMissingBeatmaps
+            );
             noVideoSetting = config.GetBindable<bool>(OsuSetting.PreferNoVideo);
 
             Content.Add(card = new BeatmapCardNano(beatmapSetInfo));
@@ -75,8 +83,13 @@ namespace osu.Game.Database
             }
             else
             {
-                bool missingSetMatchesExistingOnlineId = realm.Run(r => r.All<BeatmapSetInfo>().Any(s => !s.DeletePending && s.OnlineID == beatmapSetInfo.OnlineID));
-                Text = missingSetMatchesExistingOnlineId ? NotificationsStrings.MismatchingBeatmapForReplay : NotificationsStrings.MissingBeatmapForReplay;
+                bool missingSetMatchesExistingOnlineId = realm.Run(r =>
+                    r.All<BeatmapSetInfo>()
+                        .Any(s => !s.DeletePending && s.OnlineID == beatmapSetInfo.OnlineID)
+                );
+                Text = missingSetMatchesExistingOnlineId
+                    ? NotificationsStrings.MismatchingBeatmapForReplay
+                    : NotificationsStrings.MissingBeatmapForReplay;
             }
         }
 
@@ -88,13 +101,16 @@ namespace osu.Game.Database
 
         private void beatmapsChanged(IRealmCollection<BeatmapSetInfo> sender, ChangeSet? changes)
         {
-            if (changes?.InsertedIndices == null) return;
+            if (changes?.InsertedIndices == null)
+                return;
 
             if (sender.Any(s => s.Beatmaps.Any(b => b.MD5Hash == beatmapHash)))
             {
                 if (scoreArchive != null)
                 {
-                    string name = scoreArchive.Filenames.First(f => f.EndsWith(".osr", StringComparison.OrdinalIgnoreCase));
+                    string name = scoreArchive.Filenames.First(f =>
+                        f.EndsWith(".osr", StringComparison.OrdinalIgnoreCase)
+                    );
                     var importTask = new ImportTask(scoreArchive.GetStream(name), name);
                     scoreManager.Import(new[] { importTask });
                 }

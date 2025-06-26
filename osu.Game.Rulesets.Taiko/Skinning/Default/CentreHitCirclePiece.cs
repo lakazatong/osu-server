@@ -37,10 +37,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                 Size = new Vector2(SYMBOL_SIZE);
                 Padding = new MarginPadding(SYMBOL_BORDER);
 
-                Children = new[]
-                {
-                    new Circle { RelativeSizeAxes = Axes.Both }
-                };
+                Children = new[] { new Circle { RelativeSizeAxes = Axes.Both } };
             }
         }
     }

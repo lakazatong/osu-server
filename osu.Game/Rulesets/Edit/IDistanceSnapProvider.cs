@@ -48,7 +48,11 @@ namespace osu.Game.Rulesets.Edit
         /// Note that the returned value does <b>NOT</b> depend on <see cref="DistanceSpacingMultiplier"/>;
         /// consumers are expected to include that multiplier as they see fit.
         /// </summary>
-        float DurationToDistance(double duration, double timingReference, IHasSliderVelocity? withVelocity = null);
+        float DurationToDistance(
+            double duration,
+            double timingReference,
+            IHasSliderVelocity? withVelocity = null
+        );
 
         /// <summary>
         /// Converts a spatial distance into a temporal duration.
@@ -64,7 +68,11 @@ namespace osu.Game.Rulesets.Edit
         /// Note that the returned value does <b>NOT</b> depend on <see cref="DistanceSpacingMultiplier"/>;
         /// consumers are expected to include that multiplier as they see fit.
         /// </summary>
-        double DistanceToDuration(float distance, double timingReference, IHasSliderVelocity? withVelocity = null);
+        double DistanceToDuration(
+            float distance,
+            double timingReference,
+            IHasSliderVelocity? withVelocity = null
+        );
 
         /// <summary>
         /// Snaps a spatial distance to the beat, relative to <paramref name="snapReferenceTime"/>.
@@ -79,6 +87,10 @@ namespace osu.Game.Rulesets.Edit
         /// Note that the returned value does <b>NOT</b> depend on <see cref="DistanceSpacingMultiplier"/>;
         /// consumers are expected to include that multiplier as they see fit.
         /// </summary>
-        float FindSnappedDistance(float distance, double snapReferenceTime, IHasSliderVelocity? withVelocity = null);
+        float FindSnappedDistance(
+            float distance,
+            double snapReferenceTime,
+            IHasSliderVelocity? withVelocity = null
+        );
     }
 }

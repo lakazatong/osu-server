@@ -43,7 +43,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm.Data
         /// <inheritdoc/>
         public double Interval { get; }
 
-        public SameRhythmHitObjectGrouping(SameRhythmHitObjectGrouping? previous, List<TaikoDifficultyHitObject> hitObjects)
+        public SameRhythmHitObjectGrouping(
+            SameRhythmHitObjectGrouping? previous,
+            List<TaikoDifficultyHitObject> hitObjects
+        )
         {
             Previous = previous;
             HitObjects = hitObjects;
@@ -52,9 +55,10 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm.Data
             HitObjectInterval = HitObjects.Count < 2 ? null : Duration / (HitObjects.Count - 1);
 
             // Calculate the ratio between this group's interval and the previous group's interval
-            HitObjectIntervalRatio = Previous?.HitObjectInterval != null && HitObjectInterval != null
-                ? HitObjectInterval.Value / Previous.HitObjectInterval.Value
-                : 1;
+            HitObjectIntervalRatio =
+                Previous?.HitObjectInterval != null && HitObjectInterval != null
+                    ? HitObjectInterval.Value / Previous.HitObjectInterval.Value
+                    : 1;
 
             // Calculate the interval from the previous group's start time
             Interval = Previous != null ? StartTime - Previous.StartTime : double.PositiveInfinity;

@@ -17,13 +17,16 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("new popup", () =>
-            {
-                Child = dialog = new TestPopupDialog
+            AddStep(
+                "new popup",
+                () =>
                 {
-                    State = { Value = Framework.Graphics.Containers.Visibility.Visible },
-                };
-            });
+                    Child = dialog = new TestPopupDialog
+                    {
+                        State = { Value = Framework.Graphics.Containers.Visibility.Visible },
+                    };
+                }
+            );
         }
 
         [Test]
@@ -33,14 +36,25 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             if (atEdge)
             {
-                AddStep("move mouse to button edge", () =>
-                {
-                    var dangerousButtonQuad = dialog.DangerousButton.ScreenSpaceDrawQuad;
-                    InputManager.MoveMouseTo(new Vector2(dangerousButtonQuad.TopLeft.X + 5, dangerousButtonQuad.Centre.Y));
-                });
+                AddStep(
+                    "move mouse to button edge",
+                    () =>
+                    {
+                        var dangerousButtonQuad = dialog.DangerousButton.ScreenSpaceDrawQuad;
+                        InputManager.MoveMouseTo(
+                            new Vector2(
+                                dangerousButtonQuad.TopLeft.X + 5,
+                                dangerousButtonQuad.Centre.Y
+                            )
+                        );
+                    }
+                );
             }
             else
-                AddStep("move mouse to button", () => InputManager.MoveMouseTo(dialog.DangerousButton));
+                AddStep(
+                    "move mouse to button",
+                    () => InputManager.MoveMouseTo(dialog.DangerousButton)
+                );
 
             AddStep("click button", () => InputManager.Click(MouseButton.Left));
             AddAssert("action not invoked", () => !dialog.DangerousButtonInvoked);
@@ -65,14 +79,8 @@ namespace osu.Game.Tests.Visual.UserInterface
 
                 Buttons = new PopupDialogButton[]
                 {
-                    new PopupDialogCancelButton
-                    {
-                        Text = @"Yes. That you can.",
-                    },
-                    new PopupDialogOkButton
-                    {
-                        Text = @"You're a fake!",
-                    },
+                    new PopupDialogCancelButton { Text = @"Yes. That you can." },
+                    new PopupDialogOkButton { Text = @"You're a fake!" },
                     DangerousButton = new PopupDialogDangerousButton
                     {
                         Text = @"Careful with this one..",

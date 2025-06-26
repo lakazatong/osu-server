@@ -15,10 +15,6 @@ namespace osu.Game.Tournament.Models
 
         public long Score;
 
-        public Bindable<int> Seed = new BindableInt
-        {
-            MinValue = 1,
-            MaxValue = 256
-        };
+        public Bindable<int> Seed = new BindableInt { MinValue = 1, MaxValue = 256 };
     }
 }

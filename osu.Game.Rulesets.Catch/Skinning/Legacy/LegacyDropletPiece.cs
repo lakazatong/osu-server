@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             base.LoadComplete();
 
             Texture? texture = Skin.GetTexture("fruit-drop")?.WithMaximumSize(droplet_max_size);
-            Texture? overlayTexture = Skin.GetTexture("fruit-drop-overlay")?.WithMaximumSize(droplet_max_size);
+            Texture? overlayTexture = Skin.GetTexture("fruit-drop-overlay")
+                ?.WithMaximumSize(droplet_max_size);
 
             SetTexture(texture, overlayTexture);
         }

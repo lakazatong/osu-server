@@ -13,11 +13,10 @@ namespace osu.Game.Rulesets.Osu.Scoring
     public partial class OsuLegacyHealthProcessor : LegacyDrainingHealthProcessor
     {
         public OsuLegacyHealthProcessor(double drainStartTime)
-            : base(drainStartTime)
-        {
-        }
+            : base(drainStartTime) { }
 
-        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() => Beatmap.HitObjects;
+        protected override IEnumerable<HitObject> EnumerateTopLevelHitObjects() =>
+            Beatmap.HitObjects;
 
         protected override IEnumerable<HitObject> EnumerateNestedHitObjects(HitObject hitObject)
         {
@@ -30,7 +29,9 @@ namespace osu.Game.Rulesets.Osu.Scoring
                     break;
 
                 case Spinner spinner:
-                    foreach (var nested in spinner.NestedHitObjects.Where(t => t is not SpinnerBonusTick))
+                    foreach (
+                        var nested in spinner.NestedHitObjects.Where(t => t is not SpinnerBonusTick)
+                    )
                         yield return nested;
 
                     break;
@@ -44,13 +45,28 @@ namespace osu.Game.Rulesets.Osu.Scoring
             switch (result)
             {
                 case HitResult.SmallTickMiss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.02, -0.075, -0.14);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.02,
+                        -0.075,
+                        -0.14
+                    );
 
                 case HitResult.LargeTickMiss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.02, -0.075, -0.14);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.02,
+                        -0.075,
+                        -0.14
+                    );
 
                 case HitResult.Miss:
-                    return IBeatmapDifficultyInfo.DifficultyRange(Beatmap.Difficulty.DrainRate, -0.03, -0.125, -0.2);
+                    return IBeatmapDifficultyInfo.DifficultyRange(
+                        Beatmap.Difficulty.DrainRate,
+                        -0.03,
+                        -0.125,
+                        -0.2
+                    );
 
                 case HitResult.SmallTickHit:
                     // This result always comes from the slider tail, which is judged the same as a repeat.

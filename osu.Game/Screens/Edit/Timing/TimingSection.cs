@@ -24,22 +24,23 @@ namespace osu.Game.Screens.Edit.Timing
         [BackgroundDependencyLoader]
         private void load()
         {
-            Flow.AddRange(new Drawable[]
-            {
-                new LabelledSwitchButton
+            Flow.AddRange(
+                new Drawable[]
                 {
-                    Label = EditorStrings.AdjustExistingObjectsOnTimingChanges,
-                    FixedLabelWidth = 220,
-                    Current = configManager.GetBindable<bool>(OsuSetting.EditorAdjustExistingObjectsOnTimingChanges),
-                },
-                new TapTimingControl(),
-                bpmTextEntry = new BPMTextBox(),
-                timeSignature = new LabelledTimeSignature
-                {
-                    Label = "Time Signature"
-                },
-                omitBarLine = new LabelledSwitchButton { Label = "Skip Bar Line" },
-            });
+                    new LabelledSwitchButton
+                    {
+                        Label = EditorStrings.AdjustExistingObjectsOnTimingChanges,
+                        FixedLabelWidth = 220,
+                        Current = configManager.GetBindable<bool>(
+                            OsuSetting.EditorAdjustExistingObjectsOnTimingChanges
+                        ),
+                    },
+                    new TapTimingControl(),
+                    bpmTextEntry = new BPMTextBox(),
+                    timeSignature = new LabelledTimeSignature { Label = "Time Signature" },
+                    omitBarLine = new LabelledSwitchButton { Label = "Skip Bar Line" },
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -52,16 +53,24 @@ namespace osu.Game.Screens.Edit.Timing
 
             void saveChanges()
             {
-                if (!isRebinding) ChangeHandler?.SaveState();
+                if (!isRebinding)
+                    ChangeHandler?.SaveState();
             }
 
             bpmTextEntry.OnCommit = (oldBeatLength, _) =>
             {
-                if (!configManager.Get<bool>(OsuSetting.EditorAdjustExistingObjectsOnTimingChanges) || ControlPoint.Value == null)
+                if (
+                    !configManager.Get<bool>(OsuSetting.EditorAdjustExistingObjectsOnTimingChanges)
+                    || ControlPoint.Value == null
+                )
                     return;
 
                 Beatmap.BeginChange();
-                TimingSectionAdjustments.SetHitObjectBPM(Beatmap, ControlPoint.Value, oldBeatLength);
+                TimingSectionAdjustments.SetHitObjectBPM(
+                    Beatmap,
+                    ControlPoint.Value,
+                    oldBeatLength
+                );
                 Beatmap.UpdateAllHitObjects();
                 Beatmap.EndChange();
             };
@@ -99,7 +108,8 @@ namespace osu.Game.Screens.Edit.Timing
         {
             public new Action<double, double>? OnCommit { get; set; }
 
-            private readonly BindableNumber<double> beatLengthBindable = new TimingControlPoint().BeatLengthBindable;
+            private readonly BindableNumber<double> beatLengthBindable =
+                new TimingControlPoint().BeatLengthBindable;
 
             public BPMTextBox()
             {
@@ -108,7 +118,8 @@ namespace osu.Game.Screens.Edit.Timing
 
                 base.OnCommit += (_, isNew) =>
                 {
-                    if (!isNew) return;
+                    if (!isNew)
+                        return;
 
                     double oldBeatLength = beatLengthBindable.Value;
 
@@ -128,10 +139,13 @@ namespace osu.Game.Screens.Edit.Timing
                     OnCommit?.Invoke(oldBeatLength, beatLengthBindable.Value);
                 };
 
-                beatLengthBindable.BindValueChanged(val =>
-                {
-                    Current.Value = BeatLengthToBpm(val.NewValue).ToString("N2");
-                }, true);
+                beatLengthBindable.BindValueChanged(
+                    val =>
+                    {
+                        Current.Value = BeatLengthToBpm(val.NewValue).ToString("N2");
+                    },
+                    true
+                );
             }
 
             public Bindable<double> Bindable

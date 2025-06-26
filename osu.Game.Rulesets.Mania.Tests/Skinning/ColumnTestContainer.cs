@@ -31,13 +31,13 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                 this.column = new Column(column, false)
                 {
                     Action = { Value = action },
-                    Alpha = showColumn ? 1 : 0
+                    Alpha = showColumn ? 1 : 0,
                 },
                 content = new ManiaInputManager(new ManiaRuleset().RulesetInfo, 4)
                 {
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
-                this.column.TopLevelContainer.CreateProxy()
+                this.column.TopLevelContainer.CreateProxy(),
             };
         }
     }

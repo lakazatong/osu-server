@@ -23,55 +23,63 @@ namespace osu.Game.Tests.Visual.UserInterface
         private ExpandableSlider<double> slider2;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = container = new TestExpandingContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Height = 0.33f,
-                Child = toolboxGroup = new SettingsToolboxGroup("sliders")
+                Child = container = new TestExpandingContainer
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Width = 1,
-                    Children = new Drawable[]
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Height = 0.33f,
+                    Child = toolboxGroup =
+                        new SettingsToolboxGroup("sliders")
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Width = 1,
+                            Children = new Drawable[]
+                            {
+                                slider1 = new ExpandableSlider<float, SizeSlider<float>>
+                                {
+                                    Current = new BindableFloat
+                                    {
+                                        Default = 1.0f,
+                                        MinValue = 1.0f,
+                                        MaxValue = 10.0f,
+                                        Precision = 0.01f,
+                                    },
+                                },
+                                slider2 = new ExpandableSlider<double>
+                                {
+                                    Current = new BindableDouble
+                                    {
+                                        Default = 1.0,
+                                        MinValue = 1.0,
+                                        MaxValue = 10.0,
+                                        Precision = 0.01,
+                                    },
+                                },
+                            },
+                        },
+                };
+
+                slider1.Current.BindValueChanged(
+                    v =>
                     {
-                        slider1 = new ExpandableSlider<float, SizeSlider<float>>
-                        {
-                            Current = new BindableFloat
-                            {
-                                Default = 1.0f,
-                                MinValue = 1.0f,
-                                MaxValue = 10.0f,
-                                Precision = 0.01f,
-                            },
-                        },
-                        slider2 = new ExpandableSlider<double>
-                        {
-                            Current = new BindableDouble
-                            {
-                                Default = 1.0,
-                                MinValue = 1.0,
-                                MaxValue = 10.0,
-                                Precision = 0.01,
-                            },
-                        },
-                    }
-                }
-            };
+                        slider1.ExpandedLabelText = $"Slider One ({v.NewValue:0.##x})";
+                        slider1.ContractedLabelText = $"S. 1. ({v.NewValue:0.##x})";
+                    },
+                    true
+                );
 
-            slider1.Current.BindValueChanged(v =>
-            {
-                slider1.ExpandedLabelText = $"Slider One ({v.NewValue:0.##x})";
-                slider1.ContractedLabelText = $"S. 1. ({v.NewValue:0.##x})";
-            }, true);
-
-            slider2.Current.BindValueChanged(v =>
-            {
-                slider2.ExpandedLabelText = $"Slider Two ({v.NewValue:N2})";
-                slider2.ContractedLabelText = $"S. 2. ({v.NewValue:N2})";
-            }, true);
-        });
+                slider2.Current.BindValueChanged(
+                    v =>
+                    {
+                        slider2.ExpandedLabelText = $"Slider Two ({v.NewValue:N2})";
+                        slider2.ContractedLabelText = $"S. 2. ({v.NewValue:N2})";
+                    },
+                    true
+                );
+            });
 
         [Test]
         public void TestDisplay()
@@ -97,7 +105,10 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("hover away", () => InputManager.MoveMouseTo(Vector2.Zero));
             AddAssert("container contracted", () => !container.Expanded.Value);
-            AddAssert("controls contracted", () => !slider1.Expanded.Value && !slider2.Expanded.Value);
+            AddAssert(
+                "controls contracted",
+                () => !slider1.Expanded.Value && !slider2.Expanded.Value
+            );
         }
 
         /// <summary>
@@ -114,7 +125,10 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("contract container", () => container.Expanded.Value = false);
             AddAssert("group contracted", () => !toolboxGroup.Expanded.Value);
-            AddAssert("controls contracted", () => !slider1.Expanded.Value && !slider2.Expanded.Value);
+            AddAssert(
+                "controls contracted",
+                () => !slider1.Expanded.Value && !slider2.Expanded.Value
+            );
         }
 
         /// <summary>
@@ -131,7 +145,10 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddStep("contract container", () => container.Expanded.Value = false);
             AddAssert("group still expanded", () => toolboxGroup.Expanded.Value);
-            AddAssert("controls contracted", () => !slider1.Expanded.Value && !slider2.Expanded.Value);
+            AddAssert(
+                "controls contracted",
+                () => !slider1.Expanded.Value && !slider2.Expanded.Value
+            );
         }
 
         /// <summary>
@@ -152,9 +169,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         private partial class TestExpandingContainer : ExpandingContainer
         {
             public TestExpandingContainer()
-                : base(120, 250)
-            {
-            }
+                : base(120, 250) { }
         }
     }
 }

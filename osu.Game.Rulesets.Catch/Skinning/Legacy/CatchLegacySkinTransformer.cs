@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
 {
     public class CatchLegacySkinTransformer : LegacySkinTransformer
     {
-        public override bool IsProvidingLegacyResources => base.IsProvidingLegacyResources || hasPear;
+        public override bool IsProvidingLegacyResources =>
+            base.IsProvidingLegacyResources || hasPear;
 
         private bool hasPear => GetTexture("fruit-pear") != null;
 
@@ -23,9 +24,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         private bool providesComboCounter => this.HasFont(LegacyFont.Combo);
 
         public CatchLegacySkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
@@ -47,9 +46,15 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                             // todo: remove CatchSkinComponents.CatchComboCounter and refactor LegacyCatchComboCounter to be added here instead.
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var keyCounter = container.OfType<LegacyKeyCounterDisplay>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
+                                var keyCounter = container
+                                    .OfType<LegacyKeyCounterDisplay>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
 
                                 if (keyCounter != null)
                                 {
@@ -79,7 +84,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                                     new LegacyKeyCounterDisplay(),
                                     new SpectatorList(),
                                     new DrawableGameplayLeaderboard(),
-                                }
+                                },
                             };
                     }
 
@@ -107,7 +112,10 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                             return null;
 
                         case CatchSkinComponents.Catcher:
-                            decimal version = GetConfig<SkinConfiguration.LegacySetting, decimal>(SkinConfiguration.LegacySetting.Version)?.Value ?? 1;
+                            decimal version =
+                                GetConfig<SkinConfiguration.LegacySetting, decimal>(
+                                    SkinConfiguration.LegacySetting.Version
+                                )?.Value ?? 1;
 
                             if (version < 2.3m)
                             {
@@ -141,8 +149,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         }
 
         private bool hasOldStyleCatcherSprite() =>
-            GetTexture(@"fruit-ryuuta") != null
-            || GetTexture(@"fruit-ryuuta-0") != null;
+            GetTexture(@"fruit-ryuuta") != null || GetTexture(@"fruit-ryuuta-0") != null;
 
         private bool hasNewStyleCatcherSprite() =>
             GetTexture(@"fruit-catcher-idle") != null
@@ -153,7 +160,10 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             switch (lookup)
             {
                 case CatchSkinColour colour:
-                    var result = (Bindable<Color4>?)base.GetConfig<SkinCustomColourLookup, TValue>(new SkinCustomColourLookup(colour));
+                    var result = (Bindable<Color4>?)
+                        base.GetConfig<SkinCustomColourLookup, TValue>(
+                            new SkinCustomColourLookup(colour)
+                        );
                     if (result == null)
                         return null;
 

@@ -49,28 +49,50 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(80, 0)]
         [TestCase(80, 10)]
         [TestCase(90, 1)]
-        [Ignore("headless test doesn't run at high enough precision for this to always enter a tracking state in time.")]
+        [Ignore(
+            "headless test doesn't run at high enough precision for this to always enter a tracking state in time."
+        )]
         public void TestVeryShortSliderMissHead(float sliderLength, int repeatCount)
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(50, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start - 10 },
-                new OsuReplayFrame { Position = new Vector2(50, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start + 2000 },
-            }, new Slider
-            {
-                StartTime = time_slider_start,
-                Position = new Vector2(0, 0),
-                SliderVelocityMultiplier = 10f,
-                RepeatCount = repeatCount,
-                Path = new SliderPath(PathType.LINEAR, new[]
+            performTest(
+                new List<ReplayFrame>
                 {
-                    Vector2.Zero,
-                    new Vector2(sliderLength, 0),
-                }),
-            }, 240, 1);
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(50, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start - 10,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(50, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start + 2000,
+                    },
+                },
+                new Slider
+                {
+                    StartTime = time_slider_start,
+                    Position = new Vector2(0, 0),
+                    SliderVelocityMultiplier = 10f,
+                    RepeatCount = repeatCount,
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(sliderLength, 0) }
+                    ),
+                },
+                240,
+                1
+            );
 
-            AddAssert("Head judgement is first", () => judgementResults[0].HitObject is SliderHeadCircle);
-            AddAssert("Tail judgement is second last", () => judgementResults[^2].HitObject is SliderTailCircle);
+            AddAssert(
+                "Head judgement is first",
+                () => judgementResults[0].HitObject is SliderHeadCircle
+            );
+            AddAssert(
+                "Tail judgement is second last",
+                () => judgementResults[^2].HitObject is SliderTailCircle
+            );
             AddAssert("Slider judgement is last", () => judgementResults[^1].HitObject is Slider);
         }
 
@@ -88,39 +110,70 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(80, 0)]
         [TestCase(80, 10)]
         [TestCase(90, 1)]
-        [Ignore("headless test doesn't run at high enough precision for this to always enter a tracking state in time.")]
+        [Ignore(
+            "headless test doesn't run at high enough precision for this to always enter a tracking state in time."
+        )]
         public void TestVeryShortSlider(float sliderLength, int repeatCount)
         {
             Slider slider;
 
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(10, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start - 10 },
-                new OsuReplayFrame { Position = new Vector2(10, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start + 2000 },
-            }, slider = new Slider
-            {
-                StartTime = time_slider_start,
-                Position = new Vector2(0, 0),
-                SliderVelocityMultiplier = 10f,
-                RepeatCount = repeatCount,
-                Path = new SliderPath(PathType.LINEAR, new[]
+            performTest(
+                new List<ReplayFrame>
                 {
-                    Vector2.Zero,
-                    new Vector2(sliderLength, 0),
-                }),
-            }, 240, 1);
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(10, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start - 10,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(10, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start + 2000,
+                    },
+                },
+                slider = new Slider
+                {
+                    StartTime = time_slider_start,
+                    Position = new Vector2(0, 0),
+                    SliderVelocityMultiplier = 10f,
+                    RepeatCount = repeatCount,
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[] { Vector2.Zero, new Vector2(sliderLength, 0) }
+                    ),
+                },
+                240,
+                1
+            );
 
             assertAllMaxJudgements();
 
-            AddAssert("Head judgement is first", () => judgementResults.First().HitObject is SliderHeadCircle);
+            AddAssert(
+                "Head judgement is first",
+                () => judgementResults.First().HitObject is SliderHeadCircle
+            );
 
             // Even if the last tick is hit early, the slider should always execute its final judgement at its endtime.
             // If not, hitsounds will not play on time.
             AddAssert("Judgement offset is zero", () => judgementResults.Last().TimeOffset == 0);
-            AddAssert("Slider judged at end time", () => judgementResults.Last().TimeAbsolute, () => Is.EqualTo(slider.EndTime));
+            AddAssert(
+                "Slider judged at end time",
+                () => judgementResults.Last().TimeAbsolute,
+                () => Is.EqualTo(slider.EndTime)
+            );
 
-            AddAssert("Slider is last judgement", () => judgementResults[^1].HitObject, Is.TypeOf<Slider>);
-            AddAssert("Tail is second last judgement", () => judgementResults[^2].HitObject, Is.TypeOf<SliderTailCircle>);
+            AddAssert(
+                "Slider is last judgement",
+                () => judgementResults[^1].HitObject,
+                Is.TypeOf<Slider>
+            );
+            AddAssert(
+                "Tail is second last judgement",
+                () => judgementResults[^2].HitObject,
+                Is.TypeOf<SliderTailCircle>
+            );
         }
 
         [TestCase(300, false)]
@@ -131,50 +184,89 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(10, true)]
         [TestCase(0, true)]
         [TestCase(-30, false)]
-        [Ignore("headless test doesn't run at high enough precision for this to always enter a tracking state in time.")]
+        [Ignore(
+            "headless test doesn't run at high enough precision for this to always enter a tracking state in time."
+        )]
         public void TestTailLeniency(float finalPosition, bool hit)
         {
             Slider slider;
 
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = Vector2.Zero, Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(finalPosition, slider_path_length * 3), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start + 20 },
-            }, slider = new Slider
-            {
-                StartTime = time_slider_start,
-                Position = new Vector2(0, 0),
-                SliderVelocityMultiplier = 10f,
-                Path = new SliderPath(PathType.LINEAR, new[]
+            performTest(
+                new List<ReplayFrame>
                 {
-                    Vector2.Zero,
-                    new Vector2(slider_path_length * 10, 0),
-                    new Vector2(slider_path_length * 10, slider_path_length * 3),
-                    new Vector2(0, slider_path_length * 3),
-                }),
-            }, 240, 1);
+                    new OsuReplayFrame
+                    {
+                        Position = Vector2.Zero,
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(finalPosition, slider_path_length * 3),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start + 20,
+                    },
+                },
+                slider = new Slider
+                {
+                    StartTime = time_slider_start,
+                    Position = new Vector2(0, 0),
+                    SliderVelocityMultiplier = 10f,
+                    Path = new SliderPath(
+                        PathType.LINEAR,
+                        new[]
+                        {
+                            Vector2.Zero,
+                            new Vector2(slider_path_length * 10, 0),
+                            new Vector2(slider_path_length * 10, slider_path_length * 3),
+                            new Vector2(0, slider_path_length * 3),
+                        }
+                    ),
+                },
+                240,
+                1
+            );
 
             if (hit)
                 assertAllMaxJudgements();
             else
                 assertMidSliderJudgementFail();
 
-            AddAssert("Head judgement is first", () => judgementResults.First().HitObject is SliderHeadCircle);
+            AddAssert(
+                "Head judgement is first",
+                () => judgementResults.First().HitObject is SliderHeadCircle
+            );
 
             // Even if the last tick is hit early, the slider should always execute its final judgement at its endtime.
             // If not, hitsounds will not play on time.
             AddAssert("Judgement offset is zero", () => judgementResults.Last().TimeOffset == 0);
-            AddAssert("Slider judged at end time", () => judgementResults.Last().TimeAbsolute, () => Is.EqualTo(slider.EndTime));
+            AddAssert(
+                "Slider judged at end time",
+                () => judgementResults.Last().TimeAbsolute,
+                () => Is.EqualTo(slider.EndTime)
+            );
         }
 
         [Test]
         public void TestPressBothKeysSimultaneouslyAndReleaseOne()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = Vector2.Zero, Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = Vector2.Zero, Actions = { OsuAction.RightButton }, Time = time_during_slide_1 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = Vector2.Zero,
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = Vector2.Zero,
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_1,
+                    },
+                }
+            );
 
             assertAllMaxJudgements();
         }
@@ -190,12 +282,29 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestInvalidKeyTransfer()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_1 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_1,
+                    },
+                }
+            );
 
             assertMidSliderJudgementFail();
         }
@@ -211,12 +320,29 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestLeftBeforeSliderThenRightThenLettingGoOfLeft()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.RightButton }, Time = time_during_slide_2 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_2,
+                    },
+                }
+            );
 
             assertAllMaxJudgements();
         }
@@ -232,12 +358,29 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingRetentionLeftRightLeft()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.RightButton }, Time = time_during_slide_1 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_1,
+                    },
+                }
+            );
 
             assertAllMaxJudgements();
         }
@@ -253,12 +396,29 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingLeftBeforeSliderToRight()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.RightButton }, Time = time_during_slide_1 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_1,
+                    },
+                }
+            );
 
             assertAllMaxJudgements();
         }
@@ -273,10 +433,17 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingPreclicked()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                }
+            );
 
             assertHeadMissTailTracked();
         }
@@ -293,14 +460,41 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingReturnMidSlider()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(150, 150), Actions = { OsuAction.LeftButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(200, 200), Actions = { OsuAction.LeftButton }, Time = time_during_slide_2 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_3 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_4 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(150, 150),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(200, 200),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_2,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_3,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_4,
+                    },
+                }
+            );
 
             assertMidSliderJudgements();
         }
@@ -318,15 +512,47 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingReturnMidSliderKeyDownBefore()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(200, 200), Actions = { OsuAction.LeftButton }, Time = time_during_slide_2 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_3 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_4 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(200, 200),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_2,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_3,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_4,
+                    },
+                }
+            );
 
             assertMidSliderJudgementFail();
         }
@@ -342,13 +568,35 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingMidSlider()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(150, 150), Actions = { OsuAction.LeftButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(200, 200), Actions = { OsuAction.LeftButton }, Time = time_during_slide_2 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_3 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_4 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(150, 150),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(200, 200),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_2,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_3,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_4,
+                    },
+                }
+            );
 
             assertMidSliderJudgements();
         }
@@ -365,13 +613,34 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestMidSliderTrackingAcquired()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(100, 100), Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_2 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(100, 100),
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_2,
+                    },
+                }
+            );
 
             assertMidSliderJudgements();
         }
@@ -379,13 +648,35 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestMidSliderTrackingAcquiredWithMouseDownOutsideSlider()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_before_slider },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton, OsuAction.RightButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(100, 100), Actions = { OsuAction.RightButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.RightButton }, Time = time_during_slide_2 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_before_slider,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton, OsuAction.RightButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(100, 100),
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.RightButton },
+                        Time = time_during_slide_2,
+                    },
+                }
+            );
 
             assertMidSliderJudgements();
         }
@@ -403,14 +694,40 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingReleasedValidKey()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(100, 100), Actions = { OsuAction.LeftButton }, Time = time_during_slide_1 },
-                new OsuReplayFrame { Position = new Vector2(100, 100), Time = time_during_slide_2 },
-                new OsuReplayFrame { Position = new Vector2(100, 100), Actions = { OsuAction.LeftButton }, Time = time_during_slide_3 },
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_during_slide_4 },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(100, 100),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_1,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(100, 100),
+                        Time = time_during_slide_2,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(100, 100),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_3,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_during_slide_4,
+                    },
+                }
+            );
 
             assertMidSliderJudgements();
         }
@@ -426,12 +743,32 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingAreaEdge()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, OsuHitObject.OBJECT_RADIUS * 1.19f), Actions = { OsuAction.LeftButton }, Time = time_slider_start + 250 },
-                new OsuReplayFrame { Position = new Vector2(slider_path_length, OsuHitObject.OBJECT_RADIUS * 1.199f), Actions = { OsuAction.LeftButton }, Time = time_slider_end },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, OsuHitObject.OBJECT_RADIUS * 1.19f),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start + 250,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(
+                            slider_path_length,
+                            OsuHitObject.OBJECT_RADIUS * 1.199f
+                        ),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_end,
+                    },
+                }
+            );
 
             assertAllMaxJudgements();
         }
@@ -447,12 +784,32 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestTrackingAreaOutsideEdge()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(0, OsuHitObject.OBJECT_RADIUS * 1.21f), Actions = { OsuAction.LeftButton }, Time = time_slider_start + 250 },
-                new OsuReplayFrame { Position = new Vector2(slider_path_length, OsuHitObject.OBJECT_RADIUS * 1.201f), Actions = { OsuAction.LeftButton }, Time = time_slider_end },
-            });
+            performTest(
+                new List<ReplayFrame>
+                {
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0, OsuHitObject.OBJECT_RADIUS * 1.21f),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start + 250,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(
+                            slider_path_length,
+                            OsuHitObject.OBJECT_RADIUS * 1.201f
+                        ),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_end,
+                    },
+                }
+            );
 
             assertMidSliderJudgementFail();
         }
@@ -460,28 +817,58 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestRewindHandling()
         {
-            performTest(new List<ReplayFrame>
-            {
-                new OsuReplayFrame { Position = new Vector2(0), Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                new OsuReplayFrame { Position = new Vector2(175, 0), Actions = { OsuAction.LeftButton }, Time = 3250 },
-                new OsuReplayFrame { Position = new Vector2(175, 0), Actions = { OsuAction.LeftButton }, Time = time_slider_end },
-            }, new Slider
-            {
-                StartTime = time_slider_start,
-                Position = new Vector2(0, 0),
-                Path = new SliderPath(PathType.PERFECT_CURVE, new[]
+            performTest(
+                new List<ReplayFrame>
                 {
-                    Vector2.Zero,
-                    new Vector2(250, 0),
-                }, 250),
-            });
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(175, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = 3250,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(175, 0),
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_end,
+                    },
+                },
+                new Slider
+                {
+                    StartTime = time_slider_start,
+                    Position = new Vector2(0, 0),
+                    Path = new SliderPath(
+                        PathType.PERFECT_CURVE,
+                        new[] { Vector2.Zero, new Vector2(250, 0) },
+                        250
+                    ),
+                }
+            );
 
-            AddUntilStep("wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
-            AddAssert("no miss judgements recorded", () => judgementResults.All(r => r.Type.IsHit()));
+            AddUntilStep(
+                "wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
+            AddAssert(
+                "no miss judgements recorded",
+                () => judgementResults.All(r => r.Type.IsHit())
+            );
 
             AddStep("rewind to middle of slider", () => currentPlayer.Seek(time_during_slide_4));
-            AddUntilStep("wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
-            AddAssert("no miss judgements recorded", () => judgementResults.All(r => r.Type.IsHit()));
+            AddUntilStep(
+                "wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
+            AddAssert(
+                "no miss judgements recorded",
+                () => judgementResults.All(r => r.Type.IsHit())
+            );
         }
 
         /// <summary>
@@ -498,10 +885,21 @@ namespace osu.Game.Rulesets.Osu.Tests
             const double last_tick_time = slider_end + SliderEventGenerator.TAIL_LENIENCY;
             const double next_circle_time = slider_end + beat_length / 4;
 
-            performTest(new List<ReplayFrame>
+            performTest(
+                new List<ReplayFrame>
                 {
-                    new OsuReplayFrame { Position = Vector2.Zero, Actions = { OsuAction.LeftButton }, Time = time_slider_start },
-                    new OsuReplayFrame { Position = new Vector2(140, 0), Actions = { OsuAction.RightButton }, Time = last_tick_time + 20 },
+                    new OsuReplayFrame
+                    {
+                        Position = Vector2.Zero,
+                        Actions = { OsuAction.LeftButton },
+                        Time = time_slider_start,
+                    },
+                    new OsuReplayFrame
+                    {
+                        Position = new Vector2(140, 0),
+                        Actions = { OsuAction.RightButton },
+                        Time = last_tick_time + 20,
+                    },
                 },
                 [
                     new Slider
@@ -509,104 +907,139 @@ namespace osu.Game.Rulesets.Osu.Tests
                         StartTime = slider_start,
                         Position = new Vector2(0, 0),
                         TickDistanceMultiplier = 10, // no ticks
-                        Path = new SliderPath(PathType.PERFECT_CURVE, new[]
-                        {
-                            Vector2.Zero,
-                            new Vector2(100, 0),
-                        }, 100),
+                        Path = new SliderPath(
+                            PathType.PERFECT_CURVE,
+                            new[] { Vector2.Zero, new Vector2(100, 0) },
+                            100
+                        ),
                     },
-                    new HitCircle
-                    {
-                        StartTime = next_circle_time,
-                        Position = new Vector2(140, 0)
-                    }
-                ], bpm: bpm);
+                    new HitCircle { StartTime = next_circle_time, Position = new Vector2(140, 0) },
+                ],
+                bpm: bpm
+            );
 
             AddAssert("all judgements are hit", () => judgementResults.All(j => j.Type.IsHit()));
         }
 
         private void assertAllMaxJudgements()
         {
-            AddAssert("All judgements max", () =>
-            {
-                return judgementResults.Select(j => (j.HitObject, j.Type));
-            }, () => Is.EqualTo(judgementResults.Select(j => (j.HitObject, j.Judgement.MaxResult))));
+            AddAssert(
+                "All judgements max",
+                () =>
+                {
+                    return judgementResults.Select(j => (j.HitObject, j.Type));
+                },
+                () => Is.EqualTo(judgementResults.Select(j => (j.HitObject, j.Judgement.MaxResult)))
+            );
         }
 
         private void assertHeadMissTailTracked()
         {
-            AddAssert("Tracking retained", () => judgementResults[^2].Type, () => Is.EqualTo(HitResult.SliderTailHit));
+            AddAssert(
+                "Tracking retained",
+                () => judgementResults[^2].Type,
+                () => Is.EqualTo(HitResult.SliderTailHit)
+            );
             AddAssert("Slider head missed", () => judgementResults.First().IsHit, () => Is.False);
         }
 
         private void assertMidSliderJudgements()
         {
-            AddAssert("Tracking acquired", () => judgementResults[^2].Type, () => Is.EqualTo(HitResult.SliderTailHit));
+            AddAssert(
+                "Tracking acquired",
+                () => judgementResults[^2].Type,
+                () => Is.EqualTo(HitResult.SliderTailHit)
+            );
         }
 
         private void assertMidSliderJudgementFail()
         {
-            AddAssert("Tracking lost", () => judgementResults[^2].Type, () => Is.EqualTo(HitResult.IgnoreMiss));
+            AddAssert(
+                "Tracking lost",
+                () => judgementResults[^2].Type,
+                () => Is.EqualTo(HitResult.IgnoreMiss)
+            );
         }
 
-        private void performTest(List<ReplayFrame> frames, Slider? slider = null, double? bpm = null, int? tickRate = null)
+        private void performTest(
+            List<ReplayFrame> frames,
+            Slider? slider = null,
+            double? bpm = null,
+            int? tickRate = null
+        )
         {
             slider ??= new Slider
             {
                 StartTime = time_slider_start,
                 Position = new Vector2(0, 0),
                 SliderVelocityMultiplier = 0.1f,
-                Path = new SliderPath(PathType.PERFECT_CURVE, new[]
-                {
-                    Vector2.Zero,
-                    new Vector2(slider_path_length, 0),
-                }, slider_path_length),
+                Path = new SliderPath(
+                    PathType.PERFECT_CURVE,
+                    new[] { Vector2.Zero, new Vector2(slider_path_length, 0) },
+                    slider_path_length
+                ),
             };
 
             performTest(frames, [slider], bpm, tickRate);
         }
 
-        private void performTest(List<ReplayFrame> frames, List<OsuHitObject> objects, double? bpm = null, int? tickRate = null)
+        private void performTest(
+            List<ReplayFrame> frames,
+            List<OsuHitObject> objects,
+            double? bpm = null,
+            int? tickRate = null
+        )
         {
-            AddStep("load player", () =>
-            {
-                var cpi = new ControlPointInfo();
-
-                if (bpm != null)
-                    cpi.Add(0, new TimingControlPoint { BeatLength = 60000 / bpm.Value });
-
-                Beatmap.Value = CreateWorkingBeatmap(new Beatmap<OsuHitObject>
+            AddStep(
+                "load player",
+                () =>
                 {
-                    HitObjects = objects,
-                    BeatmapInfo =
-                    {
-                        Difficulty = new BeatmapDifficulty
+                    var cpi = new ControlPointInfo();
+
+                    if (bpm != null)
+                        cpi.Add(0, new TimingControlPoint { BeatLength = 60000 / bpm.Value });
+
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new Beatmap<OsuHitObject>
                         {
-                            SliderTickRate = tickRate ?? 3,
-                            SliderMultiplier = 1,
-                        },
-                        Ruleset = new OsuRuleset().RulesetInfo,
-                    },
-                    ControlPointInfo = cpi,
-                });
+                            HitObjects = objects,
+                            BeatmapInfo =
+                            {
+                                Difficulty = new BeatmapDifficulty
+                                {
+                                    SliderTickRate = tickRate ?? 3,
+                                    SliderMultiplier = 1,
+                                },
+                                Ruleset = new OsuRuleset().RulesetInfo,
+                            },
+                            ControlPointInfo = cpi,
+                        }
+                    );
 
-                var p = new ScoreAccessibleReplayPlayer(new Score { Replay = new Replay { Frames = frames } });
+                    var p = new ScoreAccessibleReplayPlayer(
+                        new Score { Replay = new Replay { Frames = frames } }
+                    );
 
-                p.OnLoadComplete += _ =>
-                {
-                    p.ScoreProcessor.NewJudgement += result =>
+                    p.OnLoadComplete += _ =>
                     {
-                        if (currentPlayer == p) judgementResults.Add(result);
+                        p.ScoreProcessor.NewJudgement += result =>
+                        {
+                            if (currentPlayer == p)
+                                judgementResults.Add(result);
+                        };
                     };
-                };
 
-                LoadScreen(currentPlayer = p);
-                judgementResults.Clear();
-            });
+                    LoadScreen(currentPlayer = p);
+                    judgementResults.Clear();
+                }
+            );
 
             AddUntilStep("Beatmap at 0", () => Beatmap.Value.Track.CurrentTime == 0);
             AddUntilStep("Wait until player is loaded", () => currentPlayer.IsCurrentScreen());
-            AddUntilStep("Wait for completion", () => currentPlayer.ScoreProcessor.HasCompleted.Value);
+            AddUntilStep(
+                "Wait for completion",
+                () => currentPlayer.ScoreProcessor.HasCompleted.Value
+            );
         }
 
         private partial class ScoreAccessibleReplayPlayer : ReplayPlayer
@@ -616,13 +1049,8 @@ namespace osu.Game.Rulesets.Osu.Tests
             protected override bool PauseOnFocusLost => false;
 
             public ScoreAccessibleReplayPlayer(Score score)
-                : base(score, new PlayerConfiguration
-                {
-                    AllowPause = false,
-                    ShowResults = false,
-                })
-            {
-            }
+                : base(score, new PlayerConfiguration { AllowPause = false, ShowResults = false })
+            { }
         }
     }
 }

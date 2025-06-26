@@ -22,7 +22,7 @@ namespace osu.Game.Tests.ScrollAlgorithms
             {
                 new MultiplierControlPoint(0) { Velocity = 1 },
                 new MultiplierControlPoint(10000) { Velocity = 2f },
-                new MultiplierControlPoint(20000) { Velocity = 0.5f }
+                new MultiplierControlPoint(20000) { Velocity = 0.5f },
             };
 
             algorithm = new OverlappingScrollAlgorithm(controlPoints);
@@ -69,12 +69,22 @@ namespace osu.Game.Tests.ScrollAlgorithms
         [TestCase(15000)]
         [TestCase(20000)]
         [TestCase(25000)]
-        [Ignore("Disabled for now because overlapping control points have multiple time values under the same position."
-                + "Ideally, scrolling should be changed to constant or sequential during editing of hitobjects.")]
+        [Ignore(
+            "Disabled for now because overlapping control points have multiple time values under the same position."
+                + "Ideally, scrolling should be changed to constant or sequential during editing of hitobjects."
+        )]
         public void TestTime(double time)
         {
-            Assert.AreEqual(time, algorithm.TimeAt(algorithm.PositionAt(time, 0, 5000, 1), 0, 5000, 1), 0.001);
-            Assert.AreEqual(time, algorithm.TimeAt(algorithm.PositionAt(time, 5000, 5000, 1), 5000, 5000, 1), 0.001);
+            Assert.AreEqual(
+                time,
+                algorithm.TimeAt(algorithm.PositionAt(time, 0, 5000, 1), 0, 5000, 1),
+                0.001
+            );
+            Assert.AreEqual(
+                time,
+                algorithm.TimeAt(algorithm.PositionAt(time, 5000, 5000, 1), 5000, 5000, 1),
+                0.001
+            );
         }
     }
 }

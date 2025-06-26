@@ -61,7 +61,8 @@ namespace osu.Game.Overlays
         [Resolved]
         private IBindable<IReadOnlyList<Mod>> mods { get; set; } = null!;
 
-        public DrawableTrack CurrentTrack { get; private set; } = new DrawableTrack(new TrackVirtual(1000));
+        public DrawableTrack CurrentTrack { get; private set; } =
+            new DrawableTrack(new TrackVirtual(1000));
 
         [Resolved]
         private RealmAccess realm { get; set; } = null!;
@@ -72,9 +73,11 @@ namespace osu.Game.Overlays
 
         private AudioFilter audioDuckFilter = null!;
 
-        private readonly Bindable<RandomSelectAlgorithm> randomSelectAlgorithm = new Bindable<RandomSelectAlgorithm>();
+        private readonly Bindable<RandomSelectAlgorithm> randomSelectAlgorithm =
+            new Bindable<RandomSelectAlgorithm>();
 
-        private readonly LinkedList<Live<BeatmapSetInfo>> randomHistory = new LinkedList<Live<BeatmapSetInfo>>();
+        private readonly LinkedList<Live<BeatmapSetInfo>> randomHistory =
+            new LinkedList<Live<BeatmapSetInfo>>();
         private LinkedListNode<Live<BeatmapSetInfo>>? currentRandomHistoryPosition;
 
         [BackgroundDependencyLoader]
@@ -91,11 +94,14 @@ namespace osu.Game.Overlays
         {
             base.LoadComplete();
 
-            beatmap.BindValueChanged(b =>
-            {
-                if (b.NewValue != null)
-                    changeBeatmap(b.NewValue);
-            }, true);
+            beatmap.BindValueChanged(
+                b =>
+                {
+                    if (b.NewValue != null)
+                        changeBeatmap(b.NewValue);
+                },
+                true
+            );
             mods.BindValueChanged(_ => ResetTrackAdjustments(), true);
         }
 
@@ -141,19 +147,24 @@ namespace osu.Game.Overlays
         /// </summary>
         public void EnsurePlayingSomething()
         {
-            if (UserPauseRequested) return;
+            if (UserPauseRequested)
+                return;
 
             if (CurrentTrack.IsDummyDevice || beatmap.Value.BeatmapSetInfo.DeletePending)
             {
                 if (beatmap.Disabled || !AllowTrackControl.Value)
                     return;
 
-                Logger.Log($"{nameof(MusicController)} skipping next track to {nameof(EnsurePlayingSomething)}");
+                Logger.Log(
+                    $"{nameof(MusicController)} skipping next track to {nameof(EnsurePlayingSomething)}"
+                );
                 NextTrack(allowProtectedTracks: true);
             }
             else if (!IsPlaying)
             {
-                Logger.Log($"{nameof(MusicController)} starting playback to {nameof(EnsurePlayingSomething)}");
+                Logger.Log(
+                    $"{nameof(MusicController)} starting playback to {nameof(EnsurePlayingSomething)}"
+                );
                 Play();
             }
         }
@@ -224,12 +235,16 @@ namespace osu.Game.Overlays
         /// </summary>
         /// <param name="onSuccess">Invoked when the operation has been performed successfully.</param>
         /// <param name="allowProtectedTracks">Whether to include <see cref="BeatmapSetInfo.Protected"/> beatmap sets when navigating.</param>
-        public void PreviousTrack(Action<PreviousTrackResult>? onSuccess = null, bool allowProtectedTracks = false) => Schedule(() =>
-        {
-            PreviousTrackResult res = prev(allowProtectedTracks);
-            if (res != PreviousTrackResult.None)
-                onSuccess?.Invoke(res);
-        });
+        public void PreviousTrack(
+            Action<PreviousTrackResult>? onSuccess = null,
+            bool allowProtectedTracks = false
+        ) =>
+            Schedule(() =>
+            {
+                PreviousTrackResult res = prev(allowProtectedTracks);
+                if (res != PreviousTrackResult.None)
+                    onSuccess?.Invoke(res);
+            });
 
         /// <summary>
         /// Play the previous track or restart the current track if it's current time below <see cref="restart_cutoff_point"/>.
@@ -257,8 +272,10 @@ namespace osu.Game.Overlays
                 playableSet = getNextRandom(-1, allowProtectedTracks);
             else
             {
-                playableSet = getBeatmapSets(allowProtectedTracks).TakeWhile(i => !i.Value.Equals(current?.BeatmapSetInfo)).LastOrDefault()
-                              ?? getBeatmapSets(allowProtectedTracks).LastOrDefault();
+                playableSet =
+                    getBeatmapSets(allowProtectedTracks)
+                        .TakeWhile(i => !i.Value.Equals(current?.BeatmapSetInfo))
+                        .LastOrDefault() ?? getBeatmapSets(allowProtectedTracks).LastOrDefault();
             }
 
             if (playableSet != null)
@@ -277,12 +294,13 @@ namespace osu.Game.Overlays
         /// <param name="onSuccess">Invoked when the operation has been performed successfully.</param>
         /// <param name="allowProtectedTracks">Whether to include <see cref="BeatmapSetInfo.Protected"/> beatmap sets when navigating.</param>
         /// <returns>A <see cref="ScheduledDelegate"/> of the operation.</returns>
-        public void NextTrack(Action? onSuccess = null, bool allowProtectedTracks = false) => Schedule(() =>
-        {
-            bool res = next(allowProtectedTracks);
-            if (res)
-                onSuccess?.Invoke();
-        });
+        public void NextTrack(Action? onSuccess = null, bool allowProtectedTracks = false) =>
+            Schedule(() =>
+            {
+                bool res = next(allowProtectedTracks);
+                if (res)
+                    onSuccess?.Invoke();
+            });
 
         private readonly List<DuckParameters> duckOperations = new List<DuckParameters>();
 
@@ -303,23 +321,46 @@ namespace osu.Game.Overlays
             DuckParameters volumeOperation = duckOperations.MinBy(p => p.DuckVolumeTo)!;
             DuckParameters lowPassOperation = duckOperations.MinBy(p => p.DuckCutoffTo)!;
 
-            audioDuckFilter.CutoffTo(lowPassOperation.DuckCutoffTo, lowPassOperation.DuckDuration, lowPassOperation.DuckEasing);
-            this.TransformBindableTo(audioDuckVolume, volumeOperation.DuckVolumeTo, volumeOperation.DuckDuration, volumeOperation.DuckEasing);
+            audioDuckFilter.CutoffTo(
+                lowPassOperation.DuckCutoffTo,
+                lowPassOperation.DuckDuration,
+                lowPassOperation.DuckEasing
+            );
+            this.TransformBindableTo(
+                audioDuckVolume,
+                volumeOperation.DuckVolumeTo,
+                volumeOperation.DuckDuration,
+                volumeOperation.DuckEasing
+            );
 
             return new InvokeOnDisposal(restoreDucking);
 
-            void restoreDucking() => Schedule(() =>
-            {
-                if (!duckOperations.Remove(parameters))
-                    return;
+            void restoreDucking() =>
+                Schedule(() =>
+                {
+                    if (!duckOperations.Remove(parameters))
+                        return;
 
-                DuckParameters? restoreVolumeOperation = duckOperations.MinBy(p => p.DuckVolumeTo);
-                DuckParameters? restoreLowPassOperation = duckOperations.MinBy(p => p.DuckCutoffTo);
+                    DuckParameters? restoreVolumeOperation = duckOperations.MinBy(p =>
+                        p.DuckVolumeTo
+                    );
+                    DuckParameters? restoreLowPassOperation = duckOperations.MinBy(p =>
+                        p.DuckCutoffTo
+                    );
 
-                // If another duck operation is in the list, restore ducking to its level, else reset back to defaults.
-                audioDuckFilter.CutoffTo(restoreLowPassOperation?.DuckCutoffTo ?? AudioFilter.MAX_LOWPASS_CUTOFF, parameters.RestoreDuration, parameters.RestoreEasing);
-                this.TransformBindableTo(audioDuckVolume, restoreVolumeOperation?.DuckVolumeTo ?? 1, parameters.RestoreDuration, parameters.RestoreEasing);
-            });
+                    // If another duck operation is in the list, restore ducking to its level, else reset back to defaults.
+                    audioDuckFilter.CutoffTo(
+                        restoreLowPassOperation?.DuckCutoffTo ?? AudioFilter.MAX_LOWPASS_CUTOFF,
+                        parameters.RestoreDuration,
+                        parameters.RestoreEasing
+                    );
+                    this.TransformBindableTo(
+                        audioDuckVolume,
+                        restoreVolumeOperation?.DuckVolumeTo ?? 1,
+                        parameters.RestoreDuration,
+                        parameters.RestoreEasing
+                    );
+                });
         }
 
         /// <summary>
@@ -353,8 +394,11 @@ namespace osu.Game.Overlays
                 playableSet = getNextRandom(1, allowProtectedTracks);
             else
             {
-                playableSet = getBeatmapSets(allowProtectedTracks).SkipWhile(i => !i.Value.Equals(current?.BeatmapSetInfo)).ElementAtOrDefault(1)
-                              ?? getBeatmapSets(allowProtectedTracks).FirstOrDefault();
+                playableSet =
+                    getBeatmapSets(allowProtectedTracks)
+                        .SkipWhile(i => !i.Value.Equals(current?.BeatmapSetInfo))
+                        .ElementAtOrDefault(1)
+                    ?? getBeatmapSets(allowProtectedTracks).FirstOrDefault();
             }
 
             var playableBeatmap = playableSet?.Value.Beatmaps.FirstOrDefault();
@@ -422,9 +466,13 @@ namespace osu.Game.Overlays
 
                     result = notYetPlayedSets[RNG.Next(notYetPlayedSets.Count)];
 
-                    Debug.Assert(randomHistory.Count == 0
-                                 || (currentRandomHistoryPosition == randomHistory.First && direction < 0)
-                                 || (currentRandomHistoryPosition == randomHistory.Last && direction > 0));
+                    Debug.Assert(
+                        randomHistory.Count == 0
+                            || (
+                                currentRandomHistoryPosition == randomHistory.First && direction < 0
+                            )
+                            || (currentRandomHistoryPosition == randomHistory.Last && direction > 0)
+                    );
 
                     // notably, this depends solely on `direction` specifically, because when there are less than 2 items in `randomHistory`,
                     // we have `randomHistory.First == randomHistory.Last` (either `null` if no items, or the single item).
@@ -436,7 +484,11 @@ namespace osu.Game.Overlays
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(randomSelectAlgorithm), randomSelectAlgorithm.Value, "Unsupported random select algorithm");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(randomSelectAlgorithm),
+                        randomSelectAlgorithm.Value,
+                        "Unsupported random select algorithm"
+                    );
             }
 
             return result;
@@ -454,11 +506,18 @@ namespace osu.Game.Overlays
         private TrackChangeDirection? queuedDirection;
 
         private IEnumerable<Live<BeatmapSetInfo>> getBeatmapSets(bool allowProtectedTracks) =>
-            realm.Realm.All<BeatmapSetInfo>().Where(s => !s.DeletePending)
-                 .AsEnumerable()
-                 .Select(s => new RealmLive<BeatmapSetInfo>(s, realm))
-                 .Where(i => (allowProtectedTracks || !i.Value.Protected)
-                             && (SeasonalUIConfig.ENABLED || i.Value.Hash != IntroChristmas.CHRISTMAS_BEATMAP_SET_HASH));
+            realm
+                .Realm.All<BeatmapSetInfo>()
+                .Where(s => !s.DeletePending)
+                .AsEnumerable()
+                .Select(s => new RealmLive<BeatmapSetInfo>(s, realm))
+                .Where(i =>
+                    (allowProtectedTracks || !i.Value.Protected)
+                    && (
+                        SeasonalUIConfig.ENABLED
+                        || i.Value.Hash != IntroChristmas.CHRISTMAS_BEATMAP_SET_HASH
+                    )
+                );
 
         private void changeBeatmap(WorkingBeatmap newWorking)
         {
@@ -485,8 +544,12 @@ namespace osu.Game.Overlays
                 else
                 {
                     // figure out the best direction based on order in playlist.
-                    int last = getBeatmapSets(allowProtectedTracks: false).TakeWhile(b => !b.Value.Equals(current.BeatmapSetInfo)).Count();
-                    int next = getBeatmapSets(allowProtectedTracks: false).TakeWhile(b => !b.Value.Equals(newWorking.BeatmapSetInfo)).Count();
+                    int last = getBeatmapSets(allowProtectedTracks: false)
+                        .TakeWhile(b => !b.Value.Equals(current.BeatmapSetInfo))
+                        .Count();
+                    int next = getBeatmapSets(allowProtectedTracks: false)
+                        .TakeWhile(b => !b.Value.Equals(newWorking.BeatmapSetInfo))
+                        .Count();
 
                     direction = last > next ? TrackChangeDirection.Prev : TrackChangeDirection.Next;
                 }
@@ -641,13 +704,13 @@ namespace osu.Game.Overlays
     {
         None,
         Next,
-        Prev
+        Prev,
     }
 
     public enum PreviousTrackResult
     {
         None,
         Restart,
-        Previous
+        Previous,
     }
 }

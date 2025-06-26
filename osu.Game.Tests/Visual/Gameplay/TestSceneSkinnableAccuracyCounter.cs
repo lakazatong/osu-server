@@ -17,7 +17,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         private ScoreProcessor scoreProcessor = new ScoreProcessor(new OsuRuleset());
 
         protected override Drawable CreateArgonImplementation() => new ArgonAccuracyCounter();
+
         protected override Drawable CreateDefaultImplementation() => new DefaultAccuracyCounter();
+
         protected override Drawable CreateLegacyImplementation() => new LegacyAccuracyCounter();
 
         public override void SetUpSteps()

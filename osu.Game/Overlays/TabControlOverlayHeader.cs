@@ -44,36 +44,37 @@ namespace osu.Game.Overlays
 
         protected TabControlOverlayHeader()
         {
-            HeaderInfo.Add(new Container
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Children = new Drawable[]
+            HeaderInfo.Add(
+                new Container
                 {
-                    controlBackground = new Box
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    TabControlContainer = new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Horizontal = ContentSidePadding },
-                        Children = new[]
+                        controlBackground = new Box { RelativeSizeAxes = Axes.Both },
+                        TabControlContainer = new Container
                         {
-                            TabControl = CreateTabControl().With(control =>
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding { Horizontal = ContentSidePadding },
+                            Children = new[]
                             {
-                                control.Current = Current;
-                            }),
-                            CreateTabControlContent().With(content =>
-                            {
-                                content.Anchor = Anchor.CentreRight;
-                                content.Origin = Anchor.CentreRight;
-                            }),
-                        }
-                    }
+                                TabControl = CreateTabControl()
+                                    .With(control =>
+                                    {
+                                        control.Current = Current;
+                                    }),
+                                CreateTabControlContent()
+                                    .With(content =>
+                                    {
+                                        content.Anchor = Anchor.CentreRight;
+                                        content.Origin = Anchor.CentreRight;
+                                    }),
+                            },
+                        },
+                    },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -105,12 +106,13 @@ namespace osu.Game.Overlays
 
             protected override TabItem<T> CreateTabItem(T value) => new OverlayHeaderTabItem(value);
 
-            protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-            {
-                RelativeSizeAxes = Axes.Y,
-                AutoSizeAxes = Axes.X,
-                Direction = FillDirection.Horizontal,
-            };
+            protected override TabFillFlowContainer CreateTabFlow() =>
+                new TabFillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.Y,
+                    AutoSizeAxes = Axes.X,
+                    Direction = FillDirection.Horizontal,
+                };
 
             private partial class OverlayHeaderTabItem : OverlayTabItem
             {

@@ -24,10 +24,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             {
                 Masking = true,
                 RelativeSizeAxes = Axes.Both,
-                Child = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
+                Child = new Box { RelativeSizeAxes = Axes.Both },
             };
         }
     }

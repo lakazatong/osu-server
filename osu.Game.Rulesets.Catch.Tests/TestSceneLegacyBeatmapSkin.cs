@@ -36,7 +36,10 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, true, userHasCustomColours);
-            AddAssert("is beatmap skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestBeatmapSkin.Colours));
+            AddAssert(
+                "is beatmap skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestBeatmapSkin.Colours)
+            );
         }
 
         [TestCase(true)]
@@ -45,7 +48,10 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, false, true);
-            AddAssert("is user custom skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours));
+            AddAssert(
+                "is user custom skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours)
+            );
         }
 
         [TestCase(true)]
@@ -54,7 +60,13 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, false, false);
-            AddAssert("is default user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(SkinConfiguration.DefaultComboColours));
+            AddAssert(
+                "is default user skin colours",
+                () =>
+                    TestPlayer.UsableComboColours.SequenceEqual(
+                        SkinConfiguration.DefaultComboColours
+                    )
+            );
         }
 
         [TestCase(true, true)]
@@ -65,18 +77,30 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, false));
             ConfigureTest(useBeatmapSkin, useBeatmapColour, false);
-            AddAssert("is default user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(SkinConfiguration.DefaultComboColours));
+            AddAssert(
+                "is default user skin colours",
+                () =>
+                    TestPlayer.UsableComboColours.SequenceEqual(
+                        SkinConfiguration.DefaultComboColours
+                    )
+            );
         }
 
         [TestCase(true, true)]
         [TestCase(false, true)]
         [TestCase(true, false)]
         [TestCase(false, false)]
-        public void TestBeatmapNoComboColoursSkinOverride(bool useBeatmapSkin, bool useBeatmapColour)
+        public void TestBeatmapNoComboColoursSkinOverride(
+            bool useBeatmapSkin,
+            bool useBeatmapColour
+        )
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, false));
             ConfigureTest(useBeatmapSkin, useBeatmapColour, true);
-            AddAssert("is custom user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours));
+            AddAssert(
+                "is custom user skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours)
+            );
         }
 
         [TestCase(true)]
@@ -85,9 +109,24 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, true, true);
-            AddAssert("is custom hyper dash colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashColour == TestBeatmapSkin.HYPER_DASH_COLOUR);
-            AddAssert("is custom hyper dash after image colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashAfterImageColour == TestBeatmapSkin.HYPER_DASH_AFTER_IMAGE_COLOUR);
-            AddAssert("is custom hyper dash fruit colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashFruitColour == TestBeatmapSkin.HYPER_DASH_FRUIT_COLOUR);
+            AddAssert(
+                "is custom hyper dash colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashColour
+                    == TestBeatmapSkin.HYPER_DASH_COLOUR
+            );
+            AddAssert(
+                "is custom hyper dash after image colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashAfterImageColour
+                    == TestBeatmapSkin.HYPER_DASH_AFTER_IMAGE_COLOUR
+            );
+            AddAssert(
+                "is custom hyper dash fruit colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashFruitColour
+                    == TestBeatmapSkin.HYPER_DASH_FRUIT_COLOUR
+            );
         }
 
         [TestCase(true)]
@@ -96,45 +135,66 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             PrepareBeatmap(() => new CatchCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, false, true);
-            AddAssert("is custom hyper dash colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashColour == TestSkin.HYPER_DASH_COLOUR);
-            AddAssert("is custom hyper dash after image colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashAfterImageColour == TestSkin.HYPER_DASH_AFTER_IMAGE_COLOUR);
-            AddAssert("is custom hyper dash fruit colours", () => ((CatchExposedPlayer)TestPlayer).UsableHyperDashFruitColour == TestSkin.HYPER_DASH_FRUIT_COLOUR);
+            AddAssert(
+                "is custom hyper dash colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashColour
+                    == TestSkin.HYPER_DASH_COLOUR
+            );
+            AddAssert(
+                "is custom hyper dash after image colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashAfterImageColour
+                    == TestSkin.HYPER_DASH_AFTER_IMAGE_COLOUR
+            );
+            AddAssert(
+                "is custom hyper dash fruit colours",
+                () =>
+                    ((CatchExposedPlayer)TestPlayer).UsableHyperDashFruitColour
+                    == TestSkin.HYPER_DASH_FRUIT_COLOUR
+            );
         }
 
-        protected override ExposedPlayer CreateTestPlayer(bool userHasCustomColours) => new CatchExposedPlayer(userHasCustomColours);
+        protected override ExposedPlayer CreateTestPlayer(bool userHasCustomColours) =>
+            new CatchExposedPlayer(userHasCustomColours);
 
         private partial class CatchExposedPlayer : ExposedPlayer
         {
             public CatchExposedPlayer(bool userHasCustomColours)
-                : base(userHasCustomColours)
-            {
-            }
+                : base(userHasCustomColours) { }
 
             public Color4 UsableHyperDashColour =>
-                GameplayClockContainer.ChildrenOfType<BeatmapSkinProvidingContainer>()
-                                      .First()
-                                      .GetConfig<SkinCustomColourLookup, Color4>(new SkinCustomColourLookup(CatchSkinColour.HyperDash))?
-                                      .Value ?? Color4.Red;
+                GameplayClockContainer
+                    .ChildrenOfType<BeatmapSkinProvidingContainer>()
+                    .First()
+                    .GetConfig<SkinCustomColourLookup, Color4>(
+                        new SkinCustomColourLookup(CatchSkinColour.HyperDash)
+                    )
+                    ?.Value ?? Color4.Red;
 
             public Color4 UsableHyperDashAfterImageColour =>
-                GameplayClockContainer.ChildrenOfType<BeatmapSkinProvidingContainer>()
-                                      .First()
-                                      .GetConfig<SkinCustomColourLookup, Color4>(new SkinCustomColourLookup(CatchSkinColour.HyperDashAfterImage))?
-                                      .Value ?? Color4.Red;
+                GameplayClockContainer
+                    .ChildrenOfType<BeatmapSkinProvidingContainer>()
+                    .First()
+                    .GetConfig<SkinCustomColourLookup, Color4>(
+                        new SkinCustomColourLookup(CatchSkinColour.HyperDashAfterImage)
+                    )
+                    ?.Value ?? Color4.Red;
 
             public Color4 UsableHyperDashFruitColour =>
-                GameplayClockContainer.ChildrenOfType<BeatmapSkinProvidingContainer>()
-                                      .First()
-                                      .GetConfig<SkinCustomColourLookup, Color4>(new SkinCustomColourLookup(CatchSkinColour.HyperDashFruit))?
-                                      .Value ?? Color4.Red;
+                GameplayClockContainer
+                    .ChildrenOfType<BeatmapSkinProvidingContainer>()
+                    .First()
+                    .GetConfig<SkinCustomColourLookup, Color4>(
+                        new SkinCustomColourLookup(CatchSkinColour.HyperDashFruit)
+                    )
+                    ?.Value ?? Color4.Red;
         }
 
         private class CatchCustomSkinWorkingBeatmap : CustomSkinWorkingBeatmap
         {
             public CatchCustomSkinWorkingBeatmap(AudioManager audio, bool hasColours)
-                : base(createBeatmap(), audio, hasColours)
-            {
-            }
+                : base(createBeatmap(), audio, hasColours) { }
 
             private static IBeatmap createBeatmap() =>
                 new Beatmap
@@ -142,9 +202,17 @@ namespace osu.Game.Rulesets.Catch.Tests
                     BeatmapInfo =
                     {
                         BeatmapSet = new BeatmapSetInfo(),
-                        Ruleset = new CatchRuleset().RulesetInfo
+                        Ruleset = new CatchRuleset().RulesetInfo,
                     },
-                    HitObjects = { new Fruit { StartTime = 1816, X = 56, NewCombo = true } }
+                    HitObjects =
+                    {
+                        new Fruit
+                        {
+                            StartTime = 1816,
+                            X = 56,
+                            NewCombo = true,
+                        },
+                    },
                 };
         }
     }

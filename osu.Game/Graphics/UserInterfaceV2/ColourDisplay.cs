@@ -75,14 +75,14 @@ namespace osu.Game.Graphics.UserInterfaceV2
                     new ColourCircle
                     {
                         Current = { BindTarget = Current },
-                        DeleteRequested = () => DeleteRequested?.Invoke(this)
+                        DeleteRequested = () => DeleteRequested?.Invoke(this),
                     },
                     colourName = new OsuSpriteText
                     {
                         Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre
-                    }
-                }
+                        Origin = Anchor.TopCentre,
+                    },
+                },
             };
         }
 
@@ -105,16 +105,13 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
                 Children = new Drawable[]
                 {
-                    fill = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    fill = new Box { RelativeSizeAxes = Axes.Both },
                     colourHexCode = new OsuSpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Font = OsuFont.Default.With(size: 12)
-                    }
+                        Font = OsuFont.Default.With(size: 12),
+                    },
                 };
             }
 
@@ -132,18 +129,21 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 colourHexCode.Colour = OsuColour.ForegroundTextColourFor(Current.Value);
             }
 
-            public Popover GetPopover() => new OsuPopover(false)
-            {
-                Child = new OsuColourPicker
+            public Popover GetPopover() =>
+                new OsuPopover(false)
                 {
-                    Current = { BindTarget = Current }
-                }
-            };
+                    Child = new OsuColourPicker { Current = { BindTarget = Current } },
+                };
 
-            public MenuItem[] ContextMenuItems => new MenuItem[]
-            {
-                new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => DeleteRequested?.Invoke())
-            };
+            public MenuItem[] ContextMenuItems =>
+                new MenuItem[]
+                {
+                    new OsuMenuItem(
+                        CommonStrings.ButtonsDelete,
+                        MenuItemType.Destructive,
+                        () => DeleteRequested?.Invoke()
+                    ),
+                };
         }
     }
 }

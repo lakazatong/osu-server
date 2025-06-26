@@ -36,32 +36,46 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
             if (hitObject == null)
                 return;
 
-            var originalSample = hitObject.CreateHitSampleInfo(hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL);
+            var originalSample = hitObject.CreateHitSampleInfo(
+                hitType == HitType.Rim ? HitSampleInfo.HIT_CLAP : HitSampleInfo.HIT_NORMAL
+            );
 
             // If the sample is provided by a legacy skin, we should not try and do anything special.
-            if (skinSource.FindProvider(s => s.GetSample(originalSample) != null) is LegacySkinTransformer)
+            if (
+                skinSource.FindProvider(s => s.GetSample(originalSample) != null)
+                is LegacySkinTransformer
+            )
                 return;
 
             if (strong && hitType == HitType.Rim && canPlayFlourish(hitObject))
-                PlaySamples(new ISampleInfo[] { new VolumeAwareHitSampleInfo(hitObject.CreateHitSampleInfo(HitSampleInfo.HIT_FLOURISH), true) });
+                PlaySamples(
+                    new ISampleInfo[]
+                    {
+                        new VolumeAwareHitSampleInfo(
+                            hitObject.CreateHitSampleInfo(HitSampleInfo.HIT_FLOURISH),
+                            true
+                        ),
+                    }
+                );
         }
 
         private bool canPlayFlourish(TaikoHitObject hitObject)
         {
             double? lastFlourish = null;
 
-            var hitObjects = hitObjectContainer.AliveObjects
-                                               .Reverse()
-                                               .Select(d => d.HitObject)
-                                               .OfType<Hit>()
-                                               .Where(h => h.IsStrong && h.Type == HitType.Rim);
+            var hitObjects = hitObjectContainer
+                .AliveObjects.Reverse()
+                .Select(d => d.HitObject)
+                .OfType<Hit>()
+                .Where(h => h.IsStrong && h.Type == HitType.Rim);
 
             // Add an additional 'flourish' sample to strong rim hits (that are at least `time_between_flourishes` apart).
             // This is applied to hitobjects in reverse order, as to sound more musically coherent by biasing towards to
             // end of groups/combos of strong rim hits instead of the start.
             foreach (var h in hitObjects)
             {
-                bool canFlourish = lastFlourish == null || lastFlourish - h.StartTime >= time_between_flourishes;
+                bool canFlourish =
+                    lastFlourish == null || lastFlourish - h.StartTime >= time_between_flourishes;
 
                 if (canFlourish)
                     lastFlourish = h.StartTime;

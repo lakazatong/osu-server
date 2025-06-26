@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                             Blending = BlendingParameters.Additive,
                             InnerRadius = 0.5f,
                             Alpha = 0.15f,
-                            Seed = largeBlobSeed
+                            Seed = largeBlobSeed,
                         },
                         new CircularBlob
                         {
@@ -67,9 +67,9 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                             InnerRadius = 0.4f,
                             Alpha = 0.5f,
                             Scale = new Vector2(0.7f),
-                            Seed = RNG.Next()
+                            Seed = RNG.Next(),
                         },
-                    }
+                    },
                 },
                 hyperBorderPiece = new CircularBlob
                 {
@@ -81,7 +81,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                     Blending = BlendingParameters.Additive,
                     InnerRadius = 0.5f,
                     Alpha = 0.15f,
-                    Seed = largeBlobSeed
+                    Seed = largeBlobSeed,
                 },
             };
         }
@@ -90,11 +90,14 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
         {
             base.LoadComplete();
 
-            AccentColour.BindValueChanged(colour =>
-            {
-                foreach (var sprite in layers)
-                    sprite.Colour = colour.NewValue;
-            }, true);
+            AccentColour.BindValueChanged(
+                colour =>
+                {
+                    foreach (var sprite in layers)
+                        sprite.Colour = colour.NewValue;
+                },
+                true
+            );
 
             rotationRandomness = RNG.NextSingle(0.2f, 1);
         }
@@ -112,7 +115,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
             {
                 layers[i].Rotation -=
                     (float)Clock.ElapsedFrameTime
-                    * 0.4f * rotationRandomness
+                    * 0.4f
+                    * rotationRandomness
                     // Each layer should alternate rotation speed.
                     * (i % 2 == 1 ? 0.5f : 1);
             }

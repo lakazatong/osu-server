@@ -77,25 +77,20 @@ namespace osu.Game.Rulesets.Catch.Tests
 
             int removeCount = path.RemoveVertices((v, i) => v.Time == 10 && i == 1);
             Assert.That(removeCount, Is.EqualTo(1));
-            Assert.That(path.Vertices, Is.EqualTo(new[]
-            {
-                new JuiceStreamPathVertex(0, 0),
-                new JuiceStreamPathVertex(20, -5)
-            }));
+            Assert.That(
+                path.Vertices,
+                Is.EqualTo(
+                    new[] { new JuiceStreamPathVertex(0, 0), new JuiceStreamPathVertex(20, -5) }
+                )
+            );
 
             removeCount = path.RemoveVertices((_, i) => i == 0);
             Assert.That(removeCount, Is.EqualTo(1));
-            Assert.That(path.Vertices, Is.EqualTo(new[]
-            {
-                new JuiceStreamPathVertex(20, -5)
-            }));
+            Assert.That(path.Vertices, Is.EqualTo(new[] { new JuiceStreamPathVertex(20, -5) }));
 
             removeCount = path.RemoveVertices((_, _) => true);
             Assert.That(removeCount, Is.EqualTo(1));
-            Assert.That(path.Vertices, Is.EqualTo(new[]
-            {
-                new JuiceStreamPathVertex()
-            }));
+            Assert.That(path.Vertices, Is.EqualTo(new[] { new JuiceStreamPathVertex() }));
         }
 
         [Test]
@@ -104,30 +99,26 @@ namespace osu.Game.Rulesets.Catch.Tests
             var path = new JuiceStreamPath();
             path.Add(-100, -10);
             path.Add(100, 50);
-            path.ResampleVertices(new double[]
-            {
-                -50,
-                0,
-                70,
-                120
-            });
-            Assert.That(path.Vertices, Is.EqualTo(new[]
-            {
-                new JuiceStreamPathVertex(-100, -10),
-                new JuiceStreamPathVertex(-50, -5),
-                new JuiceStreamPathVertex(0, 0),
-                new JuiceStreamPathVertex(70, 35),
-                new JuiceStreamPathVertex(100, 50),
-                new JuiceStreamPathVertex(100, 50),
-            }));
+            path.ResampleVertices(new double[] { -50, 0, 70, 120 });
+            Assert.That(
+                path.Vertices,
+                Is.EqualTo(
+                    new[]
+                    {
+                        new JuiceStreamPathVertex(-100, -10),
+                        new JuiceStreamPathVertex(-50, -5),
+                        new JuiceStreamPathVertex(0, 0),
+                        new JuiceStreamPathVertex(70, 35),
+                        new JuiceStreamPathVertex(100, 50),
+                        new JuiceStreamPathVertex(100, 50),
+                    }
+                )
+            );
 
             path.Clear();
             path.SetVertexPosition(0, 10);
             path.ResampleVertices(Array.Empty<double>());
-            Assert.That(path.Vertices, Is.EqualTo(new[]
-            {
-                new JuiceStreamPathVertex(0, 10)
-            }));
+            Assert.That(path.Vertices, Is.EqualTo(new[] { new JuiceStreamPathVertex(0, 10) }));
         }
 
         [TestCase(10)]
@@ -154,7 +145,10 @@ namespace osu.Game.Rulesets.Catch.Tests
                     } while (rng.Next(2) != 0);
 
                     int length = sliderPath.ControlPoints.Count - start + 1;
-                    sliderPath.ControlPoints[start].Type = length <= 2 ? PathType.LINEAR : length == 3 ? PathType.PERFECT_CURVE : PathType.BEZIER;
+                    sliderPath.ControlPoints[start].Type =
+                        length <= 2 ? PathType.LINEAR
+                        : length == 3 ? PathType.PERFECT_CURVE
+                        : PathType.BEZIER;
                 } while (rng.Next(3) != 0);
 
                 if (rng.Next(5) == 0)
@@ -167,9 +161,10 @@ namespace osu.Game.Rulesets.Catch.Tests
                 Assert.That(path.Duration * velocity, Is.EqualTo(sliderPath.Distance).Within(1e-3));
                 assertInvariants(path.Vertices);
 
-                double[] sampleTimes = Enumerable.Range(0, 10)
-                                                 .Select(_ => rng.NextDouble() * sliderPath.Distance / velocity)
-                                                 .ToArray();
+                double[] sampleTimes = Enumerable
+                    .Range(0, 10)
+                    .Select(_ => rng.NextDouble() * sliderPath.Distance / velocity)
+                    .ToArray();
 
                 foreach (double time in sampleTimes)
                 {
@@ -206,7 +201,9 @@ namespace osu.Game.Rulesets.Catch.Tests
                     path.Add(time, x);
                 } while (rng.Next(5) != 0);
 
-                float sliderStartY = (float)(rng.NextDouble() * JuiceStreamPath.OSU_PLAYFIELD_HEIGHT);
+                float sliderStartY = (float)(
+                    rng.NextDouble() * JuiceStreamPath.OSU_PLAYFIELD_HEIGHT
+                );
 
                 double requiredVelocity = path.ComputeRequiredVelocity();
                 double velocity = Math.Clamp(requiredVelocity, 1, 100);
@@ -216,13 +213,17 @@ namespace osu.Game.Rulesets.Catch.Tests
                 foreach (var point in sliderPath.ControlPoints)
                 {
                     Assert.That(point.Type, Is.EqualTo(PathType.LINEAR).Or.Null);
-                    Assert.That(sliderStartY + point.Position.Y, Is.InRange(0, JuiceStreamPath.OSU_PLAYFIELD_HEIGHT));
+                    Assert.That(
+                        sliderStartY + point.Position.Y,
+                        Is.InRange(0, JuiceStreamPath.OSU_PLAYFIELD_HEIGHT)
+                    );
                 }
 
                 Assert.That(sliderPath.ControlPoints[0].Position.X, Is.EqualTo(path.Vertices[0].X));
 
                 // The path is preserved only if required velocity is used.
-                if (velocity < requiredVelocity) continue;
+                if (velocity < requiredVelocity)
+                    continue;
 
                 Assert.That(sliderPath.Distance / velocity, Is.EqualTo(path.Duration).Within(1e-3));
 
@@ -230,7 +231,10 @@ namespace osu.Game.Rulesets.Catch.Tests
                 {
                     double time = rng.NextDouble() * path.Duration;
                     float expected = path.PositionAtTime(time);
-                    Assert.That(sliderPath.PositionAt(time * velocity / sliderPath.Distance).X, Is.EqualTo(expected).Within(3e-3));
+                    Assert.That(
+                        sliderPath.PositionAt(time * velocity / sliderPath.Distance).X,
+                        Is.EqualTo(expected).Within(3e-3)
+                    );
                 }
             }
         }

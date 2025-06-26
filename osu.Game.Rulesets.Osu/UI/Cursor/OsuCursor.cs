@@ -79,7 +79,10 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
             ModScaleAdjust.ValueChanged += _ => cursorScale.Value = CalculateCursorScale();
 
-            cursorScale.BindValueChanged(e => cursorScaleContainer.Scale = new Vector2(e.NewValue), true);
+            cursorScale.BindValueChanged(
+                e => cursorScaleContainer.Scale = new Vector2(e.NewValue),
+                true
+            );
         }
 
         protected override void LoadComplete()
@@ -88,17 +91,23 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
             cursorScale.Value = CalculateCursorScale();
         }
 
-        protected virtual Drawable CreateCursorContent() => cursorScaleContainer = new Container
-        {
-            RelativeSizeAxes = Axes.Both,
-            Origin = Anchor.Centre,
-            Anchor = Anchor.Centre,
-            Child = cursorSprite = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.Cursor), _ => new DefaultCursor(), confineMode: ConfineMode.NoScaling)
+        protected virtual Drawable CreateCursorContent() =>
+            cursorScaleContainer = new Container
             {
+                RelativeSizeAxes = Axes.Both,
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-            },
-        };
+                Child = cursorSprite =
+                    new SkinnableDrawable(
+                        new OsuSkinComponentLookup(OsuSkinComponents.Cursor),
+                        _ => new DefaultCursor(),
+                        confineMode: ConfineMode.NoScaling
+                    )
+                    {
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                    },
+            };
 
         protected virtual float CalculateCursorScale()
         {
@@ -115,12 +124,15 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
         protected override void SkinChanged(ISkinSource skin)
         {
-            cursorExpand = skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorExpand)?.Value ?? true;
+            cursorExpand =
+                skin.GetConfig<OsuSkinConfiguration, bool>(OsuSkinConfiguration.CursorExpand)?.Value
+                ?? true;
         }
 
         public void Expand()
         {
-            if (!cursorExpand) return;
+            if (!cursorExpand)
+                return;
 
             skinnableCursor.Expand();
         }
@@ -131,7 +143,10 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
         /// Get the scale applicable to the ActiveCursor based on a beatmap's circle size.
         /// </summary>
         public static float GetScaleForCircleSize(float circleSize) =>
-            1f - 0.7f * (1f + circleSize - BeatmapDifficulty.DEFAULT_DIFFICULTY) / BeatmapDifficulty.DEFAULT_DIFFICULTY;
+            1f
+            - 0.7f
+                * (1f + circleSize - BeatmapDifficulty.DEFAULT_DIFFICULTY)
+                / BeatmapDifficulty.DEFAULT_DIFFICULTY;
 
         private partial class DefaultCursor : SkinnableCursor
         {

@@ -25,7 +25,11 @@ namespace osu.Game.Rulesets.Catch.UI
     {
         protected override bool UserScrollSpeedAdjustment => false;
 
-        public DrawableCatchRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
+        public DrawableCatchRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        )
             : base(ruleset, beatmap, mods)
         {
             Direction.Value = ScrollingDirection.Down;
@@ -41,20 +45,28 @@ namespace osu.Game.Rulesets.Catch.UI
                 KeyBindingInputManager.Add(new CatchTouchInputMapper());
         }
 
-        protected double GetTimeRange(float approachRate) => IBeatmapDifficultyInfo.DifficultyRange(approachRate, 1800, 1200, 450);
+        protected double GetTimeRange(float approachRate) =>
+            IBeatmapDifficultyInfo.DifficultyRange(approachRate, 1800, 1200, 450);
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new CatchFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new CatchFramedReplayInputHandler(replay);
 
-        protected override ReplayRecorder CreateReplayRecorder(Score score) => new CatchReplayRecorder(score, (CatchPlayfield)Playfield);
+        protected override ReplayRecorder CreateReplayRecorder(Score score) =>
+            new CatchReplayRecorder(score, (CatchPlayfield)Playfield);
 
         protected override Playfield CreatePlayfield() => new CatchPlayfield(Beatmap.Difficulty);
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new CatchPlayfieldAdjustmentContainer();
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new CatchPlayfieldAdjustmentContainer();
 
-        protected override PassThroughInputManager CreateInputManager() => new CatchInputManager(Ruleset.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new CatchInputManager(Ruleset.RulesetInfo);
 
-        public override DrawableHitObject<CatchHitObject>? CreateDrawableRepresentation(CatchHitObject h) => null;
+        public override DrawableHitObject<CatchHitObject>? CreateDrawableRepresentation(
+            CatchHitObject h
+        ) => null;
 
-        protected override ResumeOverlay CreateResumeOverlay() => new DelayedResumeOverlay { Scale = new Vector2(0.65f) };
+        protected override ResumeOverlay CreateResumeOverlay() =>
+            new DelayedResumeOverlay { Scale = new Vector2(0.65f) };
     }
 }

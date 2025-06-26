@@ -36,12 +36,13 @@ namespace osu.Game.Online.API.Requests
             Ruleset = ruleset;
         }
 
-        protected override string Target => $@"users/{Lookup}/{Ruleset?.ShortName}?key={lookupType.ToString().ToLowerInvariant()}";
+        protected override string Target =>
+            $@"users/{Lookup}/{Ruleset?.ShortName}?key={lookupType.ToString().ToLowerInvariant()}";
 
         private enum LookupType
         {
             Id,
-            Username
+            Username,
         }
     }
 }

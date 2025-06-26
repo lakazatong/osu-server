@@ -64,11 +64,23 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.HitCircles
             return base.OnMouseDown(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
             var result = composer?.TrySnapToNearbyObjects(screenSpacePosition, fallbackTime);
-            result ??= composer?.TrySnapToDistanceGrid(screenSpacePosition, limitedDistanceSnap.Value && editorClock != null ? editorClock.CurrentTime : null);
-            if (composer?.TrySnapToPositionGrid(result?.ScreenSpacePosition ?? screenSpacePosition, result?.Time ?? fallbackTime) is SnapResult gridSnapResult)
+            result ??= composer?.TrySnapToDistanceGrid(
+                screenSpacePosition,
+                limitedDistanceSnap.Value && editorClock != null ? editorClock.CurrentTime : null
+            );
+            if (
+                composer?.TrySnapToPositionGrid(
+                    result?.ScreenSpacePosition ?? screenSpacePosition,
+                    result?.Time ?? fallbackTime
+                )
+                is SnapResult gridSnapResult
+            )
                 result = gridSnapResult;
             result ??= new SnapResult(screenSpacePosition, fallbackTime);
 

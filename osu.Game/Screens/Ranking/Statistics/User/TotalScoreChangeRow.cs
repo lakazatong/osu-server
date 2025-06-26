@@ -10,15 +10,18 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     public partial class TotalScoreChangeRow : RankingChangeRow<long>
     {
         public TotalScoreChangeRow()
-            : base(stats => stats.TotalScore)
-        {
-        }
+            : base(stats => stats.TotalScore) { }
 
         protected override LocalisableString Label => UsersStrings.ShowStatsTotalScore;
 
-        protected override LocalisableString FormatCurrentValue(long current) => current.ToLocalisableString(@"N0");
+        protected override LocalisableString FormatCurrentValue(long current) =>
+            current.ToLocalisableString(@"N0");
 
-        protected override int CalculateDifference(long previous, long current, out LocalisableString formattedDifference)
+        protected override int CalculateDifference(
+            long previous,
+            long current,
+            out LocalisableString formattedDifference
+        )
         {
             long difference = current - previous;
 

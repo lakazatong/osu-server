@@ -13,9 +13,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
     public class TaikoTrianglesSkinTransformer : SkinTransformer
     {
         public TaikoTrianglesSkinTransformer(ISkin skin)
-            : base(skin)
-        {
-        }
+            : base(skin) { }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
@@ -32,8 +30,12 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                         case GlobalSkinnableContainers.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
 
                                 if (leaderboard != null)
                                 {
@@ -61,7 +63,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
                                     {
                                         Anchor = Anchor.BottomLeft,
                                         Origin = Anchor.BottomLeft,
-                                    }
+                                    },
                                 },
                             };
                     }

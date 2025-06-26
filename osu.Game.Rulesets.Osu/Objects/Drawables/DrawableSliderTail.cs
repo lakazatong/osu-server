@@ -37,14 +37,10 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private Container scaleContainer;
 
         public DrawableSliderTail()
-            : base(null)
-        {
-        }
+            : base(null) { }
 
         public DrawableSliderTail(SliderTailCircle tailCircle)
-            : base(tailCircle)
-        {
-        }
+            : base(tailCircle) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -52,22 +48,29 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Origin = Anchor.Centre;
             Size = OsuHitObject.OBJECT_DIMENSIONS;
 
-            AddRangeInternal(new Drawable[]
-            {
-                scaleContainer = new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Children = new Drawable[]
+                    scaleContainer = new Container
                     {
-                        // no default for this; only visible in legacy skins.
-                        CirclePiece = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.SliderTailHitCircle), _ => Empty())
-                    }
-                },
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Children = new Drawable[]
+                        {
+                            // no default for this; only visible in legacy skins.
+                            CirclePiece = new SkinnableDrawable(
+                                new OsuSkinComponentLookup(OsuSkinComponents.SliderTailHitCircle),
+                                _ => Empty()
+                            ),
+                        },
+                    },
+                }
+            );
 
-            ScaleBindable.BindValueChanged(scale => scaleContainer.Scale = new Vector2(scale.NewValue));
+            ScaleBindable.BindValueChanged(scale =>
+                scaleContainer.Scale = new Vector2(scale.NewValue)
+            );
         }
 
         protected override void LoadSamples()
@@ -112,7 +115,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             }
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset) => DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
+        protected override void CheckForResult(bool userTriggered, double timeOffset) =>
+            DrawableSlider.SliderInputManager.TryJudgeNestedObject(this, timeOffset);
 
         protected override void OnApply()
         {
@@ -135,7 +139,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 // More or less matches stable (see https://github.com/peppy/osu-stable-reference/blob/bb57924c1552adbed11ee3d96cdcde47cf96f2b6/osu!/GameplayElements/HitObjects/Osu/HitCircleOsu.cs#L336-L338)
                 AccentColour.Value = Color4.White;
-                Alpha = Interpolation.ValueAt(Time.Current, 1f, 0f, HitStateUpdateTime, HitStateUpdateTime + 700);
+                Alpha = Interpolation.ValueAt(
+                    Time.Current,
+                    1f,
+                    0f,
+                    HitStateUpdateTime,
+                    HitStateUpdateTime + 700
+                );
             }
 
             LifetimeEnd = HitStateUpdateTime + 700;

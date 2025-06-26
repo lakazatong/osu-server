@@ -23,10 +23,22 @@ namespace osu.Game.Tests.Mods
 
             Assert.That(orderedSettings, Has.Length.EqualTo(4));
 
-            Assert.That(orderedSettings[0].Item2.Name, Is.EqualTo(nameof(ClassWithSettings.FirstSetting)));
-            Assert.That(orderedSettings[1].Item2.Name, Is.EqualTo(nameof(ClassWithSettings.SecondSetting)));
-            Assert.That(orderedSettings[2].Item2.Name, Is.EqualTo(nameof(ClassWithSettings.ThirdSetting)));
-            Assert.That(orderedSettings[3].Item2.Name, Is.EqualTo(nameof(ClassWithSettings.UnorderedSetting)));
+            Assert.That(
+                orderedSettings[0].Item2.Name,
+                Is.EqualTo(nameof(ClassWithSettings.FirstSetting))
+            );
+            Assert.That(
+                orderedSettings[1].Item2.Name,
+                Is.EqualTo(nameof(ClassWithSettings.SecondSetting))
+            );
+            Assert.That(
+                orderedSettings[2].Item2.Name,
+                Is.EqualTo(nameof(ClassWithSettings.ThirdSetting))
+            );
+            Assert.That(
+                orderedSettings[3].Item2.Name,
+                Is.EqualTo(nameof(ClassWithSettings.UnorderedSetting))
+            );
         }
 
         [Test]
@@ -56,7 +68,11 @@ namespace osu.Game.Tests.Mods
 
         private class ClassWithCustomSettingControl
         {
-            [SettingSource("Custom setting", "Should be a custom control", SettingControlType = typeof(CustomSettingsControl))]
+            [SettingSource(
+                "Custom setting",
+                "Should be a custom control",
+                SettingControlType = typeof(CustomSettingsControl)
+            )]
             public BindableInt UnorderedSetting { get; } = new BindableInt();
         }
 

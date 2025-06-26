@@ -39,7 +39,8 @@ namespace osu.Game.Graphics.Containers
 
         private FlowContainer<T> scrollContentContainer = null!;
 
-        private float? headerHeight, footerHeight;
+        private float? headerHeight,
+            footerHeight;
 
         private float? lastKnownScroll;
 
@@ -55,14 +56,16 @@ namespace osu.Game.Graphics.Containers
             get => expandableHeader;
             set
             {
-                if (value == expandableHeader) return;
+                if (value == expandableHeader)
+                    return;
 
                 if (expandableHeader != null)
                     RemoveInternal(expandableHeader, false);
 
                 expandableHeader = value;
 
-                if (value == null) return;
+                if (value == null)
+                    return;
 
                 AddInternal(expandableHeader);
 
@@ -75,12 +78,14 @@ namespace osu.Game.Graphics.Containers
             get => fixedHeader;
             set
             {
-                if (value == fixedHeader) return;
+                if (value == fixedHeader)
+                    return;
 
                 fixedHeader?.Expire();
                 fixedHeader = value;
 
-                if (value == null) return;
+                if (value == null)
+                    return;
 
                 AddInternal(fixedHeader);
                 lastKnownScroll = null;
@@ -92,14 +97,16 @@ namespace osu.Game.Graphics.Containers
             get => footer;
             set
             {
-                if (value == footer) return;
+                if (value == footer)
+                    return;
 
                 if (footer != null)
                     scrollContainer.Remove(footer, false);
 
                 footer = value;
 
-                if (footer == null) return;
+                if (footer == null)
+                    return;
 
                 footer.Anchor |= Anchor.y2;
                 footer.Origin |= Anchor.y2;
@@ -114,7 +121,8 @@ namespace osu.Game.Graphics.Containers
             get => headerBackground;
             set
             {
-                if (value == headerBackground) return;
+                if (value == headerBackground)
+                    return;
 
                 headerBackgroundContainer.Clear();
                 headerBackground = value;
@@ -129,20 +137,20 @@ namespace osu.Game.Graphics.Containers
 
         public SectionsContainer()
         {
-            AddRangeInternal(new Drawable[]
-            {
-                scrollContainer = CreateScrollContainer().With(s =>
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    s.RelativeSizeAxes = Axes.Both;
-                    s.Masking = true;
-                    s.ScrollbarVisible = false;
-                    s.Child = scrollContentContainer = CreateScrollContentContainer();
-                }),
-                headerBackgroundContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.X
+                    scrollContainer = CreateScrollContainer()
+                        .With(s =>
+                        {
+                            s.RelativeSizeAxes = Axes.Both;
+                            s.Masking = true;
+                            s.ScrollbarVisible = false;
+                            s.Child = scrollContentContainer = CreateScrollContentContainer();
+                        }),
+                    headerBackgroundContainer = new Container { RelativeSizeAxes = Axes.X },
                 }
-            });
+            );
 
             originalSectionsMargin = scrollContentContainer.Margin;
         }
@@ -179,41 +187,51 @@ namespace osu.Game.Graphics.Containers
             // Content may load in as a scroll occurs, changing the scroll target we need to aim for.
             // This scheduled operation ensures that we keep trying until actually arriving at the target.
             scrollToTargetDelegate?.Cancel();
-            scrollToTargetDelegate = Scheduler.AddDelayed(() =>
-            {
-                if (scrollContainer.UserScrolling)
+            scrollToTargetDelegate = Scheduler.AddDelayed(
+                () =>
                 {
-                    Logger.Log("Scroll operation interrupted by user scroll");
-                    scrollToTargetDelegate?.Cancel();
-                    scrollToTargetDelegate = null;
-                    return;
-                }
+                    if (scrollContainer.UserScrolling)
+                    {
+                        Logger.Log("Scroll operation interrupted by user scroll");
+                        scrollToTargetDelegate?.Cancel();
+                        scrollToTargetDelegate = null;
+                        return;
+                    }
 
-                if (Precision.AlmostEquals(scrollContainer.Current, scrollTarget, 1))
-                {
-                    Logger.Log($"Finished scrolling to {target}!");
-                    scrollToTargetDelegate?.Cancel();
-                    scrollToTargetDelegate = null;
-                    return;
-                }
+                    if (Precision.AlmostEquals(scrollContainer.Current, scrollTarget, 1))
+                    {
+                        Logger.Log($"Finished scrolling to {target}!");
+                        scrollToTargetDelegate?.Cancel();
+                        scrollToTargetDelegate = null;
+                        return;
+                    }
 
-                if (!Precision.AlmostEquals(getScrollTargetForDrawable(target), scrollTarget, 1))
-                {
-                    Logger.Log($"Reattempting scroll to {target} due to change in position");
-                    ScrollTo(target);
-                }
-            }, 50, true);
+                    if (
+                        !Precision.AlmostEquals(getScrollTargetForDrawable(target), scrollTarget, 1)
+                    )
+                    {
+                        Logger.Log($"Reattempting scroll to {target} due to change in position");
+                        ScrollTo(target);
+                    }
+                },
+                50,
+                true
+            );
         }
 
         private float getScrollTargetForDrawable(Drawable target)
         {
             // implementation similar to ScrollIntoView but a bit more nuanced.
-            return (float)(scrollContainer.GetChildPosInContent(target) - scrollContainer.DisplayableContent * scroll_y_centre);
+            return (float)(
+                scrollContainer.GetChildPosInContent(target)
+                - scrollContainer.DisplayableContent * scroll_y_centre
+            );
         }
 
         public void ScrollToTop() => scrollContainer.ScrollTo(0);
 
-        protected virtual UserTrackingScrollContainer CreateScrollContainer() => new UserTrackingScrollContainer();
+        protected virtual UserTrackingScrollContainer CreateScrollContainer() =>
+            new UserTrackingScrollContainer();
 
         protected virtual FlowContainer<T> CreateScrollContentContainer() =>
             new FillFlowContainer<T>
@@ -282,14 +300,22 @@ namespace osu.Game.Graphics.Containers
 
                 var flowChildren = scrollContentContainer.FlowingChildren.OfType<T>();
 
-                float smallestSectionHeight = flowChildren.Any() ? flowChildren.Min(d => d.Height) : 0;
+                float smallestSectionHeight = flowChildren.Any()
+                    ? flowChildren.Min(d => d.Height)
+                    : 0;
 
                 // scroll offset is our fixed header height if we have it plus 10% of content height
                 // plus 5% to fix floating point errors and to not have a section instantly unselect when scrolling upwards
                 // but the 5% can't be bigger than our smallest section height, otherwise it won't get selected correctly
-                float selectionLenienceAboveSection = Math.Min(smallestSectionHeight / 2.0f, scrollContainer.DisplayableContent * 0.05f);
+                float selectionLenienceAboveSection = Math.Min(
+                    smallestSectionHeight / 2.0f,
+                    scrollContainer.DisplayableContent * 0.05f
+                );
 
-                float scrollCentre = fixedHeaderSize + scrollContainer.DisplayableContent * scroll_y_centre + selectionLenienceAboveSection;
+                float scrollCentre =
+                    fixedHeaderSize
+                    + scrollContainer.DisplayableContent * scroll_y_centre
+                    + selectionLenienceAboveSection;
 
                 var presentChildren = flowChildren.Where(c => c.IsPresent);
 
@@ -297,20 +323,32 @@ namespace osu.Game.Graphics.Containers
                     SelectedSection.Value = lastClickedSection;
                 else if (Precision.AlmostBigger(0, scrollContainer.Current))
                     SelectedSection.Value = presentChildren.FirstOrDefault();
-                else if (Precision.AlmostBigger(scrollContainer.Current, scrollContainer.ScrollableExtent))
+                else if (
+                    Precision.AlmostBigger(
+                        scrollContainer.Current,
+                        scrollContainer.ScrollableExtent
+                    )
+                )
                     SelectedSection.Value = presentChildren.LastOrDefault();
                 else
                 {
-                    SelectedSection.Value = presentChildren
-                                            .TakeWhile(section => scrollContainer.GetChildPosInContent(section) - currentScroll - scrollCentre <= 0)
-                                            .LastOrDefault() ?? presentChildren.FirstOrDefault();
+                    SelectedSection.Value =
+                        presentChildren
+                            .TakeWhile(section =>
+                                scrollContainer.GetChildPosInContent(section)
+                                    - currentScroll
+                                    - scrollCentre
+                                <= 0
+                            )
+                            .LastOrDefault() ?? presentChildren.FirstOrDefault();
                 }
             }
         }
 
         private void updateSectionsMargin()
         {
-            if (!Children.Any()) return;
+            if (!Children.Any())
+                return;
 
             // if a fixed header is present, apply top padding for it
             // to make the scroll container aware of its displayable area.

@@ -8,13 +8,9 @@ namespace osu.Game.Online.API
     public class OsuJsonWebRequest<T> : JsonWebRequest<T>
     {
         public OsuJsonWebRequest(string uri)
-            : base(uri)
-        {
-        }
+            : base(uri) { }
 
-        public OsuJsonWebRequest()
-        {
-        }
+        public OsuJsonWebRequest() { }
 
         protected override string UserAgent => "osu!";
     }

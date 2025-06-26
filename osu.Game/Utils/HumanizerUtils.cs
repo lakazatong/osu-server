@@ -37,7 +37,13 @@ namespace osu.Game.Utils
         /// <param name="minUnit">The minimum unit of time to output.</param>
         /// <param name="toWords">Uses words instead of numbers if true. E.g. one day.</param>
         /// <returns>distance of time in words</returns>
-        public static string Humanize(TimeSpan input, int precision = 1, TimeUnit maxUnit = TimeUnit.Week, TimeUnit minUnit = TimeUnit.Millisecond, bool toWords = false)
+        public static string Humanize(
+            TimeSpan input,
+            int precision = 1,
+            TimeUnit maxUnit = TimeUnit.Week,
+            TimeUnit minUnit = TimeUnit.Millisecond,
+            bool toWords = false
+        )
         {
             // this works around https://github.com/xamarin/xamarin-android/issues/2012 and https://github.com/Humanizr/Humanizer/issues/690#issuecomment-368536282
             try
@@ -46,7 +52,12 @@ namespace osu.Game.Utils
             }
             catch (ArgumentException)
             {
-                return input.Humanize(culture: new CultureInfo("en-US"), precision: precision, maxUnit: maxUnit, minUnit: minUnit);
+                return input.Humanize(
+                    culture: new CultureInfo("en-US"),
+                    precision: precision,
+                    maxUnit: maxUnit,
+                    minUnit: minUnit
+                );
             }
         }
     }

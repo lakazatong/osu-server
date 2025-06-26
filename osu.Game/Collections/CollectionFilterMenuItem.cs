@@ -39,10 +39,13 @@ namespace osu.Game.Collections
 
         public virtual bool Equals(CollectionFilterMenuItem? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            if (Collection == null) return false;
+            if (Collection == null)
+                return false;
 
             return Collection.ID == other.Collection?.ID;
         }
@@ -53,11 +56,10 @@ namespace osu.Game.Collections
     public class AllBeatmapsCollectionFilterMenuItem : CollectionFilterMenuItem
     {
         public AllBeatmapsCollectionFilterMenuItem()
-            : base("All beatmaps")
-        {
-        }
+            : base("All beatmaps") { }
 
-        public override bool Equals(CollectionFilterMenuItem? other) => other is AllBeatmapsCollectionFilterMenuItem;
+        public override bool Equals(CollectionFilterMenuItem? other) =>
+            other is AllBeatmapsCollectionFilterMenuItem;
 
         public override int GetHashCode() => 1;
     }
@@ -65,11 +67,10 @@ namespace osu.Game.Collections
     public class ManageCollectionsFilterMenuItem : CollectionFilterMenuItem
     {
         public ManageCollectionsFilterMenuItem()
-            : base("Manage collections...")
-        {
-        }
+            : base("Manage collections...") { }
 
-        public override bool Equals(CollectionFilterMenuItem? other) => other is ManageCollectionsFilterMenuItem;
+        public override bool Equals(CollectionFilterMenuItem? other) =>
+            other is ManageCollectionsFilterMenuItem;
 
         public override int GetHashCode() => 2;
     }

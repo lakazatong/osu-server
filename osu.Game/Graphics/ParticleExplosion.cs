@@ -71,9 +71,7 @@ namespace osu.Game.Graphics
             private Vector2 sourceSize;
 
             public ParticleExplosionDrawNode(Sprite source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -100,7 +98,8 @@ namespace osu.Game.Graphics
                         pos.X * sourceSize.X - Texture.DisplayWidth / 2,
                         pos.Y * sourceSize.Y - Texture.DisplayHeight / 2,
                         Texture.DisplayWidth,
-                        Texture.DisplayHeight);
+                        Texture.DisplayHeight
+                    );
 
                     // convert to screen space.
                     var quad = new Quad(
@@ -110,9 +109,16 @@ namespace osu.Game.Graphics
                         Vector2Extensions.Transform(rect.BottomRight, DrawInfo.Matrix)
                     );
 
-                    renderer.DrawQuad(Texture, quad, DrawColourInfo.Colour.MultiplyAlpha(alpha),
-                        inflationPercentage: new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height),
-                        textureCoords: TextureCoords);
+                    renderer.DrawQuad(
+                        Texture,
+                        quad,
+                        DrawColourInfo.Colour.MultiplyAlpha(alpha),
+                        inflationPercentage: new Vector2(
+                            InflationAmount.X / DrawRectangle.Width,
+                            InflationAmount.Y / DrawRectangle.Height
+                        ),
+                        textureCoords: TextureCoords
+                    );
                 }
             }
 
@@ -137,7 +143,8 @@ namespace osu.Game.Graphics
             public Vector2 PositionAtTime(double time)
             {
                 float travelledDistance = distance * progressAtTime(time);
-                return new Vector2(0.5f) + travelledDistance * new Vector2(MathF.Sin(direction), MathF.Cos(direction));
+                return new Vector2(0.5f)
+                    + travelledDistance * new Vector2(MathF.Sin(direction), MathF.Cos(direction));
             }
 
             private float progressAtTime(double time) => (float)Math.Clamp(time / duration, 0, 1);

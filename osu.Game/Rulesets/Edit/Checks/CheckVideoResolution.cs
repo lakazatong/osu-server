@@ -20,13 +20,15 @@ namespace osu.Game.Rulesets.Edit.Checks
 
         private const int max_video_height = 720;
 
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Resources, "Too high video resolution.");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Resources, "Too high video resolution.");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateHighResolution(this),
-            new IssueTemplateFileError(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateHighResolution(this),
+                new IssueTemplateFileError(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -38,7 +40,8 @@ namespace osu.Game.Rulesets.Edit.Checks
                 string? storagePath = beatmapSet?.GetPathForFile(filename);
 
                 // Don't report any issues for missing video here since another check is already doing that (CheckAudioInVideo)
-                if (storagePath == null) continue;
+                if (storagePath == null)
+                    continue;
 
                 Issue issue;
 
@@ -53,7 +56,11 @@ namespace osu.Game.Rulesets.Edit.Checks
                         if (height <= max_video_height || width <= max_video_width)
                             continue;
 
-                        issue = new IssueTemplateHighResolution(this).Create(filename, width, height);
+                        issue = new IssueTemplateHighResolution(this).Create(
+                            filename,
+                            width,
+                            height
+                        );
                     }
                 }
                 catch (CorruptFileException)
@@ -66,7 +73,10 @@ namespace osu.Game.Rulesets.Edit.Checks
                 }
                 catch (Exception ex)
                 {
-                    issue = new IssueTemplateFileError(this).Create(filename, "Internal failure - see logs for more info");
+                    issue = new IssueTemplateFileError(this).Create(
+                        filename,
+                        "Internal failure - see logs for more info"
+                    );
                     Logger.Log($"Failed when running {nameof(CheckVideoResolution)}: {ex}");
                 }
 
@@ -97,20 +107,19 @@ namespace osu.Game.Rulesets.Edit.Checks
         {
             public IssueTemplateHighResolution(ICheck check)
                 : base(check, IssueType.Problem, "\"{0}\" resolution exceeds 1280x720 ({1}x{2})")
-            {
-            }
+            { }
 
-            public Issue Create(string filename, int width, int height) => new Issue(this, filename, width, height);
+            public Issue Create(string filename, int width, int height) =>
+                new Issue(this, filename, width, height);
         }
 
         public class IssueTemplateFileError : IssueTemplate
         {
             public IssueTemplateFileError(ICheck check)
-                : base(check, IssueType.Error, "Could not check resolution for \"{0}\" ({1}).")
-            {
-            }
+                : base(check, IssueType.Error, "Could not check resolution for \"{0}\" ({1}).") { }
 
-            public Issue Create(string filename, string errorReason) => new Issue(this, filename, errorReason);
+            public Issue Create(string filename, string errorReason) =>
+                new Issue(this, filename, errorReason);
         }
     }
 }

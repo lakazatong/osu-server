@@ -10,13 +10,13 @@ namespace osu.Game.Overlays.Profile.Sections.Historical
 {
     public partial class PlayHistorySubsection : ChartProfileSubsection
     {
-        protected override LocalisableString GraphCounterName => UsersStrings.ShowExtraHistoricalMonthlyPlaycountsCountLabel;
+        protected override LocalisableString GraphCounterName =>
+            UsersStrings.ShowExtraHistoricalMonthlyPlaycountsCountLabel;
 
         public PlayHistorySubsection(Bindable<UserProfileData?> user)
-            : base(user, UsersStrings.ShowExtraHistoricalMonthlyPlaycountsTitle)
-        {
-        }
+            : base(user, UsersStrings.ShowExtraHistoricalMonthlyPlaycountsTitle) { }
 
-        protected override APIUserHistoryCount[]? GetValues(APIUser? user) => user?.MonthlyPlayCounts;
+        protected override APIUserHistoryCount[]? GetValues(APIUser? user) =>
+            user?.MonthlyPlayCounts;
     }
 }

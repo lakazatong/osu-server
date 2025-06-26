@@ -10,7 +10,11 @@ namespace osu.Desktop.Windows
 {
     internal class WindowsKey
     {
-        private delegate int LowLevelKeyboardProcDelegate(int nCode, int wParam, ref KdDllHookStruct lParam);
+        private delegate int LowLevelKeyboardProcDelegate(
+            int nCode,
+            int wParam,
+            ref KdDllHookStruct lParam
+        );
 
         private static bool isBlocked;
 
@@ -52,7 +56,14 @@ namespace osu.Desktop.Windows
             if (keyHook != IntPtr.Zero || isBlocked)
                 return;
 
-            keyHook = setWindowsHookEx(wh_keyboard_ll, (keyboardHookDelegate = lowLevelKeyboardProc), Marshal.GetHINSTANCE(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+            keyHook = setWindowsHookEx(
+                wh_keyboard_ll,
+                (keyboardHookDelegate = lowLevelKeyboardProc),
+                Marshal.GetHINSTANCE(
+                    System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0]
+                ),
+                0
+            );
 
             isBlocked = true;
         }
@@ -71,12 +82,22 @@ namespace osu.Desktop.Windows
         }
 
         [DllImport(@"user32.dll", EntryPoint = @"SetWindowsHookExA")]
-        private static extern IntPtr setWindowsHookEx(int idHook, LowLevelKeyboardProcDelegate lpfn, IntPtr hMod, int dwThreadId);
+        private static extern IntPtr setWindowsHookEx(
+            int idHook,
+            LowLevelKeyboardProcDelegate lpfn,
+            IntPtr hMod,
+            int dwThreadId
+        );
 
         [DllImport(@"user32.dll", EntryPoint = @"UnhookWindowsHookEx")]
         private static extern IntPtr unhookWindowsHookEx(IntPtr hHook);
 
         [DllImport(@"user32.dll", EntryPoint = @"CallNextHookEx")]
-        private static extern int callNextHookEx(int hHook, int nCode, int wParam, ref KdDllHookStruct lParam);
+        private static extern int callNextHookEx(
+            int hHook,
+            int nCode,
+            int wParam,
+            ref KdDllHookStruct lParam
+        );
     }
 }

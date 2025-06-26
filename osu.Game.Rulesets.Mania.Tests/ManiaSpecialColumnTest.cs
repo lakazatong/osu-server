@@ -2,35 +2,17 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
-using osu.Game.Rulesets.Mania.Beatmaps;
 using NUnit.Framework;
+using osu.Game.Rulesets.Mania.Beatmaps;
 
 namespace osu.Game.Rulesets.Mania.Tests
 {
     [TestFixture]
     public class ManiaSpecialColumnTest
     {
-        [TestCase(new[]
-        {
-            true
-        }, 1)]
-        [TestCase(new[]
-        {
-            false,
-            false,
-            false,
-            false
-        }, 4)]
-        [TestCase(new[]
-        {
-            false,
-            false,
-            false,
-            true,
-            false,
-            false,
-            false
-        }, 7)]
+        [TestCase(new[] { true }, 1)]
+        [TestCase(new[] { false, false, false, false }, 4)]
+        [TestCase(new[] { false, false, false, true, false, false, false }, 7)]
         public void Test(IEnumerable<bool> special, int columns)
         {
             var definition = new StageDefinition(columns);

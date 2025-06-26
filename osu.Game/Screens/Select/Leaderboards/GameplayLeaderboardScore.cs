@@ -90,7 +90,11 @@ namespace osu.Game.Screens.Select.Leaderboards
         /// </summary>
         public Bindable<long> DisplayOrder { get; } = new BindableLong();
 
-        public GameplayLeaderboardScore(GameplayState gameplayState, bool tracked, ComboDisplayMode comboMode)
+        public GameplayLeaderboardScore(
+            GameplayState gameplayState,
+            bool tracked,
+            ComboDisplayMode comboMode
+        )
         {
             User = gameplayState.Score.ScoreInfo.User;
             Tracked = tracked;
@@ -98,39 +102,65 @@ namespace osu.Game.Screens.Select.Leaderboards
             var scoreProcessor = gameplayState.ScoreProcessor;
             TotalScore.BindTarget = scoreProcessor.TotalScore;
             Accuracy.BindTarget = scoreProcessor.Accuracy;
-            Combo.BindTarget = comboMode == ComboDisplayMode.Current ? scoreProcessor.Combo : scoreProcessor.HighestCombo;
+            Combo.BindTarget =
+                comboMode == ComboDisplayMode.Current
+                    ? scoreProcessor.Combo
+                    : scoreProcessor.HighestCombo;
             GetDisplayScore = scoreProcessor.GetDisplayScore;
         }
 
-        public GameplayLeaderboardScore(IUser user, SpectatorScoreProcessor scoreProcessor, bool tracked, ComboDisplayMode comboMode)
+        public GameplayLeaderboardScore(
+            IUser user,
+            SpectatorScoreProcessor scoreProcessor,
+            bool tracked,
+            ComboDisplayMode comboMode
+        )
         {
             User = user;
             Tracked = tracked;
             TotalScore.BindTarget = scoreProcessor.TotalScore;
             Accuracy.BindTarget = scoreProcessor.Accuracy;
-            Combo.BindTarget = comboMode == ComboDisplayMode.Current ? scoreProcessor.Combo : scoreProcessor.HighestCombo;
+            Combo.BindTarget =
+                comboMode == ComboDisplayMode.Current
+                    ? scoreProcessor.Combo
+                    : scoreProcessor.HighestCombo;
             GetDisplayScore = scoreProcessor.GetDisplayScore;
         }
 
-        public GameplayLeaderboardScore(ScoreInfo scoreInfo, bool tracked, ComboDisplayMode comboMode)
+        public GameplayLeaderboardScore(
+            ScoreInfo scoreInfo,
+            bool tracked,
+            ComboDisplayMode comboMode
+        )
         {
             User = scoreInfo.User;
             Tracked = tracked;
             TotalScore.Value = scoreInfo.TotalScore;
             Accuracy.Value = scoreInfo.Accuracy;
-            Combo.Value = comboMode == ComboDisplayMode.Current ? scoreInfo.Combo : scoreInfo.MaxCombo;
-            TotalScoreTiebreaker = scoreInfo.OnlineID > 0 ? scoreInfo.OnlineID : scoreInfo.Date.ToUnixTimeSeconds();
+            Combo.Value =
+                comboMode == ComboDisplayMode.Current ? scoreInfo.Combo : scoreInfo.MaxCombo;
+            TotalScoreTiebreaker =
+                scoreInfo.OnlineID > 0 ? scoreInfo.OnlineID : scoreInfo.Date.ToUnixTimeSeconds();
             GetDisplayScore = scoreInfo.GetDisplayScore;
             InitialPosition = scoreInfo.Position;
         }
 
-        public GameplayLeaderboardScore(MultiplayerScore score, bool tracked, ComboDisplayMode comboMode)
+        public GameplayLeaderboardScore(
+            MultiplayerScore score,
+            bool tracked,
+            ComboDisplayMode comboMode
+        )
         {
             User = score.User;
             Tracked = tracked;
             TotalScore.Value = score.TotalScore;
             Accuracy.Value = score.Accuracy;
-            Combo.Value = comboMode == ComboDisplayMode.Highest ? score.MaxCombo : throw new NotSupportedException($"{comboMode} {nameof(comboMode)} is not supported.");
+            Combo.Value =
+                comboMode == ComboDisplayMode.Highest
+                    ? score.MaxCombo
+                    : throw new NotSupportedException(
+                        $"{comboMode} {nameof(comboMode)} is not supported."
+                    );
             TotalScoreTiebreaker = score.ID;
             GetDisplayScore = score.GetDisplayScore;
             InitialPosition = score.Position;

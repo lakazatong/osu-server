@@ -25,20 +25,22 @@ namespace osu.Game.Rulesets.Mania.UI
         public override bool PropagateNonPositionalInputSubTree => true;
 
         [SettingSource("Spacing", "The spacing between receptors.")]
-        public BindableFloat Spacing { get; } = new BindableFloat(10)
-        {
-            Precision = 1,
-            MinValue = 0,
-            MaxValue = 100,
-        };
+        public BindableFloat Spacing { get; } =
+            new BindableFloat(10)
+            {
+                Precision = 1,
+                MinValue = 0,
+                MaxValue = 100,
+            };
 
         [SettingSource("Opacity", "The receptor opacity.")]
-        public BindableFloat Opacity { get; } = new BindableFloat(1)
-        {
-            Precision = 0.1f,
-            MinValue = 0,
-            MaxValue = 1
-        };
+        public BindableFloat Opacity { get; } =
+            new BindableFloat(1)
+            {
+                Precision = 0.1f,
+                MinValue = 0,
+                MaxValue = 1,
+            };
 
         private GridContainer gridContainer = null!;
 
@@ -71,11 +73,13 @@ namespace osu.Game.Rulesets.Mania.UI
                         receptorGridDimensions.Add(new Dimension(GridSizeMode.AutoSize));
                     }
 
-                    receptorGridContent.Add(new ColumnInputReceptor
-                    {
-                        Action = { BindTarget = column.Action },
-                        Spacing = { BindTarget = Spacing },
-                    });
+                    receptorGridContent.Add(
+                        new ColumnInputReceptor
+                        {
+                            Action = { BindTarget = column.Action },
+                            Spacing = { BindTarget = Spacing },
+                        }
+                    );
                     receptorGridDimensions.Add(new Dimension());
 
                     first = false;
@@ -87,7 +91,7 @@ namespace osu.Game.Rulesets.Mania.UI
                 RelativeSizeAxes = Axes.Both,
                 AlwaysPresent = true,
                 Content = new[] { receptorGridContent.ToArray() },
-                ColumnDimensions = receptorGridDimensions.ToArray()
+                ColumnDimensions = receptorGridDimensions.ToArray(),
             };
         }
 
@@ -145,25 +149,24 @@ namespace osu.Game.Rulesets.Mania.UI
                         CornerRadius = 10,
                         Children = new Drawable[]
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Alpha = 0.15f,
-                            },
+                            new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.15f },
                             highlightOverlay = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Alpha = 0,
                                 Blending = BlendingParameters.Additive,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
                 // Extend input coverage to the gaps close to this receptor.
-                => DrawRectangle.Inflate(new Vector2(Spacing.Value / 2, 0)).Contains(ToLocalSpace(screenSpacePos));
+                =>
+                DrawRectangle
+                    .Inflate(new Vector2(Spacing.Value / 2, 0))
+                    .Contains(ToLocalSpace(screenSpacePos));
 
             protected override bool OnTouchDown(TouchDownEvent e)
             {

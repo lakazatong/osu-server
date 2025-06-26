@@ -23,11 +23,11 @@ namespace osu.Game.Screens.Play.PlayerSettings
         {
             Children = new Drawable[]
             {
-                beatmapHitsoundsToggle = new PlayerCheckbox { LabelText = SkinSettingsStrings.BeatmapHitsounds },
-                new BeatmapOffsetControl
+                beatmapHitsoundsToggle = new PlayerCheckbox
                 {
-                    ReferenceScore = { BindTarget = referenceScore },
+                    LabelText = SkinSettingsStrings.BeatmapHitsounds,
                 },
+                new BeatmapOffsetControl { ReferenceScore = { BindTarget = referenceScore } },
             };
         }
 

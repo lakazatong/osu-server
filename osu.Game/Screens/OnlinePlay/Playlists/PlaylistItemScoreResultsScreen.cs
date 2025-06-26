@@ -15,7 +15,11 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
     {
         private readonly long scoreId;
 
-        public PlaylistItemScoreResultsScreen(ScoreInfo score, long roomId, PlaylistItem playlistItem)
+        public PlaylistItemScoreResultsScreen(
+            ScoreInfo score,
+            long roomId,
+            PlaylistItem playlistItem
+        )
             : base(score, roomId, playlistItem)
         {
             scoreId = score.OnlineID;
@@ -27,7 +31,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             this.scoreId = scoreId;
         }
 
-        protected override APIRequest<MultiplayerScore> CreateScoreRequest() => new ShowPlaylistScoreRequest(RoomId, PlaylistItem.ID, scoreId);
+        protected override APIRequest<MultiplayerScore> CreateScoreRequest() =>
+            new ShowPlaylistScoreRequest(RoomId, PlaylistItem.ID, scoreId);
 
         protected override void OnScoresAdded(ScoreInfo[] scores)
         {

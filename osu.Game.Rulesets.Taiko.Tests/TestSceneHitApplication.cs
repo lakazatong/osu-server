@@ -14,22 +14,38 @@ namespace osu.Game.Rulesets.Taiko.Tests
         {
             var hit = new DrawableHit();
 
-            AddStep("apply new hit", () => hit.Apply(PrepareObject(new Hit
-            {
-                Type = HitType.Rim,
-                IsStrong = false,
-                StartTime = 300
-            })));
+            AddStep(
+                "apply new hit",
+                () =>
+                    hit.Apply(
+                        PrepareObject(
+                            new Hit
+                            {
+                                Type = HitType.Rim,
+                                IsStrong = false,
+                                StartTime = 300,
+                            }
+                        )
+                    )
+            );
 
             AddHitObject(hit);
             RemoveHitObject(hit);
 
-            AddStep("apply new hit", () => hit.Apply(PrepareObject(new Hit
-            {
-                Type = HitType.Centre,
-                IsStrong = true,
-                StartTime = 500
-            })));
+            AddStep(
+                "apply new hit",
+                () =>
+                    hit.Apply(
+                        PrepareObject(
+                            new Hit
+                            {
+                                Type = HitType.Centre,
+                                IsStrong = true,
+                                StartTime = 500,
+                            }
+                        )
+                    )
+            );
 
             AddHitObject(hit);
         }

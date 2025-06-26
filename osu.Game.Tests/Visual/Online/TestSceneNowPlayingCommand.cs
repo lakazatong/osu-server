@@ -39,58 +39,116 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestGenericActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InLobby(new Room())));
+            AddStep(
+                "Set activity",
+                () =>
+                    session.SetValue<UserActivity>(
+                        Static.UserOnlineActivity,
+                        new UserActivity.InLobby(new Room())
+                    )
+            );
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
-            AddAssert("Check correct response", () => postTarget.LastMessage.Contains("is listening"));
+            AddAssert(
+                "Check correct response",
+                () => postTarget.LastMessage.Contains("is listening")
+            );
         }
 
         [Test]
         public void TestEditActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.EditingBeatmap(new BeatmapInfo())));
+            AddStep(
+                "Set activity",
+                () =>
+                    session.SetValue<UserActivity>(
+                        Static.UserOnlineActivity,
+                        new UserActivity.EditingBeatmap(new BeatmapInfo())
+                    )
+            );
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
-            AddAssert("Check correct response", () => postTarget.LastMessage.Contains("is editing"));
+            AddAssert(
+                "Check correct response",
+                () => postTarget.LastMessage.Contains("is editing")
+            );
         }
 
         [Test]
         public void TestPlayActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)));
+            AddStep(
+                "Set activity",
+                () =>
+                    session.SetValue<UserActivity>(
+                        Static.UserOnlineActivity,
+                        new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)
+                    )
+            );
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
-            AddAssert("Check correct response", () => postTarget.LastMessage.Contains("is playing"));
+            AddAssert(
+                "Check correct response",
+                () => postTarget.LastMessage.Contains("is playing")
+            );
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void TestLinkPresence(bool hasOnlineId)
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InLobby(new Room())));
+            AddStep(
+                "Set activity",
+                () =>
+                    session.SetValue<UserActivity>(
+                        Static.UserOnlineActivity,
+                        new UserActivity.InLobby(new Room())
+                    )
+            );
 
-            AddStep("Set beatmap", () => Beatmap.Value = new DummyWorkingBeatmap(Audio, null)
-            {
-                BeatmapInfo = { OnlineID = hasOnlineId ? 1234 : -1 }
-            });
+            AddStep(
+                "Set beatmap",
+                () =>
+                    Beatmap.Value = new DummyWorkingBeatmap(Audio, null)
+                    {
+                        BeatmapInfo = { OnlineID = hasOnlineId ? 1234 : -1 },
+                    }
+            );
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
             if (hasOnlineId)
                 AddAssert("Check link presence", () => postTarget.LastMessage.Contains("/b/1234"));
             else
-                AddAssert("Check link not present", () => !postTarget.LastMessage.Contains("https://"));
+                AddAssert(
+                    "Check link not present",
+                    () => !postTarget.LastMessage.Contains("https://")
+                );
         }
 
         [Test]
         public void TestModPresence()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)));
+            AddStep(
+                "Set activity",
+                () =>
+                    session.SetValue<UserActivity>(
+                        Static.UserOnlineActivity,
+                        new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)
+                    )
+            );
 
-            AddStep("Add Hidden mod", () => SelectedMods.Value = new[] { Ruleset.Value.CreateInstance().CreateMod<ModHidden>() });
+            AddStep(
+                "Add Hidden mod",
+                () =>
+                    SelectedMods.Value = new[]
+                    {
+                        Ruleset.Value.CreateInstance().CreateMod<ModHidden>(),
+                    }
+            );
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 

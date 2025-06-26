@@ -52,7 +52,10 @@ namespace osu.Game.Screens.Edit
                         new Dimension(GridSizeMode.Absolute, 150),
                         new Dimension(),
                         new Dimension(GridSizeMode.Absolute, 220),
-                        new Dimension(GridSizeMode.Absolute, HitObjectComposer.TOOLBOX_CONTRACTED_SIZE_RIGHT),
+                        new Dimension(
+                            GridSizeMode.Absolute,
+                            HitObjectComposer.TOOLBOX_CONTRACTED_SIZE_RIGHT
+                        ),
                     },
                     Content = new[]
                     {
@@ -66,10 +69,10 @@ namespace osu.Game.Screens.Edit
                                 RelativeSizeAxes = Axes.Both,
                                 Size = new Vector2(1),
                                 Action = editor.TestGameplay,
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
 
             saveInProgress = editor.MutationTracker.InProgress.GetBoundCopy();
@@ -80,21 +83,28 @@ namespace osu.Game.Screens.Edit
         {
             base.LoadComplete();
 
-            saveInProgress.BindValueChanged(_ => TestGameplayButton.Enabled.Value = !saveInProgress.Value, true);
-            composerFocusMode.BindValueChanged(_ =>
-            {
-                // Transforms should be kept in sync with other usages of composer focus mode.
-                foreach (var c in this.ChildrenOfType<BottomBarContainer>())
+            saveInProgress.BindValueChanged(
+                _ => TestGameplayButton.Enabled.Value = !saveInProgress.Value,
+                true
+            );
+            composerFocusMode.BindValueChanged(
+                _ =>
                 {
-                    if (!composerFocusMode.Value)
-                        c.Background.FadeIn(750, Easing.OutQuint);
-                    else
-                        c.Background.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
-                }
-            }, true);
+                    // Transforms should be kept in sync with other usages of composer focus mode.
+                    foreach (var c in this.ChildrenOfType<BottomBarContainer>())
+                    {
+                        if (!composerFocusMode.Value)
+                            c.Background.FadeIn(750, Easing.OutQuint);
+                        else
+                            c.Background.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
+                    }
+                },
+                true
+            );
         }
 
         protected override bool OnMouseDown(MouseDownEvent e) => true;
+
         protected override bool OnClick(ClickEvent e) => true;
     }
 }

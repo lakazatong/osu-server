@@ -22,18 +22,21 @@ namespace osu.Game.Rulesets.Edit.Checks
         private const int delay_threshold = 5;
         private const int delay_threshold_negligible = 1;
 
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Audio, "Delayed hit sounds.");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Audio, "Delayed hit sounds.");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateConsequentDelay(this),
-            new IssueTemplateDelay(this),
-            new IssueTemplateDelayNoSilence(this),
-            new IssueTemplateMinorDelay(this),
-            new IssueTemplateMinorDelayNoSilence(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateConsequentDelay(this),
+                new IssueTemplateDelay(this),
+                new IssueTemplateDelayNoSilence(this),
+                new IssueTemplateMinorDelay(this),
+                new IssueTemplateMinorDelayNoSilence(this),
+            };
 
-        private float getAverageAmplitude(Waveform.Point point) => (point.AmplitudeLeft + point.AmplitudeRight) / 2;
+        private float getAverageAmplitude(Waveform.Point point) =>
+            (point.AmplitudeLeft + point.AmplitudeRight) / 2;
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -44,7 +47,9 @@ namespace osu.Game.Rulesets.Edit.Checks
 
             foreach (var file in beatmapSet.Files)
             {
-                using (Stream? stream = context.WorkingBeatmap.GetStream(file.File.GetStoragePath()))
+                using (
+                    Stream? stream = context.WorkingBeatmap.GetStream(file.File.GetStoragePath())
+                )
                 {
                     if (stream == null)
                         continue;
@@ -86,20 +91,37 @@ namespace osu.Game.Rulesets.Edit.Checks
                     }
 
                     if (consequentDelay >= delay_threshold)
-                        yield return new IssueTemplateConsequentDelay(this).Create(file.Filename, consequentDelay);
+                        yield return new IssueTemplateConsequentDelay(this).Create(
+                            file.Filename,
+                            consequentDelay
+                        );
                     else if (consequentDelay + delay >= delay_threshold)
                     {
                         if (consequentDelay > 0)
-                            yield return new IssueTemplateDelay(this).Create(file.Filename, consequentDelay, delay);
+                            yield return new IssueTemplateDelay(this).Create(
+                                file.Filename,
+                                consequentDelay,
+                                delay
+                            );
                         else
-                            yield return new IssueTemplateDelayNoSilence(this).Create(file.Filename, delay);
+                            yield return new IssueTemplateDelayNoSilence(this).Create(
+                                file.Filename,
+                                delay
+                            );
                     }
                     else if (consequentDelay + delay >= delay_threshold_negligible)
                     {
                         if (consequentDelay > 0)
-                            yield return new IssueTemplateMinorDelay(this).Create(file.Filename, consequentDelay, delay);
+                            yield return new IssueTemplateMinorDelay(this).Create(
+                                file.Filename,
+                                consequentDelay,
+                                delay
+                            );
                         else
-                            yield return new IssueTemplateMinorDelayNoSilence(this).Create(file.Filename, delay);
+                            yield return new IssueTemplateMinorDelayNoSilence(this).Create(
+                                file.Filename,
+                                delay
+                            );
                     }
                 }
             }
@@ -120,38 +142,42 @@ namespace osu.Game.Rulesets.Edit.Checks
             string sampleSet = parts[1];
 
             return HitSampleInfo.ALL_BANKS.Contains(bank)
-                   && HitSampleInfo.ALL_ADDITIONS.Append(HitSampleInfo.HIT_NORMAL).Any(sampleSet.StartsWith);
+                && HitSampleInfo
+                    .ALL_ADDITIONS.Append(HitSampleInfo.HIT_NORMAL)
+                    .Any(sampleSet.StartsWith);
         }
 
         public class IssueTemplateConsequentDelay : IssueTemplate
         {
             public IssueTemplateConsequentDelay(ICheck check)
-                : base(check, IssueType.Problem,
-                    "\"{0}\" has a {1:0.##} ms period of complete silence at the start.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "\"{0}\" has a {1:0.##} ms period of complete silence at the start."
+                ) { }
 
-            public Issue Create(string filename, int pureDelay) => new Issue(this, filename, pureDelay);
+            public Issue Create(string filename, int pureDelay) =>
+                new Issue(this, filename, pureDelay);
         }
 
         public class IssueTemplateDelay : IssueTemplate
         {
             public IssueTemplateDelay(ICheck check)
-                : base(check, IssueType.Warning,
-                    "\"{0}\" has a transient delay of ~{1:0.##} ms, of which {2:0.##} ms is complete silence.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "\"{0}\" has a transient delay of ~{1:0.##} ms, of which {2:0.##} ms is complete silence."
+                ) { }
 
-            public Issue Create(string filename, int consequentDelay, int delay) => new Issue(this, filename, delay, consequentDelay);
+            public Issue Create(string filename, int consequentDelay, int delay) =>
+                new Issue(this, filename, delay, consequentDelay);
         }
 
         public class IssueTemplateDelayNoSilence : IssueTemplate
         {
             public IssueTemplateDelayNoSilence(ICheck check)
-                : base(check, IssueType.Warning,
-                    "\"{0}\" has a transient delay of ~{1:0.##} ms.")
-            {
-            }
+                : base(check, IssueType.Warning, "\"{0}\" has a transient delay of ~{1:0.##} ms.")
+            { }
 
             public Issue Create(string filename, int delay) => new Issue(this, filename, delay);
         }
@@ -159,21 +185,24 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateMinorDelay : IssueTemplate
         {
             public IssueTemplateMinorDelay(ICheck check)
-                : base(check, IssueType.Negligible,
-                    "\"{0}\" has a transient delay of ~{1:0.##} ms, of which {2:0.##} ms is complete silence.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Negligible,
+                    "\"{0}\" has a transient delay of ~{1:0.##} ms, of which {2:0.##} ms is complete silence."
+                ) { }
 
-            public Issue Create(string filename, int consequentDelay, int delay) => new Issue(this, filename, delay, consequentDelay);
+            public Issue Create(string filename, int consequentDelay, int delay) =>
+                new Issue(this, filename, delay, consequentDelay);
         }
 
         public class IssueTemplateMinorDelayNoSilence : IssueTemplate
         {
             public IssueTemplateMinorDelayNoSilence(ICheck check)
-                : base(check, IssueType.Negligible,
-                    "\"{0}\" has a transient delay of ~{1:0.##} ms.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Negligible,
+                    "\"{0}\" has a transient delay of ~{1:0.##} ms."
+                ) { }
 
             public Issue Create(string filename, int delay) => new Issue(this, filename, delay);
         }

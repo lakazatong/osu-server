@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Taiko.Mods
 {
-    public class TaikoModDoubleTime : ModDoubleTime
-    {
-    }
+    public class TaikoModDoubleTime : ModDoubleTime { }
 }

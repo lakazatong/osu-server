@@ -8,9 +8,9 @@ using System.Linq;
 using JetBrains.Annotations;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Taiko.Skinning.Default;
 using osu.Game.Screens.Play;
 using osu.Game.Skinning;
@@ -41,9 +41,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         public event Action<int> UpdateHitProgress;
 
         public DrawableSwell()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableSwell([CanBeNull] Swell swell)
             : base(swell)
@@ -53,13 +51,16 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             AddInternal(ticks = new Container<DrawableSwellTick> { RelativeSizeAxes = Axes.Both });
         }
 
-        protected override SkinnableDrawable CreateMainPiece() => new SkinnableDrawable(new TaikoSkinComponentLookup(TaikoSkinComponents.Swell),
-            _ => new DefaultSwell
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-            });
+        protected override SkinnableDrawable CreateMainPiece() =>
+            new SkinnableDrawable(
+                new TaikoSkinComponentLookup(TaikoSkinComponents.Swell),
+                _ => new DefaultSwell
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
 
         protected override void RecreatePieces()
         {
@@ -204,7 +205,8 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
             if (AllJudged)
                 return false;
 
-            bool isCentre = e.Action == TaikoAction.LeftCentre || e.Action == TaikoAction.RightCentre;
+            bool isCentre =
+                e.Action == TaikoAction.LeftCentre || e.Action == TaikoAction.RightCentre;
 
             // Ensure alternating centre and rim hits
             if (lastWasCentre == isCentre && MustAlternate)

@@ -30,7 +30,12 @@ namespace osu.Game.Rulesets.Mania.Beatmaps.Patterns
 
         protected readonly int TotalColumns;
 
-        protected PatternGenerator(HitObject hitObject, IBeatmap beatmap, int totalColumns, Pattern previousPattern)
+        protected PatternGenerator(
+            HitObject hitObject,
+            IBeatmap beatmap,
+            int totalColumns,
+            Pattern previousPattern
+        )
         {
             ArgumentNullException.ThrowIfNull(hitObject);
             ArgumentNullException.ThrowIfNull(beatmap);

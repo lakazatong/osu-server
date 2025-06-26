@@ -48,6 +48,7 @@ namespace osu.Game.Rulesets.Catch.Objects
             }
         }
 
-        Color4 IHasComboInformation.GetComboColour(ISkin skin) => IHasComboInformation.GetSkinComboColour(this, skin, IndexInBeatmap + 1);
+        Color4 IHasComboInformation.GetComboColour(ISkin skin) =>
+            IHasComboInformation.GetSkinComboColour(this, skin, IndexInBeatmap + 1);
     }
 }

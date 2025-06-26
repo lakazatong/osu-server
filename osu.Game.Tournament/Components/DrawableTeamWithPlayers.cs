@@ -46,17 +46,21 @@ namespace osu.Game.Tournament.Components
                                 {
                                     Direction = FillDirection.Vertical,
                                     AutoSizeAxes = Axes.Both,
-                                    ChildrenEnumerable = players.Take(split).Select(createPlayerText),
+                                    ChildrenEnumerable = players
+                                        .Take(split)
+                                        .Select(createPlayerText),
                                 },
                                 new FillFlowContainer
                                 {
                                     Direction = FillDirection.Vertical,
                                     AutoSizeAxes = Axes.Both,
-                                    ChildrenEnumerable = players.Skip(split).Select(createPlayerText),
+                                    ChildrenEnumerable = players
+                                        .Skip(split)
+                                        .Select(createPlayerText),
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             };
 

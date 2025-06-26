@@ -7,6 +7,6 @@ namespace osu.Game.Rulesets.Taiko.Configuration
     {
         KDDK,
         DDKK,
-        KKDD
+        KKDD,
     }
 }

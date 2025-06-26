@@ -17,7 +17,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 {
     public class TaikoLegacySkinTransformer : LegacySkinTransformer
     {
-        public override bool IsProvidingLegacyResources => base.IsProvidingLegacyResources || hasHitCircle || hasBarLeft;
+        public override bool IsProvidingLegacyResources =>
+            base.IsProvidingLegacyResources || hasHitCircle || hasBarLeft;
 
         private readonly Lazy<bool> hasExplosion;
 
@@ -27,7 +28,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
         public TaikoLegacySkinTransformer(ISkin skin)
             : base(skin)
         {
-            hasExplosion = new Lazy<bool>(() => GetTexture(getHitName(TaikoSkinComponents.TaikoExplosionGreat)) != null);
+            hasExplosion = new Lazy<bool>(() =>
+                GetTexture(getHitName(TaikoSkinComponents.TaikoExplosionGreat)) != null
+            );
         }
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
@@ -49,9 +52,15 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                         case GlobalSkinnableContainers.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
-                                var combo = container.OfType<LegacyDefaultComboCounter>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
-                                var leaderboard = container.OfType<DrawableGameplayLeaderboard>().FirstOrDefault();
+                                var combo = container
+                                    .OfType<LegacyDefaultComboCounter>()
+                                    .FirstOrDefault();
+                                var spectatorList = container
+                                    .OfType<SpectatorList>()
+                                    .FirstOrDefault();
+                                var leaderboard = container
+                                    .OfType<DrawableGameplayLeaderboard>()
+                                    .FirstOrDefault();
 
                                 Vector2 pos = new Vector2();
 
@@ -61,7 +70,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                                     combo.Origin = Anchor.BottomLeft;
                                     combo.Scale = new Vector2(1.28f);
 
-                                    pos += new Vector2(10, -(combo.DrawHeight * 1.56f + 20) * combo.Scale.X);
+                                    pos += new Vector2(
+                                        10,
+                                        -(combo.DrawHeight * 1.56f + 20) * combo.Scale.X
+                                    );
                                 }
 
                                 if (leaderboard != null)
@@ -160,7 +172,11 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                             return null;
 
                         case TaikoSkinComponents.TaikoExplosionMiss:
-                            var missSprite = this.GetAnimation(getHitName(taikoComponent.Component), true, false);
+                            var missSprite = this.GetAnimation(
+                                getHitName(taikoComponent.Component),
+                                true,
+                                false
+                            );
                             if (missSprite != null)
                                 return new LegacyHitExplosion(missSprite);
 
@@ -226,7 +242,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                     return "taiko-hit300";
             }
 
-            throw new ArgumentOutOfRangeException(nameof(component), $"Invalid component type: {component}");
+            throw new ArgumentOutOfRangeException(
+                nameof(component),
+                $"Invalid component type: {component}"
+            );
         }
 
         public override ISample? GetSample(ISampleInfo sampleInfo)
@@ -240,10 +259,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
         private class LegacyTaikoSampleInfo : HitSampleInfo
         {
             public LegacyTaikoSampleInfo(HitSampleInfo sampleInfo)
-                : base(sampleInfo.Name, sampleInfo.Bank, sampleInfo.Suffix, sampleInfo.Volume)
-
-            {
-            }
+                : base(sampleInfo.Name, sampleInfo.Bank, sampleInfo.Suffix, sampleInfo.Volume) { }
 
             public override IEnumerable<string> LookupNames
             {

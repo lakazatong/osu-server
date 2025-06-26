@@ -17,43 +17,43 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [TestCase(1)]
         [TestCase(7)]
         [TestCase(10)]
-        public void TestDefaultBeatmap(float angleSharpness) => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModRandom
-            {
-                AngleSharpness = { Value = angleSharpness }
-            },
-            Autoplay = true,
-            PassCondition = () => true
-        });
+        public void TestDefaultBeatmap(float angleSharpness) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModRandom { AngleSharpness = { Value = angleSharpness } },
+                    Autoplay = true,
+                    PassCondition = () => true,
+                }
+            );
 
         [TestCase(1)]
         [TestCase(7)]
         [TestCase(10)]
-        public void TestJumpBeatmap(float angleSharpness) => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModRandom
-            {
-                AngleSharpness = { Value = angleSharpness }
-            },
-            CreateBeatmap = jumpBeatmap,
-            Autoplay = true,
-            PassCondition = () => true
-        });
+        public void TestJumpBeatmap(float angleSharpness) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModRandom { AngleSharpness = { Value = angleSharpness } },
+                    CreateBeatmap = jumpBeatmap,
+                    Autoplay = true,
+                    PassCondition = () => true,
+                }
+            );
 
         [TestCase(1)]
         [TestCase(7)]
         [TestCase(10)]
-        public void TestStreamBeatmap(float angleSharpness) => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModRandom
-            {
-                AngleSharpness = { Value = angleSharpness }
-            },
-            CreateBeatmap = streamBeatmap,
-            Autoplay = true,
-            PassCondition = () => true
-        });
+        public void TestStreamBeatmap(float angleSharpness) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModRandom { AngleSharpness = { Value = angleSharpness } },
+                    CreateBeatmap = streamBeatmap,
+                    Autoplay = true,
+                    PassCondition = () => true,
+                }
+            );
 
         private OsuBeatmap jumpBeatmap() =>
             createHitCircleBeatmap(new[] { 100, 200, 300, 400 }, 8, 300, 2 * 300);
@@ -61,38 +61,41 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         private OsuBeatmap streamBeatmap() =>
             createHitCircleBeatmap(new[] { 10, 20, 30, 40, 50, 60, 70, 80 }, 16, 150, 4 * 150);
 
-        private OsuBeatmap createHitCircleBeatmap(IEnumerable<int> spacings, int objectsPerSpacing, int interval, int beatLength)
+        private OsuBeatmap createHitCircleBeatmap(
+            IEnumerable<int> spacings,
+            int objectsPerSpacing,
+            int interval,
+            int beatLength
+        )
         {
             var controlPointInfo = new ControlPointInfo();
-            controlPointInfo.Add(0, new TimingControlPoint
-            {
-                Time = 0,
-                BeatLength = beatLength
-            });
+            controlPointInfo.Add(0, new TimingControlPoint { Time = 0, BeatLength = beatLength });
 
             var beatmap = new OsuBeatmap
             {
                 BeatmapInfo = new BeatmapInfo
                 {
-                    Difficulty = new BeatmapDifficulty
-                    {
-                        ApproachRate = 8.5f
-                    }
+                    Difficulty = new BeatmapDifficulty { ApproachRate = 8.5f },
                 },
                 StackLeniency = 0,
-                ControlPointInfo = controlPointInfo
+                ControlPointInfo = controlPointInfo,
             };
 
             foreach (int spacing in spacings)
             {
                 for (int i = 0; i < objectsPerSpacing; i++)
                 {
-                    beatmap.HitObjects.Add(new HitCircle
-                    {
-                        StartTime = interval * beatmap.HitObjects.Count,
-                        Position = beatmap.HitObjects.Count % 2 == 0 ? Vector2.Zero : new Vector2(spacing, 0),
-                        NewCombo = i == 0
-                    });
+                    beatmap.HitObjects.Add(
+                        new HitCircle
+                        {
+                            StartTime = interval * beatmap.HitObjects.Count,
+                            Position =
+                                beatmap.HitObjects.Count % 2 == 0
+                                    ? Vector2.Zero
+                                    : new Vector2(spacing, 0),
+                            NewCombo = i == 0,
+                        }
+                    );
                 }
             }
 

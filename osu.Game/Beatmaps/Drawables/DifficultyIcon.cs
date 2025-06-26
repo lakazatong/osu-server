@@ -19,7 +19,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Beatmaps.Drawables
 {
-    public partial class DifficultyIcon : CompositeDrawable, IHasCustomTooltip<DifficultyIconTooltipContent>
+    public partial class DifficultyIcon
+        : CompositeDrawable,
+            IHasCustomTooltip<DifficultyIconTooltipContent>
     {
         /// <summary>
         /// Size of this difficulty icon.
@@ -33,7 +35,8 @@ namespace osu.Game.Beatmaps.Drawables
         /// <summary>
         /// Which type of tooltip to show. Only works if a beatmap was provided at construction time.
         /// </summary>
-        public DifficultyIconTooltipType TooltipType { get; set; } = DifficultyIconTooltipType.StarRating;
+        public DifficultyIconTooltipType TooltipType { get; set; } =
+            DifficultyIconTooltipType.StarRating;
 
         private readonly IBeatmapInfo? beatmap;
 
@@ -48,7 +51,8 @@ namespace osu.Game.Beatmaps.Drawables
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        private readonly BindableWithCurrent<StarDifficulty> difficulty = new BindableWithCurrent<StarDifficulty>();
+        private readonly BindableWithCurrent<StarDifficulty> difficulty =
+            new BindableWithCurrent<StarDifficulty>();
 
         // TODO: remove this after old song select is gone.
         public virtual Bindable<StarDifficulty> Current
@@ -66,7 +70,11 @@ namespace osu.Game.Beatmaps.Drawables
         /// <param name="beatmap">The beatmap to be displayed in the tooltip, and to be used for the initial star rating value.</param>
         /// <param name="mods">An array of mods to account for in the calculations</param>
         /// <param name="ruleset">An optional ruleset to be used for the icon display, in place of the beatmap's ruleset.</param>
-        public DifficultyIcon(IBeatmapInfo beatmap, IRulesetInfo? ruleset = null, Mod[]? mods = null)
+        public DifficultyIcon(
+            IBeatmapInfo beatmap,
+            IRulesetInfo? ruleset = null,
+            Mod[]? mods = null
+        )
         {
             this.beatmap = beatmap;
             this.mods = mods;
@@ -95,10 +103,7 @@ namespace osu.Game.Beatmaps.Drawables
                         Type = EdgeEffectType.Shadow,
                         Radius = 3,
                     },
-                    Child = background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = background = new Box { RelativeSizeAxes = Axes.Both },
                 },
                 new ConstrainedIconContainer
                 {
@@ -106,7 +111,7 @@ namespace osu.Game.Beatmaps.Drawables
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     // the null coalesce here is only present to make unit tests work (ruleset dlls aren't copied correctly for testing at the moment)
-                    Icon = getRulesetIcon()
+                    Icon = getRulesetIcon(),
                 },
             };
         }
@@ -115,10 +120,16 @@ namespace osu.Game.Beatmaps.Drawables
         {
             base.LoadComplete();
 
-            Current.BindValueChanged(difficulty =>
-            {
-                background.FadeColour(colours.ForStarDifficulty(difficulty.NewValue.Stars), 200);
-            }, true);
+            Current.BindValueChanged(
+                difficulty =>
+                {
+                    background.FadeColour(
+                        colours.ForStarDifficulty(difficulty.NewValue.Stars),
+                        200
+                    );
+                },
+                true
+            );
 
             background.FinishTransforms();
         }
@@ -127,17 +138,24 @@ namespace osu.Game.Beatmaps.Drawables
         {
             int? onlineID = ruleset.OnlineID;
 
-            if (onlineID >= 0 && rulesets.GetRuleset(onlineID.Value)?.CreateInstance() is Ruleset rulesetInstance)
+            if (
+                onlineID >= 0
+                && rulesets.GetRuleset(onlineID.Value)?.CreateInstance() is Ruleset rulesetInstance
+            )
                 return rulesetInstance.CreateIcon();
 
             return new SpriteIcon { Icon = FontAwesome.Regular.QuestionCircle };
         }
 
-        ITooltip<DifficultyIconTooltipContent> IHasCustomTooltip<DifficultyIconTooltipContent>.
-            GetCustomTooltip() => new DifficultyIconTooltip();
+        ITooltip<DifficultyIconTooltipContent> IHasCustomTooltip<DifficultyIconTooltipContent>.GetCustomTooltip() =>
+            new DifficultyIconTooltip();
 
-        DifficultyIconTooltipContent IHasCustomTooltip<DifficultyIconTooltipContent>.
-            TooltipContent => (TooltipType != DifficultyIconTooltipType.None && beatmap != null ? new DifficultyIconTooltipContent(beatmap, Current, ruleset, mods, TooltipType) : null)!;
+        DifficultyIconTooltipContent IHasCustomTooltip<DifficultyIconTooltipContent>.TooltipContent =>
+            (
+                TooltipType != DifficultyIconTooltipType.None && beatmap != null
+                    ? new DifficultyIconTooltipContent(beatmap, Current, ruleset, mods, TooltipType)
+                    : null
+            )!;
     }
 
     public enum DifficultyIconTooltipType

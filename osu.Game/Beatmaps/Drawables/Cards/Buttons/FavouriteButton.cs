@@ -7,15 +7,17 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Framework.Logging;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 {
-    public partial class FavouriteButton : BeatmapCardIconButton, IHasCurrentValue<BeatmapSetFavouriteState>
+    public partial class FavouriteButton
+        : BeatmapCardIconButton,
+            IHasCurrentValue<BeatmapSetFavouriteState>
     {
         private readonly BindableWithCurrent<BeatmapSetFavouriteState> current;
 
@@ -34,7 +36,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 
         public FavouriteButton(APIBeatmapSet beatmapSet)
         {
-            current = new BindableWithCurrent<BeatmapSetFavouriteState>(new BeatmapSetFavouriteState(beatmapSet.HasFavourited, beatmapSet.FavouriteCount));
+            current = new BindableWithCurrent<BeatmapSetFavouriteState>(
+                new BeatmapSetFavouriteState(beatmapSet.HasFavourited, beatmapSet.FavouriteCount)
+            );
             this.beatmapSet = beatmapSet;
         }
 
@@ -48,7 +52,9 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 
         private void toggleFavouriteStatus()
         {
-            var actionType = current.Value.Favourited ? BeatmapFavouriteAction.UnFavourite : BeatmapFavouriteAction.Favourite;
+            var actionType = current.Value.Favourited
+                ? BeatmapFavouriteAction.UnFavourite
+                : BeatmapFavouriteAction.Favourite;
 
             favouriteRequest?.Cancel();
             favouriteRequest = new PostBeatmapFavouriteRequest(beatmapSet.OnlineID, actionType);
@@ -59,13 +65,19 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
             {
                 bool favourited = actionType == BeatmapFavouriteAction.Favourite;
 
-                current.Value = new BeatmapSetFavouriteState(favourited, current.Value.FavouriteCount + (favourited ? 1 : -1));
+                current.Value = new BeatmapSetFavouriteState(
+                    favourited,
+                    current.Value.FavouriteCount + (favourited ? 1 : -1)
+                );
 
                 SetLoading(false);
             };
             favouriteRequest.Failure += e =>
             {
-                Logger.Error(e, $"Failed to {actionType.ToString().ToLowerInvariant()} beatmap: {e.Message}");
+                Logger.Error(
+                    e,
+                    $"Failed to {actionType.ToString().ToLowerInvariant()} beatmap: {e.Message}"
+                );
                 SetLoading(false);
             };
 

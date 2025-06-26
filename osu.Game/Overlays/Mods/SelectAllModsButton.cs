@@ -13,8 +13,10 @@ namespace osu.Game.Overlays.Mods
 {
     public partial class SelectAllModsButton : ShearedButton
     {
-        private readonly Bindable<IReadOnlyList<Mod>> selectedMods = new Bindable<IReadOnlyList<Mod>>();
-        private readonly Bindable<Dictionary<ModType, IReadOnlyList<ModState>>> availableMods = new Bindable<Dictionary<ModType, IReadOnlyList<ModState>>>();
+        private readonly Bindable<IReadOnlyList<Mod>> selectedMods =
+            new Bindable<IReadOnlyList<Mod>>();
+        private readonly Bindable<Dictionary<ModType, IReadOnlyList<ModState>>> availableMods =
+            new Bindable<Dictionary<ModType, IReadOnlyList<ModState>>>();
         private readonly Bindable<string> searchTerm = new Bindable<string>();
 
         public SelectAllModsButton(FreeModSelectOverlay modSelectOverlay)
@@ -40,10 +42,10 @@ namespace osu.Game.Overlays.Mods
 
         private void updateEnabledState()
         {
-            Enabled.Value = availableMods.Value
-                                         .SelectMany(pair => pair.Value)
-                                         .Where(modState => modState.ValidForSelection.Value)
-                                         .Any(modState => !modState.Active.Value && modState.Visible);
+            Enabled.Value = availableMods
+                .Value.SelectMany(pair => pair.Value)
+                .Where(modState => modState.ValidForSelection.Value)
+                .Any(modState => !modState.Active.Value && modState.Visible);
         }
     }
 }

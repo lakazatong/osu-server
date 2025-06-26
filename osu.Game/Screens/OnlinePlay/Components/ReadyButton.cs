@@ -14,7 +14,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
     {
         public new readonly BindableBool Enabled = new BindableBool();
 
-        private readonly IBindable<BeatmapAvailability> availability = new Bindable<BeatmapAvailability>();
+        private readonly IBindable<BeatmapAvailability> availability =
+            new Bindable<BeatmapAvailability>();
 
         [BackgroundDependencyLoader]
         private void load(OnlinePlayBeatmapAvailabilityTracker beatmapTracker)
@@ -26,7 +27,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
         }
 
         private void updateState() =>
-            base.Enabled.Value = availability.Value.State == DownloadState.LocallyAvailable && Enabled.Value;
+            base.Enabled.Value =
+                availability.Value.State == DownloadState.LocallyAvailable && Enabled.Value;
 
         public override LocalisableString TooltipText
         {

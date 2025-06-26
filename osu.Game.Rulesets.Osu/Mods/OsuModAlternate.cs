@@ -14,8 +14,10 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override string Acronym => @"AL";
         public override LocalisableString Description => @"Don't use the same key twice in a row!";
         public override IconUsage? Icon => FontAwesome.Solid.Keyboard;
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(OsuModSingleTap) }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Concat(new[] { typeof(OsuModSingleTap) }).ToArray();
 
-        protected override bool CheckValidNewAction(OsuAction action) => LastAcceptedAction != action;
+        protected override bool CheckValidNewAction(OsuAction action) =>
+            LastAcceptedAction != action;
     }
 }

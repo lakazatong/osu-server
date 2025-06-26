@@ -11,9 +11,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
     public partial class DiscussionSettings : PlayerSettingsGroup
     {
         public DiscussionSettings()
-            : base("discussions")
-        {
-        }
+            : base("discussions") { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -23,7 +21,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
                 new PlayerCheckbox
                 {
                     LabelText = "Show floating comments",
-                    Current = config.GetBindable<bool>(OsuSetting.FloatingComments)
+                    Current = config.GetBindable<bool>(OsuSetting.FloatingComments),
                 },
                 new FocusedTextBox
                 {

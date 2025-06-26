@@ -18,7 +18,11 @@ namespace osu.Game.Tests.Gameplay
         /// <summary>
         /// Creates a correctly-initialised <see cref="GameplayState"/> instance for use in testing.
         /// </summary>
-        public static GameplayState Create(Ruleset ruleset, IReadOnlyList<Mod>? mods = null, Score? score = null)
+        public static GameplayState Create(
+            Ruleset ruleset,
+            IReadOnlyList<Mod>? mods = null,
+            Score? score = null
+        )
         {
             var beatmap = new TestBeatmap(ruleset.RulesetInfo);
             var workingBeatmap = new TestWorkingBeatmap(beatmap);
@@ -29,7 +33,14 @@ namespace osu.Game.Tests.Gameplay
 
             var healthProcessor = ruleset.CreateHealthProcessor(beatmap.HitObjects[0].StartTime);
 
-            return new GameplayState(playableBeatmap, ruleset, mods, score, scoreProcessor, healthProcessor);
+            return new GameplayState(
+                playableBeatmap,
+                ruleset,
+                mods,
+                score,
+                scoreProcessor,
+                healthProcessor
+            );
         }
     }
 }

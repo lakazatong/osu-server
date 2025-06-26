@@ -58,9 +58,14 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
             return true;
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override SnapResult UpdateTimeAndPosition(
+            Vector2 screenSpacePosition,
+            double fallbackTime
+        )
         {
-            var result = composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            var result =
+                composer?.FindSnappedPositionAndTime(screenSpacePosition)
+                ?? new SnapResult(screenSpacePosition, fallbackTime);
 
             base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
 
@@ -88,7 +93,7 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         }
 
         private float getNoteHeight(Column resultPlayfield) =>
-            resultPlayfield.ToScreenSpace(new Vector2(DefaultNotePiece.NOTE_HEIGHT)).Y -
-            resultPlayfield.ToScreenSpace(Vector2.Zero).Y;
+            resultPlayfield.ToScreenSpace(new Vector2(DefaultNotePiece.NOTE_HEIGHT)).Y
+            - resultPlayfield.ToScreenSpace(Vector2.Zero).Y;
     }
 }

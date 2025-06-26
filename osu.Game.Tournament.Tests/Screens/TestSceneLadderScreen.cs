@@ -13,11 +13,13 @@ namespace osu.Game.Tournament.Tests.Screens
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new OsuContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = new LadderScreen()
-            });
+            Add(
+                new OsuContextMenuContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = new LadderScreen(),
+                }
+            );
         }
     }
 }

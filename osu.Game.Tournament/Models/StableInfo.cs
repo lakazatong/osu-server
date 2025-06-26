@@ -36,7 +36,9 @@ namespace osu.Game.Tournament.Models
             if (!configStorage.Exists(config_path))
                 return;
 
-            using (Stream stream = configStorage.GetStream(config_path, FileAccess.Read, FileMode.Open))
+            using (
+                Stream stream = configStorage.GetStream(config_path, FileAccess.Read, FileMode.Open)
+            )
             using (var sr = new StreamReader(stream))
             {
                 JsonConvert.PopulateObject(sr.ReadToEnd(), this);
@@ -48,13 +50,17 @@ namespace osu.Game.Tournament.Models
             using (var stream = configStorage.CreateFileSafely(config_path))
             using (var sw = new StreamWriter(stream))
             {
-                sw.Write(JsonConvert.SerializeObject(this,
-                    new JsonSerializerSettings
-                    {
-                        Formatting = Formatting.Indented,
-                        NullValueHandling = NullValueHandling.Ignore,
-                        DefaultValueHandling = DefaultValueHandling.Ignore,
-                    }));
+                sw.Write(
+                    JsonConvert.SerializeObject(
+                        this,
+                        new JsonSerializerSettings
+                        {
+                            Formatting = Formatting.Indented,
+                            NullValueHandling = NullValueHandling.Ignore,
+                            DefaultValueHandling = DefaultValueHandling.Ignore,
+                        }
+                    )
+                );
             }
 
             OnStableInfoSaved?.Invoke();

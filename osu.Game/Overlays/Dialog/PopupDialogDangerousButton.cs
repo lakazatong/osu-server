@@ -25,32 +25,37 @@ namespace osu.Game.Overlays.Dialog
         {
             ButtonColour = colours.Red3;
 
-            ColourContainer.Add(progressBox = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Blending = BlendingParameters.Additive,
-            });
+            ColourContainer.Add(
+                progressBox = new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Blending = BlendingParameters.Additive,
+                }
+            );
 
-            AddInternal(confirmContainer = new DangerousConfirmContainer
-            {
-                Action = () => Action(),
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(
+                confirmContainer = new DangerousConfirmContainer
+                {
+                    Action = () => Action(),
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            confirmContainer.Progress.BindValueChanged(progress => progressBox.Width = (float)progress.NewValue, true);
+            confirmContainer.Progress.BindValueChanged(
+                progress => progressBox.Width = (float)progress.NewValue,
+                true
+            );
         }
 
         private partial class DangerousConfirmContainer : HoldToConfirmContainer
         {
             public DangerousConfirmContainer()
-                : base(isDangerousAction: true)
-            {
-            }
+                : base(isDangerousAction: true) { }
 
             private Sample tickSample;
             private Sample confirmSample;
@@ -104,7 +109,8 @@ namespace osu.Game.Overlays.Dialog
             {
                 base.OnHoverLost(e);
 
-                if (!mouseDown) return;
+                if (!mouseDown)
+                    return;
 
                 AbortConfirm();
             }

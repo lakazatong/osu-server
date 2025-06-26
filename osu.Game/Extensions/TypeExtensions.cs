@@ -23,7 +23,10 @@ namespace osu.Game.Extensions
         {
             string? assemblyQualifiedName = type.AssemblyQualifiedName;
             if (assemblyQualifiedName == null)
-                throw new ArgumentException($"{type}'s assembly-qualified name is null. Ensure that it is a concrete type and not a generic type parameter.", nameof(type));
+                throw new ArgumentException(
+                    $"{type}'s assembly-qualified name is null. Ensure that it is a concrete type and not a generic type parameter.",
+                    nameof(type)
+                );
 
             return string.Join(',', assemblyQualifiedName.Split(',').Take(2));
         }

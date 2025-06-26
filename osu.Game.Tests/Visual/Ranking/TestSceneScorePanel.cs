@@ -123,14 +123,18 @@ namespace osu.Game.Tests.Visual.Ranking
             AddWaitStep("wait for transition", 10);
         }
 
-        private void addPanelStep(ScoreInfo score, PanelState state = PanelState.Expanded) => AddStep("add panel", () =>
-        {
-            Child = panel = new ScorePanel(score, true)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                State = state
-            };
-        });
+        private void addPanelStep(ScoreInfo score, PanelState state = PanelState.Expanded) =>
+            AddStep(
+                "add panel",
+                () =>
+                {
+                    Child = panel = new ScorePanel(score, true)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        State = state,
+                    };
+                }
+            );
     }
 }

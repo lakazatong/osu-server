@@ -16,7 +16,10 @@ namespace osu.Game.Beatmaps.Drawables
         private readonly IBeatmapSetOnlineInfo set;
         private readonly BeatmapSetCoverType type;
 
-        public OnlineBeatmapSetCover(IBeatmapSetOnlineInfo set, BeatmapSetCoverType type = BeatmapSetCoverType.Cover)
+        public OnlineBeatmapSetCover(
+            IBeatmapSetOnlineInfo set,
+            BeatmapSetCoverType type = BeatmapSetCoverType.Cover
+        )
         {
             ArgumentNullException.ThrowIfNull(set);
 

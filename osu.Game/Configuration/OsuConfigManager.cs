@@ -131,7 +131,10 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.MenuParallax, true);
 
             // See https://stackoverflow.com/a/63307411 for default sourcing.
-            SetDefault(OsuSetting.Prefer24HourTime, !CultureInfoHelper.SystemCulture.DateTimeFormat.ShortTimePattern.Contains(@"tt"));
+            SetDefault(
+                OsuSetting.Prefer24HourTime,
+                !CultureInfoHelper.SystemCulture.DateTimeFormat.ShortTimePattern.Contains(@"tt")
+            );
 
             // Gameplay
             SetDefault(OsuSetting.PositionalHitsoundsLevel, 0.2f, 0, 1, 0.01f);
@@ -252,8 +255,10 @@ namespace osu.Game.Configuration
 
             // on a fresh install or when coming from a non-release build, execution will end here.
             // we don't want to run migrations in such cases.
-            if (!int.TryParse(pieces[0], out int year)) return;
-            if (!int.TryParse(pieces[1], out int monthDay)) return;
+            if (!int.TryParse(pieces[0], out int year))
+                return;
+            if (!int.TryParse(pieces[1], out int monthDay))
+                return;
 
             int combined = year * 10000 + monthDay;
 
@@ -269,71 +274,105 @@ namespace osu.Game.Configuration
         {
             return new TrackedSettings
             {
-                new TrackedSetting<bool>(OsuSetting.ShowFpsDisplay, state => new SettingDescription(
-                    rawValue: state,
-                    name: GlobalActionKeyBindingStrings.ToggleFPSCounter,
-                    value: state ? CommonStrings.Enabled.ToLower() : CommonStrings.Disabled.ToLower(),
-                    shortcut: LookupKeyBindings(GlobalAction.ToggleFPSDisplay))
+                new TrackedSetting<bool>(
+                    OsuSetting.ShowFpsDisplay,
+                    state => new SettingDescription(
+                        rawValue: state,
+                        name: GlobalActionKeyBindingStrings.ToggleFPSCounter,
+                        value: state
+                            ? CommonStrings.Enabled.ToLower()
+                            : CommonStrings.Disabled.ToLower(),
+                        shortcut: LookupKeyBindings(GlobalAction.ToggleFPSDisplay)
+                    )
                 ),
-                new TrackedSetting<bool>(OsuSetting.MouseDisableButtons, disabledState => new SettingDescription(
-                    rawValue: !disabledState,
-                    name: GlobalActionKeyBindingStrings.ToggleGameplayMouseButtons,
-                    value: disabledState ? CommonStrings.Disabled.ToLower() : CommonStrings.Enabled.ToLower(),
-                    shortcut: LookupKeyBindings(GlobalAction.ToggleGameplayMouseButtons))
+                new TrackedSetting<bool>(
+                    OsuSetting.MouseDisableButtons,
+                    disabledState => new SettingDescription(
+                        rawValue: !disabledState,
+                        name: GlobalActionKeyBindingStrings.ToggleGameplayMouseButtons,
+                        value: disabledState
+                            ? CommonStrings.Disabled.ToLower()
+                            : CommonStrings.Enabled.ToLower(),
+                        shortcut: LookupKeyBindings(GlobalAction.ToggleGameplayMouseButtons)
+                    )
                 ),
-                new TrackedSetting<bool>(OsuSetting.GameplayLeaderboard, state => new SettingDescription(
-                    rawValue: state,
-                    name: GlobalActionKeyBindingStrings.ToggleInGameLeaderboard,
-                    value: state ? CommonStrings.Enabled.ToLower() : CommonStrings.Disabled.ToLower(),
-                    shortcut: LookupKeyBindings(GlobalAction.ToggleInGameLeaderboard))
+                new TrackedSetting<bool>(
+                    OsuSetting.GameplayLeaderboard,
+                    state => new SettingDescription(
+                        rawValue: state,
+                        name: GlobalActionKeyBindingStrings.ToggleInGameLeaderboard,
+                        value: state
+                            ? CommonStrings.Enabled.ToLower()
+                            : CommonStrings.Disabled.ToLower(),
+                        shortcut: LookupKeyBindings(GlobalAction.ToggleInGameLeaderboard)
+                    )
                 ),
-                new TrackedSetting<HUDVisibilityMode>(OsuSetting.HUDVisibilityMode, visibilityMode => new SettingDescription(
-                    rawValue: visibilityMode,
-                    name: GameplaySettingsStrings.HUDVisibilityMode,
-                    value: visibilityMode.GetLocalisableDescription(),
-                    shortcut: new TranslatableString(@"_", @"{0}: {1} {2}: {3}",
-                        GlobalActionKeyBindingStrings.ToggleInGameInterface,
-                        LookupKeyBindings(GlobalAction.ToggleInGameInterface),
-                        GlobalActionKeyBindingStrings.HoldForHUD,
-                        LookupKeyBindings(GlobalAction.HoldForHUD)))
+                new TrackedSetting<HUDVisibilityMode>(
+                    OsuSetting.HUDVisibilityMode,
+                    visibilityMode => new SettingDescription(
+                        rawValue: visibilityMode,
+                        name: GameplaySettingsStrings.HUDVisibilityMode,
+                        value: visibilityMode.GetLocalisableDescription(),
+                        shortcut: new TranslatableString(
+                            @"_",
+                            @"{0}: {1} {2}: {3}",
+                            GlobalActionKeyBindingStrings.ToggleInGameInterface,
+                            LookupKeyBindings(GlobalAction.ToggleInGameInterface),
+                            GlobalActionKeyBindingStrings.HoldForHUD,
+                            LookupKeyBindings(GlobalAction.HoldForHUD)
+                        )
+                    )
                 ),
-                new TrackedSetting<ScalingMode>(OsuSetting.Scaling, scalingMode => new SettingDescription(
+                new TrackedSetting<ScalingMode>(
+                    OsuSetting.Scaling,
+                    scalingMode => new SettingDescription(
                         rawValue: scalingMode,
                         name: GraphicsSettingsStrings.ScreenScaling,
                         value: scalingMode.GetLocalisableDescription()
                     )
                 ),
-                new TrackedSetting<string>(OsuSetting.Skin, skin =>
-                {
-                    string skinName = string.Empty;
+                new TrackedSetting<string>(
+                    OsuSetting.Skin,
+                    skin =>
+                    {
+                        string skinName = string.Empty;
 
-                    if (Guid.TryParse(skin, out var id))
-                        skinName = LookupSkinName(id);
+                        if (Guid.TryParse(skin, out var id))
+                            skinName = LookupSkinName(id);
 
-                    return new SettingDescription(
-                        rawValue: skinName,
-                        name: SkinSettingsStrings.SkinSectionHeader,
-                        value: skinName,
-                        shortcut: new TranslatableString(@"_", @"{0}: {1}",
-                            GlobalActionKeyBindingStrings.RandomSkin,
-                            LookupKeyBindings(GlobalAction.RandomSkin))
-                    );
-                }),
-                new TrackedSetting<float>(OsuSetting.UIScale, scale => new SettingDescription(
+                        return new SettingDescription(
+                            rawValue: skinName,
+                            name: SkinSettingsStrings.SkinSectionHeader,
+                            value: skinName,
+                            shortcut: new TranslatableString(
+                                @"_",
+                                @"{0}: {1}",
+                                GlobalActionKeyBindingStrings.RandomSkin,
+                                LookupKeyBindings(GlobalAction.RandomSkin)
+                            )
+                        );
+                    }
+                ),
+                new TrackedSetting<float>(
+                    OsuSetting.UIScale,
+                    scale => new SettingDescription(
                         rawValue: scale,
                         name: GraphicsSettingsStrings.UIScaling,
                         value: $"{scale:N2}x"
-                        // TODO: implement lookup for framework platform key bindings
+                    // TODO: implement lookup for framework platform key bindings
                     )
                 ),
             };
         }
 
         public Func<Guid, string> LookupSkinName { private get; set; } = _ => @"unknown";
-        public Func<GlobalAction, LocalisableString> LookupKeyBindings { private get; set; } = _ => @"unknown";
+        public Func<GlobalAction, LocalisableString> LookupKeyBindings { private get; set; } =
+            _ => @"unknown";
 
-        IBindable<float> IGameplaySettings.ComboColourNormalisationAmount => GetOriginalBindable<float>(OsuSetting.ComboColourNormalisationAmount);
-        IBindable<float> IGameplaySettings.PositionalHitsoundsLevel => GetOriginalBindable<float>(OsuSetting.PositionalHitsoundsLevel);
+        IBindable<float> IGameplaySettings.ComboColourNormalisationAmount =>
+            GetOriginalBindable<float>(OsuSetting.ComboColourNormalisationAmount);
+        IBindable<float> IGameplaySettings.PositionalHitsoundsLevel =>
+            GetOriginalBindable<float>(OsuSetting.PositionalHitsoundsLevel);
     }
 
     // IMPORTANT: These are used in user configuration files.
@@ -473,6 +512,6 @@ namespace osu.Game.Configuration
         /// Cached state of whether local user is a supporter.
         /// Used to allow early checks (ie for startup samples) to be in the correct state, even if the API authentication process has not completed.
         /// </summary>
-        WasSupporter
+        WasSupporter,
     }
 }

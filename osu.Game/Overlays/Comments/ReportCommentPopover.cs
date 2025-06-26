@@ -10,8 +10,10 @@ namespace osu.Game.Overlays.Comments
     public partial class ReportCommentPopover : ReportPopover<CommentReportReason>
     {
         public ReportCommentPopover(Comment? comment)
-            : base(ReportStrings.CommentTitle(comment?.User?.Username ?? comment?.LegacyName ?? @"Someone"))
-        {
-        }
+            : base(
+                ReportStrings.CommentTitle(
+                    comment?.User?.Username ?? comment?.LegacyName ?? @"Someone"
+                )
+            ) { }
     }
 }

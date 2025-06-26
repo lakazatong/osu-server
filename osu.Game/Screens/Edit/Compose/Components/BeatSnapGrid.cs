@@ -51,9 +51,11 @@ namespace osu.Game.Screens.Edit.Compose.Components
         [Resolved]
         private BindableBeatDivisor beatDivisor { get; set; } = null!;
 
-        private readonly List<ScrollingHitObjectContainer> grids = new List<ScrollingHitObjectContainer>();
+        private readonly List<ScrollingHitObjectContainer> grids =
+            new List<ScrollingHitObjectContainer>();
 
-        private readonly DrawablePool<DrawableGridLine> linesPool = new DrawablePool<DrawableGridLine>(50);
+        private readonly DrawablePool<DrawableGridLine> linesPool =
+            new DrawablePool<DrawableGridLine>(50);
 
         private readonly Cached lineCache = new Cached();
 
@@ -123,16 +125,15 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 }
 
                 Color4 colour = BindableBeatDivisor.GetColourFor(
-                    BindableBeatDivisor.GetDivisorForBeatIndex(beat, beatDivisor.Value), colours);
+                    BindableBeatDivisor.GetDivisorForBeatIndex(beat, beatDivisor.Value),
+                    colours
+                );
 
                 foreach (var grid in grids)
                 {
                     var line = linesPool.Get();
 
-                    line.Apply(new HitObject
-                    {
-                        StartTime = time
-                    });
+                    line.Apply(new HitObject { StartTime = time });
 
                     line.Colour = colour;
 
@@ -156,7 +157,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
                         line.Alpha = 1;
                     else
                     {
-                        double timeSeparation = time < range.start ? range.start - time : time - range.end;
+                        double timeSeparation =
+                            time < range.start ? range.start - time : time - range.end;
                         line.Alpha = (float)Math.Max(0, 1 - timeSeparation / visible_range);
                     }
                 }
@@ -168,7 +170,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
             [Resolved]
             private IScrollingInfo scrollingInfo { get; set; } = null!;
 
-            private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+            private readonly IBindable<ScrollingDirection> direction =
+                new Bindable<ScrollingDirection>();
 
             public DrawableGridLine()
                 : base(new HitObject())
@@ -208,7 +211,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
                         break;
                 }
 
-                bool isHorizontal = direction.NewValue == ScrollingDirection.Left || direction.NewValue == ScrollingDirection.Right;
+                bool isHorizontal =
+                    direction.NewValue == ScrollingDirection.Left
+                    || direction.NewValue == ScrollingDirection.Right;
 
                 if (isHorizontal)
                 {

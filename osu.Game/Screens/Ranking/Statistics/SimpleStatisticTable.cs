@@ -48,12 +48,9 @@ namespace osu.Game.Screens.Ranking.Statistics
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize)
-                },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                 ColumnDimensions = createColumnDimensions().ToArray(),
-                Content = new[] { createColumns().ToArray() }
+                Content = new[] { createColumns().ToArray() },
             };
 
             for (int i = 0; i < items.Length; ++i)
@@ -77,22 +74,20 @@ namespace osu.Game.Screens.Ranking.Statistics
             {
                 if (column > 0)
                 {
-                    yield return new Spacer
-                    {
-                        Alpha = items.Length > column ? 1 : 0
-                    };
+                    yield return new Spacer { Alpha = items.Length > column ? 1 : 0 };
                 }
 
                 yield return columns[column] = createColumn();
             }
         }
 
-        private FillFlowContainer createColumn() => new FillFlowContainer
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Direction = FillDirection.Vertical
-        };
+        private FillFlowContainer createColumn() =>
+            new FillFlowContainer
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Vertical,
+            };
 
         public partial class Spacer : CompositeDrawable
         {
@@ -111,8 +106,8 @@ namespace osu.Game.Screens.Ranking.Statistics
                     Child = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = Color4Extensions.FromHex("#222")
-                    }
+                        Colour = Color4Extensions.FromHex("#222"),
+                    },
                 };
             }
         }

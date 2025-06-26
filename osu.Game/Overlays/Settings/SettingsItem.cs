@@ -16,13 +16,18 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osuTK;
 
 namespace osu.Game.Overlays.Settings
 {
-    public abstract partial class SettingsItem<T> : Container, IConditionalFilterable, ISettingsItem, IHasCurrentValue<T>, IHasTooltip
+    public abstract partial class SettingsItem<T>
+        : Container,
+            IConditionalFilterable,
+            ISettingsItem,
+            IHasCurrentValue<T>,
+            IHasTooltip
     {
         protected abstract Drawable CreateControl();
 
@@ -102,13 +107,17 @@ namespace osu.Game.Overlays.Settings
             ClearNoticeText();
 
             // construct lazily for cases where the label is not needed (may be provided by the Control).
-            FlowContent.Add(noticeText = new LinkFlowContainer(cp => cp.Colour = isWarning ? colours.Yellow : colours.Green)
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Margin = new MarginPadding { Bottom = 5 },
-                Text = text,
-            });
+            FlowContent.Add(
+                noticeText = new LinkFlowContainer(cp =>
+                    cp.Colour = isWarning ? colours.Yellow : colours.Green
+                )
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Margin = new MarginPadding { Bottom = 5 },
+                    Text = text,
+                }
+            );
         }
 
         public virtual Bindable<T> Current
@@ -121,9 +130,11 @@ namespace osu.Game.Overlays.Settings
         {
             get
             {
-                var keywords = new List<LocalisableString>(Keywords?.Select(k => (LocalisableString)k) ?? Array.Empty<LocalisableString>())
+                var keywords = new List<LocalisableString>(
+                    Keywords?.Select(k => (LocalisableString)k) ?? Array.Empty<LocalisableString>()
+                )
                 {
-                    LabelText
+                    LabelText,
                 };
 
                 if (HasClassicDefault)
@@ -179,7 +190,9 @@ namespace osu.Game.Overlays.Settings
         public void ApplyClassicDefault()
         {
             if (!HasClassicDefault)
-                throw new InvalidOperationException($"Cannot apply a classic default to a setting which doesn't have one defined via {nameof(ClassicDefault)}.");
+                throw new InvalidOperationException(
+                    $"Cannot apply a classic default to a setting which doesn't have one defined via {nameof(ClassicDefault)}."
+                );
 
             Current.Value = classicDefault;
         }
@@ -203,20 +216,23 @@ namespace osu.Game.Overlays.Settings
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Padding = new MarginPadding { Left = SettingsPanel.CONTENT_MARGINS },
-                    Child = FlowContent = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Spacing = new Vector2(0, 5),
-                        Child = Control = CreateControl(),
-                    }
-                }
+                    Child = FlowContent =
+                        new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Spacing = new Vector2(0, 5),
+                            Child = Control = CreateControl(),
+                        },
+                },
             };
 
             // IMPORTANT: all bindable logic is in constructor intentionally to support "CreateSettingsControls" being used in a context it is
             // never loaded, but requires bindable storage.
             if (controlWithCurrent == null)
-                throw new ArgumentException(@$"Control created via {nameof(CreateControl)} must implement {nameof(IHasCurrentValue<T>)}");
+                throw new ArgumentException(
+                    @$"Control created via {nameof(CreateControl)} must implement {nameof(IHasCurrentValue<T>)}"
+                );
 
             controlWithCurrent.Current.ValueChanged += _ => SettingChanged?.Invoke();
             controlWithCurrent.Current.DisabledChanged += _ => updateDisabled();
@@ -241,7 +257,9 @@ namespace osu.Game.Overlays.Settings
 
             // if the settings item is providing a label, the default value indicator should be centred vertically to the left of the label.
             // otherwise, it should be centred vertically to the left of the main control of the settings item.
-            defaultValueIndicatorContainer.Height = hasLabel ? labelText.DrawHeight : Control.DrawHeight;
+            defaultValueIndicatorContainer.Height = hasLabel
+                ? labelText.DrawHeight
+                : Control.DrawHeight;
         }
 
         private void updateDisabled()

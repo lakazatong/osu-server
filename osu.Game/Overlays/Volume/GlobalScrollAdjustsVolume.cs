@@ -31,7 +31,8 @@ namespace osu.Game.Overlays.Volume
                 return false;
 
             // forward any unhandled mouse scroll events to the volume control.
-            return volumeOverlay?.Adjust(GlobalAction.IncreaseVolume, e.ScrollDelta.Y, e.IsPrecise) ?? false;
+            return volumeOverlay?.Adjust(GlobalAction.IncreaseVolume, e.ScrollDelta.Y, e.IsPrecise)
+                ?? false;
         }
     }
 }

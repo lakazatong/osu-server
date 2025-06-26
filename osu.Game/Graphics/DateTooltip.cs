@@ -15,7 +15,8 @@ namespace osu.Game.Graphics
 {
     public partial class DateTooltip : VisibilityContainer, ITooltip<DateTimeOffset>
     {
-        private readonly OsuSpriteText dateText, timeText;
+        private readonly OsuSpriteText dateText,
+            timeText;
         private readonly Box background;
 
         public DateTooltip()
@@ -26,10 +27,7 @@ namespace osu.Game.Graphics
 
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
@@ -48,8 +46,8 @@ namespace osu.Game.Graphics
                             Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular),
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -62,6 +60,7 @@ namespace osu.Game.Graphics
         }
 
         protected override void PopIn() => this.FadeIn(200, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(200, Easing.OutQuint);
 
         public void SetContent(DateTimeOffset date)

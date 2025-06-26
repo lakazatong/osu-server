@@ -43,57 +43,90 @@ namespace osu.Game.Tests.Visual.Online
             AddUntilStep("ensure manager loaded", () => beatmaps != null);
             ensureSoleilyRemoved();
             createButtonWithBeatmap(createSoleily());
-            AddUntilStep("button state not downloaded", () => downloadButton.DownloadState == DownloadState.NotDownloaded);
-            AddStep("import soleily", () => beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()));
+            AddUntilStep(
+                "button state not downloaded",
+                () => downloadButton.DownloadState == DownloadState.NotDownloaded
+            );
+            AddStep(
+                "import soleily",
+                () => beatmaps.Import(TestResources.GetQuickTestBeatmapForImport())
+            );
 
-            AddUntilStep("wait for beatmap import", () => beatmaps.GetAllUsableBeatmapSets().Any(b => b.OnlineID == 241526));
-            AddUntilStep("button state downloaded", () => downloadButton.DownloadState == DownloadState.LocallyAvailable);
+            AddUntilStep(
+                "wait for beatmap import",
+                () => beatmaps.GetAllUsableBeatmapSets().Any(b => b.OnlineID == 241526)
+            );
+            AddUntilStep(
+                "button state downloaded",
+                () => downloadButton.DownloadState == DownloadState.LocallyAvailable
+            );
 
             createButtonWithBeatmap(createSoleily());
-            AddUntilStep("button state downloaded", () => downloadButton.DownloadState == DownloadState.LocallyAvailable);
+            AddUntilStep(
+                "button state downloaded",
+                () => downloadButton.DownloadState == DownloadState.LocallyAvailable
+            );
             ensureSoleilyRemoved();
-            AddUntilStep("button state not downloaded", () => downloadButton.DownloadState == DownloadState.NotDownloaded);
+            AddUntilStep(
+                "button state not downloaded",
+                () => downloadButton.DownloadState == DownloadState.NotDownloaded
+            );
         }
 
         private void ensureSoleilyRemoved()
         {
-            AddStep("remove soleily", () =>
-            {
-                var beatmap = beatmaps.QueryBeatmapSet(b => b.OnlineID == 241526);
+            AddStep(
+                "remove soleily",
+                () =>
+                {
+                    var beatmap = beatmaps.QueryBeatmapSet(b => b.OnlineID == 241526);
 
-                if (beatmap != null) beatmaps.Delete(beatmap.Value);
-            });
+                    if (beatmap != null)
+                        beatmaps.Delete(beatmap.Value);
+                }
+            );
         }
 
         private void assertEnabled(bool enabled)
         {
-            AddAssert($"button {(enabled ? "enabled" : "disabled")}", () => downloadButton.DownloadEnabled == enabled);
+            AddAssert(
+                $"button {(enabled ? "enabled" : "disabled")}",
+                () => downloadButton.DownloadEnabled == enabled
+            );
         }
 
         private void createButtonWithBeatmap(IBeatmapSetInfo beatmap)
         {
-            AddStep("create button", () =>
-            {
-                Child = downloadButton = new TestDownloadButton(beatmap)
+            AddStep(
+                "create button",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(75, 50),
-                };
-            });
+                    Child = downloadButton = new TestDownloadButton(beatmap)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(75, 50),
+                    };
+                }
+            );
         }
 
         private void createButton(bool downloadable)
         {
-            AddStep("create button", () =>
-            {
-                Child = downloadButton = new TestDownloadButton(downloadable ? getDownloadableBeatmapSet() : getUndownloadableBeatmapSet())
+            AddStep(
+                "create button",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(75, 50),
-                };
-            });
+                    Child = downloadButton = new TestDownloadButton(
+                        downloadable ? getDownloadableBeatmapSet() : getUndownloadableBeatmapSet()
+                    )
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(75, 50),
+                    };
+                }
+            );
         }
 
         private IBeatmapSetInfo createSoleily()
@@ -146,9 +179,7 @@ namespace osu.Game.Tests.Visual.Online
             public DownloadState DownloadState => State.Value;
 
             public TestDownloadButton(IBeatmapSetInfo beatmapSet)
-                : base(beatmapSet)
-            {
-            }
+                : base(beatmapSet) { }
         }
     }
 }

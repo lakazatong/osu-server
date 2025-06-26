@@ -16,11 +16,7 @@ namespace osu.Game.Users.Drawables
             BorderThickness = 4;
             BorderColour = Colour4.White; // the colour is being applied through Colour - since it's multiplicative it applies to the border as well
             Masking = true;
-            Child = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = Colour4.White.Opacity(0)
-            };
+            Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.White.Opacity(0) };
         }
     }
 }

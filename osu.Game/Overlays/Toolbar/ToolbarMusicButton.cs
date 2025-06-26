@@ -37,31 +37,33 @@ namespace osu.Game.Overlays.Toolbar
             StateContainer = music;
 
             Flow.Padding = new MarginPadding { Horizontal = Toolbar.HEIGHT / 4 };
-            Flow.Add(volumeDisplay = new CircularContainer
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                Width = 3f,
-                Height = IconContainer.Height,
-                Margin = new MarginPadding { Horizontal = 2.5f },
-                Masking = true,
-                Children = new[]
+            Flow.Add(
+                volumeDisplay = new CircularContainer
                 {
-                    new Box
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    Width = 3f,
+                    Height = IconContainer.Height,
+                    Margin = new MarginPadding { Horizontal = 2.5f },
+                    Masking = true,
+                    Children = new[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.White.Opacity(0.25f),
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.White.Opacity(0.25f),
+                        },
+                        volumeBar = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Height = 0f,
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomLeft,
+                            Colour = Color4.White,
+                        },
                     },
-                    volumeBar = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Height = 0f,
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomLeft,
-                        Colour = Color4.White,
-                    }
                 }
-            });
+            );
         }
 
         [Resolved]
@@ -78,7 +80,10 @@ namespace osu.Game.Overlays.Toolbar
             base.LoadComplete();
 
             globalVolume = audio.Volume.GetBoundCopy();
-            globalVolume.BindValueChanged(v => volumeBar.ResizeHeightTo((float)v.NewValue, 200, Easing.OutQuint), true);
+            globalVolume.BindValueChanged(
+                v => volumeBar.ResizeHeightTo((float)v.NewValue, 200, Easing.OutQuint),
+                true
+            );
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -128,10 +133,13 @@ namespace osu.Game.Overlays.Toolbar
             }
 
             contractTransform?.Cancel();
-            contractTransform = Scheduler.AddDelayed(() =>
-            {
-                volumeDisplay.ResizeWidthTo(3f, 500, Easing.OutQuint);
-            }, 1000);
+            contractTransform = Scheduler.AddDelayed(
+                () =>
+                {
+                    volumeDisplay.ResizeWidthTo(3f, 500, Easing.OutQuint);
+                },
+                1000
+            );
         }
     }
 }

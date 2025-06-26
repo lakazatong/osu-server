@@ -29,9 +29,14 @@ namespace osu.Game.Rulesets.Scoring
         private void ensureValidHitWindows()
         {
             var availableWindows = GetAllAvailableWindows().ToList();
-            Debug.Assert(availableWindows.Any(r => r.result == HitResult.Miss), $"{nameof(GetAllAvailableWindows)} should always contain {nameof(HitResult.Miss)}");
-            Debug.Assert(availableWindows.Any(r => r.result != HitResult.Miss),
-                $"{nameof(GetAllAvailableWindows)} should always contain at least one result type other than {nameof(HitResult.Miss)}.");
+            Debug.Assert(
+                availableWindows.Any(r => r.result == HitResult.Miss),
+                $"{nameof(GetAllAvailableWindows)} should always contain {nameof(HitResult.Miss)}"
+            );
+            Debug.Assert(
+                availableWindows.Any(r => r.result != HitResult.Miss),
+                $"{nameof(GetAllAvailableWindows)} should always contain at least one result type other than {nameof(HitResult.Miss)}."
+            );
         }
 
         /// <summary>
@@ -106,7 +111,8 @@ namespace osu.Game.Rulesets.Scoring
         /// </summary>
         /// <param name="timeOffset">The time offset.</param>
         /// <returns>Whether the <see cref="HitObject"/> can be hit at any point in the future from this time offset.</returns>
-        public bool CanBeHit(double timeOffset) => timeOffset <= WindowFor(LowestSuccessfulHitResult());
+        public bool CanBeHit(double timeOffset) =>
+            timeOffset <= WindowFor(LowestSuccessfulHitResult());
 
         private class EmptyHitWindows : HitWindows
         {

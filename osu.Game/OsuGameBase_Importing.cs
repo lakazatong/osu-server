@@ -17,13 +17,15 @@ namespace osu.Game
         /// Register a global handler for file imports. Most recently registered will have precedence.
         /// </summary>
         /// <param name="handler">The handler to register.</param>
-        public void RegisterImportHandler(ICanAcceptFiles handler) => fileImporters.Insert(0, handler);
+        public void RegisterImportHandler(ICanAcceptFiles handler) =>
+            fileImporters.Insert(0, handler);
 
         /// <summary>
         /// Unregister a global handler for file imports.
         /// </summary>
         /// <param name="handler">The previously registered handler.</param>
-        public void UnregisterImportHandler(ICanAcceptFiles handler) => fileImporters.Remove(handler);
+        public void UnregisterImportHandler(ICanAcceptFiles handler) =>
+            fileImporters.Remove(handler);
 
         public async Task Import(params string[] paths)
         {
@@ -44,14 +46,23 @@ namespace osu.Game
 
         public virtual async Task Import(ImportTask[] tasks, ImportParameters parameters = default)
         {
-            var tasksPerExtension = tasks.GroupBy(t => Path.GetExtension(t.Path).ToLowerInvariant());
-            await Task.WhenAll(tasksPerExtension.Select(taskGroup =>
-            {
-                var importer = fileImporters.FirstOrDefault(i => i.HandledExtensions.Contains(taskGroup.Key));
-                return importer?.Import(taskGroup.ToArray(), parameters) ?? Task.CompletedTask;
-            })).ConfigureAwait(false);
+            var tasksPerExtension = tasks.GroupBy(t =>
+                Path.GetExtension(t.Path).ToLowerInvariant()
+            );
+            await Task.WhenAll(
+                    tasksPerExtension.Select(taskGroup =>
+                    {
+                        var importer = fileImporters.FirstOrDefault(i =>
+                            i.HandledExtensions.Contains(taskGroup.Key)
+                        );
+                        return importer?.Import(taskGroup.ToArray(), parameters)
+                            ?? Task.CompletedTask;
+                    })
+                )
+                .ConfigureAwait(false);
         }
 
-        public IEnumerable<string> HandledExtensions => fileImporters.SelectMany(i => i.HandledExtensions);
+        public IEnumerable<string> HandledExtensions =>
+            fileImporters.SelectMany(i => i.HandledExtensions);
     }
 }

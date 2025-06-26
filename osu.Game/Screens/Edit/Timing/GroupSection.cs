@@ -53,18 +53,14 @@ namespace osu.Game.Screens.Edit.Timing
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        textBox = new LabelledTextBox
-                        {
-                            Label = "Time",
-                            SelectAllOnFocus = true,
-                        },
+                        textBox = new LabelledTextBox { Label = "Time", SelectAllOnFocus = true },
                         button = new RoundedButton
                         {
                             Text = "Use current time",
                             RelativeSizeAxes = Axes.X,
-                            Action = () => changeSelectedGroupTime(clock.CurrentTime)
-                        }
-                    }
+                            Action = () => changeSelectedGroupTime(clock.CurrentTime),
+                        },
+                    },
                 },
             };
 
@@ -83,23 +79,26 @@ namespace osu.Game.Screens.Edit.Timing
                 }
             };
 
-            SelectedGroup.BindValueChanged(group =>
-            {
-                if (group.NewValue == null)
+            SelectedGroup.BindValueChanged(
+                group =>
                 {
-                    textBox.Text = string.Empty;
+                    if (group.NewValue == null)
+                    {
+                        textBox.Text = string.Empty;
 
-                    // cannot use textBox.Current.Disabled due to https://github.com/ppy/osu-framework/issues/3919
-                    textBox.ReadOnly = true;
-                    button.Enabled.Value = false;
-                    return;
-                }
+                        // cannot use textBox.Current.Disabled due to https://github.com/ppy/osu-framework/issues/3919
+                        textBox.ReadOnly = true;
+                        button.Enabled.Value = false;
+                        return;
+                    }
 
-                textBox.ReadOnly = false;
-                button.Enabled.Value = true;
+                    textBox.ReadOnly = false;
+                    button.Enabled.Value = true;
 
-                textBox.Text = $"{group.NewValue.Time:n0}";
-            }, true);
+                    textBox.Text = $"{group.NewValue.Time:n0}";
+                },
+                true
+            );
         }
 
         private void changeSelectedGroupTime(in double time)
@@ -116,9 +115,18 @@ namespace osu.Game.Screens.Edit.Timing
             foreach (var cp in currentGroupItems)
             {
                 // Only adjust hit object offsets if the group contains a timing control point
-                if (cp is TimingControlPoint tp && configManager.Get<bool>(OsuSetting.EditorAdjustExistingObjectsOnTimingChanges))
+                if (
+                    cp is TimingControlPoint tp
+                    && configManager.Get<bool>(
+                        OsuSetting.EditorAdjustExistingObjectsOnTimingChanges
+                    )
+                )
                 {
-                    TimingSectionAdjustments.AdjustHitObjectOffset(Beatmap, tp, time - SelectedGroup.Value.Time);
+                    TimingSectionAdjustments.AdjustHitObjectOffset(
+                        Beatmap,
+                        tp,
+                        time - SelectedGroup.Value.Time
+                    );
                     Beatmap.UpdateAllHitObjects();
                 }
 

@@ -36,7 +36,10 @@ namespace osu.Game.Graphics.UserInterface
         /// Array of button codes which should trigger the click sound.
         /// If this optional parameter is omitted or set to <code>null</code>, the click sound will only be played on left click.
         /// </param>
-        public HoverClickSounds(HoverSampleSet sampleSet = HoverSampleSet.Default, MouseButton[] buttons = null)
+        public HoverClickSounds(
+            HoverSampleSet sampleSet = HoverSampleSet.Default,
+            MouseButton[] buttons = null
+        )
             : base(sampleSet)
         {
             this.buttons = buttons ?? new[] { MouseButton.Left };
@@ -46,7 +49,9 @@ namespace osu.Game.Graphics.UserInterface
         {
             if (buttons.Contains(e.Button))
             {
-                var channel = Enabled.Value ? sampleClick?.GetChannel() : sampleClickDisabled?.GetChannel();
+                var channel = Enabled.Value
+                    ? sampleClick?.GetChannel()
+                    : sampleClickDisabled?.GetChannel();
 
                 if (channel != null)
                 {
@@ -69,11 +74,15 @@ namespace osu.Game.Graphics.UserInterface
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
-            sampleClick = audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select")
-                          ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select");
+            sampleClick =
+                audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select")
+                ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select");
 
-            sampleClickDisabled = audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select-disabled")
-                                  ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select-disabled");
+            sampleClickDisabled =
+                audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select-disabled")
+                ?? audio.Samples.Get(
+                    $@"UI/{HoverSampleSet.Default.GetDescription()}-select-disabled"
+                );
         }
     }
 }

@@ -22,7 +22,8 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
         private const float height = 40;
         private const float selection_width = 3;
 
-        protected override TabItem<MatchType> CreateTabItem(MatchType value) => new GameTypePickerItem(value);
+        protected override TabItem<MatchType> CreateTabItem(MatchType value) =>
+            new GameTypePickerItem(value);
 
         protected override Dropdown<MatchType>? CreateDropdown() => null;
 
@@ -54,10 +55,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
                         RelativeSizeAxes = Axes.Both,
                         Masking = true,
                         Alpha = 0,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new DrawableGameType(Value)
                     {
@@ -68,16 +66,14 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
                     {
                         RelativeSizeAxes = Axes.Both,
                         Padding = new MarginPadding(selection_width),
-                        Child = hover = new CircularContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Masking = true,
-                            Alpha = 0,
-                            Child = new Box
+                        Child = hover =
+                            new CircularContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
+                                Masking = true,
+                                Alpha = 0,
+                                Child = new Box { RelativeSizeAxes = Axes.Both },
                             },
-                        },
                     },
                     new HoverSounds(HoverSampleSet.TabSelect),
                 };

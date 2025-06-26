@@ -44,11 +44,21 @@ namespace osu.Game.Screens.Select
             selectedTab = config.GetBindable<BeatmapDetailTab>(OsuSetting.BeatmapDetailTab);
             selectedModsFilter = config.GetBindable<bool>(OsuSetting.BeatmapDetailModsFilter);
 
-            selectedTab.BindValueChanged(tab => CurrentTab.Value = getTabItemFromTabType(tab.NewValue), true);
-            CurrentTab.BindValueChanged(tab => selectedTab.Value = getTabTypeFromTabItem(tab.NewValue));
+            selectedTab.BindValueChanged(
+                tab => CurrentTab.Value = getTabItemFromTabType(tab.NewValue),
+                true
+            );
+            CurrentTab.BindValueChanged(tab =>
+                selectedTab.Value = getTabTypeFromTabItem(tab.NewValue)
+            );
 
-            selectedModsFilter.BindValueChanged(checkbox => CurrentModsFilter.Value = checkbox.NewValue, true);
-            CurrentModsFilter.BindValueChanged(checkbox => selectedModsFilter.Value = checkbox.NewValue);
+            selectedModsFilter.BindValueChanged(
+                checkbox => CurrentModsFilter.Value = checkbox.NewValue,
+                true
+            );
+            CurrentModsFilter.BindValueChanged(checkbox =>
+                selectedModsFilter.Value = checkbox.NewValue
+            );
         }
 
         public override void Refresh()
@@ -77,14 +87,29 @@ namespace osu.Game.Screens.Select
             }
         }
 
-        protected override BeatmapDetailAreaTabItem[] CreateTabItems() => base.CreateTabItems().Concat(new BeatmapDetailAreaTabItem[]
-        {
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Local),
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Global),
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Country),
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Friend),
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Team),
-        }).ToArray();
+        protected override BeatmapDetailAreaTabItem[] CreateTabItems() =>
+            base.CreateTabItems()
+                .Concat(
+                    new BeatmapDetailAreaTabItem[]
+                    {
+                        new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                            BeatmapLeaderboardScope.Local
+                        ),
+                        new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                            BeatmapLeaderboardScope.Global
+                        ),
+                        new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                            BeatmapLeaderboardScope.Country
+                        ),
+                        new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                            BeatmapLeaderboardScope.Friend
+                        ),
+                        new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                            BeatmapLeaderboardScope.Team
+                        ),
+                    }
+                )
+                .ToArray();
 
         private BeatmapDetailAreaTabItem getTabItemFromTabType(BeatmapDetailTab type)
         {
@@ -94,19 +119,29 @@ namespace osu.Game.Screens.Select
                     return new BeatmapDetailAreaDetailTabItem();
 
                 case BeatmapDetailTab.Local:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Local);
+                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                        BeatmapLeaderboardScope.Local
+                    );
 
                 case BeatmapDetailTab.Global:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Global);
+                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                        BeatmapLeaderboardScope.Global
+                    );
 
                 case BeatmapDetailTab.Country:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Country);
+                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                        BeatmapLeaderboardScope.Country
+                    );
 
                 case BeatmapDetailTab.Friends:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Friend);
+                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                        BeatmapLeaderboardScope.Friend
+                    );
 
                 case BeatmapDetailTab.Team:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Team);
+                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(
+                        BeatmapLeaderboardScope.Team
+                    );
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type));

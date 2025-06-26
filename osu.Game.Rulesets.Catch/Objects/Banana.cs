@@ -22,7 +22,8 @@ namespace osu.Game.Rulesets.Catch.Objects
 
         public override Judgement CreateJudgement() => new CatchBananaJudgement();
 
-        private static readonly IList<HitSampleInfo> default_banana_samples = new List<HitSampleInfo> { new BananaHitSampleInfo() }.AsReadOnly();
+        private static readonly IList<HitSampleInfo> default_banana_samples =
+            new List<HitSampleInfo> { new BananaHitSampleInfo() }.AsReadOnly();
 
         public Banana()
         {
@@ -49,23 +50,29 @@ namespace osu.Game.Rulesets.Catch.Objects
 
         public class BananaHitSampleInfo : HitSampleInfo, IEquatable<BananaHitSampleInfo>
         {
-            private static readonly string[] lookup_names = { "Gameplay/metronomelow", "Gameplay/catch-banana" };
+            private static readonly string[] lookup_names =
+            {
+                "Gameplay/metronomelow",
+                "Gameplay/catch-banana",
+            };
 
             public override IEnumerable<string> LookupNames => lookup_names;
 
             public BananaHitSampleInfo(int volume = 100)
-                : base(string.Empty, volume: volume)
-            {
-            }
+                : base(string.Empty, volume: volume) { }
 
-            public sealed override HitSampleInfo With(Optional<string> newName = default, Optional<string> newBank = default, Optional<string?> newSuffix = default, Optional<int> newVolume = default, Optional<bool> newEditorAutoBank = default)
-                => new BananaHitSampleInfo(newVolume.GetOr(Volume));
+            public sealed override HitSampleInfo With(
+                Optional<string> newName = default,
+                Optional<string> newBank = default,
+                Optional<string?> newSuffix = default,
+                Optional<int> newVolume = default,
+                Optional<bool> newEditorAutoBank = default
+            ) => new BananaHitSampleInfo(newVolume.GetOr(Volume));
 
-            public bool Equals(BananaHitSampleInfo? other)
-                => other != null;
+            public bool Equals(BananaHitSampleInfo? other) => other != null;
 
-            public override bool Equals(object? obj)
-                => obj is BananaHitSampleInfo other && Equals(other);
+            public override bool Equals(object? obj) =>
+                obj is BananaHitSampleInfo other && Equals(other);
 
             public override int GetHashCode() => lookup_names.GetHashCode();
         }

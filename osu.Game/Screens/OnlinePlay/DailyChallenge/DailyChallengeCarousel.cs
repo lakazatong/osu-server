@@ -42,7 +42,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     Spacing = new Vector2(10),
-                }
+                },
             };
         }
 
@@ -177,10 +177,10 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                 Colour = Colour4.White,
                                 Blending = BlendingParameters.Additive,
                                 Alpha = 0,
-                            }
-                        }
+                            },
+                        },
                     },
-                    new HoverClickSounds()
+                    new HoverClickSounds(),
                 };
             }
 
@@ -188,22 +188,25 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             {
                 base.LoadComplete();
 
-                Active.BindValueChanged(val =>
-                {
-                    if (val.NewValue)
+                Active.BindValueChanged(
+                    val =>
                     {
-                        background.FadeColour(colourProvider.Highlight1, 250, Easing.OutQuint);
-                        this.ResizeWidthTo(30, 250, Easing.OutQuint);
-                        progressLayer.Width = 0;
-                        progressLayer.Alpha = 0.5f;
-                    }
-                    else
-                    {
-                        background.FadeColour(colourProvider.Light4, 250, Easing.OutQuint);
-                        this.ResizeWidthTo(15, 250, Easing.OutQuint);
-                        progressLayer.FadeOut(250, Easing.OutQuint);
-                    }
-                }, true);
+                        if (val.NewValue)
+                        {
+                            background.FadeColour(colourProvider.Highlight1, 250, Easing.OutQuint);
+                            this.ResizeWidthTo(30, 250, Easing.OutQuint);
+                            progressLayer.Width = 0;
+                            progressLayer.Alpha = 0.5f;
+                        }
+                        else
+                        {
+                            background.FadeColour(colourProvider.Light4, 250, Easing.OutQuint);
+                            this.ResizeWidthTo(15, 250, Easing.OutQuint);
+                            progressLayer.FadeOut(250, Easing.OutQuint);
+                        }
+                    },
+                    true
+                );
             }
 
             protected override bool OnHover(HoverEvent e)
@@ -223,8 +226,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             {
                 Clicked(this);
 
-                hoverLayer.FadeTo(1)
-                          .Then().FadeTo(IsHovered ? 0.2f : 0, 250, Easing.OutQuint);
+                hoverLayer.FadeTo(1).Then().FadeTo(IsHovered ? 0.2f : 0, 250, Easing.OutQuint);
 
                 return true;
             }

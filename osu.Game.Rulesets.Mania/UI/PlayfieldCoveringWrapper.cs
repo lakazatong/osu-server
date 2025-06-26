@@ -43,7 +43,8 @@ namespace osu.Game.Rulesets.Mania.UI
         /// </summary>
         private readonly Box filled;
 
-        private readonly IBindable<ScrollingDirection> scrollDirection = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> scrollDirection =
+            new Bindable<ScrollingDirection>();
 
         private float currentCoverageHeight;
 
@@ -69,7 +70,7 @@ namespace osu.Game.Rulesets.Mania.UI
                             // Subtract the cover's alpha from the destination (points with alpha 1 should make the destination completely transparent).
                             AlphaEquation = BlendingEquation.Add,
                             SourceAlpha = BlendingType.Zero,
-                            DestinationAlpha = BlendingType.OneMinusSrcAlpha
+                            DestinationAlpha = BlendingType.OneMinusSrcAlpha,
                         },
                         Children = new Drawable[]
                         {
@@ -83,18 +84,18 @@ namespace osu.Game.Rulesets.Mania.UI
                                 Colour = ColourInfo.GradientVertical(
                                     Color4.White.Opacity(0f),
                                     Color4.White.Opacity(1f)
-                                )
+                                ),
                             },
                             filled = new Box
                             {
                                 Anchor = Anchor.BottomLeft,
                                 Origin = Anchor.BottomLeft,
                                 RelativeSizeAxes = Axes.Both,
-                                Height = 0
-                            }
-                        }
-                    }
-                }
+                                Height = 0,
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -129,8 +130,20 @@ namespace osu.Game.Rulesets.Mania.UI
             }
             else
             {
-                targetCoverage = (float)Interpolation.DampContinuously(currentCoverageHeight, Coverage.Value, 25, Math.Abs(Time.Elapsed));
-                targetAlpha = (float)Interpolation.DampContinuously(gradient.Alpha, Coverage.Value > 0 ? 1 : 0, 25, Math.Abs(Time.Elapsed));
+                targetCoverage = (float)
+                    Interpolation.DampContinuously(
+                        currentCoverageHeight,
+                        Coverage.Value,
+                        25,
+                        Math.Abs(Time.Elapsed)
+                    );
+                targetAlpha = (float)
+                    Interpolation.DampContinuously(
+                        gradient.Alpha,
+                        Coverage.Value > 0 ? 1 : 0,
+                        25,
+                        Math.Abs(Time.Elapsed)
+                    );
             }
 
             filled.Height = GetHeight(targetCoverage);
@@ -142,15 +155,17 @@ namespace osu.Game.Rulesets.Mania.UI
 
         protected virtual float GetHeight(float coverage) => coverage;
 
-        private void onScrollDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
-            => cover.Rotation = direction.NewValue == ScrollingDirection.Up ? 0 : 180f;
+        private void onScrollDirectionChanged(ValueChangedEvent<ScrollingDirection> direction) =>
+            cover.Rotation = direction.NewValue == ScrollingDirection.Up ? 0 : 180f;
 
         /// <summary>
         /// The direction in which the cover expands.
         /// </summary>
         public CoverExpandDirection Direction
         {
-            set => cover.Scale = value == CoverExpandDirection.AlongScroll ? Vector2.One : new Vector2(1, -1);
+            set =>
+                cover.Scale =
+                    value == CoverExpandDirection.AlongScroll ? Vector2.One : new Vector2(1, -1);
         }
     }
 
@@ -166,6 +181,6 @@ namespace osu.Game.Rulesets.Mania.UI
         /// The cover expands against the scrolling direction.
         /// </summary>
         [Description("Against scroll")]
-        AgainstScroll
+        AgainstScroll,
     }
 }

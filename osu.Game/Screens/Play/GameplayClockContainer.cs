@@ -51,7 +51,8 @@ namespace osu.Game.Screens.Play
         /// </summary>
         protected readonly FramedBeatmapClock GameplayClock;
 
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         /// <summary>
         /// Creates a new <see cref="GameplayClockContainer"/>.
@@ -65,8 +66,12 @@ namespace osu.Game.Screens.Play
 
             InternalChildren = new Drawable[]
             {
-                GameplayClock = new FramedBeatmapClock(applyOffsets, requireDecoupling, sourceClock),
-                Content
+                GameplayClock = new FramedBeatmapClock(
+                    applyOffsets,
+                    requireDecoupling,
+                    sourceClock
+                ),
+                Content,
             };
         }
 
@@ -126,13 +131,17 @@ namespace osu.Game.Screens.Play
 
         protected virtual void StartGameplayClock()
         {
-            Logger.Log($"{nameof(GameplayClockContainer)} started via call to {nameof(StartGameplayClock)}");
+            Logger.Log(
+                $"{nameof(GameplayClockContainer)} started via call to {nameof(StartGameplayClock)}"
+            );
             GameplayClock.Start();
         }
 
         protected virtual void StopGameplayClock()
         {
-            Logger.Log($"{nameof(GameplayClockContainer)} stopped via call to {nameof(StopGameplayClock)}");
+            Logger.Log(
+                $"{nameof(GameplayClockContainer)} stopped via call to {nameof(StopGameplayClock)}"
+            );
             GameplayClock.Stop();
         }
 
@@ -176,9 +185,7 @@ namespace osu.Game.Screens.Play
 
         void IAdjustableClock.Reset() => Reset();
 
-        public virtual void ResetSpeedAdjustments()
-        {
-        }
+        public virtual void ResetSpeedAdjustments() { }
 
         double IAdjustableClock.Rate
         {

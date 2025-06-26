@@ -37,10 +37,7 @@ namespace osu.Game.Overlays.Settings.Sections
 
         public override LocalisableString Header => SkinSettingsStrings.SkinSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.SkinB
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.SkinB };
 
         private static readonly Live<SkinInfo> random_skin_info = new SkinInfo
         {
@@ -77,14 +74,33 @@ namespace osu.Game.Overlays.Settings.Sections
                     AutoSizeAxes = Axes.Y,
                     Direction = FillDirection.Horizontal,
                     Spacing = new Vector2(5, 0),
-                    Padding = new MarginPadding { Left = SettingsPanel.CONTENT_MARGINS, Right = SettingsPanel.CONTENT_MARGINS },
+                    Padding = new MarginPadding
+                    {
+                        Left = SettingsPanel.CONTENT_MARGINS,
+                        Right = SettingsPanel.CONTENT_MARGINS,
+                    },
                     Children = new Drawable[]
                     {
                         // This is all super-temporary until we move skin settings to their own panel / overlay.
-                        new RenameSkinButton { Padding = new MarginPadding(), RelativeSizeAxes = Axes.None, Width = 120 },
-                        new ExportSkinButton { Padding = new MarginPadding(), RelativeSizeAxes = Axes.None, Width = 120 },
-                        new DeleteSkinButton { Padding = new MarginPadding(), RelativeSizeAxes = Axes.None, Width = 110 },
-                    }
+                        new RenameSkinButton
+                        {
+                            Padding = new MarginPadding(),
+                            RelativeSizeAxes = Axes.None,
+                            Width = 120,
+                        },
+                        new ExportSkinButton
+                        {
+                            Padding = new MarginPadding(),
+                            RelativeSizeAxes = Axes.None,
+                            Width = 120,
+                        },
+                        new DeleteSkinButton
+                        {
+                            Padding = new MarginPadding(),
+                            RelativeSizeAxes = Axes.None,
+                            Width = 110,
+                        },
+                    },
                 },
                 new SettingsButton
                 {
@@ -98,9 +114,14 @@ namespace osu.Game.Overlays.Settings.Sections
         {
             base.LoadComplete();
 
-            realmSubscription = realm.RegisterForNotifications(_ => realm.Realm.All<SkinInfo>()
-                                                                         .Where(s => !s.DeletePending)
-                                                                         .OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase), skinsChanged);
+            realmSubscription = realm.RegisterForNotifications(
+                _ =>
+                    realm
+                        .Realm.All<SkinInfo>()
+                        .Where(s => !s.DeletePending)
+                        .OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase),
+                skinsChanged
+            );
 
             skinDropdown.Current.BindValueChanged(skin =>
             {
@@ -148,11 +169,13 @@ namespace osu.Game.Overlays.Settings.Sections
 
         private partial class SkinSettingsDropdown : SettingsDropdown<Live<SkinInfo>>
         {
-            protected override OsuDropdown<Live<SkinInfo>> CreateDropdown() => new SkinDropdownControl();
+            protected override OsuDropdown<Live<SkinInfo>> CreateDropdown() =>
+                new SkinDropdownControl();
 
             private partial class SkinDropdownControl : DropdownControl
             {
-                protected override LocalisableString GenerateItemText(Live<SkinInfo> item) => item.ToString();
+                protected override LocalisableString GenerateItemText(Live<SkinInfo> item) =>
+                    item.ToString();
             }
         }
 
@@ -175,7 +198,10 @@ namespace osu.Game.Overlays.Settings.Sections
                 base.LoadComplete();
 
                 currentSkin = skins.CurrentSkin.GetBoundCopy();
-                currentSkin.BindValueChanged(skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected), true);
+                currentSkin.BindValueChanged(
+                    skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected),
+                    true
+                );
             }
 
             public Popover GetPopover()
@@ -203,7 +229,10 @@ namespace osu.Game.Overlays.Settings.Sections
                 base.LoadComplete();
 
                 currentSkin = skins.CurrentSkin.GetBoundCopy();
-                currentSkin.BindValueChanged(skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected), true);
+                currentSkin.BindValueChanged(
+                    skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected),
+                    true
+                );
             }
 
             private void export()
@@ -214,7 +243,10 @@ namespace osu.Game.Overlays.Settings.Sections
                 }
                 catch (Exception e)
                 {
-                    Logger.Log($"Could not export current skin: {e.Message}", level: LogLevel.Error);
+                    Logger.Log(
+                        $"Could not export current skin: {e.Message}",
+                        level: LogLevel.Error
+                    );
                 }
             }
         }
@@ -241,7 +273,10 @@ namespace osu.Game.Overlays.Settings.Sections
                 base.LoadComplete();
 
                 currentSkin = skins.CurrentSkin.GetBoundCopy();
-                currentSkin.BindValueChanged(skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected), true);
+                currentSkin.BindValueChanged(
+                    skin => Enabled.Value = skin.NewValue.SkinInfo.PerformRead(s => !s.Protected),
+                    true
+                );
             }
 
             private void delete()
@@ -285,8 +320,8 @@ namespace osu.Game.Overlays.Settings.Sections
                             RelativeSizeAxes = Axes.X,
                             MatchingFilter = true,
                             Text = "Save",
-                        }
-                    }
+                        },
+                    },
                 };
 
                 renameButton.Action += rename;
@@ -301,11 +336,12 @@ namespace osu.Game.Overlays.Settings.Sections
                 base.PopIn();
             }
 
-            private void rename() => skins.CurrentSkinInfo.Value.PerformWrite(skin =>
-            {
-                skin.Name = textBox.Text;
-                PopOut();
-            });
+            private void rename() =>
+                skins.CurrentSkinInfo.Value.PerformWrite(skin =>
+                {
+                    skin.Name = textBox.Text;
+                    PopOut();
+                });
         }
     }
 }

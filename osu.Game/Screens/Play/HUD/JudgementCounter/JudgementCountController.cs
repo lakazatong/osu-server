@@ -21,7 +21,8 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
         [Resolved]
         private ScoreProcessor scoreProcessor { get; set; } = null!;
 
-        private readonly Dictionary<HitResult, JudgementCount> results = new Dictionary<HitResult, JudgementCount>();
+        private readonly Dictionary<HitResult, JudgementCount> results =
+            new Dictionary<HitResult, JudgementCount>();
 
         public IEnumerable<JudgementCount> Counters => counters;
 
@@ -32,13 +33,18 @@ namespace osu.Game.Screens.Play.HUD.JudgementCounter
         {
             // Due to weirdness in judgements, some results have the same name and should be aggregated for display purposes.
             // There's only one case of this right now ("slider end").
-            foreach (var group in ruleset.Value.CreateInstance().GetHitResults().GroupBy(r => r.displayName))
+            foreach (
+                var group in ruleset
+                    .Value.CreateInstance()
+                    .GetHitResults()
+                    .GroupBy(r => r.displayName)
+            )
             {
                 var judgementCount = new JudgementCount
                 {
                     DisplayName = group.Key,
                     Types = group.Select(r => r.result).ToArray(),
-                    ResultCount = new BindableInt()
+                    ResultCount = new BindableInt(),
                 };
 
                 counters.Add(judgementCount);

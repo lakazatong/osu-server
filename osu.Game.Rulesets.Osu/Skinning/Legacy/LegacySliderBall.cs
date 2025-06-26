@@ -44,7 +44,9 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         {
             Vector2 maxSize = OsuLegacySkinTransformer.MAX_FOLLOW_CIRCLE_AREA_SIZE;
 
-            var ballColour = skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderBall)?.Value ?? Color4.White;
+            var ballColour =
+                skin.GetConfig<OsuSkinColour, Color4>(OsuSkinColour.SliderBall)?.Value
+                ?? Color4.White;
             ballTextures = skin.GetTextures("sliderb", default, default, true, "", maxSize, out _);
 
             InternalChildren = new Drawable[]
@@ -88,7 +90,11 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 parentObject.ApplyCustomUpdateState += updateStateTransforms;
                 updateStateTransforms(parentObject, parentObject.State.Value);
 
-                if (skin.GetConfig<SkinConfiguration.LegacySetting, bool>(SkinConfiguration.LegacySetting.AllowSliderBallTint)?.Value == true)
+                if (
+                    skin.GetConfig<SkinConfiguration.LegacySetting, bool>(
+                        SkinConfiguration.LegacySetting.AllowSliderBallTint
+                    )?.Value == true
+                )
                 {
                     accentColour.BindTo(parentObject.AccentColour);
                     accentColour.BindValueChanged(a => ballAnimation.Colour = a.NewValue, true);
@@ -116,8 +122,11 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 DrawableSlider drawableSlider = (DrawableSlider)drawableObject;
 
                 frameDelay = Math.Max(
-                    0.15 / drawableSlider.HitObject.Velocity * LegacySkinExtensions.SIXTY_FRAME_TIME,
-                    LegacySkinExtensions.SIXTY_FRAME_TIME);
+                    0.15
+                        / drawableSlider.HitObject.Velocity
+                        * LegacySkinExtensions.SIXTY_FRAME_TIME,
+                    LegacySkinExtensions.SIXTY_FRAME_TIME
+                );
             }
             else
                 frameDelay = LegacySkinExtensions.SIXTY_FRAME_TIME;

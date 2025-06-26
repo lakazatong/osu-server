@@ -21,8 +21,12 @@ namespace osu.Game.Overlays.Comments
 
         private void onCurrentChanged(ValueChangedEvent<int> count)
         {
-            Text = new TranslatableString(@"_", "{0} ({1})",
-                CommonStrings.ButtonsShowMore.ToUpper(), count.NewValue);
+            Text = new TranslatableString(
+                @"_",
+                "{0} ({1})",
+                CommonStrings.ButtonsShowMore.ToUpper(),
+                count.NewValue
+            );
         }
     }
 }

@@ -17,11 +17,14 @@ namespace osu.Game.Screens.Play.HUD
     /// <summary>
     /// A horizontally wrapping display of mods. For cases where wrapping is not required, use <see cref="ModDisplay"/> instead.
     /// </summary>
-    public partial class ModFlowDisplay : ReverseChildIDFillFlowContainer<ModIcon>, IHasCurrentValue<IReadOnlyList<Mod>>
+    public partial class ModFlowDisplay
+        : ReverseChildIDFillFlowContainer<ModIcon>,
+            IHasCurrentValue<IReadOnlyList<Mod>>
     {
         private const int fade_duration = 1000;
 
-        private readonly BindableWithCurrent<IReadOnlyList<Mod>> current = new BindableWithCurrent<IReadOnlyList<Mod>>();
+        private readonly BindableWithCurrent<IReadOnlyList<Mod>> current =
+            new BindableWithCurrent<IReadOnlyList<Mod>>();
 
         public Bindable<IReadOnlyList<Mod>> Current
         {
@@ -64,18 +67,21 @@ namespace osu.Game.Screens.Play.HUD
         {
             Clear();
 
-            if (current.Value == null) return;
+            if (current.Value == null)
+                return;
 
             Spacing = new Vector2(0, -12 * iconScale);
 
             foreach (Mod mod in current.Value.AsOrdered())
             {
-                Add(new ModIcon(mod)
-                {
-                    Scale = new Vector2(0.6f * iconScale),
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                });
+                Add(
+                    new ModIcon(mod)
+                    {
+                        Scale = new Vector2(0.6f * iconScale),
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                    }
+                );
             }
         }
     }

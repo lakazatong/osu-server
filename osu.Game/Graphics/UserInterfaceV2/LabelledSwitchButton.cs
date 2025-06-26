@@ -6,9 +6,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
     public partial class LabelledSwitchButton : LabelledComponent<SwitchButton, bool>
     {
         public LabelledSwitchButton()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
         protected override SwitchButton CreateComponent() => new SwitchButton();
     }

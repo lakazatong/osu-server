@@ -48,8 +48,10 @@ namespace osu.Game.Tests.Mods
                             var secondMod = multiMod.Mods[j];
 
                             Assert.That(
-                                ModUtils.CheckCompatibleSet(new[] { firstMod, secondMod }), Is.False,
-                                $"{firstMod.Name} ({firstMod.Acronym}) and {secondMod.Name} ({secondMod.Acronym}) should be incompatible.");
+                                ModUtils.CheckCompatibleSet(new[] { firstMod, secondMod }),
+                                Is.False,
+                                $"{firstMod.Name} ({firstMod.Acronym}) and {secondMod.Name} ({secondMod.Acronym}) should be incompatible."
+                            );
                         }
                     }
                 }
@@ -59,7 +61,7 @@ namespace osu.Game.Tests.Mods
         /// <remarks>
         /// This local helper is used rather than <see cref="Ruleset.CreateAllMods"/>, because the aforementioned method flattens multi mods.
         /// </remarks>>
-        private static IEnumerable<MultiMod> getMultiMods(Ruleset ruleset)
-            => Enum.GetValues<ModType>().SelectMany(ruleset.GetModsFor).OfType<MultiMod>();
+        private static IEnumerable<MultiMod> getMultiMods(Ruleset ruleset) =>
+            Enum.GetValues<ModType>().SelectMany(ruleset.GetModsFor).OfType<MultiMod>();
     }
 }

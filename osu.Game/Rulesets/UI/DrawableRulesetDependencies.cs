@@ -61,14 +61,35 @@ namespace osu.Game.Rulesets.UI
 
             var host = parent.Get<GameHost>();
 
-            TextureStore = new TextureStore(host.Renderer, parent.Get<GameHost>().CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(resources, @"Textures")));
-            CacheAs(TextureStore = new FallbackTextureStore(host.Renderer, TextureStore, parent.Get<TextureStore>()));
+            TextureStore = new TextureStore(
+                host.Renderer,
+                parent
+                    .Get<GameHost>()
+                    .CreateTextureLoaderStore(
+                        new NamespacedResourceStore<byte[]>(resources, @"Textures")
+                    )
+            );
+            CacheAs(
+                TextureStore = new FallbackTextureStore(
+                    host.Renderer,
+                    TextureStore,
+                    parent.Get<TextureStore>()
+                )
+            );
 
-            SampleStore = parent.Get<AudioManager>().GetSampleStore(new NamespacedResourceStore<byte[]>(resources, @"Samples"));
+            SampleStore = parent
+                .Get<AudioManager>()
+                .GetSampleStore(new NamespacedResourceStore<byte[]>(resources, @"Samples"));
             SampleStore.PlaybackConcurrency = OsuGameBase.SAMPLE_CONCURRENCY;
             CacheAs(SampleStore = new FallbackSampleStore(SampleStore, parent.Get<ISampleStore>()));
 
-            CacheAs(ShaderManager = new RulesetShaderManager(host.Renderer, new NamespacedResourceStore<byte[]>(resources, @"Shaders"), parent.Get<ShaderManager>()));
+            CacheAs(
+                ShaderManager = new RulesetShaderManager(
+                    host.Renderer,
+                    new NamespacedResourceStore<byte[]>(resources, @"Shaders"),
+                    parent.Get<ShaderManager>()
+                )
+            );
 
             RulesetConfigManager = parent.Get<IRulesetConfigCache>().GetConfigFor(ruleset);
             if (RulesetConfigManager != null)
@@ -98,9 +119,12 @@ namespace osu.Game.Rulesets.UI
 
             isDisposed = true;
 
-            if (SampleStore.IsNotNull()) SampleStore.Dispose();
-            if (TextureStore.IsNotNull()) TextureStore.Dispose();
-            if (ShaderManager.IsNotNull()) ShaderManager.Dispose();
+            if (SampleStore.IsNotNull())
+                SampleStore.Dispose();
+            if (TextureStore.IsNotNull())
+                TextureStore.Dispose();
+            if (ShaderManager.IsNotNull())
+                ShaderManager.Dispose();
         }
 
         #endregion
@@ -121,25 +145,36 @@ namespace osu.Game.Rulesets.UI
 
             public Sample Get(string name) => primary.Get(name) ?? fallback.Get(name);
 
-            public async Task<Sample> GetAsync(string name, CancellationToken cancellationToken = default)
+            public async Task<Sample> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            )
             {
                 return await primary.GetAsync(name, cancellationToken).ConfigureAwait(false)
-                       ?? await fallback.GetAsync(name, cancellationToken).ConfigureAwait(false);
+                    ?? await fallback.GetAsync(name, cancellationToken).ConfigureAwait(false);
             }
 
-            public Stream GetStream(string name) => primary.GetStream(name) ?? fallback.GetStream(name);
+            public Stream GetStream(string name) =>
+                primary.GetStream(name) ?? fallback.GetStream(name);
 
             public IEnumerable<string> GetAvailableResources() => throw new NotSupportedException();
 
-            public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => throw new NotSupportedException();
+            public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+                throw new NotSupportedException();
 
-            public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => throw new NotSupportedException();
+            public void RemoveAdjustment(
+                AdjustableProperty type,
+                IBindable<double> adjustBindable
+            ) => throw new NotSupportedException();
 
-            public void RemoveAllAdjustments(AdjustableProperty type) => throw new NotSupportedException();
+            public void RemoveAllAdjustments(AdjustableProperty type) =>
+                throw new NotSupportedException();
 
-            public void BindAdjustments(IAggregateAudioAdjustment component) => throw new NotImplementedException();
+            public void BindAdjustments(IAggregateAudioAdjustment component) =>
+                throw new NotImplementedException();
 
-            public void UnbindAdjustments(IAggregateAudioAdjustment component) => throw new NotImplementedException();
+            public void UnbindAdjustments(IAggregateAudioAdjustment component) =>
+                throw new NotImplementedException();
 
             public BindableNumber<double> Volume => throw new NotSupportedException();
 
@@ -167,7 +202,8 @@ namespace osu.Game.Rulesets.UI
 
             public void Dispose()
             {
-                if (primary.IsNotNull()) primary.Dispose();
+                if (primary.IsNotNull())
+                    primary.Dispose();
             }
         }
 
@@ -179,20 +215,25 @@ namespace osu.Game.Rulesets.UI
             private readonly TextureStore primary;
             private readonly TextureStore fallback;
 
-            public FallbackTextureStore(IRenderer renderer, TextureStore primary, TextureStore fallback)
+            public FallbackTextureStore(
+                IRenderer renderer,
+                TextureStore primary,
+                TextureStore fallback
+            )
                 : base(renderer)
             {
                 this.primary = primary;
                 this.fallback = fallback;
             }
 
-            public override Texture? Get(string name, WrapMode wrapModeS, WrapMode wrapModeT)
-                => primary.Get(name, wrapModeS, wrapModeT) ?? fallback.Get(name, wrapModeS, wrapModeT);
+            public override Texture? Get(string name, WrapMode wrapModeS, WrapMode wrapModeT) =>
+                primary.Get(name, wrapModeS, wrapModeT) ?? fallback.Get(name, wrapModeS, wrapModeT);
 
             protected override void Dispose(bool disposing)
             {
                 base.Dispose(disposing);
-                if (primary.IsNotNull()) primary.Dispose();
+                if (primary.IsNotNull())
+                    primary.Dispose();
             }
         }
 
@@ -200,17 +241,24 @@ namespace osu.Game.Rulesets.UI
         {
             private readonly ShaderManager parent;
 
-            public RulesetShaderManager(IRenderer renderer, NamespacedResourceStore<byte[]> rulesetResources, ShaderManager parent)
+            public RulesetShaderManager(
+                IRenderer renderer,
+                NamespacedResourceStore<byte[]> rulesetResources,
+                ShaderManager parent
+            )
                 : base(renderer, rulesetResources)
             {
                 this.parent = parent;
             }
 
-            public override IShader? GetCachedShader(string vertex, string fragment) => base.GetCachedShader(vertex, fragment) ?? parent.GetCachedShader(vertex, fragment);
+            public override IShader? GetCachedShader(string vertex, string fragment) =>
+                base.GetCachedShader(vertex, fragment) ?? parent.GetCachedShader(vertex, fragment);
 
-            public override IShaderPart? GetCachedShaderPart(string name) => base.GetCachedShaderPart(name) ?? parent.GetCachedShaderPart(name);
+            public override IShaderPart? GetCachedShaderPart(string name) =>
+                base.GetCachedShaderPart(name) ?? parent.GetCachedShaderPart(name);
 
-            public override byte[]? GetRawData(string fileName) => base.GetRawData(fileName) ?? parent.GetRawData(fileName);
+            public override byte[]? GetRawData(string fileName) =>
+                base.GetRawData(fileName) ?? parent.GetRawData(fileName);
         }
     }
 }

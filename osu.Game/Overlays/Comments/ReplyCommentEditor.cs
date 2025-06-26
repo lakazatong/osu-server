@@ -27,12 +27,15 @@ namespace osu.Game.Overlays.Comments
         protected override LocalisableString GetButtonText(bool isLoggedIn) =>
             isLoggedIn ? CommonStrings.ButtonsReply : CommentsStrings.GuestButtonReply;
 
-        protected override LocalisableString GetPlaceholderText() => CommentsStrings.PlaceholderReply;
+        protected override LocalisableString GetPlaceholderText() =>
+            CommentsStrings.PlaceholderReply;
 
         public ReplyCommentEditor(Comment parent, IEnumerable<CommentableMeta> meta)
         {
             parentComment = parent;
-            CommentableMeta.Value = meta.SingleOrDefault(m => m.Id == parent.CommentableId && m.Type == parent.CommentableType);
+            CommentableMeta.Value = meta.SingleOrDefault(m =>
+                m.Id == parent.CommentableId && m.Type == parent.CommentableType
+            );
         }
 
         protected override void LoadComplete()
@@ -46,12 +49,18 @@ namespace osu.Game.Overlays.Comments
         protected override void OnCommit(string text)
         {
             ShowLoadingSpinner = true;
-            CommentPostRequest req = new CommentPostRequest(commentsContainer.Type.Value, commentsContainer.Id.Value, text, parentComment.Id);
-            req.Failure += e => Schedule(() =>
-            {
-                ShowLoadingSpinner = false;
-                Logger.Error(e, "Posting reply comment failed.");
-            });
+            CommentPostRequest req = new CommentPostRequest(
+                commentsContainer.Type.Value,
+                commentsContainer.Id.Value,
+                text,
+                parentComment.Id
+            );
+            req.Failure += e =>
+                Schedule(() =>
+                {
+                    ShowLoadingSpinner = false;
+                    Logger.Error(e, "Posting reply comment failed.");
+                });
             req.Success += cb => Schedule(processPostedComments, cb);
             API.Queue(req);
         }
@@ -61,7 +70,9 @@ namespace osu.Game.Overlays.Comments
             foreach (var comment in cb.Comments)
                 comment.ParentComment = parentComment;
 
-            var drawables = cb.Comments.Select(c => commentsContainer.GetDrawableComment(c, cb.CommentableMeta)).ToArray();
+            var drawables = cb
+                .Comments.Select(c => commentsContainer.GetDrawableComment(c, cb.CommentableMeta))
+                .ToArray();
             OnPost?.Invoke(drawables);
 
             OnCancel!.Invoke();

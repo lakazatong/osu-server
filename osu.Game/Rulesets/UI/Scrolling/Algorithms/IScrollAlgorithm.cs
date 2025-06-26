@@ -32,7 +32,12 @@ namespace osu.Game.Rulesets.UI.Scrolling.Algorithms
         /// <param name="timeRange">The amount of visible time.</param>
         /// <param name="scrollLength">The absolute spatial length through <paramref name="timeRange"/>.</param>
         /// <returns>The time at which the object should enter the time range.</returns>
-        double GetDisplayStartTime(double originTime, float offset, double timeRange, float scrollLength);
+        double GetDisplayStartTime(
+            double originTime,
+            float offset,
+            double timeRange,
+            float scrollLength
+        );
 
         /// <summary>
         /// Computes the spatial length within a start and end time.
@@ -53,7 +58,13 @@ namespace osu.Game.Rulesets.UI.Scrolling.Algorithms
         /// <param name="scrollLength">The absolute spatial length through <paramref name="timeRange"/>.</param>
         /// <param name="originTime">The time to be used for control point lookups (ie. the parent's start time for nested hit objects).</param>
         /// <returns>The absolute spatial position.</returns>
-        float PositionAt(double time, double currentTime, double timeRange, float scrollLength, double? originTime = null);
+        float PositionAt(
+            double time,
+            double currentTime,
+            double timeRange,
+            float scrollLength,
+            double? originTime = null
+        );
 
         /// <summary>
         /// Computes the time which brings a point to a provided spatial position given the current time.

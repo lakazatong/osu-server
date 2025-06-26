@@ -27,32 +27,38 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private const double skip_time = 6000;
 
-        private void createTest(double skipTime = skip_time) => AddStep("create test", () =>
-        {
-            requestCount = 0;
-            increment = skip_time;
-
-            var working = CreateWorkingBeatmap(CreateBeatmap(new OsuRuleset().RulesetInfo));
-
-            Child = gameplayClockContainer = new MasterGameplayClockContainer(working, 0)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+        private void createTest(double skipTime = skip_time) =>
+            AddStep(
+                "create test",
+                () =>
                 {
-                    skip = new TestSkipOverlay(skipTime)
-                    {
-                        RequestSkip = () =>
-                        {
-                            requestCount++;
-                            gameplayClockContainer.Seek(gameplayClock.CurrentTime + increment);
-                        }
-                    }
-                },
-            };
+                    requestCount = 0;
+                    increment = skip_time;
 
-            gameplayClockContainer.Start();
-            gameplayClock = gameplayClockContainer;
-        });
+                    var working = CreateWorkingBeatmap(CreateBeatmap(new OsuRuleset().RulesetInfo));
+
+                    Child = gameplayClockContainer = new MasterGameplayClockContainer(working, 0)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
+                        {
+                            skip = new TestSkipOverlay(skipTime)
+                            {
+                                RequestSkip = () =>
+                                {
+                                    requestCount++;
+                                    gameplayClockContainer.Seek(
+                                        gameplayClock.CurrentTime + increment
+                                    );
+                                },
+                            },
+                        },
+                    };
+
+                    gameplayClockContainer.Start();
+                    gameplayClock = gameplayClockContainer;
+                }
+            );
 
         [Test]
         public void TestSkipTimeZero()
@@ -109,11 +115,17 @@ namespace osu.Game.Tests.Visual.Gameplay
             createTest();
 
             AddStep("move mouse", () => InputManager.MoveMouseTo(skip.ScreenSpaceDrawQuad.Centre));
-            AddStep("click", () =>
-            {
-                increment = skip_time - gameplayClock.CurrentTime - MasterGameplayClockContainer.MINIMUM_SKIP_TIME / 2;
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click",
+                () =>
+                {
+                    increment =
+                        skip_time
+                        - gameplayClock.CurrentTime
+                        - MasterGameplayClockContainer.MINIMUM_SKIP_TIME / 2;
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("click", () => InputManager.Click(MouseButton.Left));
             AddStep("click", () => InputManager.Click(MouseButton.Left));
             AddStep("click", () => InputManager.Click(MouseButton.Left));
@@ -160,16 +172,22 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void checkRequestCount(int expected)
         {
-            AddAssert($"skip count is {expected}", () => skip.SkipCount, () => Is.EqualTo(expected));
-            AddAssert($"request count is {expected}", () => requestCount, () => Is.EqualTo(expected));
+            AddAssert(
+                $"skip count is {expected}",
+                () => skip.SkipCount,
+                () => Is.EqualTo(expected)
+            );
+            AddAssert(
+                $"request count is {expected}",
+                () => requestCount,
+                () => Is.EqualTo(expected)
+            );
         }
 
         private partial class TestSkipOverlay : SkipOverlay
         {
             public TestSkipOverlay(double startTime)
-                : base(startTime)
-            {
-            }
+                : base(startTime) { }
 
             public Drawable OverlayContent => InternalChild;
 

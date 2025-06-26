@@ -16,12 +16,13 @@ namespace osu.Game.Rulesets.Taiko.Mods
     {
         public override double ScoreMultiplier => UsesDefaultConfiguration ? 1.12 : 1;
 
-        public override BindableFloat SizeMultiplier { get; } = new BindableFloat(1)
-        {
-            MinValue = 0.5f,
-            MaxValue = 1.5f,
-            Precision = 0.1f
-        };
+        public override BindableFloat SizeMultiplier { get; } =
+            new BindableFloat(1)
+            {
+                MinValue = 0.5f,
+                MaxValue = 1.5f,
+                Precision = 0.1f,
+            };
 
         public override BindableBool ComboBasedSize { get; } = new BindableBool(true);
 
@@ -39,7 +40,9 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
         public partial class TaikoFlashlight : Flashlight
         {
-            private readonly LayoutValue flashlightProperties = new LayoutValue(Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo);
+            private readonly LayoutValue flashlightProperties = new LayoutValue(
+                Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo
+            );
             private readonly TaikoPlayfield taikoPlayfield;
 
             public TaikoFlashlight(TaikoModFlashlight modFlashlight, TaikoPlayfield taikoPlayfield)
@@ -68,7 +71,11 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
             protected override void UpdateFlashlightSize(float size)
             {
-                this.TransformTo(nameof(FlashlightSize), adjustSizeForPlayfieldAspectRatio(size), FLASHLIGHT_FADE_DURATION);
+                this.TransformTo(
+                    nameof(FlashlightSize),
+                    adjustSizeForPlayfieldAspectRatio(size),
+                    FLASHLIGHT_FADE_DURATION
+                );
             }
 
             protected override string FragmentShader => "CircularFlashlight";
@@ -79,7 +86,9 @@ namespace osu.Game.Rulesets.Taiko.Mods
 
                 if (!flashlightProperties.IsValid)
                 {
-                    FlashlightPosition = ToLocalSpace(taikoPlayfield.HitTarget.ScreenSpaceDrawQuad.Centre);
+                    FlashlightPosition = ToLocalSpace(
+                        taikoPlayfield.HitTarget.ScreenSpaceDrawQuad.Centre
+                    );
 
                     ClearTransforms(targetMember: nameof(FlashlightSize));
                     FlashlightSize = adjustSizeForPlayfieldAspectRatio(GetSize());

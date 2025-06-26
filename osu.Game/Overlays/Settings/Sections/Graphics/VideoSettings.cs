@@ -23,7 +23,9 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
         [BackgroundDependencyLoader]
         private void load(FrameworkConfigManager config)
         {
-            hardwareVideoDecoder = config.GetBindable<HardwareVideoDecoder>(FrameworkSetting.HardwareVideoDecoder);
+            hardwareVideoDecoder = config.GetBindable<HardwareVideoDecoder>(
+                FrameworkSetting.HardwareVideoDecoder
+            );
 
             Children = new Drawable[]
             {
@@ -33,12 +35,15 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 },
             };
 
-            hwAccelCheckbox.Current.Default = hardwareVideoDecoder.Default != HardwareVideoDecoder.None;
+            hwAccelCheckbox.Current.Default =
+                hardwareVideoDecoder.Default != HardwareVideoDecoder.None;
             hwAccelCheckbox.Current.Value = hardwareVideoDecoder.Value != HardwareVideoDecoder.None;
 
             hwAccelCheckbox.Current.BindValueChanged(val =>
             {
-                hardwareVideoDecoder.Value = val.NewValue ? HardwareVideoDecoder.Any : HardwareVideoDecoder.None;
+                hardwareVideoDecoder.Value = val.NewValue
+                    ? HardwareVideoDecoder.Any
+                    : HardwareVideoDecoder.None;
             });
         }
     }

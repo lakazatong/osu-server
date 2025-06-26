@@ -112,8 +112,8 @@ namespace osu.Game.Screens.Edit.Submission
                                             Origin = Anchor.CentreLeft,
                                             Width = 0,
                                             Colour = colourProvider.Highlight1,
-                                        }
-                                    }
+                                        },
+                                    },
                                 },
                                 errorMessage = new OsuTextFlowContainer
                                 {
@@ -126,11 +126,11 @@ namespace osu.Game.Screens.Edit.Submission
                                     AutoSizeAxes = Axes.Y,
                                     Alpha = 0,
                                     Colour = colours.Red1,
-                                }
-                            ]
-                        }
-                    }
-                }
+                                },
+                            ],
+                        },
+                    },
+                },
             };
 
             errorSample = audio.Samples.Get(@"UI/generic-error");
@@ -191,7 +191,11 @@ namespace osu.Game.Screens.Edit.Submission
             progressSampleFadeDelegate?.Cancel();
             progressSampleStopDelegate?.Cancel();
 
-            progressBarContainer.FadeTo(status.Value == StageStatusType.InProgress && progress.Value != null ? 1 : 0, transition_duration, transition_easing);
+            progressBarContainer.FadeTo(
+                status.Value == StageStatusType.InProgress && progress.Value != null ? 1 : 0,
+                transition_duration,
+                transition_easing
+            );
 
             if (progress.Value is float progressValue)
             {
@@ -204,22 +208,49 @@ namespace osu.Game.Screens.Edit.Submission
                 if (!progressSampleChannel.Playing)
                     progressSampleChannel.Play();
 
-                this.TransformBindableTo(progressSampleChannel.Frequency, 0.5f + (progressValue * 1.5f), transition_duration, transition_easing);
-                this.TransformBindableTo(progressSampleChannel.Volume, 0.25f + (progressValue * .75f), transition_duration, transition_easing);
+                this.TransformBindableTo(
+                    progressSampleChannel.Frequency,
+                    0.5f + (progressValue * 1.5f),
+                    transition_duration,
+                    transition_easing
+                );
+                this.TransformBindableTo(
+                    progressSampleChannel.Volume,
+                    0.25f + (progressValue * .75f),
+                    transition_duration,
+                    transition_easing
+                );
 
-                progressSampleFadeDelegate = Scheduler.AddDelayed(() =>
-                {
-                    // Perform a fade-out before stopping the sample to prevent clicking.
-                    this.TransformBindableTo(progressSampleChannel.Volume, 0, fadeout_duration);
-                    progressSampleStopDelegate = Scheduler.AddDelayed(() => { progressSampleChannel.Stop(); }, fadeout_duration);
-                }, transition_duration - fadeout_duration);
+                progressSampleFadeDelegate = Scheduler.AddDelayed(
+                    () =>
+                    {
+                        // Perform a fade-out before stopping the sample to prevent clicking.
+                        this.TransformBindableTo(progressSampleChannel.Volume, 0, fadeout_duration);
+                        progressSampleStopDelegate = Scheduler.AddDelayed(
+                            () =>
+                            {
+                                progressSampleChannel.Stop();
+                            },
+                            fadeout_duration
+                        );
+                    },
+                    transition_duration - fadeout_duration
+                );
             }
         }
 
         private void updateStatus()
         {
-            progressBarContainer.FadeTo(status.Value == StageStatusType.InProgress && progress.Value != null ? 1 : 0, transition_duration, Easing.OutQuint);
-            errorMessage.FadeTo(status.Value == StageStatusType.Failed ? 1 : 0, transition_duration, Easing.OutQuint);
+            progressBarContainer.FadeTo(
+                status.Value == StageStatusType.InProgress && progress.Value != null ? 1 : 0,
+                transition_duration,
+                Easing.OutQuint
+            );
+            errorMessage.FadeTo(
+                status.Value == StageStatusType.Failed ? 1 : 0,
+                transition_duration,
+                Easing.OutQuint
+            );
 
             iconContainer.Clear();
             iconContainer.ClearTransforms();
@@ -230,7 +261,7 @@ namespace osu.Game.Screens.Edit.Submission
                     iconContainer.Child = new LoadingSpinner
                     {
                         Size = new Vector2(16),
-                        State = { Value = Visibility.Visible, },
+                        State = { Value = Visibility.Visible },
                     };
                     iconContainer.Colour = colours.Orange1;
                     break;

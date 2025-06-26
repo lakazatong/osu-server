@@ -29,21 +29,16 @@ namespace osu.Game.Overlays.Dashboard.Home
                 Colour = Color4.Black.Opacity(0.25f),
                 Type = EdgeEffectType.Shadow,
                 Radius = 3,
-                Offset = new Vector2(0, 1)
+                Offset = new Vector2(0, 1),
             };
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    content = new Container { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]

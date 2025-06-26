@@ -26,10 +26,21 @@ namespace osu.Game.Tests.Input
         [Test]
         public void TestUnmapGlobalAction()
         {
-            var keyBinding = new RealmKeyBinding(GlobalAction.ToggleReplaySettings, KeyCombination.FromKey(Key.Z));
+            var keyBinding = new RealmKeyBinding(
+                GlobalAction.ToggleReplaySettings,
+                KeyCombination.FromKey(Key.Z)
+            );
 
-            AddAssert("action is integer", () => keyBinding.Action, () => Is.EqualTo((int)GlobalAction.ToggleReplaySettings));
-            AddAssert("action unmaps correctly", () => keyBinding.GetAction(rulesets), () => Is.EqualTo(GlobalAction.ToggleReplaySettings));
+            AddAssert(
+                "action is integer",
+                () => keyBinding.Action,
+                () => Is.EqualTo((int)GlobalAction.ToggleReplaySettings)
+            );
+            AddAssert(
+                "action unmaps correctly",
+                () => keyBinding.GetAction(rulesets),
+                () => Is.EqualTo(GlobalAction.ToggleReplaySettings)
+            );
         }
 
         [TestCase(typeof(OsuRuleset), OsuAction.Smoke, null)]
@@ -39,10 +50,19 @@ namespace osu.Game.Tests.Input
         public void TestUnmapRulesetActions(Type rulesetType, object action, int? variant)
         {
             string rulesetName = ((Ruleset)Activator.CreateInstance(rulesetType)!).ShortName;
-            var keyBinding = new RealmKeyBinding(action, KeyCombination.FromKey(Key.Z), rulesetName, variant);
+            var keyBinding = new RealmKeyBinding(
+                action,
+                KeyCombination.FromKey(Key.Z),
+                rulesetName,
+                variant
+            );
 
             AddAssert("action is integer", () => keyBinding.Action, () => Is.EqualTo((int)action));
-            AddAssert("action unmaps correctly", () => keyBinding.GetAction(rulesets), () => Is.EqualTo(action));
+            AddAssert(
+                "action unmaps correctly",
+                () => keyBinding.GetAction(rulesets),
+                () => Is.EqualTo(action)
+            );
         }
     }
 }

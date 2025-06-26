@@ -8,7 +8,9 @@ using osu.Game.Storyboards.Drawables;
 
 namespace osu.Game.Storyboards.Commands
 {
-    public abstract class StoryboardCommand<T> : IStoryboardCommand, IComparable<StoryboardCommand<T>>
+    public abstract class StoryboardCommand<T>
+        : IStoryboardCommand,
+            IComparable<StoryboardCommand<T>>
     {
         public double StartTime { get; }
         public double EndTime { get; }
@@ -19,7 +21,13 @@ namespace osu.Game.Storyboards.Commands
 
         public double Duration => EndTime - StartTime;
 
-        protected StoryboardCommand(Easing easing, double startTime, double endTime, T startValue, T endValue)
+        protected StoryboardCommand(
+            Easing easing,
+            double startTime,
+            double endTime,
+            T startValue,
+            T endValue
+        )
         {
             if (endTime < startTime)
                 endTime = startTime;
@@ -51,6 +59,7 @@ namespace osu.Game.Storyboards.Commands
             return EndTime.CompareTo(other.EndTime);
         }
 
-        public override string ToString() => $"{StartTime} -> {EndTime}, {StartValue} -> {EndValue} {Easing}";
+        public override string ToString() =>
+            $"{StartTime} -> {EndTime}, {StartValue} -> {EndValue} {Easing}";
     }
 }

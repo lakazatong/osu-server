@@ -23,16 +23,8 @@ namespace osu.Game.Screens.Menu
 
             Buttons = new PopupDialogButton[]
             {
-                new PopupDialogDangerousButton
-                {
-                    Text = @"Yes",
-                    Action = onConfirm
-                },
-                new PopupDialogCancelButton
-                {
-                    Text = @"No I didn't mean to",
-                    Action = onCancel
-                },
+                new PopupDialogDangerousButton { Text = @"Yes", Action = onConfirm },
+                new PopupDialogCancelButton { Text = @"No I didn't mean to", Action = onCancel },
             };
         }
     }

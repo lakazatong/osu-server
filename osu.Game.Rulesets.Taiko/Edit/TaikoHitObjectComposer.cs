@@ -19,22 +19,24 @@ namespace osu.Game.Rulesets.Taiko.Edit
         protected override bool ApplyHorizontalCentering => false;
 
         public TaikoHitObjectComposer(TaikoRuleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
-        protected override IReadOnlyList<CompositionTool> CompositionTools => new CompositionTool[]
-        {
-            new HitCompositionTool(),
-            new DrumRollCompositionTool(),
-            new SwellCompositionTool()
-        };
+        protected override IReadOnlyList<CompositionTool> CompositionTools =>
+            new CompositionTool[]
+            {
+                new HitCompositionTool(),
+                new DrumRollCompositionTool(),
+                new SwellCompositionTool(),
+            };
 
-        protected override DrawableRuleset<TaikoHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods) =>
-            new DrawableTaikoEditorRuleset(ruleset, beatmap, mods);
+        protected override DrawableRuleset<TaikoHitObject> CreateDrawableRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods
+        ) => new DrawableTaikoEditorRuleset(ruleset, beatmap, mods);
 
-        protected override ComposeBlueprintContainer CreateBlueprintContainer()
-            => new TaikoBlueprintContainer(this);
+        protected override ComposeBlueprintContainer CreateBlueprintContainer() =>
+            new TaikoBlueprintContainer(this);
 
         protected override BeatSnapGrid CreateBeatSnapGrid() => new TaikoBeatSnapGrid();
     }

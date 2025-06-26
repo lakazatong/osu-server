@@ -48,11 +48,19 @@ namespace osu.Game.Rulesets.Mods
         /// Parentheses are added to the tooltip, surrounding the value of this property. If this property is <c>string.Empty</c>,
         /// the tooltip will not have parentheses.
         /// </remarks>
-        public virtual IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public virtual IEnumerable<(
+            LocalisableString setting,
+            LocalisableString value
+        )> SettingDescription
         {
             get
             {
-                foreach ((SettingSourceAttribute attr, PropertyInfo property) in this.GetOrderedSettingsSourceProperties())
+                foreach (
+                    (
+                        SettingSourceAttribute attr,
+                        PropertyInfo property
+                    ) in this.GetOrderedSettingsSourceProperties()
+                )
                 {
                     var bindable = (IBindable)property.GetValue(this)!;
 
@@ -125,15 +133,19 @@ namespace osu.Game.Rulesets.Mods
         /// The settings are returned in ascending key order as per <see cref="SettingsMap"/>.
         /// The ordering is intentionally enforced manually, as ordering of <see cref="Dictionary{TKey,TValue}.Values"/> is unspecified.
         /// </remarks>
-        internal IEnumerable<IBindable> SettingsBindables => SettingsMap.OrderBy(pair => pair.Key).Select(pair => pair.Value);
+        internal IEnumerable<IBindable> SettingsBindables =>
+            SettingsMap.OrderBy(pair => pair.Key).Select(pair => pair.Value);
 
         /// <summary>
         /// Provides mapping of names to <see cref="IBindable"/>s of all settings within this mod.
         /// </summary>
         internal IReadOnlyDictionary<string, IBindable> SettingsMap =>
             settingsBacking ??= this.GetSettingsSourceProperties()
-                                    .Select(p => p.Item2)
-                                    .ToDictionary(property => property.Name.ToSnakeCase(), property => (IBindable)property.GetValue(this)!);
+                .Select(p => p.Item2)
+                .ToDictionary(
+                    property => property.Name.ToSnakeCase(),
+                    property => (IBindable)property.GetValue(this)!
+                );
 
         /// <summary>
         /// Whether all settings in this mod are set to their default state.
@@ -157,7 +169,10 @@ namespace osu.Game.Rulesets.Mods
         public void CopyFrom(Mod source)
         {
             if (source.GetType() != GetType())
-                throw new ArgumentException($"Expected mod of type {GetType()}, got {source.GetType()}.", nameof(source));
+                throw new ArgumentException(
+                    $"Expected mod of type {GetType()}, got {source.GetType()}.",
+                    nameof(source)
+                );
 
             foreach (var (_, property) in this.GetSettingsSourceProperties())
             {
@@ -196,12 +211,18 @@ namespace osu.Game.Rulesets.Mods
                 // if either the target is assignable to the source or the source is assignable to the target,
                 // then we presume that the data types contained in both bindables are compatible and we can proceed with the copy.
                 // this handles cases like `Bindable<int>` and `BindableInt`.
-                if (!targetBindableType.IsAssignableFrom(sourceBindableType) && !sourceBindableType.IsAssignableFrom(targetBindableType))
+                if (
+                    !targetBindableType.IsAssignableFrom(sourceBindableType)
+                    && !sourceBindableType.IsAssignableFrom(targetBindableType)
+                )
                     continue;
 
                 // TODO: special case for handling number types
 
-                BindableValueAccessor.SetValue(targetSetting, BindableValueAccessor.GetValue(sourceSetting));
+                BindableValueAccessor.SetValue(
+                    targetSetting,
+                    BindableValueAccessor.GetValue(sourceSetting)
+                );
             }
         }
 
@@ -225,7 +246,9 @@ namespace osu.Game.Rulesets.Mods
             else
             {
                 if (!(target is IParseable parseable))
-                    throw new InvalidOperationException($"Bindable type {target.GetType().ReadableName()} is not {nameof(IParseable)}.");
+                    throw new InvalidOperationException(
+                        $"Bindable type {target.GetType().ReadableName()} is not {nameof(IParseable)}."
+                    );
 
                 parseable.Parse(source, CultureInfo.InvariantCulture);
             }
@@ -235,11 +258,16 @@ namespace osu.Game.Rulesets.Mods
 
         public bool Equals(Mod? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return GetType() == other.GetType() &&
-                   SettingsBindables.SequenceEqual(other.SettingsBindables, ModSettingsEqualityComparer.Default);
+            return GetType() == other.GetType()
+                && SettingsBindables.SequenceEqual(
+                    other.SettingsBindables,
+                    ModSettingsEqualityComparer.Default
+                );
         }
 
         public override int GetHashCode()
@@ -257,11 +285,13 @@ namespace osu.Game.Rulesets.Mods
         /// <summary>
         /// Reset all custom settings for this mod back to their defaults.
         /// </summary>
-        public virtual void ResetSettingsToDefaults() => CopyFrom((Mod)Activator.CreateInstance(GetType())!);
+        public virtual void ResetSettingsToDefaults() =>
+            CopyFrom((Mod)Activator.CreateInstance(GetType())!);
 
         private class ModSettingsEqualityComparer : IEqualityComparer<IBindable>
         {
-            public static ModSettingsEqualityComparer Default { get; } = new ModSettingsEqualityComparer();
+            public static ModSettingsEqualityComparer Default { get; } =
+                new ModSettingsEqualityComparer();
 
             public bool Equals(IBindable? x, IBindable? y)
             {

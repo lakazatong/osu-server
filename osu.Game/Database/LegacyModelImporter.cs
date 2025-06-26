@@ -31,8 +31,9 @@ namespace osu.Game.Database
             if (!storage.ExistsDirectory(ImportFromStablePath))
                 return Enumerable.Empty<string>();
 
-            return storage.GetDirectories(ImportFromStablePath)
-                          .Select(path => storage.GetFullPath(path));
+            return storage
+                .GetDirectories(ImportFromStablePath)
+                .Select(path => storage.GetFullPath(path));
         }
 
         protected readonly IModelImporter<TModel> Importer;
@@ -42,7 +43,8 @@ namespace osu.Game.Database
             Importer = importer;
         }
 
-        public Task<int> GetAvailableCount(StableStorage stableStorage) => Task.Run(() => GetStableImportPaths(PrepareStableStorage(stableStorage)).Count());
+        public Task<int> GetAvailableCount(StableStorage stableStorage) =>
+            Task.Run(() => GetStableImportPaths(PrepareStableStorage(stableStorage)).Count());
 
         public Task ImportFromStableAsync(StableStorage stableStorage)
         {
@@ -53,7 +55,11 @@ namespace osu.Game.Database
             {
                 string fullPath = storage.GetFullPath(ImportFromStablePath);
 
-                Logger.Log(@$"Folder ""{fullPath}"" not available in the target osu!stable installation to import {Importer.HumanisedModelName}s.", LoggingTarget.Information, LogLevel.Error);
+                Logger.Log(
+                    @$"Folder ""{fullPath}"" not available in the target osu!stable installation to import {Importer.HumanisedModelName}s.",
+                    LoggingTarget.Information,
+                    LogLevel.Error
+                );
                 return Task.CompletedTask;
             }
 
@@ -61,7 +67,9 @@ namespace osu.Game.Database
             {
                 var tasks = GetStableImportPaths(storage).Select(p => new ImportTask(p)).ToArray();
 
-                await Importer.Import(tasks, new ImportParameters { Batch = true, PreferHardLinks = true }).ConfigureAwait(false);
+                await Importer
+                    .Import(tasks, new ImportParameters { Batch = true, PreferHardLinks = true })
+                    .ConfigureAwait(false);
             });
         }
 
@@ -70,6 +78,7 @@ namespace osu.Game.Database
         /// </summary>
         /// <param name="stableStorage">The stable storage.</param>
         /// <returns>The usable storage. Return the unchanged <paramref name="stableStorage"/> if no traversal is required.</returns>
-        protected virtual Storage PrepareStableStorage(StableStorage stableStorage) => stableStorage;
+        protected virtual Storage PrepareStableStorage(StableStorage stableStorage) =>
+            stableStorage;
     }
 }

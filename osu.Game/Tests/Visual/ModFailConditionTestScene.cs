@@ -17,26 +17,32 @@ namespace osu.Game.Tests.Visual
             this.mod = mod;
         }
 
-        protected void CreateHitObjectTest(HitObjectTestData testData, bool shouldMiss) => CreateModTest(new ModTestData
-        {
-            Mod = mod,
-            CreateBeatmap = () => new Beatmap
-            {
-                BeatmapInfo = { Ruleset = CreatePlayerRuleset().RulesetInfo },
-                HitObjects = { testData.HitObject }
-            },
-            Autoplay = !shouldMiss,
-            PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(shouldMiss && testData.FailOnMiss)
-        });
+        protected void CreateHitObjectTest(HitObjectTestData testData, bool shouldMiss) =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = mod,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            BeatmapInfo = { Ruleset = CreatePlayerRuleset().RulesetInfo },
+                            HitObjects = { testData.HitObject },
+                        },
+                    Autoplay = !shouldMiss,
+                    PassCondition = () =>
+                        ((ModFailConditionTestPlayer)Player).CheckFailed(
+                            shouldMiss && testData.FailOnMiss
+                        ),
+                }
+            );
 
-        protected override TestPlayer CreateModPlayer(Ruleset ruleset) => new ModFailConditionTestPlayer(CurrentTestData, AllowFail);
+        protected override TestPlayer CreateModPlayer(Ruleset ruleset) =>
+            new ModFailConditionTestPlayer(CurrentTestData, AllowFail);
 
         protected partial class ModFailConditionTestPlayer : ModTestPlayer
         {
             public ModFailConditionTestPlayer(ModTestData data, bool allowFail)
-                : base(data, allowFail)
-            {
-            }
+                : base(data, allowFail) { }
 
             protected override bool CheckModsAllowFailure() => true;
 

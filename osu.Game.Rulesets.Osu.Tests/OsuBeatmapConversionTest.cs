@@ -55,8 +55,14 @@ namespace osu.Game.Rulesets.Osu.Tests
                 // compare: `SliderEventGenerator.Generate()`, and the calculation of `legacyLastTickTime`.
                 if (obj is SliderTailCircle && parent is Slider slider)
                 {
-                    startTime = Math.Max(startTime + SliderEventGenerator.TAIL_LENIENCY, slider.StartTime + slider.Duration / 2);
-                    endTime = Math.Max(endTime + SliderEventGenerator.TAIL_LENIENCY, slider.StartTime + slider.Duration / 2);
+                    startTime = Math.Max(
+                        startTime + SliderEventGenerator.TAIL_LENIENCY,
+                        slider.StartTime + slider.Duration / 2
+                    );
+                    endTime = Math.Max(
+                        endTime + SliderEventGenerator.TAIL_LENIENCY,
+                        slider.StartTime + slider.Duration / 2
+                    );
                 }
 
                 return new ConvertValue
@@ -64,7 +70,7 @@ namespace osu.Game.Rulesets.Osu.Tests
                     StartTime = startTime,
                     EndTime = endTime,
                     X = obj.StackedPosition.X,
-                    Y = obj.StackedPosition.Y
+                    Y = obj.StackedPosition.Y,
                 };
             }
         }
@@ -84,10 +90,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         public float X;
         public float Y;
 
-        public bool Equals(ConvertValue other)
-            => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
-               && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
-               && Precision.AlmostEquals(X, other.X, conversion_lenience)
-               && Precision.AlmostEquals(Y, other.Y, conversion_lenience);
+        public bool Equals(ConvertValue other) =>
+            Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
+            && Precision.AlmostEquals(EndTime, other.EndTime, conversion_lenience)
+            && Precision.AlmostEquals(X, other.X, conversion_lenience)
+            && Precision.AlmostEquals(Y, other.Y, conversion_lenience);
     }
 }

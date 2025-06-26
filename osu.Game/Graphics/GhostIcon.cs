@@ -47,9 +47,7 @@ namespace osu.Game.Graphics
             protected new GhostIcon Source => (GhostIcon)base.Source;
 
             public GhostIconDrawNode(IDrawable source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private Quad screenSpaceDrawQuad;
             private Vector4 drawRectangle;
@@ -64,7 +62,10 @@ namespace osu.Game.Graphics
                 screenSpaceDrawQuad = Source.ScreenSpaceDrawQuad;
                 drawRectangle = new Vector4(0, 0, Source.DrawWidth, Source.DrawHeight);
                 shader = Source.ghostShader;
-                blend = new Vector2(Math.Min(Source.DrawWidth, Source.DrawHeight) / Math.Min(screenSpaceDrawQuad.Width, screenSpaceDrawQuad.Height));
+                blend = new Vector2(
+                    Math.Min(Source.DrawWidth, Source.DrawHeight)
+                        / Math.Min(screenSpaceDrawQuad.Width, screenSpaceDrawQuad.Height)
+                );
                 time = (float)(Source.Time.Current / Source.AnimationDuration) % 1f;
             }
 
@@ -82,48 +83,53 @@ namespace osu.Game.Graphics
                 quadBatch ??= renderer.CreateQuadBatch<TexturedVertex2D>(1, 2);
                 ghostParametersBuffer ??= renderer.CreateUniformBuffer<GhostParameters>();
 
-                ghostParametersBuffer.Data = new GhostParameters
-                {
-                    Time = time
-                };
+                ghostParametersBuffer.Data = new GhostParameters { Time = time };
 
                 shader.Bind();
                 shader.BindUniformBlock("m_GhostParameters", ghostParametersBuffer);
 
                 var vertexAction = quadBatch.AddAction;
 
-                vertexAction(new TexturedVertex2D(renderer)
-                {
-                    Position = screenSpaceDrawQuad.BottomLeft,
-                    TexturePosition = new Vector2(0, 1),
-                    TextureRect = drawRectangle,
-                    BlendRange = blend,
-                    Colour = DrawColourInfo.Colour.BottomLeft.SRGB,
-                });
-                vertexAction(new TexturedVertex2D(renderer)
-                {
-                    Position = screenSpaceDrawQuad.BottomRight,
-                    TexturePosition = new Vector2(1, 1),
-                    TextureRect = drawRectangle,
-                    BlendRange = blend,
-                    Colour = DrawColourInfo.Colour.BottomRight.SRGB,
-                });
-                vertexAction(new TexturedVertex2D(renderer)
-                {
-                    Position = screenSpaceDrawQuad.TopRight,
-                    TexturePosition = new Vector2(1, 0),
-                    TextureRect = drawRectangle,
-                    BlendRange = blend,
-                    Colour = DrawColourInfo.Colour.TopRight.SRGB,
-                });
-                vertexAction(new TexturedVertex2D(renderer)
-                {
-                    Position = screenSpaceDrawQuad.TopLeft,
-                    TexturePosition = Vector2.Zero,
-                    TextureRect = drawRectangle,
-                    BlendRange = blend,
-                    Colour = DrawColourInfo.Colour.TopLeft.SRGB,
-                });
+                vertexAction(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = screenSpaceDrawQuad.BottomLeft,
+                        TexturePosition = new Vector2(0, 1),
+                        TextureRect = drawRectangle,
+                        BlendRange = blend,
+                        Colour = DrawColourInfo.Colour.BottomLeft.SRGB,
+                    }
+                );
+                vertexAction(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = screenSpaceDrawQuad.BottomRight,
+                        TexturePosition = new Vector2(1, 1),
+                        TextureRect = drawRectangle,
+                        BlendRange = blend,
+                        Colour = DrawColourInfo.Colour.BottomRight.SRGB,
+                    }
+                );
+                vertexAction(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = screenSpaceDrawQuad.TopRight,
+                        TexturePosition = new Vector2(1, 0),
+                        TextureRect = drawRectangle,
+                        BlendRange = blend,
+                        Colour = DrawColourInfo.Colour.TopRight.SRGB,
+                    }
+                );
+                vertexAction(
+                    new TexturedVertex2D(renderer)
+                    {
+                        Position = screenSpaceDrawQuad.TopLeft,
+                        TexturePosition = Vector2.Zero,
+                        TextureRect = drawRectangle,
+                        BlendRange = blend,
+                        Colour = DrawColourInfo.Colour.TopLeft.SRGB,
+                    }
+                );
 
                 shader.Unbind();
             }

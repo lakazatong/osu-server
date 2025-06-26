@@ -18,7 +18,8 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
         {
             var playfield = new TaikoPlayfield();
 
-            var beatmap = CreateWorkingBeatmap(new TaikoRuleset().RulesetInfo).GetPlayableBeatmap(new TaikoRuleset().RulesetInfo);
+            var beatmap = CreateWorkingBeatmap(new TaikoRuleset().RulesetInfo)
+                .GetPlayableBeatmap(new TaikoRuleset().RulesetInfo);
 
             foreach (var h in beatmap.HitObjects)
                 playfield.Add(h);
@@ -31,11 +32,8 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Size = new Vector2(180f, 200f),
-                    Child = new InputDrum
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                }
+                    Child = new InputDrum { RelativeSizeAxes = Axes.Both },
+                },
             });
         }
     }

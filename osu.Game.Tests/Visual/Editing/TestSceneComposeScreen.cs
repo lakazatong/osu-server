@@ -31,37 +31,49 @@ namespace osu.Game.Tests.Visual.Editing
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup compose screen", () =>
-            {
-                var beatmap = new OsuBeatmap
+            AddStep(
+                "setup compose screen",
+                () =>
                 {
-                    BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo },
-                };
-
-                beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
-
-                editorBeatmap = new EditorBeatmap(beatmap, new LegacyBeatmapSkin(beatmap.BeatmapInfo, null));
-
-                Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
-
-                Child = new DependencyProvidingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new (Type, object)[]
+                    var beatmap = new OsuBeatmap
                     {
-                        (typeof(EditorBeatmap), editorBeatmap),
-                        (typeof(IBeatSnapProvider), editorBeatmap),
-                        (typeof(OverlayColourProvider), new OverlayColourProvider(OverlayColourScheme.Green)),
-                    },
-                    Children = new Drawable[]
-                    {
-                        editorBeatmap,
-                        new ComposeScreen { State = { Value = Visibility.Visible } },
-                    }
-                };
-            });
+                        BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo },
+                    };
 
-            AddUntilStep("wait for composer", () => this.ChildrenOfType<HitObjectComposer>().SingleOrDefault()?.IsLoaded == true);
+                    beatmap.ControlPointInfo.Add(0, new TimingControlPoint());
+
+                    editorBeatmap = new EditorBeatmap(
+                        beatmap,
+                        new LegacyBeatmapSkin(beatmap.BeatmapInfo, null)
+                    );
+
+                    Beatmap.Value = CreateWorkingBeatmap(editorBeatmap.PlayableBeatmap);
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
+                        {
+                            (typeof(EditorBeatmap), editorBeatmap),
+                            (typeof(IBeatSnapProvider), editorBeatmap),
+                            (
+                                typeof(OverlayColourProvider),
+                                new OverlayColourProvider(OverlayColourScheme.Green)
+                            ),
+                        },
+                        Children = new Drawable[]
+                        {
+                            editorBeatmap,
+                            new ComposeScreen { State = { Value = Visibility.Visible } },
+                        },
+                    };
+                }
+            );
+
+            AddUntilStep(
+                "wait for composer",
+                () => this.ChildrenOfType<HitObjectComposer>().SingleOrDefault()?.IsLoaded == true
+            );
         }
 
         /// <summary>
@@ -70,11 +82,18 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestLegacyBeatmapSkinHasTransformer()
         {
-            AddAssert("legacy beatmap skin has transformer", () =>
-            {
-                var sources = this.ChildrenOfType<BeatmapSkinProvidingContainer>().First().AllSources;
-                return sources.OfType<LegacySkinTransformer>().Count(t => t.Skin == editorBeatmap.BeatmapSkin.AsNonNull().Skin) == 1;
-            });
+            AddAssert(
+                "legacy beatmap skin has transformer",
+                () =>
+                {
+                    var sources = this.ChildrenOfType<BeatmapSkinProvidingContainer>()
+                        .First()
+                        .AllSources;
+                    return sources
+                            .OfType<LegacySkinTransformer>()
+                            .Count(t => t.Skin == editorBeatmap.BeatmapSkin.AsNonNull().Skin) == 1;
+                }
+            );
         }
     }
 }

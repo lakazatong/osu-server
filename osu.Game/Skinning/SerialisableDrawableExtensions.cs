@@ -11,16 +11,28 @@ namespace osu.Game.Skinning
 {
     public static class SerialisableDrawableExtensions
     {
-        public static SerialisedDrawableInfo CreateSerialisedInfo(this Drawable component) => new SerialisedDrawableInfo(component);
+        public static SerialisedDrawableInfo CreateSerialisedInfo(this Drawable component) =>
+            new SerialisedDrawableInfo(component);
 
-        public static void ApplySerialisedInfo(this Drawable component, SerialisedDrawableInfo drawableInfo)
+        public static void ApplySerialisedInfo(
+            this Drawable component,
+            SerialisedDrawableInfo drawableInfo
+        )
         {
             // todo: can probably make this better via deserialisation directly using a common interface.
             component.Position = drawableInfo.Position;
             component.Rotation = drawableInfo.Rotation;
-            if (drawableInfo.Width is float width && width != 0 && (component as CompositeDrawable)?.AutoSizeAxes.HasFlag(Axes.X) != true)
+            if (
+                drawableInfo.Width is float width
+                && width != 0
+                && (component as CompositeDrawable)?.AutoSizeAxes.HasFlag(Axes.X) != true
+            )
                 component.Width = width;
-            if (drawableInfo.Height is float height && height != 0 && (component as CompositeDrawable)?.AutoSizeAxes.HasFlag(Axes.Y) != true)
+            if (
+                drawableInfo.Height is float height
+                && height != 0
+                && (component as CompositeDrawable)?.AutoSizeAxes.HasFlag(Axes.Y) != true
+            )
                 component.Height = height;
             component.Scale = drawableInfo.Scale;
             component.Anchor = drawableInfo.Anchor;
@@ -34,7 +46,12 @@ namespace osu.Game.Skinning
                 {
                     var bindable = ((IBindable)property.GetValue(component)!);
 
-                    if (!drawableInfo.Settings.TryGetValue(property.Name.ToSnakeCase(), out object? settingValue))
+                    if (
+                        !drawableInfo.Settings.TryGetValue(
+                            property.Name.ToSnakeCase(),
+                            out object? settingValue
+                        )
+                    )
                     {
                         // TODO: We probably want to restore default if not included in serialisation information.
                         // This is not simple to do as SetDefault() is only found in the typed Bindable<T> interface right now.

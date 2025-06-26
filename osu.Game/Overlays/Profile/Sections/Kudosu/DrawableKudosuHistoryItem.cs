@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -8,7 +9,6 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
-using System;
 using osuTK;
 
 namespace osu.Game.Overlays.Profile.Sections.Kudosu
@@ -27,21 +27,23 @@ namespace osu.Game.Overlays.Profile.Sections.Kudosu
 
             Height = height;
             RelativeSizeAxes = Axes.X;
-            AddRangeInternal(new Drawable[]
-            {
-                linkFlowContainer = new LinkFlowContainer
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    AutoSizeAxes = Axes.Both,
-                    Spacing = new Vector2(0, 3),
-                },
-                date = new DrawableDate(historyItem.CreatedAt)
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
+                    linkFlowContainer = new LinkFlowContainer
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        AutoSizeAxes = Axes.Both,
+                        Spacing = new Vector2(0, 3),
+                    },
+                    date = new DrawableDate(historyItem.CreatedAt)
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                    },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]

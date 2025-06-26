@@ -24,28 +24,37 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [BackgroundDependencyLoader]
         private void load(OsuGameBase game, GameHost host, IPerformFromScreenRunner? performer)
         {
-            if ((selector = host.CreateSystemFileSelector(game.HandledExtensions.ToArray())) != null)
+            if (
+                (selector = host.CreateSystemFileSelector(game.HandledExtensions.ToArray())) != null
+            )
                 selector.Selected += f => Task.Run(() => game.Import(f.FullName));
 
-            AddRange(new Drawable[]
-            {
-                new SettingsButton
+            AddRange(
+                new Drawable[]
                 {
-                    Text = DebugSettingsStrings.ImportFiles,
-                    Action = () =>
+                    new SettingsButton
                     {
-                        if (selector != null)
-                            selector.Present();
-                        else
-                            performer?.PerformFromScreen(menu => menu.Push(new FileImportScreen()));
+                        Text = DebugSettingsStrings.ImportFiles,
+                        Action = () =>
+                        {
+                            if (selector != null)
+                                selector.Present();
+                            else
+                                performer?.PerformFromScreen(menu =>
+                                    menu.Push(new FileImportScreen())
+                                );
+                        },
                     },
-                },
-                new SettingsButton
-                {
-                    Text = DebugSettingsStrings.RunLatencyCertifier,
-                    Action = () => performer?.PerformFromScreen(menu => menu.Push(new LatencyCertifierScreen()))
+                    new SettingsButton
+                    {
+                        Text = DebugSettingsStrings.RunLatencyCertifier,
+                        Action = () =>
+                            performer?.PerformFromScreen(menu =>
+                                menu.Push(new LatencyCertifierScreen())
+                            ),
+                    },
                 }
-            });
+            );
         }
     }
 }

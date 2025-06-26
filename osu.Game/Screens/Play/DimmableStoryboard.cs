@@ -56,7 +56,10 @@ namespace osu.Game.Screens.Play
             this.storyboard = storyboard;
             this.mods = mods;
 
-            storyboardMustAlwaysBePresent = new Lazy<bool>(() => storyboard.GetLayer(@"Overlay").Elements.Any() || storyboard.Layers.Any(l => l.Elements.OfType<StoryboardSampleInfo>().Any()));
+            storyboardMustAlwaysBePresent = new Lazy<bool>(() =>
+                storyboard.GetLayer(@"Overlay").Elements.Any()
+                || storyboard.Layers.Any(l => l.Elements.OfType<StoryboardSampleInfo>().Any())
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -69,26 +72,31 @@ namespace osu.Game.Screens.Play
 
         protected override void LoadComplete()
         {
-            ShowStoryboard.BindValueChanged(show =>
-            {
-                initializeStoryboard(true);
-
-                if (drawableStoryboard != null)
+            ShowStoryboard.BindValueChanged(
+                show =>
                 {
-                    // Regardless of user dim setting, for the time being we need to ensure storyboards are still updated in the background (even if not displayed).
-                    // If we don't do this, an intensive storyboard will have a lot of catch-up work to do at the start of a break, causing a huge stutter.
-                    //
-                    // This can be reconsidered when https://github.com/ppy/osu-framework/issues/6491 is resolved.
-                    bool alwaysPresent = show.NewValue;
+                    initializeStoryboard(true);
 
-                    Content.AlwaysPresent = alwaysPresent;
-                    drawableStoryboard.AlwaysPresent = alwaysPresent;
-                }
-            }, true);
+                    if (drawableStoryboard != null)
+                    {
+                        // Regardless of user dim setting, for the time being we need to ensure storyboards are still updated in the background (even if not displayed).
+                        // If we don't do this, an intensive storyboard will have a lot of catch-up work to do at the start of a break, causing a huge stutter.
+                        //
+                        // This can be reconsidered when https://github.com/ppy/osu-framework/issues/6491 is resolved.
+                        bool alwaysPresent = show.NewValue;
+
+                        Content.AlwaysPresent = alwaysPresent;
+                        drawableStoryboard.AlwaysPresent = alwaysPresent;
+                    }
+                },
+                true
+            );
             base.LoadComplete();
         }
 
-        protected override bool ShowDimContent => IgnoreUserSettings.Value || (ShowStoryboard.Value && (DimLevel < 1 || storyboardMustAlwaysBePresent.Value));
+        protected override bool ShowDimContent =>
+            IgnoreUserSettings.Value
+            || (ShowStoryboard.Value && (DimLevel < 1 || storyboardMustAlwaysBePresent.Value));
 
         private void initializeStoryboard(bool async)
         {

@@ -36,51 +36,47 @@ namespace osu.Game.Overlays.Profile
 
         protected override Drawable CreateBackground() => Empty();
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Direction = FillDirection.Vertical,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                new TopHeaderContainer
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Vertical,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    User = { BindTarget = User },
+                    new TopHeaderContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        User = { BindTarget = User },
+                    },
+                    new BannerHeaderContainer { User = { BindTarget = User } },
+                    new BadgeHeaderContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        User = { BindTarget = User },
+                    },
+                    detailHeaderContainer = new DetailHeaderContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        User = { BindTarget = User },
+                    },
+                    centreHeaderContainer = new CentreHeaderContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        User = { BindTarget = User },
+                    },
+                    new BottomHeaderContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        User = { BindTarget = User },
+                    },
                 },
-                new BannerHeaderContainer
-                {
-                    User = { BindTarget = User },
-                },
-                new BadgeHeaderContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    User = { BindTarget = User },
-                },
-                detailHeaderContainer = new DetailHeaderContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    User = { BindTarget = User },
-                },
-                centreHeaderContainer = new CentreHeaderContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    User = { BindTarget = User },
-                },
-                new BottomHeaderContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    User = { BindTarget = User },
-                },
-            }
-        };
+            };
 
         protected override OverlayTitle CreateTitle() => new ProfileHeaderTitle();
 
-        protected override Drawable CreateTabControlContent() => new ProfileRulesetSelector
-        {
-            User = { BindTarget = User }
-        };
+        protected override Drawable CreateTabControlContent() =>
+            new ProfileRulesetSelector { User = { BindTarget = User } };
 
         private partial class ProfileHeaderTitle : OverlayTitle
         {

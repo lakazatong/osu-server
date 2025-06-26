@@ -42,12 +42,8 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                     Direction = FillDirection.Vertical,
                     Spacing = new Vector2(0, 5f),
 
-                    Children = new Drawable[]
-                    {
-                        Flag,
-                        AcronymText
-                    }
-                }
+                    Children = new Drawable[] { Flag, AcronymText },
+                },
             };
         }
 

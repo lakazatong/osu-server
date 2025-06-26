@@ -14,10 +14,7 @@ namespace osu.Game.Overlays.Settings.Sections
     {
         public override LocalisableString Header => UserInterfaceStrings.UserInterfaceSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.UserInterface
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.UserInterface };
 
         public UserInterfaceSection()
         {
@@ -25,7 +22,7 @@ namespace osu.Game.Overlays.Settings.Sections
             {
                 new GeneralSettings(),
                 new MainMenuSettings(),
-                new SongSelectSettings()
+                new SongSelectSettings(),
             };
         }
     }

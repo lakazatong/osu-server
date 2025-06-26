@@ -17,15 +17,8 @@ namespace osu.Game.Screens.Edit
 
             Buttons = new PopupDialogButton[]
             {
-                new PopupDialogOkButton
-                {
-                    Text = "Sounds good, let's go!",
-                    Action = saveAndAction
-                },
-                new PopupDialogCancelButton
-                {
-                    Text = "Oops, continue editing",
-                },
+                new PopupDialogOkButton { Text = "Sounds good, let's go!", Action = saveAndAction },
+                new PopupDialogCancelButton { Text = "Oops, continue editing" },
             };
         }
     }

@@ -15,7 +15,9 @@ using Realms;
 
 namespace osu.Game.Database
 {
-    public class ModelManager<TModel> : IModelManager<TModel>, IModelFileManager<TModel, RealmNamedFileUsage>
+    public class ModelManager<TModel>
+        : IModelManager<TModel>,
+            IModelFileManager<TModel, RealmNamedFileUsage>
         where TModel : RealmObject, IHasRealmFiles, IHasGuidPrimaryKey, ISoftDelete
     {
         /// <summary>
@@ -34,13 +36,24 @@ namespace osu.Game.Database
         }
 
         public void DeleteFile(TModel item, RealmNamedFileUsage file) =>
-            performFileOperation(item, managed => DeleteFile(managed, managed.Files.First(f => f.Filename == file.Filename), managed.Realm!));
+            performFileOperation(
+                item,
+                managed =>
+                    DeleteFile(
+                        managed,
+                        managed.Files.First(f => f.Filename == file.Filename),
+                        managed.Realm!
+                    )
+            );
 
         public void ReplaceFile(TModel item, RealmNamedFileUsage file, Stream contents) =>
             performFileOperation(item, managed => ReplaceFile(file, contents, managed.Realm!));
 
         public void AddFile(TModel item, Stream contents, string filename) =>
-            performFileOperation(item, managed => AddFile(managed, contents, filename, managed.Realm!));
+            performFileOperation(
+                item,
+                managed => AddFile(managed, contents, filename, managed.Realm!)
+            );
 
         private void performFileOperation(TModel item, Action<TModel> operation)
         {
@@ -108,7 +121,12 @@ namespace osu.Game.Database
             if (items.Count == 0)
             {
                 if (!silent)
-                    PostNotification?.Invoke(new ProgressCompletionNotification { Text = $"No {HumanisedModelName}s found to delete!" });
+                    PostNotification?.Invoke(
+                        new ProgressCompletionNotification
+                        {
+                            Text = $"No {HumanisedModelName}s found to delete!",
+                        }
+                    );
                 return;
             }
 
@@ -150,7 +168,12 @@ namespace osu.Game.Database
             if (!items.Any())
             {
                 if (!silent)
-                    PostNotification?.Invoke(new ProgressCompletionNotification { Text = $"No {HumanisedModelName}s found to restore!" });
+                    PostNotification?.Invoke(
+                        new ProgressCompletionNotification
+                        {
+                            Text = $"No {HumanisedModelName}s found to restore!",
+                        }
+                    );
                 return;
             }
 
@@ -221,6 +244,7 @@ namespace osu.Game.Database
 
         public Action<Notification>? PostNotification { get; set; }
 
-        public virtual string HumanisedModelName => $"{typeof(TModel).Name.Replace(@"Info", "").ToLowerInvariant()}";
+        public virtual string HumanisedModelName =>
+            $"{typeof(TModel).Name.Replace(@"Info", "").ToLowerInvariant()}";
     }
 }

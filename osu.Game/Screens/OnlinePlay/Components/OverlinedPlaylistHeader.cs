@@ -35,8 +35,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 updateDuration();
         }
 
-        private void updateDuration()
-            => Details.Value = room.Playlist.GetTotalDuration(rulesets);
+        private void updateDuration() => Details.Value = room.Playlist.GetTotalDuration(rulesets);
 
         protected override void Dispose(bool isDisposing)
         {

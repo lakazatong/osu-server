@@ -30,11 +30,14 @@ namespace osu.Game.Overlays.Notifications
         /// <summary>
         /// Whether the operation represented by the <see cref="ProgressNotification"/> is still ongoing.
         /// </summary>
-        public bool Ongoing => State != ProgressNotificationState.Completed && State != ProgressNotificationState.Cancelled;
+        public bool Ongoing =>
+            State != ProgressNotificationState.Completed
+            && State != ProgressNotificationState.Cancelled;
 
         protected override bool AllowFlingDismiss => false;
 
-        public override string PopOutSampleName => State is ProgressNotificationState.Cancelled ? base.PopOutSampleName : "";
+        public override string PopOutSampleName =>
+            State is ProgressNotificationState.Cancelled ? base.PopOutSampleName : "";
 
         /// <summary>
         /// The function to post completion notifications back to.
@@ -85,7 +88,8 @@ namespace osu.Game.Overlays.Notifications
             Scheduler.AddOnce(updateState);
         }
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource cancellationTokenSource =
+            new CancellationTokenSource();
 
         public CancellationToken CancellationToken => cancellationTokenSource.Token;
 
@@ -94,7 +98,8 @@ namespace osu.Game.Overlays.Notifications
             get => state;
             set
             {
-                if (state == value) return;
+                if (state == value)
+                    return;
 
                 state = value;
 
@@ -114,7 +119,10 @@ namespace osu.Game.Overlays.Notifications
                     Light.Pulsate = false;
                     progressBar.Active = false;
 
-                    IconContent.FadeColour(ColourInfo.GradientVertical(colourQueued, colourQueued.Lighten(0.5f)), colour_fade_duration);
+                    IconContent.FadeColour(
+                        ColourInfo.GradientVertical(colourQueued, colourQueued.Lighten(0.5f)),
+                        colour_fade_duration
+                    );
                     loadingSpinner.Show();
                     break;
 
@@ -123,14 +131,20 @@ namespace osu.Game.Overlays.Notifications
                     Light.Pulsate = true;
                     progressBar.Active = true;
 
-                    IconContent.FadeColour(ColourInfo.GradientVertical(colourActive, colourActive.Lighten(0.5f)), colour_fade_duration);
+                    IconContent.FadeColour(
+                        ColourInfo.GradientVertical(colourActive, colourActive.Lighten(0.5f)),
+                        colour_fade_duration
+                    );
                     loadingSpinner.Show();
                     break;
 
                 case ProgressNotificationState.Cancelled:
                     cancellationTokenSource.Cancel();
 
-                    IconContent.FadeColour(ColourInfo.GradientVertical(Color4.Gray, Color4.Gray.Lighten(0.5f)), colour_fade_duration);
+                    IconContent.FadeColour(
+                        ColourInfo.GradientVertical(Color4.Gray, Color4.Gray.Lighten(0.5f)),
+                        colour_fade_duration
+                    );
                     cancelSample?.Play();
                     loadingSpinner.Hide();
 
@@ -165,7 +179,8 @@ namespace osu.Game.Overlays.Notifications
         /// </summary>
         private void attemptPostCompletion()
         {
-            if (state != ProgressNotificationState.Completed) return;
+            if (state != ProgressNotificationState.Completed)
+                return;
 
             // This notification may not have been posted yet (and thus may not have a target to post the completion to).
             // Completion posting will be re-attempted in a scheduled invocation.
@@ -183,11 +198,12 @@ namespace osu.Game.Overlays.Notifications
 
         private ProgressNotificationState state;
 
-        protected virtual Notification CreateCompletionNotification() => new ProgressCompletionNotification
-        {
-            Activated = CompletionClickAction,
-            Text = CompletionText
-        };
+        protected virtual Notification CreateCompletionNotification() =>
+            new ProgressCompletionNotification
+            {
+                Activated = CompletionClickAction,
+                Text = CompletionText,
+            };
 
         public override bool DisplayOnTop => false;
 
@@ -206,18 +222,24 @@ namespace osu.Game.Overlays.Notifications
         {
             IsImportant = false;
 
-            Content.Add(textDrawable = new OsuTextFlowContainer(t => t.Font = t.Font.With(size: 14, weight: FontWeight.Medium))
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-            });
+            Content.Add(
+                textDrawable = new OsuTextFlowContainer(t =>
+                    t.Font = t.Font.With(size: 14, weight: FontWeight.Medium)
+                )
+                {
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                }
+            );
 
-            MainContent.Add(progressBar = new ProgressBar
-            {
-                Origin = Anchor.BottomLeft,
-                Anchor = Anchor.BottomLeft,
-                RelativeSizeAxes = Axes.X,
-            });
+            MainContent.Add(
+                progressBar = new ProgressBar
+                {
+                    Origin = Anchor.BottomLeft,
+                    Anchor = Anchor.BottomLeft,
+                    RelativeSizeAxes = Axes.X,
+                }
+            );
 
             // make some extra space for the progress bar.
             IconContent.Margin = new MarginPadding { Bottom = 5 };
@@ -235,19 +257,21 @@ namespace osu.Game.Overlays.Notifications
             colourActive = colours.Blue;
             colourCancelled = colours.Red;
 
-            IconContent.AddRange(new Drawable[]
-            {
-                new Box
+            IconContent.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background5,
-                    Depth = float.MaxValue,
-                },
-                loadingSpinner = new LoadingSpinner
-                {
-                    Size = new Vector2(loading_spinner_size),
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = colourProvider.Background5,
+                        Depth = float.MaxValue,
+                    },
+                    loadingSpinner = new LoadingSpinner
+                    {
+                        Size = new Vector2(loading_spinner_size),
+                    },
                 }
-            });
+            );
 
             cancelSample = audioManager.Samples.Get(@"UI/notification-cancel");
         }
@@ -283,7 +307,8 @@ namespace osu.Game.Overlays.Notifications
                 get => progress;
                 set
                 {
-                    if (progress == value) return;
+                    if (progress == value)
+                        return;
 
                     progress = value;
                     box.ResizeTo(new Vector2(progress, 1), 100, Easing.OutQuad);
@@ -306,11 +331,7 @@ namespace osu.Game.Overlays.Notifications
             {
                 Children = new[]
                 {
-                    box = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Width = 0,
-                    }
+                    box = new Box { RelativeSizeAxes = Axes.Both, Width = 0 },
                 };
             }
 
@@ -329,6 +350,6 @@ namespace osu.Game.Overlays.Notifications
         Queued,
         Active,
         Completed,
-        Cancelled
+        Cancelled,
     }
 }

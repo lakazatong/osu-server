@@ -47,7 +47,10 @@ namespace osu.Game.Tournament.Components
             {
                 InternalChild = new Box
                 {
-                    Colour = ColourInfo.GradientVertical(OsuColour.Gray(0.3f), OsuColour.Gray(0.6f)),
+                    Colour = ColourInfo.GradientVertical(
+                        OsuColour.Gray(0.3f),
+                        OsuColour.Gray(0.6f)
+                    ),
                     RelativeSizeAxes = Axes.Both,
                 };
             }

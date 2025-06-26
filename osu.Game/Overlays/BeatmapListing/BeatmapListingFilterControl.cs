@@ -99,10 +99,11 @@ namespace osu.Game.Overlays.BeatmapListing
                             Radius = 3,
                             Offset = new Vector2(0f, 1f),
                         },
-                        Child = searchControl = new BeatmapListingSearchControl
-                        {
-                            TypingStarted = () => TypingStarted?.Invoke()
-                        }
+                        Child = searchControl =
+                            new BeatmapListingSearchControl
+                            {
+                                TypingStarted = () => TypingStarted?.Invoke(),
+                            },
                     },
                     new Container
                     {
@@ -110,26 +111,23 @@ namespace osu.Game.Overlays.BeatmapListing
                         Height = 40,
                         Children = new Drawable[]
                         {
-                            sortControlBackground = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            sortControlBackground = new Box { RelativeSizeAxes = Axes.Both },
                             sortControl = new BeatmapListingSortTabControl
                             {
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
-                                Margin = new MarginPadding { Left = 20 }
+                                Margin = new MarginPadding { Left = 20 },
                             },
                             new BeatmapListingCardSizeTabControl
                             {
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
                                 Margin = new MarginPadding { Right = 20 },
-                                Current = { BindTarget = CardSize }
-                            }
-                        }
-                    }
-                }
+                                Current = { BindTarget = CardSize },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -142,14 +140,13 @@ namespace osu.Game.Overlays.BeatmapListing
             sortControlBackground.Colour = colourProvider.Background4;
         }
 
-        public void Search(string query)
-            => Schedule(() => searchControl.Query.Value = query);
+        public void Search(string query) => Schedule(() => searchControl.Query.Value = query);
 
-        public void FilterGenre(SearchGenre genre)
-            => Schedule(() => searchControl.Genre.Value = genre);
+        public void FilterGenre(SearchGenre genre) =>
+            Schedule(() => searchControl.Genre.Value = genre);
 
-        public void FilterLanguage(SearchLanguage language)
-            => Schedule(() => searchControl.Language.Value = language);
+        public void FilterLanguage(SearchLanguage language) =>
+            Schedule(() => searchControl.Language.Value = language);
 
         protected override void LoadComplete()
         {
@@ -206,7 +203,11 @@ namespace osu.Game.Overlays.BeatmapListing
             performRequest();
         }
 
-        private void resetSortControl() => sortControl.Reset(searchControl.Category.Value, !string.IsNullOrEmpty(searchControl.Query.Value));
+        private void resetSortControl() =>
+            sortControl.Reset(
+                searchControl.Category.Value,
+                !string.IsNullOrEmpty(searchControl.Query.Value)
+            );
 
         private void queueUpdateSearch(bool queryTextChanged = false)
         {
@@ -217,11 +218,14 @@ namespace osu.Game.Overlays.BeatmapListing
             if (!api.IsLoggedIn)
                 return;
 
-            queryChangedDebounce = Scheduler.AddDelayed(() =>
-            {
-                resetSearch();
-                FetchNextPage();
-            }, queryTextChanged ? 500 : 100);
+            queryChangedDebounce = Scheduler.AddDelayed(
+                () =>
+                {
+                    resetSearch();
+                    FetchNextPage();
+                },
+                queryTextChanged ? 500 : 100
+            );
         }
 
         private void performRequest()
@@ -239,7 +243,8 @@ namespace osu.Game.Overlays.BeatmapListing
                 searchControl.Extra,
                 searchControl.Ranks,
                 searchControl.Played.Value,
-                searchControl.ExplicitContent.Value);
+                searchControl.ExplicitContent.Value
+            );
 
             getSetsRequest.Success += response =>
             {
@@ -314,7 +319,7 @@ namespace osu.Game.Overlays.BeatmapListing
             /// <summary>
             /// The user is not a supporter, but used supporter-only search filters.
             /// </summary>
-            SupporterOnlyFilters
+            SupporterOnlyFilters,
         }
 
         /// <summary>
@@ -336,17 +341,15 @@ namespace osu.Game.Overlays.BeatmapListing
             /// </summary>
             public List<LocalisableString> SupporterOnlyFiltersUsed { get; private set; }
 
-            public static SearchResult ResultsReturned(List<APIBeatmapSet> results) => new SearchResult
-            {
-                Type = SearchResultType.ResultsReturned,
-                Results = results,
-            };
+            public static SearchResult ResultsReturned(List<APIBeatmapSet> results) =>
+                new SearchResult { Type = SearchResultType.ResultsReturned, Results = results };
 
-            public static SearchResult SupporterOnlyFilters(List<LocalisableString> filters) => new SearchResult
-            {
-                Type = SearchResultType.SupporterOnlyFilters,
-                SupporterOnlyFiltersUsed = filters
-            };
+            public static SearchResult SupporterOnlyFilters(List<LocalisableString> filters) =>
+                new SearchResult
+                {
+                    Type = SearchResultType.SupporterOnlyFilters,
+                    SupporterOnlyFiltersUsed = filters,
+                };
         }
     }
 }

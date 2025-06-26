@@ -21,26 +21,30 @@ namespace osu.Game.Rulesets.Mania.Mods
 
         protected override CoverExpandDirection ExpandDirection => Direction.Value;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[]
-        {
-            typeof(ManiaModHidden),
-            typeof(ManiaModFadeIn)
-        }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(new[] { typeof(ManiaModHidden), typeof(ManiaModFadeIn) })
+                .ToArray();
 
         public override bool Ranked => false;
 
         public override bool ValidForFreestyleAsRequiredMod => false;
 
-        [SettingSource("Coverage", "The proportion of playfield height that notes will be hidden for.")]
-        public override BindableNumber<float> Coverage { get; } = new BindableFloat(0.5f)
-        {
-            Precision = 0.1f,
-            MinValue = 0.2f,
-            MaxValue = 0.8f,
-            Default = 0.5f,
-        };
+        [SettingSource(
+            "Coverage",
+            "The proportion of playfield height that notes will be hidden for."
+        )]
+        public override BindableNumber<float> Coverage { get; } =
+            new BindableFloat(0.5f)
+            {
+                Precision = 0.1f,
+                MinValue = 0.2f,
+                MaxValue = 0.8f,
+                Default = 0.5f,
+            };
 
         [SettingSource("Direction", "The direction on which the cover is applied")]
-        public Bindable<CoverExpandDirection> Direction { get; } = new Bindable<CoverExpandDirection>();
+        public Bindable<CoverExpandDirection> Direction { get; } =
+            new Bindable<CoverExpandDirection>();
     }
 }

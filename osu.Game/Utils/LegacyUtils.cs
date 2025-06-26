@@ -10,16 +10,52 @@ namespace osu.Game.Utils
 {
     public static class LegacyUtils
     {
-        public static Color4 InterpolateNonLinear(double time, Color4 startColour, Color4 endColour, double startTime, double endTime, Easing easing = Easing.None)
-            => InterpolateNonLinear(time, startColour, endColour, startTime, endTime, new DefaultEasingFunction(easing));
+        public static Color4 InterpolateNonLinear(
+            double time,
+            Color4 startColour,
+            Color4 endColour,
+            double startTime,
+            double endTime,
+            Easing easing = Easing.None
+        ) =>
+            InterpolateNonLinear(
+                time,
+                startColour,
+                endColour,
+                startTime,
+                endTime,
+                new DefaultEasingFunction(easing)
+            );
 
-        public static Colour4 InterpolateNonLinear(double time, Colour4 startColour, Colour4 endColour, double startTime, double endTime, Easing easing = Easing.None)
-            => InterpolateNonLinear(time, startColour, endColour, startTime, endTime, new DefaultEasingFunction(easing));
+        public static Colour4 InterpolateNonLinear(
+            double time,
+            Colour4 startColour,
+            Colour4 endColour,
+            double startTime,
+            double endTime,
+            Easing easing = Easing.None
+        ) =>
+            InterpolateNonLinear(
+                time,
+                startColour,
+                endColour,
+                startTime,
+                endTime,
+                new DefaultEasingFunction(easing)
+            );
 
         /// <summary>
         /// Interpolates between two sRGB <see cref="Color4"/>s directly in sRGB space.
         /// </summary>
-        public static Color4 InterpolateNonLinear<TEasing>(double time, Color4 startColour, Color4 endColour, double startTime, double endTime, TEasing easing) where TEasing : IEasingFunction
+        public static Color4 InterpolateNonLinear<TEasing>(
+            double time,
+            Color4 startColour,
+            Color4 endColour,
+            double startTime,
+            double endTime,
+            TEasing easing
+        )
+            where TEasing : IEasingFunction
         {
             if (startColour == endColour)
                 return startColour;
@@ -36,13 +72,22 @@ namespace osu.Game.Utils
                 startColour.R + t * (endColour.R - startColour.R),
                 startColour.G + t * (endColour.G - startColour.G),
                 startColour.B + t * (endColour.B - startColour.B),
-                startColour.A + t * (endColour.A - startColour.A));
+                startColour.A + t * (endColour.A - startColour.A)
+            );
         }
 
         /// <summary>
         /// Interpolates between two sRGB <see cref="Colour4"/>s directly in sRGB space.
         /// </summary>
-        public static Colour4 InterpolateNonLinear<TEasing>(double time, Colour4 startColour, Colour4 endColour, double startTime, double endTime, TEasing easing) where TEasing : IEasingFunction
+        public static Colour4 InterpolateNonLinear<TEasing>(
+            double time,
+            Colour4 startColour,
+            Colour4 endColour,
+            double startTime,
+            double endTime,
+            TEasing easing
+        )
+            where TEasing : IEasingFunction
         {
             if (startColour == endColour)
                 return startColour;
@@ -59,7 +104,8 @@ namespace osu.Game.Utils
                 startColour.R + t * (endColour.R - startColour.R),
                 startColour.G + t * (endColour.G - startColour.G),
                 startColour.B + t * (endColour.B - startColour.B),
-                startColour.A + t * (endColour.A - startColour.A));
+                startColour.A + t * (endColour.A - startColour.A)
+            );
         }
     }
 }

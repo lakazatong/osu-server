@@ -37,7 +37,13 @@ namespace osu.Game.Overlays.Volume
 
         protected static readonly Vector2 LABEL_SIZE = new Vector2(120, 20);
 
-        public BindableDouble Bindable { get; } = new BindableDouble { MinValue = 0, MaxValue = 1, Precision = 0.01 };
+        public BindableDouble Bindable { get; } =
+            new BindableDouble
+            {
+                MinValue = 0,
+                MaxValue = 1,
+                Precision = 0.01,
+            };
 
         protected readonly float CircleSize;
 
@@ -142,12 +148,13 @@ namespace osu.Game.Overlays.Volume
                                             Name = @"Progress under covers for smoothing",
                                             RelativeSizeAxes = Axes.Both,
                                             Rotation = 180,
-                                            Child = volumeCircle = new CircularProgress
-                                            {
-                                                RelativeSizeAxes = Axes.Both,
-                                            }
+                                            Child = volumeCircle =
+                                                new CircularProgress
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                },
                                         },
-                                    }
+                                    },
                                 },
                                 new Circle
                                 {
@@ -164,20 +171,26 @@ namespace osu.Game.Overlays.Volume
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     RelativeSizeAxes = Axes.Both,
-                                    Size = new Vector2(progress_start_radius + progress_size / 1.5f),
+                                    Size = new Vector2(
+                                        progress_start_radius + progress_size / 1.5f
+                                    ),
                                     Rotation = 180,
                                     Padding = new MarginPadding(-Blur.KernelSize(blur_amount)),
-                                    Child = (volumeCircleGlow = new CircularProgress
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                        InnerRadius = progress_size * 0.8f,
-                                    }).WithEffect(new GlowEffect
-                                    {
-                                        Colour = meterColour,
-                                        BlurSigma = new Vector2(blur_amount),
-                                        Strength = 5,
-                                        PadExtent = true
-                                    }),
+                                    Child = (
+                                        volumeCircleGlow = new CircularProgress
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            InnerRadius = progress_size * 0.8f,
+                                        }
+                                    ).WithEffect(
+                                        new GlowEffect
+                                        {
+                                            Colour = meterColour,
+                                            BlurSigma = new Vector2(blur_amount),
+                                            Strength = 5,
+                                            PadExtent = true,
+                                        }
+                                    ),
                                 },
                             },
                         },
@@ -197,19 +210,19 @@ namespace osu.Game.Overlays.Volume
                                 Type = EdgeEffectType.Glow,
                                 Colour = meterColour.Opacity(0.1f),
                                 Radius = 10,
-                            }
+                            },
                         },
-                        maxGlow = (text = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = OsuFont.Numeric.With(size: 0.16f * CircleSize)
-                        }).WithEffect(new GlowEffect
-                        {
-                            Colour = Color4.Transparent,
-                            PadExtent = true,
-                        })
-                    }
+                        maxGlow = (
+                            text = new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Font = OsuFont.Numeric.With(size: 0.16f * CircleSize),
+                            }
+                        ).WithEffect(
+                            new GlowEffect { Colour = Color4.Transparent, PadExtent = true }
+                        ),
+                    },
                 },
                 new Container
                 {
@@ -221,23 +234,25 @@ namespace osu.Game.Overlays.Volume
                     Anchor = Anchor.CentreLeft,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = backgroundColour,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = backgroundColour },
                         new OsuSpriteText
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Font = OsuFont.GetFont(weight: FontWeight.Bold),
-                            Text = name
-                        }
-                    }
-                }
+                            Text = name,
+                        },
+                    },
+                },
             };
 
-            Bindable.BindValueChanged(volume => { this.TransformTo(nameof(DisplayVolume), volume.NewValue, 400, Easing.OutQuint); }, true);
+            Bindable.BindValueChanged(
+                volume =>
+                {
+                    this.TransformTo(nameof(DisplayVolume), volume.NewValue, 400, Easing.OutQuint);
+                },
+                true
+            );
 
             bgProgress.Progress = 0.75f;
         }
@@ -304,8 +319,11 @@ namespace osu.Game.Overlays.Volume
 
         private const double adjust_step = 0.01;
 
-        public void Increase(double amount = 1, bool isPrecise = false) => adjust(amount, isPrecise);
-        public void Decrease(double amount = 1, bool isPrecise = false) => adjust(-amount, isPrecise);
+        public void Increase(double amount = 1, bool isPrecise = false) =>
+            adjust(amount, isPrecise);
+
+        public void Decrease(double amount = 1, bool isPrecise = false) =>
+            adjust(-amount, isPrecise);
 
         // because volume precision is set to 0.01, this local is required to keep track of more precise adjustments and only apply when possible.
         private double scrollAccumulation;
@@ -340,7 +358,8 @@ namespace osu.Game.Overlays.Volume
 
             dragDelta += delta.Y / mouse_drag_divisor;
 
-            if (Math.Abs(dragDelta) < 0.01) return;
+            if (Math.Abs(dragDelta) < 0.01)
+                return;
 
             Volume -= dragDelta;
             dragDelta = 0;
@@ -357,7 +376,10 @@ namespace osu.Game.Overlays.Volume
             accelerationDebounce = Scheduler.AddDelayed(resetAcceleration, 150);
 
             delta *= accelerationModifier;
-            accelerationModifier = Math.Min(max_acceleration, accelerationModifier * acceleration_multiplier);
+            accelerationModifier = Math.Min(
+                max_acceleration,
+                accelerationModifier * acceleration_multiplier
+            );
 
             double precision = Bindable.Precision;
 
@@ -368,7 +390,10 @@ namespace osu.Game.Overlays.Volume
                 while (Precision.AlmostBigger(Math.Abs(scrollAccumulation), precision))
                 {
                     Volume += Math.Sign(scrollAccumulation) * precision;
-                    scrollAccumulation = scrollAccumulation < 0 ? Math.Min(0, scrollAccumulation + precision) : Math.Max(0, scrollAccumulation - precision);
+                    scrollAccumulation =
+                        scrollAccumulation < 0
+                            ? Math.Min(0, scrollAccumulation + precision)
+                            : Math.Max(0, scrollAccumulation - precision);
                 }
             }
             else
@@ -395,13 +420,9 @@ namespace osu.Game.Overlays.Volume
             return false;
         }
 
-        protected override void OnHoverLost(HoverLostEvent e)
-        {
-        }
+        protected override void OnHoverLost(HoverLostEvent e) { }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         private void updateSelectedState()
         {

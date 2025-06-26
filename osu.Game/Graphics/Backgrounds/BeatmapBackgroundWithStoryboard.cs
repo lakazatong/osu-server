@@ -31,7 +31,10 @@ namespace osu.Game.Graphics.Backgrounds
         [Resolved]
         private IBindable<IReadOnlyList<Mod>> mods { get; set; } = null!;
 
-        public BeatmapBackgroundWithStoryboard(WorkingBeatmap beatmap, string fallbackTextureName = "Backgrounds/bg1")
+        public BeatmapBackgroundWithStoryboard(
+            WorkingBeatmap beatmap,
+            string fallbackTextureName = "Backgrounds/bg1"
+        )
             : base(beatmap, fallbackTextureName)
         {
             storyboardClock = new InterpolatingFramedClock();
@@ -40,11 +43,13 @@ namespace osu.Game.Graphics.Backgrounds
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(storyboardContainer = new AudioContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Volume = { Value = 0 },
-            });
+            AddInternal(
+                storyboardContainer = new AudioContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Volume = { Value = 0 },
+                }
+            );
 
             LoadStoryboard(false);
         }
@@ -58,11 +63,15 @@ namespace osu.Game.Graphics.Backgrounds
 
             drawableStoryboard = new DrawableStoryboard(Beatmap.Storyboard, mods.Value)
             {
-                Clock = storyboardClock
+                Clock = storyboardClock,
             };
 
             if (async)
-                LoadComponentAsync(drawableStoryboard, finishLoad, (loadCancellationSource = new CancellationTokenSource()).Token);
+                LoadComponentAsync(
+                    drawableStoryboard,
+                    finishLoad,
+                    (loadCancellationSource = new CancellationTokenSource()).Token
+                );
             else
             {
                 LoadComponent(drawableStoryboard);
@@ -74,7 +83,10 @@ namespace osu.Game.Graphics.Backgrounds
                 if (Beatmap.Storyboard.ReplacesBackground)
                     Sprite.FadeOut(BackgroundScreen.TRANSITION_LENGTH, Easing.InQuint);
 
-                storyboardContainer.FadeInFromZero(BackgroundScreen.TRANSITION_LENGTH, Easing.OutQuint);
+                storyboardContainer.FadeInFromZero(
+                    BackgroundScreen.TRANSITION_LENGTH,
+                    Easing.OutQuint
+                );
                 storyboardContainer.Add(s);
             }
         }
@@ -104,7 +116,8 @@ namespace osu.Game.Graphics.Backgrounds
             updateStoryboardClockSource(Beatmap);
         }
 
-        private void onTrackChanged(WorkingBeatmap newBeatmap, TrackChangeDirection _) => updateStoryboardClockSource(newBeatmap);
+        private void onTrackChanged(WorkingBeatmap newBeatmap, TrackChangeDirection _) =>
+            updateStoryboardClockSource(newBeatmap);
 
         private void updateStoryboardClockSource(WorkingBeatmap newBeatmap)
         {

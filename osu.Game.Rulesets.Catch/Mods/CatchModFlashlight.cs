@@ -15,12 +15,13 @@ namespace osu.Game.Rulesets.Catch.Mods
     {
         public override double ScoreMultiplier => UsesDefaultConfiguration ? 1.12 : 1;
 
-        public override BindableFloat SizeMultiplier { get; } = new BindableFloat(1)
-        {
-            MinValue = 0.5f,
-            MaxValue = 1.5f,
-            Precision = 0.1f
-        };
+        public override BindableFloat SizeMultiplier { get; } =
+            new BindableFloat(1)
+            {
+                MinValue = 0.5f,
+                MaxValue = 1.5f,
+                Precision = 0.1f,
+            };
 
         public override BindableBool ComboBasedSize { get; } = new BindableBool(true);
 
@@ -63,12 +64,19 @@ namespace osu.Game.Rulesets.Catch.Mods
             {
                 base.Update();
 
-                FlashlightPosition = playfield.CatcherArea.ToSpaceOfOtherDrawable(playfield.Catcher.DrawPosition, this);
+                FlashlightPosition = playfield.CatcherArea.ToSpaceOfOtherDrawable(
+                    playfield.Catcher.DrawPosition,
+                    this
+                );
             }
 
             protected override void UpdateFlashlightSize(float size)
             {
-                this.TransformTo(nameof(FlashlightSize), new Vector2(0, size), FLASHLIGHT_FADE_DURATION);
+                this.TransformTo(
+                    nameof(FlashlightSize),
+                    new Vector2(0, size),
+                    FLASHLIGHT_FADE_DURATION
+                );
             }
 
             protected override string FragmentShader => "CircularFlashlight";

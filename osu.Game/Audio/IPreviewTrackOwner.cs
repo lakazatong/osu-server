@@ -10,7 +10,5 @@ namespace osu.Game.Audio
     /// <see cref="IPreviewTrackOwner"/>s can cancel the currently playing <see cref="PreviewTrack"/> through the
     /// global <see cref="PreviewTrackManager"/> if they're the owner of the playing <see cref="PreviewTrack"/>.
     /// </remarks>
-    public interface IPreviewTrackOwner
-    {
-    }
+    public interface IPreviewTrackOwner { }
 }

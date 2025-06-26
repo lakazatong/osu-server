@@ -16,19 +16,21 @@ namespace osu.Game.Tests.Visual.SongSelectV2
         protected override float InitialRelativeWidth => 0.7f;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new Container
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Child = filterControl = new FilterControl
+                Child = new Container
                 {
-                    State = { Value = Visibility.Visible },
                     RelativeSizeAxes = Axes.X,
-                },
-            };
-        });
+                    AutoSizeAxes = Axes.Y,
+                    Child = filterControl =
+                        new FilterControl
+                        {
+                            State = { Value = Visibility.Visible },
+                            RelativeSizeAxes = Axes.X,
+                        },
+                };
+            });
 
         [Test]
         public void TestSearch()

@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 using Microsoft.Win32;
 using osu.Desktop.Performance;
 using osu.Desktop.Security;
+using osu.Desktop.Updater;
+using osu.Desktop.Windows;
+using osu.Framework;
+using osu.Framework.Allocation;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game;
-using osu.Desktop.Updater;
-using osu.Framework;
-using osu.Framework.Logging;
-using osu.Game.Updater;
-using osu.Desktop.Windows;
-using osu.Framework.Allocation;
 using osu.Game.Configuration;
 using osu.Game.IO;
 using osu.Game.IPC;
 using osu.Game.Online.Multiplayer;
 using osu.Game.Performance;
+using osu.Game.Updater;
 using osu.Game.Utils;
 
 namespace osu.Desktop
@@ -32,14 +32,13 @@ namespace osu.Desktop
         private ArchiveImportIPCChannel? archiveImportIPCChannel;
 
         [Cached(typeof(IHighPerformanceSessionManager))]
-        private readonly HighPerformanceSessionManager highPerformanceSessionManager = new HighPerformanceSessionManager();
+        private readonly HighPerformanceSessionManager highPerformanceSessionManager =
+            new HighPerformanceSessionManager();
 
         public bool IsFirstRun { get; init; }
 
         public OsuGameDesktop(string[]? args = null)
-            : base(args)
-        {
-        }
+            : base(args) { }
 
         public override StableStorage? GetStorageForStableInstall()
         {
@@ -54,7 +53,11 @@ namespace osu.Desktop
             }
             catch (Exception)
             {
-                Logger.Log("Could not find a stable install", LoggingTarget.Runtime, LogLevel.Important);
+                Logger.Log(
+                    "Could not find a stable install",
+                    LoggingTarget.Runtime,
+                    LogLevel.Important
+                );
             }
 
             return null;
@@ -62,7 +65,9 @@ namespace osu.Desktop
 
         private string? getStableInstallPath()
         {
-            static bool checkExists(string p) => Directory.Exists(Path.Combine(p, "Songs")) || File.Exists(Path.Combine(p, "osu!.cfg"));
+            static bool checkExists(string p) =>
+                Directory.Exists(Path.Combine(p, "Songs"))
+                || File.Exists(Path.Combine(p, "osu!.cfg"));
 
             string? stableInstallPath;
 
@@ -80,16 +85,20 @@ namespace osu.Desktop
                     if (!string.IsNullOrEmpty(stableInstallPath) && checkExists(stableInstallPath))
                         return stableInstallPath;
                 }
-                catch
-                {
-                }
+                catch { }
             }
 
-            stableInstallPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"osu!");
+            stableInstallPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                @"osu!"
+            );
             if (checkExists(stableInstallPath))
                 return stableInstallPath;
 
-            stableInstallPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".osu");
+            stableInstallPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                ".osu"
+            );
             if (checkExists(stableInstallPath))
                 return stableInstallPath;
 
@@ -100,10 +109,18 @@ namespace osu.Desktop
         private string? getStableInstallPathFromRegistry(string progId)
         {
             using (RegistryKey? key = Registry.ClassesRoot.OpenSubKey(progId))
-                return key?.OpenSubKey(WindowsAssociationManager.SHELL_OPEN_COMMAND)?.GetValue(string.Empty)?.ToString()?.Split('"')[1].Replace("osu!.exe", "");
+                return key
+                    ?.OpenSubKey(WindowsAssociationManager.SHELL_OPEN_COMMAND)
+                    ?.GetValue(string.Empty)
+                    ?.ToString()
+                    ?.Split('"')[1]
+                    .Replace("osu!.exe", "");
         }
 
-        public static bool IsPackageManaged => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_PROVIDER"));
+        public static bool IsPackageManaged =>
+            !string.IsNullOrEmpty(
+                Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_PROVIDER")
+            );
 
         protected override UpdateManager CreateUpdateManager()
         {
@@ -146,14 +163,17 @@ namespace osu.Desktop
         {
             base.SetHost(host);
 
-            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "lazer.ico");
+            var iconStream = Assembly
+                .GetExecutingAssembly()
+                .GetManifestResourceStream(GetType(), "lazer.ico");
             if (iconStream != null)
                 host.Window.SetIconFromStream(iconStream);
 
             host.Window.Title = Name;
         }
 
-        protected override BatteryInfo CreateBatteryInfo() => FrameworkEnvironment.UseSDL3 ? new SDL3BatteryInfo() : new SDL2BatteryInfo();
+        protected override BatteryInfo CreateBatteryInfo() =>
+            FrameworkEnvironment.UseSDL3 ? new SDL3BatteryInfo() : new SDL2BatteryInfo();
 
         protected override void Dispose(bool isDisposing)
         {

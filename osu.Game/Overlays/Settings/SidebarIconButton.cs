@@ -3,15 +3,15 @@
 
 #nullable disable
 
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
+using osuTK;
 
 namespace osu.Game.Overlays.Settings
 {
@@ -62,49 +62,44 @@ namespace osu.Game.Overlays.Settings
 
             Padding = new MarginPadding(5);
 
-            AddRange(new Drawable[]
-            {
-                textIconContent = new Container
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = OsuColour.Gray(0.6f),
-                    Children = new Drawable[]
-                    {
-                        iconContainer = new ConstrainedIconContainer
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Size = new Vector2(20),
-                            Margin = new MarginPadding { Left = 25 }
-                        },
-                        headerText = new OsuSpriteText
-                        {
-                            Position = new Vector2(60, 0),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                        },
-                    }
-                },
-                selectionIndicator = new CircularContainer
-                {
-                    Alpha = 0,
-                    Width = 4,
-                    Height = selection_indicator_height_inactive,
-                    Masking = true,
-                    CornerRadius = 1.5f,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Margin = new MarginPadding
-                    {
-                        Left = 9,
-                    },
-                    Child = new Box
+                    textIconContent = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = Colour4.White
-                    }
-                },
-            });
+                        Colour = OsuColour.Gray(0.6f),
+                        Children = new Drawable[]
+                        {
+                            iconContainer = new ConstrainedIconContainer
+                            {
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Size = new Vector2(20),
+                                Margin = new MarginPadding { Left = 25 },
+                            },
+                            headerText = new OsuSpriteText
+                            {
+                                Position = new Vector2(60, 0),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                            },
+                        },
+                    },
+                    selectionIndicator = new CircularContainer
+                    {
+                        Alpha = 0,
+                        Width = 4,
+                        Height = selection_indicator_height_inactive,
+                        Masking = true,
+                        CornerRadius = 1.5f,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Margin = new MarginPadding { Left = 9 },
+                        Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.White },
+                    },
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -122,14 +117,26 @@ namespace osu.Game.Overlays.Settings
                 textIconContent.FadeColour(ColourProvider.Content1, FADE_DURATION, Easing.OutQuint);
 
                 selectionIndicator.FadeIn(FADE_DURATION, Easing.OutQuint);
-                selectionIndicator.ResizeHeightTo(selection_indicator_height_active, FADE_DURATION, Easing.OutElasticHalf);
+                selectionIndicator.ResizeHeightTo(
+                    selection_indicator_height_active,
+                    FADE_DURATION,
+                    Easing.OutElasticHalf
+                );
             }
             else
             {
-                textIconContent.FadeColour(IsHovered ? ColourProvider.Light1 : ColourProvider.Light3, FADE_DURATION, Easing.OutQuint);
+                textIconContent.FadeColour(
+                    IsHovered ? ColourProvider.Light1 : ColourProvider.Light3,
+                    FADE_DURATION,
+                    Easing.OutQuint
+                );
 
                 selectionIndicator.FadeOut(FADE_DURATION, Easing.OutQuint);
-                selectionIndicator.ResizeHeightTo(selection_indicator_height_inactive, FADE_DURATION, Easing.OutQuint);
+                selectionIndicator.ResizeHeightTo(
+                    selection_indicator_height_inactive,
+                    FADE_DURATION,
+                    Easing.OutQuint
+                );
             }
         }
     }

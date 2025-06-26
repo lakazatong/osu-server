@@ -58,7 +58,11 @@ namespace osu.Game.Rulesets.Edit.Checks.Components
             HitObjects = new[] { hitObject };
         }
 
-        public Issue(IEnumerable<HitObject> hitObjects, IssueTemplate template, params object[] args)
+        public Issue(
+            IEnumerable<HitObject> hitObjects,
+            IssueTemplate template,
+            params object[] args
+        )
             : this(template, args)
         {
             var hitObjectList = hitObjects.ToList();

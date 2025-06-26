@@ -19,17 +19,16 @@ namespace osu.Game.Rulesets.Taiko.UI
             RelativeSizeAxes = Axes.Both;
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Gray1,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Gray1, RelativeSizeAxes = Axes.Both },
                 new Box
                 {
                     Anchor = Anchor.TopRight,
                     RelativeSizeAxes = Axes.Y,
                     Width = 10,
-                    Colour = Framework.Graphics.Colour.ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.6f), Color4.Black.Opacity(0)),
+                    Colour = Framework.Graphics.Colour.ColourInfo.GradientHorizontal(
+                        Color4.Black.Opacity(0.6f),
+                        Color4.Black.Opacity(0)
+                    ),
                 },
             };
         }

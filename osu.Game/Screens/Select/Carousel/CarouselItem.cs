@@ -17,7 +17,9 @@ namespace osu.Game.Screens.Select.Carousel
 
         public readonly BindableBool Filtered = new BindableBool();
 
-        public readonly Bindable<CarouselItemState> State = new Bindable<CarouselItemState>(CarouselItemState.NotSelected);
+        public readonly Bindable<CarouselItemState> State = new Bindable<CarouselItemState>(
+            CarouselItemState.NotSelected
+        );
 
         /// <summary>
         /// This item is not in a hidden state.
@@ -43,15 +45,15 @@ namespace osu.Game.Screens.Select.Carousel
         /// </summary>
         public abstract DrawableCarouselItem? CreateDrawableRepresentation();
 
-        public virtual void Filter(FilterCriteria criteria)
-        {
-        }
+        public virtual void Filter(FilterCriteria criteria) { }
 
-        public virtual int CompareTo(FilterCriteria criteria, CarouselItem other) => ItemID.CompareTo(other.ItemID);
+        public virtual int CompareTo(FilterCriteria criteria, CarouselItem other) =>
+            ItemID.CompareTo(other.ItemID);
 
         public int CompareTo(CarouselItem? other)
         {
-            if (other == null) return 1;
+            if (other == null)
+                return 1;
 
             return CarouselYPosition.CompareTo(other.CarouselYPosition);
         }

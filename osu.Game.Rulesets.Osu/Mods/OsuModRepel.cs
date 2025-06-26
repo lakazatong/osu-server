@@ -19,22 +19,36 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    internal class OsuModRepel : Mod, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>
+    internal class OsuModRepel
+        : Mod,
+            IUpdatableByPlayfield,
+            IApplicableToDrawableRuleset<OsuHitObject>
     {
         public override string Name => "Repel";
         public override string Acronym => "RP";
         public override ModType Type => ModType.Fun;
         public override LocalisableString Description => "Hit objects run away!";
         public override double ScoreMultiplier => 1;
-        public override Type[] IncompatibleMods => new[] { typeof(OsuModAutopilot), typeof(OsuModWiggle), typeof(OsuModTransform), typeof(ModAutoplay), typeof(OsuModMagnetised), typeof(OsuModBubbles), typeof(OsuModDepth) };
+        public override Type[] IncompatibleMods =>
+            new[]
+            {
+                typeof(OsuModAutopilot),
+                typeof(OsuModWiggle),
+                typeof(OsuModTransform),
+                typeof(ModAutoplay),
+                typeof(OsuModMagnetised),
+                typeof(OsuModBubbles),
+                typeof(OsuModDepth),
+            };
 
         [SettingSource("Repulsion strength", "How strong the repulsion is.", 0)]
-        public BindableFloat RepulsionStrength { get; } = new BindableFloat(0.5f)
-        {
-            Precision = 0.05f,
-            MinValue = 0.05f,
-            MaxValue = 1.0f,
-        };
+        public BindableFloat RepulsionStrength { get; } =
+            new BindableFloat(0.5f)
+            {
+                Precision = 0.05f,
+                MinValue = 0.05f,
+                MaxValue = 1.0f,
+            };
 
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
         {
@@ -51,11 +65,16 @@ namespace osu.Game.Rulesets.Osu.Mods
             {
                 var drawable = entry.Value;
 
-                var destination = Vector2.Clamp(2 * drawable.Position - cursorPos, Vector2.Zero, OsuPlayfield.BASE_SIZE);
+                var destination = Vector2.Clamp(
+                    2 * drawable.Position - cursorPos,
+                    Vector2.Zero,
+                    OsuPlayfield.BASE_SIZE
+                );
 
                 if (drawable.HitObject is Slider thisSlider)
                 {
-                    var possibleMovementBounds = OsuHitObjectGenerationUtils.CalculatePossibleMovementBounds(thisSlider);
+                    var possibleMovementBounds =
+                        OsuHitObjectGenerationUtils.CalculatePossibleMovementBounds(thisSlider);
 
                     destination = Vector2.Clamp(
                         destination,
@@ -75,19 +94,43 @@ namespace osu.Game.Rulesets.Osu.Mods
                         if (!slider.HeadCircle.Result.HasResult)
                             easeTo(playfield.Clock, slider, destination, cursorPos);
                         else
-                            easeTo(playfield.Clock, slider, destination - slider.Ball.DrawPosition, cursorPos);
+                            easeTo(
+                                playfield.Clock,
+                                slider,
+                                destination - slider.Ball.DrawPosition,
+                                cursorPos
+                            );
 
                         break;
                 }
             }
         }
 
-        private void easeTo(IFrameBasedClock clock, DrawableHitObject hitObject, Vector2 destination, Vector2 cursorPos)
+        private void easeTo(
+            IFrameBasedClock clock,
+            DrawableHitObject hitObject,
+            Vector2 destination,
+            Vector2 cursorPos
+        )
         {
-            double dampLength = Vector2.Distance(hitObject.Position, cursorPos) / (0.04 * RepulsionStrength.Value + 0.04);
+            double dampLength =
+                Vector2.Distance(hitObject.Position, cursorPos)
+                / (0.04 * RepulsionStrength.Value + 0.04);
 
-            float x = (float)Interpolation.DampContinuously(hitObject.X, destination.X, dampLength, clock.ElapsedFrameTime);
-            float y = (float)Interpolation.DampContinuously(hitObject.Y, destination.Y, dampLength, clock.ElapsedFrameTime);
+            float x = (float)
+                Interpolation.DampContinuously(
+                    hitObject.X,
+                    destination.X,
+                    dampLength,
+                    clock.ElapsedFrameTime
+                );
+            float y = (float)
+                Interpolation.DampContinuously(
+                    hitObject.Y,
+                    destination.Y,
+                    dampLength,
+                    clock.ElapsedFrameTime
+                );
 
             hitObject.Position = new Vector2(x, y);
         }

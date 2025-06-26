@@ -31,11 +31,14 @@ namespace osu.Game.Screens.Play.HUD
         public Bindable<Typeface> HeaderFont { get; } = new Bindable<Typeface>(Typeface.Torus);
         public BindableColour4 HeaderColour { get; } = new BindableColour4(Colour4.White);
 
-        private IBindableList<SpectatorUser> watchingUsers { get; } = new BindableList<SpectatorUser>();
+        private IBindableList<SpectatorUser> watchingUsers { get; } =
+            new BindableList<SpectatorUser>();
         private IBindableList<int> multiplayerPlayers { get; } = new BindableList<int>();
-        private BindableList<SpectatorUser> actualSpectators { get; } = new BindableList<SpectatorUser>();
+        private BindableList<SpectatorUser> actualSpectators { get; } =
+            new BindableList<SpectatorUser>();
 
-        private Bindable<LocalUserPlayingState> userPlayingState { get; } = new Bindable<LocalUserPlayingState>();
+        private Bindable<LocalUserPlayingState> userPlayingState { get; } =
+            new Bindable<LocalUserPlayingState>();
 
         private OsuSpriteText header = null!;
         private FillFlowContainer mainFlow = null!;
@@ -74,8 +77,8 @@ namespace osu.Game.Screens.Play.HUD
                         {
                             AutoSizeAxes = Axes.Both,
                             Direction = FillDirection.Vertical,
-                        }
-                    }
+                        },
+                    },
                 },
                 pool = new DrawablePool<SpectatorListEntry>(max_spectators_displayed),
             };
@@ -170,12 +173,18 @@ namespace osu.Game.Screens.Play.HUD
 
                 case NotifyCollectionChangedAction.Remove:
                 {
-                    spectatorsFlow.RemoveAll(entry => e.OldItems!.Contains(entry.Current.Value), false);
+                    spectatorsFlow.RemoveAll(
+                        entry => e.OldItems!.Contains(entry.Current.Value),
+                        false
+                    );
 
                     for (int i = 0; i < spectatorsFlow.Count; i++)
                         spectatorsFlow.SetLayoutPosition(spectatorsFlow[i], i);
 
-                    if (actualSpectators.Count >= max_spectators_displayed && spectatorsFlow.Count < max_spectators_displayed)
+                    if (
+                        actualSpectators.Count >= max_spectators_displayed
+                        && spectatorsFlow.Count < max_spectators_displayed
+                    )
                     {
                         for (int i = spectatorsFlow.Count; i < max_spectators_displayed; i++)
                             addNewSpectatorToList(i, actualSpectators[i]);
@@ -199,9 +208,10 @@ namespace osu.Game.Screens.Play.HUD
 
             for (int i = 0; i < spectatorsFlow.Count; i++)
             {
-                spectatorsFlow[i].Colour = i < max_spectators_displayed - 1
-                    ? Color4.White
-                    : ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(0));
+                spectatorsFlow[i].Colour =
+                    i < max_spectators_displayed - 1
+                        ? Color4.White
+                        : ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(0));
             }
         }
 
@@ -219,7 +229,14 @@ namespace osu.Game.Screens.Play.HUD
         private void updateVisibility()
         {
             // We don't want to show spectators when we are watching a replay.
-            mainFlow.FadeTo(actualSpectators.Count > 0 && userPlayingState.Value != LocalUserPlayingState.NotPlaying ? 1 : 0, 250, Easing.OutQuint);
+            mainFlow.FadeTo(
+                actualSpectators.Count > 0
+                && userPlayingState.Value != LocalUserPlayingState.NotPlaying
+                    ? 1
+                    : 0,
+                250,
+                Easing.OutQuint
+            );
         }
 
         private void updateAppearance()
@@ -234,7 +251,8 @@ namespace osu.Game.Screens.Play.HUD
         {
             public Bindable<SpectatorUser> Current { get; } = new Bindable<SpectatorUser>();
 
-            private readonly BindableWithCurrent<LocalUserPlayingState> current = new BindableWithCurrent<LocalUserPlayingState>();
+            private readonly BindableWithCurrent<LocalUserPlayingState> current =
+                new BindableWithCurrent<LocalUserPlayingState>();
 
             public Bindable<LocalUserPlayingState> UserPlayingState
             {
@@ -253,10 +271,7 @@ namespace osu.Game.Screens.Play.HUD
             {
                 AutoSizeAxes = Axes.Both;
 
-                InternalChildren = new Drawable[]
-                {
-                    username = new OsuSpriteText(),
-                };
+                InternalChildren = new Drawable[] { username = new OsuSpriteText() };
             }
 
             protected override void LoadComplete()
@@ -270,9 +285,7 @@ namespace osu.Game.Screens.Play.HUD
             {
                 base.PrepareForUse();
 
-                username.MoveToX(10)
-                        .Then()
-                        .MoveToX(0, 400, Easing.OutQuint);
+                username.MoveToX(10).Then().MoveToX(0, 400, Easing.OutQuint);
 
                 this.FadeInFromZero(400, Easing.OutQuint);
             }
@@ -281,18 +294,24 @@ namespace osu.Game.Screens.Play.HUD
             {
                 username.Text = Current.Value.Username;
                 linkCompiler?.Expire();
-                AddInternal(linkCompiler = new DrawableLinkCompiler([username])
-                {
-                    IdleColour = Colour4.White,
-                    Action = () => game?.HandleLink(new LinkDetails(LinkAction.OpenUserProfile, Current.Value)),
-                });
+                AddInternal(
+                    linkCompiler = new DrawableLinkCompiler([username])
+                    {
+                        IdleColour = Colour4.White,
+                        Action = () =>
+                            game?.HandleLink(
+                                new LinkDetails(LinkAction.OpenUserProfile, Current.Value)
+                            ),
+                    }
+                );
                 updateEnabledState();
             }
 
             private void updateEnabledState()
             {
                 if (linkCompiler != null)
-                    linkCompiler.Enabled.Value = UserPlayingState.Value != LocalUserPlayingState.Playing;
+                    linkCompiler.Enabled.Value =
+                        UserPlayingState.Value != LocalUserPlayingState.Playing;
             }
         }
 

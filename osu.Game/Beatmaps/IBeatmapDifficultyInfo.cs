@@ -92,8 +92,8 @@ namespace osu.Game.Beatmaps
         /// </list>
         /// </param>
         /// <returns>Value to which the difficulty value maps in the specified range.</returns>
-        static double DifficultyRange(double difficulty, DifficultyRange range)
-            => DifficultyRange(difficulty, range.Min, range.Mid, range.Max);
+        static double DifficultyRange(double difficulty, DifficultyRange range) =>
+            DifficultyRange(difficulty, range.Min, range.Mid, range.Max);
 
         /// <summary>
         /// Inverse function to <see cref="DifficultyRange(double,double,double,double)"/>.
@@ -104,7 +104,12 @@ namespace osu.Game.Beatmaps
         /// <param name="diff5">Midpoint of the resulting range which will be achieved by a difficulty value of 5.</param>
         /// <param name="diff10">Maximum of the resulting range which will be achieved by a difficulty value of 10.</param>
         /// <returns>Value to which the difficulty value maps in the specified range.</returns>
-        static double InverseDifficultyRange(double difficultyValue, double diff0, double diff5, double diff10)
+        static double InverseDifficultyRange(
+            double difficultyValue,
+            double diff0,
+            double diff5,
+            double diff10
+        )
         {
             return Math.Sign(difficultyValue - diff5) == Math.Sign(diff10 - diff5)
                 ? (difficultyValue - diff5) / (diff10 - diff5) * 5 + 5
@@ -118,8 +123,8 @@ namespace osu.Game.Beatmaps
         /// <param name="difficultyValue">The difficulty-dependent value to be unmapped.</param>
         /// <param name="range">Minimum of the resulting range which will be achieved by a difficulty value of 0.</param>
         /// <returns>Value to which the difficulty value maps in the specified range.</returns>
-        static double InverseDifficultyRange(double difficultyValue, DifficultyRange range)
-            => InverseDifficultyRange(difficultyValue, range.Min, range.Mid, range.Max);
+        static double InverseDifficultyRange(double difficultyValue, DifficultyRange range) =>
+            InverseDifficultyRange(difficultyValue, range.Min, range.Mid, range.Max);
     }
 
     /// <summary>

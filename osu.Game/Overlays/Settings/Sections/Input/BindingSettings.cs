@@ -11,9 +11,20 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 {
     public partial class BindingSettings : SettingsSubsection
     {
-        protected override LocalisableString Header => BindingSettingsStrings.ShortcutAndGameplayBindings;
+        protected override LocalisableString Header =>
+            BindingSettingsStrings.ShortcutAndGameplayBindings;
 
-        public override IEnumerable<LocalisableString> FilterTerms => base.FilterTerms.Concat(new LocalisableString[] { @"keybindings", @"controls", @"keyboard", @"keys", @"buttons" });
+        public override IEnumerable<LocalisableString> FilterTerms =>
+            base.FilterTerms.Concat(
+                new LocalisableString[]
+                {
+                    @"keybindings",
+                    @"controls",
+                    @"keyboard",
+                    @"keys",
+                    @"buttons",
+                }
+            );
 
         public BindingSettings(KeyBindingPanel keyConfig)
         {
@@ -23,7 +34,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 {
                     Text = BindingSettingsStrings.Configure,
                     TooltipText = BindingSettingsStrings.ChangeBindingsButton,
-                    Action = keyConfig.ToggleVisibility
+                    Action = keyConfig.ToggleVisibility,
                 },
             };
         }

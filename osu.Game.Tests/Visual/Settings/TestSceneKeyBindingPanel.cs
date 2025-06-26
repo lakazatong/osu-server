@@ -38,8 +38,18 @@ namespace osu.Game.Tests.Visual.Settings
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddUntilStep("wait for load", () => panel.ChildrenOfType<GlobalKeyBindingsSection>().Any());
-            AddStep("Scroll to top", () => panel.ChildrenOfType<SettingsPanel.SettingsSectionsContainer>().First().ScrollToTop());
+            AddUntilStep(
+                "wait for load",
+                () => panel.ChildrenOfType<GlobalKeyBindingsSection>().Any()
+            );
+            AddStep(
+                "Scroll to top",
+                () =>
+                    panel
+                        .ChildrenOfType<SettingsPanel.SettingsSectionsContainer>()
+                        .First()
+                        .ScrollToTop()
+            );
             AddWaitStep("wait for scroll", 5);
         }
 
@@ -111,36 +121,46 @@ namespace osu.Game.Tests.Visual.Settings
         {
             KeyBindingRow firstRow = null;
 
-            AddStep("click first row", () =>
-            {
-                firstRow = panel.ChildrenOfType<KeyBindingRow>().First();
-
-                InputManager.MoveMouseTo(firstRow);
-                InputManager.Click(MouseButton.Left);
-            });
-
-            AddStep("schedule button clicks", () =>
-            {
-                var clearButton = firstRow.ChildrenOfType<KeyBindingRow.ClearButton>().Single();
-
-                InputManager.MoveMouseTo(clearButton);
-
-                int buttonClicks = 0;
-                ScheduledDelegate clickDelegate = null;
-
-                clickDelegate = Scheduler.AddDelayed(() =>
+            AddStep(
+                "click first row",
+                () =>
                 {
-                    InputManager.Click(MouseButton.Left);
+                    firstRow = panel.ChildrenOfType<KeyBindingRow>().First();
 
-                    if (++buttonClicks == 2)
-                    {
-                        // ReSharper disable once AccessToModifiedClosure
-                        Debug.Assert(clickDelegate != null);
-                        // ReSharper disable once AccessToModifiedClosure
-                        clickDelegate.Cancel();
-                    }
-                }, 0, true);
-            });
+                    InputManager.MoveMouseTo(firstRow);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+
+            AddStep(
+                "schedule button clicks",
+                () =>
+                {
+                    var clearButton = firstRow.ChildrenOfType<KeyBindingRow.ClearButton>().Single();
+
+                    InputManager.MoveMouseTo(clearButton);
+
+                    int buttonClicks = 0;
+                    ScheduledDelegate clickDelegate = null;
+
+                    clickDelegate = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            InputManager.Click(MouseButton.Left);
+
+                            if (++buttonClicks == 2)
+                            {
+                                // ReSharper disable once AccessToModifiedClosure
+                                Debug.Assert(clickDelegate != null);
+                                // ReSharper disable once AccessToModifiedClosure
+                                clickDelegate.Cancel();
+                            }
+                        },
+                        0,
+                        true
+                    );
+                }
+            );
         }
 
         [Test]
@@ -148,42 +168,67 @@ namespace osu.Game.Tests.Visual.Settings
         {
             KeyBindingRow multiBindingRow = null;
 
-            AddStep("click first row with two bindings", () =>
-            {
-                multiBindingRow = panel.ChildrenOfType<KeyBindingRow>().First(row => row.Defaults.Count() > 1);
-                InputManager.MoveMouseTo(multiBindingRow.ChildrenOfType<OsuSpriteText>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first row with two bindings",
+                () =>
+                {
+                    multiBindingRow = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(row => row.Defaults.Count() > 1);
+                    InputManager.MoveMouseTo(
+                        multiBindingRow.ChildrenOfType<OsuSpriteText>().First()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             clickClearButton();
 
-            AddAssert("first binding cleared",
+            AddAssert(
+                "first binding cleared",
                 () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().First().Text.Text,
-                () => Is.EqualTo(InputSettingsStrings.ActionHasNoKeyBinding));
+                () => Is.EqualTo(InputSettingsStrings.ActionHasNoKeyBinding)
+            );
 
-            AddStep("click second binding", () =>
-            {
-                var target = multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(1);
+            AddStep(
+                "click second binding",
+                () =>
+                {
+                    var target = multiBindingRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(1);
 
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             clickClearButton();
 
-            AddAssert("second binding cleared",
-                () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(1).Text.Text,
-                () => Is.EqualTo(InputSettingsStrings.ActionHasNoKeyBinding));
+            AddAssert(
+                "second binding cleared",
+                () =>
+                    multiBindingRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(1)
+                        .Text.Text,
+                () => Is.EqualTo(InputSettingsStrings.ActionHasNoKeyBinding)
+            );
 
             void clickClearButton()
             {
-                AddStep("click clear button", () =>
-                {
-                    var clearButton = multiBindingRow.ChildrenOfType<KeyBindingRow.ClearButton>().Single();
+                AddStep(
+                    "click clear button",
+                    () =>
+                    {
+                        var clearButton = multiBindingRow
+                            .ChildrenOfType<KeyBindingRow.ClearButton>()
+                            .Single();
 
-                    InputManager.MoveMouseTo(clearButton);
-                    InputManager.Click(MouseButton.Left);
-                });
+                        InputManager.MoveMouseTo(clearButton);
+                        InputManager.Click(MouseButton.Left);
+                    }
+                );
             }
         }
 
@@ -192,29 +237,59 @@ namespace osu.Game.Tests.Visual.Settings
         {
             KeyBindingRow settingsKeyBindingRow = null;
 
-            AddStep("click first row", () =>
-            {
-                settingsKeyBindingRow = panel.ChildrenOfType<KeyBindingRow>().First();
+            AddStep(
+                "click first row",
+                () =>
+                {
+                    settingsKeyBindingRow = panel.ChildrenOfType<KeyBindingRow>().First();
 
-                InputManager.MoveMouseTo(settingsKeyBindingRow);
-                InputManager.Click(MouseButton.Left);
-                InputManager.PressKey(Key.P);
-                InputManager.ReleaseKey(Key.P);
-            });
+                    InputManager.MoveMouseTo(settingsKeyBindingRow);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.PressKey(Key.P);
+                    InputManager.ReleaseKey(Key.P);
+                }
+            );
 
-            AddUntilStep("restore button shown", () => settingsKeyBindingRow.ChildrenOfType<RevertToDefaultButton<bool>>().First().Alpha > 0);
+            AddUntilStep(
+                "restore button shown",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<RevertToDefaultButton<bool>>()
+                        .First()
+                        .Alpha > 0
+            );
 
-            AddStep("click reset button for bindings", () =>
-            {
-                var resetButton = settingsKeyBindingRow.ChildrenOfType<RevertToDefaultButton<bool>>().First();
+            AddStep(
+                "click reset button for bindings",
+                () =>
+                {
+                    var resetButton = settingsKeyBindingRow
+                        .ChildrenOfType<RevertToDefaultButton<bool>>()
+                        .First();
 
-                resetButton.TriggerClick();
-            });
+                    resetButton.TriggerClick();
+                }
+            );
 
-            AddUntilStep("restore button hidden", () => settingsKeyBindingRow.ChildrenOfType<RevertToDefaultButton<bool>>().First().Alpha == 0);
+            AddUntilStep(
+                "restore button hidden",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<RevertToDefaultButton<bool>>()
+                        .First()
+                        .Alpha == 0
+            );
 
-            AddAssert("binding cleared",
-                () => settingsKeyBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(0).KeyBinding.Value.KeyCombination.Equals(settingsKeyBindingRow.Defaults.ElementAt(0)));
+            AddAssert(
+                "binding cleared",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(0)
+                        .KeyBinding.Value.KeyCombination.Equals(
+                            settingsKeyBindingRow.Defaults.ElementAt(0)
+                        )
+            );
         }
 
         [Test]
@@ -222,29 +297,57 @@ namespace osu.Game.Tests.Visual.Settings
         {
             KeyBindingRow settingsKeyBindingRow = null;
 
-            AddStep("click first row", () =>
-            {
-                settingsKeyBindingRow = panel.ChildrenOfType<KeyBindingRow>().First();
+            AddStep(
+                "click first row",
+                () =>
+                {
+                    settingsKeyBindingRow = panel.ChildrenOfType<KeyBindingRow>().First();
 
-                InputManager.MoveMouseTo(settingsKeyBindingRow);
-                InputManager.Click(MouseButton.Left);
-                InputManager.PressKey(Key.P);
-                InputManager.ReleaseKey(Key.P);
-            });
+                    InputManager.MoveMouseTo(settingsKeyBindingRow);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.PressKey(Key.P);
+                    InputManager.ReleaseKey(Key.P);
+                }
+            );
 
-            AddUntilStep("restore button shown", () => settingsKeyBindingRow.ChildrenOfType<RevertToDefaultButton<bool>>().First().Alpha > 0);
+            AddUntilStep(
+                "restore button shown",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<RevertToDefaultButton<bool>>()
+                        .First()
+                        .Alpha > 0
+            );
 
-            AddStep("click reset button for bindings", () =>
-            {
-                var resetButton = panel.ChildrenOfType<ResetButton>().First();
+            AddStep(
+                "click reset button for bindings",
+                () =>
+                {
+                    var resetButton = panel.ChildrenOfType<ResetButton>().First();
 
-                resetButton.TriggerClick();
-            });
+                    resetButton.TriggerClick();
+                }
+            );
 
-            AddUntilStep("restore button hidden", () => settingsKeyBindingRow.ChildrenOfType<RevertToDefaultButton<bool>>().First().Alpha == 0);
+            AddUntilStep(
+                "restore button hidden",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<RevertToDefaultButton<bool>>()
+                        .First()
+                        .Alpha == 0
+            );
 
-            AddAssert("binding cleared",
-                () => settingsKeyBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(0).KeyBinding.Value.KeyCombination.Equals(settingsKeyBindingRow.Defaults.ElementAt(0)));
+            AddAssert(
+                "binding cleared",
+                () =>
+                    settingsKeyBindingRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(0)
+                        .KeyBinding.Value.KeyCombination.Equals(
+                            settingsKeyBindingRow.Defaults.ElementAt(0)
+                        )
+            );
         }
 
         [Test]
@@ -252,31 +355,52 @@ namespace osu.Game.Tests.Visual.Settings
         {
             KeyBindingRow multiBindingRow = null;
 
-            AddStep("click first row with two bindings", () =>
-            {
-                multiBindingRow = panel.ChildrenOfType<KeyBindingRow>().First(row => row.Defaults.Count() > 1);
-                InputManager.MoveMouseTo(multiBindingRow.ChildrenOfType<OsuSpriteText>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first row with two bindings",
+                () =>
+                {
+                    multiBindingRow = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(row => row.Defaults.Count() > 1);
+                    InputManager.MoveMouseTo(
+                        multiBindingRow.ChildrenOfType<OsuSpriteText>().First()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("first binding selected", () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().First().IsBinding);
+            AddAssert(
+                "first binding selected",
+                () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().First().IsBinding
+            );
 
-            AddStep("click second binding", () =>
-            {
-                var target = multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(1);
+            AddStep(
+                "click second binding",
+                () =>
+                {
+                    var target = multiBindingRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(1);
 
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("click back binding row", () =>
-            {
-                multiBindingRow = panel.ChildrenOfType<KeyBindingRow>().ElementAt(10);
-                InputManager.MoveMouseTo(multiBindingRow);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click back binding row",
+                () =>
+                {
+                    multiBindingRow = panel.ChildrenOfType<KeyBindingRow>().ElementAt(10);
+                    InputManager.MoveMouseTo(multiBindingRow);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("first binding selected", () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().First().IsBinding);
+            AddAssert(
+                "first binding selected",
+                () => multiBindingRow.ChildrenOfType<KeyBindingRow.KeyButton>().First().IsBinding
+            );
         }
 
         [Test]
@@ -284,32 +408,56 @@ namespace osu.Game.Tests.Visual.Settings
         {
             SearchTextBox searchTextBox = null;
 
-            AddStep("add any search term", () =>
-            {
-                searchTextBox = panel.ChildrenOfType<SearchTextBox>().Single();
-                searchTextBox.Current.Value = "chat";
-            });
-            AddUntilStep("all reset section bindings buttons hidden", () => panel.ChildrenOfType<ResetButton>().All(button => button.Alpha == 0));
+            AddStep(
+                "add any search term",
+                () =>
+                {
+                    searchTextBox = panel.ChildrenOfType<SearchTextBox>().Single();
+                    searchTextBox.Current.Value = "chat";
+                }
+            );
+            AddUntilStep(
+                "all reset section bindings buttons hidden",
+                () => panel.ChildrenOfType<ResetButton>().All(button => button.Alpha == 0)
+            );
 
             AddStep("clear search term", () => searchTextBox.Current.Value = string.Empty);
-            AddUntilStep("all reset section bindings buttons shown", () => panel.ChildrenOfType<ResetButton>().All(button => button.Alpha == 1));
+            AddUntilStep(
+                "all reset section bindings buttons shown",
+                () => panel.ChildrenOfType<ResetButton>().All(button => button.Alpha == 1)
+            );
         }
 
         [Test]
         public void TestBindingConflictResolvedByRollbackViaMouse()
         {
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (rim)");
             AddStep("attempt to bind M1 to two keys", () => InputManager.Click(MouseButton.Left));
 
             KeyBindingConflictPopover popover = null;
-            AddUntilStep("wait for popover", () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Not.Null);
-            AddStep("click first button", () => popover.ChildrenOfType<RoundedButton>().First().TriggerClick());
+            AddUntilStep(
+                "wait for popover",
+                () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
+            AddStep(
+                "click first button",
+                () => popover.ChildrenOfType<RoundedButton>().First().TriggerClick()
+            );
             checkBinding("Left (centre)", "M1");
             checkBinding("Left (rim)", "M2");
         }
@@ -317,18 +465,33 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestBindingConflictResolvedByOverwriteViaMouse()
         {
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (rim)");
             AddStep("attempt to bind M1 to two keys", () => InputManager.Click(MouseButton.Left));
 
             KeyBindingConflictPopover popover = null;
-            AddUntilStep("wait for popover", () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Not.Null);
-            AddStep("click second button", () => popover.ChildrenOfType<RoundedButton>().ElementAt(1).TriggerClick());
+            AddUntilStep(
+                "wait for popover",
+                () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
+            AddStep(
+                "click second button",
+                () => popover.ChildrenOfType<RoundedButton>().ElementAt(1).TriggerClick()
+            );
             checkBinding("Left (centre)", InputSettingsStrings.ActionHasNoKeyBinding.ToString());
             checkBinding("Left (rim)", "M1");
         }
@@ -336,18 +499,32 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestBindingConflictResolvedByRollbackViaKeyboard()
         {
-            AddStep("reset taiko & global sections to default", () =>
-            {
-                panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset))
-                     .ChildrenOfType<ResetButton>().Single().TriggerClick();
+            AddStep(
+                "reset taiko & global sections to default",
+                () =>
+                {
+                    panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset))
+                        .ChildrenOfType<ResetButton>()
+                        .Single()
+                        .TriggerClick();
 
-                panel.ChildrenOfType<ResetButton>().First().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+                    panel.ChildrenOfType<ResetButton>().First().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (rim)");
             AddStep("attempt to bind M1 to two keys", () => InputManager.Click(MouseButton.Left));
 
-            AddUntilStep("wait for popover", () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Not.Null);
+            AddUntilStep(
+                "wait for popover",
+                () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
             AddStep("press Esc", () => InputManager.Key(Key.Escape));
             checkBinding("Left (centre)", "M1");
             checkBinding("Left (rim)", "M2");
@@ -356,18 +533,32 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestBindingConflictResolvedByOverwriteViaKeyboard()
         {
-            AddStep("reset taiko & global sections to default", () =>
-            {
-                panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset))
-                     .ChildrenOfType<ResetButton>().Single().TriggerClick();
+            AddStep(
+                "reset taiko & global sections to default",
+                () =>
+                {
+                    panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset))
+                        .ChildrenOfType<ResetButton>()
+                        .Single()
+                        .TriggerClick();
 
-                panel.ChildrenOfType<ResetButton>().First().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+                    panel.ChildrenOfType<ResetButton>().First().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (rim)");
             AddStep("attempt to bind M1 to two keys", () => InputManager.Click(MouseButton.Left));
 
-            AddUntilStep("wait for popover", () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Not.Null);
+            AddUntilStep(
+                "wait for popover",
+                () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
             AddStep("press Enter", () => InputManager.Key(Key.Enter));
             checkBinding("Left (centre)", InputSettingsStrings.ActionHasNoKeyBinding.ToString());
             checkBinding("Left (rim)", "M1");
@@ -376,30 +567,61 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestBindingConflictCausedByResetToDefaultOfSingleRow()
         {
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (centre)");
-            AddStep("clear binding", () =>
-            {
-                var row = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == "Left (centre)"));
-                row.ChildrenOfType<KeyBindingRow.ClearButton>().Single().TriggerClick();
-            });
+            AddStep(
+                "clear binding",
+                () =>
+                {
+                    var row = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>()
+                                .Any(s => s.Text.ToString() == "Left (centre)")
+                        );
+                    row.ChildrenOfType<KeyBindingRow.ClearButton>().Single().TriggerClick();
+                }
+            );
             scrollToAndStartBinding("Left (rim)");
             AddStep("bind M1", () => InputManager.Click(MouseButton.Left));
 
-            AddStep("reset Left (centre) to default", () =>
-            {
-                var row = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == "Left (centre)"));
-                row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().TriggerClick();
-            });
+            AddStep(
+                "reset Left (centre) to default",
+                () =>
+                {
+                    var row = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>()
+                                .Any(s => s.Text.ToString() == "Left (centre)")
+                        );
+                    row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().TriggerClick();
+                }
+            );
 
             KeyBindingConflictPopover popover = null;
-            AddUntilStep("wait for popover", () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Not.Null);
-            AddStep("click second button", () => popover.ChildrenOfType<RoundedButton>().ElementAt(1).TriggerClick());
+            AddUntilStep(
+                "wait for popover",
+                () => popover = panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Not.Null
+            );
+            AddStep(
+                "click second button",
+                () => popover.ChildrenOfType<RoundedButton>().ElementAt(1).TriggerClick()
+            );
             checkBinding("Left (centre)", "M1");
             checkBinding("Left (rim)", InputSettingsStrings.ActionHasNoKeyBinding.ToString());
         }
@@ -407,35 +629,60 @@ namespace osu.Game.Tests.Visual.Settings
         [Test]
         public void TestResettingEntireSectionDoesNotCauseBindingConflicts()
         {
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
             scrollToAndStartBinding("Left (centre)");
             clearBinding();
             scrollToAndStartBinding("Left (rim)");
             AddStep("bind M1", () => InputManager.Click(MouseButton.Left));
 
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
             AddWaitStep("wait a bit", 3);
-            AddUntilStep("conflict popover not shown", () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Null);
+            AddUntilStep(
+                "conflict popover not shown",
+                () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Null
+            );
         }
 
         [Test]
         public void TestResettingRowCannotConflictWithItself()
         {
-            AddStep("reset taiko section to default", () =>
-            {
-                var section = panel.ChildrenOfType<VariantBindingsSubsection>().First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
-                section.ChildrenOfType<ResetButton>().Single().TriggerClick();
-            });
-            AddStep("move mouse to centre", () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "reset taiko section to default",
+                () =>
+                {
+                    var section = panel
+                        .ChildrenOfType<VariantBindingsSubsection>()
+                        .First(section => new TaikoRuleset().RulesetInfo.Equals(section.Ruleset));
+                    section.ChildrenOfType<ResetButton>().Single().TriggerClick();
+                }
+            );
+            AddStep(
+                "move mouse to centre",
+                () => InputManager.MoveMouseTo(panel.ScreenSpaceDrawQuad.Centre)
+            );
 
             scrollToAndStartBinding("Left (centre)");
             clearBinding();
@@ -447,55 +694,100 @@ namespace osu.Game.Tests.Visual.Settings
             scrollToAndStartBinding("Left (centre)", 1);
             AddStep("bind M1", () => InputManager.Click(MouseButton.Left));
 
-            AddStep("revert row to default", () =>
-            {
-                var row = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == "Left (centre)"));
-                InputManager.MoveMouseTo(row.ChildrenOfType<RevertToDefaultButton<bool>>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "revert row to default",
+                () =>
+                {
+                    var row = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>()
+                                .Any(s => s.Text.ToString() == "Left (centre)")
+                        );
+                    InputManager.MoveMouseTo(
+                        row.ChildrenOfType<RevertToDefaultButton<bool>>().Single()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddWaitStep("wait a bit", 3);
-            AddUntilStep("conflict popover not shown", () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(), () => Is.Null);
+            AddUntilStep(
+                "conflict popover not shown",
+                () => panel.ChildrenOfType<KeyBindingConflictPopover>().SingleOrDefault(),
+                () => Is.Null
+            );
         }
 
         private void clearBinding()
         {
-            AddStep("clear binding", () =>
-            {
-                var row = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == "Left (centre)"));
-                row.ChildrenOfType<KeyBindingRow.ClearButton>().Single().TriggerClick();
-            });
+            AddStep(
+                "clear binding",
+                () =>
+                {
+                    var row = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>()
+                                .Any(s => s.Text.ToString() == "Left (centre)")
+                        );
+                    row.ChildrenOfType<KeyBindingRow.ClearButton>().Single().TriggerClick();
+                }
+            );
         }
 
         private void checkBinding(string name, string keyName)
         {
-            AddAssert($"Check {name} is bound to {keyName}", () =>
-            {
-                var firstRow = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == name));
-                var firstButton = firstRow.ChildrenOfType<KeyBindingRow.KeyButton>().First();
+            AddAssert(
+                $"Check {name} is bound to {keyName}",
+                () =>
+                {
+                    var firstRow = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == name)
+                        );
+                    var firstButton = firstRow.ChildrenOfType<KeyBindingRow.KeyButton>().First();
 
-                return firstButton.Text.Text.ToString();
-            }, () => Is.EqualTo(keyName));
+                    return firstButton.Text.Text.ToString();
+                },
+                () => Is.EqualTo(keyName)
+            );
         }
 
         private void scrollToAndStartBinding(string name, int bindingIndex = 0)
         {
             KeyBindingRow.KeyButton targetButton = null;
 
-            AddStep($"Scroll to {name}", () =>
-            {
-                var firstRow = panel.ChildrenOfType<KeyBindingRow>().First(r => r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == name));
-                targetButton = firstRow.ChildrenOfType<KeyBindingRow.KeyButton>().ElementAt(bindingIndex);
+            AddStep(
+                $"Scroll to {name}",
+                () =>
+                {
+                    var firstRow = panel
+                        .ChildrenOfType<KeyBindingRow>()
+                        .First(r =>
+                            r.ChildrenOfType<OsuSpriteText>().Any(s => s.Text.ToString() == name)
+                        );
+                    targetButton = firstRow
+                        .ChildrenOfType<KeyBindingRow.KeyButton>()
+                        .ElementAt(bindingIndex);
 
-                panel.ChildrenOfType<SettingsPanel.SettingsSectionsContainer>().First().ScrollTo(targetButton);
-            });
+                    panel
+                        .ChildrenOfType<SettingsPanel.SettingsSectionsContainer>()
+                        .First()
+                        .ScrollTo(targetButton);
+                }
+            );
 
             AddWaitStep("wait for scroll", 5);
 
-            AddStep("click to bind", () =>
-            {
-                InputManager.MoveMouseTo(targetButton);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click to bind",
+                () =>
+                {
+                    InputManager.MoveMouseTo(targetButton);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
         }
     }
 }

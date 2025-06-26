@@ -26,9 +26,7 @@ namespace osu.Game.Screens.Play.HUD
         public double FadeTime { get; set; }
 
         public DefaultKeyCounter(InputTrigger trigger)
-            : base(trigger)
-        {
-        }
+            : base(trigger) { }
 
         [BackgroundDependencyLoader(true)]
         private void load(TextureStore textures)
@@ -46,7 +44,7 @@ namespace osu.Game.Screens.Play.HUD
                     Texture = textures.Get(@"KeyCounter/key-glow"),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Alpha = 0
+                    Alpha = 0,
                 },
                 textLayer = new Container
                 {
@@ -63,7 +61,7 @@ namespace osu.Game.Screens.Play.HUD
                             Origin = Anchor.Centre,
                             RelativePositionAxes = Axes.Both,
                             Position = new Vector2(0, -0.25f),
-                            Colour = KeyUpTextColor
+                            Colour = KeyUpTextColor,
                         },
                         countSpriteText = new OsuSpriteText
                         {
@@ -72,10 +70,10 @@ namespace osu.Game.Screens.Play.HUD
                             Origin = Anchor.Centre,
                             RelativePositionAxes = Axes.Both,
                             Position = new Vector2(0, 0.25f),
-                            Colour = KeyUpTextColor
-                        }
-                    }
-                }
+                            Colour = KeyUpTextColor,
+                        },
+                    },
+                },
             };
             // Set this manually because an element with Alpha=0 won't take it size to AutoSizeContainer,
             // so the size can be changing between buttonSprite and glowSprite.
@@ -83,7 +81,10 @@ namespace osu.Game.Screens.Play.HUD
             Width = buttonSprite.DrawWidth;
 
             IsActive.BindValueChanged(e => updateGlowSprite(e.NewValue), true);
-            CountPresses.BindValueChanged(e => countSpriteText.Text = e.NewValue.ToString(@"#,0"), true);
+            CountPresses.BindValueChanged(
+                e => countSpriteText.Text = e.NewValue.ToString(@"#,0"),
+                true
+            );
         }
 
         private void updateGlowSprite(bool show)

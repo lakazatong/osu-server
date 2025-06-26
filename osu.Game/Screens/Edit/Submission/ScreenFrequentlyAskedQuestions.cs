@@ -13,50 +13,61 @@ using osuTK;
 
 namespace osu.Game.Screens.Edit.Submission
 {
-    [LocalisableDescription(typeof(BeatmapSubmissionStrings), nameof(BeatmapSubmissionStrings.FrequentlyAskedQuestions))]
+    [LocalisableDescription(
+        typeof(BeatmapSubmissionStrings),
+        nameof(BeatmapSubmissionStrings.FrequentlyAskedQuestions)
+    )]
     public partial class ScreenFrequentlyAskedQuestions : WizardScreen
     {
         [BackgroundDependencyLoader]
         private void load(OsuGame? game, IAPIProvider api)
         {
-            Content.Add(new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(5),
-                Children = new Drawable[]
+            Content.Add(
+                new FillFlowContainer
                 {
-                    new FormButton
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(5),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Caption = BeatmapSubmissionStrings.BeatmapRankingCriteriaDescription,
-                        ButtonText = BeatmapSubmissionStrings.BeatmapRankingCriteria,
-                        Action = () => game?.ShowWiki(@"Ranking_Criteria"),
+                        new FormButton
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Caption = BeatmapSubmissionStrings.BeatmapRankingCriteriaDescription,
+                            ButtonText = BeatmapSubmissionStrings.BeatmapRankingCriteria,
+                            Action = () => game?.ShowWiki(@"Ranking_Criteria"),
+                        },
+                        new FormButton
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Caption = BeatmapSubmissionStrings.SubmissionProcessDescription,
+                            ButtonText = BeatmapSubmissionStrings.SubmissionProcess,
+                            Action = () => game?.ShowWiki(@"Beatmap_ranking_procedure"),
+                        },
+                        new FormButton
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Caption = BeatmapSubmissionStrings.MappingHelpForumDescription,
+                            ButtonText = BeatmapSubmissionStrings.MappingHelpForum,
+                            Action = () =>
+                                game?.OpenUrlExternally(
+                                    $@"{api.Endpoints.WebsiteUrl}/community/forums/56"
+                                ),
+                        },
+                        new FormButton
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Caption = BeatmapSubmissionStrings.ModdingQueuesForumDescription,
+                            ButtonText = BeatmapSubmissionStrings.ModdingQueuesForum,
+                            Action = () =>
+                                game?.OpenUrlExternally(
+                                    $@"{api.Endpoints.WebsiteUrl}/community/forums/60"
+                                ),
+                        },
                     },
-                    new FormButton
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Caption = BeatmapSubmissionStrings.SubmissionProcessDescription,
-                        ButtonText = BeatmapSubmissionStrings.SubmissionProcess,
-                        Action = () => game?.ShowWiki(@"Beatmap_ranking_procedure"),
-                    },
-                    new FormButton
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Caption = BeatmapSubmissionStrings.MappingHelpForumDescription,
-                        ButtonText = BeatmapSubmissionStrings.MappingHelpForum,
-                        Action = () => game?.OpenUrlExternally($@"{api.Endpoints.WebsiteUrl}/community/forums/56"),
-                    },
-                    new FormButton
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Caption = BeatmapSubmissionStrings.ModdingQueuesForumDescription,
-                        ButtonText = BeatmapSubmissionStrings.ModdingQueuesForum,
-                        Action = () => game?.OpenUrlExternally($@"{api.Endpoints.WebsiteUrl}/community/forums/60"),
-                    },
-                },
-            });
+                }
+            );
         }
     }
 }

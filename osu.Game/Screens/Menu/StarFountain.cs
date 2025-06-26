@@ -31,7 +31,8 @@ namespace osu.Game.Screens.Menu
         protected override void SkinChanged(ISkinSource skin)
         {
             base.SkinChanged(skin);
-            spewer.Texture = skin.GetTexture("Menu/fountain-star") ?? textures.Get("Menu/fountain-star");
+            spewer.Texture =
+                skin.GetTexture("Menu/fountain-star") ?? textures.Get("Menu/fountain-star");
         }
 
         public partial class StarFountainSpewer : ParticleSpewer
@@ -51,19 +52,16 @@ namespace osu.Game.Screens.Menu
             private ISkinSource skin { get; set; } = null!;
 
             public StarFountainSpewer()
-                : this(240)
-            {
-            }
+                : this(240) { }
 
             protected StarFountainSpewer(int perSecond)
-                : base(null, perSecond, particle_duration_max)
-            {
-            }
+                : base(null, perSecond, particle_duration_max) { }
 
             [BackgroundDependencyLoader]
             private void load(TextureStore textures)
             {
-                Texture = skin.GetTexture("Menu/fountain-star") ?? textures.Get("Menu/fountain-star");
+                Texture =
+                    skin.GetTexture("Menu/fountain-star") ?? textures.Get("Menu/fountain-star");
             }
 
             protected override FallingParticle CreateParticle()
@@ -84,7 +82,12 @@ namespace osu.Game.Screens.Menu
                 const float x_velocity_random_variance = 60;
                 const float x_velocity_from_direction = 500;
 
-                return LastShootDirection * x_velocity_from_direction * (float)(1 - 2 * (Clock.CurrentTime - lastShootTime!.Value) / ShootDuration) + getRandomVariance(x_velocity_random_variance);
+                return LastShootDirection
+                        * x_velocity_from_direction
+                        * (float)(
+                            1 - 2 * (Clock.CurrentTime - lastShootTime!.Value) / ShootDuration
+                        )
+                    + getRandomVariance(x_velocity_random_variance);
             }
 
             private ScheduledDelegate? deactivateDelegate;
@@ -94,13 +97,17 @@ namespace osu.Game.Screens.Menu
                 Active.Value = true;
 
                 deactivateDelegate?.Cancel();
-                deactivateDelegate = Scheduler.AddDelayed(() => Active.Value = false, ShootDuration);
+                deactivateDelegate = Scheduler.AddDelayed(
+                    () => Active.Value = false,
+                    ShootDuration
+                );
 
                 lastShootTime = Clock.CurrentTime;
                 LastShootDirection = direction;
             }
 
-            private static float getRandomVariance(float variance) => RNG.NextSingle(-variance, variance);
+            private static float getRandomVariance(float variance) =>
+                RNG.NextSingle(-variance, variance);
         }
     }
 }

@@ -20,10 +20,12 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             this.room = room;
         }
 
-        protected override BeatmapDetailArea CreateBeatmapDetailArea() => new MatchBeatmapDetailArea(room)
-        {
-            CreateNewItem = () => room.Playlist = room.Playlist.Append(createNewItem()).ToArray()
-        };
+        protected override BeatmapDetailArea CreateBeatmapDetailArea() =>
+            new MatchBeatmapDetailArea(room)
+            {
+                CreateNewItem = () =>
+                    room.Playlist = room.Playlist.Append(createNewItem()).ToArray(),
+            };
 
         protected override bool SelectItem(PlaylistItem item)
         {
@@ -34,13 +36,14 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             return true;
         }
 
-        private PlaylistItem createNewItem() => new PlaylistItem(Beatmap.Value.BeatmapInfo)
-        {
-            ID = room.Playlist.Count == 0 ? 0 : room.Playlist.Max(p => p.ID) + 1,
-            RulesetID = Ruleset.Value.OnlineID,
-            RequiredMods = Mods.Value.Select(m => new APIMod(m)).ToArray(),
-            AllowedMods = FreeMods.Value.Select(m => new APIMod(m)).ToArray(),
-            Freestyle = Freestyle.Value
-        };
+        private PlaylistItem createNewItem() =>
+            new PlaylistItem(Beatmap.Value.BeatmapInfo)
+            {
+                ID = room.Playlist.Count == 0 ? 0 : room.Playlist.Max(p => p.ID) + 1,
+                RulesetID = Ruleset.Value.OnlineID,
+                RequiredMods = Mods.Value.Select(m => new APIMod(m)).ToArray(),
+                AllowedMods = FreeMods.Value.Select(m => new APIMod(m)).ToArray(),
+                Freestyle = Freestyle.Value,
+            };
     }
 }

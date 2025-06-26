@@ -36,25 +36,31 @@ namespace osu.Game.Screens.Edit.Compose.Components
         private void load()
         {
             Size = new Vector2(15f);
-            AddInternal(icon = new SpriteIcon
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.5f),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Icon = FontAwesome.Solid.Redo,
-                Scale = new Vector2
+            AddInternal(
+                icon = new SpriteIcon
                 {
-                    X = Anchor.HasFlag(Anchor.x0) ? 1f : -1f,
-                    Y = Anchor.HasFlag(Anchor.y0) ? 1f : -1f
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.5f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Icon = FontAwesome.Solid.Redo,
+                    Scale = new Vector2
+                    {
+                        X = Anchor.HasFlag(Anchor.x0) ? 1f : -1f,
+                        Y = Anchor.HasFlag(Anchor.y0) ? 1f : -1f,
+                    },
                 }
-            });
+            );
         }
 
         protected override void UpdateHoverState()
         {
             base.UpdateHoverState();
-            icon.FadeColour(!IsHeld && IsHovered ? Color4.White : Color4.Black, TRANSFORM_DURATION, Easing.OutQuint);
+            icon.FadeColour(
+                !IsHeld && IsHovered ? Color4.White : Color4.Black,
+                TRANSFORM_DURATION,
+                Easing.OutQuint
+            );
         }
 
         private float rawCumulativeRotation;
@@ -64,7 +70,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
             if (e.Button != MouseButton.Left)
                 return false;
 
-            if (rotationHandler == null) return false;
+            if (rotationHandler == null)
+                return false;
 
             if (rotationHandler.OperationInProgress.Value)
                 return false;
@@ -77,7 +84,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             base.OnDrag(e);
 
-            if (rotationHandler == null || !rotationHandler.OperationInProgress.Value) return;
+            if (rotationHandler == null || !rotationHandler.OperationInProgress.Value)
+                return;
 
             rawCumulativeRotation += convertDragEventToAngleOfRotation(e);
 
@@ -116,17 +124,27 @@ namespace osu.Game.Screens.Edit.Compose.Components
         private float convertDragEventToAngleOfRotation(DragEvent e)
         {
             // Adjust coordinate system to the center of the selection
-            Vector2 center = selectionBox.ToLocalSpace(rotationHandler!.ToScreenSpace(rotationHandler!.DefaultOrigin!.Value));
+            Vector2 center = selectionBox.ToLocalSpace(
+                rotationHandler!.ToScreenSpace(rotationHandler!.DefaultOrigin!.Value)
+            );
 
-            float startAngle = MathF.Atan2(e.LastMousePosition.Y - center.Y, e.LastMousePosition.X - center.X);
-            float endAngle = MathF.Atan2(e.MousePosition.Y - center.Y, e.MousePosition.X - center.X);
+            float startAngle = MathF.Atan2(
+                e.LastMousePosition.Y - center.Y,
+                e.LastMousePosition.X - center.X
+            );
+            float endAngle = MathF.Atan2(
+                e.MousePosition.Y - center.Y,
+                e.MousePosition.X - center.X
+            );
 
             return (endAngle - startAngle) * 180 / MathF.PI;
         }
 
         private void applyRotation(bool shouldSnap)
         {
-            float newRotation = shouldSnap ? snap(rawCumulativeRotation, snap_step) : MathF.Round(rawCumulativeRotation);
+            float newRotation = shouldSnap
+                ? snap(rawCumulativeRotation, snap_step)
+                : MathF.Round(rawCumulativeRotation);
             newRotation = ((newRotation + 360 + 180) % 360) - 180;
             if (MathF.Abs(newRotation) == 180)
                 newRotation = 180;
@@ -134,7 +152,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
             cumulativeRotation.Value = newRotation;
 
             rotationHandler?.Update(newRotation);
-            TooltipText = shouldSnap ? EditorStrings.RotationSnapped(newRotation) : EditorStrings.RotationUnsnapped(newRotation);
+            TooltipText = shouldSnap
+                ? EditorStrings.RotationSnapped(newRotation)
+                : EditorStrings.RotationUnsnapped(newRotation);
         }
 
         private float snap(float value, float step) => MathF.Round(value / step) * step;

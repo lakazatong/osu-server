@@ -38,9 +38,9 @@ namespace osu.Game.Overlays.AccountCreation
 
             using (BeginDelayedSequence(initial_move_time))
             {
-                this
-                    .MoveToX(x_movement, loop_move_time, Easing.InOutSine)
-                    .Then().MoveToX(0, loop_move_time, Easing.InOutSine)
+                this.MoveToX(x_movement, loop_move_time, Easing.InOutSine)
+                    .Then()
+                    .MoveToX(0, loop_move_time, Easing.InOutSine)
                     .Loop();
             }
         }

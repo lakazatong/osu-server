@@ -29,39 +29,61 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create overlay", () =>
-            {
-                Child = overlay = new TestShearedOverlayContainer
+            AddStep(
+                "create overlay",
+                () =>
                 {
-                    State = { Value = Visibility.Visible }
-                };
-            });
+                    Child = overlay = new TestShearedOverlayContainer
+                    {
+                        State = { Value = Visibility.Visible },
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestClickAwayToExit()
         {
-            AddStep("click inside header", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<ShearedOverlayHeader>().First().ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click inside header",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        overlay
+                            .ChildrenOfType<ShearedOverlayHeader>()
+                            .First()
+                            .ScreenSpaceDrawQuad.Centre
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("overlay not dismissed", () => overlay.State.Value == Visibility.Visible);
 
-            AddStep("click inside content", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click inside content",
+                () =>
+                {
+                    InputManager.MoveMouseTo(overlay.ScreenSpaceDrawQuad.Centre);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("overlay not dismissed", () => overlay.State.Value == Visibility.Visible);
 
-            AddStep("click outside header", () =>
-            {
-                InputManager.MoveMouseTo(new Vector2(overlay.ScreenSpaceDrawQuad.TopLeft.X, overlay.ScreenSpaceDrawQuad.Centre.Y));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click outside header",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        new Vector2(
+                            overlay.ScreenSpaceDrawQuad.TopLeft.X,
+                            overlay.ScreenSpaceDrawQuad.Centre.Y
+                        )
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("overlay dismissed", () => overlay.State.Value == Visibility.Hidden);
         }
@@ -69,15 +91,16 @@ namespace osu.Game.Tests.Visual.UserInterface
         public partial class TestShearedOverlayContainer : ShearedOverlayContainer
         {
             public TestShearedOverlayContainer()
-                : base(OverlayColourScheme.Green)
-            {
-            }
+                : base(OverlayColourScheme.Green) { }
 
             [BackgroundDependencyLoader]
             private void load()
             {
                 Header.Title = "Sheared overlay header";
-                Header.Description = string.Join(" ", Enumerable.Repeat("This is a description.", 20));
+                Header.Description = string.Join(
+                    " ",
+                    Enumerable.Repeat("This is a description.", 20)
+                );
 
                 MainAreaContent.Child = new InputBlockingContainer
                 {
@@ -87,19 +110,15 @@ namespace osu.Game.Tests.Visual.UserInterface
                     Size = new Vector2(0.9f),
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = Color4.Blue,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = Color4.Blue, RelativeSizeAxes = Axes.Both },
                         new OsuSpriteText
                         {
                             Font = OsuFont.Default.With(size: 24),
                             Text = "Content",
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

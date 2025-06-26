@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Text = @"0",
-                            Font = OsuFont.Default.With(size: 28, weight: FontWeight.SemiBold)
+                            Font = OsuFont.Default.With(size: 28, weight: FontWeight.SemiBold),
                         },
                         new OsuSpriteText
                         {
@@ -69,10 +69,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                             Origin = Anchor.TopCentre,
                             Text = @"SPINS PER MINUTE",
                             Font = OsuFont.Default.With(size: 16, weight: FontWeight.SemiBold),
-                            Y = 30
-                        }
-                    }
-                }
+                            Y = 30,
+                        },
+                    },
+                },
             };
         }
 
@@ -99,17 +99,22 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                 }
                 else
                 {
-                    bonusCounter.Text = drawableSpinner.CurrentBonusScore.ToString(NumberFormatInfo.InvariantInfo);
+                    bonusCounter.Text = drawableSpinner.CurrentBonusScore.ToString(
+                        NumberFormatInfo.InvariantInfo
+                    );
                     bonusCounter.ScaleTo(1.5f).Then().ScaleTo(1f, 1000, Easing.OutQuint);
                     bonusCounter.FadeOutFromOne(1500);
                 }
             });
 
             spinsPerMinute = drawableSpinner.SpinsPerMinute.GetBoundCopy();
-            spinsPerMinute.BindValueChanged(spm =>
-            {
-                spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
-            }, true);
+            spinsPerMinute.BindValueChanged(
+                spm =>
+                {
+                    spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
+                },
+                true
+            );
         }
 
         protected override void Update()
@@ -122,7 +127,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         private void updateSpmAlpha()
         {
             if (drawableSpinner.Result?.TimeStarted is double startTime)
-                spmContainer.Alpha = (float)Math.Clamp((Clock.CurrentTime - startTime) / drawableSpinner.HitObject.TimeFadeIn, 0, 1);
+                spmContainer.Alpha = (float)
+                    Math.Clamp(
+                        (Clock.CurrentTime - startTime) / drawableSpinner.HitObject.TimeFadeIn,
+                        0,
+                        1
+                    );
             else
                 spmContainer.Alpha = 0;
         }

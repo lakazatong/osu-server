@@ -18,172 +18,218 @@ namespace osu.Game.Tests.Visual.UserInterface
         private OsuMarkdownContainer markdownContainer;
 
         [Cached]
-        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(OverlayColourScheme.Orange);
+        private readonly OverlayColourProvider overlayColour = new OverlayColourProvider(
+            OverlayColourScheme.Orange
+        );
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public void Setup() =>
+            Schedule(() =>
             {
-                new Box
+                Children = new Drawable[]
                 {
-                    Colour = overlayColour.Background5,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new BasicScrollContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding(20),
-                    Child = markdownContainer = new OsuMarkdownContainer
+                    new Box { Colour = overlayColour.Background5, RelativeSizeAxes = Axes.Both },
+                    new BasicScrollContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y
-                    }
-                }
-            };
-        });
+                        RelativeSizeAxes = Axes.Both,
+                        Padding = new MarginPadding(20),
+                        Child = markdownContainer =
+                            new OsuMarkdownContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                            },
+                    },
+                };
+            });
 
         [Test]
         public void TestEmphases()
         {
-            AddStep("Emphases", () =>
-            {
-                markdownContainer.Text = @"_italic with underscore_
+            AddStep(
+                "Emphases",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"_italic with underscore_
 *italic with asterisk*
 __bold with underscore__
 **bold with asterisk**
 *__italic with asterisk, bold with underscore__*
 _**italic with underscore, bold with asterisk**_";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestHeading()
         {
-            AddStep("Add Heading", () =>
-            {
-                markdownContainer.Text = @"# Header 1
+            AddStep(
+                "Add Heading",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"# Header 1
 ## Header 2
 ### Header 3
 #### Header 4
 ##### Header 5";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestLink()
         {
-            AddStep("Add Link", () =>
-            {
-                markdownContainer.Text = "[Welcome to osu!](https://osu.ppy.sh)";
-            });
+            AddStep(
+                "Add Link",
+                () =>
+                {
+                    markdownContainer.Text = "[Welcome to osu!](https://osu.ppy.sh)";
+                }
+            );
         }
 
         [Test]
         public void TestLinkWithInlineText()
         {
-            AddStep("Add Link with inline text", () =>
-            {
-                markdownContainer.Text = "Hey, [welcome to osu!](https://osu.ppy.sh) Please enjoy the game.";
-            });
+            AddStep(
+                "Add Link with inline text",
+                () =>
+                {
+                    markdownContainer.Text =
+                        "Hey, [welcome to osu!](https://osu.ppy.sh) Please enjoy the game.";
+                }
+            );
         }
 
         [Test]
         public void TestLinkWithTitle()
         {
-            AddStep("Add Link with title", () =>
-            {
-                markdownContainer.Text = "[wikipedia](https://www.wikipedia.org \"The Free Encyclopedia\")";
-            });
+            AddStep(
+                "Add Link with title",
+                () =>
+                {
+                    markdownContainer.Text =
+                        "[wikipedia](https://www.wikipedia.org \"The Free Encyclopedia\")";
+                }
+            );
         }
 
         [Test]
         public void TestAutoLink()
         {
-            AddStep("Add autolink", () =>
-            {
-                markdownContainer.Text = "<https://discord.gg/ppy>";
-            });
+            AddStep(
+                "Add autolink",
+                () =>
+                {
+                    markdownContainer.Text = "<https://discord.gg/ppy>";
+                }
+            );
         }
 
         [Test]
         public void TestInlineCode()
         {
-            AddStep("Add inline code", () =>
-            {
-                markdownContainer.Text = "This is `inline code` text";
-            });
+            AddStep(
+                "Add inline code",
+                () =>
+                {
+                    markdownContainer.Text = "This is `inline code` text";
+                }
+            );
         }
 
         [Test]
         public void TestParagraph()
         {
-            AddStep("Add paragraph", () =>
-            {
-                markdownContainer.Text = @"first paragraph
+            AddStep(
+                "Add paragraph",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"first paragraph
 
 second paragraph
 
 third paragraph";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestFencedCodeBlock()
         {
-            AddStep("Add Code Block", () =>
-            {
-                markdownContainer.Text = @"```markdown
+            AddStep(
+                "Add Code Block",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"```markdown
 # Markdown code block
 
 This is markdown code block.
 ```";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestSeparator()
         {
-            AddStep("Add Seperator", () =>
-            {
-                markdownContainer.Text = @"Line above
+            AddStep(
+                "Add Seperator",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"Line above
 
 ---
 
 Line below";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestQuote()
         {
-            AddStep("Add quote", () =>
-            {
-                markdownContainer.Text =
-                    @"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-            });
+            AddStep(
+                "Add quote",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+                }
+            );
         }
 
         [Test]
         public void TestTable()
         {
-            AddStep("Add Table", () =>
-            {
-                markdownContainer.Text =
-                    @"| Left Aligned  | Center Aligned | Right Aligned |
+            AddStep(
+                "Add Table",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"| Left Aligned  | Center Aligned | Right Aligned |
 | :------------------- | :--------------------: | ---------------------:|
 | Long Align Left Text | Long Align Center Text | Long Align Right Text |
 | Align Left           |      Align Center      |           Align Right |
 | Left                 |         Center         |                 Right |";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestUnorderedList()
         {
-            AddStep("Add Unordered List", () =>
-            {
-                markdownContainer.Text = @"- First item level 1
+            AddStep(
+                "Add Unordered List",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"- First item level 1
 - Second item level 1
     - First item level 2
         - First item level 3
@@ -195,15 +241,19 @@ Line below";
     - Second item level 2
     - Third item level 2
 - Third item level 1";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestOrderedList()
         {
-            AddStep("Add Ordered List", () =>
-            {
-                markdownContainer.Text = @"1. First item level 1
+            AddStep(
+                "Add Ordered List",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"1. First item level 1
 2. Second item level 1
     1. First item level 2
         1. First item level 3
@@ -215,15 +265,19 @@ Line below";
     2. Second item level 2
     3. Third item level 2
 3. Third item level 1";
-            });
+                }
+            );
         }
 
         [Test]
         public void TestLongMixedList()
         {
-            AddStep("Add long mixed list", () =>
-            {
-                markdownContainer.Text = @"1. The osu! World Cup is a country-based team tournament played on the osu! game mode.
+            AddStep(
+                "Add long mixed list",
+                () =>
+                {
+                    markdownContainer.Text =
+                        @"1. The osu! World Cup is a country-based team tournament played on the osu! game mode.
    - While this competition is planned as a 4 versus 4 setup, this may change depending on the number of incoming registrations.
 2. Beatmap scoring is based on Score V2.
 3. The beatmaps for each round will be announced by the map selectors in advance on the Sunday before the actual matches take place. Only these beatmaps will be used during the respective matches.
@@ -254,7 +308,8 @@ Line below";
     - Disqualification from the entire tournament
     - Disqualification from the current and future official tournaments until appealed
     - Any modification of these rules will be announced.";
-            });
+                }
+            );
         }
     }
 }

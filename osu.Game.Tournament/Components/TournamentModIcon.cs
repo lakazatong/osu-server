@@ -35,14 +35,16 @@ namespace osu.Game.Tournament.Components
 
             if (customTexture != null)
             {
-                AddInternal(new Sprite
-                {
-                    FillMode = FillMode.Fit,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Texture = customTexture
-                });
+                AddInternal(
+                    new Sprite
+                    {
+                        FillMode = FillMode.Fit,
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        Texture = customTexture,
+                    }
+                );
 
                 return;
             }
@@ -53,12 +55,14 @@ namespace osu.Game.Tournament.Components
             if (modIcon == null)
                 return;
 
-            AddInternal(new ModIcon(modIcon, false)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(0.5f)
-            });
+            AddInternal(
+                new ModIcon(modIcon, false)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(0.5f),
+                }
+            );
         }
     }
 }

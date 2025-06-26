@@ -61,21 +61,13 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 BorderColour = colour.Gray3,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colour.Gray1,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = colour.Gray1 },
                     usableAreaContainer = new UsableAreaContainer(handler)
                     {
                         Origin = Anchor.Centre,
                         Children = new Drawable[]
                         {
-                            usableFill = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Alpha = 0.6f,
-                            },
+                            usableFill = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.6f },
                             new Box
                             {
                                 Colour = Color4.White,
@@ -96,16 +88,16 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                                 Origin = Anchor.Centre,
                                 Colour = Color4.White,
                                 Font = OsuFont.Default.With(size: 12),
-                                Y = 10
-                            }
-                        }
+                                Y = 10,
+                            },
+                        },
                     },
                     tabletName = new OsuSpriteText
                     {
                         Padding = new MarginPadding(3),
-                        Font = OsuFont.Default.With(size: 8)
+                        Font = OsuFont.Default.With(size: 8),
                     },
-                }
+                },
             };
         }
 
@@ -114,33 +106,42 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             base.LoadComplete();
 
             areaOffset.BindTo(handler.AreaOffset);
-            areaOffset.BindValueChanged(val =>
-            {
-                usableAreaContainer.MoveTo(val.NewValue, 100, Easing.OutQuint);
-                checkBounds();
-            }, true);
+            areaOffset.BindValueChanged(
+                val =>
+                {
+                    usableAreaContainer.MoveTo(val.NewValue, 100, Easing.OutQuint);
+                    checkBounds();
+                },
+                true
+            );
 
             areaSize.BindTo(handler.AreaSize);
-            areaSize.BindValueChanged(val =>
-            {
-                usableAreaContainer.ResizeTo(val.NewValue, 100, Easing.OutQuint);
+            areaSize.BindValueChanged(
+                val =>
+                {
+                    usableAreaContainer.ResizeTo(val.NewValue, 100, Easing.OutQuint);
 
-                int x = (int)Math.Round(val.NewValue.X);
-                int y = (int)Math.Round(val.NewValue.Y);
-                int commonDivider = greatestCommonDivider(x, y);
+                    int x = (int)Math.Round(val.NewValue.X);
+                    int y = (int)Math.Round(val.NewValue.Y);
+                    int commonDivider = greatestCommonDivider(x, y);
 
-                usableAreaText.Text = $"{x / commonDivider}:{y / commonDivider}";
-                checkBounds();
-            }, true);
+                    usableAreaText.Text = $"{x / commonDivider}:{y / commonDivider}";
+                    checkBounds();
+                },
+                true
+            );
 
             rotation.BindTo(handler.Rotation);
-            rotation.BindValueChanged(val =>
-            {
-                usableAreaContainer.RotateTo(val.NewValue, 100, Easing.OutQuint);
-                tabletContainer.RotateTo(-val.NewValue, 800, Easing.OutQuint);
+            rotation.BindValueChanged(
+                val =>
+                {
+                    usableAreaContainer.RotateTo(val.NewValue, 100, Easing.OutQuint);
+                    tabletContainer.RotateTo(-val.NewValue, 800, Easing.OutQuint);
 
-                checkBounds();
-            }, true);
+                    checkBounds();
+                },
+                true
+            );
 
             tablet.BindTo(handler.Tablet);
             tablet.BindValueChanged(_ => Scheduler.AddOnce(updateTabletDetails));
@@ -180,7 +181,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             // allow for some degree of floating point error, as we don't care about being perfect here.
             const float lenience = 0.5f;
 
-            var tabletArea = new Quad(-lenience, -lenience, tablet.Value.Size.X + lenience * 2, tablet.Value.Size.Y + lenience * 2);
+            var tabletArea = new Quad(
+                -lenience,
+                -lenience,
+                tablet.Value.Size.X + lenience * 2,
+                tablet.Value.Size.Y + lenience * 2
+            );
 
             var halfUsableArea = areaSize.Value / 2;
             var offset = areaOffset.Value;
@@ -200,10 +206,10 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             usableAreaQuad *= matrix;
 
             IsWithinBounds =
-                tabletArea.Contains(usableAreaQuad.TopLeft) &&
-                tabletArea.Contains(usableAreaQuad.TopRight) &&
-                tabletArea.Contains(usableAreaQuad.BottomLeft) &&
-                tabletArea.Contains(usableAreaQuad.BottomRight);
+                tabletArea.Contains(usableAreaQuad.TopLeft)
+                && tabletArea.Contains(usableAreaQuad.TopRight)
+                && tabletArea.Contains(usableAreaQuad.BottomLeft)
+                && tabletArea.Contains(usableAreaQuad.BottomRight);
 
             usableFill.FadeColour(IsWithinBounds ? colour.Blue : colour.RedLight, 100);
         }

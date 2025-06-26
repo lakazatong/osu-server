@@ -25,6 +25,7 @@ namespace osu.Game.Online.API.Requests
 
         protected override string FileExtension => ".osz";
 
-        protected override string Target => $@"beatmapsets/{Model.OnlineID}/download{(noVideo ? "?noVideo=1" : "")}";
+        protected override string Target =>
+            $@"beatmapsets/{Model.OnlineID}/download{(noVideo ? "?noVideo=1" : "")}";
     }
 }

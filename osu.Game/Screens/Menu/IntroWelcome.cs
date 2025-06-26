@@ -23,7 +23,8 @@ namespace osu.Game.Screens.Menu
 {
     public partial class IntroWelcome : IntroScreen
     {
-        protected override string BeatmapHash => "64e00d7022195959bfa3109d09c2e2276c8f12f486b91fcf6175583e973b48f2";
+        protected override string BeatmapHash =>
+            "64e00d7022195959bfa3109d09c2e2276c8f12f486b91fcf6175583e973b48f2";
         protected override string BeatmapFile => "welcome.osz";
         private const double delay_step_two = 2142;
 
@@ -34,9 +35,7 @@ namespace osu.Game.Screens.Menu
         protected override string SeeyaSampleName => "Intro/Welcome/seeya";
 
         public IntroWelcome([CanBeNull] Func<MainMenu> createNextScreen = null)
-            : base(createNextScreen)
-        {
-        }
+            : base(createNextScreen) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio, IAPIProvider api)
@@ -44,7 +43,11 @@ namespace osu.Game.Screens.Menu
             if (MenuVoice.Value)
             {
                 if (api.LocalUser.Value.IsSupporter)
-                    AddInternal(skinnableWelcome = new SkinnableSound(new SampleInfo(@"Intro/Welcome/welcome")));
+                    AddInternal(
+                        skinnableWelcome = new SkinnableSound(
+                            new SampleInfo(@"Intro/Welcome/welcome")
+                        )
+                    );
                 else
                     welcome = audio.Samples.Get(@"Intro/Welcome/welcome");
             }
@@ -60,46 +63,49 @@ namespace osu.Game.Screens.Menu
             {
                 Track.Looping = true;
 
-                LoadComponentAsync(new WelcomeIntroSequence
-                {
-                    RelativeSizeAxes = Axes.Both
-                }, intro =>
-                {
-                    PrepareMenuLoad();
-
-                    AddInternal(intro);
-
-                    if (skinnableWelcome != null)
-                        skinnableWelcome.Play();
-                    else
-                        welcome?.Play();
-
-                    var reverbChannel = pianoReverb?.Play();
-                    if (reverbChannel != null)
-                        intro.LogoVisualisation.AddAmplitudeSource(reverbChannel);
-
-                    if (!UsingThemedIntro)
-                        StartTrack();
-
-                    Scheduler.AddDelayed(() =>
+                LoadComponentAsync(
+                    new WelcomeIntroSequence { RelativeSizeAxes = Axes.Both },
+                    intro =>
                     {
-                        if (UsingThemedIntro)
-                        {
+                        PrepareMenuLoad();
+
+                        AddInternal(intro);
+
+                        if (skinnableWelcome != null)
+                            skinnableWelcome.Play();
+                        else
+                            welcome?.Play();
+
+                        var reverbChannel = pianoReverb?.Play();
+                        if (reverbChannel != null)
+                            intro.LogoVisualisation.AddAmplitudeSource(reverbChannel);
+
+                        if (!UsingThemedIntro)
                             StartTrack();
-                            // this classic intro loops forever.
-                            Track.Looping = true;
-                        }
 
-                        const float fade_in_time = 200;
+                        Scheduler.AddDelayed(
+                            () =>
+                            {
+                                if (UsingThemedIntro)
+                                {
+                                    StartTrack();
+                                    // this classic intro loops forever.
+                                    Track.Looping = true;
+                                }
 
-                        logo.ScaleTo(1);
-                        logo.FadeIn(fade_in_time);
+                                const float fade_in_time = 200;
 
-                        FadeInBackground(fade_in_time);
+                                logo.ScaleTo(1);
+                                logo.FadeIn(fade_in_time);
 
-                        LoadMenu();
-                    }, delay_step_two);
-                });
+                                FadeInBackground(fade_in_time);
+
+                                LoadMenu();
+                            },
+                            delay_step_two
+                        );
+                    }
+                );
             }
         }
 
@@ -138,16 +144,23 @@ namespace osu.Game.Screens.Menu
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 Size = new Vector2(480),
-                                Colour = Color4.Black
+                                Colour = Color4.Black,
                             },
-                        }
+                        },
                     },
                 };
 
                 if (api.LocalUser.Value.IsSupporter)
-                    scaleContainer.Add(welcomeText = new SkinnableSprite(@"Intro/Welcome/welcome_text"));
+                    scaleContainer.Add(
+                        welcomeText = new SkinnableSprite(@"Intro/Welcome/welcome_text")
+                    );
                 else
-                    scaleContainer.Add(welcomeText = new Sprite { Texture = textures.Get(@"Intro/Welcome/welcome_text") });
+                    scaleContainer.Add(
+                        welcomeText = new Sprite
+                        {
+                            Texture = textures.Get(@"Intro/Welcome/welcome_text"),
+                        }
+                    );
 
                 welcomeText.Anchor = Anchor.Centre;
                 welcomeText.Origin = Anchor.Centre;
@@ -159,7 +172,10 @@ namespace osu.Game.Screens.Menu
 
                 using (BeginDelayedSequence(0))
                 {
-                    scaleContainer.ScaleTo(0.9f).ScaleTo(1, delay_step_two).OnComplete(_ => Expire());
+                    scaleContainer
+                        .ScaleTo(0.9f)
+                        .ScaleTo(1, delay_step_two)
+                        .OnComplete(_ => Expire());
                     scaleContainer.FadeInFromZero(1800);
 
                     welcomeText.ScaleTo(new Vector2(1, 0)).ScaleTo(Vector2.One, 400, Easing.Out);

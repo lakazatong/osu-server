@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Mania.UI.Components
 {
     public partial class HitPositionPaddedContainer : Container
     {
-        protected readonly IBindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
+        protected readonly IBindable<ScrollingDirection> Direction =
+            new Bindable<ScrollingDirection>();
 
         [Resolved]
         private ISkinSource skin { get; set; } = null!;
@@ -32,13 +33,17 @@ namespace osu.Game.Rulesets.Mania.UI.Components
 
         protected virtual void UpdateHitPosition()
         {
-            float hitPosition = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                    new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.HitPosition))?.Value
-                                ?? Stage.HIT_TARGET_POSITION;
+            float hitPosition =
+                skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                    new ManiaSkinConfigurationLookup(
+                        LegacyManiaSkinConfigurationLookups.HitPosition
+                    )
+                )?.Value ?? Stage.HIT_TARGET_POSITION;
 
-            Padding = Direction.Value == ScrollingDirection.Up
-                ? new MarginPadding { Top = hitPosition }
-                : new MarginPadding { Bottom = hitPosition };
+            Padding =
+                Direction.Value == ScrollingDirection.Up
+                    ? new MarginPadding { Top = hitPosition }
+                    : new MarginPadding { Bottom = hitPosition };
         }
 
         protected override void Dispose(bool isDisposing)

@@ -19,28 +19,35 @@ namespace osu.Game.Tests.Online
         [Test]
         public void TestGenericRequestHandling()
         {
-            AddStep("register request handling", () => ((DummyAPIAccess)API).HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case CommentVoteRequest cRequest:
-                        cRequest.TriggerSuccess(new CommentBundle());
-                        return true;
-                }
+            AddStep(
+                "register request handling",
+                () =>
+                    ((DummyAPIAccess)API).HandleRequest = req =>
+                    {
+                        switch (req)
+                        {
+                            case CommentVoteRequest cRequest:
+                                cRequest.TriggerSuccess(new CommentBundle());
+                                return true;
+                        }
 
-                return false;
-            });
+                        return false;
+                    }
+            );
 
             CommentVoteRequest request = null;
             CommentBundle response = null;
 
-            AddStep("fire request", () =>
-            {
-                response = null;
-                request = new CommentVoteRequest(1, CommentVoteAction.Vote);
-                request.Success += res => response = res;
-                API.Queue(request);
-            });
+            AddStep(
+                "fire request",
+                () =>
+                {
+                    response = null;
+                    request = new CommentVoteRequest(1, CommentVoteAction.Vote);
+                    request.Success += res => response = res;
+                    API.Queue(request);
+                }
+            );
 
             AddAssert("response event fired", () => response != null);
 
@@ -55,13 +62,16 @@ namespace osu.Game.Tests.Online
             LeaveChannelRequest request;
             bool gotResponse = false;
 
-            AddStep("fire request", () =>
-            {
-                gotResponse = false;
-                request = new LeaveChannelRequest(new Channel());
-                request.Success += () => gotResponse = true;
-                API.Queue(request);
-            });
+            AddStep(
+                "fire request",
+                () =>
+                {
+                    gotResponse = false;
+                    request = new LeaveChannelRequest(new Channel());
+                    request.Success += () => gotResponse = true;
+                    API.Queue(request);
+                }
+            );
 
             AddAssert("response event fired", () => gotResponse);
         }
@@ -74,13 +84,16 @@ namespace osu.Game.Tests.Online
             LeaveChannelRequest request;
             bool gotResponse = false;
 
-            AddStep("fire request", () =>
-            {
-                gotResponse = false;
-                request = new LeaveChannelRequest(new Channel());
-                request.Success += () => gotResponse = true;
-                API.Perform(request);
-            });
+            AddStep(
+                "fire request",
+                () =>
+                {
+                    gotResponse = false;
+                    request = new LeaveChannelRequest(new Channel());
+                    request.Success += () => gotResponse = true;
+                    API.Perform(request);
+                }
+            );
 
             AddAssert("response event fired", () => gotResponse);
         }
@@ -93,30 +106,37 @@ namespace osu.Game.Tests.Online
             LeaveChannelRequest request;
             bool gotResponse = false;
 
-            AddStep("fire request", () =>
-            {
-                gotResponse = false;
-                request = new LeaveChannelRequest(new Channel());
-                request.Success += () => gotResponse = true;
-                API.PerformAsync(request);
-            });
+            AddStep(
+                "fire request",
+                () =>
+                {
+                    gotResponse = false;
+                    request = new LeaveChannelRequest(new Channel());
+                    request.Success += () => gotResponse = true;
+                    API.PerformAsync(request);
+                }
+            );
 
             AddAssert("response event fired", () => gotResponse);
         }
 
         private void registerHandler()
         {
-            AddStep("register request handling", () => ((DummyAPIAccess)API).HandleRequest = req =>
-            {
-                switch (req)
-                {
-                    case LeaveChannelRequest cRequest:
-                        cRequest.TriggerSuccess();
-                        return true;
-                }
+            AddStep(
+                "register request handling",
+                () =>
+                    ((DummyAPIAccess)API).HandleRequest = req =>
+                    {
+                        switch (req)
+                        {
+                            case LeaveChannelRequest cRequest:
+                                cRequest.TriggerSuccess();
+                                return true;
+                        }
 
-                return false;
-            });
+                        return false;
+                    }
+            );
         }
     }
 }

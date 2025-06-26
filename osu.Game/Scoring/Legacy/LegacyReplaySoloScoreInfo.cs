@@ -31,10 +31,12 @@ namespace osu.Game.Scoring.Legacy
         public APIMod[] Mods { get; set; } = Array.Empty<APIMod>();
 
         [JsonProperty("statistics")]
-        public Dictionary<HitResult, int> Statistics { get; set; } = new Dictionary<HitResult, int>();
+        public Dictionary<HitResult, int> Statistics { get; set; } =
+            new Dictionary<HitResult, int>();
 
         [JsonProperty("maximum_statistics")]
-        public Dictionary<HitResult, int> MaximumStatistics { get; set; } = new Dictionary<HitResult, int>();
+        public Dictionary<HitResult, int> MaximumStatistics { get; set; } =
+            new Dictionary<HitResult, int>();
 
         [JsonProperty("client_version")]
         public string ClientVersion = string.Empty;
@@ -49,16 +51,20 @@ namespace osu.Game.Scoring.Legacy
         [JsonProperty("total_score_without_mods")]
         public long? TotalScoreWithoutMods { get; set; }
 
-        public static LegacyReplaySoloScoreInfo FromScore(ScoreInfo score) => new LegacyReplaySoloScoreInfo
-        {
-            OnlineID = score.OnlineID,
-            Mods = score.APIMods,
-            Statistics = score.Statistics.Where(kvp => kvp.Value != 0).ToDictionary(),
-            MaximumStatistics = score.MaximumStatistics.Where(kvp => kvp.Value != 0).ToDictionary(),
-            ClientVersion = score.ClientVersion,
-            Rank = score.Rank,
-            UserID = score.User.OnlineID,
-            TotalScoreWithoutMods = score.TotalScoreWithoutMods > 0 ? score.TotalScoreWithoutMods : null,
-        };
+        public static LegacyReplaySoloScoreInfo FromScore(ScoreInfo score) =>
+            new LegacyReplaySoloScoreInfo
+            {
+                OnlineID = score.OnlineID,
+                Mods = score.APIMods,
+                Statistics = score.Statistics.Where(kvp => kvp.Value != 0).ToDictionary(),
+                MaximumStatistics = score
+                    .MaximumStatistics.Where(kvp => kvp.Value != 0)
+                    .ToDictionary(),
+                ClientVersion = score.ClientVersion,
+                Rank = score.Rank,
+                UserID = score.User.OnlineID,
+                TotalScoreWithoutMods =
+                    score.TotalScoreWithoutMods > 0 ? score.TotalScoreWithoutMods : null,
+            };
     }
 }

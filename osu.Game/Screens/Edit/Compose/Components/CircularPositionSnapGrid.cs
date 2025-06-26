@@ -18,10 +18,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         /// <summary>
         /// The spacing between grid lines of this <see cref="CircularPositionSnapGrid"/>.
         /// </summary>
-        public BindableFloat Spacing { get; } = new BindableFloat(1f)
-        {
-            MinValue = 0f,
-        };
+        public BindableFloat Spacing { get; } = new BindableFloat(1f) { MinValue = 0f };
 
         public CircularPositionSnapGrid()
         {
@@ -74,12 +71,14 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             generatedCircles.First().Alpha = 0.8f;
 
-            AddInternal(new Container
-            {
-                Masking = true,
-                RelativeSizeAxes = Axes.Both,
-                Children = generatedCircles,
-            });
+            AddInternal(
+                new Container
+                {
+                    Masking = true,
+                    RelativeSizeAxes = Axes.Both,
+                    Children = generatedCircles,
+                }
+            );
         }
 
         public override Vector2 GetSnappedPosition(Vector2 original)

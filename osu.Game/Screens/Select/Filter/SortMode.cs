@@ -9,7 +9,10 @@ namespace osu.Game.Screens.Select.Filter
 {
     public enum SortMode
     {
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.ListingSearchSortingArtist))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.ListingSearchSortingArtist)
+        )]
         Artist,
 
         [Description("Author")]
@@ -30,7 +33,10 @@ namespace osu.Game.Screens.Select.Filter
         [Description("Last Played")]
         LastPlayed,
 
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.ListingSearchSortingDifficulty))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.ListingSearchSortingDifficulty)
+        )]
         Difficulty,
 
         [LocalisableDescription(typeof(SortStrings), nameof(SortStrings.ArtistTracksLength))]
@@ -43,7 +49,10 @@ namespace osu.Game.Screens.Select.Filter
         [Description("Source")]
         Source,
 
-        [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.ListingSearchSortingTitle))]
+        [LocalisableDescription(
+            typeof(BeatmapsStrings),
+            nameof(BeatmapsStrings.ListingSearchSortingTitle)
+        )]
         Title,
     }
 }

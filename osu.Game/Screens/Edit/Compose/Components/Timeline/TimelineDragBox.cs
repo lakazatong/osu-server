@@ -20,11 +20,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         [Resolved]
         private Timeline timeline { get; set; } = null!;
 
-        protected override Drawable CreateBox() => new Box
-        {
-            RelativeSizeAxes = Axes.Y,
-            Alpha = 0.3f
-        };
+        protected override Drawable CreateBox() =>
+            new Box { RelativeSizeAxes = Axes.Y, Alpha = 0.3f };
 
         public override void HandleDrag(MouseButtonEvent e)
         {

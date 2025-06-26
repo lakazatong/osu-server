@@ -23,53 +23,53 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new CatchRuleset();
 
         [Test]
-        public void TestModRelax() => CreateModTest(new ModTestData
-        {
-            Mod = new CatchModRelax(),
-            Autoplay = false,
-            PassCondition = passCondition,
-            CreateBeatmap = () => new Beatmap
-            {
-                HitObjects = new List<HitObject>
+        public void TestModRelax() =>
+            CreateModTest(
+                new ModTestData
                 {
-                    new Fruit
-                    {
-                        X = CatchPlayfield.CENTER_X,
-                        StartTime = 0
-                    },
-                    new Fruit
-                    {
-                        X = 0,
-                        StartTime = 1000
-                    },
-                    new Fruit
-                    {
-                        X = CatchPlayfield.WIDTH,
-                        StartTime = 2000
-                    },
-                    new JuiceStream
-                    {
-                        X = CatchPlayfield.CENTER_X,
-                        StartTime = 3000,
-                        Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, Vector2.UnitY * 200 })
-                    }
+                    Mod = new CatchModRelax(),
+                    Autoplay = false,
+                    PassCondition = passCondition,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = new List<HitObject>
+                            {
+                                new Fruit { X = CatchPlayfield.CENTER_X, StartTime = 0 },
+                                new Fruit { X = 0, StartTime = 1000 },
+                                new Fruit { X = CatchPlayfield.WIDTH, StartTime = 2000 },
+                                new JuiceStream
+                                {
+                                    X = CatchPlayfield.CENTER_X,
+                                    StartTime = 3000,
+                                    Path = new SliderPath(
+                                        PathType.LINEAR,
+                                        new[] { Vector2.Zero, Vector2.UnitY * 200 }
+                                    ),
+                                },
+                            },
+                        },
                 }
-            }
-        });
+            );
 
         [Test]
         public void TestGameCursorHidden()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new CatchModRelax(),
-                Autoplay = false,
-                PassCondition = () =>
+            CreateModTest(
+                new ModTestData
                 {
-                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableCatchRuleset>().Single());
-                    return this.ChildrenOfType<MenuCursorContainer>().Single().State.Value == Visibility.Hidden;
+                    Mod = new CatchModRelax(),
+                    Autoplay = false,
+                    PassCondition = () =>
+                    {
+                        InputManager.MoveMouseTo(
+                            this.ChildrenOfType<DrawableCatchRuleset>().Single()
+                        );
+                        return this.ChildrenOfType<MenuCursorContainer>().Single().State.Value
+                            == Visibility.Hidden;
+                    },
                 }
-            });
+            );
         }
 
         private bool passCondition()

@@ -110,7 +110,9 @@ namespace osu.Game.Graphics.Backgrounds
 
                 parts[i] = newParticle;
 
-                float bottomPos = parts[i].Position.Y + triangle_size * ScaleAdjust * equilateral_triangle_ratio / DrawHeight;
+                float bottomPos =
+                    parts[i].Position.Y
+                    + triangle_size * ScaleAdjust * equilateral_triangle_ratio / DrawHeight;
                 if (bottomPos < 0)
                     parts.RemoveAt(i);
             }
@@ -160,7 +162,8 @@ namespace osu.Game.Graphics.Backgrounds
             if (randomY)
             {
                 // since triangles are drawn from the top - allow them to be positioned a bit above the screen
-                float maxOffset = triangle_size * ScaleAdjust * equilateral_triangle_ratio / DrawHeight;
+                float maxOffset =
+                    triangle_size * ScaleAdjust * equilateral_triangle_ratio / DrawHeight;
                 y = Interpolation.ValueAt(nextRandom(), -maxOffset, 1f, 0f, 1f);
             }
 
@@ -180,7 +183,9 @@ namespace osu.Game.Graphics.Backgrounds
 
             float u1 = 1 - nextRandom(); //uniform(0,1] random floats
             float u2 = 1 - nextRandom();
-            float randStdNormal = (float)(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)); // random normal(0,1)
+            float randStdNormal = (float)(
+                Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)
+            ); // random normal(0,1)
             float speedMultiplier = Math.Max(mean + std_dev * randStdNormal, 0.1f); // random normal(mean,stdDev^2)
 
             return new TriangleParticle { SpeedMultiplier = speedMultiplier };
@@ -207,9 +212,7 @@ namespace osu.Game.Graphics.Backgrounds
             private Axes clampAxes;
 
             public TrianglesDrawNode(TrianglesV2 source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -220,7 +223,10 @@ namespace osu.Game.Graphics.Backgrounds
                 size = Source.DrawSize;
                 thickness = Source.Thickness;
                 clampAxes = Source.ClampAxes;
-                triangleSize = new Vector2(1f, equilateral_triangle_ratio) * triangle_size * Source.ScaleAdjust;
+                triangleSize =
+                    new Vector2(1f, equilateral_triangle_ratio)
+                    * triangle_size
+                    * Source.ScaleAdjust;
 
                 Quad triangleQuad = new Quad(
                     Vector2Extensions.Transform(Vector2.Zero, DrawInfo.Matrix),
@@ -248,7 +254,7 @@ namespace osu.Game.Graphics.Backgrounds
                 borderDataBuffer.Data = borderDataBuffer.Data with
                 {
                     Thickness = thickness,
-                    TexelSize = texelSize
+                    TexelSize = texelSize,
                 };
 
                 shader.Bind();
@@ -265,18 +271,31 @@ namespace osu.Game.Graphics.Backgrounds
                     var drawQuad = new Quad(
                         Vector2Extensions.Transform(triangleQuad.TopLeft * size, DrawInfo.Matrix),
                         Vector2Extensions.Transform(triangleQuad.TopRight * size, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(triangleQuad.BottomLeft * size, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(triangleQuad.BottomRight * size, DrawInfo.Matrix)
+                        Vector2Extensions.Transform(
+                            triangleQuad.BottomLeft * size,
+                            DrawInfo.Matrix
+                        ),
+                        Vector2Extensions.Transform(
+                            triangleQuad.BottomRight * size,
+                            DrawInfo.Matrix
+                        )
                     );
 
-                    RectangleF textureCoords = new RectangleF(
-                        triangleQuad.TopLeft.X - topLeft.X,
-                        triangleQuad.TopLeft.Y - topLeft.Y,
-                        triangleQuad.Width,
-                        triangleQuad.Height
-                    ) / relativeSize;
+                    RectangleF textureCoords =
+                        new RectangleF(
+                            triangleQuad.TopLeft.X - topLeft.X,
+                            triangleQuad.TopLeft.Y - topLeft.Y,
+                            triangleQuad.Width,
+                            triangleQuad.Height
+                        ) / relativeSize;
 
-                    renderer.DrawQuad(texture, drawQuad, DrawColourInfo.Colour.Interpolate(triangleQuad), new RectangleF(0, 0, 1, 1), textureCoords: textureCoords);
+                    renderer.DrawQuad(
+                        texture,
+                        drawQuad,
+                        DrawColourInfo.Colour.Interpolate(triangleQuad),
+                        new RectangleF(0, 0, 1, 1),
+                        textureCoords: textureCoords
+                    );
                 }
 
                 shader.Unbind();

@@ -23,7 +23,8 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// The list of <see cref="HitObjectLifetimeEntry"/> for the <see cref="HitObject"/>'s nested objects (if any).
         /// </summary>
-        public List<HitObjectLifetimeEntry> NestedEntries { get; internal set; } = new List<HitObjectLifetimeEntry>();
+        public List<HitObjectLifetimeEntry> NestedEntries { get; internal set; } =
+            new List<HitObjectLifetimeEntry>();
 
         /// <summary>
         /// The result that <see cref="HitObject"/> was judged with.
@@ -129,7 +130,8 @@ namespace osu.Game.Rulesets.Objects
         /// <summary>
         /// Set <see cref="LifetimeEntry.LifetimeStart"/> using <see cref="InitialLifetimeOffset"/>.
         /// </summary>
-        internal void SetInitialLifetime() => LifetimeStart = HitObject.StartTime - InitialLifetimeOffset;
+        internal void SetInitialLifetime() =>
+            LifetimeStart = HitObject.StartTime - InitialLifetimeOffset;
 
         internal void OnRevertResult() => RevertResult?.Invoke();
     }

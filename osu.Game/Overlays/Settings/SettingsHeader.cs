@@ -37,18 +37,24 @@ namespace osu.Game.Overlays.Settings
                     {
                         Horizontal = SettingsPanel.CONTENT_MARGINS,
                         Top = Toolbar.Toolbar.TOOLTIP_HEIGHT,
-                        Bottom = 30
-                    }
+                        Bottom = 30,
+                    },
                 }.With(flow =>
                 {
-                    flow.AddText(heading, header => header.Font = OsuFont.TorusAlternate.With(size: 40));
+                    flow.AddText(
+                        heading,
+                        header => header.Font = OsuFont.TorusAlternate.With(size: 40)
+                    );
                     flow.NewLine();
-                    flow.AddText(subheading, subheader =>
-                    {
-                        subheader.Colour = colourProvider.Content2;
-                        subheader.Font = OsuFont.GetFont(size: 18);
-                    });
-                })
+                    flow.AddText(
+                        subheading,
+                        subheader =>
+                        {
+                            subheader.Colour = colourProvider.Content2;
+                            subheader.Font = OsuFont.GetFont(size: 18);
+                        }
+                    );
+                }),
             };
         }
     }

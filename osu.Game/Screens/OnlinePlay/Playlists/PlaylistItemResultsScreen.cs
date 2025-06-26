@@ -52,7 +52,11 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         [Resolved]
         private BeatmapManager beatmapManager { get; set; } = null!;
 
-        protected PlaylistItemResultsScreen(ScoreInfo? score, long roomId, PlaylistItem playlistItem)
+        protected PlaylistItemResultsScreen(
+            ScoreInfo? score,
+            long roomId,
+            PlaylistItem playlistItem
+        )
             : base(score)
         {
             RoomId = roomId;
@@ -62,34 +66,41 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         [BackgroundDependencyLoader]
         private void load()
         {
-            var localBeatmap = beatmapManager.QueryBeatmap($@"{nameof(BeatmapInfo.OnlineID)} == $0 AND {nameof(BeatmapInfo.MD5Hash)} == {nameof(BeatmapInfo.OnlineMD5Hash)}",
-                PlaylistItem.Beatmap.OnlineID);
+            var localBeatmap = beatmapManager.QueryBeatmap(
+                $@"{nameof(BeatmapInfo.OnlineID)} == $0 AND {nameof(BeatmapInfo.MD5Hash)} == {nameof(BeatmapInfo.OnlineMD5Hash)}",
+                PlaylistItem.Beatmap.OnlineID
+            );
             itemBeatmap = beatmapManager.GetWorkingBeatmap(localBeatmap);
 
-            AddInternal(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Padding = new MarginPadding { Bottom = TwoLayerButton.SIZE_EXTENDED.Y },
-                Children = new Drawable[]
+            AddInternal(
+                new Container
                 {
-                    LeftSpinner = new PanelListLoadingSpinner(ScorePanelList)
+                    RelativeSizeAxes = Axes.Both,
+                    Padding = new MarginPadding { Bottom = TwoLayerButton.SIZE_EXTENDED.Y },
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.Centre,
-                    },
-                    CentreSpinner = new PanelListLoadingSpinner(ScorePanelList)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        State = { Value = Score == null ? Visibility.Visible : Visibility.Hidden },
-                    },
-                    RightSpinner = new PanelListLoadingSpinner(ScorePanelList)
-                    {
-                        Anchor = Anchor.CentreRight,
-                        Origin = Anchor.Centre,
+                        LeftSpinner = new PanelListLoadingSpinner(ScorePanelList)
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.Centre,
+                        },
+                        CentreSpinner = new PanelListLoadingSpinner(ScorePanelList)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            State =
+                            {
+                                Value = Score == null ? Visibility.Visible : Visibility.Hidden,
+                            },
+                        },
+                        RightSpinner = new PanelListLoadingSpinner(ScorePanelList)
+                        {
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.Centre,
+                        },
                     },
                 }
-            });
+            );
         }
 
         protected abstract APIRequest<MultiplayerScore> CreateScoreRequest();
@@ -171,9 +182,15 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         private async Task<ScoreInfo[]> fetchScoresAround(MultiplayerScores? pivot = null)
         {
             var requestTaskSource = new TaskCompletionSource<IndexedMultiplayerScores>();
-            var indexReq = pivot != null
-                ? new IndexPlaylistScoresRequest(RoomId, PlaylistItem.ID, pivot.Cursor, pivot.Params)
-                : new IndexPlaylistScoresRequest(RoomId, PlaylistItem.ID);
+            var indexReq =
+                pivot != null
+                    ? new IndexPlaylistScoresRequest(
+                        RoomId,
+                        PlaylistItem.ID,
+                        pivot.Cursor,
+                        pivot.Params
+                    )
+                    : new IndexPlaylistScoresRequest(RoomId, PlaylistItem.ID);
             indexReq.Success += requestTaskSource.SetResult;
             indexReq.Failure += requestTaskSource.SetException;
             API.Queue(indexReq);
@@ -215,7 +232,9 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             }
             catch (Exception ex)
             {
-                Logger.Log($"Failed to fetch scores (room: {RoomId}, item: {PlaylistItem.ID}): {ex}");
+                Logger.Log(
+                    $"Failed to fetch scores (room: {RoomId}, item: {PlaylistItem.ID}): {ex}"
+                );
                 return [];
             }
         }
@@ -227,12 +246,19 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         private async Task<ScoreInfo[]> transformScores(List<MultiplayerScore> scores)
         {
             int[] allBeatmapIds = scores.Select(s => s.BeatmapId).Distinct().ToArray();
-            BeatmapInfo[] localBeatmaps = allBeatmapIds.Select(id => beatmapManager.QueryBeatmap(b => b.OnlineID == id))
-                                                       .Where(b => b != null)
-                                                       .ToArray()!;
+            BeatmapInfo[] localBeatmaps = allBeatmapIds
+                .Select(id => beatmapManager.QueryBeatmap(b => b.OnlineID == id))
+                .Where(b => b != null)
+                .ToArray()!;
 
-            int[] missingBeatmapIds = allBeatmapIds.Except(localBeatmaps.Select(b => b.OnlineID)).ToArray();
-            APIBeatmap[] onlineBeatmaps = (await beatmapLookupCache.GetBeatmapsAsync(missingBeatmapIds).ConfigureAwait(false)).Where(b => b != null).ToArray()!;
+            int[] missingBeatmapIds = allBeatmapIds
+                .Except(localBeatmaps.Select(b => b.OnlineID))
+                .ToArray();
+            APIBeatmap[] onlineBeatmaps = (
+                await beatmapLookupCache.GetBeatmapsAsync(missingBeatmapIds).ConfigureAwait(false)
+            )
+                .Where(b => b != null)
+                .ToArray()!;
 
             Dictionary<int, BeatmapInfo> beatmapsById = new Dictionary<int, BeatmapInfo>();
 
@@ -253,12 +279,12 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                         {
                             Username = beatmap.Metadata.Author.Username,
                             OnlineID = beatmap.Metadata.Author.OnlineID,
-                        }
+                        },
                     },
                     DifficultyName = beatmap.DifficultyName,
                     StarRating = beatmap.StarRating,
                     Length = beatmap.Length,
-                    BPM = beatmap.BPM
+                    BPM = beatmap.BPM,
                 };
             }
 
@@ -267,17 +293,19 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             {
                 if (!beatmapsById.ContainsKey(id))
                 {
-                    Logger.Log($"Failed to fetch beatmap {id} to display scores for playlist item {PlaylistItem.ID}");
+                    Logger.Log(
+                        $"Failed to fetch beatmap {id} to display scores for playlist item {PlaylistItem.ID}"
+                    );
                     beatmapsById[id] = Beatmap.Value.BeatmapInfo;
                 }
             }
 
             // Exclude the score provided to this screen since it's added already.
             return scores
-                   .Where(s => s.ID != Score?.OnlineID)
-                   .Select(s => s.CreateScoreInfo(ScoreManager, Rulesets, beatmapsById[s.BeatmapId]))
-                   .OrderByTotalScore()
-                   .ToArray();
+                .Where(s => s.ID != Score?.OnlineID)
+                .Select(s => s.CreateScoreInfo(ScoreManager, Rulesets, beatmapsById[s.BeatmapId]))
+                .OrderByTotalScore()
+                .ToArray();
         }
 
         protected override void OnScoresAdded(ScoreInfo[] scores)
@@ -295,8 +323,11 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
         /// <param name="scores">The <see cref="MultiplayerScores"/> to set positions on.</param>
         /// <param name="pivot">The pivot.</param>
         /// <param name="increment">The amount to increment the pivot position by for each <see cref="MultiplayerScore"/> in <paramref name="scores"/>.</param>
-        private static void setPositions(MultiplayerScores scores, MultiplayerScores? pivot, int increment)
-            => setPositions(scores, pivot?.Scores[^1].Position ?? 0, increment);
+        private static void setPositions(
+            MultiplayerScores scores,
+            MultiplayerScores? pivot,
+            int increment
+        ) => setPositions(scores, pivot?.Scores[^1].Position ?? 0, increment);
 
         /// <summary>
         /// Applies positions to all <see cref="MultiplayerScore"/>s referenced to a given pivot.
@@ -313,7 +344,8 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             }
         }
 
-        protected override BackgroundScreen CreateBackground() => new BackgroundScreenBeatmap(itemBeatmap);
+        protected override BackgroundScreen CreateBackground() =>
+            new BackgroundScreenBeatmap(itemBeatmap);
 
         private partial class PanelListLoadingSpinner : LoadingSpinner
         {

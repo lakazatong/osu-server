@@ -14,18 +14,18 @@ using osu.Game.Graphics.UserInterfaceV2;
 
 namespace osu.Game.Screens.Edit.Timing
 {
-    public partial class LabelledTimeSignature : LabelledComponent<LabelledTimeSignature.TimeSignatureBox, TimeSignature>
+    public partial class LabelledTimeSignature
+        : LabelledComponent<LabelledTimeSignature.TimeSignatureBox, TimeSignature>
     {
         public LabelledTimeSignature()
-            : base(false)
-        {
-        }
+            : base(false) { }
 
         protected override TimeSignatureBox CreateComponent() => new TimeSignatureBox();
 
         public partial class TimeSignatureBox : CompositeDrawable, IHasCurrentValue<TimeSignature>
         {
-            private readonly BindableWithCurrent<TimeSignature> current = new BindableWithCurrent<TimeSignature>(TimeSignature.SimpleQuadruple);
+            private readonly BindableWithCurrent<TimeSignature> current =
+                new BindableWithCurrent<TimeSignature>(TimeSignature.SimpleQuadruple);
 
             public Bindable<TimeSignature> Current
             {
@@ -51,7 +51,7 @@ namespace osu.Game.Screens.Edit.Timing
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
                             CornerRadius = CORNER_RADIUS,
-                            CommitOnFocusLost = true
+                            CommitOnFocusLost = true,
                         },
                         new OsuSpriteText
                         {
@@ -60,12 +60,12 @@ namespace osu.Game.Screens.Edit.Timing
                             Margin = new MarginPadding
                             {
                                 Left = 5,
-                                Right = CONTENT_PADDING_HORIZONTAL
+                                Right = CONTENT_PADDING_HORIZONTAL,
                             },
                             Text = "/ 4",
-                            Font = OsuFont.Default.With(size: 20)
-                        }
-                    }
+                            Font = OsuFont.Default.With(size: 20),
+                        },
+                    },
                 };
             }
 

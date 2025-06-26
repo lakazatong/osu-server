@@ -34,7 +34,8 @@ namespace osu.Game.Rulesets.Osu.UI
             this.replay = replay;
         }
 
-        private bool requireDisplay => showClickMarkers.Value || showFrameMarkers.Value || showCursorPath.Value;
+        private bool requireDisplay =>
+            showClickMarkers.Value || showFrameMarkers.Value || showCursorPath.Value;
 
         [BackgroundDependencyLoader]
         private void load(OsuRulesetConfigManager config)
@@ -49,11 +50,14 @@ namespace osu.Game.Rulesets.Osu.UI
         {
             base.LoadComplete();
 
-            displayLength.BindValueChanged(_ =>
-            {
-                // Need to fully reload to make this work.
-                loaded.Invalidate();
-            }, true);
+            displayLength.BindValueChanged(
+                _ =>
+                {
+                    // Need to fully reload to make this work.
+                    loaded.Invalidate();
+                },
+                true
+            );
         }
 
         private readonly Cached loaded = new Cached();
@@ -67,9 +71,12 @@ namespace osu.Game.Rulesets.Osu.UI
             if (requireDisplay)
                 initialise();
 
-            if (ClickMarkers != null) ClickMarkers.Alpha = showClickMarkers.Value ? 1 : 0;
-            if (FrameMarkers != null) FrameMarkers.Alpha = showFrameMarkers.Value ? 1 : 0;
-            if (CursorPath != null) CursorPath.Alpha = showCursorPath.Value ? 1 : 0;
+            if (ClickMarkers != null)
+                ClickMarkers.Alpha = showClickMarkers.Value ? 1 : 0;
+            if (FrameMarkers != null)
+                FrameMarkers.Alpha = showFrameMarkers.Value ? 1 : 0;
+            if (CursorPath != null)
+                CursorPath.Alpha = showCursorPath.Value ? 1 : 0;
         }
 
         private void initialise()
@@ -107,7 +114,14 @@ namespace osu.Game.Rulesets.Osu.UI
                 else if (!leftHeld && leftButton)
                 {
                     leftHeld = true;
-                    ClickMarkers.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position, OsuAction.LeftButton));
+                    ClickMarkers.Add(
+                        new AnalysisFrameEntry(
+                            osuFrame.Time,
+                            displayLength.Value,
+                            osuFrame.Position,
+                            OsuAction.LeftButton
+                        )
+                    );
                 }
 
                 if (rightHeld && !rightButton)
@@ -115,14 +129,34 @@ namespace osu.Game.Rulesets.Osu.UI
                 else if (!rightHeld && rightButton)
                 {
                     rightHeld = true;
-                    ClickMarkers.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position, OsuAction.RightButton));
+                    ClickMarkers.Add(
+                        new AnalysisFrameEntry(
+                            osuFrame.Time,
+                            displayLength.Value,
+                            osuFrame.Position,
+                            OsuAction.RightButton
+                        )
+                    );
                 }
 
-                FrameMarkers.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position, osuFrame.Actions.ToArray()));
-                CursorPath.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position));
+                FrameMarkers.Add(
+                    new AnalysisFrameEntry(
+                        osuFrame.Time,
+                        displayLength.Value,
+                        osuFrame.Position,
+                        osuFrame.Actions.ToArray()
+                    )
+                );
+                CursorPath.Add(
+                    new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position)
+                );
             }
 
-            LoadComponentsAsync(newDrawables, drawables => InternalChildrenEnumerable = drawables, generationCancellationSource.Token);
+            LoadComponentsAsync(
+                newDrawables,
+                drawables => InternalChildrenEnumerable = drawables,
+                generationCancellationSource.Token
+            );
         }
     }
 }

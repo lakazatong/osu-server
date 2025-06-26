@@ -31,6 +31,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         protected override bool AllowBackwardsSeeks => true;
 
         private TestGameplaySampleTriggerSource sampleTriggerSource = null!;
+
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
 
         private Beatmap beatmap = null!;
@@ -38,8 +39,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Resolved]
         private AudioManager audio { get; set; } = null!;
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
-            => new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), audio);
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard? storyboard = null
+        ) =>
+            new ClockBackedTestWorkingBeatmap(
+                beatmap,
+                storyboard,
+                new FramedClock(new ManualClock { Rate = 1 }),
+                audio
+            );
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
@@ -50,9 +59,9 @@ namespace osu.Game.Tests.Visual.Gameplay
                 BeatmapInfo = new BeatmapInfo
                 {
                     Difficulty = new BeatmapDifficulty { CircleSize = 6, SliderMultiplier = 3 },
-                    Ruleset = ruleset
+                    Ruleset = ruleset,
                 },
-                ControlPointInfo = controlPointInfo
+                ControlPointInfo = controlPointInfo,
             };
 
             const double start_offset = 8000;
@@ -61,46 +70,56 @@ namespace osu.Game.Tests.Visual.Gameplay
             // intentionally start objects a bit late so we can test the case of no alive objects.
             double t = start_offset;
 
-            beatmap.HitObjects.AddRange(new HitObject[]
-            {
-                new HitCircle
+            beatmap.HitObjects.AddRange(
+                new HitObject[]
                 {
-                    HitWindows = new DefaultHitWindows(),
-                    StartTime = t += spacing,
-                    Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) }
-                },
-                new HitCircle
-                {
-                    HitWindows = new DefaultHitWindows(),
-                    StartTime = t += spacing,
-                    Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_WHISTLE) }
-                },
-                new HitCircle
-                {
-                    HitWindows = new DefaultHitWindows(),
-                    StartTime = t += spacing,
-                    Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_NORMAL, HitSampleInfo.BANK_SOFT) },
-                },
-                new HitCircle
-                {
-                    HitWindows = new DefaultHitWindows(),
-                    StartTime = t += spacing,
-                },
-                new Slider
-                {
-                    HitWindows = new DefaultHitWindows(),
-                    StartTime = t += spacing,
-                    Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, Vector2.UnitY * 200 }),
-                    Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_WHISTLE, HitSampleInfo.BANK_SOFT) },
-                },
-            });
+                    new HitCircle
+                    {
+                        HitWindows = new DefaultHitWindows(),
+                        StartTime = t += spacing,
+                        Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_NORMAL) },
+                    },
+                    new HitCircle
+                    {
+                        HitWindows = new DefaultHitWindows(),
+                        StartTime = t += spacing,
+                        Samples = new[] { new HitSampleInfo(HitSampleInfo.HIT_WHISTLE) },
+                    },
+                    new HitCircle
+                    {
+                        HitWindows = new DefaultHitWindows(),
+                        StartTime = t += spacing,
+                        Samples = new[]
+                        {
+                            new HitSampleInfo(HitSampleInfo.HIT_NORMAL, HitSampleInfo.BANK_SOFT),
+                        },
+                    },
+                    new HitCircle
+                    {
+                        HitWindows = new DefaultHitWindows(),
+                        StartTime = t += spacing,
+                    },
+                    new Slider
+                    {
+                        HitWindows = new DefaultHitWindows(),
+                        StartTime = t += spacing,
+                        Path = new SliderPath(
+                            PathType.LINEAR,
+                            new[] { Vector2.Zero, Vector2.UnitY * 200 }
+                        ),
+                        Samples = new[]
+                        {
+                            new HitSampleInfo(HitSampleInfo.HIT_WHISTLE, HitSampleInfo.BANK_SOFT),
+                        },
+                    },
+                }
+            );
 
             // Add a change in volume halfway through final slider.
-            controlPointInfo.Add(t, new SampleControlPoint
-            {
-                SampleBank = "normal",
-                SampleVolume = 20,
-            });
+            controlPointInfo.Add(
+                t,
+                new SampleControlPoint { SampleBank = "normal", SampleVolume = 20 }
+            );
 
             return beatmap;
         }
@@ -109,7 +128,15 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.SetUpSteps();
 
-            AddStep("Add trigger source", () => Player.DrawableRuleset.FrameStableComponents.Add(sampleTriggerSource = new TestGameplaySampleTriggerSource(Player.DrawableRuleset.Playfield.HitObjectContainer)));
+            AddStep(
+                "Add trigger source",
+                () =>
+                    Player.DrawableRuleset.FrameStableComponents.Add(
+                        sampleTriggerSource = new TestGameplaySampleTriggerSource(
+                            Player.DrawableRuleset.Playfield.HitObjectContainer
+                        )
+                    )
+            );
         }
 
         [Test]
@@ -122,22 +149,31 @@ namespace osu.Game.Tests.Visual.Gameplay
             waitForAliveObjectIndex(0);
             checkValidObjectIndex(0);
 
-            AddAssert("first object not hit", () => getNextAliveObject()?.Entry?.Result?.HasResult != true);
+            AddAssert(
+                "first object not hit",
+                () => getNextAliveObject()?.Entry?.Result?.HasResult != true
+            );
 
-            AddStep("hit first object", () =>
-            {
-                var next = getNextAliveObject();
-
-                if (next != null)
+            AddStep(
+                "hit first object",
+                () =>
                 {
-                    Debug.Assert(next.Entry?.Result?.HasResult != true);
+                    var next = getNextAliveObject();
 
-                    InputManager.MoveMouseTo(next.ScreenSpaceDrawQuad.Centre);
-                    InputManager.Click(MouseButton.Left);
+                    if (next != null)
+                    {
+                        Debug.Assert(next.Entry?.Result?.HasResult != true);
+
+                        InputManager.MoveMouseTo(next.ScreenSpaceDrawQuad.Centre);
+                        InputManager.Click(MouseButton.Left);
+                    }
                 }
-            });
+            );
 
-            AddAssert("first object hit", () => getNextAliveObject()?.Entry?.Result?.HasResult == true);
+            AddAssert(
+                "first object hit",
+                () => getNextAliveObject()?.Entry?.Result?.HasResult == true
+            );
 
             // next object is too far away, so we still use the already hit object.
             checkValidObjectIndex(0);
@@ -172,18 +208,42 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             // Even before the object, we should prefer the first nested object's sample.
             // This is because the (parent) object will only play its sample at the final EndTime.
-            AddAssert("check valid object is slider's first nested", () => sampleTriggerSource.GetMostValidObject(), () => Is.EqualTo(beatmap.HitObjects[4].NestedHitObjects.First()));
+            AddAssert(
+                "check valid object is slider's first nested",
+                () => sampleTriggerSource.GetMostValidObject(),
+                () => Is.EqualTo(beatmap.HitObjects[4].NestedHitObjects.First())
+            );
 
-            AddStep("seek to just before slider ends", () => Player.GameplayClockContainer.Seek(beatmap.HitObjects[4].GetEndTime() - 100));
+            AddStep(
+                "seek to just before slider ends",
+                () => Player.GameplayClockContainer.Seek(beatmap.HitObjects[4].GetEndTime() - 100)
+            );
             waitForCatchUp();
-            AddUntilStep("wait until valid object is slider's last nested", () => sampleTriggerSource.GetMostValidObject(), () => Is.EqualTo(beatmap.HitObjects[4].NestedHitObjects.Last()));
+            AddUntilStep(
+                "wait until valid object is slider's last nested",
+                () => sampleTriggerSource.GetMostValidObject(),
+                () => Is.EqualTo(beatmap.HitObjects[4].NestedHitObjects.Last())
+            );
 
             // After we get far enough away, the samples of the object itself should be used, not any nested object.
-            AddStep("seek to further after slider", () => Player.GameplayClockContainer.Seek(beatmap.HitObjects[4].GetEndTime() + 1000));
+            AddStep(
+                "seek to further after slider",
+                () => Player.GameplayClockContainer.Seek(beatmap.HitObjects[4].GetEndTime() + 1000)
+            );
             waitForCatchUp();
-            AddUntilStep("wait until valid object is slider itself", () => sampleTriggerSource.GetMostValidObject(), () => Is.EqualTo(beatmap.HitObjects[4]));
+            AddUntilStep(
+                "wait until valid object is slider itself",
+                () => sampleTriggerSource.GetMostValidObject(),
+                () => Is.EqualTo(beatmap.HitObjects[4])
+            );
 
-            AddStep("Seek into future", () => Player.GameplayClockContainer.Seek(beatmap.HitObjects.Last().GetEndTime() + 10000));
+            AddStep(
+                "Seek into future",
+                () =>
+                    Player.GameplayClockContainer.Seek(
+                        beatmap.HitObjects.Last().GetEndTime() + 10000
+                    )
+            );
             waitForCatchUp();
             waitForAliveObjectIndex(null);
             checkValidObjectIndex(4);
@@ -191,23 +251,42 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void seekBeforeIndex(int index, double amount = 100)
         {
-            AddStep($"seek to {amount} ms before object {index}", () => Player.GameplayClockContainer.Seek(beatmap.HitObjects[index].StartTime - amount));
+            AddStep(
+                $"seek to {amount} ms before object {index}",
+                () =>
+                    Player.GameplayClockContainer.Seek(beatmap.HitObjects[index].StartTime - amount)
+            );
             waitForCatchUp();
         }
 
         private void waitForCatchUp() =>
-            AddUntilStep("wait for frame stable clock to catch up", () => Precision.AlmostEquals(Player.GameplayClockContainer.CurrentTime, Player.DrawableRuleset.FrameStableClock.CurrentTime));
+            AddUntilStep(
+                "wait for frame stable clock to catch up",
+                () =>
+                    Precision.AlmostEquals(
+                        Player.GameplayClockContainer.CurrentTime,
+                        Player.DrawableRuleset.FrameStableClock.CurrentTime
+                    )
+            );
 
         private void waitForAliveObjectIndex(int? index)
         {
             if (index == null)
                 AddUntilStep("wait for no alive objects", getNextAliveObject, () => Is.Null);
             else
-                AddUntilStep($"wait for next alive to be {index}", () => getNextAliveObject()?.HitObject, () => Is.EqualTo(beatmap.HitObjects[index.Value]));
+                AddUntilStep(
+                    $"wait for next alive to be {index}",
+                    () => getNextAliveObject()?.HitObject,
+                    () => Is.EqualTo(beatmap.HitObjects[index.Value])
+                );
         }
 
         private void checkValidObjectIndex(int index) =>
-            AddAssert($"check object at index {index} is correct", () => sampleTriggerSource.GetMostValidObject(), () => Is.EqualTo(beatmap.HitObjects[index]));
+            AddAssert(
+                $"check object at index {index} is correct",
+                () => sampleTriggerSource.GetMostValidObject(),
+                () => Is.EqualTo(beatmap.HitObjects[index])
+            );
 
         private DrawableHitObject? getNextAliveObject() =>
             Player.DrawableRuleset.Playfield.HitObjectContainer.AliveObjects.FirstOrDefault();
@@ -221,9 +300,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         public partial class TestGameplaySampleTriggerSource : GameplaySampleTriggerSource
         {
             public TestGameplaySampleTriggerSource(HitObjectContainer hitObjectContainer)
-                : base(hitObjectContainer)
-            {
-            }
+                : base(hitObjectContainer) { }
 
             public new HitObject? GetMostValidObject() => base.GetMostValidObject();
         }

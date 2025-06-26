@@ -4,15 +4,15 @@
 #nullable disable
 
 using System;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Overlays.Dialog;
-using osu.Game.Graphics.Containers;
-using osu.Game.Input.Bindings;
 using System.Linq;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Game.Graphics.Containers;
+using osu.Game.Input.Bindings;
+using osu.Game.Overlays.Dialog;
 
 namespace osu.Game.Overlays
 {
@@ -28,8 +28,8 @@ namespace osu.Game.Overlays
 
         public PopupDialog CurrentDialog { get; private set; }
 
-        public override bool IsPresent => Scheduler.HasPendingTasks
-                                          || dialogContainer.Children.Count > 0;
+        public override bool IsPresent =>
+            Scheduler.HasPendingTasks || dialogContainer.Children.Count > 0;
 
         [CanBeNull]
         private IDisposable duckOperation;
@@ -58,7 +58,8 @@ namespace osu.Game.Overlays
 
         public void Push(PopupDialog dialog)
         {
-            if (dialog == CurrentDialog || dialog.State.Value == Visibility.Hidden) return;
+            if (dialog == CurrentDialog || dialog.State.Value == Visibility.Hidden)
+                return;
 
             // Immediately update the externally accessible property as this may be used for checks even before
             // a DialogOverlay instance has finished loading.
@@ -82,7 +83,8 @@ namespace osu.Game.Overlays
 
                 dialog.State.BindValueChanged(state =>
                 {
-                    if (state.NewValue != Visibility.Hidden) return;
+                    if (state.NewValue != Visibility.Hidden)
+                        return;
 
                     // Trigger the demise of the dialog as soon as it hides.
                     dialog.Delay(PopupDialog.EXIT_DURATION).Expire();
@@ -93,7 +95,8 @@ namespace osu.Game.Overlays
 
             void dismiss()
             {
-                if (dialog != CurrentDialog) return;
+                if (dialog != CurrentDialog)
+                    return;
 
                 // Handle the case where the dialog is the currently displayed dialog.
                 // In this scenario, the overlay itself should also be hidden.
@@ -106,12 +109,14 @@ namespace osu.Game.Overlays
 
         protected override void PopIn()
         {
-            duckOperation = musicController?.Duck(new DuckParameters
-            {
-                DuckVolumeTo = 1,
-                DuckDuration = 100,
-                RestoreDuration = 100,
-            });
+            duckOperation = musicController?.Duck(
+                new DuckParameters
+                {
+                    DuckVolumeTo = 1,
+                    DuckDuration = 100,
+                    RestoreDuration = 100,
+                }
+            );
         }
 
         protected override void PopOut()
@@ -133,8 +138,8 @@ namespace osu.Game.Overlays
             {
                 case GlobalAction.Select:
                     var clickableButton =
-                        CurrentDialog?.Buttons.OfType<PopupDialogOkButton>().FirstOrDefault() ??
-                        CurrentDialog?.Buttons.First();
+                        CurrentDialog?.Buttons.OfType<PopupDialogOkButton>().FirstOrDefault()
+                        ?? CurrentDialog?.Buttons.First();
 
                     clickableButton?.TriggerClick();
                     return true;

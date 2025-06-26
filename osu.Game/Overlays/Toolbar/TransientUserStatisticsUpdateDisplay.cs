@@ -21,7 +21,8 @@ namespace osu.Game.Overlays.Toolbar
 {
     public partial class TransientUserStatisticsUpdateDisplay : CompositeDrawable
     {
-        public Bindable<ScoreBasedUserStatisticsUpdate?> LatestUpdate { get; } = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        public Bindable<ScoreBasedUserStatisticsUpdate?> LatestUpdate { get; } =
+            new Bindable<ScoreBasedUserStatisticsUpdate?>();
 
         private Statistic<int> globalRank = null!;
         private Statistic<int> pp = null!;
@@ -42,13 +43,23 @@ namespace osu.Game.Overlays.Toolbar
                 Direction = FillDirection.Horizontal,
                 Children = new Drawable[]
                 {
-                    globalRank = new Statistic<int>(UsersStrings.ShowRankGlobalSimple, @"#", Comparer<int>.Create((before, after) => before - after)),
-                    pp = new Statistic<int>(RankingsStrings.StatPerformance, string.Empty, Comparer<int>.Create((before, after) => Math.Sign(after - before))),
-                }
+                    globalRank = new Statistic<int>(
+                        UsersStrings.ShowRankGlobalSimple,
+                        @"#",
+                        Comparer<int>.Create((before, after) => before - after)
+                    ),
+                    pp = new Statistic<int>(
+                        RankingsStrings.StatPerformance,
+                        string.Empty,
+                        Comparer<int>.Create((before, after) => Math.Sign(after - before))
+                    ),
+                },
             };
 
             if (userStatisticsWatcher != null)
-                ((IBindable<ScoreBasedUserStatisticsUpdate?>)LatestUpdate).BindTo(userStatisticsWatcher.LatestUpdate);
+                ((IBindable<ScoreBasedUserStatisticsUpdate?>)LatestUpdate).BindTo(
+                    userStatisticsWatcher.LatestUpdate
+                );
         }
 
         protected override void LoadComplete()
@@ -79,7 +90,8 @@ namespace osu.Game.Overlays.Toolbar
                     globalRank.Display(
                         update.Before.GlobalRank ?? update.After.GlobalRank.Value,
                         Math.Abs((update.After.GlobalRank.Value - update.Before.GlobalRank) ?? 0),
-                        update.After.GlobalRank.Value);
+                        update.After.GlobalRank.Value
+                    );
                 }
 
                 if (update.After.PP != null)
@@ -109,7 +121,11 @@ namespace osu.Game.Overlays.Toolbar
             [Resolved]
             private OsuColour colours { get; set; } = null!;
 
-            public Statistic(LocalisableString title, string mainValuePrefix, IComparer<T> valueComparer)
+            public Statistic(
+                LocalisableString title,
+                string mainValuePrefix,
+                IComparer<T> valueComparer
+            )
             {
                 this.title = title;
                 this.mainValuePrefix = mainValuePrefix;
@@ -146,20 +162,27 @@ namespace osu.Game.Overlays.Toolbar
                                 {
                                     Anchor = Anchor.CentreRight,
                                     Origin = Anchor.CentreRight,
-                                    Font = OsuFont.Default.With(size: 12, fixedWidth: true, weight: FontWeight.SemiBold),
+                                    Font = OsuFont.Default.With(
+                                        size: 12,
+                                        fixedWidth: true,
+                                        weight: FontWeight.SemiBold
+                                    ),
                                     AlwaysPresent = true,
                                 },
                                 titleText = new OsuSpriteText
                                 {
                                     Anchor = Anchor.CentreRight,
                                     Origin = Anchor.CentreRight,
-                                    Font = OsuFont.Default.With(size: 12, weight: FontWeight.SemiBold),
+                                    Font = OsuFont.Default.With(
+                                        size: 12,
+                                        weight: FontWeight.SemiBold
+                                    ),
                                     Text = title,
                                     AlwaysPresent = true,
-                                }
-                            }
-                        }
-                    }
+                                },
+                            },
+                        },
+                    },
                 };
             }
 
@@ -226,13 +249,16 @@ namespace osu.Game.Overlays.Toolbar
 
             private string valuePrefix = string.Empty;
 
-            protected override LocalisableString FormatCount(T count) => LocalisableString.Format(@"{0}{1:N0}", ValuePrefix, count);
+            protected override LocalisableString FormatCount(T count) =>
+                LocalisableString.Format(@"{0}{1:N0}", ValuePrefix, count);
 
-            protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(t =>
-            {
-                t.Font = Font;
-                t.Spacing = new Vector2(-1.5f, 0);
-            });
+            protected override OsuSpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(t =>
+                    {
+                        t.Font = Font;
+                        t.Spacing = new Vector2(-1.5f, 0);
+                    });
 
             protected override double RollingDuration => 1500;
         }

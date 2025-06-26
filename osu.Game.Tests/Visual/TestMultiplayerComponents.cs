@@ -6,8 +6,8 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
-using osu.Game.Database;
 using osu.Game.Beatmaps;
+using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Online.Multiplayer;
 using osu.Game.Screens;
@@ -63,8 +63,8 @@ namespace osu.Game.Tests.Visual
                 screenStack = new OsuScreenStack
                 {
                     Name = nameof(TestMultiplayerComponents),
-                    RelativeSizeAxes = Axes.Both
-                }
+                    RelativeSizeAxes = Axes.Both,
+                },
             };
 
             screenStack.Push(MultiplayerScreen);
@@ -73,10 +73,12 @@ namespace osu.Game.Tests.Visual
         [BackgroundDependencyLoader]
         private void load(IAPIProvider api)
         {
-            ((DummyAPIAccess)api).HandleRequest = request => requestsHandler.HandleRequest(request, api.LocalUser.Value, beatmapManager);
+            ((DummyAPIAccess)api).HandleRequest = request =>
+                requestsHandler.HandleRequest(request, api.LocalUser.Value, beatmapManager);
         }
 
-        public override bool OnBackButton() => (screenStack.CurrentScreen as OsuScreen)?.OnBackButton() ?? base.OnBackButton();
+        public override bool OnBackButton() =>
+            (screenStack.CurrentScreen as OsuScreen)?.OnBackButton() ?? base.OnBackButton();
 
         public override bool OnExiting(ScreenExitEvent e)
         {

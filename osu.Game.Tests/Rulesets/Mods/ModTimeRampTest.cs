@@ -55,10 +55,7 @@ namespace osu.Game.Tests.Rulesets.Mods
         public void TestModWindDown(double time, double expectedRate)
         {
             var beatmap = createSingleSpinnerBeatmap();
-            var mod = new ModWindDown
-            {
-                FinalRate = { Value = 0.5 }
-            };
+            var mod = new ModWindDown { FinalRate = { Value = 0.5 } };
             mod.ApplyToBeatmap(beatmap);
             mod.ApplyToTrack(track);
 
@@ -95,24 +92,14 @@ namespace osu.Game.Tests.Rulesets.Mods
             {
                 HitObjects =
                 {
-                    new Spinner
-                    {
-                        StartTime = start_time,
-                        Duration = duration
-                    }
-                }
+                    new Spinner { StartTime = start_time, Duration = duration },
+                },
             };
         }
 
         private static Beatmap createSingleObjectBeatmap()
         {
-            return new Beatmap
-            {
-                HitObjects =
-                {
-                    new HitCircle { StartTime = start_time }
-                }
-            };
+            return new Beatmap { HitObjects = { new HitCircle { StartTime = start_time } } };
         }
     }
 }

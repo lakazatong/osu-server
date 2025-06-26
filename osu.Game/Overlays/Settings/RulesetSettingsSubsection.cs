@@ -27,7 +27,9 @@ namespace osu.Game.Overlays.Settings
 
         private DependencyContainer dependencies;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 

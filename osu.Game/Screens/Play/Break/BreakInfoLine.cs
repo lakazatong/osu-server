@@ -54,7 +54,7 @@ namespace osu.Game.Screens.Play.Break
                     Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 17),
                     Margin = new MarginPadding { Left = margin },
                     Colour = colours.YellowLight,
-                }
+                },
             };
 
             Current.BindValueChanged(text => valueText.Text = Format(text.NewValue));
@@ -72,9 +72,7 @@ namespace osu.Game.Screens.Play.Break
     public partial class PercentageBreakInfoLine : BreakInfoLine<double>
     {
         public PercentageBreakInfoLine(LocalisableString name)
-            : base(name)
-        {
-        }
+            : base(name) { }
 
         protected override LocalisableString Format(double count) => count.FormatAccuracy();
     }

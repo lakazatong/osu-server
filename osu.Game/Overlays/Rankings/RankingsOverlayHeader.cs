@@ -22,11 +22,13 @@ namespace osu.Game.Overlays.Rankings
 
         protected override OverlayTitle CreateTitle() => new RankingsTitle();
 
-        protected override Drawable CreateTabControlContent() => rulesetSelector = new OverlayRulesetSelector();
+        protected override Drawable CreateTabControlContent() =>
+            rulesetSelector = new OverlayRulesetSelector();
 
         protected override Drawable CreateContent() => countryFilter = new CountryFilter();
 
-        protected override Drawable CreateBackground() => new OverlayHeaderBackground("Headers/rankings");
+        protected override Drawable CreateBackground() =>
+            new OverlayHeaderBackground("Headers/rankings");
 
         private partial class RankingsTitle : OverlayTitle
         {
@@ -42,10 +44,17 @@ namespace osu.Game.Overlays.Rankings
         {
             base.LoadComplete();
 
-            Current.BindValueChanged(scope =>
-            {
-                rulesetSelector.FadeTo(showRulesetSelector(scope.NewValue) ? 1 : 0, 200, Easing.OutQuint);
-            }, true);
+            Current.BindValueChanged(
+                scope =>
+                {
+                    rulesetSelector.FadeTo(
+                        showRulesetSelector(scope.NewValue) ? 1 : 0,
+                        200,
+                        Easing.OutQuint
+                    );
+                },
+                true
+            );
 
             bool showRulesetSelector(RankingsScope scope)
             {

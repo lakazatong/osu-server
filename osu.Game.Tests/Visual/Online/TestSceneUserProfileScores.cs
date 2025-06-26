@@ -79,11 +79,7 @@ namespace osu.Game.Tests.Visual.Online
                 Rank = ScoreRank.S,
                 Beatmap = new APIBeatmap
                 {
-                    BeatmapSet = new APIBeatmapSet
-                    {
-                        Title = "Idolize",
-                        Artist = "Creo",
-                    },
+                    BeatmapSet = new APIBeatmapSet { Title = "Idolize", Artist = "Creo" },
                     DifficultyName = "Insane",
                     Status = BeatmapOnlineStatus.Ranked,
                 },
@@ -196,28 +192,60 @@ namespace osu.Game.Tests.Visual.Online
                 Processed = true,
             };
 
-            Add(new FillFlowContainer
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(0, 10),
-                Children = new[]
+            Add(
+                new FillFlowContainer
                 {
-                    new ColourProvidedContainer(OverlayColourScheme.Green, new DrawableProfileScore(firstScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Green, new DrawableProfileScore(secondScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileScore(noPPScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileScore(lovedScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileScore(unprocessedPPScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileScore(unrankedPPScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileScore(notPreservedPPScore)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileWeightedScore(firstScore, 0.97)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileWeightedScore(secondScore, 0.85)),
-                    new ColourProvidedContainer(OverlayColourScheme.Pink, new DrawableProfileWeightedScore(thirdScore, 0.66)),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(0, 10),
+                    Children = new[]
+                    {
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Green,
+                            new DrawableProfileScore(firstScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Green,
+                            new DrawableProfileScore(secondScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileScore(noPPScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileScore(lovedScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileScore(unprocessedPPScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileScore(unrankedPPScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileScore(notPreservedPPScore)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileWeightedScore(firstScore, 0.97)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileWeightedScore(secondScore, 0.85)
+                        ),
+                        new ColourProvidedContainer(
+                            OverlayColourScheme.Pink,
+                            new DrawableProfileWeightedScore(thirdScore, 0.66)
+                        ),
+                    },
                 }
-            });
+            );
         }
 
         private partial class ColourProvidedContainer : Container
@@ -225,7 +253,10 @@ namespace osu.Game.Tests.Visual.Online
             [Cached]
             private readonly OverlayColourProvider colourProvider;
 
-            public ColourProvidedContainer(OverlayColourScheme colourScheme, DrawableProfileScore score)
+            public ColourProvidedContainer(
+                OverlayColourScheme colourScheme,
+                DrawableProfileScore score
+            )
             {
                 colourProvider = new OverlayColourProvider(colourScheme);
 

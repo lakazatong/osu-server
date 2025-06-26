@@ -30,38 +30,40 @@ namespace osu.Game.Tests.Editing
         private HitObject transferredUsage;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            reset();
-
-            if (eventBuffer != null)
+        public void Setup() =>
+            Schedule(() =>
             {
-                eventBuffer.HitObjectUsageBegan -= onHitObjectUsageBegan;
-                eventBuffer.HitObjectUsageFinished -= onHitObjectUsageFinished;
-                eventBuffer.HitObjectUsageTransferred -= onHitObjectUsageTransferred;
-            }
+                reset();
 
-            var topPlayfield = new TestPlayfield();
-            topPlayfield.AddNested(playfield1 = new TestPlayfield());
-            topPlayfield.AddNested(playfield2 = new TestPlayfield());
+                if (eventBuffer != null)
+                {
+                    eventBuffer.HitObjectUsageBegan -= onHitObjectUsageBegan;
+                    eventBuffer.HitObjectUsageFinished -= onHitObjectUsageFinished;
+                    eventBuffer.HitObjectUsageTransferred -= onHitObjectUsageTransferred;
+                }
 
-            eventBuffer = new HitObjectUsageEventBuffer(topPlayfield);
-            eventBuffer.HitObjectUsageBegan += onHitObjectUsageBegan;
-            eventBuffer.HitObjectUsageFinished += onHitObjectUsageFinished;
-            eventBuffer.HitObjectUsageTransferred += onHitObjectUsageTransferred;
+                var topPlayfield = new TestPlayfield();
+                topPlayfield.AddNested(playfield1 = new TestPlayfield());
+                topPlayfield.AddNested(playfield2 = new TestPlayfield());
 
-            Children = new Drawable[]
-            {
-                topPlayfield,
-                intermediateDrawable = new TestDrawable(),
-            };
-        });
+                eventBuffer = new HitObjectUsageEventBuffer(topPlayfield);
+                eventBuffer.HitObjectUsageBegan += onHitObjectUsageBegan;
+                eventBuffer.HitObjectUsageFinished += onHitObjectUsageFinished;
+                eventBuffer.HitObjectUsageTransferred += onHitObjectUsageTransferred;
+
+                Children = new Drawable[]
+                {
+                    topPlayfield,
+                    intermediateDrawable = new TestDrawable(),
+                };
+            });
 
         private void onHitObjectUsageBegan(HitObject obj) => beganUsage = obj;
 
         private void onHitObjectUsageFinished(HitObject obj) => finishedUsage = obj;
 
-        private void onHitObjectUsageTransferred(HitObject obj, DrawableHitObject drawableObj) => transferredUsage = obj;
+        private void onHitObjectUsageTransferred(HitObject obj, DrawableHitObject drawableObj) =>
+            transferredUsage = obj;
 
         [Test]
         public void TestUsageBeganAfterAdd()
@@ -84,11 +86,14 @@ namespace osu.Game.Tests.Editing
         {
             AddStep("add hitobject", () => playfield1.Add(testObj));
             addResetStep();
-            AddStep("transfer hitobject to other playfield", () =>
-            {
-                playfield1.Remove(testObj);
-                playfield2.Add(testObj);
-            });
+            AddStep(
+                "transfer hitobject to other playfield",
+                () =>
+                {
+                    playfield1.Remove(testObj);
+                    playfield2.Add(testObj);
+                }
+            );
 
             addCheckStep(transferred: true);
         }
@@ -96,11 +101,14 @@ namespace osu.Game.Tests.Editing
         [Test]
         public void TestRemoveImmediatelyAfterUsageBegan()
         {
-            AddStep("add hitobject and schedule removal", () =>
-            {
-                playfield1.Add(testObj);
-                intermediateDrawable.Schedule(() => playfield1.Remove(testObj));
-            });
+            AddStep(
+                "add hitobject and schedule removal",
+                () =>
+                {
+                    playfield1.Add(testObj);
+                    intermediateDrawable.Schedule(() => playfield1.Remove(testObj));
+                }
+            );
 
             addCheckStep(began: true, finished: true);
         }
@@ -110,12 +118,15 @@ namespace osu.Game.Tests.Editing
         {
             AddStep("add hitobject", () => playfield1.Add(testObj));
             addResetStep();
-            AddStep("transfer hitobject to other playfield and schedule removal", () =>
-            {
-                playfield1.Remove(testObj);
-                playfield2.Add(testObj);
-                intermediateDrawable.Schedule(() => playfield2.Remove(testObj));
-            });
+            AddStep(
+                "transfer hitobject to other playfield and schedule removal",
+                () =>
+                {
+                    playfield1.Remove(testObj);
+                    playfield2.Add(testObj);
+                    intermediateDrawable.Schedule(() => playfield2.Remove(testObj));
+                }
+            );
 
             addCheckStep(transferred: true, finished: true);
         }
@@ -135,9 +146,18 @@ namespace osu.Game.Tests.Editing
             transferredUsage = null;
         }
 
-        private void addCheckStep(bool began = false, bool finished = false, bool transferred = false)
-            => AddAssert($"began = {began}, finished = {finished}, transferred = {transferred}",
-                () => (beganUsage == testObj) == began && (finishedUsage == testObj) == finished && (transferredUsage == testObj) == transferred);
+        private void addCheckStep(
+            bool began = false,
+            bool finished = false,
+            bool transferred = false
+        ) =>
+            AddAssert(
+                $"began = {began}, finished = {finished}, transferred = {transferred}",
+                () =>
+                    (beganUsage == testObj) == began
+                    && (finishedUsage == testObj) == finished
+                    && (transferredUsage == testObj) == transferred
+            );
 
         private partial class TestPlayfield : Playfield
         {
@@ -165,9 +185,7 @@ namespace osu.Game.Tests.Editing
             public override string ToString() => "TestHitObject";
         }
 
-        private partial class TestDrawableHitObject : DrawableHitObject
-        {
-        }
+        private partial class TestDrawableHitObject : DrawableHitObject { }
 
         private partial class TestDrawable : Drawable
         {

@@ -26,6 +26,7 @@ using osu.Game.Database;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online;
 using osu.Game.Online.Chat;
 using osu.Game.Online.Rooms;
@@ -37,11 +38,12 @@ using osu.Game.Screens.Play.HUD;
 using osu.Game.Users.Drawables;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.OnlinePlay
 {
-    public partial class DrawableRoomPlaylistItem : OsuRearrangeableListItem<PlaylistItem>, IHasContextMenu
+    public partial class DrawableRoomPlaylistItem
+        : OsuRearrangeableListItem<PlaylistItem>,
+            IHasContextMenu
     {
         public const float HEIGHT = 50;
 
@@ -124,7 +126,13 @@ namespace osu.Game.Screens.OnlinePlay
         public DrawableRoomPlaylistItem(PlaylistItem item, bool loadImmediately = false)
             : base(item)
         {
-            onScreenLoader = new DelayedLoadWrapper(Empty, timeBeforeLoad: loadImmediately ? 0 : 500) { RelativeSizeAxes = Axes.Both };
+            onScreenLoader = new DelayedLoadWrapper(
+                Empty,
+                timeBeforeLoad: loadImmediately ? 0 : 500
+            )
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
 
             Item = item;
 
@@ -149,23 +157,26 @@ namespace osu.Game.Screens.OnlinePlay
         {
             base.LoadComplete();
 
-            SelectedItem.BindValueChanged(selected =>
-            {
-                if (!valid.Value)
+            SelectedItem.BindValueChanged(
+                selected =>
                 {
-                    // Don't allow selection when not valid.
-                    if (IsSelectedItem)
+                    if (!valid.Value)
                     {
-                        SelectedItem.Value = selected.OldValue;
+                        // Don't allow selection when not valid.
+                        if (IsSelectedItem)
+                        {
+                            SelectedItem.Value = selected.OldValue;
+                        }
+
+                        // Don't update border when not valid (the border is displaying this fact).
+                        return;
                     }
 
-                    // Don't update border when not valid (the border is displaying this fact).
-                    return;
-                }
-
-                if (borderContainer != null)
-                    borderContainer.BorderThickness = IsSelectedItem ? border_thickness : 0;
-            }, true);
+                    if (borderContainer != null)
+                        borderContainer.BorderThickness = IsSelectedItem ? border_thickness : 0;
+                },
+                true
+            );
 
             valid.BindValueChanged(_ => Scheduler.AddOnce(refresh));
 
@@ -177,7 +188,9 @@ namespace osu.Game.Screens.OnlinePlay
                     {
                         if (showItemOwner)
                         {
-                            var foundUser = await userLookupCache.GetUserAsync(Item.OwnerID).ConfigureAwait(false);
+                            var foundUser = await userLookupCache
+                                .GetUserAsync(Item.OwnerID)
+                                .ConfigureAwait(false);
                             Schedule(() =>
                             {
                                 if (ownerAvatar != null)
@@ -185,7 +198,9 @@ namespace osu.Game.Screens.OnlinePlay
                             });
                         }
 
-                        beatmap = await beatmapLookupCache.GetBeatmapAsync(Item.Beatmap.OnlineID).ConfigureAwait(false);
+                        beatmap = await beatmapLookupCache
+                            .GetBeatmapAsync(Item.Beatmap.OnlineID)
+                            .ConfigureAwait(false);
 
                         Scheduler.AddOnce(refresh);
                     }
@@ -298,7 +313,10 @@ namespace osu.Game.Screens.OnlinePlay
                 {
                     difficultyIconContainer.Children = new Drawable[]
                     {
-                        thumbnail = new BeatmapCardThumbnail(beatmap.BeatmapSet!, (IBeatmapSetOnlineInfo)beatmap.BeatmapSet!)
+                        thumbnail = new BeatmapCardThumbnail(
+                            beatmap.BeatmapSet!,
+                            (IBeatmapSetOnlineInfo)beatmap.BeatmapSet!
+                        )
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
@@ -306,7 +324,7 @@ namespace osu.Game.Screens.OnlinePlay
                             Masking = true,
                             CornerRadius = 10,
                             RelativeSizeAxes = Axes.Y,
-                            Dimmed = { Value = IsHovered }
+                            Dimmed = { Value = IsHovered },
                         },
                         new DifficultyIcon(beatmap, ruleset, requiredMods)
                         {
@@ -330,14 +348,16 @@ namespace osu.Game.Screens.OnlinePlay
 
                 if (beatmap != null)
                 {
-                    beatmapText.AddLink(beatmap.GetDisplayTitleRomanisable(includeCreator: false),
+                    beatmapText.AddLink(
+                        beatmap.GetDisplayTitleRomanisable(includeCreator: false),
                         LinkAction.OpenBeatmap,
                         beatmap.OnlineID.ToString(),
                         null,
                         text =>
                         {
                             text.Truncate = true;
-                        });
+                        }
+                    );
                 }
             }
 
@@ -354,7 +374,8 @@ namespace osu.Game.Screens.OnlinePlay
 
             if (explicitContent != null)
             {
-                bool hasExplicitContent = (beatmap?.BeatmapSet as IBeatmapSetOnlineInfo)?.HasExplicitContent == true;
+                bool hasExplicitContent =
+                    (beatmap?.BeatmapSet as IBeatmapSetOnlineInfo)?.HasExplicitContent == true;
                 explicitContent.Alpha = hasExplicitContent ? 1 : 0;
             }
 
@@ -373,7 +394,8 @@ namespace osu.Game.Screens.OnlinePlay
 
         protected override Drawable CreateContent()
         {
-            Action<SpriteText> fontParameters = s => s.Font = OsuFont.Default.With(size: 14, weight: FontWeight.SemiBold);
+            Action<SpriteText> fontParameters = s =>
+                s.Font = OsuFont.Default.With(size: 14, weight: FontWeight.SemiBold);
 
             return new Container
             {
@@ -389,10 +411,7 @@ namespace osu.Game.Screens.OnlinePlay
                         Children = new Drawable[]
                         {
                             onScreenLoader,
-                            panelBackground = new PanelBackground
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                            },
+                            panelBackground = new PanelBackground { RelativeSizeAxes = Axes.Both },
                             new GridContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
@@ -401,7 +420,7 @@ namespace osu.Game.Screens.OnlinePlay
                                     new Dimension(GridSizeMode.AutoSize),
                                     new Dimension(),
                                     new Dimension(GridSizeMode.AutoSize),
-                                    new Dimension(GridSizeMode.AutoSize)
+                                    new Dimension(GridSizeMode.AutoSize),
                                 },
                                 Content = new[]
                                 {
@@ -417,7 +436,9 @@ namespace osu.Game.Screens.OnlinePlay
                                             Spacing = new Vector2(4),
                                             Margin = new MarginPadding { Right = 4 },
                                         },
-                                        mainFillFlow = new MainFlow(() => SelectedItem.Value == Model || !AllowSelection)
+                                        mainFillFlow = new MainFlow(() =>
+                                            SelectedItem.Value == Model || !AllowSelection
+                                        )
                                         {
                                             Anchor = Anchor.CentreLeft,
                                             Origin = Anchor.CentreLeft,
@@ -433,7 +454,7 @@ namespace osu.Game.Screens.OnlinePlay
                                                     // workaround to ensure only the first line of text shows, emulating truncation (but without ellipsis at the end).
                                                     // TODO: remove when text/link flow can support truncation with ellipsis natively.
                                                     Height = OsuFont.DEFAULT_FONT_SIZE,
-                                                    Masking = true
+                                                    Masking = true,
                                                 },
                                                 new FillFlowContainer
                                                 {
@@ -451,14 +472,23 @@ namespace osu.Game.Screens.OnlinePlay
                                                             Spacing = new Vector2(10f, 0),
                                                             Children = new Drawable[]
                                                             {
-                                                                authorText = new LinkFlowContainer(fontParameters) { AutoSizeAxes = Axes.Both },
-                                                                explicitContent = new ExplicitContentBeatmapBadge
+                                                                authorText = new LinkFlowContainer(
+                                                                    fontParameters
+                                                                )
                                                                 {
-                                                                    Alpha = 0f,
-                                                                    Anchor = Anchor.CentreLeft,
-                                                                    Origin = Anchor.CentreLeft,
-                                                                    Margin = new MarginPadding { Top = 3f },
-                                                                }
+                                                                    AutoSizeAxes = Axes.Both,
+                                                                },
+                                                                explicitContent =
+                                                                    new ExplicitContentBeatmapBadge
+                                                                    {
+                                                                        Alpha = 0f,
+                                                                        Anchor = Anchor.CentreLeft,
+                                                                        Origin = Anchor.CentreLeft,
+                                                                        Margin = new MarginPadding
+                                                                        {
+                                                                            Top = 3f,
+                                                                        },
+                                                                    },
                                                             },
                                                         },
                                                         new Container
@@ -466,16 +496,21 @@ namespace osu.Game.Screens.OnlinePlay
                                                             Anchor = Anchor.CentreLeft,
                                                             Origin = Anchor.CentreLeft,
                                                             AutoSizeAxes = Axes.Both,
-                                                            Child = modDisplay = new ModDisplay
-                                                            {
-                                                                Scale = new Vector2(0.4f),
-                                                                ExpansionMode = ExpansionMode.AlwaysExpanded,
-                                                                Margin = new MarginPadding { Vertical = -6 },
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                                            Child = modDisplay =
+                                                                new ModDisplay
+                                                                {
+                                                                    Scale = new Vector2(0.4f),
+                                                                    ExpansionMode =
+                                                                        ExpansionMode.AlwaysExpanded,
+                                                                    Margin = new MarginPadding
+                                                                    {
+                                                                        Vertical = -6,
+                                                                    },
+                                                                },
+                                                        },
+                                                    },
+                                                },
+                                            },
                                         },
                                         buttonsFlow = new FillFlowContainer
                                         {
@@ -485,11 +520,14 @@ namespace osu.Game.Screens.OnlinePlay
                                             Margin = new MarginPadding { Horizontal = 8 },
                                             AutoSizeAxes = Axes.Both,
                                             Spacing = new Vector2(5),
-                                            ChildrenEnumerable = createButtons().Select(button => button.With(b =>
-                                            {
-                                                b.Anchor = Anchor.Centre;
-                                                b.Origin = Anchor.Centre;
-                                            }))
+                                            ChildrenEnumerable = createButtons()
+                                                .Select(button =>
+                                                    button.With(b =>
+                                                    {
+                                                        b.Anchor = Anchor.Centre;
+                                                        b.Origin = Anchor.Centre;
+                                                    })
+                                                ),
                                         },
                                         ownerAvatar = new OwnerAvatar
                                         {
@@ -499,10 +537,10 @@ namespace osu.Game.Screens.OnlinePlay
                                             Margin = new MarginPadding { Right = 8 },
                                             Masking = true,
                                             CornerRadius = 4,
-                                            Alpha = ShowItemOwner ? 1 : 0
+                                            Alpha = ShowItemOwner ? 1 : 0,
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
                         },
                     },
@@ -517,68 +555,74 @@ namespace osu.Game.Screens.OnlinePlay
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Alpha = 0,
-                                AlwaysPresent = true
+                                AlwaysPresent = true,
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
-        private IEnumerable<Drawable> createButtons() => new[]
-        {
-            new CompletionIcon
+        private IEnumerable<Drawable> createButtons() =>
+            new[]
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Visible = { BindTarget = completed }
-            },
-            beatmap == null
-                ? Empty().With(d =>
-                {
-                    d.Anchor = Anchor.Centre;
-                    d.Origin = Anchor.Centre;
-                })
-                : new PlaylistDownloadButton(beatmap)
+                new CompletionIcon
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
+                    Visible = { BindTarget = completed },
                 },
-            showResultsButton = new GrayButton(FontAwesome.Solid.ChartPie)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(30, 30),
-                Action = () => RequestResults?.Invoke(Item),
-                Alpha = AllowShowingResults ? 1 : 0,
-                TooltipText = "View results"
-            },
-            editButton = new PlaylistEditButton
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(30, 30),
-                Alpha = AllowEditing ? 1 : 0,
-                Action = () => RequestEdit?.Invoke(Item),
-                TooltipText = Resources.Localisation.Web.CommonStrings.ButtonsEdit
-            },
-            removeButton = new PlaylistRemoveButton
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(30, 30),
-                Alpha = AllowDeletion ? 1 : 0,
-                Action = () => RequestDeletion?.Invoke(Item),
-                TooltipText = "Remove from playlist"
-            },
-        };
+                beatmap == null
+                    ? Empty()
+                        .With(d =>
+                        {
+                            d.Anchor = Anchor.Centre;
+                            d.Origin = Anchor.Centre;
+                        })
+                    : new PlaylistDownloadButton(beatmap)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    },
+                showResultsButton = new GrayButton(FontAwesome.Solid.ChartPie)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(30, 30),
+                    Action = () => RequestResults?.Invoke(Item),
+                    Alpha = AllowShowingResults ? 1 : 0,
+                    TooltipText = "View results",
+                },
+                editButton = new PlaylistEditButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(30, 30),
+                    Alpha = AllowEditing ? 1 : 0,
+                    Action = () => RequestEdit?.Invoke(Item),
+                    TooltipText = Resources.Localisation.Web.CommonStrings.ButtonsEdit,
+                },
+                removeButton = new PlaylistRemoveButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(30, 30),
+                    Alpha = AllowDeletion ? 1 : 0,
+                    Action = () => RequestDeletion?.Invoke(Item),
+                    TooltipText = "Remove from playlist",
+                },
+            };
 
         protected override bool OnHover(HoverEvent e)
         {
             if (thumbnail != null)
                 thumbnail.Dimmed.Value = true;
 
-            panelBackground.FadeColour(OsuColour.Gray(0.7f), BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            panelBackground.FadeColour(
+                OsuColour.Gray(0.7f),
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
             return base.OnHover(e);
         }
 
@@ -587,7 +631,11 @@ namespace osu.Game.Screens.OnlinePlay
             if (thumbnail != null)
                 thumbnail.Dimmed.Value = false;
 
-            panelBackground.FadeColour(OsuColour.Gray(1f), BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            panelBackground.FadeColour(
+                OsuColour.Gray(1f),
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
             base.OnHoverLost(e);
         }
 
@@ -605,19 +653,38 @@ namespace osu.Game.Screens.OnlinePlay
                 List<MenuItem> items = new List<MenuItem>();
 
                 if (beatmapOverlay != null)
-                    items.Add(new OsuMenuItem("Details...", MenuItemType.Standard, () => beatmapOverlay.FetchAndShowBeatmap(Item.Beatmap.OnlineID)));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Details...",
+                            MenuItemType.Standard,
+                            () => beatmapOverlay.FetchAndShowBeatmap(Item.Beatmap.OnlineID)
+                        )
+                    );
 
                 if (beatmap != null)
                 {
-                    if (beatmaps.QueryBeatmap(b => b.OnlineID == beatmap.OnlineID) is BeatmapInfo local && !local.BeatmapSet.AsNonNull().DeletePending)
+                    if (
+                        beatmaps.QueryBeatmap(b => b.OnlineID == beatmap.OnlineID)
+                            is BeatmapInfo local
+                        && !local.BeatmapSet.AsNonNull().DeletePending
+                    )
                     {
-                        var collectionItems = realm.Realm.All<BeatmapCollection>()
-                                                   .OrderBy(c => c.Name)
-                                                   .AsEnumerable()
-                                                   .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmap)).Cast<OsuMenuItem>().ToList();
+                        var collectionItems = realm
+                            .Realm.All<BeatmapCollection>()
+                            .OrderBy(c => c.Name)
+                            .AsEnumerable()
+                            .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmap))
+                            .Cast<OsuMenuItem>()
+                            .ToList();
 
                         if (manageCollectionsDialog != null)
-                            collectionItems.Add(new OsuMenuItem("Manage...", MenuItemType.Standard, manageCollectionsDialog.Show));
+                            collectionItems.Add(
+                                new OsuMenuItem(
+                                    "Manage...",
+                                    MenuItemType.Standard,
+                                    manageCollectionsDialog.Show
+                                )
+                            );
 
                         items.Add(new OsuMenuItem("Collections") { Items = collectionItems });
                     }
@@ -630,17 +697,13 @@ namespace osu.Game.Screens.OnlinePlay
         public partial class PlaylistEditButton : GrayButton
         {
             public PlaylistEditButton()
-                : base(FontAwesome.Solid.Edit)
-            {
-            }
+                : base(FontAwesome.Solid.Edit) { }
         }
 
         public partial class PlaylistRemoveButton : GrayButton
         {
             public PlaylistRemoveButton()
-                : base(FontAwesome.Solid.MinusSquare)
-            {
-            }
+                : base(FontAwesome.Solid.MinusSquare) { }
         }
 
         private sealed partial class PlaylistDownloadButton : BeatmapDownloadButton
@@ -686,15 +749,13 @@ namespace osu.Game.Screens.OnlinePlay
                             State.Value = DownloadState.NotDownloaded;
                         else
                         {
-                            this.FadeTo(0, 500)
-                                .ResizeWidthTo(0, 500, Easing.OutQuint);
+                            this.FadeTo(0, 500).ResizeWidthTo(0, 500, Easing.OutQuint);
                         }
 
                         break;
 
                     default:
-                        this.ResizeWidthTo(width, 500, Easing.OutQuint)
-                            .FadeTo(1, 500);
+                        this.ResizeWidthTo(width, 500, Easing.OutQuint).FadeTo(1, 500);
                         break;
                 }
             }
@@ -736,22 +797,30 @@ namespace osu.Game.Screens.OnlinePlay
                             new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Colour = ColourInfo.GradientHorizontal(Color4.Black, new Color4(0f, 0f, 0f, 0.7f)),
+                                Colour = ColourInfo.GradientHorizontal(
+                                    Color4.Black,
+                                    new Color4(0f, 0f, 0f, 0.7f)
+                                ),
                                 Width = 0.4f,
                             },
                             new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Colour = ColourInfo.GradientHorizontal(new Color4(0f, 0f, 0f, 0.7f), new Color4(0, 0, 0, 0.4f)),
+                                Colour = ColourInfo.GradientHorizontal(
+                                    new Color4(0f, 0f, 0f, 0.7f),
+                                    new Color4(0, 0, 0, 0.4f)
+                                ),
                                 Width = 0.4f,
                             },
-                        }
-                    }
+                        },
+                    },
                 };
 
                 // manual binding required as playlists don't expose IBeatmapInfo currently.
                 // may be removed in the future if this changes.
-                Beatmap.BindValueChanged(beatmap => backgroundSprite.Beatmap.Value = beatmap.NewValue);
+                Beatmap.BindValueChanged(beatmap =>
+                    backgroundSprite.Beatmap.Value = beatmap.NewValue
+                );
             }
         }
 
@@ -759,14 +828,11 @@ namespace osu.Game.Screens.OnlinePlay
         {
             public OwnerAvatar()
             {
-                AddInternal(new TooltipArea(this)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = -1
-                });
+                AddInternal(new TooltipArea(this) { RelativeSizeAxes = Axes.Both, Depth = -1 });
             }
 
-            public LocalisableString TooltipText => User == null ? string.Empty : $"queued by {User.Username}";
+            public LocalisableString TooltipText =>
+                User == null ? string.Empty : $"queued by {User.Username}";
 
             private partial class TooltipArea : Component, IHasTooltip
             {
@@ -812,10 +878,7 @@ namespace osu.Game.Screens.OnlinePlay
                     Colour = colours.Lime0,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both },
                         new SpriteIcon
                         {
                             Anchor = Anchor.Centre,
@@ -823,9 +886,9 @@ namespace osu.Game.Screens.OnlinePlay
                             RelativeSizeAxes = Axes.Both,
                             Scale = new Vector2(0.5f),
                             Colour = OsuColour.Gray(0.5f),
-                            Icon = FontAwesome.Solid.Check
-                        }
-                    }
+                            Icon = FontAwesome.Solid.Check,
+                        },
+                    },
                 };
             }
 
@@ -849,7 +912,8 @@ namespace osu.Game.Screens.OnlinePlay
                 }
             }
 
-            public LocalisableString TooltipText => DrawableRoomPlaylistItemStrings.CompletedTooltip;
+            public LocalisableString TooltipText =>
+                DrawableRoomPlaylistItemStrings.CompletedTooltip;
         }
     }
 }

@@ -34,7 +34,10 @@ namespace osu.Desktop.Windows
 
         private void updateBlocking()
         {
-            bool shouldDisable = isActive.Value && disableWinKey.Value && localUserPlaying.Value == LocalUserPlayingState.Playing;
+            bool shouldDisable =
+                isActive.Value
+                && disableWinKey.Value
+                && localUserPlaying.Value == LocalUserPlayingState.Playing;
 
             if (shouldDisable)
                 host.InputThread.Scheduler.Add(WindowsKey.Disable);

@@ -41,7 +41,8 @@ namespace osu.Game.Online.Multiplayer
             // To do so, we schedule to the next whole second. Note that scheduler invocation isn't
             // guaranteed to be accurate, so this may still occur slightly late, but even in such a case
             // the next invocation will be roughly correct.
-            double timeToNextSecond = endDate.Subtract(DateTimeOffset.UtcNow).TotalMilliseconds % 1000;
+            double timeToNextSecond =
+                endDate.Subtract(DateTimeOffset.UtcNow).TotalMilliseconds % 1000;
 
             updateDelegate = Scheduler.AddDelayed(updateTimeWithReschedule, timeToNextSecond);
         }
@@ -56,7 +57,8 @@ namespace osu.Game.Online.Multiplayer
                 Text = "The multiplayer server will be right back...";
             }
             else
-                Text = $"The multiplayer server is restarting in {HumanizerUtils.Humanize(remaining, precision: 3, minUnit: TimeUnit.Second)}.";
+                Text =
+                    $"The multiplayer server is restarting in {HumanizerUtils.Humanize(remaining, precision: 3, minUnit: TimeUnit.Second)}.";
         }
     }
 }

@@ -12,12 +12,10 @@ namespace osu.Game.Overlays.Settings.Sections
 {
     public partial class MaintenanceSection : SettingsSection
     {
-        public override LocalisableString Header => MaintenanceSettingsStrings.MaintenanceSectionHeader;
+        public override LocalisableString Header =>
+            MaintenanceSettingsStrings.MaintenanceSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Maintenance
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Maintenance };
 
         public MaintenanceSection()
         {
@@ -28,7 +26,7 @@ namespace osu.Game.Overlays.Settings.Sections
                 new SkinSettings(),
                 new CollectionsSettings(),
                 new ScoreSettings(),
-                new ModPresetSettings()
+                new ModPresetSettings(),
             };
         }
     }

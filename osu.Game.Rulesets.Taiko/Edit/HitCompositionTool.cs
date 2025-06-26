@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Taiko.Edit
     public class HitCompositionTool : CompositionTool
     {
         public HitCompositionTool()
-            : base(nameof(Hit))
-        {
-        }
+            : base(nameof(Hit)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new HitPlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new HitPlacementBlueprint();
     }
 }

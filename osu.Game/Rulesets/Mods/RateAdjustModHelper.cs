@@ -59,11 +59,19 @@ namespace osu.Game.Rulesets.Mods
             // When switching between pitch adjust, we need to update adjustments to time-shift or frequency-scale.
             adjustPitch.BindValueChanged(adjustPitchSetting =>
             {
-                track?.RemoveAdjustment(adjustmentForPitchSetting(adjustPitchSetting.OldValue), SpeedChange);
-                track?.AddAdjustment(adjustmentForPitchSetting(adjustPitchSetting.NewValue), SpeedChange);
+                track?.RemoveAdjustment(
+                    adjustmentForPitchSetting(adjustPitchSetting.OldValue),
+                    SpeedChange
+                );
+                track?.AddAdjustment(
+                    adjustmentForPitchSetting(adjustPitchSetting.NewValue),
+                    SpeedChange
+                );
 
-                AdjustableProperty adjustmentForPitchSetting(bool adjustPitchSettingValue)
-                    => adjustPitchSettingValue ? AdjustableProperty.Frequency : AdjustableProperty.Tempo;
+                AdjustableProperty adjustmentForPitchSetting(bool adjustPitchSettingValue) =>
+                    adjustPitchSettingValue
+                        ? AdjustableProperty.Frequency
+                        : AdjustableProperty.Tempo;
             });
         }
 
@@ -75,7 +83,9 @@ namespace osu.Game.Rulesets.Mods
         public void ApplyToTrack(IAdjustableAudioComponent track)
         {
             if (adjustPitch == null)
-                throw new InvalidOperationException($"Must call {nameof(HandleAudioAdjustments)} first");
+                throw new InvalidOperationException(
+                    $"Must call {nameof(HandleAudioAdjustments)} first"
+                );
 
             this.track = track;
             adjustPitch.TriggerChange();

@@ -43,7 +43,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         [Resolved]
         private IFrameBasedClock? editorClock { get; set; }
 
-        private readonly LayoutValue zoomedContentWidthCache = new LayoutValue(Invalidation.DrawSize);
+        private readonly LayoutValue zoomedContentWidthCache = new LayoutValue(
+            Invalidation.DrawSize
+        );
 
         private float minZoom;
         private float maxZoom;
@@ -55,14 +57,16 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         protected ZoomableScrollContainer()
             : base(Direction.Horizontal)
         {
-            base.Content.Add(zoomedContent = new Container
-            {
-                RelativeSizeAxes = Axes.Y,
-                // We must hide content until SetupZoom is called.
-                // If not, a child component that relies on its DrawWidth (via RelativeSizeAxes) may see a very incorrect value
-                // momentarily, as noticed in the TimelineTickDisplay, which would render thousands of ticks incorrectly.
-                Alpha = 0,
-            });
+            base.Content.Add(
+                zoomedContent = new Container
+                {
+                    RelativeSizeAxes = Axes.Y,
+                    // We must hide content until SetupZoom is called.
+                    // If not, a child component that relies on its DrawWidth (via RelativeSizeAxes) may see a very incorrect value
+                    // momentarily, as noticed in the TimelineTickDisplay, which would render thousands of ticks incorrectly.
+                    Alpha = 0,
+                }
+            );
 
             AddLayout(zoomedContentWidthCache);
         }
@@ -85,16 +89,26 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         protected void SetupZoom(float initial, float minimum, float maximum)
         {
             if (minimum < 1)
-                throw new ArgumentException($"{nameof(minimum)} ({minimum}) must be >= 1.", nameof(maximum));
+                throw new ArgumentException(
+                    $"{nameof(minimum)} ({minimum}) must be >= 1.",
+                    nameof(maximum)
+                );
 
             if (maximum < 1)
-                throw new ArgumentException($"{nameof(maximum)} ({maximum}) must be >= 1.", nameof(maximum));
+                throw new ArgumentException(
+                    $"{nameof(maximum)} ({maximum}) must be >= 1.",
+                    nameof(maximum)
+                );
 
             if (minimum > maximum)
-                throw new ArgumentException($"{nameof(minimum)} ({minimum}) must be less than {nameof(maximum)} ({maximum})");
+                throw new ArgumentException(
+                    $"{nameof(minimum)} ({minimum}) must be less than {nameof(maximum)} ({maximum})"
+                );
 
             if (initial < minimum || initial > maximum)
-                throw new ArgumentException($"{nameof(initial)} ({initial}) must be between {nameof(minimum)} ({minimum}) and {nameof(maximum)} ({maximum})");
+                throw new ArgumentException(
+                    $"{nameof(initial)} ({initial}) must be between {nameof(minimum)} ({minimum}) and {nameof(maximum)} ({maximum})"
+                );
 
             minZoom = minimum;
             maxZoom = maximum;
@@ -123,7 +137,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             float newZoom = Math.Clamp(value, minZoom, maxZoom);
 
             if (IsLoaded)
-                setZoomTarget(newZoom, ToSpaceOfOtherDrawable(new Vector2(DrawWidth / 2, 0), zoomedContent).X);
+                setZoomTarget(
+                    newZoom,
+                    ToSpaceOfOtherDrawable(new Vector2(DrawWidth / 2, 0), zoomedContent).X
+                );
             else
                 CurrentZoom.Value = zoomTarget = newZoom;
         }
@@ -166,7 +183,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             const float zoom_change_sensitivity = 0.02f;
 
-            setZoomTarget(zoomTarget + change * (maxZoom - minZoom) * zoom_change_sensitivity, focusPoint);
+            setZoomTarget(
+                zoomTarget + change * (maxZoom - minZoom) * zoom_change_sensitivity,
+                focusPoint
+            );
         }
 
         private float zoomTarget = 1;
@@ -174,22 +194,34 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         private void setZoomTarget(float newZoom, float? focusPoint = null)
         {
             zoomTarget = Math.Clamp(newZoom, minZoom, maxZoom);
-            focusPoint ??= zoomedContent.ToLocalSpace(ToScreenSpace(new Vector2(DrawWidth / 2, 0))).X;
+            focusPoint ??= zoomedContent
+                .ToLocalSpace(ToScreenSpace(new Vector2(DrawWidth / 2, 0)))
+                .X;
 
             transformZoomTo(zoomTarget, focusPoint.Value, ZoomDuration, ZoomEasing);
 
             OnZoomChanged();
         }
 
-        private void transformZoomTo(float newZoom, float focusPoint, double duration = 0, Easing easing = Easing.None)
-            => this.TransformTo(this.PopulateTransform(new TransformZoom(focusPoint, zoomedContent.DrawWidth, (float)Current), newZoom, duration, easing));
+        private void transformZoomTo(
+            float newZoom,
+            float focusPoint,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) =>
+            this.TransformTo(
+                this.PopulateTransform(
+                    new TransformZoom(focusPoint, zoomedContent.DrawWidth, (float)Current),
+                    newZoom,
+                    duration,
+                    easing
+                )
+            );
 
         /// <summary>
         /// Invoked when <see cref="Zoom"/> has changed.
         /// </summary>
-        protected virtual void OnZoomChanged()
-        {
-        }
+        protected virtual void OnZoomChanged() { }
 
         private class TransformZoom : Transform<float, ZoomableScrollContainer>
         {
@@ -225,10 +257,19 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             private float valueAt(double time)
             {
-                if (time < StartTime) return StartValue;
-                if (time >= EndTime) return EndValue;
+                if (time < StartTime)
+                    return StartValue;
+                if (time >= EndTime)
+                    return EndValue;
 
-                return Interpolation.ValueAt(time, StartValue, EndValue, StartTime, EndTime, Easing);
+                return Interpolation.ValueAt(
+                    time,
+                    StartValue,
+                    EndValue,
+                    StartTime,
+                    EndTime,
+                    Easing
+                );
             }
 
             protected override void Apply(ZoomableScrollContainer d, double time)
@@ -248,7 +289,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 d.ScrollTo(targetOffset, false);
             }
 
-            protected override void ReadIntoStartValue(ZoomableScrollContainer d) => StartValue = d.CurrentZoom.Value;
+            protected override void ReadIntoStartValue(ZoomableScrollContainer d) =>
+                StartValue = d.CurrentZoom.Value;
         }
     }
 }

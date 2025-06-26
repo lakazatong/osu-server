@@ -41,64 +41,72 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         private ShakeContainer shakeContainer = null!;
 
         public DrawableHitCircle()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
         public DrawableHitCircle(HitCircle? h = null)
-            : base(h)
-        {
-        }
+            : base(h) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             Origin = Anchor.Centre;
 
-            AddRangeInternal(new Drawable[]
-            {
-                scaleContainer = new Container
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Children = new Drawable[]
+                    scaleContainer = new Container
                     {
-                        HitArea = new HitReceptor
+                        RelativeSizeAxes = Axes.Both,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Children = new Drawable[]
                         {
-                            CanBeHit = () => !AllJudged,
-                            Hit = () => UpdateResult(true)
-                        },
-                        shakeContainer = new ShakeContainer
-                        {
-                            ShakeDuration = 30,
-                            RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            HitArea = new HitReceptor
                             {
-                                CirclePiece = new SkinnableDrawable(new OsuSkinComponentLookup(CirclePieceComponent), _ => new MainCirclePiece())
+                                CanBeHit = () => !AllJudged,
+                                Hit = () => UpdateResult(true),
+                            },
+                            shakeContainer = new ShakeContainer
+                            {
+                                ShakeDuration = 30,
+                                RelativeSizeAxes = Axes.Both,
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
+                                    CirclePiece = new SkinnableDrawable(
+                                        new OsuSkinComponentLookup(CirclePieceComponent),
+                                        _ => new MainCirclePiece()
+                                    )
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                    },
+                                    ApproachCircle = new ProxyableSkinnableDrawable(
+                                        new OsuSkinComponentLookup(
+                                            OsuSkinComponents.ApproachCircle
+                                        ),
+                                        _ => new DefaultApproachCircle()
+                                    )
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0,
+                                        Scale = new Vector2(4),
+                                    },
                                 },
-                                ApproachCircle = new ProxyableSkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.ApproachCircle), _ => new DefaultApproachCircle())
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativeSizeAxes = Axes.Both,
-                                    Alpha = 0,
-                                    Scale = new Vector2(4),
-                                }
-                            }
-                        }
-                    }
-                },
-            });
+                            },
+                        },
+                    },
+                }
+            );
 
             Size = HitArea.DrawSize;
 
             PositionBindable.BindValueChanged(_ => UpdatePosition());
             StackHeightBindable.BindValueChanged(_ => UpdatePosition());
-            ScaleBindable.BindValueChanged(scale => scaleContainer.Scale = new Vector2(scale.NewValue));
+            ScaleBindable.BindValueChanged(scale =>
+                scaleContainer.Scale = new Vector2(scale.NewValue)
+            );
         }
 
         public override double LifetimeStart
@@ -136,13 +144,16 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 if (!HitObject.HitWindows.CanBeHit(timeOffset))
                 {
-                    ApplyResult((r, position) =>
-                    {
-                        var circleResult = (OsuHitCircleJudgementResult)r;
+                    ApplyResult(
+                        (r, position) =>
+                        {
+                            var circleResult = (OsuHitCircleJudgementResult)r;
 
-                        circleResult.Type = r.Judgement.MinResult;
-                        circleResult.CursorPositionAtHit = position;
-                    }, computeHitPosition());
+                            circleResult.Type = r.Judgement.MinResult;
+                            circleResult.CursorPositionAtHit = position;
+                        },
+                        computeHitPosition()
+                    );
                 }
 
                 return;
@@ -157,19 +168,23 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             if (result == HitResult.None || clickAction != ClickAction.Hit)
                 return;
 
-            ApplyResult<(HitResult result, Vector2? position)>((r, state) =>
-            {
-                var circleResult = (OsuHitCircleJudgementResult)r;
+            ApplyResult<(HitResult result, Vector2? position)>(
+                (r, state) =>
+                {
+                    var circleResult = (OsuHitCircleJudgementResult)r;
 
-                circleResult.Type = state.result;
-                circleResult.CursorPositionAtHit = state.position;
-            }, (result, computeHitPosition()));
+                    circleResult.Type = state.result;
+                    circleResult.CursorPositionAtHit = state.position;
+                },
+                (result, computeHitPosition())
+            );
         }
 
         private Vector2? computeHitPosition()
         {
             if (HitArea.ClosestPressPosition is Vector2 screenSpaceHitPosition)
-                return HitObject.StackedPosition + (ToLocalSpace(screenSpaceHitPosition) - DrawSize / 2);
+                return HitObject.StackedPosition
+                    + (ToLocalSpace(screenSpaceHitPosition) - DrawSize / 2);
 
             return null;
         }
@@ -179,7 +194,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// </summary>
         /// <param name="timeOffset">The time offset.</param>
         /// <returns>The hit result, or <see cref="HitResult.None"/> if <paramref name="timeOffset"/> doesn't result in a judgement.</returns>
-        protected virtual HitResult ResultFor(double timeOffset) => HitObject.HitWindows.ResultFor(timeOffset);
+        protected virtual HitResult ResultFor(double timeOffset) =>
+            HitObject.HitWindows.ResultFor(timeOffset);
 
         protected override void UpdateInitialTransforms()
         {
@@ -227,7 +243,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
 
         public Drawable ProxiedLayer => ApproachCircle;
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new OsuHitCircleJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement) =>
+            new OsuHitCircleJudgementResult(HitObject, judgement);
 
         public partial class HitReceptor : CompositeDrawable, IKeyBindingHandler<OsuAction>
         {
@@ -276,8 +293,14 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                     case OsuAction.RightButton:
                         if (ClosestPressPosition is Vector2 curClosest)
                         {
-                            float oldDist = Vector2.DistanceSquared(curClosest, ScreenSpaceDrawQuad.Centre);
-                            float newDist = Vector2.DistanceSquared(e.ScreenSpaceMousePosition, ScreenSpaceDrawQuad.Centre);
+                            float oldDist = Vector2.DistanceSquared(
+                                curClosest,
+                                ScreenSpaceDrawQuad.Centre
+                            );
+                            float newDist = Vector2.DistanceSquared(
+                                e.ScreenSpaceMousePosition,
+                                ScreenSpaceDrawQuad.Centre
+                            );
 
                             if (newDist < oldDist)
                                 ClosestPressPosition = e.ScreenSpaceMousePosition;
@@ -298,9 +321,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
                 return false;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e) { }
 
             /// <summary>
             /// Resets to a fresh state.
@@ -316,10 +337,12 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         {
             public override bool RemoveWhenNotAlive => false;
 
-            public ProxyableSkinnableDrawable(ISkinComponentLookup lookup, Func<ISkinComponentLookup, Drawable>? defaultImplementation = null, ConfineMode confineMode = ConfineMode.NoScaling)
-                : base(lookup, defaultImplementation, confineMode)
-            {
-            }
+            public ProxyableSkinnableDrawable(
+                ISkinComponentLookup lookup,
+                Func<ISkinComponentLookup, Drawable>? defaultImplementation = null,
+                ConfineMode confineMode = ConfineMode.NoScaling
+            )
+                : base(lookup, defaultImplementation, confineMode) { }
         }
 
         #region FOR EDITOR USE ONLY, DO NOT USE FOR ANY OTHER PURPOSE
@@ -335,7 +358,13 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             {
                 // More or less matches stable (see https://github.com/peppy/osu-stable-reference/blob/bb57924c1552adbed11ee3d96cdcde47cf96f2b6/osu!/GameplayElements/HitObjects/Osu/HitCircleOsu.cs#L336-L338)
                 AccentColour.Value = Color4.White;
-                Alpha = Interpolation.ValueAt(Time.Current, 1f, 0f, HitStateUpdateTime, HitStateUpdateTime + 700);
+                Alpha = Interpolation.ValueAt(
+                    Time.Current,
+                    1f,
+                    0f,
+                    HitStateUpdateTime,
+                    HitStateUpdateTime + 700
+                );
             }
 
             LifetimeEnd = HitStateUpdateTime + 700;

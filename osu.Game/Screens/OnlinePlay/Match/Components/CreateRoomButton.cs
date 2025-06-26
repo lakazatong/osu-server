@@ -8,7 +8,9 @@ using osu.Framework.Input.Events;
 
 namespace osu.Game.Screens.OnlinePlay.Match.Components
 {
-    public abstract partial class CreateRoomButton : PurpleRoundedButton, IKeyBindingHandler<PlatformAction>
+    public abstract partial class CreateRoomButton
+        : PurpleRoundedButton,
+            IKeyBindingHandler<PlatformAction>
     {
         [BackgroundDependencyLoader]
         private void load()
@@ -36,8 +38,6 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
     }
 }

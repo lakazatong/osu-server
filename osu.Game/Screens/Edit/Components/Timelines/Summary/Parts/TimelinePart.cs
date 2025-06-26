@@ -5,21 +5,20 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.ObjectExtensions;
-using osuTK;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
+using osuTK;
 
 namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 {
-    public partial class TimelinePart : TimelinePart<Drawable>
-    {
-    }
+    public partial class TimelinePart : TimelinePart<Drawable> { }
 
     /// <summary>
     /// Represents a part of the summary timeline..
     /// </summary>
-    public partial class TimelinePart<T> : Container<T> where T : Drawable
+    public partial class TimelinePart<T> : Container<T>
+        where T : Drawable
     {
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
 
@@ -35,7 +34,9 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 
         public TimelinePart(Container<T>? content = null)
         {
-            AddInternal(this.content = content ?? new Container<T> { RelativeSizeAxes = Axes.Both });
+            AddInternal(
+                this.content = content ?? new Container<T> { RelativeSizeAxes = Axes.Both }
+            );
         }
 
         [BackgroundDependencyLoader]

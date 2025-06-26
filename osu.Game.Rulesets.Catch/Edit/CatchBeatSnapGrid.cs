@@ -11,9 +11,7 @@ namespace osu.Game.Rulesets.Catch.Edit
 {
     public partial class CatchBeatSnapGrid : BeatSnapGrid
     {
-        protected override IEnumerable<Container> GetTargetContainers(HitObjectComposer composer) => new[]
-        {
-            ((CatchPlayfield)composer.Playfield).UnderlayElements
-        };
+        protected override IEnumerable<Container> GetTargetContainers(HitObjectComposer composer) =>
+            new[] { ((CatchPlayfield)composer.Playfield).UnderlayElements };
     }
 }

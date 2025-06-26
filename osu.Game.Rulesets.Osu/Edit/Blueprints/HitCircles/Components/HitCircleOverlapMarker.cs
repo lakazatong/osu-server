@@ -45,13 +45,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.HitCircles.Components
             InternalChild = content = new Container
             {
                 RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
-                {
-                    ring = new RingPiece
-                    {
-                        BorderThickness = 4,
-                    }
-                }
+                Children = new Drawable[] { ring = new RingPiece { BorderThickness = 4 } },
             };
         }
 
@@ -76,8 +70,26 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.HitCircles.Components
 
             if (hasReachedObject && showHitMarkers.Value)
             {
-                float alpha = Interpolation.ValueAt(editorTime, 0, 1f, hitObjectTime, hitObjectTime + FADE_OUT_EXTENSION, Easing.In);
-                float ringScale = Math.Clamp(Interpolation.ValueAt(editorTime, 0, 1f, hitObjectTime, hitObjectTime + FADE_OUT_EXTENSION / 2, Easing.OutQuint), 0, 1);
+                float alpha = Interpolation.ValueAt(
+                    editorTime,
+                    0,
+                    1f,
+                    hitObjectTime,
+                    hitObjectTime + FADE_OUT_EXTENSION,
+                    Easing.In
+                );
+                float ringScale = Math.Clamp(
+                    Interpolation.ValueAt(
+                        editorTime,
+                        0,
+                        1f,
+                        hitObjectTime,
+                        hitObjectTime + FADE_OUT_EXTENSION / 2,
+                        Easing.OutQuint
+                    ),
+                    0,
+                    1
+                );
 
                 ring.Scale = new Vector2(1 + 0.1f * ringScale);
                 content.Alpha = 0.9f * (1 - alpha);

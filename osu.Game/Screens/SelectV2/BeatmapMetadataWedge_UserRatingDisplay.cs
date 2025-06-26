@@ -45,7 +45,11 @@ namespace osu.Game.Screens.SelectV2
 
                         negativeText.Text = (totalCount - positiveCount).ToLocalisableString(@"N0");
                         positiveText.Text = positiveCount.ToLocalisableString(@"N0");
-                        positiveBar.ResizeWidthTo(totalCount == 0 ? 0 : (float)positiveCount / totalCount, 300, Easing.OutQuint);
+                        positiveBar.ResizeWidthTo(
+                            totalCount == 0 ? 0 : (float)positiveCount / totalCount,
+                            300,
+                            Easing.OutQuint
+                        );
                     }
                 }
             }
@@ -111,9 +115,9 @@ namespace osu.Game.Screens.SelectV2
                                         Height = 4f,
                                     },
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 };
             }
 

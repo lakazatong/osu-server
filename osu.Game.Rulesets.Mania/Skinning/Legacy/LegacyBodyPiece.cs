@@ -23,7 +23,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
     {
         private DrawableHoldNote holdNote = null!;
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
         private readonly IBindable<bool> isHitting = new Bindable<bool>();
 
         /// <summary>
@@ -45,18 +46,31 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         }
 
         [BackgroundDependencyLoader]
-        private void load(ISkinSource skin, IScrollingInfo scrollingInfo, DrawableHitObject drawableObject)
+        private void load(
+            ISkinSource skin,
+            IScrollingInfo scrollingInfo,
+            DrawableHitObject drawableObject
+        )
         {
             holdNote = (DrawableHoldNote)drawableObject;
 
-            string imageName = GetColumnSkinConfig<string>(skin, LegacyManiaSkinConfigurationLookups.HoldNoteBodyImage)?.Value
-                               ?? $"mania-note{FallbackColumnIndex}L";
+            string imageName =
+                GetColumnSkinConfig<string>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.HoldNoteBodyImage
+                )?.Value ?? $"mania-note{FallbackColumnIndex}L";
 
-            string lightImage = GetColumnSkinConfig<string>(skin, LegacyManiaSkinConfigurationLookups.HoldNoteLightImage)?.Value
-                                ?? "lightingL";
+            string lightImage =
+                GetColumnSkinConfig<string>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.HoldNoteLightImage
+                )?.Value ?? "lightingL";
 
-            float lightScale = GetColumnSkinConfig<float>(skin, LegacyManiaSkinConfigurationLookups.HoldNoteLightScale)?.Value
-                               ?? 1;
+            float lightScale =
+                GetColumnSkinConfig<float>(
+                    skin,
+                    LegacyManiaSkinConfigurationLookups.HoldNoteLightScale
+                )?.Value ?? 1;
 
             // Create a temporary animation to retrieve the number of frames, in an effort to calculate the intended frame length.
             // This animation is discarded and re-queried with the appropriate frame length afterwards.
@@ -65,39 +79,47 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             if (tmp is IFramedAnimation tmpAnimation && tmpAnimation.FrameCount > 0)
                 frameLength = Math.Max(1000 / 60.0, 170.0 / tmpAnimation.FrameCount);
 
-            light = skin.GetAnimation(lightImage, true, true, frameLength: frameLength)?.With(d =>
-            {
-                d.Origin = Anchor.Centre;
-                d.Blending = BlendingParameters.Additive;
-                d.Scale = new Vector2(lightScale);
-            });
+            light = skin.GetAnimation(lightImage, true, true, frameLength: frameLength)
+                ?.With(d =>
+                {
+                    d.Origin = Anchor.Centre;
+                    d.Blending = BlendingParameters.Additive;
+                    d.Scale = new Vector2(lightScale);
+                });
 
             if (light != null)
             {
-                lightContainer = new HitTargetInsetContainer
-                {
-                    Alpha = 0,
-                    Child = light
-                };
+                lightContainer = new HitTargetInsetContainer { Alpha = 0, Child = light };
             }
 
-            bodyStyle = skin.GetConfig<ManiaSkinConfigurationLookup, LegacyNoteBodyStyle>(new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.NoteBodyStyle))?.Value;
+            bodyStyle = skin.GetConfig<ManiaSkinConfigurationLookup, LegacyNoteBodyStyle>(
+                new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.NoteBodyStyle)
+            )?.Value;
 
-            var wrapMode = bodyStyle == LegacyNoteBodyStyle.Stretch ? WrapMode.ClampToEdge : WrapMode.Repeat;
+            var wrapMode =
+                bodyStyle == LegacyNoteBodyStyle.Stretch ? WrapMode.ClampToEdge : WrapMode.Repeat;
 
             direction.BindTo(scrollingInfo.Direction);
             isHitting.BindTo(holdNote.IsHolding);
 
-            bodySprite = skin.GetAnimation(imageName, wrapMode, wrapMode, true, true, frameLength: 30)?.With(d =>
-            {
-                if (d is TextureAnimation animation)
-                    animation.IsPlaying = false;
+            bodySprite = skin.GetAnimation(
+                    imageName,
+                    wrapMode,
+                    wrapMode,
+                    true,
+                    true,
+                    frameLength: 30
+                )
+                ?.With(d =>
+                {
+                    if (d is TextureAnimation animation)
+                        animation.IsPlaying = false;
 
-                d.Anchor = Anchor.TopCentre;
-                d.RelativeSizeAxes = Axes.Both;
-                d.Size = Vector2.One;
-                // Todo: Wrap?
-            });
+                    d.Anchor = Anchor.TopCentre;
+                    d.RelativeSizeAxes = Axes.Both;
+                    d.Size = Vector2.One;
+                    // Todo: Wrap?
+                });
 
             if (bodySprite != null)
                 InternalChild = bodySprite;
@@ -156,8 +178,9 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             }
             else
             {
-                lightContainer.FadeOut(120)
-                              .OnComplete(d => Column.TopLevelContainer.Remove(d, false));
+                lightContainer
+                    .FadeOut(120)
+                    .OnComplete(d => Column.TopLevelContainer.Remove(d, false));
             }
         }
 
@@ -233,13 +256,17 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                     // let's wait to see if anyone actually uses them in skins.
                     if (bodySprite != null)
                     {
-                        var sprite = bodySprite as Sprite ?? bodySprite.ChildrenOfType<Sprite>().Single();
+                        var sprite =
+                            bodySprite as Sprite ?? bodySprite.ChildrenOfType<Sprite>().Single();
 
                         bodySprite.FillMode = FillMode.Stretch;
                         // i dunno this looks about right??
                         // the guard against zero draw height is intended for zero-length hold notes. yes, such cases have been spotted in the wild.
                         if (sprite.DrawHeight > 0)
-                            bodySprite.Scale = new Vector2(1, scaleDirection * MathF.Max(1, 32800 / sprite.DrawHeight));
+                            bodySprite.Scale = new Vector2(
+                                1,
+                                scaleDirection * MathF.Max(1, 32800 / sprite.DrawHeight)
+                            );
                     }
 
                     break;

@@ -29,40 +29,46 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
             // Avoid flickering due to no anti-aliasing of boxes by default.
             var edgeSmoothness = new Vector2(0.3f);
 
-            AddInternal(mainLine = new Box
-            {
-                Name = "Bar line",
-                EdgeSmoothness = edgeSmoothness,
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(
+                mainLine = new Box
+                {
+                    Name = "Bar line",
+                    EdgeSmoothness = edgeSmoothness,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
 
             const float major_extension = 10;
 
-            AddInternal(leftAnchor = new Box
-            {
-                Name = "Left anchor",
-                EdgeSmoothness = edgeSmoothness,
-                Blending = BlendingParameters.Additive,
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreRight,
-                Width = major_extension,
-                RelativeSizeAxes = Axes.Y,
-                Colour = ColourInfo.GradientHorizontal(Colour4.Transparent, Colour4.White),
-            });
+            AddInternal(
+                leftAnchor = new Box
+                {
+                    Name = "Left anchor",
+                    EdgeSmoothness = edgeSmoothness,
+                    Blending = BlendingParameters.Additive,
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreRight,
+                    Width = major_extension,
+                    RelativeSizeAxes = Axes.Y,
+                    Colour = ColourInfo.GradientHorizontal(Colour4.Transparent, Colour4.White),
+                }
+            );
 
-            AddInternal(rightAnchor = new Box
-            {
-                Name = "Right anchor",
-                EdgeSmoothness = edgeSmoothness,
-                Blending = BlendingParameters.Additive,
-                Anchor = Anchor.CentreRight,
-                Origin = Anchor.CentreLeft,
-                Width = major_extension,
-                RelativeSizeAxes = Axes.Y,
-                Colour = ColourInfo.GradientHorizontal(Colour4.White, Colour4.Transparent),
-            });
+            AddInternal(
+                rightAnchor = new Box
+                {
+                    Name = "Right anchor",
+                    EdgeSmoothness = edgeSmoothness,
+                    Blending = BlendingParameters.Additive,
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreLeft,
+                    Width = major_extension,
+                    RelativeSizeAxes = Axes.Y,
+                    Colour = ColourInfo.GradientHorizontal(Colour4.White, Colour4.Transparent),
+                }
+            );
 
             major = ((DrawableBarLine)drawableHitObject).Major.GetBoundCopy();
         }

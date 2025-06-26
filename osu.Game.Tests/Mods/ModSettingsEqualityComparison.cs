@@ -55,9 +55,21 @@ namespace osu.Game.Tests.Mods
         {
             var ruleset = new OsuRuleset();
 
-            var mod1 = new OsuModDifficultyAdjust { OverallDifficulty = { Value = 10 }, CircleSize = { Value = 0 } };
-            var mod2 = new OsuModDifficultyAdjust { OverallDifficulty = { Value = 10 }, CircleSize = { Value = 6 } };
-            var mod3 = new OsuModDifficultyAdjust { OverallDifficulty = { Value = 10 }, CircleSize = { Value = 6 } };
+            var mod1 = new OsuModDifficultyAdjust
+            {
+                OverallDifficulty = { Value = 10 },
+                CircleSize = { Value = 0 },
+            };
+            var mod2 = new OsuModDifficultyAdjust
+            {
+                OverallDifficulty = { Value = 10 },
+                CircleSize = { Value = 6 },
+            };
+            var mod3 = new OsuModDifficultyAdjust
+            {
+                OverallDifficulty = { Value = 10 },
+                CircleSize = { Value = 6 },
+            };
 
             var doubleConvertedMod1 = new APIMod(mod1).ToMod(ruleset);
             var doubleConvertedMod2 = new APIMod(mod2).ToMod(ruleset);

@@ -23,14 +23,10 @@ namespace osu.Game.Overlays.Mods
         private Bindable<IReadOnlyList<Mod>> selectedMods { get; set; } = null!;
 
         public IncompatibilityDisplayingModPanel(ModState modState)
-            : base(modState)
-        {
-        }
+            : base(modState) { }
 
         public IncompatibilityDisplayingModPanel(Mod mod)
-            : base(mod)
-        {
-        }
+            : base(mod) { }
 
         protected override void LoadComplete()
         {
@@ -42,23 +38,31 @@ namespace osu.Game.Overlays.Mods
 
         private void updateIncompatibility()
         {
-            incompatible.Value = selectedMods.Value.Count > 0
-                                 && selectedMods.Value.All(selected => selected.GetType() != Mod.GetType())
-                                 && !ModUtils.CheckCompatibleSet(selectedMods.Value.Append(Mod));
+            incompatible.Value =
+                selectedMods.Value.Count > 0
+                && selectedMods.Value.All(selected => selected.GetType() != Mod.GetType())
+                && !ModUtils.CheckCompatibleSet(selectedMods.Value.Append(Mod));
         }
 
-        protected override Colour4 BackgroundColour => incompatible.Value ? ColourProvider.Background6 : base.BackgroundColour;
-        protected override Colour4 ForegroundColour => incompatible.Value ? ColourProvider.Background5 : base.ForegroundColour;
+        protected override Colour4 BackgroundColour =>
+            incompatible.Value ? ColourProvider.Background6 : base.BackgroundColour;
+        protected override Colour4 ForegroundColour =>
+            incompatible.Value ? ColourProvider.Background5 : base.ForegroundColour;
 
         protected override void UpdateState()
         {
             base.UpdateState();
-            SwitchContainer.FadeColour(incompatible.Value ? Colour4.Gray : Colour4.White, TRANSITION_DURATION, Easing.OutQuint);
+            SwitchContainer.FadeColour(
+                incompatible.Value ? Colour4.Gray : Colour4.White,
+                TRANSITION_DURATION,
+                Easing.OutQuint
+            );
         }
 
         #region IHasCustomTooltip
 
-        public ITooltip<Mod> GetCustomTooltip() => new IncompatibilityDisplayingTooltip(overlayColourProvider);
+        public ITooltip<Mod> GetCustomTooltip() =>
+            new IncompatibilityDisplayingTooltip(overlayColourProvider);
 
         public Mod TooltipContent => Mod;
 

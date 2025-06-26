@@ -25,11 +25,12 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         private PathControlPointVisualiser<Slider> visualiser;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            slider = new Slider();
-            slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                slider = new Slider();
+                slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
+            });
 
         [Test]
         public void TestPerfectCurveTooManyPoints()
@@ -144,11 +145,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             addControlPointStep(new Vector2(500, 100));
 
             moveMouseToControlPoint(2);
-            AddStep("select first and third control point", () =>
-            {
-                visualiser.Pieces[0].IsSelected.Value = true;
-                visualiser.Pieces[2].IsSelected.Value = true;
-            });
+            AddStep(
+                "select first and third control point",
+                () =>
+                {
+                    visualiser.Pieces[0].IsSelected.Value = true;
+                    visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
             addContextMenuItemStep("Catmull");
 
             assertControlPointPathType(0, PathType.CATMULL);
@@ -167,10 +171,11 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 new Vector2(300),
                 new Vector2(500, 300),
                 new Vector2(700, 200),
-                new Vector2(500, 100)
+                new Vector2(500, 100),
             ];
 
-            foreach (var point in points) addControlPointStep(point);
+            foreach (var point in points)
+                addControlPointStep(point);
 
             AddStep("apply stacking", () => slider.StackHeightBindable.Value += 1);
 
@@ -189,114 +194,161 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             addControlPointStep(new Vector2(700, 200));
             addControlPointStep(new Vector2(500, 100));
 
-            AddStep("select first control point", () => visualiser.Pieces[0].IsSelected.Value = true);
+            AddStep(
+                "select first control point",
+                () => visualiser.Pieces[0].IsSelected.Value = true
+            );
             AddStep("press tab", () => InputManager.Key(Key.Tab));
             assertControlPointPathType(0, PathType.BEZIER);
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             assertControlPointPathType(0, PathType.LINEAR);
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             assertControlPointPathType(0, PathType.BSpline(4));
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             assertControlPointPathType(0, PathType.PERFECT_CURVE);
             assertControlPointPathType(2, PathType.BSpline(4));
 
-            AddStep("select third last control point", () =>
-            {
-                visualiser.Pieces[0].IsSelected.Value = false;
-                visualiser.Pieces[2].IsSelected.Value = true;
-            });
+            AddStep(
+                "select third last control point",
+                () =>
+                {
+                    visualiser.Pieces[0].IsSelected.Value = false;
+                    visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.LShift);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.LShift);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.LShift);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.LShift);
+                }
+            );
             assertControlPointPathType(2, PathType.PERFECT_CURVE);
 
             AddRepeatStep("press tab", () => InputManager.Key(Key.Tab), 2);
             assertControlPointPathType(0, PathType.BEZIER);
             assertControlPointPathType(2, null);
 
-            AddStep("select first and third control points", () =>
-            {
-                visualiser.Pieces[0].IsSelected.Value = true;
-                visualiser.Pieces[2].IsSelected.Value = true;
-            });
-            AddStep("press alt-1", () =>
-            {
-                InputManager.PressKey(Key.AltLeft);
-                InputManager.Key(Key.Number1);
-                InputManager.ReleaseKey(Key.AltLeft);
-            });
+            AddStep(
+                "select first and third control points",
+                () =>
+                {
+                    visualiser.Pieces[0].IsSelected.Value = true;
+                    visualiser.Pieces[2].IsSelected.Value = true;
+                }
+            );
+            AddStep(
+                "press alt-1",
+                () =>
+                {
+                    InputManager.PressKey(Key.AltLeft);
+                    InputManager.Key(Key.Number1);
+                    InputManager.ReleaseKey(Key.AltLeft);
+                }
+            );
             assertControlPointPathType(0, PathType.LINEAR);
             assertControlPointPathType(2, PathType.LINEAR);
         }
 
         private void addAssertPointPositionChanged(Vector2[] points, int index)
         {
-            AddAssert($"Point at {points.ElementAt(index)} changed",
+            AddAssert(
+                $"Point at {points.ElementAt(index)} changed",
                 () => visualiser.Pieces[index].Position,
                 () => !Is.EqualTo(points.ElementAt(index))
             );
         }
 
-        private void createVisualiser(bool allowSelection) => AddStep("create visualiser", () => Child = visualiser = new PathControlPointVisualiser<Slider>(slider, allowSelection)
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre
-        });
+        private void createVisualiser(bool allowSelection) =>
+            AddStep(
+                "create visualiser",
+                () =>
+                    Child = visualiser =
+                        new PathControlPointVisualiser<Slider>(slider, allowSelection)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
 
         private void addControlPointStep(Vector2 position) => addControlPointStep(position, null);
 
         private void addControlPointStep(Vector2 position, PathType? type)
         {
-            AddStep($"add {type?.Type} control point at {position}", () =>
-            {
-                slider.Path.ControlPoints.Add(new PathControlPoint(position, type));
-            });
+            AddStep(
+                $"add {type?.Type} control point at {position}",
+                () =>
+                {
+                    slider.Path.ControlPoints.Add(new PathControlPoint(position, type));
+                }
+            );
         }
 
         private void moveMouseToControlPoint(int index)
         {
-            AddStep($"move mouse to control point {index}", () =>
-            {
-                Vector2 position = slider.Path.ControlPoints[index].Position;
-                InputManager.MoveMouseTo(visualiser.Pieces[0].Parent!.ToScreenSpace(position));
-            });
+            AddStep(
+                $"move mouse to control point {index}",
+                () =>
+                {
+                    Vector2 position = slider.Path.ControlPoints[index].Position;
+                    InputManager.MoveMouseTo(visualiser.Pieces[0].Parent!.ToScreenSpace(position));
+                }
+            );
         }
 
         private void assertControlPointPathType(int controlPointIndex, PathType? type)
         {
-            AddAssert($"point {controlPointIndex} is {type}", () => slider.Path.ControlPoints[controlPointIndex].Type == type);
+            AddAssert(
+                $"point {controlPointIndex} is {type}",
+                () => slider.Path.ControlPoints[controlPointIndex].Type == type
+            );
         }
 
         private void addContextMenuItemStep(string contextMenuText)
         {
-            AddStep($"click context menu item \"{contextMenuText}\"", () =>
-            {
-                MenuItem item = visualiser.ContextMenuItems!.FirstOrDefault(menuItem => menuItem.Text.Value == "Curve type")?.Items.FirstOrDefault(menuItem => menuItem.Text.Value == contextMenuText);
+            AddStep(
+                $"click context menu item \"{contextMenuText}\"",
+                () =>
+                {
+                    MenuItem item = visualiser
+                        .ContextMenuItems!.FirstOrDefault(menuItem =>
+                            menuItem.Text.Value == "Curve type"
+                        )
+                        ?.Items.FirstOrDefault(menuItem => menuItem.Text.Value == contextMenuText);
 
-                item?.Action.Value?.Invoke();
-            });
+                    item?.Action.Value?.Invoke();
+                }
+            );
         }
     }
 }

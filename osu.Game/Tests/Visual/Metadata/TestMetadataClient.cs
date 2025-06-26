@@ -20,13 +20,16 @@ namespace osu.Game.Tests.Visual.Metadata
         private UserPresence localUserPresence;
 
         public override IBindableDictionary<int, UserPresence> UserPresences => userPresences;
-        private readonly BindableDictionary<int, UserPresence> userPresences = new BindableDictionary<int, UserPresence>();
+        private readonly BindableDictionary<int, UserPresence> userPresences =
+            new BindableDictionary<int, UserPresence>();
 
         public override IBindableDictionary<int, UserPresence> FriendPresences => friendPresences;
-        private readonly BindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        private readonly BindableDictionary<int, UserPresence> friendPresences =
+            new BindableDictionary<int, UserPresence>();
 
         public override Bindable<DailyChallengeInfo?> DailyChallengeInfo => dailyChallengeInfo;
-        private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo = new Bindable<DailyChallengeInfo?>();
+        private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo =
+            new Bindable<DailyChallengeInfo?>();
 
         [Resolved]
         private IAPIProvider api { get; set; } = null!;
@@ -105,8 +108,8 @@ namespace osu.Game.Tests.Visual.Metadata
             return Task.CompletedTask;
         }
 
-        public override Task<BeatmapUpdates> GetChangesSince(int queueId)
-            => Task.FromResult(new BeatmapUpdates(Array.Empty<int>(), queueId));
+        public override Task<BeatmapUpdates> GetChangesSince(int queueId) =>
+            Task.FromResult(new BeatmapUpdates(Array.Empty<int>(), queueId));
 
         public override Task BeatmapSetsUpdated(BeatmapUpdates updates) => Task.CompletedTask;
 
@@ -118,7 +121,9 @@ namespace osu.Game.Tests.Visual.Metadata
 
         public override Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(long id)
         {
-            var stats = new MultiplayerPlaylistItemStats[MultiplayerPlaylistItemStats.TOTAL_SCORE_DISTRIBUTION_BINS];
+            var stats = new MultiplayerPlaylistItemStats[
+                MultiplayerPlaylistItemStats.TOTAL_SCORE_DISTRIBUTION_BINS
+            ];
 
             for (int i = 0; i < stats.Length; i++)
                 stats[i] = new MultiplayerPlaylistItemStats { PlaylistItemID = i };

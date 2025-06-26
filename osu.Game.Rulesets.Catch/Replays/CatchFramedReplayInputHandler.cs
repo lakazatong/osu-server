@@ -13,21 +13,27 @@ namespace osu.Game.Rulesets.Catch.Replays
     public class CatchFramedReplayInputHandler : FramedReplayInputHandler<CatchReplayFrame>
     {
         public CatchFramedReplayInputHandler(Replay replay)
-            : base(replay)
-        {
-        }
+            : base(replay) { }
 
         protected override bool IsImportant(CatchReplayFrame frame) => frame.Actions.Any();
 
         protected override void CollectReplayInputs(List<IInput> inputs)
         {
-            float position = Interpolation.ValueAt(CurrentTime, StartFrame.Position, EndFrame.Position, StartFrame.Time, EndFrame.Time);
+            float position = Interpolation.ValueAt(
+                CurrentTime,
+                StartFrame.Position,
+                EndFrame.Position,
+                StartFrame.Time,
+                EndFrame.Time
+            );
 
-            inputs.Add(new CatchReplayState
-            {
-                PressedActions = CurrentFrame?.Actions ?? new List<CatchAction>(),
-                CatcherX = position
-            });
+            inputs.Add(
+                new CatchReplayState
+                {
+                    PressedActions = CurrentFrame?.Actions ?? new List<CatchAction>(),
+                    CatcherX = position,
+                }
+            );
         }
 
         public class CatchReplayState : ReplayState<CatchAction>

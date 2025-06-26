@@ -66,21 +66,33 @@ namespace osu.Game.Tests.Visual.Multiplayer
                         Alpha = 0.2f,
                         Scale = new Vector2(1),
                     },
-                }
+                },
             };
         }
 
         [Test]
-        public void TestRange([Values(0, 2, 3, 4, 6, 7)] double min, [Values(0, 2, 3, 4, 6, 7)] double max)
+        public void TestRange(
+            [Values(0, 2, 3, 4, 6, 7)] double min,
+            [Values(0, 2, 3, 4, 6, 7)] double max
+        )
         {
-            AddStep("set playlist", () =>
-            {
-                room.Playlist =
-                [
-                    new PlaylistItem(new BeatmapInfo { StarRating = min }) { ID = TestResources.GetNextTestID() },
-                    new PlaylistItem(new BeatmapInfo { StarRating = max }) { ID = TestResources.GetNextTestID() },
-                ];
-            });
+            AddStep(
+                "set playlist",
+                () =>
+                {
+                    room.Playlist =
+                    [
+                        new PlaylistItem(new BeatmapInfo { StarRating = min })
+                        {
+                            ID = TestResources.GetNextTestID(),
+                        },
+                        new PlaylistItem(new BeatmapInfo { StarRating = max })
+                        {
+                            ID = TestResources.GetNextTestID(),
+                        },
+                    ];
+                }
+            );
         }
     }
 }

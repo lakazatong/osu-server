@@ -20,54 +20,52 @@ namespace osu.Game.Graphics.UserInterfaceV2
         private Box hiddenToggleBackground = null!;
 
         public OsuDirectorySelector(string? initialPath = null)
-            : base(initialPath)
-        {
-        }
+            : base(initialPath) { }
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
         {
-            AddInternal(new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = colourProvider.Background5,
-                Depth = float.MaxValue,
-            });
+            AddInternal(
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = colourProvider.Background5,
+                    Depth = float.MaxValue,
+                }
+            );
 
             hiddenToggleBackground.Colour = colourProvider.Background4;
         }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new OsuScrollContainer
-        {
-            Padding = new MarginPadding
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new OsuScrollContainer
             {
-                Horizontal = 20,
-                Vertical = 15,
-            }
-        };
+                Padding = new MarginPadding { Horizontal = 20, Vertical = 15 },
+            };
 
-        protected override DirectorySelectorBreadcrumbDisplay CreateBreadcrumb() => new OsuDirectorySelectorBreadcrumbDisplay();
+        protected override DirectorySelectorBreadcrumbDisplay CreateBreadcrumb() =>
+            new OsuDirectorySelectorBreadcrumbDisplay();
 
-        protected override Drawable CreateHiddenToggleButton() => new Container
-        {
-            RelativeSizeAxes = Axes.Y,
-            AutoSizeAxes = Axes.X,
-            Children = new Drawable[]
+        protected override Drawable CreateHiddenToggleButton() =>
+            new Container
             {
-                hiddenToggleBackground = new Box
+                RelativeSizeAxes = Axes.Y,
+                AutoSizeAxes = Axes.X,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
+                    hiddenToggleBackground = new Box { RelativeSizeAxes = Axes.Both },
+                    new HiddenFilesToggleCheckbox { Current = { BindTarget = ShowHiddenItems } },
                 },
-                new HiddenFilesToggleCheckbox
-                {
-                    Current = { BindTarget = ShowHiddenItems },
-                },
-            }
-        };
+            };
 
-        protected override DirectorySelectorDirectory CreateParentDirectoryItem(DirectoryInfo directory) => new OsuDirectorySelectorParentDirectory(directory);
+        protected override DirectorySelectorDirectory CreateParentDirectoryItem(
+            DirectoryInfo directory
+        ) => new OsuDirectorySelectorParentDirectory(directory);
 
-        protected override DirectorySelectorDirectory CreateDirectoryItem(DirectoryInfo directory, string? displayName = null) => new OsuDirectorySelectorDirectory(directory, displayName);
+        protected override DirectorySelectorDirectory CreateDirectoryItem(
+            DirectoryInfo directory,
+            string? displayName = null
+        ) => new OsuDirectorySelectorDirectory(directory, displayName);
 
         protected override void NotifySelectionError() => this.FlashColour(Colour4.Red, 300);
     }

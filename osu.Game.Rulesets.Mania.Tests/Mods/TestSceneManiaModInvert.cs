@@ -14,11 +14,14 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         protected override Ruleset CreatePlayerRuleset() => new ManiaRuleset();
 
         [Test]
-        public void TestInversion() => CreateModTest(new ModTestData
-        {
-            Mod = new ManiaModInvert(),
-            PassCondition = () => Player.ScoreProcessor.JudgedHits >= 2
-        });
+        public void TestInversion() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new ManiaModInvert(),
+                    PassCondition = () => Player.ScoreProcessor.JudgedHits >= 2,
+                }
+            );
 
         [Test]
         public void TestBreaksPreservedOnOriginalBeatmap()
@@ -29,10 +32,15 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
 
             var workingBeatmap = new FlatWorkingBeatmap(beatmap);
 
-            var playableWithInvert = workingBeatmap.GetPlayableBeatmap(new ManiaRuleset().RulesetInfo, new[] { new ManiaModInvert() });
+            var playableWithInvert = workingBeatmap.GetPlayableBeatmap(
+                new ManiaRuleset().RulesetInfo,
+                new[] { new ManiaModInvert() }
+            );
             Assert.That(playableWithInvert.Breaks.Count, Is.Zero);
 
-            var playableWithoutInvert = workingBeatmap.GetPlayableBeatmap(new ManiaRuleset().RulesetInfo);
+            var playableWithoutInvert = workingBeatmap.GetPlayableBeatmap(
+                new ManiaRuleset().RulesetInfo
+            );
             Assert.That(playableWithoutInvert.Breaks.Count, Is.Not.Zero);
             Assert.That(playableWithoutInvert.Breaks[0], Is.EqualTo(new BreakPeriod(0, 1000)));
         }

@@ -43,22 +43,21 @@ namespace osu.Game.Screens.Edit.Verify
             generalVerifier = new BeatmapVerifier();
             rulesetVerifier = beatmap.BeatmapInfo.Ruleset.CreateInstance().CreateBeatmapVerifier();
 
-            context = new BeatmapVerifierContext(beatmap, workingBeatmap.Value, verify.InterpretedDifficulty.Value);
-            verify.InterpretedDifficulty.BindValueChanged(difficulty => context.InterpretedDifficulty = difficulty.NewValue);
+            context = new BeatmapVerifierContext(
+                beatmap,
+                workingBeatmap.Value,
+                verify.InterpretedDifficulty.Value
+            );
+            verify.InterpretedDifficulty.BindValueChanged(difficulty =>
+                context.InterpretedDifficulty = difficulty.NewValue
+            );
 
             RelativeSizeAxes = Axes.Both;
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Colour = colours.Background3,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                table = new IssueTable
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = colours.Background3, RelativeSizeAxes = Axes.Both },
+                table = new IssueTable { RelativeSizeAxes = Axes.Both },
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
@@ -75,7 +74,7 @@ namespace osu.Game.Screens.Edit.Verify
                             Anchor = Anchor.BottomRight,
                             Origin = Anchor.BottomRight,
                         },
-                    }
+                    },
                 },
             };
         }
@@ -100,9 +99,11 @@ namespace osu.Game.Screens.Edit.Verify
             issues = filter(issues);
 
             table.Issues.Clear();
-            table.Issues.AddRange(issues
-                                  .OrderBy(issue => issue.Template.Type)
-                                  .ThenBy(issue => issue.Check.Metadata.Category));
+            table.Issues.AddRange(
+                issues
+                    .OrderBy(issue => issue.Template.Type)
+                    .ThenBy(issue => issue.Check.Metadata.Category)
+            );
         }
 
         private IEnumerable<Issue> filter(IEnumerable<Issue> issues)

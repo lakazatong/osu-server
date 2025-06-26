@@ -86,10 +86,7 @@ namespace osu.Game.Screens.SelectV2
                 },
             };
 
-            Background = background = new PanelSetBackground
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            Background = background = new PanelSetBackground { RelativeSizeAxes = Axes.Both };
 
             Content.Children = new[]
             {
@@ -99,7 +96,12 @@ namespace osu.Game.Screens.SelectV2
                     Direction = FillDirection.Vertical,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
-                    Padding = new MarginPadding { Top = 7.5f, Left = 15, Bottom = 13 },
+                    Padding = new MarginPadding
+                    {
+                        Top = 7.5f,
+                        Left = 15,
+                        Bottom = 13,
+                    },
                     Children = new Drawable[]
                     {
                         titleText = new OsuSpriteText
@@ -137,9 +139,9 @@ namespace osu.Game.Screens.SelectV2
                                     Origin = Anchor.CentreLeft,
                                 },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -174,10 +176,18 @@ namespace osu.Game.Screens.SelectV2
             var beatmapSet = (BeatmapSetInfo)Item.Model;
 
             // Choice of background image matches BSS implementation (always uses the lowest `beatmap_id` from the set).
-            background.Beatmap = beatmaps.GetWorkingBeatmap(beatmapSet.Beatmaps.MinBy(b => b.OnlineID));
+            background.Beatmap = beatmaps.GetWorkingBeatmap(
+                beatmapSet.Beatmaps.MinBy(b => b.OnlineID)
+            );
 
-            titleText.Text = new RomanisableString(beatmapSet.Metadata.TitleUnicode, beatmapSet.Metadata.Title);
-            artistText.Text = new RomanisableString(beatmapSet.Metadata.ArtistUnicode, beatmapSet.Metadata.Artist);
+            titleText.Text = new RomanisableString(
+                beatmapSet.Metadata.TitleUnicode,
+                beatmapSet.Metadata.Title
+            );
+            artistText.Text = new RomanisableString(
+                beatmapSet.Metadata.ArtistUnicode,
+                beatmapSet.Metadata.Artist
+            );
             updateButton.BeatmapSet = beatmapSet;
             statusPill.Status = beatmapSet.Status;
             difficultiesDisplay.BeatmapSet = beatmapSet;
@@ -211,35 +221,68 @@ namespace osu.Game.Screens.SelectV2
 
                 if (!Expanded.Value)
                 {
-                    items.Add(new OsuMenuItem("Expand", MenuItemType.Highlighted, () => TriggerClick()));
+                    items.Add(
+                        new OsuMenuItem("Expand", MenuItemType.Highlighted, () => TriggerClick())
+                    );
                     items.Add(new OsuMenuItemSpacer());
                 }
 
                 if (beatmapSet.OnlineID > 0)
                 {
-                    items.Add(new OsuMenuItem("Details...", MenuItemType.Standard, () => beatmapOverlay?.FetchAndShowBeatmapSet(beatmapSet.OnlineID)));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Details...",
+                            MenuItemType.Standard,
+                            () => beatmapOverlay?.FetchAndShowBeatmapSet(beatmapSet.OnlineID)
+                        )
+                    );
 
                     if (beatmapSet.GetOnlineURL(api, ruleset.Value) is string url)
-                        items.Add(new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, () => game?.CopyToClipboard(url)));
+                        items.Add(
+                            new OsuMenuItem(
+                                CommonStrings.CopyLink,
+                                MenuItemType.Standard,
+                                () => game?.CopyToClipboard(url)
+                            )
+                        );
 
                     items.Add(new OsuMenuItemSpacer());
                 }
 
-                var collectionItems = realm.Realm.All<BeatmapCollection>()
-                                           .OrderBy(c => c.Name)
-                                           .AsEnumerable()
-                                           .Select(createCollectionMenuItem)
-                                           .ToList();
+                var collectionItems = realm
+                    .Realm.All<BeatmapCollection>()
+                    .OrderBy(c => c.Name)
+                    .AsEnumerable()
+                    .Select(createCollectionMenuItem)
+                    .ToList();
 
                 if (manageCollectionsDialog != null)
-                    collectionItems.Add(new OsuMenuItem("Manage...", MenuItemType.Standard, manageCollectionsDialog.Show));
+                    collectionItems.Add(
+                        new OsuMenuItem(
+                            "Manage...",
+                            MenuItemType.Standard,
+                            manageCollectionsDialog.Show
+                        )
+                    );
 
                 items.Add(new OsuMenuItem(CommonStrings.Collections) { Items = collectionItems });
 
                 if (beatmapSet.Beatmaps.Any(b => b.Hidden))
-                    items.Add(new OsuMenuItem("Restore all hidden", MenuItemType.Standard, () => songSelect?.RestoreAllHidden(beatmapSet)));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Restore all hidden",
+                            MenuItemType.Standard,
+                            () => songSelect?.RestoreAllHidden(beatmapSet)
+                        )
+                    );
 
-                items.Add(new OsuMenuItem("Delete...", MenuItemType.Destructive, () => songSelect?.Delete(beatmapSet)));
+                items.Add(
+                    new OsuMenuItem(
+                        "Delete...",
+                        MenuItemType.Destructive,
+                        () => songSelect?.Delete(beatmapSet)
+                    )
+                );
                 return items.ToArray();
             }
         }
@@ -252,7 +295,9 @@ namespace osu.Game.Screens.SelectV2
 
             TernaryState state;
 
-            int countExisting = beatmapSet.Beatmaps.Count(b => collection.BeatmapMD5Hashes.Contains(b.MD5Hash));
+            int countExisting = beatmapSet.Beatmaps.Count(b =>
+                collection.BeatmapMD5Hashes.Contains(b.MD5Hash)
+            );
 
             if (countExisting == beatmapSet.Beatmaps.Count)
                 state = TernaryState.True;
@@ -263,30 +308,34 @@ namespace osu.Game.Screens.SelectV2
 
             var liveCollection = collection.ToLive(realm);
 
-            return new TernaryStateToggleMenuItem(collection.Name, MenuItemType.Standard, s =>
-            {
-                liveCollection.PerformWrite(c =>
+            return new TernaryStateToggleMenuItem(
+                collection.Name,
+                MenuItemType.Standard,
+                s =>
                 {
-                    foreach (var b in beatmapSet.Beatmaps)
+                    liveCollection.PerformWrite(c =>
                     {
-                        switch (s)
+                        foreach (var b in beatmapSet.Beatmaps)
                         {
-                            case TernaryState.True:
-                                if (c.BeatmapMD5Hashes.Contains(b.MD5Hash))
-                                    continue;
+                            switch (s)
+                            {
+                                case TernaryState.True:
+                                    if (c.BeatmapMD5Hashes.Contains(b.MD5Hash))
+                                        continue;
 
-                                c.BeatmapMD5Hashes.Add(b.MD5Hash);
-                                break;
+                                    c.BeatmapMD5Hashes.Add(b.MD5Hash);
+                                    break;
 
-                            case TernaryState.False:
-                                c.BeatmapMD5Hashes.Remove(b.MD5Hash);
-                                break;
+                                case TernaryState.False:
+                                    c.BeatmapMD5Hashes.Remove(b.MD5Hash);
+                                    break;
+                            }
                         }
-                    }
-                });
-            })
+                    });
+                }
+            )
             {
-                State = { Value = state }
+                State = { Value = state },
             };
         }
     }

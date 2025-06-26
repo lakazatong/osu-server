@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Osu.Edit
     public class HitCircleCompositionTool : CompositionTool
     {
         public HitCircleCompositionTool()
-            : base(nameof(HitCircle))
-        {
-        }
+            : base(nameof(HitCircle)) { }
 
-        public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
+        public override Drawable CreateIcon() =>
+            new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new HitCirclePlacementBlueprint();
+        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() =>
+            new HitCirclePlacementBlueprint();
     }
 }

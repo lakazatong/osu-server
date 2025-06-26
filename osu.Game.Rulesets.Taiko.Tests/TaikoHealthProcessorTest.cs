@@ -26,17 +26,42 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new Hit { StartTime = 2000 },
                     new Hit { StartTime = 3000 },
                     new Hit { StartTime = 4000 },
-                }
+                },
             };
 
             var healthProcessor = new TaikoHealthProcessor();
             healthProcessor.ApplyBeatmap(beatmap);
 
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement()) { Type = HitResult.Great });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement()) { Type = HitResult.Great });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement()) { Type = HitResult.Great });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement()) { Type = HitResult.Great });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement()) { Type = HitResult.Great });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
 
             Assert.Multiple(() =>
             {
@@ -57,17 +82,42 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new Hit { StartTime = 2000 },
                     new Hit { StartTime = 3000 },
                     new Hit { StartTime = 4000 },
-                }
+                },
             };
 
             var healthProcessor = new TaikoHealthProcessor();
             healthProcessor.ApplyBeatmap(beatmap);
 
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement()) { Type = HitResult.Great });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement()) { Type = HitResult.Miss });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement())
+                {
+                    Type = HitResult.Great,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement())
+                {
+                    Type = HitResult.Miss,
+                }
+            );
 
             Assert.Multiple(() =>
             {
@@ -88,17 +138,42 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new Hit { StartTime = 2000 },
                     new Hit { StartTime = 3000 },
                     new Hit { StartTime = 4000 },
-                }
+                },
             };
 
             var healthProcessor = new TaikoHealthProcessor();
             healthProcessor.ApplyBeatmap(beatmap);
 
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement()) { Type = HitResult.Miss });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement()) { Type = HitResult.Ok });
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement()) { Type = HitResult.Miss });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement())
+                {
+                    Type = HitResult.Miss,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[1], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[2], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[3], new TaikoJudgement())
+                {
+                    Type = HitResult.Ok,
+                }
+            );
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[4], new TaikoJudgement())
+                {
+                    Type = HitResult.Miss,
+                }
+            );
 
             Assert.Multiple(() =>
             {
@@ -110,13 +185,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
         [Test]
         public void TestDrumRollOnly()
         {
-            var beatmap = new TaikoBeatmap
-            {
-                HitObjects =
-                {
-                    new DrumRoll { Duration = 2000 }
-                }
-            };
+            var beatmap = new TaikoBeatmap { HitObjects = { new DrumRoll { Duration = 2000 } } };
 
             foreach (var ho in beatmap.HitObjects)
                 ho.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
@@ -127,11 +196,18 @@ namespace osu.Game.Rulesets.Taiko.Tests
             foreach (var nested in beatmap.HitObjects[0].NestedHitObjects)
             {
                 var nestedJudgement = nested.Judgement;
-                healthProcessor.ApplyResult(new JudgementResult(nested, nestedJudgement) { Type = nestedJudgement.MaxResult });
+                healthProcessor.ApplyResult(
+                    new JudgementResult(nested, nestedJudgement)
+                    {
+                        Type = nestedJudgement.MaxResult,
+                    }
+                );
             }
 
             var judgement = beatmap.HitObjects[0].Judgement;
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], judgement) { Type = judgement.MaxResult });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], judgement) { Type = judgement.MaxResult }
+            );
 
             Assert.Multiple(() =>
             {
@@ -143,13 +219,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
         [Test]
         public void TestSwellOnly()
         {
-            var beatmap = new TaikoBeatmap
-            {
-                HitObjects =
-                {
-                    new Swell { Duration = 2000 }
-                }
-            };
+            var beatmap = new TaikoBeatmap { HitObjects = { new Swell { Duration = 2000 } } };
 
             foreach (var ho in beatmap.HitObjects)
                 ho.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
@@ -160,11 +230,18 @@ namespace osu.Game.Rulesets.Taiko.Tests
             foreach (var nested in beatmap.HitObjects[0].NestedHitObjects)
             {
                 var nestedJudgement = nested.Judgement;
-                healthProcessor.ApplyResult(new JudgementResult(nested, nestedJudgement) { Type = nestedJudgement.MaxResult });
+                healthProcessor.ApplyResult(
+                    new JudgementResult(nested, nestedJudgement)
+                    {
+                        Type = nestedJudgement.MaxResult,
+                    }
+                );
             }
 
             var judgement = beatmap.HitObjects[0].Judgement;
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], judgement) { Type = judgement.MaxResult });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], judgement) { Type = judgement.MaxResult }
+            );
 
             Assert.Multiple(() =>
             {
@@ -181,8 +258,8 @@ namespace osu.Game.Rulesets.Taiko.Tests
                 HitObjects =
                 {
                     new Hit(),
-                    new Swell { Duration = 2000 }
-                }
+                    new Swell { Duration = 2000 },
+                },
             };
 
             foreach (var ho in beatmap.HitObjects)
@@ -191,16 +268,28 @@ namespace osu.Game.Rulesets.Taiko.Tests
             var healthProcessor = new TaikoHealthProcessor();
             healthProcessor.ApplyBeatmap(beatmap);
 
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement()) { Type = HitResult.Miss });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[0], new TaikoJudgement())
+                {
+                    Type = HitResult.Miss,
+                }
+            );
 
             foreach (var nested in beatmap.HitObjects[1].NestedHitObjects)
             {
                 var nestedJudgement = nested.CreateJudgement();
-                healthProcessor.ApplyResult(new JudgementResult(nested, nestedJudgement) { Type = nestedJudgement.MaxResult });
+                healthProcessor.ApplyResult(
+                    new JudgementResult(nested, nestedJudgement)
+                    {
+                        Type = nestedJudgement.MaxResult,
+                    }
+                );
             }
 
             var judgement = beatmap.HitObjects[1].CreateJudgement();
-            healthProcessor.ApplyResult(new JudgementResult(beatmap.HitObjects[1], judgement) { Type = judgement.MaxResult });
+            healthProcessor.ApplyResult(
+                new JudgementResult(beatmap.HitObjects[1], judgement) { Type = judgement.MaxResult }
+            );
 
             Assert.Multiple(() =>
             {
@@ -218,17 +307,14 @@ namespace osu.Game.Rulesets.Taiko.Tests
             [new DrumRollTick.StrongNestedHit(new DrumRollTick(new DrumRoll())), false],
             [new DrumRoll(), false],
             [new SwellTick(), false],
-            [new Swell(), false]
+            [new Swell(), false],
         ];
 
         [TestCaseSource(nameof(test_cases))]
         public void TestFailAfterMinResult(TaikoHitObject hitObject, bool failExpected)
         {
             var healthProcessor = new TaikoHealthProcessor();
-            healthProcessor.ApplyBeatmap(new TaikoBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new TaikoBeatmap { HitObjects = { hitObject } });
 
             var result = new JudgementResult(hitObject, hitObject.CreateJudgement());
             result.Type = result.Judgement.MinResult;
@@ -241,10 +327,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
         public void TestNoFailAfterMaxResult(TaikoHitObject hitObject, bool _)
         {
             var healthProcessor = new TaikoHealthProcessor();
-            healthProcessor.ApplyBeatmap(new TaikoBeatmap
-            {
-                HitObjects = { hitObject }
-            });
+            healthProcessor.ApplyBeatmap(new TaikoBeatmap { HitObjects = { hitObject } });
 
             var result = new JudgementResult(hitObject, hitObject.CreateJudgement());
             result.Type = result.Judgement.MaxResult;

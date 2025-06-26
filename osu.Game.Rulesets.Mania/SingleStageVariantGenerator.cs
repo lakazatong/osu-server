@@ -20,7 +20,14 @@ namespace osu.Game.Rulesets.Mania
             if (variant == 10)
             {
                 leftKeys = new[] { InputKey.A, InputKey.S, InputKey.D, InputKey.F, InputKey.V };
-                rightKeys = new[] { InputKey.N, InputKey.J, InputKey.K, InputKey.L, InputKey.Semicolon };
+                rightKeys = new[]
+                {
+                    InputKey.N,
+                    InputKey.J,
+                    InputKey.K,
+                    InputKey.L,
+                    InputKey.Semicolon,
+                };
             }
             else
             {
@@ -29,11 +36,12 @@ namespace osu.Game.Rulesets.Mania
             }
         }
 
-        public IEnumerable<KeyBinding> GenerateMappings() => new VariantMappingGenerator
-        {
-            LeftKeys = leftKeys,
-            RightKeys = rightKeys,
-            SpecialKey = InputKey.Space,
-        }.GenerateKeyBindingsFor(variant);
+        public IEnumerable<KeyBinding> GenerateMappings() =>
+            new VariantMappingGenerator
+            {
+                LeftKeys = leftKeys,
+                RightKeys = rightKeys,
+                SpecialKey = InputKey.Space,
+            }.GenerateKeyBindingsFor(variant);
     }
 }

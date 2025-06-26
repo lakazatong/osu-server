@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                     Colour = Color4.Orange,
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0.2f,
-                }
+                },
             };
         }
 
@@ -53,8 +53,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             const float duration = 300;
 
-            this.ScaleTo(1, duration, Easing.OutQuint)
-                .FadeOut(duration / 2, Easing.OutQuint);
+            this.ScaleTo(1, duration, Easing.OutQuint).FadeOut(duration / 2, Easing.OutQuint);
         }
 
         protected override void OnSliderTick()
@@ -67,8 +66,6 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
             }
         }
 
-        protected override void OnSliderBreak()
-        {
-        }
+        protected override void OnSliderBreak() { }
     }
 }

@@ -14,25 +14,28 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestMode([Values] ExpansionMode mode)
         {
-            AddStep("create mod display", () =>
-            {
-                Child = new ModDisplay
+            AddStep(
+                "create mod display",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    ExpansionMode = mode,
-                    Current =
+                    Child = new ModDisplay
                     {
-                        Value = new Mod[]
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        ExpansionMode = mode,
+                        Current =
                         {
-                            new OsuModHardRock(),
-                            new OsuModDoubleTime(),
-                            new OsuModDifficultyAdjust(),
-                            new OsuModEasy(),
-                        }
-                    }
-                };
-            });
+                            Value = new Mod[]
+                            {
+                                new OsuModHardRock(),
+                                new OsuModDoubleTime(),
+                                new OsuModDifficultyAdjust(),
+                                new OsuModEasy(),
+                            },
+                        },
+                    };
+                }
+            );
         }
     }
 }

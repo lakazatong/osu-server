@@ -16,14 +16,20 @@ namespace osu.Game.Beatmaps.Legacy
         [JsonProperty]
         public IReadOnlyList<SampleControlPoint> SamplePoints => samplePoints;
 
-        private readonly SortedList<SampleControlPoint> samplePoints = new SortedList<SampleControlPoint>(Comparer<SampleControlPoint>.Default);
+        private readonly SortedList<SampleControlPoint> samplePoints =
+            new SortedList<SampleControlPoint>(Comparer<SampleControlPoint>.Default);
 
         /// <summary>
         /// Finds the sound control point that is active at <paramref name="time"/>.
         /// </summary>
         /// <param name="time">The time to find the sound control point at.</param>
         /// <returns>The sound control point.</returns>
-        public SampleControlPoint SamplePointAt(double time) => BinarySearchWithFallback(SamplePoints, time, SamplePoints.Count > 0 ? SamplePoints[0] : SampleControlPoint.DEFAULT);
+        public SampleControlPoint SamplePointAt(double time) =>
+            BinarySearchWithFallback(
+                SamplePoints,
+                time,
+                SamplePoints.Count > 0 ? SamplePoints[0] : SampleControlPoint.DEFAULT
+            );
 
         /// <summary>
         /// All difficulty points.
@@ -31,14 +37,16 @@ namespace osu.Game.Beatmaps.Legacy
         [JsonProperty]
         public IReadOnlyList<DifficultyControlPoint> DifficultyPoints => difficultyPoints;
 
-        private readonly SortedList<DifficultyControlPoint> difficultyPoints = new SortedList<DifficultyControlPoint>(Comparer<DifficultyControlPoint>.Default);
+        private readonly SortedList<DifficultyControlPoint> difficultyPoints =
+            new SortedList<DifficultyControlPoint>(Comparer<DifficultyControlPoint>.Default);
 
         /// <summary>
         /// Finds the difficulty control point that is active at <paramref name="time"/>.
         /// </summary>
         /// <param name="time">The time to find the difficulty control point at.</param>
         /// <returns>The difficulty control point.</returns>
-        public DifficultyControlPoint DifficultyPointAt(double time) => BinarySearchWithFallback(DifficultyPoints, time, DifficultyControlPoint.DEFAULT);
+        public DifficultyControlPoint DifficultyPointAt(double time) =>
+            BinarySearchWithFallback(DifficultyPoints, time, DifficultyControlPoint.DEFAULT);
 
         public override void Clear()
         {

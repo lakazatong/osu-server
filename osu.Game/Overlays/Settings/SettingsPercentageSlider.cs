@@ -15,6 +15,9 @@ namespace osu.Game.Overlays.Settings
     public partial class SettingsPercentageSlider<TValue> : SettingsSlider<TValue>
         where TValue : struct, INumber<TValue>, IMinMaxValue<TValue>
     {
-        protected override Drawable CreateControl() => ((RoundedSliderBar<TValue>)base.CreateControl()).With(sliderBar => sliderBar.DisplayAsPercentage = true);
+        protected override Drawable CreateControl() =>
+            ((RoundedSliderBar<TValue>)base.CreateControl()).With(sliderBar =>
+                sliderBar.DisplayAsPercentage = true
+            );
     }
 }

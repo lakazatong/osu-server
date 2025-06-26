@@ -45,19 +45,19 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
             if (showRipples.Value)
             {
-                AddInternal(ripplePool.Get(r =>
-                {
-                    r.Position = e.MousePosition;
-                    r.Scale = CursorScale;
-                }));
+                AddInternal(
+                    ripplePool.Get(r =>
+                    {
+                        r.Position = e.MousePosition;
+                        r.Scale = CursorScale;
+                    })
+                );
             }
 
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<OsuAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<OsuAction> e) { }
 
         private partial class CursorRipple : PoolableDrawable
         {
@@ -69,7 +69,10 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
                 AutoSizeAxes = Axes.Both;
                 Origin = Anchor.Centre;
 
-                InternalChild = ripple = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.CursorRipple), _ => new DefaultCursorRipple())
+                InternalChild = ripple = new SkinnableDrawable(
+                    new OsuSkinComponentLookup(OsuSkinComponents.CursorRipple),
+                    _ => new DefaultCursorRipple()
+                )
                 {
                     Blending = BlendingParameters.Additive,
                 };
@@ -81,12 +84,9 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
                 ClearTransforms(true);
 
-                ripple.ScaleTo(0.1f)
-                      .ScaleTo(1, 700, Easing.Out);
+                ripple.ScaleTo(0.1f).ScaleTo(1, 700, Easing.Out);
 
-                this
-                    .FadeOutFromOne(700)
-                    .Expire(true);
+                this.FadeOutFromOne(700).Expire(true);
             }
         }
 
@@ -99,11 +99,7 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
                 InternalChildren = new Drawable[]
                 {
-                    new RingPiece(3)
-                    {
-                        Size = OsuHitObject.OBJECT_DIMENSIONS,
-                        Alpha = 0.1f,
-                    }
+                    new RingPiece(3) { Size = OsuHitObject.OBJECT_DIMENSIONS, Alpha = 0.1f },
                 };
             }
         }

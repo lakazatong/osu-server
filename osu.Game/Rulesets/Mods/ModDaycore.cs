@@ -19,13 +19,18 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Whoaaaaa...";
         public override bool Ranked => UsesDefaultConfiguration;
 
-        [SettingSource("Speed decrease", "The actual decrease to apply", SettingControlType = typeof(MultiplierSettingsSlider))]
-        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(0.75)
-        {
-            MinValue = 0.5,
-            MaxValue = 0.99,
-            Precision = 0.01,
-        };
+        [SettingSource(
+            "Speed decrease",
+            "The actual decrease to apply",
+            SettingControlType = typeof(MultiplierSettingsSlider)
+        )]
+        public override BindableNumber<double> SpeedChange { get; } =
+            new BindableDouble(0.75)
+            {
+                MinValue = 0.5,
+                MaxValue = 0.99,
+                Precision = 0.01,
+            };
 
         private readonly BindableNumber<double> tempoAdjust = new BindableDouble(1);
         private readonly BindableNumber<double> freqAdjust = new BindableDouble(1);
@@ -37,11 +42,14 @@ namespace osu.Game.Rulesets.Mods
 
             // intentionally not deferring the speed change handling to `RateAdjustModHelper`
             // as the expected result of operation is not the same (daycore should preserve constant pitch).
-            SpeedChange.BindValueChanged(val =>
-            {
-                freqAdjust.Value = SpeedChange.Default;
-                tempoAdjust.Value = val.NewValue / SpeedChange.Default;
-            }, true);
+            SpeedChange.BindValueChanged(
+                val =>
+                {
+                    freqAdjust.Value = SpeedChange.Default;
+                    tempoAdjust.Value = val.NewValue / SpeedChange.Default;
+                },
+                true
+            );
         }
 
         public override void ApplyToTrack(IAdjustableAudioComponent track)

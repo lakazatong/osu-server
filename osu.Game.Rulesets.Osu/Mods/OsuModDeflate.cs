@@ -17,11 +17,12 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         public override LocalisableString Description => "Hit them at the right size!";
 
-        public override BindableNumber<float> StartScale { get; } = new BindableFloat(2)
-        {
-            MinValue = 1f,
-            MaxValue = 25f,
-            Precision = 0.1f,
-        };
+        public override BindableNumber<float> StartScale { get; } =
+            new BindableFloat(2)
+            {
+                MinValue = 1f,
+                MaxValue = 25f,
+                Precision = 0.1f,
+            };
     }
 }

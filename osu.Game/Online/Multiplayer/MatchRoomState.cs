@@ -14,7 +14,5 @@ namespace osu.Game.Online.Multiplayer
     [Serializable]
     [MessagePackObject]
     [Union(0, typeof(TeamVersusRoomState))] // IMPORTANT: Add rules to SignalRUnionWorkaroundResolver for new derived types.
-    public abstract class MatchRoomState
-    {
-    }
+    public abstract class MatchRoomState { }
 }

@@ -119,13 +119,9 @@ namespace osu.Game.Screens.SelectV2
                                 {
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
-                                    Margin = new MarginPadding
-                                    {
-                                        Top = -4f,
-                                        Left = 2,
-                                    },
+                                    Margin = new MarginPadding { Top = -4f, Left = 2 },
                                     Size = new Vector2(8),
-                                }
+                                },
                             },
                         },
                     },
@@ -147,8 +143,16 @@ namespace osu.Game.Screens.SelectV2
 
             private void updateDisplay()
             {
-                bar.ResizeWidthTo(value.Maximum == 0 ? 0 : Math.Clamp(value.Value / value.Maximum, 0, 1), 300, Easing.OutQuint);
-                adjustedBar.ResizeWidthTo(value.Maximum == 0 ? 0 : Math.Clamp(value.AdjustedValue / value.Maximum, 0, 1), 300, Easing.OutQuint);
+                bar.ResizeWidthTo(
+                    value.Maximum == 0 ? 0 : Math.Clamp(value.Value / value.Maximum, 0, 1),
+                    300,
+                    Easing.OutQuint
+                );
+                adjustedBar.ResizeWidthTo(
+                    value.Maximum == 0 ? 0 : Math.Clamp(value.AdjustedValue / value.Maximum, 0, 1),
+                    300,
+                    Easing.OutQuint
+                );
 
                 labelText.Text = value.Label;
                 valueText.Text = value.Content ?? value.AdjustedValue.ToLocalisableString("0.##");
@@ -169,7 +173,11 @@ namespace osu.Game.Screens.SelectV2
                     {
                         bars.ChangeChildDepth(adjustedBar, 1);
                         bar.FadeIn(300, Easing.OutQuint);
-                        adjustedBar.FadeColour(ColourInfo.GradientHorizontal(Color4.Black, colours.Red1), 300, Easing.OutQuint);
+                        adjustedBar.FadeColour(
+                            ColourInfo.GradientHorizontal(Color4.Black, colours.Red1),
+                            300,
+                            Easing.OutQuint
+                        );
 
                         valueText.FadeColour(colours.Red1, 300, Easing.OutQuint);
                         valueIcon.Show();
@@ -190,7 +198,13 @@ namespace osu.Game.Screens.SelectV2
                 }
             }
 
-            public record Data(LocalisableString Label, float Value, float AdjustedValue, float Maximum, string? Content = null);
+            public record Data(
+                LocalisableString Label,
+                float Value,
+                float AdjustedValue,
+                float Maximum,
+                string? Content = null
+            );
         }
     }
 }

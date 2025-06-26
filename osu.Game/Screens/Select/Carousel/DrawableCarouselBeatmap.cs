@@ -107,7 +107,9 @@ namespace osu.Game.Screens.Select.Carousel
 
             if (songSelect != null)
             {
-                mainMenuItems = songSelect.CreateForwardNavigationMenuItemsForBeatmap(() => beatmapInfo);
+                mainMenuItems = songSelect.CreateForwardNavigationMenuItemsForBeatmap(() =>
+                    beatmapInfo
+                );
                 selectRequested = b => songSelect.FinaliseSelection(b);
             }
 
@@ -116,16 +118,13 @@ namespace osu.Game.Screens.Select.Carousel
 
             Header.Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 triangles = new Triangles
                 {
                     TriangleScale = 2,
                     RelativeSizeAxes = Axes.Both,
                     ColourLight = Color4Extensions.FromHex(@"3a7285"),
-                    ColourDark = Color4Extensions.FromHex(@"123744")
+                    ColourDark = Color4Extensions.FromHex(@"123744"),
                 },
                 new FillFlowContainer
                 {
@@ -167,15 +166,17 @@ namespace osu.Game.Screens.Select.Carousel
                                             Text = beatmapInfo.DifficultyName,
                                             Font = OsuFont.GetFont(size: 20),
                                             Anchor = Anchor.BottomLeft,
-                                            Origin = Anchor.BottomLeft
+                                            Origin = Anchor.BottomLeft,
                                         },
                                         new OsuSpriteText
                                         {
-                                            Text = BeatmapsetsStrings.ShowDetailsMappedBy(beatmapInfo.Metadata.Author.Username),
+                                            Text = BeatmapsetsStrings.ShowDetailsMappedBy(
+                                                beatmapInfo.Metadata.Author.Username
+                                            ),
                                             Anchor = Anchor.BottomLeft,
-                                            Origin = Anchor.BottomLeft
+                                            Origin = Anchor.BottomLeft,
                                         },
-                                    }
+                                    },
                                 },
                                 new FillFlowContainer
                                 {
@@ -186,13 +187,13 @@ namespace osu.Game.Screens.Select.Carousel
                                     Children = new Drawable[]
                                     {
                                         new TopLocalRank(beatmapInfo),
-                                        starCounter = new StarCounter()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                        starCounter = new StarCounter(),
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -212,7 +213,8 @@ namespace osu.Game.Screens.Select.Carousel
 
             background.Colour = ColourInfo.GradientVertical(
                 new Color4(20, 43, 51, 255),
-                new Color4(40, 86, 102, 255));
+                new Color4(40, 86, 102, 255)
+            );
 
             triangles.Colour = Color4.White;
         }
@@ -246,12 +248,19 @@ namespace osu.Game.Screens.Select.Carousel
             if (Item?.State.Value != CarouselItemState.Collapsed)
             {
                 // We've potentially cancelled the computation above so a new bindable is required.
-                starDifficultyBindable = difficultyCache.GetBindableDifficulty(beatmapInfo, (starDifficultyCancellationSource = new CancellationTokenSource()).Token, 200);
-                starDifficultyBindable.BindValueChanged(d =>
-                {
-                    starCounter.Current = (float)(d.NewValue.Stars);
-                    difficultyIcon.Current.Value = d.NewValue;
-                }, true);
+                starDifficultyBindable = difficultyCache.GetBindableDifficulty(
+                    beatmapInfo,
+                    (starDifficultyCancellationSource = new CancellationTokenSource()).Token,
+                    200
+                );
+                starDifficultyBindable.BindValueChanged(
+                    d =>
+                    {
+                        starCounter.Current = (float)(d.NewValue.Stars);
+                        difficultyIcon.Current.Value = d.NewValue;
+                    },
+                    true
+                );
 
                 updateKeyCount();
             }
@@ -287,26 +296,59 @@ namespace osu.Game.Screens.Select.Carousel
                     items.AddRange(mainMenuItems);
 
                 if (beatmapInfo.OnlineID > 0 && beatmapOverlay != null)
-                    items.Add(new OsuMenuItem("Details...", MenuItemType.Standard, () => beatmapOverlay.FetchAndShowBeatmap(beatmapInfo.OnlineID)));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Details...",
+                            MenuItemType.Standard,
+                            () => beatmapOverlay.FetchAndShowBeatmap(beatmapInfo.OnlineID)
+                        )
+                    );
 
-                var collectionItems = realm.Realm.All<BeatmapCollection>()
-                                           .OrderBy(c => c.Name)
-                                           .AsEnumerable()
-                                           .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmapInfo)).Cast<OsuMenuItem>().ToList();
+                var collectionItems = realm
+                    .Realm.All<BeatmapCollection>()
+                    .OrderBy(c => c.Name)
+                    .AsEnumerable()
+                    .Select(c => new CollectionToggleMenuItem(c.ToLive(realm), beatmapInfo))
+                    .Cast<OsuMenuItem>()
+                    .ToList();
 
                 if (manageCollectionsDialog != null)
-                    collectionItems.Add(new OsuMenuItem("Manage...", MenuItemType.Standard, manageCollectionsDialog.Show));
+                    collectionItems.Add(
+                        new OsuMenuItem(
+                            "Manage...",
+                            MenuItemType.Standard,
+                            manageCollectionsDialog.Show
+                        )
+                    );
 
                 items.Add(new OsuMenuItem("Collections") { Items = collectionItems });
 
                 if (beatmapInfo.GetOnlineURL(api, ruleset.Value) is string url)
-                    items.Add(new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, () => game?.CopyToClipboard(url)));
+                    items.Add(
+                        new OsuMenuItem(
+                            CommonStrings.CopyLink,
+                            MenuItemType.Standard,
+                            () => game?.CopyToClipboard(url)
+                        )
+                    );
 
                 if (manager != null)
-                    items.Add(new OsuMenuItem("Mark as played", MenuItemType.Standard, () => manager.MarkPlayed(beatmapInfo)));
+                    items.Add(
+                        new OsuMenuItem(
+                            "Mark as played",
+                            MenuItemType.Standard,
+                            () => manager.MarkPlayed(beatmapInfo)
+                        )
+                    );
 
                 if (hideRequested != null)
-                    items.Add(new OsuMenuItem(WebCommonStrings.ButtonsHide.ToSentence(), MenuItemType.Destructive, () => hideRequested(beatmapInfo)));
+                    items.Add(
+                        new OsuMenuItem(
+                            WebCommonStrings.ButtonsHide.ToSentence(),
+                            MenuItemType.Destructive,
+                            () => hideRequested(beatmapInfo)
+                        )
+                    );
 
                 return items.ToArray();
             }

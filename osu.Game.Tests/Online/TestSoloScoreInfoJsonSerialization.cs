@@ -47,11 +47,7 @@ namespace osu.Game.Tests.Online
         {
             var score = SoloScoreInfo.ForSubmission(TestResources.CreateTestScoreInfo());
 
-            string[] variants =
-            {
-                JsonConvert.SerializeObject(score),
-                score.Serialize()
-            };
+            string[] variants = { JsonConvert.SerializeObject(score), score.Serialize() };
 
             foreach (string serialised in variants)
             {

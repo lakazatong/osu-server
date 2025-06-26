@@ -39,7 +39,9 @@ namespace osu.Game.Overlays.Dashboard.Friends
                     return Color4.Black;
 
                 default:
-                    throw new ArgumentException($@"{Value} status does not provide a colour in {nameof(GetBarColour)}.");
+                    throw new ArgumentException(
+                        $@"{Value} status does not provide a colour in {nameof(GetBarColour)}."
+                    );
             }
         }
     }

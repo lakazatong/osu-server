@@ -38,7 +38,17 @@ namespace osu.Game.Tests.Visual.Multiplayer
         private void load(GameHost host, AudioManager audio)
         {
             Dependencies.Cache(new RealmRulesetStore(Realm));
-            Dependencies.Cache(beatmaps = new BeatmapManager(LocalStorage, Realm, null, audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                beatmaps = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
             Dependencies.Cache(Realm);
 
             beatmaps.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
@@ -52,50 +62,54 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("join room", () => JoinRoom(room));
             WaitForJoined();
 
-            AddStep("create button", () =>
-            {
-                importedSet = beatmaps.GetAllUsableBeatmapSets().First();
-                Beatmap.Value = beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First());
-
-                MultiplayerBeatmapAvailabilityTracker tracker = new MultiplayerBeatmapAvailabilityTracker();
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "create button",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies =
-                    [
-                        (typeof(OnlinePlayBeatmapAvailabilityTracker), tracker)
-                    ],
-                    Children =
-                    [
-                        tracker,
-                        new PopoverContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = new FillFlowContainer
+                    importedSet = beatmaps.GetAllUsableBeatmapSets().First();
+                    Beatmap.Value = beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First());
+
+                    MultiplayerBeatmapAvailabilityTracker tracker =
+                        new MultiplayerBeatmapAvailabilityTracker();
+
+                    Child = new DependencyProvidingContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies =
+                        [
+                            (typeof(OnlinePlayBeatmapAvailabilityTracker), tracker),
+                        ],
+                        Children =
+                        [
+                            tracker,
+                            new PopoverContainer
                             {
-                                AutoSizeAxes = Axes.Both,
-                                Direction = FillDirection.Vertical,
-                                Children = new Drawable[]
+                                RelativeSizeAxes = Axes.Both,
+                                Child = new FillFlowContainer
                                 {
-                                    spectateButton = new MultiplayerSpectateButton
+                                    AutoSizeAxes = Axes.Both,
+                                    Direction = FillDirection.Vertical,
+                                    Children = new Drawable[]
                                     {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Size = new Vector2(200, 50)
+                                        spectateButton = new MultiplayerSpectateButton
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Size = new Vector2(200, 50),
+                                        },
+                                        startControl = new MatchStartControl
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Size = new Vector2(200, 50),
+                                        },
                                     },
-                                    startControl = new MatchStartControl
-                                    {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Size = new Vector2(200, 50)
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-            });
+                                },
+                            },
+                        ],
+                    };
+                }
+            );
         }
 
         [TestCase(MultiplayerRoomState.Open)]
@@ -103,7 +117,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [TestCase(MultiplayerRoomState.Playing)]
         public void TestEnabledWhenRoomOpenOrInGameplay(MultiplayerRoomState roomState)
         {
-            AddStep($"change room to {roomState}", () => MultiplayerClient.ChangeRoomState(roomState));
+            AddStep(
+                $"change room to {roomState}",
+                () => MultiplayerClient.ChangeRoomState(roomState)
+            );
             assertSpectateButtonEnablement(true);
         }
 
@@ -112,16 +129,26 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public void TestToggleWhenIdle(MultiplayerUserState initialState)
         {
             ClickButtonWhenEnabled<MultiplayerSpectateButton>();
-            AddUntilStep("user is spectating", () => MultiplayerClient.ClientRoom?.Users[0].State == MultiplayerUserState.Spectating);
+            AddUntilStep(
+                "user is spectating",
+                () =>
+                    MultiplayerClient.ClientRoom?.Users[0].State == MultiplayerUserState.Spectating
+            );
 
             ClickButtonWhenEnabled<MultiplayerSpectateButton>();
-            AddUntilStep("user is idle", () => MultiplayerClient.ClientRoom?.Users[0].State == MultiplayerUserState.Idle);
+            AddUntilStep(
+                "user is idle",
+                () => MultiplayerClient.ClientRoom?.Users[0].State == MultiplayerUserState.Idle
+            );
         }
 
         [TestCase(MultiplayerRoomState.Closed)]
         public void TestDisabledWhenClosed(MultiplayerRoomState roomState)
         {
-            AddStep($"change room to {roomState}", () => MultiplayerClient.ChangeRoomState(roomState));
+            AddStep(
+                $"change room to {roomState}",
+                () => MultiplayerClient.ChangeRoomState(roomState)
+            );
             assertSpectateButtonEnablement(false);
         }
 
@@ -136,7 +163,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public void TestReadyButtonEnabledWhenHostAndUsersReady()
         {
             AddStep("add user", () => MultiplayerClient.AddUser(new APIUser { Id = PLAYER_1_ID }));
-            AddStep("set user ready", () => MultiplayerClient.ChangeUserState(PLAYER_1_ID, MultiplayerUserState.Ready));
+            AddStep(
+                "set user ready",
+                () => MultiplayerClient.ChangeUserState(PLAYER_1_ID, MultiplayerUserState.Ready)
+            );
 
             ClickButtonWhenEnabled<MultiplayerSpectateButton>();
             assertReadyButtonEnablement(true);
@@ -145,22 +175,38 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestReadyButtonDisabledWhenNotHostAndUsersReady()
         {
-            AddStep("add user and transfer host", () =>
-            {
-                MultiplayerClient.AddUser(new APIUser { Id = PLAYER_1_ID });
-                MultiplayerClient.TransferHost(PLAYER_1_ID);
-            });
+            AddStep(
+                "add user and transfer host",
+                () =>
+                {
+                    MultiplayerClient.AddUser(new APIUser { Id = PLAYER_1_ID });
+                    MultiplayerClient.TransferHost(PLAYER_1_ID);
+                }
+            );
 
-            AddStep("set user ready", () => MultiplayerClient.ChangeUserState(PLAYER_1_ID, MultiplayerUserState.Ready));
+            AddStep(
+                "set user ready",
+                () => MultiplayerClient.ChangeUserState(PLAYER_1_ID, MultiplayerUserState.Ready)
+            );
 
             ClickButtonWhenEnabled<MultiplayerSpectateButton>();
             assertReadyButtonEnablement(false);
         }
 
-        private void assertSpectateButtonEnablement(bool shouldBeEnabled)
-            => AddUntilStep($"spectate button {(shouldBeEnabled ? "is" : "is not")} enabled", () => spectateButton.ChildrenOfType<OsuButton>().Single().Enabled.Value == shouldBeEnabled);
+        private void assertSpectateButtonEnablement(bool shouldBeEnabled) =>
+            AddUntilStep(
+                $"spectate button {(shouldBeEnabled ? "is" : "is not")} enabled",
+                () =>
+                    spectateButton.ChildrenOfType<OsuButton>().Single().Enabled.Value
+                    == shouldBeEnabled
+            );
 
-        private void assertReadyButtonEnablement(bool shouldBeEnabled)
-            => AddUntilStep($"ready button {(shouldBeEnabled ? "is" : "is not")} enabled", () => startControl.ChildrenOfType<MultiplayerReadyButton>().Single().Enabled.Value == shouldBeEnabled);
+        private void assertReadyButtonEnablement(bool shouldBeEnabled) =>
+            AddUntilStep(
+                $"ready button {(shouldBeEnabled ? "is" : "is not")} enabled",
+                () =>
+                    startControl.ChildrenOfType<MultiplayerReadyButton>().Single().Enabled.Value
+                    == shouldBeEnabled
+            );
     }
 }

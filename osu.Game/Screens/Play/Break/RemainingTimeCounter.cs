@@ -24,6 +24,7 @@ namespace osu.Game.Screens.Play.Break
             };
         }
 
-        protected override void OnCountChanged(double count) => counter.Text = ((int)Math.Ceiling(count / 1000)).ToString();
+        protected override void OnCountChanged(double count) =>
+            counter.Text = ((int)Math.Ceiling(count / 1000)).ToString();
     }
 }

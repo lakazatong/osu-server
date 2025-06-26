@@ -44,29 +44,34 @@ namespace osu.Game.Screens.Ranking.Expanded.Statistics
             }
         }
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Direction = FillDirection.Horizontal,
-            Spacing = new Vector2(10, 0),
-            Children = new[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                base.CreateContent().With(_ =>
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(10, 0),
+                Children = new[]
                 {
-                    Anchor = Anchor.CentreLeft;
-                    Origin = Anchor.CentreLeft;
-                }),
-                perfectText = new OsuSpriteText
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Text = "PERFECT",
-                    Font = OsuFont.Torus.With(size: 11, weight: FontWeight.SemiBold),
-                    Colour = ColourInfo.GradientVertical(Color4Extensions.FromHex("#66FFCC"), Color4Extensions.FromHex("#FF9AD7")),
-                    Alpha = 0,
-                    UseFullGlyphHeight = false,
-                }
-            }
-        };
+                    base.CreateContent()
+                        .With(_ =>
+                        {
+                            Anchor = Anchor.CentreLeft;
+                            Origin = Anchor.CentreLeft;
+                        }),
+                    perfectText = new OsuSpriteText
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Text = "PERFECT",
+                        Font = OsuFont.Torus.With(size: 11, weight: FontWeight.SemiBold),
+                        Colour = ColourInfo.GradientVertical(
+                            Color4Extensions.FromHex("#66FFCC"),
+                            Color4Extensions.FromHex("#FF9AD7")
+                        ),
+                        Alpha = 0,
+                        UseFullGlyphHeight = false,
+                    },
+                },
+            };
     }
 }

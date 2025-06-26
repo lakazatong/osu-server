@@ -6,10 +6,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using HtmlAgilityPack;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 
@@ -40,7 +40,9 @@ namespace osu.Game.Overlays.Wiki
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    RowDimensions = Enumerable.Repeat(new Dimension(GridSizeMode.AutoSize), panels.Length).ToArray(),
+                    RowDimensions = Enumerable
+                        .Repeat(new Dimension(GridSizeMode.AutoSize), panels.Length)
+                        .ToArray(),
                     Content = panels,
                 },
             };
@@ -48,29 +50,32 @@ namespace osu.Game.Overlays.Wiki
 
         private Container createBlurb(HtmlDocument html)
         {
-            var blurbNode = html.DocumentNode.SelectSingleNode("//div[contains(@class, 'wiki-main-page__blurb')]");
+            var blurbNode = html.DocumentNode.SelectSingleNode(
+                "//div[contains(@class, 'wiki-main-page__blurb')]"
+            );
 
             return new Container
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Padding = new MarginPadding
-                {
-                    Vertical = 30,
-                },
-                Child = new OsuTextFlowContainer(t => t.Font = OsuFont.GetFont(Typeface.Inter, size: 12, weight: FontWeight.Light))
+                Padding = new MarginPadding { Vertical = 30 },
+                Child = new OsuTextFlowContainer(t =>
+                    t.Font = OsuFont.GetFont(Typeface.Inter, size: 12, weight: FontWeight.Light)
+                )
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Text = blurbNode.InnerText,
                     TextAnchor = Anchor.TopCentre,
-                }
+                },
             };
         }
 
         private IEnumerable<Drawable[]> createPanels(HtmlDocument html)
         {
-            var panelsNode = html.DocumentNode.SelectNodes("//div[contains(@class, 'wiki-main-page-panel')]").ToArray();
+            var panelsNode = html
+                .DocumentNode.SelectNodes("//div[contains(@class, 'wiki-main-page-panel')]")
+                .ToArray();
 
             Debug.Assert(panelsNode.Length > 1);
 
@@ -97,7 +102,9 @@ namespace osu.Game.Overlays.Wiki
                     yield return new Drawable[]
                     {
                         new WikiPanelContainer(panelsNode[i++].InnerText),
-                        i < panelsNode.Length ? new WikiPanelContainer(panelsNode[i++].InnerText) : null,
+                        i < panelsNode.Length
+                            ? new WikiPanelContainer(panelsNode[i++].InnerText)
+                            : null,
                     };
                 }
             }

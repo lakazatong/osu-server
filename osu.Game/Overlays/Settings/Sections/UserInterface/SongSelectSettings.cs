@@ -23,31 +23,35 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
                 {
                     LabelText = UserInterfaceStrings.ShowConvertedBeatmaps,
                     Current = config.GetBindable<bool>(OsuSetting.ShowConvertedBeatmaps),
-                    Keywords = new[] { "converts", "converted" }
+                    Keywords = new[] { "converts", "converted" },
                 },
                 new SettingsEnumDropdown<RandomSelectAlgorithm>
                 {
                     LabelText = UserInterfaceStrings.RandomSelectionAlgorithm,
-                    Current = config.GetBindable<RandomSelectAlgorithm>(OsuSetting.RandomSelectAlgorithm),
+                    Current = config.GetBindable<RandomSelectAlgorithm>(
+                        OsuSetting.RandomSelectAlgorithm
+                    ),
                 },
                 new SettingsEnumDropdown<ModSelectHotkeyStyle>
                 {
                     LabelText = UserInterfaceStrings.ModSelectHotkeyStyle,
-                    Current = config.GetBindable<ModSelectHotkeyStyle>(OsuSetting.ModSelectHotkeyStyle),
-                    ClassicDefault = ModSelectHotkeyStyle.Classic
+                    Current = config.GetBindable<ModSelectHotkeyStyle>(
+                        OsuSetting.ModSelectHotkeyStyle
+                    ),
+                    ClassicDefault = ModSelectHotkeyStyle.Classic,
                 },
                 new SettingsCheckbox
                 {
                     LabelText = UserInterfaceStrings.ModSelectTextSearchStartsActive,
                     Current = config.GetBindable<bool>(OsuSetting.ModSelectTextSearchStartsActive),
-                    ClassicDefault = false
+                    ClassicDefault = false,
                 },
                 new SettingsCheckbox
                 {
                     LabelText = GameplaySettingsStrings.BackgroundBlur,
                     Current = config.GetBindable<bool>(OsuSetting.SongSelectBackgroundBlur),
                     ClassicDefault = false,
-                }
+                },
             };
         }
     }

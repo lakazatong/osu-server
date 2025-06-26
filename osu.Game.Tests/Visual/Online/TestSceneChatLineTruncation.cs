@@ -21,13 +21,15 @@ namespace osu.Game.Tests.Visual.Online
 
         public TestSceneChatLineTruncation()
         {
-            Add(textContainer = new TestChatLineContainer
-            {
-                Padding = new MarginPadding { Left = 20, Right = 20 },
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-            });
+            Add(
+                textContainer = new TestChatLineContainer
+                {
+                    Padding = new MarginPadding { Left = 20, Right = 20 },
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -38,16 +40,23 @@ namespace osu.Game.Tests.Visual.Online
 
         private void clear() => AddStep("clear messages", textContainer.Clear);
 
-        private void addMessageWithChecks(string text, bool isAction = false, bool isImportant = false, string username = null, Colour4? color = null)
+        private void addMessageWithChecks(
+            string text,
+            bool isAction = false,
+            bool isImportant = false,
+            string username = null,
+            Colour4? color = null
+        )
         {
             int index = textContainer.Count + 1;
 
-            var newLine = color != null
-                ? new ChatLine(new DummyMessage(text, isAction, isImportant, index, username))
-                {
-                    UsernameColour = color.Value
-                }
-                : new ChatLine(new DummyMessage(text, isAction, isImportant, index, username));
+            var newLine =
+                color != null
+                    ? new ChatLine(new DummyMessage(text, isAction, isImportant, index, username))
+                    {
+                        UsernameColour = color.Value,
+                    }
+                    : new ChatLine(new DummyMessage(text, isAction, isImportant, index, username));
 
             textContainer.Add(newLine);
         }
@@ -58,7 +67,11 @@ namespace osu.Game.Tests.Visual.Online
                 addMessageWithChecks($"Wide {a} character username.", username: new string('w', a));
             addMessageWithChecks("Short name with spaces.", username: "sho rt name");
             addMessageWithChecks("Long name with spaces.", username: "long name with s p a c e s");
-            addMessageWithChecks("message with custom color", username: "I have custom color", color: Colour4.Green);
+            addMessageWithChecks(
+                "message with custom color",
+                username: "I have custom color",
+                color: Colour4.Green
+            );
         }
 
         private class DummyMessage : Message
@@ -80,7 +93,13 @@ namespace osu.Game.Tests.Visual.Online
 
             public new DateTimeOffset Timestamp = DateTimeOffset.Now;
 
-            public DummyMessage(string text, bool isAction = false, bool isImportant = false, int number = 0, string username = null)
+            public DummyMessage(
+                string text,
+                bool isAction = false,
+                bool isImportant = false,
+                int number = 0,
+                string username = null
+            )
                 : base(messageCounter++)
             {
                 Content = text;

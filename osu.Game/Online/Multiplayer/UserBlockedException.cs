@@ -12,8 +12,6 @@ namespace osu.Game.Online.Multiplayer
         public const string MESSAGE = @"Cannot perform action due to user being blocked.";
 
         public UserBlockedException()
-            : base(MESSAGE)
-        {
-        }
+            : base(MESSAGE) { }
     }
 }

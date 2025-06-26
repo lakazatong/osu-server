@@ -70,7 +70,12 @@ namespace osu.Game.Rulesets.Osu.Tests
         [TestCase(10, -20, 350, 340)]
         [TestCase(-10, 20, 350, 360)]
         [TestCase(-10, 20, -350, 340)]
-        public void TestSpinMultipleDirections(float spin1, float spin2, float spin3, float expectedRotation)
+        public void TestSpinMultipleDirections(
+            float spin1,
+            float spin2,
+            float spin3,
+            float expectedRotation
+        )
         {
             history.ReportDelta(500, spin1);
             history.ReportDelta(1000, spin2);
@@ -84,7 +89,11 @@ namespace osu.Game.Rulesets.Osu.Tests
         // Two spins
         [TestCase(740, -420, 320)]
         [TestCase(-740, 420, 320)]
-        public void TestRemoveAndCrossFullSpin(float deltaToAdd, float deltaToRemove, float expectedRotation)
+        public void TestRemoveAndCrossFullSpin(
+            float deltaToAdd,
+            float deltaToRemove,
+            float expectedRotation
+        )
         {
             history.ReportDelta(1000, deltaToAdd);
             history.ReportDelta(500, deltaToRemove);
@@ -97,7 +106,12 @@ namespace osu.Game.Rulesets.Osu.Tests
         // Two spins + partial
         [TestCase(800, -430, -50, 320)]
         [TestCase(-800, 430, 50, 320)]
-        public void TestRemoveAndCrossFullAndPartialSpins(float deltaToAdd1, float deltaToAdd2, float deltaToRemove, float expectedRotation)
+        public void TestRemoveAndCrossFullAndPartialSpins(
+            float deltaToAdd1,
+            float deltaToAdd2,
+            float deltaToRemove,
+            float expectedRotation
+        )
         {
             history.ReportDelta(1000, deltaToAdd1);
             history.ReportDelta(1500, deltaToAdd2);

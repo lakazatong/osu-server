@@ -16,7 +16,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneMissingBeatmapNotification : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         [BackgroundDependencyLoader]
         private void load()
@@ -27,7 +29,11 @@ namespace osu.Game.Tests.Visual.UserInterface
                 AutoSizeAxes = Axes.Y,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Child = new MissingBeatmapNotification(CreateAPIBeatmapSet(Ruleset.Value).Beatmaps.First(), "deadbeef", new ImportScoreTest.TestArchiveReader())
+                Child = new MissingBeatmapNotification(
+                    CreateAPIBeatmapSet(Ruleset.Value).Beatmaps.First(),
+                    "deadbeef",
+                    new ImportScoreTest.TestArchiveReader()
+                ),
             };
         }
     }

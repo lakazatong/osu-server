@@ -37,7 +37,7 @@ namespace osu.Game.Graphics.Containers.Markdown
                     RelativeSizeAxes = Axes.X,
                     Direction = FillDirection.Vertical,
                     Spacing = new Vector2(10, 10),
-                }
+                },
             };
         }
 

@@ -17,12 +17,15 @@ namespace osu.Game.Tests.Localisation
                 Artist = "Romanised Artist",
                 ArtistUnicode = "Unicode Artist",
                 Title = "Romanised title",
-                TitleUnicode = "Unicode Title"
+                TitleUnicode = "Unicode Title",
             };
             var romanisableString = metadata.GetDisplayTitleRomanisable();
 
             Assert.AreEqual(metadata.ToString(), romanisableString.Romanised);
-            Assert.AreEqual($"{metadata.ArtistUnicode} - {metadata.TitleUnicode}", romanisableString.Original);
+            Assert.AreEqual(
+                $"{metadata.ArtistUnicode} - {metadata.TitleUnicode}",
+                romanisableString.Original
+            );
         }
 
         [Test]
@@ -31,7 +34,7 @@ namespace osu.Game.Tests.Localisation
             var metadata = new BeatmapMetadata
             {
                 Artist = "Romanised Artist",
-                Title = "Romanised title"
+                Title = "Romanised title",
             };
             var romanisableString = metadata.GetDisplayTitleRomanisable();
 

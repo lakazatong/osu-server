@@ -57,7 +57,10 @@ namespace osu.Game.Storyboards.Drawables
                 if (vectorScale == value)
                     return;
 
-                if (!Validation.IsFinite(value)) throw new ArgumentException($@"{nameof(VectorScale)} must be finite, but is {value}.");
+                if (!Validation.IsFinite(value))
+                    throw new ArgumentException(
+                        $@"{nameof(VectorScale)} must be finite, but is {value}."
+                    );
 
                 vectorScale = value;
                 Invalidate(Invalidation.MiscGeometry);
@@ -66,13 +69,17 @@ namespace osu.Game.Storyboards.Drawables
 
         public override bool RemoveWhenNotAlive => false;
 
-        protected override Vector2 DrawScale
-            => new Vector2(FlipH ? -base.DrawScale.X : base.DrawScale.X, FlipV ? -base.DrawScale.Y : base.DrawScale.Y) * VectorScale;
+        protected override Vector2 DrawScale =>
+            new Vector2(
+                FlipH ? -base.DrawScale.X : base.DrawScale.X,
+                FlipV ? -base.DrawScale.Y : base.DrawScale.Y
+            ) * VectorScale;
 
-        public override Anchor Origin => StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
+        public override Anchor Origin =>
+            StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
 
-        public override bool IsPresent
-            => !float.IsNaN(DrawPosition.X) && !float.IsNaN(DrawPosition.Y) && base.IsPresent;
+        public override bool IsPresent =>
+            !float.IsNaN(DrawPosition.X) && !float.IsNaN(DrawPosition.Y) && base.IsPresent;
 
         [Resolved]
         private ISkinSource skin { get; set; } = null!;
@@ -107,8 +114,9 @@ namespace osu.Game.Storyboards.Drawables
 
         private void skinSourceChanged()
         {
-            Texture = skin.GetTexture(Sprite.Path, WrapMode.ClampToEdge, WrapMode.ClampToEdge) ??
-                      textureStore.Get(Sprite.Path, WrapMode.ClampToEdge, WrapMode.ClampToEdge);
+            Texture =
+                skin.GetTexture(Sprite.Path, WrapMode.ClampToEdge, WrapMode.ClampToEdge)
+                ?? textureStore.Get(Sprite.Path, WrapMode.ClampToEdge, WrapMode.ClampToEdge);
 
             // Setting texture will only update the size if it's zero.
             // So let's force an explicit update.

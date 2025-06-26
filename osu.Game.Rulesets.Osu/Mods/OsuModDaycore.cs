@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModDaycore : ModDaycore
-    {
-    }
+    public class OsuModDaycore : ModDaycore { }
 }

@@ -31,7 +31,8 @@ namespace osu.Game.Screens.Ranking
             private SearchTextBox searchBox = null!;
             private SearchContainer searchContainer = null!;
 
-            public BindableDictionary<long, UserTag> AvailableTags { get; } = new BindableDictionary<long, UserTag>();
+            public BindableDictionary<long, UserTag> AvailableTags { get; } =
+                new BindableDictionary<long, UserTag>();
 
             public Action<UserTag>? OnSelected { get; set; }
 
@@ -40,11 +41,7 @@ namespace osu.Game.Screens.Ranking
             [BackgroundDependencyLoader]
             private void load()
             {
-                AllowableAnchors = new[]
-                {
-                    Anchor.TopCentre,
-                    Anchor.BottomCentre,
-                };
+                AllowableAnchors = new[] { Anchor.TopCentre, Anchor.BottomCentre };
 
                 Children = new Drawable[]
                 {
@@ -65,15 +62,16 @@ namespace osu.Game.Screens.Ranking
                                 Y = 40,
                                 Height = 260,
                                 ScrollbarOverlapsContent = false,
-                                Child = searchContainer = new SearchContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding { Right = 5, Bottom = 10 },
-                                    Direction = FillDirection.Vertical,
-                                    Spacing = new Vector2(10),
-                                }
-                            }
+                                Child = searchContainer =
+                                    new SearchContainer
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Padding = new MarginPadding { Right = 5, Bottom = 10 },
+                                        Direction = FillDirection.Vertical,
+                                        Spacing = new Vector2(10),
+                                    },
+                            },
                         },
                     },
                 };
@@ -83,18 +81,28 @@ namespace osu.Game.Screens.Ranking
             {
                 base.LoadComplete();
 
-                AvailableTags.BindCollectionChanged((_, _) =>
-                {
-                    loadCancellationTokenSource?.Cancel();
-                    loadCancellationTokenSource = new CancellationTokenSource();
-
-                    LoadComponentsAsync(createItems(AvailableTags.Values), loaded =>
+                AvailableTags.BindCollectionChanged(
+                    (_, _) =>
                     {
-                        searchContainer.Clear();
-                        searchContainer.AddRange(loaded);
-                    }, loadCancellationTokenSource.Token);
-                }, true);
-                searchBox.Current.BindValueChanged(_ => searchContainer.SearchTerm = searchBox.Current.Value, true);
+                        loadCancellationTokenSource?.Cancel();
+                        loadCancellationTokenSource = new CancellationTokenSource();
+
+                        LoadComponentsAsync(
+                            createItems(AvailableTags.Values),
+                            loaded =>
+                            {
+                                searchContainer.Clear();
+                                searchContainer.AddRange(loaded);
+                            },
+                            loadCancellationTokenSource.Token
+                        );
+                    },
+                    true
+                );
+                searchBox.Current.BindValueChanged(
+                    _ => searchContainer.SearchTerm = searchBox.Current.Value,
+                    true
+                );
             }
 
             private IEnumerable<Drawable> createItems(IEnumerable<UserTag> tags)
@@ -106,7 +114,9 @@ namespace osu.Game.Screens.Ranking
                     var drawableGroup = new GroupFlow(group.Key);
 
                     foreach (var tag in group.OrderBy(t => t.FullName))
-                        drawableGroup.Add(new DrawableAddableTag(tag) { Action = () => OnSelected?.Invoke(tag) });
+                        drawableGroup.Add(
+                            new DrawableAddableTag(tag) { Action = () => OnSelected?.Invoke(tag) }
+                        );
 
                     yield return drawableGroup;
                 }
@@ -125,7 +135,10 @@ namespace osu.Game.Screens.Ranking
 
             private void attemptSelect()
             {
-                var visibleItems = searchContainer.ChildrenOfType<DrawableAddableTag>().Where(d => d.IsPresent).ToArray();
+                var visibleItems = searchContainer
+                    .ChildrenOfType<DrawableAddableTag>()
+                    .Where(d => d.IsPresent)
+                    .ToArray();
 
                 if (visibleItems.Length == 1)
                     OnSelected?.Invoke(visibleItems.Single().Tag);
@@ -189,64 +202,68 @@ namespace osu.Game.Screens.Ranking
                 [BackgroundDependencyLoader]
                 private void load()
                 {
-                    Content.AddRange(new Drawable[]
-                    {
-                        new Box
+                    Content.AddRange(
+                        new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = colours.Gray7,
-                            Depth = float.MaxValue,
-                        },
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.Y,
-                            Width = 30,
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                            Depth = float.MaxValue,
-                            Children = new Drawable[]
+                            new Box
                             {
-                                votedBackground = new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                },
-                                votedIcon = new SpriteIcon
-                                {
-                                    Size = new Vector2(16),
-                                    Icon = FontAwesome.Solid.ThumbsUp,
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                }
-                            }
-                        },
-                        new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(2),
-                            Padding = new MarginPadding(5) { Right = 35 },
-                            Children = new Drawable[]
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = colours.Gray7,
+                                Depth = float.MaxValue,
+                            },
+                            new Container
                             {
-                                new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold))
+                                RelativeSizeAxes = Axes.Y,
+                                Width = 30,
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Depth = float.MaxValue,
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Text = Tag.DisplayName,
+                                    votedBackground = new Box { RelativeSizeAxes = Axes.Both },
+                                    votedIcon = new SpriteIcon
+                                    {
+                                        Size = new Vector2(16),
+                                        Icon = FontAwesome.Solid.ThumbsUp,
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                    },
                                 },
-                                new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(size: 14))
+                            },
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(2),
+                                Padding = new MarginPadding(5) { Right = 35 },
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Text = Tag.Description,
-                                }
-                            }
-                        },
-                        loadingLayer = new LoadingLayer(dimBackground: true),
-                    });
+                                    new OsuTextFlowContainer(t =>
+                                        t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold)
+                                    )
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Text = Tag.DisplayName,
+                                    },
+                                    new OsuTextFlowContainer(t =>
+                                        t.Font = OsuFont.Default.With(size: 14)
+                                    )
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Text = Tag.Description,
+                                    },
+                                },
+                            },
+                            loadingLayer = new LoadingLayer(dimBackground: true),
+                        }
+                    );
                 }
 
-                public IEnumerable<LocalisableString> FilterTerms => [Tag.FullName, Tag.Description];
+                public IEnumerable<LocalisableString> FilterTerms =>
+                    [Tag.FullName, Tag.Description];
 
                 public bool MatchingFilter
                 {
@@ -262,14 +279,29 @@ namespace osu.Game.Screens.Ranking
                 {
                     base.LoadComplete();
 
-                    voted.BindValueChanged(_ =>
-                    {
-                        votedBackground.FadeColour(voted.Value ? colours.Lime2 : colours.Gray2, 250, Easing.OutQuint);
-                        votedIcon.FadeColour(voted.Value ? Colour4.Black : Colour4.White, 250, Easing.OutQuint);
-                    }, true);
+                    voted.BindValueChanged(
+                        _ =>
+                        {
+                            votedBackground.FadeColour(
+                                voted.Value ? colours.Lime2 : colours.Gray2,
+                                250,
+                                Easing.OutQuint
+                            );
+                            votedIcon.FadeColour(
+                                voted.Value ? Colour4.Black : Colour4.White,
+                                250,
+                                Easing.OutQuint
+                            );
+                        },
+                        true
+                    );
                     FinishTransforms(true);
 
-                    updating.BindValueChanged(u => loadingLayer.State.Value = u.NewValue ? Visibility.Visible : Visibility.Hidden);
+                    updating.BindValueChanged(u =>
+                        loadingLayer.State.Value = u.NewValue
+                            ? Visibility.Visible
+                            : Visibility.Hidden
+                    );
                 }
             }
         }

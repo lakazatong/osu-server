@@ -25,15 +25,23 @@ namespace osu.Game.Screens.Play.HUD
 
         protected virtual bool DisplayXSymbol => true;
 
-        [SettingSource("Wireframe opacity", "Controls the opacity of the wireframes behind the digits.")]
-        public BindableFloat WireframeOpacity { get; } = new BindableFloat(0.25f)
-        {
-            Precision = 0.01f,
-            MinValue = 0,
-            MaxValue = 1,
-        };
+        [SettingSource(
+            "Wireframe opacity",
+            "Controls the opacity of the wireframes behind the digits."
+        )]
+        public BindableFloat WireframeOpacity { get; } =
+            new BindableFloat(0.25f)
+            {
+                Precision = 0.01f,
+                MinValue = 0,
+                MaxValue = 1,
+            };
 
-        [SettingSource(typeof(SkinnableComponentStrings), nameof(SkinnableComponentStrings.ShowLabel), nameof(SkinnableComponentStrings.ShowLabelDescription))]
+        [SettingSource(
+            typeof(SkinnableComponentStrings),
+            nameof(SkinnableComponentStrings.ShowLabel),
+            nameof(SkinnableComponentStrings.ShowLabelDescription)
+        )]
         public Bindable<bool> ShowLabel { get; } = new BindableBool(true);
 
         [BackgroundDependencyLoader]
@@ -45,12 +53,15 @@ namespace osu.Game.Screens.Play.HUD
                 bool wasIncrease = combo.NewValue > combo.OldValue;
                 bool wasMiss = combo.OldValue > 1 && combo.NewValue == 0;
 
-                float newScale = Math.Clamp(Text.NumberContainer.Scale.X * (wasIncrease ? 1.1f : 0.8f), 0.6f, 1.4f);
+                float newScale = Math.Clamp(
+                    Text.NumberContainer.Scale.X * (wasIncrease ? 1.1f : 0.8f),
+                    0.6f,
+                    1.4f
+                );
 
                 float duration = wasMiss ? 2000 : 500;
 
-                Text.NumberContainer
-                    .ScaleTo(new Vector2(newScale))
+                Text.NumberContainer.ScaleTo(new Vector2(newScale))
                     .ScaleTo(Vector2.One, duration, Easing.OutQuint);
 
                 if (wasMiss)
@@ -86,12 +97,17 @@ namespace osu.Game.Screens.Play.HUD
             return digitsRequired;
         }
 
-        protected override LocalisableString FormatCount(int count) => DisplayXSymbol ? $@"{count}x" : count.ToString();
+        protected override LocalisableString FormatCount(int count) =>
+            DisplayXSymbol ? $@"{count}x" : count.ToString();
 
-        protected override IHasText CreateText() => Text = new ArgonCounterTextComponent(Anchor.TopLeft, MatchesStrings.MatchScoreStatsCombo.ToUpper())
-        {
-            WireframeOpacity = { BindTarget = WireframeOpacity },
-            ShowLabel = { BindTarget = ShowLabel },
-        };
+        protected override IHasText CreateText() =>
+            Text = new ArgonCounterTextComponent(
+                Anchor.TopLeft,
+                MatchesStrings.MatchScoreStatsCombo.ToUpper()
+            )
+            {
+                WireframeOpacity = { BindTarget = WireframeOpacity },
+                ShowLabel = { BindTarget = ShowLabel },
+            };
     }
 }

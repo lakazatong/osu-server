@@ -12,7 +12,13 @@ namespace osu.Game.Benchmarks
         {
             BenchmarkSwitcher
                 .FromAssembly(typeof(Program).Assembly)
-                .Run(args, DefaultConfig.Instance.WithOption(ConfigOptions.DisableOptimizationsValidator, true));
+                .Run(
+                    args,
+                    DefaultConfig.Instance.WithOption(
+                        ConfigOptions.DisableOptimizationsValidator,
+                        true
+                    )
+                );
         }
     }
 }

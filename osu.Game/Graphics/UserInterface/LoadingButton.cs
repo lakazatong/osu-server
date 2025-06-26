@@ -41,13 +41,15 @@ namespace osu.Game.Graphics.UserInterface
         protected LoadingButton()
             : base(HoverSampleSet.Button)
         {
-            Add(loading = new LoadingSpinner
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(12),
-                Depth = -1,
-            });
+            Add(
+                loading = new LoadingSpinner
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(12),
+                    Depth = -1,
+                }
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -60,13 +62,16 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            loading.State.BindValueChanged(s =>
-            {
-                if (s.NewValue == Visibility.Visible)
-                    OnLoadStarted();
-                else
-                    OnLoadFinished();
-            }, true);
+            loading.State.BindValueChanged(
+                s =>
+                {
+                    if (s.NewValue == Visibility.Visible)
+                        OnLoadStarted();
+                    else
+                        OnLoadFinished();
+                },
+                true
+            );
         }
 
         protected override bool OnClick(ClickEvent e)
@@ -85,13 +90,9 @@ namespace osu.Game.Graphics.UserInterface
             }
         }
 
-        protected virtual void OnLoadStarted()
-        {
-        }
+        protected virtual void OnLoadStarted() { }
 
-        protected virtual void OnLoadFinished()
-        {
-        }
+        protected virtual void OnLoadFinished() { }
 
         protected abstract Drawable CreateContent();
     }

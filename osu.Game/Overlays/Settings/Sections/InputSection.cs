@@ -19,10 +19,7 @@ namespace osu.Game.Overlays.Settings.Sections
 
         public override LocalisableString Header => InputSettingsStrings.InputSectionHeader;
 
-        public override Drawable CreateIcon() => new SpriteIcon
-        {
-            Icon = OsuIcon.Input
-        };
+        public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.Input };
 
         public InputSection(KeyBindingPanel keyConfig)
         {
@@ -32,10 +29,7 @@ namespace osu.Game.Overlays.Settings.Sections
         [BackgroundDependencyLoader]
         private void load(GameHost host, OsuGameBase game)
         {
-            Children = new Drawable[]
-            {
-                new BindingSettings(keyConfig),
-            };
+            Children = new Drawable[] { new BindingSettings(keyConfig) };
 
             foreach (var handler in host.AvailableInputHandlers)
             {
@@ -63,7 +57,7 @@ namespace osu.Game.Overlays.Settings.Sections
                     new SettingsCheckbox
                     {
                         LabelText = CommonStrings.Enabled,
-                        Current = handler.Enabled
+                        Current = handler.Enabled,
                     },
                 };
             }

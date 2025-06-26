@@ -22,7 +22,12 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestFirstItemSelectedByDefault()
         {
-            AddUntilStep("first item selected", () => MultiplayerClient.ClientRoom?.Settings.PlaylistItemId == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID);
+            AddUntilStep(
+                "first item selected",
+                () =>
+                    MultiplayerClient.ClientRoom?.Settings.PlaylistItemId
+                    == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID
+            );
         }
 
         [Test]
@@ -30,21 +35,43 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             RunGameplay();
 
-            AddUntilStep("playlist contains two items", () => MultiplayerClient.ClientAPIRoom?.Playlist.Count == 2);
-            AddUntilStep("first playlist item expired", () => MultiplayerClient.ClientAPIRoom?.Playlist[0].Expired == true);
-            AddUntilStep("second playlist item not expired", () => MultiplayerClient.ClientAPIRoom?.Playlist[1].Expired == false);
-            AddUntilStep("second playlist item selected", () => MultiplayerClient.ClientRoom?.Settings.PlaylistItemId == MultiplayerClient.ClientAPIRoom?.Playlist[1].ID);
+            AddUntilStep(
+                "playlist contains two items",
+                () => MultiplayerClient.ClientAPIRoom?.Playlist.Count == 2
+            );
+            AddUntilStep(
+                "first playlist item expired",
+                () => MultiplayerClient.ClientAPIRoom?.Playlist[0].Expired == true
+            );
+            AddUntilStep(
+                "second playlist item not expired",
+                () => MultiplayerClient.ClientAPIRoom?.Playlist[1].Expired == false
+            );
+            AddUntilStep(
+                "second playlist item selected",
+                () =>
+                    MultiplayerClient.ClientRoom?.Settings.PlaylistItemId
+                    == MultiplayerClient.ClientAPIRoom?.Playlist[1].ID
+            );
         }
 
         [Test]
         public void TestSettingsUpdatedWhenChangingQueueMode()
         {
-            AddStep("change queue mode", () => MultiplayerClient.ChangeSettings(new MultiplayerRoomSettings
-            {
-                QueueMode = QueueMode.AllPlayers
-            }).WaitSafely());
+            AddStep(
+                "change queue mode",
+                () =>
+                    MultiplayerClient
+                        .ChangeSettings(
+                            new MultiplayerRoomSettings { QueueMode = QueueMode.AllPlayers }
+                        )
+                        .WaitSafely()
+            );
 
-            AddUntilStep("api room updated", () => MultiplayerClient.ClientAPIRoom?.QueueMode == QueueMode.AllPlayers);
+            AddUntilStep(
+                "api room updated",
+                () => MultiplayerClient.ClientAPIRoom?.QueueMode == QueueMode.AllPlayers
+            );
         }
 
         [Test]
@@ -52,7 +79,12 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             selectNewItem(() => InitialBeatmap);
 
-            AddUntilStep("playlist item still selected", () => MultiplayerClient.ClientRoom?.Settings.PlaylistItemId == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID);
+            AddUntilStep(
+                "playlist item still selected",
+                () =>
+                    MultiplayerClient.ClientRoom?.Settings.PlaylistItemId
+                    == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID
+            );
         }
 
         [Test]
@@ -60,7 +92,12 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             selectNewItem(() => OtherBeatmap);
 
-            AddUntilStep("playlist item still selected", () => MultiplayerClient.ClientRoom?.Settings.PlaylistItemId == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID);
+            AddUntilStep(
+                "playlist item still selected",
+                () =>
+                    MultiplayerClient.ClientRoom?.Settings.PlaylistItemId
+                    == MultiplayerClient.ClientAPIRoom?.Playlist[0].ID
+            );
         }
 
         [Test]
@@ -69,12 +106,21 @@ namespace osu.Game.Tests.Visual.Multiplayer
             RunGameplay();
 
             IBeatmapInfo firstBeatmap = null!;
-            AddStep("get first playlist item beatmap", () => firstBeatmap = MultiplayerClient.ServerAPIRoom!.Playlist[0].Beatmap);
+            AddStep(
+                "get first playlist item beatmap",
+                () => firstBeatmap = MultiplayerClient.ServerAPIRoom!.Playlist[0].Beatmap
+            );
 
             selectNewItem(() => OtherBeatmap);
 
-            AddUntilStep("first playlist item hasn't changed", () => MultiplayerClient.ServerAPIRoom!.Playlist[0].Beatmap == firstBeatmap);
-            AddUntilStep("second playlist item changed", () => MultiplayerClient.ClientAPIRoom!.Playlist[1].Beatmap != firstBeatmap);
+            AddUntilStep(
+                "first playlist item hasn't changed",
+                () => MultiplayerClient.ServerAPIRoom!.Playlist[0].Beatmap == firstBeatmap
+            );
+            AddUntilStep(
+                "second playlist item changed",
+                () => MultiplayerClient.ClientAPIRoom!.Playlist[1].Beatmap != firstBeatmap
+            );
         }
 
         [Test]
@@ -82,43 +128,86 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             addItem(() => OtherBeatmap);
 
-            AddUntilStep("playlist contains two items", () => MultiplayerClient.ClientAPIRoom?.Playlist.Count == 2);
+            AddUntilStep(
+                "playlist contains two items",
+                () => MultiplayerClient.ClientAPIRoom?.Playlist.Count == 2
+            );
         }
 
         private void selectNewItem(Func<BeatmapInfo> beatmap)
         {
-            AddUntilStep("wait for playlist panels to load", () =>
-            {
-                var queueList = this.ChildrenOfType<MultiplayerQueueList>().Single();
-                return queueList.ChildrenOfType<DrawableRoomPlaylistItem>().Count() == queueList.Items.Count;
-            });
+            AddUntilStep(
+                "wait for playlist panels to load",
+                () =>
+                {
+                    var queueList = this.ChildrenOfType<MultiplayerQueueList>().Single();
+                    return queueList.ChildrenOfType<DrawableRoomPlaylistItem>().Count()
+                        == queueList.Items.Count;
+                }
+            );
 
-            AddStep("click edit button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableRoomPlaylistItem.PlaylistEditButton>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click edit button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<DrawableRoomPlaylistItem.PlaylistEditButton>().First()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddUntilStep("wait for song select", () => CurrentSubScreen is Screens.Select.SongSelect select && select.BeatmapSetsLoaded);
+            AddUntilStep(
+                "wait for song select",
+                () =>
+                    CurrentSubScreen is Screens.Select.SongSelect select && select.BeatmapSetsLoaded
+            );
 
             BeatmapInfo otherBeatmap = null!;
-            AddStep("select other beatmap", () => ((Screens.Select.SongSelect)CurrentSubScreen).FinaliseSelection(otherBeatmap = beatmap()));
+            AddStep(
+                "select other beatmap",
+                () =>
+                    ((Screens.Select.SongSelect)CurrentSubScreen).FinaliseSelection(
+                        otherBeatmap = beatmap()
+                    )
+            );
 
-            AddUntilStep("wait for return to match", () => CurrentSubScreen is MultiplayerMatchSubScreen);
-            AddUntilStep("selected item is new beatmap", () => Beatmap.Value.BeatmapInfo.OnlineID == otherBeatmap.OnlineID);
+            AddUntilStep(
+                "wait for return to match",
+                () => CurrentSubScreen is MultiplayerMatchSubScreen
+            );
+            AddUntilStep(
+                "selected item is new beatmap",
+                () => Beatmap.Value.BeatmapInfo.OnlineID == otherBeatmap.OnlineID
+            );
         }
 
         private void addItem(Func<BeatmapInfo> beatmap)
         {
-            AddStep("click add button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<MultiplayerMatchSubScreen.AddItemButton>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click add button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<MultiplayerMatchSubScreen.AddItemButton>().Single()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddUntilStep("wait for song select", () => CurrentSubScreen is Screens.Select.SongSelect select && select.BeatmapSetsLoaded);
-            AddStep("select other beatmap", () => ((Screens.Select.SongSelect)CurrentSubScreen).FinaliseSelection(beatmap()));
-            AddUntilStep("wait for return to match", () => CurrentSubScreen is MultiplayerMatchSubScreen);
+            AddUntilStep(
+                "wait for song select",
+                () =>
+                    CurrentSubScreen is Screens.Select.SongSelect select && select.BeatmapSetsLoaded
+            );
+            AddStep(
+                "select other beatmap",
+                () => ((Screens.Select.SongSelect)CurrentSubScreen).FinaliseSelection(beatmap())
+            );
+            AddUntilStep(
+                "wait for return to match",
+                () => CurrentSubScreen is MultiplayerMatchSubScreen
+            );
         }
     }
 }

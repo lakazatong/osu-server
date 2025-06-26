@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
         // Invariant: `path.Vertices.Count == vertexStates.Count`
         private readonly List<VertexState> vertexStates = new List<VertexState>
         {
-            new VertexState { IsFixed = true }
+            new VertexState { IsFixed = true },
         };
 
         private readonly List<VertexState> previousVertexStates = new List<VertexState>();
@@ -53,7 +53,10 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             Anchor = Anchor.BottomLeft;
         }
 
-        public void UpdateFrom(ScrollingHitObjectContainer hitObjectContainer, JuiceStream hitObject)
+        public void UpdateFrom(
+            ScrollingHitObjectContainer hitObjectContainer,
+            JuiceStream hitObject
+        )
         {
             while (path.Vertices.Count < InternalChildren.Count)
                 RemoveInternal(InternalChildren[^1], true);
@@ -61,7 +64,10 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             while (InternalChildren.Count < path.Vertices.Count)
                 AddInternal(new VertexPiece());
 
-            double timeToYFactor = -hitObjectContainer.LengthAtTime(hitObject.StartTime, hitObject.StartTime + 1);
+            double timeToYFactor = -hitObjectContainer.LengthAtTime(
+                hitObject.StartTime,
+                hitObject.StartTime + 1
+            );
 
             for (int i = 0; i < VertexCount; i++)
             {
@@ -80,16 +86,18 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             // If the original slider path has non-linear type segments, resample the vertices at nested hit object times to reduce the number of vertices.
             if (sliderPath.ControlPoints.Any(p => p.Type != null && p.Type != PathType.LINEAR))
             {
-                path.ResampleVertices(hitObject.NestedHitObjects
-                                               .Skip(1).TakeWhile(h => !(h is Fruit)) // Only droplets in the first span are used.
-                                               .Select(h => h.StartTime - hitObject.StartTime));
+                path.ResampleVertices(
+                    hitObject
+                        .NestedHitObjects.Skip(1)
+                        .TakeWhile(h => !(h is Fruit)) // Only droplets in the first span are used.
+                        .Select(h => h.StartTime - hitObject.StartTime)
+                );
             }
 
             vertexStates.Clear();
-            vertexStates.AddRange(path.Vertices.Select((_, i) => new VertexState
-            {
-                IsFixed = i == 0
-            }));
+            vertexStates.AddRange(
+                path.Vertices.Select((_, i) => new VertexState { IsFixed = i == 0 })
+            );
         }
 
         public virtual void UpdateHitObjectFromPath(JuiceStream hitObject)
@@ -117,11 +125,13 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             double localVelocity = hitObject.Velocity * relativeChange;
             path.ConvertToSliderPath(hitObject.Path, hitObject.LegacyConvertedY, localVelocity);
 
-            if (beatSnapProvider == null) return;
+            if (beatSnapProvider == null)
+                return;
 
             double endTime = hitObject.StartTime + path.Duration;
             double snappedEndTime = beatSnapProvider.SnapTime(endTime, hitObject.StartTime);
-            hitObject.Path.ExpectedDistance.Value = (snappedEndTime - hitObject.StartTime) * localVelocity;
+            hitObject.Path.ExpectedDistance.Value =
+                (snappedEndTime - hitObject.StartTime) * localVelocity;
 
             EditorBeatmap?.Update(hitObject);
         }

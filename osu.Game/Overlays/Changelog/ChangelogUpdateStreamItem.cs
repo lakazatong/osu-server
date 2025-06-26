@@ -19,7 +19,10 @@ namespace osu.Game.Overlays.Changelog
 
             MainText = Value.DisplayName;
             AdditionalText = Value.LatestBuild.DisplayVersion;
-            InfoText = Value.UserCount > 0 ? $"{"user".ToQuantity(Value.UserCount, "N0")} online" : default(LocalisableString);
+            InfoText =
+                Value.UserCount > 0
+                    ? $"{"user".ToQuantity(Value.UserCount, "N0")} online"
+                    : default(LocalisableString);
         }
 
         protected override Color4 GetBarColour(OsuColour colours) => Value.Colour;

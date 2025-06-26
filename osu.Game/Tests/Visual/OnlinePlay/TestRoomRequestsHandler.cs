@@ -41,7 +41,11 @@ namespace osu.Game.Tests.Visual.OnlinePlay
         /// <param name="localUser">The local user to store in responses where required.</param>
         /// <param name="beatmapManager">The beatmap manager to attempt to retrieve beatmaps from, prior to returning dummy beatmaps.</param>
         /// <returns>Whether the request was successfully handled.</returns>
-        public bool HandleRequest(APIRequest request, APIUser localUser, BeatmapManager beatmapManager)
+        public bool HandleRequest(
+            APIRequest request,
+            APIUser localUser,
+            BeatmapManager beatmapManager
+        )
         {
             switch (request)
             {
@@ -65,7 +69,9 @@ namespace osu.Game.Tests.Visual.OnlinePlay
 
                     if (joinRoomRequest.Password != room.Password)
                     {
-                        joinRoomRequest.TriggerFailure(new InvalidOperationException("Invalid password."));
+                        joinRoomRequest.TriggerFailure(
+                            new InvalidOperationException("Invalid password.")
+                        );
                         return true;
                     }
 
@@ -74,76 +80,80 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                 }
 
                 case GetRoomLeaderboardRequest roomLeaderboardRequest:
-                    roomLeaderboardRequest.TriggerSuccess(new APILeaderboard
-                    {
-                        Leaderboard = new List<APIUserScoreAggregate>
+                    roomLeaderboardRequest.TriggerSuccess(
+                        new APILeaderboard
                         {
-                            new APIUserScoreAggregate
+                            Leaderboard = new List<APIUserScoreAggregate>
                             {
-                                TotalScore = 1000000,
-                                TotalAttempts = 5,
-                                CompletedBeatmaps = 2,
-                                User = new APIUser { Username = "best user" }
+                                new APIUserScoreAggregate
+                                {
+                                    TotalScore = 1000000,
+                                    TotalAttempts = 5,
+                                    CompletedBeatmaps = 2,
+                                    User = new APIUser { Username = "best user" },
+                                },
+                                new APIUserScoreAggregate
+                                {
+                                    TotalScore = 50,
+                                    TotalAttempts = 1,
+                                    CompletedBeatmaps = 1,
+                                    User = new APIUser { Username = "worst user" },
+                                },
                             },
-                            new APIUserScoreAggregate
-                            {
-                                TotalScore = 50,
-                                TotalAttempts = 1,
-                                CompletedBeatmaps = 1,
-                                User = new APIUser { Username = "worst user" }
-                            }
                         }
-                    });
+                    );
                     return true;
 
                 case IndexPlaylistScoresRequest roomLeaderboardRequest:
-                    roomLeaderboardRequest.TriggerSuccess(new IndexedMultiplayerScores
-                    {
-                        Scores =
+                    roomLeaderboardRequest.TriggerSuccess(
+                        new IndexedMultiplayerScores
                         {
-                            new MultiplayerScore
+                            Scores =
                             {
-                                ID = currentScoreId++,
-                                Accuracy = 1,
-                                Position = 1,
-                                EndedAt = DateTimeOffset.Now,
-                                Passed = true,
-                                Rank = ScoreRank.S,
-                                MaxCombo = 1000,
-                                TotalScore = 1000000,
-                                User = new APIUser { Username = "best user" },
-                                Mods = [new APIMod { Acronym = @"DT" }],
-                                Statistics = new Dictionary<HitResult, int>()
+                                new MultiplayerScore
+                                {
+                                    ID = currentScoreId++,
+                                    Accuracy = 1,
+                                    Position = 1,
+                                    EndedAt = DateTimeOffset.Now,
+                                    Passed = true,
+                                    Rank = ScoreRank.S,
+                                    MaxCombo = 1000,
+                                    TotalScore = 1000000,
+                                    User = new APIUser { Username = "best user" },
+                                    Mods = [new APIMod { Acronym = @"DT" }],
+                                    Statistics = new Dictionary<HitResult, int>(),
+                                },
+                                new MultiplayerScore
+                                {
+                                    ID = currentScoreId++,
+                                    Accuracy = 0.7,
+                                    Position = 2,
+                                    EndedAt = DateTimeOffset.Now,
+                                    Passed = true,
+                                    Rank = ScoreRank.B,
+                                    MaxCombo = 100,
+                                    TotalScore = 200000,
+                                    User = new APIUser { Username = "worst user" },
+                                    Mods = [new APIMod { Acronym = @"TD" }],
+                                    Statistics = new Dictionary<HitResult, int>(),
+                                },
                             },
-                            new MultiplayerScore
+                            UserScore = new MultiplayerScore
                             {
                                 ID = currentScoreId++,
-                                Accuracy = 0.7,
-                                Position = 2,
+                                Accuracy = 0.91,
+                                Position = 4,
                                 EndedAt = DateTimeOffset.Now,
                                 Passed = true,
-                                Rank = ScoreRank.B,
+                                Rank = ScoreRank.A,
                                 MaxCombo = 100,
-                                TotalScore = 200000,
-                                User = new APIUser { Username = "worst user" },
-                                Mods = [new APIMod { Acronym = @"TD" }],
-                                Statistics = new Dictionary<HitResult, int>()
+                                TotalScore = 800000,
+                                User = localUser,
+                                Statistics = new Dictionary<HitResult, int>(),
                             },
-                        },
-                        UserScore = new MultiplayerScore
-                        {
-                            ID = currentScoreId++,
-                            Accuracy = 0.91,
-                            Position = 4,
-                            EndedAt = DateTimeOffset.Now,
-                            Passed = true,
-                            Rank = ScoreRank.A,
-                            MaxCombo = 100,
-                            TotalScore = 800000,
-                            User = localUser,
-                            Statistics = new Dictionary<HitResult, int>()
-                        },
-                    });
+                        }
+                    );
                     return true;
 
                 case PartRoomRequest partRoomRequest:
@@ -160,7 +170,12 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                     return true;
 
                 case GetRoomRequest getRoomRequest:
-                    getRoomRequest.TriggerSuccess(createResponseRoom(ServerSideRooms.Single(r => r.RoomID == getRoomRequest.RoomId), true));
+                    getRoomRequest.TriggerSuccess(
+                        createResponseRoom(
+                            ServerSideRooms.Single(r => r.RoomID == getRoomRequest.RoomId),
+                            true
+                        )
+                    );
                     return true;
 
                 case CreateRoomScoreRequest createRoomScoreRequest:
@@ -168,37 +183,53 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                     return true;
 
                 case SubmitRoomScoreRequest submitRoomScoreRequest:
-                    submitRoomScoreRequest.TriggerSuccess(new MultiplayerScore
-                    {
-                        ID = currentScoreId++,
-                        Accuracy = 1,
-                        EndedAt = DateTimeOffset.Now,
-                        Passed = true,
-                        Rank = ScoreRank.S,
-                        MaxCombo = 1000,
-                        TotalScore = 1000000,
-                        User = localUser,
-                        Statistics = new Dictionary<HitResult, int>()
-                    });
+                    submitRoomScoreRequest.TriggerSuccess(
+                        new MultiplayerScore
+                        {
+                            ID = currentScoreId++,
+                            Accuracy = 1,
+                            EndedAt = DateTimeOffset.Now,
+                            Passed = true,
+                            Rank = ScoreRank.S,
+                            MaxCombo = 1000,
+                            TotalScore = 1000000,
+                            User = localUser,
+                            Statistics = new Dictionary<HitResult, int>(),
+                        }
+                    );
                     return true;
 
                 case GetBeatmapRequest getBeatmapRequest:
                 {
-                    getBeatmapRequest.TriggerSuccess(createResponseBeatmaps(getBeatmapRequest.OnlineID).Single());
+                    getBeatmapRequest.TriggerSuccess(
+                        createResponseBeatmaps(getBeatmapRequest.OnlineID).Single()
+                    );
                     return true;
                 }
 
                 case GetBeatmapsRequest getBeatmapsRequest:
                 {
-                    getBeatmapsRequest.TriggerSuccess(new GetBeatmapsResponse { Beatmaps = createResponseBeatmaps(getBeatmapsRequest.BeatmapIds.ToArray()) });
+                    getBeatmapsRequest.TriggerSuccess(
+                        new GetBeatmapsResponse
+                        {
+                            Beatmaps = createResponseBeatmaps(
+                                getBeatmapsRequest.BeatmapIds.ToArray()
+                            ),
+                        }
+                    );
                     return true;
                 }
 
                 case GetBeatmapSetRequest getBeatmapSetRequest:
                 {
-                    var baseBeatmap = getBeatmapSetRequest.Type == BeatmapSetLookupType.BeatmapId
-                        ? beatmapManager.QueryBeatmap(b => b.OnlineID == getBeatmapSetRequest.ID)
-                        : beatmapManager.QueryBeatmapSet(s => s.OnlineID == getBeatmapSetRequest.ID)?.PerformRead(s => s.Beatmaps.First().Detach());
+                    var baseBeatmap =
+                        getBeatmapSetRequest.Type == BeatmapSetLookupType.BeatmapId
+                            ? beatmapManager.QueryBeatmap(b =>
+                                b.OnlineID == getBeatmapSetRequest.ID
+                            )
+                            : beatmapManager
+                                .QueryBeatmapSet(s => s.OnlineID == getBeatmapSetRequest.ID)
+                                ?.PerformRead(s => s.Beatmaps.First().Detach());
 
                     if (baseBeatmap == null)
                     {
@@ -207,31 +238,40 @@ namespace osu.Game.Tests.Visual.OnlinePlay
                         baseBeatmap.BeatmapSet!.OnlineID = getBeatmapSetRequest.ID;
                     }
 
-                    getBeatmapSetRequest.TriggerSuccess(OsuTestScene.CreateAPIBeatmapSet(baseBeatmap));
+                    getBeatmapSetRequest.TriggerSuccess(
+                        OsuTestScene.CreateAPIBeatmapSet(baseBeatmap)
+                    );
                     return true;
                 }
 
                 case GetUsersRequest getUsersRequest:
                 {
-                    getUsersRequest.TriggerSuccess(new GetUsersResponse
-                    {
-                        Users = getUsersRequest.UserIds.Select(id => id == TestUserLookupCache.UNRESOLVED_USER_ID
-                                                   ? null
-                                                   : new APIUser
-                                                   {
-                                                       Id = id,
-                                                       Username = $"User {id}",
-                                                       Team = RNG.NextBool()
-                                                           ? new APITeam
-                                                           {
-                                                               Name = "Collective Wangs",
-                                                               ShortName = "WANG",
-                                                               FlagUrl = "https://assets.ppy.sh/teams/flag/1/wanglogo.jpg",
-                                                           }
-                                                           : null,
-                                                   })
-                                               .Where(u => u != null).ToList(),
-                    });
+                    getUsersRequest.TriggerSuccess(
+                        new GetUsersResponse
+                        {
+                            Users = getUsersRequest
+                                .UserIds.Select(id =>
+                                    id == TestUserLookupCache.UNRESOLVED_USER_ID
+                                        ? null
+                                        : new APIUser
+                                        {
+                                            Id = id,
+                                            Username = $"User {id}",
+                                            Team = RNG.NextBool()
+                                                ? new APITeam
+                                                {
+                                                    Name = "Collective Wangs",
+                                                    ShortName = "WANG",
+                                                    FlagUrl =
+                                                        "https://assets.ppy.sh/teams/flag/1/wanglogo.jpg",
+                                                }
+                                                : null,
+                                        }
+                                )
+                                .Where(u => u != null)
+                                .ToList(),
+                        }
+                    );
                     return true;
                 }
             }
@@ -300,8 +340,19 @@ namespace osu.Game.Tests.Visual.OnlinePlay
             // When serialising, only beatmap IDs are sent to the server.
             // When deserialising, full beatmaps and IDs are expected to arrive.
 
-            PlaylistItem? finalCurrentItem = result.CurrentPlaylistItem?.With(id: source.CurrentPlaylistItem!.ID, beatmap: new Optional<IBeatmapInfo>(source.CurrentPlaylistItem.Beatmap));
-            PlaylistItem[] finalPlaylist = result.Playlist.Select((pi, i) => pi.With(id: source.Playlist[i].ID, beatmap: new Optional<IBeatmapInfo>(source.Playlist[i].Beatmap))).ToArray();
+            PlaylistItem? finalCurrentItem = result.CurrentPlaylistItem?.With(
+                id: source.CurrentPlaylistItem!.ID,
+                beatmap: new Optional<IBeatmapInfo>(source.CurrentPlaylistItem.Beatmap)
+            );
+            PlaylistItem[] finalPlaylist = result
+                .Playlist.Select(
+                    (pi, i) =>
+                        pi.With(
+                            id: source.Playlist[i].ID,
+                            beatmap: new Optional<IBeatmapInfo>(source.Playlist[i].Beatmap)
+                        )
+                )
+                .ToArray();
 
             // When setting the properties, we do a clear-then-add, otherwise equality comparers (that only compare by ID) pass early and members don't get replaced.
             result.CurrentPlaylistItem = null;

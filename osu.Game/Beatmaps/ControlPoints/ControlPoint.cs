@@ -11,7 +11,11 @@ using osuTK.Graphics;
 namespace osu.Game.Beatmaps.ControlPoints
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    public abstract class ControlPoint : IComparable<ControlPoint>, IDeepCloneable<ControlPoint>, IEquatable<ControlPoint>, IControlPoint
+    public abstract class ControlPoint
+        : IComparable<ControlPoint>,
+            IDeepCloneable<ControlPoint>,
+            IEquatable<ControlPoint>,
+            IControlPoint
     {
         /// <summary>
         /// Invoked when any of this <see cref="ControlPoint"/>'s properties have changed.
@@ -66,14 +70,15 @@ namespace osu.Game.Beatmaps.ControlPoints
             Time = other.Time;
         }
 
-        public sealed override bool Equals(object? obj)
-            => obj is ControlPoint otherControlPoint
-               && Equals(otherControlPoint);
+        public sealed override bool Equals(object? obj) =>
+            obj is ControlPoint otherControlPoint && Equals(otherControlPoint);
 
         public virtual bool Equals(ControlPoint? other)
         {
-            if (ReferenceEquals(other, null)) return false;
-            if (ReferenceEquals(other, this)) return true;
+            if (ReferenceEquals(other, null))
+                return false;
+            if (ReferenceEquals(other, this))
+                return true;
 
             return Time == other.Time;
         }

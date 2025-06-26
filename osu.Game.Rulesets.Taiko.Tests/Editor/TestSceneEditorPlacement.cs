@@ -19,17 +19,30 @@ namespace osu.Game.Rulesets.Taiko.Tests.Editor
         public void TestPlacementBlueprintDoesNotCauseCrashes()
         {
             AddStep("clear objects", () => EditorBeatmap.Clear());
-            AddStep("add two objects", () =>
-            {
-                EditorBeatmap.Add(new Hit { StartTime = 1818 });
-                EditorBeatmap.Add(new Hit { StartTime = 1584 });
-            });
+            AddStep(
+                "add two objects",
+                () =>
+                {
+                    EditorBeatmap.Add(new Hit { StartTime = 1818 });
+                    EditorBeatmap.Add(new Hit { StartTime = 1584 });
+                }
+            );
             AddStep("seek back", () => EditorClock.Seek(1584));
             AddStep("choose hit placement tool", () => InputManager.Key(Key.Number2));
-            AddStep("hover over first hit", () => InputManager.MoveMouseTo(Editor.ChildrenOfType<DrawableHit>().ElementAt(1)));
-            AddStep("hover over second hit", () => InputManager.MoveMouseTo(Editor.ChildrenOfType<DrawableHit>().ElementAt(0)));
+            AddStep(
+                "hover over first hit",
+                () => InputManager.MoveMouseTo(Editor.ChildrenOfType<DrawableHit>().ElementAt(1))
+            );
+            AddStep(
+                "hover over second hit",
+                () => InputManager.MoveMouseTo(Editor.ChildrenOfType<DrawableHit>().ElementAt(0))
+            );
             AddStep("right click", () => InputManager.Click(MouseButton.Right));
-            AddUntilStep("second hit deleted", () => Editor.ChildrenOfType<DrawableHit>().Count(), () => Is.EqualTo(1));
+            AddUntilStep(
+                "second hit deleted",
+                () => Editor.ChildrenOfType<DrawableHit>().Count(),
+                () => Is.EqualTo(1)
+            );
         }
     }
 }

@@ -12,6 +12,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
 using osu.Game.Beatmaps;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.Rooms;
 using osu.Game.Overlays;
@@ -21,7 +22,6 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Screens.Select;
 using osu.Game.Users;
 using osu.Game.Utils;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.OnlinePlay
 {
@@ -41,7 +41,9 @@ namespace osu.Game.Screens.OnlinePlay
 
         protected override UserActivity InitialActivity => new UserActivity.InLobby(room);
 
-        protected readonly Bindable<IReadOnlyList<Mod>> FreeMods = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        protected readonly Bindable<IReadOnlyList<Mod>> FreeMods = new Bindable<IReadOnlyList<Mod>>(
+            Array.Empty<Mod>()
+        );
         protected readonly Bindable<bool> Freestyle = new Bindable<bool>(true);
 
         private readonly Room room;
@@ -108,8 +110,12 @@ namespace osu.Game.Screens.OnlinePlay
 
                     // At this point, Mods contains both the required and allowed mods. For selection purposes, it should only contain the required mods.
                     // Similarly, freeMods is currently empty but should only contain the allowed mods.
-                    Mods.Value = initialItem.RequiredMods.Select(m => m.ToMod(rulesetInstance)).ToArray();
-                    FreeMods.Value = initialItem.AllowedMods.Select(m => m.ToMod(rulesetInstance)).ToArray();
+                    Mods.Value = initialItem
+                        .RequiredMods.Select(m => m.ToMod(rulesetInstance))
+                        .ToArray();
+                    FreeMods.Value = initialItem
+                        .AllowedMods.Select(m => m.ToMod(rulesetInstance))
+                        .ToArray();
                 }
 
                 Freestyle.Value = initialItem.Freestyle;
@@ -119,7 +125,9 @@ namespace osu.Game.Screens.OnlinePlay
             Ruleset.BindValueChanged(onRulesetChanged);
             Freestyle.BindValueChanged(onFreestyleChanged);
 
-            freeModSelectOverlayRegistration = OverlayManager?.RegisterBlockingOverlay(freeModSelect);
+            freeModSelectOverlayRegistration = OverlayManager?.RegisterBlockingOverlay(
+                freeModSelect
+            );
 
             updateFooterButtons();
             updateValidMods();
@@ -141,7 +149,10 @@ namespace osu.Game.Screens.OnlinePlay
             else
             {
                 // When disabling freestyle, enable freemods by default.
-                FreeMods.Value = freeModSelect.AllAvailableMods.Where(state => state.ValidForSelection.Value).Select(state => state.Mod).ToArray();
+                FreeMods.Value = freeModSelect
+                    .AllAvailableMods.Where(state => state.ValidForSelection.Value)
+                    .Select(state => state.Mod)
+                    .ToArray();
             }
         }
 
@@ -192,7 +203,7 @@ namespace osu.Game.Screens.OnlinePlay
                 RulesetID = Ruleset.Value.OnlineID,
                 RequiredMods = Mods.Value.Select(m => new APIMod(m)).ToArray(),
                 AllowedMods = FreeMods.Value.Select(m => new APIMod(m)).ToArray(),
-                Freestyle = Freestyle.Value
+                Freestyle = Freestyle.Value,
             };
 
             return SelectItem(item);
@@ -222,29 +233,34 @@ namespace osu.Game.Screens.OnlinePlay
             return base.OnExiting(e);
         }
 
-        protected override ModSelectOverlay CreateModSelectOverlay() => new UserModSelectOverlay(OverlayColourScheme.Plum)
-        {
-            IsValidMod = isValidRequiredMod
-        };
+        protected override ModSelectOverlay CreateModSelectOverlay() =>
+            new UserModSelectOverlay(OverlayColourScheme.Plum) { IsValidMod = isValidRequiredMod };
 
-        protected override IEnumerable<(FooterButton button, OverlayContainer? overlay)> CreateSongSelectFooterButtons()
+        protected override IEnumerable<(
+            FooterButton button,
+            OverlayContainer? overlay
+        )> CreateSongSelectFooterButtons()
         {
             var baseButtons = base.CreateSongSelectFooterButtons().ToList();
 
-            baseButtons.Single(i => i.button is FooterButtonMods).button.TooltipText = MultiplayerMatchStrings.RequiredModsButtonTooltip;
+            baseButtons.Single(i => i.button is FooterButtonMods).button.TooltipText =
+                MultiplayerMatchStrings.RequiredModsButtonTooltip;
 
-            baseButtons.InsertRange(baseButtons.FindIndex(b => b.button is FooterButtonMods) + 1, new (FooterButton, OverlayContainer?)[]
-            {
-                (freeModsFooterButton = new FooterButtonFreeMods(freeModSelect)
+            baseButtons.InsertRange(
+                baseButtons.FindIndex(b => b.button is FooterButtonMods) + 1,
+                new (FooterButton, OverlayContainer?)[]
                 {
-                    FreeMods = { BindTarget = FreeMods },
-                    Freestyle = { BindTarget = Freestyle }
-                }, null),
-                (new FooterButtonFreestyle
-                {
-                    Freestyle = { BindTarget = Freestyle }
-                }, null)
-            });
+                    (
+                        freeModsFooterButton = new FooterButtonFreeMods(freeModSelect)
+                        {
+                            FreeMods = { BindTarget = FreeMods },
+                            Freestyle = { BindTarget = Freestyle },
+                        },
+                        null
+                    ),
+                    (new FooterButtonFreestyle { Freestyle = { BindTarget = Freestyle } }, null),
+                }
+            );
 
             return baseButtons;
         }
@@ -253,17 +269,19 @@ namespace osu.Game.Screens.OnlinePlay
         /// Checks whether a given <see cref="Mod"/> is valid to be selected as a required mod.
         /// </summary>
         /// <param name="mod">The <see cref="Mod"/> to check.</param>
-        private bool isValidRequiredMod(Mod mod) => ModUtils.IsValidModForMatch(mod, true, room.Type, Freestyle.Value);
+        private bool isValidRequiredMod(Mod mod) =>
+            ModUtils.IsValidModForMatch(mod, true, room.Type, Freestyle.Value);
 
         /// <summary>
         /// Checks whether a given <see cref="Mod"/> is valid to be selected as an allowed mod.
         /// </summary>
         /// <param name="mod">The <see cref="Mod"/> to check.</param>
-        private bool isValidAllowedMod(Mod mod) => ModUtils.IsValidModForMatch(mod, false, room.Type, Freestyle.Value)
-                                                   // Mod must not be contained in the required mods.
-                                                   && Mods.Value.All(m => m.Acronym != mod.Acronym)
-                                                   // Mod must be compatible with all the required mods.
-                                                   && ModUtils.CheckCompatibleSet(Mods.Value.Append(mod).ToArray());
+        private bool isValidAllowedMod(Mod mod) =>
+            ModUtils.IsValidModForMatch(mod, false, room.Type, Freestyle.Value)
+            // Mod must not be contained in the required mods.
+            && Mods.Value.All(m => m.Acronym != mod.Acronym)
+            // Mod must be compatible with all the required mods.
+            && ModUtils.CheckCompatibleSet(Mods.Value.Append(mod).ToArray());
 
         protected override void Dispose(bool isDisposing)
         {

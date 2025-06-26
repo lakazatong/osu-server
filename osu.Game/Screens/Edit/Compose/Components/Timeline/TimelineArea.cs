@@ -44,21 +44,21 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                     Origin = Anchor.TopRight,
                     Width = 35 + HitObjectComposer.TOOLBOX_CONTRACTED_SIZE_RIGHT,
                     RelativeSizeAxes = Axes.Y,
-                    Colour = colourProvider.Background4
+                    Colour = colourProvider.Background4,
                 },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    RowDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize),
-                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                     ColumnDimensions = new[]
                     {
                         new Dimension(),
                         new Dimension(GridSizeMode.Absolute, 35),
-                        new Dimension(GridSizeMode.Absolute, HitObjectComposer.TOOLBOX_CONTRACTED_SIZE_RIGHT),
+                        new Dimension(
+                            GridSizeMode.Absolute,
+                            HitObjectComposer.TOOLBOX_CONTRACTED_SIZE_RIGHT
+                        ),
                     },
                     Content = new[]
                     {
@@ -74,10 +74,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                                     {
                                         RelativeSizeAxes = Axes.Both,
                                         Depth = float.MaxValue,
-                                        Colour = colourProvider.Background5
+                                        Colour = colourProvider.Background5,
                                     },
                                     Timeline = new Timeline(userContent),
-                                }
+                                },
                             },
                             new Container
                             {
@@ -103,7 +103,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                                                 RelativeSizeAxes = Axes.Both,
                                                 Size = new Vector2(1, 0.5f),
                                                 Icon = FontAwesome.Solid.SearchPlus,
-                                                Action = () => Timeline.AdjustZoomRelatively(1)
+                                                Action = () => Timeline.AdjustZoomRelatively(1),
                                             },
                                             new TimelineButton
                                             {
@@ -112,16 +112,16 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                                                 RelativeSizeAxes = Axes.Both,
                                                 Size = new Vector2(1, 0.5f),
                                                 Icon = FontAwesome.Solid.SearchMinus,
-                                                Action = () => Timeline.AdjustZoomRelatively(-1)
+                                                Action = () => Timeline.AdjustZoomRelatively(-1),
                                             },
-                                        }
-                                    }
-                                }
+                                        },
+                                    },
+                                },
                             },
-                            new BeatDivisorControl { RelativeSizeAxes = Axes.Both }
+                            new BeatDivisorControl { RelativeSizeAxes = Axes.Both },
                         },
                     },
-                }
+                },
             };
 
             if (editor != null)
@@ -132,14 +132,17 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         {
             base.LoadComplete();
 
-            composerFocusMode.BindValueChanged(_ =>
-            {
-                // Transforms should be kept in sync with other usages of composer focus mode.
-                if (!composerFocusMode.Value)
-                    timelineBackground.FadeIn(750, Easing.OutQuint);
-                else
-                    timelineBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
-            }, true);
+            composerFocusMode.BindValueChanged(
+                _ =>
+                {
+                    // Transforms should be kept in sync with other usages of composer focus mode.
+                    if (!composerFocusMode.Value)
+                        timelineBackground.FadeIn(750, Easing.OutQuint);
+                    else
+                        timelineBackground.Delay(600).FadeTo(0.5f, 4000, Easing.OutQuint);
+                },
+                true
+            );
         }
     }
 }

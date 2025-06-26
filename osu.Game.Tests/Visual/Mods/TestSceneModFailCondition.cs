@@ -34,22 +34,31 @@ namespace osu.Game.Tests.Visual.Mods
         }
 
         [Test]
-        public void TestRestartOnFailDisabled() => CreateModTest(new ModTestData
-        {
-            Autoplay = false,
-            Mod = new OsuModSuddenDeath(),
-            PassCondition = () => !restartRequested && Player.ChildrenOfType<FailOverlay>().Single().State.Value == Visibility.Visible
-        });
+        public void TestRestartOnFailDisabled() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Autoplay = false,
+                    Mod = new OsuModSuddenDeath(),
+                    PassCondition = () =>
+                        !restartRequested
+                        && Player.ChildrenOfType<FailOverlay>().Single().State.Value
+                            == Visibility.Visible,
+                }
+            );
 
         [Test]
-        public void TestRestartOnFailEnabled() => CreateModTest(new ModTestData
-        {
-            Autoplay = false,
-            Mod = new OsuModSuddenDeath
-            {
-                Restart = { Value = true }
-            },
-            PassCondition = () => restartRequested && Player.ChildrenOfType<FailOverlay>().Single().State.Value == Visibility.Hidden
-        });
+        public void TestRestartOnFailEnabled() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Autoplay = false,
+                    Mod = new OsuModSuddenDeath { Restart = { Value = true } },
+                    PassCondition = () =>
+                        restartRequested
+                        && Player.ChildrenOfType<FailOverlay>().Single().State.Value
+                            == Visibility.Hidden,
+                }
+            );
     }
 }

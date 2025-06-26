@@ -6,7 +6,8 @@ using osu.Game.Graphics.UserInterface;
 
 namespace osu.Game.Overlays.Settings
 {
-    public partial class MultiplierSettingsSlider : SettingsSlider<double, MultiplierSettingsSlider.MultiplierRoundedSliderBar>
+    public partial class MultiplierSettingsSlider
+        : SettingsSlider<double, MultiplierSettingsSlider.MultiplierRoundedSliderBar>
     {
         public MultiplierSettingsSlider()
         {

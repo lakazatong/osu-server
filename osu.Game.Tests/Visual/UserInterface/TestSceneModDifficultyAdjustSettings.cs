@@ -29,31 +29,30 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create control", () =>
-            {
-                modDifficultyAdjust = new OsuModDifficultyAdjust();
-
-                Child = new Container
+            AddStep(
+                "create control",
+                () =>
                 {
-                    Size = new Vector2(300),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
+                    modDifficultyAdjust = new OsuModDifficultyAdjust();
+
+                    Child = new Container
                     {
-                        new Box
+                        Size = new Vector2(300),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
+                            new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                ChildrenEnumerable = modDifficultyAdjust.CreateSettingsControls(),
+                            },
                         },
-                        new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            ChildrenEnumerable = modDifficultyAdjust.CreateSettingsControls(),
-                        },
-                    }
-                };
-            });
+                    };
+                }
+            );
         }
 
         [Test]
@@ -232,13 +231,16 @@ namespace osu.Game.Tests.Visual.UserInterface
             checkSliderAtValue("Circle Size", 3);
             checkBindableAtValue("Circle Size", 3);
 
-            AddStep("double click circle size nub", () =>
-            {
-                var nub = this.ChildrenOfType<RoundedSliderBar<float>.SliderNub>().First();
-                InputManager.MoveMouseTo(nub);
-                InputManager.Click(MouseButton.Left);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "double click circle size nub",
+                () =>
+                {
+                    var nub = this.ChildrenOfType<RoundedSliderBar<float>.SliderNub>().First();
+                    InputManager.MoveMouseTo(nub);
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkSliderAtValue("Circle Size", 5);
             checkBindableAtValue("Circle Size", null);
@@ -252,15 +254,18 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             setBeatmapWithDifficultyParameters(5);
 
-            AddStep("add mod settings change tracker", () =>
-            {
-                settingsChangedQueue = new Queue<Mod>();
-
-                tracker = new ModSettingChangeTracker(modDifficultyAdjust.Yield())
+            AddStep(
+                "add mod settings change tracker",
+                () =>
                 {
-                    SettingChanged = settingsChangedQueue.Enqueue
-                };
-            });
+                    settingsChangedQueue = new Queue<Mod>();
+
+                    tracker = new ModSettingChangeTracker(modDifficultyAdjust.Yield())
+                    {
+                        SettingChanged = settingsChangedQueue.Enqueue,
+                    };
+                }
+            );
 
             AddAssert("no settings changed", () => settingsChangedQueue.Count == 0);
 
@@ -282,68 +287,103 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             settingsChangedFired();
 
-            AddStep("dispose tracker", () =>
-            {
-                tracker.Dispose();
-                tracker = null;
-            });
+            AddStep(
+                "dispose tracker",
+                () =>
+                {
+                    tracker.Dispose();
+                    tracker = null;
+                }
+            );
 
             void settingsChangedFired()
             {
-                AddAssert("setting changed event fired", () =>
-                {
-                    settingsChangedQueue.Dequeue();
-                    return settingsChangedQueue.Count == 0;
-                });
+                AddAssert(
+                    "setting changed event fired",
+                    () =>
+                    {
+                        settingsChangedQueue.Dequeue();
+                        return settingsChangedQueue.Count == 0;
+                    }
+                );
             }
         }
 
         private void resetToDefault(string name)
         {
-            AddStep($"Reset {name} to default", () =>
-                this.ChildrenOfType<DifficultyAdjustSettingsControl>().First(c => c.LabelText == name)
-                    .Current.SetDefault());
+            AddStep(
+                $"Reset {name} to default",
+                () =>
+                    this.ChildrenOfType<DifficultyAdjustSettingsControl>()
+                        .First(c => c.LabelText == name)
+                        .Current.SetDefault()
+            );
         }
 
         private void setExtendedLimits(bool status) =>
-            AddStep($"Set extended limits {status}", () => modDifficultyAdjust.ExtendedLimits.Value = status);
+            AddStep(
+                $"Set extended limits {status}",
+                () => modDifficultyAdjust.ExtendedLimits.Value = status
+            );
 
         private void setSliderValue(string name, float value)
         {
-            AddStep($"Set {name} slider to {value}", () =>
-                this.ChildrenOfType<DifficultyAdjustSettingsControl>().First(c => c.LabelText == name)
-                    .ChildrenOfType<RoundedSliderBar<float>>().First().Current.Value = value);
+            AddStep(
+                $"Set {name} slider to {value}",
+                () =>
+                    this.ChildrenOfType<DifficultyAdjustSettingsControl>()
+                        .First(c => c.LabelText == name)
+                        .ChildrenOfType<RoundedSliderBar<float>>()
+                        .First()
+                        .Current.Value = value
+            );
         }
 
         private void checkBindableAtValue(string name, float? expectedValue)
         {
-            AddAssert($"Bindable {name} is {(expectedValue?.ToString() ?? "null")}", () =>
-                this.ChildrenOfType<DifficultyAdjustSettingsControl>().First(c => c.LabelText == name)
-                    .Current.Value == expectedValue);
+            AddAssert(
+                $"Bindable {name} is {(expectedValue?.ToString() ?? "null")}",
+                () =>
+                    this.ChildrenOfType<DifficultyAdjustSettingsControl>()
+                        .First(c => c.LabelText == name)
+                        .Current.Value == expectedValue
+            );
         }
 
         private void checkSliderAtValue(string name, float expectedValue)
         {
-            AddAssert($"Slider {name} at {expectedValue}", () =>
-                this.ChildrenOfType<DifficultyAdjustSettingsControl>().First(c => c.LabelText == name)
-                    .ChildrenOfType<RoundedSliderBar<float>>().First().Current.Value == expectedValue);
+            AddAssert(
+                $"Slider {name} at {expectedValue}",
+                () =>
+                    this.ChildrenOfType<DifficultyAdjustSettingsControl>()
+                        .First(c => c.LabelText == name)
+                        .ChildrenOfType<RoundedSliderBar<float>>()
+                        .First()
+                        .Current.Value == expectedValue
+            );
         }
 
         private void setBeatmapWithDifficultyParameters(float value)
         {
-            AddStep($"set beatmap with all {value}", () => Beatmap.Value = CreateWorkingBeatmap(new Beatmap
-            {
-                BeatmapInfo = new BeatmapInfo
-                {
-                    Difficulty = new BeatmapDifficulty
-                    {
-                        OverallDifficulty = value,
-                        CircleSize = value,
-                        DrainRate = value,
-                        ApproachRate = value,
-                    }
-                }
-            }));
+            AddStep(
+                $"set beatmap with all {value}",
+                () =>
+                    Beatmap.Value = CreateWorkingBeatmap(
+                        new Beatmap
+                        {
+                            BeatmapInfo = new BeatmapInfo
+                            {
+                                Difficulty = new BeatmapDifficulty
+                                {
+                                    OverallDifficulty = value,
+                                    CircleSize = value,
+                                    DrainRate = value,
+                                    ApproachRate = value,
+                                },
+                            },
+                        }
+                    )
+            );
         }
     }
 }

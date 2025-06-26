@@ -69,7 +69,11 @@ namespace osu.Game.Beatmaps.Drawables
             // matching web: https://github.com/ppy/osu-web/blob/d06d8c5e735eb1f48799b1654b528e9a7afb0a35/resources/assets/lib/beatmapset-panel.tsx#L127
             bool collapsed = beatmapSet.Beatmaps.Count() > max_difficulties_before_collapsing;
 
-            foreach (var rulesetGrouping in beatmapSet.Beatmaps.GroupBy(beatmap => beatmap.Ruleset).OrderBy(group => group.Key))
+            foreach (
+                var rulesetGrouping in beatmapSet
+                    .Beatmaps.GroupBy(beatmap => beatmap.Ruleset)
+                    .OrderBy(group => group.Key)
+            )
             {
                 int rulesetId = rulesetGrouping.Key.OnlineID;
 
@@ -129,23 +133,29 @@ namespace osu.Game.Beatmaps.Drawables
                 Spacing = new Vector2(1, 0);
                 Direction = FillDirection.Horizontal;
 
-                var icon = rulesets.GetRuleset(RulesetId)?.CreateInstance().CreateIcon() ?? new SpriteIcon { Icon = FontAwesome.Regular.QuestionCircle };
-                Add(icon.With(i =>
-                {
-                    i.Size = new Vector2(14);
-                    i.Anchor = i.Origin = Anchor.Centre;
-                }));
+                var icon =
+                    rulesets.GetRuleset(RulesetId)?.CreateInstance().CreateIcon()
+                    ?? new SpriteIcon { Icon = FontAwesome.Regular.QuestionCircle };
+                Add(
+                    icon.With(i =>
+                    {
+                        i.Size = new Vector2(14);
+                        i.Anchor = i.Origin = Anchor.Centre;
+                    })
+                );
 
                 for (int i = 0; i < max_difficulties_before_collapsing; i++)
                     Add(new DifficultyDot());
 
-                Add(countText = new OsuSpriteText
-                {
-                    Font = OsuFont.Style.Caption1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Padding = new MarginPadding { Bottom = 1 }
-                });
+                Add(
+                    countText = new OsuSpriteText
+                    {
+                        Font = OsuFont.Style.Caption1,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Padding = new MarginPadding { Bottom = 1 },
+                    }
+                );
             }
 
             protected override void LoadComplete()

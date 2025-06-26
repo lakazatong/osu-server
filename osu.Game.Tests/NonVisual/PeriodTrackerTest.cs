@@ -19,7 +19,7 @@ namespace osu.Game.Tests.NonVisual
             new Period(-9.1, -8.3),
             new Period(-3.4, 2.1),
             new Period(9.0, 50.0),
-            new Period(5.25, 10.50)
+            new Period(5.25, 10.50),
         };
 
         [Test]
@@ -54,18 +54,26 @@ namespace osu.Game.Tests.NonVisual
         [Test]
         public void TestCheckValuesOutOfPeriods()
         {
-            var tracker = new PeriodTracker(new[]
-            {
-                new Period(1.0, 2.0),
-                new Period(3.0, 4.0)
-            });
+            var tracker = new PeriodTracker(new[] { new Period(1.0, 2.0), new Period(3.0, 4.0) });
 
-            Assert.IsFalse(tracker.IsInAny(0.9), "Time before first period is being considered inside");
+            Assert.IsFalse(
+                tracker.IsInAny(0.9),
+                "Time before first period is being considered inside"
+            );
 
-            Assert.IsFalse(tracker.IsInAny(2.1), "Time right after first period is being considered inside");
-            Assert.IsFalse(tracker.IsInAny(2.9), "Time right before second period is being considered inside");
+            Assert.IsFalse(
+                tracker.IsInAny(2.1),
+                "Time right after first period is being considered inside"
+            );
+            Assert.IsFalse(
+                tracker.IsInAny(2.9),
+                "Time right before second period is being considered inside"
+            );
 
-            Assert.IsFalse(tracker.IsInAny(4.1), "Time after last period is being considered inside");
+            Assert.IsFalse(
+                tracker.IsInAny(4.1),
+                "Time after last period is being considered inside"
+            );
         }
 
         [Test]
@@ -73,10 +81,7 @@ namespace osu.Game.Tests.NonVisual
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                _ = new PeriodTracker(new[]
-                {
-                    new Period(2.0, 1.0)
-                });
+                _ = new PeriodTracker(new[] { new Period(2.0, 1.0) });
             });
         }
 

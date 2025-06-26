@@ -18,7 +18,8 @@ namespace osu.Game.Screens.Ranking
 {
     public partial class SoloResultsScreen : ResultsScreen
     {
-        private readonly IBindable<LeaderboardScores?> globalScores = new Bindable<LeaderboardScores?>();
+        private readonly IBindable<LeaderboardScores?> globalScores =
+            new Bindable<LeaderboardScores?>();
 
         [Resolved]
         private IAPIProvider api { get; set; } = null!;
@@ -27,9 +28,7 @@ namespace osu.Game.Screens.Ranking
         private LeaderboardManager leaderboardManager { get; set; } = null!;
 
         public SoloResultsScreen(ScoreInfo score)
-            : base(score)
-        {
-        }
+            : base(score) { }
 
         protected override void LoadComplete()
         {
@@ -50,7 +49,10 @@ namespace osu.Game.Screens.Ranking
             var requestTaskSource = new TaskCompletionSource<LeaderboardScores>();
             globalScores.BindValueChanged(_ =>
             {
-                if (globalScores.Value != null && leaderboardManager.CurrentCriteria?.Equals(criteria) == true)
+                if (
+                    globalScores.Value != null
+                    && leaderboardManager.CurrentCriteria?.Equals(criteria) == true
+                )
                     requestTaskSource.TrySetResult(globalScores.Value);
             });
             leaderboardManager.FetchWithCriteria(criteria, forceRefresh: true);
@@ -59,7 +61,9 @@ namespace osu.Game.Screens.Ranking
 
             if (result.FailState != null)
             {
-                Logger.Log($"Failed to fetch scores (beatmap: {Score.BeatmapInfo}, ruleset: {Score.Ruleset}): {result.FailState}");
+                Logger.Log(
+                    $"Failed to fetch scores (beatmap: {Score.BeatmapInfo}, ruleset: {Score.Ruleset}): {result.FailState}"
+                );
                 return [];
             }
 
@@ -87,7 +91,10 @@ namespace osu.Game.Screens.Ranking
                 {
                     bool isOnlineLeaderboard = criteria.Scope != BeatmapLeaderboardScope.Local;
                     bool presentingLocalUserScore = Score.UserID == api.LocalUser.Value.OnlineID;
-                    bool presentedLocalUserScoreIsBetter = presentingLocalUserScore && clonedScore.UserID == api.LocalUser.Value.OnlineID && clonedScore.TotalScore < Score.TotalScore;
+                    bool presentedLocalUserScoreIsBetter =
+                        presentingLocalUserScore
+                        && clonedScore.UserID == api.LocalUser.Value.OnlineID
+                        && clonedScore.TotalScore < Score.TotalScore;
 
                     if (isOnlineLeaderboard && presentedLocalUserScoreIsBetter)
                         continue;
@@ -104,7 +111,9 @@ namespace osu.Game.Screens.Ranking
             sortedScores = sortedScores.OrderByTotalScore().ToList();
 
             int delta = 0;
-            bool isPartialLeaderboard = leaderboardManager.CurrentCriteria?.Scope != BeatmapLeaderboardScope.Local && result.TopScores.Count >= 50;
+            bool isPartialLeaderboard =
+                leaderboardManager.CurrentCriteria?.Scope != BeatmapLeaderboardScope.Local
+                && result.TopScores.Count >= 50;
 
             for (int i = 0; i < sortedScores.Count; i++)
             {
@@ -120,9 +129,14 @@ namespace osu.Game.Screens.Ranking
                     if (ReferenceEquals(sortedScore, Score) && sortedScore.Position == null)
                     {
                         int? previousScorePosition = i > 0 ? sortedScores[i - 1].Position : 0;
-                        int? nextScorePosition = i < result.TopScores.Count - 1 ? sortedScores[i + 1].Position : null;
+                        int? nextScorePosition =
+                            i < result.TopScores.Count - 1 ? sortedScores[i + 1].Position : null;
 
-                        if (previousScorePosition != null && nextScorePosition != null && previousScorePosition + 1 == nextScorePosition)
+                        if (
+                            previousScorePosition != null
+                            && nextScorePosition != null
+                            && previousScorePosition + 1 == nextScorePosition
+                        )
                         {
                             sortedScore.Position = previousScorePosition + 1;
                             delta += 1;

@@ -15,9 +15,7 @@ namespace osu.Game.Rulesets.Taiko
         protected override LocalisableString Header => "osu!taiko";
 
         public TaikoSettingsSubsection(TaikoRuleset ruleset)
-            : base(ruleset)
-        {
-        }
+            : base(ruleset) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -29,8 +27,10 @@ namespace osu.Game.Rulesets.Taiko
                 new SettingsEnumDropdown<TaikoTouchControlScheme>
                 {
                     LabelText = RulesetSettingsStrings.TouchControlScheme,
-                    Current = config.GetBindable<TaikoTouchControlScheme>(TaikoRulesetSetting.TouchControlScheme)
-                }
+                    Current = config.GetBindable<TaikoTouchControlScheme>(
+                        TaikoRulesetSetting.TouchControlScheme
+                    ),
+                },
             };
         }
     }

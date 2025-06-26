@@ -31,8 +31,14 @@ namespace osu.Game.Screens.Play
         {
             set
             {
-                breaks = new PeriodTracker(value.Where(b => b.HasEffect)
-                                                .Select(b => new Period(b.StartTime, b.EndTime - BreakOverlay.BREAK_FADE_DURATION)));
+                breaks = new PeriodTracker(
+                    value
+                        .Where(b => b.HasEffect)
+                        .Select(b => new Period(
+                            b.StartTime,
+                            b.EndTime - BreakOverlay.BREAK_FADE_DURATION
+                        ))
+                );
 
                 if (IsLoaded)
                     updateBreakTime();

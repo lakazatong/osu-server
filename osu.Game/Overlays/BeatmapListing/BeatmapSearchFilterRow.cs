@@ -2,14 +2,14 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.EnumExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
-using osu.Game.Graphics;
-using osuTK;
-using osu.Framework.Extensions.EnumExtensions;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osuTK;
 
 namespace osu.Game.Overlays.BeatmapListing
 {
@@ -28,33 +28,32 @@ namespace osu.Game.Overlays.BeatmapListing
             Drawable filter;
             AutoSizeAxes = Axes.Y;
             RelativeSizeAxes = Axes.X;
-            AddInternal(new GridContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X,
-                ColumnDimensions = new[]
+            AddInternal(
+                new GridContainer
                 {
-                    new Dimension(GridSizeMode.Absolute, size: 100),
-                    new Dimension()
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize)
-                },
-                Content = new[]
-                {
-                    new[]
+                    AutoSizeAxes = Axes.Y,
+                    RelativeSizeAxes = Axes.X,
+                    ColumnDimensions = new[]
                     {
-                        new OsuTextFlowContainer(t => t.Font = OsuFont.GetFont(size: 13))
+                        new Dimension(GridSizeMode.Absolute, size: 100),
+                        new Dimension(),
+                    },
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                    Content = new[]
+                    {
+                        new[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Text = header
+                            new OsuTextFlowContainer(t => t.Font = OsuFont.GetFont(size: 13))
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Text = header,
+                            },
+                            filter = CreateFilter(),
                         },
-                        filter = CreateFilter()
-                    }
+                    },
                 }
-            });
+            );
 
             if (filter is IHasCurrentValue<T> filterWithValue)
                 Current = filterWithValue.Current;
@@ -82,12 +81,13 @@ namespace osu.Game.Overlays.BeatmapListing
 
             protected override TabItem<T> CreateTabItem(T value) => new FilterTabItem<T>(value);
 
-            protected override TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                AllowMultiline = true,
-            };
+            protected override TabFillFlowContainer CreateTabFlow() =>
+                new TabFillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    AllowMultiline = true,
+                };
         }
     }
 }

@@ -57,7 +57,11 @@ namespace osu.Game.Screens.Menu
         }
 
         [BackgroundDependencyLoader]
-        private void load(IBindable<WorkingBeatmap> beatmap, IAPIProvider api, SkinManager skinManager)
+        private void load(
+            IBindable<WorkingBeatmap> beatmap,
+            IAPIProvider api,
+            SkinManager skinManager
+        )
         {
             this.beatmap.BindTo(beatmap);
 
@@ -76,7 +80,7 @@ namespace osu.Game.Screens.Menu
                     // align off-screen to make sure our edges don't become visible during parallax.
                     X = -box_width,
                     Alpha = 0,
-                    Blending = BlendingParameters.Additive
+                    Blending = BlendingParameters.Additive,
                 },
                 rightBox = new Box
                 {
@@ -87,8 +91,8 @@ namespace osu.Game.Screens.Menu
                     Height = 1.5f,
                     X = box_width,
                     Alpha = 0,
-                    Blending = BlendingParameters.Additive
-                }
+                    Blending = BlendingParameters.Additive,
+                },
             };
 
             if (!RefreshColoursEveryFlash)
@@ -98,14 +102,27 @@ namespace osu.Game.Screens.Menu
             }
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             if (beatIndex < 0)
                 return;
 
-            if (effectPoint.KiaiMode ? beatIndex % 2 == 0 : beatIndex % timingPoint.TimeSignature.Numerator == 0)
+            if (
+                effectPoint.KiaiMode
+                    ? beatIndex % 2 == 0
+                    : beatIndex % timingPoint.TimeSignature.Numerator == 0
+            )
                 flash(leftBox, timingPoint.BeatLength, effectPoint.KiaiMode, amplitudes);
-            if (effectPoint.KiaiMode ? beatIndex % 2 == 1 : beatIndex % timingPoint.TimeSignature.Numerator == 0)
+            if (
+                effectPoint.KiaiMode
+                    ? beatIndex % 2 == 1
+                    : beatIndex % timingPoint.TimeSignature.Numerator == 0
+            )
                 flash(rightBox, timingPoint.BeatLength, effectPoint.KiaiMode, amplitudes);
         }
 
@@ -114,10 +131,23 @@ namespace osu.Game.Screens.Menu
             if (RefreshColoursEveryFlash)
                 updateColour();
 
-            d.FadeTo(Math.Clamp(0.1f + ((ReferenceEquals(d, leftBox) ? amplitudes.LeftChannel : amplitudes.RightChannel) - amplitude_dead_zone) / (kiai ? kiai_multiplier : alpha_multiplier), 0.1f, 1),
-                 box_fade_in_time)
-             .Then()
-             .FadeOut(beatLength, Easing.In);
+            d.FadeTo(
+                    Math.Clamp(
+                        0.1f
+                            + (
+                                (
+                                    ReferenceEquals(d, leftBox)
+                                        ? amplitudes.LeftChannel
+                                        : amplitudes.RightChannel
+                                ) - amplitude_dead_zone
+                            ) / (kiai ? kiai_multiplier : alpha_multiplier),
+                        0.1f,
+                        1
+                    ),
+                    box_fade_in_time
+                )
+                .Then()
+                .FadeOut(beatLength, Easing.In);
         }
 
         protected virtual Color4 GetBaseColour()
@@ -125,7 +155,10 @@ namespace osu.Game.Screens.Menu
             Color4 baseColour = colours.Blue;
 
             if (user.Value?.IsSupporter ?? false)
-                baseColour = skin.Value.GetConfig<GlobalSkinColours, Color4>(GlobalSkinColours.MenuGlow)?.Value ?? baseColour;
+                baseColour =
+                    skin.Value.GetConfig<GlobalSkinColours, Color4>(
+                        GlobalSkinColours.MenuGlow
+                    )?.Value ?? baseColour;
 
             return baseColour;
         }

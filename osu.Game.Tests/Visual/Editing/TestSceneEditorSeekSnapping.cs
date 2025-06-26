@@ -39,8 +39,8 @@ namespace osu.Game.Tests.Visual.Editing
                 HitObjects =
                 {
                     new HitCircle { StartTime = 0 },
-                    new HitCircle { StartTime = 5000 }
-                }
+                    new HitCircle { StartTime = 5000 },
+                },
             };
 
             testBeatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = 200 });
@@ -48,7 +48,10 @@ namespace osu.Game.Tests.Visual.Editing
             testBeatmap.ControlPointInfo.Add(175, new TimingControlPoint { BeatLength = 800 });
             testBeatmap.ControlPointInfo.Add(350, new TimingControlPoint { BeatLength = 200 });
             testBeatmap.ControlPointInfo.Add(450, new TimingControlPoint { BeatLength = 100 });
-            testBeatmap.ControlPointInfo.Add(500, new TimingControlPoint { BeatLength = 307.69230769230802 });
+            testBeatmap.ControlPointInfo.Add(
+                500,
+                new TimingControlPoint { BeatLength = 307.69230769230802 }
+            );
 
             return testBeatmap;
         }
@@ -287,28 +290,39 @@ namespace osu.Game.Tests.Visual.Editing
 
             for (int i = 0; i < 9; i++)
             {
-                AddStep("SeekForward, Snap", () =>
-                {
-                    lastTime = EditorClock.CurrentTime;
-                    EditorClock.SeekForward(true);
-                });
+                AddStep(
+                    "SeekForward, Snap",
+                    () =>
+                    {
+                        lastTime = EditorClock.CurrentTime;
+                        EditorClock.SeekForward(true);
+                    }
+                );
                 AddAssert("Time > lastTime", () => EditorClock.CurrentTime > lastTime);
             }
 
             for (int i = 0; i < 9; i++)
             {
-                AddStep("SeekBackward, Snap", () =>
-                {
-                    lastTime = EditorClock.CurrentTime;
-                    EditorClock.SeekBackward(true);
-                });
+                AddStep(
+                    "SeekBackward, Snap",
+                    () =>
+                    {
+                        lastTime = EditorClock.CurrentTime;
+                        EditorClock.SeekBackward(true);
+                    }
+                );
                 AddAssert("Time < lastTime", () => EditorClock.CurrentTime < lastTime);
             }
 
             checkTime(0);
         }
 
-        private void checkTime(double expectedTime) => AddUntilStep($"Current time is {expectedTime}", () => EditorClock.CurrentTime, () => Is.EqualTo(expectedTime));
+        private void checkTime(double expectedTime) =>
+            AddUntilStep(
+                $"Current time is {expectedTime}",
+                () => EditorClock.CurrentTime,
+                () => Is.EqualTo(expectedTime)
+            );
 
         private void reset()
         {
@@ -341,7 +355,7 @@ namespace osu.Game.Tests.Visual.Editing
                     {
                         Name = "Background",
                         RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black.Opacity(85f)
+                        Colour = Color4.Black.Opacity(85f),
                     },
                     new Container
                     {
@@ -364,18 +378,21 @@ namespace osu.Game.Tests.Visual.Editing
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(0, 5)
+                                Spacing = new Vector2(0, 5),
                             },
-                        }
-                    }
+                        },
+                    },
                 };
 
                 var timingPoints = beatmap.ControlPointInfo.TimingPoints;
 
                 for (int i = 0; i < timingPoints.Count; i++)
                 {
-                    TimingControlPoint next = i == timingPoints.Count - 1 ? null : timingPoints[i + 1];
-                    timelineContainer.Add(new TimingPointTimeline(timingPoints[i], next?.Time ?? length, length));
+                    TimingControlPoint next =
+                        i == timingPoints.Count - 1 ? null : timingPoints[i + 1];
+                    timelineContainer.Add(
+                        new TimingPointTimeline(timingPoints[i], next?.Time ?? length, length)
+                    );
                 }
             }
 
@@ -388,36 +405,46 @@ namespace osu.Game.Tests.Visual.Editing
 
             private partial class TimingPointTimeline : CompositeDrawable
             {
-                public TimingPointTimeline(TimingControlPoint timingPoint, double endTime, double fullDuration)
+                public TimingPointTimeline(
+                    TimingControlPoint timingPoint,
+                    double endTime,
+                    double fullDuration
+                )
                 {
                     RelativeSizeAxes = Axes.X;
                     AutoSizeAxes = Axes.Y;
 
-                    Box createMainTick(double time) => new Box
-                    {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomCentre,
-                        RelativePositionAxes = Axes.X,
-                        X = (float)(time / fullDuration),
-                        Height = 10,
-                        Width = 2
-                    };
+                    Box createMainTick(double time) =>
+                        new Box
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomCentre,
+                            RelativePositionAxes = Axes.X,
+                            X = (float)(time / fullDuration),
+                            Height = 10,
+                            Width = 2,
+                        };
 
-                    Box createBeatTick(double time) => new Box
-                    {
-                        Anchor = Anchor.BottomLeft,
-                        Origin = Anchor.BottomCentre,
-                        RelativePositionAxes = Axes.X,
-                        X = (float)(time / fullDuration),
-                        Height = 5,
-                        Width = 2,
-                        Colour = time > endTime ? Color4.Gray : Color4.Yellow
-                    };
+                    Box createBeatTick(double time) =>
+                        new Box
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomCentre,
+                            RelativePositionAxes = Axes.X,
+                            X = (float)(time / fullDuration),
+                            Height = 5,
+                            Width = 2,
+                            Colour = time > endTime ? Color4.Gray : Color4.Yellow,
+                        };
 
                     AddInternal(createMainTick(timingPoint.Time));
                     AddInternal(createMainTick(endTime));
 
-                    for (double t = timingPoint.Time + timingPoint.BeatLength / 4; t < fullDuration; t += timingPoint.BeatLength / 4)
+                    for (
+                        double t = timingPoint.Time + timingPoint.BeatLength / 4;
+                        t < fullDuration;
+                        t += timingPoint.BeatLength / 4
+                    )
                         AddInternal(createBeatTick(t));
                 }
             }

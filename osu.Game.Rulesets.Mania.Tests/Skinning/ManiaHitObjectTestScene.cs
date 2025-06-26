@@ -16,55 +16,62 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
     public abstract partial class ManiaHitObjectTestScene : ManiaSkinnableTestScene
     {
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            SetContents(_ => new FillFlowContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Height = 0.7f,
-                Direction = FillDirection.Horizontal,
-                Children = new Drawable[]
+                SetContents(_ => new FillFlowContainer
                 {
-                    new ColumnTestContainer(0, ManiaAction.Key1, true)
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Height = 0.7f,
+                    Direction = FillDirection.Horizontal,
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Y,
-                        Width = 80,
-                        Child = new ScrollingHitObjectContainer
+                        new ColumnTestContainer(0, ManiaAction.Key1, true)
                         {
-                            RelativeSizeAxes = Axes.Both,
-                        }.With(c =>
-                        {
-                            c.Add(CreateHitObject().With(h =>
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Y,
+                            Width = 80,
+                            Child = new ScrollingHitObjectContainer
                             {
-                                h.HitObject.StartTime = Time.Current + 5000;
-                                h.AccentColour.Value = Color4.Orange;
-                            }));
-                        })
-                    },
-                    new ColumnTestContainer(1, ManiaAction.Key2, true)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Y,
-                        Width = 80,
-                        Child = new ScrollingHitObjectContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        }.With(c =>
-                        {
-                            c.Add(CreateHitObject().With(h =>
+                                RelativeSizeAxes = Axes.Both,
+                            }.With(c =>
                             {
-                                h.HitObject.StartTime = Time.Current + 5000;
-                            }));
-                        })
+                                c.Add(
+                                    CreateHitObject()
+                                        .With(h =>
+                                        {
+                                            h.HitObject.StartTime = Time.Current + 5000;
+                                            h.AccentColour.Value = Color4.Orange;
+                                        })
+                                );
+                            }),
+                        },
+                        new ColumnTestContainer(1, ManiaAction.Key2, true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Y,
+                            Width = 80,
+                            Child = new ScrollingHitObjectContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            }.With(c =>
+                            {
+                                c.Add(
+                                    CreateHitObject()
+                                        .With(h =>
+                                        {
+                                            h.HitObject.StartTime = Time.Current + 5000;
+                                        })
+                                );
+                            }),
+                        },
                     },
-                }
+                });
             });
-        });
 
         protected abstract DrawableManiaHitObject CreateHitObject();
     }

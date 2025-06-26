@@ -6,6 +6,7 @@ using System.Threading;
 using osu.Framework.Configuration;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
+using osu.Game.Graphics;
 using osu.Game.Overlays.Mods;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Select;
@@ -28,6 +29,8 @@ namespace osu.Game.BellaFiora
         private static ModPanel dtPanel = null!;
         private static BeatmapDifficultyCache beatmapDifficultyCache = null!;
         private static BeatmapManager beatmapManager = null!;
+        private static ScreenshotManager screenshotManager = null!;
+
         public static void CarouselBeatmapsTrulyLoaded(SongSelect songSelect)
         {
             if (server == null && SynchronizationContext.Current != null)
@@ -45,30 +48,41 @@ namespace osu.Game.BellaFiora
                     HRPanel = hrPanel,
                     DTPanel = dtPanel,
                     BeatmapDifficultyCache = beatmapDifficultyCache,
-                    BeatmapManager = beatmapManager
+                    BeatmapManager = beatmapManager,
+                    ScreenshotManager = screenshotManager,
                 };
                 server.Start();
             }
         }
+
         public static void ModPanelLoadComplete(ModPanel panel)
         {
             if (server == null)
             {
                 modPanels.TryAdd(panel.Mod.Acronym, panel);
-                if (autoPanel == null && panel.Mod.Acronym == "AT") autoPanel = panel;
-                if (hdPanel == null && panel.Mod.Acronym == "HD") hdPanel = panel;
-                if (hrPanel == null && panel.Mod.Acronym == "HR") hrPanel = panel;
-                if (dtPanel == null && panel.Mod.Acronym == "DT") dtPanel = panel;
+                if (autoPanel == null && panel.Mod.Acronym == "AT")
+                    autoPanel = panel;
+                if (hdPanel == null && panel.Mod.Acronym == "HD")
+                    hdPanel = panel;
+                if (hrPanel == null && panel.Mod.Acronym == "HR")
+                    hrPanel = panel;
+                if (dtPanel == null && panel.Mod.Acronym == "DT")
+                    dtPanel = panel;
             }
             else
             {
                 server.ModPanels.TryAdd(panel.Mod.Acronym, panel);
-                if (server.AutoPanel == null && panel.Mod.Acronym == "AT") server.AutoPanel = panel;
-                if (server.HDPanel == null && panel.Mod.Acronym == "HD") server.HDPanel = panel;
-                if (server.HRPanel == null && panel.Mod.Acronym == "HR") server.HRPanel = panel;
-                if (server.DTPanel == null && panel.Mod.Acronym == "DT") server.DTPanel = panel;
+                if (server.AutoPanel == null && panel.Mod.Acronym == "AT")
+                    server.AutoPanel = panel;
+                if (server.HDPanel == null && panel.Mod.Acronym == "HD")
+                    server.HDPanel = panel;
+                if (server.HRPanel == null && panel.Mod.Acronym == "HR")
+                    server.HRPanel = panel;
+                if (server.DTPanel == null && panel.Mod.Acronym == "DT")
+                    server.DTPanel = panel;
             }
         }
+
         public static void FooterButtonModsLoadComplete(FooterButtonMods button)
         {
             if (!footerButtonModsLoadCompleteTrigged)
@@ -78,12 +92,17 @@ namespace osu.Game.BellaFiora
                 footerButtonModsLoadCompleteTrigged = true;
             }
         }
+
         public static void PlayerLoaded(Player player, HotkeyExitOverlay? hotkeyExitOverlay)
         {
-            if (server == null) return;
-            if (player is ReplayPlayer replayPlayer) server.ReplayPlayer = replayPlayer;
-            if (hotkeyExitOverlay != null) server.HotkeyExitOverlay = hotkeyExitOverlay;
+            if (server == null)
+                return;
+            if (player is ReplayPlayer replayPlayer)
+                server.ReplayPlayer = replayPlayer;
+            if (hotkeyExitOverlay != null)
+                server.HotkeyExitOverlay = hotkeyExitOverlay;
         }
+
         public static void SkinManagerCreated(SkinManager sm, Skin[] ds)
         {
             if (skinManager == null)
@@ -92,18 +111,26 @@ namespace osu.Game.BellaFiora
                 defaultSkins = ds;
             }
         }
+
         public static void LocalConfigLoaded(OsuConfigManager lc, FrameworkConfigManager fcm)
         {
             osuConfigManager = lc;
             frameworkConfigManager = fcm;
         }
+
         public static void BeatmapDifficultyCacheCreated(BeatmapDifficultyCache bdc)
         {
             beatmapDifficultyCache = bdc;
         }
+
         public static void BeatmapManagerCreated(BeatmapManager bm)
         {
             beatmapManager = bm;
+        }
+
+        public static void ScreenShotManagerCreated(ScreenshotManager sm)
+        {
+            screenshotManager = sm;
         }
     }
 }

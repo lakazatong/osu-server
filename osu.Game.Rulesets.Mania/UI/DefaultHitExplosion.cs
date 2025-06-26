@@ -27,7 +27,8 @@ namespace osu.Game.Rulesets.Mania.UI
         [Resolved]
         private Column column { get; set; }
 
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private CircularContainer largeFaint;
         private CircularContainer mainGlow1;
@@ -90,44 +91,49 @@ namespace osu.Game.Rulesets.Mania.UI
                     Size = new Vector2(0.01f, initial_height),
                     Blending = BlendingParameters.Additive,
                     Rotation = RNG.NextSingle(-angle_variance, angle_variance),
-                }
+                },
             };
 
             direction.BindTo(scrollingInfo.Direction);
             direction.BindValueChanged(onDirectionChanged, true);
 
             accentColour = column.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(colour =>
-            {
-                largeFaint.EdgeEffect = new EdgeEffectParameters
+            accentColour.BindValueChanged(
+                colour =>
                 {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Interpolation.ValueAt(0.1f, colour.NewValue, Color4.White, 0, 1).Opacity(0.3f),
-                    Roundness = 160,
-                    Radius = 200,
-                };
-                mainGlow1.EdgeEffect = new EdgeEffectParameters
-                {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Interpolation.ValueAt(0.6f, colour.NewValue, Color4.White, 0, 1),
-                    Roundness = 20,
-                    Radius = 50,
-                };
-                mainGlow2.EdgeEffect = new EdgeEffectParameters
-                {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Interpolation.ValueAt(0.4f, colour.NewValue, Color4.White, 0, 1),
-                    Roundness = roundness,
-                    Radius = 40,
-                };
-                mainGlow3.EdgeEffect = new EdgeEffectParameters
-                {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Interpolation.ValueAt(0.4f, colour.NewValue, Color4.White, 0, 1),
-                    Roundness = roundness,
-                    Radius = 40,
-                };
-            }, true);
+                    largeFaint.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Interpolation
+                            .ValueAt(0.1f, colour.NewValue, Color4.White, 0, 1)
+                            .Opacity(0.3f),
+                        Roundness = 160,
+                        Radius = 200,
+                    };
+                    mainGlow1.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Interpolation.ValueAt(0.6f, colour.NewValue, Color4.White, 0, 1),
+                        Roundness = 20,
+                        Radius = 50,
+                    };
+                    mainGlow2.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Interpolation.ValueAt(0.4f, colour.NewValue, Color4.White, 0, 1),
+                        Roundness = roundness,
+                        Radius = 40,
+                    };
+                    mainGlow3.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Interpolation.ValueAt(0.4f, colour.NewValue, Color4.White, 0, 1),
+                        Roundness = roundness,
+                        Radius = 40,
+                    };
+                },
+                true
+            );
         }
 
         private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
@@ -154,7 +160,11 @@ namespace osu.Game.Rulesets.Mania.UI
             largeFaint
                 .ResizeTo(default_large_faint_size)
                 .Then()
-                .ResizeTo(default_large_faint_size * new Vector2(5, 1), PoolableHitExplosion.DURATION, Easing.OutQuint)
+                .ResizeTo(
+                    default_large_faint_size * new Vector2(5, 1),
+                    PoolableHitExplosion.DURATION,
+                    Easing.OutQuint
+                )
                 .FadeOut(PoolableHitExplosion.DURATION * 2);
 
             mainGlow1

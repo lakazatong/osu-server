@@ -30,14 +30,16 @@ namespace osu.Game.Overlays.Chat.Listing
         public readonly Channel Channel;
 
         public bool FilteringActive { get; set; }
-        public IEnumerable<LocalisableString> FilterTerms => new LocalisableString[] { Channel.Name, Channel.Topic ?? string.Empty };
+        public IEnumerable<LocalisableString> FilterTerms =>
+            new LocalisableString[] { Channel.Name, Channel.Topic ?? string.Empty };
 
         public bool MatchingFilter
         {
             set => this.FadeTo(value ? 1f : 0f, 100);
         }
 
-        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) => new HoverSounds();
+        protected override HoverSounds CreateHoverSounds(HoverSampleSet sampleSet) =>
+            new HoverSounds();
 
         private Box hoverBox = null!;
         private SpriteIcon checkbox = null!;
@@ -114,10 +116,15 @@ namespace osu.Game.Overlays.Chat.Listing
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Text = Channel.Name,
-                                Font = OsuFont.Torus.With(size: text_size, weight: FontWeight.SemiBold),
+                                Font = OsuFont.Torus.With(
+                                    size: text_size,
+                                    weight: FontWeight.SemiBold
+                                ),
                                 Margin = new MarginPadding { Bottom = 2 },
                             },
-                            topicText = new OsuTextFlowContainer(t => t.Font = OsuFont.Torus.With(size: text_size))
+                            topicText = new OsuTextFlowContainer(t =>
+                                t.Font = OsuFont.Torus.With(size: text_size)
+                            )
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
@@ -155,25 +162,28 @@ namespace osu.Game.Overlays.Chat.Listing
             base.LoadComplete();
 
             channelJoined = Channel.Joined.GetBoundCopy();
-            channelJoined.BindValueChanged(change =>
-            {
-                const double duration = 500;
+            channelJoined.BindValueChanged(
+                change =>
+                {
+                    const double duration = 500;
 
-                if (change.NewValue)
-                {
-                    checkbox.FadeIn(duration, Easing.OutQuint);
-                    checkbox.ScaleTo(1f, duration, Easing.OutElastic);
-                    channelText.Colour = Colour4.White;
-                    topicText.Colour = Colour4.White;
-                }
-                else
-                {
-                    checkbox.FadeOut(duration, Easing.OutQuint);
-                    checkbox.ScaleTo(0.8f, duration, Easing.OutQuint);
-                    channelText.Colour = colourProvider.Light3;
-                    topicText.Colour = colourProvider.Content2;
-                }
-            }, true);
+                    if (change.NewValue)
+                    {
+                        checkbox.FadeIn(duration, Easing.OutQuint);
+                        checkbox.ScaleTo(1f, duration, Easing.OutElastic);
+                        channelText.Colour = Colour4.White;
+                        topicText.Colour = Colour4.White;
+                    }
+                    else
+                    {
+                        checkbox.FadeOut(duration, Easing.OutQuint);
+                        checkbox.ScaleTo(0.8f, duration, Easing.OutQuint);
+                        channelText.Colour = colourProvider.Light3;
+                        topicText.Colour = colourProvider.Content2;
+                    }
+                },
+                true
+            );
 
             Action = () =>
             {

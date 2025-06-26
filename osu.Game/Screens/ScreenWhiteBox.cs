@@ -5,18 +5,18 @@
 
 using System;
 using System.Collections.Generic;
-using osu.Framework.Screens;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Screens.Backgrounds;
-using osu.Game.Graphics.UserInterface;
-using osuTK;
-using osuTK.Graphics;
-using osu.Game.Graphics;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Screens;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Screens.Backgrounds;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens
 {
@@ -28,11 +28,16 @@ namespace osu.Game.Screens
 
         protected virtual IEnumerable<Type> PossibleChildren => null;
 
-        protected override BackgroundScreen CreateBackground() => new BackgroundScreenCustom(@"Backgrounds/bg2");
+        protected override BackgroundScreen CreateBackground() =>
+            new BackgroundScreenCustom(@"Backgrounds/bg2");
 
         public override bool OnExiting(ScreenExitEvent e)
         {
-            message.TextContainer.MoveTo(new Vector2(DrawSize.X / 16, 0), transition_time, Easing.OutExpo);
+            message.TextContainer.MoveTo(
+                new Vector2(DrawSize.X / 16, 0),
+                transition_time,
+                Easing.OutExpo
+            );
             this.FadeOut(transition_time, Easing.OutExpo);
 
             return base.OnExiting(e);
@@ -42,7 +47,11 @@ namespace osu.Game.Screens
         {
             base.OnSuspending(e);
 
-            message.TextContainer.MoveTo(new Vector2(-(DrawSize.X / 16), 0), transition_time, Easing.OutExpo);
+            message.TextContainer.MoveTo(
+                new Vector2(-(DrawSize.X / 16), 0),
+                transition_time,
+                Easing.OutExpo
+            );
             this.FadeOut(transition_time, Easing.OutExpo);
         }
 
@@ -67,21 +76,26 @@ namespace osu.Game.Screens
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(TwoLayerButton.SIZE_RETRACTED.X, 1)
-                }
+                    Size = new Vector2(TwoLayerButton.SIZE_RETRACTED.X, 1),
+                },
             };
 
             if (PossibleChildren != null)
             {
                 foreach (Type t in PossibleChildren)
                 {
-                    childModeButtons.Add(new ChildModeButton
-                    {
-                        Text = $@"{t.Name}",
-                        BackgroundColour = getColourFor(t.Name),
-                        HoverColour = getColourFor(t.Name).Lighten(0.2f),
-                        Action = delegate { this.Push(Activator.CreateInstance(t) as Screen); }
-                    });
+                    childModeButtons.Add(
+                        new ChildModeButton
+                        {
+                            Text = $@"{t.Name}",
+                            BackgroundColour = getColourFor(t.Name),
+                            HoverColour = getColourFor(t.Name).Lighten(0.2f),
+                            Action = delegate
+                            {
+                                this.Push(Activator.CreateInstance(t) as Screen);
+                            },
+                        }
+                    );
                 }
             }
         }
@@ -111,7 +125,10 @@ namespace osu.Game.Screens
 
             private readonly Container boxContainer;
 
-            public UnderConstructionMessage(string name, string description = "is not yet ready for use!")
+            public UnderConstructionMessage(
+                string name,
+                string description = "is not yet ready for use!"
+            )
             {
                 AutoSizeAxes = Axes.Both;
 
@@ -176,9 +193,9 @@ namespace osu.Game.Screens
                                         Text = "please check back a bit later.",
                                         Font = OsuFont.GetFont(size: 14),
                                     },
-                                }
+                                },
                             },
-                        }
+                        },
                     },
                 };
             }

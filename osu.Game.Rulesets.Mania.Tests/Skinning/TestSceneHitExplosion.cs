@@ -20,34 +20,44 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
     [TestFixture]
     public partial class TestSceneHitExplosion : ManiaSkinnableTestScene
     {
-        private readonly List<DrawablePool<PoolableHitExplosion>> hitExplosionPools = new List<DrawablePool<PoolableHitExplosion>>();
+        private readonly List<DrawablePool<PoolableHitExplosion>> hitExplosionPools =
+            new List<DrawablePool<PoolableHitExplosion>>();
 
         public TestSceneHitExplosion()
         {
             int runCount = 0;
 
-            AddRepeatStep("explode", () =>
-            {
-                runCount++;
-
-                if (runCount % 15 > 12)
-                    return;
-
-                int poolIndex = 0;
-
-                foreach (var c in CreatedDrawables.OfType<Container>())
+            AddRepeatStep(
+                "explode",
+                () =>
                 {
-                    c.Add(hitExplosionPools[poolIndex].Get(e =>
+                    runCount++;
+
+                    if (runCount % 15 > 12)
+                        return;
+
+                    int poolIndex = 0;
+
+                    foreach (var c in CreatedDrawables.OfType<Container>())
                     {
-                        e.Apply(new JudgementResult(new HitObject(), new ManiaJudgement()));
+                        c.Add(
+                            hitExplosionPools[poolIndex]
+                                .Get(e =>
+                                {
+                                    e.Apply(
+                                        new JudgementResult(new HitObject(), new ManiaJudgement())
+                                    );
 
-                        e.Anchor = Anchor.Centre;
-                        e.Origin = Anchor.Centre;
-                    }));
+                                    e.Anchor = Anchor.Centre;
+                                    e.Origin = Anchor.Centre;
+                                })
+                        );
 
-                    poolIndex++;
-                }
-            }, 100);
+                        poolIndex++;
+                    }
+                },
+                100
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -65,7 +75,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                     RelativePositionAxes = Axes.Y,
                     Y = -0.25f,
                     Size = new Vector2(Column.COLUMN_WIDTH, DefaultNotePiece.NOTE_HEIGHT),
-                    Child = pool
+                    Child = pool,
                 };
             });
         }

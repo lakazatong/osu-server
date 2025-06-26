@@ -27,48 +27,53 @@ namespace osu.Game.Screens.OnlinePlay.Components
         {
             this.room = room;
 
-            Add(playlistArea = new GridContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Padding = new MarginPadding { Vertical = 10 },
-                Content = new[]
+            Add(
+                playlistArea = new GridContainer
                 {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    Padding = new MarginPadding { Vertical = 10 },
+                    Content = new[]
                     {
-                        new Container
+                        new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Padding = new MarginPadding { Bottom = 10 },
-                            Child = playlist = new PlaylistsRoomSettingsPlaylist
+                            new Container
                             {
-                                RelativeSizeAxes = Axes.Both
-                            }
-                        }
-                    },
-                    new Drawable[]
-                    {
-                        new RoundedButton
+                                RelativeSizeAxes = Axes.Both,
+                                Padding = new MarginPadding { Bottom = 10 },
+                                Child = playlist =
+                                    new PlaylistsRoomSettingsPlaylist
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                            },
+                        },
+                        new Drawable[]
                         {
-                            Text = "Add new playlist entry",
-                            RelativeSizeAxes = Axes.Both,
-                            Size = Vector2.One,
-                            Action = () => CreateNewItem?.Invoke()
-                        }
+                            new RoundedButton
+                            {
+                                Text = "Add new playlist entry",
+                                RelativeSizeAxes = Axes.Both,
+                                Size = Vector2.One,
+                                Action = () => CreateNewItem?.Invoke(),
+                            },
+                        },
                     },
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(),
-                    new Dimension(GridSizeMode.Absolute, 50),
+                    RowDimensions = new[]
+                    {
+                        new Dimension(),
+                        new Dimension(GridSizeMode.Absolute, 50),
+                    },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            playlist.Items.BindCollectionChanged((_, __) => room.Playlist = playlist.Items.ToArray());
+            playlist.Items.BindCollectionChanged(
+                (_, __) => room.Playlist = playlist.Items.ToArray()
+            );
 
             room.PropertyChanged += onRoomPropertyChanged;
             updateRoomPlaylist();
@@ -80,8 +85,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 updateRoomPlaylist();
         }
 
-        private void updateRoomPlaylist()
-            => playlist.Items.ReplaceRange(0, playlist.Items.Count, room.Playlist);
+        private void updateRoomPlaylist() =>
+            playlist.Items.ReplaceRange(0, playlist.Items.Count, room.Playlist);
 
         protected override void OnTabChanged(BeatmapDetailAreaTabItem tab, bool selectedMods)
         {
@@ -99,7 +104,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
         }
 
-        protected override BeatmapDetailAreaTabItem[] CreateTabItems() => base.CreateTabItems().Prepend(new BeatmapDetailAreaPlaylistTabItem()).ToArray();
+        protected override BeatmapDetailAreaTabItem[] CreateTabItems() =>
+            base.CreateTabItems().Prepend(new BeatmapDetailAreaPlaylistTabItem()).ToArray();
 
         protected override void Dispose(bool isDisposing)
         {

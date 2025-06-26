@@ -31,7 +31,12 @@ namespace osu.Game.Scoring
         /// </summary>
         public LocalisableString DisplayName { get; }
 
-        public HitResultDisplayStatistic(HitResult result, int count, int? maxCount, LocalisableString displayName)
+        public HitResultDisplayStatistic(
+            HitResult result,
+            int count,
+            int? maxCount,
+            LocalisableString displayName
+        )
         {
             Result = result;
             Count = count;

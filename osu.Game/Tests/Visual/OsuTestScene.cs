@@ -47,7 +47,8 @@ namespace osu.Game.Tests.Visual
         protected Bindable<RulesetInfo> Ruleset { get; } = new Bindable<RulesetInfo>();
 
         [Cached]
-        protected Bindable<IReadOnlyList<Mod>> SelectedMods { get; } = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        protected Bindable<IReadOnlyList<Mod>> SelectedMods { get; } =
+            new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
         protected new DependencyContainer Dependencies { get; private set; }
 
@@ -58,7 +59,9 @@ namespace osu.Game.Tests.Visual
             get
             {
                 if (UseOnlineAPI)
-                    throw new InvalidOperationException($"Using the {nameof(OsuTestScene)} dummy API is not supported when {nameof(UseOnlineAPI)} is true");
+                    throw new InvalidOperationException(
+                        $"Using the {nameof(OsuTestScene)} dummy API is not supported when {nameof(UseOnlineAPI)} is true"
+                    );
 
                 return dummyAPI;
             }
@@ -116,7 +119,9 @@ namespace osu.Game.Tests.Visual
 
         private DrawableRulesetDependencies rulesetDependencies;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var host = parent.Get<GameHost>();
 
@@ -124,7 +129,13 @@ namespace osu.Game.Tests.Visual
 
             Resources = parent.Get<OsuGameBase>().Resources;
 
-            realm = new Lazy<RealmAccess>(() => new RealmAccess(LocalStorage, OsuGameBase.CLIENT_DATABASE_FILENAME, host.UpdateThread));
+            realm = new Lazy<RealmAccess>(() =>
+                new RealmAccess(
+                    LocalStorage,
+                    OsuGameBase.CLIENT_DATABASE_FILENAME,
+                    host.UpdateThread
+                )
+            );
 
             RecycleLocalStorage(false);
 
@@ -139,14 +150,19 @@ namespace osu.Game.Tests.Visual
 
             var providedRuleset = CreateRuleset();
             if (providedRuleset != null)
-                isolatedBaseDependencies = rulesetDependencies = new DrawableRulesetDependencies(providedRuleset, baseDependencies);
+                isolatedBaseDependencies = rulesetDependencies = new DrawableRulesetDependencies(
+                    providedRuleset,
+                    baseDependencies
+                );
 
             Dependencies = isolatedBaseDependencies;
 
             Beatmap.Default = parent.Get<Bindable<WorkingBeatmap>>().Default;
             Beatmap.SetDefault();
 
-            Ruleset.Value = CreateRuleset()?.RulesetInfo ?? parent.Get<RulesetStore>().AvailableRulesets.First();
+            Ruleset.Value =
+                CreateRuleset()?.RulesetInfo
+                ?? parent.Get<RulesetStore>().AvailableRulesets.First();
 
             SelectedMods.SetDefault();
 
@@ -167,7 +183,9 @@ namespace osu.Game.Tests.Visual
         {
             base.LoadComplete();
 
-            ChangeBackgroundColour(ColourInfo.GradientVertical(colours.GreyCarmine, colours.GreyCarmineDarker));
+            ChangeBackgroundColour(
+                ColourInfo.GradientVertical(colours.GreyCarmine, colours.GreyCarmineDarker)
+            );
 
             var parentBeatmap = Parent!.Dependencies.Get<Bindable<WorkingBeatmap>>();
             parentBeatmap.Value = Beatmap.Value;
@@ -238,13 +256,15 @@ namespace osu.Game.Tests.Visual
         /// Returns a sample API beatmap with a populated beatmap set.
         /// </summary>
         /// <param name="ruleset">The ruleset to create the sample model using. osu! ruleset will be used if not specified.</param>
-        protected APIBeatmap CreateAPIBeatmap(RulesetInfo ruleset = null) => CreateAPIBeatmap(CreateBeatmap(ruleset ?? Ruleset.Value).BeatmapInfo);
+        protected APIBeatmap CreateAPIBeatmap(RulesetInfo ruleset = null) =>
+            CreateAPIBeatmap(CreateBeatmap(ruleset ?? Ruleset.Value).BeatmapInfo);
 
         /// <summary>
         /// Constructs a sample API beatmap set containing a beatmap.
         /// </summary>
         /// <param name="ruleset">The ruleset to create the sample model using. osu! ruleset will be used if not specified.</param>
-        protected APIBeatmapSet CreateAPIBeatmapSet(RulesetInfo ruleset = null) => CreateAPIBeatmapSet(CreateBeatmap(ruleset ?? Ruleset.Value).BeatmapInfo);
+        protected APIBeatmapSet CreateAPIBeatmapSet(RulesetInfo ruleset = null) =>
+            CreateAPIBeatmapSet(CreateBeatmap(ruleset ?? Ruleset.Value).BeatmapInfo);
 
         /// <summary>
         /// Constructs a sample API beatmap with a populated beatmap set from a given source beatmap.
@@ -280,7 +300,7 @@ namespace osu.Game.Tests.Visual
                 {
                     Cover = "https://assets.ppy.sh/beatmaps/163112/covers/cover.jpg",
                     Card = "https://assets.ppy.sh/beatmaps/163112/covers/card.jpg",
-                    List = "https://assets.ppy.sh/beatmaps/163112/covers/list.jpg"
+                    List = "https://assets.ppy.sh/beatmaps/163112/covers/list.jpg",
                 },
                 Title = original.Metadata.Title,
                 TitleUnicode = original.Metadata.TitleUnicode,
@@ -289,7 +309,7 @@ namespace osu.Game.Tests.Visual
                 Author = new APIUser
                 {
                     Username = original.Metadata.Author.Username,
-                    Id = original.Metadata.Author.OnlineID
+                    Id = original.Metadata.Author.OnlineID,
                 },
                 Source = original.Metadata.Source,
                 Tags = original.Metadata.Tags,
@@ -305,7 +325,7 @@ namespace osu.Game.Tests.Visual
                         RulesetID = original.Ruleset.OnlineID,
                         StarRating = original.StarRating,
                         DifficultyName = original.DifficultyName,
-                    }
+                    },
                 },
                 HasFavourited = false,
                 FavouriteCount = 0,
@@ -320,8 +340,10 @@ namespace osu.Game.Tests.Visual
         protected WorkingBeatmap CreateWorkingBeatmap(RulesetInfo ruleset) =>
             CreateWorkingBeatmap(CreateBeatmap(ruleset));
 
-        protected virtual WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null) =>
-            new ClockBackedTestWorkingBeatmap(beatmap, storyboard, Clock, Audio);
+        protected virtual WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        ) => new ClockBackedTestWorkingBeatmap(beatmap, storyboard, Clock, Audio);
 
         protected override void Dispose(bool isDisposing)
         {
@@ -347,10 +369,12 @@ namespace osu.Game.Tests.Visual
             /// <param name="ruleset">The target ruleset.</param>
             /// <param name="referenceClock">A clock which should be used instead of a stopwatch for virtual time progression.</param>
             /// <param name="audio">Audio manager. Required if a reference clock isn't provided.</param>
-            public ClockBackedTestWorkingBeatmap(RulesetInfo ruleset, IFrameBasedClock referenceClock, AudioManager audio)
-                : this(new TestBeatmap(ruleset), null, referenceClock, audio)
-            {
-            }
+            public ClockBackedTestWorkingBeatmap(
+                RulesetInfo ruleset,
+                IFrameBasedClock referenceClock,
+                AudioManager audio
+            )
+                : this(new TestBeatmap(ruleset), null, referenceClock, audio) { }
 
             /// <summary>
             /// Create an instance which provides the <see cref="IBeatmap"/> when requested.
@@ -359,14 +383,22 @@ namespace osu.Game.Tests.Visual
             /// <param name="storyboard">The storyboard.</param>
             /// <param name="referenceClock">An optional clock which should be used instead of a stopwatch for virtual time progression.</param>
             /// <param name="audio">Audio manager. Required if a reference clock isn't provided.</param>
-            public ClockBackedTestWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard, IFrameBasedClock referenceClock, AudioManager audio)
+            public ClockBackedTestWorkingBeatmap(
+                IBeatmap beatmap,
+                Storyboard storyboard,
+                IFrameBasedClock referenceClock,
+                AudioManager audio
+            )
                 : base(beatmap, storyboard, audio)
             {
                 double trackLength = 60000;
 
                 if (beatmap.HitObjects.Count > 0)
                     // add buffer after last hitobject to allow for final replay frames etc.
-                    trackLength = Math.Max(trackLength, beatmap.HitObjects.Max(h => h.GetEndTime()) + 2000);
+                    trackLength = Math.Max(
+                        trackLength,
+                        beatmap.HitObjects.Max(h => h.GetEndTime()) + 2000
+                    );
 
                 if (referenceClock != null)
                 {
@@ -403,13 +435,20 @@ namespace osu.Game.Tests.Visual
 
                 public Track Get(string name) => throw new NotImplementedException();
 
-                public Task<Track> GetAsync(string name, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+                public Task<Track> GetAsync(
+                    string name,
+                    CancellationToken cancellationToken = default
+                ) => throw new NotImplementedException();
 
                 public Stream GetStream(string name) => throw new NotImplementedException();
 
-                public IEnumerable<string> GetAvailableResources() => throw new NotImplementedException();
+                public IEnumerable<string> GetAvailableResources() =>
+                    throw new NotImplementedException();
 
-                public Track GetVirtual(double length = double.PositiveInfinity, string name = "virtual")
+                public Track GetVirtual(
+                    double length = double.PositiveInfinity,
+                    string name = "virtual"
+                )
                 {
                     var track = new TrackVirtualManual(referenceClock, name) { Length = length };
                     AddItem(track);
@@ -426,10 +465,11 @@ namespace osu.Game.Tests.Visual
 
                 private bool running;
 
-                public override double Rate => base.Rate
-                                               // This is mainly to allow some tests to override the rate to zero
-                                               // and avoid interpolation.
-                                               * referenceClock.Rate;
+                public override double Rate =>
+                    base.Rate
+                    // This is mainly to allow some tests to override the rate to zero
+                    // and avoid interpolation.
+                    * referenceClock.Rate;
 
                 public TrackVirtualManual(IFrameBasedClock referenceClock, string name = "virtual")
                     : base(name)

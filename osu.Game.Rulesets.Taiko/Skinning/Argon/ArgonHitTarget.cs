@@ -31,7 +31,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                     Origin = Anchor.TopCentre,
                     Y = -border_thickness,
                     RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(border_thickness, (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE)),
+                    Size = new Vector2(
+                        border_thickness,
+                        (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE)
+                    ),
                 },
                 new Circle
                 {
@@ -64,7 +67,10 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Y,
                     Y = border_thickness,
-                    Size = new Vector2(border_thickness, (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE)),
+                    Size = new Vector2(
+                        border_thickness,
+                        (1 - TaikoStrongableHitObject.DEFAULT_STRONG_SIZE)
+                    ),
                 },
             };
         }

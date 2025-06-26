@@ -41,7 +41,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                 RelativeSizeAxes = Axes.Both,
                 Size = Vector2.One,
                 Enabled = { Value = true },
-                Action = onClick
+                Action = onClick,
             };
         }
 
@@ -60,8 +60,12 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             operationInProgress = ongoingOperationTracker.InProgress.GetBoundCopy();
             operationInProgress.BindValueChanged(_ => updateState());
 
-            automaticallyDownload = config.GetBindable<bool>(OsuSetting.AutomaticallyDownloadMissingBeatmaps);
-            automaticallyDownload.BindValueChanged(_ => Scheduler.AddOnce(checkForAutomaticDownload));
+            automaticallyDownload = config.GetBindable<bool>(
+                OsuSetting.AutomaticallyDownloadMissingBeatmaps
+            );
+            automaticallyDownload.BindValueChanged(_ =>
+                Scheduler.AddOnce(checkForAutomaticDownload)
+            );
         }
 
         protected override void LoadComplete()
@@ -89,9 +93,10 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
                     break;
             }
 
-            button.Enabled.Value = client.Room != null
-                                   && client.Room.State != MultiplayerRoomState.Closed
-                                   && !operationInProgress.Value;
+            button.Enabled.Value =
+                client.Room != null
+                && client.Room.State != MultiplayerRoomState.Closed
+                && !operationInProgress.Value;
 
             Scheduler.AddOnce(checkForAutomaticDownload);
         }
@@ -146,19 +151,28 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Match
             // In a perfect world we'd use BeatmapAvailability, but there's no event-driven flow for when a selection changes.
             // ie. if selection changes from "not downloaded" to another "not downloaded" we wouldn't get a value changed raised.
             beatmapLookupCache
-                .GetBeatmapAsync(item.BeatmapID, (downloadCheckCancellation = new CancellationTokenSource()).Token)
-                .ContinueWith(resolved => Schedule(() =>
-                {
-                    var beatmapSet = resolved.GetResultSafely()?.BeatmapSet;
+                .GetBeatmapAsync(
+                    item.BeatmapID,
+                    (downloadCheckCancellation = new CancellationTokenSource()).Token
+                )
+                .ContinueWith(resolved =>
+                    Schedule(() =>
+                    {
+                        var beatmapSet = resolved.GetResultSafely()?.BeatmapSet;
 
-                    if (beatmapSet == null)
-                        return;
+                        if (beatmapSet == null)
+                            return;
 
-                    if (beatmaps.IsAvailableLocally(new BeatmapSetInfo { OnlineID = beatmapSet.OnlineID }))
-                        return;
+                        if (
+                            beatmaps.IsAvailableLocally(
+                                new BeatmapSetInfo { OnlineID = beatmapSet.OnlineID }
+                            )
+                        )
+                            return;
 
-                    beatmapDownloader.Download(beatmapSet);
-                }));
+                        beatmapDownloader.Download(beatmapSet);
+                    })
+                );
         }
 
         #endregion

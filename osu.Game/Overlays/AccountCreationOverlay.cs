@@ -82,10 +82,10 @@ namespace osu.Game.Overlays
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
         }
 

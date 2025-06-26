@@ -35,11 +35,7 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = new Color4(54, 54, 54, 255)
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = new Color4(54, 54, 54, 255) },
                 // Group name
                 new TournamentSpriteText
                 {
@@ -63,9 +59,9 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
                         Top = 21f,
                         Bottom = 7f,
                         Left = 7f,
-                        Right = 7f
-                    }
-                }
+                        Right = 7f,
+                    },
+                },
             };
         }
 

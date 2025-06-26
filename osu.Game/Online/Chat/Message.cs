@@ -45,9 +45,7 @@ namespace osu.Game.Online.Chat
         public string Uuid { get; set; } = string.Empty;
 
         [JsonConstructor]
-        public Message()
-        {
-        }
+        public Message() { }
 
         /// <summary>
         /// The text that is displayed in chat.
@@ -86,8 +84,10 @@ namespace osu.Game.Online.Chat
 
         public virtual bool Equals(Message other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return Id.HasValue && Id == other.Id;
         }
@@ -95,6 +95,7 @@ namespace osu.Game.Online.Chat
         // ReSharper disable once ImpureMethodCallOnReadonlyValueField
         public override int GetHashCode() => Id.GetHashCode();
 
-        public override string ToString() => $"({(Id?.ToString() ?? "null")}) {Timestamp} {Sender}: {Content}";
+        public override string ToString() =>
+            $"({(Id?.ToString() ?? "null")}) {Timestamp} {Sender}: {Content}";
     }
 }

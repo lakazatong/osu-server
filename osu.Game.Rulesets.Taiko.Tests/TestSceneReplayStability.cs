@@ -12,7 +12,9 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Taiko.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneReplayStability : ReplayStabilityTestScene
     {
         private static readonly object[][] test_cases =
@@ -39,7 +41,6 @@ namespace osu.Game.Rulesets.Taiko.Tests
             new object[] { 5f, -80.2d, HitResult.Miss },
             new object[] { 5f, -80.8d, HitResult.Miss },
             new object[] { 5f, -81d, HitResult.Miss },
-
             // OD = 7.8 test cases.
             // GREAT hit window is [-26.6ms, 26.6ms]
             // OK    hit window is [-63.2ms, 63.2ms]
@@ -59,7 +60,11 @@ namespace osu.Game.Rulesets.Taiko.Tests
         };
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestHitWindowStability(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowStability(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             const double hit_time = 100;
 
@@ -67,17 +72,10 @@ namespace osu.Game.Rulesets.Taiko.Tests
             {
                 HitObjects =
                 {
-                    new Hit
-                    {
-                        StartTime = hit_time,
-                        Type = HitType.Centre,
-                    }
+                    new Hit { StartTime = hit_time, Type = HitType.Centre },
                 },
                 Difficulty = new BeatmapDifficulty { OverallDifficulty = overallDifficulty },
-                BeatmapInfo =
-                {
-                    Ruleset = new TaikoRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new TaikoRuleset().RulesetInfo },
             };
 
             var replay = new Replay
@@ -87,7 +85,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
                     new TaikoReplayFrame(0),
                     new TaikoReplayFrame(hit_time + hitOffset, TaikoAction.LeftCentre),
                     new TaikoReplayFrame(hit_time + hitOffset + 20),
-                }
+                },
             };
 
             RunTest(beatmap, replay, [expectedResult]);

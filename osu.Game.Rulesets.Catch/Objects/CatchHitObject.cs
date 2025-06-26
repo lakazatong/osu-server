@@ -15,7 +15,11 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Catch.Objects
 {
-    public abstract class CatchHitObject : HitObject, IHasPosition, IHasComboInformation, IHasTimePreempt
+    public abstract class CatchHitObject
+        : HitObject,
+            IHasPosition,
+            IHasComboInformation,
+            IHasTimePreempt
     {
         public const float OBJECT_RADIUS = 64;
 
@@ -146,11 +150,20 @@ namespace osu.Game.Rulesets.Catch.Objects
         /// </summary>
         public int RandomSeed => (int)StartTime;
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
-            TimePreempt = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, PREEMPT_MAX, PREEMPT_MID, PREEMPT_MIN);
+            TimePreempt = (float)
+                IBeatmapDifficultyInfo.DifficultyRange(
+                    difficulty.ApproachRate,
+                    PREEMPT_MAX,
+                    PREEMPT_MID,
+                    PREEMPT_MIN
+                );
 
             Scale = LegacyRulesetExtensions.CalculateScaleFromCircleSize(difficulty.CircleSize);
         }
@@ -166,7 +179,10 @@ namespace osu.Game.Rulesets.Catch.Objects
             // - For the purpose of combo colours, spinners never start a new combo even if they are flagged as doing so.
             // - At decode time, the first hitobject in the beatmap and the first hitobject after a banana shower are both enforced to be a new combo,
             //   but this isn't directly enforced by the editor so the extra checks against the last hitobject are duplicated here.
-            if (this is not BananaShower && (NewCombo || lastObj == null || lastObj is BananaShower))
+            if (
+                this is not BananaShower
+                && (NewCombo || lastObj == null || lastObj is BananaShower)
+            )
             {
                 inCurrentCombo = 0;
                 index++;

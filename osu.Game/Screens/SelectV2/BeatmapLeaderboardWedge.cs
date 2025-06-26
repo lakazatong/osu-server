@@ -39,7 +39,8 @@ namespace osu.Game.Screens.SelectV2
     {
         public const float SPACING_BETWEEN_SCORES = 4;
 
-        public IBindable<BeatmapLeaderboardScope> Scope { get; } = new Bindable<BeatmapLeaderboardScope>();
+        public IBindable<BeatmapLeaderboardScope> Scope { get; } =
+            new Bindable<BeatmapLeaderboardScope>();
 
         public IBindable<bool> FilterBySelectedMods { get; } = new BindableBool();
 
@@ -78,7 +79,8 @@ namespace osu.Game.Screens.SelectV2
 
         private CancellationTokenSource? cancellationTokenSource;
 
-        private readonly IBindable<LeaderboardScores?> fetchedScores = new Bindable<LeaderboardScores?>();
+        private readonly IBindable<LeaderboardScores?> fetchedScores =
+            new Bindable<LeaderboardScores?>();
 
         private const float personal_best_height = 112;
 
@@ -97,20 +99,21 @@ namespace osu.Game.Screens.SelectV2
                         RelativeSizeAxes = Axes.Both,
                         ScrollbarVisible = false,
                         Shear = OsuGame.SHEAR,
-                        Child = scoresContainer = new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding
+                        Child = scoresContainer =
+                            new Container
                             {
-                                Top = 5,
-                                // Left padding offsets the shear to create a visually appealing list display.
-                                Left = 80f,
-                                // Bottom padding ensures the last entry's full width is displayed
-                                // (ie it is fully on screen after shear is considered).
-                                Bottom = BeatmapLeaderboardScore.HEIGHT * 3
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding
+                                {
+                                    Top = 5,
+                                    // Left padding offsets the shear to create a visually appealing list display.
+                                    Left = 80f,
+                                    // Bottom padding ensures the last entry's full width is displayed
+                                    // (ie it is fully on screen after shear is considered).
+                                    Bottom = BeatmapLeaderboardScore.HEIGHT * 3,
+                                },
                             },
-                        },
                     },
                     personalBestDisplay = new Container
                     {
@@ -119,10 +122,7 @@ namespace osu.Game.Screens.SelectV2
                         RelativeSizeAxes = Axes.X,
                         Height = personal_best_height,
                         Shear = OsuGame.SHEAR,
-                        Margin = new MarginPadding
-                        {
-                            Left = -40f,
-                        },
+                        Margin = new MarginPadding { Left = -40f },
                         CornerRadius = 10f,
                         Masking = true,
                         // push the personal best 1px down to hide masking issues
@@ -137,21 +137,30 @@ namespace osu.Game.Screens.SelectV2
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
                                 Shear = -OsuGame.SHEAR,
-                                Padding = new MarginPadding { Top = 5f, Bottom = 5f, Left = 70f, Right = 10f },
+                                Padding = new MarginPadding
+                                {
+                                    Top = 5f,
+                                    Bottom = 5f,
+                                    Left = 70f,
+                                    Right = 10f,
+                                },
                                 Children = new Drawable[]
                                 {
                                     personalBestText = new OsuSpriteText
                                     {
                                         Colour = colourProvider.Content2,
-                                        Font = OsuFont.Style.Caption1.With(weight: FontWeight.SemiBold),
+                                        Font = OsuFont.Style.Caption1.With(
+                                            weight: FontWeight.SemiBold
+                                        ),
                                     },
-                                    personalBestScoreContainer = new Container<BeatmapLeaderboardScore>
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Margin = new MarginPadding { Top = 20f },
-                                    },
-                                }
+                                    personalBestScoreContainer =
+                                        new Container<BeatmapLeaderboardScore>
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Margin = new MarginPadding { Top = 20f },
+                                        },
+                                },
                             },
                         },
                     },
@@ -162,7 +171,7 @@ namespace osu.Game.Screens.SelectV2
                         RelativeSizeAxes = Axes.Both,
                     },
                     loading = new LoadingLayer(),
-                }
+                },
             };
         }
 
@@ -212,32 +221,43 @@ namespace osu.Game.Screens.SelectV2
             SetState(LeaderboardState.Retrieving);
 
             refetchOperation?.Cancel();
-            refetchOperation = Scheduler.AddDelayed(() =>
-            {
-                var fetchBeatmapInfo = beatmap.Value.BeatmapInfo;
-                var fetchRuleset = ruleset.Value ?? fetchBeatmapInfo.Ruleset;
-
-                // For now, we forcefully refresh to keep things simple.
-                // In the future, removing this requirement may be deemed useful, but will need ample testing of edge case scenarios
-                // (like returning from gameplay after setting a new score, returning to song select after main menu).
-                leaderboardManager.FetchWithCriteria(new LeaderboardCriteria(fetchBeatmapInfo, fetchRuleset, Scope.Value, FilterBySelectedMods.Value ? mods.Value.ToArray() : null),
-                    forceRefresh: true);
-
-                if (!initialFetchComplete)
+            refetchOperation = Scheduler.AddDelayed(
+                () =>
                 {
-                    // only bind this after the first fetch to avoid reading stale scores.
-                    fetchedScores.BindTo(leaderboardManager.Scores);
-                    fetchedScores.BindValueChanged(_ => updateScores(), true);
-                    initialFetchComplete = true;
-                }
-            }, initialFetchComplete ? 300 : 0);
+                    var fetchBeatmapInfo = beatmap.Value.BeatmapInfo;
+                    var fetchRuleset = ruleset.Value ?? fetchBeatmapInfo.Ruleset;
+
+                    // For now, we forcefully refresh to keep things simple.
+                    // In the future, removing this requirement may be deemed useful, but will need ample testing of edge case scenarios
+                    // (like returning from gameplay after setting a new score, returning to song select after main menu).
+                    leaderboardManager.FetchWithCriteria(
+                        new LeaderboardCriteria(
+                            fetchBeatmapInfo,
+                            fetchRuleset,
+                            Scope.Value,
+                            FilterBySelectedMods.Value ? mods.Value.ToArray() : null
+                        ),
+                        forceRefresh: true
+                    );
+
+                    if (!initialFetchComplete)
+                    {
+                        // only bind this after the first fetch to avoid reading stale scores.
+                        fetchedScores.BindTo(leaderboardManager.Scores);
+                        fetchedScores.BindValueChanged(_ => updateScores(), true);
+                        initialFetchComplete = true;
+                    }
+                },
+                initialFetchComplete ? 300 : 0
+            );
         }
 
         private void updateScores()
         {
             var scores = fetchedScores.Value;
 
-            if (scores == null) return;
+            if (scores == null)
+                return;
 
             if (scores.FailState != null)
                 SetState((LeaderboardState)scores.FailState);
@@ -245,7 +265,11 @@ namespace osu.Game.Screens.SelectV2
                 SetScores(scores.TopScores, scores.UserScore, scores.TotalScores);
         }
 
-        protected void SetScores(IEnumerable<ScoreInfo> scores, ScoreInfo? userScore = null, int? totalCount = null)
+        protected void SetScores(
+            IEnumerable<ScoreInfo> scores,
+            ScoreInfo? userScore = null,
+            int? totalCount = null
+        )
         {
             cancellationTokenSource?.Cancel();
             cancellationTokenSource = new CancellationTokenSource();
@@ -259,47 +283,56 @@ namespace osu.Game.Screens.SelectV2
                 return;
             }
 
-            LoadComponentsAsync(scores.Select((s, i) =>
-            {
-                BeatmapLeaderboardScore.HighlightType? highlightType = null;
+            LoadComponentsAsync(
+                scores.Select(
+                    (s, i) =>
+                    {
+                        BeatmapLeaderboardScore.HighlightType? highlightType = null;
 
-                if (s.OnlineID == userScore?.OnlineID)
-                    highlightType = BeatmapLeaderboardScore.HighlightType.Own;
-                else if (api.Friends.Any(r => r.TargetID == s.UserID) && Scope.Value != BeatmapLeaderboardScope.Friend)
-                    highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
+                        if (s.OnlineID == userScore?.OnlineID)
+                            highlightType = BeatmapLeaderboardScore.HighlightType.Own;
+                        else if (
+                            api.Friends.Any(r => r.TargetID == s.UserID)
+                            && Scope.Value != BeatmapLeaderboardScope.Friend
+                        )
+                            highlightType = BeatmapLeaderboardScore.HighlightType.Friend;
 
-                return new BeatmapLeaderboardScore(s)
+                        return new BeatmapLeaderboardScore(s)
+                        {
+                            Rank = i + 1,
+                            Highlight = highlightType,
+                            SelectedMods = { BindTarget = mods },
+                            Action = () => onLeaderboardScoreClicked(s),
+                        };
+                    }
+                ),
+                loadedScores =>
                 {
-                    Rank = i + 1,
-                    Highlight = highlightType,
-                    SelectedMods = { BindTarget = mods },
-                    Action = () => onLeaderboardScoreClicked(s),
-                };
-            }), loadedScores =>
-            {
-                int delay = 200;
-                int i = 0;
+                    int delay = 200;
+                    int i = 0;
 
-                foreach (var d in loadedScores)
-                {
-                    d.Y = (BeatmapLeaderboardScore.HEIGHT + SPACING_BETWEEN_SCORES) * i;
+                    foreach (var d in loadedScores)
+                    {
+                        d.Y = (BeatmapLeaderboardScore.HEIGHT + SPACING_BETWEEN_SCORES) * i;
 
-                    // This is a bit of a weird one. We're already in a sheared state and don't want top-level
-                    // shear applied, but still need the `BeatmapLeaderboardScore` to be in "sheared" mode (see ctor).
-                    d.Shear = Vector2.Zero;
+                        // This is a bit of a weird one. We're already in a sheared state and don't want top-level
+                        // shear applied, but still need the `BeatmapLeaderboardScore` to be in "sheared" mode (see ctor).
+                        d.Shear = Vector2.Zero;
 
-                    scoresContainer.Add(d);
+                        scoresContainer.Add(d);
 
-                    d.FadeOut()
-                     .MoveToX(-20f)
-                     .Delay(delay)
-                     .FadeIn(300, Easing.OutQuint)
-                     .MoveToX(0f, 300, Easing.OutQuint);
+                        d.FadeOut()
+                            .MoveToX(-20f)
+                            .Delay(delay)
+                            .FadeIn(300, Easing.OutQuint)
+                            .MoveToX(0f, 300, Easing.OutQuint);
 
-                    delay += 30;
-                    i++;
-                }
-            }, cancellation: cancellationTokenSource.Token);
+                        delay += 30;
+                        i++;
+                    }
+                },
+                cancellation: cancellationTokenSource.Token
+            );
 
             if (userScore != null)
             {
@@ -313,10 +346,16 @@ namespace osu.Game.Screens.SelectV2
                     Action = () => onLeaderboardScoreClicked(userScore),
                 };
 
-                scoresScroll.TransformTo(nameof(scoresScroll.Padding), new MarginPadding { Bottom = personal_best_height }, 300, Easing.OutQuint);
+                scoresScroll.TransformTo(
+                    nameof(scoresScroll.Padding),
+                    new MarginPadding { Bottom = personal_best_height },
+                    300,
+                    Easing.OutQuint
+                );
 
                 if (totalCount != null && userScore.Position != null)
-                    personalBestText.Text = $"Personal Best (#{userScore.Position:N0} of {totalCount.Value:N0})";
+                    personalBestText.Text =
+                        $"Personal Best (#{userScore.Position:N0} of {totalCount.Value:N0})";
                 else
                     personalBestText.Text = "Personal Best";
             }
@@ -332,10 +371,7 @@ namespace osu.Game.Screens.SelectV2
                 if (d.LifetimeEnd != double.MaxValue)
                     continue;
 
-                d.Delay(delay)
-                 .MoveToX(-10f, 120, Easing.Out)
-                 .FadeOut(120, Easing.Out)
-                 .Expire();
+                d.Delay(delay).MoveToX(-10f, 120, Easing.Out).FadeOut(120, Easing.Out).Expire();
 
                 // If the user is scrolled down in the list, start delaying only from the current visible range to
                 // avoid the perceived transition from taking longer than expected.
@@ -345,7 +381,12 @@ namespace osu.Game.Screens.SelectV2
 
             personalBestDisplay.MoveToX(-100, 300, Easing.OutQuint);
             personalBestDisplay.FadeOut(300, Easing.OutQuint);
-            scoresScroll.TransformTo(nameof(scoresScroll.Padding), new MarginPadding(), 300, Easing.OutQuint);
+            scoresScroll.TransformTo(
+                nameof(scoresScroll.Padding),
+                new MarginPadding(),
+                300,
+                Easing.OutQuint
+            );
         }
 
         private void onLeaderboardScoreClicked(ScoreInfo score) => songSelect?.PresentScore(score);
@@ -416,7 +457,8 @@ namespace osu.Game.Screens.SelectV2
                 {
                     c.Colour = ColourInfo.GradientVertical(
                         Color4.White.Opacity(Math.Min(1 - (topY - fadeBottom) / height, 1)),
-                        Color4.White.Opacity(Math.Min(1 - (bottomY - fadeBottom) / height, 1)));
+                        Color4.White.Opacity(Math.Min(1 - (bottomY - fadeBottom) / height, 1))
+                    );
                 }
                 else
                 {
@@ -424,7 +466,8 @@ namespace osu.Game.Screens.SelectV2
 
                     c.Colour = ColourInfo.GradientVertical(
                         Color4.White.Opacity(Math.Min(1 - (fadeTop - topY) / height, 1)),
-                        Color4.White.Opacity(Math.Min(1 - (fadeTop - bottomY) / height, 1)));
+                        Color4.White.Opacity(Math.Min(1 - (fadeTop - bottomY) / height, 1))
+                    );
                 }
             }
         }
@@ -436,28 +479,39 @@ namespace osu.Game.Screens.SelectV2
             switch (state)
             {
                 case LeaderboardState.NetworkFailure:
-                    return new ClickablePlaceholder(LeaderboardStrings.CouldntFetchScores, FontAwesome.Solid.Sync)
+                    return new ClickablePlaceholder(
+                        LeaderboardStrings.CouldntFetchScores,
+                        FontAwesome.Solid.Sync
+                    )
                     {
-                        Action = refetchScores
+                        Action = refetchScores,
                     };
 
                 case LeaderboardState.NoneSelected:
                     return new MessagePlaceholder(LeaderboardStrings.PleaseSelectABeatmap);
 
                 case LeaderboardState.RulesetUnavailable:
-                    return new MessagePlaceholder(LeaderboardStrings.LeaderboardsAreNotAvailableForThisRuleset);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.LeaderboardsAreNotAvailableForThisRuleset
+                    );
 
                 case LeaderboardState.BeatmapUnavailable:
-                    return new MessagePlaceholder(LeaderboardStrings.LeaderboardsAreNotAvailableForThisBeatmap);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.LeaderboardsAreNotAvailableForThisBeatmap
+                    );
 
                 case LeaderboardState.NoScores:
                     return new MessagePlaceholder(LeaderboardStrings.NoRecordsYet);
 
                 case LeaderboardState.NotLoggedIn:
-                    return new LoginPlaceholder(LeaderboardStrings.PleaseSignInToViewOnlineLeaderboards);
+                    return new LoginPlaceholder(
+                        LeaderboardStrings.PleaseSignInToViewOnlineLeaderboards
+                    );
 
                 case LeaderboardState.NotSupporter:
-                    return new MessagePlaceholder(LeaderboardStrings.PleaseInvestInAnOsuSupporterTagToViewThisLeaderboard);
+                    return new MessagePlaceholder(
+                        LeaderboardStrings.PleaseInvestInAnOsuSupporterTagToViewThisLeaderboard
+                    );
 
                 case LeaderboardState.NoTeam:
                     return new MessagePlaceholder(LeaderboardStrings.NoTeam);

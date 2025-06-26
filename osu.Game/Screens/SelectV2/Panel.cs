@@ -85,11 +85,13 @@ namespace osu.Game.Screens.SelectV2
             var inputRectangle = TopLevelContent.DrawRectangle;
 
             // Cover the gaps introduced by the spacing between panels so that user mis-aims don't result in no-ops.
-            inputRectangle = inputRectangle.Inflate(new MarginPadding
-            {
-                Top = item.CarouselInputLenienceAbove,
-                Bottom = item.CarouselInputLenienceBelow,
-            });
+            inputRectangle = inputRectangle.Inflate(
+                new MarginPadding
+                {
+                    Top = item.CarouselInputLenienceAbove,
+                    Bottom = item.CarouselInputLenienceBelow,
+                }
+            );
 
             return inputRectangle.Contains(TopLevelContent.ToLocalSpace(screenSpacePos));
         }
@@ -135,15 +137,12 @@ namespace osu.Game.Screens.SelectV2
                             CornerRadius = corner_radius,
                             Children = new Drawable[]
                             {
-                                backgroundGradient = new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                },
+                                backgroundGradient = new Box { RelativeSizeAxes = Axes.Both },
                                 backgroundContainer = new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
-                            }
+                            },
                         },
                     },
                     iconContainer = new Container
@@ -176,7 +175,10 @@ namespace osu.Game.Screens.SelectV2
                     keyboardSelectionLayer = new Box
                     {
                         Alpha = 0,
-                        Colour = ColourInfo.GradientHorizontal(colourProvider.Highlight1.Opacity(0.1f), colourProvider.Highlight1.Opacity(0.4f)),
+                        Colour = ColourInfo.GradientHorizontal(
+                            colourProvider.Highlight1.Opacity(0.1f),
+                            colourProvider.Highlight1.Opacity(0.4f)
+                        ),
                         Blending = BlendingParameters.Additive,
                         RelativeSizeAxes = Axes.Both,
                     },
@@ -188,10 +190,13 @@ namespace osu.Game.Screens.SelectV2
                         RelativeSizeAxes = Axes.Both,
                     },
                     new HoverSounds(),
-                }
+                },
             };
 
-            backgroundGradient.Colour = ColourInfo.GradientHorizontal(colourProvider.Background3, colourProvider.Background4);
+            backgroundGradient.Colour = ColourInfo.GradientHorizontal(
+                colourProvider.Background3,
+                colourProvider.Background4
+            );
         }
 
         public partial class PulsatingBox : BeatSyncedContainer
@@ -206,16 +211,18 @@ namespace osu.Game.Screens.SelectV2
 
                 InternalChildren = new Drawable[]
                 {
-                    box = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    box = new Box { RelativeSizeAxes = Axes.Both },
                 };
             }
 
             private int separation = 1;
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+            protected override void OnNewBeat(
+                int beatIndex,
+                TimingControlPoint timingPoint,
+                EffectControlPoint effectPoint,
+                ChannelAmplitudes amplitudes
+            )
             {
                 base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
 
@@ -231,8 +238,7 @@ namespace osu.Game.Screens.SelectV2
                     separation *= 2;
                 }
 
-                box
-                    .Delay(FlashOffset)
+                box.Delay(FlashOffset)
                     .FadeTo(0.8f, length / 6, Easing.Out)
                     .Then()
                     .FadeTo(0.4f, length, Easing.Out);
@@ -249,25 +255,32 @@ namespace osu.Game.Screens.SelectV2
                 updateXOffset();
             });
 
-            Selected.BindValueChanged(_ =>
-            {
-                updateSelectedState();
-                updateXOffset();
-            }, true);
-
-            KeyboardSelected.BindValueChanged(selected =>
-            {
-                if (selected.NewValue)
+            Selected.BindValueChanged(
+                _ =>
                 {
-                    keyboardSelectionLayer.FadeIn(80, Easing.Out)
-                                          .Then()
-                                          .FadeTo(0.5f, 2000, Easing.OutQuint);
-                }
-                else
-                    keyboardSelectionLayer.FadeOut(1000, Easing.OutQuint);
+                    updateSelectedState();
+                    updateXOffset();
+                },
+                true
+            );
 
-                updateXOffset();
-            }, true);
+            KeyboardSelected.BindValueChanged(
+                selected =>
+                {
+                    if (selected.NewValue)
+                    {
+                        keyboardSelectionLayer
+                            .FadeIn(80, Easing.Out)
+                            .Then()
+                            .FadeTo(0.5f, 2000, Easing.OutQuint);
+                    }
+                    else
+                        keyboardSelectionLayer.FadeOut(1000, Easing.OutQuint);
+
+                    updateXOffset();
+                },
+                true
+            );
         }
 
         protected override void PrepareForUse()
@@ -308,7 +321,10 @@ namespace osu.Game.Screens.SelectV2
 
             backgroundBorder.Colour = backgroundColour;
 
-            selectionLayer.Colour = ColourInfo.GradientHorizontal(backgroundColour.Opacity(0), backgroundColour.Opacity(0.5f));
+            selectionLayer.Colour = ColourInfo.GradientHorizontal(
+                backgroundColour.Opacity(0),
+                backgroundColour.Opacity(0.5f)
+            );
 
             updateSelectedState(animated: false);
         }
@@ -318,7 +334,11 @@ namespace osu.Game.Screens.SelectV2
             bool selectedOrExpanded = Expanded.Value || Selected.Value;
 
             var edgeEffectColour = accentColour ?? Color4Extensions.FromHex(@"4EBFFF");
-            TopLevelContent.FadeEdgeEffectTo(selectedOrExpanded ? edgeEffectColour.Opacity(0.8f) : Color4.Black.Opacity(0.4f), animated ? DURATION : 0, Easing.OutQuint);
+            TopLevelContent.FadeEdgeEffectTo(
+                selectedOrExpanded ? edgeEffectColour.Opacity(0.8f) : Color4.Black.Opacity(0.4f),
+                animated ? DURATION : 0,
+                Easing.OutQuint
+            );
 
             if (selectedOrExpanded)
                 selectionLayer.FadeIn(100, Easing.OutQuint);
@@ -360,7 +380,10 @@ namespace osu.Game.Screens.SelectV2
         {
             base.Update();
             Content.Padding = Content.Padding with { Left = iconContainer.DrawWidth };
-            backgroundLayerHorizontalPadding.Padding = new MarginPadding { Left = iconContainer.DrawWidth };
+            backgroundLayerHorizontalPadding.Padding = new MarginPadding
+            {
+                Left = iconContainer.DrawWidth,
+            };
         }
 
         public abstract MenuItem[]? ContextMenuItems { get; }

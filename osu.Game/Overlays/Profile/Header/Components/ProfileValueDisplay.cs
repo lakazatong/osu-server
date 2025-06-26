@@ -40,10 +40,7 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    title = new OsuSpriteText
-                    {
-                        Font = OsuFont.GetFont(size: 12)
-                    },
+                    title = new OsuSpriteText { Font = OsuFont.GetFont(size: 12) },
                     content = new ContentText
                     {
                         Font = OsuFont.GetFont(size: big ? 30 : 20, weight: FontWeight.Light),
@@ -51,8 +48,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     new Container // Add a minimum size to the FillFlowContainer
                     {
                         Width = minimumWidth,
-                    }
-                }
+                    },
+                },
             };
         }
 

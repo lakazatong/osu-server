@@ -56,14 +56,14 @@ namespace osu.Game.Overlays.Mods
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Label = CommonStrings.Name,
-                        TabbableContentContainer = this
+                        TabbableContentContainer = this,
                     },
                     descriptionTextBox = new LabelledTextBox
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Label = CommonStrings.Description,
-                        TabbableContentContainer = this
+                        TabbableContentContainer = this,
                     },
                     new FillFlowContainer
                     {
@@ -80,11 +80,11 @@ namespace osu.Game.Overlays.Mods
                                 Anchor = Anchor.TopRight,
                                 Origin = Anchor.TopRight,
                                 Text = ModSelectOverlayStrings.AddPreset,
-                                Action = createPreset
-                            }
-                        }
-                    }
-                }
+                                Action = createPreset,
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -105,10 +105,13 @@ namespace osu.Game.Overlays.Mods
 
             ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(nameTextBox));
 
-            nameTextBox.Current.BindValueChanged(s =>
-            {
-                createButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
-            }, true);
+            nameTextBox.Current.BindValueChanged(
+                s =>
+                {
+                    createButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
+                },
+                true
+            );
         }
 
         public override bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
@@ -125,13 +128,19 @@ namespace osu.Game.Overlays.Mods
 
         private void createPreset()
         {
-            realm.Write(r => r.Add(new ModPreset
-            {
-                Name = nameTextBox.Current.Value,
-                Description = descriptionTextBox.Current.Value,
-                Mods = selectedMods.Value.Where(mod => mod.Type != ModType.System).ToArray(),
-                Ruleset = r.Find<RulesetInfo>(ruleset.Value.ShortName)!
-            }));
+            realm.Write(r =>
+                r.Add(
+                    new ModPreset
+                    {
+                        Name = nameTextBox.Current.Value,
+                        Description = descriptionTextBox.Current.Value,
+                        Mods = selectedMods
+                            .Value.Where(mod => mod.Type != ModType.System)
+                            .ToArray(),
+                        Ruleset = r.Find<RulesetInfo>(ruleset.Value.ShortName)!,
+                    }
+                )
+            );
 
             this.HidePopover();
         }

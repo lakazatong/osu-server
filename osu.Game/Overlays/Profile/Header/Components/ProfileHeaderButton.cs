@@ -26,26 +26,25 @@ namespace osu.Game.Overlays.Profile.Header.Components
             AutoSizeAxes = Axes.X;
             Height = 40;
 
-            base.Content.Add(new CircularContainer
-            {
-                Masking = true,
-                AutoSizeAxes = Axes.X,
-                RelativeSizeAxes = Axes.Y,
-                Children = new Drawable[]
+            base.Content.Add(
+                new CircularContainer
                 {
-                    background = new Box
+                    Masking = true,
+                    AutoSizeAxes = Axes.X,
+                    RelativeSizeAxes = Axes.Y,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
+                        background = new Box { RelativeSizeAxes = Axes.Both },
+                        content = new Container
+                        {
+                            AutoSizeAxes = Axes.X,
+                            RelativeSizeAxes = Axes.Y,
+                            Padding = new MarginPadding { Horizontal = 10 },
+                        },
+                        loading = new LoadingLayer(true, false),
                     },
-                    content = new Container
-                    {
-                        AutoSizeAxes = Axes.X,
-                        RelativeSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Horizontal = 10 },
-                    },
-                    loading = new LoadingLayer(true, false)
                 }
-            });
+            );
         }
 
         protected void ShowLoadingLayer()

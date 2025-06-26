@@ -16,7 +16,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             Blending = BlendingParameters.Additive;
 
-            Colour = ColourInfo.GradientVertical(Colour4.FromHex("FC618F"), Colour4.FromHex("BB1A41"));
+            Colour = ColourInfo.GradientVertical(
+                Colour4.FromHex("FC618F"),
+                Colour4.FromHex("BB1A41")
+            );
             AutoSizeAxes = Axes.Both;
 
             InternalChildren = new Drawable[]

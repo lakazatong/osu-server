@@ -28,7 +28,8 @@ namespace osu.Game.Beatmaps
 {
     public class WorkingBeatmapCache : IBeatmapResourceProvider, IWorkingBeatmapCache
     {
-        private readonly WeakList<BeatmapManagerWorkingBeatmap> workingCache = new WeakList<BeatmapManagerWorkingBeatmap>();
+        private readonly WeakList<BeatmapManagerWorkingBeatmap> workingCache =
+            new WeakList<BeatmapManagerWorkingBeatmap>();
 
         /// <summary>
         /// Beatmap files may specify this filename to denote that they don't have an audio track.
@@ -50,8 +51,14 @@ namespace osu.Game.Beatmaps
         [CanBeNull]
         private readonly GameHost host;
 
-        public WorkingBeatmapCache(ITrackStore trackStore, AudioManager audioManager, IResourceStore<byte[]> resources, IResourceStore<byte[]> files, WorkingBeatmap defaultBeatmap = null,
-                                   GameHost host = null)
+        public WorkingBeatmapCache(
+            ITrackStore trackStore,
+            AudioManager audioManager,
+            IResourceStore<byte[]> resources,
+            IResourceStore<byte[]> files,
+            WorkingBeatmap defaultBeatmap = null,
+            GameHost host = null
+        )
         {
             DefaultBeatmap = defaultBeatmap;
 
@@ -59,8 +66,14 @@ namespace osu.Game.Beatmaps
             this.resources = resources;
             this.host = host;
             this.files = files;
-            largeTextureStore = new LargeTextureStore(host?.Renderer ?? new DummyRenderer(), host?.CreateTextureLoaderStore(files));
-            beatmapPanelTextureStore = new LargeTextureStore(host?.Renderer ?? new DummyRenderer(), new BeatmapPanelBackgroundTextureLoaderStore(host?.CreateTextureLoaderStore(files)));
+            largeTextureStore = new LargeTextureStore(
+                host?.Renderer ?? new DummyRenderer(),
+                host?.CreateTextureLoaderStore(files)
+            );
+            beatmapPanelTextureStore = new LargeTextureStore(
+                host?.Renderer ?? new DummyRenderer(),
+                new BeatmapPanelBackgroundTextureLoaderStore(host?.CreateTextureLoaderStore(files))
+            );
             this.trackStore = trackStore;
         }
 
@@ -104,7 +117,8 @@ namespace osu.Game.Beatmaps
                 workingCache.Add(working = new BeatmapManagerWorkingBeatmap(beatmapInfo, this));
 
                 // best effort; may be higher than expected.
-                GlobalStatistics.Get<int>("Beatmaps", $"Cached {nameof(WorkingBeatmap)}s").Value = workingCache.Count();
+                GlobalStatistics.Get<int>("Beatmaps", $"Cached {nameof(WorkingBeatmap)}s").Value =
+                    workingCache.Count();
 
                 return working;
             }
@@ -120,7 +134,10 @@ namespace osu.Game.Beatmaps
         RealmAccess IStorageResourceProvider.RealmAccess => null!;
         IResourceStore<byte[]> IStorageResourceProvider.Files => files;
         IResourceStore<byte[]> IStorageResourceProvider.Resources => resources;
-        IResourceStore<TextureUpload> IStorageResourceProvider.CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => host?.CreateTextureLoaderStore(underlyingStore);
+
+        IResourceStore<TextureUpload> IStorageResourceProvider.CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => host?.CreateTextureLoaderStore(underlyingStore);
 
         #endregion
 
@@ -129,7 +146,10 @@ namespace osu.Game.Beatmaps
             [NotNull]
             private readonly IBeatmapResourceProvider resources;
 
-            public BeatmapManagerWorkingBeatmap(BeatmapInfo beatmapInfo, [NotNull] IBeatmapResourceProvider resources)
+            public BeatmapManagerWorkingBeatmap(
+                BeatmapInfo beatmapInfo,
+                [NotNull] IBeatmapResourceProvider resources
+            )
                 : base(beatmapInfo, resources.AudioManager)
             {
                 this.resources = resources;
@@ -148,7 +168,10 @@ namespace osu.Game.Beatmaps
 
                     if (stream == null)
                     {
-                        Logger.Log($"Beatmap failed to load (file {BeatmapInfo.Path} not found on disk at expected location {fileStorePath}).", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Beatmap failed to load (file {BeatmapInfo.Path} not found on disk at expected location {fileStorePath}).",
+                            level: LogLevel.Error
+                        );
                         return null;
                     }
 
@@ -157,7 +180,10 @@ namespace osu.Game.Beatmaps
 
                     if (streamMD5 != BeatmapInfo.MD5Hash)
                     {
-                        Logger.Log($"Beatmap failed to load (file {BeatmapInfo.Path} does not have the expected hash).", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Beatmap failed to load (file {BeatmapInfo.Path} does not have the expected hash).",
+                            level: LogLevel.Error
+                        );
                         return null;
                     }
 
@@ -179,9 +205,11 @@ namespace osu.Game.Beatmaps
                 }
             }
 
-            public override Texture GetPanelBackground() => getBackgroundFromStore(resources.BeatmapPanelTextureStore);
+            public override Texture GetPanelBackground() =>
+                getBackgroundFromStore(resources.BeatmapPanelTextureStore);
 
-            public override Texture GetBackground() => getBackgroundFromStore(resources.LargeTextureStore);
+            public override Texture GetBackground() =>
+                getBackgroundFromStore(resources.LargeTextureStore);
 
             private Texture getBackgroundFromStore(TextureStore store)
             {
@@ -195,7 +223,9 @@ namespace osu.Game.Beatmaps
 
                     if (texture == null)
                     {
-                        Logger.Log($"Beatmap background failed to load (file {Metadata.BackgroundFile} not found on disk at expected location {fileStorePath}).");
+                        Logger.Log(
+                            $"Beatmap background failed to load (file {Metadata.BackgroundFile} not found on disk at expected location {fileStorePath})."
+                        );
                         return null;
                     }
 
@@ -223,7 +253,10 @@ namespace osu.Game.Beatmaps
 
                     if (track == null)
                     {
-                        Logger.Log($"Beatmap failed to load (file {Metadata.AudioFile} not found on disk at expected location {fileStorePath}).", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Beatmap failed to load (file {Metadata.AudioFile} not found on disk at expected location {fileStorePath}).",
+                            level: LogLevel.Error
+                        );
                         return null;
                     }
 
@@ -252,7 +285,10 @@ namespace osu.Game.Beatmaps
 
                     if (trackData == null)
                     {
-                        Logger.Log($"Beatmap waveform failed to load (file {Metadata.AudioFile} not found on disk at expected location {fileStorePath}).", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Beatmap waveform failed to load (file {Metadata.AudioFile} not found on disk at expected location {fileStorePath}).",
+                            level: LogLevel.Error
+                        );
                         return null;
                     }
 
@@ -279,7 +315,10 @@ namespace osu.Game.Beatmaps
 
                     if (beatmapFileStream == null)
                     {
-                        Logger.Log($"Beatmap failed to load (file {BeatmapInfo.Path} not found on disk at expected location {fileStorePath})", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Beatmap failed to load (file {BeatmapInfo.Path} not found on disk at expected location {fileStorePath})",
+                            level: LogLevel.Error
+                        );
                         return new Storyboard();
                     }
 
@@ -289,22 +328,40 @@ namespace osu.Game.Beatmaps
 
                         Stream storyboardFileStream = null;
 
-                        string mainStoryboardFilename = getMainStoryboardFilename(BeatmapSetInfo.Metadata);
+                        string mainStoryboardFilename = getMainStoryboardFilename(
+                            BeatmapSetInfo.Metadata
+                        );
 
-                        if (BeatmapSetInfo?.Files.FirstOrDefault(f => f.Filename.Equals(mainStoryboardFilename, StringComparison.OrdinalIgnoreCase))?.Filename is string
-                            storyboardFilename)
+                        if (
+                            BeatmapSetInfo
+                                ?.Files.FirstOrDefault(f =>
+                                    f.Filename.Equals(
+                                        mainStoryboardFilename,
+                                        StringComparison.OrdinalIgnoreCase
+                                    )
+                                )
+                                ?.Filename
+                            is string storyboardFilename
+                        )
                         {
-                            string storyboardFileStorePath = BeatmapSetInfo?.GetPathForFile(storyboardFilename);
+                            string storyboardFileStorePath = BeatmapSetInfo?.GetPathForFile(
+                                storyboardFilename
+                            );
                             storyboardFileStream = GetStream(storyboardFileStorePath);
 
                             if (storyboardFileStream == null)
-                                Logger.Log($"Storyboard failed to load (file {storyboardFilename} not found on disk at expected location {storyboardFileStorePath})", level: LogLevel.Error);
+                                Logger.Log(
+                                    $"Storyboard failed to load (file {storyboardFilename} not found on disk at expected location {storyboardFileStorePath})",
+                                    level: LogLevel.Error
+                                );
                         }
 
                         if (storyboardFileStream != null)
                         {
                             // Stand-alone storyboard was found, so parse in addition to the beatmap's local storyboard.
-                            using (var secondaryReader = new LineBufferedReader(storyboardFileStream))
+                            using (
+                                var secondaryReader = new LineBufferedReader(storyboardFileStream)
+                            )
                                 storyboard = decoder.Decode(reader, secondaryReader);
                         }
                         else
@@ -335,26 +392,73 @@ namespace osu.Game.Beatmaps
                 }
             }
 
-            public override Stream GetStream(string storagePath) => resources.Files.GetStream(storagePath);
+            public override Stream GetStream(string storagePath) =>
+                resources.Files.GetStream(storagePath);
 
             private string getMainStoryboardFilename(IBeatmapMetadataInfo metadata)
             {
                 // Matches stable implementation, because it's probably simpler than trying to do anything else.
                 // This may need to be reconsidered after we begin storing storyboards in the new editor.
                 return windowsFilenameStrip(
-                    (metadata.Artist.Length > 0 ? metadata.Artist + @" - " + metadata.Title : Path.GetFileNameWithoutExtension(metadata.AudioFile))
-                    + (metadata.Author.Username.Length > 0 ? @" (" + metadata.Author.Username + @")" : string.Empty)
-                    + @".osb");
+                    (
+                        metadata.Artist.Length > 0
+                            ? metadata.Artist + @" - " + metadata.Title
+                            : Path.GetFileNameWithoutExtension(metadata.AudioFile)
+                    )
+                        + (
+                            metadata.Author.Username.Length > 0
+                                ? @" (" + metadata.Author.Username + @")"
+                                : string.Empty
+                        )
+                        + @".osb"
+                );
 
                 string windowsFilenameStrip(string entry)
                 {
                     // Inlined from Path.GetInvalidFilenameChars() to ensure the windows characters are used (to match stable).
                     char[] invalidCharacters =
                     {
-                        '\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07',
-                        '\x08', '\x09', '\x0A', '\x0B', '\x0C', '\x0D', '\x0E', '\x0F', '\x10', '\x11', '\x12',
-                        '\x13', '\x14', '\x15', '\x16', '\x17', '\x18', '\x19', '\x1A', '\x1B', '\x1C', '\x1D',
-                        '\x1E', '\x1F', '\x22', '\x3C', '\x3E', '\x7C', ':', '*', '?', '\\', '/'
+                        '\x00',
+                        '\x01',
+                        '\x02',
+                        '\x03',
+                        '\x04',
+                        '\x05',
+                        '\x06',
+                        '\x07',
+                        '\x08',
+                        '\x09',
+                        '\x0A',
+                        '\x0B',
+                        '\x0C',
+                        '\x0D',
+                        '\x0E',
+                        '\x0F',
+                        '\x10',
+                        '\x11',
+                        '\x12',
+                        '\x13',
+                        '\x14',
+                        '\x15',
+                        '\x16',
+                        '\x17',
+                        '\x18',
+                        '\x19',
+                        '\x1A',
+                        '\x1B',
+                        '\x1C',
+                        '\x1D',
+                        '\x1E',
+                        '\x1F',
+                        '\x22',
+                        '\x3C',
+                        '\x3E',
+                        '\x7C',
+                        ':',
+                        '*',
+                        '?',
+                        '\\',
+                        '/',
                     };
 
                     foreach (char c in invalidCharacters)

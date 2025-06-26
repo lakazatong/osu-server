@@ -37,11 +37,7 @@ namespace osu.Game.Tests.Visual.Menus
                     Height = Toolbar.HEIGHT,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                         new FillFlowContainer
                         {
                             Anchor = Anchor.Centre,
@@ -64,13 +60,19 @@ namespace osu.Game.Tests.Visual.Menus
                                     RelativeSizeAxes = Axes.Y,
                                     Width = 2,
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             };
 
-            AddSliderStep("scale", 0.5, 4, 1, scale => mainContainer.Scale = new Vector2((float)scale));
+            AddSliderStep(
+                "scale",
+                0.5,
+                4,
+                1,
+                scale => mainContainer.Scale = new Vector2((float)scale)
+            );
         }
 
         [Test]
@@ -78,14 +80,20 @@ namespace osu.Game.Tests.Visual.Menus
         {
             AddStep("Log out", () => dummyAPI.Logout());
             AddStep("Log in", () => dummyAPI.Login("wang", "jang"));
-            AddStep("Authenticate via second factor", () => dummyAPI.AuthenticateSecondFactor("abcdefgh"));
+            AddStep(
+                "Authenticate via second factor",
+                () => dummyAPI.AuthenticateSecondFactor("abcdefgh")
+            );
         }
 
         [Test]
         public void TestStates()
         {
             AddStep("Log in", () => dummyAPI.Login("wang", "jang"));
-            AddStep("Authenticate via second factor", () => dummyAPI.AuthenticateSecondFactor("abcdefgh"));
+            AddStep(
+                "Authenticate via second factor",
+                () => dummyAPI.AuthenticateSecondFactor("abcdefgh")
+            );
 
             foreach (var state in Enum.GetValues<APIState>())
             {
@@ -98,126 +106,105 @@ namespace osu.Game.Tests.Visual.Menus
         {
             AddStep("Log in", () => dummyAPI.Login("wang", "jang"));
 
-            AddStep("Gain", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 123_456,
-                        PP = 1234
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357
-                    });
-            });
+            AddStep(
+                "Gain",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 123_456, PP = 1234 },
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357 }
+                    );
+                }
+            );
 
-            AddStep("Loss", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 123_456,
-                        PP = 1234
-                    });
-            });
+            AddStep(
+                "Loss",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357 },
+                        new UserStatistics { GlobalRank = 123_456, PP = 1234 }
+                    );
+                }
+            );
 
             // Tests flooring logic works as expected.
-            AddStep("Tiny increase in PP", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357.6m
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1358.1m
-                    });
-            });
+            AddStep(
+                "Tiny increase in PP",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357.6m },
+                        new UserStatistics { GlobalRank = 111_111, PP = 1358.1m }
+                    );
+                }
+            );
 
             // cross-reference: `TestSceneOverallRanking.TestRoundingTreatment()`.
-            AddStep("Test rounding treatment", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 5071.495M
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 5072.99M
-                    });
-            });
+            AddStep(
+                "Test rounding treatment",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 111_111, PP = 5071.495M },
+                        new UserStatistics { GlobalRank = 111_111, PP = 5072.99M }
+                    );
+                }
+            );
 
-            AddStep("No change 1", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357m
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357.1m
-                    });
-            });
+            AddStep(
+                "No change 1",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357m },
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357.1m }
+                    );
+                }
+            );
 
-            AddStep("Was null", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = null,
-                        PP = null
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357
-                    });
-            });
+            AddStep(
+                "Was null",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = null, PP = null },
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357 }
+                    );
+                }
+            );
 
-            AddStep("Became null", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = null,
-                        PP = null
-                    });
-            });
+            AddStep(
+                "Became null",
+                () =>
+                {
+                    var transientUpdateDisplay =
+                        this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
+                    transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                        new ScoreInfo(),
+                        new UserStatistics { GlobalRank = 111_111, PP = 1357 },
+                        new UserStatistics { GlobalRank = null, PP = null }
+                    );
+                }
+            );
         }
     }
 }

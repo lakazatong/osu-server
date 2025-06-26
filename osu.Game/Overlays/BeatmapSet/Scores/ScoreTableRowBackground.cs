@@ -35,15 +35,8 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                hoveredBackground = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
+                hoveredBackground = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0 },
             };
         }
 

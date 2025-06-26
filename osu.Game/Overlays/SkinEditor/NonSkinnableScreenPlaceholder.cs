@@ -49,7 +49,9 @@ namespace osu.Game.Overlays.SkinEditor
                             Size = new Vector2(24),
                             Y = -5,
                         },
-                        new OsuTextFlowContainer(t => t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold, size: 18))
+                        new OsuTextFlowContainer(t =>
+                            t.Font = OsuFont.Default.With(weight: FontWeight.SemiBold, size: 18)
+                        )
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
@@ -65,9 +67,9 @@ namespace osu.Game.Overlays.SkinEditor
                             Width = 200,
                             Margin = new MarginPadding { Top = 20 },
                             Action = () => skinEditorOverlay?.Hide(),
-                            Text = "Return to game"
-                        }
-                    }
+                            Text = "Return to game",
+                        },
+                    },
                 },
             };
         }

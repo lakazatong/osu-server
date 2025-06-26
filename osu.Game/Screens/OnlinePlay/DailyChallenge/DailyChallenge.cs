@@ -53,10 +53,13 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         /// <summary>
         /// Any mods applied by/to the local user.
         /// </summary>
-        private readonly Bindable<IReadOnlyList<Mod>> userMods = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        private readonly Bindable<IReadOnlyList<Mod>> userMods = new Bindable<IReadOnlyList<Mod>>(
+            Array.Empty<Mod>()
+        );
 
         private readonly IBindable<APIState> apiState = new Bindable<APIState>();
-        private readonly IBindable<DailyChallengeInfo?> dailyChallengeInfo = new Bindable<DailyChallengeInfo?>();
+        private readonly IBindable<DailyChallengeInfo?> dailyChallengeInfo =
+            new Bindable<DailyChallengeInfo?>();
 
         private OnlinePlayScreenWaveContainer waves = null!;
         private DailyChallengeLeaderboard leaderboard = null!;
@@ -69,7 +72,9 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
         private DailyChallengeEventFeed feed = null!;
 
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Plum
+        );
 
         [Cached(typeof(OnlinePlayBeatmapAvailabilityTracker))]
         private readonly DailyChallengeBeatmapAvailabilityTracker beatmapAvailabilityTracker;
@@ -155,7 +160,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                 new Dimension(GridSizeMode.Absolute, 10),
                                 new Dimension(),
                                 new Dimension(GridSizeMode.Absolute, 30),
-                                new Dimension(GridSizeMode.Absolute, 50)
+                                new Dimension(GridSizeMode.Absolute, 50),
                             ],
                             Content = new[]
                             {
@@ -167,7 +172,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                         AllowReordering = false,
                                         Scale = new Vector2(1.4f),
                                         Width = 1 / 1.4f,
-                                    }
+                                    },
                                 },
                                 null,
                                 [
@@ -193,7 +198,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                     new Dimension(GridSizeMode.Absolute, 10),
                                                     new Dimension(),
                                                     new Dimension(GridSizeMode.Absolute, 10),
-                                                    new Dimension()
+                                                    new Dimension(),
                                                 ],
                                                 Content = new[]
                                                 {
@@ -207,7 +212,7 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                             RowDimensions =
                                                             [
                                                                 new Dimension(),
-                                                                new Dimension()
+                                                                new Dimension(),
                                                             ],
                                                             Content = new[]
                                                             {
@@ -215,33 +220,47 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                                 {
                                                                     new DailyChallengeCarousel
                                                                     {
-                                                                        RelativeSizeAxes = Axes.Both,
+                                                                        RelativeSizeAxes =
+                                                                            Axes.Both,
                                                                         Anchor = Anchor.Centre,
                                                                         Origin = Anchor.Centre,
                                                                         Children = new Drawable[]
                                                                         {
-                                                                            new DailyChallengeTimeRemainingRing(room),
-                                                                            breakdown = new DailyChallengeScoreBreakdown(),
-                                                                            totals = new DailyChallengeTotalsDisplay(),
-                                                                        }
-                                                                    }
+                                                                            new DailyChallengeTimeRemainingRing(
+                                                                                room
+                                                                            ),
+                                                                            breakdown =
+                                                                                new DailyChallengeScoreBreakdown(),
+                                                                            totals =
+                                                                                new DailyChallengeTotalsDisplay(),
+                                                                        },
+                                                                    },
                                                                 },
                                                                 [
-                                                                    feed = new DailyChallengeEventFeed
-                                                                    {
-                                                                        RelativeSizeAxes = Axes.Both,
-                                                                        PresentScore = presentScore
-                                                                    }
+                                                                    feed =
+                                                                        new DailyChallengeEventFeed
+                                                                        {
+                                                                            RelativeSizeAxes =
+                                                                                Axes.Both,
+                                                                            PresentScore =
+                                                                                presentScore,
+                                                                        },
                                                                 ],
                                                             },
                                                         },
                                                         null,
                                                         // Middle column (leaderboard)
-                                                        leaderboard = new DailyChallengeLeaderboard(room, playlistItem)
+                                                        leaderboard = new DailyChallengeLeaderboard(
+                                                            room,
+                                                            playlistItem
+                                                        )
                                                         {
                                                             RelativeSizeAxes = Axes.Both,
                                                             PresentScore = presentScore,
-                                                            SelectedMods = { BindTarget = userMods },
+                                                            SelectedMods =
+                                                            {
+                                                                BindTarget = userMods,
+                                                            },
                                                         },
                                                         // Spacer
                                                         null,
@@ -253,21 +272,29 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                             {
                                                                 new Drawable[]
                                                                 {
-                                                                    new SectionHeader("Chat")
+                                                                    new SectionHeader("Chat"),
                                                                 },
-                                                                [new MatchChatDisplay(room) { RelativeSizeAxes = Axes.Both }]
+                                                                [
+                                                                    new MatchChatDisplay(room)
+                                                                    {
+                                                                        RelativeSizeAxes =
+                                                                            Axes.Both,
+                                                                    },
+                                                                ],
                                                             },
                                                             RowDimensions =
                                                             [
-                                                                new Dimension(GridSizeMode.AutoSize),
-                                                                new Dimension()
-                                                            ]
+                                                                new Dimension(
+                                                                    GridSizeMode.AutoSize
+                                                                ),
+                                                                new Dimension(),
+                                                            ],
                                                         },
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
                                 ],
                                 null,
                                 [
@@ -299,47 +326,55 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
                                                         Origin = Anchor.Centre,
                                                         RelativeSizeAxes = Axes.Y,
                                                         Size = new Vector2(250, 1),
-                                                        Action = startPlay
-                                                    }
-                                                }
+                                                        Action = startPlay,
+                                                    },
+                                                },
                                             },
-                                        }
-                                    }
+                                        },
+                                    },
                                 ],
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
 
-            LoadComponent(userModsSelectOverlay = new RoomModSelectOverlay
-            {
-                Beatmap = { BindTarget = Beatmap },
-                SelectedMods = { BindTarget = userMods },
-                IsValidMod = _ => false
-            });
+            LoadComponent(
+                userModsSelectOverlay = new RoomModSelectOverlay
+                {
+                    Beatmap = { BindTarget = Beatmap },
+                    SelectedMods = { BindTarget = userMods },
+                    IsValidMod = _ => false,
+                }
+            );
 
             if (playlistItem.AllowedMods.Any())
             {
-                footerButtons.Insert(-1, new UserModSelectButton
-                {
-                    Text = "Free mods",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(250, 1),
-                    Action = () => userModsSelectOverlay.Show(),
-                });
+                footerButtons.Insert(
+                    -1,
+                    new UserModSelectButton
+                    {
+                        Text = "Free mods",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Y,
+                        Size = new Vector2(250, 1),
+                        Action = () => userModsSelectOverlay.Show(),
+                    }
+                );
 
                 var rulesetInstance = rulesets.GetRuleset(playlistItem.RulesetID)!.CreateInstance();
                 var allowedMods = playlistItem.AllowedMods.Select(m => m.ToMod(rulesetInstance));
-                userModsSelectOverlay.IsValidMod = leaderboard.IsValidMod = m => allowedMods.Any(a => a.GetType() == m.GetType());
+                userModsSelectOverlay.IsValidMod = leaderboard.IsValidMod = m =>
+                    allowedMods.Any(a => a.GetType() == m.GetType());
             }
 
             metadataClient.MultiplayerRoomScoreSet += onRoomScoreSet;
             dailyChallengeInfo.BindTo(metadataClient.DailyChallengeInfo);
 
-            ((IBindable<MultiplayerScore?>)breakdown.UserBestScore).BindTo(leaderboard.UserBestScore);
+            ((IBindable<MultiplayerScore?>)breakdown.UserBestScore).BindTo(
+                leaderboard.UserBestScore
+            );
         }
 
         private void presentScore(long id)
@@ -353,37 +388,55 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             if (e.RoomID != room.RoomID || e.PlaylistItemID != playlistItem.ID)
                 return;
 
-            userLookupCache.GetUserAsync(e.UserID).ContinueWith(t =>
-            {
-                if (t.Exception != null)
+            userLookupCache
+                .GetUserAsync(e.UserID)
+                .ContinueWith(t =>
                 {
-                    Logger.Log($@"Could not display room score set event: {t.Exception}", LoggingTarget.Network);
-                    return;
-                }
+                    if (t.Exception != null)
+                    {
+                        Logger.Log(
+                            $@"Could not display room score set event: {t.Exception}",
+                            LoggingTarget.Network
+                        );
+                        return;
+                    }
 
-                APIUser? user = t.GetResultSafely();
-                if (user == null) return;
+                    APIUser? user = t.GetResultSafely();
+                    if (user == null)
+                        return;
 
-                var ev = new NewScoreEvent(e.ScoreID, user, e.TotalScore, e.NewRank);
-                Schedule(() =>
-                {
-                    breakdown.AddNewScore(ev);
-                    totals.AddNewScore(ev);
-                    feed.AddNewScore(ev);
+                    var ev = new NewScoreEvent(e.ScoreID, user, e.TotalScore, e.NewRank);
+                    Schedule(() =>
+                    {
+                        breakdown.AddNewScore(ev);
+                        totals.AddNewScore(ev);
+                        feed.AddNewScore(ev);
 
-                    if (e.NewRank <= 50)
-                        Scheduler.AddOnce(() => leaderboard.RefetchScores());
+                        if (e.NewRank <= 50)
+                            Scheduler.AddOnce(() => leaderboard.RefetchScores());
+                    });
                 });
-            });
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            beatmapAvailabilityTracker.Availability.BindValueChanged(_ => TrySetDailyChallengeBeatmap(this, beatmapManager, rulesets, musicController, playlistItem), true);
+            beatmapAvailabilityTracker.Availability.BindValueChanged(
+                _ =>
+                    TrySetDailyChallengeBeatmap(
+                        this,
+                        beatmapManager,
+                        rulesets,
+                        musicController,
+                        playlistItem
+                    ),
+                true
+            );
 
-            userModsSelectOverlayRegistration = overlayManager?.RegisterBlockingOverlay(userModsSelectOverlay);
+            userModsSelectOverlayRegistration = overlayManager?.RegisterBlockingOverlay(
+                userModsSelectOverlay
+            );
             userModsSelectOverlay.SelectedItem.Value = playlistItem;
             userMods.BindValueChanged(_ => Scheduler.AddOnce(updateMods), true);
 
@@ -393,17 +446,27 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             dailyChallengeInfo.BindValueChanged(dailyChallengeChanged);
         }
 
-        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
-        {
-            if (state.NewValue != APIState.Online)
-                Schedule(forcefullyExit);
-        });
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) =>
+            Schedule(() =>
+            {
+                if (state.NewValue != APIState.Online)
+                    Schedule(forcefullyExit);
+            });
 
         private void dailyChallengeChanged(ValueChangedEvent<DailyChallengeInfo?> change)
         {
-            if (change.OldValue?.RoomID == room.RoomID && change.NewValue == null && metadataClient.IsConnected.Value)
+            if (
+                change.OldValue?.RoomID == room.RoomID
+                && change.NewValue == null
+                && metadataClient.IsConnected.Value
+            )
             {
-                notificationOverlay?.Post(new SimpleNotification { Text = DailyChallengeStrings.ChallengeEndedNotification });
+                notificationOverlay?.Post(
+                    new SimpleNotification
+                    {
+                        Text = DailyChallengeStrings.ChallengeEndedNotification,
+                    }
+                );
             }
         }
 
@@ -428,29 +491,50 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             API.Queue(new JoinRoomRequest(room, null));
             startLoopingTrack(this, musicController);
 
-            metadataClient.BeginWatchingMultiplayerRoom(room.RoomID!.Value).ContinueWith(t =>
-            {
-                if (t.Exception != null)
-                {
-                    Logger.Error(t.Exception, @"Failed to subscribe to room updates", LoggingTarget.Network);
-                    return;
-                }
+            metadataClient
+                .BeginWatchingMultiplayerRoom(room.RoomID!.Value)
+                .ContinueWith(
+                    t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Logger.Error(
+                                t.Exception,
+                                @"Failed to subscribe to room updates",
+                                LoggingTarget.Network
+                            );
+                            return;
+                        }
 
-                MultiplayerPlaylistItemStats[] stats = t.GetResultSafely();
-                var itemStats = stats.SingleOrDefault(item => item.PlaylistItemID == playlistItem.ID);
+                        MultiplayerPlaylistItemStats[] stats = t.GetResultSafely();
+                        var itemStats = stats.SingleOrDefault(item =>
+                            item.PlaylistItemID == playlistItem.ID
+                        );
 
-                if (itemStats == null) return;
+                        if (itemStats == null)
+                            return;
 
-                Schedule(() =>
-                {
-                    breakdown.SetInitialCounts(itemStats.TotalScoreDistribution);
-                    totals.SetInitialCounts(itemStats.TotalScoreDistribution.Sum(c => c), itemStats.CumulativeScore);
-                });
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                        Schedule(() =>
+                        {
+                            breakdown.SetInitialCounts(itemStats.TotalScoreDistribution);
+                            totals.SetInitialCounts(
+                                itemStats.TotalScoreDistribution.Sum(c => c),
+                                itemStats.CumulativeScore
+                            );
+                        });
+                    },
+                    TaskContinuationOptions.OnlyOnRanToCompletion
+                );
 
             userModsSelectOverlay.SelectedItem.Value = playlistItem;
 
-            TrySetDailyChallengeBeatmap(this, beatmapManager, rulesets, musicController, playlistItem);
+            TrySetDailyChallengeBeatmap(
+                this,
+                beatmapManager,
+                rulesets,
+                musicController,
+                playlistItem
+            );
         }
 
         public override void OnResuming(ScreenTransitionEvent e)
@@ -485,12 +569,21 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             return base.OnExiting(e);
         }
 
-        public static void TrySetDailyChallengeBeatmap(OsuScreen screen, BeatmapManager beatmaps, RulesetStore rulesets, MusicController music, PlaylistItem item)
+        public static void TrySetDailyChallengeBeatmap(
+            OsuScreen screen,
+            BeatmapManager beatmaps,
+            RulesetStore rulesets,
+            MusicController music,
+            PlaylistItem item
+        )
         {
             if (!screen.IsCurrentScreen())
                 return;
 
-            var beatmap = beatmaps.QueryBeatmap($@"{nameof(BeatmapInfo.OnlineID)} == $0 AND {nameof(BeatmapInfo.MD5Hash)} == {nameof(BeatmapInfo.OnlineMD5Hash)}", item.Beatmap.OnlineID);
+            var beatmap = beatmaps.QueryBeatmap(
+                $@"{nameof(BeatmapInfo.OnlineID)} == $0 AND {nameof(BeatmapInfo.MD5Hash)} == {nameof(BeatmapInfo.OnlineMD5Hash)}",
+                item.Beatmap.OnlineID
+            );
 
             screen.Beatmap.Value = beatmaps.GetWorkingBeatmap(beatmap); // this will gracefully fall back to dummy beatmap if missing locally.
             screen.Ruleset.Value = rulesets.GetRuleset(item.RulesetID);
@@ -525,16 +618,24 @@ namespace osu.Game.Screens.OnlinePlay.DailyChallenge
             if (!this.IsCurrentScreen())
                 return;
 
-            Mods.Value = userMods.Value.Concat(playlistItem.RequiredMods.Select(m => m.ToMod(Ruleset.Value.CreateInstance()))).ToList();
+            Mods.Value = userMods
+                .Value.Concat(
+                    playlistItem.RequiredMods.Select(m => m.ToMod(Ruleset.Value.CreateInstance()))
+                )
+                .ToList();
         }
 
         private void startPlay()
         {
             sampleStart?.Play();
-            this.Push(new PlayerLoader(() => new DailyChallengePlayer(room, playlistItem)
-            {
-                Exited = () => Scheduler.AddOnce(() => leaderboard.RefetchScores())
-            }));
+            this.Push(
+                new PlayerLoader(() =>
+                    new DailyChallengePlayer(room, playlistItem)
+                    {
+                        Exited = () => Scheduler.AddOnce(() => leaderboard.RefetchScores()),
+                    }
+                )
+            );
         }
 
         protected override void Dispose(bool isDisposing)

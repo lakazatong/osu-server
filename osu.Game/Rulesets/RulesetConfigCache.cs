@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets
         private readonly RealmAccess realm;
         private readonly RulesetStore rulesets;
 
-        private readonly Dictionary<string, IRulesetConfigManager?> configCache = new Dictionary<string, IRulesetConfigManager?>();
+        private readonly Dictionary<string, IRulesetConfigManager?> configCache =
+            new Dictionary<string, IRulesetConfigManager?>();
 
         public RulesetConfigCache(RealmAccess realm, RulesetStore rulesets)
         {
@@ -36,17 +37,23 @@ namespace osu.Game.Rulesets
                 if (string.IsNullOrEmpty(ruleset.ShortName))
                     continue;
 
-                configCache[ruleset.ShortName] = ruleset.CreateInstance().CreateConfig(settingsStore);
+                configCache[ruleset.ShortName] = ruleset
+                    .CreateInstance()
+                    .CreateConfig(settingsStore);
             }
         }
 
         public IRulesetConfigManager? GetConfigFor(Ruleset ruleset)
         {
             if (!IsLoaded)
-                throw new InvalidOperationException($@"Cannot retrieve {nameof(IRulesetConfigManager)} before {nameof(RulesetConfigCache)} has loaded");
+                throw new InvalidOperationException(
+                    $@"Cannot retrieve {nameof(IRulesetConfigManager)} before {nameof(RulesetConfigCache)} has loaded"
+                );
 
             if (!configCache.TryGetValue(ruleset.RulesetInfo.ShortName, out var config))
-                throw new InvalidOperationException($@"Attempted to retrieve {nameof(IRulesetConfigManager)} for an unavailable ruleset {ruleset.GetDisplayString()}");
+                throw new InvalidOperationException(
+                    $@"Attempted to retrieve {nameof(IRulesetConfigManager)} for an unavailable ruleset {ruleset.GetDisplayString()}"
+                );
 
             return config;
         }

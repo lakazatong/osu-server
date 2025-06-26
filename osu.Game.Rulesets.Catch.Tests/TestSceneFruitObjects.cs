@@ -31,29 +31,39 @@ namespace osu.Game.Rulesets.Catch.Tests
 
             AddStep("show hyperdash pear", () => SetContents(_ => createDrawableFruit(0, true)));
             AddStep("show hyperdash grape", () => SetContents(_ => createDrawableFruit(1, true)));
-            AddStep("show hyperdash pineapple / apple", () => SetContents(_ => createDrawableFruit(2, true)));
-            AddStep("show hyperdash raspberry / orange", () => SetContents(_ => createDrawableFruit(3, true)));
+            AddStep(
+                "show hyperdash pineapple / apple",
+                () => SetContents(_ => createDrawableFruit(2, true))
+            );
+            AddStep(
+                "show hyperdash raspberry / orange",
+                () => SetContents(_ => createDrawableFruit(3, true))
+            );
 
             AddStep("show hyperdash droplet", () => SetContents(_ => createDrawableDroplet(true)));
         }
 
         private Drawable createDrawableFruit(int indexInBeatmap, bool hyperDash = false) =>
-            new TestDrawableCatchHitObjectSpecimen(new DrawableFruit(new Fruit
-            {
-                IndexInBeatmap = indexInBeatmap,
-                HyperDashBindable = { Value = hyperDash }
-            }));
+            new TestDrawableCatchHitObjectSpecimen(
+                new DrawableFruit(
+                    new Fruit
+                    {
+                        IndexInBeatmap = indexInBeatmap,
+                        HyperDashBindable = { Value = hyperDash },
+                    }
+                )
+            );
 
         private Drawable createDrawableBanana() =>
             new TestDrawableCatchHitObjectSpecimen(new DrawableBanana(new Banana()));
 
         private Drawable createDrawableDroplet(bool hyperDash = false) =>
-            new TestDrawableCatchHitObjectSpecimen(new DrawableDroplet(new Droplet
-            {
-                HyperDashBindable = { Value = hyperDash }
-            }));
+            new TestDrawableCatchHitObjectSpecimen(
+                new DrawableDroplet(new Droplet { HyperDashBindable = { Value = hyperDash } })
+            );
 
-        private Drawable createDrawableTinyDroplet() => new TestDrawableCatchHitObjectSpecimen(new DrawableTinyDroplet(new TinyDroplet()));
+        private Drawable createDrawableTinyDroplet() =>
+            new TestDrawableCatchHitObjectSpecimen(new DrawableTinyDroplet(new TinyDroplet()));
     }
 
     public partial class TestDrawableCatchHitObjectSpecimen : CompositeDrawable

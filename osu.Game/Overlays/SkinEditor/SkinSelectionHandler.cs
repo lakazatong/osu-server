@@ -11,9 +11,9 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Extensions;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Screens.Edit.Compose.Components;
-using osu.Game.Localisation;
 using osu.Game.Skinning;
 using osu.Game.Utils;
 using osuTK;
@@ -30,19 +30,18 @@ namespace osu.Game.Overlays.SkinEditor
         [Resolved]
         private SkinEditor skinEditor { get; set; } = null!;
 
-        public override SelectionRotationHandler CreateRotationHandler() => new SkinSelectionRotationHandler
-        {
-            UpdatePosition = updateDrawablePosition
-        };
+        public override SelectionRotationHandler CreateRotationHandler() =>
+            new SkinSelectionRotationHandler { UpdatePosition = updateDrawablePosition };
 
         public override SelectionScaleHandler CreateScaleHandler()
         {
             var scaleHandler = new SkinSelectionScaleHandler
             {
-                UpdatePosition = updateDrawablePosition
+                UpdatePosition = updateDrawablePosition,
             };
 
-            scaleHandler.PerformFlipFromScaleHandles += a => SelectionBox.PerformFlipFromScaleHandles(a);
+            scaleHandler.PerformFlipFromScaleHandles += a =>
+                SelectionBox.PerformFlipFromScaleHandles(a);
 
             return scaleHandler;
         }
@@ -58,7 +57,10 @@ namespace osu.Game.Overlays.SkinEditor
 
         private void updateTernaryStates()
         {
-            var usingClosestAnchor = GetStateFromSelection(SelectedBlueprints, c => !c.Item.UsesFixedAnchor);
+            var usingClosestAnchor = GetStateFromSelection(
+                SelectedBlueprints,
+                c => !c.Item.UsesFixedAnchor
+            );
 
             if (closestAnchor != null)
                 closestAnchor.State.Value = usingClosestAnchor;
@@ -66,14 +68,22 @@ namespace osu.Game.Overlays.SkinEditor
             if (fixedAnchors != null)
             {
                 foreach (var fixedAnchor in fixedAnchors)
-                    fixedAnchor.State.Value = GetStateFromSelection(SelectedBlueprints, c => c.Item.UsesFixedAnchor && ((Drawable)c.Item).Anchor == fixedAnchor.Anchor);
+                    fixedAnchor.State.Value = GetStateFromSelection(
+                        SelectedBlueprints,
+                        c =>
+                            c.Item.UsesFixedAnchor
+                            && ((Drawable)c.Item).Anchor == fixedAnchor.Anchor
+                    );
             }
 
             if (originMenu != null)
             {
                 foreach (var origin in originMenu.Items.OfType<AnchorMenuItem>())
                 {
-                    origin.State.Value = GetStateFromSelection(SelectedBlueprints, c => ((Drawable)c.Item).Origin == origin.Anchor);
+                    origin.State.Value = GetStateFromSelection(
+                        SelectedBlueprints,
+                        c => ((Drawable)c.Item).Origin == origin.Anchor
+                    );
                     origin.Action.Disabled = usingClosestAnchor == TernaryState.True;
                 }
             }
@@ -82,13 +92,18 @@ namespace osu.Game.Overlays.SkinEditor
         public override bool HandleFlip(Direction direction, bool flipOverOrigin)
         {
             var selectionQuad = getSelectionQuad();
-            Vector2 scaleFactor = direction == Direction.Horizontal ? new Vector2(-1, 1) : new Vector2(1, -1);
+            Vector2 scaleFactor =
+                direction == Direction.Horizontal ? new Vector2(-1, 1) : new Vector2(1, -1);
 
             foreach (var b in SelectedBlueprints)
             {
                 var drawableItem = (Drawable)b.Item;
 
-                var flippedPosition = GeometryUtils.GetFlippedPosition(direction, flipOverOrigin ? drawableItem.Parent!.ScreenSpaceDrawQuad : selectionQuad, b.ScreenSpaceSelectionPoint);
+                var flippedPosition = GeometryUtils.GetFlippedPosition(
+                    direction,
+                    flipOverOrigin ? drawableItem.Parent!.ScreenSpaceDrawQuad : selectionQuad,
+                    b.ScreenSpaceSelectionPoint
+                );
 
                 updateDrawablePosition(drawableItem, flippedPosition);
 
@@ -109,7 +124,9 @@ namespace osu.Game.Overlays.SkinEditor
                 if (!item.UsesFixedAnchor)
                     ApplyClosestAnchorOrigin(drawable);
 
-                drawable.Position += drawable.ScreenSpaceDeltaToParentSpace(moveEvent.ScreenSpaceDelta);
+                drawable.Position += drawable.ScreenSpaceDeltaToParentSpace(
+                    moveEvent.ScreenSpaceDelta
+                );
             }
 
             return true;
@@ -135,14 +152,20 @@ namespace osu.Game.Overlays.SkinEditor
         protected override void DeleteItems(IEnumerable<ISerialisableDrawable> items) =>
             skinEditor.DeleteItems(items.ToArray());
 
-        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(IEnumerable<SelectionBlueprint<ISerialisableDrawable>> selection)
+        protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection(
+            IEnumerable<SelectionBlueprint<ISerialisableDrawable>> selection
+        )
         {
-            closestAnchor = new TernaryStateRadioMenuItem(SkinEditorStrings.Closest, MenuItemType.Standard, _ => applyClosestAnchors());
+            closestAnchor = new TernaryStateRadioMenuItem(
+                SkinEditorStrings.Closest,
+                MenuItemType.Standard,
+                _ => applyClosestAnchors()
+            );
             fixedAnchors = createAnchorItems(applyFixedAnchors).ToArray();
 
             yield return new OsuMenuItem(SkinEditorStrings.Anchor)
             {
-                Items = fixedAnchors.Prepend(closestAnchor).ToArray()
+                Items = fixedAnchors.Prepend(closestAnchor).ToArray(),
             };
 
             yield return originMenu = new OsuMenuItem(SkinEditorStrings.Origin);
@@ -151,37 +174,57 @@ namespace osu.Game.Overlays.SkinEditor
 
             yield return new OsuMenuItemSpacer();
 
-            yield return new OsuMenuItem(SkinEditorStrings.ResetPosition, MenuItemType.Standard, () =>
-            {
-                foreach (var blueprint in SelectedBlueprints)
-                    ((Drawable)blueprint.Item).Position = Vector2.Zero;
-            });
-
-            yield return new OsuMenuItem(SkinEditorStrings.ResetRotation, MenuItemType.Standard, () =>
-            {
-                foreach (var blueprint in SelectedBlueprints)
-                    ((Drawable)blueprint.Item).Rotation = 0;
-            });
-
-            yield return new OsuMenuItem(SkinEditorStrings.ResetScale, MenuItemType.Standard, () =>
-            {
-                foreach (var blueprint in SelectedBlueprints)
+            yield return new OsuMenuItem(
+                SkinEditorStrings.ResetPosition,
+                MenuItemType.Standard,
+                () =>
                 {
-                    var blueprintItem = ((Drawable)blueprint.Item);
-                    blueprintItem.Scale = Vector2.One;
-
-                    if (blueprintItem.RelativeSizeAxes.HasFlag(Axes.X))
-                        blueprintItem.Width = 1;
-                    if (blueprintItem.RelativeSizeAxes.HasFlag(Axes.Y))
-                        blueprintItem.Height = 1;
+                    foreach (var blueprint in SelectedBlueprints)
+                        ((Drawable)blueprint.Item).Position = Vector2.Zero;
                 }
-            });
+            );
+
+            yield return new OsuMenuItem(
+                SkinEditorStrings.ResetRotation,
+                MenuItemType.Standard,
+                () =>
+                {
+                    foreach (var blueprint in SelectedBlueprints)
+                        ((Drawable)blueprint.Item).Rotation = 0;
+                }
+            );
+
+            yield return new OsuMenuItem(
+                SkinEditorStrings.ResetScale,
+                MenuItemType.Standard,
+                () =>
+                {
+                    foreach (var blueprint in SelectedBlueprints)
+                    {
+                        var blueprintItem = ((Drawable)blueprint.Item);
+                        blueprintItem.Scale = Vector2.One;
+
+                        if (blueprintItem.RelativeSizeAxes.HasFlag(Axes.X))
+                            blueprintItem.Width = 1;
+                        if (blueprintItem.RelativeSizeAxes.HasFlag(Axes.Y))
+                            blueprintItem.Height = 1;
+                    }
+                }
+            );
 
             yield return new OsuMenuItemSpacer();
 
-            yield return new OsuMenuItem(SkinEditorStrings.BringToFront, MenuItemType.Standard, () => skinEditor.BringSelectionToFront());
+            yield return new OsuMenuItem(
+                SkinEditorStrings.BringToFront,
+                MenuItemType.Standard,
+                () => skinEditor.BringSelectionToFront()
+            );
 
-            yield return new OsuMenuItem(SkinEditorStrings.SendToBack, MenuItemType.Standard, () => skinEditor.SendSelectionToBack());
+            yield return new OsuMenuItem(
+                SkinEditorStrings.SendToBack,
+                MenuItemType.Standard,
+                () => skinEditor.SendSelectionToBack()
+            );
 
             yield return new OsuMenuItemSpacer();
 
@@ -250,7 +293,11 @@ namespace osu.Game.Overlays.SkinEditor
         /// </summary>
         /// <returns></returns>
         private Quad getSelectionQuad() =>
-            GeometryUtils.GetSurroundingQuad(SelectedBlueprints.SelectMany(b => b.Item.ScreenSpaceDrawQuad.GetVertices().ToArray()));
+            GeometryUtils.GetSurroundingQuad(
+                SelectedBlueprints.SelectMany(b =>
+                    b.Item.ScreenSpaceDrawQuad.GetVertices().ToArray()
+                )
+            );
 
         private void applyFixedAnchors(Anchor anchor)
         {
@@ -294,7 +341,12 @@ namespace osu.Game.Overlays.SkinEditor
 
             var result = default(Anchor);
 
-            static Anchor getAnchorFromPosition(float xOrY, Anchor anchor0, Anchor anchor1, Anchor anchor2)
+            static Anchor getAnchorFromPosition(
+                float xOrY,
+                Anchor anchor0,
+                Anchor anchor1,
+                Anchor anchor2
+            )
             {
                 if (xOrY >= 2 / 3f)
                     return anchor2;
@@ -305,15 +357,26 @@ namespace osu.Game.Overlays.SkinEditor
                 return anchor0;
             }
 
-            result |= getAnchorFromPosition(absolutePosition.X / factor.X, Anchor.x0, Anchor.x1, Anchor.x2);
-            result |= getAnchorFromPosition(absolutePosition.Y / factor.Y, Anchor.y0, Anchor.y1, Anchor.y2);
+            result |= getAnchorFromPosition(
+                absolutePosition.X / factor.X,
+                Anchor.x0,
+                Anchor.x1,
+                Anchor.x2
+            );
+            result |= getAnchorFromPosition(
+                absolutePosition.Y / factor.Y,
+                Anchor.y0,
+                Anchor.y1,
+                Anchor.y2
+            );
 
             return result;
         }
 
         private static void applyAnchor(Drawable drawable, Anchor anchor)
         {
-            if (anchor == drawable.Anchor) return;
+            if (anchor == drawable.Anchor)
+                return;
 
             var previousAnchor = drawable.AnchorPosition;
             drawable.Anchor = anchor;
@@ -331,7 +394,9 @@ namespace osu.Game.Overlays.SkinEditor
 
             void checkOrigin(Anchor originToTest)
             {
-                Vector2 positionToTest = drawable.ToScreenSpace(originToTest.PositionOnQuad(drawable.DrawRectangle));
+                Vector2 positionToTest = drawable.ToScreenSpace(
+                    originToTest.PositionOnQuad(drawable.DrawRectangle)
+                );
                 float testedDistance = Vector2.Distance(targetScreenSpacePosition, positionToTest);
 
                 if (testedDistance < smallestDistanceFromTargetPosition)
@@ -353,7 +418,9 @@ namespace osu.Game.Overlays.SkinEditor
             checkOrigin(Anchor.BottomCentre);
             checkOrigin(Anchor.BottomRight);
 
-            Vector2 offset = drawable.ToParentSpace(localOrigin.PositionOnQuad(drawable.DrawRectangle)) - drawable.ToParentSpace(drawable.Origin.PositionOnQuad(drawable.DrawRectangle));
+            Vector2 offset =
+                drawable.ToParentSpace(localOrigin.PositionOnQuad(drawable.DrawRectangle))
+                - drawable.ToParentSpace(drawable.Origin.PositionOnQuad(drawable.DrawRectangle));
 
             drawable.Origin = localOrigin;
             drawable.Position += offset;

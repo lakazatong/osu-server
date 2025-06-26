@@ -26,9 +26,7 @@ namespace osu.Game.Screens.Play
         public double RateAdjustedOffset => base.Offset;
 
         public OffsetCorrectionClock(IClock source)
-            : base(source)
-        {
-        }
+            : base(source) { }
 
         public override void ProcessFrame()
         {

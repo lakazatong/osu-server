@@ -66,7 +66,12 @@ namespace osu.Game.Tests.NonVisual
             assertClosestDivisors(divisors, closestDivisors, cpi);
         }
 
-        private static void assertClosestDivisors(IReadOnlyList<double> divisors, IReadOnlyList<double> closestDivisors, ControlPointInfo cpi, double step = 1)
+        private static void assertClosestDivisors(
+            IReadOnlyList<double> divisors,
+            IReadOnlyList<double> closestDivisors,
+            ControlPointInfo cpi,
+            double step = 1
+        )
         {
             List<HitObject> hitobjects = new List<HitObject>();
             double offset = cpi.TimingPoints[0].Time;
@@ -78,14 +83,14 @@ namespace osu.Game.Tests.NonVisual
                 offset += beatLength * step;
             }
 
-            var beatmap = new Beatmap
-            {
-                HitObjects = hitobjects,
-                ControlPointInfo = cpi
-            };
+            var beatmap = new Beatmap { HitObjects = hitobjects, ControlPointInfo = cpi };
 
             for (int i = 0; i < divisors.Count; ++i)
-                Assert.AreEqual(closestDivisors[i], beatmap.ControlPointInfo.GetClosestBeatDivisor(beatmap.HitObjects[i].StartTime), $"at index {i}");
+                Assert.AreEqual(
+                    closestDivisors[i],
+                    beatmap.ControlPointInfo.GetClosestBeatDivisor(beatmap.HitObjects[i].StartTime),
+                    $"at index {i}"
+                );
         }
     }
 }

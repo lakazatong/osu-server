@@ -22,6 +22,9 @@ namespace osu.Game.Screens.Ranking.Statistics
             Value = hitEvents.CalculateAverageHitError();
         }
 
-        protected override string DisplayValue(double? value) => value == null ? "(not available)" : $"{Math.Abs(value.Value):N2} ms {(value.Value < 0 ? "early" : "late")}";
+        protected override string DisplayValue(double? value) =>
+            value == null
+                ? "(not available)"
+                : $"{Math.Abs(value.Value):N2} ms {(value.Value < 0 ? "early" : "late")}";
     }
 }

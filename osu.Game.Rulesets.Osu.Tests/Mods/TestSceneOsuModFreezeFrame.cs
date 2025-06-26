@@ -11,12 +11,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestFreezeFrame()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModFreezeFrame(),
-                PassCondition = () => true,
-                Autoplay = false,
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModFreezeFrame(),
+                    PassCondition = () => true,
+                    Autoplay = false,
+                }
+            );
         }
     }
 }

@@ -17,11 +17,17 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestSwitchScreensInstantaneously()
         {
-            AddStep("switch between all screens at once", () =>
-            {
-                foreach (var screen in Enum.GetValues(typeof(EditorScreenMode)).Cast<EditorScreenMode>())
-                    Editor.Mode.Value = screen;
-            });
+            AddStep(
+                "switch between all screens at once",
+                () =>
+                {
+                    foreach (
+                        var screen in Enum.GetValues(typeof(EditorScreenMode))
+                            .Cast<EditorScreenMode>()
+                    )
+                        Editor.Mode.Value = screen;
+                }
+            );
         }
     }
 }

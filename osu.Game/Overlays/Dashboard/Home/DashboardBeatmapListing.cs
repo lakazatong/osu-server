@@ -15,7 +15,10 @@ namespace osu.Game.Overlays.Dashboard.Home
         private readonly List<APIBeatmapSet> newBeatmaps;
         private readonly List<APIBeatmapSet> popularBeatmaps;
 
-        public DashboardBeatmapListing(List<APIBeatmapSet> newBeatmaps, List<APIBeatmapSet> popularBeatmaps)
+        public DashboardBeatmapListing(
+            List<APIBeatmapSet> newBeatmaps,
+            List<APIBeatmapSet> popularBeatmaps
+        )
         {
             this.newBeatmaps = newBeatmaps;
             this.popularBeatmaps = popularBeatmaps;
@@ -35,8 +38,8 @@ namespace osu.Game.Overlays.Dashboard.Home
                 Children = new DrawableBeatmapList[]
                 {
                     new DrawableNewBeatmapList(newBeatmaps),
-                    new DrawablePopularBeatmapList(popularBeatmaps)
-                }
+                    new DrawablePopularBeatmapList(popularBeatmaps),
+                },
             };
         }
     }

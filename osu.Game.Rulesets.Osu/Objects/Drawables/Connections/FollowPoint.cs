@@ -2,8 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -11,6 +9,8 @@ using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Skinning;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Osu.Objects.Drawables.Connections
 {
@@ -27,25 +27,28 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Connections
         {
             Origin = Anchor.Centre;
 
-            InternalChild = new SkinnableDrawable(new OsuSkinComponentLookup(OsuSkinComponents.FollowPoint), _ => new CircularContainer
-            {
-                Masking = true,
-                AutoSizeAxes = Axes.Both,
-                EdgeEffect = new EdgeEffectParameters
+            InternalChild = new SkinnableDrawable(
+                new OsuSkinComponentLookup(OsuSkinComponents.FollowPoint),
+                _ => new CircularContainer
                 {
-                    Type = EdgeEffectType.Glow,
-                    Colour = Color4.White.Opacity(0.2f),
-                    Radius = 4,
-                },
-                Child = new Box
-                {
-                    Size = new Vector2(width),
-                    Blending = BlendingParameters.Additive,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Alpha = 0.5f,
+                    Masking = true,
+                    AutoSizeAxes = Axes.Both,
+                    EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Colour = Color4.White.Opacity(0.2f),
+                        Radius = 4,
+                    },
+                    Child = new Box
+                    {
+                        Size = new Vector2(width),
+                        Blending = BlendingParameters.Additive,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Alpha = 0.5f,
+                    },
                 }
-            });
+            );
         }
 
         public Bindable<double> AnimationStartTime { get; } = new BindableDouble();

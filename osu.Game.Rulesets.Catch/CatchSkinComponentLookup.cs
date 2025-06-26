@@ -8,8 +8,6 @@ namespace osu.Game.Rulesets.Catch
     public class CatchSkinComponentLookup : SkinComponentLookup<CatchSkinComponents>
     {
         public CatchSkinComponentLookup(CatchSkinComponents component)
-            : base(component)
-        {
-        }
+            : base(component) { }
     }
 }

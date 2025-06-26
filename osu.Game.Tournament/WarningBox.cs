@@ -22,18 +22,14 @@ namespace osu.Game.Tournament
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = Color4.Red,
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new Box { Colour = Color4.Red, RelativeSizeAxes = Axes.Both },
                 new TournamentSpriteText
                 {
                     Text = text,
                     Font = OsuFont.Torus.With(weight: FontWeight.Bold),
                     Colour = Color4.White,
-                    Padding = new MarginPadding(20)
-                }
+                    Padding = new MarginPadding(20),
+                },
             };
         }
     }

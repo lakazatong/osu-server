@@ -19,23 +19,35 @@ namespace osu.Game.Online
     public class SignalRUnionWorkaroundResolver : IFormatterResolver
     {
         public static readonly MessagePackSerializerOptions OPTIONS =
-            MessagePackSerializerOptions.Standard.WithResolver(new SignalRUnionWorkaroundResolver());
+            MessagePackSerializerOptions.Standard.WithResolver(
+                new SignalRUnionWorkaroundResolver()
+            );
 
-        private static readonly IReadOnlyDictionary<Type, IMessagePackFormatter> formatter_map = createFormatterMap();
+        private static readonly IReadOnlyDictionary<Type, IMessagePackFormatter> formatter_map =
+            createFormatterMap();
 
         private static IReadOnlyDictionary<Type, IMessagePackFormatter> createFormatterMap()
         {
-            IEnumerable<(Type derivedType, Type baseType)> baseMap = SignalRWorkaroundTypes.BASE_TYPE_MAPPING;
+            IEnumerable<(Type derivedType, Type baseType)> baseMap =
+                SignalRWorkaroundTypes.BASE_TYPE_MAPPING;
 
             // This should not be required. The fallback should work. But something is weird with the way caching is done.
             // For future adventurers, I would not advise looking into this further. It's likely not worth the effort.
             baseMap = baseMap.Concat(baseMap.Select(t => (t.baseType, t.baseType)).Distinct());
 
-            return new Dictionary<Type, IMessagePackFormatter>(baseMap.Select(t =>
-            {
-                var formatter = (IMessagePackFormatter)Activator.CreateInstance(typeof(TypeRedirectingFormatter<,>).MakeGenericType(t.derivedType, t.baseType));
-                return new KeyValuePair<Type, IMessagePackFormatter>(t.derivedType, formatter);
-            }));
+            return new Dictionary<Type, IMessagePackFormatter>(
+                baseMap.Select(t =>
+                {
+                    var formatter = (IMessagePackFormatter)
+                        Activator.CreateInstance(
+                            typeof(TypeRedirectingFormatter<,>).MakeGenericType(
+                                t.derivedType,
+                                t.baseType
+                            )
+                        );
+                    return new KeyValuePair<Type, IMessagePackFormatter>(t.derivedType, formatter);
+                })
+            );
         }
 
         public IMessagePackFormatter<T> GetFormatter<T>()
@@ -55,11 +67,17 @@ namespace osu.Game.Online
                 baseFormatter = StandardResolver.Instance.GetFormatter<TBase>();
             }
 
-            public void Serialize(ref MessagePackWriter writer, TActual value, MessagePackSerializerOptions options) =>
+            public void Serialize(
+                ref MessagePackWriter writer,
+                TActual value,
+                MessagePackSerializerOptions options
+            ) =>
                 baseFormatter.Serialize(ref writer, (TBase)(object)value, StandardResolver.Options);
 
-            public TActual Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) =>
-                (TActual)(object)baseFormatter.Deserialize(ref reader, StandardResolver.Options);
+            public TActual Deserialize(
+                ref MessagePackReader reader,
+                MessagePackSerializerOptions options
+            ) => (TActual)(object)baseFormatter.Deserialize(ref reader, StandardResolver.Options);
         }
     }
 }

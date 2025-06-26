@@ -9,7 +9,8 @@ namespace osu.Game.Rulesets.Osu.Judgements
 {
     public class OsuSliderJudgementResult : OsuJudgementResult
     {
-        public readonly Stack<(double time, bool tracking)> TrackingHistory = new Stack<(double, bool)>();
+        public readonly Stack<(double time, bool tracking)> TrackingHistory =
+            new Stack<(double, bool)>();
 
         public OsuSliderJudgementResult(HitObject hitObject, Judgement judgement)
             : base(hitObject, judgement)

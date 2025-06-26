@@ -28,43 +28,56 @@ namespace osu.Game.Tests.Visual.Mods
 
         [Test]
         public void TestMaximumAchievableAccuracy() =>
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModAccuracyChallenge
+            CreateModTest(
+                new ModTestData
                 {
-                    MinimumAccuracy = { Value = 0.6 }
-                },
-                Autoplay = false,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = Enumerable.Range(0, 5).Select(i => new HitCircle
-                    {
-                        StartTime = i * 250,
-                        Position = new Vector2(i * 50)
-                    }).Cast<HitObject>().ToList()
-                },
-                PassCondition = () => Player.GameplayState.HasFailed && Player.ScoreProcessor.JudgedHits >= 3
-            });
+                    Mod = new OsuModAccuracyChallenge { MinimumAccuracy = { Value = 0.6 } },
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = Enumerable
+                                .Range(0, 5)
+                                .Select(i => new HitCircle
+                                {
+                                    StartTime = i * 250,
+                                    Position = new Vector2(i * 50),
+                                })
+                                .Cast<HitObject>()
+                                .ToList(),
+                        },
+                    PassCondition = () =>
+                        Player.GameplayState.HasFailed && Player.ScoreProcessor.JudgedHits >= 3,
+                }
+            );
 
         [Test]
         public void TestStandardAccuracy() =>
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModAccuracyChallenge
+            CreateModTest(
+                new ModTestData
                 {
-                    MinimumAccuracy = { Value = 0.6 },
-                    AccuracyJudgeMode = { Value = ModAccuracyChallenge.AccuracyMode.Standard }
-                },
-                Autoplay = false,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = Enumerable.Range(0, 5).Select(i => new HitCircle
+                    Mod = new OsuModAccuracyChallenge
                     {
-                        StartTime = i * 250,
-                        Position = new Vector2(i * 50)
-                    }).Cast<HitObject>().ToList()
-                },
-                PassCondition = () => Player.GameplayState.HasFailed && Player.ScoreProcessor.JudgedHits >= 1
-            });
+                        MinimumAccuracy = { Value = 0.6 },
+                        AccuracyJudgeMode = { Value = ModAccuracyChallenge.AccuracyMode.Standard },
+                    },
+                    Autoplay = false,
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            HitObjects = Enumerable
+                                .Range(0, 5)
+                                .Select(i => new HitCircle
+                                {
+                                    StartTime = i * 250,
+                                    Position = new Vector2(i * 50),
+                                })
+                                .Cast<HitObject>()
+                                .ToList(),
+                        },
+                    PassCondition = () =>
+                        Player.GameplayState.HasFailed && Player.ScoreProcessor.JudgedHits >= 1,
+                }
+            );
     }
 }

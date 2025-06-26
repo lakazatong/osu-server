@@ -16,7 +16,8 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
     public partial class LegacyNotePiece : LegacyManiaColumnElement
     {
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
 
         private Container directionContainer = null!;
 
@@ -33,14 +34,18 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin, IScrollingInfo scrollingInfo)
         {
-            minimumColumnWidth = skin.GetConfig<ManiaSkinConfigurationLookup, float>(new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.MinimumColumnWidth))?.Value;
+            minimumColumnWidth = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                new ManiaSkinConfigurationLookup(
+                    LegacyManiaSkinConfigurationLookups.MinimumColumnWidth
+                )
+            )?.Value;
 
             InternalChild = directionContainer = new Container
             {
                 Origin = Anchor.BottomCentre,
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Child = noteAnimation = GetAnimation(skin) ?? Empty()
+                Child = noteAnimation = GetAnimation(skin) ?? Empty(),
             };
 
             direction.BindTo(scrollingInfo.Direction);
@@ -55,14 +60,20 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 
             if (noteAnimation is Sprite sprite)
                 texture = sprite.Texture;
-            else if (noteAnimation is TextureAnimation textureAnimation && textureAnimation.FrameCount > 0)
+            else if (
+                noteAnimation is TextureAnimation textureAnimation
+                && textureAnimation.FrameCount > 0
+            )
                 texture = textureAnimation.CurrentFrame;
 
             if (texture != null)
             {
                 // The height is scaled to the minimum column width, if provided.
                 float minimumWidth = minimumColumnWidth ?? DrawWidth;
-                noteAnimation.Scale = Vector2.Divide(new Vector2(DrawWidth, minimumWidth), texture.DisplayWidth);
+                noteAnimation.Scale = Vector2.Divide(
+                    new Vector2(DrawWidth, minimumWidth),
+                    texture.DisplayWidth
+                );
             }
         }
 
@@ -80,9 +91,13 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             }
         }
 
-        protected virtual Drawable? GetAnimation(ISkinSource skin) => GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.NoteImage);
+        protected virtual Drawable? GetAnimation(ISkinSource skin) =>
+            GetAnimationFromLookup(skin, LegacyManiaSkinConfigurationLookups.NoteImage);
 
-        protected Drawable? GetAnimationFromLookup(ISkin skin, LegacyManiaSkinConfigurationLookups lookup)
+        protected Drawable? GetAnimationFromLookup(
+            ISkin skin,
+            LegacyManiaSkinConfigurationLookups lookup
+        )
         {
             string suffix = string.Empty;
 
@@ -97,10 +112,17 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                     break;
             }
 
-            string noteImage = GetColumnSkinConfig<string>(skin, lookup)?.Value
-                               ?? $"mania-note{FallbackColumnIndex}{suffix}";
+            string noteImage =
+                GetColumnSkinConfig<string>(skin, lookup)?.Value
+                ?? $"mania-note{FallbackColumnIndex}{suffix}";
 
-            return skin.GetAnimation(noteImage, WrapMode.ClampToEdge, WrapMode.ClampToEdge, true, true);
+            return skin.GetAnimation(
+                noteImage,
+                WrapMode.ClampToEdge,
+                WrapMode.ClampToEdge,
+                true,
+                true
+            );
         }
     }
 }

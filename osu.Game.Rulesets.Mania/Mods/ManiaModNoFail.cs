@@ -5,7 +5,5 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
-    public class ManiaModNoFail : ModNoFail
-    {
-    }
+    public class ManiaModNoFail : ModNoFail { }
 }

@@ -8,13 +8,22 @@ namespace osu.Game.Configuration
 {
     public enum BackgroundSource
     {
-        [LocalisableDescription(typeof(SkinSettingsStrings), nameof(SkinSettingsStrings.SkinSectionHeader))]
+        [LocalisableDescription(
+            typeof(SkinSettingsStrings),
+            nameof(SkinSettingsStrings.SkinSectionHeader)
+        )]
         Skin,
 
-        [LocalisableDescription(typeof(GameplaySettingsStrings), nameof(GameplaySettingsStrings.BeatmapHeader))]
+        [LocalisableDescription(
+            typeof(GameplaySettingsStrings),
+            nameof(GameplaySettingsStrings.BeatmapHeader)
+        )]
         Beatmap,
 
-        [LocalisableDescription(typeof(UserInterfaceStrings), nameof(UserInterfaceStrings.BeatmapWithStoryboard))]
+        [LocalisableDescription(
+            typeof(UserInterfaceStrings),
+            nameof(UserInterfaceStrings.BeatmapWithStoryboard)
+        )]
         BeatmapWithStoryboard,
     }
 }

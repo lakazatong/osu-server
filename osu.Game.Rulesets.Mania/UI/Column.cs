@@ -41,9 +41,15 @@ namespace osu.Game.Rulesets.Mania.UI
 
         public readonly ColumnHitObjectArea HitObjectArea;
 
-        internal readonly Container BackgroundContainer = new Container { RelativeSizeAxes = Axes.Both };
+        internal readonly Container BackgroundContainer = new Container
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
 
-        internal readonly Container TopLevelContainer = new Container { RelativeSizeAxes = Axes.Both };
+        internal readonly Container TopLevelContainer = new Container
+        {
+            RelativeSizeAxes = Axes.Both,
+        };
 
         private DrawablePool<PoolableHitExplosion> hitExplosionPool = null!;
         private readonly OrderedHitPolicy hitPolicy;
@@ -95,17 +101,23 @@ namespace osu.Game.Rulesets.Mania.UI
                 hitExplosionPool = new DrawablePool<PoolableHitExplosion>(5),
                 sampleTriggerSource = new GameplaySampleTriggerSource(HitObjectContainer),
                 HitObjectArea,
-                keyArea = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.KeyArea), _ => new DefaultKeyArea())
+                keyArea = new SkinnableDrawable(
+                    new ManiaSkinComponentLookup(ManiaSkinComponents.KeyArea),
+                    _ => new DefaultKeyArea()
+                )
                 {
                     RelativeSizeAxes = Axes.Both,
                 },
                 // For input purposes, the background is added at the highest depth, but is then proxied back below all other elements externally
                 // (see `Stage.columnBackgrounds`).
                 BackgroundContainer,
-                TopLevelContainer
+                TopLevelContainer,
             };
 
-            var background = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground), _ => new DefaultColumnBackground())
+            var background = new SkinnableDrawable(
+                new ManiaSkinComponentLookup(ManiaSkinComponents.ColumnBackground),
+                _ => new DefaultColumnBackground()
+            )
             {
                 RelativeSizeAxes = Axes.Both,
             };
@@ -123,20 +135,34 @@ namespace osu.Game.Rulesets.Mania.UI
             RegisterPool<HoldNoteBody, DrawableHoldNoteBody>(10, 50);
 
             if (rulesetConfig != null)
-                mobilePlayStyle = rulesetConfig.GetBindable<ManiaMobileLayout>(ManiaRulesetSetting.MobileLayout);
+                mobilePlayStyle = rulesetConfig.GetBindable<ManiaMobileLayout>(
+                    ManiaRulesetSetting.MobileLayout
+                );
         }
 
         private void onSourceChanged()
         {
-            AccentColour.Value = skin.GetManiaSkinConfig<Color4>(LegacyManiaSkinConfigurationLookups.ColumnBackgroundColour, Index)?.Value ?? Color4.Black;
+            AccentColour.Value =
+                skin.GetManiaSkinConfig<Color4>(
+                    LegacyManiaSkinConfigurationLookups.ColumnBackgroundColour,
+                    Index
+                )?.Value ?? Color4.Black;
 
-            leftColumnSpacing = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                        new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.LeftColumnSpacing, Index))
-                                    ?.Value ?? Stage.COLUMN_SPACING;
+            leftColumnSpacing =
+                skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                    new ManiaSkinConfigurationLookup(
+                        LegacyManiaSkinConfigurationLookups.LeftColumnSpacing,
+                        Index
+                    )
+                )?.Value ?? Stage.COLUMN_SPACING;
 
-            rightColumnSpacing = skin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                                         new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.RightColumnSpacing, Index))
-                                     ?.Value ?? Stage.COLUMN_SPACING;
+            rightColumnSpacing =
+                skin.GetConfig<ManiaSkinConfigurationLookup, float>(
+                    new ManiaSkinConfigurationLookup(
+                        LegacyManiaSkinConfigurationLookups.RightColumnSpacing,
+                        Index
+                    )
+                )?.Value ?? Stage.COLUMN_SPACING;
         }
 
         protected override void LoadComplete()
@@ -156,7 +182,9 @@ namespace osu.Game.Rulesets.Mania.UI
                 skin.SourceChanged -= onSourceChanged;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
             dependencies.CacheAs<IBindable<ManiaAction>>(Action);
@@ -193,14 +221,16 @@ namespace osu.Game.Rulesets.Mania.UI
             return true;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<ManiaAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<ManiaAction> e) { }
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
         {
             // Extend input coverage to the gaps close to this column.
-            var spacingInflation = new MarginPadding { Left = leftColumnSpacing, Right = rightColumnSpacing };
+            var spacingInflation = new MarginPadding
+            {
+                Left = leftColumnSpacing,
+                Right = rightColumnSpacing,
+            };
             return DrawRectangle.Inflate(spacingInflation).Contains(ToLocalSpace(screenSpacePos));
         }
 

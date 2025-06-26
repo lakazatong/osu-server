@@ -17,13 +17,16 @@ namespace osu.Game.Online.API.Requests.Responses
 
         public bool Equals(APIMenuContent? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return Images.SequenceEqual(other.Images);
         }
 
-        public override bool Equals(object? other) => other is APIMenuContent content && Equals(content);
+        public override bool Equals(object? other) =>
+            other is APIMenuContent content && Equals(content);
 
         public override int GetHashCode()
         {

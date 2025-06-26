@@ -39,7 +39,8 @@ namespace osu.Game.Screens.Ranking
         private BindableList<UserTag> displayedTags { get; } = new BindableList<UserTag>();
 
         private Bindable<APITag[]?> apiTags = null!;
-        private BindableDictionary<long, UserTag> relevantTagsById { get; } = new BindableDictionary<long, UserTag>();
+        private BindableDictionary<long, UserTag> relevantTagsById { get; } =
+            new BindableDictionary<long, UserTag>();
 
         private readonly Bindable<APIBeatmap?> apiBeatmap = new Bindable<APIBeatmap?>();
 
@@ -67,11 +68,7 @@ namespace osu.Game.Screens.Ranking
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Padding = new MarginPadding(10),
-                    ColumnDimensions =
-                    [
-                        new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize)
-                    ],
+                    ColumnDimensions = [new Dimension(), new Dimension(GridSizeMode.AutoSize)],
                     RowDimensions = [new Dimension(GridSizeMode.AutoSize, minSize: 40)],
                     Content = new[]
                     {
@@ -91,16 +88,17 @@ namespace osu.Game.Screens.Ranking
                                         AutoSizeAxes = Axes.Y,
                                         Direction = FillDirection.Full,
                                         Spacing = new Vector2(4),
-                                        Child = addNewTagUserTag = new AddNewTagUserTag
-                                        {
-                                            AvailableTags = { BindTarget = relevantTagsById },
-                                            OnTagSelected = toggleVote,
-                                        },
+                                        Child = addNewTagUserTag =
+                                            new AddNewTagUserTag
+                                            {
+                                                AvailableTags = { BindTarget = relevantTagsById },
+                                                OnTagSelected = toggleVote,
+                                            },
                                     },
                                 },
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
@@ -114,7 +112,10 @@ namespace osu.Game.Screens.Ranking
             }
 
             var getBeatmapSetRequest = new GetBeatmapSetRequest(beatmapInfo.BeatmapSet!.OnlineID);
-            getBeatmapSetRequest.Success += set => apiBeatmap.Value = set.Beatmaps.SingleOrDefault(b => b.MatchesOnlineID(beatmapInfo));
+            getBeatmapSetRequest.Success += set =>
+                apiBeatmap.Value = set.Beatmaps.SingleOrDefault(b =>
+                    b.MatchesOnlineID(beatmapInfo)
+                );
             api.Queue(getBeatmapSetRequest);
         }
 
@@ -137,9 +138,13 @@ namespace osu.Game.Screens.Ranking
                 return;
 
             relevantTagsById.Clear();
-            relevantTagsById.AddRange(apiTags.Value
-                                             .Where(t => t.RulesetId == null || t.RulesetId == beatmapInfo.Ruleset.OnlineID)
-                                             .Select(t => new KeyValuePair<long, UserTag>(t.Id, new UserTag(t))));
+            relevantTagsById.AddRange(
+                apiTags
+                    .Value.Where(t =>
+                        t.RulesetId == null || t.RulesetId == beatmapInfo.Ruleset.OnlineID
+                    )
+                    .Select(t => new KeyValuePair<long, UserTag>(t.Id, new UserTag(t)))
+            );
 
             foreach (var topTag in apiBeatmap.Value.TopTags ?? [])
             {
@@ -259,9 +264,11 @@ namespace osu.Game.Screens.Ranking
             if (!layout.IsValid && !Contains(inputManager.CurrentState.Mouse.Position))
             {
                 var sortedTags = new Dictionary<UserTag, int>(
-                    displayedTags.OrderByDescending(t => t.VoteCount.Value)
-                                 .ThenByDescending(t => t.Voted.Value)
-                                 .Select((tag, index) => new KeyValuePair<UserTag, int>(tag, index)));
+                    displayedTags
+                        .OrderByDescending(t => t.VoteCount.Value)
+                        .ThenByDescending(t => t.Voted.Value)
+                        .Select((tag, index) => new KeyValuePair<UserTag, int>(tag, index))
+                );
 
                 foreach (var drawableTag in tagFlow)
                 {
@@ -279,7 +286,8 @@ namespace osu.Game.Screens.Ranking
 
         private partial class AddNewTagUserTag : DrawableUserTag, IHasPopover
         {
-            public BindableDictionary<long, UserTag> AvailableTags { get; } = new BindableDictionary<long, UserTag>();
+            public BindableDictionary<long, UserTag> AvailableTags { get; } =
+                new BindableDictionary<long, UserTag>();
 
             public Action<UserTag>? OnTagSelected { get; set; }
 
@@ -287,15 +295,16 @@ namespace osu.Game.Screens.Ranking
             private OverlayColourProvider overlayColourProvider { get; set; } = null!;
 
             public AddNewTagUserTag()
-                : base(new UserTag(new APITag { Name = "+/add" }), false)
-            {
-            }
+                : base(new UserTag(new APITag { Name = "+/add" }), false) { }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
 
-                AvailableTags.BindCollectionChanged((_, _) => Enabled.Value = AvailableTags.Count > 0, true);
+                AvailableTags.BindCollectionChanged(
+                    (_, _) => Enabled.Value = AvailableTags.Count > 0,
+                    true
+                );
                 Action = this.ShowPopover;
 
                 MainBackground.FadeColour(overlayColourProvider.Background2);
@@ -304,11 +313,12 @@ namespace osu.Game.Screens.Ranking
                 FadeEdgeEffectTo(0);
             }
 
-            public Popover GetPopover() => new AddTagsPopover
-            {
-                AvailableTags = { BindTarget = AvailableTags },
-                OnSelected = OnTagSelected,
-            };
+            public Popover GetPopover() =>
+                new AddTagsPopover
+                {
+                    AvailableTags = { BindTarget = AvailableTags },
+                    OnSelected = OnTagSelected,
+                };
         }
     }
 }

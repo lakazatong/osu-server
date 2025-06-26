@@ -41,12 +41,13 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 Origin = Anchor.CentreLeft,
                 Icon = FontAwesome.Solid.Envelope,
                 FillMode = FillMode.Fit,
-                Size = new Vector2(50, 14)
+                Size = new Vector2(50, 14),
             };
 
             Action = () =>
             {
-                if (!Content.IsPresent) return;
+                if (!Content.IsPresent)
+                    return;
 
                 channelManager?.OpenPrivateChannel(User.Value?.User);
                 userOverlay?.Hide();
@@ -56,7 +57,10 @@ namespace osu.Game.Overlays.Profile.Header.Components
             User.ValueChanged += e =>
             {
                 var user = e.NewValue?.User;
-                Content.Alpha = user != null && !user.PMFriendsOnly && apiProvider.LocalUser.Value.Id != user.Id ? 1 : 0;
+                Content.Alpha =
+                    user != null && !user.PMFriendsOnly && apiProvider.LocalUser.Value.Id != user.Id
+                        ? 1
+                        : 0;
             };
         }
     }

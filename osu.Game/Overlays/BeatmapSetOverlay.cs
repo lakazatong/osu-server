@@ -49,14 +49,14 @@ namespace osu.Game.Overlays
                 {
                     info = new Info
                     {
-                        Beatmap = { BindTarget = Header.HeaderContent.Picker.Beatmap }
+                        Beatmap = { BindTarget = Header.HeaderContent.Picker.Beatmap },
                     },
                     new ScoresContainer
                     {
-                        Beatmap = { BindTarget = Header.HeaderContent.Picker.Beatmap }
+                        Beatmap = { BindTarget = Header.HeaderContent.Picker.Beatmap },
                     },
-                    comments = new CommentsSection()
-                }
+                    comments = new CommentsSection(),
+                },
             };
 
             Header.BeatmapSet.BindTo(beatmapSet);
@@ -70,11 +70,13 @@ namespace osu.Game.Overlays
         private void load()
         {
             apiUser = api.LocalUser.GetBoundCopy();
-            apiUser.BindValueChanged(_ => Schedule(() =>
-            {
-                if (api.IsLoggedIn)
-                    performFetch();
-            }));
+            apiUser.BindValueChanged(_ =>
+                Schedule(() =>
+                {
+                    if (api.IsLoggedIn)
+                        performFetch();
+                })
+            );
         }
 
         protected override BeatmapSetHeader CreateHeader() => new BeatmapSetHeader();
@@ -129,7 +131,10 @@ namespace osu.Game.Overlays
             {
                 beatmapSet.Value = res;
                 if (lastLookup.Value.type == BeatmapSetLookupType.BeatmapId)
-                    Header.HeaderContent.Picker.Beatmap.Value = Header.BeatmapSet.Value.Beatmaps.First(b => b.OnlineID == lastLookup.Value.id);
+                    Header.HeaderContent.Picker.Beatmap.Value =
+                        Header.BeatmapSet.Value.Beatmaps.First(b =>
+                            b.OnlineID == lastLookup.Value.id
+                        );
             };
             API.Queue(req);
         }
@@ -144,18 +149,24 @@ namespace osu.Game.Overlays
 
                 Add(comments = new CommentsContainer());
 
-                BeatmapSet.BindValueChanged(beatmapSet =>
-                {
-                    if (beatmapSet.NewValue?.OnlineID > 0)
+                BeatmapSet.BindValueChanged(
+                    beatmapSet =>
                     {
-                        Show();
-                        comments.ShowComments(CommentableType.Beatmapset, beatmapSet.NewValue.OnlineID);
-                    }
-                    else
-                    {
-                        Hide();
-                    }
-                }, true);
+                        if (beatmapSet.NewValue?.OnlineID > 0)
+                        {
+                            Show();
+                            comments.ShowComments(
+                                CommentableType.Beatmapset,
+                                beatmapSet.NewValue.OnlineID
+                            );
+                        }
+                        else
+                        {
+                            Hide();
+                        }
+                    },
+                    true
+                );
             }
         }
     }

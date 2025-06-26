@@ -8,9 +8,7 @@ namespace osu.Game.Online.API.Requests
     public class GetCountryRankingsRequest : GetRankingsRequest<GetCountriesResponse>
     {
         public GetCountryRankingsRequest(RulesetInfo ruleset, int page = 1)
-            : base(ruleset, page)
-        {
-        }
+            : base(ruleset, page) { }
 
         protected override string TargetPostfix() => "country";
     }

@@ -7,6 +7,6 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
     {
         All,
         Public,
-        Private
+        Private,
     }
 }

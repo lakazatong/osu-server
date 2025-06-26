@@ -21,47 +21,76 @@ namespace osu.Game.Tests.Visual.Ranking
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create button", () => Child = new PopoverContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Child = collectionButton = new CollectionButton(beatmapInfo)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-            });
+            AddStep(
+                "create button",
+                () =>
+                    Child = new PopoverContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Child = collectionButton =
+                            new CollectionButton(beatmapInfo)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                    }
+            );
         }
 
         [Test]
         public void TestCollectionButton()
         {
-            AddStep("click collection button", () =>
-            {
-                InputManager.MoveMouseTo(collectionButton!);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click collection button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(collectionButton!);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("collection popover is visible", () => this.ChildrenOfType<CollectionPopover>().Single().State.Value == Visibility.Visible);
+            AddAssert(
+                "collection popover is visible",
+                () =>
+                    this.ChildrenOfType<CollectionPopover>().Single().State.Value
+                    == Visibility.Visible
+            );
 
-            AddStep("click outside popover", () =>
-            {
-                InputManager.MoveMouseTo(ScreenSpaceDrawQuad.TopLeft);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click outside popover",
+                () =>
+                {
+                    InputManager.MoveMouseTo(ScreenSpaceDrawQuad.TopLeft);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("collection popover is hidden", () => this.ChildrenOfType<CollectionPopover>().Single().State.Value == Visibility.Hidden);
+            AddAssert(
+                "collection popover is hidden",
+                () =>
+                    this.ChildrenOfType<CollectionPopover>().Single().State.Value
+                    == Visibility.Hidden
+            );
 
-            AddStep("click collection button", () =>
-            {
-                InputManager.MoveMouseTo(collectionButton!);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click collection button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(collectionButton!);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("press escape", () => InputManager.Key(Key.Escape));
 
-            AddAssert("collection popover is hidden", () => this.ChildrenOfType<CollectionPopover>().Single().State.Value == Visibility.Hidden);
+            AddAssert(
+                "collection popover is hidden",
+                () =>
+                    this.ChildrenOfType<CollectionPopover>().Single().State.Value
+                    == Visibility.Hidden
+            );
         }
     }
 }

@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                     Origin = Anchor.CentreLeft,
                     Alpha = 0,
                     Blending = BlendingParameters.Additive,
-                    Rotation = -90
+                    Rotation = -90,
                 },
                 explosion2 = new Sprite
                 {
@@ -46,8 +46,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                     Origin = Anchor.CentreLeft,
                     Alpha = 0,
                     Blending = BlendingParameters.Additive,
-                    Rotation = -90
-                }
+                    Rotation = -90,
+                },
             };
         }
 
@@ -68,11 +68,19 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
             using (BeginAbsoluteSequence(entry.LifetimeStart))
             {
                 float halfCatchWidth = catcher.CatchWidth / 2;
-                float explosionOffset = Math.Clamp(entry.Position, -halfCatchWidth + catch_margin * 3, halfCatchWidth - catch_margin * 3);
+                float explosionOffset = Math.Clamp(
+                    entry.Position,
+                    -halfCatchWidth + catch_margin * 3,
+                    halfCatchWidth - catch_margin * 3
+                );
 
                 if (!(entry.HitObject is Droplet))
                 {
-                    float scale = Math.Clamp(entry.JudgementResult.ComboAtJudgement / 200f, 0.35f, 1.125f);
+                    float scale = Math.Clamp(
+                        entry.JudgementResult.ComboAtJudgement / 200f,
+                        0.35f,
+                        1.125f
+                    );
 
                     explosion1.Scale = new Vector2(1, 0.9f);
                     explosion1.Position = new Vector2(explosionOffset, 0);

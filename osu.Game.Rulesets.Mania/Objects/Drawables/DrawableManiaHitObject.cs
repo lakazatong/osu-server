@@ -8,9 +8,9 @@ using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Game.Rulesets.Mania.UI;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI.Scrolling;
-using osu.Game.Rulesets.Mania.UI;
 
 namespace osu.Game.Rulesets.Mania.Objects.Drawables
 {
@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         /// </summary>
         protected readonly IBindable<ManiaAction> Action = new Bindable<ManiaAction>();
 
-        protected readonly IBindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
+        protected readonly IBindable<ScrollingDirection> Direction =
+            new Bindable<ScrollingDirection>();
 
         [Resolved(canBeNull: true)]
         private ManiaPlayfield playfield { get; set; }
@@ -50,7 +51,10 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load([CanBeNull] IBindable<ManiaAction> action, [NotNull] IScrollingInfo scrollingInfo)
+        private void load(
+            [CanBeNull] IBindable<ManiaAction> action,
+            [NotNull] IScrollingInfo scrollingInfo
+        )
         {
             if (action != null)
                 Action.BindTo(action);
@@ -67,7 +71,8 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
 
         protected virtual void OnDirectionChanged(ValueChangedEvent<ScrollingDirection> e)
         {
-            Anchor = Origin = e.NewValue == ScrollingDirection.Up ? Anchor.TopCentre : Anchor.BottomCentre;
+            Anchor = Origin =
+                e.NewValue == ScrollingDirection.Up ? Anchor.TopCentre : Anchor.BottomCentre;
         }
 
         protected override void UpdateHitStateTransforms(ArmedState state)
@@ -96,8 +101,6 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
         public new TObject HitObject => (TObject)base.HitObject;
 
         protected DrawableManiaHitObject(TObject hitObject)
-            : base(hitObject)
-        {
-        }
+            : base(hitObject) { }
     }
 }

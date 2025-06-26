@@ -7,18 +7,14 @@ using osu.Game.Overlays.Settings;
 
 namespace osu.Game.Graphics.UserInterfaceV2
 {
-    public partial class LabelledSliderBar<TNumber> : LabelledComponent<SettingsSlider<TNumber>, TNumber>
+    public partial class LabelledSliderBar<TNumber>
+        : LabelledComponent<SettingsSlider<TNumber>, TNumber>
         where TNumber : struct, INumber<TNumber>, IMinMaxValue<TNumber>
     {
         public LabelledSliderBar()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
-        protected override SettingsSlider<TNumber> CreateComponent() => new SettingsSlider<TNumber>
-        {
-            TransferValueOnCommit = true,
-            RelativeSizeAxes = Axes.X,
-        };
+        protected override SettingsSlider<TNumber> CreateComponent() =>
+            new SettingsSlider<TNumber> { TransferValueOnCommit = true, RelativeSizeAxes = Axes.X };
     }
 }

@@ -73,7 +73,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                             InnerRadius = 0.05f,
                             Seed = RNG.Next(),
                         },
-                    }
+                    },
                 },
                 hyperBorderPiece = new CircularBlob
                 {
@@ -84,7 +84,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                     Blending = BlendingParameters.Additive,
                     InnerRadius = 0.08f,
                     Size = new Vector2(1.15f),
-                    Seed = largeBlobSeed
+                    Seed = largeBlobSeed,
                 },
             };
         }
@@ -93,11 +93,14 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
         {
             base.LoadComplete();
 
-            AccentColour.BindValueChanged(colour =>
-            {
-                foreach (var sprite in layers)
-                    sprite.Colour = colour.NewValue;
-            }, true);
+            AccentColour.BindValueChanged(
+                colour =>
+                {
+                    foreach (var sprite in layers)
+                        sprite.Colour = colour.NewValue;
+                },
+                true
+            );
 
             rotationRandomness = RNG.NextSingle(0.2f, 1) * (RNG.NextBool() ? -1 : 1);
         }
@@ -112,7 +115,8 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
                     // Layers are ordered from largest to smallest. Smaller layers should rotate more.
                     (i * 2)
                     * (float)Clock.ElapsedFrameTime
-                    * 0.02f * rotationRandomness
+                    * 0.02f
+                    * rotationRandomness
                     // Each layer should alternate rotation direction.
                     * (i % 2 == 1 ? 1 : -1);
             }

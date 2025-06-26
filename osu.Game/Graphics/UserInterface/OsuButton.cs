@@ -77,46 +77,50 @@ namespace osu.Game.Graphics.UserInterface
         {
             Height = 40;
 
-            AddInternal(Content = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Masking = true,
-                CornerRadius = 5,
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            AddInternal(
+                Content = new Container
                 {
-                    Background = new Box
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Masking = true,
+                    CornerRadius = 5,
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        Depth = float.MaxValue,
-                    },
-                    Hover = new Box
-                    {
-                        Alpha = 0,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.White,
-                        Blending = BlendingParameters.Additive,
-                        Depth = float.MinValue
-                    },
-                    SpriteText = CreateText(),
-                    flashLayer = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Blending = BlendingParameters.Additive,
-                        Depth = float.MinValue,
-                        Colour = Color4.White.Opacity(0.5f),
-                        Alpha = 0,
+                        Background = new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                        },
+                        Hover = new Box
+                        {
+                            Alpha = 0,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.White,
+                            Blending = BlendingParameters.Additive,
+                            Depth = float.MinValue,
+                        },
+                        SpriteText = CreateText(),
+                        flashLayer = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Blending = BlendingParameters.Additive,
+                            Depth = float.MinValue,
+                            Colour = Color4.White.Opacity(0.5f),
+                            Alpha = 0,
+                        },
                     },
                 }
-            });
+            );
 
             if (hoverSounds.HasValue)
-                AddInternal(new HoverClickSounds(hoverSounds.Value) { Enabled = { BindTarget = Enabled } });
+                AddInternal(
+                    new HoverClickSounds(hoverSounds.Value) { Enabled = { BindTarget = Enabled } }
+                );
         }
 
         [BackgroundDependencyLoader]
@@ -149,9 +153,10 @@ namespace osu.Game.Graphics.UserInterface
         {
             if (Enabled.Value)
             {
-                Hover.FadeTo(0.2f, 40, Easing.OutQuint)
-                     .Then()
-                     .FadeTo(HoverLayerFinalAlpha, 800, Easing.OutQuint);
+                Hover
+                    .FadeTo(0.2f, 40, Easing.OutQuint)
+                    .Then()
+                    .FadeTo(HoverLayerFinalAlpha, 800, Easing.OutQuint);
             }
 
             return base.OnHover(e);
@@ -176,12 +181,13 @@ namespace osu.Game.Graphics.UserInterface
             base.OnMouseUp(e);
         }
 
-        protected virtual SpriteText CreateText() => new OsuSpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.Centre,
-            Anchor = Anchor.Centre,
-            Font = OsuFont.GetFont(weight: FontWeight.Bold)
-        };
+        protected virtual SpriteText CreateText() =>
+            new OsuSpriteText
+            {
+                Depth = -1,
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Font = OsuFont.GetFont(weight: FontWeight.Bold),
+            };
     }
 }

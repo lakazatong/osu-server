@@ -46,10 +46,22 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             base.Update();
 
-            if (Time.Current >= drawableRepeat.HitStateUpdateTime && drawableRepeat.State.Value == ArmedState.Hit)
+            if (
+                Time.Current >= drawableRepeat.HitStateUpdateTime
+                && drawableRepeat.State.Value == ArmedState.Hit
+            )
             {
                 double animDuration = Math.Min(300, drawableRepeat.HitObject.SpanDuration);
-                Scale = new Vector2(Interpolation.ValueAt(Time.Current, 1, 1.5f, drawableRepeat.HitStateUpdateTime, drawableRepeat.HitStateUpdateTime + animDuration, Easing.Out));
+                Scale = new Vector2(
+                    Interpolation.ValueAt(
+                        Time.Current,
+                        1,
+                        1.5f,
+                        drawableRepeat.HitStateUpdateTime,
+                        drawableRepeat.HitStateUpdateTime + animDuration,
+                        Easing.Out
+                    )
+                );
             }
             else
             {
@@ -59,11 +71,30 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                 const double move_in_duration = 250;
                 const double total = 300;
 
-                double loopCurrentTime = (Time.Current - drawableRepeat.AnimationStartTime.Value) % total;
+                double loopCurrentTime =
+                    (Time.Current - drawableRepeat.AnimationStartTime.Value) % total;
                 if (loopCurrentTime < move_out_duration)
-                    Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, 1, scale_amount, 0, move_out_duration, Easing.Out));
+                    Scale = new Vector2(
+                        Interpolation.ValueAt(
+                            loopCurrentTime,
+                            1,
+                            scale_amount,
+                            0,
+                            move_out_duration,
+                            Easing.Out
+                        )
+                    );
                 else
-                    Scale = new Vector2(Interpolation.ValueAt(loopCurrentTime, scale_amount, 1f, move_out_duration, move_out_duration + move_in_duration, Easing.Out));
+                    Scale = new Vector2(
+                        Interpolation.ValueAt(
+                            loopCurrentTime,
+                            scale_amount,
+                            1f,
+                            move_out_duration,
+                            move_out_duration + move_in_duration,
+                            Easing.Out
+                        )
+                    );
             }
         }
     }

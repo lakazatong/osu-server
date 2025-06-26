@@ -29,18 +29,22 @@ namespace osu.Game.Screens.SelectV2
 
             InternalChildren = new Drawable[]
             {
-                new ShearAligningWrapper(header = new Header
-                {
-                    Shear = -OsuGame.SHEAR,
-                    RelativeSizeAxes = Axes.X,
-                    Height = header_height,
-                }),
-                new ShearAligningWrapper(contentContainer = new Container
-                {
-                    Shear = -OsuGame.SHEAR,
-                    Padding = new MarginPadding { Top = header_height },
-                    RelativeSizeAxes = Axes.Both,
-                })
+                new ShearAligningWrapper(
+                    header = new Header
+                    {
+                        Shear = -OsuGame.SHEAR,
+                        RelativeSizeAxes = Axes.X,
+                        Height = header_height,
+                    }
+                ),
+                new ShearAligningWrapper(
+                    contentContainer = new Container
+                    {
+                        Shear = -OsuGame.SHEAR,
+                        Padding = new MarginPadding { Top = header_height },
+                        RelativeSizeAxes = Axes.Both,
+                    }
+                )
                 {
                     Depth = 1f,
                 },

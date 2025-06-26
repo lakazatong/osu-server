@@ -59,23 +59,33 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private void addReset() => addStepClickLink("00:00:000", "reset", false);
 
-        private void addStepClickLink(string timestamp, string step = "", bool displayTimestamp = true)
+        private void addStepClickLink(
+            string timestamp,
+            string step = "",
+            bool displayTimestamp = true
+        )
         {
-            AddStep(displayTimestamp ? $"{step} {timestamp}" : step, () => Editor.HandleTimestamp(timestamp));
+            AddStep(
+                displayTimestamp ? $"{step} {timestamp}" : step,
+                () => Editor.HandleTimestamp(timestamp)
+            );
             AddUntilStep("wait for seek", () => EditorClock.SeekingOrStopped.Value);
         }
 
-        private void checkSelection(Func<double> startTime, params int[] comboNumbers)
-            => AddUntilStep($"seeked & selected {(comboNumbers.Any() ? string.Join(",", comboNumbers) : "nothing")}", () =>
-            {
-                bool checkCombos = comboNumbers.Any()
-                    ? hasCombosInOrder(EditorBeatmap.SelectedHitObjects, comboNumbers)
-                    : !EditorBeatmap.SelectedHitObjects.Any();
+        private void checkSelection(Func<double> startTime, params int[] comboNumbers) =>
+            AddUntilStep(
+                $"seeked & selected {(comboNumbers.Any() ? string.Join(",", comboNumbers) : "nothing")}",
+                () =>
+                {
+                    bool checkCombos = comboNumbers.Any()
+                        ? hasCombosInOrder(EditorBeatmap.SelectedHitObjects, comboNumbers)
+                        : !EditorBeatmap.SelectedHitObjects.Any();
 
-                return EditorClock.CurrentTime == startTime()
-                       && EditorBeatmap.SelectedHitObjects.Count == comboNumbers.Length
-                       && checkCombos;
-            });
+                    return EditorClock.CurrentTime == startTime()
+                        && EditorBeatmap.SelectedHitObjects.Count == comboNumbers.Length
+                        && checkCombos;
+                }
+            );
 
         private bool hasCombosInOrder(IEnumerable<HitObject> selected, params int[] comboNumbers)
         {
@@ -83,9 +93,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             if (hitObjects.Count != comboNumbers.Length)
                 return false;
 
-            return !hitObjects.Select(x => (OsuHitObject)x)
-                              .Where((x, i) => x.IndexInCurrentCombo + 1 != comboNumbers[i])
-                              .Any();
+            return !hitObjects
+                .Select(x => (OsuHitObject)x)
+                .Where((x, i) => x.IndexInCurrentCombo + 1 != comboNumbers[i])
+                .Any();
         }
     }
 }

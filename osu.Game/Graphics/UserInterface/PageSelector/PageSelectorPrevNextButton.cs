@@ -28,39 +28,42 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
             this.text = text;
         }
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.Y,
-            AutoSizeAxes = Axes.X,
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new Container
             {
-                new FillFlowContainer
+                RelativeSizeAxes = Axes.Y,
+                AutoSizeAxes = Axes.X,
+                Children = new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Spacing = new Vector2(3, 0),
-                    Children = new Drawable[]
+                    new FillFlowContainer
                     {
-                        name = new OsuSpriteText
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Spacing = new Vector2(3, 0),
+                        Children = new Drawable[]
                         {
-                            Font = OsuFont.GetFont(size: 12),
-                            Anchor = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                            Origin = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                            Text = text.ToUpper(),
+                            name = new OsuSpriteText
+                            {
+                                Font = OsuFont.GetFont(size: 12),
+                                Anchor = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
+                                Origin = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
+                                Text = text.ToUpper(),
+                            },
+                            icon = new SpriteIcon
+                            {
+                                Icon = rightAligned
+                                    ? FontAwesome.Solid.ChevronRight
+                                    : FontAwesome.Solid.ChevronLeft,
+                                Size = new Vector2(8),
+                                Anchor = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
+                                Origin = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
+                            },
                         },
-                        icon = new SpriteIcon
-                        {
-                            Icon = rightAligned ? FontAwesome.Solid.ChevronRight : FontAwesome.Solid.ChevronLeft,
-                            Size = new Vector2(8),
-                            Anchor = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                            Origin = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                        },
-                    }
+                    },
                 },
-            }
-        };
+            };
 
         [BackgroundDependencyLoader]
         private void load()
@@ -73,10 +76,17 @@ namespace osu.Game.Graphics.UserInterface.PageSelector
         {
             base.LoadComplete();
 
-            Enabled.BindValueChanged(enabled => Background.FadeTo(enabled.NewValue ? 1 : 0.5f, DURATION), true);
+            Enabled.BindValueChanged(
+                enabled => Background.FadeTo(enabled.NewValue ? 1 : 0.5f, DURATION),
+                true
+            );
         }
 
         protected override void UpdateHoverState() =>
-            Background.FadeColour(IsHovered ? ColourProvider.Dark3 : ColourProvider.Dark4, DURATION, Easing.OutQuint);
+            Background.FadeColour(
+                IsHovered ? ColourProvider.Dark3 : ColourProvider.Dark4,
+                DURATION,
+                Easing.OutQuint
+            );
     }
 }

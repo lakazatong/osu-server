@@ -25,7 +25,10 @@ namespace osu.Game.Tests.Beatmaps.Formats
                 Assert.That(decoder.ParsedLines, Has.None.EqualTo("// Combo1: 0, 0, 0"));
                 Assert.That(decoder.ParsedLines, Has.None.EqualTo("//Combo2: 0, 0, 0"));
                 Assert.That(decoder.ParsedLines, Has.None.EqualTo(" // Combo3: 0, 0, 0"));
-                Assert.That(decoder.ParsedLines, Has.One.EqualTo("Combo1: 100, 100, 100 // Comment at end of line"));
+                Assert.That(
+                    decoder.ParsedLines,
+                    Has.One.EqualTo("Combo1: 100, 100, 100 // Comment at end of line")
+                );
             }
         }
 
@@ -34,9 +37,7 @@ namespace osu.Game.Tests.Beatmaps.Formats
             public readonly List<string> ParsedLines = new List<string>();
 
             public LineLoggingDecoder(int version)
-                : base(version)
-            {
-            }
+                : base(version) { }
 
             protected override bool ShouldSkipLine(string line)
             {
@@ -49,8 +50,6 @@ namespace osu.Game.Tests.Beatmaps.Formats
             }
         }
 
-        private class TestModel
-        {
-        }
+        private class TestModel { }
     }
 }

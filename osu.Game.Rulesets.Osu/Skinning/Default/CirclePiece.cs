@@ -42,16 +42,13 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                     Origin = Anchor.Centre,
                     Texture = textures.Get(@"Gameplay/osu/disc"),
                 },
-                new KiaiFlash
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                new KiaiFlash { RelativeSizeAxes = Axes.Both },
                 triangles = new TrianglesPiece
                 {
                     RelativeSizeAxes = Axes.Both,
                     Blending = BlendingParameters.Additive,
                     Alpha = 0.5f,
-                }
+                },
             };
 
             drawableObject.HitObjectApplied += onHitObjectApplied;

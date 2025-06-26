@@ -46,7 +46,9 @@ namespace osu.Game.Screens.Edit
         public void EndChange()
         {
             if (bulkChangesStarted == 0)
-                throw new InvalidOperationException($"Cannot call {nameof(EndChange)} without a previous call to {nameof(BeginChange)}.");
+                throw new InvalidOperationException(
+                    $"Cannot call {nameof(EndChange)} without a previous call to {nameof(BeginChange)}."
+                );
 
             if (--bulkChangesStarted == 0)
             {

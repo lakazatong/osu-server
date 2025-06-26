@@ -30,7 +30,12 @@ namespace osu.Game.Tests.Online.Chat
         [Test]
         public void TestContainsUsernameMidlineNegative()
         {
-            Assert.IsFalse(MessageNotifier.CheckContainsUsername("This is a testmessage for notifications", "Test"));
+            Assert.IsFalse(
+                MessageNotifier.CheckContainsUsername(
+                    "This is a testmessage for notifications",
+                    "Test"
+                )
+            );
         }
 
         [Test]
@@ -42,7 +47,9 @@ namespace osu.Game.Tests.Online.Chat
         [Test]
         public void TestContainsUsernameEndOfLineNegative()
         {
-            Assert.IsFalse(MessageNotifier.CheckContainsUsername("This is a notificationtest", "Test"));
+            Assert.IsFalse(
+                MessageNotifier.CheckContainsUsername("This is a notificationtest", "Test")
+            );
         }
 
         [Test]
@@ -54,13 +61,20 @@ namespace osu.Game.Tests.Online.Chat
         [Test]
         public void TestContainsUsernameUnicode()
         {
-            Assert.IsTrue(MessageNotifier.CheckContainsUsername("Test \u0460\u0460 message", "\u0460\u0460"));
+            Assert.IsTrue(
+                MessageNotifier.CheckContainsUsername("Test \u0460\u0460 message", "\u0460\u0460")
+            );
         }
 
         [Test]
         public void TestContainsUsernameUnicodeNegative()
         {
-            Assert.IsFalse(MessageNotifier.CheckContainsUsername("Test ha\u0460\u0460o message", "\u0460\u0460"));
+            Assert.IsFalse(
+                MessageNotifier.CheckContainsUsername(
+                    "Test ha\u0460\u0460o message",
+                    "\u0460\u0460"
+                )
+            );
         }
 
         [Test]
@@ -72,7 +86,9 @@ namespace osu.Game.Tests.Online.Chat
         [Test]
         public void TestContainsUsernameSpecialCharactersNegative()
         {
-            Assert.IsFalse(MessageNotifier.CheckContainsUsername("Test pad[#^-^#]oru message", "[#^-^#]"));
+            Assert.IsFalse(
+                MessageNotifier.CheckContainsUsername("Test pad[#^-^#]oru message", "[#^-^#]")
+            );
         }
 
         [Test]

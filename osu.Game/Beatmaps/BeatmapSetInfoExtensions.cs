@@ -20,7 +20,8 @@ namespace osu.Game.Beatmaps
         /// </summary>
         /// <param name="model">The model to operate on.</param>
         /// <param name="filename">The name of the file to get the storage path of.</param>
-        public static string? GetPathForFile(this IHasRealmFiles model, string filename) => model.GetFile(filename)?.File.GetStoragePath();
+        public static string? GetPathForFile(this IHasRealmFiles model, string filename) =>
+            model.GetFile(filename)?.File.GetStoragePath();
 
         /// <summary>
         /// Returns the file usage for the file in this beatmapset with the given filename, if any exists, otherwise null.
@@ -30,12 +31,18 @@ namespace osu.Game.Beatmaps
         /// <param name="model">The model to operate on.</param>
         /// <param name="filename">The name of the file to get the storage path of.</param>
         public static RealmNamedFileUsage? GetFile(this IHasRealmFiles model, string filename) =>
-            model.Files.SingleOrDefault(f => string.Equals(f.Filename, filename, StringComparison.OrdinalIgnoreCase));
+            model.Files.SingleOrDefault(f =>
+                string.Equals(f.Filename, filename, StringComparison.OrdinalIgnoreCase)
+            );
 
         /// <summary>
         /// Get the beatmapset info page URL, or <c>null</c> if unavailable.
         /// </summary>
-        public static string? GetOnlineURL(this IBeatmapSetInfo beatmapSetInfo, IAPIProvider api, IRulesetInfo? ruleset = null)
+        public static string? GetOnlineURL(
+            this IBeatmapSetInfo beatmapSetInfo,
+            IAPIProvider api,
+            IRulesetInfo? ruleset = null
+        )
         {
             if (beatmapSetInfo.OnlineID <= 0)
                 return null;

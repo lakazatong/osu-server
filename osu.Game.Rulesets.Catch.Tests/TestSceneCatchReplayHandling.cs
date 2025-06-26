@@ -20,16 +20,32 @@ namespace osu.Game.Rulesets.Catch.Tests
             DrawableCatchRuleset drawableRuleset = null!;
             float catcherPosition = 0;
 
-            AddStep("create drawable ruleset", () => Child = drawableRuleset = new DrawableCatchRuleset(new CatchRuleset(), new CatchBeatmap(), []));
+            AddStep(
+                "create drawable ruleset",
+                () =>
+                    Child = drawableRuleset =
+                        new DrawableCatchRuleset(new CatchRuleset(), new CatchBeatmap(), [])
+            );
             AddStep("attach replay", () => drawableRuleset.SetReplayScore(new Score()));
-            AddStep("store catcher position", () => catcherPosition = drawableRuleset.ChildrenOfType<Catcher>().Single().X);
+            AddStep(
+                "store catcher position",
+                () => catcherPosition = drawableRuleset.ChildrenOfType<Catcher>().Single().X
+            );
             AddStep("hold down left", () => InputManager.PressKey(Key.Left));
-            AddAssert("catcher didn't move", () => drawableRuleset.ChildrenOfType<Catcher>().Single().X, () => Is.EqualTo(catcherPosition));
+            AddAssert(
+                "catcher didn't move",
+                () => drawableRuleset.ChildrenOfType<Catcher>().Single().X,
+                () => Is.EqualTo(catcherPosition)
+            );
             AddStep("release left", () => InputManager.ReleaseKey(Key.Left));
 
             AddStep("detach replay", () => drawableRuleset.SetReplayScore(null));
             AddStep("hold down left", () => InputManager.PressKey(Key.Left));
-            AddUntilStep("catcher moved", () => drawableRuleset.ChildrenOfType<Catcher>().Single().X, () => Is.Not.EqualTo(catcherPosition));
+            AddUntilStep(
+                "catcher moved",
+                () => drawableRuleset.ChildrenOfType<Catcher>().Single().X,
+                () => Is.Not.EqualTo(catcherPosition)
+            );
             AddStep("release left", () => InputManager.ReleaseKey(Key.Left));
         }
     }

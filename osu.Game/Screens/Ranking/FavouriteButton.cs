@@ -38,7 +38,9 @@ namespace osu.Game.Screens.Ranking
             : base(FontAwesome.Regular.Heart)
         {
             BeatmapSetInfo = beatmapSetInfo;
-            current = new BindableWithCurrent<BeatmapSetFavouriteState>(new BeatmapSetFavouriteState(false, 0));
+            current = new BindableWithCurrent<BeatmapSetFavouriteState>(
+                new BeatmapSetFavouriteState(false, 0)
+            );
 
             Size = new Vector2(75, 30);
         }
@@ -63,20 +65,28 @@ namespace osu.Game.Screens.Ranking
 
         private void getBeatmapSet()
         {
-            GetBeatmapSetRequest beatmapSetRequest = new GetBeatmapSetRequest(BeatmapSetInfo.OnlineID);
+            GetBeatmapSetRequest beatmapSetRequest = new GetBeatmapSetRequest(
+                BeatmapSetInfo.OnlineID
+            );
 
             loading.Show();
             beatmapSetRequest.Success += beatmapSet =>
             {
                 this.beatmapSet = beatmapSet;
-                current.Value = new BeatmapSetFavouriteState(this.beatmapSet.HasFavourited, this.beatmapSet.FavouriteCount);
+                current.Value = new BeatmapSetFavouriteState(
+                    this.beatmapSet.HasFavourited,
+                    this.beatmapSet.FavouriteCount
+                );
 
                 loading.Hide();
                 Enabled.Value = true;
             };
             beatmapSetRequest.Failure += e =>
             {
-                Logger.Log($"Favourite button failed to fetch beatmap info: {e}", LoggingTarget.Network);
+                Logger.Log(
+                    $"Favourite button failed to fetch beatmap info: {e}",
+                    LoggingTarget.Network
+                );
 
                 Schedule(() =>
                 {
@@ -96,7 +106,9 @@ namespace osu.Game.Screens.Ranking
             Enabled.Value = false;
             loading.Show();
 
-            var actionType = current.Value.Favourited ? BeatmapFavouriteAction.UnFavourite : BeatmapFavouriteAction.Favourite;
+            var actionType = current.Value.Favourited
+                ? BeatmapFavouriteAction.UnFavourite
+                : BeatmapFavouriteAction.Favourite;
 
             favouriteRequest?.Cancel();
             favouriteRequest = new PostBeatmapFavouriteRequest(beatmapSet.OnlineID, actionType);
@@ -105,14 +117,20 @@ namespace osu.Game.Screens.Ranking
             {
                 bool favourited = actionType == BeatmapFavouriteAction.Favourite;
 
-                current.Value = new BeatmapSetFavouriteState(favourited, current.Value.FavouriteCount + (favourited ? 1 : -1));
+                current.Value = new BeatmapSetFavouriteState(
+                    favourited,
+                    current.Value.FavouriteCount + (favourited ? 1 : -1)
+                );
 
                 Enabled.Value = true;
                 loading.Hide();
             };
             favouriteRequest.Failure += e =>
             {
-                Logger.Error(e, $"Failed to {actionType.ToString().ToLowerInvariant()} beatmap: {e.Message}");
+                Logger.Error(
+                    e,
+                    $"Failed to {actionType.ToString().ToLowerInvariant()} beatmap: {e.Message}"
+                );
 
                 Schedule(() =>
                 {

@@ -32,11 +32,7 @@ namespace osu.Game.Skinning.Components
 
             InternalChildren = new Drawable[]
             {
-                text = new OsuSpriteText
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                }
+                text = new OsuSpriteText { Anchor = Anchor.CentreLeft, Origin = Anchor.CentreLeft },
             };
         }
 

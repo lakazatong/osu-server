@@ -63,7 +63,8 @@ namespace osu.Game.Storyboards.Drawables
         {
             base.LoadComplete();
 
-            if (drawableVideo == null) return;
+            if (drawableVideo == null)
+                return;
 
             using (drawableVideo.BeginAbsoluteSequence(Video.StartTime))
             {
@@ -118,22 +119,27 @@ namespace osu.Game.Storyboards.Drawables
                     if (vectorScale == value)
                         return;
 
-                    if (!Validation.IsFinite(value)) throw new ArgumentException($@"{nameof(VectorScale)} must be finite, but is {value}.");
+                    if (!Validation.IsFinite(value))
+                        throw new ArgumentException(
+                            $@"{nameof(VectorScale)} must be finite, but is {value}."
+                        );
 
                     vectorScale = value;
                     Invalidate(Invalidation.MiscGeometry);
                 }
             }
 
-            protected override Vector2 DrawScale
-                => new Vector2(FlipH ? -base.DrawScale.X : base.DrawScale.X, FlipV ? -base.DrawScale.Y : base.DrawScale.Y) * VectorScale;
+            protected override Vector2 DrawScale =>
+                new Vector2(
+                    FlipH ? -base.DrawScale.X : base.DrawScale.X,
+                    FlipV ? -base.DrawScale.Y : base.DrawScale.Y
+                ) * VectorScale;
 
-            public override Anchor Origin => StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
+            public override Anchor Origin =>
+                StoryboardExtensions.AdjustOrigin(base.Origin, VectorScale, FlipH, FlipV);
 
             public DrawableVideo(Stream stream, bool startAtCurrentTime = true)
-                : base(stream, startAtCurrentTime)
-            {
-            }
+                : base(stream, startAtCurrentTime) { }
         }
     }
 }

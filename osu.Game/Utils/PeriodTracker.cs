@@ -80,7 +80,9 @@ namespace osu.Game.Utils
         public Period(double start, double end)
         {
             if (start >= end)
-                throw new ArgumentException($"Invalid period provided, {nameof(start)} must be less than {nameof(end)}");
+                throw new ArgumentException(
+                    $"Invalid period provided, {nameof(start)} must be less than {nameof(end)}"
+                );
 
             Start = start;
             End = end;

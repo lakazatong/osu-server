@@ -30,9 +30,7 @@ namespace osu.Game.Graphics.UserInterface
         private OsuMenuSamples menuSamples { get; set; } = null!;
 
         public OsuMenu(Direction direction, bool topLevelMenu = false)
-            : this(direction, topLevelMenu, playSamples: !topLevelMenu)
-        {
-        }
+            : this(direction, topLevelMenu, playSamples: !topLevelMenu) { }
 
         protected OsuMenu(Direction direction, bool topLevelMenu, bool playSamples)
             : base(direction, topLevelMenu)
@@ -79,8 +77,7 @@ namespace osu.Game.Graphics.UserInterface
             if (PlaySamples && WasOpened)
                 menuSamples?.PlayCloseSample();
 
-            this.Delay(DELAY_BEFORE_FADE_OUT)
-                .FadeOut(FADE_DURATION, Easing.OutQuint);
+            this.Delay(DELAY_BEFORE_FADE_OUT).FadeOut(FADE_DURATION, Easing.OutQuint);
 
             WasOpened = false;
         }
@@ -122,12 +119,14 @@ namespace osu.Game.Graphics.UserInterface
             return new DrawableOsuMenuItem(item);
         }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new OsuScrollContainer(direction);
+        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) =>
+            new OsuScrollContainer(direction);
 
-        protected override Menu CreateSubMenu() => new OsuMenu(Direction.Vertical)
-        {
-            Anchor = Direction == Direction.Horizontal ? Anchor.BottomLeft : Anchor.TopRight
-        };
+        protected override Menu CreateSubMenu() =>
+            new OsuMenu(Direction.Vertical)
+            {
+                Anchor = Direction == Direction.Horizontal ? Anchor.BottomLeft : Anchor.TopRight,
+            };
 
         protected partial class DrawableSpacer : DrawableOsuMenuItem
         {
@@ -136,15 +135,17 @@ namespace osu.Game.Graphics.UserInterface
             {
                 Scale = new Vector2(1, 0.6f);
 
-                AddInternal(new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Colour = BackgroundColourHover,
-                    RelativeSizeAxes = Axes.X,
-                    Height = 2f,
-                    Width = 0.9f,
-                });
+                AddInternal(
+                    new Box
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Colour = BackgroundColourHover,
+                        RelativeSizeAxes = Axes.X,
+                        Height = 2f,
+                        Width = 0.9f,
+                    }
+                );
             }
 
             protected override bool OnHover(HoverEvent e) => true;

@@ -29,18 +29,28 @@ namespace osu.Game.Tests.Resources
     {
         public const double QUICK_BEATMAP_LENGTH = 10000;
 
-        public const string COVER_IMAGE_1 = "https://assets.ppy.sh/user-cover-presets/1/df28696b58541a9e67f6755918951d542d93bdf1da41720fcca2fd2c1ea8cf51.jpeg";
-        public const string COVER_IMAGE_2 = "https://assets.ppy.sh/user-cover-presets/7/4a0ccb7b7fdd5c4238b11f0e7c686760fe2c99c6472b19400e82d1a8ff503e31.jpeg";
-        public const string COVER_IMAGE_3 = "https://assets.ppy.sh/user-cover-presets/12/6e8d3402c8080c2d9549a98321e1bff111dd9c94603ccdb237597479cab6e8a7.jpeg";
-        public const string COVER_IMAGE_4 = "https://assets.ppy.sh/user-cover-presets/17/80f82e4c2b27d8d6eed3ce89708ec27343e5ac63389cba6b5fb4550776562d08.jpeg";
+        public const string COVER_IMAGE_1 =
+            "https://assets.ppy.sh/user-cover-presets/1/df28696b58541a9e67f6755918951d542d93bdf1da41720fcca2fd2c1ea8cf51.jpeg";
+        public const string COVER_IMAGE_2 =
+            "https://assets.ppy.sh/user-cover-presets/7/4a0ccb7b7fdd5c4238b11f0e7c686760fe2c99c6472b19400e82d1a8ff503e31.jpeg";
+        public const string COVER_IMAGE_3 =
+            "https://assets.ppy.sh/user-cover-presets/12/6e8d3402c8080c2d9549a98321e1bff111dd9c94603ccdb237597479cab6e8a7.jpeg";
+        public const string COVER_IMAGE_4 =
+            "https://assets.ppy.sh/user-cover-presets/17/80f82e4c2b27d8d6eed3ce89708ec27343e5ac63389cba6b5fb4550776562d08.jpeg";
 
-        private static readonly TemporaryNativeStorage temp_storage = new TemporaryNativeStorage("TestResources");
+        private static readonly TemporaryNativeStorage temp_storage = new TemporaryNativeStorage(
+            "TestResources"
+        );
 
-        public static DllResourceStore GetStore() => new DllResourceStore(typeof(TestResources).Assembly);
+        public static DllResourceStore GetStore() =>
+            new DllResourceStore(typeof(TestResources).Assembly);
 
         public static Stream OpenResource(string name) => GetStore().GetStream($"Resources/{name}");
 
-        public static Stream GetTestBeatmapStream(bool virtualTrack = false) => OpenResource($"Archives/241526 Soleily - Renatus{(virtualTrack ? "_virtual" : "")}.osz");
+        public static Stream GetTestBeatmapStream(bool virtualTrack = false) =>
+            OpenResource(
+                $"Archives/241526 Soleily - Renatus{(virtualTrack ? "_virtual" : "")}.osz"
+            );
 
         /// <summary>
         /// Retrieve a path to a copy of a shortened (~10 second) beatmap archive with a virtual track.
@@ -76,7 +86,8 @@ namespace osu.Game.Tests.Resources
             return tempPath;
         }
 
-        private static string getTempFilename() => temp_storage.GetFullPath(Guid.NewGuid() + ".osz");
+        private static string getTempFilename() =>
+            temp_storage.GetFullPath(Guid.NewGuid() + ".osz");
 
         private static int testId = 1;
 
@@ -90,7 +101,10 @@ namespace osu.Game.Tests.Resources
         /// </summary>
         /// <param name="difficultyCount">Number of difficulties. If null, a random number between 1 and 20 will be used.</param>
         /// <param name="rulesets">Rulesets to cycle through when creating difficulties. If <c>null</c>, osu! ruleset will be used.</param>
-        public static BeatmapSetInfo CreateTestBeatmapSetInfo(int? difficultyCount = null, RulesetInfo[] rulesets = null)
+        public static BeatmapSetInfo CreateTestBeatmapSetInfo(
+            int? difficultyCount = null,
+            RulesetInfo[] rulesets = null
+        )
         {
             int j = 0;
 
@@ -113,7 +127,9 @@ namespace osu.Game.Tests.Resources
             var beatmapSet = new BeatmapSetInfo
             {
                 OnlineID = setId,
-                Hash = new MemoryStream(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).ComputeMD5Hash(),
+                Hash = new MemoryStream(
+                    Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())
+                ).ComputeMD5Hash(),
                 DateAdded = DateTimeOffset.UtcNow,
             };
 
@@ -146,7 +162,8 @@ namespace osu.Game.Tests.Resources
                     yield return new BeatmapInfo
                     {
                         OnlineID = beatmapId,
-                        DifficultyName = $"{version} {beatmapId} (length {TimeSpan.FromMilliseconds(length):m\\:ss}, bpm {bpm:0.#})",
+                        DifficultyName =
+                            $"{version} {beatmapId} (length {TimeSpan.FromMilliseconds(length):m\\:ss}, bpm {bpm:0.#})",
                         StarRating = diff,
                         Length = length,
                         BeatmapSet = beatmapSet,
@@ -155,10 +172,7 @@ namespace osu.Game.Tests.Resources
                         MD5Hash = hash,
                         Ruleset = rulesetInfo,
                         Metadata = metadata.DeepClone(),
-                        Difficulty = new BeatmapDifficulty
-                        {
-                            OverallDifficulty = diff,
-                        }
+                        Difficulty = new BeatmapDifficulty { OverallDifficulty = diff },
                     };
                 }
             }
@@ -170,55 +184,59 @@ namespace osu.Game.Tests.Resources
         /// <param name="ruleset">The ruleset for which the score was set against.</param>
         /// <returns></returns>
         public static ScoreInfo CreateTestScoreInfo(RulesetInfo ruleset = null) =>
-            CreateTestScoreInfo(CreateTestBeatmapSetInfo(1, new[] { ruleset ?? new OsuRuleset().RulesetInfo }).Beatmaps.First());
+            CreateTestScoreInfo(
+                CreateTestBeatmapSetInfo(1, new[] { ruleset ?? new OsuRuleset().RulesetInfo })
+                    .Beatmaps.First()
+            );
 
         /// <summary>
         /// Create a test score model.
         /// </summary>
         /// <param name="beatmap">The beatmap for which the score was set against.</param>
         /// <returns></returns>
-        public static ScoreInfo CreateTestScoreInfo(BeatmapInfo beatmap) => new ScoreInfo
-        {
-            User = new APIUser
+        public static ScoreInfo CreateTestScoreInfo(BeatmapInfo beatmap) =>
+            new ScoreInfo
             {
-                Id = 2,
-                Username = "peppy",
-                CoverUrl = COVER_IMAGE_3,
-            },
-            BeatmapInfo = beatmap,
-            BeatmapHash = beatmap.Hash,
-            Ruleset = beatmap.Ruleset,
-            Mods = new Mod[] { new TestModHardRock(), new TestModDoubleTime() },
-            TotalScore = 284537,
-            Accuracy = 0.95,
-            MaxCombo = 999,
-            Position = 1,
-            Rank = ScoreRank.S,
-            Date = DateTimeOffset.Now,
-            Statistics = new Dictionary<HitResult, int>
-            {
-                [HitResult.Miss] = 1,
-                [HitResult.Meh] = 50,
-                [HitResult.Ok] = 100,
-                [HitResult.Good] = 200,
-                [HitResult.Great] = 300,
-                [HitResult.Perfect] = 320,
-                [HitResult.SmallTickHit] = 50,
-                [HitResult.SmallTickMiss] = 25,
-                [HitResult.LargeTickHit] = 100,
-                [HitResult.LargeTickMiss] = 50,
-                [HitResult.SmallBonus] = 10,
-                [HitResult.LargeBonus] = 50
-            },
-            MaximumStatistics = new Dictionary<HitResult, int>
-            {
-                [HitResult.Perfect] = 971,
-                [HitResult.SmallTickHit] = 75,
-                [HitResult.LargeTickHit] = 150,
-                [HitResult.SmallBonus] = 10,
-                [HitResult.LargeBonus] = 50,
-            }
-        };
+                User = new APIUser
+                {
+                    Id = 2,
+                    Username = "peppy",
+                    CoverUrl = COVER_IMAGE_3,
+                },
+                BeatmapInfo = beatmap,
+                BeatmapHash = beatmap.Hash,
+                Ruleset = beatmap.Ruleset,
+                Mods = new Mod[] { new TestModHardRock(), new TestModDoubleTime() },
+                TotalScore = 284537,
+                Accuracy = 0.95,
+                MaxCombo = 999,
+                Position = 1,
+                Rank = ScoreRank.S,
+                Date = DateTimeOffset.Now,
+                Statistics = new Dictionary<HitResult, int>
+                {
+                    [HitResult.Miss] = 1,
+                    [HitResult.Meh] = 50,
+                    [HitResult.Ok] = 100,
+                    [HitResult.Good] = 200,
+                    [HitResult.Great] = 300,
+                    [HitResult.Perfect] = 320,
+                    [HitResult.SmallTickHit] = 50,
+                    [HitResult.SmallTickMiss] = 25,
+                    [HitResult.LargeTickHit] = 100,
+                    [HitResult.LargeTickMiss] = 50,
+                    [HitResult.SmallBonus] = 10,
+                    [HitResult.LargeBonus] = 50,
+                },
+                MaximumStatistics = new Dictionary<HitResult, int>
+                {
+                    [HitResult.Perfect] = 971,
+                    [HitResult.SmallTickHit] = 75,
+                    [HitResult.LargeTickHit] = 150,
+                    [HitResult.SmallBonus] = 10,
+                    [HitResult.LargeBonus] = 50,
+                },
+            };
 
         private class TestModHardRock : ModHardRock
         {

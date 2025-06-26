@@ -100,10 +100,7 @@ namespace osu.Game.Graphics.UserInterface
 
             InternalChildren = new[]
             {
-                label = new OsuSpriteText
-                {
-                    Font = OsuFont.GetFont(size: 14),
-                },
+                label = new OsuSpriteText { Font = OsuFont.GetFont(size: 14) },
                 upperBound = new UpperBoundSlider
                 {
                     KeyboardStep = 0.1f,
@@ -125,8 +122,16 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            lowerBound.Current.ValueChanged += min => upperBound.Current.Value = Math.Max(min.NewValue + minRange, upperBound.Current.Value);
-            upperBound.Current.ValueChanged += max => lowerBound.Current.Value = Math.Min(max.NewValue - minRange, lowerBound.Current.Value);
+            lowerBound.Current.ValueChanged += min =>
+                upperBound.Current.Value = Math.Max(
+                    min.NewValue + minRange,
+                    upperBound.Current.Value
+                );
+            upperBound.Current.ValueChanged += max =>
+                lowerBound.Current.Value = Math.Min(
+                    max.NewValue - minRange,
+                    lowerBound.Current.Value
+                );
         }
 
         private partial class LowerBoundSlider : BoundSlider
@@ -172,7 +177,11 @@ namespace osu.Game.Graphics.UserInterface
             public float NubWidth { get; set; } = Nub.HEIGHT;
 
             public override LocalisableString TooltipText =>
-                (Current.IsDefault ? DefaultTooltip : Current.Value.ToString($@"0.## {TooltipSuffix}")) ?? Current.Value.ToString($@"0.## {TooltipSuffix}");
+                (
+                    Current.IsDefault
+                        ? DefaultTooltip
+                        : Current.Value.ToString($@"0.## {TooltipSuffix}")
+                ) ?? Current.Value.ToString($@"0.## {TooltipSuffix}");
 
             protected override bool OnHover(HoverEvent e)
             {
@@ -188,25 +197,36 @@ namespace osu.Game.Graphics.UserInterface
 
                 OsuSpriteText currentDisplay;
 
-                Nub.Add(currentDisplay = new OsuSpriteText
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Y = -0.5f,
-                    Colour = Color4.White,
-                    Font = OsuFont.Torus.With(size: 10),
-                });
+                Nub.Add(
+                    currentDisplay = new OsuSpriteText
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Y = -0.5f,
+                        Colour = Color4.White,
+                        Font = OsuFont.Torus.With(size: 10),
+                    }
+                );
 
-                Current.BindValueChanged(current =>
-                {
-                    currentDisplay.Text = (current.NewValue != Current.Default ? current.NewValue.ToString("N1") : DefaultString) ?? current.NewValue.ToString("N1");
-                }, true);
+                Current.BindValueChanged(
+                    current =>
+                    {
+                        currentDisplay.Text =
+                            (
+                                current.NewValue != Current.Default
+                                    ? current.NewValue.ToString("N1")
+                                    : DefaultString
+                            ) ?? current.NewValue.ToString("N1");
+                    },
+                    true
+                );
             }
 
             [BackgroundDependencyLoader(true)]
             private void load(OverlayColourProvider? colourProvider)
             {
-                if (colourProvider == null) return;
+                if (colourProvider == null)
+                    return;
 
                 AccentColour = colourProvider.Background2;
                 Nub.AccentColour = colourProvider.Background2;

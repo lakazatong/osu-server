@@ -4,14 +4,14 @@
 #nullable disable
 
 using System;
-using osuTK;
+using System.Linq;
+using JetBrains.Annotations;
 using osu.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
-using System.Linq;
-using JetBrains.Annotations;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
+using osuTK;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -19,12 +19,11 @@ namespace osu.Game.Graphics.UserInterface
     {
         private const float padding = 10;
 
-        protected override TabItem<T> CreateTabItem(T value) => new BreadcrumbTabItem(value)
-        {
-            AccentColour = AccentColour,
-        };
+        protected override TabItem<T> CreateTabItem(T value) =>
+            new BreadcrumbTabItem(value) { AccentColour = AccentColour };
 
-        protected override float StripWidth => base.StripWidth - TabContainer.FirstOrDefault()?.Padding.Right ?? 0;
+        protected override float StripWidth =>
+            base.StripWidth - TabContainer.FirstOrDefault()?.Padding.Right ?? 0;
 
         public BreadcrumbControl()
         {
@@ -55,7 +54,8 @@ namespace osu.Game.Graphics.UserInterface
             public readonly SpriteIcon Chevron;
 
             //don't allow clicking between transitions
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Alpha == 1f && base.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                Alpha == 1f && base.ReceivePositionalInputAt(screenSpacePos);
 
             public override bool HandleNonPositionalInput => State == Visibility.Visible;
             public override bool HandlePositionalInput => State == Visibility.Visible;
@@ -67,7 +67,8 @@ namespace osu.Game.Graphics.UserInterface
                 get => state;
                 set
                 {
-                    if (value == state) return;
+                    if (value == state)
+                        return;
 
                     state = value;
 
@@ -98,15 +99,17 @@ namespace osu.Game.Graphics.UserInterface
                 Text.Font = Text.Font.With(size: 18);
                 Text.Margin = new MarginPadding { Vertical = 8 };
                 Margin = new MarginPadding { Right = padding + ChevronSize };
-                Add(Chevron = new SpriteIcon
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreLeft,
-                    Size = new Vector2(ChevronSize),
-                    Icon = FontAwesome.Solid.ChevronRight,
-                    Margin = new MarginPadding { Left = padding },
-                    Alpha = 0f,
-                });
+                Add(
+                    Chevron = new SpriteIcon
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreLeft,
+                        Size = new Vector2(ChevronSize),
+                        Icon = FontAwesome.Solid.ChevronRight,
+                        Margin = new MarginPadding { Left = padding },
+                        Alpha = 0f,
+                    }
+                );
             }
         }
     }

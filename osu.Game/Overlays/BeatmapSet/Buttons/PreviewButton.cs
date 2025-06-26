@@ -17,7 +17,8 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
 {
     public partial class PreviewButton : OsuClickableContainer
     {
-        private readonly Box background, progress;
+        private readonly Box background,
+            progress;
         private readonly PlayButton playButton;
 
         private PreviewTrack? preview => playButton.Preview;
@@ -34,23 +35,20 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
         {
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.5f
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                 new Container
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     RelativeSizeAxes = Axes.X,
                     Height = 3,
-                    Child = progress = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Width = 0f,
-                        Alpha = 0f,
-                    },
+                    Child = progress =
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Width = 0f,
+                            Alpha = 0f,
+                        },
                 },
                 playButton = new PlayButton
                 {
@@ -78,7 +76,8 @@ namespace osu.Game.Overlays.BeatmapSet.Buttons
             if (Playing.Value && preview != null)
             {
                 // prevent negative (potential infinite) width if a track without length was loaded
-                progress.Width = preview.Length > 0 ? (float)(preview.CurrentTime / preview.Length) : 0f;
+                progress.Width =
+                    preview.Length > 0 ? (float)(preview.CurrentTime / preview.Length) : 0f;
             }
             else
                 progress.Width = 0;

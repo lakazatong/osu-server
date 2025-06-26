@@ -9,9 +9,10 @@ namespace osu.Game.Online.Multiplayer
     [Serializable]
     public class InvalidStateChangeException : HubException
     {
-        public InvalidStateChangeException(MultiplayerUserState oldState, MultiplayerUserState newState)
-            : base($"Cannot change from {oldState} to {newState}")
-        {
-        }
+        public InvalidStateChangeException(
+            MultiplayerUserState oldState,
+            MultiplayerUserState newState
+        )
+            : base($"Cannot change from {oldState} to {newState}") { }
     }
 }

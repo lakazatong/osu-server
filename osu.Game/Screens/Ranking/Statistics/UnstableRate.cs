@@ -21,6 +21,7 @@ namespace osu.Game.Screens.Ranking.Statistics
             Value = hitEvents.CalculateUnstableRate()?.Result;
         }
 
-        protected override string DisplayValue(double? value) => value?.ToString(@"N2") ?? "(not available)";
+        protected override string DisplayValue(double? value) =>
+            value?.ToString(@"N2") ?? "(not available)";
     }
 }

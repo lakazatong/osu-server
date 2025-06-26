@@ -14,7 +14,11 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Objects
 {
-    public abstract class OsuHitObject : HitObject, IHasComboInformation, IHasPosition, IHasTimePreempt
+    public abstract class OsuHitObject
+        : HitObject,
+            IHasComboInformation,
+            IHasPosition,
+            IHasTimePreempt
     {
         /// <summary>
         /// The radius of hit objects (ie. the radius of a <see cref="HitCircle"/>).
@@ -165,11 +169,20 @@ namespace osu.Game.Rulesets.Osu.Objects
             });
         }
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected override void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
-            TimePreempt = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, PREEMPT_MAX, PREEMPT_MID, PREEMPT_MIN);
+            TimePreempt = (float)
+                IBeatmapDifficultyInfo.DifficultyRange(
+                    difficulty.ApproachRate,
+                    PREEMPT_MAX,
+                    PREEMPT_MID,
+                    PREEMPT_MIN
+                );
 
             // Preempt time can go below 450ms. Normally, this is achieved via the DT mod which uniformly speeds up all animations game wide regardless of AR.
             // This uniform speedup is hard to match 1:1, however we can at least make AR>10 (via mods) feel good by extending the upper linear function above.
@@ -177,7 +190,10 @@ namespace osu.Game.Rulesets.Osu.Objects
             // This adjustment is necessary for AR>10, otherwise TimePreempt can become smaller leading to hitcircles not fully fading in.
             TimeFadeIn = 400 * Math.Min(1, TimePreempt / PREEMPT_MIN);
 
-            Scale = LegacyRulesetExtensions.CalculateScaleFromCircleSize(difficulty.CircleSize, true);
+            Scale = LegacyRulesetExtensions.CalculateScaleFromCircleSize(
+                difficulty.CircleSize,
+                true
+            );
         }
 
         public void UpdateComboInformation(IHasComboInformation? lastObj)

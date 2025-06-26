@@ -40,96 +40,103 @@ namespace osu.Game.Tournament.Screens.Gameplay
         {
             this.ipc = ipc;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new TourneyVideo("gameplay")
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Loop = true,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                header = new MatchHeader
-                {
-                    ShowLogo = false,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Y = 110,
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    Children = new[]
+                    new TourneyVideo("gameplay") { Loop = true, RelativeSizeAxes = Axes.Both },
+                    header = new MatchHeader { ShowLogo = false },
+                    new Container
                     {
-                        chroma = new Container
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Y = 110,
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Children = new[]
                         {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Height = 512,
-                            Children = new Drawable[]
+                            chroma = new Container
                             {
-                                new ChromaArea
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Height = 512,
+                                Children = new Drawable[]
                                 {
-                                    Name = "Left chroma",
-                                    RelativeSizeAxes = Axes.Both,
-                                    Width = 0.5f,
+                                    new ChromaArea
+                                    {
+                                        Name = "Left chroma",
+                                        RelativeSizeAxes = Axes.Both,
+                                        Width = 0.5f,
+                                    },
+                                    new ChromaArea
+                                    {
+                                        Name = "Right chroma",
+                                        RelativeSizeAxes = Axes.Both,
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.TopRight,
+                                        Width = 0.5f,
+                                    },
                                 },
-                                new ChromaArea
-                                {
-                                    Name = "Right chroma",
-                                    RelativeSizeAxes = Axes.Both,
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    Width = 0.5f,
-                                }
-                            }
+                            },
                         },
-                    }
-                },
-                scoreDisplay = new TournamentMatchScoreDisplay
-                {
-                    Y = -147,
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.TopCentre,
-                },
-                new ControlPanel
-                {
-                    Children = new Drawable[]
+                    },
+                    scoreDisplay = new TournamentMatchScoreDisplay
                     {
-                        warmupButton = new TourneyButton
+                        Y = -147,
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.TopCentre,
+                    },
+                    new ControlPanel
+                    {
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            Text = "Toggle warmup",
-                            Action = () => warmup.Toggle()
+                            warmupButton = new TourneyButton
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Text = "Toggle warmup",
+                                Action = () => warmup.Toggle(),
+                            },
+                            new TourneyButton
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                Text = "Toggle chat",
+                                Action = () =>
+                                {
+                                    State.Value =
+                                        State.Value == TourneyState.Idle
+                                            ? TourneyState.Playing
+                                            : TourneyState.Idle;
+                                },
+                            },
+                            new SettingsSlider<int>
+                            {
+                                LabelText = "Chroma width",
+                                Current = LadderInfo.ChromaKeyWidth,
+                                KeyboardStep = 1,
+                            },
+                            new SettingsSlider<int>
+                            {
+                                LabelText = "Players per team",
+                                Current = LadderInfo.PlayersPerTeam,
+                                KeyboardStep = 1,
+                            },
                         },
-                        new TourneyButton
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Text = "Toggle chat",
-                            Action = () => { State.Value = State.Value == TourneyState.Idle ? TourneyState.Playing : TourneyState.Idle; }
-                        },
-                        new SettingsSlider<int>
-                        {
-                            LabelText = "Chroma width",
-                            Current = LadderInfo.ChromaKeyWidth,
-                            KeyboardStep = 1,
-                        },
-                        new SettingsSlider<int>
-                        {
-                            LabelText = "Players per team",
-                            Current = LadderInfo.PlayersPerTeam,
-                            KeyboardStep = 1,
-                        },
-                    }
+                    },
                 }
-            });
+            );
 
-            LadderInfo.ChromaKeyWidth.BindValueChanged(width => chroma.Width = width.NewValue, true);
+            LadderInfo.ChromaKeyWidth.BindValueChanged(
+                width => chroma.Width = width.NewValue,
+                true
+            );
 
-            warmup.BindValueChanged(w =>
-            {
-                warmupButton.Alpha = !w.NewValue ? 0.5f : 1;
-                header.ShowScores = !w.NewValue;
-            }, true);
+            warmup.BindValueChanged(
+                w =>
+                {
+                    warmupButton.Alpha = !w.NewValue ? 0.5f : 1;
+                    header.ShowScores = !w.NewValue;
+                },
+                true
+            );
         }
 
         protected override void LoadComplete()
@@ -196,7 +203,8 @@ namespace osu.Game.Tournament.Screens.Gameplay
 
                 if (State.Value == TourneyState.Ranking)
                 {
-                    if (warmup.Value || CurrentMatch.Value == null) return;
+                    if (warmup.Value || CurrentMatch.Value == null)
+                        return;
 
                     if (ipc.Score1.Value > ipc.Score2.Value)
                         CurrentMatch.Value.Team1Score.Value++;
@@ -218,9 +226,21 @@ namespace osu.Game.Tournament.Screens.Gameplay
                             if (lastState == TourneyState.Ranking && !warmup.Value)
                             {
                                 if (CurrentMatch.Value?.Completed.Value == true)
-                                    scheduledScreenChange = Scheduler.AddDelayed(() => { sceneManager?.SetScreen(typeof(TeamWinScreen)); }, delay_before_progression);
+                                    scheduledScreenChange = Scheduler.AddDelayed(
+                                        () =>
+                                        {
+                                            sceneManager?.SetScreen(typeof(TeamWinScreen));
+                                        },
+                                        delay_before_progression
+                                    );
                                 else if (CurrentMatch.Value?.Completed.Value == false)
-                                    scheduledScreenChange = Scheduler.AddDelayed(() => { sceneManager?.SetScreen(typeof(MapPoolScreen)); }, delay_before_progression);
+                                    scheduledScreenChange = Scheduler.AddDelayed(
+                                        () =>
+                                        {
+                                            sceneManager?.SetScreen(typeof(MapPoolScreen));
+                                        },
+                                        delay_before_progression
+                                    );
                             }
                         }
 
@@ -293,10 +313,7 @@ namespace osu.Game.Tournament.Screens.Gameplay
                         break;
 
                     default:
-                        InternalChild = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        };
+                        InternalChild = new Box { RelativeSizeAxes = Axes.Both };
                         break;
                 }
             }

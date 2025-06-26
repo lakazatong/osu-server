@@ -21,10 +21,18 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("hold shift", () => InputManager.PressKey(Key.LShift));
 
             AddStep("press 4", () => InputManager.Key(Key.Number4));
-            AddAssert("snap updated to 4", () => EditorBeatmap.BeatmapInfo.BeatDivisor, () => Is.EqualTo(4));
+            AddAssert(
+                "snap updated to 4",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor,
+                () => Is.EqualTo(4)
+            );
 
             AddStep("press 6", () => InputManager.Key(Key.Number6));
-            AddAssert("snap updated to 6", () => EditorBeatmap.BeatmapInfo.BeatDivisor, () => Is.EqualTo(6));
+            AddAssert(
+                "snap updated to 6",
+                () => EditorBeatmap.BeatmapInfo.BeatDivisor,
+                () => Is.EqualTo(6)
+            );
 
             AddStep("release shift", () => InputManager.ReleaseKey(Key.LShift));
         }

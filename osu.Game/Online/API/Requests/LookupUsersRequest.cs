@@ -20,11 +20,14 @@ namespace osu.Game.Online.API.Requests
         public LookupUsersRequest(int[] userIds)
         {
             if (userIds.Length > max_ids_per_request)
-                throw new ArgumentException($"{nameof(LookupUsersRequest)} calls only support up to {max_ids_per_request} IDs at once");
+                throw new ArgumentException(
+                    $"{nameof(LookupUsersRequest)} calls only support up to {max_ids_per_request} IDs at once"
+                );
 
             UserIds = userIds;
         }
 
-        protected override string Target => @"users/lookup/?ids[]=" + string.Join(@"&ids[]=", UserIds);
+        protected override string Target =>
+            @"users/lookup/?ids[]=" + string.Join(@"&ids[]=", UserIds);
     }
 }

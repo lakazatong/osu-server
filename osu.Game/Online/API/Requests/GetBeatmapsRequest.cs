@@ -15,7 +15,9 @@ namespace osu.Game.Online.API.Requests
         public GetBeatmapsRequest(int[] beatmapIds)
         {
             if (beatmapIds.Length > max_ids_per_request)
-                throw new ArgumentException($"{nameof(GetBeatmapsRequest)} calls only support up to {max_ids_per_request} IDs at once");
+                throw new ArgumentException(
+                    $"{nameof(GetBeatmapsRequest)} calls only support up to {max_ids_per_request} IDs at once"
+                );
 
             BeatmapIds = beatmapIds;
         }

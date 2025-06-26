@@ -10,15 +10,16 @@ namespace osu.Game.Tests.Visual.SongSelect
     public partial class TestSceneFilterControl : OsuManualInputManagerTestScene
     {
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new FilterControl
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.X,
-                Height = FilterControl.HEIGHT,
-            };
-        });
+                Child = new FilterControl
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.X,
+                    Height = FilterControl.HEIGHT,
+                };
+            });
     }
 }

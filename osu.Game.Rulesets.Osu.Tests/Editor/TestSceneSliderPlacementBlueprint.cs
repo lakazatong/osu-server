@@ -26,11 +26,12 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         protected sealed override Ruleset CreateRuleset() => new OsuRuleset();
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            HitObjectContainer.Clear();
-            ResetPlacement();
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                HitObjectContainer.Clear();
+                ResetPlacement();
+            });
 
         [Test]
         public void TestBeginPlacementWithoutFinishing()
@@ -72,7 +73,13 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             addMovementStep(new Vector2(200));
             addClickStep(MouseButton.Left);
 
-            AddStep("move mouse out of screen", () => InputManager.MoveMouseTo(InputManager.ScreenSpaceDrawQuad.TopRight + Vector2.One));
+            AddStep(
+                "move mouse out of screen",
+                () =>
+                    InputManager.MoveMouseTo(
+                        InputManager.ScreenSpaceDrawQuad.TopRight + Vector2.One
+                    )
+            );
             addClickStep(MouseButton.Right);
 
             assertPlaced(true);
@@ -294,20 +301,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             AddRepeatStep("press tab", () => InputManager.Key(Key.Tab), 2);
             assertControlPointTypeDuringPlacement(0, PathType.LINEAR);
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
             assertControlPointTypeDuringPlacement(0, PathType.BSpline(4));
 
-            AddStep("press alt-2", () =>
-            {
-                InputManager.PressKey(Key.AltLeft);
-                InputManager.Key(Key.Number2);
-                InputManager.ReleaseKey(Key.AltLeft);
-            });
+            AddStep(
+                "press alt-2",
+                () =>
+                {
+                    InputManager.PressKey(Key.AltLeft);
+                    InputManager.Key(Key.Number2);
+                    InputManager.ReleaseKey(Key.AltLeft);
+                }
+            );
             assertControlPointTypeDuringPlacement(0, PathType.BEZIER);
 
             AddStep("start new segment via S", () => InputManager.Key(Key.S));
@@ -400,13 +413,35 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
         {
             Vector2 startPoint = new Vector2(200);
 
-            AddStep("move mouse to a random point", () => InputManager.MoveMouseTo(InputManager.ToScreenSpace(Vector2.Zero)));
-            AddStep("begin touch at start point", () => InputManager.BeginTouch(new Touch(TouchSource.Touch1, InputManager.ToScreenSpace(startPoint))));
+            AddStep(
+                "move mouse to a random point",
+                () => InputManager.MoveMouseTo(InputManager.ToScreenSpace(Vector2.Zero))
+            );
+            AddStep(
+                "begin touch at start point",
+                () =>
+                    InputManager.BeginTouch(
+                        new Touch(TouchSource.Touch1, InputManager.ToScreenSpace(startPoint))
+                    )
+            );
 
             for (int i = 1; i < 20; i++)
-                addTouchMovementStep(startPoint + new Vector2(i * 40, MathF.Sin(i * MathF.PI / 5) * 50));
+                addTouchMovementStep(
+                    startPoint + new Vector2(i * 40, MathF.Sin(i * MathF.PI / 5) * 50)
+                );
 
-            AddStep("release touch at end point", () => InputManager.EndTouch(new Touch(TouchSource.Touch1, InputManager.CurrentState.Touch.GetTouchPosition(TouchSource.Touch1)!.Value)));
+            AddStep(
+                "release touch at end point",
+                () =>
+                    InputManager.EndTouch(
+                        new Touch(
+                            TouchSource.Touch1,
+                            InputManager
+                                .CurrentState.Touch.GetTouchPosition(TouchSource.Touch1)!
+                                .Value
+                        )
+                    )
+            );
 
             assertPlaced(true);
             assertLength(808, tolerance: 10);
@@ -516,32 +551,81 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             assertFinalControlPointType(0, PathType.PERFECT_CURVE);
         }
 
-        private void addMovementStep(Vector2 position) => AddStep($"move mouse to {position}", () => InputManager.MoveMouseTo(InputManager.ToScreenSpace(position)));
+        private void addMovementStep(Vector2 position) =>
+            AddStep(
+                $"move mouse to {position}",
+                () => InputManager.MoveMouseTo(InputManager.ToScreenSpace(position))
+            );
 
-        private void addTouchMovementStep(Vector2 position) => AddStep($"move touch1 to {position}", () => InputManager.MoveTouchTo(new Touch(TouchSource.Touch1, InputManager.ToScreenSpace(position))));
+        private void addTouchMovementStep(Vector2 position) =>
+            AddStep(
+                $"move touch1 to {position}",
+                () =>
+                    InputManager.MoveTouchTo(
+                        new Touch(TouchSource.Touch1, InputManager.ToScreenSpace(position))
+                    )
+            );
 
         private void addClickStep(MouseButton button)
         {
             AddStep($"click {button}", () => InputManager.Click(button));
         }
 
-        private void assertPlaced(bool expected) => AddAssert($"slider {(expected ? "placed" : "not placed")}", () => (getSlider() != null) == expected);
+        private void assertPlaced(bool expected) =>
+            AddAssert(
+                $"slider {(expected ? "placed" : "not placed")}",
+                () => (getSlider() != null) == expected
+            );
 
-        private void assertLength(double expected, double tolerance = 1) => AddAssert($"slider length is {expected}±{tolerance}", () => getSlider()!.Distance, () => Is.EqualTo(expected).Within(tolerance));
+        private void assertLength(double expected, double tolerance = 1) =>
+            AddAssert(
+                $"slider length is {expected}±{tolerance}",
+                () => getSlider()!.Distance,
+                () => Is.EqualTo(expected).Within(tolerance)
+            );
 
-        private void assertControlPointCount(int expected) => AddAssert($"has {expected} control points", () => getSlider()!.Path.ControlPoints.Count, () => Is.EqualTo(expected));
+        private void assertControlPointCount(int expected) =>
+            AddAssert(
+                $"has {expected} control points",
+                () => getSlider()!.Path.ControlPoints.Count,
+                () => Is.EqualTo(expected)
+            );
 
-        private void assertControlPointTypeDuringPlacement(int index, PathType? type) => AddAssert($"control point {index} is {type?.ToString() ?? "inherit"}",
-            () => this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(index).ControlPoint.Type, () => Is.EqualTo(type));
+        private void assertControlPointTypeDuringPlacement(int index, PathType? type) =>
+            AddAssert(
+                $"control point {index} is {type?.ToString() ?? "inherit"}",
+                () =>
+                    this.ChildrenOfType<PathControlPointPiece<Slider>>()
+                        .ElementAt(index)
+                        .ControlPoint.Type,
+                () => Is.EqualTo(type)
+            );
 
-        private void assertFinalControlPointType(int index, PathType? type) => AddAssert($"control point {index} is {type?.ToString() ?? "inherit"}", () => getSlider()!.Path.ControlPoints[index].Type, () => Is.EqualTo(type));
+        private void assertFinalControlPointType(int index, PathType? type) =>
+            AddAssert(
+                $"control point {index} is {type?.ToString() ?? "inherit"}",
+                () => getSlider()!.Path.ControlPoints[index].Type,
+                () => Is.EqualTo(type)
+            );
 
         private void assertControlPointPosition(int index, Vector2 position) =>
-            AddAssert($"control point {index} at {position}", () => Precision.AlmostEquals(position, getSlider()!.Path.ControlPoints[index].Position, 1));
+            AddAssert(
+                $"control point {index} at {position}",
+                () =>
+                    Precision.AlmostEquals(
+                        position,
+                        getSlider()!.Path.ControlPoints[index].Position,
+                        1
+                    )
+            );
 
-        private Slider? getSlider() => HitObjectContainer.Count > 0 ? ((DrawableSlider)HitObjectContainer[0]).HitObject : null;
+        private Slider? getSlider() =>
+            HitObjectContainer.Count > 0 ? ((DrawableSlider)HitObjectContainer[0]).HitObject : null;
 
-        protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableSlider((Slider)hitObject);
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new SliderPlacementBlueprint();
+        protected override DrawableHitObject CreateHitObject(HitObject hitObject) =>
+            new DrawableSlider((Slider)hitObject);
+
+        protected override HitObjectPlacementBlueprint CreateBlueprint() =>
+            new SliderPlacementBlueprint();
     }
 }

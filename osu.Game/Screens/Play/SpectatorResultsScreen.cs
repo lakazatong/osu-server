@@ -13,9 +13,7 @@ namespace osu.Game.Screens.Play
     public partial class SpectatorResultsScreen : SoloResultsScreen
     {
         public SpectatorResultsScreen(ScoreInfo score)
-            : base(score)
-        {
-        }
+            : base(score) { }
 
         [Resolved]
         private SpectatorClient spectatorClient { get; set; } = null!;
@@ -32,7 +30,8 @@ namespace osu.Game.Screens.Play
             {
                 Schedule(() =>
                 {
-                    if (this.IsCurrentScreen()) this.Exit();
+                    if (this.IsCurrentScreen())
+                        this.Exit();
                 });
             }
         }

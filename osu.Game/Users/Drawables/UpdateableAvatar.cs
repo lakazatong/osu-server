@@ -59,7 +59,12 @@ namespace osu.Game.Users.Drawables
         /// Only has an effect if <see cref="isInteractive"/> is true.
         /// </param>
         /// <param name="showGuestOnNull">Whether to show a default guest representation on null user (as opposed to nothing).</param>
-        public UpdateableAvatar(APIUser? user = null, bool isInteractive = true, bool showUserPanelOnHover = false, bool showGuestOnNull = true)
+        public UpdateableAvatar(
+            APIUser? user = null,
+            bool isInteractive = true,
+            bool showUserPanelOnHover = false,
+            bool showGuestOnNull = true
+        )
         {
             this.isInteractive = isInteractive;
             this.showGuestOnNull = showGuestOnNull;
@@ -81,10 +86,7 @@ namespace osu.Game.Users.Drawables
                 };
             }
 
-            return new DrawableAvatar(user)
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            return new DrawableAvatar(user) { RelativeSizeAxes = Axes.Both };
         }
     }
 }

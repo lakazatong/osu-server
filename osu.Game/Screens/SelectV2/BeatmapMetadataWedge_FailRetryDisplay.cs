@@ -34,8 +34,12 @@ namespace osu.Game.Screens.SelectV2
 
                     int maximum = total.DefaultIfEmpty(0).Max();
 
-                    retriesGraph.Data = total.Select(r => maximum == 0 ? 0 : (float)r / maximum).ToArray();
-                    failsGraph.Data = fails.Select(r => maximum == 0 ? 0 : (float)r / maximum).ToArray();
+                    retriesGraph.Data = total
+                        .Select(r => maximum == 0 ? 0 : (float)r / maximum)
+                        .ToArray();
+                    failsGraph.Data = fails
+                        .Select(r => maximum == 0 ? 0 : (float)r / maximum)
+                        .ToArray();
                 }
             }
 
@@ -64,7 +68,11 @@ namespace osu.Game.Screens.SelectV2
                             Height = 65f,
                             Children = new[]
                             {
-                                retriesGraph = new GraphDrawable { RelativeSizeAxes = Axes.Both, Y = -1f },
+                                retriesGraph = new GraphDrawable
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Y = -1f,
+                                },
                                 failsGraph = new GraphDrawable { RelativeSizeAxes = Axes.Both },
                             },
                         },
@@ -105,7 +113,13 @@ namespace osu.Game.Screens.SelectV2
                     {
                         float before = displayedData[i];
                         float value = data.ElementAtOrDefault(i);
-                        displayedData[i] = (float)Interpolation.DampContinuously(displayedData[i], value, 40, Time.Elapsed);
+                        displayedData[i] = (float)
+                            Interpolation.DampContinuously(
+                                displayedData[i],
+                                value,
+                                40,
+                                Time.Elapsed
+                            );
                         changed |= displayedData[i] != before;
                     }
 
@@ -160,32 +174,47 @@ namespace osu.Game.Screens.SelectV2
                         }
                     }
 
-                    private void drawBar(IRenderer renderer, float position, float width, float height)
+                    private void drawBar(
+                        IRenderer renderer,
+                        float position,
+                        float width,
+                        float height
+                    )
                     {
                         float cornerRadius = width / 2f;
 
                         Vector3 scale = DrawInfo.MatrixInverse.ExtractScale();
                         float blendRange = (scale.X + scale.Y) / 2;
 
-                        RectangleF drawRectangle = new RectangleF(new Vector2(position, drawSize.Y - height), new Vector2(width, height));
-                        Quad screenSpaceDrawQuad = Quad.FromRectangle(drawRectangle) * DrawInfo.Matrix;
+                        RectangleF drawRectangle = new RectangleF(
+                            new Vector2(position, drawSize.Y - height),
+                            new Vector2(width, height)
+                        );
+                        Quad screenSpaceDrawQuad =
+                            Quad.FromRectangle(drawRectangle) * DrawInfo.Matrix;
 
-                        renderer.PushMaskingInfo(new MaskingInfo
-                        {
-                            ScreenSpaceAABB = screenSpaceDrawQuad.AABB,
-                            MaskingRect = drawRectangle.Normalize(),
-                            ConservativeScreenSpaceQuad = screenSpaceDrawQuad,
-                            ToMaskingSpace = DrawInfo.MatrixInverse,
-                            CornerRadius = cornerRadius,
-                            CornerExponent = 2f,
-                            // We are setting the linear blend range to the approximate size of a _pixel_ here.
-                            // This results in the optimal trade-off between crispness and smoothness of the
-                            // edges of the masked region according to sampling theory.
-                            BlendRange = blendRange,
-                            AlphaExponent = 1,
-                        });
+                        renderer.PushMaskingInfo(
+                            new MaskingInfo
+                            {
+                                ScreenSpaceAABB = screenSpaceDrawQuad.AABB,
+                                MaskingRect = drawRectangle.Normalize(),
+                                ConservativeScreenSpaceQuad = screenSpaceDrawQuad,
+                                ToMaskingSpace = DrawInfo.MatrixInverse,
+                                CornerRadius = cornerRadius,
+                                CornerExponent = 2f,
+                                // We are setting the linear blend range to the approximate size of a _pixel_ here.
+                                // This results in the optimal trade-off between crispness and smoothness of the
+                                // edges of the masked region according to sampling theory.
+                                BlendRange = blendRange,
+                                AlphaExponent = 1,
+                            }
+                        );
 
-                        renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour);
+                        renderer.DrawQuad(
+                            renderer.WhitePixel,
+                            screenSpaceDrawQuad,
+                            DrawColourInfo.Colour
+                        );
                         renderer.PopMaskingInfo();
                     }
                 }

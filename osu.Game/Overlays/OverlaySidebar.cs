@@ -21,17 +21,14 @@ namespace osu.Game.Overlays
             Width = 250;
             InternalChildren = new Drawable[]
             {
-                sidebarBackground = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                sidebarBackground = new Box { RelativeSizeAxes = Axes.Both },
                 scrollbarBackground = new Box
                 {
                     RelativeSizeAxes = Axes.Y,
                     Width = OsuScrollContainer.SCROLL_BAR_WIDTH,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Alpha = 0.5f
+                    Alpha = 0.5f,
                 },
                 new Container
                 {
@@ -53,13 +50,13 @@ namespace osu.Game.Overlays
                                 {
                                     Vertical = 20,
                                     Left = WaveOverlayContainer.HORIZONTAL_PADDING,
-                                    Right = 30
+                                    Right = 30,
                                 },
-                                Child = CreateContent()
-                            }
-                        }
-                    }
-                }
+                                Child = CreateContent(),
+                            },
+                        },
+                    },
+                },
             };
         }
 

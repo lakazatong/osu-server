@@ -23,19 +23,19 @@ namespace osu.Game.Screens.Footer
         {
             // Ensure clicks in the corner of the screen still trigger the back button.
             // Need to apply more than 1x inflation due to shear.
-            var inputRectangle = DrawRectangle.Inflate(new MarginPadding
-            {
-                Left = OsuGame.SCREEN_EDGE_MARGIN * 2,
-                Bottom = OsuGame.SCREEN_EDGE_MARGIN * 2,
-            });
+            var inputRectangle = DrawRectangle.Inflate(
+                new MarginPadding
+                {
+                    Left = OsuGame.SCREEN_EDGE_MARGIN * 2,
+                    Bottom = OsuGame.SCREEN_EDGE_MARGIN * 2,
+                }
+            );
 
             return inputRectangle.Contains(ToLocalSpace(screenSpacePos));
         }
 
         public ScreenBackButton()
-            : base(BUTTON_WIDTH)
-        {
-        }
+            : base(BUTTON_WIDTH) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -62,8 +62,8 @@ namespace osu.Game.Screens.Footer
                         Font = OsuFont.TorusAlternate.With(size: 17),
                         Text = CommonStrings.Back,
                         UseFullGlyphHeight = false,
-                    }
-                }
+                    },
+                },
             };
 
             DarkerColour = Color4Extensions.FromHex("#DE31AE");

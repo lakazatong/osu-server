@@ -65,11 +65,7 @@ namespace osu.Game.Screens.Edit
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = colourProvider.Background5,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = colourProvider.Background5, RelativeSizeAxes = Axes.Both },
                     flow = new FillFlowContainer
                     {
                         Margin = new MarginPadding(20),
@@ -78,8 +74,8 @@ namespace osu.Game.Screens.Edit
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Spacing = new Vector2(15),
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -116,11 +112,16 @@ namespace osu.Game.Screens.Edit
 
             try
             {
-                EditOperation = await beatmapManager.BeginExternalEditing(editorBeatmap.BeatmapInfo.BeatmapSet!).ConfigureAwait(true);
+                EditOperation = await beatmapManager
+                    .BeginExternalEditing(editorBeatmap.BeatmapInfo.BeatmapSet!)
+                    .ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                Logger.Log($@"Failed to initiate external edit operation: {ex}", LoggingTarget.Database);
+                Logger.Log(
+                    $@"Failed to initiate external edit operation: {ex}",
+                    LoggingTarget.Database
+                );
                 fileMountOperation = null;
                 showSpinner("Export failed!");
                 await Task.Delay(1000).ConfigureAwait(true);
@@ -143,7 +144,8 @@ namespace osu.Game.Screens.Edit
                     Origin = Anchor.TopCentre,
                     Width = 350,
                     AutoSizeAxes = Axes.Y,
-                    Text = "Any changes made to the exported folder will be imported to the game, including file additions, modifications and deletions.",
+                    Text =
+                        "Any changes made to the exported folder will be imported to the game, including file additions, modifications and deletions.",
                 },
                 new PurpleRoundedButton
                 {
@@ -152,7 +154,7 @@ namespace osu.Game.Screens.Edit
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Action = openDirectory,
-                    Enabled = { Value = false }
+                    Enabled = { Value = false },
                 },
                 new DangerousRoundedButton
                 {
@@ -161,16 +163,19 @@ namespace osu.Game.Screens.Edit
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Action = () => finish().FireAndForget(),
-                    Enabled = { Value = false }
-                }
+                    Enabled = { Value = false },
+                },
             };
 
-            Scheduler.AddDelayed(() =>
-            {
-                foreach (var b in flow.ChildrenOfType<RoundedButton>())
-                    b.Enabled.Value = true;
-                openDirectory();
-            }, 1000);
+            Scheduler.AddDelayed(
+                () =>
+                {
+                    foreach (var b in flow.ChildrenOfType<RoundedButton>())
+                        b.Enabled.Value = true;
+                    openDirectory();
+                },
+                1000
+            );
         }
 
         private void openDirectory()
@@ -179,7 +184,9 @@ namespace osu.Game.Screens.Edit
                 return;
 
             // Ensure the trailing separator is present in order to show the folder contents.
-            gameHost.OpenFileExternally(EditOperation.MountedPath.TrimDirectorySeparator() + Path.DirectorySeparatorChar);
+            gameHost.OpenFileExternally(
+                EditOperation.MountedPath.TrimDirectorySeparator() + Path.DirectorySeparatorChar
+            );
         }
 
         private async Task finish()
@@ -196,7 +203,10 @@ namespace osu.Game.Screens.Edit
             }
             catch (Exception ex)
             {
-                Logger.Log($@"Failed to finish external edit operation: {ex}", LoggingTarget.Database);
+                Logger.Log(
+                    $@"Failed to finish external edit operation: {ex}",
+                    LoggingTarget.Database
+                );
                 showSpinner("Import failed!");
                 await Task.Delay(1000).ConfigureAwait(true);
             }
@@ -214,13 +224,18 @@ namespace osu.Game.Screens.Edit
                 {
                     if (s.Status == BeatmapOnlineStatus.None)
                         s.Status = BeatmapOnlineStatus.LocallyModified;
-                    foreach (var difficulty in s.Beatmaps.Where(b => b.Status == BeatmapOnlineStatus.None))
+                    foreach (
+                        var difficulty in s.Beatmaps.Where(b =>
+                            b.Status == BeatmapOnlineStatus.None
+                        )
+                    )
                         difficulty.Status = BeatmapOnlineStatus.LocallyModified;
                 });
 
                 var closestMatchingBeatmap =
-                    beatmap.Value.Beatmaps.FirstOrDefault(b => b.DifficultyName == originalDifficulty)
-                    ?? beatmap.Value.Beatmaps.First();
+                    beatmap.Value.Beatmaps.FirstOrDefault(b =>
+                        b.DifficultyName == originalDifficulty
+                    ) ?? beatmap.Value.Beatmaps.First();
 
                 editor.SwitchToDifficulty(closestMatchingBeatmap);
             }
@@ -244,7 +259,7 @@ namespace osu.Game.Screens.Edit
                 {
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    State = { Value = Visibility.Visible }
+                    State = { Value = Visibility.Visible },
                 },
             };
         }

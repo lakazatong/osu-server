@@ -27,7 +27,9 @@ namespace osu.Game.Tests.Visual.UserInterface
         private TestBeatmapDifficultyCache difficultyCache = new TestBeatmapDifficultyCache();
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         private Container content = null!;
         protected override Container<Drawable> Content => content;
@@ -37,14 +39,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         [BackgroundDependencyLoader]
         private void load()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                difficultyCache,
-                content = new Container
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both
+                    difficultyCache,
+                    content = new Container { RelativeSizeAxes = Axes.Both },
                 }
-            });
+            );
         }
 
         [Test]
@@ -53,63 +54,107 @@ namespace osu.Game.Tests.Visual.UserInterface
             OsuModDifficultyAdjust difficultyAdjust = new OsuModDifficultyAdjust();
             OsuModDoubleTime doubleTime = new OsuModDoubleTime();
 
-            AddStep("create display", () => Child = panel = new BeatmapAttributesDisplay
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Mods = { BindTarget = SelectedMods },
-            });
+            AddStep(
+                "create display",
+                () =>
+                    Child = panel =
+                        new BeatmapAttributesDisplay
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Mods = { BindTarget = SelectedMods },
+                        }
+            );
 
-            AddStep("set beatmap", () =>
-            {
-                var beatmap = new TestBeatmap(new OsuRuleset().RulesetInfo)
+            AddStep(
+                "set beatmap",
+                () =>
                 {
-                    BeatmapInfo =
+                    var beatmap = new TestBeatmap(new OsuRuleset().RulesetInfo)
                     {
-                        BPM = 120
-                    }
-                };
+                        BeatmapInfo = { BPM = 120 },
+                    };
 
-                Ruleset.Value = beatmap.BeatmapInfo.Ruleset;
-                panel.BeatmapInfo.Value = beatmap.BeatmapInfo;
-            });
+                    Ruleset.Value = beatmap.BeatmapInfo.Ruleset;
+                    panel.BeatmapInfo.Value = beatmap.BeatmapInfo;
+                }
+            );
 
-            AddSliderStep("change star rating", 0, 10d, 5, stars =>
-            {
-                if (panel.IsNotNull())
-                    previewStarRating(stars);
-            });
+            AddSliderStep(
+                "change star rating",
+                0,
+                10d,
+                5,
+                stars =>
+                {
+                    if (panel.IsNotNull())
+                        previewStarRating(stars);
+                }
+            );
             AddStep("preview ridiculously high SR", () => previewStarRating(1234));
 
             AddStep("add DA to mods", () => SelectedMods.Value = new[] { difficultyAdjust });
 
-            AddSliderStep("change AR", 0, 10f, 5, ar =>
-            {
-                if (panel.IsNotNull())
-                    difficultyAdjust.ApproachRate.Value = ar;
-            });
-            AddSliderStep("change CS", 0, 10f, 5, cs =>
-            {
-                if (panel.IsNotNull())
-                    difficultyAdjust.CircleSize.Value = cs;
-            });
-            AddSliderStep("change HP", 0, 10f, 5, hp =>
-            {
-                if (panel.IsNotNull())
-                    difficultyAdjust.DrainRate.Value = hp;
-            });
-            AddSliderStep("change OD", 0, 10f, 5, od =>
-            {
-                if (panel.IsNotNull())
-                    difficultyAdjust.OverallDifficulty.Value = od;
-            });
+            AddSliderStep(
+                "change AR",
+                0,
+                10f,
+                5,
+                ar =>
+                {
+                    if (panel.IsNotNull())
+                        difficultyAdjust.ApproachRate.Value = ar;
+                }
+            );
+            AddSliderStep(
+                "change CS",
+                0,
+                10f,
+                5,
+                cs =>
+                {
+                    if (panel.IsNotNull())
+                        difficultyAdjust.CircleSize.Value = cs;
+                }
+            );
+            AddSliderStep(
+                "change HP",
+                0,
+                10f,
+                5,
+                hp =>
+                {
+                    if (panel.IsNotNull())
+                        difficultyAdjust.DrainRate.Value = hp;
+                }
+            );
+            AddSliderStep(
+                "change OD",
+                0,
+                10f,
+                5,
+                od =>
+                {
+                    if (panel.IsNotNull())
+                        difficultyAdjust.OverallDifficulty.Value = od;
+                }
+            );
 
-            AddStep("add DT to mods", () => SelectedMods.Value = new Mod[] { difficultyAdjust, doubleTime });
-            AddSliderStep("change rate", 1.01d, 2d, 1.5d, rate =>
-            {
-                if (panel.IsNotNull())
-                    doubleTime.SpeedChange.Value = rate;
-            });
+            AddStep(
+                "add DT to mods",
+                () => SelectedMods.Value = new Mod[] { difficultyAdjust, doubleTime }
+            );
+            AddSliderStep(
+                "change rate",
+                1.01d,
+                2d,
+                1.5d,
+                rate =>
+                {
+                    if (panel.IsNotNull())
+                        doubleTime.SpeedChange.Value = rate;
+                }
+            );
 
             AddToggleStep("toggle collapsed", collapsed => panel.Collapsed.Value = collapsed);
         }
@@ -124,9 +169,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             public StarDifficulty? Difficulty { get; set; }
 
-            public override Task<StarDifficulty?> GetDifficultyAsync(IBeatmapInfo beatmapInfo, IRulesetInfo? rulesetInfo = null, IEnumerable<Mod>? mods = null,
-                                                                     CancellationToken cancellationToken = default, int computationDelay = 0)
-                => Task.FromResult(Difficulty);
+            public override Task<StarDifficulty?> GetDifficultyAsync(
+                IBeatmapInfo beatmapInfo,
+                IRulesetInfo? rulesetInfo = null,
+                IEnumerable<Mod>? mods = null,
+                CancellationToken cancellationToken = default,
+                int computationDelay = 0
+            ) => Task.FromResult(Difficulty);
         }
     }
 }

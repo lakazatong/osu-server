@@ -20,7 +20,9 @@ namespace osu.Game.Online.API.Requests
         public GetUsersRequest(int[] userIds)
         {
             if (userIds.Length > MAX_IDS_PER_REQUEST)
-                throw new ArgumentException($"{nameof(GetUsersRequest)} calls only support up to {MAX_IDS_PER_REQUEST} IDs at once");
+                throw new ArgumentException(
+                    $"{nameof(GetUsersRequest)} calls only support up to {MAX_IDS_PER_REQUEST} IDs at once"
+                );
 
             UserIds = userIds;
         }

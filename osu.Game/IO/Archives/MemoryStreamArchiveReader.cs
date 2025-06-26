@@ -19,11 +19,10 @@ namespace osu.Game.IO.Archives
             this.stream = stream;
         }
 
-        public override Stream GetStream(string name) => new MemoryStream(stream.ToArray(), 0, (int)stream.Length);
+        public override Stream GetStream(string name) =>
+            new MemoryStream(stream.ToArray(), 0, (int)stream.Length);
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
         public override IEnumerable<string> Filenames => new[] { Name };
     }

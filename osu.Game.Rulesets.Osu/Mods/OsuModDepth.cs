@@ -17,7 +17,10 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public class OsuModDepth : ModWithVisibilityAdjustment, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>
+    public class OsuModDepth
+        : ModWithVisibilityAdjustment,
+            IUpdatableByPlayfield,
+            IApplicableToDrawableRuleset<OsuHitObject>
     {
         public override string Name => "Depth";
         public override string Acronym => "DP";
@@ -25,25 +28,47 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override ModType Type => ModType.Fun;
         public override LocalisableString Description => "3D. Almost.";
         public override double ScoreMultiplier => 1;
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(OsuModMagnetised), typeof(OsuModRepel), typeof(OsuModFreezeFrame), typeof(ModWithVisibilityAdjustment) }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(
+                    new[]
+                    {
+                        typeof(OsuModMagnetised),
+                        typeof(OsuModRepel),
+                        typeof(OsuModFreezeFrame),
+                        typeof(ModWithVisibilityAdjustment),
+                    }
+                )
+                .ToArray();
 
-        private static readonly Vector3 camera_position = new Vector3(OsuPlayfield.BASE_SIZE.X * 0.5f, OsuPlayfield.BASE_SIZE.Y * 0.5f, -200);
+        private static readonly Vector3 camera_position = new Vector3(
+            OsuPlayfield.BASE_SIZE.X * 0.5f,
+            OsuPlayfield.BASE_SIZE.Y * 0.5f,
+            -200
+        );
         private readonly float sliderMinDepth = depthForScale(1.5f); // Depth at which slider's scale will be 1.5f
 
         [SettingSource("Maximum depth", "How far away objects appear.", 0)]
-        public BindableFloat MaxDepth { get; } = new BindableFloat(100)
-        {
-            Precision = 10,
-            MinValue = 50,
-            MaxValue = 200
-        };
+        public BindableFloat MaxDepth { get; } =
+            new BindableFloat(100)
+            {
+                Precision = 10,
+                MinValue = 50,
+                MaxValue = 200,
+            };
 
         [SettingSource("Show Approach Circles", "Whether approach circles should be visible.", 1)]
         public BindableBool ShowApproachCircles { get; } = new BindableBool(true);
 
-        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyTransform(hitObject, state);
+        protected override void ApplyIncreasedVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyTransform(hitObject, state);
 
-        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state) => applyTransform(hitObject, state);
+        protected override void ApplyNormalVisibilityState(
+            DrawableHitObject hitObject,
+            ArmedState state
+        ) => applyTransform(hitObject, state);
 
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
         {
@@ -113,7 +138,12 @@ namespace osu.Game.Rulesets.Osu.Mods
             double appearTime = hitObject.StartTime - hitObject.TimePreempt;
 
             // Allow slider to move at a constant speed if its scale at the end time will be lower than 1.5f
-            float zEnd = MaxDepth.Value - (float)((Math.Max(hitObject.StartTime + hitObject.Duration, appearTime) - appearTime) * baseSpeed);
+            float zEnd =
+                MaxDepth.Value
+                - (float)(
+                    (Math.Max(hitObject.StartTime + hitObject.Duration, appearTime) - appearTime)
+                    * baseSpeed
+                );
 
             if (zEnd > sliderMinDepth)
             {
@@ -131,14 +161,20 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             if (time < hitObject.StartTime - decelerationTime)
             {
-                float fullDistance = decelerationDistance + (float)(baseSpeed * (hitObject.TimePreempt - decelerationTime));
+                float fullDistance =
+                    decelerationDistance
+                    + (float)(baseSpeed * (hitObject.TimePreempt - decelerationTime));
                 z = fullDistance - (float)((Math.Max(time, appearTime) - appearTime) * baseSpeed);
             }
             else if (time < hitObject.StartTime)
             {
                 double timeOffset = time - (hitObject.StartTime - decelerationTime);
                 double deceleration = (slowSpeed - baseSpeed) / decelerationTime;
-                z = decelerationDistance - (float)(baseSpeed * timeOffset + deceleration * timeOffset * timeOffset * 0.5);
+                z =
+                    decelerationDistance
+                    - (float)(
+                        baseSpeed * timeOffset + deceleration * timeOffset * timeOffset * 0.5
+                    );
             }
             else
             {
@@ -151,9 +187,11 @@ namespace osu.Game.Rulesets.Osu.Mods
             drawableSlider.Scale = new Vector2(scale);
         }
 
-        private static float scaleForDepth(float depth) => -camera_position.Z / Math.Max(1f, depth - camera_position.Z);
+        private static float scaleForDepth(float depth) =>
+            -camera_position.Z / Math.Max(1f, depth - camera_position.Z);
 
-        private static float depthForScale(float scale) => -camera_position.Z / scale + camera_position.Z;
+        private static float depthForScale(float scale) =>
+            -camera_position.Z / scale + camera_position.Z;
 
         private static Vector2 toPlayfieldPosition(float scale, Vector2 positionAtZeroDepth)
         {

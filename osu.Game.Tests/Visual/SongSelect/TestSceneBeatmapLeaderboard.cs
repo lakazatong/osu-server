@@ -45,13 +45,33 @@ namespace osu.Game.Tests.Visual.SongSelect
 
         private LeaderboardManager leaderboardManager = null!;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
             dependencies.Cache(rulesetStore = new RealmRulesetStore(Realm));
-            dependencies.Cache(beatmapManager = new BeatmapManager(LocalStorage, Realm, null, dependencies.Get<AudioManager>(), Resources, dependencies.Get<GameHost>(), Beatmap.Default));
-            dependencies.Cache(scoreManager = new ScoreManager(rulesetStore, () => beatmapManager, LocalStorage, Realm, API));
+            dependencies.Cache(
+                beatmapManager = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    dependencies.Get<AudioManager>(),
+                    Resources,
+                    dependencies.Get<GameHost>(),
+                    Beatmap.Default
+                )
+            );
+            dependencies.Cache(
+                scoreManager = new ScoreManager(
+                    rulesetStore,
+                    () => beatmapManager,
+                    LocalStorage,
+                    Realm,
+                    API
+                )
+            );
             dependencies.CacheAs<Screens.Select.SongSelect>(songSelect = new PlaySongSelect());
             dependencies.Cache(leaderboardManager = new LeaderboardManager());
 
@@ -69,24 +89,23 @@ namespace osu.Game.Tests.Visual.SongSelect
 
         public TestSceneBeatmapLeaderboard()
         {
-            Add(new OsuContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new OsuContextMenuContainer
                 {
-                    dialogOverlay = new DialogOverlay
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Depth = -1
+                        dialogOverlay = new DialogOverlay { Depth = -1 },
+                        leaderboard = new FailableLeaderboard
+                        {
+                            Origin = Anchor.Centre,
+                            Anchor = Anchor.Centre,
+                            Size = new Vector2(550f, 450f),
+                            Scope = BeatmapLeaderboardScope.Global,
+                        },
                     },
-                    leaderboard = new FailableLeaderboard
-                    {
-                        Origin = Anchor.Centre,
-                        Anchor = Anchor.Centre,
-                        Size = new Vector2(550f, 450f),
-                        Scope = BeatmapLeaderboardScope.Global,
-                    }
                 }
-            });
+            );
         }
 
         [Test]
@@ -96,13 +115,18 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             AddStep(@"Set scope", () => leaderboard.Scope = BeatmapLeaderboardScope.Local);
 
-            AddStep(@"Set beatmap", () =>
-            {
-                beatmapManager.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
-                beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
+            AddStep(
+                @"Set beatmap",
+                () =>
+                {
+                    beatmapManager
+                        .Import(TestResources.GetQuickTestBeatmapForImport())
+                        .WaitSafely();
+                    beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
 
-                leaderboard.BeatmapInfo = beatmapInfo;
-            });
+                    leaderboard.BeatmapInfo = beatmapInfo;
+                }
+            );
 
             clearScores();
             checkDisplayedCount(0);
@@ -125,13 +149,18 @@ namespace osu.Game.Tests.Visual.SongSelect
             AddStep("Log out", () => API.Logout());
             AddStep(@"Set scope", () => leaderboard.Scope = BeatmapLeaderboardScope.Local);
 
-            AddStep(@"Set beatmap", () =>
-            {
-                beatmapManager.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
-                beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
+            AddStep(
+                @"Set beatmap",
+                () =>
+                {
+                    beatmapManager
+                        .Import(TestResources.GetQuickTestBeatmapForImport())
+                        .WaitSafely();
+                    beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
 
-                leaderboard.BeatmapInfo = beatmapInfo;
-            });
+                    leaderboard.BeatmapInfo = beatmapInfo;
+                }
+            );
 
             clearScores();
             importMoreScores(() => beatmapInfo);
@@ -146,36 +175,47 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             AddStep(@"Set scope", () => leaderboard.Scope = BeatmapLeaderboardScope.Local);
 
-            AddStep(@"Import beatmap", () =>
-            {
-                beatmapManager.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
-                beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
+            AddStep(
+                @"Import beatmap",
+                () =>
+                {
+                    beatmapManager
+                        .Import(TestResources.GetQuickTestBeatmapForImport())
+                        .WaitSafely();
+                    beatmapInfo = beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps.First();
 
-                leaderboard.BeatmapInfo = beatmapInfo;
-            });
+                    leaderboard.BeatmapInfo = beatmapInfo;
+                }
+            );
 
             clearScores();
             checkDisplayedCount(0);
 
-            AddStep(@"Perform initial save to guarantee stable hash", () =>
-            {
-                IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
-                beatmapManager.Save(beatmapInfo, beatmap);
+            AddStep(
+                @"Perform initial save to guarantee stable hash",
+                () =>
+                {
+                    IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
+                    beatmapManager.Save(beatmapInfo, beatmap);
 
-                originalHash = beatmapInfo.Hash;
-            });
+                    originalHash = beatmapInfo.Hash;
+                }
+            );
 
             importMoreScores(() => beatmapInfo);
 
             checkDisplayedCount(10);
             checkStoredCount(10);
 
-            AddStep(@"Save with changes", () =>
-            {
-                IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
-                beatmap.Difficulty.ApproachRate = 12;
-                beatmapManager.Save(beatmapInfo, beatmap);
-            });
+            AddStep(
+                @"Save with changes",
+                () =>
+                {
+                    IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
+                    beatmap.Difficulty.ApproachRate = 12;
+                    beatmapManager.Save(beatmapInfo, beatmap);
+                }
+            );
 
             AddAssert("Hash changed", () => beatmapInfo.Hash, () => Is.Not.EqualTo(originalHash));
             checkDisplayedCount(0);
@@ -186,12 +226,15 @@ namespace osu.Game.Tests.Visual.SongSelect
             checkDisplayedCount(20);
             checkStoredCount(30);
 
-            AddStep(@"Revert changes", () =>
-            {
-                IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
-                beatmap.Difficulty.ApproachRate = 8;
-                beatmapManager.Save(beatmapInfo, beatmap);
-            });
+            AddStep(
+                @"Revert changes",
+                () =>
+                {
+                    IBeatmap beatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo).Beatmap;
+                    beatmap.Difficulty.ApproachRate = 8;
+                    beatmapManager.Save(beatmapInfo, beatmap);
+                }
+            );
 
             AddAssert("Hash restored", () => beatmapInfo.Hash, () => Is.EqualTo(originalHash));
             checkDisplayedCount(10);
@@ -206,12 +249,22 @@ namespace osu.Game.Tests.Visual.SongSelect
         public void TestGlobalScoresDisplay()
         {
             AddStep(@"Set scope", () => leaderboard.Scope = BeatmapLeaderboardScope.Global);
-            AddStep(@"New Scores", () => leaderboard.SetScores(GenerateSampleScores(new BeatmapInfo())));
-            AddStep(@"New Scores with teams", () => leaderboard.SetScores(GenerateSampleScores(new BeatmapInfo()).Select(s =>
-            {
-                s.User.Team = new APITeam();
-                return s;
-            })));
+            AddStep(
+                @"New Scores",
+                () => leaderboard.SetScores(GenerateSampleScores(new BeatmapInfo()))
+            );
+            AddStep(
+                @"New Scores with teams",
+                () =>
+                    leaderboard.SetScores(
+                        GenerateSampleScores(new BeatmapInfo())
+                            .Select(s =>
+                            {
+                                s.User.Team = new APITeam();
+                                return s;
+                            })
+                    )
+            );
         }
 
         [Test]
@@ -226,95 +279,145 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             AddStep("ensure no scores displayed", () => leaderboard.SetScores(null));
 
-            AddStep(@"Network failure", () => leaderboard.SetErrorState(LeaderboardState.NetworkFailure));
+            AddStep(
+                @"Network failure",
+                () => leaderboard.SetErrorState(LeaderboardState.NetworkFailure)
+            );
             AddStep(@"No team", () => leaderboard.SetErrorState(LeaderboardState.NoTeam));
-            AddStep(@"No supporter", () => leaderboard.SetErrorState(LeaderboardState.NotSupporter));
-            AddStep(@"Not logged in", () => leaderboard.SetErrorState(LeaderboardState.NotLoggedIn));
-            AddStep(@"Ruleset unavailable", () => leaderboard.SetErrorState(LeaderboardState.RulesetUnavailable));
-            AddStep(@"Beatmap unavailable", () => leaderboard.SetErrorState(LeaderboardState.BeatmapUnavailable));
-            AddStep(@"None selected", () => leaderboard.SetErrorState(LeaderboardState.NoneSelected));
+            AddStep(
+                @"No supporter",
+                () => leaderboard.SetErrorState(LeaderboardState.NotSupporter)
+            );
+            AddStep(
+                @"Not logged in",
+                () => leaderboard.SetErrorState(LeaderboardState.NotLoggedIn)
+            );
+            AddStep(
+                @"Ruleset unavailable",
+                () => leaderboard.SetErrorState(LeaderboardState.RulesetUnavailable)
+            );
+            AddStep(
+                @"Beatmap unavailable",
+                () => leaderboard.SetErrorState(LeaderboardState.BeatmapUnavailable)
+            );
+            AddStep(
+                @"None selected",
+                () => leaderboard.SetErrorState(LeaderboardState.NoneSelected)
+            );
         }
 
         [Test]
         public void TestUseTheseModsDoesNotCopySystemMods()
         {
-            AddStep(@"set scores", () => leaderboard.SetScores(leaderboard.Scores, new ScoreInfo
-            {
-                Position = 999,
-                Rank = ScoreRank.XH,
-                Accuracy = 1,
-                MaxCombo = 244,
-                TotalScore = 1707827,
-                Ruleset = new OsuRuleset().RulesetInfo,
-                Mods = new Mod[] { new OsuModHidden(), new ModScoreV2(), },
-                User = new APIUser
+            AddStep(
+                @"set scores",
+                () =>
+                    leaderboard.SetScores(
+                        leaderboard.Scores,
+                        new ScoreInfo
+                        {
+                            Position = 999,
+                            Rank = ScoreRank.XH,
+                            Accuracy = 1,
+                            MaxCombo = 244,
+                            TotalScore = 1707827,
+                            Ruleset = new OsuRuleset().RulesetInfo,
+                            Mods = new Mod[] { new OsuModHidden(), new ModScoreV2() },
+                            User = new APIUser
+                            {
+                                Id = 6602580,
+                                Username = @"waaiiru",
+                                CountryCode = CountryCode.ES,
+                            },
+                        }
+                    )
+            );
+            AddUntilStep(
+                "wait for scores",
+                () => this.ChildrenOfType<LeaderboardScore>().Count(),
+                () => Is.GreaterThan(0)
+            );
+            AddStep(
+                "right click panel",
+                () =>
                 {
-                    Id = 6602580,
-                    Username = @"waaiiru",
-                    CountryCode = CountryCode.ES,
+                    InputManager.MoveMouseTo(this.ChildrenOfType<LeaderboardScore>().Single());
+                    InputManager.Click(MouseButton.Right);
                 }
-            }));
-            AddUntilStep("wait for scores", () => this.ChildrenOfType<LeaderboardScore>().Count(), () => Is.GreaterThan(0));
-            AddStep("right click panel", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<LeaderboardScore>().Single());
-                InputManager.Click(MouseButton.Right);
-            });
-            AddStep("click use these mods", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("song select received HD", () => songSelect.Mods.Value.Any(m => m is OsuModHidden));
-            AddAssert("song select did not receive SV2", () => !songSelect.Mods.Value.Any(m => m is ModScoreV2));
+            );
+            AddStep(
+                "click use these mods",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableOsuMenuItem>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "song select received HD",
+                () => songSelect.Mods.Value.Any(m => m is OsuModHidden)
+            );
+            AddAssert(
+                "song select did not receive SV2",
+                () => !songSelect.Mods.Value.Any(m => m is ModScoreV2)
+            );
         }
 
         private void showPersonalBestWithNullPosition()
         {
-            leaderboard.SetScores(leaderboard.Scores, new ScoreInfo
-            {
-                Rank = ScoreRank.XH,
-                Accuracy = 1,
-                MaxCombo = 244,
-                TotalScore = 1707827,
-                Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
-                Ruleset = new OsuRuleset().RulesetInfo,
-                User = new APIUser
+            leaderboard.SetScores(
+                leaderboard.Scores,
+                new ScoreInfo
                 {
-                    Id = 6602580,
-                    Username = @"waaiiru",
-                    CountryCode = CountryCode.ES,
-                },
-            });
+                    Rank = ScoreRank.XH,
+                    Accuracy = 1,
+                    MaxCombo = 244,
+                    TotalScore = 1707827,
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
+                    Ruleset = new OsuRuleset().RulesetInfo,
+                    User = new APIUser
+                    {
+                        Id = 6602580,
+                        Username = @"waaiiru",
+                        CountryCode = CountryCode.ES,
+                    },
+                }
+            );
         }
 
         private void showPersonalBest()
         {
-            leaderboard.SetScores(leaderboard.Scores, new ScoreInfo
-            {
-                Position = 999,
-                Rank = ScoreRank.XH,
-                Accuracy = 1,
-                MaxCombo = 244,
-                TotalScore = 1707827,
-                Ruleset = new OsuRuleset().RulesetInfo,
-                Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
-                User = new APIUser
+            leaderboard.SetScores(
+                leaderboard.Scores,
+                new ScoreInfo
                 {
-                    Id = 6602580,
-                    Username = @"waaiiru",
-                    CountryCode = CountryCode.ES,
+                    Position = 999,
+                    Rank = ScoreRank.XH,
+                    Accuracy = 1,
+                    MaxCombo = 244,
+                    TotalScore = 1707827,
+                    Ruleset = new OsuRuleset().RulesetInfo,
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
+                    User = new APIUser
+                    {
+                        Id = 6602580,
+                        Username = @"waaiiru",
+                        CountryCode = CountryCode.ES,
+                    },
                 }
-            });
+            );
         }
 
         private void importMoreScores(Func<BeatmapInfo> beatmapInfo)
         {
-            AddStep(@"Import new scores", () =>
-            {
-                foreach (var score in GenerateSampleScores(beatmapInfo()))
-                    scoreManager.Import(score);
-            });
+            AddStep(
+                @"Import new scores",
+                () =>
+                {
+                    foreach (var score in GenerateSampleScores(beatmapInfo()))
+                        scoreManager.Import(score);
+                }
+            );
         }
 
         private void clearScores()
@@ -323,10 +426,18 @@ namespace osu.Game.Tests.Visual.SongSelect
         }
 
         private void checkDisplayedCount(int expected) =>
-            AddUntilStep($"{expected} scores displayed", () => leaderboard.ChildrenOfType<LeaderboardScore>().Count(), () => Is.EqualTo(expected));
+            AddUntilStep(
+                $"{expected} scores displayed",
+                () => leaderboard.ChildrenOfType<LeaderboardScore>().Count(),
+                () => Is.EqualTo(expected)
+            );
 
         private void checkStoredCount(int expected) =>
-            AddUntilStep($"Total scores stored is {expected}", () => Realm.Run(r => r.All<ScoreInfo>().Count(s => !s.DeletePending)), () => Is.EqualTo(expected));
+            AddUntilStep(
+                $"Total scores stored is {expected}",
+                () => Realm.Run(r => r.All<ScoreInfo>().Count(s => !s.DeletePending)),
+                () => Is.EqualTo(expected)
+            );
 
         public static ScoreInfo[] GenerateSampleScores(BeatmapInfo beatmapInfo)
         {
@@ -353,8 +464,8 @@ namespace osu.Game.Tests.Visual.SongSelect
                             ApproachRate = { Value = 10 },
                             OverallDifficulty = { Value = 10 },
                             DrainRate = { Value = 10 },
-                            ExtendedLimits = { Value = true }
-                        }
+                            ExtendedLimits = { Value = true },
+                        },
                     },
                     Ruleset = new OsuRuleset().RulesetInfo,
                     BeatmapInfo = beatmapInfo,
@@ -373,7 +484,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddSeconds(-30),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -391,7 +502,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddSeconds(-70),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -410,7 +521,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddMinutes(-40),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -429,7 +540,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddHours(-2),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -448,7 +559,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddHours(-25),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -467,7 +578,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddHours(-50),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -486,7 +597,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddHours(-72),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -505,7 +616,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddMonths(-10),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -524,7 +635,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                     MaxCombo = 244,
                     TotalScore = 1707827,
                     Date = DateTime.Now.AddYears(-2),
-                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock(), },
+                    Mods = new Mod[] { new OsuModHidden(), new OsuModHardRock() },
                     BeatmapInfo = beatmapInfo,
                     BeatmapHash = beatmapInfo.Hash,
                     Ruleset = new OsuRuleset().RulesetInfo,
@@ -542,7 +653,11 @@ namespace osu.Game.Tests.Visual.SongSelect
         private partial class FailableLeaderboard : BeatmapLeaderboard
         {
             public new void SetErrorState(LeaderboardState state) => base.SetErrorState(state);
-            public new void SetScores(IEnumerable<ScoreInfo>? scores, ScoreInfo? userScore = null) => base.SetScores(scores, userScore);
+
+            public new void SetScores(
+                IEnumerable<ScoreInfo>? scores,
+                ScoreInfo? userScore = null
+            ) => base.SetScores(scores, userScore);
         }
     }
 }

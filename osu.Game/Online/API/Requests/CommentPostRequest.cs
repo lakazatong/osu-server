@@ -14,7 +14,12 @@ namespace osu.Game.Online.API.Requests
         public readonly string Message;
         public readonly long? ParentCommentId;
 
-        public CommentPostRequest(CommentableType commentable, long commentableId, string message, long? parentCommentId = null)
+        public CommentPostRequest(
+            CommentableType commentable,
+            long commentableId,
+            string message,
+            long? parentCommentId = null
+        )
         {
             Commentable = commentable;
             CommentableId = commentableId;
@@ -27,7 +32,10 @@ namespace osu.Game.Online.API.Requests
             var req = base.CreateWebRequest();
             req.Method = HttpMethod.Post;
 
-            req.AddParameter(@"comment[commentable_type]", Commentable.ToString().ToLowerInvariant());
+            req.AddParameter(
+                @"comment[commentable_type]",
+                Commentable.ToString().ToLowerInvariant()
+            );
             req.AddParameter(@"comment[commentable_id]", $"{CommentableId}");
             req.AddParameter(@"comment[message]", Message);
             if (ParentCommentId.HasValue)

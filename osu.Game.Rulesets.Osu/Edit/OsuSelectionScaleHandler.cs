@@ -27,7 +27,8 @@ namespace osu.Game.Rulesets.Osu.Edit
         /// <summary>
         /// Whether scaling anchored by the center of the playfield can currently be performed.
         /// </summary>
-        public Bindable<bool> CanScaleFromPlayfieldOrigin { get; private set; } = new BindableBool();
+        public Bindable<bool> CanScaleFromPlayfieldOrigin { get; private set; } =
+            new BindableBool();
 
         /// <summary>
         /// Whether a single slider is currently selected, which results in a different scaling behaviour.
@@ -64,7 +65,8 @@ namespace osu.Game.Rulesets.Osu.Edit
             CanScaleY.Value = quad.Height > 0;
             CanScaleDiagonally.Value = CanScaleX.Value && CanScaleY.Value;
             CanScaleFromPlayfieldOrigin.Value = selectedMovableObjects.Any();
-            IsScalingSlider.Value = selectedMovableObjects.Count() == 1 && selectedMovableObjects.First() is Slider;
+            IsScalingSlider.Value =
+                selectedMovableObjects.Count() == 1 && selectedMovableObjects.First() is Slider;
         }
 
         private Dictionary<OsuHitObject, OriginalHitObjectState>? objectsInScale;
@@ -74,28 +76,48 @@ namespace osu.Game.Rulesets.Osu.Edit
         public override void Begin()
         {
             if (OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Begin)} a scale operation while another is in progress!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Begin)} a scale operation while another is in progress!"
+                );
 
             base.Begin();
 
             changeHandler?.BeginChange();
 
-            objectsInScale = selectedMovableObjects.ToDictionary(ho => ho, ho => new OriginalHitObjectState(ho));
-            OriginalSurroundingQuad = objectsInScale.Count == 1 && objectsInScale.First().Key is Slider slider
-                ? GeometryUtils.GetSurroundingQuad(slider.Path.ControlPoints.Select(p => slider.Position + p.Position))
-                : GeometryUtils.GetSurroundingQuad(objectsInScale.Keys);
-            originalConvexHull = objectsInScale.Count == 1 && objectsInScale.First().Key is Slider slider2
-                ? GeometryUtils.GetConvexHull(slider2.Path.ControlPoints.Select(p => slider2.Position + p.Position))
-                : GeometryUtils.GetConvexHull(objectsInScale.Keys);
+            objectsInScale = selectedMovableObjects.ToDictionary(
+                ho => ho,
+                ho => new OriginalHitObjectState(ho)
+            );
+            OriginalSurroundingQuad =
+                objectsInScale.Count == 1 && objectsInScale.First().Key is Slider slider
+                    ? GeometryUtils.GetSurroundingQuad(
+                        slider.Path.ControlPoints.Select(p => slider.Position + p.Position)
+                    )
+                    : GeometryUtils.GetSurroundingQuad(objectsInScale.Keys);
+            originalConvexHull =
+                objectsInScale.Count == 1 && objectsInScale.First().Key is Slider slider2
+                    ? GeometryUtils.GetConvexHull(
+                        slider2.Path.ControlPoints.Select(p => slider2.Position + p.Position)
+                    )
+                    : GeometryUtils.GetConvexHull(objectsInScale.Keys);
             defaultOrigin = GeometryUtils.MinimumEnclosingCircle(originalConvexHull).Item1;
         }
 
-        public override void Update(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both, float axisRotation = 0)
+        public override void Update(
+            Vector2 scale,
+            Vector2? origin = null,
+            Axes adjustAxis = Axes.Both,
+            float axisRotation = 0
+        )
         {
             if (!OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!"
+                );
 
-            Debug.Assert(objectsInScale != null && defaultOrigin != null && OriginalSurroundingQuad != null);
+            Debug.Assert(
+                objectsInScale != null && defaultOrigin != null && OriginalSurroundingQuad != null
+            );
 
             Vector2 actualOrigin = origin ?? defaultOrigin.Value;
             scale = clampScaleToAdjustAxis(scale, adjustAxis);
@@ -113,7 +135,12 @@ namespace osu.Game.Rulesets.Osu.Edit
 
                 foreach (var (ho, originalState) in objectsInScale)
                 {
-                    ho.Position = GeometryUtils.GetScaledPosition(scale, actualOrigin, originalState.Position, axisRotation);
+                    ho.Position = GeometryUtils.GetScaledPosition(
+                        scale,
+                        actualOrigin,
+                        originalState.Position,
+                        axisRotation
+                    );
                 }
             }
 
@@ -123,7 +150,9 @@ namespace osu.Game.Rulesets.Osu.Edit
         public override void Commit()
         {
             if (!OperationInProgress.Value)
-                throw new InvalidOperationException($"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Commit)} a rotate operation without calling {nameof(Begin)} first!"
+                );
 
             changeHandler?.EndChange();
 
@@ -134,8 +163,8 @@ namespace osu.Game.Rulesets.Osu.Edit
             defaultOrigin = null;
         }
 
-        private IEnumerable<OsuHitObject> selectedMovableObjects => selectedItems.Cast<OsuHitObject>()
-                                                                                 .Where(h => h is not Spinner);
+        private IEnumerable<OsuHitObject> selectedMovableObjects =>
+            selectedItems.Cast<OsuHitObject>().Where(h => h is not Spinner);
 
         private Vector2 clampScaleToAdjustAxis(Vector2 scale, Axes adjustAxis)
         {
@@ -157,16 +186,30 @@ namespace osu.Game.Rulesets.Osu.Edit
             return scale;
         }
 
-        private void scaleSlider(Slider slider, Vector2 scale, Vector2 origin, OriginalHitObjectState originalInfo, float axisRotation = 0)
+        private void scaleSlider(
+            Slider slider,
+            Vector2 scale,
+            Vector2 origin,
+            OriginalHitObjectState originalInfo,
+            float axisRotation = 0
+        )
         {
-            Debug.Assert(originalInfo.PathControlPointPositions != null && originalInfo.PathControlPointTypes != null);
+            Debug.Assert(
+                originalInfo.PathControlPointPositions != null
+                    && originalInfo.PathControlPointTypes != null
+            );
 
             scale = Vector2.ComponentMax(scale, new Vector2(Precision.FLOAT_EPSILON));
 
             // Maintain the path types in case they were defaulted to bezier at some point during scaling
             for (int i = 0; i < slider.Path.ControlPoints.Count; i++)
             {
-                slider.Path.ControlPoints[i].Position = GeometryUtils.GetScaledPosition(scale, Vector2.Zero, originalInfo.PathControlPointPositions[i], axisRotation);
+                slider.Path.ControlPoints[i].Position = GeometryUtils.GetScaledPosition(
+                    scale,
+                    Vector2.Zero,
+                    originalInfo.PathControlPointPositions[i],
+                    axisRotation
+                );
                 slider.Path.ControlPoints[i].Type = originalInfo.PathControlPointTypes[i];
             }
 
@@ -174,7 +217,12 @@ namespace osu.Game.Rulesets.Osu.Edit
             // to calculate the final resulting duration / bounding box before the final checks.
             slider.SnapTo(snapProvider);
 
-            slider.Position = GeometryUtils.GetScaledPosition(scale, origin, originalInfo.Position, axisRotation);
+            slider.Position = GeometryUtils.GetScaledPosition(
+                scale,
+                origin,
+                originalInfo.Position,
+                axisRotation
+            );
 
             //if sliderhead or sliderend end up outside playfield, revert scaling.
             Quad scaledQuad = GeometryUtils.GetSurroundingQuad(new OsuHitObject[] { slider });
@@ -194,8 +242,10 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private (bool X, bool Y) isQuadInBounds(Quad quad)
         {
-            bool xInBounds = (quad.TopLeft.X >= 0) && (quad.BottomRight.X <= OsuPlayfield.BASE_SIZE.X);
-            bool yInBounds = (quad.TopLeft.Y >= 0) && (quad.BottomRight.Y <= OsuPlayfield.BASE_SIZE.Y);
+            bool xInBounds =
+                (quad.TopLeft.X >= 0) && (quad.BottomRight.X <= OsuPlayfield.BASE_SIZE.X);
+            bool yInBounds =
+                (quad.TopLeft.Y >= 0) && (quad.BottomRight.Y <= OsuPlayfield.BASE_SIZE.Y);
 
             return (xInBounds, yInBounds);
         }
@@ -208,7 +258,12 @@ namespace osu.Game.Rulesets.Osu.Edit
         /// <param name="adjustAxis">The axes to adjust the scale in.</param>
         /// <param name="axisRotation">The rotation of the axes in degrees</param>
         /// <returns>The clamped scale vector</returns>
-        public Vector2 ClampScaleToPlayfieldBounds(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both, float axisRotation = 0)
+        public Vector2 ClampScaleToPlayfieldBounds(
+            Vector2 scale,
+            Vector2? origin = null,
+            Axes adjustAxis = Axes.Both,
+            float axisRotation = 0
+        )
         {
             //todo: this is not always correct for selections involving sliders. This approximation assumes each point is scaled independently, but sliderends move with the sliderhead.
             if (objectsInScale == null || adjustAxis == Axes.None)
@@ -233,7 +288,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                     selectionQuad.TopLeft,
                     selectionQuad.TopRight,
                     selectionQuad.BottomLeft,
-                    selectionQuad.BottomRight
+                    selectionQuad.BottomRight,
                 };
             }
             else
@@ -254,33 +309,54 @@ namespace osu.Game.Rulesets.Osu.Edit
                 // a.Y is the rotated X component of p with respect to the Y bounds
                 // b.X is the rotated Y component of p with respect to the X bounds
                 // b.Y is the rotated Y component of p with respect to the Y bounds
-                var a = new Vector2(cos * cos * p.X - sin * cos * p.Y, -sin * cos * p.X + sin * sin * p.Y);
-                var b = new Vector2(sin * sin * p.X + sin * cos * p.Y, sin * cos * p.X + cos * cos * p.Y);
+                var a = new Vector2(
+                    cos * cos * p.X - sin * cos * p.Y,
+                    -sin * cos * p.X + sin * sin * p.Y
+                );
+                var b = new Vector2(
+                    sin * sin * p.X + sin * cos * p.Y,
+                    sin * cos * p.X + cos * cos * p.Y
+                );
 
-                float sLowerBound, sUpperBound;
+                float sLowerBound,
+                    sUpperBound;
 
                 switch (adjustAxis)
                 {
                     case Axes.X:
-                        (sLowerBound, sUpperBound) = computeBounds(lowerBounds - b, upperBounds - b, a);
+                        (sLowerBound, sUpperBound) = computeBounds(
+                            lowerBounds - b,
+                            upperBounds - b,
+                            a
+                        );
                         s.X = Math.Clamp(s.X, sLowerBound, sUpperBound);
                         break;
 
                     case Axes.Y:
-                        (sLowerBound, sUpperBound) = computeBounds(lowerBounds - a, upperBounds - a, b);
+                        (sLowerBound, sUpperBound) = computeBounds(
+                            lowerBounds - a,
+                            upperBounds - a,
+                            b
+                        );
                         s.Y = Math.Clamp(s.Y, sLowerBound, sUpperBound);
                         break;
 
                     case Axes.Both:
                         // Here we compute the bounds for the magnitude multiplier of the scale vector
                         // Therefore the ratio s.X / s.Y will be maintained
-                        (sLowerBound, sUpperBound) = computeBounds(lowerBounds, upperBounds, a * s.X + b * s.Y);
-                        s.X = s.X < 0
-                            ? Math.Clamp(s.X, s.X * sUpperBound, s.X * sLowerBound)
-                            : Math.Clamp(s.X, s.X * sLowerBound, s.X * sUpperBound);
-                        s.Y = s.Y < 0
-                            ? Math.Clamp(s.Y, s.Y * sUpperBound, s.Y * sLowerBound)
-                            : Math.Clamp(s.Y, s.Y * sLowerBound, s.Y * sUpperBound);
+                        (sLowerBound, sUpperBound) = computeBounds(
+                            lowerBounds,
+                            upperBounds,
+                            a * s.X + b * s.Y
+                        );
+                        s.X =
+                            s.X < 0
+                                ? Math.Clamp(s.X, s.X * sUpperBound, s.X * sLowerBound)
+                                : Math.Clamp(s.X, s.X * sLowerBound, s.X * sUpperBound);
+                        s.Y =
+                            s.Y < 0
+                                ? Math.Clamp(s.Y, s.Y * sUpperBound, s.Y * sLowerBound)
+                                : Math.Clamp(s.Y, s.Y * sLowerBound, s.Y * sUpperBound);
                         break;
                 }
 
@@ -302,11 +378,20 @@ namespace osu.Game.Rulesets.Osu.Edit
                 // If the point is at zero, then any scale will have no effect on the point so the bounds are infinite
                 // The float division would already give us infinity for the bounds, but the sign is not consistent so we have to manually set it
                 if (Precision.AlmostEquals(p.X, 0))
-                    (sLowerBounds.X, sUpperBounds.X) = (float.NegativeInfinity, float.PositiveInfinity);
+                    (sLowerBounds.X, sUpperBounds.X) = (
+                        float.NegativeInfinity,
+                        float.PositiveInfinity
+                    );
                 if (Precision.AlmostEquals(p.Y, 0))
-                    (sLowerBounds.Y, sUpperBounds.Y) = (float.NegativeInfinity, float.PositiveInfinity);
+                    (sLowerBounds.Y, sUpperBounds.Y) = (
+                        float.NegativeInfinity,
+                        float.PositiveInfinity
+                    );
 
-                return (MathF.Max(sLowerBounds.X, sLowerBounds.Y), MathF.Min(sUpperBounds.X, sUpperBounds.Y));
+                return (
+                    MathF.Max(sLowerBounds.X, sLowerBounds.Y),
+                    MathF.Min(sUpperBounds.X, sUpperBounds.Y)
+                );
             }
         }
 
@@ -339,8 +424,12 @@ namespace osu.Game.Rulesets.Osu.Edit
             public OriginalHitObjectState(OsuHitObject hitObject)
             {
                 Position = hitObject.Position;
-                PathControlPointPositions = (hitObject as IHasPath)?.Path.ControlPoints.Select(p => p.Position).ToArray();
-                PathControlPointTypes = (hitObject as IHasPath)?.Path.ControlPoints.Select(p => p.Type).ToArray();
+                PathControlPointPositions = (hitObject as IHasPath)
+                    ?.Path.ControlPoints.Select(p => p.Position)
+                    .ToArray();
+                PathControlPointTypes = (hitObject as IHasPath)
+                    ?.Path.ControlPoints.Select(p => p.Type)
+                    .ToArray();
             }
         }
     }

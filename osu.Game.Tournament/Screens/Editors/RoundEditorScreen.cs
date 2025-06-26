@@ -20,7 +20,8 @@ using osuTK;
 
 namespace osu.Game.Tournament.Screens.Editors
 {
-    public partial class RoundEditorScreen : TournamentEditorScreen<RoundEditorScreen.RoundRow, TournamentRound>
+    public partial class RoundEditorScreen
+        : TournamentEditorScreen<RoundEditorScreen.RoundRow, TournamentRound>
     {
         protected override BindableList<TournamentRound> Storage => LadderInfo.Rounds;
 
@@ -41,18 +42,11 @@ namespace osu.Game.Tournament.Screens.Editors
                 Masking = true;
                 CornerRadius = 10;
 
-                RoundBeatmapEditor beatmapEditor = new RoundBeatmapEditor(round)
-                {
-                    Width = 0.95f
-                };
+                RoundBeatmapEditor beatmapEditor = new RoundBeatmapEditor(round) { Width = 0.95f };
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = OsuColour.Gray(0.1f),
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = OsuColour.Gray(0.1f), RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         Margin = new MarginPadding(5),
@@ -67,41 +61,41 @@ namespace osu.Game.Tournament.Screens.Editors
                             {
                                 LabelText = "Name",
                                 Width = 0.33f,
-                                Current = Model.Name
+                                Current = Model.Name,
                             },
                             new SettingsTextBox
                             {
                                 LabelText = "Description",
                                 Width = 0.33f,
-                                Current = Model.Description
+                                Current = Model.Description,
                             },
                             new DateTextBox
                             {
                                 LabelText = "Start Time",
                                 Width = 0.33f,
-                                Current = Model.StartDate
+                                Current = Model.StartDate,
                             },
                             new SettingsSlider<int>
                             {
                                 LabelText = "# of Bans",
                                 Width = 0.33f,
-                                Current = Model.BanCount
+                                Current = Model.BanCount,
                             },
                             new SettingsSlider<int>
                             {
                                 LabelText = "Best of",
                                 Width = 0.33f,
-                                Current = Model.BestOf
+                                Current = Model.BestOf,
                             },
                             new SettingsButton
                             {
                                 Width = 0.2f,
                                 Margin = new MarginPadding(10),
                                 Text = "Add beatmap",
-                                Action = () => beatmapEditor.CreateNew()
+                                Action = () => beatmapEditor.CreateNew(),
                             },
-                            beatmapEditor
-                        }
+                            beatmapEditor,
+                        },
                     },
                     new DangerousSettingsButton
                     {
@@ -110,12 +104,18 @@ namespace osu.Game.Tournament.Screens.Editors
                         RelativeSizeAxes = Axes.None,
                         Width = 150,
                         Text = "Delete Round",
-                        Action = () => dialogOverlay?.Push(new DeleteRoundDialog(Model, () =>
-                        {
-                            Expire();
-                            ladderInfo.Rounds.Remove(Model);
-                        }))
-                    }
+                        Action = () =>
+                            dialogOverlay?.Push(
+                                new DeleteRoundDialog(
+                                    Model,
+                                    () =>
+                                    {
+                                        Expire();
+                                        ladderInfo.Rounds.Remove(Model);
+                                    }
+                                )
+                            ),
+                    },
                 };
 
                 RelativeSizeAxes = Axes.X;
@@ -139,7 +139,10 @@ namespace osu.Game.Tournament.Screens.Editors
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
-                        ChildrenEnumerable = round.Beatmaps.Select(p => new RoundBeatmapRow(round, p))
+                        ChildrenEnumerable = round.Beatmaps.Select(p => new RoundBeatmapRow(
+                            round,
+                            p
+                        )),
                     };
                 }
 
@@ -179,11 +182,7 @@ namespace osu.Game.Tournament.Screens.Editors
 
                         InternalChildren = new Drawable[]
                         {
-                            new Box
-                            {
-                                Colour = OsuColour.Gray(0.2f),
-                                RelativeSizeAxes = Axes.Both,
-                            },
+                            new Box { Colour = OsuColour.Gray(0.2f), RelativeSizeAxes = Axes.Both },
                             new FillFlowContainer
                             {
                                 Margin = new MarginPadding(5),
@@ -211,7 +210,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                     {
                                         Size = new Vector2(100, 70),
                                     },
-                                }
+                                },
                             },
                             new DangerousSettingsButton
                             {
@@ -225,7 +224,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                     Expire();
                                     team.Beatmaps.Remove(beatmap);
                                 },
-                            }
+                            },
                         };
                     }
 
@@ -233,54 +232,63 @@ namespace osu.Game.Tournament.Screens.Editors
                     private void load()
                     {
                         beatmapId.Value = Model.ID;
-                        beatmapId.BindValueChanged(id =>
-                        {
-                            Model.ID = id.NewValue ?? 0;
-
-                            if (id.NewValue != id.OldValue)
-                                Model.Beatmap = null;
-
-                            if (Model.Beatmap != null)
+                        beatmapId.BindValueChanged(
+                            id =>
                             {
-                                updatePanel();
-                                return;
-                            }
+                                Model.ID = id.NewValue ?? 0;
 
-                            var req = new GetBeatmapRequest(new APIBeatmap { OnlineID = Model.ID });
+                                if (id.NewValue != id.OldValue)
+                                    Model.Beatmap = null;
 
-                            req.Success += res =>
-                            {
-                                Model.Beatmap = new TournamentBeatmap(res);
-                                updatePanel();
-                            };
+                                if (Model.Beatmap != null)
+                                {
+                                    updatePanel();
+                                    return;
+                                }
 
-                            req.Failure += _ =>
-                            {
-                                Model.Beatmap = null;
-                                updatePanel();
-                            };
+                                var req = new GetBeatmapRequest(
+                                    new APIBeatmap { OnlineID = Model.ID }
+                                );
 
-                            API.Queue(req);
-                        }, true);
+                                req.Success += res =>
+                                {
+                                    Model.Beatmap = new TournamentBeatmap(res);
+                                    updatePanel();
+                                };
+
+                                req.Failure += _ =>
+                                {
+                                    Model.Beatmap = null;
+                                    updatePanel();
+                                };
+
+                                API.Queue(req);
+                            },
+                            true
+                        );
 
                         mods.Value = Model.Mods;
                         mods.BindValueChanged(modString => Model.Mods = modString.NewValue);
                     }
 
-                    private void updatePanel() => Schedule(() =>
-                    {
-                        drawableContainer.Clear();
-
-                        if (Model.Beatmap != null)
+                    private void updatePanel() =>
+                        Schedule(() =>
                         {
-                            drawableContainer.Child = new TournamentBeatmapPanel(Model.Beatmap, Model.Mods)
+                            drawableContainer.Clear();
+
+                            if (Model.Beatmap != null)
                             {
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                                Width = 300
-                            };
-                        }
-                    });
+                                drawableContainer.Child = new TournamentBeatmapPanel(
+                                    Model.Beatmap,
+                                    Model.Mods
+                                )
+                                {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
+                                    Width = 300,
+                                };
+                            }
+                        });
                 }
             }
         }

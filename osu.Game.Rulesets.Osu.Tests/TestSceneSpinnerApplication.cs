@@ -21,25 +21,42 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             DrawableSpinner dho = null;
 
-            AddStep("create spinner", () => Child = dho = new DrawableSpinner(prepareObject(new Spinner
-            {
-                Position = new Vector2(256, 192),
-                IndexInCurrentCombo = 0,
-                Duration = 500,
-            }))
-            {
-                Clock = new FramedClock(new StopwatchClock())
-            });
+            AddStep(
+                "create spinner",
+                () =>
+                    Child = dho =
+                        new DrawableSpinner(
+                            prepareObject(
+                                new Spinner
+                                {
+                                    Position = new Vector2(256, 192),
+                                    IndexInCurrentCombo = 0,
+                                    Duration = 500,
+                                }
+                            )
+                        )
+                        {
+                            Clock = new FramedClock(new StopwatchClock()),
+                        }
+            );
 
             AddStep("rotate some", () => dho.RotationTracker.AddRotation(180));
             AddAssert("rotation is set", () => dho.Result.TotalRotation == 180);
 
-            AddStep("apply new spinner", () => dho.Apply(prepareObject(new Spinner
-            {
-                Position = new Vector2(256, 192),
-                ComboIndex = 1,
-                Duration = 1000,
-            })));
+            AddStep(
+                "apply new spinner",
+                () =>
+                    dho.Apply(
+                        prepareObject(
+                            new Spinner
+                            {
+                                Position = new Vector2(256, 192),
+                                ComboIndex = 1,
+                                Duration = 1000,
+                            }
+                        )
+                    )
+            );
 
             AddAssert("rotation is reset", () => dho.Result.TotalRotation == 0);
         }

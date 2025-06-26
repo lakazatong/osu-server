@@ -9,12 +9,11 @@ namespace osu.Game.Rulesets.Mania.Edit.Checks
 {
     public class CheckKeyCount : ICheck
     {
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Settings, "Check mania keycount.");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Settings, "Check mania keycount.");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateKeycountTooLow(this),
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[] { new IssueTemplateKeycountTooLow(this) };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -29,9 +28,7 @@ namespace osu.Game.Rulesets.Mania.Edit.Checks
         public class IssueTemplateKeycountTooLow : IssueTemplate
         {
             public IssueTemplateKeycountTooLow(ICheck check)
-                : base(check, IssueType.Problem, "Key count is {0} and must be 4 or higher.")
-            {
-            }
+                : base(check, IssueType.Problem, "Key count is {0} and must be 4 or higher.") { }
 
             public Issue Create(float current) => new Issue(this, current);
         }

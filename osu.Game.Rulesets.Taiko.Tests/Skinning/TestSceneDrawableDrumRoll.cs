@@ -17,44 +17,57 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
     public partial class TestSceneDrawableDrumRoll : TaikoSkinnableTestScene
     {
         [Cached(typeof(IScrollingInfo))]
-        private ScrollingTestContainer.TestScrollingInfo info = new ScrollingTestContainer.TestScrollingInfo
-        {
-            Direction = { Value = ScrollingDirection.Left },
-            TimeRange = { Value = 5000 },
-        };
+        private ScrollingTestContainer.TestScrollingInfo info =
+            new ScrollingTestContainer.TestScrollingInfo
+            {
+                Direction = { Value = ScrollingDirection.Left },
+                TimeRange = { Value = 5000 },
+            };
 
         [Test]
         public void TestDrumroll([Values] bool withKiai)
         {
             AddStep("set up beatmap", () => setUpBeatmap(withKiai));
 
-            AddStep("Drum roll", () => SetContents(_ =>
-            {
-                var hoc = new ScrollingHitObjectContainer();
+            AddStep(
+                "Drum roll",
+                () =>
+                    SetContents(_ =>
+                    {
+                        var hoc = new ScrollingHitObjectContainer();
 
-                hoc.Add(new DrawableDrumRoll(createDrumRollAtCurrentTime())
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                });
+                        hoc.Add(
+                            new DrawableDrumRoll(createDrumRollAtCurrentTime())
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Width = 500,
+                            }
+                        );
 
-                return hoc;
-            }));
+                        return hoc;
+                    })
+            );
 
-            AddStep("Drum roll (strong)", () => SetContents(_ =>
-            {
-                var hoc = new ScrollingHitObjectContainer();
+            AddStep(
+                "Drum roll (strong)",
+                () =>
+                    SetContents(_ =>
+                    {
+                        var hoc = new ScrollingHitObjectContainer();
 
-                hoc.Add(new DrawableDrumRoll(createDrumRollAtCurrentTime(true))
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 500,
-                });
+                        hoc.Add(
+                            new DrawableDrumRoll(createDrumRollAtCurrentTime(true))
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Width = 500,
+                            }
+                        );
 
-                return hoc;
-            }));
+                        return hoc;
+                    })
+            );
         }
 
         private DrumRoll createDrumRollAtCurrentTime(bool strong = false)
@@ -83,10 +96,9 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
             if (withKiai)
                 controlPointInfo.Add(0, new EffectControlPoint { KiaiMode = true });
 
-            Beatmap.Value = CreateWorkingBeatmap(new Beatmap
-            {
-                ControlPointInfo = controlPointInfo
-            });
+            Beatmap.Value = CreateWorkingBeatmap(
+                new Beatmap { ControlPointInfo = controlPointInfo }
+            );
 
             Beatmap.Value.Track.Start();
         }

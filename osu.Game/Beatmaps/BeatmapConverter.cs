@@ -64,13 +64,18 @@ namespace osu.Game.Beatmaps
         /// <param name="original">The un-converted Beatmap.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The converted Beatmap.</returns>
-        protected virtual Beatmap<T> ConvertBeatmap(IBeatmap original, CancellationToken cancellationToken)
+        protected virtual Beatmap<T> ConvertBeatmap(
+            IBeatmap original,
+            CancellationToken cancellationToken
+        )
         {
             var beatmap = CreateBeatmap();
 
             beatmap.BeatmapInfo = original.BeatmapInfo;
             beatmap.ControlPointInfo = original.ControlPointInfo;
-            beatmap.HitObjects = convertHitObjects(original.HitObjects, original, cancellationToken).OrderBy(s => s.StartTime).ToList();
+            beatmap.HitObjects = convertHitObjects(original.HitObjects, original, cancellationToken)
+                .OrderBy(s => s.StartTime)
+                .ToList();
             beatmap.Breaks = original.Breaks;
             beatmap.UnhandledEventLines = original.UnhandledEventLines;
             beatmap.AudioLeadIn = original.AudioLeadIn;
@@ -91,7 +96,11 @@ namespace osu.Game.Beatmaps
             return beatmap;
         }
 
-        private List<T> convertHitObjects(IReadOnlyList<HitObject> hitObjects, IBeatmap beatmap, CancellationToken cancellationToken)
+        private List<T> convertHitObjects(
+            IReadOnlyList<HitObject> hitObjects,
+            IBeatmap beatmap,
+            CancellationToken cancellationToken
+        )
         {
             var result = new List<T>(hitObjects.Count);
 
@@ -134,6 +143,10 @@ namespace osu.Game.Beatmaps
         /// <param name="beatmap">The un-converted Beatmap.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The converted hit object.</returns>
-        protected virtual IEnumerable<T> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken) => Enumerable.Empty<T>();
+        protected virtual IEnumerable<T> ConvertHitObject(
+            HitObject original,
+            IBeatmap beatmap,
+            CancellationToken cancellationToken
+        ) => Enumerable.Empty<T>();
     }
 }

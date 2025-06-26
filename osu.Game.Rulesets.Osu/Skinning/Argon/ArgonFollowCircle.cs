@@ -33,11 +33,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
                 Masking = true,
                 BorderThickness = 4,
                 Blending = BlendingParameters.Additive,
-                Child = circleFill = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.3f,
-                }
+                Child = circleFill = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.3f },
             };
         }
 
@@ -52,11 +48,20 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             base.LoadComplete();
 
-            accentColour.BindValueChanged(colour =>
-            {
-                circleContainer.BorderColour = ColourInfo.GradientVertical(colour.NewValue, colour.NewValue.Darken(0.5f));
-                circleFill.Colour = ColourInfo.GradientVertical(colour.NewValue, colour.NewValue.Darken(0.5f));
-            }, true);
+            accentColour.BindValueChanged(
+                colour =>
+                {
+                    circleContainer.BorderColour = ColourInfo.GradientVertical(
+                        colour.NewValue,
+                        colour.NewValue.Darken(0.5f)
+                    );
+                    circleFill.Colour = ColourInfo.GradientVertical(
+                        colour.NewValue,
+                        colour.NewValue.Darken(0.5f)
+                    );
+                },
+                true
+            );
         }
 
         protected override void OnSliderPress()
@@ -82,8 +87,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             const float duration = 300;
 
-            this.ScaleTo(1, duration, Easing.OutQuint)
-                .FadeOut(duration / 2, Easing.OutQuint);
+            this.ScaleTo(1, duration, Easing.OutQuint).FadeOut(duration / 2, Easing.OutQuint);
         }
 
         protected override void OnSliderTick()
@@ -96,8 +100,6 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             }
         }
 
-        protected override void OnSliderBreak()
-        {
-        }
+        protected override void OnSliderBreak() { }
     }
 }

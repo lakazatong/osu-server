@@ -17,10 +17,15 @@ namespace osu.Game.Online
     {
         public override bool CanConvert(Type objectType) =>
             SignalRWorkaroundTypes.BASE_TYPE_MAPPING.Any(t =>
-                objectType == t.baseType ||
-                objectType == t.derivedType);
+                objectType == t.baseType || objectType == t.derivedType
+            );
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? o, JsonSerializer jsonSerializer)
+        public override object? ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object? o,
+            JsonSerializer jsonSerializer
+        )
         {
             if (reader.TokenType == JsonToken.Null)
                 return null;
@@ -29,7 +34,9 @@ namespace osu.Game.Online
 
             string type = (string)obj[@"$dtype"]!;
 
-            var resolvedType = SignalRWorkaroundTypes.BASE_TYPE_MAPPING.Select(t => t.derivedType).Single(t => t.Name == type);
+            var resolvedType = SignalRWorkaroundTypes
+                .BASE_TYPE_MAPPING.Select(t => t.derivedType)
+                .Single(t => t.Name == type);
 
             object? instance = Activator.CreateInstance(resolvedType);
 

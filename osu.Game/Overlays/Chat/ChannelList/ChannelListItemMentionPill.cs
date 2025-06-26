@@ -30,11 +30,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
 
             Children = new Drawable[]
             {
-                box = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = osuColour.Orange1,
-                },
+                box = new Box { RelativeSizeAxes = Axes.Both, Colour = osuColour.Orange1 },
                 countText = new OsuSpriteText
                 {
                     Anchor = Anchor.Centre,
@@ -50,20 +46,23 @@ namespace osu.Game.Overlays.Chat.ChannelList
         {
             base.LoadComplete();
 
-            Mentions.BindValueChanged(change =>
-            {
-                int mentionCount = change.NewValue;
-
-                countText.Text = mentionCount > 99 ? "99+" : mentionCount.ToString();
-
-                if (mentionCount > 0)
+            Mentions.BindValueChanged(
+                change =>
                 {
-                    this.FadeIn(1000, Easing.OutQuint);
-                    box.FlashColour(Color4.White, 500, Easing.OutQuint);
-                }
-                else
-                    this.FadeOut(100, Easing.OutQuint);
-            }, true);
+                    int mentionCount = change.NewValue;
+
+                    countText.Text = mentionCount > 99 ? "99+" : mentionCount.ToString();
+
+                    if (mentionCount > 0)
+                    {
+                        this.FadeIn(1000, Easing.OutQuint);
+                        box.FlashColour(Color4.White, 500, Easing.OutQuint);
+                    }
+                    else
+                        this.FadeOut(100, Easing.OutQuint);
+                },
+                true
+            );
         }
     }
 }

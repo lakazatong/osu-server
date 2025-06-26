@@ -54,7 +54,8 @@ namespace osu.Game.Rulesets.Objects
             set => StartTimeBindable.Value = value;
         }
 
-        public readonly BindableList<HitSampleInfo> SamplesBindable = new BindableList<HitSampleInfo>();
+        public readonly BindableList<HitSampleInfo> SamplesBindable =
+            new BindableList<HitSampleInfo>();
 
         /// <summary>
         /// The samples to be played when this hit object is hit.
@@ -94,7 +95,8 @@ namespace osu.Game.Rulesets.Objects
         private readonly List<HitObject> nestedHitObjects = new List<HitObject>();
 
         [JsonIgnore]
-        public SlimReadOnlyListWrapper<HitObject> NestedHitObjects => nestedHitObjects.AsSlimReadOnly();
+        public SlimReadOnlyListWrapper<HitObject> NestedHitObjects =>
+            nestedHitObjects.AsSlimReadOnly();
 
         /// <summary>
         /// Applies default values to this HitObject.
@@ -102,7 +104,11 @@ namespace osu.Game.Rulesets.Objects
         /// <param name="controlPointInfo">The control points.</param>
         /// <param name="difficulty">The difficulty settings to use.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public void ApplyDefaults(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty, CancellationToken cancellationToken = default)
+        public void ApplyDefaults(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty,
+            CancellationToken cancellationToken = default
+        )
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -121,7 +127,9 @@ namespace osu.Game.Rulesets.Objects
                     if (hitObject is IHasComboInformation n)
                     {
                         n.ComboIndexBindable.BindTo(hasCombo.ComboIndexBindable);
-                        n.ComboIndexWithOffsetsBindable.BindTo(hasCombo.ComboIndexWithOffsetsBindable);
+                        n.ComboIndexWithOffsetsBindable.BindTo(
+                            hasCombo.ComboIndexWithOffsetsBindable
+                        );
                         n.IndexInCurrentComboBindable.BindTo(hasCombo.IndexInCurrentComboBindable);
                     }
                 }
@@ -153,7 +161,10 @@ namespace osu.Game.Rulesets.Objects
             }
         }
 
-        protected virtual void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
+        protected virtual void ApplyDefaultsToSelf(
+            ControlPointInfo controlPointInfo,
+            IBeatmapDifficultyInfo difficulty
+        )
         {
             Kiai = controlPointInfo.EffectPointAt(StartTime + control_point_leniency).KiaiMode;
 
@@ -161,9 +172,7 @@ namespace osu.Game.Rulesets.Objects
             HitWindows?.SetDifficulty(difficulty.OverallDifficulty);
         }
 
-        protected virtual void CreateNestedHitObjects(CancellationToken cancellationToken)
-        {
-        }
+        protected virtual void CreateNestedHitObjects(CancellationToken cancellationToken) { }
 
         protected void AddNested(HitObject hitObject) => nestedHitObjects.Add(hitObject);
 
@@ -231,12 +240,18 @@ namespace osu.Game.Rulesets.Objects
             // As per stable, all non-normal "addition" samples should use the same bank.
             if (sampleName != HitSampleInfo.HIT_NORMAL)
             {
-                if (Samples.FirstOrDefault(s => s.Name != HitSampleInfo.HIT_NORMAL) is HitSampleInfo existingAddition)
+                if (
+                    Samples.FirstOrDefault(s => s.Name != HitSampleInfo.HIT_NORMAL)
+                    is HitSampleInfo existingAddition
+                )
                     return existingAddition.With(newName: sampleName);
             }
 
             // Fall back to using the normal sample bank otherwise.
-            if (Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL) is HitSampleInfo existingNormal)
+            if (
+                Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL)
+                is HitSampleInfo existingNormal
+            )
                 return existingNormal.With(newName: sampleName, newEditorAutoBank: true);
 
             return new HitSampleInfo(sampleName);
@@ -255,6 +270,7 @@ namespace osu.Game.Rulesets.Objects
         /// </remarks>
         /// <param name="hitObject">The object.</param>
         /// <returns>The end time of this object.</returns>
-        public static double GetEndTime(this HitObject hitObject) => (hitObject as IHasDuration)?.EndTime ?? hitObject.StartTime;
+        public static double GetEndTime(this HitObject hitObject) =>
+            (hitObject as IHasDuration)?.EndTime ?? hitObject.StartTime;
     }
 }

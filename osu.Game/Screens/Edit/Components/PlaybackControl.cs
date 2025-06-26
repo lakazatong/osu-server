@@ -2,8 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Bindables;
@@ -21,6 +19,8 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Localisation;
 using osu.Game.Overlays;
+using osuTK;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace osu.Game.Screens.Edit.Components
@@ -33,7 +33,8 @@ namespace osu.Game.Screens.Edit.Components
         [Resolved]
         private EditorClock editorClock { get; set; } = null!;
 
-        private readonly Bindable<EditorScreenMode> currentScreenMode = new Bindable<EditorScreenMode>();
+        private readonly Bindable<EditorScreenMode> currentScreenMode =
+            new Bindable<EditorScreenMode>();
         private readonly BindableNumber<double> tempoAdjustment = new BindableDouble(1);
 
         [BackgroundDependencyLoader]
@@ -56,24 +57,21 @@ namespace osu.Game.Screens.Edit.Components
                 {
                     AutoSizeAxes = Axes.Y,
                     RelativeSizeAxes = Axes.X,
-                    Padding = new MarginPadding { Left = 45, },
+                    Padding = new MarginPadding { Left = 45 },
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        new OsuSpriteText
-                        {
-                            Text = EditorStrings.PlaybackSpeed,
-                        },
+                        new OsuSpriteText { Text = EditorStrings.PlaybackSpeed },
                         new PlaybackTabControl
                         {
                             Current = tempoAdjustment,
                             RelativeSizeAxes = Axes.X,
                             Height = 16,
                         },
-                    }
-                }
+                    },
+                },
             };
 
             editorClock.AudioAdjustments.AddAdjustment(AdjustableProperty.Tempo, tempoAdjustment);
@@ -93,7 +91,8 @@ namespace osu.Game.Screens.Edit.Components
                     tempoAdjustment.Value = 1;
                     tempoAdjustment.Disabled = true;
                     playbackSpeedControl.FadeTo(0.5f, 400, Easing.OutQuint);
-                    playbackSpeedControl.TooltipText = "Speed adjustment is unavailable in timing mode. Timing at slower speeds is inaccurate due to resampling artifacts.";
+                    playbackSpeedControl.TooltipText =
+                        "Speed adjustment is unavailable in timing mode. Timing at slower speeds is inaccurate due to resampling artifacts.";
                 }
                 else
                 {
@@ -107,7 +106,10 @@ namespace osu.Game.Screens.Edit.Components
         protected override void Dispose(bool isDisposing)
         {
             if (editorClock.IsNotNull())
-                editorClock.AudioAdjustments.RemoveAdjustment(AdjustableProperty.Tempo, tempoAdjustment);
+                editorClock.AudioAdjustments.RemoveAdjustment(
+                    AdjustableProperty.Tempo,
+                    tempoAdjustment
+                );
 
             base.Dispose(isDisposing);
         }
@@ -154,7 +156,8 @@ namespace osu.Game.Screens.Edit.Components
         {
             private static readonly double[] tempo_values = { 0.25, 0.5, 0.75, 1 };
 
-            protected override TabItem<double> CreateTabItem(double value) => new PlaybackTabItem(value);
+            protected override TabItem<double> CreateTabItem(double value) =>
+                new PlaybackTabItem(value);
 
             protected override Dropdown<double> CreateDropdown() => null!;
 
@@ -189,7 +192,7 @@ namespace osu.Game.Screens.Edit.Components
                             Origin = Anchor.TopCentre,
                             Anchor = Anchor.TopCentre,
                             Text = $"{value:0%}",
-                            Font = OsuFont.GetFont(size: 14)
+                            Font = OsuFont.GetFont(size: 14),
                         },
                         textBold = new OsuSpriteText
                         {
@@ -219,12 +222,18 @@ namespace osu.Game.Screens.Edit.Components
                 }
 
                 protected override void OnHoverLost(HoverLostEvent e) => updateState();
+
                 protected override void OnActivated() => updateState();
+
                 protected override void OnDeactivated() => updateState();
 
                 private void updateState()
                 {
-                    text.FadeColour(Active.Value || IsHovered ? hoveredColour : normalColour, fade_duration, Easing.OutQuint);
+                    text.FadeColour(
+                        Active.Value || IsHovered ? hoveredColour : normalColour,
+                        fade_duration,
+                        Easing.OutQuint
+                    );
                     text.FadeTo(Active.Value ? 0 : 1, fade_duration, Easing.OutQuint);
                     textBold.FadeTo(Active.Value ? 1 : 0, fade_duration, Easing.OutQuint);
                 }

@@ -30,10 +30,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         [FlakyTest]
         public void TestLeadInProducesCorrectStartTime(double leadIn, double expectedStartTime)
         {
-            loadPlayerWithBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
-            {
-                AudioLeadIn = leadIn
-            });
+            loadPlayerWithBeatmap(
+                new TestBeatmap(new OsuRuleset().RulesetInfo) { AudioLeadIn = leadIn }
+            );
 
             checkFirstFrameTime(expectedStartTime);
         }
@@ -43,13 +42,22 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(-1000, -1000)]
         [TestCase(-10000, -10000)]
         [FlakyTest]
-        public void TestStoryboardProducesCorrectStartTimeSimpleAlpha(double firstStoryboardEvent, double expectedStartTime)
+        public void TestStoryboardProducesCorrectStartTimeSimpleAlpha(
+            double firstStoryboardEvent,
+            double expectedStartTime
+        )
         {
             var storyboard = new Storyboard();
 
             var sprite = new StoryboardSprite("unknown", Anchor.TopLeft, Vector2.Zero);
 
-            sprite.Commands.AddAlpha(Easing.None, firstStoryboardEvent, firstStoryboardEvent + 500, 0, 1);
+            sprite.Commands.AddAlpha(
+                Easing.None,
+                firstStoryboardEvent,
+                firstStoryboardEvent + 500,
+                0,
+                1
+            );
 
             storyboard.GetLayer("Background").Add(sprite);
 
@@ -67,7 +75,11 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(-1000, -1000, true)]
         [TestCase(-10000, -10000, true)]
         [FlakyTest]
-        public void TestStoryboardProducesCorrectStartTimeFadeInAfterOtherEvents(double firstStoryboardEvent, double expectedStartTime, bool addEventToLoop)
+        public void TestStoryboardProducesCorrectStartTimeFadeInAfterOtherEvents(
+            double firstStoryboardEvent,
+            double expectedStartTime,
+            bool addEventToLoop
+        )
         {
             const double loop_start_time = -20000;
 
@@ -82,7 +94,13 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             var target = addEventToLoop ? loopGroup : sprite.Commands;
             double loopRelativeOffset = addEventToLoop ? -loop_start_time : 0;
-            target.AddAlpha(Easing.None, loopRelativeOffset + firstStoryboardEvent, loopRelativeOffset + firstStoryboardEvent + 500, 0, 1);
+            target.AddAlpha(
+                Easing.None,
+                loopRelativeOffset + firstStoryboardEvent,
+                loopRelativeOffset + firstStoryboardEvent + 500,
+                0,
+                1
+            );
 
             // these should be ignored due to being in the future.
             sprite.Commands.AddAlpha(Easing.None, 18000, 20000, 0, 1);
@@ -96,15 +114,27 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         private void checkFirstFrameTime(double expectedStartTime) =>
-            AddAssert("check first frame time", () => player.FirstFrameClockTime, () => Is.EqualTo(expectedStartTime).Within(lenience_ms));
+            AddAssert(
+                "check first frame time",
+                () => player.FirstFrameClockTime,
+                () => Is.EqualTo(expectedStartTime).Within(lenience_ms)
+            );
 
         private void loadPlayerWithBeatmap(IBeatmap beatmap, Storyboard? storyboard = null)
         {
-            AddStep("create player", () =>
-            {
-                Beatmap.Value = new ClockBackedTestWorkingBeatmap(beatmap, storyboard, new FramedClock(new ManualClock { Rate = 1 }), Audio);
-                LoadScreen(player = new LeadInPlayer());
-            });
+            AddStep(
+                "create player",
+                () =>
+                {
+                    Beatmap.Value = new ClockBackedTestWorkingBeatmap(
+                        beatmap,
+                        storyboard,
+                        new FramedClock(new ManualClock { Rate = 1 }),
+                        Audio
+                    );
+                    LoadScreen(player = new LeadInPlayer());
+                }
+            );
 
             AddUntilStep("player loaded", () => player.IsLoaded && player.Alpha == 1);
         }
@@ -112,9 +142,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         private partial class LeadInPlayer : TestPlayer
         {
             public LeadInPlayer()
-                : base(false, false)
-            {
-            }
+                : base(false, false) { }
 
             public double? FirstFrameClockTime;
 
@@ -129,13 +157,16 @@ namespace osu.Game.Tests.Visual.Gameplay
                 if (!FirstFrameClockTime.HasValue)
                 {
                     FirstFrameClockTime = GameplayClockContainer.CurrentTime;
-                    AddInternal(new OsuSpriteText
-                    {
-                        Text = $"GameplayStartTime: {DrawableRuleset.GameplayStartTime} "
-                               + $"FirstHitObjectTime: {FirstHitObjectTime} "
-                               + $"LeadInTime: {Beatmap.Value.Beatmap.AudioLeadIn} "
-                               + $"FirstFrameClockTime: {FirstFrameClockTime}"
-                    });
+                    AddInternal(
+                        new OsuSpriteText
+                        {
+                            Text =
+                                $"GameplayStartTime: {DrawableRuleset.GameplayStartTime} "
+                                + $"FirstHitObjectTime: {FirstHitObjectTime} "
+                                + $"LeadInTime: {Beatmap.Value.Beatmap.AudioLeadIn} "
+                                + $"FirstFrameClockTime: {FirstFrameClockTime}",
+                        }
+                    );
                 }
             }
         }

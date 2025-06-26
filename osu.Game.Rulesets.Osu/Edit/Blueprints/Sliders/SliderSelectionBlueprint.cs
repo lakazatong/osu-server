@@ -76,7 +76,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             }
         }
 
-        private readonly BindableList<PathControlPoint> controlPoints = new BindableList<PathControlPoint>();
+        private readonly BindableList<PathControlPoint> controlPoints =
+            new BindableList<PathControlPoint>();
         private readonly IBindable<int> pathVersion = new Bindable<int>();
         private readonly BindableList<HitObject> selectedObjects = new BindableList<HitObject>();
         private readonly Bindable<bool> showHitMarkers = new Bindable<bool>();
@@ -87,9 +88,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         private Vector2 lastRightClickPosition;
 
         public SliderSelectionBlueprint(Slider slider)
-            : base(slider)
-        {
-        }
+            : base(slider) { }
 
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
@@ -135,7 +134,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
         public override bool HandleQuickDeletion()
         {
-            var hoveredControlPoint = ControlPointVisualiser?.Pieces.FirstOrDefault(p => p.IsHovered);
+            var hoveredControlPoint = ControlPointVisualiser?.Pieces.FirstOrDefault(p =>
+                p.IsHovered
+            );
 
             if (hoveredControlPoint == null)
                 return false;
@@ -195,11 +196,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             {
                 if (ControlPointVisualiser == null)
                 {
-                    AddInternal(ControlPointVisualiser = new PathControlPointVisualiser<Slider>(HitObject, true)
-                    {
-                        RemoveControlPointsRequested = removeControlPoints,
-                        SplitControlPointsRequested = splitControlPoints
-                    });
+                    AddInternal(
+                        ControlPointVisualiser = new PathControlPointVisualiser<Slider>(
+                            HitObject,
+                            true
+                        )
+                        {
+                            RemoveControlPointsRequested = removeControlPoints,
+                            SplitControlPointsRequested = splitControlPoints,
+                        }
+                    );
                 }
             }
             else
@@ -247,7 +253,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
         {
             isAdjustingLength = true;
             adjustVelocityMomentary = e.ShiftPressed;
-            lengthAdjustMouseOffset = ToLocalSpace(e.ScreenSpaceMouseDownPosition) - HitObject.Position - HitObject.Path.PositionAt(1);
+            lengthAdjustMouseOffset =
+                ToLocalSpace(e.ScreenSpaceMouseDownPosition)
+                - HitObject.Position
+                - HitObject.Path.PositionAt(1);
             oldDuration = HitObject.Path.Distance / HitObject.SliderVelocityMultiplier;
             oldVelocityMultiplier = HitObject.SliderVelocityMultiplier;
             changeHandler?.BeginChange();
@@ -260,7 +269,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             isAdjustingLength = false;
         }
 
-        private void adjustLength(MouseEvent e) => adjustLength(findClosestPathDistance(e), e.ShiftPressed);
+        private void adjustLength(MouseEvent e) =>
+            adjustLength(findClosestPathDistance(e), e.ShiftPressed);
 
         private void adjustLength(double proposedDistance, bool adjustVelocity)
         {
@@ -270,11 +280,16 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             if (adjustVelocity)
             {
                 proposedVelocity = proposedDistance / oldDuration;
-                proposedDistance = Math.Clamp(proposedDistance, 0.1 * oldDuration, 10 * oldDuration);
+                proposedDistance = Math.Clamp(
+                    proposedDistance,
+                    0.1 * oldDuration,
+                    10 * oldDuration
+                );
             }
             else
             {
-                double minDistance = distanceSnapProvider?.GetBeatSnapDistance() * oldVelocityMultiplier ?? 1;
+                double minDistance =
+                    distanceSnapProvider?.GetBeatSnapDistance() * oldVelocityMultiplier ?? 1;
                 // do not allow the slider to extend beyond the path's calculated distance.
                 // this can happen in two specific circumstances:
                 // - floating point issues (`minDistance` is just ever so slightly larger than the calculated distance)
@@ -283,11 +298,23 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                 minDistance = Math.Min(minDistance, HitObject.Path.CalculatedDistance);
 
                 // Add a small amount to the proposed distance to make it easier to snap to the full length of the slider.
-                proposedDistance = distanceSnapProvider?.FindSnappedDistance((float)proposedDistance + 1, HitObject.StartTime, HitObject) ?? proposedDistance;
-                proposedDistance = Math.Clamp(proposedDistance, minDistance, HitObject.Path.CalculatedDistance);
+                proposedDistance =
+                    distanceSnapProvider?.FindSnappedDistance(
+                        (float)proposedDistance + 1,
+                        HitObject.StartTime,
+                        HitObject
+                    ) ?? proposedDistance;
+                proposedDistance = Math.Clamp(
+                    proposedDistance,
+                    minDistance,
+                    HitObject.Path.CalculatedDistance
+                );
             }
 
-            if (Precision.AlmostEquals(proposedDistance, HitObject.Path.Distance) && Precision.AlmostEquals(proposedVelocity, HitObject.SliderVelocityMultiplier))
+            if (
+                Precision.AlmostEquals(proposedDistance, HitObject.Path.Distance)
+                && Precision.AlmostEquals(proposedVelocity, HitObject.SliderVelocityMultiplier)
+            )
                 return;
 
             HitObject.SliderVelocityMultiplier = proposedVelocity;
@@ -309,11 +336,15 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             for (int i = 1; i < sliderPath.ControlPoints.Count - 1; i++)
             {
-                if (!sliderPath.ControlPoints[i].Type.HasValue) continue;
+                if (!sliderPath.ControlPoints[i].Type.HasValue)
+                    continue;
 
                 if (Precision.AlmostBigger(segmentEnds[segmentIndex], 1, 1E-3))
                 {
-                    sliderPath.ControlPoints.RemoveRange(i + 1, sliderPath.ControlPoints.Count - i - 1);
+                    sliderPath.ControlPoints.RemoveRange(
+                        i + 1,
+                        sliderPath.ControlPoints.Count - i - 1
+                    );
                     sliderPath.ControlPoints[^1].Type = null;
                     break;
                 }
@@ -331,7 +362,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             const double step2 = 0.1;
             const double longer_distance_bias = 0.01;
 
-            var desiredPosition = ToLocalSpace(e.ScreenSpaceMousePosition) - HitObject.Position - lengthAdjustMouseOffset;
+            var desiredPosition =
+                ToLocalSpace(e.ScreenSpaceMousePosition)
+                - HitObject.Position
+                - lengthAdjustMouseOffset;
 
             if (!fullPathCache.IsValid)
                 fullPathCache.Value = new SliderPath(HitObject.Path.ControlPoints.ToArray());
@@ -343,9 +377,12 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             for (double d = 0; d <= fullPathCache.Value.CalculatedDistance; d += step1)
             {
                 double t = d / fullPathCache.Value.CalculatedDistance;
-                double dist = Vector2.Distance(fullPathCache.Value.PositionAt(t), desiredPosition) - d * longer_distance_bias;
+                double dist =
+                    Vector2.Distance(fullPathCache.Value.PositionAt(t), desiredPosition)
+                    - d * longer_distance_bias;
 
-                if (dist >= minDistance) continue;
+                if (dist >= minDistance)
+                    continue;
 
                 minDistance = dist;
                 bestValue = d;
@@ -357,9 +394,12 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             for (double d = bestValue - step1; d <= maxValue; d += step2)
             {
                 double t = d / fullPathCache.Value.CalculatedDistance;
-                double dist = Vector2.Distance(fullPathCache.Value.PositionAt(t), desiredPosition) - d * longer_distance_bias;
+                double dist =
+                    Vector2.Distance(fullPathCache.Value.PositionAt(t), desiredPosition)
+                    - d * longer_distance_bias;
 
-                if (dist >= minDistance) continue;
+                if (dist >= minDistance)
+                    continue;
 
                 minDistance = dist;
                 bestValue = d;
@@ -425,7 +465,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
         protected override void OnKeyUp(KeyUpEvent e)
         {
-            if (!IsSelected || !isAdjustingLength || e.ShiftPressed == adjustVelocityMomentary) return;
+            if (!IsSelected || !isAdjustingLength || e.ShiftPressed == adjustVelocityMomentary)
+                return;
 
             adjustVelocityMomentary = e.ShiftPressed;
             adjustLength(desiredDistance, adjustVelocityMomentary);
@@ -440,7 +481,10 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             for (int i = 0; i < controlPoints.Count - 1; i++)
             {
-                float dist = new Line(controlPoints[i].Position, controlPoints[i + 1].Position).DistanceToPoint(position);
+                float dist = new Line(
+                    controlPoints[i].Position,
+                    controlPoints[i + 1].Position
+                ).DistanceToPoint(position);
 
                 if (dist < minDistance)
                 {
@@ -471,7 +515,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             {
                 // The first control point in the slider must have a type, so take it from the previous "first" one
                 // Todo: Should be handled within SliderPath itself
-                if (c == controlPoints[0] && controlPoints.Count > 1 && controlPoints[1].Type == null)
+                if (
+                    c == controlPoints[0]
+                    && controlPoints.Count > 1
+                    && controlPoints[1].Type == null
+                )
                     controlPoints[1].Type = controlPoints[0].Type;
 
                 controlPoints.Remove(c);
@@ -513,7 +561,11 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
             foreach (var splitPoint in controlPointsToSplitAt)
             {
-                if (splitPoint == controlPoints[0] || splitPoint == controlPoints[^1] || splitPoint.Type == null)
+                if (
+                    splitPoint == controlPoints[0]
+                    || splitPoint == controlPoints[^1]
+                    || splitPoint.Type == null
+                )
                     continue;
 
                 // Split off the section of slider before this control point so the remaining control points to split are in the latter part of the slider.
@@ -533,8 +585,19 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
                     NewCombo = HitObject.NewCombo,
                     Samples = HitObject.Samples.Select(s => s.With()).ToList(),
                     RepeatCount = HitObject.RepeatCount,
-                    NodeSamples = HitObject.NodeSamples.Select(n => (IList<HitSampleInfo>)n.Select(s => s.With()).ToList()).ToList(),
-                    Path = new SliderPath(splitControlPoints.Select(o => new PathControlPoint(o.Position - splitControlPoints[0].Position, o == splitControlPoints[^1] ? null : o.Type)).ToArray())
+                    NodeSamples = HitObject
+                        .NodeSamples.Select(n =>
+                            (IList<HitSampleInfo>)n.Select(s => s.With()).ToList()
+                        )
+                        .ToList(),
+                    Path = new SliderPath(
+                        splitControlPoints
+                            .Select(o => new PathControlPoint(
+                                o.Position - splitControlPoints[0].Position,
+                                o == splitControlPoints[^1] ? null : o.Type
+                            ))
+                            .ToArray()
+                    ),
                 };
 
                 // Increase the start time of the slider before adding the new slider so the new slider is immediately inserted at the correct index and internal state remains valid.
@@ -580,7 +643,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             {
                 // positionWithRepeats is a fractional number in the range of [0, HitObject.SpanCount()]
                 // and indicates how many fractional spans of a slider have passed up to time.
-                double positionWithRepeats = (time - HitObject.StartTime) / HitObject.Duration * HitObject.SpanCount();
+                double positionWithRepeats =
+                    (time - HitObject.StartTime) / HitObject.Duration * HitObject.SpanCount();
                 double pathPosition = positionWithRepeats - (int)positionWithRepeats;
                 // every second span is in the reverse direction - need to reverse the path position.
                 if (positionWithRepeats % 2 >= 1)
@@ -588,13 +652,15 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
 
                 Vector2 position = HitObject.Position + HitObject.Path.PositionAt(pathPosition);
 
-                editorBeatmap.Add(new HitCircle
-                {
-                    StartTime = time,
-                    Position = position,
-                    NewCombo = i == 0 && HitObject.NewCombo,
-                    Samples = HitObject.HeadCircle.Samples.Select(s => s.With()).ToList()
-                });
+                editorBeatmap.Add(
+                    new HitCircle
+                    {
+                        StartTime = time,
+                        Position = position,
+                        NewCombo = i == 0 && HitObject.NewCombo,
+                        Samples = HitObject.HeadCircle.Samples.Select(s => s.With()).ToList(),
+                    }
+                );
 
                 i += 1;
                 time = HitObject.StartTime + i * streamSpacing;
@@ -605,35 +671,52 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             changeHandler?.EndChange();
         }
 
-        public override MenuItem[] ContextMenuItems => new MenuItem[]
-        {
-            new OsuMenuItem("Add control point", MenuItemType.Standard, () =>
+        public override MenuItem[] ContextMenuItems =>
+            new MenuItem[]
             {
-                changeHandler?.BeginChange();
-                addControlPoint(lastRightClickPosition);
-                changeHandler?.EndChange();
-            })
-            {
-                Hotkey = new Hotkey(new KeyCombination(InputKey.Control, InputKey.MouseLeft))
-            },
-            new OsuMenuItem("Convert to stream", MenuItemType.Destructive, convertToStream)
-            {
-                Hotkey = new Hotkey(new KeyCombination(InputKey.Control, InputKey.Shift, InputKey.F))
-            },
-        };
+                new OsuMenuItem(
+                    "Add control point",
+                    MenuItemType.Standard,
+                    () =>
+                    {
+                        changeHandler?.BeginChange();
+                        addControlPoint(lastRightClickPosition);
+                        changeHandler?.EndChange();
+                    }
+                )
+                {
+                    Hotkey = new Hotkey(new KeyCombination(InputKey.Control, InputKey.MouseLeft)),
+                },
+                new OsuMenuItem("Convert to stream", MenuItemType.Destructive, convertToStream)
+                {
+                    Hotkey = new Hotkey(
+                        new KeyCombination(InputKey.Control, InputKey.Shift, InputKey.F)
+                    ),
+                },
+            };
 
         // Always refer to the drawable object's slider body so subsequent movement deltas are calculated with updated positions.
-        public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.SliderBody?.ToScreenSpace(DrawableObject.SliderBody.PathOffset)
-                                                             ?? BodyPiece.ToScreenSpace(BodyPiece.PathStartLocation);
+        public override Vector2 ScreenSpaceSelectionPoint =>
+            DrawableObject.SliderBody?.ToScreenSpace(DrawableObject.SliderBody.PathOffset)
+            ?? BodyPiece.ToScreenSpace(BodyPiece.PathStartLocation);
 
-        protected override Vector2[] ScreenSpaceAdditionalNodes => new[]
-        {
-            DrawableObject.SliderBody?.ToScreenSpace(DrawableObject.SliderBody.PathEndOffset) ?? BodyPiece.ToScreenSpace(BodyPiece.PathEndLocation)
-        };
+        protected override Vector2[] ScreenSpaceAdditionalNodes =>
+            new[]
+            {
+                DrawableObject.SliderBody?.ToScreenSpace(DrawableObject.SliderBody.PathEndOffset)
+                    ?? BodyPiece.ToScreenSpace(BodyPiece.PathEndLocation),
+            };
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
         {
-            if (BodyPiece.ReceivePositionalInputAt(screenSpacePos) && (IsSelected || DrawableObject.Body.Alpha > 0 || DrawableObject.HeadCircle.Alpha > 0))
+            if (
+                BodyPiece.ReceivePositionalInputAt(screenSpacePos)
+                && (
+                    IsSelected
+                    || DrawableObject.Body.Alpha > 0
+                    || DrawableObject.HeadCircle.Alpha > 0
+                )
+            )
                 return true;
 
             if (ControlPointVisualiser == null)
@@ -648,6 +731,9 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders
             return false;
         }
 
-        protected virtual SliderCircleOverlay CreateCircleOverlay(Slider slider, SliderPosition position) => new SliderCircleOverlay(slider, position);
+        protected virtual SliderCircleOverlay CreateCircleOverlay(
+            Slider slider,
+            SliderPosition position
+        ) => new SliderCircleOverlay(slider, position);
     }
 }

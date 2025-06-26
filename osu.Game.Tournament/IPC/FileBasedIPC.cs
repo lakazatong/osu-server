@@ -69,91 +69,102 @@ namespace osu.Game.Tournament.IPC
 
                 if (IPCStorage.Exists(file_ipc_filename))
                 {
-                    scheduled = Scheduler.AddDelayed(delegate
-                    {
-                        try
+                    scheduled = Scheduler.AddDelayed(
+                        delegate
                         {
-                            using (var stream = IPCStorage.GetStream(file_ipc_filename))
-                            using (var sr = new StreamReader(stream))
+                            try
                             {
-                                int beatmapId = int.Parse(sr.ReadLine().AsNonNull());
-                                int mods = int.Parse(sr.ReadLine().AsNonNull());
-
-                                if (lastBeatmapId != beatmapId)
+                                using (var stream = IPCStorage.GetStream(file_ipc_filename))
+                                using (var sr = new StreamReader(stream))
                                 {
-                                    beatmapLookupRequest?.Cancel();
+                                    int beatmapId = int.Parse(sr.ReadLine().AsNonNull());
+                                    int mods = int.Parse(sr.ReadLine().AsNonNull());
 
-                                    lastBeatmapId = beatmapId;
-
-                                    var existing = ladder.CurrentMatch.Value?.Round.Value?.Beatmaps.FirstOrDefault(b => b.ID == beatmapId);
-
-                                    if (existing != null)
-                                        Beatmap.Value = existing.Beatmap;
-                                    else
+                                    if (lastBeatmapId != beatmapId)
                                     {
-                                        beatmapLookupRequest = new GetBeatmapRequest(new APIBeatmap { OnlineID = beatmapId });
-                                        beatmapLookupRequest.Success += b =>
+                                        beatmapLookupRequest?.Cancel();
+
+                                        lastBeatmapId = beatmapId;
+
+                                        var existing =
+                                            ladder.CurrentMatch.Value?.Round.Value?.Beatmaps.FirstOrDefault(
+                                                b => b.ID == beatmapId
+                                            );
+
+                                        if (existing != null)
+                                            Beatmap.Value = existing.Beatmap;
+                                        else
                                         {
-                                            if (lastBeatmapId == beatmapId)
-                                                Beatmap.Value = new TournamentBeatmap(b);
-                                        };
-                                        beatmapLookupRequest.Failure += _ =>
-                                        {
-                                            if (lastBeatmapId == beatmapId)
-                                                Beatmap.Value = null;
-                                        };
-                                        API.Queue(beatmapLookupRequest);
+                                            beatmapLookupRequest = new GetBeatmapRequest(
+                                                new APIBeatmap { OnlineID = beatmapId }
+                                            );
+                                            beatmapLookupRequest.Success += b =>
+                                            {
+                                                if (lastBeatmapId == beatmapId)
+                                                    Beatmap.Value = new TournamentBeatmap(b);
+                                            };
+                                            beatmapLookupRequest.Failure += _ =>
+                                            {
+                                                if (lastBeatmapId == beatmapId)
+                                                    Beatmap.Value = null;
+                                            };
+                                            API.Queue(beatmapLookupRequest);
+                                        }
                                     }
+
+                                    Mods.Value = (LegacyMods)mods;
                                 }
-
-                                Mods.Value = (LegacyMods)mods;
                             }
-                        }
-                        catch
-                        {
-                            // file might be in use.
-                        }
-
-                        try
-                        {
-                            using (var stream = IPCStorage.GetStream(file_ipc_channel_filename))
-                            using (var sr = new StreamReader(stream))
+                            catch
                             {
-                                ChatChannel.Value = sr.ReadLine().AsNonNull();
+                                // file might be in use.
                             }
-                        }
-                        catch (Exception)
-                        {
-                            // file might be in use.
-                        }
 
-                        try
-                        {
-                            using (var stream = IPCStorage.GetStream(file_ipc_state_filename))
-                            using (var sr = new StreamReader(stream))
+                            try
                             {
-                                State.Value = Enum.Parse<TourneyState>(sr.ReadLine().AsNonNull());
+                                using (var stream = IPCStorage.GetStream(file_ipc_channel_filename))
+                                using (var sr = new StreamReader(stream))
+                                {
+                                    ChatChannel.Value = sr.ReadLine().AsNonNull();
+                                }
                             }
-                        }
-                        catch (Exception)
-                        {
-                            // file might be in use.
-                        }
+                            catch (Exception)
+                            {
+                                // file might be in use.
+                            }
 
-                        try
-                        {
-                            using (var stream = IPCStorage.GetStream(file_ipc_scores_filename))
-                            using (var sr = new StreamReader(stream))
+                            try
                             {
-                                Score1.Value = int.Parse(sr.ReadLine().AsNonNull());
-                                Score2.Value = int.Parse(sr.ReadLine().AsNonNull());
+                                using (var stream = IPCStorage.GetStream(file_ipc_state_filename))
+                                using (var sr = new StreamReader(stream))
+                                {
+                                    State.Value = Enum.Parse<TourneyState>(
+                                        sr.ReadLine().AsNonNull()
+                                    );
+                                }
                             }
-                        }
-                        catch (Exception)
-                        {
-                            // file might be in use.
-                        }
-                    }, 250, true);
+                            catch (Exception)
+                            {
+                                // file might be in use.
+                            }
+
+                            try
+                            {
+                                using (var stream = IPCStorage.GetStream(file_ipc_scores_filename))
+                                using (var sr = new StreamReader(stream))
+                                {
+                                    Score1.Value = int.Parse(sr.ReadLine().AsNonNull());
+                                    Score2.Value = int.Parse(sr.ReadLine().AsNonNull());
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // file might be in use.
+                            }
+                        },
+                        250,
+                        true
+                    );
                 }
             }
             catch (Exception e)
@@ -189,14 +200,16 @@ namespace osu.Game.Tournament.IPC
         /// <returns>Whether an IPC directory was successfully auto-detected.</returns>
         public bool AutoDetectIPCLocation() => SetIPCLocation(findStablePath());
 
-        private static bool ipcFileExistsInDirectory(string? p) => p != null && File.Exists(Path.Combine(p, "ipc.txt"));
+        private static bool ipcFileExistsInDirectory(string? p) =>
+            p != null && File.Exists(Path.Combine(p, "ipc.txt"));
 
         private string? findStablePath()
         {
-            string? stableInstallPath = findFromEnvVar() ??
-                                        findFromRegistry() ??
-                                        findFromLocalAppData() ??
-                                        findFromDotFolder();
+            string? stableInstallPath =
+                findFromEnvVar()
+                ?? findFromRegistry()
+                ?? findFromLocalAppData()
+                ?? findFromDotFolder();
 
             Logger.Log($"Stable path for tourney usage: {stableInstallPath}");
             return stableInstallPath;
@@ -212,9 +225,7 @@ namespace osu.Game.Tournament.IPC
                 if (ipcFileExistsInDirectory(stableInstallPath))
                     return stableInstallPath!;
             }
-            catch
-            {
-            }
+            catch { }
 
             return null;
         }
@@ -222,7 +233,10 @@ namespace osu.Game.Tournament.IPC
         private string? findFromLocalAppData()
         {
             Logger.Log("Trying to find stable in %LOCALAPPDATA%");
-            string stableInstallPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"osu!");
+            string stableInstallPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                @"osu!"
+            );
 
             if (ipcFileExistsInDirectory(stableInstallPath))
                 return stableInstallPath;
@@ -233,7 +247,10 @@ namespace osu.Game.Tournament.IPC
         private string? findFromDotFolder()
         {
             Logger.Log("Trying to find stable in dotfolders");
-            string stableInstallPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".osu");
+            string stableInstallPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                ".osu"
+            );
 
             if (ipcFileExistsInDirectory(stableInstallPath))
                 return stableInstallPath;
@@ -251,15 +268,18 @@ namespace osu.Game.Tournament.IPC
 
 #pragma warning disable CA1416
                 using (RegistryKey? key = Registry.ClassesRoot.OpenSubKey("osu"))
-                    stableInstallPath = key?.OpenSubKey(@"shell\open\command")?.GetValue(string.Empty)?.ToString()?.Split('"')[1].Replace("osu!.exe", "");
+                    stableInstallPath = key
+                        ?.OpenSubKey(@"shell\open\command")
+                        ?.GetValue(string.Empty)
+                        ?.ToString()
+                        ?.Split('"')[1]
+                        .Replace("osu!.exe", "");
 #pragma warning restore CA1416
 
                 if (ipcFileExistsInDirectory(stableInstallPath))
                     return stableInstallPath;
             }
-            catch
-            {
-            }
+            catch { }
 
             return null;
         }

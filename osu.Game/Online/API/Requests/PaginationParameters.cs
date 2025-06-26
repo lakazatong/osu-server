@@ -25,14 +25,13 @@ namespace osu.Game.Online.API.Requests
         }
 
         public PaginationParameters(int limit)
-            : this(0, limit)
-        {
-        }
+            : this(0, limit) { }
 
         /// <summary>
         /// Returns a <see cref="PaginationParameters"/> of the next number of items defined by <paramref name="limit"/> after this.
         /// </summary>
         /// <param name="limit">The limit of the next pagination.</param>
-        public PaginationParameters TakeNext(int limit) => new PaginationParameters(Offset + Limit, limit);
+        public PaginationParameters TakeNext(int limit) =>
+            new PaginationParameters(Offset + Limit, limit);
     }
 }

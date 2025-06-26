@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Osu.Beatmaps
                     Content = spinners.ToString(),
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners),
                     BarDisplayLength = Math.Min(spinners / 10f, 1),
-                }
+                },
             };
         }
     }

@@ -21,20 +21,33 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             DrawableHitCircle dho = null;
 
-            AddStep("create circle", () => Child = dho = new DrawableHitCircle(prepareObject(new HitCircle
-            {
-                Position = new Vector2(256, 192),
-                IndexInCurrentCombo = 0
-            }))
-            {
-                Clock = new FramedClock(new StopwatchClock())
-            });
+            AddStep(
+                "create circle",
+                () =>
+                    Child = dho =
+                        new DrawableHitCircle(
+                            prepareObject(
+                                new HitCircle
+                                {
+                                    Position = new Vector2(256, 192),
+                                    IndexInCurrentCombo = 0,
+                                }
+                            )
+                        )
+                        {
+                            Clock = new FramedClock(new StopwatchClock()),
+                        }
+            );
 
-            AddStep("apply new circle", () => dho.Apply(prepareObject(new HitCircle
-            {
-                Position = new Vector2(128, 128),
-                ComboIndex = 1,
-            })));
+            AddStep(
+                "apply new circle",
+                () =>
+                    dho.Apply(
+                        prepareObject(
+                            new HitCircle { Position = new Vector2(128, 128), ComboIndex = 1 }
+                        )
+                    )
+            );
         }
 
         private HitCircle prepareObject(HitCircle circle)

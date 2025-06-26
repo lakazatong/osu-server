@@ -90,7 +90,11 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             CheckHasSelection();
             AddAssert("drawable selection non-null", () => selection, () => Is.Not.Null);
-            AddAssert("drawable selection matches carousel selection", () => selection, () => Is.EqualTo(Carousel.CurrentSelection));
+            AddAssert(
+                "drawable selection matches carousel selection",
+                () => selection,
+                () => Is.EqualTo(Carousel.CurrentSelection)
+            );
 
             RemoveAllBeatmaps();
             AddUntilStep("no drawable selection", GetSelectedPanel, () => Is.Null);
@@ -101,11 +105,26 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             CheckHasSelection();
             AddAssert("no drawable selection", GetSelectedPanel, () => Is.Null);
 
-            AddStep("add previous selection", () => BeatmapSets.Add(((BeatmapInfo)selection!).BeatmapSet!));
+            AddStep(
+                "add previous selection",
+                () => BeatmapSets.Add(((BeatmapInfo)selection!).BeatmapSet!)
+            );
 
-            AddAssert("selection matches original carousel selection", () => selection, () => Is.EqualTo(Carousel.CurrentSelection));
-            AddUntilStep("drawable selection restored", () => GetSelectedPanel()?.Item?.Model, () => Is.EqualTo(selection));
-            AddAssert("carousel item is visible", () => GetSelectedPanel()?.Item?.IsVisible, () => Is.True);
+            AddAssert(
+                "selection matches original carousel selection",
+                () => selection,
+                () => Is.EqualTo(Carousel.CurrentSelection)
+            );
+            AddUntilStep(
+                "drawable selection restored",
+                () => GetSelectedPanel()?.Item?.Model,
+                () => Is.EqualTo(selection)
+            );
+            AddAssert(
+                "carousel item is visible",
+                () => GetSelectedPanel()?.Item?.IsVisible,
+                () => Is.True
+            );
         }
 
         [Test]
@@ -168,20 +187,26 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             SelectNextPanel();
             SelectNextPanel();
 
-            AddStep("Press two keys at once", () =>
-            {
-                InputManager.Key(Key.Down);
-                InputManager.Key(Key.Right);
-            });
+            AddStep(
+                "Press two keys at once",
+                () =>
+                {
+                    InputManager.Key(Key.Down);
+                    InputManager.Key(Key.Right);
+                }
+            );
 
             // Second key is respected, so only set selection changes.
             WaitForSetSelection(1, 0);
 
-            AddStep("Press two keys at once", () =>
-            {
-                InputManager.Key(Key.Left);
-                InputManager.Key(Key.Up);
-            });
+            AddStep(
+                "Press two keys at once",
+                () =>
+                {
+                    InputManager.Key(Key.Left);
+                    InputManager.Key(Key.Up);
+                }
+            );
 
             // Second key is respected, so only keyboard selection changes.
             WaitForSetSelection(1, 0);
@@ -288,27 +313,45 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             AddAssert("no beatmaps visible", () => !GetVisiblePanels<PanelBeatmap>().Any());
 
-            ClickVisiblePanelWithOffset<PanelBeatmapSet>(0, new Vector2(0, -(PanelBeatmapSet.HEIGHT / 2 + BeatmapCarousel.SPACING + 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmapSet>(
+                0,
+                new Vector2(0, -(PanelBeatmapSet.HEIGHT / 2 + BeatmapCarousel.SPACING + 1))
+            );
 
             AddAssert("no beatmaps visible", () => !GetVisiblePanels<PanelBeatmap>().Any());
 
             // add lenience to avoid floating-point inaccuracies at edge.
-            ClickVisiblePanelWithOffset<PanelBeatmapSet>(0, new Vector2(0, -(PanelBeatmapSet.HEIGHT / 2 - 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmapSet>(
+                0,
+                new Vector2(0, -(PanelBeatmapSet.HEIGHT / 2 - 1))
+            );
 
             AddUntilStep("wait for beatmaps visible", () => GetVisiblePanels<PanelBeatmap>().Any());
             WaitForSetSelection(0, 0);
 
             // Beatmap panels expand their selection area to cover holes from spacing.
-            ClickVisiblePanelWithOffset<PanelBeatmap>(0, new Vector2(0, -(PanelBeatmap.HEIGHT / 2 + 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmap>(
+                0,
+                new Vector2(0, -(PanelBeatmap.HEIGHT / 2 + 1))
+            );
             WaitForSetSelection(0, 0);
 
-            ClickVisiblePanelWithOffset<PanelBeatmap>(2, new Vector2(0, (PanelBeatmap.HEIGHT / 2 + 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmap>(
+                2,
+                new Vector2(0, (PanelBeatmap.HEIGHT / 2 + 1))
+            );
             WaitForSetSelection(0, 2);
 
-            ClickVisiblePanelWithOffset<PanelBeatmap>(2, new Vector2(0, -(PanelBeatmap.HEIGHT / 2 + 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmap>(
+                2,
+                new Vector2(0, -(PanelBeatmap.HEIGHT / 2 + 1))
+            );
             WaitForSetSelection(0, 2);
 
-            ClickVisiblePanelWithOffset<PanelBeatmap>(3, new Vector2(0, (PanelBeatmap.HEIGHT / 2 + 1)));
+            ClickVisiblePanelWithOffset<PanelBeatmap>(
+                3,
+                new Vector2(0, (PanelBeatmap.HEIGHT / 2 + 1))
+            );
             WaitForSetSelection(0, 3);
         }
 
@@ -320,7 +363,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             SortAndGroupBy(SortMode.Difficulty, GroupMode.None);
 
-            AddUntilStep("standalone panels displayed", () => GetVisiblePanels<PanelBeatmapStandalone>().Any());
+            AddUntilStep(
+                "standalone panels displayed",
+                () => GetVisiblePanels<PanelBeatmapStandalone>().Any()
+            );
 
             SelectNextSet();
             // both sets have a difficulty with 0.00* star rating.
@@ -343,15 +389,31 @@ namespace osu.Game.Tests.Visual.SongSelectV2
 
             SortBy(SortMode.Difficulty);
 
-            AddUntilStep("standalone panels displayed", () => GetVisiblePanels<PanelBeatmapStandalone>().Count(), () => Is.EqualTo(3));
+            AddUntilStep(
+                "standalone panels displayed",
+                () => GetVisiblePanels<PanelBeatmapStandalone>().Count(),
+                () => Is.EqualTo(3)
+            );
 
             WaitForSetSelection(0, 0);
 
             SortBy(SortMode.Title);
 
-            AddUntilStep("set panel displayed", () => GetVisiblePanels<PanelBeatmapSet>().Count(), () => Is.EqualTo(1));
-            AddUntilStep("normal panels displayed", () => GetVisiblePanels<PanelBeatmap>().Count(), () => Is.EqualTo(3));
-            AddUntilStep("standalone panels not displayed", () => GetVisiblePanels<PanelBeatmapStandalone>().Count(), () => Is.EqualTo(0));
+            AddUntilStep(
+                "set panel displayed",
+                () => GetVisiblePanels<PanelBeatmapSet>().Count(),
+                () => Is.EqualTo(1)
+            );
+            AddUntilStep(
+                "normal panels displayed",
+                () => GetVisiblePanels<PanelBeatmap>().Count(),
+                () => Is.EqualTo(3)
+            );
+            AddUntilStep(
+                "standalone panels not displayed",
+                () => GetVisiblePanels<PanelBeatmapStandalone>().Count(),
+                () => Is.EqualTo(0)
+            );
         }
 
         [Test]
@@ -360,7 +422,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
             AddBeatmaps(5, 3);
             WaitForDrawablePanels();
 
-            AddStep("set recommendation algorithm", () => BeatmapRecommendationFunction = beatmaps => beatmaps.Last());
+            AddStep(
+                "set recommendation algorithm",
+                () => BeatmapRecommendationFunction = beatmaps => beatmaps.Last()
+            );
 
             SelectPrevSet();
 
@@ -398,7 +463,10 @@ namespace osu.Game.Tests.Visual.SongSelectV2
                 if (isIterating)
                     AddUntilStep("selection changed", () => Carousel.CurrentSelection != selection);
                 else
-                    AddUntilStep("selection not changed", () => Carousel.CurrentSelection == selection);
+                    AddUntilStep(
+                        "selection not changed",
+                        () => Carousel.CurrentSelection == selection
+                    );
             }
         }
     }

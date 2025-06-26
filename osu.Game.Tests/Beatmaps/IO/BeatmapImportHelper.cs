@@ -31,12 +31,22 @@ namespace osu.Game.Tests.Beatmaps.IO
 
             ensureLoaded(osu);
 
-            waitForOrAssert(() => !File.Exists(temp), "Temporary file still exists after standard import", 5000);
+            waitForOrAssert(
+                () => !File.Exists(temp),
+                "Temporary file still exists after standard import",
+                5000
+            );
 
-            return manager.GetAllUsableBeatmapSets().Find(beatmapSet => beatmapSet.ID == importedSet.ID);
+            return manager
+                .GetAllUsableBeatmapSets()
+                .Find(beatmapSet => beatmapSet.ID == importedSet.ID);
         }
 
-        public static async Task<BeatmapSetInfo> LoadOszIntoOsu(OsuGameBase osu, string path = null, bool virtualTrack = false)
+        public static async Task<BeatmapSetInfo> LoadOszIntoOsu(
+            OsuGameBase osu,
+            string path = null,
+            bool virtualTrack = false
+        )
         {
             string temp = path ?? TestResources.GetTestBeatmapForImport(virtualTrack);
 
@@ -48,9 +58,15 @@ namespace osu.Game.Tests.Beatmaps.IO
 
             ensureLoaded(osu);
 
-            waitForOrAssert(() => !File.Exists(temp), "Temporary file still exists after standard import", 5000);
+            waitForOrAssert(
+                () => !File.Exists(temp),
+                "Temporary file still exists after standard import",
+                5000
+            );
 
-            return manager.GetAllUsableBeatmapSets().Find(beatmapSet => beatmapSet.ID == importedSet.ID);
+            return manager
+                .GetAllUsableBeatmapSets()
+                .Find(beatmapSet => beatmapSet.ID == importedSet.ID);
         }
 
         private static void ensureLoaded(OsuGameBase osu, int timeout = 60000)
@@ -74,11 +90,16 @@ namespace osu.Game.Tests.Beatmaps.IO
             // Assert.IsTrue(beatmap?.HitObjects.Any() == true);
         }
 
-        private static void waitForOrAssert(Func<bool> result, string failureMessage, int timeout = 60000)
+        private static void waitForOrAssert(
+            Func<bool> result,
+            string failureMessage,
+            int timeout = 60000
+        )
         {
             Task task = Task.Run(() =>
             {
-                while (!result()) Thread.Sleep(200);
+                while (!result())
+                    Thread.Sleep(200);
             });
 
             Assert.IsTrue(task.Wait(timeout), failureMessage);

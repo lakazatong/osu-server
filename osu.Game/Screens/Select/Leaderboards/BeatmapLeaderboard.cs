@@ -62,7 +62,8 @@ namespace osu.Game.Screens.Select.Leaderboards
             }
         }
 
-        private readonly IBindable<LeaderboardScores?> fetchedScores = new Bindable<LeaderboardScores?>();
+        private readonly IBindable<LeaderboardScores?> fetchedScores =
+            new Bindable<LeaderboardScores?>();
 
         [Resolved]
         private IBindable<RulesetInfo> ruleset { get; set; } = null!;
@@ -100,7 +101,15 @@ namespace osu.Game.Screens.Select.Leaderboards
             // For now, we forcefully refresh to keep things simple.
             // In the future, removing this requirement may be deemed useful, but will need ample testing of edge case scenarios
             // (like returning from gameplay after setting a new score, returning to song select after main menu).
-            leaderboardManager.FetchWithCriteria(new LeaderboardCriteria(fetchBeatmapInfo, fetchRuleset, Scope, filterMods ? mods.Value.Where(m => m.UserPlayable).ToArray() : null), forceRefresh: true);
+            leaderboardManager.FetchWithCriteria(
+                new LeaderboardCriteria(
+                    fetchBeatmapInfo,
+                    fetchRuleset,
+                    Scope,
+                    filterMods ? mods.Value.Where(m => m.UserPlayable).ToArray() : null
+                ),
+                forceRefresh: true
+            );
 
             if (!initialFetchComplete)
             {
@@ -117,7 +126,8 @@ namespace osu.Game.Screens.Select.Leaderboards
         {
             var scores = fetchedScores.Value;
 
-            if (scores == null) return;
+            if (scores == null)
+                return;
 
             if (scores.FailState == null)
                 Schedule(() => SetScores(scores.TopScores, scores.UserScore));
@@ -125,14 +135,26 @@ namespace osu.Game.Screens.Select.Leaderboards
                 Schedule(() => SetErrorState((LeaderboardState)scores.FailState));
         }
 
-        protected override LeaderboardScore CreateDrawableScore(ScoreInfo model, int index) => new LeaderboardScore(model, index, IsOnlineScope, Scope != BeatmapLeaderboardScope.Friend)
-        {
-            Action = () => ScoreSelected?.Invoke(model)
-        };
+        protected override LeaderboardScore CreateDrawableScore(ScoreInfo model, int index) =>
+            new LeaderboardScore(
+                model,
+                index,
+                IsOnlineScope,
+                Scope != BeatmapLeaderboardScope.Friend
+            )
+            {
+                Action = () => ScoreSelected?.Invoke(model),
+            };
 
-        protected override LeaderboardScore CreateDrawableTopScore(ScoreInfo model) => new LeaderboardScore(model, model.Position, false, Scope != BeatmapLeaderboardScope.Friend)
-        {
-            Action = () => ScoreSelected?.Invoke(model)
-        };
+        protected override LeaderboardScore CreateDrawableTopScore(ScoreInfo model) =>
+            new LeaderboardScore(
+                model,
+                model.Position,
+                false,
+                Scope != BeatmapLeaderboardScope.Friend
+            )
+            {
+                Action = () => ScoreSelected?.Invoke(model),
+            };
     }
 }

@@ -12,9 +12,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
         public new Beatmap<PippidonHitObject> Beatmap => (Beatmap<PippidonHitObject>)base.Beatmap;
 
         public PippidonAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
-        {
-        }
+            : base(beatmap) { }
 
         protected override void GenerateFrames()
         {
@@ -22,11 +20,13 @@ namespace osu.Game.Rulesets.Pippidon.Replays
 
             foreach (PippidonHitObject hitObject in Beatmap.HitObjects)
             {
-                Frames.Add(new PippidonReplayFrame
-                {
-                    Time = hitObject.StartTime,
-                    Position = hitObject.Position,
-                });
+                Frames.Add(
+                    new PippidonReplayFrame
+                    {
+                        Time = hitObject.StartTime,
+                        Position = hitObject.Position,
+                    }
+                );
             }
         }
     }

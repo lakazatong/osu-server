@@ -24,38 +24,50 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create components", () =>
-            {
-                manualGameplayClock = new TestGameplayClock();
-
-                Child = new DependencyProvidingContainer
+            AddStep(
+                "create components",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    CachedDependencies = new (Type, object)[] { (typeof(IGameplayClock), manualGameplayClock) },
-                    Children = new Drawable[]
+                    manualGameplayClock = new TestGameplayClock();
+
+                    Child = new DependencyProvidingContainer
                     {
-                        controller = new ClicksPerSecondController(),
-                        new DependencyProvidingContainer
+                        RelativeSizeAxes = Axes.Both,
+                        CachedDependencies = new (Type, object)[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            CachedDependencies = new (Type, object)[] { (typeof(ClicksPerSecondController), controller) },
-                            Child = new ClicksPerSecondCounter
+                            (typeof(IGameplayClock), manualGameplayClock),
+                        },
+                        Children = new Drawable[]
+                        {
+                            controller = new ClicksPerSecondController(),
+                            new DependencyProvidingContainer
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Scale = new Vector2(5),
-                            }
-                        }
-                    },
-                };
-            });
+                                RelativeSizeAxes = Axes.Both,
+                                CachedDependencies = new (Type, object)[]
+                                {
+                                    (typeof(ClicksPerSecondController), controller),
+                                },
+                                Child = new ClicksPerSecondCounter
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Scale = new Vector2(5),
+                                },
+                            },
+                        },
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestBasicConsistency()
         {
             seek(1000);
-            AddStep("add inputs in past", () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 }));
+            AddStep(
+                "add inputs in past",
+                () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 })
+            );
             checkClicksPerSecondValue(10);
         }
 
@@ -63,7 +75,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestRateAdjustConsistency()
         {
             seek(1000);
-            AddStep("add inputs in past", () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 }));
+            AddStep(
+                "add inputs in past",
+                () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 })
+            );
             checkClicksPerSecondValue(10);
             AddStep("set rate 0.5x", () => manualGameplayClock.TrueGameplayRate = 0.5);
             checkClicksPerSecondValue(5);
@@ -73,7 +88,10 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestInputsDiscardedOnRewind()
         {
             seek(1000);
-            AddStep("add inputs in past", () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 }));
+            AddStep(
+                "add inputs in past",
+                () => addInputs(new double[] { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 })
+            );
             checkClicksPerSecondValue(10);
             seek(500);
             checkClicksPerSecondValue(6);
@@ -81,11 +99,13 @@ namespace osu.Game.Tests.Visual.Gameplay
             checkClicksPerSecondValue(6);
         }
 
-        private void checkClicksPerSecondValue(int i) => AddAssert("clicks/s is correct", () => controller.Value, () => Is.EqualTo(i));
+        private void checkClicksPerSecondValue(int i) =>
+            AddAssert("clicks/s is correct", () => controller.Value, () => Is.EqualTo(i));
 
         private void seekClockImmediately(double time) => manualGameplayClock.CurrentTime = time;
 
-        private void seek(double time) => AddStep($"Seek to {time}ms", () => seekClockImmediately(time));
+        private void seek(double time) =>
+            AddStep($"Seek to {time}ms", () => seekClockImmediately(time));
 
         private void addInputs(IEnumerable<double> inputs)
         {
@@ -115,9 +135,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             private readonly AudioAdjustments adjustableAudioComponent = new AudioAdjustments();
 
-            public void ProcessFrame()
-            {
-            }
+            public void ProcessFrame() { }
 
             public double ElapsedFrameTime => throw new NotImplementedException();
             public double FramesPerSecond => throw new NotImplementedException();
@@ -127,7 +145,8 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public IAdjustableAudioComponent AdjustmentsFromMods => adjustableAudioComponent;
 
-            public IEnumerable<double> NonGameplayAdjustments => throw new NotImplementedException();
+            public IEnumerable<double> NonGameplayAdjustments =>
+                throw new NotImplementedException();
             public IBindable<bool> IsPaused => throw new NotImplementedException();
             public bool IsRewinding => false;
         }

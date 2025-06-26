@@ -34,21 +34,23 @@ namespace osu.Game.Utils
 
             int bestNumber = findBestNumber(existingNames, regex);
 
-            return bestNumber == 0
-                ? desiredName
-                : $"{desiredName} ({bestNumber.ToString()})";
+            return bestNumber == 0 ? desiredName : $"{desiredName} ({bestNumber.ToString()})";
         }
 
         /// <summary>
         /// Given a set of <paramref name="existingFilenames"/> and a desired target <paramref name="desiredFilename"/>
         /// finds a filename closest to <paramref name="desiredFilename"/> that is not in <paramref name="existingFilenames"/>
         /// </summary>
-        public static string GetNextBestFilename(IEnumerable<string> existingFilenames, string desiredFilename)
+        public static string GetNextBestFilename(
+            IEnumerable<string> existingFilenames,
+            string desiredFilename
+        )
         {
             string name = Path.GetFileNameWithoutExtension(desiredFilename);
             string extension = Path.GetExtension(desiredFilename);
 
-            string pattern = $@"^{getBaselineNameDetectingPattern(name)}(?i){Regex.Escape(extension)}(?-i)$";
+            string pattern =
+                $@"^{getBaselineNameDetectingPattern(name)}(?i){Regex.Escape(extension)}(?-i)$";
             var regex = new Regex(pattern, RegexOptions.Compiled);
 
             int bestNumber = findBestNumber(existingFilenames, regex);
@@ -71,8 +73,8 @@ namespace osu.Game.Utils
         /// All comparisons are made in a case-insensitive manner.
         /// If a number is detected in the matches, it will be output to the <c>copyNumber</c> named group.
         /// </remarks>
-        private static string getBaselineNameDetectingPattern(string desiredName)
-            => $@"(?i){Regex.Escape(desiredName)}(?-i)( \((?<copyNumber>[1-9][0-9]*)\))?";
+        private static string getBaselineNameDetectingPattern(string desiredName) =>
+            $@"(?i){Regex.Escape(desiredName)}(?-i)( \((?<copyNumber>[1-9][0-9]*)\))?";
 
         private static int findBestNumber(IEnumerable<string> existingNames, Regex regex)
         {

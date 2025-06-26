@@ -15,7 +15,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
 {
     public static class SpeedEvaluator
     {
-        private const double single_spacing_threshold = OsuDifficultyHitObject.NORMALISED_DIAMETER * 1.25; // 1.25 circles distance between centers
+        private const double single_spacing_threshold =
+            OsuDifficultyHitObject.NORMALISED_DIAMETER * 1.25; // 1.25 circles distance between centers
         private const double min_speed_bonus = 200; // 200 BPM 1/4th
         private const double speed_balancing_factor = 40;
         private const double distance_multiplier = 0.9;
@@ -28,7 +29,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
         /// <item><description>and how easily they can be cheesed.</description></item>
         /// </list>
         /// </summary>
-        public static double EvaluateDifficultyOf(DifficultyHitObject current, IReadOnlyList<Mod> mods)
+        public static double EvaluateDifficultyOf(
+            DifficultyHitObject current,
+            IReadOnlyList<Mod> mods
+        )
         {
             if (current.BaseObject is Spinner)
                 return 0;
@@ -38,7 +42,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
             var osuPrevObj = current.Index > 0 ? (OsuDifficultyHitObject)current.Previous(0) : null;
 
             double strainTime = osuCurrObj.StrainTime;
-            double doubletapness = 1.0 - osuCurrObj.GetDoubletapness((OsuDifficultyHitObject?)osuCurrObj.Next(0));
+            double doubletapness =
+                1.0 - osuCurrObj.GetDoubletapness((OsuDifficultyHitObject?)osuCurrObj.Next(0));
 
             // Cap deltatime to the OD 300 hitwindow.
             // 0.93 is derived from making sure 260bpm OD8 streams aren't nerfed harshly, whilst 0.92 limits the effect of the cap.
@@ -49,7 +54,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
 
             // Add additional scaling bonus for streams/bursts higher than 200bpm
             if (DifficultyCalculationUtils.MillisecondsToBPM(strainTime) > min_speed_bonus)
-                speedBonus = 0.75 * Math.Pow((DifficultyCalculationUtils.BPMToMilliseconds(min_speed_bonus) - strainTime) / speed_balancing_factor, 2);
+                speedBonus =
+                    0.75
+                    * Math.Pow(
+                        (DifficultyCalculationUtils.BPMToMilliseconds(min_speed_bonus) - strainTime)
+                            / speed_balancing_factor,
+                        2
+                    );
 
             double travelDistance = osuPrevObj?.TravelDistance ?? 0;
             double distance = travelDistance + osuCurrObj.MinimumJumpDistance;
@@ -58,7 +69,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
             distance = Math.Min(distance, single_spacing_threshold);
 
             // Max distance bonus is 1 * `distance_multiplier` at single_spacing_threshold
-            double distanceBonus = Math.Pow(distance / single_spacing_threshold, 3.95) * distance_multiplier;
+            double distanceBonus =
+                Math.Pow(distance / single_spacing_threshold, 3.95) * distance_multiplier;
 
             if (mods.OfType<OsuModAutopilot>().Any())
                 distanceBonus = 0;

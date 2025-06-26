@@ -77,14 +77,21 @@ namespace osu.Game.Screens.SelectV2
             if (beatmap == null)
                 return;
 
-            scoreSubscription = realm.RegisterForNotifications(r =>
+            scoreSubscription = realm.RegisterForNotifications(
+                r =>
                     r.All<ScoreInfo>()
-                     .Filter($"{nameof(ScoreInfo.User)}.{nameof(RealmUser.OnlineID)} == $0"
-                             + $" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $1"
-                             + $" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
-                             + $" && {nameof(ScoreInfo.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $2"
-                             + $" && {nameof(ScoreInfo.DeletePending)} == false", api.LocalUser.Value.Id, beatmap.ID, ruleset.Value.ShortName),
-                localScoresChanged);
+                        .Filter(
+                            $"{nameof(ScoreInfo.User)}.{nameof(RealmUser.OnlineID)} == $0"
+                                + $" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.ID)} == $1"
+                                + $" && {nameof(ScoreInfo.BeatmapInfo)}.{nameof(BeatmapInfo.Hash)} == {nameof(ScoreInfo.BeatmapHash)}"
+                                + $" && {nameof(ScoreInfo.Ruleset)}.{nameof(RulesetInfo.ShortName)} == $2"
+                                + $" && {nameof(ScoreInfo.DeletePending)} == false",
+                            api.LocalUser.Value.Id,
+                            beatmap.ID,
+                            ruleset.Value.ShortName
+                        ),
+                localScoresChanged
+            );
         }
 
         private void localScoresChanged(IRealmCollection<ScoreInfo> sender, ChangeSet? changes)
@@ -94,7 +101,9 @@ namespace osu.Game.Screens.SelectV2
             if (changes?.HasCollectionChanges() == false)
                 return;
 
-            ScoreInfo? topScore = sender.MaxBy(info => (info.TotalScore, -info.Date.UtcDateTime.Ticks));
+            ScoreInfo? topScore = sender.MaxBy(info =>
+                (info.TotalScore, -info.Date.UtcDateTime.Ticks)
+            );
             updateable.Rank = topScore?.Rank;
             updateable.Alpha = topScore != null ? 1 : 0;
         }

@@ -30,26 +30,26 @@ namespace osu.Game.Rulesets.Catch.Tests
         [BackgroundDependencyLoader]
         private void load()
         {
-            Dependencies.CacheAs<Player>(new TestPlayer
-            {
-                ShowingOverlayComponents = { BindTarget = showHud },
-            });
+            Dependencies.CacheAs<Player>(
+                new TestPlayer { ShowingOverlayComponents = { BindTarget = showHud } }
+            );
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            scoreProcessor = new ScoreProcessor(new CatchRuleset());
-
-            showHud.Value = true;
-
-            SetContents(_ => new CatchComboDisplay
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(2.5f),
+                scoreProcessor = new ScoreProcessor(new CatchRuleset());
+
+                showHud.Value = true;
+
+                SetContents(_ => new CatchComboDisplay
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(2.5f),
+                });
             });
-        });
 
         [Test]
         public void TestCatchComboCounter()
@@ -57,15 +57,18 @@ namespace osu.Game.Rulesets.Catch.Tests
             AddRepeatStep("perform hit", () => performJudgement(HitResult.Great), 20);
             AddStep("perform miss", () => performJudgement(HitResult.Miss));
 
-            AddStep("randomize judged object colour", () =>
-            {
-                judgedObjectColour = new Color4(
-                    RNG.NextSingle(1f),
-                    RNG.NextSingle(1f),
-                    RNG.NextSingle(1f),
-                    1f
-                );
-            });
+            AddStep(
+                "randomize judged object colour",
+                () =>
+                {
+                    judgedObjectColour = new Color4(
+                        RNG.NextSingle(1f),
+                        RNG.NextSingle(1f),
+                        RNG.NextSingle(1f),
+                        1f
+                    );
+                }
+            );
 
             AddStep("set hud to never show", () => showHud.Value = false);
             AddRepeatStep("perform hit", () => performJudgement(HitResult.Great), 5);
@@ -76,9 +79,15 @@ namespace osu.Game.Rulesets.Catch.Tests
 
         private void performJudgement(HitResult type, Judgement? judgement = null)
         {
-            var judgedObject = new DrawableFruit(new Fruit()) { AccentColour = { Value = judgedObjectColour } };
+            var judgedObject = new DrawableFruit(new Fruit())
+            {
+                AccentColour = { Value = judgedObjectColour },
+            };
 
-            var result = new JudgementResult(judgedObject.HitObject, judgement ?? new Judgement()) { Type = type };
+            var result = new JudgementResult(judgedObject.HitObject, judgement ?? new Judgement())
+            {
+                Type = type,
+            };
             scoreProcessor.ApplyResult(result);
 
             foreach (var counter in CreatedDrawables.Cast<CatchComboDisplay>())

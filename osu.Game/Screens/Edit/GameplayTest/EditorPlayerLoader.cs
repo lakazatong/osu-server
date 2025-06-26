@@ -15,9 +15,7 @@ namespace osu.Game.Screens.Edit.GameplayTest
         private OsuLogo osuLogo { get; set; } = null!;
 
         public EditorPlayerLoader(Editor editor)
-            : base(() => new EditorPlayer(editor))
-        {
-        }
+            : base(() => new EditorPlayer(editor)) { }
 
         public override void OnEntering(ScreenTransitionEvent e)
         {

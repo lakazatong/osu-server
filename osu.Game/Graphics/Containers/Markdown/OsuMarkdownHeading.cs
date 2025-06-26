@@ -18,11 +18,12 @@ namespace osu.Game.Graphics.Containers.Markdown
             level = headingBlock.Level;
         }
 
-        public override MarkdownTextFlowContainer CreateTextFlow() => new HeadingTextFlowContainer
-        {
-            FontSize = GetFontSizeByLevel(level),
-            FontWeight = GetFontWeightByLevel(level),
-        };
+        public override MarkdownTextFlowContainer CreateTextFlow() =>
+            new HeadingTextFlowContainer
+            {
+                FontSize = GetFontSizeByLevel(level),
+                FontWeight = GetFontWeightByLevel(level),
+            };
 
         protected override float GetFontSizeByLevel(int level)
         {
@@ -69,8 +70,11 @@ namespace osu.Game.Graphics.Containers.Markdown
             public float FontSize;
             public FontWeight FontWeight;
 
-            protected override SpriteText CreateSpriteText()
-                => base.CreateSpriteText().With(t => t.Font = t.Font.With(Typeface.Torus, size: FontSize, weight: FontWeight));
+            protected override SpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(t =>
+                        t.Font = t.Font.With(Typeface.Torus, size: FontSize, weight: FontWeight)
+                    );
         }
     }
 }

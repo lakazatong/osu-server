@@ -20,12 +20,18 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Edit
 {
-    public partial class TransformToolboxGroup : EditorToolboxGroup, IKeyBindingHandler<GlobalAction>
+    public partial class TransformToolboxGroup
+        : EditorToolboxGroup,
+            IKeyBindingHandler<GlobalAction>
     {
         private readonly BindableList<HitObject> selectedHitObjects = new BindableList<HitObject>();
         private readonly BindableBool canMove = new BindableBool();
-        private readonly AggregateBindable<bool> canRotate = new AggregateBindable<bool>((x, y) => x || y);
-        private readonly AggregateBindable<bool> canScale = new AggregateBindable<bool>((x, y) => x || y);
+        private readonly AggregateBindable<bool> canRotate = new AggregateBindable<bool>(
+            (x, y) => x || y
+        );
+        private readonly AggregateBindable<bool> canScale = new AggregateBindable<bool>(
+            (x, y) => x || y
+        );
 
         private EditorToolButton moveButton = null!;
         private EditorToolButton rotateButton = null!;
@@ -37,9 +43,7 @@ namespace osu.Game.Rulesets.Osu.Edit
         public OsuGridToolboxGroup GridToolbox { get; init; } = null!;
 
         public TransformToolboxGroup()
-            : base("transform")
-        {
-        }
+            : base("transform") { }
 
         [BackgroundDependencyLoader]
         private void load(EditorBeatmap editorBeatmap)
@@ -51,16 +55,22 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    moveButton = new EditorToolButton("Move",
+                    moveButton = new EditorToolButton(
+                        "Move",
                         () => new SpriteIcon { Icon = FontAwesome.Solid.ArrowsAlt },
-                        () => new PreciseMovementPopover()),
-                    rotateButton = new EditorToolButton("Rotate",
+                        () => new PreciseMovementPopover()
+                    ),
+                    rotateButton = new EditorToolButton(
+                        "Rotate",
                         () => new SpriteIcon { Icon = FontAwesome.Solid.Undo },
-                        () => new PreciseRotationPopover(RotationHandler, GridToolbox)),
-                    scaleButton = new EditorToolButton("Scale",
+                        () => new PreciseRotationPopover(RotationHandler, GridToolbox)
+                    ),
+                    scaleButton = new EditorToolButton(
+                        "Scale",
                         () => new SpriteIcon { Icon = FontAwesome.Solid.ExpandArrowsAlt },
-                        () => new PreciseScalePopover(ScaleHandler, GridToolbox))
-                }
+                        () => new PreciseScalePopover(ScaleHandler, GridToolbox)
+                    ),
+                },
             };
 
             selectedHitObjects.BindTo(editorBeatmap.SelectedHitObjects);
@@ -70,7 +80,10 @@ namespace osu.Game.Rulesets.Osu.Edit
         {
             base.LoadComplete();
 
-            selectedHitObjects.BindCollectionChanged((_, _) => canMove.Value = selectedHitObjects.Any(ho => ho is not Spinner), true);
+            selectedHitObjects.BindCollectionChanged(
+                (_, _) => canMove.Value = selectedHitObjects.Any(ho => ho is not Spinner),
+                true
+            );
 
             canRotate.AddSource(RotationHandler.CanRotateAroundPlayfieldOrigin);
             canRotate.AddSource(RotationHandler.CanRotateAroundSelectionOrigin);
@@ -82,13 +95,20 @@ namespace osu.Game.Rulesets.Osu.Edit
             // bindings to `Enabled` on the buttons are decoupled on purpose
             // due to the weird `OsuButton` behaviour of resetting `Enabled` to `false` when `Action` is set.
             canMove.BindValueChanged(move => moveButton.Enabled.Value = move.NewValue, true);
-            canRotate.Result.BindValueChanged(rotate => rotateButton.Enabled.Value = rotate.NewValue, true);
-            canScale.Result.BindValueChanged(scale => scaleButton.Enabled.Value = scale.NewValue, true);
+            canRotate.Result.BindValueChanged(
+                rotate => rotateButton.Enabled.Value = rotate.NewValue,
+                true
+            );
+            canScale.Result.BindValueChanged(
+                scale => scaleButton.Enabled.Value = scale.NewValue,
+                true
+            );
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
-            if (e.Repeat) return false;
+            if (e.Repeat)
+                return false;
 
             switch (e.Action)
             {
@@ -116,8 +136,6 @@ namespace osu.Game.Rulesets.Osu.Edit
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
     }
 }

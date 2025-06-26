@@ -24,7 +24,8 @@ namespace osu.Game.Tests.Visual.SongSelect
 {
     public partial class TestSceneManageCollectionsDialog : OsuManualInputManagerTestScene
     {
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         private DialogOverlay dialogOverlay = null!;
         private BeatmapManager beatmapManager = null!;
@@ -34,26 +35,33 @@ namespace osu.Game.Tests.Visual.SongSelect
         private void load(GameHost host)
         {
             Dependencies.Cache(new RealmRulesetStore(Realm));
-            Dependencies.Cache(beatmapManager = new BeatmapManager(LocalStorage, Realm, null, Audio, Resources, host, Beatmap.Default));
+            Dependencies.Cache(
+                beatmapManager = new BeatmapManager(
+                    LocalStorage,
+                    Realm,
+                    null,
+                    Audio,
+                    Resources,
+                    host,
+                    Beatmap.Default
+                )
+            );
             Dependencies.Cache(Realm);
 
             beatmapManager.Import(TestResources.GetQuickTestBeatmapForImport()).WaitSafely();
 
-            base.Content.AddRange(new Drawable[]
-            {
-                Content,
-                dialogOverlay = new DialogOverlay(),
-            });
+            base.Content.AddRange(new Drawable[] { Content, dialogOverlay = new DialogOverlay() });
 
             Dependencies.CacheAs<IDialogOverlay>(dialogOverlay);
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Realm.Write(r => r.RemoveAll<BeatmapCollection>());
-            Child = dialog = new ManageCollectionsDialog();
-        });
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                Realm.Write(r => r.RemoveAll<BeatmapCollection>());
+                Child = dialog = new ManageCollectionsDialog();
+            });
 
         [SetUpSteps]
         public void SetUpSteps()
@@ -71,17 +79,26 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestLastItemIsPlaceholder()
         {
-            AddAssert("last item is placeholder", () => !dialog.ChildrenOfType<DrawableCollectionListItem>().Last().Model.IsManaged);
+            AddAssert(
+                "last item is placeholder",
+                () => !dialog.ChildrenOfType<DrawableCollectionListItem>().Last().Model.IsManaged
+            );
         }
 
         [Test]
         public void TestAddCollectionExternal()
         {
-            AddStep("add collection", () => Realm.Write(r => r.Add(new BeatmapCollection(name: "First collection"))));
+            AddStep(
+                "add collection",
+                () => Realm.Write(r => r.Add(new BeatmapCollection(name: "First collection")))
+            );
             assertCollectionCount(1);
             assertCollectionName(0, "First collection");
 
-            AddStep("add another collection", () => Realm.Write(r => r.Add(new BeatmapCollection(name: "Second collection"))));
+            AddStep(
+                "add another collection",
+                () => Realm.Write(r => r.Add(new BeatmapCollection(name: "Second collection")))
+            );
             assertCollectionCount(2);
             assertCollectionName(1, "Second collection");
         }
@@ -89,11 +106,16 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestFocusPlaceholderDoesNotCreateCollection()
         {
-            AddStep("focus placeholder", () =>
-            {
-                InputManager.MoveMouseTo(dialog.ChildrenOfType<DrawableCollectionListItem>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus placeholder",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialog.ChildrenOfType<DrawableCollectionListItem>().Last()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertCollectionCount(0);
         }
@@ -103,23 +125,34 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             DrawableCollectionListItem placeholderItem = null!;
 
-            AddStep("focus placeholder", () =>
-            {
-                InputManager.MoveMouseTo(placeholderItem = dialog.ChildrenOfType<DrawableCollectionListItem>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus placeholder",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        placeholderItem = dialog.ChildrenOfType<DrawableCollectionListItem>().Last()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertCollectionCount(0);
 
-            AddStep("change collection name", () =>
-            {
-                placeholderItem.ChildrenOfType<TextBox>().First().Text = "test text";
-                InputManager.Key(Key.Enter);
-            });
+            AddStep(
+                "change collection name",
+                () =>
+                {
+                    placeholderItem.ChildrenOfType<TextBox>().First().Text = "test text";
+                    InputManager.Key(Key.Enter);
+                }
+            );
 
             assertCollectionCount(1);
 
-            AddAssert("last item is placeholder", () => !dialog.ChildrenOfType<DrawableCollectionListItem>().Last().Model.IsManaged);
+            AddAssert(
+                "last item is placeholder",
+                () => !dialog.ChildrenOfType<DrawableCollectionListItem>().Last().Model.IsManaged
+            );
         }
 
         [Test]
@@ -127,17 +160,22 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             BeatmapCollection first = null!;
 
-            AddStep("add two collections", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "add two collections",
+                () =>
                 {
-                    r.Add(new[]
+                    Realm.Write(r =>
                     {
-                        first = new BeatmapCollection(name: "1"),
-                        new BeatmapCollection(name: "2"),
+                        r.Add(
+                            new[]
+                            {
+                                first = new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "2"),
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             assertCollectionCount(2);
 
@@ -149,89 +187,168 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestCollectionNameCollisions()
         {
-            AddStep("add dropdown", () =>
-            {
-                Add(new CollectionDropdown
+            AddStep(
+                "add dropdown",
+                () =>
                 {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.X,
-                    Width = 0.4f,
-                });
-            });
-            AddStep("add two collections with same name", () => Realm.Write(r => r.Add(new[]
-            {
-                new BeatmapCollection(name: "1"),
-                new BeatmapCollection(name: "1")
-                {
-                    BeatmapMD5Hashes = { beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps[0].MD5Hash }
-                },
-            })));
+                    Add(
+                        new CollectionDropdown
+                        {
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            RelativeSizeAxes = Axes.X,
+                            Width = 0.4f,
+                        }
+                    );
+                }
+            );
+            AddStep(
+                "add two collections with same name",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            new[]
+                            {
+                                new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "1")
+                                {
+                                    BeatmapMD5Hashes =
+                                    {
+                                        beatmapManager
+                                            .GetAllUsableBeatmapSets()
+                                            .First()
+                                            .Beatmaps[0]
+                                            .MD5Hash,
+                                    },
+                                },
+                            }
+                        )
+                    )
+            );
         }
 
         [Test]
         public void TestCollectionNameCollisionsWithBuiltInItems()
         {
-            AddStep("add dropdown", () =>
-            {
-                Add(new CollectionDropdown
+            AddStep(
+                "add dropdown",
+                () =>
                 {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.X,
-                    Width = 0.4f,
-                });
-            });
-            AddStep("add two collections which collide with default items", () => Realm.Write(r => r.Add(new[]
-            {
-                new BeatmapCollection(name: "All beatmaps"),
-                new BeatmapCollection(name: "Manage collections...")
-                {
-                    BeatmapMD5Hashes = { beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps[0].MD5Hash }
-                },
-            })));
+                    Add(
+                        new CollectionDropdown
+                        {
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            RelativeSizeAxes = Axes.X,
+                            Width = 0.4f,
+                        }
+                    );
+                }
+            );
+            AddStep(
+                "add two collections which collide with default items",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            new[]
+                            {
+                                new BeatmapCollection(name: "All beatmaps"),
+                                new BeatmapCollection(name: "Manage collections...")
+                                {
+                                    BeatmapMD5Hashes =
+                                    {
+                                        beatmapManager
+                                            .GetAllUsableBeatmapSets()
+                                            .First()
+                                            .Beatmaps[0]
+                                            .MD5Hash,
+                                    },
+                                },
+                            }
+                        )
+                    )
+            );
         }
 
         [Test]
         public void TestRemoveCollectionViaButton()
         {
-            AddStep("add two collections", () => Realm.Write(r => r.Add(new[]
-            {
-                new BeatmapCollection(name: "1"),
-                new BeatmapCollection(name: "2")
-                {
-                    BeatmapMD5Hashes = { beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps[0].MD5Hash }
-                },
-            })));
+            AddStep(
+                "add two collections",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            new[]
+                            {
+                                new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "2")
+                                {
+                                    BeatmapMD5Hashes =
+                                    {
+                                        beatmapManager
+                                            .GetAllUsableBeatmapSets()
+                                            .First()
+                                            .Beatmaps[0]
+                                            .MD5Hash,
+                                    },
+                                },
+                            }
+                        )
+                    )
+            );
 
             assertCollectionCount(2);
 
-            AddStep("click first delete button", () =>
-            {
-                InputManager.MoveMouseTo(dialog
-                                         .ChildrenOfType<DrawableCollectionListItem>().Single(i => i.Model.Value.Name == "1")
-                                         .ChildrenOfType<DrawableCollectionListItem.DeleteButton>().Single(), new Vector2(5, 0));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first delete button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialog
+                            .ChildrenOfType<DrawableCollectionListItem>()
+                            .Single(i => i.Model.Value.Name == "1")
+                            .ChildrenOfType<DrawableCollectionListItem.DeleteButton>()
+                            .Single(),
+                        new Vector2(5, 0)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("dialog not displayed", () => dialogOverlay.CurrentDialog == null);
             assertCollectionCount(1);
             assertCollectionName(0, "2");
 
-            AddStep("click second delete button", () =>
-            {
-                InputManager.MoveMouseTo(dialog
-                                         .ChildrenOfType<DrawableCollectionListItem>().Single(i => i.Model.Value.Name == "2")
-                                         .ChildrenOfType<DrawableCollectionListItem.DeleteButton>().Single(), new Vector2(5, 0));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click second delete button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialog
+                            .ChildrenOfType<DrawableCollectionListItem>()
+                            .Single(i => i.Model.Value.Name == "2")
+                            .ChildrenOfType<DrawableCollectionListItem.DeleteButton>()
+                            .Single(),
+                        new Vector2(5, 0)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("dialog displayed", () => dialogOverlay.CurrentDialog is DeleteCollectionDialog);
-            AddStep("click confirmation", () =>
-            {
-                InputManager.MoveMouseTo(dialogOverlay.CurrentDialog.ChildrenOfType<PopupDialogButton>().First());
-                InputManager.PressButton(MouseButton.Left);
-            });
+            AddAssert(
+                "dialog displayed",
+                () => dialogOverlay.CurrentDialog is DeleteCollectionDialog
+            );
+            AddStep(
+                "click confirmation",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialogOverlay.CurrentDialog.ChildrenOfType<PopupDialogButton>().First()
+                    );
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
 
             assertCollectionCount(0);
 
@@ -241,28 +358,57 @@ namespace osu.Game.Tests.Visual.SongSelect
         [Test]
         public void TestCollectionNotRemovedWhenDialogCancelled()
         {
-            AddStep("add collection", () => Realm.Write(r => r.Add(new[]
-            {
-                new BeatmapCollection(name: "1")
-                {
-                    BeatmapMD5Hashes = { beatmapManager.GetAllUsableBeatmapSets().First().Beatmaps[0].MD5Hash }
-                },
-            })));
+            AddStep(
+                "add collection",
+                () =>
+                    Realm.Write(r =>
+                        r.Add(
+                            new[]
+                            {
+                                new BeatmapCollection(name: "1")
+                                {
+                                    BeatmapMD5Hashes =
+                                    {
+                                        beatmapManager
+                                            .GetAllUsableBeatmapSets()
+                                            .First()
+                                            .Beatmaps[0]
+                                            .MD5Hash,
+                                    },
+                                },
+                            }
+                        )
+                    )
+            );
 
             assertCollectionCount(1);
 
-            AddStep("click first delete button", () =>
-            {
-                InputManager.MoveMouseTo(dialog.ChildrenOfType<DrawableCollectionListItem.DeleteButton>().First(), new Vector2(5, 0));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first delete button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialog.ChildrenOfType<DrawableCollectionListItem.DeleteButton>().First(),
+                        new Vector2(5, 0)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("dialog displayed", () => dialogOverlay.CurrentDialog is DeleteCollectionDialog);
-            AddStep("click cancellation", () =>
-            {
-                InputManager.MoveMouseTo(dialogOverlay.CurrentDialog.ChildrenOfType<PopupDialogButton>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddAssert(
+                "dialog displayed",
+                () => dialogOverlay.CurrentDialog is DeleteCollectionDialog
+            );
+            AddStep(
+                "click cancellation",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        dialogOverlay.CurrentDialog.ChildrenOfType<PopupDialogButton>().Last()
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             assertCollectionCount(1);
         }
@@ -272,17 +418,22 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             BeatmapCollection first = null!;
 
-            AddStep("add two collections", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "add two collections",
+                () =>
                 {
-                    r.Add(new[]
+                    Realm.Write(r =>
                     {
-                        first = new BeatmapCollection(name: "1"),
-                        new BeatmapCollection(name: "2"),
+                        r.Add(
+                            new[]
+                            {
+                                first = new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "2"),
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             assertCollectionName(0, "1");
             assertCollectionName(1, "2");
@@ -301,40 +452,60 @@ namespace osu.Game.Tests.Visual.SongSelect
             BeatmapCollection first = null!;
             DrawableCollectionListItem firstItem = null!;
 
-            AddStep("add two collections", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "add two collections",
+                () =>
                 {
-                    r.Add(new[]
+                    Realm.Write(r =>
                     {
-                        first = new BeatmapCollection(name: "1"),
-                        new BeatmapCollection(name: "2"),
+                        r.Add(
+                            new[]
+                            {
+                                first = new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "2"),
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             assertCollectionCount(2);
 
-            AddStep("focus first collection", () =>
-            {
-                InputManager.MoveMouseTo(firstItem = dialog.ChildrenOfType<DrawableCollectionListItem>().Single(i => i.Model.Value.Name == "1"));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus first collection",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        firstItem = dialog
+                            .ChildrenOfType<DrawableCollectionListItem>()
+                            .Single(i => i.Model.Value.Name == "1")
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("change first collection name", () =>
-            {
-                firstItem.ChildrenOfType<TextBox>().First().Text = "First";
-            });
+            AddStep(
+                "change first collection name",
+                () =>
+                {
+                    firstItem.ChildrenOfType<TextBox>().First().Text = "First";
+                }
+            );
 
             if (commitWithEnter)
                 AddStep("commit via enter", () => InputManager.Key(Key.Enter));
             else
             {
-                AddStep("commit via click away", () =>
-                {
-                    InputManager.MoveMouseTo(firstItem.ScreenSpaceDrawQuad.TopLeft - new Vector2(10));
-                    InputManager.Click(MouseButton.Left);
-                });
+                AddStep(
+                    "commit via click away",
+                    () =>
+                    {
+                        InputManager.MoveMouseTo(
+                            firstItem.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)
+                        );
+                        InputManager.Click(MouseButton.Left);
+                    }
+                );
             }
 
             AddUntilStep("collection has new name", () => first.Name == "First");
@@ -345,22 +516,30 @@ namespace osu.Game.Tests.Visual.SongSelect
         {
             BeatmapCollection first = null!;
 
-            AddStep("add two collections", () =>
-            {
-                Realm.Write(r =>
+            AddStep(
+                "add two collections",
+                () =>
                 {
-                    r.Add(new[]
+                    Realm.Write(r =>
                     {
-                        first = new BeatmapCollection(name: "1"),
-                        new BeatmapCollection(name: "2"),
+                        r.Add(
+                            new[]
+                            {
+                                first = new BeatmapCollection(name: "1"),
+                                new BeatmapCollection(name: "2"),
+                            }
+                        );
                     });
-                });
-            });
+                }
+            );
 
             assertCollectionName(0, "1");
             assertCollectionName(1, "2");
 
-            AddStep("search for 1", () => dialog.ChildrenOfType<SearchTextBox>().Single().Current.Value = "1");
+            AddStep(
+                "search for 1",
+                () => dialog.ChildrenOfType<SearchTextBox>().Single().Current.Value = "1"
+            );
 
             assertCollectionCount(1);
 
@@ -368,16 +547,33 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             assertCollectionCount(0);
 
-            AddStep("search for first", () => dialog.ChildrenOfType<SearchTextBox>().Single().Current.Value = "firs");
+            AddStep(
+                "search for first",
+                () => dialog.ChildrenOfType<SearchTextBox>().Single().Current.Value = "firs"
+            );
 
             assertCollectionCount(1);
         }
 
-        private void assertCollectionCount(int count)
-            => AddUntilStep($"{count} collections shown", () => dialog.ChildrenOfType<DrawableCollectionListItem>().Count(i => i.IsPresent) == count + 1); // +1 for placeholder
+        private void assertCollectionCount(int count) =>
+            AddUntilStep(
+                $"{count} collections shown",
+                () =>
+                    dialog.ChildrenOfType<DrawableCollectionListItem>().Count(i => i.IsPresent)
+                    == count + 1
+            ); // +1 for placeholder
 
-        private void assertCollectionName(int index, string name)
-            => AddUntilStep($"item {index + 1} has correct name",
-                () => dialog.ChildrenOfType<DrawableCollectionList>().Single().OrderedItems.ElementAtOrDefault(index)?.ChildrenOfType<TextBox>().First().Text == name);
+        private void assertCollectionName(int index, string name) =>
+            AddUntilStep(
+                $"item {index + 1} has correct name",
+                () =>
+                    dialog
+                        .ChildrenOfType<DrawableCollectionList>()
+                        .Single()
+                        .OrderedItems.ElementAtOrDefault(index)
+                        ?.ChildrenOfType<TextBox>()
+                        .First()
+                        .Text == name
+            );
     }
 }

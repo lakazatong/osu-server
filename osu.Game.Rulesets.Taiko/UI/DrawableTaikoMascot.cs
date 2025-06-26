@@ -28,7 +28,9 @@ namespace osu.Game.Rulesets.Taiko.UI
         private bool lastObjectHit = true;
         private bool kiaiMode;
 
-        public DrawableTaikoMascot(TaikoMascotAnimationState startingState = TaikoMascotAnimationState.Idle)
+        public DrawableTaikoMascot(
+            TaikoMascotAnimationState startingState = TaikoMascotAnimationState.Idle
+        )
         {
             Origin = Anchor = Anchor.BottomLeft;
 
@@ -43,10 +45,18 @@ namespace osu.Game.Rulesets.Taiko.UI
         {
             InternalChildren = new[]
             {
-                animations[TaikoMascotAnimationState.Idle] = new TaikoMascotAnimation(TaikoMascotAnimationState.Idle),
-                animations[TaikoMascotAnimationState.Clear] = new TaikoMascotAnimation(TaikoMascotAnimationState.Clear),
-                animations[TaikoMascotAnimationState.Kiai] = new TaikoMascotAnimation(TaikoMascotAnimationState.Kiai),
-                animations[TaikoMascotAnimationState.Fail] = new TaikoMascotAnimation(TaikoMascotAnimationState.Fail),
+                animations[TaikoMascotAnimationState.Idle] = new TaikoMascotAnimation(
+                    TaikoMascotAnimationState.Idle
+                ),
+                animations[TaikoMascotAnimationState.Clear] = new TaikoMascotAnimation(
+                    TaikoMascotAnimationState.Clear
+                ),
+                animations[TaikoMascotAnimationState.Kiai] = new TaikoMascotAnimation(
+                    TaikoMascotAnimationState.Kiai
+                ),
+                animations[TaikoMascotAnimationState.Fail] = new TaikoMascotAnimation(
+                    TaikoMascotAnimationState.Fail
+                ),
             };
 
             if (gameplayState != null)
@@ -84,7 +94,12 @@ namespace osu.Game.Rulesets.Taiko.UI
             lastObjectHit = result.IsHit;
         }
 
-        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        protected override void OnNewBeat(
+            int beatIndex,
+            TimingControlPoint timingPoint,
+            EffectControlPoint effectPoint,
+            ChannelAmplitudes amplitudes
+        )
         {
             kiaiMode = effectPoint.KiaiMode;
         }
@@ -99,7 +114,10 @@ namespace osu.Game.Rulesets.Taiko.UI
         {
             // don't change state if current animation is still playing (and we haven't rewound before it).
             // used for clear state - others are manually animated on new beats.
-            if (currentAnimation?.Completed == false && currentAnimation.DisplayTime <= Time.Current)
+            if (
+                currentAnimation?.Completed == false
+                && currentAnimation.DisplayTime <= Time.Current
+            )
                 return State.Value;
 
             if (!lastObjectHit)
@@ -115,10 +133,12 @@ namespace osu.Game.Rulesets.Taiko.UI
             currentAnimation.Show();
         }
 
-        private bool triggerComboClear(JudgementResult judgementResult)
-            => (judgementResult.ComboAtJudgement + 1) % 50 == 0 && judgementResult.Type.AffectsCombo() && judgementResult.IsHit;
+        private bool triggerComboClear(JudgementResult judgementResult) =>
+            (judgementResult.ComboAtJudgement + 1) % 50 == 0
+            && judgementResult.Type.AffectsCombo()
+            && judgementResult.IsHit;
 
-        private bool triggerSwellClear(JudgementResult judgementResult)
-            => judgementResult.Judgement is TaikoSwellJudgement && judgementResult.IsHit;
+        private bool triggerSwellClear(JudgementResult judgementResult) =>
+            judgementResult.Judgement is TaikoSwellJudgement && judgementResult.IsHit;
     }
 }

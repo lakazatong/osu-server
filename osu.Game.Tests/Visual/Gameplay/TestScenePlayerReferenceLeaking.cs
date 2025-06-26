@@ -14,38 +14,48 @@ namespace osu.Game.Tests.Visual.Gameplay
 {
     public partial class TestScenePlayerReferenceLeaking : TestSceneAllRulesetPlayers
     {
-        private readonly WeakList<IWorkingBeatmap> workingWeakReferences = new WeakList<IWorkingBeatmap>();
+        private readonly WeakList<IWorkingBeatmap> workingWeakReferences =
+            new WeakList<IWorkingBeatmap>();
 
         private readonly WeakList<Player> playerWeakReferences = new WeakList<Player>();
 
         protected override void AddCheckSteps()
         {
-            AddUntilStep("no leaked beatmaps", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                int count = 0;
+            AddUntilStep(
+                "no leaked beatmaps",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    int count = 0;
 
-                foreach (var unused in workingWeakReferences)
-                    count++;
+                    foreach (var unused in workingWeakReferences)
+                        count++;
 
-                return count == 1;
-            });
+                    return count == 1;
+                }
+            );
 
-            AddUntilStep("no leaked players", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                int count = 0;
+            AddUntilStep(
+                "no leaked players",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    int count = 0;
 
-                foreach (var unused in playerWeakReferences)
-                    count++;
+                    foreach (var unused in playerWeakReferences)
+                        count++;
 
-                return count == 1;
-            });
+                    return count == 1;
+                }
+            );
         }
 
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
+        protected override WorkingBeatmap CreateWorkingBeatmap(
+            IBeatmap beatmap,
+            Storyboard storyboard = null
+        )
         {
             var working = base.CreateWorkingBeatmap(beatmap, storyboard);
             workingWeakReferences.Add(working);

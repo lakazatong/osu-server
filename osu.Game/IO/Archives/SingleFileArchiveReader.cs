@@ -23,9 +23,7 @@ namespace osu.Game.IO.Archives
 
         public override Stream GetStream(string name) => File.OpenRead(path);
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
         public override IEnumerable<string> Filenames => new[] { Name };
     }

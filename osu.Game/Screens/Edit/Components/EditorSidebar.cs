@@ -31,22 +31,20 @@ namespace osu.Game.Screens.Edit.Components
 
             InternalChildren = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                background = new Box { RelativeSizeAxes = Axes.Both },
                 new OsuScrollContainer
                 {
                     ScrollbarOverlapsContent = false,
                     RelativeSizeAxes = Axes.Both,
-                    Child = Content = new FillFlowContainer<EditorSidebarSection>
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding(PADDING),
-                        Direction = FillDirection.Vertical,
-                    },
-                }
+                    Child = Content =
+                        new FillFlowContainer<EditorSidebarSection>
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding(PADDING),
+                            Direction = FillDirection.Vertical,
+                        },
+                },
             };
         }
 

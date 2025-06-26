@@ -2,14 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Localisation;
-using osu.Game.Rulesets;
 using osu.Game.Localisation;
+using osu.Game.Rulesets;
 
 namespace osu.Game.Screens.Edit.Setup
 {
     public abstract partial class RulesetSetupSection : SetupSection
     {
-        public sealed override LocalisableString Title => EditorSetupStrings.RulesetHeader(rulesetInfo.Name);
+        public sealed override LocalisableString Title =>
+            EditorSetupStrings.RulesetHeader(rulesetInfo.Name);
 
         private readonly RulesetInfo rulesetInfo;
 

@@ -35,10 +35,7 @@ namespace osu.Game.Screens.Play.HUD
         {
             Size = new Vector2(default_size, default_size / 2f);
 
-            InternalChild = flag = new UpdateableTeamFlag
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            InternalChild = flag = new UpdateableTeamFlag { RelativeSizeAxes = Axes.Both };
         }
 
         [BackgroundDependencyLoader]
@@ -51,8 +48,11 @@ namespace osu.Game.Screens.Play.HUD
                 else
                 {
                     // We only store very basic information about a user to realm, so there's a high chance we don't have the team information.
-                    userLookupCache.GetUserAsync(gameplayState.Score.ScoreInfo.User.Id)
-                                   .ContinueWith(task => Schedule(() => flag.Team = task.GetResultSafely()?.Team));
+                    userLookupCache
+                        .GetUserAsync(gameplayState.Score.ScoreInfo.User.Id)
+                        .ContinueWith(task =>
+                            Schedule(() => flag.Team = task.GetResultSafely()?.Team)
+                        );
                 }
             }
             else

@@ -24,7 +24,9 @@ namespace osu.Game.Skinning
             get
             {
                 if (beatmapSkins == null)
-                    throw new InvalidOperationException($"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed.");
+                    throw new InvalidOperationException(
+                        $"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed."
+                    );
 
                 return beatmapSkins.Value;
             }
@@ -35,7 +37,9 @@ namespace osu.Game.Skinning
             get
             {
                 if (beatmapColours == null)
-                    throw new InvalidOperationException($"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed.");
+                    throw new InvalidOperationException(
+                        $"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed."
+                    );
 
                 return beatmapColours.Value;
             }
@@ -44,7 +48,9 @@ namespace osu.Game.Skinning
         protected override bool AllowDrawableLookup(ISkinComponentLookup lookup)
         {
             if (beatmapSkins == null)
-                throw new InvalidOperationException($"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed.");
+                throw new InvalidOperationException(
+                    $"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed."
+                );
 
             return beatmapSkins.Value;
         }
@@ -52,7 +58,9 @@ namespace osu.Game.Skinning
         protected override bool AllowTextureLookup(string componentName)
         {
             if (beatmapSkins == null)
-                throw new InvalidOperationException($"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed.");
+                throw new InvalidOperationException(
+                    $"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed."
+                );
 
             return beatmapSkins.Value;
         }
@@ -60,7 +68,9 @@ namespace osu.Game.Skinning
         protected override bool AllowSampleLookup(ISampleInfo sampleInfo)
         {
             if (beatmapSkins == null)
-                throw new InvalidOperationException($"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed.");
+                throw new InvalidOperationException(
+                    $"{nameof(BeatmapSkinProvidingContainer)} needs to be loaded before being consumed."
+                );
 
             return sampleInfo is StoryboardSampleInfo || beatmapHitsounds.Value;
         }
@@ -77,7 +87,9 @@ namespace osu.Game.Skinning
             this.classicFallback = classicFallback;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var config = parent.Get<OsuConfigManager>();
 
@@ -96,26 +108,31 @@ namespace osu.Game.Skinning
             beatmapHitsounds.BindValueChanged(_ => TriggerSourceChanged());
 
             currentSkin = skins.CurrentSkin.GetBoundCopy();
-            currentSkin.BindValueChanged(_ =>
-            {
-                bool userSkinIsLegacy = skins.CurrentSkin.Value is LegacySkin;
-                bool beatmapProvidingResources = skin is LegacySkinTransformer legacySkin && legacySkin.IsProvidingLegacyResources;
+            currentSkin.BindValueChanged(
+                _ =>
+                {
+                    bool userSkinIsLegacy = skins.CurrentSkin.Value is LegacySkin;
+                    bool beatmapProvidingResources =
+                        skin is LegacySkinTransformer legacySkin
+                        && legacySkin.IsProvidingLegacyResources;
 
-                // Some beatmaps provide a limited selection of skin elements to add some visual flair.
-                // In stable, these elements will take lookup priority over the selected skin (whether that be a user skin or default).
-                //
-                // To replicate this we need to pay special attention to the fallback order.
-                // If a user has a non-legacy skin (argon, triangles) selected, the game won't normally fall back to a legacy skin.
-                // In turn this can create an unexpected visual experience.
-                //
-                // So here, check what skin the user has selected. If it's already a legacy skin then we don't need to do anything special.
-                // If it isn't, we insert the classic default. Note that this is only done if the beatmap seems to be providing skin elements,
-                // as we only want to override the user's (non-legacy) skin choice when required for beatmap skin visuals.
-                if (!userSkinIsLegacy && beatmapProvidingResources && classicFallback != null)
-                    SetSources(new[] { skin, classicFallback });
-                else
-                    SetSources(new[] { skin });
-            }, true);
+                    // Some beatmaps provide a limited selection of skin elements to add some visual flair.
+                    // In stable, these elements will take lookup priority over the selected skin (whether that be a user skin or default).
+                    //
+                    // To replicate this we need to pay special attention to the fallback order.
+                    // If a user has a non-legacy skin (argon, triangles) selected, the game won't normally fall back to a legacy skin.
+                    // In turn this can create an unexpected visual experience.
+                    //
+                    // So here, check what skin the user has selected. If it's already a legacy skin then we don't need to do anything special.
+                    // If it isn't, we insert the classic default. Note that this is only done if the beatmap seems to be providing skin elements,
+                    // as we only want to override the user's (non-legacy) skin choice when required for beatmap skin visuals.
+                    if (!userSkinIsLegacy && beatmapProvidingResources && classicFallback != null)
+                        SetSources(new[] { skin, classicFallback });
+                    else
+                        SetSources(new[] { skin });
+                },
+                true
+            );
         }
     }
 }

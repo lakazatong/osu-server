@@ -26,6 +26,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
         }
 
         protected override TextBox CreateHexCodeTextBox() => new OsuTextBox();
+
         protected override ColourPreview CreateColourPreview() => new OsuColourPreview();
 
         private partial class OsuColourPreview : ColourPreview
@@ -38,10 +39,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                 {
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
-                    Child = preview = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    Child = preview = new Box { RelativeSizeAxes = Axes.Both },
                 };
             }
 

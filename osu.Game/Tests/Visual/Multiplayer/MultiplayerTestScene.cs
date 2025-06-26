@@ -12,7 +12,9 @@ namespace osu.Game.Tests.Visual.Multiplayer
     /// <summary>
     /// The base test scene for all multiplayer components and screens.
     /// </summary>
-    public abstract partial class MultiplayerTestScene : OnlinePlayTestScene, IMultiplayerTestSceneDependencies
+    public abstract partial class MultiplayerTestScene
+        : OnlinePlayTestScene,
+            IMultiplayerTestSceneDependencies
     {
         public const int PLAYER_1_ID = 55;
         public const int PLAYER_2_ID = 56;
@@ -20,7 +22,8 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public TestMultiplayerClient MultiplayerClient => OnlinePlayDependencies.MultiplayerClient;
         public TestSpectatorClient SpectatorClient => OnlinePlayDependencies.SpectatorClient;
 
-        protected new MultiplayerTestSceneDependencies OnlinePlayDependencies => (MultiplayerTestSceneDependencies)base.OnlinePlayDependencies;
+        protected new MultiplayerTestSceneDependencies OnlinePlayDependencies =>
+            (MultiplayerTestSceneDependencies)base.OnlinePlayDependencies;
 
         public bool RoomJoined => MultiplayerClient.RoomJoined;
 
@@ -34,9 +37,9 @@ namespace osu.Game.Tests.Visual.Multiplayer
                 [
                     new PlaylistItem(new TestBeatmap(Ruleset.Value).BeatmapInfo)
                     {
-                        RulesetID = Ruleset.Value.OnlineID
-                    }
-                ]
+                        RulesetID = Ruleset.Value.OnlineID,
+                    },
+                ],
             };
         }
 
@@ -47,6 +50,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
         protected void WaitForJoined() => AddUntilStep("wait for room join", () => RoomJoined);
 
-        protected override OnlinePlayTestSceneDependencies CreateOnlinePlayDependencies() => new MultiplayerTestSceneDependencies();
+        protected override OnlinePlayTestSceneDependencies CreateOnlinePlayDependencies() =>
+            new MultiplayerTestSceneDependencies();
     }
 }

@@ -16,7 +16,8 @@ namespace osu.Game.Overlays.BeatmapListing
 
         protected override OverlayTitle CreateTitle() => new BeatmapListingTitle();
 
-        protected override Drawable CreateContent() => FilterControl = new BeatmapListingFilterControl();
+        protected override Drawable CreateContent() =>
+            FilterControl = new BeatmapListingFilterControl();
 
         private partial class BeatmapListingTitle : OverlayTitle
         {

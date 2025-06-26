@@ -53,32 +53,34 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
         {
             RelativeSizeAxes = Axes.Both;
 
-            Add(content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Masking = true,
-                Scale = new Vector2(0.8f),
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Children = new Drawable[]
+            Add(
+                content = new Container
                 {
-                    hover = new Container
+                    RelativeSizeAxes = Axes.Both,
+                    Masking = true,
+                    Scale = new Vector2(0.8f),
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        CornerRadius = BeatmapCard.CORNER_RADIUS,
-                        Masking = true,
-                        Colour = Color4.White.Opacity(0.1f),
-                        Blending = BlendingParameters.Additive,
-                        Child = new Box { RelativeSizeAxes = Axes.Both, }
-                    },
-                    Icon = new SpriteIcon
-                    {
-                        Origin = Anchor.Centre,
-                        Anchor = Anchor.Centre,
-                        Size = new Vector2(14),
+                        hover = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            CornerRadius = BeatmapCard.CORNER_RADIUS,
+                            Masking = true,
+                            Colour = Color4.White.Opacity(0.1f),
+                            Blending = BlendingParameters.Additive,
+                            Child = new Box { RelativeSizeAxes = Axes.Both },
+                        },
+                        Icon = new SpriteIcon
+                        {
+                            Origin = Anchor.Centre,
+                            Anchor = Anchor.Centre,
+                            Size = new Vector2(14),
+                        },
                     },
                 }
-            });
+            );
 
             IdleColour = colourProvider.Light1;
             HoverColour = colourProvider.Content1;
@@ -110,7 +112,11 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 
             hover.FadeTo(isHovered ? 1f : 0f, 500, Easing.OutQuint);
             content.ScaleTo(isHovered ? 0.9f : 0.8f, 500, Easing.OutQuint);
-            Icon.FadeColour(isHovered ? HoverColour : IdleColour, BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
+            Icon.FadeColour(
+                isHovered ? HoverColour : IdleColour,
+                BeatmapCard.TRANSITION_DURATION,
+                Easing.OutQuint
+            );
         }
 
         protected void SetLoading(bool isLoading)

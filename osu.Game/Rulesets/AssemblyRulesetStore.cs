@@ -23,9 +23,7 @@ namespace osu.Game.Rulesets
         /// </summary>
         /// <param name="path">An path containing ruleset DLLs.</param>
         public AssemblyRulesetStore(string path)
-            : this(new NativeStorage(path))
-        {
-        }
+            : this(new NativeStorage(path)) { }
 
         /// <summary>
         /// Create an assembly ruleset store that populates from loaded assemblies and an optional storage source.
@@ -33,21 +31,27 @@ namespace osu.Game.Rulesets
         /// <param name="storage">An optional storage containing ruleset DLLs.</param>
         public AssemblyRulesetStore(Storage? storage = null)
             : base(storage)
-
         {
-            List<Ruleset> instances = LoadedAssemblies.Values
-                                                      .Select(r => Activator.CreateInstance(r) as Ruleset)
-                                                      .Where(r => r != null)
-                                                      .Select(r => r.AsNonNull())
-                                                      .ToList();
+            List<Ruleset> instances = LoadedAssemblies
+                .Values.Select(r => Activator.CreateInstance(r) as Ruleset)
+                .Where(r => r != null)
+                .Select(r => r.AsNonNull())
+                .ToList();
 
             // add all legacy rulesets first to ensure they have exclusive choice of primary key.
             foreach (var r in instances.Where(r => r is ILegacyRuleset))
             {
-                availableRulesets.Add(new RulesetInfo(r.RulesetInfo.ShortName, r.RulesetInfo.Name, r.RulesetInfo.InstantiationInfo, r.RulesetInfo.OnlineID)
-                {
-                    Available = true
-                });
+                availableRulesets.Add(
+                    new RulesetInfo(
+                        r.RulesetInfo.ShortName,
+                        r.RulesetInfo.Name,
+                        r.RulesetInfo.InstantiationInfo,
+                        r.RulesetInfo.OnlineID
+                    )
+                    {
+                        Available = true,
+                    }
+                );
             }
         }
     }

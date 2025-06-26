@@ -17,44 +17,78 @@ namespace osu.Game.Tests.Visual.Settings
     public partial class TestSceneKeyBindingRow : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Aquamarine
+        );
 
         [Test]
         public void TestChangesAfterConstruction()
         {
             KeyBindingRow row = null!;
 
-            AddStep("create row", () => Child = new Container
-            {
-                Width = 500,
-                AutoSizeAxes = Axes.Y,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Child = row = new KeyBindingRow(GlobalAction.Back)
-                {
-                    Defaults = new[]
+            AddStep(
+                "create row",
+                () =>
+                    Child = new Container
                     {
-                        new KeyCombination(InputKey.Escape),
-                        new KeyCombination(InputKey.ExtraMouseButton1)
+                        Width = 500,
+                        AutoSizeAxes = Axes.Y,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Child = row =
+                            new KeyBindingRow(GlobalAction.Back)
+                            {
+                                Defaults = new[]
+                                {
+                                    new KeyCombination(InputKey.Escape),
+                                    new KeyCombination(InputKey.ExtraMouseButton1),
+                                },
+                            },
                     }
+            );
+
+            AddStep(
+                "change key bindings",
+                () =>
+                {
+                    row.KeyBindings.Add(
+                        new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.Escape))
+                    );
+                    row.KeyBindings.Add(
+                        new RealmKeyBinding(
+                            GlobalAction.Back,
+                            new KeyCombination(InputKey.ExtraMouseButton1)
+                        )
+                    );
                 }
-            });
+            );
+            AddUntilStep(
+                "revert to default button not shown",
+                () => row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().Alpha,
+                () => Is.Zero
+            );
 
-            AddStep("change key bindings", () =>
-            {
-                row.KeyBindings.Add(new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.Escape)));
-                row.KeyBindings.Add(new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.ExtraMouseButton1)));
-            });
-            AddUntilStep("revert to default button not shown", () => row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().Alpha, () => Is.Zero);
-
-            AddStep("change key bindings", () =>
-            {
-                row.KeyBindings.Clear();
-                row.KeyBindings.Add(new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.X)));
-                row.KeyBindings.Add(new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.Z)));
-                row.KeyBindings.Add(new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.I)));
-            });
-            AddUntilStep("revert to default button not shown", () => row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().Alpha, () => Is.Not.Zero);
+            AddStep(
+                "change key bindings",
+                () =>
+                {
+                    row.KeyBindings.Clear();
+                    row.KeyBindings.Add(
+                        new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.X))
+                    );
+                    row.KeyBindings.Add(
+                        new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.Z))
+                    );
+                    row.KeyBindings.Add(
+                        new RealmKeyBinding(GlobalAction.Back, new KeyCombination(InputKey.I))
+                    );
+                }
+            );
+            AddUntilStep(
+                "revert to default button not shown",
+                () => row.ChildrenOfType<RevertToDefaultButton<bool>>().Single().Alpha,
+                () => Is.Not.Zero
+            );
         }
     }
 }

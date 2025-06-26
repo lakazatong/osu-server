@@ -63,8 +63,8 @@ namespace osu.Game.Rulesets.Catch.UI
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.Centre,
                     Margin = new MarginPadding { Bottom = 350f },
-                    X = CatchPlayfield.CENTER_X
-                }
+                    X = CatchPlayfield.CENTER_X,
+                },
             };
         }
 
@@ -84,11 +84,18 @@ namespace osu.Game.Rulesets.Catch.UI
         {
             base.Update();
 
-            var replayState = (GetContainingInputManager()!.CurrentState as RulesetInputManagerInputState<CatchAction>)?.LastReplayState as CatchFramedReplayInputHandler.CatchReplayState;
+            var replayState =
+                (
+                    GetContainingInputManager()!.CurrentState
+                    as RulesetInputManagerInputState<CatchAction>
+                )?.LastReplayState as CatchFramedReplayInputHandler.CatchReplayState;
 
             SetCatcherPosition(
-                replayState?.CatcherX ??
-                (float)(Catcher.X + Catcher.Speed * currentDirection * Clock.ElapsedFrameTime));
+                replayState?.CatcherX
+                    ?? (float)(
+                        Catcher.X + Catcher.Speed * currentDirection * Clock.ElapsedFrameTime
+                    )
+            );
         }
 
         protected override void UpdateAfterChildren()
@@ -113,7 +120,11 @@ namespace osu.Game.Rulesets.Catch.UI
                 const double trail_generation_interval = 16;
 
                 if (Time.Current - CatcherTrails.LastDashTrailTime >= trail_generation_interval)
-                    displayCatcherTrail(Catcher.HyperDashing ? CatcherTrailAnimation.HyperDashing : CatcherTrailAnimation.Dashing);
+                    displayCatcherTrail(
+                        Catcher.HyperDashing
+                            ? CatcherTrailAnimation.HyperDashing
+                            : CatcherTrailAnimation.Dashing
+                    );
             }
 
             lastHyperDashState = Catcher.HyperDashing;
@@ -170,6 +181,15 @@ namespace osu.Game.Rulesets.Catch.UI
             }
         }
 
-        private void displayCatcherTrail(CatcherTrailAnimation animation) => CatcherTrails.Add(new CatcherTrailEntry(Time.Current, Catcher.CurrentState, Catcher.X, Catcher.BodyScale, animation));
+        private void displayCatcherTrail(CatcherTrailAnimation animation) =>
+            CatcherTrails.Add(
+                new CatcherTrailEntry(
+                    Time.Current,
+                    Catcher.CurrentState,
+                    Catcher.X,
+                    Catcher.BodyScale,
+                    animation
+                )
+            );
     }
 }

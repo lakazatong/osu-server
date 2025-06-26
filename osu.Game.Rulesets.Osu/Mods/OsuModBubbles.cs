@@ -24,7 +24,11 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public partial class OsuModBubbles : Mod, IApplicableToDrawableRuleset<OsuHitObject>, IApplicableToDrawableHitObject, IApplicableToScoreProcessor
+    public partial class OsuModBubbles
+        : Mod,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IApplicableToDrawableHitObject,
+            IApplicableToScoreProcessor
     {
         public override string Name => "Bubbles";
 
@@ -37,7 +41,8 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override ModType Type => ModType.Fun;
 
         // Compatibility with these seems potentially feasible in the future, blocked for now because they don't work as one would expect
-        public override Type[] IncompatibleMods => new[] { typeof(OsuModBarrelRoll), typeof(OsuModMagnetised), typeof(OsuModRepel) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(OsuModBarrelRoll), typeof(OsuModMagnetised), typeof(OsuModRepel) };
 
         private PlayfieldAdjustmentContainer bubbleContainer = null!;
 
@@ -54,8 +59,10 @@ namespace osu.Game.Rulesets.Osu.Mods
         public void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
         {
             currentCombo.BindTo(scoreProcessor.Combo);
-            currentCombo.BindValueChanged(combo =>
-                maxSize = Math.Min(1.75f, (float)(1.25 + 0.005 * combo.NewValue)), true);
+            currentCombo.BindValueChanged(
+                combo => maxSize = Math.Min(1.75f, (float)(1.25 + 0.005 * combo.NewValue)),
+                true
+            );
         }
 
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
@@ -80,7 +87,8 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             drawableObject.OnNewResult += (drawable, _) =>
             {
-                if (drawable is not DrawableOsuHitObject drawableOsuHitObject) return;
+                if (drawable is not DrawableOsuHitObject drawableOsuHitObject)
+                    return;
 
                 switch (drawableOsuHitObject.HitObject)
                 {
@@ -105,9 +113,12 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             drawableObject.OnRevertResult += (drawable, _) =>
             {
-                if (drawable.HitObject is SpinnerTick or Slider) return;
+                if (drawable.HitObject is SpinnerTick or Slider)
+                    return;
 
-                BubbleDrawable? lastBubble = bubbleContainer.OfType<BubbleDrawable>().LastOrDefault();
+                BubbleDrawable? lastBubble = bubbleContainer
+                    .OfType<BubbleDrawable>()
+                    .LastOrDefault();
 
                 lastBubble?.ClearTransforms();
                 lastBubble?.Expire(true);
@@ -167,7 +178,7 @@ namespace osu.Game.Rulesets.Osu.Mods
                         Radius = 3,
                         Colour = Colour4.Black.Opacity(0.05f),
                     },
-                    Child = colourBox = new Box { RelativeSizeAxes = Axes.Both, }
+                    Child = colourBox = new Box { RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -189,21 +200,29 @@ namespace osu.Game.Rulesets.Osu.Mods
                     .Then()
                     // Pop at the end of the bubbles life time
                     .ScaleTo(MaxSize * 1.5f, duration * 0.2f, Easing.OutQuint)
-                    .FadeOut(duration * 0.2f, Easing.OutCirc).Expire();
+                    .FadeOut(duration * 0.2f, Easing.OutCirc)
+                    .Expire();
 
-                if (!WasHit) return;
+                if (!WasHit)
+                    return;
 
                 content.BorderThickness = InitialSize.X / 3.5f;
                 content.BorderColour = Colour4.White;
 
                 colourBox.FadeColour(colourDarker);
 
-                content.TransformTo(nameof(BorderColour), colourDarker, duration * 0.3f, Easing.OutQuint);
+                content.TransformTo(
+                    nameof(BorderColour),
+                    colourDarker,
+                    duration * 0.3f,
+                    Easing.OutQuint
+                );
                 // Ripple effect utilises the border to reduce drawable count
-                content.TransformTo(nameof(BorderThickness), 2f, duration * 0.3f, Easing.OutQuint)
-                       .Then()
-                       // Avoids transparency overlap issues during the bubble "pop"
-                       .TransformTo(nameof(BorderThickness), 0f);
+                content
+                    .TransformTo(nameof(BorderThickness), 2f, duration * 0.3f, Easing.OutQuint)
+                    .Then()
+                    // Avoids transparency overlap issues during the bubble "pop"
+                    .TransformTo(nameof(BorderThickness), 0f);
             }
         }
 

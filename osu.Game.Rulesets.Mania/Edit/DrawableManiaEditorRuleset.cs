@@ -15,7 +15,9 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Mania.Edit
 {
-    public partial class DrawableManiaEditorRuleset : DrawableManiaRuleset, ISupportConstantAlgorithmToggle
+    public partial class DrawableManiaEditorRuleset
+        : DrawableManiaRuleset,
+            ISupportConstantAlgorithmToggle
     {
         public BindableBool ShowSpeedChanges { get; } = new BindableBool();
 
@@ -23,28 +25,40 @@ namespace osu.Game.Rulesets.Mania.Edit
 
         public new IScrollingInfo ScrollingInfo => base.ScrollingInfo;
 
-        public DrawableManiaEditorRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods)
-            : base(ruleset, beatmap, mods)
-        {
-        }
+        public DrawableManiaEditorRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods
+        )
+            : base(ruleset, beatmap, mods) { }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            ShowSpeedChanges.BindValueChanged(showChanges => VisualisationMethod = showChanges.NewValue ? ScrollVisualisationMethod.Sequential : ScrollVisualisationMethod.Constant, true);
+            ShowSpeedChanges.BindValueChanged(
+                showChanges =>
+                    VisualisationMethod = showChanges.NewValue
+                        ? ScrollVisualisationMethod.Sequential
+                        : ScrollVisualisationMethod.Constant,
+                true
+            );
         }
 
-        protected override Playfield CreatePlayfield() => new ManiaEditorPlayfield(Beatmap.Stages)
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Size = Vector2.One
-        };
+        protected override Playfield CreatePlayfield() =>
+            new ManiaEditorPlayfield(Beatmap.Stages)
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Size = Vector2.One,
+            };
 
         protected override void Update()
         {
-            TargetTimeRange = TimelineTimeRange == null || ShowSpeedChanges.Value ? ComputeScrollTime(Config.Get<double>(ManiaRulesetSetting.ScrollSpeed)) : TimelineTimeRange.Value;
+            TargetTimeRange =
+                TimelineTimeRange == null || ShowSpeedChanges.Value
+                    ? ComputeScrollTime(Config.Get<double>(ManiaRulesetSetting.ScrollSpeed))
+                    : TimelineTimeRange.Value;
             base.Update();
         }
     }

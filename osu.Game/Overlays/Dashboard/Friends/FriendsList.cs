@@ -25,7 +25,8 @@ namespace osu.Game.Overlays.Dashboard.Friends
         [Resolved]
         private MetadataClient metadataClient { get; set; } = null!;
 
-        private readonly IBindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        private readonly IBindableDictionary<int, UserPresence> friendPresences =
+            new BindableDictionary<int, UserPresence>();
         private readonly OverlayPanelDisplayStyle style;
         private readonly APIUser[] friends;
 
@@ -49,7 +50,7 @@ namespace osu.Game.Overlays.Dashboard.Friends
                 AutoSizeAxes = Axes.Y,
                 Spacing = new Vector2(style == OverlayPanelDisplayStyle.Card ? 10 : 2),
                 SortCriteria = { BindTarget = SortCriteria },
-                ChildrenEnumerable = friends.Select(createUserPanel)
+                ChildrenEnumerable = friends.Select(createUserPanel),
             };
         }
 
@@ -64,7 +65,10 @@ namespace osu.Game.Overlays.Dashboard.Friends
             OnlineStream.BindValueChanged(onFriendsStreamChanged, true);
         }
 
-        private void onFriendPresencesChanged(object? sender, NotifyDictionaryChangedEventArgs<int, UserPresence> e)
+        private void onFriendPresencesChanged(
+            object? sender,
+            NotifyDictionaryChangedEventArgs<int, UserPresence> e
+        )
         {
             switch (e.Action)
             {
@@ -134,7 +138,8 @@ namespace osu.Game.Overlays.Dashboard.Friends
 
         private partial class FriendsSearchContainer : SearchContainer<FilterableUserPanel>
         {
-            public readonly IBindable<UserSortCriteria> SortCriteria = new Bindable<UserSortCriteria>();
+            public readonly IBindable<UserSortCriteria> SortCriteria =
+                new Bindable<UserSortCriteria>();
 
             protected override void LoadComplete()
             {
@@ -146,7 +151,8 @@ namespace osu.Game.Overlays.Dashboard.Friends
             {
                 get
                 {
-                    IEnumerable<FilterableUserPanel> panels = base.FlowingChildren.OfType<FilterableUserPanel>();
+                    IEnumerable<FilterableUserPanel> panels =
+                        base.FlowingChildren.OfType<FilterableUserPanel>();
 
                     switch (SortCriteria.Value)
                     {
@@ -157,7 +163,11 @@ namespace osu.Game.Overlays.Dashboard.Friends
 
                         case UserSortCriteria.Rank:
                             // Todo: Statistics are not currently updated according to realtime user statistics, but it's also not currently displayed in the panels.
-                            return panels.OrderByDescending(panel => panel.User.Statistics.GlobalRank.HasValue).ThenBy(panel => panel.User.Statistics.GlobalRank ?? 0);
+                            return panels
+                                .OrderByDescending(panel =>
+                                    panel.User.Statistics.GlobalRank.HasValue
+                                )
+                                .ThenBy(panel => panel.User.Statistics.GlobalRank ?? 0);
 
                         case UserSortCriteria.Username:
                             return panels.OrderBy(panel => panel.User.Username);

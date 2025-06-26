@@ -21,10 +21,7 @@ namespace osu.Game.Tests.Visual.Online
 
             for (int i = 0; i < 11; i++)
             {
-                levels.Add(new UserStatistics.LevelInfo
-                {
-                    Current = i * 10
-                });
+                levels.Add(new UserStatistics.LevelInfo { Current = i * 10 });
             }
 
             levels.Add(new UserStatistics.LevelInfo { Current = 101 });
@@ -45,9 +42,9 @@ namespace osu.Game.Tests.Visual.Online
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Size = new Vector2(60),
-                        LevelInfo = { Value = level }
-                    })
-                }
+                        LevelInfo = { Value = level },
+                    }),
+                },
             };
         }
     }

@@ -20,7 +20,8 @@ namespace osu.Game.Tests.Visual
     /// </summary>
     public partial class ScrollingTestContainer : Container
     {
-        public SortedList<MultiplierControlPoint> ControlPoints => scrollingInfo.Algorithm.ControlPoints;
+        public SortedList<MultiplierControlPoint> ControlPoints =>
+            scrollingInfo.Algorithm.ControlPoints;
 
         public ScrollVisualisationMethod ScrollAlgorithm
         {
@@ -47,23 +48,30 @@ namespace osu.Game.Tests.Visual
             scrollingInfo.Direction.Value = direction;
         }
 
-        public void Flip() => scrollingInfo.Direction.Value = scrollingInfo.Direction.Value == ScrollingDirection.Up ? ScrollingDirection.Down : ScrollingDirection.Up;
+        public void Flip() =>
+            scrollingInfo.Direction.Value =
+                scrollingInfo.Direction.Value == ScrollingDirection.Up
+                    ? ScrollingDirection.Down
+                    : ScrollingDirection.Up;
 
         public class TestScrollingInfo : IScrollingInfo
         {
-            public readonly Bindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
+            public readonly Bindable<ScrollingDirection> Direction =
+                new Bindable<ScrollingDirection>();
             IBindable<ScrollingDirection> IScrollingInfo.Direction => Direction;
 
             public readonly Bindable<double> TimeRange = new BindableDouble(1000) { Value = 1000 };
             IBindable<double> IScrollingInfo.TimeRange => TimeRange;
 
             public readonly TestScrollAlgorithm Algorithm = new TestScrollAlgorithm();
-            IBindable<IScrollAlgorithm> IScrollingInfo.Algorithm => new Bindable<IScrollAlgorithm>(Algorithm);
+            IBindable<IScrollAlgorithm> IScrollingInfo.Algorithm =>
+                new Bindable<IScrollAlgorithm>(Algorithm);
         }
 
         public class TestScrollAlgorithm : IScrollAlgorithm
         {
-            public readonly SortedList<MultiplierControlPoint> ControlPoints = new SortedList<MultiplierControlPoint>();
+            public readonly SortedList<MultiplierControlPoint> ControlPoints =
+                new SortedList<MultiplierControlPoint>();
 
             private IScrollAlgorithm implementation;
 
@@ -93,20 +101,36 @@ namespace osu.Game.Tests.Visual
                 }
             }
 
-            public double GetDisplayStartTime(double originTime, float offset, double timeRange, float scrollLength)
-                => implementation.GetDisplayStartTime(originTime, offset, timeRange, scrollLength);
+            public double GetDisplayStartTime(
+                double originTime,
+                float offset,
+                double timeRange,
+                float scrollLength
+            ) => implementation.GetDisplayStartTime(originTime, offset, timeRange, scrollLength);
 
-            public float GetLength(double startTime, double endTime, double timeRange, float scrollLength)
-                => implementation.GetLength(startTime, endTime, timeRange, scrollLength);
+            public float GetLength(
+                double startTime,
+                double endTime,
+                double timeRange,
+                float scrollLength
+            ) => implementation.GetLength(startTime, endTime, timeRange, scrollLength);
 
-            public float PositionAt(double time, double currentTime, double timeRange, float scrollLength, double? originTime = null)
-                => implementation.PositionAt(time, currentTime, timeRange, scrollLength, originTime);
+            public float PositionAt(
+                double time,
+                double currentTime,
+                double timeRange,
+                float scrollLength,
+                double? originTime = null
+            ) => implementation.PositionAt(time, currentTime, timeRange, scrollLength, originTime);
 
-            public double TimeAt(float position, double currentTime, double timeRange, float scrollLength)
-                => implementation.TimeAt(position, currentTime, timeRange, scrollLength);
+            public double TimeAt(
+                float position,
+                double currentTime,
+                double timeRange,
+                float scrollLength
+            ) => implementation.TimeAt(position, currentTime, timeRange, scrollLength);
 
-            public void Reset()
-                => implementation.Reset();
+            public void Reset() => implementation.Reset();
         }
     }
 }

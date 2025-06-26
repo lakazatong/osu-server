@@ -26,9 +26,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
         private IDisposable? selectionOperation;
 
         public MultiplayerMatchFreestyleSelect(Room room, PlaylistItem item)
-            : base(room, item)
-        {
-        }
+            : base(room, item) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -65,26 +63,30 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
 
             selectionOperation = operationTracker.BeginOperation();
 
-            client.ChangeUserStyle(Beatmap.Value.BeatmapInfo.OnlineID, Ruleset.Value.OnlineID)
-                  .FireAndForget(onSuccess: () =>
-                  {
-                      selectionOperation.Dispose();
+            client
+                .ChangeUserStyle(Beatmap.Value.BeatmapInfo.OnlineID, Ruleset.Value.OnlineID)
+                .FireAndForget(
+                    onSuccess: () =>
+                    {
+                        selectionOperation.Dispose();
 
-                      Schedule(() =>
-                      {
-                          // If an error or server side trigger occurred this screen may have already exited by external means.
-                          if (this.IsCurrentScreen())
-                              this.Exit();
-                      });
-                  }, onError: _ =>
-                  {
-                      selectionOperation.Dispose();
+                        Schedule(() =>
+                        {
+                            // If an error or server side trigger occurred this screen may have already exited by external means.
+                            if (this.IsCurrentScreen())
+                                this.Exit();
+                        });
+                    },
+                    onError: _ =>
+                    {
+                        selectionOperation.Dispose();
 
-                      Schedule(() =>
-                      {
-                          Carousel.AllowSelection = true;
-                      });
-                  });
+                        Schedule(() =>
+                        {
+                            Carousel.AllowSelection = true;
+                        });
+                    }
+                );
 
             return true;
         }

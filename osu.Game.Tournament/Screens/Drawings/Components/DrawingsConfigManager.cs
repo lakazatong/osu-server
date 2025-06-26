@@ -17,14 +17,12 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
         }
 
         public DrawingsConfigManager(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
     }
 
     public enum DrawingsConfig
     {
         Groups,
-        TeamsPerGroup
+        TeamsPerGroup,
     }
 }

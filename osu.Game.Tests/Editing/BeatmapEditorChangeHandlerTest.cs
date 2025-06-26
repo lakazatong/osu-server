@@ -204,13 +204,9 @@ namespace osu.Game.Tests.Editing
 
         private (EditorChangeHandler, EditorBeatmap) createChangeHandler()
         {
-            var beatmap = new EditorBeatmap(new OsuBeatmap
-            {
-                BeatmapInfo =
-                {
-                    Ruleset = new OsuRuleset().RulesetInfo,
-                },
-            });
+            var beatmap = new EditorBeatmap(
+                new OsuBeatmap { BeatmapInfo = { Ruleset = new OsuRuleset().RulesetInfo } }
+            );
 
             var changeHandler = new BeatmapEditorChangeHandler(beatmap);
 

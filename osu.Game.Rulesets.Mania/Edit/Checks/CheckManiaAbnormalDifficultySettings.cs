@@ -10,7 +10,8 @@ namespace osu.Game.Rulesets.Mania.Edit.Checks
 {
     public class CheckManiaAbnormalDifficultySettings : CheckAbnormalDifficultySettings
     {
-        public override CheckMetadata Metadata => new CheckMetadata(CheckCategory.Settings, "Checks mania relevant settings");
+        public override CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Settings, "Checks mania relevant settings");
 
         public override IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {

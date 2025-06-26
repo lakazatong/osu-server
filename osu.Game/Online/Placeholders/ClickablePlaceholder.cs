@@ -20,22 +20,29 @@ namespace osu.Game.Online.Placeholders
             OsuAnimatedButton button;
             OsuTextFlowContainer textFlow;
 
-            AddArbitraryDrawable(button = new OsuAnimatedButton
-            {
-                AutoSizeAxes = Framework.Graphics.Axes.Both,
-                Action = () => Action?.Invoke()
-            });
+            AddArbitraryDrawable(
+                button = new OsuAnimatedButton
+                {
+                    AutoSizeAxes = Framework.Graphics.Axes.Both,
+                    Action = () => Action?.Invoke(),
+                }
+            );
 
-            button.Add(textFlow = new OsuTextFlowContainer(cp => cp.Font = cp.Font.With(size: TEXT_SIZE))
-            {
-                AutoSizeAxes = Framework.Graphics.Axes.Both,
-                Margin = new Framework.Graphics.MarginPadding(5)
-            });
+            button.Add(
+                textFlow = new OsuTextFlowContainer(cp => cp.Font = cp.Font.With(size: TEXT_SIZE))
+                {
+                    AutoSizeAxes = Framework.Graphics.Axes.Both,
+                    Margin = new Framework.Graphics.MarginPadding(5),
+                }
+            );
 
-            textFlow.AddIcon(icon, i =>
-            {
-                i.Padding = new Framework.Graphics.MarginPadding { Right = 10 };
-            });
+            textFlow.AddIcon(
+                icon,
+                i =>
+                {
+                    i.Padding = new Framework.Graphics.MarginPadding { Right = 10 };
+                }
+            );
 
             textFlow.AddText(actionMessage);
         }

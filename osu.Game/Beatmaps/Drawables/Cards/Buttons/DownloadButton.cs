@@ -6,9 +6,9 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Configuration;
 using osu.Game.Online;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Resources.Localisation.Web;
 
 namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
@@ -81,11 +81,15 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
                     if (!beatmapSet.HasVideo)
                         TooltipText = BeatmapsetsStrings.PanelDownloadAll;
                     else
-                        TooltipText = preferNoVideo.Value ? BeatmapsetsStrings.PanelDownloadNoVideo : BeatmapsetsStrings.PanelDownloadVideo;
+                        TooltipText = preferNoVideo.Value
+                            ? BeatmapsetsStrings.PanelDownloadNoVideo
+                            : BeatmapsetsStrings.PanelDownloadVideo;
                     break;
 
                 default:
-                    throw new InvalidOperationException($"Unknown {nameof(DownloadState)} specified.");
+                    throw new InvalidOperationException(
+                        $"Unknown {nameof(DownloadState)} specified."
+                    );
             }
         }
     }

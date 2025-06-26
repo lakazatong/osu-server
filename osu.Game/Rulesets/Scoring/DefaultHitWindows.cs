@@ -12,12 +12,28 @@ namespace osu.Game.Rulesets.Scoring
     /// </summary>
     public class DefaultHitWindows : HitWindows
     {
-        private static readonly DifficultyRange perfect_window_range = new DifficultyRange(22.4D, 19.4D, 13.9D);
-        private static readonly DifficultyRange great_window_range = new DifficultyRange(64, 49, 34);
+        private static readonly DifficultyRange perfect_window_range = new DifficultyRange(
+            22.4D,
+            19.4D,
+            13.9D
+        );
+        private static readonly DifficultyRange great_window_range = new DifficultyRange(
+            64,
+            49,
+            34
+        );
         private static readonly DifficultyRange good_window_range = new DifficultyRange(97, 82, 67);
         private static readonly DifficultyRange ok_window_range = new DifficultyRange(127, 112, 97);
-        private static readonly DifficultyRange meh_window_range = new DifficultyRange(151, 136, 121);
-        private static readonly DifficultyRange miss_window_range = new DifficultyRange(188, 173, 158);
+        private static readonly DifficultyRange meh_window_range = new DifficultyRange(
+            151,
+            136,
+            121
+        );
+        private static readonly DifficultyRange miss_window_range = new DifficultyRange(
+            188,
+            173,
+            158
+        );
 
         private double perfect;
         private double great;

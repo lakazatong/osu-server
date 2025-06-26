@@ -32,7 +32,8 @@ namespace osu.Game.Overlays.BeatmapSet
         private const float tile_spacing = 2;
 
         private readonly LinkFlowContainer infoContainer;
-        private readonly Statistic plays, favourites;
+        private readonly Statistic plays,
+            favourites;
 
         public readonly DifficultiesContainer Difficulties;
 
@@ -44,7 +45,8 @@ namespace osu.Game.Overlays.BeatmapSet
             get => beatmapSet;
             set
             {
-                if (value == beatmapSet) return;
+                if (value == beatmapSet)
+                    return;
 
                 beatmapSet = value;
                 updateDisplay();
@@ -72,10 +74,16 @@ namespace osu.Game.Overlays.BeatmapSet
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Margin = new MarginPadding { Left = -(tile_icon_padding + tile_spacing / 2), Bottom = 10 },
+                            Margin = new MarginPadding
+                            {
+                                Left = -(tile_icon_padding + tile_spacing / 2),
+                                Bottom = 10,
+                            },
                             OnLostHover = () => showBeatmap(Beatmap.Value, withStarRating: false),
                         },
-                        infoContainer = new LinkFlowContainer(t => t.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 11))
+                        infoContainer = new LinkFlowContainer(t =>
+                            t.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 11)
+                        )
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
@@ -129,24 +137,33 @@ namespace osu.Game.Overlays.BeatmapSet
 
             if (BeatmapSet != null)
             {
-                Difficulties.ChildrenEnumerable = BeatmapSet.Beatmaps.Concat(BeatmapSet.Converts ?? Array.Empty<APIBeatmap>())
-                                                            .Where(b => b.Ruleset.MatchesOnlineID(ruleset.Value))
-                                                            .OrderBy(b => !b.Convert)
-                                                            .ThenBy(b => b.StarRating)
-                                                            .Select(b => new DifficultySelectorButton(b, b.Convert ? new RulesetInfo { OnlineID = 0 } : null)
-                                                            {
-                                                                State = DifficultySelectorState.NotSelected,
-                                                                OnHovered = beatmap =>
-                                                                {
-                                                                    showBeatmap(beatmap, withStarRating: true);
-                                                                },
-                                                                OnClicked = beatmap => { Beatmap.Value = beatmap; },
-                                                            });
+                Difficulties.ChildrenEnumerable = BeatmapSet
+                    .Beatmaps.Concat(BeatmapSet.Converts ?? Array.Empty<APIBeatmap>())
+                    .Where(b => b.Ruleset.MatchesOnlineID(ruleset.Value))
+                    .OrderBy(b => !b.Convert)
+                    .ThenBy(b => b.StarRating)
+                    .Select(b => new DifficultySelectorButton(
+                        b,
+                        b.Convert ? new RulesetInfo { OnlineID = 0 } : null
+                    )
+                    {
+                        State = DifficultySelectorState.NotSelected,
+                        OnHovered = beatmap =>
+                        {
+                            showBeatmap(beatmap, withStarRating: true);
+                        },
+                        OnClicked = beatmap =>
+                        {
+                            Beatmap.Value = beatmap;
+                        },
+                    });
             }
 
             // If a selection is already made, try and maintain it.
             if (Beatmap.Value != null)
-                Beatmap.Value = Difficulties.FirstOrDefault(b => b.Beatmap.OnlineID == Beatmap.Value.OnlineID)?.Beatmap;
+                Beatmap.Value = Difficulties
+                    .FirstOrDefault(b => b.Beatmap.OnlineID == Beatmap.Value.OnlineID)
+                    ?.Beatmap;
 
             // Else just choose the first available difficulty for now.
             Beatmap.Value ??= Difficulties.FirstOrDefault()?.Beatmap;
@@ -161,15 +178,22 @@ namespace osu.Game.Overlays.BeatmapSet
         {
             infoContainer.Clear();
 
-            infoContainer.AddText(beatmapInfo?.DifficultyName ?? string.Empty, s => s.Font = OsuFont.GetFont(size: 17, weight: FontWeight.Bold));
+            infoContainer.AddText(
+                beatmapInfo?.DifficultyName ?? string.Empty,
+                s => s.Font = OsuFont.GetFont(size: 17, weight: FontWeight.Bold)
+            );
             infoContainer.AddArbitraryDrawable(Empty().With(e => e.Width = 5));
 
             var beatmapOwners = beatmapInfo?.BeatmapOwners;
-            bool isHostDifficulty = beatmapOwners?.Length == 1 && beatmapOwners.First().Id == beatmapSet?.AuthorID;
+            bool isHostDifficulty =
+                beatmapOwners?.Length == 1 && beatmapOwners.First().Id == beatmapSet?.AuthorID;
 
             if (beatmapOwners != null && !isHostDifficulty)
             {
-                APIUser[] users = BeatmapSet?.RelatedUsers?.Where(u => beatmapOwners.Any(o => o.Id == u.OnlineID)).ToArray() ?? [];
+                APIUser[] users =
+                    BeatmapSet
+                        ?.RelatedUsers?.Where(u => beatmapOwners.Any(o => o.Id == u.OnlineID))
+                        .ToArray() ?? [];
                 int count = users.Length;
 
                 switch (count)
@@ -212,18 +236,28 @@ namespace osu.Game.Overlays.BeatmapSet
             {
                 infoContainer.AddArbitraryDrawable(Empty().With(e => e.Width = 5));
                 infoContainer.AddText(
-                    LocalisableString.Interpolate($"{BeatmapsetsStrings.ShowStatsStars} {beatmapInfo?.StarRating.FormatStarRating()}"),
+                    LocalisableString.Interpolate(
+                        $"{BeatmapsetsStrings.ShowStatsStars} {beatmapInfo?.StarRating.FormatStarRating()}"
+                    ),
                     t =>
                     {
                         t.Font = OsuFont.GetFont(size: 11, weight: FontWeight.Bold);
                         t.Colour = colours.Yellow;
-                    });
+                    }
+                );
             }
         }
 
         private void updateDifficultyButtons()
         {
-            Difficulties.Children.ToList().ForEach(diff => diff.State = diff.Beatmap == Beatmap.Value ? DifficultySelectorState.Selected : DifficultySelectorState.NotSelected);
+            Difficulties
+                .Children.ToList()
+                .ForEach(diff =>
+                    diff.State =
+                        diff.Beatmap == Beatmap.Value
+                            ? DifficultySelectorState.Selected
+                            : DifficultySelectorState.NotSelected
+                );
         }
 
         public partial class DifficultiesContainer : FillFlowContainer<DifficultySelectorButton>
@@ -237,7 +271,9 @@ namespace osu.Game.Overlays.BeatmapSet
             }
         }
 
-        public partial class DifficultySelectorButton : OsuClickableContainer, IStateful<DifficultySelectorState>
+        public partial class DifficultySelectorButton
+            : OsuClickableContainer,
+                IStateful<DifficultySelectorState>
         {
             private const float transition_duration = 100;
             private const float size = 54;
@@ -260,7 +296,8 @@ namespace osu.Game.Overlays.BeatmapSet
                 get => state;
                 set
                 {
-                    if (value == state) return;
+                    if (value == state)
+                        return;
 
                     state = value;
 
@@ -285,11 +322,8 @@ namespace osu.Game.Overlays.BeatmapSet
                         Size = new Vector2(background_size),
                         Masking = true,
                         CornerRadius = 4,
-                        Child = backgroundBox = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0.5f
-                        }
+                        Child = backgroundBox =
+                            new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                     },
                     icon = new DifficultyIcon(beatmapInfo, ruleset)
                     {
@@ -377,7 +411,11 @@ namespace osu.Game.Overlays.BeatmapSet
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold, italics: true),
+                        Font = OsuFont.GetFont(
+                            size: 12,
+                            weight: FontWeight.SemiBold,
+                            italics: true
+                        ),
                     },
                 };
             }

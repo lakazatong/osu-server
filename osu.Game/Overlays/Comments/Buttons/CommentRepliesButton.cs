@@ -41,18 +41,11 @@ namespace osu.Game.Overlays.Comments.Buttons
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        background = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        background = new Box { RelativeSizeAxes = Axes.Both },
                         new Container
                         {
                             AutoSizeAxes = Axes.Both,
-                            Margin = new MarginPadding
-                            {
-                                Vertical = 5,
-                                Horizontal = 10,
-                            },
+                            Margin = new MarginPadding { Vertical = 5, Horizontal = 10 },
                             Child = new FillFlowContainer
                             {
                                 AutoSizeAxes = Axes.Both,
@@ -67,17 +60,20 @@ namespace osu.Game.Overlays.Comments.Buttons
                                         Anchor = Anchor.CentreLeft,
                                         Origin = Anchor.CentreLeft,
                                         AlwaysPresent = true,
-                                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold)
+                                        Font = OsuFont.GetFont(
+                                            size: 12,
+                                            weight: FontWeight.SemiBold
+                                        ),
                                     },
                                     icon = new ChevronIcon
                                     {
                                         Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                        Origin = Anchor.CentreLeft,
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
                 new HoverClickSounds(),
             };
@@ -89,9 +85,11 @@ namespace osu.Game.Overlays.Comments.Buttons
             background.Colour = colourProvider.Background2;
         }
 
-        protected void SetIconDirection(bool upwards) => icon.ScaleTo(upwards ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
+        protected void SetIconDirection(bool upwards) =>
+            icon.ScaleTo(upwards ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
 
-        public void ToggleTextVisibility(bool visible) => text.FadeTo(visible ? 1 : 0, 200, Easing.OutQuint);
+        public void ToggleTextVisibility(bool visible) =>
+            text.FadeTo(visible ? 1 : 0, 200, Easing.OutQuint);
 
         protected override bool OnHover(HoverEvent e)
         {

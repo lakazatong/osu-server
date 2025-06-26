@@ -20,51 +20,62 @@ namespace osu.Game.Tests.Visual.Ranking
         private Container container;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new Container
+        public void SetUp() =>
+            Schedule(() =>
             {
-                AutoSizeAxes = Axes.Y,
-                Width = 700,
-                Children = new Drawable[]
+                Child = new Container
                 {
-                    new Box
+                    AutoSizeAxes = Axes.Y,
+                    Width = 700,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4Extensions.FromHex("#333"),
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4Extensions.FromHex("#333"),
+                        },
+                        container = new Container
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding(20),
+                        },
                     },
-                    container = new Container
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding(20)
-                    }
-                }
-            };
-        });
+                };
+            });
 
         [Test]
         public void TestEmpty()
         {
-            AddStep("create with no items",
-                () => container.Add(new SimpleStatisticTable(2, Enumerable.Empty<SimpleStatisticItem>())));
+            AddStep(
+                "create with no items",
+                () =>
+                    container.Add(
+                        new SimpleStatisticTable(2, Enumerable.Empty<SimpleStatisticItem>())
+                    )
+            );
         }
 
         [Test]
         public void TestManyItems(
             [Values(1, 2, 3, 4, 12)] int itemCount,
-            [Values(1, 3, 5)] int columnCount)
+            [Values(1, 3, 5)] int columnCount
+        )
         {
-            AddStep($"create with {"item".ToQuantity(itemCount)}", () =>
-            {
-                var items = Enumerable.Range(1, itemCount)
-                                      .Select(i => new SimpleStatisticItem<int>($"Statistic #{i}")
-                                      {
-                                          Value = RNG.Next(100)
-                                      });
+            AddStep(
+                $"create with {"item".ToQuantity(itemCount)}",
+                () =>
+                {
+                    var items = Enumerable
+                        .Range(1, itemCount)
+                        .Select(i => new SimpleStatisticItem<int>($"Statistic #{i}")
+                        {
+                            Value = RNG.Next(100),
+                        });
 
-                container.Add(new SimpleStatisticTable(columnCount, items));
-            });
+                    container.Add(new SimpleStatisticTable(columnCount, items));
+                }
+            );
         }
     }
 }

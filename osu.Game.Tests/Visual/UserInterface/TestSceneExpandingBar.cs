@@ -16,27 +16,29 @@ namespace osu.Game.Tests.Visual.UserInterface
             Container container;
             ExpandingBar expandingBar;
 
-            Add(container = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Children = new Drawable[]
+            Add(
+                container = new Container
                 {
-                    new Box
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Children = new Drawable[]
                     {
-                        Colour = Color4.Gray,
-                        Alpha = 0.5f,
-                        RelativeSizeAxes = Axes.Both,
+                        new Box
+                        {
+                            Colour = Color4.Gray,
+                            Alpha = 0.5f,
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                        expandingBar = new ExpandingBar
+                        {
+                            Anchor = Anchor.Centre,
+                            ExpandedSize = 10,
+                            CollapsedSize = 2,
+                            Colour = Color4.DeepSkyBlue,
+                        },
                     },
-                    expandingBar = new ExpandingBar
-                    {
-                        Anchor = Anchor.Centre,
-                        ExpandedSize = 10,
-                        CollapsedSize = 2,
-                        Colour = Color4.DeepSkyBlue,
-                    }
                 }
-            });
+            );
 
             AddStep(@"Collapse", () => expandingBar.Collapse());
             AddStep(@"Expand", () => expandingBar.Expand());

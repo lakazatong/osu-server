@@ -49,17 +49,13 @@ namespace osu.Game.Overlays.Profile.Sections
             Masking = true;
             CornerRadius = 6;
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    content = new Container { RelativeSizeAxes = Axes.Both },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -83,7 +79,11 @@ namespace osu.Game.Overlays.Profile.Sections
 
         private void fadeBackgroundColour(double fadeDuration = 0)
         {
-            background.FadeColour(IsHovered ? HoverColour : IdleColour, fadeDuration, Easing.OutQuint);
+            background.FadeColour(
+                IsHovered ? HoverColour : IdleColour,
+                fadeDuration,
+                Easing.OutQuint
+            );
         }
     }
 }

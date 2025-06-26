@@ -30,15 +30,14 @@ namespace osu.Game.Screens.Edit.Timing.RowAttributes
         [BackgroundDependencyLoader]
         private void load()
         {
-            Content.AddRange(new Drawable[]
-            {
-                progressBar = new AttributeProgressBar(Point)
+            Content.AddRange(
+                new Drawable[]
                 {
-                    Current = scrollSpeed,
-                },
-                text = new AttributeText(Point) { Width = 45 },
-                kiaiModeBubble = new AttributeText(Point) { Text = "kiai" },
-            });
+                    progressBar = new AttributeProgressBar(Point) { Current = scrollSpeed },
+                    text = new AttributeText(Point) { Width = 45 },
+                    kiaiModeBubble = new AttributeText(Point) { Text = "kiai" },
+                }
+            );
 
             if (!Beatmap.BeatmapInfo.Ruleset.CreateInstance().EditorShowScrollSpeed)
             {
@@ -46,7 +45,10 @@ namespace osu.Game.Screens.Edit.Timing.RowAttributes
                 progressBar.Hide();
             }
 
-            kiaiMode.BindValueChanged(enabled => kiaiModeBubble.FadeTo(enabled.NewValue ? 1 : 0), true);
+            kiaiMode.BindValueChanged(
+                enabled => kiaiModeBubble.FadeTo(enabled.NewValue ? 1 : 0),
+                true
+            );
             scrollSpeed.BindValueChanged(_ => updateText(), true);
         }
 

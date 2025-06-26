@@ -43,14 +43,17 @@ namespace osu.Game.Rulesets.UI
 
             InternalChild = AudioContainer = new AudioContainer
             {
-                Child = hitSounds = new Container<SkinnableSound>
-                {
-                    Name = "concurrent sample pool",
-                    ChildrenEnumerable = Enumerable.Range(0, max_concurrent_hitsounds).Select(_ => new PausableSkinnableSound
+                Child = hitSounds =
+                    new Container<SkinnableSound>
                     {
-                        MinimumSampleVolume = DrawableHitObject.MINIMUM_SAMPLE_VOLUME
-                    })
-                }
+                        Name = "concurrent sample pool",
+                        ChildrenEnumerable = Enumerable
+                            .Range(0, max_concurrent_hitsounds)
+                            .Select(_ => new PausableSkinnableSound
+                            {
+                                MinimumSampleVolume = DrawableHitObject.MINIMUM_SAMPLE_VOLUME,
+                            }),
+                    },
             };
         }
 
@@ -64,30 +67,30 @@ namespace osu.Game.Rulesets.UI
             if (nextObject == null)
                 return;
 
-            var samples = nextObject.Samples
-                                    .Cast<ISampleInfo>()
-                                    .ToArray();
+            var samples = nextObject.Samples.Cast<ISampleInfo>().ToArray();
 
             PlaySamples(samples);
         }
 
-        protected virtual void PlaySamples(ISampleInfo[] samples) => Schedule(() =>
-        {
-            var hitSound = GetNextSample();
-            ApplySampleInfo(hitSound, samples);
-            hitSound.Play();
-        });
+        protected virtual void PlaySamples(ISampleInfo[] samples) =>
+            Schedule(() =>
+            {
+                var hitSound = GetNextSample();
+                ApplySampleInfo(hitSound, samples);
+                hitSound.Play();
+            });
 
         protected virtual void ApplySampleInfo(SkinnableSound hitSound, ISampleInfo[] samples)
         {
             hitSound.Samples = samples;
         }
 
-        public void StopAllPlayback() => Schedule(() =>
-        {
-            foreach (var sound in hitSounds)
-                sound.Stop();
-        });
+        public void StopAllPlayback() =>
+            Schedule(() =>
+            {
+                foreach (var sound in hitSounds)
+                    sound.Stop();
+            });
 
         protected override void Update()
         {
@@ -105,8 +108,12 @@ namespace osu.Game.Rulesets.UI
                 // If required, we can make this lookup more efficient by adding support to get next-future-entry in LifetimeEntryManager.
                 var candidate =
                     // Use alive entries first as an optimisation.
-                    hitObjectContainer.AliveEntries.Keys.Where(e => !isAlreadyHit(e)).MinBy(e => e.HitObject.StartTime)
-                    ?? hitObjectContainer.Entries.Where(e => !isAlreadyHit(e)).MinBy(e => e.HitObject.StartTime);
+                    hitObjectContainer
+                        .AliveEntries.Keys.Where(e => !isAlreadyHit(e))
+                        .MinBy(e => e.HitObject.StartTime)
+                    ?? hitObjectContainer
+                        .Entries.Where(e => !isAlreadyHit(e))
+                        .MinBy(e => e.HitObject.StartTime);
 
                 // In the case there are no non-judged objects, the last hit object should be used instead.
                 if (candidate == null)
@@ -135,11 +142,16 @@ namespace osu.Game.Rulesets.UI
 
             // Else we want the earliest valid nested.
             // In cases of nested objects, they will always have earlier sample data than their parent object.
-            return getAllNested(mostValidObject.HitObject).OrderBy(h => h.GetEndTime()).SkipWhile(h => h.GetEndTime() <= getReferenceTime()).FirstOrDefault() ?? mostValidObject.HitObject;
+            return getAllNested(mostValidObject.HitObject)
+                    .OrderBy(h => h.GetEndTime())
+                    .SkipWhile(h => h.GetEndTime() <= getReferenceTime())
+                    .FirstOrDefault() ?? mostValidObject.HitObject;
         }
 
         private bool isAlreadyHit(HitObjectLifetimeEntry h) => h.AllJudged;
-        private bool isCloseEnoughToCurrentTime(HitObject h) => getReferenceTime() >= h.StartTime - h.HitWindows.WindowFor(HitResult.Miss) * 2;
+
+        private bool isCloseEnoughToCurrentTime(HitObject h) =>
+            getReferenceTime() >= h.StartTime - h.HitWindows.WindowFor(HitResult.Miss) * 2;
 
         private double getReferenceTime() => gameplayClock?.CurrentTime ?? Clock.CurrentTime;
 

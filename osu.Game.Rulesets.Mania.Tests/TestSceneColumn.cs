@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using osu.Framework.Graphics;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -33,9 +33,7 @@ namespace osu.Game.Rulesets.Mania.Tests
         private readonly List<Column> columns = new List<Column>();
 
         public TestSceneColumn()
-            : base(2)
-        {
-        }
+            : base(2) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -49,8 +47,8 @@ namespace osu.Game.Rulesets.Mania.Tests
                 Children = new[]
                 {
                     createColumn(ScrollingDirection.Up, ManiaAction.Key1, 0),
-                    createColumn(ScrollingDirection.Down, ManiaAction.Key2, 1)
-                }
+                    createColumn(ScrollingDirection.Down, ManiaAction.Key2, 1),
+                },
             };
         }
 
@@ -77,7 +75,12 @@ namespace osu.Game.Rulesets.Mania.Tests
         {
             for (int i = 0; i < columns.Count; i++)
             {
-                var obj = new HoldNote { Column = i, StartTime = Time.Current + 2000, Duration = 500 };
+                var obj = new HoldNote
+                {
+                    Column = i,
+                    StartTime = Time.Current + 2000,
+                    Duration = 500,
+                };
                 obj.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
                 columns[i].Add(new DrawableHoldNote(obj));
@@ -104,7 +107,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                 AutoSizeAxes = Axes.X,
                 RelativeSizeAxes = Axes.Y,
                 TimeRange = 2000,
-                Child = column
+                Child = column,
             };
         }
     }

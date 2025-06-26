@@ -21,21 +21,26 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             {
                 Position = new Vector2(256, 256),
                 StartTime = -1000,
-                EndTime = 2000
+                EndTime = 2000,
             };
 
             spinner.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty { CircleSize = 2 });
 
             DrawableSpinner drawableSpinner;
 
-            Add(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.5f),
-                Child = drawableSpinner = new DrawableSpinner(spinner)
-            });
+            Add(
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.5f),
+                    Child = drawableSpinner = new DrawableSpinner(spinner),
+                }
+            );
 
-            AddBlueprint(new SpinnerSelectionBlueprint(spinner) { Size = new Vector2(0.5f) }, drawableSpinner);
+            AddBlueprint(
+                new SpinnerSelectionBlueprint(spinner) { Size = new Vector2(0.5f) },
+                drawableSpinner
+            );
         }
     }
 }

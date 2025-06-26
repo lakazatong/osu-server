@@ -19,13 +19,15 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
+using osu.Game.Localisation;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.Play
 {
-    public abstract partial class GameplayMenuOverlay : OverlayContainer, IKeyBindingHandler<GlobalAction>
+    public abstract partial class GameplayMenuOverlay
+        : OverlayContainer,
+            IKeyBindingHandler<GlobalAction>
     {
         protected const int TRANSITION_DURATION = 200;
 
@@ -43,15 +45,16 @@ namespace osu.Game.Screens.Play
         /// <summary>
         /// Action that is invoked when <see cref="GlobalAction.Back"/> is triggered.
         /// </summary>
-        protected virtual Action BackAction => () =>
-        {
-            // We prefer triggering the button click as it will animate...
-            // but sometimes buttons aren't present (see FailOverlay's constructor as an example).
-            if (Buttons.Any())
-                Buttons.Last().TriggerClick();
-            else
-                OnQuit?.Invoke();
-        };
+        protected virtual Action BackAction =>
+            () =>
+            {
+                // We prefer triggering the button click as it will animate...
+                // but sometimes buttons aren't present (see FailOverlay's constructor as an example).
+                if (Buttons.Any())
+                    Buttons.Last().TriggerClick();
+                else
+                    OnQuit?.Invoke();
+            };
 
         /// <summary>
         /// Action that is invoked when <see cref="GlobalAction.Select"/> is triggered.
@@ -114,28 +117,42 @@ namespace osu.Game.Screens.Play
                             {
                                 Type = EdgeEffectType.Shadow,
                                 Colour = Color4.Black.Opacity(0.6f),
-                                Radius = 50
+                                Radius = 50,
                             },
                         },
-                        playInfoText = new OsuTextFlowContainer(cp => cp.Font = OsuFont.GetFont(size: 18))
+                        playInfoText = new OsuTextFlowContainer(cp =>
+                            cp.Font = OsuFont.GetFont(size: 18)
+                        )
                         {
                             Origin = Anchor.TopCentre,
                             Anchor = Anchor.TopCentre,
                             TextAnchor = Anchor.TopCentre,
                             AutoSizeAxes = Axes.Both,
-                        }
-                    }
+                        },
+                    },
                 },
             };
 
             if (OnResume != null)
-                AddButton(GameplayMenuOverlayStrings.Continue, colours.Green, () => OnResume.Invoke());
+                AddButton(
+                    GameplayMenuOverlayStrings.Continue,
+                    colours.Green,
+                    () => OnResume.Invoke()
+                );
 
             if (OnRetry != null)
-                AddButton(GameplayMenuOverlayStrings.Retry, colours.YellowDark, () => OnRetry.Invoke());
+                AddButton(
+                    GameplayMenuOverlayStrings.Retry,
+                    colours.YellowDark,
+                    () => OnRetry.Invoke()
+                );
 
             if (OnQuit != null)
-                AddButton(GameplayMenuOverlayStrings.Quit, new Color4(170, 27, 39, 255), () => OnQuit.Invoke());
+                AddButton(
+                    GameplayMenuOverlayStrings.Quit,
+                    new Color4(170, 27, 39, 255),
+                    () => OnQuit.Invoke()
+                );
 
             State.ValueChanged += _ => InternalButtons.Deselect();
 
@@ -179,7 +196,7 @@ namespace osu.Game.Screens.Play
                 {
                     action?.Invoke();
                     Hide();
-                }
+                },
             };
 
             InternalButtons.Add(button);
@@ -209,9 +226,7 @@ namespace osu.Game.Screens.Play
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
 
         [Resolved]
         private IGameplayClock? gameplayClock { get; set; }
@@ -223,13 +238,19 @@ namespace osu.Game.Screens.Play
         {
             playInfoText.Clear();
             playInfoText.AddText(GameplayMenuOverlayStrings.RetryCount);
-            playInfoText.AddText(retries.ToString(), cp => cp.Font = cp.Font.With(weight: FontWeight.Bold));
+            playInfoText.AddText(
+                retries.ToString(),
+                cp => cp.Font = cp.Font.With(weight: FontWeight.Bold)
+            );
 
             if (getSongProgress() is int progress)
             {
                 playInfoText.NewLine();
                 playInfoText.AddText(GameplayMenuOverlayStrings.SongProgress);
-                playInfoText.AddText($"{progress}%", cp => cp.Font = cp.Font.With(weight: FontWeight.Bold));
+                playInfoText.AddText(
+                    $"{progress}%",
+                    cp => cp.Font = cp.Font.With(weight: FontWeight.Bold)
+                );
             }
         }
 
@@ -238,14 +259,20 @@ namespace osu.Game.Screens.Play
             if (gameplayClock == null || gameplayState == null)
                 return null;
 
-            (double firstHitTime, double lastHitTime) = gameplayState.Beatmap.CalculatePlayableBounds();
+            (double firstHitTime, double lastHitTime) =
+                gameplayState.Beatmap.CalculatePlayableBounds();
 
             double playableLength = (lastHitTime - firstHitTime);
 
             if (playableLength == 0)
                 return 0;
 
-            return (int)Math.Clamp(((gameplayClock.CurrentTime - firstHitTime) / playableLength) * 100, 0, 100);
+            return (int)
+                Math.Clamp(
+                    ((gameplayClock.CurrentTime - firstHitTime) / playableLength) * 100,
+                    0,
+                    100
+                );
         }
 
         private partial class Button : DialogButton

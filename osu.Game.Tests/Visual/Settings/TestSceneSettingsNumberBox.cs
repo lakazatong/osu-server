@@ -20,7 +20,10 @@ namespace osu.Game.Tests.Visual.Settings
         public void SetUpSteps()
         {
             AddStep("create number box", () => Child = numberBox = new SettingsNumberBox());
-            AddStep("get inner text box", () => textBox = numberBox.ChildrenOfType<OsuTextBox>().Single());
+            AddStep(
+                "get inner text box",
+                () => textBox = numberBox.ChildrenOfType<OsuTextBox>().Single()
+            );
         }
 
         [Test]
@@ -73,9 +76,17 @@ namespace osu.Game.Tests.Visual.Settings
             currentTextIs("1");
         }
 
-        private void inputText(string text) => AddStep($"set textbox text to {text}", () => textBox.Text = text);
-        private void currentValueIs(int? value) => AddAssert($"current value is {value?.ToString() ?? "null"}", () => numberBox.Current.Value == value);
-        private void currentTextIs(string value) => AddAssert($"current text is {value}", () => textBox.Text == value);
+        private void inputText(string text) =>
+            AddStep($"set textbox text to {text}", () => textBox.Text = text);
+
+        private void currentValueIs(int? value) =>
+            AddAssert(
+                $"current value is {value?.ToString() ?? "null"}",
+                () => numberBox.Current.Value == value
+            );
+
+        private void currentTextIs(string value) =>
+            AddAssert($"current text is {value}", () => textBox.Text == value);
 
         /// <summary>
         /// The smallest number that overflows <see langword="int"/>.

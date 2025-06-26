@@ -45,7 +45,10 @@ namespace osu.Game.Rulesets.Edit
 
         private Bindable<double> startTimeBindable = null!;
 
-        private HitObject? getPreviousHitObject() => beatmap.HitObjects.TakeWhile(h => h.StartTime <= startTimeBindable.Value).LastOrDefault();
+        private HitObject? getPreviousHitObject() =>
+            beatmap
+                .HitObjects.TakeWhile(h => h.StartTime <= startTimeBindable.Value)
+                .LastOrDefault();
 
         [Resolved]
         private IPlacementHandler placementHandler { get; set; } = null!;
@@ -97,30 +100,50 @@ namespace osu.Game.Rulesets.Edit
                 HitObject.StartTime = time;
 
                 if (HitObject is IHasComboInformation comboInformation)
-                    comboInformation.UpdateComboInformation(getPreviousHitObject() as IHasComboInformation);
+                    comboInformation.UpdateComboInformation(
+                        getPreviousHitObject() as IHasComboInformation
+                    );
             }
 
             var lastHitObject = getPreviousHitObject();
-            var lastHitNormal = lastHitObject?.Samples?.FirstOrDefault(o => o.Name == HitSampleInfo.HIT_NORMAL);
+            var lastHitNormal = lastHitObject?.Samples?.FirstOrDefault(o =>
+                o.Name == HitSampleInfo.HIT_NORMAL
+            );
 
             if (AutomaticAdditionBankAssignment)
             {
                 // Inherit the addition bank from the previous hit object
                 // If there is no previous addition, inherit from the normal sample
-                var lastAddition = lastHitObject?.Samples?.FirstOrDefault(o => o.Name != HitSampleInfo.HIT_NORMAL) ?? lastHitNormal;
+                var lastAddition =
+                    lastHitObject?.Samples?.FirstOrDefault(o => o.Name != HitSampleInfo.HIT_NORMAL)
+                    ?? lastHitNormal;
 
                 if (lastAddition != null)
-                    HitObject.Samples = HitObject.Samples.Select(s => s.Name != HitSampleInfo.HIT_NORMAL ? s.With(newBank: lastAddition.Bank) : s).ToList();
+                    HitObject.Samples = HitObject
+                        .Samples.Select(s =>
+                            s.Name != HitSampleInfo.HIT_NORMAL
+                                ? s.With(newBank: lastAddition.Bank)
+                                : s
+                        )
+                        .ToList();
             }
 
             if (lastHitNormal != null)
             {
                 if (AutomaticBankAssignment)
                     // Inherit the bank from the previous hit object
-                    HitObject.Samples = HitObject.Samples.Select(s => s.Name == HitSampleInfo.HIT_NORMAL ? s.With(newBank: lastHitNormal.Bank) : s).ToList();
+                    HitObject.Samples = HitObject
+                        .Samples.Select(s =>
+                            s.Name == HitSampleInfo.HIT_NORMAL
+                                ? s.With(newBank: lastHitNormal.Bank)
+                                : s
+                        )
+                        .ToList();
 
                 // Inherit the volume from the previous hit object
-                HitObject.Samples = HitObject.Samples.Select(s => s.With(newVolume: lastHitNormal.Volume)).ToList();
+                HitObject.Samples = HitObject
+                    .Samples.Select(s => s.With(newVolume: lastHitNormal.Volume))
+                    .ToList();
             }
 
             if (HitObject is IHasRepeats hasRepeats)
@@ -137,7 +160,8 @@ namespace osu.Game.Rulesets.Edit
         /// Invokes <see cref="Objects.HitObject.ApplyDefaults(ControlPointInfo,IBeatmapDifficultyInfo,CancellationToken)"/>,
         /// refreshing <see cref="Objects.HitObject.NestedHitObjects"/> and parameters for the <see cref="HitObject"/>.
         /// </summary>
-        protected void ApplyDefaultsToHitObject() => HitObject.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
+        protected void ApplyDefaultsToHitObject() =>
+            HitObject.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
 
         protected override void PopIn()
         {

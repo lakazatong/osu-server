@@ -9,15 +9,18 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     public partial class MaximumComboChangeRow : RankingChangeRow<int>
     {
         public MaximumComboChangeRow()
-            : base(stats => stats.MaxCombo)
-        {
-        }
+            : base(stats => stats.MaxCombo) { }
 
         protected override LocalisableString Label => UsersStrings.ShowStatsMaximumCombo;
 
-        protected override LocalisableString FormatCurrentValue(int current) => LocalisableString.Interpolate($@"{current:N0}x");
+        protected override LocalisableString FormatCurrentValue(int current) =>
+            LocalisableString.Interpolate($@"{current:N0}x");
 
-        protected override int CalculateDifference(int previous, int current, out LocalisableString formattedDifference)
+        protected override int CalculateDifference(
+            int previous,
+            int current,
+            out LocalisableString formattedDifference
+        )
         {
             int difference = current - previous;
 

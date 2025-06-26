@@ -49,7 +49,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             if (selected.Count == 0)
                 return;
 
-            var timingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(selected.First().StartTime);
+            var timingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(
+                selected.First().StartTime
+            );
             double adjustment = timingPoint.BeatLength / EditorBeatmap.BeatDivisor * amount;
 
             EditorBeatmap.PerformOnSelection(h =>
@@ -68,7 +70,10 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         [CanBeNull]
         private HitObject pivot;
 
-        internal override bool MouseDownSelectionRequested(SelectionBlueprint<HitObject> blueprint, MouseButtonEvent e)
+        internal override bool MouseDownSelectionRequested(
+            SelectionBlueprint<HitObject> blueprint,
+            MouseButtonEvent e
+        )
         {
             if (e.ShiftPressed && e.Button == MouseButton.Left && pivot != null)
             {
@@ -101,7 +106,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             double rangeStart = Math.Min(clickedObject.StartTime, pivot.StartTime);
             double rangeEnd = Math.Max(clickedObject.GetEndTime(), pivot.GetEndTime());
 
-            var newSelection = new HashSet<HitObject>(EditorBeatmap.HitObjects.Where(obj => isInRange(obj, rangeStart, rangeEnd)));
+            var newSelection = new HashSet<HitObject>(
+                EditorBeatmap.HitObjects.Where(obj => isInRange(obj, rangeStart, rangeEnd))
+            );
 
             if (cumulative)
             {
@@ -112,8 +119,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             EditorBeatmap.SelectedHitObjects.Clear();
             EditorBeatmap.SelectedHitObjects.AddRange(newSelection);
 
-            bool isInRange(HitObject hitObject, double start, double end)
-                => hitObject.StartTime >= start && hitObject.GetEndTime() <= end;
+            bool isInRange(HitObject hitObject, double start, double end) =>
+                hitObject.StartTime >= start && hitObject.GetEndTime() <= end;
         }
     }
 }

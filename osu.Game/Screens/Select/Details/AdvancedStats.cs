@@ -4,43 +4,50 @@
 #nullable disable
 
 using System;
-using osuTK.Graphics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics.UserInterface;
-using osu.Game.Beatmaps;
-using osu.Framework.Bindables;
-using System.Collections.Generic;
-using osu.Game.Rulesets.Mods;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using osu.Framework.Extensions;
 using osu.Framework.Localisation;
 using osu.Framework.Threading;
 using osu.Framework.Utils;
+using osu.Game.Beatmaps;
 using osu.Game.Configuration;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Overlays.Mods;
 using osu.Game.Resources.Localisation.Web;
 using osu.Game.Rulesets;
-using osu.Game.Overlays.Mods;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Utils;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Select.Details
 {
-    public partial class AdvancedStats : Container, IHasCustomTooltip<AdjustedAttributesTooltip.Data>
+    public partial class AdvancedStats
+        : Container,
+            IHasCustomTooltip<AdjustedAttributesTooltip.Data>
     {
         [Resolved]
         private BeatmapDifficultyCache difficultyCache { get; set; }
 
-        protected readonly StatisticRow FirstValue, HpDrain, Accuracy, ApproachRate;
+        protected readonly StatisticRow FirstValue,
+            HpDrain,
+            Accuracy,
+            ApproachRate;
         private readonly StatisticRow starDifficulty;
 
-        public ITooltip<AdjustedAttributesTooltip.Data> GetCustomTooltip() => new AdjustedAttributesTooltip();
+        public ITooltip<AdjustedAttributesTooltip.Data> GetCustomTooltip() =>
+            new AdjustedAttributesTooltip();
+
         public AdjustedAttributesTooltip.Data TooltipContent { get; private set; }
 
         private IBeatmapInfo beatmapInfo;
@@ -50,7 +57,8 @@ namespace osu.Game.Screens.Select.Details
             get => beatmapInfo;
             set
             {
-                if (value == beatmapInfo) return;
+                if (value == beatmapInfo)
+                    return;
 
                 beatmapInfo = value;
 
@@ -73,7 +81,8 @@ namespace osu.Game.Screens.Select.Details
         /// <remarks>
         /// No checks are done as to whether the mods specified are valid for the current <see cref="Ruleset"/>.
         /// </remarks>
-        public Bindable<IReadOnlyList<Mod>> Mods { get; } = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
+        public Bindable<IReadOnlyList<Mod>> Mods { get; } =
+            new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
         public AdvancedStats(int columns = 1)
         {
@@ -87,10 +96,22 @@ namespace osu.Game.Screens.Select.Details
                         Children = new[]
                         {
                             FirstValue = new StatisticRow(), // circle size/key amount
-                            HpDrain = new StatisticRow { Title = BeatmapsetsStrings.ShowStatsDrain },
-                            Accuracy = new StatisticRow { Title = BeatmapsetsStrings.ShowStatsAccuracy },
-                            ApproachRate = new StatisticRow { Title = BeatmapsetsStrings.ShowStatsAr },
-                            starDifficulty = new StatisticRow(10, true) { Title = BeatmapsetsStrings.ShowStatsStars },
+                            HpDrain = new StatisticRow
+                            {
+                                Title = BeatmapsetsStrings.ShowStatsDrain,
+                            },
+                            Accuracy = new StatisticRow
+                            {
+                                Title = BeatmapsetsStrings.ShowStatsAccuracy,
+                            },
+                            ApproachRate = new StatisticRow
+                            {
+                                Title = BeatmapsetsStrings.ShowStatsAr,
+                            },
+                            starDifficulty = new StatisticRow(10, true)
+                            {
+                                Title = BeatmapsetsStrings.ShowStatsStars,
+                            },
                         },
                     };
                     break;
@@ -187,9 +208,14 @@ namespace osu.Game.Screens.Select.Details
                 {
                     double rate = ModUtils.CalculateRateWithMods(Mods.Value);
 
-                    adjustedDifficulty = Ruleset.Value.CreateInstance().GetRateAdjustedDisplayDifficulty(originalDifficulty, rate);
+                    adjustedDifficulty = Ruleset
+                        .Value.CreateInstance()
+                        .GetRateAdjustedDisplayDifficulty(originalDifficulty, rate);
 
-                    TooltipContent = new AdjustedAttributesTooltip.Data(originalDifficulty, adjustedDifficulty);
+                    TooltipContent = new AdjustedAttributesTooltip.Data(
+                        originalDifficulty,
+                        adjustedDifficulty
+                    );
                 }
             }
 
@@ -203,7 +229,10 @@ namespace osu.Game.Screens.Select.Details
                     // For the time being, the key count is static no matter what, because:
                     // a) The method doesn't have knowledge of the active keymods. Doing so may require considerations for filtering.
                     // b) Using the difficulty adjustment mod to adjust OD doesn't have an effect on conversion.
-                    int keyCount = baseDifficulty == null ? 0 : legacyRuleset.GetKeyCount(BeatmapInfo, Mods.Value);
+                    int keyCount =
+                        baseDifficulty == null
+                            ? 0
+                            : legacyRuleset.GetKeyCount(BeatmapInfo, Mods.Value);
 
                     FirstValue.Title = BeatmapsetsStrings.ShowStatsCsMania;
                     FirstValue.Value = (keyCount, keyCount);
@@ -211,13 +240,22 @@ namespace osu.Game.Screens.Select.Details
 
                 default:
                     FirstValue.Title = BeatmapsetsStrings.ShowStatsCs;
-                    FirstValue.Value = (baseDifficulty?.CircleSize ?? 0, adjustedDifficulty?.CircleSize);
+                    FirstValue.Value = (
+                        baseDifficulty?.CircleSize ?? 0,
+                        adjustedDifficulty?.CircleSize
+                    );
                     break;
             }
 
             HpDrain.Value = (baseDifficulty?.DrainRate ?? 0, adjustedDifficulty?.DrainRate);
-            Accuracy.Value = (baseDifficulty?.OverallDifficulty ?? 0, adjustedDifficulty?.OverallDifficulty);
-            ApproachRate.Value = (baseDifficulty?.ApproachRate ?? 0, adjustedDifficulty?.ApproachRate);
+            Accuracy.Value = (
+                baseDifficulty?.OverallDifficulty ?? 0,
+                adjustedDifficulty?.OverallDifficulty
+            );
+            ApproachRate.Value = (
+                baseDifficulty?.ApproachRate ?? 0,
+                adjustedDifficulty?.ApproachRate
+            );
 
             updateStarDifficulty();
         }
@@ -231,29 +269,50 @@ namespace osu.Game.Screens.Select.Details
         /// This is scheduled to avoid scenarios wherein a ruleset changes first before selected mods do,
         /// potentially resulting in failure during difficulty calculation due to incomplete bindable state updates.
         /// </remarks>
-        private void updateStarDifficulty() => Scheduler.AddOnce(() =>
-        {
-            starDifficultyCancellationSource?.Cancel();
-
-            if (BeatmapInfo == null)
-                return;
-
-            starDifficultyCancellationSource = new CancellationTokenSource();
-
-            var normalStarDifficultyTask = difficultyCache.GetDifficultyAsync(BeatmapInfo, Ruleset.Value, null, starDifficultyCancellationSource.Token);
-            var moddedStarDifficultyTask = difficultyCache.GetDifficultyAsync(BeatmapInfo, Ruleset.Value, Mods.Value, starDifficultyCancellationSource.Token);
-
-            Task.WhenAll(normalStarDifficultyTask, moddedStarDifficultyTask).ContinueWith(_ => Schedule(() =>
+        private void updateStarDifficulty() =>
+            Scheduler.AddOnce(() =>
             {
-                var normalDifficulty = normalStarDifficultyTask.GetResultSafely();
-                var moddedDifficulty = moddedStarDifficultyTask.GetResultSafely();
+                starDifficultyCancellationSource?.Cancel();
 
-                if (normalDifficulty == null || moddedDifficulty == null)
+                if (BeatmapInfo == null)
                     return;
 
-                starDifficulty.Value = ((float)normalDifficulty.Value.Stars, (float)moddedDifficulty.Value.Stars);
-            }), starDifficultyCancellationSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-        });
+                starDifficultyCancellationSource = new CancellationTokenSource();
+
+                var normalStarDifficultyTask = difficultyCache.GetDifficultyAsync(
+                    BeatmapInfo,
+                    Ruleset.Value,
+                    null,
+                    starDifficultyCancellationSource.Token
+                );
+                var moddedStarDifficultyTask = difficultyCache.GetDifficultyAsync(
+                    BeatmapInfo,
+                    Ruleset.Value,
+                    Mods.Value,
+                    starDifficultyCancellationSource.Token
+                );
+
+                Task.WhenAll(normalStarDifficultyTask, moddedStarDifficultyTask)
+                    .ContinueWith(
+                        _ =>
+                            Schedule(() =>
+                            {
+                                var normalDifficulty = normalStarDifficultyTask.GetResultSafely();
+                                var moddedDifficulty = moddedStarDifficultyTask.GetResultSafely();
+
+                                if (normalDifficulty == null || moddedDifficulty == null)
+                                    return;
+
+                                starDifficulty.Value = (
+                                    (float)normalDifficulty.Value.Stars,
+                                    (float)moddedDifficulty.Value.Stars
+                                );
+                            }),
+                        starDifficultyCancellationSource.Token,
+                        TaskContinuationOptions.OnlyOnRanToCompletion,
+                        TaskScheduler.Current
+                    );
+            });
 
         protected override void Dispose(bool isDisposing)
         {
@@ -269,7 +328,8 @@ namespace osu.Game.Screens.Select.Details
 
             private readonly float maxValue;
             private readonly bool forceDecimalPlaces;
-            private readonly OsuSpriteText name, valueText;
+            private readonly OsuSpriteText name,
+                valueText;
             private readonly Bar bar;
             public readonly Bar ModBar;
 
@@ -296,10 +356,18 @@ namespace osu.Game.Screens.Select.Details
 
                     bar.Length = value.baseValue / maxValue;
 
-                    valueText.Text = (value.adjustedValue ?? value.baseValue).ToString(forceDecimalPlaces ? "0.00" : "0.##");
+                    valueText.Text = (value.adjustedValue ?? value.baseValue).ToString(
+                        forceDecimalPlaces ? "0.00" : "0.##"
+                    );
                     ModBar.Length = (value.adjustedValue ?? 0) / maxValue;
 
-                    if (Precision.AlmostEquals(value.baseValue, value.adjustedValue ?? value.baseValue, 0.05f))
+                    if (
+                        Precision.AlmostEquals(
+                            value.baseValue,
+                            value.adjustedValue ?? value.baseValue,
+                            0.05f
+                        )
+                    )
                         ModBar.AccentColour = valueText.Colour = Color4.White;
                     else if (value.adjustedValue > value.baseValue)
                         ModBar.AccentColour = valueText.Colour = colours.Red;
@@ -330,15 +398,16 @@ namespace osu.Game.Screens.Select.Details
                         AutoSizeAxes = Axes.Y,
                         // osu-web uses 1.25 line-height, which at 12px font size makes the element 14px tall - this compentates that difference
                         Padding = new MarginPadding { Vertical = 1 },
-                        Child = name = new OsuSpriteText
-                        {
-                            Font = OsuFont.GetFont(size: 12)
-                        },
+                        Child = name = new OsuSpriteText { Font = OsuFont.GetFont(size: 12) },
                     },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Left = name_width + 10, Right = value_width + 10 },
+                        Padding = new MarginPadding
+                        {
+                            Left = name_width + 10,
+                            Right = value_width + 10,
+                        },
                         Children = new Drawable[]
                         {
                             new Container
@@ -357,14 +426,10 @@ namespace osu.Game.Screens.Select.Details
                                         RelativeSizeAxes = Axes.Both,
                                         BackgroundColour = Color4.White.Opacity(0.5f),
                                     },
-                                    ModBar = new Bar
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Alpha = 0.5f,
-                                    },
-                                }
+                                    ModBar = new Bar { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
+                                },
                             },
-                        }
+                        },
                     },
                     new Container
                     {
@@ -372,12 +437,13 @@ namespace osu.Game.Screens.Select.Details
                         Origin = Anchor.TopRight,
                         Width = value_width,
                         RelativeSizeAxes = Axes.Y,
-                        Child = valueText = new OsuSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = OsuFont.GetFont(size: 12)
-                        },
+                        Child = valueText =
+                            new OsuSpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Font = OsuFont.GetFont(size: 12),
+                            },
                     },
                 };
             }

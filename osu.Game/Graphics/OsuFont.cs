@@ -23,7 +23,8 @@ namespace osu.Game.Graphics
             /// <summary>
             /// Equivalent to Torus with 32px size and semi-bold weight.
             /// </summary>
-            public static FontUsage Title => GetFont(Typeface.TorusAlternate, size: 32, weight: FontWeight.Regular);
+            public static FontUsage Title =>
+                GetFont(Typeface.TorusAlternate, size: 32, weight: FontWeight.Regular);
 
             /// <summary>
             /// Torus with 28px size and semi-bold weight.
@@ -43,7 +44,8 @@ namespace osu.Game.Graphics
             /// <summary>
             /// Torus with 16px size and regular weight.
             /// </summary>
-            public static FontUsage Body => GetFont(size: DEFAULT_FONT_SIZE, weight: FontWeight.Regular);
+            public static FontUsage Body =>
+                GetFont(size: DEFAULT_FONT_SIZE, weight: FontWeight.Regular);
 
             /// <summary>
             /// Torus with 14px size and regular weight.
@@ -74,7 +76,8 @@ namespace osu.Game.Graphics
         /// <summary>
         /// Default font face with alternate character set for headings and flair text.
         /// </summary>
-        public static FontUsage TorusAlternate => GetFont(Typeface.TorusAlternate, weight: FontWeight.Regular);
+        public static FontUsage TorusAlternate =>
+            GetFont(Typeface.TorusAlternate, weight: FontWeight.Regular);
 
         public static FontUsage Inter => GetFont(Typeface.Inter, weight: FontWeight.Regular);
 
@@ -87,10 +90,22 @@ namespace osu.Game.Graphics
         /// <param name="italics">Whether the font is italic.</param>
         /// <param name="fixedWidth">Whether all characters should be spaced the same distance apart.</param>
         /// <returns>The <see cref="FontUsage"/>.</returns>
-        public static FontUsage GetFont(Typeface typeface = Typeface.Torus, float size = DEFAULT_FONT_SIZE, FontWeight weight = FontWeight.Medium, bool italics = false, bool fixedWidth = false)
+        public static FontUsage GetFont(
+            Typeface typeface = Typeface.Torus,
+            float size = DEFAULT_FONT_SIZE,
+            FontWeight weight = FontWeight.Medium,
+            bool italics = false,
+            bool fixedWidth = false
+        )
         {
             string familyString = GetFamilyString(typeface);
-            return new FontUsage(familyString, size, GetWeightString(familyString, weight), getItalics(italics), fixedWidth);
+            return new FontUsage(
+                familyString,
+                size,
+                GetWeightString(familyString, weight),
+                getItalics(italics),
+                fixedWidth
+            );
         }
 
         private static bool getItalics(in bool italicsRequested)
@@ -133,7 +148,13 @@ namespace osu.Game.Graphics
         /// <returns>The string representation of <paramref name="weight"/> in the specified <paramref name="family"/>.</returns>
         public static string GetWeightString(string family, FontWeight weight)
         {
-            if ((family == GetFamilyString(Typeface.Torus) || family == GetFamilyString(Typeface.TorusAlternate)) && weight == FontWeight.Medium)
+            if (
+                (
+                    family == GetFamilyString(Typeface.Torus)
+                    || family == GetFamilyString(Typeface.TorusAlternate)
+                )
+                && weight == FontWeight.Medium
+            )
                 // torus doesn't have a medium; fallback to regular.
                 weight = FontWeight.Regular;
 
@@ -153,10 +174,19 @@ namespace osu.Game.Graphics
         /// <param name="italics">Whether the font is italic. If null, the value is copied from this <see cref="FontUsage"/>.</param>
         /// <param name="fixedWidth">Whether all characters should be spaced apart the same distance. If null, the value is copied from this <see cref="FontUsage"/>.</param>
         /// <returns>The resulting <see cref="FontUsage"/>.</returns>
-        public static FontUsage With(this FontUsage usage, Typeface? typeface = null, float? size = null, FontWeight? weight = null, bool? italics = null, bool? fixedWidth = null)
+        public static FontUsage With(
+            this FontUsage usage,
+            Typeface? typeface = null,
+            float? size = null,
+            FontWeight? weight = null,
+            bool? italics = null,
+            bool? fixedWidth = null
+        )
         {
-            string familyString = typeface != null ? OsuFont.GetFamilyString(typeface.Value) : usage.Family;
-            string weightString = weight != null ? OsuFont.GetWeightString(familyString, weight.Value) : usage.Weight;
+            string familyString =
+                typeface != null ? OsuFont.GetFamilyString(typeface.Value) : usage.Family;
+            string weightString =
+                weight != null ? OsuFont.GetWeightString(familyString, weight.Value) : usage.Weight;
 
             return usage.With(familyString, size, weightString, italics, fixedWidth);
         }
@@ -202,6 +232,6 @@ namespace osu.Game.Graphics
         /// <summary>
         /// Equivalent to weight 900.
         /// </summary>
-        Black = 900
+        Black = 900,
     }
 }

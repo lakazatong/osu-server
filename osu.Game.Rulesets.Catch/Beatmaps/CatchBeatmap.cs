@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Catch.Beatmaps
                     Content = bananaShowers.ToString(),
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners),
                     BarDisplayLength = Math.Min(bananaShowers / 10f, 1),
-                }
+                },
             };
         }
 
@@ -52,7 +52,9 @@ namespace osu.Game.Rulesets.Catch.Beatmaps
         /// <remarks>
         /// If multiple objects have the same start time, the ordering is preserved (it is a stable sorting).
         /// </remarks>
-        public static IEnumerable<PalpableCatchHitObject> GetPalpableObjects(IEnumerable<HitObject> hitObjects)
+        public static IEnumerable<PalpableCatchHitObject> GetPalpableObjects(
+            IEnumerable<HitObject> hitObjects
+        )
         {
             return hitObjects.SelectMany(selectPalpableObjects).OrderBy(h => h.StartTime);
 

@@ -24,10 +24,7 @@ namespace osu.Game.Overlays
             set
             {
                 contentSidePadding = value;
-                content.Padding = new MarginPadding
-                {
-                    Horizontal = value
-                };
+                content.Padding = new MarginPadding { Horizontal = value };
             }
         }
 
@@ -41,50 +38,54 @@ namespace osu.Game.Overlays
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
 
-            Add(new FillFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Children = new[]
+            Add(
+                new FillFlowContainer
                 {
-                    HeaderInfo = new FillFlowContainer
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Children = new[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Depth = -float.MaxValue,
-                        Children = new[]
+                        HeaderInfo = new FillFlowContainer
                         {
-                            CreateBackground(),
-                            new Container
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Depth = -float.MaxValue,
+                            Children = new[]
                             {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Children = new Drawable[]
+                                CreateBackground(),
+                                new Container
                                 {
-                                    titleBackground = new Box
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Children = new Drawable[]
                                     {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Colour = Color4.Gray,
-                                    },
-                                    content = new Container
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Child = Title = CreateTitle().With(title =>
+                                        titleBackground = new Box
                                         {
-                                            title.Anchor = Anchor.CentreLeft;
-                                            title.Origin = Anchor.CentreLeft;
-                                        }),
-                                    }
-                                }
+                                            RelativeSizeAxes = Axes.Both,
+                                            Colour = Color4.Gray,
+                                        },
+                                        content = new Container
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Child = Title =
+                                                CreateTitle()
+                                                    .With(title =>
+                                                    {
+                                                        title.Anchor = Anchor.CentreLeft;
+                                                        title.Origin = Anchor.CentreLeft;
+                                                    }),
+                                        },
+                                    },
+                                },
                             },
-                        }
+                        },
+                        CreateContent(),
                     },
-                    CreateContent()
                 }
-            });
+            );
 
             ContentSidePadding = WaveOverlayContainer.HORIZONTAL_PADDING;
         }

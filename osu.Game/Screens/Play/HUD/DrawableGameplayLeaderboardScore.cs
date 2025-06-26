@@ -50,7 +50,11 @@ namespace osu.Game.Screens.Play.HUD
 
         public Bindable<bool> Expanded = new Bindable<bool>();
 
-        private OsuSpriteText positionText = null!, scoreText = null!, accuracyText = null!, comboText = null!, usernameText = null!;
+        private OsuSpriteText positionText = null!,
+            scoreText = null!,
+            accuracyText = null!,
+            comboText = null!,
+            usernameText = null!;
 
         public BindableLong TotalScore { get; } = new BindableLong();
         public BindableDouble Accuracy { get; } = new BindableDouble(1);
@@ -145,14 +149,10 @@ namespace osu.Game.Screens.Play.HUD
                                     Shear = new Vector2(panel_shear, 0f),
                                     Children = new Drawable[]
                                     {
-                                        new Box
-                                        {
-                                            Alpha = 0.5f,
-                                            RelativeSizeAxes = Axes.Both,
-                                        },
+                                        new Box { Alpha = 0.5f, RelativeSizeAxes = Axes.Both },
                                     },
                                 },
-                            }
+                            },
                         },
                         gridContainer = new GridContainer
                         {
@@ -176,12 +176,18 @@ namespace osu.Game.Screens.Play.HUD
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
                                         Colour = Color4.White,
-                                        Font = OsuFont.Torus.With(size: 14, weight: FontWeight.Bold),
+                                        Font = OsuFont.Torus.With(
+                                            size: 14,
+                                            weight: FontWeight.Bold
+                                        ),
                                         Shadow = false,
                                     },
                                     new Container
                                     {
-                                        Padding = new MarginPadding { Horizontal = SHEAR_WIDTH / 3 },
+                                        Padding = new MarginPadding
+                                        {
+                                            Horizontal = SHEAR_WIDTH / 3,
+                                        },
                                         RelativeSizeAxes = Axes.Both,
                                         Children = new Drawable[]
                                         {
@@ -199,7 +205,7 @@ namespace osu.Game.Screens.Play.HUD
                                                         RelativeSizeAxes = Axes.Both,
                                                         Colour = Color4Extensions.FromHex("3399cc"),
                                                     },
-                                                }
+                                                },
                                             },
                                             new FillFlowContainer
                                             {
@@ -221,12 +227,13 @@ namespace osu.Game.Screens.Play.HUD
                                                         {
                                                             new Box
                                                             {
-                                                                Name = "Placeholder while avatar loads",
+                                                                Name =
+                                                                    "Placeholder while avatar loads",
                                                                 Alpha = 0.3f,
                                                                 RelativeSizeAxes = Axes.Both,
                                                                 Colour = colours.Gray4,
-                                                            }
-                                                        }
+                                                            },
+                                                        },
                                                     },
                                                     usernameText = new TruncatingSpriteText
                                                     {
@@ -235,17 +242,25 @@ namespace osu.Game.Screens.Play.HUD
                                                         Anchor = Anchor.CentreLeft,
                                                         Origin = Anchor.CentreLeft,
                                                         Colour = Color4.White,
-                                                        Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold),
+                                                        Font = OsuFont.Torus.With(
+                                                            size: 14,
+                                                            weight: FontWeight.SemiBold
+                                                        ),
                                                         Text = User?.Username ?? string.Empty,
                                                         Shadow = false,
-                                                    }
-                                                }
+                                                    },
+                                                },
                                             },
-                                        }
+                                        },
                                     },
                                     scoreComponents = new Container
                                     {
-                                        Padding = new MarginPadding { Top = 2f, Right = 17.5f, Bottom = 5f },
+                                        Padding = new MarginPadding
+                                        {
+                                            Top = 2f,
+                                            Right = 17.5f,
+                                            Bottom = 5f,
+                                        },
                                         AlwaysPresent = true, // required to smoothly animate autosize after hidden early.
                                         Masking = true,
                                         RelativeSizeAxes = Axes.Y,
@@ -257,14 +272,22 @@ namespace osu.Game.Screens.Play.HUD
                                             scoreText = new OsuSpriteText
                                             {
                                                 Spacing = new Vector2(-1f, 0f),
-                                                Font = OsuFont.Torus.With(size: 16, weight: FontWeight.SemiBold, fixedWidth: true),
+                                                Font = OsuFont.Torus.With(
+                                                    size: 16,
+                                                    weight: FontWeight.SemiBold,
+                                                    fixedWidth: true
+                                                ),
                                                 Shadow = false,
                                             },
                                             accuracyText = new OsuSpriteText
                                             {
                                                 Anchor = Anchor.BottomLeft,
                                                 Origin = Anchor.BottomLeft,
-                                                Font = OsuFont.Torus.With(size: 12, weight: FontWeight.SemiBold, fixedWidth: true),
+                                                Font = OsuFont.Torus.With(
+                                                    size: 12,
+                                                    weight: FontWeight.SemiBold,
+                                                    fixedWidth: true
+                                                ),
                                                 Spacing = new Vector2(-1f, 0f),
                                                 Shadow = false,
                                             },
@@ -273,35 +296,47 @@ namespace osu.Game.Screens.Play.HUD
                                                 Anchor = Anchor.BottomRight,
                                                 Origin = Anchor.BottomRight,
                                                 Spacing = new Vector2(-1f, 0f),
-                                                Font = OsuFont.Torus.With(size: 12, weight: FontWeight.SemiBold, fixedWidth: true),
+                                                Font = OsuFont.Torus.With(
+                                                    size: 12,
+                                                    weight: FontWeight.SemiBold,
+                                                    fixedWidth: true
+                                                ),
                                                 Shadow = false,
                                             },
                                         },
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             };
 
             LoadComponentAsync(new DrawableAvatar(User), avatarContainer.Add);
 
-            scoreDisplayMode = osuConfigManager.GetBindable<ScoringMode>(OsuSetting.ScoreDisplayMode);
+            scoreDisplayMode = osuConfigManager.GetBindable<ScoringMode>(
+                OsuSetting.ScoreDisplayMode
+            );
             scoreDisplayMode.BindValueChanged(_ => updateScore());
             TotalScore.BindValueChanged(_ => updateScore(), true);
 
-            Accuracy.BindValueChanged(v =>
-            {
-                accuracyText.Text = v.NewValue.FormatAccuracy();
-                updateDetailsWidth();
-            }, true);
+            Accuracy.BindValueChanged(
+                v =>
+                {
+                    accuracyText.Text = v.NewValue.FormatAccuracy();
+                    updateDetailsWidth();
+                },
+                true
+            );
 
-            Combo.BindValueChanged(v =>
-            {
-                comboText.Text = $"{v.NewValue}x";
-                updateDetailsWidth();
-            }, true);
+            Combo.BindValueChanged(
+                v =>
+                {
+                    comboText.Text = $"{v.NewValue}x";
+                    updateDetailsWidth();
+                },
+                true
+            );
 
             HasQuit.BindValueChanged(_ => updateState());
 
@@ -319,13 +354,20 @@ namespace osu.Game.Screens.Play.HUD
             FinishTransforms(true);
         }
 
-        private void updateScore() => scoreText.Text = (getDisplayScoreFunction?.Invoke(scoreDisplayMode.Value) ?? TotalScore.Value).ToString("N0");
+        private void updateScore() =>
+            scoreText.Text = (
+                getDisplayScoreFunction?.Invoke(scoreDisplayMode.Value) ?? TotalScore.Value
+            ).ToString("N0");
 
         private void changeExpandedState(ValueChangedEvent<bool> expanded)
         {
             if (expanded.NewValue)
             {
-                gridContainer.ResizeWidthTo(regular_width, panel_transition_duration, Easing.OutQuint);
+                gridContainer.ResizeWidthTo(
+                    regular_width,
+                    panel_transition_duration,
+                    Easing.OutQuint
+                );
 
                 scoreComponents.FadeIn(panel_transition_duration, Easing.OutQuint);
 
@@ -333,7 +375,11 @@ namespace osu.Game.Screens.Play.HUD
             }
             else
             {
-                gridContainer.ResizeWidthTo(compact_width, panel_transition_duration, Easing.OutQuint);
+                gridContainer.ResizeWidthTo(
+                    compact_width,
+                    panel_transition_duration,
+                    Easing.OutQuint
+                );
 
                 scoreComponents.FadeOut(text_transition_duration, Easing.OutQuint);
 
@@ -350,7 +396,10 @@ namespace osu.Game.Screens.Play.HUD
             const float score_components_min_width = 88f;
 
             float newWidth = Expanded.Value
-                ? Math.Max(score_components_min_width, comboText.DrawWidth + accuracyText.DrawWidth + 25)
+                ? Math.Max(
+                    score_components_min_width,
+                    comboText.DrawWidth + accuracyText.DrawWidth + 25
+                )
                 : 0;
 
             if (scoreComponentsTargetWidth == newWidth)
@@ -373,7 +422,9 @@ namespace osu.Game.Screens.Play.HUD
                 return;
             }
 
-            positionText.Text = ScorePosition.Value.HasValue ? $"#{ScorePosition.Value.Value.FormatRank()}" : "-";
+            positionText.Text = ScorePosition.Value.HasValue
+                ? $"#{ScorePosition.Value.Value.FormatRank()}"
+                : "-";
 
             if (ScorePosition.Value == 1)
             {
@@ -398,7 +449,12 @@ namespace osu.Game.Screens.Play.HUD
                 textColour = TextColour ?? Color4.White;
             }
 
-            this.TransformTo(nameof(SizeContainerLeftPadding), widthExtension ? -top_player_left_width_extension : 0, panel_transition_duration, Easing.OutElastic);
+            this.TransformTo(
+                nameof(SizeContainerLeftPadding),
+                widthExtension ? -top_player_left_width_extension : 0,
+                panel_transition_duration,
+                Easing.OutElastic
+            );
         }
 
         public float SizeContainerLeftPadding

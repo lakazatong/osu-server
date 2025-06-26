@@ -13,16 +13,21 @@ namespace osu.Game.Overlays.BeatmapSet
     public partial class MetadataSectionGenre : MetadataSection<BeatmapSetOnlineGenre>
     {
         public MetadataSectionGenre(Action<BeatmapSetOnlineGenre>? searchAction = null)
-            : base(MetadataType.Genre, searchAction)
-        {
-        }
+            : base(MetadataType.Genre, searchAction) { }
 
-        protected override void AddMetadata(BeatmapSetOnlineGenre metadata, LinkFlowContainer loaded)
+        protected override void AddMetadata(
+            BeatmapSetOnlineGenre metadata,
+            LinkFlowContainer loaded
+        )
         {
             var genre = (SearchGenre)metadata.Id;
 
             if (Enum.IsDefined(genre))
-                loaded.AddLink(genre.GetLocalisableDescription(), LinkAction.FilterBeatmapSetGenre, genre);
+                loaded.AddLink(
+                    genre.GetLocalisableDescription(),
+                    LinkAction.FilterBeatmapSetGenre,
+                    genre
+                );
             else
                 loaded.AddText(metadata.Name);
         }

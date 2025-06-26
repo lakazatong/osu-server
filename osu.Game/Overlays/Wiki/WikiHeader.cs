@@ -70,7 +70,8 @@ namespace osu.Game.Overlays.Wiki
             ShowParentPage?.Invoke();
         }
 
-        protected override Drawable CreateBackground() => new OverlayHeaderBackground(@"Headers/wiki");
+        protected override Drawable CreateBackground() =>
+            new OverlayHeaderBackground(@"Headers/wiki");
 
         protected override OverlayTitle CreateTitle() => new WikiHeaderTitle();
 

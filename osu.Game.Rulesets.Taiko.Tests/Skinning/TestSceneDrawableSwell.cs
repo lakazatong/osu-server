@@ -16,21 +16,21 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
         [Test]
         public void TestHits()
         {
-            AddStep("Centre hit", () => SetContents(_ => new DrawableSwell(createHitAtCurrentTime())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new osuTK.Vector2(0.5f),
-            }));
+            AddStep(
+                "Centre hit",
+                () =>
+                    SetContents(_ => new DrawableSwell(createHitAtCurrentTime())
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new osuTK.Vector2(0.5f),
+                    })
+            );
         }
 
         private Swell createHitAtCurrentTime()
         {
-            var hit = new Swell
-            {
-                StartTime = Time.Current + 3000,
-                EndTime = Time.Current + 6000,
-            };
+            var hit = new Swell { StartTime = Time.Current + 3000, EndTime = Time.Current + 6000 };
 
             hit.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 

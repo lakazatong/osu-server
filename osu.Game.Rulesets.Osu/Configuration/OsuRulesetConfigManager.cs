@@ -9,10 +9,12 @@ namespace osu.Game.Rulesets.Osu.Configuration
 {
     public class OsuRulesetConfigManager : RulesetConfigManager<OsuRulesetSetting>
     {
-        public OsuRulesetConfigManager(SettingsStore? settings, RulesetInfo ruleset, int? variant = null)
-            : base(settings, ruleset, variant)
-        {
-        }
+        public OsuRulesetConfigManager(
+            SettingsStore? settings,
+            RulesetInfo ruleset,
+            int? variant = null
+        )
+            : base(settings, ruleset, variant) { }
 
         protected override void InitialiseDefaults()
         {

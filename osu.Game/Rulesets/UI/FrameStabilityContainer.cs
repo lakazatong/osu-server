@@ -21,7 +21,10 @@ namespace osu.Game.Rulesets.UI
     /// </summary>
     [Cached(typeof(IGameplayClock))]
     [Cached(typeof(IFrameStableClock))]
-    public sealed partial class FrameStabilityContainer : Container, IHasReplayHandler, IFrameStableClock
+    public sealed partial class FrameStabilityContainer
+        : Container,
+            IHasReplayHandler,
+            IFrameStableClock
     {
         public ReplayInputHandler? ReplayInputHandler { get; set; }
 
@@ -116,7 +119,10 @@ namespace osu.Game.Rulesets.UI
 
                 base.UpdateSubTree();
                 UpdateSubTreeMasking();
-            } while (state == PlaybackState.RequiresCatchUp && stopwatch.ElapsedMilliseconds < max_catchup_milliseconds);
+            } while (
+                state == PlaybackState.RequiresCatchUp
+                && stopwatch.ElapsedMilliseconds < max_catchup_milliseconds
+            );
 
             return true;
         }
@@ -159,12 +165,22 @@ namespace osu.Game.Rulesets.UI
             //
             // It basically says that "while we're running in frame stable mode, and don't have a replay attached,
             // time should never go backwards". If it does, we stop running gameplay until it returns to normal.
-            if (!hasReplayAttached && FrameStablePlayback && proposedTime > referenceClock.CurrentTime && !AllowBackwardsSeeks)
+            if (
+                !hasReplayAttached
+                && FrameStablePlayback
+                && proposedTime > referenceClock.CurrentTime
+                && !AllowBackwardsSeeks
+            )
             {
-                if (lastBackwardsSeekLogTime == null || Math.Abs(Clock.CurrentTime - lastBackwardsSeekLogTime.Value) > 1000)
+                if (
+                    lastBackwardsSeekLogTime == null
+                    || Math.Abs(Clock.CurrentTime - lastBackwardsSeekLogTime.Value) > 1000
+                )
                 {
                     lastBackwardsSeekLogTime = Clock.CurrentTime;
-                    Logger.Log($"Denying backwards seek during gameplay (reference: {referenceClock.CurrentTime:N2} stable: {proposedTime:N2})");
+                    Logger.Log(
+                        $"Denying backwards seek during gameplay (reference: {referenceClock.CurrentTime:N2} stable: {proposedTime:N2})"
+                    );
                 }
 
                 state = PlaybackState.NotValid;
@@ -218,7 +234,9 @@ namespace osu.Game.Rulesets.UI
                 // when stability is disabled, we don't really care about accuracy.
                 // looping over the replay will allow it to catch up and feed out the required values
                 // for the current time.
-                while ((newTime = ReplayInputHandler.SetFrameFromTime(proposedTime)) != proposedTime)
+                while (
+                    (newTime = ReplayInputHandler.SetFrameFromTime(proposedTime)) != proposedTime
+                )
                 {
                     if (newTime == null)
                     {
@@ -261,9 +279,10 @@ namespace osu.Game.Rulesets.UI
                 manualClock.CurrentTime = proposedTime = Math.Min(GameplayStartTime, proposedTime);
             else if (Math.Abs(manualClock.CurrentTime - proposedTime) > sixty_frame_time * 1.2f)
             {
-                proposedTime = proposedTime > manualClock.CurrentTime
-                    ? Math.Min(proposedTime, manualClock.CurrentTime + sixty_frame_time)
-                    : Math.Max(proposedTime, manualClock.CurrentTime - sixty_frame_time);
+                proposedTime =
+                    proposedTime > manualClock.CurrentTime
+                        ? Math.Min(proposedTime, manualClock.CurrentTime + sixty_frame_time)
+                        : Math.Max(proposedTime, manualClock.CurrentTime - sixty_frame_time);
             }
         }
 
@@ -289,7 +308,8 @@ namespace osu.Game.Rulesets.UI
 
         private readonly AudioAdjustments gameplayAdjustments = new AudioAdjustments();
 
-        public IAdjustableAudioComponent AdjustmentsFromMods => parentGameplayClock?.AdjustmentsFromMods ?? gameplayAdjustments;
+        public IAdjustableAudioComponent AdjustmentsFromMods =>
+            parentGameplayClock?.AdjustmentsFromMods ?? gameplayAdjustments;
 
         #endregion
 
@@ -316,7 +336,7 @@ namespace osu.Game.Rulesets.UI
             /// <summary>
             /// In a valid state, progressing one child hierarchy loop per game loop.
             /// </summary>
-            Valid
+            Valid,
         }
     }
 }

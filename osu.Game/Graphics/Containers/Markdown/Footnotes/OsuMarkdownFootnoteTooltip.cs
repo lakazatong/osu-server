@@ -30,18 +30,14 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background6
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background6 },
                 markdownContainer = new FootnoteMarkdownContainer
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     DocumentMargin = new MarginPadding(),
-                    DocumentPadding = new MarginPadding { Horizontal = 10, Vertical = 5 }
-                }
+                    DocumentPadding = new MarginPadding { Horizontal = 10, Vertical = 5 },
+                },
             };
         }
 
@@ -61,7 +57,8 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
                 lastFootnote = Text = footnote;
             }
 
-            public override OsuMarkdownTextFlowContainer CreateTextFlow() => new FootnoteMarkdownTextFlowContainer();
+            public override OsuMarkdownTextFlowContainer CreateTextFlow() =>
+                new FootnoteMarkdownTextFlowContainer();
         }
 
         private partial class FootnoteMarkdownTextFlowContainer : OsuMarkdownTextFlowContainer

@@ -19,7 +19,8 @@ namespace osu.Game.Overlays.Mods
     {
         private readonly OsuSpriteText incompatibleText;
 
-        private readonly Bindable<IReadOnlyList<Mod>> incompatibleMods = new Bindable<IReadOnlyList<Mod>>();
+        private readonly Bindable<IReadOnlyList<Mod>> incompatibleMods =
+            new Bindable<IReadOnlyList<Mod>>();
 
         [Resolved]
         private Bindable<RulesetInfo> ruleset { get; set; } = null!;
@@ -27,22 +28,24 @@ namespace osu.Game.Overlays.Mods
         public IncompatibilityDisplayingTooltip(OverlayColourProvider colourProvider)
             : base(colourProvider)
         {
-            AddRange(new Drawable[]
-            {
-                incompatibleText = new OsuSpriteText
+            AddRange(
+                new Drawable[]
                 {
-                    Margin = new MarginPadding { Top = 5 },
-                    Colour = colourProvider.Content2,
-                    Font = OsuFont.GetFont(weight: FontWeight.Regular),
-                    Text = "Incompatible with:"
-                },
-                new ModDisplay
-                {
-                    Current = incompatibleMods,
-                    ExpansionMode = ExpansionMode.AlwaysExpanded,
-                    Scale = new Vector2(0.7f)
+                    incompatibleText = new OsuSpriteText
+                    {
+                        Margin = new MarginPadding { Top = 5 },
+                        Colour = colourProvider.Content2,
+                        Font = OsuFont.GetFont(weight: FontWeight.Regular),
+                        Text = "Incompatible with:",
+                    },
+                    new ModDisplay
+                    {
+                        Current = incompatibleMods,
+                        ExpansionMode = ExpansionMode.AlwaysExpanded,
+                        Scale = new Vector2(0.7f),
+                    },
                 }
-            });
+            );
         }
 
         protected override void UpdateDisplay(Mod mod)
@@ -53,8 +56,16 @@ namespace osu.Game.Overlays.Mods
 
             var allMods = ruleset.Value.CreateInstance().AllMods;
 
-            incompatibleMods.Value = allMods.Where(m => m.GetType() != mod.GetType() && incompatibleTypes.Any(t => t.IsInstanceOfType(m))).Select(m => m.CreateInstance()).ToList();
-            incompatibleText.Text = incompatibleMods.Value.Any() ? "Incompatible with:" : "Compatible with all mods";
+            incompatibleMods.Value = allMods
+                .Where(m =>
+                    m.GetType() != mod.GetType()
+                    && incompatibleTypes.Any(t => t.IsInstanceOfType(m))
+                )
+                .Select(m => m.CreateInstance())
+                .ToList();
+            incompatibleText.Text = incompatibleMods.Value.Any()
+                ? "Incompatible with:"
+                : "Compatible with all mods";
         }
     }
 }

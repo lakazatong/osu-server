@@ -23,11 +23,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         [SetUpSteps]
         public void SetUp()
         {
-            AddStep("create judgement container", () => Child = judgementContainer = new JudgementContainer<DrawableOsuJudgement>
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            AddStep(
+                "create judgement container",
+                () =>
+                    Child = judgementContainer =
+                        new JudgementContainer<DrawableOsuJudgement>
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        }
+            );
         }
 
         [Test]
@@ -36,21 +41,27 @@ namespace osu.Game.Tests.Visual.Gameplay
             DrawableHitCircle drawableHitCircle1 = null!;
             DrawableHitCircle drawableHitCircle2 = null!;
 
-            AddStep("create hit circles", () =>
-            {
-                Add(drawableHitCircle1 = new DrawableHitCircle(createHitCircle()));
-                Add(drawableHitCircle2 = new DrawableHitCircle(createHitCircle()));
-            });
+            AddStep(
+                "create hit circles",
+                () =>
+                {
+                    Add(drawableHitCircle1 = new DrawableHitCircle(createHitCircle()));
+                    Add(drawableHitCircle2 = new DrawableHitCircle(createHitCircle()));
+                }
+            );
 
             int judgementCount = 0;
 
-            AddStep("judge the same hitobject twice via different drawables", () =>
-            {
-                addDrawableJudgement(drawableHitCircle1);
-                drawableHitCircle2.Apply(drawableHitCircle1.HitObject);
-                addDrawableJudgement(drawableHitCircle2);
-                judgementCount = judgementContainer.Count;
-            });
+            AddStep(
+                "judge the same hitobject twice via different drawables",
+                () =>
+                {
+                    addDrawableJudgement(drawableHitCircle1);
+                    drawableHitCircle2.Apply(drawableHitCircle1.HitObject);
+                    addDrawableJudgement(drawableHitCircle2);
+                    judgementCount = judgementContainer.Count;
+                }
+            );
 
             AddAssert("one judgement in container", () => judgementCount, () => Is.EqualTo(1));
         }
@@ -60,17 +71,23 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             DrawableHitCircle drawableHitCircle = null!;
 
-            AddStep("create hit circle", () => Add(drawableHitCircle = new DrawableHitCircle(createHitCircle())));
+            AddStep(
+                "create hit circle",
+                () => Add(drawableHitCircle = new DrawableHitCircle(createHitCircle()))
+            );
 
             int judgementCount = 0;
 
-            AddStep("judge two hitobjects via the same drawable", () =>
-            {
-                addDrawableJudgement(drawableHitCircle);
-                drawableHitCircle.Apply(createHitCircle());
-                addDrawableJudgement(drawableHitCircle);
-                judgementCount = judgementContainer.Count;
-            });
+            AddStep(
+                "judge two hitobjects via the same drawable",
+                () =>
+                {
+                    addDrawableJudgement(drawableHitCircle);
+                    drawableHitCircle.Apply(createHitCircle());
+                    addDrawableJudgement(drawableHitCircle);
+                    judgementCount = judgementContainer.Count;
+                }
+            );
 
             AddAssert("two judgements in container", () => judgementCount, () => Is.EqualTo(2));
         }
@@ -79,11 +96,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             var judgement = new DrawableOsuJudgement();
 
-            judgement.Apply(new JudgementResult(drawableHitObject.HitObject, new OsuJudgement())
-            {
-                Type = HitResult.Great,
-                TimeOffset = Time.Current
-            }, drawableHitObject);
+            judgement.Apply(
+                new JudgementResult(drawableHitObject.HitObject, new OsuJudgement())
+                {
+                    Type = HitResult.Great,
+                    TimeOffset = Time.Current,
+                },
+                drawableHitObject
+            );
 
             judgementContainer.Add(judgement);
         }

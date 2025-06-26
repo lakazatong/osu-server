@@ -100,19 +100,21 @@ namespace osu.Game.Overlays.Mods
             if (allowIncompatibleSelection)
             {
                 ControlContainer.Height = 35;
-                ControlContainer.Add(toggleAllCheckbox = new ToggleAllCheckbox(this)
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Scale = new Vector2(0.8f),
-                    RelativeSizeAxes = Axes.X,
-                    Shear = -OsuGame.SHEAR
-                });
+                ControlContainer.Add(
+                    toggleAllCheckbox = new ToggleAllCheckbox(this)
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Scale = new Vector2(0.8f),
+                        RelativeSizeAxes = Axes.X,
+                        Shear = -OsuGame.SHEAR,
+                    }
+                );
                 ItemsFlow.Padding = new MarginPadding
                 {
                     Top = 0,
                     Bottom = 7,
-                    Horizontal = 7
+                    Horizontal = 7,
                 };
             }
         }
@@ -128,7 +130,9 @@ namespace osu.Game.Overlays.Mods
                 toggleAllCheckbox.AccentHoverColour = AccentColour.Lighten(0.3f);
             }
 
-            hotkeyStyle = configManager.GetBindable<ModSelectHotkeyStyle>(OsuSetting.ModSelectHotkeyStyle);
+            hotkeyStyle = configManager.GetBindable<ModSelectHotkeyStyle>(
+                OsuSetting.ModSelectHotkeyStyle
+            );
         }
 
         protected override void LoadComplete()
@@ -136,14 +140,19 @@ namespace osu.Game.Overlays.Mods
             base.LoadComplete();
 
             toggleAllCheckbox?.Current.BindValueChanged(_ => updateToggleAllText(), true);
-            hotkeyStyle.BindValueChanged(val => hotkeyHandler = createHotkeyHandler(val.NewValue), true);
+            hotkeyStyle.BindValueChanged(
+                val => hotkeyHandler = createHotkeyHandler(val.NewValue),
+                true
+            );
             asyncLoadPanels();
         }
 
         private void updateToggleAllText()
         {
             Debug.Assert(toggleAllCheckbox != null);
-            toggleAllCheckbox.LabelText = toggleAllCheckbox.Current.Value ? CommonStrings.DeselectAll : CommonStrings.SelectAll;
+            toggleAllCheckbox.LabelText = toggleAllCheckbox.Current.Value
+                ? CommonStrings.DeselectAll
+                : CommonStrings.SelectAll;
         }
 
         private CancellationTokenSource? cancellationTokenSource;
@@ -152,14 +161,20 @@ namespace osu.Game.Overlays.Mods
         {
             cancellationTokenSource?.Cancel();
 
-            var panels = availableMods.Select(mod => CreateModPanel(mod).With(panel => panel.Shear = Vector2.Zero)).ToArray();
+            var panels = availableMods
+                .Select(mod => CreateModPanel(mod).With(panel => panel.Shear = Vector2.Zero))
+                .ToArray();
             latestLoadedPanels = panels;
 
-            latestLoadTask = LoadComponentsAsync(panels, loaded =>
-            {
-                ItemsFlow.ChildrenEnumerable = loaded;
-                updateState();
-            }, (cancellationTokenSource = new CancellationTokenSource()).Token);
+            latestLoadTask = LoadComponentsAsync(
+                panels,
+                loaded =>
+                {
+                    ItemsFlow.ChildrenEnumerable = loaded;
+                    updateState();
+                },
+                (cancellationTokenSource = new CancellationTokenSource()).Token
+            );
         }
 
         private void updateState()
@@ -174,7 +189,9 @@ namespace osu.Game.Overlays.Mods
 
                 // checking `anyPanelsVisible` is important since `.All()` returns `true` for empty enumerables.
                 if (anyPanelsVisible)
-                    toggleAllCheckbox.Current.Value = availableMods.Where(panel => panel.Visible).All(panel => panel.Active.Value);
+                    toggleAllCheckbox.Current.Value = availableMods
+                        .Where(panel => panel.Visible)
+                        .All(panel => panel.Active.Value);
             }
         }
 
@@ -202,14 +219,20 @@ namespace osu.Game.Overlays.Mods
                 Invalidate(Invalidation.Presence);
             wasPresent = IsPresent;
 
-            if (selectionDelay == initial_multiple_selection_delay || Time.Current - lastSelection >= selectionDelay)
+            if (
+                selectionDelay == initial_multiple_selection_delay
+                || Time.Current - lastSelection >= selectionDelay
+            )
             {
                 if (pendingSelectionOperations.TryDequeue(out var dequeuedAction))
                 {
                     dequeuedAction();
 
                     // each time we play an animation, we decrease the time until the next animation (to ramp the visual and audible elements).
-                    selectionDelay = Math.Max(ModSelectPanel.SAMPLE_PLAYBACK_DELAY, selectionDelay * 0.8f);
+                    selectionDelay = Math.Max(
+                        ModSelectPanel.SAMPLE_PLAYBACK_DELAY,
+                        selectionDelay * 0.8f
+                    );
                     lastSelection = Time.Current;
                 }
                 else

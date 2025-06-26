@@ -40,9 +40,7 @@ namespace osu.Game.Tests.Visual
         private GameHost host { get; set; }
 
         protected SkinnableTestScene()
-            : base(2, 3)
-        {
-        }
+            : base(2, 3) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -51,10 +49,25 @@ namespace osu.Game.Tests.Visual
 
             argonSkin = new ArgonSkin(this);
             trianglesSkin = new TrianglesSkin(this);
-            metricsSkin = new TestLegacySkin(new SkinInfo { Name = "metrics-skin" }, new NamespacedResourceStore<byte[]>(dllStore, "Resources/metrics_skin"), this, true);
+            metricsSkin = new TestLegacySkin(
+                new SkinInfo { Name = "metrics-skin" },
+                new NamespacedResourceStore<byte[]>(dllStore, "Resources/metrics_skin"),
+                this,
+                true
+            );
             legacySkin = new DefaultLegacySkin(this);
-            specialSkin = new TestLegacySkin(new SkinInfo { Name = "special-skin" }, new NamespacedResourceStore<byte[]>(dllStore, "Resources/special_skin"), this, true);
-            oldSkin = new TestLegacySkin(new SkinInfo { Name = "old-skin" }, new NamespacedResourceStore<byte[]>(dllStore, "Resources/old_skin"), this, true);
+            specialSkin = new TestLegacySkin(
+                new SkinInfo { Name = "special-skin" },
+                new NamespacedResourceStore<byte[]>(dllStore, "Resources/special_skin"),
+                this,
+                true
+            );
+            oldSkin = new TestLegacySkin(
+                new SkinInfo { Name = "old-skin" },
+                new NamespacedResourceStore<byte[]>(dllStore, "Resources/old_skin"),
+                this,
+                true
+            );
         }
 
         private readonly List<Drawable> createdDrawables = new List<Drawable>();
@@ -75,7 +88,11 @@ namespace osu.Game.Tests.Visual
 
         protected IEnumerable<Drawable> CreatedDrawables => createdDrawables;
 
-        private Drawable createProvider(Skin skin, Func<ISkin, Drawable> creationFunction, IBeatmap beatmap)
+        private Drawable createProvider(
+            Skin skin,
+            Func<ISkin, Drawable> creationFunction,
+            IBeatmap beatmap
+        )
         {
             var created = creationFunction(skin);
 
@@ -85,7 +102,8 @@ namespace osu.Game.Tests.Visual
             OutlineBox outlineBox;
             SkinProvidingContainer skinProvider;
 
-            ISkin provider = Ruleset.Value.CreateInstance().CreateSkinTransformer(skin, beatmap) ?? skin;
+            ISkin provider =
+                Ruleset.Value.CreateInstance().CreateSkinTransformer(skin, beatmap) ?? skin;
 
             var children = new Container
             {
@@ -115,13 +133,10 @@ namespace osu.Game.Tests.Visual
                         Children = new Drawable[]
                         {
                             outlineBox = new OutlineBox(),
-                            skinProvider = new SkinProvidingContainer(provider)
-                            {
-                                Child = created,
-                            }
-                        }
+                            skinProvider = new SkinProvidingContainer(provider) { Child = created },
+                        },
                     },
-                }
+                },
             };
 
             // run this once initially to bring things into a sane state as early as possible.
@@ -165,7 +180,8 @@ namespace osu.Game.Tests.Visual
 
         protected sealed override Ruleset CreateRuleset() => CreateRulesetForSkinProvider();
 
-        protected virtual IBeatmap CreateBeatmapForSkinProvider() => CreateWorkingBeatmap(Ruleset.Value).GetPlayableBeatmap(Ruleset.Value);
+        protected virtual IBeatmap CreateBeatmapForSkinProvider() =>
+            CreateWorkingBeatmap(Ruleset.Value).GetPlayableBeatmap(Ruleset.Value);
 
         #region IResourceStorageProvider
 
@@ -173,7 +189,11 @@ namespace osu.Game.Tests.Visual
         public AudioManager AudioManager => Audio;
         public IResourceStore<byte[]> Files => null!;
         public new IResourceStore<byte[]> Resources => base.Resources;
-        public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => host.CreateTextureLoaderStore(underlyingStore);
+
+        public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => host.CreateTextureLoaderStore(underlyingStore);
+
         RealmAccess IStorageResourceProvider.RealmAccess => null!;
 
         #endregion
@@ -192,7 +212,7 @@ namespace osu.Game.Tests.Visual
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0,
                     Colour = Color4.Brown,
-                    AlwaysPresent = true
+                    AlwaysPresent = true,
                 };
             }
         }
@@ -201,13 +221,22 @@ namespace osu.Game.Tests.Visual
         {
             private readonly bool extrapolateAnimations;
 
-            public TestLegacySkin(SkinInfo skin, IResourceStore<byte[]> fallbackStore, IStorageResourceProvider resources, bool extrapolateAnimations)
+            public TestLegacySkin(
+                SkinInfo skin,
+                IResourceStore<byte[]> fallbackStore,
+                IStorageResourceProvider resources,
+                bool extrapolateAnimations
+            )
                 : base(skin, resources, fallbackStore)
             {
                 this.extrapolateAnimations = extrapolateAnimations;
             }
 
-            public override Texture GetTexture(string componentName, WrapMode wrapModeS, WrapMode wrapModeT)
+            public override Texture GetTexture(
+                string componentName,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT
+            )
             {
                 var lookup = base.GetTexture(componentName, wrapModeS, wrapModeT);
 
@@ -219,8 +248,16 @@ namespace osu.Game.Tests.Visual
                 {
                     var match = Regex.Match(componentName, "-([0-9]*)");
 
-                    if (match.Length > 0 && int.TryParse(match.Groups[1].Value, out int number) && number < 60)
-                        return base.GetTexture(componentName.Replace($"-{number}", $"-{number % 2}"), wrapModeS, wrapModeT);
+                    if (
+                        match.Length > 0
+                        && int.TryParse(match.Groups[1].Value, out int number)
+                        && number < 60
+                    )
+                        return base.GetTexture(
+                            componentName.Replace($"-{number}", $"-{number % 2}"),
+                            wrapModeS,
+                            wrapModeT
+                        );
                 }
 
                 return null;

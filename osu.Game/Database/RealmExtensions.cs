@@ -20,7 +20,8 @@ namespace osu.Game.Database
         /// The retrieved entity of type <typeparamref name="T"/>.
         /// Can be <see langword="null"/> if the entity is still not found by <paramref name="id"/> even after a refresh.
         /// </returns>
-        public static T? FindWithRefresh<T>(this Realm realm, Guid id) where T : IRealmObject
+        public static T? FindWithRefresh<T>(this Realm realm, Guid id)
+            where T : IRealmObject
         {
             var found = realm.Find<T>(id);
 
@@ -99,6 +100,9 @@ namespace osu.Game.Database
         /// Realm subscriptions fire on both collection and property changes (including *all* nested properties).
         /// Quite often we only care about changes at a collection level. This can be used to guard and early-return when no such changes are in a callback.
         /// </remarks>
-        public static bool HasCollectionChanges(this ChangeSet changes) => changes.InsertedIndices.Length > 0 || changes.DeletedIndices.Length > 0 || changes.Moves.Length > 0;
+        public static bool HasCollectionChanges(this ChangeSet changes) =>
+            changes.InsertedIndices.Length > 0
+            || changes.DeletedIndices.Length > 0
+            || changes.Moves.Length > 0;
     }
 }

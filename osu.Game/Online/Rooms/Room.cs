@@ -342,9 +342,7 @@ namespace osu.Game.Online.Rooms
         // Not yet serialised (not implemented).
         private RoomAvailability availability;
 
-        public Room()
-        {
-        }
+        public Room() { }
 
         public Room(MultiplayerRoom room)
         {
@@ -424,10 +422,14 @@ namespace osu.Game.Online.Rooms
             public double Max;
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        protected bool SetList<T>(ref IReadOnlyList<T> list, IReadOnlyList<T> value, [CallerMemberName] string propertyName = null!)
+        protected bool SetList<T>(
+            ref IReadOnlyList<T> list,
+            IReadOnlyList<T> value,
+            [CallerMemberName] string propertyName = null!
+        )
         {
             if (list.SequenceEqual(value))
                 return false;
@@ -437,7 +439,11 @@ namespace osu.Game.Online.Rooms
             return true;
         }
 
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null!)
+        protected bool SetField<T>(
+            ref T field,
+            T value,
+            [CallerMemberName] string propertyName = null!
+        )
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
                 return false;

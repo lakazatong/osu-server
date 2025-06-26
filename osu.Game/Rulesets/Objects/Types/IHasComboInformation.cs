@@ -76,9 +76,15 @@ namespace osu.Game.Rulesets.Objects.Types
         /// <param name="skin">The skin to retrieve the combo colour from.</param>
         /// <param name="comboIndex">The index to retrieve the combo colour with.</param>
         /// <returns></returns>
-        protected static Color4 GetSkinComboColour(IHasComboInformation combo, ISkin skin, int comboIndex)
+        protected static Color4 GetSkinComboColour(
+            IHasComboInformation combo,
+            ISkin skin,
+            int comboIndex
+        )
         {
-            return skin.GetConfig<SkinComboColourLookup, Color4>(new SkinComboColourLookup(comboIndex, combo))?.Value ?? Color4.White;
+            return skin.GetConfig<SkinComboColourLookup, Color4>(
+                    new SkinComboColourLookup(comboIndex, combo)
+                )?.Value ?? Color4.White;
         }
 
         /// <summary>

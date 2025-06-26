@@ -43,7 +43,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, true, userHasCustomColours);
-            AddAssert("is beatmap skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestBeatmapSkin.Colours));
+            AddAssert(
+                "is beatmap skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestBeatmapSkin.Colours)
+            );
         }
 
         [TestCase(true)]
@@ -52,7 +55,10 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, false, true);
-            AddAssert("is user custom skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours));
+            AddAssert(
+                "is user custom skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours)
+            );
         }
 
         [TestCase(true)]
@@ -61,7 +67,13 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, true));
             ConfigureTest(useBeatmapSkin, false, false);
-            AddAssert("is default user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(SkinConfiguration.DefaultComboColours));
+            AddAssert(
+                "is default user skin colours",
+                () =>
+                    TestPlayer.UsableComboColours.SequenceEqual(
+                        SkinConfiguration.DefaultComboColours
+                    )
+            );
         }
 
         [TestCase(true, true)]
@@ -72,64 +84,100 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, false));
             ConfigureTest(useBeatmapSkin, useBeatmapColour, false);
-            AddAssert("is default user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(SkinConfiguration.DefaultComboColours));
+            AddAssert(
+                "is default user skin colours",
+                () =>
+                    TestPlayer.UsableComboColours.SequenceEqual(
+                        SkinConfiguration.DefaultComboColours
+                    )
+            );
         }
 
         [TestCase(true, true)]
         [TestCase(false, true)]
         [TestCase(true, false)]
         [TestCase(false, false)]
-        public void TestBeatmapNoComboColoursSkinOverride(bool useBeatmapSkin, bool useBeatmapColour)
+        public void TestBeatmapNoComboColoursSkinOverride(
+            bool useBeatmapSkin,
+            bool useBeatmapColour
+        )
         {
             PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, false));
             ConfigureTest(useBeatmapSkin, useBeatmapColour, true);
-            AddAssert("is custom user skin colours", () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours));
+            AddAssert(
+                "is custom user skin colours",
+                () => TestPlayer.UsableComboColours.SequenceEqual(TestSkin.Colours)
+            );
         }
 
         [TestCase(true, true)]
         [TestCase(true, false)]
         [TestCase(false, true)]
         [TestCase(false, false)]
-        public void TestComboOffsetWithBeatmapColours(bool userHasCustomColours, bool useBeatmapSkin)
+        public void TestComboOffsetWithBeatmapColours(
+            bool userHasCustomColours,
+            bool useBeatmapSkin
+        )
         {
-            PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, true, getHitCirclesWithLegacyOffsets()));
+            PrepareBeatmap(() =>
+                new OsuCustomSkinWorkingBeatmap(audio, true, getHitCirclesWithLegacyOffsets())
+            );
             ConfigureTest(useBeatmapSkin, true, userHasCustomColours);
-            assertCorrectObjectComboColours("is beatmap skin colours with combo offsets applied",
+            assertCorrectObjectComboColours(
+                "is beatmap skin colours with combo offsets applied",
                 TestBeatmapSkin.Colours,
-                (i, obj) => i + 1 + obj.ComboOffset);
+                (i, obj) => i + 1 + obj.ComboOffset
+            );
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void TestComboOffsetWithIgnoredBeatmapColours(bool useBeatmapSkin)
         {
-            PrepareBeatmap(() => new OsuCustomSkinWorkingBeatmap(audio, true, getHitCirclesWithLegacyOffsets()));
+            PrepareBeatmap(() =>
+                new OsuCustomSkinWorkingBeatmap(audio, true, getHitCirclesWithLegacyOffsets())
+            );
             ConfigureTest(useBeatmapSkin, false, true);
-            assertCorrectObjectComboColours("is user skin colours without combo offsets applied",
+            assertCorrectObjectComboColours(
+                "is user skin colours without combo offsets applied",
                 TestSkin.Colours,
-                (i, _) => i + 1);
+                (i, _) => i + 1
+            );
         }
 
-        private void assertCorrectObjectComboColours(string description, Color4[] expectedColours, Func<int, OsuHitObject, int> nextExpectedComboIndex)
+        private void assertCorrectObjectComboColours(
+            string description,
+            Color4[] expectedColours,
+            Func<int, OsuHitObject, int> nextExpectedComboIndex
+        )
         {
-            AddUntilStep("wait for objects to become alive", () =>
-                TestPlayer.DrawableRuleset.Playfield.AllHitObjects.Count() == TestPlayer.DrawableRuleset.Objects.Count());
+            AddUntilStep(
+                "wait for objects to become alive",
+                () =>
+                    TestPlayer.DrawableRuleset.Playfield.AllHitObjects.Count()
+                    == TestPlayer.DrawableRuleset.Objects.Count()
+            );
 
-            AddAssert(description, () =>
-            {
-                int index = 0;
-
-                return TestPlayer.DrawableRuleset.Playfield.AllHitObjects.All(d =>
+            AddAssert(
+                description,
+                () =>
                 {
-                    index = nextExpectedComboIndex(index, (OsuHitObject)d.HitObject);
-                    return checkComboColour(d, expectedColours[index % expectedColours.Length]);
-                });
-            });
+                    int index = 0;
+
+                    return TestPlayer.DrawableRuleset.Playfield.AllHitObjects.All(d =>
+                    {
+                        index = nextExpectedComboIndex(index, (OsuHitObject)d.HitObject);
+                        return checkComboColour(d, expectedColours[index % expectedColours.Length]);
+                    });
+                }
+            );
 
             static bool checkComboColour(DrawableHitObject drawableHitObject, Color4 expectedColour)
             {
-                return drawableHitObject.AccentColour.Value == expectedColour &&
-                       drawableHitObject.NestedHitObjects.All(n => checkComboColour(n, expectedColour));
+                return drawableHitObject.AccentColour.Value == expectedColour
+                    && drawableHitObject.NestedHitObjects.All(n =>
+                        checkComboColour(n, expectedColour)
+                    );
             }
         }
 
@@ -139,16 +187,19 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             for (int i = 0; i < 10; i++)
             {
-                var hitObject = i % 2 == 0
-                    ? (OsuHitObject)new HitCircle()
-                    : new Slider
-                    {
-                        Path = new SliderPath(new[]
+                var hitObject =
+                    i % 2 == 0
+                        ? (OsuHitObject)new HitCircle()
+                        : new Slider
                         {
-                            new PathControlPoint(new Vector2(0, 0)),
-                            new PathControlPoint(new Vector2(100, 0)),
-                        })
-                    };
+                            Path = new SliderPath(
+                                new[]
+                                {
+                                    new PathControlPoint(new Vector2(0, 0)),
+                                    new PathControlPoint(new Vector2(100, 0)),
+                                }
+                            ),
+                        };
 
                 hitObject.StartTime = i;
                 hitObject.Position = new Vector2(256, 192);
@@ -163,10 +214,12 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private class OsuCustomSkinWorkingBeatmap : CustomSkinWorkingBeatmap
         {
-            public OsuCustomSkinWorkingBeatmap(AudioManager audio, bool hasColours, IEnumerable<OsuHitObject> hitObjects = null)
-                : base(createBeatmap(hitObjects), audio, hasColours)
-            {
-            }
+            public OsuCustomSkinWorkingBeatmap(
+                AudioManager audio,
+                bool hasColours,
+                IEnumerable<OsuHitObject> hitObjects = null
+            )
+                : base(createBeatmap(hitObjects), audio, hasColours) { }
 
             private static IBeatmap createBeatmap(IEnumerable<OsuHitObject> hitObjects)
             {
@@ -179,10 +232,9 @@ namespace osu.Game.Rulesets.Osu.Tests
                     },
                 };
 
-                beatmap.HitObjects.AddRange(hitObjects ?? new[]
-                {
-                    new HitCircle { Position = new Vector2(256, 192) }
-                });
+                beatmap.HitObjects.AddRange(
+                    hitObjects ?? new[] { new HitCircle { Position = new Vector2(256, 192) } }
+                );
 
                 return beatmap;
             }

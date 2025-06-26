@@ -57,23 +57,25 @@ namespace osu.Game.Online.Chat
                 {
                     Colour = Color4.Black,
                     Alpha = 0.8f,
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
             };
 
             if (postingTextBox)
             {
-                AddInternal(TextBox = new ChatTextBox
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = text_box_height,
-                    PlaceholderText = ChatStrings.InputPlaceholder,
-                    CornerRadius = corner_radius,
-                    ReleaseFocusOnCommit = false,
-                    HoldFocus = true,
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                });
+                AddInternal(
+                    TextBox = new ChatTextBox
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = text_box_height,
+                        PlaceholderText = ChatStrings.InputPlaceholder,
+                        CornerRadius = corner_radius,
+                        ReleaseFocusOnCommit = false,
+                        HoldFocus = true,
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                    }
+                );
 
                 TextBox.OnCommit += postMessage;
             }
@@ -107,7 +109,8 @@ namespace osu.Game.Online.Chat
             TextBox.Text = string.Empty;
         }
 
-        protected virtual ChatLine? CreateMessage(Message message) => new StandAloneMessage(message);
+        protected virtual ChatLine? CreateMessage(Message message) =>
+            new StandAloneMessage(message);
 
         private void channelChanged(ValueChangedEvent<Channel?> e)
         {
@@ -116,13 +119,17 @@ namespace osu.Game.Online.Chat
             if (e.OldValue != null)
                 TextBox?.Current.UnbindFrom(e.OldValue.TextBoxMessage);
 
-            if (e.NewValue == null) return;
+            if (e.NewValue == null)
+                return;
 
             TextBox?.Current.BindTo(e.NewValue.TextBoxMessage);
 
             drawableChannel = CreateDrawableChannel(e.NewValue);
             drawableChannel.CreateChatLineAction = CreateMessage;
-            drawableChannel.Padding = new MarginPadding { Bottom = postingTextBox ? text_box_height : 0 };
+            drawableChannel.Padding = new MarginPadding
+            {
+                Bottom = postingTextBox ? text_box_height : 0,
+            };
 
             AddInternal(drawableChannel);
         }
@@ -175,13 +182,13 @@ namespace osu.Game.Online.Chat
             public Func<Message, ChatLine?>? CreateChatLineAction;
 
             public StandAloneDrawableChannel(Channel channel)
-                : base(channel)
-            {
-            }
+                : base(channel) { }
 
-            protected override ChatLine? CreateChatLine(Message m) => CreateChatLineAction?.Invoke(m) ?? null;
+            protected override ChatLine? CreateChatLine(Message m) =>
+                CreateChatLineAction?.Invoke(m) ?? null;
 
-            protected override DaySeparator CreateDaySeparator(DateTimeOffset time) => new StandAloneDaySeparator(time);
+            protected override DaySeparator CreateDaySeparator(DateTimeOffset time) =>
+                new StandAloneDaySeparator(time);
         }
 
         protected partial class StandAloneDaySeparator : DaySeparator
@@ -192,9 +199,7 @@ namespace osu.Game.Online.Chat
             protected override float DateAlign => 125;
 
             public StandAloneDaySeparator(DateTimeOffset date)
-                : base(date)
-            {
-            }
+                : base(date) { }
 
             [BackgroundDependencyLoader]
             private void load(OsuColour colours)
@@ -210,9 +215,7 @@ namespace osu.Game.Online.Chat
             protected override float UsernameWidth => 90;
 
             public StandAloneMessage(Message message)
-                : base(message)
-            {
-            }
+                : base(message) { }
         }
     }
 }

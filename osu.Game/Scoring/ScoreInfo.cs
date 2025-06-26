@@ -26,7 +26,13 @@ namespace osu.Game.Scoring
     /// A realm model containing metadata for a single score.
     /// </summary>
     [MapTo("Score")]
-    public class ScoreInfo : RealmObject, IHasGuidPrimaryKey, IHasRealmFiles, ISoftDelete, IEquatable<ScoreInfo>, IScoreInfo
+    public class ScoreInfo
+        : RealmObject,
+            IHasGuidPrimaryKey,
+            IHasRealmFiles,
+            ISoftDelete,
+            IEquatable<ScoreInfo>,
+            IScoreInfo
     {
         [PrimaryKey]
         public Guid ID { get; set; }
@@ -155,7 +161,11 @@ namespace osu.Game.Scoring
         [MapTo("MaximumStatistics")]
         public string MaximumStatisticsJson { get; set; } = string.Empty;
 
-        public ScoreInfo(BeatmapInfo? beatmap = null, RulesetInfo? ruleset = null, RealmUser? realmUser = null)
+        public ScoreInfo(
+            BeatmapInfo? beatmap = null,
+            RulesetInfo? ruleset = null,
+            RealmUser? realmUser = null
+        )
         {
             Ruleset = ruleset ?? new RulesetInfo();
             BeatmapInfo = beatmap ?? new BeatmapInfo();
@@ -165,9 +175,7 @@ namespace osu.Game.Scoring
         }
 
         [UsedImplicitly] // Realm
-        protected ScoreInfo()
-        {
-        }
+        protected ScoreInfo() { }
 
         // TODO: this is a bit temporary to account for the fact that this class is used to ferry API user data to certain UI components.
         // Eventually we should either persist enough information to realm to not require the API lookups, or perform the API lookups locally.
@@ -176,12 +184,13 @@ namespace osu.Game.Scoring
         [Ignored]
         public APIUser User
         {
-            get => user ??= new APIUser
-            {
-                Id = RealmUser.OnlineID,
-                Username = RealmUser.Username,
-                CountryCode = RealmUser.CountryCode,
-            };
+            get =>
+                user ??= new APIUser
+                {
+                    Id = RealmUser.OnlineID,
+                    Username = RealmUser.Username,
+                    CountryCode = RealmUser.CountryCode,
+                };
             set
             {
                 user = value;
@@ -270,7 +279,9 @@ namespace osu.Game.Scoring
                     return statistics;
 
                 if (!string.IsNullOrEmpty(StatisticsJson))
-                    statistics = JsonConvert.DeserializeObject<Dictionary<HitResult, int>>(StatisticsJson);
+                    statistics = JsonConvert.DeserializeObject<Dictionary<HitResult, int>>(
+                        StatisticsJson
+                    );
 
                 return statistics ??= new Dictionary<HitResult, int>();
             }
@@ -288,7 +299,9 @@ namespace osu.Game.Scoring
                     return maximumStatistics;
 
                 if (!string.IsNullOrEmpty(MaximumStatisticsJson))
-                    maximumStatistics = JsonConvert.DeserializeObject<Dictionary<HitResult, int>>(MaximumStatisticsJson);
+                    maximumStatistics = JsonConvert.DeserializeObject<Dictionary<HitResult, int>>(
+                        MaximumStatisticsJson
+                    );
 
                 return maximumStatistics ??= new Dictionary<HitResult, int>();
             }
@@ -323,7 +336,8 @@ namespace osu.Game.Scoring
         {
             get
             {
-                if (apiMods != null) return apiMods;
+                if (apiMods != null)
+                    return apiMods;
 
                 // prioritise reading from realm backing
                 if (!string.IsNullOrEmpty(ModsJson))
@@ -352,9 +366,7 @@ namespace osu.Game.Scoring
 
         private void updateModsJson()
         {
-            ModsJson = APIMods.Length > 0
-                ? JsonConvert.SerializeObject(APIMods)
-                : string.Empty;
+            ModsJson = APIMods.Length > 0 ? JsonConvert.SerializeObject(APIMods) : string.Empty;
         }
 
         public IEnumerable<HitResultDisplayStatistic> GetStatisticsForDisplay()
@@ -371,7 +383,12 @@ namespace osu.Game.Scoring
                     case HitResult.LargeBonus:
                     case HitResult.SmallBonus:
                         if (MaximumStatistics.TryGetValue(r.result, out int count) && count > 0)
-                            yield return new HitResultDisplayStatistic(r.result, value, count, r.displayName);
+                            yield return new HitResultDisplayStatistic(
+                                r.result,
+                                value,
+                                count,
+                                r.displayName
+                            );
 
                         break;
 
@@ -380,7 +397,12 @@ namespace osu.Game.Scoring
                         break;
 
                     default:
-                        yield return new HitResultDisplayStatistic(r.result, value, null, r.displayName);
+                        yield return new HitResultDisplayStatistic(
+                            r.result,
+                            value,
+                            null,
+                            r.displayName
+                        );
 
                         break;
                 }

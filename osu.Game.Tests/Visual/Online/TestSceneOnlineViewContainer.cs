@@ -25,7 +25,7 @@ namespace osu.Game.Tests.Visual.Online
             Child = new Container
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = onlineView = new TestOnlineViewContainer()
+                Child = onlineView = new TestOnlineViewContainer(),
             };
         }
 
@@ -35,22 +35,34 @@ namespace osu.Game.Tests.Visual.Online
             AddStep("set status to online", () => ((DummyAPIAccess)API).SetState(APIState.Online));
 
             AddUntilStep("children are visible", () => onlineView.ViewTarget.IsPresent);
-            AddUntilStep("loading animation is not visible", () => !onlineView.LoadingSpinner.IsPresent);
+            AddUntilStep(
+                "loading animation is not visible",
+                () => !onlineView.LoadingSpinner.IsPresent
+            );
         }
 
         [Test]
         public void TestOfflineStateVisibility()
         {
-            AddStep("set status to offline", () => ((DummyAPIAccess)API).SetState(APIState.Offline));
+            AddStep(
+                "set status to offline",
+                () => ((DummyAPIAccess)API).SetState(APIState.Offline)
+            );
 
             AddUntilStep("children are not visible", () => !onlineView.ViewTarget.IsPresent);
-            AddUntilStep("loading animation is not visible", () => !onlineView.LoadingSpinner.IsPresent);
+            AddUntilStep(
+                "loading animation is not visible",
+                () => !onlineView.LoadingSpinner.IsPresent
+            );
         }
 
         [Test]
         public void TestConnectingStateVisibility()
         {
-            AddStep("set status to connecting", () => ((DummyAPIAccess)API).SetState(APIState.Connecting));
+            AddStep(
+                "set status to connecting",
+                () => ((DummyAPIAccess)API).SetState(APIState.Connecting)
+            );
 
             AddUntilStep("children are not visible", () => !onlineView.ViewTarget.IsPresent);
             AddUntilStep("loading animation is visible", () => onlineView.LoadingSpinner.IsPresent);
@@ -59,7 +71,10 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestFailingStateVisibility()
         {
-            AddStep("set status to failing", () => ((DummyAPIAccess)API).SetState(APIState.Failing));
+            AddStep(
+                "set status to failing",
+                () => ((DummyAPIAccess)API).SetState(APIState.Failing)
+            );
 
             AddUntilStep("children are not visible", () => !onlineView.ViewTarget.IsPresent);
             AddUntilStep("loading animation is visible", () => onlineView.LoadingSpinner.IsPresent);
@@ -78,18 +93,14 @@ namespace osu.Game.Tests.Visual.Online
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Blue.Opacity(0.8f),
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Blue.Opacity(0.8f) },
                     new OsuSpriteText
                     {
                         Text = "dummy online content",
                         Font = OsuFont.Default.With(size: 40),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
+                    },
                 };
             }
         }

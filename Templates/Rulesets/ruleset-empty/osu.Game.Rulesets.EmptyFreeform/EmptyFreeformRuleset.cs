@@ -25,8 +25,10 @@ namespace osu.Game.Rulesets.EmptyFreeform
     {
         public override string Description => "a very emptyfreeformruleset ruleset";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
-            new DrawableEmptyFreeformRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(
+            IBeatmap beatmap,
+            IReadOnlyList<Mod> mods = null
+        ) => new DrawableEmptyFreeformRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
             new EmptyFreeformBeatmapConverter(beatmap, this);
@@ -48,11 +50,12 @@ namespace osu.Game.Rulesets.EmptyFreeform
 
         public override string ShortName => "emptyfreeformruleset";
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
-        {
-            new KeyBinding(InputKey.Z, EmptyFreeformAction.Button1),
-            new KeyBinding(InputKey.X, EmptyFreeformAction.Button2),
-        };
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
+            new[]
+            {
+                new KeyBinding(InputKey.Z, EmptyFreeformAction.Button1),
+                new KeyBinding(InputKey.X, EmptyFreeformAction.Button2),
+            };
 
         public override Drawable CreateIcon() => new Icon(ShortName[0]);
 
@@ -62,18 +65,14 @@ namespace osu.Game.Rulesets.EmptyFreeform
             {
                 InternalChildren = new Drawable[]
                 {
-                    new Circle
-                    {
-                        Size = new Vector2(20),
-                        Colour = Color4.White,
-                    },
+                    new Circle { Size = new Vector2(20), Colour = Color4.White },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Text = c.ToString(),
-                        Font = OsuFont.Default.With(size: 18)
-                    }
+                        Font = OsuFont.Default.With(size: 18),
+                    },
                 };
             }
         }

@@ -22,6 +22,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Statistics
         }
 
         public override object TooltipContent => dateTime;
+
         public override ITooltip GetCustomTooltip() => new DateTooltip();
 
         public static BeatmapCardDateStatistic? CreateFor(IBeatmapSetOnlineInfo beatmapSetInfo)

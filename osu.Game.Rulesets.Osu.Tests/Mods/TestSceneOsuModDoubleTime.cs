@@ -18,12 +18,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         {
             var mod = new OsuModDoubleTime { SpeedChange = { Value = rate } };
 
-            CreateModTest(new ModTestData
-            {
-                Mod = mod,
-                PassCondition = () => Player.ScoreProcessor.JudgedHits >= 2 &&
-                                      Precision.AlmostEquals(Player.GameplayClockContainer.Rate, mod.SpeedChange.Value)
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = mod,
+                    PassCondition = () =>
+                        Player.ScoreProcessor.JudgedHits >= 2
+                        && Precision.AlmostEquals(
+                            Player.GameplayClockContainer.Rate,
+                            mod.SpeedChange.Value
+                        ),
+                }
+            );
         }
     }
 }

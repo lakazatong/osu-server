@@ -4,23 +4,25 @@
 using System.Collections.Generic;
 using System.Threading;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.EmptyScrolling.Objects;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Rulesets.EmptyScrolling.Beatmaps
 {
     public class EmptyScrollingBeatmapConverter : BeatmapConverter<EmptyScrollingHitObject>
     {
         public EmptyScrollingBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
-            : base(beatmap, ruleset)
-        {
-        }
+            : base(beatmap, ruleset) { }
 
         // todo: Check for conversion types that should be supported (ie. Beatmap.HitObjects.Any(h => h is IHasXPosition))
         // https://github.com/ppy/osu/tree/master/osu.Game/Rulesets/Objects/Types
         public override bool CanConvert() => true;
 
-        protected override IEnumerable<EmptyScrollingHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
+        protected override IEnumerable<EmptyScrollingHitObject> ConvertHitObject(
+            HitObject original,
+            IBeatmap beatmap,
+            CancellationToken cancellationToken
+        )
         {
             yield return new EmptyScrollingHitObject
             {

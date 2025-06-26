@@ -42,7 +42,8 @@ namespace osu.Game.Skinning
         /// <summary>
         /// All raw <see cref="DrawableSamples"/>s contained in this <see cref="SkinnableSound"/>.
         /// </summary>
-        protected IEnumerable<DrawableSample> DrawableSamples => samplesContainer.Select(c => c.Sample).Where(s => s != null);
+        protected IEnumerable<DrawableSample> DrawableSamples =>
+            samplesContainer.Select(c => c.Sample).Where(s => s != null);
 
         private readonly AudioContainer<PoolableSkinnableSample> samplesContainer;
 
@@ -72,9 +73,7 @@ namespace osu.Game.Skinning
         /// </summary>
         /// <param name="sample">The initial sample.</param>
         public SkinnableSound(ISampleInfo sample)
-            : this(new[] { sample })
-        {
-        }
+            : this(new[] { sample }) { }
 
         private ISampleInfo[] samples = Array.Empty<ISampleInfo>();
 
@@ -108,7 +107,8 @@ namespace osu.Game.Skinning
             get => looping;
             set
             {
-                if (value == looping) return;
+                if (value == looping)
+                    return;
 
                 looping = value;
 
@@ -184,15 +184,20 @@ namespace osu.Game.Skinning
 
         public BindableNumber<double> Tempo => samplesContainer.Tempo;
 
-        public void BindAdjustments(IAggregateAudioAdjustment component) => samplesContainer.BindAdjustments(component);
+        public void BindAdjustments(IAggregateAudioAdjustment component) =>
+            samplesContainer.BindAdjustments(component);
 
-        public void UnbindAdjustments(IAggregateAudioAdjustment component) => samplesContainer.UnbindAdjustments(component);
+        public void UnbindAdjustments(IAggregateAudioAdjustment component) =>
+            samplesContainer.UnbindAdjustments(component);
 
-        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => samplesContainer.AddAdjustment(type, adjustBindable);
+        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            samplesContainer.AddAdjustment(type, adjustBindable);
 
-        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) => samplesContainer.RemoveAdjustment(type, adjustBindable);
+        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            samplesContainer.RemoveAdjustment(type, adjustBindable);
 
-        public void RemoveAllAdjustments(AdjustableProperty type) => samplesContainer.RemoveAllAdjustments(type);
+        public void RemoveAllAdjustments(AdjustableProperty type) =>
+            samplesContainer.RemoveAllAdjustments(type);
 
         /// <summary>
         /// Whether any samples are currently playing.

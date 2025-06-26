@@ -27,33 +27,32 @@ namespace osu.Game.Tests.Visual.Online
         private GraphExposingSuccessRate successRate;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = new Container
+        public void Setup() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(275, 220),
-                Children = new Drawable[]
+                Child = new Container
                 {
-                    new Box
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(275, 220),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Gray,
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray },
+                        successRate = new GraphExposingSuccessRate
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(275, 220),
+                            Padding = new MarginPadding(20),
+                        },
                     },
-                    successRate = new GraphExposingSuccessRate
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(275, 220),
-                        Padding = new MarginPadding(20)
-                    }
-                }
-            };
-        });
+                };
+            });
 
         [Test]
         public void TestMetrics()
@@ -67,41 +66,49 @@ namespace osu.Game.Tests.Visual.Online
             AddStep("set second set", () => successRate.Beatmap = secondBeatmap);
             AddAssert("ratings set", () => successRate.Graph.FailTimes == secondBeatmap.FailTimes);
 
-            static APIBeatmap createBeatmap() => new APIBeatmap
-            {
-                FailTimes = new APIFailTimes
+            static APIBeatmap createBeatmap() =>
+                new APIBeatmap
                 {
-                    Fails = Enumerable.Range(1, 100).Select(_ => RNG.Next(10)).ToArray(),
-                    Retries = Enumerable.Range(-2, 100).Select(_ => RNG.Next(10)).ToArray(),
-                },
-                PassCount = RNG.Next(0, 999),
-                PlayCount = RNG.Next(1000, 1999),
-            };
+                    FailTimes = new APIFailTimes
+                    {
+                        Fails = Enumerable.Range(1, 100).Select(_ => RNG.Next(10)).ToArray(),
+                        Retries = Enumerable.Range(-2, 100).Select(_ => RNG.Next(10)).ToArray(),
+                    },
+                    PassCount = RNG.Next(0, 999),
+                    PlayCount = RNG.Next(1000, 1999),
+                };
         }
 
         [Test]
         public void TestOnlyFailMetrics()
         {
-            AddStep("set beatmap", () => successRate.Beatmap = new APIBeatmap
-            {
-                FailTimes = new APIFailTimes
-                {
-                    Fails = Enumerable.Range(1, 100).ToArray(),
-                }
-            });
+            AddStep(
+                "set beatmap",
+                () =>
+                    successRate.Beatmap = new APIBeatmap
+                    {
+                        FailTimes = new APIFailTimes { Fails = Enumerable.Range(1, 100).ToArray() },
+                    }
+            );
 
-            AddAssert("graph max values correct", () => successRate.ChildrenOfType<BarGraph>().All(graph => graph.MaxValue == 100));
+            AddAssert(
+                "graph max values correct",
+                () => successRate.ChildrenOfType<BarGraph>().All(graph => graph.MaxValue == 100)
+            );
         }
 
         [Test]
         public void TestEmptyMetrics()
         {
-            AddStep("set beatmap", () => successRate.Beatmap = new APIBeatmap
-            {
-                FailTimes = new APIFailTimes()
-            });
+            AddStep(
+                "set beatmap",
+                () => successRate.Beatmap = new APIBeatmap { FailTimes = new APIFailTimes() }
+            );
 
-            AddAssert("graph max values correct", () => successRate.ChildrenOfType<BarGraph>().All(graph => graph.MaxValue == 0));
+            AddAssert(
+                "graph max values correct",
+                () => successRate.ChildrenOfType<BarGraph>().All(graph => graph.MaxValue == 0)
+            );
         }
 
         private partial class GraphExposingSuccessRate : SuccessRate

@@ -26,28 +26,24 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
             for (float i = 0; i < count; i++)
             {
-                Add(new Container
-                {
-                    Alpha = 0.4f,
-                    Blending = BlendingParameters.Additive,
-                    RelativePositionAxes = Axes.Both,
-                    Masking = true,
-                    CornerRadius = 5,
-                    Size = new Vector2(60, 10),
-                    Origin = Anchor.Centre,
-                    Position = new Vector2(
-                        0.5f + MathF.Sin(i / count * 2 * MathF.PI) / 2 * 0.83f,
-                        0.5f + MathF.Cos(i / count * 2 * MathF.PI) / 2 * 0.83f
-                    ),
-                    Rotation = -i / count * 360 + 90,
-                    Children = new[]
+                Add(
+                    new Container
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        }
+                        Alpha = 0.4f,
+                        Blending = BlendingParameters.Additive,
+                        RelativePositionAxes = Axes.Both,
+                        Masking = true,
+                        CornerRadius = 5,
+                        Size = new Vector2(60, 10),
+                        Origin = Anchor.Centre,
+                        Position = new Vector2(
+                            0.5f + MathF.Sin(i / count * 2 * MathF.PI) / 2 * 0.83f,
+                            0.5f + MathF.Cos(i / count * 2 * MathF.PI) / 2 * 0.83f
+                        ),
+                        Rotation = -i / count * 360 + 90,
+                        Children = new[] { new Box { RelativeSizeAxes = Axes.Both } },
                     }
-                });
+                );
             }
         }
 
@@ -60,13 +56,12 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
                 foreach (var c in Children.OfType<Container>())
                 {
-                    c.EdgeEffect =
-                        new EdgeEffectParameters
-                        {
-                            Type = EdgeEffectType.Glow,
-                            Radius = 20,
-                            Colour = value.Opacity(0.8f),
-                        };
+                    c.EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Glow,
+                        Radius = 20,
+                        Colour = value.Opacity(0.8f),
+                    };
                 }
             }
         }

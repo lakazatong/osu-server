@@ -8,8 +8,6 @@ namespace osu.Game.Skinning
     public class UnsupportedSkinComponentException : Exception
     {
         public UnsupportedSkinComponentException(ISkinComponentLookup lookup)
-            : base($@"Unsupported component type: {lookup.GetType()} (lookup: ""{lookup}"").")
-        {
-        }
+            : base($@"Unsupported component type: {lookup.GetType()} (lookup: ""{lookup}"").") { }
     }
 }

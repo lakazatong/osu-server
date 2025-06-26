@@ -3,16 +3,16 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
-using osu.Game.Graphics.Sprites;
 using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
+using osu.Game.Graphics.Sprites;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -156,10 +156,9 @@ namespace osu.Game.Graphics.UserInterface
         /// <param name="newValue">Expected count value after modification.</param>
         protected virtual void TransformCount(T currentValue, T newValue)
         {
-            double rollingTotalDuration =
-                IsRollingProportional
-                    ? GetProportionalDuration(currentValue, newValue)
-                    : RollingDuration;
+            double rollingTotalDuration = IsRollingProportional
+                ? GetProportionalDuration(currentValue, newValue)
+                : RollingDuration;
 
             this.TransformTo(nameof(DisplayedCount), newValue, rollingTotalDuration, RollingEasing);
         }
@@ -173,9 +172,7 @@ namespace osu.Game.Graphics.UserInterface
         /// Creates an <see cref="OsuSpriteText"/> which may be used to display this counter's text.
         /// May not be called if <see cref="CreateText"/> is overridden.
         /// </summary>
-        protected virtual OsuSpriteText CreateSpriteText() => new OsuSpriteText
-        {
-            Font = OsuFont.Numeric.With(size: 40f),
-        };
+        protected virtual OsuSpriteText CreateSpriteText() =>
+            new OsuSpriteText { Font = OsuFont.Numeric.With(size: 40f) };
     }
 }

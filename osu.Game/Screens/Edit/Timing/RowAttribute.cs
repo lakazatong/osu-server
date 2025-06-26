@@ -76,7 +76,7 @@ namespace osu.Game.Screens.Edit.Timing
                             Text = label,
                         },
                     },
-                }
+                },
             };
         }
     }

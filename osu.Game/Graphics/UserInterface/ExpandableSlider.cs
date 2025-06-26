@@ -17,7 +17,10 @@ namespace osu.Game.Graphics.UserInterface
     /// <summary>
     /// An <see cref="IExpandable"/> implementation for the UI slider bar control.
     /// </summary>
-    public partial class ExpandableSlider<T, TSlider> : CompositeDrawable, IExpandable, IHasCurrentValue<T>
+    public partial class ExpandableSlider<T, TSlider>
+        : CompositeDrawable,
+            IExpandable,
+            IHasCurrentValue<T>
         where T : struct, INumber<T>, IMinMaxValue<T>
         where TSlider : RoundedSliderBar<T>, new()
     {
@@ -96,11 +99,8 @@ namespace osu.Game.Graphics.UserInterface
                 Children = new Drawable[]
                 {
                     label = new OsuSpriteText(),
-                    slider = new TSlider
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    },
-                }
+                    slider = new TSlider { RelativeSizeAxes = Axes.X },
+                },
             };
         }
 
@@ -111,21 +111,39 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            expandingContainer?.Expanded.BindValueChanged(containerExpanded =>
-            {
-                Expanded.Value = containerExpanded.NewValue;
-            }, true);
+            expandingContainer?.Expanded.BindValueChanged(
+                containerExpanded =>
+                {
+                    Expanded.Value = containerExpanded.NewValue;
+                },
+                true
+            );
 
-            Expanded.BindValueChanged(v =>
-            {
-                label.Text = v.NewValue ? expandedLabelText : contractedLabelText;
-                slider.FadeTo(v.NewValue ? Current.Disabled ? 0.3f : 1f : 0f, 500, Easing.OutQuint);
-                slider.BypassAutoSizeAxes = !v.NewValue ? Axes.Y : Axes.None;
-            }, true);
+            Expanded.BindValueChanged(
+                v =>
+                {
+                    label.Text = v.NewValue ? expandedLabelText : contractedLabelText;
+                    slider.FadeTo(
+                        v.NewValue
+                            ? Current.Disabled
+                                ? 0.3f
+                                : 1f
+                            : 0f,
+                        500,
+                        Easing.OutQuint
+                    );
+                    slider.BypassAutoSizeAxes = !v.NewValue ? Axes.Y : Axes.None;
+                },
+                true
+            );
 
             Current.BindDisabledChanged(disabled =>
             {
-                slider.Alpha = Expanded.Value ? disabled ? 0.3f : 1 : 0f;
+                slider.Alpha = Expanded.Value
+                    ? disabled
+                        ? 0.3f
+                        : 1
+                    : 0f;
             });
         }
     }
@@ -134,7 +152,5 @@ namespace osu.Game.Graphics.UserInterface
     /// An <see cref="IExpandable"/> implementation for the UI slider bar control.
     /// </summary>
     public partial class ExpandableSlider<T> : ExpandableSlider<T, RoundedSliderBar<T>>
-        where T : struct, INumber<T>, IMinMaxValue<T>
-    {
-    }
+        where T : struct, INumber<T>, IMinMaxValue<T> { }
 }

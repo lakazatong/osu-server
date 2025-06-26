@@ -23,13 +23,15 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         // (higher = more performant, but higher false-negative chance).
         private const int path_step_size = 5;
 
-        public CheckMetadata Metadata { get; } = new CheckMetadata(CheckCategory.Compose, "Offscreen hitobjects");
+        public CheckMetadata Metadata { get; } =
+            new CheckMetadata(CheckCategory.Compose, "Offscreen hitobjects");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateOffscreenCircle(this),
-            new IssueTemplateOffscreenSlider(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateOffscreenCircle(this),
+                new IssueTemplateOffscreenSlider(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -88,16 +90,20 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
 
         private bool isOffscreen(Vector2 position, double radius)
         {
-            return position.X - radius < min_x || position.X + radius > max_x ||
-                   position.Y - radius < min_y || position.Y + radius > max_y;
+            return position.X - radius < min_x
+                || position.X + radius > max_x
+                || position.Y - radius < min_y
+                || position.Y + radius > max_y;
         }
 
         public class IssueTemplateOffscreenCircle : IssueTemplate
         {
             public IssueTemplateOffscreenCircle(ICheck check)
-                : base(check, IssueType.Problem, "This circle goes offscreen on a 4:3 aspect ratio.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "This circle goes offscreen on a 4:3 aspect ratio."
+                ) { }
 
             public Issue Create(HitCircle circle) => new Issue(circle, this);
         }
@@ -105,11 +111,14 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
         public class IssueTemplateOffscreenSlider : IssueTemplate
         {
             public IssueTemplateOffscreenSlider(ICheck check)
-                : base(check, IssueType.Problem, "This slider goes offscreen here on a 4:3 aspect ratio.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Problem,
+                    "This slider goes offscreen here on a 4:3 aspect ratio."
+                ) { }
 
-            public Issue Create(Slider slider, double offscreenTime) => new Issue(slider, this) { Time = offscreenTime };
+            public Issue Create(Slider slider, double offscreenTime) =>
+                new Issue(slider, this) { Time = offscreenTime };
         }
     }
 }

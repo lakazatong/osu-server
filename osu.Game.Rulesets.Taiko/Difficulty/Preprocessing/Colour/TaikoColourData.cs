@@ -28,7 +28,8 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour
         /// <summary>
         /// The closest past <see cref="TaikoDifficultyHitObject"/> that's not the same colour.
         /// </summary>
-        public TaikoDifficultyHitObject? PreviousColourChange => MonoStreak?.FirstHitObject.PreviousNote(0);
+        public TaikoDifficultyHitObject? PreviousColourChange =>
+            MonoStreak?.FirstHitObject.PreviousNote(0);
 
         /// <summary>
         /// The closest future <see cref="TaikoDifficultyHitObject"/> that's not the same colour.

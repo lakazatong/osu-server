@@ -38,8 +38,8 @@ namespace osu.Game.Tests.Editing.Checks
                 },
                 BeatmapInfo = new BeatmapInfo
                 {
-                    Metadata = new BeatmapMetadata { AudioFile = "abc123.jpg" }
-                }
+                    Metadata = new BeatmapMetadata { AudioFile = "abc123.jpg" },
+                },
             };
             beatmapFullyMapped = new Beatmap<HitObject>
             {
@@ -51,7 +51,7 @@ namespace osu.Game.Tests.Editing.Checks
                 BeatmapInfo = new BeatmapInfo
                 {
                     Metadata = new BeatmapMetadata { AudioFile = "abc123.jpg" },
-                }
+                },
             };
         }
 
@@ -62,7 +62,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEnd);
+            Assert.That(
+                issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEnd
+            );
         }
 
         [Test]
@@ -72,7 +74,9 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEnd);
+            Assert.That(
+                issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEnd
+            );
         }
 
         [Test]
@@ -90,7 +94,10 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEndStoryboardOrVideo);
+            Assert.That(
+                issues.Single().Template
+                    is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEndStoryboardOrVideo
+            );
         }
 
         [Test]
@@ -108,7 +115,10 @@ namespace osu.Game.Tests.Editing.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEndStoryboardOrVideo);
+            Assert.That(
+                issues.Single().Template
+                    is CheckUnusedAudioAtEnd.IssueTemplateUnusedAudioAtEndStoryboardOrVideo
+            );
         }
 
         [Test]
@@ -122,10 +132,16 @@ namespace osu.Game.Tests.Editing.Checks
 
         private BeatmapVerifierContext getContext(IBeatmap beatmap)
         {
-            return new BeatmapVerifierContext(beatmap, getMockWorkingBeatmap(beatmap, new Storyboard()).Object);
+            return new BeatmapVerifierContext(
+                beatmap,
+                getMockWorkingBeatmap(beatmap, new Storyboard()).Object
+            );
         }
 
-        private BeatmapVerifierContext getContext(IBeatmap beatmap, Mock<IWorkingBeatmap> workingBeatmap)
+        private BeatmapVerifierContext getContext(
+            IBeatmap beatmap,
+            Mock<IWorkingBeatmap> workingBeatmap
+        )
         {
             return new BeatmapVerifierContext(beatmap, workingBeatmap.Object);
         }

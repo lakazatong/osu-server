@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
             InternalChildren = new[]
             {
                 Background = new Box { RelativeSizeAxes = Axes.Both },
-                foregroundContainer = new Container { RelativeSizeAxes = Axes.Both }
+                foregroundContainer = new Container { RelativeSizeAxes = Axes.Both },
             };
 
             if (drawableObject != null)
@@ -56,13 +56,15 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
 
         public void Recycle() => foregroundContainer.Child = CreateForeground();
 
-        protected virtual Drawable CreateForeground() => new ForegroundPiece
-        {
-            AccentColour = { BindTarget = AccentColour },
-            IsHitting = { BindTarget = IsHitting }
-        };
+        protected virtual Drawable CreateForeground() =>
+            new ForegroundPiece
+            {
+                AccentColour = { BindTarget = AccentColour },
+                IsHitting = { BindTarget = IsHitting },
+            };
 
-        private void onAccentChanged(ValueChangedEvent<Color4> accent) => Background.Colour = accent.NewValue.Opacity(0.7f);
+        private void onAccentChanged(ValueChangedEvent<Color4> accent) =>
+            Background.Colour = accent.NewValue.Opacity(0.7f);
 
         private partial class ForegroundPiece : CompositeDrawable
         {
@@ -98,27 +100,37 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
                             // This is needed because we're blending with another object
                             BackgroundColour = Color4.White.Opacity(0),
                             // The 'hole' is achieved by subtracting the result of this container with the parent
-                            Blending = new BlendingParameters { AlphaEquation = BlendingEquation.ReverseSubtract },
-                            Child = subtractionLayer = new CircularContainer
+                            Blending = new BlendingParameters
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                // Height computed in Update
-                                Width = 1,
-                                Masking = true,
-                                Child = new Box
+                                AlphaEquation = BlendingEquation.ReverseSubtract,
+                            },
+                            Child = subtractionLayer =
+                                new CircularContainer
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Alpha = 0,
-                                    AlwaysPresent = true
-                                }
-                            }
-                        }
-                    }
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    // Height computed in Update
+                                    Width = 1,
+                                    Masking = true,
+                                    Child = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0,
+                                        AlwaysPresent = true,
+                                    },
+                                },
+                        },
+                    },
                 };
 
                 AccentColour.BindValueChanged(onAccentChanged, true);
-                IsHitting.BindValueChanged(_ => onAccentChanged(new ValueChangedEvent<Color4>(AccentColour.Value, AccentColour.Value)), true);
+                IsHitting.BindValueChanged(
+                    _ =>
+                        onAccentChanged(
+                            new ValueChangedEvent<Color4>(AccentColour.Value, AccentColour.Value)
+                        ),
+                    true
+                );
             }
 
             private void onAccentChanged(ValueChangedEvent<Color4> accent)
@@ -132,9 +144,14 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
                 if (IsHitting.Value)
                 {
                     // wait for the next sync point
-                    double synchronisedOffset = animation_length * 2 - Time.Current % (animation_length * 2);
+                    double synchronisedOffset =
+                        animation_length * 2 - Time.Current % (animation_length * 2);
                     using (foregroundBuffer.BeginDelayedSequence(synchronisedOffset))
-                        foregroundBuffer.FadeColour(accent.NewValue.Lighten(0.2f), animation_length).Then().FadeColour(foregroundBuffer.Colour, animation_length).Loop();
+                        foregroundBuffer
+                            .FadeColour(accent.NewValue.Lighten(0.2f), animation_length)
+                            .Then()
+                            .FadeColour(foregroundBuffer.Colour, animation_length)
+                            .Loop();
                 }
 
                 subtractionCache.Invalidate();
@@ -152,7 +169,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
                     {
                         Colour = Color4.White,
                         Type = EdgeEffectType.Glow,
-                        Radius = DrawWidth
+                        Radius = DrawWidth,
                     };
 
                     foregroundBuffer.ForceRedraw();

@@ -10,7 +10,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Checks
 {
     public class CheckOsuAbnormalDifficultySettings : CheckAbnormalDifficultySettings
     {
-        public override CheckMetadata Metadata => new CheckMetadata(CheckCategory.Settings, "Checks osu relevant settings");
+        public override CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Settings, "Checks osu relevant settings");
 
         public override IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {

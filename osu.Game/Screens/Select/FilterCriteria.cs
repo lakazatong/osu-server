@@ -30,7 +30,8 @@ namespace osu.Game.Screens.Select
         public OptionalRange<double> Length;
         public OptionalRange<double> BPM;
         public OptionalRange<int> BeatDivisor;
-        public OptionalSet<BeatmapOnlineStatus> OnlineStatus = new OptionalSet<BeatmapOnlineStatus>();
+        public OptionalSet<BeatmapOnlineStatus> OnlineStatus =
+            new OptionalSet<BeatmapOnlineStatus>();
         public OptionalRange<DateTimeOffset> LastPlayed;
         public OptionalRange<DateTimeOffset> DateRanked;
         public OptionalRange<DateTimeOffset> DateSubmitted;
@@ -43,7 +44,7 @@ namespace osu.Game.Screens.Select
         public OptionalRange<double> UserStarDifficulty = new OptionalRange<double>
         {
             IsLowerInclusive = true,
-            IsUpperInclusive = true
+            IsUpperInclusive = true,
         };
 
         public OptionalTextFilter[] SearchTerms = Array.Empty<OptionalTextFilter>();
@@ -82,7 +83,7 @@ namespace osu.Game.Screens.Select
                 {
                     DifficultyName = new OptionalTextFilter
                     {
-                        SearchTerm = quotedSegment.Groups[2].Value.Trim(']')
+                        SearchTerm = quotedSegment.Groups[2].Value.Trim(']'),
                     };
 
                     remainingText = remainingText.Replace(quotedSegment.Value, string.Empty);
@@ -96,16 +97,20 @@ namespace osu.Game.Screens.Select
                 }
 
                 // Then handle the rest splitting on any spaces.
-                terms.AddRange(remainingText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => new OptionalTextFilter
-                {
-                    SearchTerm = s
-                }));
+                terms.AddRange(
+                    remainingText
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => new OptionalTextFilter { SearchTerm = s })
+                );
 
                 SearchTerms = terms.ToArray();
 
                 SearchNumber = null;
 
-                if (SearchTerms.Length == 1 && int.TryParse(SearchTerms[0].SearchTerm, out int parsed))
+                if (
+                    SearchTerms.Length == 1
+                    && int.TryParse(SearchTerms[0].SearchTerm, out int parsed)
+                )
                     SearchNumber = parsed;
             }
         }
@@ -171,11 +176,11 @@ namespace osu.Game.Screens.Select
             public bool IsLowerInclusive;
             public bool IsUpperInclusive;
 
-            public bool Equals(OptionalRange<T> other)
-                => EqualityComparer<T?>.Default.Equals(Min, other.Min)
-                   && EqualityComparer<T?>.Default.Equals(Max, other.Max)
-                   && IsLowerInclusive.Equals(other.IsLowerInclusive)
-                   && IsUpperInclusive.Equals(other.IsUpperInclusive);
+            public bool Equals(OptionalRange<T> other) =>
+                EqualityComparer<T?>.Default.Equals(Min, other.Min)
+                && EqualityComparer<T?>.Default.Equals(Max, other.Max)
+                && IsLowerInclusive.Equals(other.IsLowerInclusive)
+                && IsUpperInclusive.Equals(other.IsUpperInclusive);
         }
 
         public struct OptionalTextFilter : IEquatable<OptionalTextFilter>
@@ -202,10 +207,18 @@ namespace osu.Game.Screens.Select
                         return value.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
 
                     case MatchMode.IsolatedPhrase:
-                        return Regex.IsMatch(value, $@"(^|\s){Regex.Escape(searchTerm)}($|\s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                        return Regex.IsMatch(
+                            value,
+                            $@"(^|\s){Regex.Escape(searchTerm)}($|\s)",
+                            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant
+                        );
 
                     case MatchMode.FullPhrase:
-                        return CultureInfo.InvariantCulture.CompareInfo.Compare(value, searchTerm, CompareOptions.OrdinalIgnoreCase) == 0;
+                        return CultureInfo.InvariantCulture.CompareInfo.Compare(
+                                value,
+                                searchTerm,
+                                CompareOptions.OrdinalIgnoreCase
+                            ) == 0;
                 }
             }
 
@@ -221,7 +234,10 @@ namespace osu.Game.Screens.Select
                     if (searchTerm.StartsWith('\"'))
                     {
                         // length check ensures that the quote character in the `StartsWith()` check above and the `EndsWith()` check below is not the same character.
-                        if (searchTerm.EndsWith("\"!", StringComparison.Ordinal) && searchTerm.Length >= 3)
+                        if (
+                            searchTerm.EndsWith("\"!", StringComparison.Ordinal)
+                            && searchTerm.Length >= 3
+                        )
                         {
                             searchTerm = searchTerm.TrimEnd('!').Trim('\"');
                             MatchMode = MatchMode.FullPhrase;

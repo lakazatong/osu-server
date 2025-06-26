@@ -7,10 +7,10 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Taiko.Difficulty.Evaluators;
-using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Colour;
 using osu.Game.Rulesets.Taiko.Difficulty.Preprocessing.Rhythm;
 using osu.Game.Rulesets.Taiko.Difficulty.Utils;
+using osu.Game.Rulesets.Taiko.Objects;
 
 namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing
 {
@@ -69,13 +69,18 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing
         /// <param name="index">The position of this <see cref="DifficultyHitObject"/> in the <paramref name="objects"/> list.</param>
         /// <param name="controlPointInfo">The control point info of the beatmap.</param>
         /// <param name="globalSliderVelocity">The global slider velocity of the beatmap.</param>
-        public TaikoDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate,
-                                        List<DifficultyHitObject> objects,
-                                        List<TaikoDifficultyHitObject> centreHitObjects,
-                                        List<TaikoDifficultyHitObject> rimHitObjects,
-                                        List<TaikoDifficultyHitObject> noteObjects, int index,
-                                        ControlPointInfo controlPointInfo,
-                                        double globalSliderVelocity)
+        public TaikoDifficultyHitObject(
+            HitObject hitObject,
+            HitObject lastObject,
+            double clockRate,
+            List<DifficultyHitObject> objects,
+            List<TaikoDifficultyHitObject> centreHitObjects,
+            List<TaikoDifficultyHitObject> rimHitObjects,
+            List<TaikoDifficultyHitObject> noteObjects,
+            int index,
+            ControlPointInfo controlPointInfo,
+            double globalSliderVelocity
+        )
             : base(hitObject, lastObject, clockRate, objects, index)
         {
             noteDifficultyHitObjects = noteObjects;
@@ -108,10 +113,17 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing
             double normalisedStartTime = StartTime * clockRate;
 
             // Retrieve the timing point at the note's start time
-            TimingControlPoint currentControlPoint = controlPointInfo.TimingPointAt(normalisedStartTime);
+            TimingControlPoint currentControlPoint = controlPointInfo.TimingPointAt(
+                normalisedStartTime
+            );
 
             // Calculate the slider velocity at the note's start time.
-            double currentSliderVelocity = calculateSliderVelocity(controlPointInfo, globalSliderVelocity, normalisedStartTime, clockRate);
+            double currentSliderVelocity = calculateSliderVelocity(
+                controlPointInfo,
+                globalSliderVelocity,
+                normalisedStartTime,
+                clockRate
+            );
 
             EffectiveBPM = currentControlPoint.BPM * currentSliderVelocity;
         }
@@ -119,19 +131,28 @@ namespace osu.Game.Rulesets.Taiko.Difficulty.Preprocessing
         /// <summary>
         /// Calculates the slider velocity based on control point info and clock rate.
         /// </summary>
-        private static double calculateSliderVelocity(ControlPointInfo controlPointInfo, double globalSliderVelocity, double startTime, double clockRate)
+        private static double calculateSliderVelocity(
+            ControlPointInfo controlPointInfo,
+            double globalSliderVelocity,
+            double startTime,
+            double clockRate
+        )
         {
             var activeEffectControlPoint = controlPointInfo.EffectPointAt(startTime);
             return globalSliderVelocity * (activeEffectControlPoint.ScrollSpeed) * clockRate;
         }
 
-        public TaikoDifficultyHitObject? PreviousMono(int backwardsIndex) => monoDifficultyHitObjects?.ElementAtOrDefault(MonoIndex - (backwardsIndex + 1));
+        public TaikoDifficultyHitObject? PreviousMono(int backwardsIndex) =>
+            monoDifficultyHitObjects?.ElementAtOrDefault(MonoIndex - (backwardsIndex + 1));
 
-        public TaikoDifficultyHitObject? NextMono(int forwardsIndex) => monoDifficultyHitObjects?.ElementAtOrDefault(MonoIndex + (forwardsIndex + 1));
+        public TaikoDifficultyHitObject? NextMono(int forwardsIndex) =>
+            monoDifficultyHitObjects?.ElementAtOrDefault(MonoIndex + (forwardsIndex + 1));
 
-        public TaikoDifficultyHitObject? PreviousNote(int backwardsIndex) => noteDifficultyHitObjects.ElementAtOrDefault(NoteIndex - (backwardsIndex + 1));
+        public TaikoDifficultyHitObject? PreviousNote(int backwardsIndex) =>
+            noteDifficultyHitObjects.ElementAtOrDefault(NoteIndex - (backwardsIndex + 1));
 
-        public TaikoDifficultyHitObject? NextNote(int forwardsIndex) => noteDifficultyHitObjects.ElementAtOrDefault(NoteIndex + (forwardsIndex + 1));
+        public TaikoDifficultyHitObject? NextNote(int forwardsIndex) =>
+            noteDifficultyHitObjects.ElementAtOrDefault(NoteIndex + (forwardsIndex + 1));
 
         public double Interval => DeltaTime;
     }

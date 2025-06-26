@@ -42,7 +42,13 @@ namespace osu.Game.Rulesets.Judgements
         /// </summary>
         public double TimeOffset
         {
-            get => RawTime != null ? Math.Min(RawTime.Value - HitObject.GetEndTime(), HitObject.MaximumJudgementOffset) : 0;
+            get =>
+                RawTime != null
+                    ? Math.Min(
+                        RawTime.Value - HitObject.GetEndTime(),
+                        HitObject.MaximumJudgementOffset
+                    )
+                    : 0;
             internal set => RawTime = HitObject.GetEndTime() + value;
         }
 
@@ -52,7 +58,10 @@ namespace osu.Game.Rulesets.Judgements
         /// <remarks>
         /// The end time of <see cref="HitObject"/> is returned if this result is not populated yet.
         /// </remarks>
-        public double TimeAbsolute => RawTime != null ? Math.Min(RawTime.Value, HitObject.GetEndTime() + HitObject.MaximumJudgementOffset) : HitObject.GetEndTime();
+        public double TimeAbsolute =>
+            RawTime != null
+                ? Math.Min(RawTime.Value, HitObject.GetEndTime() + HitObject.MaximumJudgementOffset)
+                : HitObject.GetEndTime();
 
         /// <summary>
         /// The gameplay rate at the time this <see cref="JudgementResult"/> occurred.

@@ -1,16 +1,16 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics.Containers;
-using osu.Game.Online.API.Requests;
 using System;
+using System.Collections.Generic;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Online.API.Requests.Responses;
-using System.Collections.Generic;
-using osu.Game.Online.API;
-using osu.Framework.Allocation;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
+using osu.Game.Online.API;
+using osu.Game.Online.API.Requests;
+using osu.Game.Online.API.Requests.Responses;
 using APIUser = osu.Game.Online.API.Requests.Responses.APIUser;
 
 namespace osu.Game.Overlays.Profile.Sections.Ranks
@@ -19,7 +19,11 @@ namespace osu.Game.Overlays.Profile.Sections.Ranks
     {
         private readonly ScoreType type;
 
-        public PaginatedScoreContainer(ScoreType type, Bindable<UserProfileData?> user, LocalisableString headerText)
+        public PaginatedScoreContainer(
+            ScoreType type,
+            Bindable<UserProfileData?> user,
+            LocalisableString headerText
+        )
             : base(user, headerText)
         {
             this.type = type;
@@ -60,8 +64,10 @@ namespace osu.Game.Overlays.Profile.Sections.Ranks
             base.OnItemsReceived(items);
         }
 
-        protected override APIRequest<List<SoloScoreInfo>> CreateRequest(UserProfileData user, PaginationParameters pagination) =>
-            new GetUserScoresRequest(user.User.Id, type, pagination, user.Ruleset);
+        protected override APIRequest<List<SoloScoreInfo>> CreateRequest(
+            UserProfileData user,
+            PaginationParameters pagination
+        ) => new GetUserScoresRequest(user.User.Id, type, pagination, user.Ruleset);
 
         private int drawableItemIndex;
 
@@ -73,7 +79,10 @@ namespace osu.Game.Overlays.Profile.Sections.Ranks
                     return new DrawableProfileScore(model);
 
                 case ScoreType.Best:
-                    return new DrawableProfileWeightedScore(model, Math.Pow(0.95, drawableItemIndex++));
+                    return new DrawableProfileWeightedScore(
+                        model,
+                        Math.Pow(0.95, drawableItemIndex++)
+                    );
             }
         }
     }

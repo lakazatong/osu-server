@@ -40,25 +40,29 @@ namespace osu.Game.Tournament.Tests.Screens
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-        });
+        public void SetUp() => Schedule(() => { });
 
         [Test]
         public void TestFewMaps()
         {
-            AddStep("load few maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load few maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 8; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 8; i++)
+                        addBeatmap();
+                }
+            );
 
-            AddStep("reset match", () =>
-            {
-                Ladder.CurrentMatch.Value = new TournamentMatch();
-            });
+            AddStep(
+                "reset match",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value = new TournamentMatch();
+                }
+            );
 
             assertTwoWide();
         }
@@ -66,13 +70,16 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestJustEnoughMaps()
         {
-            AddStep("load just enough maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load just enough maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 18; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 18; i++)
+                        addBeatmap();
+                }
+            );
 
             AddStep("reset state", resetState);
 
@@ -82,13 +89,16 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestManyMaps()
         {
-            AddStep("load many maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load many maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 19; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 19; i++)
+                        addBeatmap();
+                }
+            );
 
             AddStep("reset state", resetState);
 
@@ -98,13 +108,20 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestJustEnoughMods()
         {
-            AddStep("load many maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load many maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 11; i++)
-                    addBeatmap(i > 4 ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym : "NM");
-            });
+                    for (int i = 0; i < 11; i++)
+                        addBeatmap(
+                            i > 4
+                                ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym
+                                : "NM"
+                        );
+                }
+            );
 
             AddStep("reset state", resetState);
 
@@ -112,21 +129,46 @@ namespace osu.Game.Tournament.Tests.Screens
         }
 
         private void assertTwoWide() =>
-            AddAssert("ensure layout width is 2", () => screen.ChildrenOfType<FillFlowContainer<FillFlowContainer<TournamentBeatmapPanel>>>().First().Padding.Left > 0);
+            AddAssert(
+                "ensure layout width is 2",
+                () =>
+                    screen
+                        .ChildrenOfType<
+                            FillFlowContainer<FillFlowContainer<TournamentBeatmapPanel>>
+                        >()
+                        .First()
+                        .Padding.Left > 0
+            );
 
         private void assertThreeWide() =>
-            AddAssert("ensure layout width is 3", () => screen.ChildrenOfType<FillFlowContainer<FillFlowContainer<TournamentBeatmapPanel>>>().First().Padding.Left == 0);
+            AddAssert(
+                "ensure layout width is 3",
+                () =>
+                    screen
+                        .ChildrenOfType<
+                            FillFlowContainer<FillFlowContainer<TournamentBeatmapPanel>>
+                        >()
+                        .First()
+                        .Padding.Left == 0
+            );
 
         [Test]
         public void TestManyMods()
         {
-            AddStep("load many maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load many maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 12; i++)
-                    addBeatmap(i > 4 ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym : "NM");
-            });
+                    for (int i = 0; i < 12; i++)
+                        addBeatmap(
+                            i > 4
+                                ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym
+                                : "NM"
+                        );
+                }
+            );
 
             AddStep("reset state", resetState);
 
@@ -136,15 +178,25 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestSplitMapPoolByMods()
         {
-            AddStep("load many maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load many maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 12; i++)
-                    addBeatmap(i > 4 ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym : "NM");
-            });
+                    for (int i = 0; i < 12; i++)
+                        addBeatmap(
+                            i > 4
+                                ? Ruleset.Value.CreateInstance().AllMods.ElementAt(i).Acronym
+                                : "NM"
+                        );
+                }
+            );
 
-            AddStep("disable splitting map pool by mods", () => Ladder.SplitMapPoolByMods.Value = false);
+            AddStep(
+                "disable splitting map pool by mods",
+                () => Ladder.SplitMapPoolByMods.Value = false
+            );
 
             AddStep("reset state", resetState);
         }
@@ -152,19 +204,32 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestBanOrderMultipleBans()
         {
-            AddStep("set ban count", () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 2);
+            AddStep(
+                "set ban count",
+                () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 2
+            );
 
-            AddStep("load some maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load some maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 5; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 5; i++)
+                        addBeatmap();
+                }
+            );
 
             AddStep("update displayed maps", () => Ladder.SplitMapPoolByMods.Value = false);
 
-            AddStep("start bans from blue team", () => screen.ChildrenOfType<TourneyButton>().First(btn => btn.Text == "Blue Ban").TriggerClick());
+            AddStep(
+                "start bans from blue team",
+                () =>
+                    screen
+                        .ChildrenOfType<TourneyButton>()
+                        .First(btn => btn.Text == "Blue Ban")
+                        .TriggerClick()
+            );
 
             AddStep("ban map", () => clickBeatmapPanel(0));
             checkTotalPickBans(1);
@@ -190,19 +255,32 @@ namespace osu.Game.Tournament.Tests.Screens
         [Test]
         public void TestPickBanOrder()
         {
-            AddStep("set ban count", () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 1);
+            AddStep(
+                "set ban count",
+                () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 1
+            );
 
-            AddStep("load some maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load some maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 5; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 5; i++)
+                        addBeatmap();
+                }
+            );
 
             AddStep("update displayed maps", () => Ladder.SplitMapPoolByMods.Value = false);
 
-            AddStep("start bans from blue team", () => screen.ChildrenOfType<TourneyButton>().First(btn => btn.Text == "Blue Ban").TriggerClick());
+            AddStep(
+                "start bans from blue team",
+                () =>
+                    screen
+                        .ChildrenOfType<TourneyButton>()
+                        .First(btn => btn.Text == "Blue Ban")
+                        .TriggerClick()
+            );
 
             AddStep("ban map", () => clickBeatmapPanel(0));
             checkTotalPickBans(1);
@@ -224,124 +302,199 @@ namespace osu.Game.Tournament.Tests.Screens
             checkTotalPickBans(5);
             checkLastPick(ChoiceType.Pick, TeamColour.Red);
 
-            AddStep("reset match", () =>
-            {
-                Ladder.CurrentMatch.Value = new TournamentMatch();
-                Ladder.CurrentMatch.Value = Ladder.Matches.First();
-                Ladder.CurrentMatch.Value.PicksBans.Clear();
-            });
+            AddStep(
+                "reset match",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value = new TournamentMatch();
+                    Ladder.CurrentMatch.Value = Ladder.Matches.First();
+                    Ladder.CurrentMatch.Value.PicksBans.Clear();
+                }
+            );
         }
 
         [Test]
         public void TestMultipleTeamBans()
         {
-            AddStep("set ban count", () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 3);
+            AddStep(
+                "set ban count",
+                () => Ladder.CurrentMatch.Value!.Round.Value!.BanCount.Value = 3
+            );
 
-            AddStep("load some maps", () =>
-            {
-                Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
+            AddStep(
+                "load some maps",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Clear();
 
-                for (int i = 0; i < 12; i++)
-                    addBeatmap();
-            });
+                    for (int i = 0; i < 12; i++)
+                        addBeatmap();
+                }
+            );
 
             AddStep("update displayed maps", () => Ladder.SplitMapPoolByMods.Value = false);
 
-            AddStep("start bans with red team", () => screen.ChildrenOfType<TourneyButton>().First(btn => btn.Text == "Red Ban").TriggerClick());
+            AddStep(
+                "start bans with red team",
+                () =>
+                    screen
+                        .ChildrenOfType<TourneyButton>()
+                        .First(btn => btn.Text == "Red Ban")
+                        .TriggerClick()
+            );
 
             AddStep("first ban", () => clickBeatmapPanel(0));
-            AddAssert("red ban registered",
-                () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red),
-                () => Is.EqualTo(1));
+            AddAssert(
+                "red ban registered",
+                () =>
+                    Ladder.CurrentMatch.Value!.PicksBans.Count(pb =>
+                        pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red
+                    ),
+                () => Is.EqualTo(1)
+            );
 
-            AddStep("ban two more maps", () =>
-            {
-                clickBeatmapPanel(1);
-                clickBeatmapPanel(2);
-            });
+            AddStep(
+                "ban two more maps",
+                () =>
+                {
+                    clickBeatmapPanel(1);
+                    clickBeatmapPanel(2);
+                }
+            );
 
-            AddAssert("three bans registered",
+            AddAssert(
+                "three bans registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban),
-                () => Is.EqualTo(3));
-            AddAssert("both new bans for blue team",
-                () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Blue),
-                () => Is.EqualTo(2));
+                () => Is.EqualTo(3)
+            );
+            AddAssert(
+                "both new bans for blue team",
+                () =>
+                    Ladder.CurrentMatch.Value!.PicksBans.Count(pb =>
+                        pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Blue
+                    ),
+                () => Is.EqualTo(2)
+            );
 
-            AddStep("ban two more maps", () =>
-            {
-                clickBeatmapPanel(3);
-                clickBeatmapPanel(4);
-            });
+            AddStep(
+                "ban two more maps",
+                () =>
+                {
+                    clickBeatmapPanel(3);
+                    clickBeatmapPanel(4);
+                }
+            );
 
-            AddAssert("five bans registered",
+            AddAssert(
+                "five bans registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban),
-                () => Is.EqualTo(5));
-            AddAssert("both new bans for red team",
-                () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red),
-                () => Is.EqualTo(3));
+                () => Is.EqualTo(5)
+            );
+            AddAssert(
+                "both new bans for red team",
+                () =>
+                    Ladder.CurrentMatch.Value!.PicksBans.Count(pb =>
+                        pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red
+                    ),
+                () => Is.EqualTo(3)
+            );
 
             AddStep("ban last map", () => clickBeatmapPanel(5));
-            AddAssert("six bans registered",
+            AddAssert(
+                "six bans registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban),
-                () => Is.EqualTo(6));
-            AddAssert("red banned three",
-                () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red),
-                () => Is.EqualTo(3));
-            AddAssert("blue banned three",
-                () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Blue),
-                () => Is.EqualTo(3));
+                () => Is.EqualTo(6)
+            );
+            AddAssert(
+                "red banned three",
+                () =>
+                    Ladder.CurrentMatch.Value!.PicksBans.Count(pb =>
+                        pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Red
+                    ),
+                () => Is.EqualTo(3)
+            );
+            AddAssert(
+                "blue banned three",
+                () =>
+                    Ladder.CurrentMatch.Value!.PicksBans.Count(pb =>
+                        pb.Type == ChoiceType.Ban && pb.Team == TeamColour.Blue
+                    ),
+                () => Is.EqualTo(3)
+            );
 
             AddStep("pick map", () => clickBeatmapPanel(6));
-            AddAssert("one pick registered",
+            AddAssert(
+                "one pick registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Pick),
-                () => Is.EqualTo(1));
-            AddAssert("pick was blue's",
+                () => Is.EqualTo(1)
+            );
+            AddAssert(
+                "pick was blue's",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Last().Team,
-                () => Is.EqualTo(TeamColour.Blue));
+                () => Is.EqualTo(TeamColour.Blue)
+            );
 
             AddStep("pick map", () => clickBeatmapPanel(7));
-            AddAssert("two picks registered",
+            AddAssert(
+                "two picks registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Pick),
-                () => Is.EqualTo(2));
-            AddAssert("pick was red's",
+                () => Is.EqualTo(2)
+            );
+            AddAssert(
+                "pick was red's",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Last().Team,
-                () => Is.EqualTo(TeamColour.Red));
+                () => Is.EqualTo(TeamColour.Red)
+            );
 
             AddStep("pick map", () => clickBeatmapPanel(8));
-            AddAssert("three picks registered",
+            AddAssert(
+                "three picks registered",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Count(pb => pb.Type == ChoiceType.Pick),
-                () => Is.EqualTo(3));
-            AddAssert("pick was blue's",
+                () => Is.EqualTo(3)
+            );
+            AddAssert(
+                "pick was blue's",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Last().Team,
-                () => Is.EqualTo(TeamColour.Blue));
+                () => Is.EqualTo(TeamColour.Blue)
+            );
 
-            AddStep("reset match", () =>
-            {
-                Ladder.CurrentMatch.Value = new TournamentMatch();
-                Ladder.CurrentMatch.Value = Ladder.Matches.First();
-                Ladder.CurrentMatch.Value.PicksBans.Clear();
-            });
+            AddStep(
+                "reset match",
+                () =>
+                {
+                    Ladder.CurrentMatch.Value = new TournamentMatch();
+                    Ladder.CurrentMatch.Value = Ladder.Matches.First();
+                    Ladder.CurrentMatch.Value.PicksBans.Clear();
+                }
+            );
         }
 
-        private void checkTotalPickBans(int expected) => AddAssert($"total pickbans is {expected}", () => Ladder.CurrentMatch.Value!.PicksBans, () => Has.Count.EqualTo(expected));
+        private void checkTotalPickBans(int expected) =>
+            AddAssert(
+                $"total pickbans is {expected}",
+                () => Ladder.CurrentMatch.Value!.PicksBans,
+                () => Has.Count.EqualTo(expected)
+            );
 
         private void checkLastPick(ChoiceType expectedChoice, TeamColour expectedColour) =>
-            AddAssert($"last choice was {expectedChoice} by {expectedColour}",
+            AddAssert(
+                $"last choice was {expectedChoice} by {expectedColour}",
                 () => Ladder.CurrentMatch.Value!.PicksBans.Select(pb => (pb.Type, pb.Team)).Last(),
-                () => Is.EqualTo((expectedChoice, expectedColour)));
+                () => Is.EqualTo((expectedChoice, expectedColour))
+            );
 
         private void addBeatmap(string mods = "NM")
         {
-            Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Add(new RoundBeatmap
-            {
-                Beatmap = CreateSampleBeatmap(),
-                Mods = mods
-            });
+            Ladder.CurrentMatch.Value!.Round.Value!.Beatmaps.Add(
+                new RoundBeatmap { Beatmap = CreateSampleBeatmap(), Mods = mods }
+            );
         }
 
         private void clickBeatmapPanel(int index)
         {
-            InputManager.MoveMouseTo(screen.ChildrenOfType<TournamentBeatmapPanel>().ElementAt(index));
+            InputManager.MoveMouseTo(
+                screen.ChildrenOfType<TournamentBeatmapPanel>().ElementAt(index)
+            );
             InputManager.Click(MouseButton.Left);
         }
 

@@ -60,10 +60,7 @@ namespace osu.Game.Rulesets.UI
                     Margin = new MarginPadding { Left = -DEFAULT_HEIGHT },
                     Children = new Drawable[]
                     {
-                        extendedBackground = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        extendedBackground = new Box { RelativeSizeAxes = Axes.Both },
                         extendedText = new OsuSpriteText
                         {
                             Margin = new MarginPadding { Left = 3 * DEFAULT_HEIGHT / 4 },
@@ -73,7 +70,7 @@ namespace osu.Game.Rulesets.UI
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                         },
-                    }
+                    },
                 },
                 new CircularContainer
                 {
@@ -82,10 +79,7 @@ namespace osu.Game.Rulesets.UI
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        background = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        background = new Box { RelativeSizeAxes = Axes.Both },
                         acronymText = new OsuSpriteText
                         {
                             Anchor = Anchor.Centre,
@@ -93,13 +87,10 @@ namespace osu.Game.Rulesets.UI
                             Shadow = false,
                             Font = OsuFont.Numeric.With(size: 24, weight: FontWeight.Black),
                             Text = mod.Acronym,
-                            Margin = new MarginPadding
-                            {
-                                Top = 4
-                            }
+                            Margin = new MarginPadding { Top = 4 },
                         },
                     },
-                }
+                },
             };
         }
 
@@ -112,7 +103,13 @@ namespace osu.Game.Rulesets.UI
             activeBackgroundColour = modTypeColour;
 
             inactiveForegroundColour = colourProvider?.Background2 ?? colours.Gray5;
-            activeForegroundColour = Interpolation.ValueAt<Colour4>(0.1f, Colour4.Black, modTypeColour, 0, 1);
+            activeForegroundColour = Interpolation.ValueAt<Colour4>(
+                0.1f,
+                Colour4.Black,
+                modTypeColour,
+                0,
+                1
+            );
         }
 
         protected override void LoadComplete()
@@ -133,7 +130,8 @@ namespace osu.Game.Rulesets.UI
 
         private void updateExtendedInformation()
         {
-            bool showExtended = showExtendedInformation && !string.IsNullOrEmpty(Mod.ExtendedIconInformation);
+            bool showExtended =
+                showExtendedInformation && !string.IsNullOrEmpty(Mod.ExtendedIconInformation);
 
             extendedContent.Alpha = showExtended ? 1 : 0;
             extendedText.Text = Mod.ExtendedIconInformation;
@@ -141,11 +139,23 @@ namespace osu.Game.Rulesets.UI
 
         private void updateState()
         {
-            acronymText.FadeColour(Active.Value ? activeForegroundColour : inactiveForegroundColour, 200, Easing.OutQuint);
-            background.FadeColour(Active.Value ? activeBackgroundColour : inactiveBackgroundColour, 200, Easing.OutQuint);
+            acronymText.FadeColour(
+                Active.Value ? activeForegroundColour : inactiveForegroundColour,
+                200,
+                Easing.OutQuint
+            );
+            background.FadeColour(
+                Active.Value ? activeBackgroundColour : inactiveBackgroundColour,
+                200,
+                Easing.OutQuint
+            );
 
-            extendedText.Colour = Active.Value ? activeBackgroundColour.Lighten(0.2f) : inactiveBackgroundColour;
-            extendedBackground.Colour = Active.Value ? activeBackgroundColour.Darken(2.4f) : inactiveBackgroundColour.Darken(2.8f);
+            extendedText.Colour = Active.Value
+                ? activeBackgroundColour.Lighten(0.2f)
+                : inactiveBackgroundColour;
+            extendedBackground.Colour = Active.Value
+                ? activeBackgroundColour.Darken(2.4f)
+                : inactiveBackgroundColour.Darken(2.8f);
         }
 
         protected override void Dispose(bool isDisposing)

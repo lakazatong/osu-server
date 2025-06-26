@@ -24,14 +24,21 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
         [BackgroundDependencyLoader]
         private void load(IDialogOverlay? dialogOverlay)
         {
-            Add(new DangerousSettingsButton
-            {
-                Text = MaintenanceSettingsStrings.DeleteAllCollections,
-                Action = () =>
+            Add(
+                new DangerousSettingsButton
                 {
-                    dialogOverlay?.Push(new MassDeleteConfirmationDialog(deleteAllCollections, DeleteConfirmationContentStrings.Collections));
+                    Text = MaintenanceSettingsStrings.DeleteAllCollections,
+                    Action = () =>
+                    {
+                        dialogOverlay?.Push(
+                            new MassDeleteConfirmationDialog(
+                                deleteAllCollections,
+                                DeleteConfirmationContentStrings.Collections
+                            )
+                        );
+                    },
                 }
-            });
+            );
         }
 
         private void deleteAllCollections()
@@ -49,7 +56,14 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                 }
             });
 
-            notificationOverlay?.Post(new ProgressCompletionNotification { Text = anyDeleted ? MaintenanceSettingsStrings.DeletedAllCollections : MaintenanceSettingsStrings.NoCollectionsFoundToDelete });
+            notificationOverlay?.Post(
+                new ProgressCompletionNotification
+                {
+                    Text = anyDeleted
+                        ? MaintenanceSettingsStrings.DeletedAllCollections
+                        : MaintenanceSettingsStrings.NoCollectionsFoundToDelete,
+                }
+            );
         }
     }
 }

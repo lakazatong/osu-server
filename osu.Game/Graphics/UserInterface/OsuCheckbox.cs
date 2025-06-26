@@ -60,33 +60,38 @@ namespace osu.Game.Graphics.UserInterface
                     RelativeSizeAxes = Axes.X,
                 },
                 Nub = new Nub(nubSize),
-                new HoverSounds()
+                new HoverSounds(),
             };
 
             if (nubOnRight)
             {
                 Nub.Anchor = Anchor.CentreRight;
                 Nub.Origin = Anchor.CentreRight;
-                LabelTextFlowContainer.Padding = new MarginPadding { Right = Nub.DEFAULT_EXPANDED_SIZE + 10f };
+                LabelTextFlowContainer.Padding = new MarginPadding
+                {
+                    Right = Nub.DEFAULT_EXPANDED_SIZE + 10f,
+                };
             }
             else
             {
                 Nub.Anchor = Anchor.CentreLeft;
                 Nub.Origin = Anchor.CentreLeft;
-                LabelTextFlowContainer.Padding = new MarginPadding { Left = Nub.DEFAULT_EXPANDED_SIZE + 10f };
+                LabelTextFlowContainer.Padding = new MarginPadding
+                {
+                    Left = Nub.DEFAULT_EXPANDED_SIZE + 10f,
+                };
             }
 
             Nub.Current.BindTo(Current);
 
-            Current.DisabledChanged += disabled => LabelTextFlowContainer.Alpha = Nub.Alpha = disabled ? 0.3f : 1;
+            Current.DisabledChanged += disabled =>
+                LabelTextFlowContainer.Alpha = Nub.Alpha = disabled ? 0.3f : 1;
         }
 
         /// <summary>
         /// A function which can be overridden to change the parameters of the label's text.
         /// </summary>
-        protected virtual void ApplyLabelParameters(SpriteText text)
-        {
-        }
+        protected virtual void ApplyLabelParameters(SpriteText text) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)

@@ -23,7 +23,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneCommentEditor : OsuManualInputManagerTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Blue
+        );
 
         private TestCommentEditor commentEditor = null!;
         private TestCancellableCommentEditor cancellableCommentEditor = null!;
@@ -32,30 +34,37 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create content", () => Child = new FillFlowContainer
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Y,
-                Width = 800,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(0, 20),
-                Children = new Drawable[]
-                {
-                    commentEditor = new TestCommentEditor(),
-                    cancellableCommentEditor = new TestCancellableCommentEditor()
-                }
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Child = new FillFlowContainer
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Y,
+                        Width = 800,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 20),
+                        Children = new Drawable[]
+                        {
+                            commentEditor = new TestCommentEditor(),
+                            cancellableCommentEditor = new TestCancellableCommentEditor(),
+                        },
+                    }
+            );
         }
 
         [Test]
         public void TestCommitViaKeyboard()
         {
-            AddStep("click on text box", () =>
-            {
-                InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on text box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("enter text", () => commentEditor.Current.Value = "text");
 
             AddStep("press Enter", () => InputManager.Key(Key.Enter));
@@ -68,11 +77,14 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestCommitViaKeyboardWhenEmpty()
         {
-            AddStep("click on text box", () =>
-            {
-                InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on text box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("press Enter", () => InputManager.Key(Key.Enter));
 
@@ -83,18 +95,24 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestCommitViaButton()
         {
-            AddStep("click on text box", () =>
-            {
-                InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on text box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(commentEditor.ChildrenOfType<TextBox>().Single());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("enter text", () => commentEditor.Current.Value = "some other text");
 
-            AddStep("click submit", () =>
-            {
-                InputManager.MoveMouseTo(commentEditor.ButtonsContainer);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click submit",
+                () =>
+                {
+                    InputManager.MoveMouseTo(commentEditor.ButtonsContainer);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddUntilStep("button is loading", () => commentEditor.IsSpinnerShown);
             AddAssert("text committed", () => commentEditor.CommittedText == "some other text");
@@ -106,15 +124,27 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             void assertLoggedInState()
             {
-                AddAssert("commit button visible", () => commentEditor.ButtonsContainer[0].Alpha == 1);
-                AddAssert("login button hidden", () => commentEditor.ButtonsContainer[1].Alpha == 0);
+                AddAssert(
+                    "commit button visible",
+                    () => commentEditor.ButtonsContainer[0].Alpha == 1
+                );
+                AddAssert(
+                    "login button hidden",
+                    () => commentEditor.ButtonsContainer[1].Alpha == 0
+                );
                 AddAssert("text box editable", () => !commentEditor.TextBox.ReadOnly);
             }
 
             void assertLoggedOutState()
             {
-                AddAssert("commit button hidden", () => commentEditor.ButtonsContainer[0].Alpha == 0);
-                AddAssert("login button visible", () => commentEditor.ButtonsContainer[1].Alpha == 1);
+                AddAssert(
+                    "commit button hidden",
+                    () => commentEditor.ButtonsContainer[0].Alpha == 0
+                );
+                AddAssert(
+                    "login button visible",
+                    () => commentEditor.ButtonsContainer[1].Alpha == 1
+                );
                 AddAssert("text box readonly", () => commentEditor.TextBox.ReadOnly);
             }
 
@@ -128,50 +158,88 @@ namespace osu.Game.Tests.Visual.UserInterface
             assertLoggedOutState();
 
             // moving from logged out -> logged in
-            AddStep("log back in", () =>
-            {
-                dummyAPI.Login("username", "password");
-                dummyAPI.AuthenticateSecondFactor("abcdefgh");
-            });
+            AddStep(
+                "log back in",
+                () =>
+                {
+                    dummyAPI.Login("username", "password");
+                    dummyAPI.AuthenticateSecondFactor("abcdefgh");
+                }
+            );
             assertLoggedInState();
         }
 
         [Test]
         public void TestCommentsDisabled()
         {
-            AddStep("no reason for disable", () => commentEditor.CommentableMeta.Value = new CommentableMeta
-            {
-                CurrentUserAttributes = new CommentableMeta.CommentableCurrentUserAttributes(),
-            });
-            AddAssert("textbox enabled", () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly, () => Is.False);
+            AddStep(
+                "no reason for disable",
+                () =>
+                    commentEditor.CommentableMeta.Value = new CommentableMeta
+                    {
+                        CurrentUserAttributes =
+                            new CommentableMeta.CommentableCurrentUserAttributes(),
+                    }
+            );
+            AddAssert(
+                "textbox enabled",
+                () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly,
+                () => Is.False
+            );
 
-            AddStep("specific reason for disable", () => commentEditor.CommentableMeta.Value = new CommentableMeta
-            {
-                CurrentUserAttributes = new CommentableMeta.CommentableCurrentUserAttributes
-                {
-                    CanNewCommentReason = "This comment section is disabled. For reasons.",
-                }
-            });
-            AddAssert("textbox disabled", () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly, () => Is.True);
+            AddStep(
+                "specific reason for disable",
+                () =>
+                    commentEditor.CommentableMeta.Value = new CommentableMeta
+                    {
+                        CurrentUserAttributes = new CommentableMeta.CommentableCurrentUserAttributes
+                        {
+                            CanNewCommentReason = "This comment section is disabled. For reasons.",
+                        },
+                    }
+            );
+            AddAssert(
+                "textbox disabled",
+                () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly,
+                () => Is.True
+            );
 
-            AddStep("entire commentable meta missing", () => commentEditor.CommentableMeta.Value = null);
-            AddAssert("textbox enabled", () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly, () => Is.False);
+            AddStep(
+                "entire commentable meta missing",
+                () => commentEditor.CommentableMeta.Value = null
+            );
+            AddAssert(
+                "textbox enabled",
+                () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly,
+                () => Is.False
+            );
 
-            AddStep("current user attributes missing", () => commentEditor.CommentableMeta.Value = new CommentableMeta
-            {
-                CurrentUserAttributes = null,
-            });
-            AddAssert("textbox enabled", () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly, () => Is.True);
+            AddStep(
+                "current user attributes missing",
+                () =>
+                    commentEditor.CommentableMeta.Value = new CommentableMeta
+                    {
+                        CurrentUserAttributes = null,
+                    }
+            );
+            AddAssert(
+                "textbox enabled",
+                () => commentEditor.ChildrenOfType<TextBox>().Single().ReadOnly,
+                () => Is.True
+            );
         }
 
         [Test]
         public void TestCancelAction()
         {
-            AddStep("click cancel button", () =>
-            {
-                InputManager.MoveMouseTo(cancellableCommentEditor.ButtonsContainer[2]);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click cancel button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(cancellableCommentEditor.ButtonsContainer[2]);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("cancel action fired", () => cancellableCommentEditor.Cancelled);
         }
@@ -193,7 +261,8 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Scheduler.AddDelayed(() => ShowLoadingSpinner = false, 1000);
             }
 
-            protected override LocalisableString FooterText => @"Footer text. And it is pretty long. Cool.";
+            protected override LocalisableString FooterText =>
+                @"Footer text. And it is pretty long. Cool.";
 
             protected override LocalisableString GetButtonText(bool isLoggedIn) =>
                 isLoggedIn ? @"Commit" : "You're logged out!";
@@ -214,12 +283,12 @@ namespace osu.Game.Tests.Visual.UserInterface
                 OnCancel = () => Cancelled = true;
             }
 
-            protected override void OnCommit(string text)
-            {
-            }
+            protected override void OnCommit(string text) { }
 
             protected override LocalisableString GetButtonText(bool isLoggedIn) => @"Save";
-            protected override LocalisableString GetPlaceholderText() => @"Multiline textboxes soon";
+
+            protected override LocalisableString GetPlaceholderText() =>
+                @"Multiline textboxes soon";
         }
     }
 }

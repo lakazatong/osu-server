@@ -131,12 +131,18 @@ namespace osu.Game.Users
         public enum RulesetVariant
         {
             [EnumMember(Value = "4k")]
-            [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.VariantMania4k))]
+            [LocalisableDescription(
+                typeof(BeatmapsStrings),
+                nameof(BeatmapsStrings.VariantMania4k)
+            )]
             FourKey,
 
             [EnumMember(Value = "7k")]
-            [LocalisableDescription(typeof(BeatmapsStrings), nameof(BeatmapsStrings.VariantMania7k))]
-            SevenKey
+            [LocalisableDescription(
+                typeof(BeatmapsStrings),
+                nameof(BeatmapsStrings.VariantMania7k)
+            )]
+            SevenKey,
         }
 
         public class Variant

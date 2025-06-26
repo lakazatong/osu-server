@@ -69,12 +69,13 @@ namespace osu.Game.Screens.SelectV2
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
                                 Margin = new MarginPadding { Top = 10f },
-                                Child = valueText = new OsuSpriteText
-                                {
-                                    Origin = Anchor.TopCentre,
-                                    RelativePositionAxes = Axes.X,
-                                    Font = OsuFont.Style.Caption1,
-                                }
+                                Child = valueText =
+                                    new OsuSpriteText
+                                    {
+                                        Origin = Anchor.TopCentre,
+                                        RelativePositionAxes = Axes.X,
+                                        Font = OsuFont.Style.Caption1,
+                                    },
                             },
                             new Container
                             {
@@ -94,9 +95,9 @@ namespace osu.Game.Screens.SelectV2
                                         Height = 4f,
                                     },
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 };
             }
 

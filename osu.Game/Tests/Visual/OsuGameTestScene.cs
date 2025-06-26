@@ -49,11 +49,7 @@ namespace osu.Game.Tests.Visual
         [BackgroundDependencyLoader]
         private void load()
         {
-            Child = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Colour = Color4.Black,
-            };
+            Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black };
         }
 
         [SetUpSteps]
@@ -65,15 +61,18 @@ namespace osu.Game.Tests.Visual
 
         protected void CreateNewGame()
         {
-            AddStep("Create new game instance", () =>
-            {
-                if (Game?.Parent != null)
-                    Remove(Game, true);
+            AddStep(
+                "Create new game instance",
+                () =>
+                {
+                    if (Game?.Parent != null)
+                        Remove(Game, true);
 
-                RecycleLocalStorage(false);
+                    RecycleLocalStorage(false);
 
-                CreateGame();
-            });
+                    CreateGame();
+                }
+            );
 
             AddUntilStep("Wait for load", () => Game.IsLoaded);
             AddUntilStep("Wait for intro", () => Game.ScreenStack.CurrentScreen is IntroScreen);
@@ -101,23 +100,35 @@ namespace osu.Game.Tests.Visual
             Screen screen = null;
             IScreen previousScreen = null;
 
-            AddStep("Push new screen", () =>
-            {
-                previousScreen = Game.ScreenStack.CurrentScreen;
-                Game.ScreenStack.Push(screen = newScreen());
-            });
+            AddStep(
+                "Push new screen",
+                () =>
+                {
+                    previousScreen = Game.ScreenStack.CurrentScreen;
+                    Game.ScreenStack.Push(screen = newScreen());
+                }
+            );
 
-            AddUntilStep("Wait for new screen", () => screen.IsLoaded
-                                                      && Game.ScreenStack.CurrentScreen != previousScreen
-                                                      && previousScreen.GetChildScreen() == screen);
+            AddUntilStep(
+                "Wait for new screen",
+                () =>
+                    screen.IsLoaded
+                    && Game.ScreenStack.CurrentScreen != previousScreen
+                    && previousScreen.GetChildScreen() == screen
+            );
         }
 
-        protected void ConfirmAtMainMenu() => AddUntilStep("Wait for main menu", () => Game.ScreenStack.CurrentScreen is MainMenu menu && menu.IsLoaded);
+        protected void ConfirmAtMainMenu() =>
+            AddUntilStep(
+                "Wait for main menu",
+                () => Game.ScreenStack.CurrentScreen is MainMenu menu && menu.IsLoaded
+            );
 
         /// <summary>
         /// Dismisses any notifications pushed which block from interacting with the game (or block screens from loading, e.g. <see cref="Player"/>).
         /// </summary>
-        protected void DismissAnyNotifications() => Game.Notifications.State.Value = Visibility.Hidden;
+        protected void DismissAnyNotifications() =>
+            Game.Notifications.State.Value = Visibility.Hidden;
 
         public partial class TestOsuGame : OsuGame
         {
@@ -163,7 +174,10 @@ namespace osu.Game.Tests.Visual
 
             protected override Loader CreateLoader() => new TestLoader();
 
-            public new void PerformFromScreen(Action<IScreen> action, IEnumerable<Type> validScreens = null) => base.PerformFromScreen(action, validScreens);
+            public new void PerformFromScreen(
+                Action<IScreen> action,
+                IEnumerable<Type> validScreens = null
+            ) => base.PerformFromScreen(action, validScreens);
 
             public TestOsuGame(Storage storage, IAPIProvider api, string[] args = null)
                 : base(args)
@@ -182,12 +196,17 @@ namespace osu.Game.Tests.Visual
                 API.Login("Rhythm Champion", "osu!");
                 ((DummyAPIAccess)API).AuthenticateSecondFactor("abcdefgh");
 
-                Dependencies.Get<SessionStatics>().SetValue(Static.MutedAudioNotificationShownOnce, true);
+                Dependencies
+                    .Get<SessionStatics>()
+                    .SetValue(Static.MutedAudioNotificationShownOnce, true);
 
                 // set applied version to latest so that the BackgroundBeatmapProcessor doesn't consider
                 // beatmap star ratings as outdated and reset them throughout the test.
                 foreach (var ruleset in RulesetStore.AvailableRulesets)
-                    ruleset.LastAppliedDifficultyVersion = ruleset.CreateInstance().CreateDifficultyCalculator(Beatmap.Default).Version;
+                    ruleset.LastAppliedDifficultyVersion = ruleset
+                        .CreateInstance()
+                        .CreateDifficultyCalculator(Beatmap.Default)
+                        .Version;
             }
 
             protected override void Update()
@@ -201,7 +220,8 @@ namespace osu.Game.Tests.Visual
 
         public partial class TestLoader : Loader
         {
-            protected override ShaderPrecompiler CreateShaderPrecompiler() => new TestShaderPrecompiler();
+            protected override ShaderPrecompiler CreateShaderPrecompiler() =>
+                new TestShaderPrecompiler();
 
             private partial class TestShaderPrecompiler : ShaderPrecompiler
             {

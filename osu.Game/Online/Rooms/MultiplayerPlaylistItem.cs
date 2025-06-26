@@ -79,9 +79,7 @@ namespace osu.Game.Online.Rooms
         /// Creates a new <see cref="MultiplayerPlaylistItem"/>.
         /// </summary>
         [SerializationConstructor]
-        public MultiplayerPlaylistItem()
-        {
-        }
+        public MultiplayerPlaylistItem() { }
 
         /// <summary>
         /// Creates a new <see cref="MultiplayerPlaylistItem"/> from an API <see cref="PlaylistItem"/>.

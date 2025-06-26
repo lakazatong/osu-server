@@ -16,14 +16,16 @@ namespace osu.Game.Rulesets.Edit.Checks
 {
     public class CheckAudioInVideo : ICheck
     {
-        public CheckMetadata Metadata => new CheckMetadata(CheckCategory.Audio, "Audio track in video files");
+        public CheckMetadata Metadata =>
+            new CheckMetadata(CheckCategory.Audio, "Audio track in video files");
 
-        public IEnumerable<IssueTemplate> PossibleTemplates => new IssueTemplate[]
-        {
-            new IssueTemplateHasAudioTrack(this),
-            new IssueTemplateMissingFile(this),
-            new IssueTemplateFileError(this)
-        };
+        public IEnumerable<IssueTemplate> PossibleTemplates =>
+            new IssueTemplate[]
+            {
+                new IssueTemplateHasAudioTrack(this),
+                new IssueTemplateMissingFile(this),
+                new IssueTemplateFileError(this),
+            };
 
         public IEnumerable<Issue> Run(BeatmapVerifierContext context)
         {
@@ -79,7 +81,10 @@ namespace osu.Game.Rulesets.Edit.Checks
                 }
                 catch (Exception ex)
                 {
-                    issue = new IssueTemplateFileError(this).Create(filename, "Internal failure - see logs for more info");
+                    issue = new IssueTemplateFileError(this).Create(
+                        filename,
+                        "Internal failure - see logs for more info"
+                    );
                     Logger.Log($"Failed when running {nameof(CheckAudioInVideo)}: {ex}");
                 }
 
@@ -90,9 +95,7 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateHasAudioTrack : IssueTemplate
         {
             public IssueTemplateHasAudioTrack(ICheck check)
-                : base(check, IssueType.Problem, "\"{0}\" has an audio track.")
-            {
-            }
+                : base(check, IssueType.Problem, "\"{0}\" has an audio track.") { }
 
             public Issue Create(string filename) => new Issue(this, filename);
         }
@@ -100,19 +103,24 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateFileError : IssueTemplate
         {
             public IssueTemplateFileError(ICheck check)
-                : base(check, IssueType.Error, "Could not check whether \"{0}\" has an audio track ({1}).")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Error,
+                    "Could not check whether \"{0}\" has an audio track ({1})."
+                ) { }
 
-            public Issue Create(string filename, string errorReason) => new Issue(this, filename, errorReason);
+            public Issue Create(string filename, string errorReason) =>
+                new Issue(this, filename, errorReason);
         }
 
         public class IssueTemplateMissingFile : IssueTemplate
         {
             public IssueTemplateMissingFile(ICheck check)
-                : base(check, IssueType.Warning, "Could not check whether \"{0}\" has an audio track, because it is missing.")
-            {
-            }
+                : base(
+                    check,
+                    IssueType.Warning,
+                    "Could not check whether \"{0}\" has an audio track, because it is missing."
+                ) { }
 
             public Issue Create(string filename) => new Issue(this, filename);
         }

@@ -23,9 +23,13 @@ namespace osu.Game.Tournament.Components
         [BackgroundDependencyLoader]
         private void load()
         {
-            if (team == null) return;
+            if (team == null)
+                return;
 
-            (acronym = team.Acronym.GetBoundCopy()).BindValueChanged(_ => Text.Text = team?.FullName.Value ?? string.Empty, true);
+            (acronym = team.Acronym.GetBoundCopy()).BindValueChanged(
+                _ => Text.Text = team?.FullName.Value ?? string.Empty,
+                true
+            );
         }
     }
 }

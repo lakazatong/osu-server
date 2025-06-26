@@ -31,7 +31,9 @@ namespace osu.Game.Tests.Database
         [SetUp]
         public void SetUp()
         {
-            var directory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()));
+            var directory = Directory.CreateDirectory(
+                Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())
+            );
 
             storage = new NativeStorage(directory.FullName);
 
@@ -96,23 +98,38 @@ namespace osu.Game.Tests.Database
 
             realm.Run(outerRealm =>
             {
-                var backBinding = outerRealm.All<RealmKeyBinding>().Single(k => k.ActionInt == (int)GlobalAction.Back);
+                var backBinding = outerRealm
+                    .All<RealmKeyBinding>()
+                    .Single(k => k.ActionInt == (int)GlobalAction.Back);
 
-                Assert.That(backBinding.KeyCombination.Keys, Is.EquivalentTo(new[] { InputKey.Escape }));
+                Assert.That(
+                    backBinding.KeyCombination.Keys,
+                    Is.EquivalentTo(new[] { InputKey.Escape })
+                );
 
                 var tsr = ThreadSafeReference.Create(backBinding);
 
                 realm.Run(innerRealm =>
                 {
                     var binding = innerRealm.ResolveReference(tsr)!;
-                    innerRealm.Write(() => binding.KeyCombination = new KeyCombination(InputKey.BackSpace));
+                    innerRealm.Write(() =>
+                        binding.KeyCombination = new KeyCombination(InputKey.BackSpace)
+                    );
                 });
 
-                Assert.That(backBinding.KeyCombination.Keys, Is.EquivalentTo(new[] { InputKey.BackSpace }));
+                Assert.That(
+                    backBinding.KeyCombination.Keys,
+                    Is.EquivalentTo(new[] { InputKey.BackSpace })
+                );
 
                 // check still correct after re-query.
-                backBinding = outerRealm.All<RealmKeyBinding>().Single(k => k.ActionInt == (int)GlobalAction.Back);
-                Assert.That(backBinding.KeyCombination.Keys, Is.EquivalentTo(new[] { InputKey.BackSpace }));
+                backBinding = outerRealm
+                    .All<RealmKeyBinding>()
+                    .Single(k => k.ActionInt == (int)GlobalAction.Back);
+                Assert.That(
+                    backBinding.KeyCombination.Keys,
+                    Is.EquivalentTo(new[] { InputKey.BackSpace })
+                );
             });
         }
 

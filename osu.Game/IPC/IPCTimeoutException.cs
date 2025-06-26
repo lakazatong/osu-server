@@ -8,8 +8,6 @@ namespace osu.Game.IPC
     public class IPCTimeoutException : TimeoutException
     {
         public IPCTimeoutException(Type channelType)
-            : base($@"IPC took too long to send message via channel {channelType}")
-        {
-        }
+            : base($@"IPC took too long to send message via channel {channelType}") { }
     }
 }

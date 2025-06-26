@@ -3,11 +3,11 @@
 
 #nullable disable
 
+using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Graphics;
-using System.Collections.Generic;
-using System.Linq;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Localisation;
@@ -31,8 +31,8 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
                 dropdown = new AudioDeviceSettingsDropdown
                 {
                     LabelText = AudioSettingsStrings.OutputDevice,
-                    Keywords = new[] { "speaker", "headphone", "output" }
-                }
+                    Keywords = new[] { "speaker", "headphone", "output" },
+                },
             };
 
             updateItems();
@@ -60,10 +60,10 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
             // specific audio devices in such a case anyways. Such
             // functionality would require involved OS-specific code.
             dropdown.Items = deviceItems
-                             // Dropdown doesn't like null items. Somehow we are seeing some arrive here (see https://github.com/ppy/osu/issues/21271)
-                             .Where(i => i != null)
-                             .Distinct()
-                             .ToList();
+                // Dropdown doesn't like null items. Somehow we are seeing some arrive here (see https://github.com/ppy/osu/issues/21271)
+                .Where(i => i != null)
+                .Distinct()
+                .ToList();
         }
 
         protected override void Dispose(bool isDisposing)
@@ -79,12 +79,15 @@ namespace osu.Game.Overlays.Settings.Sections.Audio
 
         private partial class AudioDeviceSettingsDropdown : SettingsDropdown<string>
         {
-            protected override OsuDropdown<string> CreateDropdown() => new AudioDeviceDropdownControl();
+            protected override OsuDropdown<string> CreateDropdown() =>
+                new AudioDeviceDropdownControl();
 
             private partial class AudioDeviceDropdownControl : DropdownControl
             {
-                protected override LocalisableString GenerateItemText(string item)
-                    => string.IsNullOrEmpty(item) ? CommonStrings.Default : base.GenerateItemText(item);
+                protected override LocalisableString GenerateItemText(string item) =>
+                    string.IsNullOrEmpty(item)
+                        ? CommonStrings.Default
+                        : base.GenerateItemText(item);
             }
         }
     }

@@ -4,8 +4,6 @@
 #nullable disable
 
 using System;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -17,6 +15,8 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Sprites;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -71,7 +71,7 @@ namespace osu.Game.Graphics.UserInterface
                         Origin = Anchor.BottomLeft,
                         Anchor = Anchor.BottomLeft,
                         Text = CreateText(),
-                        Font = OsuFont.GetFont(size: 14)
+                        Font = OsuFont.GetFont(size: 14),
                     },
                     box = new Box
                     {
@@ -82,10 +82,17 @@ namespace osu.Game.Graphics.UserInterface
                         Origin = Anchor.BottomLeft,
                         Anchor = Anchor.BottomLeft,
                     },
-                    new HoverSounds(HoverSampleSet.TabSelect)
+                    new HoverSounds(HoverSampleSet.TabSelect),
                 };
 
-                Active.BindValueChanged(active => Text.Font = Text.Font.With(Typeface.Torus, weight: active.NewValue ? FontWeight.Bold : FontWeight.Medium), true);
+                Active.BindValueChanged(
+                    active =>
+                        Text.Font = Text.Font.With(
+                            Typeface.Torus,
+                            weight: active.NewValue ? FontWeight.Bold : FontWeight.Medium
+                        ),
+                    true
+                );
             }
 
             [BackgroundDependencyLoader]
@@ -94,7 +101,8 @@ namespace osu.Game.Graphics.UserInterface
                 selectSample = audio.Samples.Get(@"UI/tabselect-select");
             }
 
-            protected virtual LocalisableString CreateText() => (Value as Enum)?.GetLocalisableDescription() ?? Value.ToString();
+            protected virtual LocalisableString CreateText() =>
+                (Value as Enum)?.GetLocalisableDescription() ?? Value.ToString();
 
             protected override bool OnHover(HoverEvent e)
             {

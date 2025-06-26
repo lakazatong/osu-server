@@ -34,10 +34,7 @@ namespace osu.Game.Screens.Utility
 
             InternalChildren = new Drawable[]
             {
-                circles = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                circles = new Container { RelativeSizeAxes = Axes.Both },
             };
 
             SampleBPM.BindValueChanged(_ =>
@@ -98,12 +95,14 @@ namespace osu.Game.Screens.Utility
                     break;
             }
 
-            circles.Add(new SampleHitCircle(time)
-            {
-                RelativePositionAxes = Axes.Both,
-                Position = location,
-                Hit = hit,
-            });
+            circles.Add(
+                new SampleHitCircle(time)
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Position = location,
+                    Hit = hit,
+                }
+            );
         }
 
         private void hit(HitEvent h)
@@ -125,8 +124,8 @@ namespace osu.Game.Screens.Utility
             private const float size = 100;
             private const float duration = 200;
 
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
-                => circle.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                circle.ReceivePositionalInputAt(screenSpacePos);
 
             public SampleHitCircle(double hitTime)
             {
@@ -165,7 +164,7 @@ namespace osu.Game.Screens.Utility
                                 AlwaysPresent = true,
                                 RelativeSizeAxes = Axes.Both,
                             },
-                        }
+                        },
                     },
                 };
             }
@@ -199,9 +198,17 @@ namespace osu.Game.Screens.Utility
             {
                 if (HitEvent == null)
                 {
-                    double preempt = (float)IBeatmapDifficultyInfo.DifficultyRange(SampleApproachRate.Value, 1800, 1200, 450);
+                    double preempt = (float)
+                        IBeatmapDifficultyInfo.DifficultyRange(
+                            SampleApproachRate.Value,
+                            1800,
+                            1200,
+                            450
+                        );
 
-                    approach.Scale = new Vector2(1 + 4 * (float)Math.Clamp((HitTime - Clock.CurrentTime) / preempt, 0, 100));
+                    approach.Scale = new Vector2(
+                        1 + 4 * (float)Math.Clamp((HitTime - Clock.CurrentTime) / preempt, 0, 100)
+                    );
                     Alpha = (float)Math.Clamp((Clock.CurrentTime - HitTime + 600) / 400, 0, 1);
 
                     if (Clock.CurrentTime > HitTime + duration)
@@ -209,30 +216,33 @@ namespace osu.Game.Screens.Utility
                 }
             }
 
-            private void attemptHit() => Schedule(() =>
-            {
-                if (HitEvent != null)
-                    return;
-
-                // in case it was hit outside of display range, show immediately
-                // so the user isn't confused.
-                this.FadeIn();
-
-                approach.Expire();
-
-                circle
-                    .FadeOut(duration)
-                    .ScaleTo(1.5f, duration);
-
-                HitEvent = new HitEvent(Clock.CurrentTime - HitTime, 1.0, HitResult.Good, new HitObject
+            private void attemptHit() =>
+                Schedule(() =>
                 {
-                    HitWindows = new DefaultHitWindows(),
-                }, null, null);
+                    if (HitEvent != null)
+                        return;
 
-                Hit?.Invoke(HitEvent.Value);
+                    // in case it was hit outside of display range, show immediately
+                    // so the user isn't confused.
+                    this.FadeIn();
 
-                this.Delay(duration).Expire();
-            });
+                    approach.Expire();
+
+                    circle.FadeOut(duration).ScaleTo(1.5f, duration);
+
+                    HitEvent = new HitEvent(
+                        Clock.CurrentTime - HitTime,
+                        1.0,
+                        HitResult.Good,
+                        new HitObject { HitWindows = new DefaultHitWindows() },
+                        null,
+                        null
+                    );
+
+                    Hit?.Invoke(HitEvent.Value);
+
+                    this.Delay(duration).Expire();
+                });
         }
     }
 }

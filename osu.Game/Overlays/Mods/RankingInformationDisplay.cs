@@ -46,112 +46,152 @@ namespace osu.Game.Overlays.Mods
         {
             // You would think that we could add this to `Content`, but borders don't mix well
             // with additive blending children elements.
-            AddInternal(new Container
-            {
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                RelativeSizeAxes = Axes.Both,
-                Shear = OsuGame.SHEAR,
-                CornerRadius = ShearedButton.CORNER_RADIUS,
-                Masking = true,
-                Children = new Drawable[]
-                {
-                    flashLayer = new Box
-                    {
-                        Alpha = 0,
-                        Blending = BlendingParameters.Additive,
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                }
-            });
-
-            LeftContent.AddRange(new Drawable[]
-            {
+            AddInternal(
                 new Container
                 {
-                    Width = 50,
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    RelativeSizeAxes = Axes.Both,
+                    Shear = OsuGame.SHEAR,
+                    CornerRadius = ShearedButton.CORNER_RADIUS,
+                    Masking = true,
+                    Children = new Drawable[]
+                    {
+                        flashLayer = new Box
+                        {
+                            Alpha = 0,
+                            Blending = BlendingParameters.Additive,
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                    },
+                }
+            );
+
+            LeftContent.AddRange(
+                new Drawable[]
+                {
+                    new Container
+                    {
+                        Width = 50,
+                        RelativeSizeAxes = Axes.Y,
+                        Margin = new MarginPadding(10),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Child = rankedText =
+                            new TextWithTooltip
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Shear = -OsuGame.SHEAR,
+                                Font = OsuFont.Default.With(size: 17, weight: FontWeight.SemiBold),
+                            },
+                    },
+                }
+            );
+
+            RightContent.Add(
+                new Container
+                {
+                    Width = 40,
                     RelativeSizeAxes = Axes.Y,
                     Margin = new MarginPadding(10),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Child = rankedText = new TextWithTooltip
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Shear = -OsuGame.SHEAR,
-                        Font = OsuFont.Default.With(size: 17, weight: FontWeight.SemiBold)
-                    }
+                    Child = counter =
+                        new EffectCounter
+                        {
+                            Shear = -OsuGame.SHEAR,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Current = { BindTarget = ModMultiplier },
+                        },
                 }
-            });
-
-            RightContent.Add(new Container
-            {
-                Width = 40,
-                RelativeSizeAxes = Axes.Y,
-                Margin = new MarginPadding(10),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Child = counter = new EffectCounter
-                {
-                    Shear = -OsuGame.SHEAR,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Current = { BindTarget = ModMultiplier }
-                }
-            });
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            ModMultiplier.BindValueChanged(e =>
-            {
-                if (e.NewValue > ModMultiplier.Default)
+            ModMultiplier.BindValueChanged(
+                e =>
                 {
-                    counter.FadeColour(colours.ForModType(ModType.DifficultyIncrease), transition_duration, Easing.OutQuint);
-                }
-                else if (e.NewValue < ModMultiplier.Default)
-                {
-                    counter.FadeColour(colours.ForModType(ModType.DifficultyReduction), transition_duration, Easing.OutQuint);
-                }
-                else
-                {
-                    counter.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                }
+                    if (e.NewValue > ModMultiplier.Default)
+                    {
+                        counter.FadeColour(
+                            colours.ForModType(ModType.DifficultyIncrease),
+                            transition_duration,
+                            Easing.OutQuint
+                        );
+                    }
+                    else if (e.NewValue < ModMultiplier.Default)
+                    {
+                        counter.FadeColour(
+                            colours.ForModType(ModType.DifficultyReduction),
+                            transition_duration,
+                            Easing.OutQuint
+                        );
+                    }
+                    else
+                    {
+                        counter.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
+                    }
 
-                flash();
+                    flash();
 
-                const float move_amount = 4;
-                if (e.NewValue > e.OldValue)
-                    counter.MoveToY(Math.Max(-move_amount * 2, counter.Y - move_amount)).Then().MoveToY(0, transition_duration * 2, Easing.OutQuint);
-                else
-                    counter.MoveToY(Math.Min(move_amount * 2, counter.Y + move_amount)).Then().MoveToY(0, transition_duration * 2, Easing.OutQuint);
-            }, true);
+                    const float move_amount = 4;
+                    if (e.NewValue > e.OldValue)
+                        counter
+                            .MoveToY(Math.Max(-move_amount * 2, counter.Y - move_amount))
+                            .Then()
+                            .MoveToY(0, transition_duration * 2, Easing.OutQuint);
+                    else
+                        counter
+                            .MoveToY(Math.Min(move_amount * 2, counter.Y + move_amount))
+                            .Then()
+                            .MoveToY(0, transition_duration * 2, Easing.OutQuint);
+                },
+                true
+            );
 
             // required to prevent the counter initially rolling up from 0 to 1
             // due to `Current.Value` having a nonstandard default value of 1.
             counter.SetCountWithoutRolling(ModMultiplier.Value);
 
-            Ranked.BindValueChanged(e =>
-            {
-                flash();
+            Ranked.BindValueChanged(
+                e =>
+                {
+                    flash();
 
-                if (e.NewValue)
-                {
-                    rankedText.Text = ModSelectOverlayStrings.Ranked;
-                    rankedText.TooltipText = ModSelectOverlayStrings.RankedExplanation;
-                    rankedText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                    FrontBackground.FadeColour(ColourProvider.Background3, transition_duration, Easing.OutQuint);
-                }
-                else
-                {
-                    rankedText.Text = ModSelectOverlayStrings.Unranked;
-                    rankedText.TooltipText = ModSelectOverlayStrings.UnrankedExplanation;
-                    rankedText.FadeColour(ColourProvider.Background5, transition_duration, Easing.OutQuint);
-                    FrontBackground.FadeColour(colours.Orange1, transition_duration, Easing.OutQuint);
-                }
-            }, true);
+                    if (e.NewValue)
+                    {
+                        rankedText.Text = ModSelectOverlayStrings.Ranked;
+                        rankedText.TooltipText = ModSelectOverlayStrings.RankedExplanation;
+                        rankedText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
+                        FrontBackground.FadeColour(
+                            ColourProvider.Background3,
+                            transition_duration,
+                            Easing.OutQuint
+                        );
+                    }
+                    else
+                    {
+                        rankedText.Text = ModSelectOverlayStrings.Unranked;
+                        rankedText.TooltipText = ModSelectOverlayStrings.UnrankedExplanation;
+                        rankedText.FadeColour(
+                            ColourProvider.Background5,
+                            transition_duration,
+                            Easing.OutQuint
+                        );
+                        FrontBackground.FadeColour(
+                            colours.Orange1,
+                            transition_duration,
+                            Easing.OutQuint
+                        );
+                    }
+                },
+                true
+            );
         }
 
         private void flash()
@@ -159,7 +199,8 @@ namespace osu.Game.Overlays.Mods
             flashLayer
                 .FadeOutFromOne()
                 .FadeTo(0.15f, 60, Easing.OutQuint)
-                .Then().FadeOut(500, Easing.OutQuint);
+                .Then()
+                .FadeOut(500, Easing.OutQuint);
         }
 
         private partial class TextWithTooltip : OsuSpriteText, IHasTooltip
@@ -171,14 +212,16 @@ namespace osu.Game.Overlays.Mods
         {
             protected override double RollingDuration => 250;
 
-            protected override LocalisableString FormatCount(double count) => ModUtils.FormatScoreMultiplier(count);
+            protected override LocalisableString FormatCount(double count) =>
+                ModUtils.FormatScoreMultiplier(count);
 
-            protected override OsuSpriteText CreateSpriteText() => new OsuSpriteText
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Font = OsuFont.Default.With(size: 17, weight: FontWeight.SemiBold)
-            };
+            protected override OsuSpriteText CreateSpriteText() =>
+                new OsuSpriteText
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Font = OsuFont.Default.With(size: 17, weight: FontWeight.SemiBold),
+                };
 
             public LocalisableString TooltipText => ModSelectOverlayStrings.ScoreMultiplier;
         }

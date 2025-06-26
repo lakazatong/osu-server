@@ -64,13 +64,32 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                 double duration = isAnimating ? 60 : 0;
 
                 Position = new Vector2(
-                    (float)Interpolation.DampContinuously(Position.X, targetPos.X, duration, Time.Elapsed),
-                    (float)Interpolation.DampContinuously(Position.Y, targetPos.Y, duration, Time.Elapsed)
+                    (float)
+                        Interpolation.DampContinuously(
+                            Position.X,
+                            targetPos.X,
+                            duration,
+                            Time.Elapsed
+                        ),
+                    (float)
+                        Interpolation.DampContinuously(
+                            Position.Y,
+                            targetPos.Y,
+                            duration,
+                            Time.Elapsed
+                        )
                 );
 
                 Size = new Vector2(
-                    (float)Interpolation.DampContinuously(Size.X, targetSize.X, duration, Time.Elapsed),
-                    (float)Interpolation.DampContinuously(Size.Y, targetSize.Y, duration, Time.Elapsed)
+                    (float)
+                        Interpolation.DampContinuously(
+                            Size.X,
+                            targetSize.X,
+                            duration,
+                            Time.Elapsed
+                        ),
+                    (float)
+                        Interpolation.DampContinuously(Size.Y, targetSize.Y, duration, Time.Elapsed)
                 );
 
                 // If we don't track the animating state, the animation will also occur when resizing the window.
@@ -86,12 +105,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                 IsMaximised = isMaximised;
                 isAnimating = true;
 
-                TweenEdgeEffectTo(new EdgeEffectParameters
-                {
-                    Type = EdgeEffectType.Shadow,
-                    Radius = isMaximised ? 30 : 10,
-                    Colour = Colour4.Black.Opacity(isMaximised ? 0.5f : 0.2f),
-                }, ANIMATION_DELAY, Easing.OutQuint);
+                TweenEdgeEffectTo(
+                    new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Shadow,
+                        Radius = isMaximised ? 30 : 10,
+                        Colour = Colour4.Black.Opacity(isMaximised ? 0.5f : 0.2f),
+                    },
+                    ANIMATION_DELAY,
+                    Easing.OutQuint
+                );
             }
 
             private Vector2 getFinalPosition() =>

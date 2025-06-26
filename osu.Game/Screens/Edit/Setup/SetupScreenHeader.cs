@@ -9,9 +9,9 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Localisation;
 using osu.Game.Overlays;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.Edit.Setup
 {
@@ -26,31 +26,32 @@ namespace osu.Game.Screens.Edit.Setup
 
         protected override OverlayTitle CreateTitle() => new SetupScreenTitle();
 
-        protected override Drawable CreateContent() => new Container
-        {
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            // reverse flow is used to ensure that the tab control's expandable bars extend over the background chooser.
-            Child = new ReverseChildIDFillFlowContainer<Drawable>
+        protected override Drawable CreateContent() =>
+            new Container
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Children = new Drawable[]
+                // reverse flow is used to ensure that the tab control's expandable bars extend over the background chooser.
+                Child = new ReverseChildIDFillFlowContainer<Drawable>
                 {
-                    tabControl = new SetupScreenTabControl
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 30
+                        tabControl = new SetupScreenTabControl
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 30,
+                        },
+                        Background = new SetupScreenHeaderBackground
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            Height = 120,
+                        },
                     },
-                    Background = new SetupScreenHeaderBackground
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Height = 120
-                    }
-                }
-            }
-        };
+                },
+            };
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
@@ -66,7 +67,9 @@ namespace osu.Game.Screens.Edit.Setup
         {
             base.LoadComplete();
 
-            sections.SelectedSection.BindValueChanged(section => tabControl.Current.Value = section.NewValue!);
+            sections.SelectedSection.BindValueChanged(section =>
+                tabControl.Current.Value = section.NewValue!
+            );
             tabControl.Current.BindValueChanged(section =>
             {
                 if (section.NewValue != sections.SelectedSection.Value)
@@ -98,17 +101,11 @@ namespace osu.Game.Screens.Edit.Setup
             {
                 TabContainer.Margin = new MarginPadding { Horizontal = 100 };
 
-                AddInternal(background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = 1
-                });
+                AddInternal(background = new Box { RelativeSizeAxes = Axes.Both, Depth = 1 });
             }
 
-            protected override TabItem<SetupSection> CreateTabItem(SetupSection value) => new SetupScreenTabItem(value)
-            {
-                AccentColour = AccentColour
-            };
+            protected override TabItem<SetupSection> CreateTabItem(SetupSection value) =>
+                new SetupScreenTabItem(value) { AccentColour = AccentColour };
 
             private partial class SetupScreenTabItem : OverlayTabItem
             {

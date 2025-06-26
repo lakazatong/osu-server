@@ -24,7 +24,8 @@ namespace osu.Game.Tests.Visual.Editing
     {
         protected override Ruleset CreateEditorRuleset() => new OsuRuleset();
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         [Test]
         public void TestCutRemovesObjects()
@@ -58,7 +59,12 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddAssert("is one object", () => EditorBeatmap.HitObjects.Count == 1);
 
-            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == EditorBeatmap.SnapTime(newTime, null));
+            AddAssert(
+                "new object selected",
+                () =>
+                    EditorBeatmap.SelectedHitObjects.Single().StartTime
+                    == EditorBeatmap.SnapTime(newTime, null)
+            );
         }
 
         [Test]
@@ -72,9 +78,9 @@ namespace osu.Game.Tests.Visual.Editing
                     ControlPoints =
                     {
                         new PathControlPoint(),
-                        new PathControlPoint(new Vector2(100, 0), PathType.BEZIER)
-                    }
-                }
+                        new PathControlPoint(new Vector2(100, 0), PathType.BEZIER),
+                    },
+                },
             };
 
             AddStep("add hitobject", () => EditorBeatmap.Add(addedObject));
@@ -89,21 +95,21 @@ namespace osu.Game.Tests.Visual.Editing
 
             Slider slider = null;
             AddStep("retrieve slider", () => slider = (Slider)EditorBeatmap.HitObjects.Single());
-            AddAssert("path matches", () =>
-            {
-                var path = slider.Path;
-                return path.ControlPoints.Count == 2 && path.ControlPoints.SequenceEqual(addedObject.Path.ControlPoints);
-            });
+            AddAssert(
+                "path matches",
+                () =>
+                {
+                    var path = slider.Path;
+                    return path.ControlPoints.Count == 2
+                        && path.ControlPoints.SequenceEqual(addedObject.Path.ControlPoints);
+                }
+            );
         }
 
         [Test]
         public void TestCutPasteSpinner()
         {
-            var addedObject = new Spinner
-            {
-                StartTime = 1000,
-                Duration = 5000
-            };
+            var addedObject = new Spinner { StartTime = 1000, Duration = 5000 };
 
             AddStep("add hitobject", () => EditorBeatmap.Add(addedObject));
 
@@ -115,7 +121,10 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddAssert("is one object", () => EditorBeatmap.HitObjects.Count == 1);
 
-            AddAssert("duration matches", () => ((Spinner)EditorBeatmap.HitObjects.Single()).Duration == 5000);
+            AddAssert(
+                "duration matches",
+                () => ((Spinner)EditorBeatmap.HitObjects.Single()).Duration == 5000
+            );
         }
 
         [TestCase(false)]
@@ -138,18 +147,59 @@ namespace osu.Game.Tests.Visual.Editing
             {
                 AddStep("deselect", () => EditorBeatmap.SelectedHitObjects.Clear());
 
-                AddUntilStep("timeline selection box is not visible", () => Editor.ChildrenOfType<Timeline>().First().ChildrenOfType<SelectionBox>().First().Alpha == 0);
-                AddUntilStep("composer selection box is not visible", () => Editor.ChildrenOfType<HitObjectComposer>().First().ChildrenOfType<SelectionBox>().First().Alpha == 0);
+                AddUntilStep(
+                    "timeline selection box is not visible",
+                    () =>
+                        Editor
+                            .ChildrenOfType<Timeline>()
+                            .First()
+                            .ChildrenOfType<SelectionBox>()
+                            .First()
+                            .Alpha == 0
+                );
+                AddUntilStep(
+                    "composer selection box is not visible",
+                    () =>
+                        Editor
+                            .ChildrenOfType<HitObjectComposer>()
+                            .First()
+                            .ChildrenOfType<SelectionBox>()
+                            .First()
+                            .Alpha == 0
+                );
             }
 
             AddStep("paste hitobject", () => Editor.Paste());
 
             AddAssert("are two objects", () => EditorBeatmap.HitObjects.Count == 2);
 
-            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == EditorBeatmap.SnapTime(paste_time, null));
+            AddAssert(
+                "new object selected",
+                () =>
+                    EditorBeatmap.SelectedHitObjects.Single().StartTime
+                    == EditorBeatmap.SnapTime(paste_time, null)
+            );
 
-            AddUntilStep("timeline selection box is visible", () => Editor.ChildrenOfType<Timeline>().First().ChildrenOfType<EditorSelectionHandler>().First().Alpha > 0);
-            AddUntilStep("composer selection box is visible", () => Editor.ChildrenOfType<HitObjectComposer>().First().ChildrenOfType<EditorSelectionHandler>().First().Alpha > 0);
+            AddUntilStep(
+                "timeline selection box is visible",
+                () =>
+                    Editor
+                        .ChildrenOfType<Timeline>()
+                        .First()
+                        .ChildrenOfType<EditorSelectionHandler>()
+                        .First()
+                        .Alpha > 0
+            );
+            AddUntilStep(
+                "composer selection box is visible",
+                () =>
+                    Editor
+                        .ChildrenOfType<HitObjectComposer>()
+                        .First()
+                        .ChildrenOfType<EditorSelectionHandler>()
+                        .First()
+                        .Alpha > 0
+            );
         }
 
         [Test]

@@ -90,7 +90,11 @@ namespace osu.Game.Rulesets.Scoring
                 return;
 
             // When jumping in and out of gameplay time within a single frame, health should only be drained for the period within the gameplay time
-            double lastGameplayTime = Math.Clamp(Time.Current - Time.Elapsed, DrainStartTime, gameplayEndTime);
+            double lastGameplayTime = Math.Clamp(
+                Time.Current - Time.Elapsed,
+                DrainStartTime,
+                gameplayEndTime
+            );
             double currentGameplayTime = Math.Clamp(Time.Current, DrainStartTime, gameplayEndTime);
 
             if (DrainLenience < 1)
@@ -105,21 +109,26 @@ namespace osu.Game.Rulesets.Scoring
                 gameplayEndTime = beatmap.HitObjects[^1].GetEndTime();
 
             noDrainPeriodTracker = new PeriodTracker(
-                beatmap.Breaks.Select(breakPeriod =>
-                    new Period(
-                        beatmap.HitObjects
-                               .Select(hitObject => hitObject.GetEndTime())
-                               .Where(endTime => endTime <= breakPeriod.StartTime)
-                               .DefaultIfEmpty(double.MinValue)
-                               .Last(),
-                        beatmap.HitObjects
-                               .Select(hitObject => hitObject.StartTime)
-                               .Where(startTime => startTime >= breakPeriod.EndTime)
-                               .DefaultIfEmpty(double.MaxValue)
-                               .First()
-                    )));
+                beatmap.Breaks.Select(breakPeriod => new Period(
+                    beatmap
+                        .HitObjects.Select(hitObject => hitObject.GetEndTime())
+                        .Where(endTime => endTime <= breakPeriod.StartTime)
+                        .DefaultIfEmpty(double.MinValue)
+                        .Last(),
+                    beatmap
+                        .HitObjects.Select(hitObject => hitObject.StartTime)
+                        .Where(startTime => startTime >= breakPeriod.EndTime)
+                        .DefaultIfEmpty(double.MaxValue)
+                        .First()
+                ))
+            );
 
-            targetMinimumHealth = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.DrainRate, min_health_target, mid_health_target, max_health_target);
+            targetMinimumHealth = IBeatmapDifficultyInfo.DifficultyRange(
+                beatmap.Difficulty.DrainRate,
+                min_health_target,
+                mid_health_target,
+                max_health_target
+            );
 
             // Add back a portion of the amount of HP to be drained, depending on the lenience requested.
             targetMinimumHealth += DrainLenience * (1 - targetMinimumHealth);
@@ -136,9 +145,12 @@ namespace osu.Game.Rulesets.Scoring
 
             if (IsSimulating && !result.Type.IsBonus())
             {
-                healthIncreases.Add(new HealthIncrease(
-                    result.HitObject.GetEndTime() + result.TimeOffset,
-                    GetHealthIncreaseFor(result)));
+                healthIncreases.Add(
+                    new HealthIncrease(
+                        result.HitObject.GetEndTime() + result.TimeOffset,
+                        GetHealthIncreaseFor(result)
+                    )
+                );
             }
         }
 
@@ -181,7 +193,10 @@ namespace osu.Game.Rulesets.Scoring
                     double currentTime = healthIncreases[i].Time;
                     double lastTime = i > 0 ? healthIncreases[i - 1].Time : DrainStartTime;
 
-                    while (currentBreak < Beatmap.Breaks.Count && Beatmap.Breaks[currentBreak].EndTime <= currentTime)
+                    while (
+                        currentBreak < Beatmap.Breaks.Count
+                        && Beatmap.Breaks[currentBreak].EndTime <= currentTime
+                    )
                     {
                         // If two hitobjects are separated by a break period, there is no drain for the full duration between the hitobjects.
                         // This differs from legacy (version < 8) beatmaps which continue draining until the break section is entered,

@@ -17,7 +17,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         private ScoreProcessor scoreProcessor = new ScoreProcessor(new OsuRuleset());
 
         protected override Drawable CreateArgonImplementation() => new ArgonComboCounter();
+
         protected override Drawable CreateDefaultImplementation() => new DefaultComboCounter();
+
         protected override Drawable CreateLegacyImplementation() => new LegacyDefaultComboCounter();
 
         [Test]

@@ -41,7 +41,11 @@ namespace osu.Game.Overlays.Chat
 
         #region Scroll handling
 
-        protected override void OnUserScroll(double value, bool animated = true, double? distanceDecay = null)
+        protected override void OnUserScroll(
+            double value,
+            bool animated = true,
+            double? distanceDecay = null
+        )
         {
             base.OnUserScroll(value, animated, distanceDecay);
             updateTrackState();

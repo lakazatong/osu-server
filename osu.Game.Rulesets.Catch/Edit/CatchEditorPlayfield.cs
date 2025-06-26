@@ -9,9 +9,7 @@ namespace osu.Game.Rulesets.Catch.Edit
     public partial class CatchEditorPlayfield : CatchPlayfield
     {
         public CatchEditorPlayfield(IBeatmapDifficultyInfo difficulty)
-            : base(difficulty)
-        {
-        }
+            : base(difficulty) { }
 
         protected override void LoadComplete()
         {

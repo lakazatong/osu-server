@@ -16,27 +16,22 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [Test]
         public void TestPerfectScoreOnShortHoldNote()
         {
-            CreateModTest(new ModTestData
-            {
-                Autoplay = true,
-                CreateBeatmap = () => new ManiaBeatmap(new StageDefinition(1))
+            CreateModTest(
+                new ModTestData
                 {
-                    HitObjects = new List<ManiaHitObject>
-                    {
-                        new HoldNote
+                    Autoplay = true,
+                    CreateBeatmap = () =>
+                        new ManiaBeatmap(new StageDefinition(1))
                         {
-                            StartTime = 100,
-                            EndTime = 100,
+                            HitObjects = new List<ManiaHitObject>
+                            {
+                                new HoldNote { StartTime = 100, EndTime = 100 },
+                                new HoldNote { StartTime = 100.1, EndTime = 150 },
+                            },
                         },
-                        new HoldNote
-                        {
-                            StartTime = 100.1,
-                            EndTime = 150,
-                        },
-                    }
-                },
-                PassCondition = () => Player.ScoreProcessor.Combo.Value == 4
-            });
+                    PassCondition = () => Player.ScoreProcessor.Combo.Value == 4,
+                }
+            );
         }
     }
 }

@@ -48,77 +48,76 @@ namespace osu.Game.Overlays
         public bool Completed { get; private set; }
 
         protected WizardOverlay(OverlayColourScheme scheme)
-            : base(scheme)
-        {
-        }
+            : base(scheme) { }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            MainAreaContent.AddRange(new Drawable[]
-            {
-                content = new PopoverContainer
+            MainAreaContent.AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Bottom = 20 },
-                    Child = new GridContainer
+                    content = new PopoverContainer
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Both,
-                        ColumnDimensions = new[]
+                        Padding = new MarginPadding { Bottom = 20 },
+                        Child = new GridContainer
                         {
-                            new Dimension(),
-                            new Dimension(minSize: 640, maxSize: 800),
-                            new Dimension(),
-                        },
-                        Content = new[]
-                        {
-                            new[]
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            ColumnDimensions = new[]
                             {
-                                Empty(),
-                                new InputBlockingContainer
+                                new Dimension(),
+                                new Dimension(minSize: 640, maxSize: 800),
+                                new Dimension(),
+                            },
+                            Content = new[]
+                            {
+                                new[]
                                 {
-                                    Masking = true,
-                                    CornerRadius = 14,
-                                    RelativeSizeAxes = Axes.Both,
-                                    Children = new Drawable[]
+                                    Empty(),
+                                    new InputBlockingContainer
                                     {
-                                        new Box
+                                        Masking = true,
+                                        CornerRadius = 14,
+                                        RelativeSizeAxes = Axes.Both,
+                                        Children = new Drawable[]
                                         {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Colour = ColourProvider.Background6,
-                                        },
-                                        loading = new LoadingSpinner(),
-                                        new Container
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Padding = new MarginPadding { Vertical = 20 },
-                                            Child = screenContent = new Container { RelativeSizeAxes = Axes.Both, },
+                                            new Box
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Colour = ColourProvider.Background6,
+                                            },
+                                            loading = new LoadingSpinner(),
+                                            new Container
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Padding = new MarginPadding { Vertical = 20 },
+                                                Child = screenContent =
+                                                    new Container { RelativeSizeAxes = Axes.Both },
+                                            },
                                         },
                                     },
+                                    Empty(),
                                 },
-                                Empty(),
                             },
-                        }
-                    }
-                },
-            });
+                        },
+                    },
+                }
+            );
         }
 
         [Resolved]
         private ScreenFooter footer { get; set; } = null!;
 
-        public new WizardFooterContent? DisplayedFooterContent => base.DisplayedFooterContent as WizardFooterContent;
+        public new WizardFooterContent? DisplayedFooterContent =>
+            base.DisplayedFooterContent as WizardFooterContent;
 
         public override VisibilityContainer CreateFooterContent()
         {
-            var footerContent = new WizardFooterContent
-            {
-                ShowNextStep = ShowNextStep,
-            };
+            var footerContent = new WizardFooterContent { ShowNextStep = ShowNextStep };
 
             footerContent.OnLoadComplete += _ => updateButtons();
             return footerContent;
@@ -161,8 +160,7 @@ namespace osu.Game.Overlays
         {
             base.PopIn();
 
-            content.ScaleTo(0.99f)
-                   .ScaleTo(1, 400, Easing.OutQuint);
+            content.ScaleTo(0.99f).ScaleTo(1, 400, Easing.OutQuint);
 
             if (CurrentStepIndex == null)
                 showFirstStep();
@@ -176,8 +174,7 @@ namespace osu.Game.Overlays
 
             if (CurrentStepIndex == null)
             {
-                stack?.FadeOut(100)
-                     .Expire();
+                stack?.FadeOut(100).Expire();
             }
         }
 
@@ -191,10 +188,7 @@ namespace osu.Game.Overlays
         {
             Debug.Assert(CurrentStepIndex == null);
 
-            screenContent.Child = stack = new ScreenStack
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            screenContent.Child = stack = new ScreenStack { RelativeSizeAxes = Axes.Both };
 
             CurrentStepIndex = -1;
             ShowNextStep();
@@ -230,7 +224,8 @@ namespace osu.Game.Overlays
             updateButtons();
         }
 
-        private void updateButtons() => DisplayedFooterContent?.UpdateButtons(CurrentStepIndex, CurrentScreen, steps);
+        private void updateButtons() =>
+            DisplayedFooterContent?.UpdateButtons(CurrentStepIndex, CurrentScreen, steps);
 
         public partial class WizardFooterContent : VisibilityContainer
         {
@@ -256,7 +251,11 @@ namespace osu.Game.Overlays
                 };
             }
 
-            public void UpdateButtons(int? currentStep, WizardScreen? currentScreen, IReadOnlyList<Type> steps)
+            public void UpdateButtons(
+                int? currentStep,
+                WizardScreen? currentScreen,
+                IReadOnlyList<Type> steps
+            )
             {
                 NextButton.Enabled.Value = currentStep != null;
 
@@ -271,7 +270,9 @@ namespace osu.Game.Overlays
                 {
                     NextButton.Text = isLastStep
                         ? CommonStrings.Finish
-                        : LocalisableString.Interpolate($@"{CommonStrings.Next} ({steps[currentStep.Value + 1].GetLocalisableDescription()})");
+                        : LocalisableString.Interpolate(
+                            $@"{CommonStrings.Next} ({steps[currentStep.Value + 1].GetLocalisableDescription()})"
+                        );
                 }
             }
 

@@ -24,46 +24,47 @@ namespace osu.Game.Tests.Visual.Components
         private IdleTrackingBox[] boxes;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            InputManager.MoveMouseTo(Vector2.Zero);
-
-            Children = boxes = new[]
+        public void SetUp() =>
+            Schedule(() =>
             {
-                box1 = new IdleTrackingBox(2000)
+                InputManager.MoveMouseTo(Vector2.Zero);
+
+                Children = boxes = new[]
                 {
-                    Name = "TopLeft",
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Red,
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                },
-                box2 = new IdleTrackingBox(4000)
-                {
-                    Name = "TopRight",
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Green,
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                },
-                box3 = new IdleTrackingBox(6000)
-                {
-                    Name = "BottomLeft",
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Blue,
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                },
-                box4 = new IdleTrackingBox(8000)
-                {
-                    Name = "BottomRight",
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Orange,
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
-                },
-            };
-        });
+                    box1 = new IdleTrackingBox(2000)
+                    {
+                        Name = "TopLeft",
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Red,
+                        Anchor = Anchor.TopLeft,
+                        Origin = Anchor.TopLeft,
+                    },
+                    box2 = new IdleTrackingBox(4000)
+                    {
+                        Name = "TopRight",
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Green,
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                    },
+                    box3 = new IdleTrackingBox(6000)
+                    {
+                        Name = "BottomLeft",
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Blue,
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                    },
+                    box4 = new IdleTrackingBox(8000)
+                    {
+                        Name = "BottomRight",
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Orange,
+                        Anchor = Anchor.BottomRight,
+                        Origin = Anchor.BottomRight,
+                    },
+                };
+            });
 
         [Test]
         public void TestNudge()
@@ -72,7 +73,10 @@ namespace osu.Game.Tests.Visual.Components
 
             waitForAllIdle();
 
-            AddStep("nudge mouse", () => InputManager.MoveMouseTo(box1.ScreenSpaceDrawQuad.Centre + new Vector2(1)));
+            AddStep(
+                "nudge mouse",
+                () => InputManager.MoveMouseTo(box1.ScreenSpaceDrawQuad.Centre + new Vector2(1))
+            );
 
             checkIdleStatus(1, false);
             checkIdleStatus(2, true);
@@ -146,12 +150,18 @@ namespace osu.Game.Tests.Visual.Components
 
         private void checkIdleStatus(int box, bool expectedIdle)
         {
-            AddAssert($"box {box} is {(expectedIdle ? "idle" : "active")}", () => boxes[box - 1].IsIdle == expectedIdle);
+            AddAssert(
+                $"box {box} is {(expectedIdle ? "idle" : "active")}",
+                () => boxes[box - 1].IsIdle == expectedIdle
+            );
         }
 
         private void waitForAllIdle()
         {
-            AddUntilStep("wait for all idle", () => box1.IsIdle && box2.IsIdle && box3.IsIdle && box4.IsIdle);
+            AddUntilStep(
+                "wait for all idle",
+                () => box1.IsIdle && box2.IsIdle && box3.IsIdle && box4.IsIdle
+            );
         }
 
         private partial class IdleTrackingBox : CompositeDrawable
@@ -170,14 +180,13 @@ namespace osu.Game.Tests.Visual.Components
                 InternalChildren = new Drawable[]
                 {
                     idleTracker = new GameIdleTracker(timeToIdle),
-                    box = new Box
-                    {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    box = new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                 };
 
-                idleTracker.IsIdle.BindValueChanged(idle => box.Colour = idle.NewValue ? Color4.White : Color4.Black, true);
+                idleTracker.IsIdle.BindValueChanged(
+                    idle => box.Colour = idle.NewValue ? Color4.White : Color4.Black,
+                    true
+                );
             }
         }
     }

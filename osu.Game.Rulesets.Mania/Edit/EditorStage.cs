@@ -8,11 +8,14 @@ namespace osu.Game.Rulesets.Mania.Edit
 {
     public partial class EditorStage : Stage
     {
-        public EditorStage(int firstColumnIndex, StageDefinition definition, ref ManiaAction columnStartAction)
-            : base(firstColumnIndex, definition, ref columnStartAction)
-        {
-        }
+        public EditorStage(
+            int firstColumnIndex,
+            StageDefinition definition,
+            ref ManiaAction columnStartAction
+        )
+            : base(firstColumnIndex, definition, ref columnStartAction) { }
 
-        protected override Column CreateColumn(int index, bool isSpecial) => new EditorColumn(index, isSpecial);
+        protected override Column CreateColumn(int index, bool isSpecial) =>
+            new EditorColumn(index, isSpecial);
     }
 }

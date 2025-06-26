@@ -20,14 +20,20 @@ using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public partial class OsuModStrictTracking : Mod, IApplicableAfterBeatmapConversion, IApplicableToDrawableHitObject, IApplicableToDrawableRuleset<OsuHitObject>
+    public partial class OsuModStrictTracking
+        : Mod,
+            IApplicableAfterBeatmapConversion,
+            IApplicableToDrawableHitObject,
+            IApplicableToDrawableRuleset<OsuHitObject>
     {
         public override string Name => @"Strict Tracking";
         public override string Acronym => @"ST";
         public override ModType Type => ModType.DifficultyIncrease;
-        public override LocalisableString Description => @"Once you start a slider, follow precisely or get a miss.";
+        public override LocalisableString Description =>
+            @"Once you start a slider, follow precisely or get a miss.";
         public override double ScoreMultiplier => 1.0;
-        public override Type[] IncompatibleMods => new[] { typeof(ModClassic), typeof(OsuModTargetPractice) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModClassic), typeof(OsuModTargetPractice) };
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
         {
@@ -35,7 +41,8 @@ namespace osu.Game.Rulesets.Osu.Mods
             {
                 slider.Tracking.ValueChanged += e =>
                 {
-                    if (e.NewValue || slider.Judged) return;
+                    if (e.NewValue || slider.Judged)
+                        return;
 
                     if (slider.Time.Current < slider.HitObject.StartTime)
                         return;
@@ -43,7 +50,9 @@ namespace osu.Game.Rulesets.Osu.Mods
                     if ((slider.Clock as IGameplayClock)?.IsRewinding == true)
                         return;
 
-                    var tail = slider.NestedHitObjects.OfType<StrictTrackingDrawableSliderTail>().First();
+                    var tail = slider
+                        .NestedHitObjects.OfType<StrictTrackingDrawableSliderTail>()
+                        .First();
 
                     if (!tail.Judged)
                         tail.MissForcefully();
@@ -55,33 +64,37 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             var osuBeatmap = (OsuBeatmap)beatmap;
 
-            if (osuBeatmap.HitObjects.Count == 0) return;
+            if (osuBeatmap.HitObjects.Count == 0)
+                return;
 
-            var hitObjects = osuBeatmap.HitObjects.Select(ho =>
-            {
-                if (ho is Slider slider)
+            var hitObjects = osuBeatmap
+                .HitObjects.Select(ho =>
                 {
-                    var newSlider = new StrictTrackingSlider(slider);
-                    return newSlider;
-                }
+                    if (ho is Slider slider)
+                    {
+                        var newSlider = new StrictTrackingSlider(slider);
+                        return newSlider;
+                    }
 
-                return ho;
-            }).ToList();
+                    return ho;
+                })
+                .ToList();
 
             osuBeatmap.HitObjects = hitObjects;
         }
 
         public void ApplyToDrawableRuleset(DrawableRuleset<OsuHitObject> drawableRuleset)
         {
-            drawableRuleset.Playfield.RegisterPool<StrictTrackingSliderTailCircle, StrictTrackingDrawableSliderTail>(10, 100);
+            drawableRuleset.Playfield.RegisterPool<
+                StrictTrackingSliderTailCircle,
+                StrictTrackingDrawableSliderTail
+            >(10, 100);
         }
 
         private class StrictTrackingSliderTailCircle : SliderTailCircle
         {
             public StrictTrackingSliderTailCircle(Slider slider)
-                : base(slider)
-            {
-            }
+                : base(slider) { }
 
             public override Judgement CreateJudgement() => new OsuJudgement();
         }
@@ -109,54 +122,70 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
             {
-                var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.Distance, this.SpanCount(), cancellationToken);
+                var sliderEvents = SliderEventGenerator.Generate(
+                    StartTime,
+                    SpanDuration,
+                    Velocity,
+                    TickDistance,
+                    Path.Distance,
+                    this.SpanCount(),
+                    cancellationToken
+                );
 
                 foreach (var e in sliderEvents)
                 {
                     switch (e.Type)
                     {
                         case SliderEventType.Tick:
-                            AddNested(new SliderTick
-                            {
-                                SpanIndex = e.SpanIndex,
-                                SpanStartTime = e.SpanStartTime,
-                                StartTime = e.Time,
-                                Position = Position + Path.PositionAt(e.PathProgress),
-                                StackHeight = StackHeight,
-                                Scale = Scale,
-                                PathProgress = e.PathProgress,
-                            });
+                            AddNested(
+                                new SliderTick
+                                {
+                                    SpanIndex = e.SpanIndex,
+                                    SpanStartTime = e.SpanStartTime,
+                                    StartTime = e.Time,
+                                    Position = Position + Path.PositionAt(e.PathProgress),
+                                    StackHeight = StackHeight,
+                                    Scale = Scale,
+                                    PathProgress = e.PathProgress,
+                                }
+                            );
                             break;
 
                         case SliderEventType.Head:
-                            AddNested(HeadCircle = new SliderHeadCircle
-                            {
-                                StartTime = e.Time,
-                                Position = Position,
-                                StackHeight = StackHeight,
-                            });
+                            AddNested(
+                                HeadCircle = new SliderHeadCircle
+                                {
+                                    StartTime = e.Time,
+                                    Position = Position,
+                                    StackHeight = StackHeight,
+                                }
+                            );
                             break;
 
                         case SliderEventType.Tail:
-                            AddNested(TailCircle = new StrictTrackingSliderTailCircle(this)
-                            {
-                                RepeatIndex = e.SpanIndex,
-                                StartTime = e.Time,
-                                Position = EndPosition,
-                                StackHeight = StackHeight
-                            });
+                            AddNested(
+                                TailCircle = new StrictTrackingSliderTailCircle(this)
+                                {
+                                    RepeatIndex = e.SpanIndex,
+                                    StartTime = e.Time,
+                                    Position = EndPosition,
+                                    StackHeight = StackHeight,
+                                }
+                            );
                             break;
 
                         case SliderEventType.Repeat:
-                            AddNested(new SliderRepeat(this)
-                            {
-                                RepeatIndex = e.SpanIndex,
-                                StartTime = StartTime + (e.SpanIndex + 1) * SpanDuration,
-                                Position = Position + Path.PositionAt(e.PathProgress),
-                                StackHeight = StackHeight,
-                                Scale = Scale,
-                                PathProgress = e.PathProgress,
-                            });
+                            AddNested(
+                                new SliderRepeat(this)
+                                {
+                                    RepeatIndex = e.SpanIndex,
+                                    StartTime = StartTime + (e.SpanIndex + 1) * SpanDuration,
+                                    Position = Position + Path.PositionAt(e.PathProgress),
+                                    StackHeight = StackHeight,
+                                    Scale = Scale,
+                                    PathProgress = e.PathProgress,
+                                }
+                            );
                             break;
                     }
                 }

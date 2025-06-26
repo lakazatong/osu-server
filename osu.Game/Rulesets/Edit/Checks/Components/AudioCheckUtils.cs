@@ -9,6 +9,9 @@ namespace osu.Game.Rulesets.Edit.Checks.Components
 {
     public static class AudioCheckUtils
     {
-        public static bool HasAudioExtension(string filename) => SupportedExtensions.AUDIO_EXTENSIONS.Contains(Path.GetExtension(filename).ToLowerInvariant());
+        public static bool HasAudioExtension(string filename) =>
+            SupportedExtensions.AUDIO_EXTENSIONS.Contains(
+                Path.GetExtension(filename).ToLowerInvariant()
+            );
     }
 }

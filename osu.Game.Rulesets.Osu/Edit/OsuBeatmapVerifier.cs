@@ -18,12 +18,10 @@ namespace osu.Game.Rulesets.Osu.Edit
             new CheckOffscreenObjects(),
             new CheckTooShortSpinners(),
             new CheckConcurrentObjects(),
-
             // Spread
             new CheckTimeDistanceEquality(),
             new CheckLowDiffOverlaps(),
             new CheckTooShortSliders(),
-
             // Settings
             new CheckOsuAbnormalDifficultySettings(),
         };

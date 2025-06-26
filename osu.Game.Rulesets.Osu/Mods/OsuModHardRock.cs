@@ -15,7 +15,8 @@ namespace osu.Game.Rulesets.Osu.Mods
     {
         public override double ScoreMultiplier => UsesDefaultConfiguration ? 1.06 : 1;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Append(typeof(ModMirror)).ToArray();
+        public override Type[] IncompatibleMods =>
+            base.IncompatibleMods.Append(typeof(ModMirror)).ToArray();
 
         public void ApplyToHitObject(HitObject hitObject)
         {

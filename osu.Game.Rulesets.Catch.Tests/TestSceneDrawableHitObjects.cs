@@ -27,39 +27,45 @@ namespace osu.Game.Rulesets.Catch.Tests
         private double playfieldTime => drawableRuleset.Playfield.Time.Current;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            var controlPointInfo = new ControlPointInfo();
-            controlPointInfo.Add(0, new TimingControlPoint());
-
-            IWorkingBeatmap beatmap = CreateWorkingBeatmap(new Beatmap
+        public void Setup() =>
+            Schedule(() =>
             {
-                HitObjects = new List<HitObject> { new Fruit() },
-                BeatmapInfo = new BeatmapInfo
-                {
-                    Difficulty = new BeatmapDifficulty(),
-                    Metadata = new BeatmapMetadata
+                var controlPointInfo = new ControlPointInfo();
+                controlPointInfo.Add(0, new TimingControlPoint());
+
+                IWorkingBeatmap beatmap = CreateWorkingBeatmap(
+                    new Beatmap
                     {
-                        Artist = @"Unknown",
-                        Title = @"You're breathtaking",
-                        Author = { Username = @"Everyone" },
-                    },
-                    Ruleset = new CatchRuleset().RulesetInfo
-                },
-                ControlPointInfo = controlPointInfo
-            });
+                        HitObjects = new List<HitObject> { new Fruit() },
+                        BeatmapInfo = new BeatmapInfo
+                        {
+                            Difficulty = new BeatmapDifficulty(),
+                            Metadata = new BeatmapMetadata
+                            {
+                                Artist = @"Unknown",
+                                Title = @"You're breathtaking",
+                                Author = { Username = @"Everyone" },
+                            },
+                            Ruleset = new CatchRuleset().RulesetInfo,
+                        },
+                        ControlPointInfo = controlPointInfo,
+                    }
+                );
 
-            Child = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Children = new[]
+                Child = new Container
                 {
-                    drawableRuleset = new DrawableCatchRuleset(new CatchRuleset(), beatmap.GetPlayableBeatmap(new CatchRuleset().RulesetInfo))
-                }
-            };
-        });
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new[]
+                    {
+                        drawableRuleset = new DrawableCatchRuleset(
+                            new CatchRuleset(),
+                            beatmap.GetPlayableBeatmap(new CatchRuleset().RulesetInfo)
+                        ),
+                    },
+                };
+            });
 
         [Test]
         public void TestFruits()
@@ -97,9 +103,11 @@ namespace osu.Game.Rulesets.Catch.Tests
             AddAssert("catcher state is idle", () => catcherState == CatcherAnimationState.Idle);
         }
 
-        private bool playfieldIsEmpty => !((CatchPlayfield)drawableRuleset.Playfield).AllHitObjects.Any(h => h.IsAlive);
+        private bool playfieldIsEmpty =>
+            !((CatchPlayfield)drawableRuleset.Playfield).AllHitObjects.Any(h => h.IsAlive);
 
-        private CatcherAnimationState catcherState => ((CatchPlayfield)drawableRuleset.Playfield).Catcher.CurrentState;
+        private CatcherAnimationState catcherState =>
+            ((CatchPlayfield)drawableRuleset.Playfield).Catcher.CurrentState;
 
         private void spawnFruits(bool hit = false)
         {
@@ -109,7 +117,7 @@ namespace osu.Game.Rulesets.Catch.Tests
                 {
                     X = getXCoords(hit),
                     LastInCombo = i % 4 == 0,
-                    StartTime = playfieldTime + 800 + (200 * i)
+                    StartTime = playfieldTime + 800 + (200 * i),
                 };
 
                 fruit.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -126,11 +134,7 @@ namespace osu.Game.Rulesets.Catch.Tests
             {
                 X = xCoords,
                 StartTime = playfieldTime + 1000,
-                Path = new SliderPath(PathType.LINEAR, new[]
-                {
-                    Vector2.Zero,
-                    new Vector2(0, 200)
-                })
+                Path = new SliderPath(PathType.LINEAR, new[] { Vector2.Zero, new Vector2(0, 200) }),
             };
 
             juice.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -149,7 +153,7 @@ namespace osu.Game.Rulesets.Catch.Tests
                 {
                     X = getXCoords(hit),
                     LastInCombo = i % 4 == 0,
-                    StartTime = playfieldTime + 800 + (200 * i)
+                    StartTime = playfieldTime + 800 + (200 * i),
                 };
 
                 banana.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());

@@ -40,41 +40,61 @@ namespace osu.Game.Overlays
             AutoSizeAxes = Axes.X;
             RelativeSizeAxes = Axes.Y;
 
-            AddRange(new Drawable[]
-            {
-                new Box
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Y,
-                    Width = 300,
-                    Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.75f), Color4.Black.Opacity(0))
-                },
-                new FillFlowContainer
-                {
-                    Direction = FillDirection.Vertical,
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Spacing = new Vector2(0, offset),
-                    Margin = new MarginPadding { Left = offset },
-                    Children = new Drawable[]
+                    new Box
                     {
-                        volumeMeters = new SelectionCycleFillFlowContainer<VolumeMeter>
+                        RelativeSizeAxes = Axes.Y,
+                        Width = 300,
+                        Colour = ColourInfo.GradientHorizontal(
+                            Color4.Black.Opacity(0.75f),
+                            Color4.Black.Opacity(0)
+                        ),
+                    },
+                    new FillFlowContainer
+                    {
+                        Direction = FillDirection.Vertical,
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Spacing = new Vector2(0, offset),
+                        Margin = new MarginPadding { Left = offset },
+                        Children = new Drawable[]
                         {
-                            Direction = FillDirection.Vertical,
-                            AutoSizeAxes = Axes.Both,
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Spacing = new Vector2(0, offset),
-                            Children = new[]
+                            volumeMeters = new SelectionCycleFillFlowContainer<VolumeMeter>
                             {
-                                volumeMeterEffect = new VolumeMeter("EFFECTS", 125, colours.BlueDarker),
-                                volumeMeterMaster = new MasterVolumeMeter("MASTER", 150, colours.PinkDarker) { IsMuted = { BindTarget = IsMuted }, },
-                                volumeMeterMusic = new VolumeMeter("MUSIC", 125, colours.BlueDarker),
-                            }
+                                Direction = FillDirection.Vertical,
+                                AutoSizeAxes = Axes.Both,
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Spacing = new Vector2(0, offset),
+                                Children = new[]
+                                {
+                                    volumeMeterEffect = new VolumeMeter(
+                                        "EFFECTS",
+                                        125,
+                                        colours.BlueDarker
+                                    ),
+                                    volumeMeterMaster = new MasterVolumeMeter(
+                                        "MASTER",
+                                        150,
+                                        colours.PinkDarker
+                                    )
+                                    {
+                                        IsMuted = { BindTarget = IsMuted },
+                                    },
+                                    volumeMeterMusic = new VolumeMeter(
+                                        "MUSIC",
+                                        125,
+                                        colours.BlueDarker
+                                    ),
+                                },
+                            },
                         },
                     },
-                },
-            });
+                }
+            );
 
             volumeMeterMaster.Bindable.BindTo(audio.Volume);
             volumeMeterEffect.Bindable.BindTo(audio.VolumeSample);
@@ -91,7 +111,8 @@ namespace osu.Game.Overlays
 
         public bool Adjust(GlobalAction action, float amount = 1, bool isPrecise = false)
         {
-            if (!IsLoaded) return false;
+            if (!IsLoaded)
+                return false;
 
             switch (action)
             {
@@ -188,11 +209,15 @@ namespace osu.Game.Overlays
         private void schedulePopOut()
         {
             popOutDelegate?.Cancel();
-            this.Delay(1000).Schedule(() =>
-            {
-                if (!IsHovered)
-                    Hide();
-            }, out popOutDelegate);
+            this.Delay(1000)
+                .Schedule(
+                    () =>
+                    {
+                        if (!IsHovered)
+                            Hide();
+                    },
+                    out popOutDelegate
+                );
         }
     }
 }

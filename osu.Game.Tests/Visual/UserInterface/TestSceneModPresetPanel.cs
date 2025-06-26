@@ -24,7 +24,9 @@ namespace osu.Game.Tests.Visual.UserInterface
     public partial class TestSceneModPresetPanel : OsuTestScene
     {
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         [SetUpSteps]
         public void SetUpSteps()
@@ -35,15 +37,20 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestVariousModPresets()
         {
-            AddStep("create content", () => Child = new FillFlowContainer
-            {
-                Width = 300,
-                AutoSizeAxes = Axes.Y,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Spacing = new Vector2(0, 5),
-                ChildrenEnumerable = createTestPresets().Select(preset => new ModPresetPanel(preset.ToLiveUnmanaged()))
-            });
+            AddStep(
+                "create content",
+                () =>
+                    Child = new FillFlowContainer
+                    {
+                        Width = 300,
+                        AutoSizeAxes = Axes.Y,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Spacing = new Vector2(0, 5),
+                        ChildrenEnumerable = createTestPresets()
+                            .Select(preset => new ModPresetPanel(preset.ToLiveUnmanaged())),
+                    }
+            );
         }
 
         [Test]
@@ -51,12 +58,17 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             ModPresetPanel? panel = null;
 
-            AddStep("create panel", () => Child = panel = new ModPresetPanel(createTestPresets().First().ToLiveUnmanaged())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Width = 0.5f
-            });
+            AddStep(
+                "create panel",
+                () =>
+                    Child = panel =
+                        new ModPresetPanel(createTestPresets().First().ToLiveUnmanaged())
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Width = 0.5f,
+                        }
+            );
             AddAssert("panel is not active", () => !panel.AsNonNull().Active.Value);
 
             AddStep("set mods to HR", () => SelectedMods.Value = new[] { new OsuModHardRock() });
@@ -65,30 +77,61 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("set mods to DT", () => SelectedMods.Value = new[] { new OsuModDoubleTime() });
             AddAssert("panel is not active", () => !panel.AsNonNull().Active.Value);
 
-            AddStep("set mods to HR+DT", () => SelectedMods.Value = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() });
+            AddStep(
+                "set mods to HR+DT",
+                () =>
+                    SelectedMods.Value = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() }
+            );
             AddAssert("panel is active", () => panel.AsNonNull().Active.Value);
 
-            AddStep("set mods to HR+customised DT", () => SelectedMods.Value = new Mod[]
-            {
-                new OsuModHardRock(),
-                new OsuModDoubleTime
-                {
-                    SpeedChange = { Value = 1.25 }
-                }
-            });
+            AddStep(
+                "set mods to HR+customised DT",
+                () =>
+                    SelectedMods.Value = new Mod[]
+                    {
+                        new OsuModHardRock(),
+                        new OsuModDoubleTime { SpeedChange = { Value = 1.25 } },
+                    }
+            );
             AddAssert("panel is not active", () => !panel.AsNonNull().Active.Value);
 
-            AddStep("set mods to HR+DT", () => SelectedMods.Value = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() });
+            AddStep(
+                "set mods to HR+DT",
+                () =>
+                    SelectedMods.Value = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() }
+            );
             AddAssert("panel is active", () => panel.AsNonNull().Active.Value);
 
-            AddStep("customise mod in place", () => SelectedMods.Value.OfType<OsuModDoubleTime>().Single().SpeedChange.Value = 1.33);
+            AddStep(
+                "customise mod in place",
+                () =>
+                    SelectedMods.Value.OfType<OsuModDoubleTime>().Single().SpeedChange.Value = 1.33
+            );
             AddAssert("panel is not active", () => !panel.AsNonNull().Active.Value);
 
-            AddStep("set mods to HD+HR+DT", () => SelectedMods.Value = new Mod[] { new OsuModHidden(), new OsuModHardRock(), new OsuModDoubleTime() });
+            AddStep(
+                "set mods to HD+HR+DT",
+                () =>
+                    SelectedMods.Value = new Mod[]
+                    {
+                        new OsuModHidden(),
+                        new OsuModHardRock(),
+                        new OsuModDoubleTime(),
+                    }
+            );
             AddAssert("panel is not active", () => !panel.AsNonNull().Active.Value);
 
             // system mods are not included in presets.
-            AddStep("set mods to HR+DT+TD", () => SelectedMods.Value = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime(), new OsuModTouchDevice() });
+            AddStep(
+                "set mods to HR+DT+TD",
+                () =>
+                    SelectedMods.Value = new Mod[]
+                    {
+                        new OsuModHardRock(),
+                        new OsuModDoubleTime(),
+                        new OsuModTouchDevice(),
+                    }
+            );
             AddAssert("panel is active", () => panel.AsNonNull().Active.Value);
         }
 
@@ -97,30 +140,59 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             ModPresetPanel? panel = null;
 
-            AddStep("create panel", () => Child = panel = new ModPresetPanel(createTestPresets().First().ToLiveUnmanaged())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Width = 0.5f
-            });
+            AddStep(
+                "create panel",
+                () =>
+                    Child = panel =
+                        new ModPresetPanel(createTestPresets().First().ToLiveUnmanaged())
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Width = 0.5f,
+                        }
+            );
 
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
-            assertSelectedModsEquivalentTo(new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() });
+            assertSelectedModsEquivalentTo(
+                new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() }
+            );
 
             AddStep("deactivate panel", () => panel.AsNonNull().TriggerClick());
             assertSelectedModsEquivalentTo(Array.Empty<Mod>());
 
             AddStep("set different mod", () => SelectedMods.Value = new[] { new OsuModHidden() });
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
-            assertSelectedModsEquivalentTo(new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() });
+            assertSelectedModsEquivalentTo(
+                new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() }
+            );
 
-            AddStep("set customised mod", () => SelectedMods.Value = new[] { new OsuModDoubleTime { SpeedChange = { Value = 1.25 } } });
+            AddStep(
+                "set customised mod",
+                () =>
+                    SelectedMods.Value = new[]
+                    {
+                        new OsuModDoubleTime { SpeedChange = { Value = 1.25 } },
+                    }
+            );
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
-            assertSelectedModsEquivalentTo(new Mod[] { new OsuModHardRock(), new OsuModDoubleTime { SpeedChange = { Value = 1.5 } } });
+            assertSelectedModsEquivalentTo(
+                new Mod[]
+                {
+                    new OsuModHardRock(),
+                    new OsuModDoubleTime { SpeedChange = { Value = 1.5 } },
+                }
+            );
 
             AddStep("set system mod", () => SelectedMods.Value = new[] { new OsuModTouchDevice() });
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
-            assertSelectedModsEquivalentTo(new Mod[] { new OsuModTouchDevice(), new OsuModHardRock(), new OsuModDoubleTime { SpeedChange = { Value = 1.5 } } });
+            assertSelectedModsEquivalentTo(
+                new Mod[]
+                {
+                    new OsuModTouchDevice(),
+                    new OsuModHardRock(),
+                    new OsuModDoubleTime { SpeedChange = { Value = 1.5 } },
+                }
+            );
         }
 
         [Test]
@@ -128,23 +200,30 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             ModPresetPanel? panel = null;
 
-            AddStep("create panel", () => Child = panel = new ModPresetPanel(new ModPreset
-            {
-                Name = "Autopilot included",
-                Description = "no way",
-                Mods = new Mod[]
-                {
-                    new OsuModAutopilot()
-                },
-                Ruleset = new OsuRuleset().RulesetInfo
-            }.ToLiveUnmanaged())
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Width = 0.5f
-            });
+            AddStep(
+                "create panel",
+                () =>
+                    Child = panel =
+                        new ModPresetPanel(
+                            new ModPreset
+                            {
+                                Name = "Autopilot included",
+                                Description = "no way",
+                                Mods = new Mod[] { new OsuModAutopilot() },
+                                Ruleset = new OsuRuleset().RulesetInfo,
+                            }.ToLiveUnmanaged()
+                        )
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Width = 0.5f,
+                        }
+            );
 
-            AddStep("Add touch device to selected mods", () => SelectedMods.Value = new Mod[] { new OsuModTouchDevice() });
+            AddStep(
+                "Add touch device to selected mods",
+                () => SelectedMods.Value = new Mod[] { new OsuModTouchDevice() }
+            );
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
 
             // touch device should be removed due to incompatibility with autopilot.
@@ -154,52 +233,49 @@ namespace osu.Game.Tests.Visual.UserInterface
             assertSelectedModsEquivalentTo(Array.Empty<Mod>());
 
             // just for test purposes, can't/shouldn't happen in reality
-            AddStep("Add score v2 to selected mod", () => SelectedMods.Value = new Mod[] { new ModScoreV2() });
+            AddStep(
+                "Add score v2 to selected mod",
+                () => SelectedMods.Value = new Mod[] { new ModScoreV2() }
+            );
             AddStep("activate panel", () => panel.AsNonNull().TriggerClick());
 
             assertSelectedModsEquivalentTo(new Mod[] { new OsuModAutopilot(), new ModScoreV2() });
         }
 
-        private void assertSelectedModsEquivalentTo(IEnumerable<Mod> mods)
-            => AddAssert("selected mods changed correctly", () => new HashSet<Mod>(SelectedMods.Value).SetEquals(mods));
+        private void assertSelectedModsEquivalentTo(IEnumerable<Mod> mods) =>
+            AddAssert(
+                "selected mods changed correctly",
+                () => new HashSet<Mod>(SelectedMods.Value).SetEquals(mods)
+            );
 
-        private static IEnumerable<ModPreset> createTestPresets() => new[]
-        {
-            new ModPreset
+        private static IEnumerable<ModPreset> createTestPresets() =>
+            new[]
             {
-                Name = "First preset",
-                Description = "Please ignore",
-                Mods = new Mod[]
+                new ModPreset
                 {
-                    new OsuModHardRock(),
-                    new OsuModDoubleTime()
+                    Name = "First preset",
+                    Description = "Please ignore",
+                    Mods = new Mod[] { new OsuModHardRock(), new OsuModDoubleTime() },
+                    Ruleset = new OsuRuleset().RulesetInfo,
                 },
-                Ruleset = new OsuRuleset().RulesetInfo
-            },
-            new ModPreset
-            {
-                Name = "AR0",
-                Description = "For good readers",
-                Mods = new Mod[]
+                new ModPreset
                 {
-                    new OsuModDifficultyAdjust
+                    Name = "AR0",
+                    Description = "For good readers",
+                    Mods = new Mod[]
                     {
-                        ApproachRate = { Value = 0 }
-                    }
+                        new OsuModDifficultyAdjust { ApproachRate = { Value = 0 } },
+                    },
+                    Ruleset = new OsuRuleset().RulesetInfo,
                 },
-                Ruleset = new OsuRuleset().RulesetInfo
-            },
-            new ModPreset
-            {
-                Name = "This preset is going to have an extraordinarily long name",
-                Description = "This is done so that the capability to truncate overlong texts may be demonstrated",
-                Mods = new Mod[]
+                new ModPreset
                 {
-                    new OsuModFlashlight(),
-                    new OsuModSpinIn()
+                    Name = "This preset is going to have an extraordinarily long name",
+                    Description =
+                        "This is done so that the capability to truncate overlong texts may be demonstrated",
+                    Mods = new Mod[] { new OsuModFlashlight(), new OsuModSpinIn() },
+                    Ruleset = new OsuRuleset().RulesetInfo,
                 },
-                Ruleset = new OsuRuleset().RulesetInfo
-            }
-        };
+            };
     }
 }

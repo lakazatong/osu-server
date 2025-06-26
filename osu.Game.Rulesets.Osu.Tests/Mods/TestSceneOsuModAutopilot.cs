@@ -12,12 +12,14 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestInstantResume()
         {
-            CreateModTest(new ModTestData
-            {
-                Mod = new OsuModAutopilot(),
-                PassCondition = () => true,
-                Autoplay = false,
-            });
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModAutopilot(),
+                    PassCondition = () => true,
+                    Autoplay = false,
+                }
+            );
 
             AddUntilStep("wait for gameplay start", () => Player.LocalUserPlaying.Value);
             AddStep("press pause", () => InputManager.PressKey(Key.Escape));

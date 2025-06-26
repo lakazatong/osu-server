@@ -19,7 +19,8 @@ namespace osu.Game.Rulesets.Catch.UI
         public override bool PropagatePositionalInputSubTree => true;
         public override bool PropagateNonPositionalInputSubTree => true;
 
-        private readonly Dictionary<object, TouchCatchAction> trackedActionSources = new Dictionary<object, TouchCatchAction>();
+        private readonly Dictionary<object, TouchCatchAction> trackedActionSources =
+            new Dictionary<object, TouchCatchAction>();
 
         private KeyBindingContainer<CatchAction> keyBindingContainer = null!;
 
@@ -55,7 +56,10 @@ namespace osu.Game.Rulesets.Catch.UI
                             Width = width,
                             Children = new Drawable[]
                             {
-                                leftBox = new InputArea(TouchCatchAction.MoveLeft, trackedActionSources)
+                                leftBox = new InputArea(
+                                    TouchCatchAction.MoveLeft,
+                                    trackedActionSources
+                                )
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Height = normal_area_height_ratio,
@@ -63,12 +67,15 @@ namespace osu.Game.Rulesets.Catch.UI
                                     Anchor = Anchor.BottomRight,
                                     Origin = Anchor.BottomRight,
                                 },
-                                leftDashBox = new InputArea(TouchCatchAction.DashLeft, trackedActionSources)
+                                leftDashBox = new InputArea(
+                                    TouchCatchAction.DashLeft,
+                                    trackedActionSources
+                                )
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Height = 1 - normal_area_height_ratio,
                                 },
-                            }
+                            },
                         },
                         new Container
                         {
@@ -78,7 +85,10 @@ namespace osu.Game.Rulesets.Catch.UI
                             Origin = Anchor.TopRight,
                             Children = new Drawable[]
                             {
-                                rightBox = new InputArea(TouchCatchAction.MoveRight, trackedActionSources)
+                                rightBox = new InputArea(
+                                    TouchCatchAction.MoveRight,
+                                    trackedActionSources
+                                )
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Height = normal_area_height_ratio,
@@ -86,12 +96,15 @@ namespace osu.Game.Rulesets.Catch.UI
                                     Anchor = Anchor.BottomRight,
                                     Origin = Anchor.BottomRight,
                                 },
-                                rightDashBox = new InputArea(TouchCatchAction.DashRight, trackedActionSources)
+                                rightDashBox = new InputArea(
+                                    TouchCatchAction.DashRight,
+                                    trackedActionSources
+                                )
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Height = 1 - normal_area_height_ratio,
                                 },
-                            }
+                            },
                         },
                     },
                 },
@@ -107,7 +120,10 @@ namespace osu.Game.Rulesets.Catch.UI
 
         protected override bool OnTouchDown(TouchDownEvent e)
         {
-            return updateAction(e.Touch.Source, getTouchCatchActionFromInput(e.ScreenSpaceTouch.Position));
+            return updateAction(
+                e.Touch.Source,
+                getTouchCatchActionFromInput(e.ScreenSpaceTouch.Position)
+            );
         }
 
         protected override void OnTouchMove(TouchMoveEvent e)
@@ -146,17 +162,26 @@ namespace osu.Game.Rulesets.Catch.UI
         {
             Show();
 
-            if (trackedActionSources.ContainsValue(TouchCatchAction.DashLeft) || trackedActionSources.ContainsValue(TouchCatchAction.MoveLeft))
+            if (
+                trackedActionSources.ContainsValue(TouchCatchAction.DashLeft)
+                || trackedActionSources.ContainsValue(TouchCatchAction.MoveLeft)
+            )
                 keyBindingContainer.TriggerPressed(CatchAction.MoveLeft);
             else
                 keyBindingContainer.TriggerReleased(CatchAction.MoveLeft);
 
-            if (trackedActionSources.ContainsValue(TouchCatchAction.DashRight) || trackedActionSources.ContainsValue(TouchCatchAction.MoveRight))
+            if (
+                trackedActionSources.ContainsValue(TouchCatchAction.DashRight)
+                || trackedActionSources.ContainsValue(TouchCatchAction.MoveRight)
+            )
                 keyBindingContainer.TriggerPressed(CatchAction.MoveRight);
             else
                 keyBindingContainer.TriggerReleased(CatchAction.MoveRight);
 
-            if (trackedActionSources.ContainsValue(TouchCatchAction.DashLeft) || trackedActionSources.ContainsValue(TouchCatchAction.DashRight))
+            if (
+                trackedActionSources.ContainsValue(TouchCatchAction.DashLeft)
+                || trackedActionSources.ContainsValue(TouchCatchAction.DashRight)
+            )
                 keyBindingContainer.TriggerPressed(CatchAction.Dash);
             else
                 keyBindingContainer.TriggerReleased(CatchAction.Dash);
@@ -190,7 +215,10 @@ namespace osu.Game.Rulesets.Catch.UI
 
             private bool isHighlighted;
 
-            public InputArea(TouchCatchAction handledAction, IEnumerable<KeyValuePair<object, TouchCatchAction>> trackedActions)
+            public InputArea(
+                TouchCatchAction handledAction,
+                IEnumerable<KeyValuePair<object, TouchCatchAction>> trackedActions
+            )
             {
                 this.handledAction = handledAction;
                 this.trackedActions = trackedActions;
@@ -204,19 +232,15 @@ namespace osu.Game.Rulesets.Catch.UI
                         CornerRadius = 10,
                         Children = new Drawable[]
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Alpha = 0.15f,
-                            },
+                            new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.15f },
                             highlightOverlay = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Alpha = 0,
                                 Blending = BlendingParameters.Additive,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 
@@ -239,7 +263,11 @@ namespace osu.Game.Rulesets.Catch.UI
                     return;
 
                 isHighlighted = isHandling;
-                highlightOverlay.FadeTo(isHighlighted ? 0.1f : 0, isHighlighted ? 80 : 400, Easing.OutQuint);
+                highlightOverlay.FadeTo(
+                    isHighlighted ? 0.1f : 0,
+                    isHighlighted ? 80 : 400,
+                    Easing.OutQuint
+                );
             }
         }
 

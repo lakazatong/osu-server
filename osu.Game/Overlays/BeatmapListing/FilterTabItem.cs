@@ -30,23 +30,23 @@ namespace osu.Game.Overlays.BeatmapListing
         protected Sample SelectSample { get; private set; } = null!;
 
         public FilterTabItem(T value)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         [BackgroundDependencyLoader]
         private void load(AudioManager audio)
         {
             AutoSizeAxes = Axes.Both;
-            AddRangeInternal(new Drawable[]
-            {
-                Text = new OsuSpriteText
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Font = OsuFont.GetFont(size: 13, weight: FontWeight.Regular),
-                    Text = LabelFor(Value)
-                },
-                new HoverSounds(HoverSampleSet.TabSelect)
-            });
+                    Text = new OsuSpriteText
+                    {
+                        Font = OsuFont.GetFont(size: 13, weight: FontWeight.Regular),
+                        Text = LabelFor(Value),
+                    },
+                    new HoverSounds(HoverSampleSet.TabSelect),
+                }
+            );
 
             Enabled.Value = true;
 
@@ -85,7 +85,8 @@ namespace osu.Game.Overlays.BeatmapListing
         /// <summary>
         /// Returns the label text to be used for the supplied <paramref name="value"/>.
         /// </summary>
-        protected virtual LocalisableString LabelFor(T value) => (value as Enum)?.GetLocalisableDescription() ?? value.ToString();
+        protected virtual LocalisableString LabelFor(T value) =>
+            (value as Enum)?.GetLocalisableDescription() ?? value.ToString();
 
         protected virtual Color4 ColourActive => ColourProvider.Content1;
         protected virtual Color4 ColourNormal => ColourProvider.Light2;

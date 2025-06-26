@@ -24,29 +24,33 @@ namespace osu.Game.Tests.Gameplay
         private readonly ManualClock clock = new ManualClock();
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new Container
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Children = new Drawable[]
+                Child = new Container
                 {
-                    hitObjectContainer = new HitObjectContainer(),
-                    proxyContainer = new ProxyContainer()
-                },
-                Clock = new FramedClock(clock)
-            };
-            clock.CurrentTime = 0;
-        });
+                    Children = new Drawable[]
+                    {
+                        hitObjectContainer = new HitObjectContainer(),
+                        proxyContainer = new ProxyContainer(),
+                    },
+                    Clock = new FramedClock(clock),
+                };
+                clock.CurrentTime = 0;
+            });
 
         [Test]
         public void TestProxyLifetimeManagement()
         {
-            AddStep("Add proxy drawables", () =>
-            {
-                addProxy(new TestDrawableHitObject(1000));
-                addProxy(new TestDrawableHitObject(3000));
-                addProxy(new TestDrawableHitObject(5000));
-            });
+            AddStep(
+                "Add proxy drawables",
+                () =>
+                {
+                    addProxy(new TestDrawableHitObject(1000));
+                    addProxy(new TestDrawableHitObject(3000));
+                    addProxy(new TestDrawableHitObject(5000));
+                }
+            );
 
             AddStep("time = 1000", () => clock.CurrentTime = 1000);
             AddAssert("One proxy is alive", () => proxyContainer.AliveChildren.Count == 1);
@@ -74,9 +78,7 @@ namespace osu.Game.Tests.Gameplay
             protected override double InitialLifetimeOffset => 100;
 
             public TestDrawableHitObject(double startTime)
-                : base(new HitObject { StartTime = startTime })
-            {
-            }
+                : base(new HitObject { StartTime = startTime }) { }
 
             protected override void UpdateInitialTransforms()
             {

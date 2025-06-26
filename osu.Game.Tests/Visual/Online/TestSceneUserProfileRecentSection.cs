@@ -21,17 +21,15 @@ namespace osu.Game.Tests.Visual.Online
     public partial class TestSceneUserProfileRecentSection : OsuTestScene
     {
         [Cached]
-        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Green);
+        private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Green
+        );
 
         public TestSceneUserProfileRecentSection()
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = OsuColour.Gray(0.2f)
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = OsuColour.Gray(0.2f) },
                 new OsuScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -40,9 +38,10 @@ namespace osu.Game.Tests.Visual.Online
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
-                        ChildrenEnumerable = createDummyActivities().Select(a => new DrawableRecentActivity(a))
+                        ChildrenEnumerable = createDummyActivities()
+                            .Select(a => new DrawableRecentActivity(a)),
                     },
-                }
+                },
             };
         }
 

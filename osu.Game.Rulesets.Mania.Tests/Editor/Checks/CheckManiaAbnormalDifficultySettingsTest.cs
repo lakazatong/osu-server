@@ -4,9 +4,9 @@
 using System.Linq;
 using NUnit.Framework;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Mania.Edit.Checks;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Checks;
+using osu.Game.Rulesets.Mania.Edit.Checks;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Tests.Beatmaps;
 
@@ -25,11 +25,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             check = new CheckManiaAbnormalDifficultySettings();
 
             beatmap.BeatmapInfo.Ruleset = new ManiaRuleset().RulesetInfo;
-            beatmap.Difficulty = new BeatmapDifficulty
-            {
-                OverallDifficulty = 5,
-                DrainRate = 5,
-            };
+            beatmap.Difficulty = new BeatmapDifficulty { OverallDifficulty = 5, DrainRate = 5 };
         }
 
         [Test]
@@ -50,7 +46,10 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateMoreThanOneDecimal);
+            Assert.That(
+                issues.Single().Template
+                    is CheckAbnormalDifficultySettings.IssueTemplateMoreThanOneDecimal
+            );
         }
 
         [Test]
@@ -62,7 +61,10 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateMoreThanOneDecimal);
+            Assert.That(
+                issues.Single().Template
+                    is CheckAbnormalDifficultySettings.IssueTemplateMoreThanOneDecimal
+            );
         }
 
         [Test]
@@ -74,7 +76,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange);
+            Assert.That(
+                issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange
+            );
         }
 
         [Test]
@@ -86,7 +90,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange);
+            Assert.That(
+                issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange
+            );
         }
 
         [Test]
@@ -98,7 +104,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange);
+            Assert.That(
+                issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange
+            );
         }
 
         [Test]
@@ -110,7 +118,9 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor.Checks
             var issues = check.Run(context).ToList();
 
             Assert.That(issues, Has.Count.EqualTo(1));
-            Assert.That(issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange);
+            Assert.That(
+                issues.Single().Template is CheckAbnormalDifficultySettings.IssueTemplateOutOfRange
+            );
         }
 
         private BeatmapVerifierContext getContext()

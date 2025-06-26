@@ -32,7 +32,13 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
 
                 try
                 {
-                    using (Stream stream = storage.GetStream(teams_filename, FileAccess.Read, FileMode.Open))
+                    using (
+                        Stream stream = storage.GetStream(
+                            teams_filename,
+                            FileAccess.Read,
+                            FileMode.Open
+                        )
+                    )
                     using (var sr = new StreamReader(stream))
                     {
                         while (sr.Peek() != -1)
@@ -47,16 +53,23 @@ namespace osu.Game.Tournament.Screens.Drawings.Components
 
                             if (split.Length < 2)
                             {
-                                Logger.Log($"Invalid team definition: {line}. Expected \"flag_name : team_name : team_acronym\".");
+                                Logger.Log(
+                                    $"Invalid team definition: {line}. Expected \"flag_name : team_name : team_acronym\"."
+                                );
                                 continue;
                             }
 
-                            teams.Add(new TournamentTeam
-                            {
-                                FullName = { Value = split[1], },
-                                Acronym = { Value = split.Length >= 3 ? split[2] : string.Empty, },
-                                FlagName = { Value = split[0] }
-                            });
+                            teams.Add(
+                                new TournamentTeam
+                                {
+                                    FullName = { Value = split[1] },
+                                    Acronym =
+                                    {
+                                        Value = split.Length >= 3 ? split[2] : string.Empty,
+                                    },
+                                    FlagName = { Value = split[0] },
+                                }
+                            );
                         }
                     }
                 }

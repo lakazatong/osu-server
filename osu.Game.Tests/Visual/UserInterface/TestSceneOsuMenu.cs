@@ -18,27 +18,31 @@ namespace osu.Game.Tests.Visual.UserInterface
         private bool actionPerformed;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            actionPerformed = false;
-
-            Child = menu = new OsuMenu(Direction.Vertical, true)
+        public void Setup() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Items = new[]
+                actionPerformed = false;
+
+                Child = menu = new OsuMenu(Direction.Vertical, true)
                 {
-                    new OsuMenuItem("standard", MenuItemType.Standard, performAction),
-                    new OsuMenuItem("highlighted", MenuItemType.Highlighted, performAction),
-                    new OsuMenuItem("destructive", MenuItemType.Destructive, performAction),
-                }
-            };
-        });
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Items = new[]
+                    {
+                        new OsuMenuItem("standard", MenuItemType.Standard, performAction),
+                        new OsuMenuItem("highlighted", MenuItemType.Highlighted, performAction),
+                        new OsuMenuItem("destructive", MenuItemType.Destructive, performAction),
+                    },
+                };
+            });
 
         [Test]
         public void TestClickEnabledMenuItem()
         {
-            AddStep("move to first menu item", () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First()));
+            AddStep(
+                "move to first menu item",
+                () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First())
+            );
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
             AddAssert("action performed", () => actionPerformed);
@@ -47,13 +51,19 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestDisableMenuItemsAndClick()
         {
-            AddStep("disable menu items", () =>
-            {
-                foreach (var item in menu.Items)
-                    ((OsuMenuItem)item).Action.Disabled = true;
-            });
+            AddStep(
+                "disable menu items",
+                () =>
+                {
+                    foreach (var item in menu.Items)
+                        ((OsuMenuItem)item).Action.Disabled = true;
+                }
+            );
 
-            AddStep("move to first menu item", () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First()));
+            AddStep(
+                "move to first menu item",
+                () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First())
+            );
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
             AddAssert("action not performed", () => !actionPerformed);
@@ -62,19 +72,28 @@ namespace osu.Game.Tests.Visual.UserInterface
         [Test]
         public void TestEnableMenuItemsAndClick()
         {
-            AddStep("disable menu items", () =>
-            {
-                foreach (var item in menu.Items)
-                    ((OsuMenuItem)item).Action.Disabled = true;
-            });
+            AddStep(
+                "disable menu items",
+                () =>
+                {
+                    foreach (var item in menu.Items)
+                        ((OsuMenuItem)item).Action.Disabled = true;
+                }
+            );
 
-            AddStep("enable menu items", () =>
-            {
-                foreach (var item in menu.Items)
-                    ((OsuMenuItem)item).Action.Disabled = false;
-            });
+            AddStep(
+                "enable menu items",
+                () =>
+                {
+                    foreach (var item in menu.Items)
+                        ((OsuMenuItem)item).Action.Disabled = false;
+                }
+            );
 
-            AddStep("move to first menu item", () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First()));
+            AddStep(
+                "move to first menu item",
+                () => InputManager.MoveMouseTo(menu.ChildrenOfType<DrawableOsuMenuItem>().First())
+            );
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
             AddAssert("action performed", () => actionPerformed);

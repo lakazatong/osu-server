@@ -36,86 +36,100 @@ namespace osu.Game.Tests.Visual.Online
         private Action<GetUsersRequest>? handleGetUsersRequest;
         private Action<GetUserRequest>? handleGetUserRequest;
 
-        private readonly Dictionary<(int userId, string rulesetName), UserStatistics> serverSideStatistics = new Dictionary<(int userId, string rulesetName), UserStatistics>();
+        private readonly Dictionary<
+            (int userId, string rulesetName),
+            UserStatistics
+        > serverSideStatistics = new Dictionary<(int userId, string rulesetName), UserStatistics>();
 
         [SetUpSteps]
         public void SetUpSteps()
         {
             AddStep("clear server-side stats", () => serverSideStatistics.Clear());
-            AddStep("set up request handling", () =>
-            {
-                handleGetUserRequest = null;
-                handleGetUsersRequest = null;
-
-                dummyAPI.HandleRequest = request =>
+            AddStep(
+                "set up request handling",
+                () =>
                 {
-                    switch (request)
+                    handleGetUserRequest = null;
+                    handleGetUsersRequest = null;
+
+                    dummyAPI.HandleRequest = request =>
                     {
-                        case GetUsersRequest getUsersRequest:
-                            if (handleGetUsersRequest != null)
-                            {
-                                handleGetUsersRequest?.Invoke(getUsersRequest);
-                            }
-                            else
-                            {
-                                int userId = getUsersRequest.UserIds.Single();
-                                var response = new GetUsersResponse
+                        switch (request)
+                        {
+                            case GetUsersRequest getUsersRequest:
+                                if (handleGetUsersRequest != null)
                                 {
-                                    Users = new List<APIUser>
+                                    handleGetUsersRequest?.Invoke(getUsersRequest);
+                                }
+                                else
+                                {
+                                    int userId = getUsersRequest.UserIds.Single();
+                                    var response = new GetUsersResponse
                                     {
-                                        new APIUser
+                                        Users = new List<APIUser>
                                         {
-                                            Id = userId,
-                                            RulesetsStatistics = new Dictionary<string, UserStatistics>
+                                            new APIUser
                                             {
-                                                ["osu"] = tryGetStatistics(userId, "osu"),
-                                                ["taiko"] = tryGetStatistics(userId, "taiko"),
-                                                ["fruits"] = tryGetStatistics(userId, "fruits"),
-                                                ["mania"] = tryGetStatistics(userId, "mania"),
-                                            }
-                                        }
-                                    }
-                                };
-                                getUsersRequest.TriggerSuccess(response);
-                            }
+                                                Id = userId,
+                                                RulesetsStatistics = new Dictionary<
+                                                    string,
+                                                    UserStatistics
+                                                >
+                                                {
+                                                    ["osu"] = tryGetStatistics(userId, "osu"),
+                                                    ["taiko"] = tryGetStatistics(userId, "taiko"),
+                                                    ["fruits"] = tryGetStatistics(userId, "fruits"),
+                                                    ["mania"] = tryGetStatistics(userId, "mania"),
+                                                },
+                                            },
+                                        },
+                                    };
+                                    getUsersRequest.TriggerSuccess(response);
+                                }
 
-                            return true;
+                                return true;
 
-                        case GetUserRequest getUserRequest:
-                            if (handleGetUserRequest != null)
-                            {
-                                handleGetUserRequest.Invoke(getUserRequest);
-                            }
-                            else
-                            {
-                                int userId = int.Parse(getUserRequest.Lookup);
-                                string rulesetName = getUserRequest.Ruleset!.ShortName;
-                                var response = new APIUser
+                            case GetUserRequest getUserRequest:
+                                if (handleGetUserRequest != null)
                                 {
-                                    Id = userId,
-                                    Statistics = tryGetStatistics(userId, rulesetName)
-                                };
-                                getUserRequest.TriggerSuccess(response);
-                            }
+                                    handleGetUserRequest.Invoke(getUserRequest);
+                                }
+                                else
+                                {
+                                    int userId = int.Parse(getUserRequest.Lookup);
+                                    string rulesetName = getUserRequest.Ruleset!.ShortName;
+                                    var response = new APIUser
+                                    {
+                                        Id = userId,
+                                        Statistics = tryGetStatistics(userId, rulesetName),
+                                    };
+                                    getUserRequest.TriggerSuccess(response);
+                                }
 
-                            return true;
+                                return true;
 
-                        default:
-                            return false;
-                    }
-                };
-            });
+                            default:
+                                return false;
+                        }
+                    };
+                }
+            );
 
-            AddStep("create watcher", () =>
-            {
-                Clear();
-                Add(statisticsProvider = new LocalUserStatisticsProvider());
-                Add(watcher = new UserStatisticsWatcher(statisticsProvider));
-            });
+            AddStep(
+                "create watcher",
+                () =>
+                {
+                    Clear();
+                    Add(statisticsProvider = new LocalUserStatisticsProvider());
+                    Add(watcher = new UserStatisticsWatcher(statisticsProvider));
+                }
+            );
         }
 
-        private UserStatistics tryGetStatistics(int userId, string rulesetName)
-            => serverSideStatistics.TryGetValue((userId, rulesetName), out var stats) ? stats : new UserStatistics();
+        private UserStatistics tryGetStatistics(int userId, string rulesetName) =>
+            serverSideStatistics.TryGetValue((userId, rulesetName), out var stats)
+                ? stats
+                : new UserStatistics();
 
         [Test]
         public void TestStatisticsUpdateFiredAfterRegistrationAddedAndScoreProcessed()
@@ -131,10 +145,21 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId)
+            );
             AddUntilStep("update received", () => update != null);
-            AddAssert("values before are correct", () => update!.Before.TotalScore, () => Is.EqualTo(4_000_000));
-            AddAssert("values after are correct", () => update!.After.TotalScore, () => Is.EqualTo(5_000_000));
+            AddAssert(
+                "values before are correct",
+                () => update!.Before.TotalScore,
+                () => Is.EqualTo(4_000_000)
+            );
+            AddAssert(
+                "values after are correct",
+                () => update!.After.TotalScore,
+                () => Is.EqualTo(5_000_000)
+            );
         }
 
         [Test]
@@ -152,10 +177,21 @@ namespace osu.Game.Tests.Visual.Online
             ScoreBasedUserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId)
+            );
             AddUntilStep("update received", () => update != null);
-            AddAssert("values before are correct", () => update!.Before.TotalScore, () => Is.EqualTo(4_000_000));
-            AddAssert("values after are correct", () => update!.After.TotalScore, () => Is.EqualTo(5_000_000));
+            AddAssert(
+                "values before are correct",
+                () => update!.Before.TotalScore,
+                () => Is.EqualTo(4_000_000)
+            );
+            AddAssert(
+                "values after are correct",
+                () => update!.After.TotalScore,
+                () => Is.EqualTo(5_000_000)
+            );
         }
 
         [Test]
@@ -174,15 +210,21 @@ namespace osu.Game.Tests.Visual.Online
 
             AddStep("log out user", () => dummyAPI.Logout());
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId)
+            );
             AddWaitStep("wait a bit", 5);
             AddAssert("update not received", () => update == null);
 
-            AddStep("log in user", () =>
-            {
-                dummyAPI.Login("user", "password");
-                dummyAPI.AuthenticateSecondFactor("abcdefgh");
-            });
+            AddStep(
+                "log in user",
+                () =>
+                {
+                    dummyAPI.Login("user", "password");
+                    dummyAPI.AuthenticateSecondFactor("abcdefgh");
+                }
+            );
         }
 
         [Test]
@@ -199,9 +241,15 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            AddStep("change user", () => dummyAPI.LocalUser.Value = new APIUser { Id = getUserId() });
+            AddStep(
+                "change user",
+                () => dummyAPI.LocalUser.Value = new APIUser { Id = getUserId() }
+            );
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId)
+            );
             AddWaitStep("wait a bit", 5);
             AddAssert("update not received", () => update == null);
         }
@@ -220,7 +268,10 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            AddStep("signal another score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, getScoreId()));
+            AddStep(
+                "signal another score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, getScoreId())
+            );
             AddWaitStep("wait a bit", 5);
             AddAssert("update not received", () => update == null);
         }
@@ -238,7 +289,10 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, firstScoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, firstScoreId)
+            );
 
             long secondScoreId = getScoreId();
 
@@ -247,10 +301,21 @@ namespace osu.Game.Tests.Visual.Online
             ScoreBasedUserStatisticsUpdate? update = null;
             registerForUpdates(secondScoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, secondScoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, secondScoreId)
+            );
             AddUntilStep("update received", () => update != null);
-            AddAssert("values before are correct", () => update!.Before.TotalScore, () => Is.EqualTo(4_000_000));
-            AddAssert("values after are correct", () => update!.After.TotalScore, () => Is.EqualTo(6_000_000));
+            AddAssert(
+                "values before are correct",
+                () => update!.Before.TotalScore,
+                () => Is.EqualTo(4_000_000)
+            );
+            AddAssert(
+                "values after are correct",
+                () => update!.After.TotalScore,
+                () => Is.EqualTo(6_000_000)
+            );
         }
 
         [Test]
@@ -267,47 +332,93 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
+            AddStep(
+                "signal score processed",
+                () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId)
+            );
             AddUntilStep("update received", () => update != null);
-            AddAssert("statistics values are correct", () => statisticsProvider.GetStatisticsFor(ruleset)!.TotalScore, () => Is.EqualTo(5_000_000));
+            AddAssert(
+                "statistics values are correct",
+                () => statisticsProvider.GetStatisticsFor(ruleset)!.TotalScore,
+                () => Is.EqualTo(5_000_000)
+            );
         }
 
         private int nextUserId = 2000;
         private long nextScoreId = 50000;
 
         private int getUserId() => ++nextUserId;
+
         private long getScoreId() => ++nextScoreId;
 
         private void setUpUser(int userId)
         {
-            AddStep("fetch initial stats", () =>
-            {
-                serverSideStatistics[(userId, "osu")] = new UserStatistics { TotalScore = 4_000_000 };
-                serverSideStatistics[(userId, "taiko")] = new UserStatistics { TotalScore = 3_000_000 };
-                serverSideStatistics[(userId, "fruits")] = new UserStatistics { TotalScore = 2_000_000 };
-                serverSideStatistics[(userId, "mania")] = new UserStatistics { TotalScore = 1_000_000 };
+            AddStep(
+                "fetch initial stats",
+                () =>
+                {
+                    serverSideStatistics[(userId, "osu")] = new UserStatistics
+                    {
+                        TotalScore = 4_000_000,
+                    };
+                    serverSideStatistics[(userId, "taiko")] = new UserStatistics
+                    {
+                        TotalScore = 3_000_000,
+                    };
+                    serverSideStatistics[(userId, "fruits")] = new UserStatistics
+                    {
+                        TotalScore = 2_000_000,
+                    };
+                    serverSideStatistics[(userId, "mania")] = new UserStatistics
+                    {
+                        TotalScore = 1_000_000,
+                    };
 
-                dummyAPI.LocalUser.Value = new APIUser { Id = userId };
-            });
+                    dummyAPI.LocalUser.Value = new APIUser { Id = userId };
+                }
+            );
         }
 
-        private void registerForUpdates(long scoreId, RulesetInfo rulesetInfo, Action<ScoreBasedUserStatisticsUpdate> onUpdateReady) =>
-            AddStep("register for updates", () =>
-            {
-                watcher.RegisterForStatisticsUpdateAfter(
-                    new ScoreInfo(Beatmap.Value.BeatmapInfo, new OsuRuleset().RulesetInfo, new RealmUser())
-                    {
-                        Ruleset = rulesetInfo,
-                        OnlineID = scoreId
-                    });
-                watcher.LatestUpdate.BindValueChanged(update =>
+        private void registerForUpdates(
+            long scoreId,
+            RulesetInfo rulesetInfo,
+            Action<ScoreBasedUserStatisticsUpdate> onUpdateReady
+        ) =>
+            AddStep(
+                "register for updates",
+                () =>
                 {
-                    if (update.NewValue?.Score.OnlineID == scoreId)
-                        onUpdateReady.Invoke(update.NewValue);
-                });
-            });
+                    watcher.RegisterForStatisticsUpdateAfter(
+                        new ScoreInfo(
+                            Beatmap.Value.BeatmapInfo,
+                            new OsuRuleset().RulesetInfo,
+                            new RealmUser()
+                        )
+                        {
+                            Ruleset = rulesetInfo,
+                            OnlineID = scoreId,
+                        }
+                    );
+                    watcher.LatestUpdate.BindValueChanged(update =>
+                    {
+                        if (update.NewValue?.Score.OnlineID == scoreId)
+                            onUpdateReady.Invoke(update.NewValue);
+                    });
+                }
+            );
 
-        private void feignScoreProcessing(int userId, RulesetInfo rulesetInfo, long newTotalScore)
-            => AddStep("feign score processing", () => serverSideStatistics[(userId, rulesetInfo.ShortName)] = new UserStatistics { TotalScore = newTotalScore });
+        private void feignScoreProcessing(
+            int userId,
+            RulesetInfo rulesetInfo,
+            long newTotalScore
+        ) =>
+            AddStep(
+                "feign score processing",
+                () =>
+                    serverSideStatistics[(userId, rulesetInfo.ShortName)] = new UserStatistics
+                    {
+                        TotalScore = newTotalScore,
+                    }
+            );
     }
 }

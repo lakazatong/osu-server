@@ -13,7 +13,10 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameEmptySet()
         {
-            string nextBestName = NamingUtils.GetNextBestName(Enumerable.Empty<string>(), "New Difficulty");
+            string nextBestName = NamingUtils.GetNextBestName(
+                Enumerable.Empty<string>(),
+                "New Difficulty"
+            );
 
             Assert.AreEqual("New Difficulty", nextBestName);
         }
@@ -21,12 +24,7 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameNotTaken()
         {
-            string[] existingNames =
-            {
-                "Something",
-                "Entirely",
-                "Different"
-            };
+            string[] existingNames = { "Something", "Entirely", "Different" };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
 
@@ -40,7 +38,7 @@ namespace osu.Game.Tests.Utils
             {
                 "New Difficulty(1)",
                 "New Difficulty (abcd)",
-                "New Difficulty but not really"
+                "New Difficulty but not really",
             };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
@@ -51,10 +49,7 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameAlreadyTaken()
         {
-            string[] existingNames =
-            {
-                "New Difficulty"
-            };
+            string[] existingNames = { "New Difficulty" };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
 
@@ -64,10 +59,7 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameAlreadyTakenWithDifferentCase()
         {
-            string[] existingNames =
-            {
-                "new difficulty"
-            };
+            string[] existingNames = { "new difficulty" };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
 
@@ -77,12 +69,12 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameAlreadyTakenWithBrackets()
         {
-            string[] existingNames =
-            {
-                "new difficulty (copy)"
-            };
+            string[] existingNames = { "new difficulty (copy)" };
 
-            string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty (copy)");
+            string nextBestName = NamingUtils.GetNextBestName(
+                existingNames,
+                "New Difficulty (copy)"
+            );
 
             Assert.AreEqual("New Difficulty (copy) (1)", nextBestName);
         }
@@ -95,7 +87,7 @@ namespace osu.Game.Tests.Utils
                 "New Difficulty",
                 "New difficulty (1)",
                 "new Difficulty (2)",
-                "New DIFFICULTY (3)"
+                "New DIFFICULTY (3)",
             };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
@@ -106,7 +98,11 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestNameEvenMoreAlreadyTaken()
         {
-            string[] existingNames = Enumerable.Range(1, 30).Select(i => $"New Difficulty ({i})").Append("New Difficulty").ToArray();
+            string[] existingNames = Enumerable
+                .Range(1, 30)
+                .Select(i => $"New Difficulty ({i})")
+                .Append("New Difficulty")
+                .ToArray();
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
 
@@ -121,7 +117,7 @@ namespace osu.Game.Tests.Utils
                 "New Difficulty",
                 "New Difficulty (1)",
                 "New Difficulty (4)",
-                "New Difficulty (9)"
+                "New Difficulty (9)",
             };
 
             string nextBestName = NamingUtils.GetNextBestName(existingNames, "New Difficulty");
@@ -132,7 +128,10 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestFilenameEmptySet()
         {
-            string nextBestFilename = NamingUtils.GetNextBestFilename(Enumerable.Empty<string>(), "test_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                Enumerable.Empty<string>(),
+                "test_file.osr"
+            );
 
             Assert.AreEqual("test_file.osr", nextBestFilename);
         }
@@ -140,14 +139,12 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestFilenameNotTaken()
         {
-            string[] existingFiles =
-            {
-                "this file exists.zip",
-                "that file exists.too",
-                "three.4",
-            };
+            string[] existingFiles = { "this file exists.zip", "that file exists.too", "three.4" };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "test_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "test_file.osr"
+            );
 
             Assert.AreEqual("test_file.osr", nextBestFilename);
         }
@@ -162,7 +159,10 @@ namespace osu.Game.Tests.Utils
                 "replay_file (1 <- now THAT is a number right here).lol",
             };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
 
             Assert.AreEqual("replay_file.osr", nextBestFilename);
         }
@@ -170,12 +170,12 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestFilenameAlreadyTaken()
         {
-            string[] existingFiles =
-            {
-                "replay_file.osr",
-            };
+            string[] existingFiles = { "replay_file.osr" };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
 
             Assert.AreEqual("replay_file (1).osr", nextBestFilename);
         }
@@ -190,23 +190,28 @@ namespace osu.Game.Tests.Utils
                 "REPLAY_FILE (2).OSR",
             };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
             Assert.AreEqual("replay_file (3).osr", nextBestFilename);
         }
 
         [Test]
         public void TestNextBestFilenameAlreadyTakenWithBrackets()
         {
-            string[] existingFiles =
-            {
-                "replay_file.osr",
-                "replay_file (copy).osr",
-            };
+            string[] existingFiles = { "replay_file.osr", "replay_file (copy).osr" };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
             Assert.AreEqual("replay_file (1).osr", nextBestFilename);
 
-            nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file (copy).osr");
+            nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file (copy).osr"
+            );
             Assert.AreEqual("replay_file (copy) (1).osr", nextBestFilename);
         }
 
@@ -221,7 +226,10 @@ namespace osu.Game.Tests.Utils
                 "replay_file (3).osr",
             };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
 
             Assert.AreEqual("replay_file (4).osr", nextBestFilename);
         }
@@ -238,7 +246,10 @@ namespace osu.Game.Tests.Utils
                 "replay_file (5).osr",
             };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
 
             Assert.AreEqual("replay_file (3).osr", nextBestFilename);
         }
@@ -246,12 +257,7 @@ namespace osu.Game.Tests.Utils
         [Test]
         public void TestNextBestFilenameNoExtensions()
         {
-            string[] existingFiles =
-            {
-                "those",
-                "are definitely",
-                "files",
-            };
+            string[] existingFiles = { "those", "are definitely", "files" };
 
             string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "surely");
             Assert.AreEqual("surely", nextBestFilename);
@@ -270,7 +276,10 @@ namespace osu.Game.Tests.Utils
                 "replay_file.txt",
             };
 
-            string nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.osr");
+            string nextBestFilename = NamingUtils.GetNextBestFilename(
+                existingFiles,
+                "replay_file.osr"
+            );
             Assert.AreEqual("replay_file (2).osr", nextBestFilename);
 
             nextBestFilename = NamingUtils.GetNextBestFilename(existingFiles, "replay_file.txt");

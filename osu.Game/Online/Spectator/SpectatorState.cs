@@ -31,16 +31,23 @@ namespace osu.Game.Online.Spectator
         public SpectatedUserState State { get; set; }
 
         [Key(4)]
-        public Dictionary<HitResult, int> MaximumStatistics { get; set; } = new Dictionary<HitResult, int>();
+        public Dictionary<HitResult, int> MaximumStatistics { get; set; } =
+            new Dictionary<HitResult, int>();
 
         public bool Equals(SpectatorState other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return BeatmapID == other.BeatmapID && Mods.SequenceEqual(other.Mods) && RulesetID == other.RulesetID && State == other.State;
+            return BeatmapID == other.BeatmapID
+                && Mods.SequenceEqual(other.Mods)
+                && RulesetID == other.RulesetID
+                && State == other.State;
         }
 
-        public override string ToString() => $"Beatmap:{BeatmapID} Mods:{string.Join(',', Mods)} Ruleset:{RulesetID} State:{State}";
+        public override string ToString() =>
+            $"Beatmap:{BeatmapID} Mods:{string.Join(',', Mods)} Ruleset:{RulesetID} State:{State}";
     }
 }

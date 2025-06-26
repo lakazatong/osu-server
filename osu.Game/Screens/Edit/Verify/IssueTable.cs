@@ -38,7 +38,7 @@ namespace osu.Game.Screens.Edit.Verify
                 {
                     RelativeSizeAxes = Axes.X,
                     Height = ROW_HEIGHT,
-                    Padding = new MarginPadding { Horizontal = ROW_HORIZONTAL_PADDING, },
+                    Padding = new MarginPadding { Horizontal = ROW_HORIZONTAL_PADDING },
                     Children = new[]
                     {
                         new TableHeaderText("Type")
@@ -63,29 +63,28 @@ namespace osu.Game.Screens.Edit.Verify
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
                         },
-                    }
+                    },
                 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = ROW_HEIGHT, },
+                    Padding = new MarginPadding { Top = ROW_HEIGHT },
                     Child = new IssueRowList
                     {
                         RelativeSizeAxes = Axes.Both,
-                        RowData = { BindTarget = Issues }
-                    }
-                }
+                        RowData = { BindTarget = Issues },
+                    },
+                },
             };
         }
 
         private partial class IssueRowList : VirtualisedListContainer<Issue, DrawableIssue>
         {
             public IssueRowList()
-                : base(ROW_HEIGHT, 50)
-            {
-            }
+                : base(ROW_HEIGHT, 50) { }
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer() => new OsuScrollContainer();
+            protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+                new OsuScrollContainer();
         }
 
         public partial class DrawableIssue : PoolableDrawable, IHasCurrentValue<Issue>
@@ -126,14 +125,11 @@ namespace osu.Game.Screens.Edit.Verify
 
                 InternalChildren = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    background = new Box { RelativeSizeAxes = Axes.Both },
                     new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Padding = new MarginPadding { Horizontal = 20, },
+                        Padding = new MarginPadding { Horizontal = 20 },
                         Children = new Drawable[]
                         {
                             issueTypeText = new OsuSpriteText
@@ -157,21 +153,25 @@ namespace osu.Game.Screens.Edit.Verify
                                     Left = 2 * (COLUMN_GAP + COLUMN_WIDTH),
                                     Right = COLUMN_GAP + COLUMN_WIDTH,
                                 },
-                                Child = issueDetailText = new OsuSpriteText
-                                {
-                                    Anchor = Anchor.CentreLeft,
-                                    Origin = Anchor.CentreLeft,
-                                    Font = OsuFont.GetFont(size: TEXT_SIZE, weight: FontWeight.Medium)
-                                },
+                                Child = issueDetailText =
+                                    new OsuSpriteText
+                                    {
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                        Font = OsuFont.GetFont(
+                                            size: TEXT_SIZE,
+                                            weight: FontWeight.Medium
+                                        ),
+                                    },
                             },
                             issueCategoryText = new OsuSpriteText
                             {
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
                                 Font = OsuFont.GetFont(size: TEXT_SIZE, weight: FontWeight.Bold),
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
 
                 selectedIssue.BindTo(verify.SelectedIssue);
@@ -205,7 +205,12 @@ namespace osu.Game.Screens.Edit.Verify
                 if (current.Value.Time != null)
                 {
                     clock.Seek(current.Value.Time.Value);
-                    editor.OnPressed(new KeyBindingPressEvent<GlobalAction>(GetContainingInputManager()!.CurrentState, GlobalAction.EditorComposeMode));
+                    editor.OnPressed(
+                        new KeyBindingPressEvent<GlobalAction>(
+                            GetContainingInputManager()!.CurrentState,
+                            GlobalAction.EditorComposeMode
+                        )
+                    );
                 }
 
                 if (current.Value.HitObjects.Any())
@@ -232,7 +237,9 @@ namespace osu.Game.Screens.Edit.Verify
                 else
                     background.FadeOut(100, Easing.OutQuint);
 
-                background.Colour = isSelected ? colourProvider.Colour3 : colourProvider.Background1;
+                background.Colour = isSelected
+                    ? colourProvider.Colour3
+                    : colourProvider.Background1;
             }
         }
     }

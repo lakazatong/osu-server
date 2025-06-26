@@ -10,7 +10,9 @@ namespace osu.Desktop.Windows
         /// <summary>
         /// Fully qualified path to the directory that contains icons (in the installation folder).
         /// </summary>
-        private static readonly string icon_directory = Path.GetDirectoryName(typeof(Icons).Assembly.Location)!;
+        private static readonly string icon_directory = Path.GetDirectoryName(
+            typeof(Icons).Assembly.Location
+        )!;
 
         public static string Lazer => Path.Join(icon_directory, "lazer.ico");
 

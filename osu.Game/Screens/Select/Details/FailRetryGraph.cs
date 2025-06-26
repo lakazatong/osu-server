@@ -4,19 +4,20 @@
 #nullable disable
 
 using System;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
-using System.Linq;
-using osu.Game.Beatmaps;
 
 namespace osu.Game.Screens.Select.Details
 {
     public partial class FailRetryGraph : Container
     {
-        private readonly BarGraph retryGraph, failGraph;
+        private readonly BarGraph retryGraph,
+            failGraph;
 
         private APIFailTimes failTimes;
 
@@ -25,7 +26,8 @@ namespace osu.Game.Screens.Select.Details
             get => failTimes;
             set
             {
-                if (value == failTimes) return;
+                if (value == failTimes)
+                    return;
 
                 failTimes = value;
 
@@ -59,14 +61,8 @@ namespace osu.Game.Screens.Select.Details
         {
             Children = new[]
             {
-                retryGraph = new BarGraph
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                failGraph = new BarGraph
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
+                retryGraph = new BarGraph { RelativeSizeAxes = Axes.Both },
+                failGraph = new BarGraph { RelativeSizeAxes = Axes.Both },
             };
         }
 

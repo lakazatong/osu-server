@@ -34,7 +34,10 @@ namespace osu.Game.Skinning
                 : textureUpload;
         }
 
-        public Task<TextureUpload> GetAsync(string name, CancellationToken cancellationToken = new CancellationToken())
+        public Task<TextureUpload> GetAsync(
+            string name,
+            CancellationToken cancellationToken = new CancellationToken()
+        )
         {
             var textureUpload = wrappedStore?.Get(name);
 
@@ -52,7 +55,7 @@ namespace osu.Game.Skinning
             @"taiko-bar-right",
             @"taikobigcircle",
             @"taikohitcircle",
-            @"taikohitcircleoverlay"
+            @"taikohitcircleoverlay",
         };
 
         private bool shouldConvertToGrayscale(string name)
@@ -61,8 +64,10 @@ namespace osu.Game.Skinning
             {
                 // unfortunately at this level of lookup we can encounter `@2x` scale suffixes in the name,
                 // so straight equality cannot be used.
-                if (name.Equals(grayscaleSprite, StringComparison.OrdinalIgnoreCase)
-                    || name.Equals($@"{grayscaleSprite}@2x", StringComparison.OrdinalIgnoreCase))
+                if (
+                    name.Equals(grayscaleSprite, StringComparison.OrdinalIgnoreCase)
+                    || name.Equals($@"{grayscaleSprite}@2x", StringComparison.OrdinalIgnoreCase)
+                )
                 {
                     return true;
                 }
@@ -73,7 +78,11 @@ namespace osu.Game.Skinning
 
         private TextureUpload convertToGrayscale(TextureUpload textureUpload)
         {
-            var image = Image.LoadPixelData(textureUpload.Data, textureUpload.Width, textureUpload.Height);
+            var image = Image.LoadPixelData(
+                textureUpload.Data,
+                textureUpload.Width,
+                textureUpload.Height
+            );
 
             // stable uses `0.299 * r + 0.587 * g + 0.114 * b`
             // (https://github.com/peppy/osu-stable-reference/blob/013c3010a9d495e3471a9c59518de17006f9ad89/osu!/Graphics/Textures/pTexture.cs#L138-L153)
@@ -85,7 +94,8 @@ namespace osu.Game.Skinning
 
         public Stream? GetStream(string name) => wrappedStore?.GetStream(name);
 
-        public IEnumerable<string> GetAvailableResources() => wrappedStore?.GetAvailableResources() ?? Array.Empty<string>();
+        public IEnumerable<string> GetAvailableResources() =>
+            wrappedStore?.GetAvailableResources() ?? Array.Empty<string>();
 
         public void Dispose()
         {

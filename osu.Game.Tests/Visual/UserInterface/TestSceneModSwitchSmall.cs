@@ -38,12 +38,18 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             AddStep("no colour scheme", () => Child = createContent(ruleset, null));
 
-            foreach (var scheme in Enum.GetValues(typeof(OverlayColourScheme)).Cast<OverlayColourScheme>())
+            foreach (
+                var scheme in Enum.GetValues(typeof(OverlayColourScheme))
+                    .Cast<OverlayColourScheme>()
+            )
             {
                 AddStep($"{scheme} colour scheme", () => Child = createContent(ruleset, scheme));
             }
 
-            AddToggleStep("toggle active", active => this.ChildrenOfType<ModSwitchTiny>().ForEach(s => s.Active.Value = active));
+            AddToggleStep(
+                "toggle active",
+                active => this.ChildrenOfType<ModSwitchTiny>().ForEach(s => s.Active.Value = active)
+            );
         }
 
         private static Drawable createContent(Ruleset ruleset, OverlayColourScheme? colourScheme)
@@ -54,16 +60,17 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Direction = FillDirection.Vertical,
                 Spacing = new Vector2(10),
                 Padding = new MarginPadding(20),
-                ChildrenEnumerable = ruleset.CreateAllMods()
-                                            .GroupBy(mod => mod.Type)
-                                            .Select(group => new FillFlowContainer
-                                            {
-                                                RelativeSizeAxes = Axes.X,
-                                                AutoSizeAxes = Axes.Y,
-                                                Direction = FillDirection.Full,
-                                                Spacing = new Vector2(5),
-                                                ChildrenEnumerable = group.Select(mod => new ModSwitchSmall(mod))
-                                            })
+                ChildrenEnumerable = ruleset
+                    .CreateAllMods()
+                    .GroupBy(mod => mod.Type)
+                    .Select(group => new FillFlowContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Full,
+                        Spacing = new Vector2(5),
+                        ChildrenEnumerable = group.Select(mod => new ModSwitchSmall(mod)),
+                    }),
             };
 
             if (colourScheme != null)
@@ -73,9 +80,12 @@ namespace osu.Game.Tests.Visual.UserInterface
                     RelativeSizeAxes = Axes.Both,
                     CachedDependencies = new (Type, object)[]
                     {
-                        (typeof(OverlayColourProvider), new OverlayColourProvider(colourScheme.Value))
+                        (
+                            typeof(OverlayColourProvider),
+                            new OverlayColourProvider(colourScheme.Value)
+                        ),
                     },
-                    Child = switchFlow
+                    Child = switchFlow,
                 };
             }
 

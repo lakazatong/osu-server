@@ -11,11 +11,10 @@ namespace osu.Game.Overlays.Dashboard.Home
     public partial class DrawablePopularBeatmapList : DrawableBeatmapList
     {
         public DrawablePopularBeatmapList(List<APIBeatmapSet> beatmapSets)
-            : base(beatmapSets)
-        {
-        }
+            : base(beatmapSets) { }
 
-        protected override DashboardBeatmapPanel CreateBeatmapPanel(APIBeatmapSet beatmapSet) => new DashboardPopularBeatmapPanel(beatmapSet);
+        protected override DashboardBeatmapPanel CreateBeatmapPanel(APIBeatmapSet beatmapSet) =>
+            new DashboardPopularBeatmapPanel(beatmapSet);
 
         protected override LocalisableString Title => HomeStrings.UserBeatmapsPopular;
     }

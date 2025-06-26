@@ -40,11 +40,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
 
             Children = new Drawable[]
             {
-                new SettingsCheckbox
-                {
-                    LabelText = CommonStrings.Enabled,
-                    Current = enabled
-                },
+                new SettingsCheckbox { LabelText = CommonStrings.Enabled, Current = enabled },
                 deadzoneSlider = new SettingsSlider<float>
                 {
                     LabelText = JoystickSettingsStrings.DeadzoneThreshold,
@@ -62,14 +58,17 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             enabled.BindTo(joystickHandler.Enabled);
             enabled.BindValueChanged(e => deadzoneSlider.Current.Disabled = !e.NewValue, true);
 
-            handlerDeadzone.BindValueChanged(val =>
-            {
-                bool disabled = localDeadzone.Disabled;
+            handlerDeadzone.BindValueChanged(
+                val =>
+                {
+                    bool disabled = localDeadzone.Disabled;
 
-                localDeadzone.Disabled = false;
-                localDeadzone.Value = val.NewValue;
-                localDeadzone.Disabled = disabled;
-            }, true);
+                    localDeadzone.Disabled = false;
+                    localDeadzone.Value = val.NewValue;
+                    localDeadzone.Disabled = disabled;
+                },
+                true
+            );
 
             localDeadzone.BindValueChanged(val => handlerDeadzone.Value = val.NewValue);
         }

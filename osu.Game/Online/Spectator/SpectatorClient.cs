@@ -40,7 +40,8 @@ namespace osu.Game.Online.Spectator
         /// The states of all users currently being watched by the local user.
         /// </summary>
         [UsedImplicitly] // Marked virtual due to mock use in testing
-        public virtual IBindableDictionary<int, SpectatorState> WatchedUserStates => watchedUserStates;
+        public virtual IBindableDictionary<int, SpectatorState> WatchedUserStates =>
+            watchedUserStates;
 
         /// <summary>
         /// All users who are currently watching the local user.
@@ -83,9 +84,11 @@ namespace osu.Game.Online.Spectator
         /// </summary>
         private readonly Dictionary<int, int> watchedUsersRefCounts = new Dictionary<int, int>();
 
-        private readonly BindableDictionary<int, SpectatorState> watchedUserStates = new BindableDictionary<int, SpectatorState>();
+        private readonly BindableDictionary<int, SpectatorState> watchedUserStates =
+            new BindableDictionary<int, SpectatorState>();
 
-        private readonly BindableList<SpectatorUser> watchingUsers = new BindableList<SpectatorUser>();
+        private readonly BindableList<SpectatorUser> watchingUsers =
+            new BindableList<SpectatorUser>();
         private readonly SpectatorState currentState = new SpectatorState();
 
         private IBeatmap? currentBeatmap;
@@ -106,32 +109,36 @@ namespace osu.Game.Online.Spectator
         [BackgroundDependencyLoader]
         private void load()
         {
-            IsConnected.BindValueChanged(connected => Schedule(() =>
-            {
-                if (connected.NewValue)
-                {
-                    // get all the users that were previously being watched
-                    var users = new Dictionary<int, int>(watchedUsersRefCounts);
-                    watchedUsersRefCounts.Clear();
-
-                    // resubscribe to watched users.
-                    foreach ((int user, int watchers) in users)
+            IsConnected.BindValueChanged(
+                connected =>
+                    Schedule(() =>
                     {
-                        for (int i = 0; i < watchers; i++)
-                            WatchUser(user);
-                    }
+                        if (connected.NewValue)
+                        {
+                            // get all the users that were previously being watched
+                            var users = new Dictionary<int, int>(watchedUsersRefCounts);
+                            watchedUsersRefCounts.Clear();
 
-                    // re-send state in case it wasn't received
-                    if (isPlaying)
-                        // TODO: this is likely sent out of order after a reconnect scenario. needs further consideration.
-                        BeginPlayingInternal(currentScoreToken, currentState);
-                }
-                else
-                {
-                    watchedUserStates.Clear();
-                    watchingUsers.Clear();
-                }
-            }), true);
+                            // resubscribe to watched users.
+                            foreach ((int user, int watchers) in users)
+                            {
+                                for (int i = 0; i < watchers; i++)
+                                    WatchUser(user);
+                            }
+
+                            // re-send state in case it wasn't received
+                            if (isPlaying)
+                                // TODO: this is likely sent out of order after a reconnect scenario. needs further consideration.
+                                BeginPlayingInternal(currentScoreToken, currentState);
+                        }
+                        else
+                        {
+                            watchedUserStates.Clear();
+                            watchingUsers.Clear();
+                        }
+                    }),
+                true
+            );
         }
 
         Task ISpectatorClient.UserBeganPlaying(int userId, SpectatorState state)
@@ -213,7 +220,9 @@ namespace osu.Game.Online.Spectator
             Schedule(() =>
             {
                 if (isPlaying)
-                    throw new InvalidOperationException($"Cannot invoke {nameof(BeginPlaying)} when already playing");
+                    throw new InvalidOperationException(
+                        $"Cannot invoke {nameof(BeginPlaying)} when already playing"
+                    );
 
                 isPlaying = true;
 
@@ -233,32 +242,35 @@ namespace osu.Game.Online.Spectator
             });
         }
 
-        public void HandleFrame(ReplayFrame frame) => Schedule(() =>
-        {
-            if (!isPlaying)
+        public void HandleFrame(ReplayFrame frame) =>
+            Schedule(() =>
             {
-                Logger.Log($"Frames arrived at {nameof(SpectatorClient)} outside of gameplay scope and will be ignored.");
-                return;
-            }
+                if (!isPlaying)
+                {
+                    Logger.Log(
+                        $"Frames arrived at {nameof(SpectatorClient)} outside of gameplay scope and will be ignored."
+                    );
+                    return;
+                }
 
-            if (frame is IConvertibleReplayFrame convertible)
-            {
-                Debug.Assert(currentBeatmap != null);
+                if (frame is IConvertibleReplayFrame convertible)
+                {
+                    Debug.Assert(currentBeatmap != null);
 
-                var convertedFrame = convertible.ToLegacy(currentBeatmap);
+                    var convertedFrame = convertible.ToLegacy(currentBeatmap);
 
-                // this reduces redundancy of frames in the resulting replay.
-                // it is also done at `ReplayRecorder`, but needs to be done here as well
-                // due to the flow being handled differently.
-                if (pendingFrames.LastOrDefault()?.IsEquivalentTo(convertedFrame) == true)
-                    pendingFrames[^1] = convertedFrame;
-                else
-                    pendingFrames.Add(convertedFrame);
-            }
+                    // this reduces redundancy of frames in the resulting replay.
+                    // it is also done at `ReplayRecorder`, but needs to be done here as well
+                    // due to the flow being handled differently.
+                    if (pendingFrames.LastOrDefault()?.IsEquivalentTo(convertedFrame) == true)
+                        pendingFrames[^1] = convertedFrame;
+                    else
+                        pendingFrames.Add(convertedFrame);
+                }
 
-            if (pendingFrames.Count > max_pending_frames)
-                purgePendingFrames();
-        });
+                if (pendingFrames.Count > max_pending_frames)
+                    purgePendingFrames();
+            });
 
         public void EndPlaying(GameplayState state)
         {
@@ -382,21 +394,22 @@ namespace osu.Game.Online.Spectator
 
             lastSend = tcs.Task;
 
-            SendFramesInternal(bundle).ContinueWith(t =>
-            {
-                // Handle exception outside of `Schedule` to ensure it doesn't go unobserved.
-                bool wasSuccessful = t.Exception == null;
-
-                return Schedule(() =>
+            SendFramesInternal(bundle)
+                .ContinueWith(t =>
                 {
-                    // If the last bundle send wasn't successful, try again without dequeuing.
-                    if (wasSuccessful)
-                        pendingFrameBundles.Dequeue();
+                    // Handle exception outside of `Schedule` to ensure it doesn't go unobserved.
+                    bool wasSuccessful = t.Exception == null;
 
-                    tcs.SetResult(wasSuccessful);
-                    sendNextBundleIfRequired();
+                    return Schedule(() =>
+                    {
+                        // If the last bundle send wasn't successful, try again without dequeuing.
+                        if (wasSuccessful)
+                            pendingFrameBundles.Dequeue();
+
+                        tcs.SetResult(wasSuccessful);
+                        sendNextBundleIfRequired();
+                    });
                 });
-            });
         }
     }
 }

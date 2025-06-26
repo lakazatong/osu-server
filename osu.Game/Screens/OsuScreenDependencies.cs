@@ -51,9 +51,17 @@ namespace osu.Game.Screens
             }
             else
             {
-                Beatmap = (parent.Get<LeasedBindable<WorkingBeatmap>>() ?? parent.Get<Bindable<WorkingBeatmap>>()).GetBoundCopy();
-                Ruleset = (parent.Get<LeasedBindable<RulesetInfo>>() ?? parent.Get<Bindable<RulesetInfo>>()).GetBoundCopy();
-                Mods = (parent.Get<LeasedBindable<IReadOnlyList<Mod>>>() ?? parent.Get<Bindable<IReadOnlyList<Mod>>>()).GetBoundCopy();
+                Beatmap = (
+                    parent.Get<LeasedBindable<WorkingBeatmap>>()
+                    ?? parent.Get<Bindable<WorkingBeatmap>>()
+                ).GetBoundCopy();
+                Ruleset = (
+                    parent.Get<LeasedBindable<RulesetInfo>>() ?? parent.Get<Bindable<RulesetInfo>>()
+                ).GetBoundCopy();
+                Mods = (
+                    parent.Get<LeasedBindable<IReadOnlyList<Mod>>>()
+                    ?? parent.Get<Bindable<IReadOnlyList<Mod>>>()
+                ).GetBoundCopy();
             }
         }
     }

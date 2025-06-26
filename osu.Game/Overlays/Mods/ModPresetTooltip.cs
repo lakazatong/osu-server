@@ -36,11 +36,7 @@ namespace osu.Game.Overlays.Mods
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colourProvider.Background6
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = colourProvider.Background6 },
                 Content = new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
@@ -58,9 +54,9 @@ namespace osu.Game.Overlays.Mods
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                             Margin = new MarginPadding { Bottom = 5f },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
         }
 
@@ -86,6 +82,7 @@ namespace osu.Game.Overlays.Mods
         }
 
         protected override void PopIn() => this.FadeIn(transition_duration, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(transition_duration, Easing.OutQuint);
 
         public void Move(Vector2 pos) => Position = pos;

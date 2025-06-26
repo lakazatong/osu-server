@@ -27,7 +27,8 @@ namespace osu.Game.Database
         private readonly IModelImporter<TModel> importer;
         private readonly IAPIProvider? api;
 
-        protected readonly List<ArchiveDownloadRequest<T>> CurrentDownloads = new List<ArchiveDownloadRequest<T>>();
+        protected readonly List<ArchiveDownloadRequest<T>> CurrentDownloads =
+            new List<ArchiveDownloadRequest<T>>();
 
         protected ModelDownloader(IModelImporter<TModel> importer, IAPIProvider? api)
         {
@@ -41,15 +42,21 @@ namespace osu.Game.Database
         /// <param name="model">The <typeparamref name="T"/> to be downloaded.</param>
         /// <param name="minimiseDownloadSize">Whether this download should be optimised for slow connections. Generally means extras are not included in the download bundle.</param>
         /// <returns>The request object.</returns>
-        protected abstract ArchiveDownloadRequest<T> CreateDownloadRequest(T model, bool minimiseDownloadSize);
+        protected abstract ArchiveDownloadRequest<T> CreateDownloadRequest(
+            T model,
+            bool minimiseDownloadSize
+        );
 
-        public bool Download(T model, bool minimiseDownloadSize = false) => Download(model, minimiseDownloadSize, null);
+        public bool Download(T model, bool minimiseDownloadSize = false) =>
+            Download(model, minimiseDownloadSize, null);
 
-        public void DownloadAsUpdate(TModel originalModel, bool minimiseDownloadSize) => Download(originalModel, minimiseDownloadSize, originalModel);
+        public void DownloadAsUpdate(TModel originalModel, bool minimiseDownloadSize) =>
+            Download(originalModel, minimiseDownloadSize, originalModel);
 
         protected bool Download(T model, bool minimiseDownloadSize, TModel? originalModel)
         {
-            if (!canDownload(model)) return false;
+            if (!canDownload(model))
+                return false;
 
             var request = CreateDownloadRequest(model, minimiseDownloadSize);
 
@@ -66,26 +73,42 @@ namespace osu.Game.Database
 
             request.Success += filename =>
             {
-                Task.Factory.StartNew(async () =>
-                {
-                    bool importSuccessful = false;
-
-                    try
+                Task.Factory.StartNew(
+                    async () =>
                     {
-                        if (originalModel != null)
-                            importSuccessful = (await importer.ImportAsUpdate(notification, new ImportTask(filename), originalModel).ConfigureAwait(false)) != null;
-                        else
-                            importSuccessful = (await importer.Import(notification, new[] { new ImportTask(filename) }).ConfigureAwait(false)).Any();
-                    }
-                    finally
-                    {
-                        // for now a failed import will be marked as a failed download for simplicity.
-                        if (!importSuccessful)
-                            DownloadFailed?.Invoke(request);
+                        bool importSuccessful = false;
 
-                        CurrentDownloads.Remove(request);
-                    }
-                }, TaskCreationOptions.LongRunning);
+                        try
+                        {
+                            if (originalModel != null)
+                                importSuccessful =
+                                    (
+                                        await importer
+                                            .ImportAsUpdate(
+                                                notification,
+                                                new ImportTask(filename),
+                                                originalModel
+                                            )
+                                            .ConfigureAwait(false)
+                                    ) != null;
+                            else
+                                importSuccessful = (
+                                    await importer
+                                        .Import(notification, new[] { new ImportTask(filename) })
+                                        .ConfigureAwait(false)
+                                ).Any();
+                        }
+                        finally
+                        {
+                            // for now a failed import will be marked as a failed download for simplicity.
+                            if (!importSuccessful)
+                                DownloadFailed?.Invoke(request);
+
+                            CurrentDownloads.Remove(request);
+                        }
+                    },
+                    TaskCreationOptions.LongRunning
+                );
             };
 
             request.Failure += triggerFailure;
@@ -114,13 +137,19 @@ namespace osu.Game.Database
 
                 if (!(error is OperationCanceledException))
                 {
-                    if (error is WebException webException && webException.Message == @"TooManyRequests")
+                    if (
+                        error is WebException webException
+                        && webException.Message == @"TooManyRequests"
+                    )
                     {
                         notification.Close(false);
                         PostNotification?.Invoke(new TooManyDownloadsNotification());
                     }
                     else
-                        Logger.Error(error, $"{importer.HumanisedModelName.Titleize()} download failed!");
+                        Logger.Error(
+                            error,
+                            $"{importer.HumanisedModelName.Titleize()} download failed!"
+                        );
                 }
             }
         }
@@ -131,13 +160,15 @@ namespace osu.Game.Database
 
         private partial class DownloadNotification : ProgressNotification
         {
-            protected override Notification CreateCompletionNotification() => new SilencedProgressCompletionNotification
-            {
-                Activated = CompletionClickAction,
-                Text = CompletionText
-            };
+            protected override Notification CreateCompletionNotification() =>
+                new SilencedProgressCompletionNotification
+                {
+                    Activated = CompletionClickAction,
+                    Text = CompletionText,
+                };
 
-            private partial class SilencedProgressCompletionNotification : ProgressCompletionNotification
+            private partial class SilencedProgressCompletionNotification
+                : ProgressCompletionNotification
             {
                 public SilencedProgressCompletionNotification()
                 {

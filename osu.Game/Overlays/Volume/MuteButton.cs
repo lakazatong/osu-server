@@ -58,34 +58,37 @@ namespace osu.Game.Overlays.Volume
 
             SpriteIcon icon;
 
-            AddRange(new Drawable[]
-            {
-                icon = new SpriteIcon
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                border = new CircularContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    BorderThickness = 3,
-                    BorderColour = unhoveredBorderColour,
-                    Child = new Box
+                    icon = new SpriteIcon { Anchor = Anchor.Centre, Origin = Anchor.Centre },
+                    border = new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = 0,
-                        AlwaysPresent = true
-                    }
+                        Masking = true,
+                        BorderThickness = 3,
+                        BorderColour = unhoveredBorderColour,
+                        Child = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Alpha = 0,
+                            AlwaysPresent = true,
+                        },
+                    },
                 }
-            });
+            );
 
-            Current.BindValueChanged(muted =>
-            {
-                icon.Icon = muted.NewValue ? FontAwesome.Solid.VolumeMute : FontAwesome.Solid.VolumeUp;
-                icon.Size = new Vector2(muted.NewValue ? 12 : 16);
-                icon.Margin = new MarginPadding { Right = muted.NewValue ? 2 : 0 };
-            }, true);
+            Current.BindValueChanged(
+                muted =>
+                {
+                    icon.Icon = muted.NewValue
+                        ? FontAwesome.Solid.VolumeMute
+                        : FontAwesome.Solid.VolumeUp;
+                    icon.Size = new Vector2(muted.NewValue ? 12 : 16);
+                    icon.Margin = new MarginPadding { Right = muted.NewValue ? 2 : 0 };
+                },
+                true
+            );
         }
 
         protected override bool OnHover(HoverEvent e)

@@ -19,12 +19,14 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
         {
             Anchor = Anchor.BottomCentre;
             Origin = Anchor.BottomCentre;
-            AddInternal(notePiece = new EditNotePiece
-            {
-                RelativeSizeAxes = Axes.X,
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-            });
+            AddInternal(
+                notePiece = new EditNotePiece
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                }
+            );
         }
 
         protected override void Update()
@@ -36,7 +38,10 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
 
         protected override void OnDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
         {
-            notePiece.Scale = new Vector2(1, direction.NewValue == ScrollingDirection.Down ? 1 : -1);
+            notePiece.Scale = new Vector2(
+                1,
+                direction.NewValue == ScrollingDirection.Down ? 1 : -1
+            );
         }
     }
 }

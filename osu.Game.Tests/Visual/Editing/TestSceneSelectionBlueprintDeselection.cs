@@ -16,25 +16,29 @@ namespace osu.Game.Tests.Visual.Editing
     {
         protected override Ruleset CreateEditorRuleset() => new OsuRuleset();
 
-        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
+        protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) =>
+            new TestBeatmap(ruleset, false);
 
         [Test]
         public void TestSingleDeleteAtSameTime()
         {
             HitCircle? circle1 = null;
 
-            AddStep("add two circles at the same time", () =>
-            {
-                EditorClock.Seek(0);
-                circle1 = new HitCircle();
-                var circle2 = new HitCircle();
+            AddStep(
+                "add two circles at the same time",
+                () =>
+                {
+                    EditorClock.Seek(0);
+                    circle1 = new HitCircle();
+                    var circle2 = new HitCircle();
 
-                EditorBeatmap.Add(circle1);
-                EditorBeatmap.Add(circle2);
+                    EditorBeatmap.Add(circle1);
+                    EditorBeatmap.Add(circle2);
 
-                EditorBeatmap.SelectedHitObjects.Add(circle1);
-                EditorBeatmap.SelectedHitObjects.Add(circle2);
-            });
+                    EditorBeatmap.SelectedHitObjects.Add(circle1);
+                    EditorBeatmap.SelectedHitObjects.Add(circle2);
+                }
+            );
 
             AddStep("delete the first circle", () => EditorBeatmap.Remove(circle1));
             AddAssert("one hitobject remains", () => EditorBeatmap.HitObjects.Count == 1);
@@ -44,29 +48,38 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestBigStackDeleteAtSameTime()
         {
-            AddStep("add 20 circles at the same time", () =>
-            {
-                EditorClock.Seek(0);
-
-                for (int i = 0; i < 20; i++)
+            AddStep(
+                "add 20 circles at the same time",
+                () =>
                 {
-                    EditorBeatmap.Add(new HitCircle());
-                }
-            });
+                    EditorClock.Seek(0);
 
-            AddStep("select half of the circles", () =>
-            {
-                foreach (var hitObject in EditorBeatmap.HitObjects.SkipLast(10).Reverse())
+                    for (int i = 0; i < 20; i++)
+                    {
+                        EditorBeatmap.Add(new HitCircle());
+                    }
+                }
+            );
+
+            AddStep(
+                "select half of the circles",
+                () =>
                 {
-                    EditorBeatmap.SelectedHitObjects.Add(hitObject);
+                    foreach (var hitObject in EditorBeatmap.HitObjects.SkipLast(10).Reverse())
+                    {
+                        EditorBeatmap.SelectedHitObjects.Add(hitObject);
+                    }
                 }
-            });
+            );
 
-            AddStep("delete all selected circles", () =>
-            {
-                InputManager.PressKey(Key.Delete);
-                InputManager.ReleaseKey(Key.Delete);
-            });
+            AddStep(
+                "delete all selected circles",
+                () =>
+                {
+                    InputManager.PressKey(Key.Delete);
+                    InputManager.ReleaseKey(Key.Delete);
+                }
+            );
 
             AddAssert("10 hitobjects remain", () => EditorBeatmap.HitObjects.Count == 10);
             AddAssert("no hitobjects selected", () => EditorBeatmap.SelectedHitObjects.Count == 0);

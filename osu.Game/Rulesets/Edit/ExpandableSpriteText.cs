@@ -20,15 +20,21 @@ namespace osu.Game.Rulesets.Edit
         {
             base.LoadComplete();
 
-            expandingContainer?.Expanded.BindValueChanged(containerExpanded =>
-            {
-                Expanded.Value = containerExpanded.NewValue;
-            }, true);
+            expandingContainer?.Expanded.BindValueChanged(
+                containerExpanded =>
+                {
+                    Expanded.Value = containerExpanded.NewValue;
+                },
+                true
+            );
 
-            Expanded.BindValueChanged(expanded =>
-            {
-                this.FadeTo(expanded.NewValue ? 1 : 0, 150, Easing.OutQuint);
-            }, true);
+            Expanded.BindValueChanged(
+                expanded =>
+                {
+                    this.FadeTo(expanded.NewValue ? 1 : 0, 150, Easing.OutQuint);
+                },
+                true
+            );
         }
     }
 }

@@ -27,11 +27,7 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints.Components
         {
             Height = DefaultNotePiece.NOTE_HEIGHT;
 
-            InternalChild = new EditNotePiece
-            {
-                RelativeSizeAxes = Axes.Both,
-                Height = 1,
-            };
+            InternalChild = new EditNotePiece { RelativeSizeAxes = Axes.Both, Height = 1 };
         }
 
         protected override void LoadComplete()

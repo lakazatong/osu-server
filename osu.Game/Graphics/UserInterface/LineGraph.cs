@@ -6,11 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using osuTK;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Layout;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
@@ -52,9 +52,12 @@ namespace osu.Game.Graphics.UserInterface
             {
                 values = value.ToArray();
 
-                float max = values.Max(), min = values.Min();
-                if (MaxValue > max) max = MaxValue.Value;
-                if (MinValue < min) min = MinValue.Value;
+                float max = values.Max(),
+                    min = values.Min();
+                if (MaxValue > max)
+                    max = MaxValue.Value;
+                if (MinValue < min)
+                    min = MinValue.Value;
 
                 ActualMaxValue = max;
                 ActualMinValue = min;
@@ -74,17 +77,20 @@ namespace osu.Game.Graphics.UserInterface
 
         public LineGraph()
         {
-            Add(maskingContainer = new Container<Path>
-            {
-                Masking = true,
-                RelativeSizeAxes = Axes.Both,
-                Child = path = new SmoothPath
+            Add(
+                maskingContainer = new Container<Path>
                 {
-                    AutoSizeAxes = Axes.None,
+                    Masking = true,
                     RelativeSizeAxes = Axes.Both,
-                    PathRadius = 1
+                    Child = path =
+                        new SmoothPath
+                        {
+                            AutoSizeAxes = Axes.None,
+                            RelativeSizeAxes = Axes.Both,
+                            PathRadius = 1,
+                        },
                 }
-            });
+            );
 
             AddLayout(pathCached);
         }
@@ -105,7 +111,8 @@ namespace osu.Game.Graphics.UserInterface
         private void applyPath()
         {
             path.ClearVertices();
-            if (values == null) return;
+            if (values == null)
+                return;
 
             int count = Math.Max(values.Length, DefaultValueCount);
 
@@ -113,7 +120,10 @@ namespace osu.Game.Graphics.UserInterface
             {
                 // Make sure that we are accounting for path width when calculating vertex positions
                 // We need to apply 2x the path radius to account for it because the full diameter of the line accounts into height
-                float x = (i + count - values.Length) / (float)(count - 1) * (DrawWidth - 2 * path.PathRadius);
+                float x =
+                    (i + count - values.Length)
+                    / (float)(count - 1)
+                    * (DrawWidth - 2 * path.PathRadius);
                 float y = GetYPosition(values[i]) * (DrawHeight - 2 * path.PathRadius);
                 path.AddVertex(new Vector2(x, y));
             }

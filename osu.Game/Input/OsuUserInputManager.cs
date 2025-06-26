@@ -10,13 +10,13 @@ namespace osu.Game.Input
 {
     public partial class OsuUserInputManager : UserInputManager
     {
-        protected override bool AllowRightClickFromLongTouch => PlayingState.Value != LocalUserPlayingState.Playing;
+        protected override bool AllowRightClickFromLongTouch =>
+            PlayingState.Value != LocalUserPlayingState.Playing;
 
-        public readonly IBindable<LocalUserPlayingState> PlayingState = new Bindable<LocalUserPlayingState>();
+        public readonly IBindable<LocalUserPlayingState> PlayingState =
+            new Bindable<LocalUserPlayingState>();
 
-        internal OsuUserInputManager()
-        {
-        }
+        internal OsuUserInputManager() { }
 
         protected override MouseButtonEventManager CreateButtonEventManagerFor(MouseButton button)
         {
@@ -32,9 +32,7 @@ namespace osu.Game.Input
         private class RightMouseManager : MouseButtonEventManager
         {
             public RightMouseManager(MouseButton button)
-                : base(button)
-            {
-            }
+                : base(button) { }
 
             public override bool EnableDrag => true; // allow right-mouse dragging for absolute scroll in scroll containers.
             public override bool EnableClick => false;

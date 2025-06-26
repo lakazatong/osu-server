@@ -59,7 +59,8 @@ namespace osu.Game.Overlays.News
             }
         }
 
-        protected override Drawable CreateBackground() => new OverlayHeaderBackground(@"Headers/news");
+        protected override Drawable CreateBackground() =>
+            new OverlayHeaderBackground(@"Headers/news");
 
         protected override OverlayTitle CreateTitle() => new NewsHeaderTitle();
 

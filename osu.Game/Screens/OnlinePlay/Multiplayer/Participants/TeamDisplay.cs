@@ -29,7 +29,8 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
             set => current.Current = value;
         }
 
-        private readonly BindableWithCurrent<MultiplayerRoomUser> current = new BindableWithCurrent<MultiplayerRoomUser>(new MultiplayerRoomUser(-1));
+        private readonly BindableWithCurrent<MultiplayerRoomUser> current =
+            new BindableWithCurrent<MultiplayerRoomUser>(new MultiplayerRoomUser(-1));
 
         [Resolved]
         private OsuColour colours { get; set; } = null!;
@@ -57,22 +58,23 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
                 Alpha = 0,
                 Scale = new Vector2(0, 1),
                 RelativeSizeAxes = Axes.Y,
-                Child = box = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    CornerRadius = 5,
-                    Masking = true,
-                    Scale = new Vector2(0, 1),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Child = new Box
+                Child = box =
+                    new Container
                     {
-                        Colour = Color4.White,
                         RelativeSizeAxes = Axes.Both,
+                        CornerRadius = 5,
+                        Masking = true,
+                        Scale = new Vector2(0, 1),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
-                }
+                        Child = new Box
+                        {
+                            Colour = Color4.White,
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                    },
             };
 
             sampleTeamSwap = audio.Samples.Get(@"Multiplayer/team-swap");
@@ -88,10 +90,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
 
         private void changeTeam()
         {
-            client.SendMatchRequest(new ChangeTeamRequest
-            {
-                TeamID = ((client.LocalUser?.MatchState as TeamVersusUserState)?.TeamID + 1) % 2 ?? 0,
-            }).FireAndForget();
+            client
+                .SendMatchRequest(
+                    new ChangeTeamRequest
+                    {
+                        TeamID =
+                            ((client.LocalUser?.MatchState as TeamVersusUserState)?.TeamID + 1) % 2
+                            ?? 0,
+                    }
+                )
+                .FireAndForget();
         }
 
         public int? DisplayedTeam { get; private set; }

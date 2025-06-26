@@ -3,13 +3,13 @@
 
 #nullable disable
 
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Online.API.Requests.Responses;
 using osuTK;
-using System.Linq;
 
 namespace osu.Game.Overlays.News.Sidebar
 {
@@ -20,24 +20,25 @@ namespace osu.Game.Overlays.News.Sidebar
 
         private FillFlowContainer<MonthSection> monthsFlow;
 
-        protected override Drawable CreateContent() => new FillFlowContainer
-        {
-            Direction = FillDirection.Vertical,
-            RelativeSizeAxes = Axes.X,
-            AutoSizeAxes = Axes.Y,
-            Spacing = new Vector2(0, 20),
-            Children = new Drawable[]
+        protected override Drawable CreateContent() =>
+            new FillFlowContainer
             {
-                new YearsPanel(),
-                monthsFlow = new FillFlowContainer<MonthSection>
+                Direction = FillDirection.Vertical,
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Spacing = new Vector2(0, 20),
+                Children = new Drawable[]
                 {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 10)
-                }
-            }
-        };
+                    new YearsPanel(),
+                    monthsFlow = new FillFlowContainer<MonthSection>
+                    {
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 10),
+                    },
+                },
+            };
 
         protected override void LoadComplete()
         {
@@ -58,20 +59,23 @@ namespace osu.Game.Overlays.News.Sidebar
             if (allPosts?.Any() != true)
                 return;
 
-            var lookup = metadata.NewValue.NewsPosts.ToLookup(post => (post.PublishedAt.Month, post.PublishedAt.Year));
+            var lookup = metadata.NewValue.NewsPosts.ToLookup(post =>
+                (post.PublishedAt.Month, post.PublishedAt.Year)
+            );
 
             var keys = lookup.Select(kvp => kvp.Key);
-            var sortedKeys = keys.OrderByDescending(k => k.Year).ThenByDescending(k => k.Month).ToList();
+            var sortedKeys = keys.OrderByDescending(k => k.Year)
+                .ThenByDescending(k => k.Month)
+                .ToList();
 
             for (int i = 0; i < sortedKeys.Count; i++)
             {
                 var key = sortedKeys[i];
                 var posts = lookup[key];
 
-                monthsFlow.Add(new MonthSection(key.Month, key.Year, posts)
-                {
-                    Expanded = { Value = i == 0 }
-                });
+                monthsFlow.Add(
+                    new MonthSection(key.Month, key.Year, posts) { Expanded = { Value = i == 0 } }
+                );
             }
         }
     }

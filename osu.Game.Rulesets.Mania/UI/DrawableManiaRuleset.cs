@@ -50,15 +50,18 @@ namespace osu.Game.Rulesets.Mania.UI
 
         public IEnumerable<BarLine> BarLines;
 
-        public override bool RequiresPortraitOrientation => Beatmap.Stages.Count == 1 && mobileLayout.Value == ManiaMobileLayout.Portrait;
+        public override bool RequiresPortraitOrientation =>
+            Beatmap.Stages.Count == 1 && mobileLayout.Value == ManiaMobileLayout.Portrait;
 
         protected override bool RelativeScaleBeatLengths => true;
 
         protected new ManiaRulesetConfigManager Config => (ManiaRulesetConfigManager)base.Config;
 
-        private readonly Bindable<ManiaScrollingDirection> configDirection = new Bindable<ManiaScrollingDirection>();
+        private readonly Bindable<ManiaScrollingDirection> configDirection =
+            new Bindable<ManiaScrollingDirection>();
         private readonly BindableDouble configScrollSpeed = new BindableDouble();
-        private readonly Bindable<ManiaMobileLayout> mobileLayout = new Bindable<ManiaMobileLayout>();
+        private readonly Bindable<ManiaMobileLayout> mobileLayout =
+            new Bindable<ManiaMobileLayout>();
 
         public double TargetTimeRange { get; protected set; }
 
@@ -72,7 +75,11 @@ namespace osu.Game.Rulesets.Mania.UI
         [Resolved]
         private GameHost gameHost { get; set; } = null!;
 
-        public DrawableManiaRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
+        public DrawableManiaRuleset(
+            Ruleset ruleset,
+            IBeatmap beatmap,
+            IReadOnlyList<Mod>? mods = null
+        )
             : base(ruleset, beatmap, mods)
         {
             BarLines = new BarLineGenerator<BarLine>(Beatmap).BarLines;
@@ -107,7 +114,10 @@ namespace osu.Game.Rulesets.Mania.UI
             BarLines.ForEach(Playfield.Add);
 
             Config.BindWith(ManiaRulesetSetting.ScrollDirection, configDirection);
-            configDirection.BindValueChanged(direction => Direction.Value = (ScrollingDirection)direction.NewValue, true);
+            configDirection.BindValueChanged(
+                direction => Direction.Value = (ScrollingDirection)direction.NewValue,
+                true
+            );
 
             Config.BindWith(ManiaRulesetSetting.ScrollSpeed, configScrollSpeed);
             configScrollSpeed.BindValueChanged(speed =>
@@ -118,7 +128,10 @@ namespace osu.Game.Rulesets.Mania.UI
                 TargetTimeRange = ComputeScrollTime(speed.NewValue);
             });
 
-            TimeRange.Value = TargetTimeRange = currentTimeRange = ComputeScrollTime(configScrollSpeed.Value);
+            TimeRange.Value =
+                TargetTimeRange =
+                currentTimeRange =
+                    ComputeScrollTime(configScrollSpeed.Value);
 
             Config.BindWith(ManiaRulesetSetting.MobileLayout, mobileLayout);
             mobileLayout.BindValueChanged(_ => updateMobileLayout(), true);
@@ -164,24 +177,39 @@ namespace osu.Game.Rulesets.Mania.UI
 
         private void skinChanged()
         {
-            hitPosition = currentSkin.GetConfig<ManiaSkinConfigurationLookup, float>(
-                              new ManiaSkinConfigurationLookup(LegacyManiaSkinConfigurationLookups.HitPosition))?.Value
-                          ?? Stage.HIT_TARGET_POSITION;
+            hitPosition =
+                currentSkin
+                    .GetConfig<ManiaSkinConfigurationLookup, float>(
+                        new ManiaSkinConfigurationLookup(
+                            LegacyManiaSkinConfigurationLookups.HitPosition
+                        )
+                    )
+                    ?.Value ?? Stage.HIT_TARGET_POSITION;
 
             pendingSkinChange = null;
         }
 
         private void updateTimeRange()
         {
-            const float length_to_default_hit_position = 768 - LegacyManiaSkinConfiguration.DEFAULT_HIT_POSITION;
+            const float length_to_default_hit_position =
+                768 - LegacyManiaSkinConfiguration.DEFAULT_HIT_POSITION;
             float lengthToHitPosition = 768 - hitPosition;
 
             // This scaling factor preserves the scroll speed as the scroll length varies from changes to the hit position.
             float scale = lengthToHitPosition / length_to_default_hit_position;
 
             // we're intentionally using the game host's update clock here to decouple the time range tween from the gameplay clock (which can be arbitrarily paused, or even rewinding)
-            currentTimeRange = Interpolation.DampContinuously(currentTimeRange, TargetTimeRange, 50, gameHost.UpdateThread.Clock.ElapsedFrameTime);
-            TimeRange.Value = currentTimeRange * speedAdjustmentTrack.AggregateTempo.Value * speedAdjustmentTrack.AggregateFrequency.Value * scale;
+            currentTimeRange = Interpolation.DampContinuously(
+                currentTimeRange,
+                TargetTimeRange,
+                50,
+                gameHost.UpdateThread.Clock.ElapsedFrameTime
+            );
+            TimeRange.Value =
+                currentTimeRange
+                * speedAdjustmentTrack.AggregateTempo.Value
+                * speedAdjustmentTrack.AggregateFrequency.Value
+                * scale;
         }
 
         /// <summary>
@@ -191,19 +219,27 @@ namespace osu.Game.Rulesets.Mania.UI
         /// <returns>The scroll time.</returns>
         public static double ComputeScrollTime(double scrollSpeed) => MAX_TIME_RANGE / scrollSpeed;
 
-        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new ManiaPlayfieldAdjustmentContainer(this);
+        public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() =>
+            new ManiaPlayfieldAdjustmentContainer(this);
 
         protected override Playfield CreatePlayfield() => new ManiaPlayfield(Beatmap.Stages);
 
-        public override int Variant => (int)(Beatmap.Stages.Count == 1 ? PlayfieldType.Single : PlayfieldType.Dual) + Beatmap.TotalColumns;
+        public override int Variant =>
+            (int)(Beatmap.Stages.Count == 1 ? PlayfieldType.Single : PlayfieldType.Dual)
+            + Beatmap.TotalColumns;
 
-        protected override PassThroughInputManager CreateInputManager() => new ManiaInputManager(Ruleset.RulesetInfo, Variant);
+        protected override PassThroughInputManager CreateInputManager() =>
+            new ManiaInputManager(Ruleset.RulesetInfo, Variant);
 
-        public override DrawableHitObject<ManiaHitObject>? CreateDrawableRepresentation(ManiaHitObject h) => null;
+        public override DrawableHitObject<ManiaHitObject>? CreateDrawableRepresentation(
+            ManiaHitObject h
+        ) => null;
 
-        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new ManiaFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) =>
+            new ManiaFramedReplayInputHandler(replay);
 
-        protected override ReplayRecorder CreateReplayRecorder(Score score) => new ManiaReplayRecorder(score);
+        protected override ReplayRecorder CreateReplayRecorder(Score score) =>
+            new ManiaReplayRecorder(score);
 
         protected override ResumeOverlay CreateResumeOverlay() => new DelayedResumeOverlay();
 

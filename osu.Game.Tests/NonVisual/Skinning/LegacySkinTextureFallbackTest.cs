@@ -35,58 +35,71 @@ namespace osu.Game.Tests.NonVisual.Skinning
                 // requested component
                 "Gameplay/osu/followpoint",
                 // returned texture name & scale
-                "Gameplay/osu/followpoint@2x", 2
+                "Gameplay/osu/followpoint@2x",
+                2,
             },
             new object[]
             {
                 new[] { "Gameplay/osu/followpoint@2x" },
                 "Gameplay/osu/followpoint",
-                "Gameplay/osu/followpoint@2x", 2
+                "Gameplay/osu/followpoint@2x",
+                2,
             },
             new object[]
             {
                 new[] { "Gameplay/osu/followpoint" },
                 "Gameplay/osu/followpoint",
-                "Gameplay/osu/followpoint", 1
+                "Gameplay/osu/followpoint",
+                1,
             },
             new object[]
             {
                 new[] { "Gameplay/osu/followpoint", "followpoint@2x" },
                 "Gameplay/osu/followpoint",
-                "Gameplay/osu/followpoint", 1
+                "Gameplay/osu/followpoint",
+                1,
             },
             new object[]
             {
                 // Looking up a filename with extension specified should work.
                 new[] { "followpoint.png" },
                 "followpoint.png",
-                "followpoint.png", 1
+                "followpoint.png",
+                1,
             },
             new object[]
             {
                 // Looking up a filename with extension specified should also work with @2x sprites.
                 new[] { "followpoint@2x.png" },
                 "followpoint.png",
-                "followpoint@2x.png", 2
+                "followpoint@2x.png",
+                2,
             },
             new object[]
             {
                 // Looking up a path with extension specified should work.
                 new[] { "Gameplay/osu/followpoint.png" },
                 "Gameplay/osu/followpoint.png",
-                "Gameplay/osu/followpoint.png", 1
+                "Gameplay/osu/followpoint.png",
+                1,
             },
             new object[]
             {
                 // Looking up a path with extension specified should also work with @2x sprites.
                 new[] { "Gameplay/osu/followpoint@2x.png" },
                 "Gameplay/osu/followpoint.png",
-                "Gameplay/osu/followpoint@2x.png", 2
+                "Gameplay/osu/followpoint@2x.png",
+                2,
             },
         };
 
         [TestCaseSource(nameof(fallbackTestCases))]
-        public void TestFallbackOrder(string[] filesInStore, string requestedComponent, string expectedTexture, float expectedScale)
+        public void TestFallbackOrder(
+            string[] filesInStore,
+            string requestedComponent,
+            string expectedTexture,
+            float expectedScale
+        )
         {
             var textureStore = new TestTextureStore(filesInStore);
             var legacySkin = new TestLegacySkin(textureStore);
@@ -155,8 +168,7 @@ namespace osu.Game.Tests.NonVisual.Skinning
 
             public TestLegacySkin(IResourceStore<TextureUpload> textureStore)
                 : base(new SkinInfo(), new TestResourceProvider(textureStore), null, string.Empty)
-            {
-            }
+            { }
 
             private class TestResourceProvider : IStorageResourceProvider
             {
@@ -172,7 +184,10 @@ namespace osu.Game.Tests.NonVisual.Skinning
                 public IResourceStore<byte[]> Files => null!;
                 public IResourceStore<byte[]> Resources => null!;
                 public RealmAccess RealmAccess => null!;
-                public IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore) => textureStore;
+
+                public IResourceStore<TextureUpload> CreateTextureLoaderStore(
+                    IResourceStore<byte[]> underlyingStore
+                ) => textureStore;
             }
         }
 
@@ -184,20 +199,25 @@ namespace osu.Game.Tests.NonVisual.Skinning
             {
                 // use an incrementing width to allow assertion matching on correct textures as they turn from uploads into actual textures.
                 int width = 1;
-                Textures = fileNames.ToDictionary(fileName => fileName, _ => new TextureUpload(new Image<Rgba32>(width, width++)));
+                Textures = fileNames.ToDictionary(
+                    fileName => fileName,
+                    _ => new TextureUpload(new Image<Rgba32>(width, width++))
+                );
             }
 
             public TextureUpload Get(string name) => Textures.GetValueOrDefault(name);
 
-            public Task<TextureUpload> GetAsync(string name, CancellationToken cancellationToken = new CancellationToken()) => Task.FromResult(Get(name));
+            public Task<TextureUpload> GetAsync(
+                string name,
+                CancellationToken cancellationToken = new CancellationToken()
+            ) => Task.FromResult(Get(name));
 
             public Stream GetStream(string name) => throw new NotImplementedException();
 
-            public IEnumerable<string> GetAvailableResources() => throw new NotImplementedException();
+            public IEnumerable<string> GetAvailableResources() =>
+                throw new NotImplementedException();
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
     }
 }

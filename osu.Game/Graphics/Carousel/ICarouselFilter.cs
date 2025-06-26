@@ -18,6 +18,9 @@ namespace osu.Game.Graphics.Carousel
         /// <param name="items">The items to be filtered.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The post-filtered items.</returns>
-        Task<List<CarouselItem>> Run(IEnumerable<CarouselItem> items, CancellationToken cancellationToken);
+        Task<List<CarouselItem>> Run(
+            IEnumerable<CarouselItem> items,
+            CancellationToken cancellationToken
+        );
     }
 }

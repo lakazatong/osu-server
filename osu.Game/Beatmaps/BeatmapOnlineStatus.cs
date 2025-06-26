@@ -14,38 +14,62 @@ namespace osu.Game.Beatmaps
         /// This is a special status given when local changes are made via the editor.
         /// Once in this state, online status changes should be ignored unless the beatmap is reverted or submitted.
         /// </summary>
-        [LocalisableDescription(typeof(SongSelectStrings), nameof(SongSelectStrings.LocallyModified))]
+        [LocalisableDescription(
+            typeof(SongSelectStrings),
+            nameof(SongSelectStrings.LocallyModified)
+        )]
         [Description("Local")]
         LocallyModified = -4,
 
         [Description("Unknown")]
         None = -3,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusGraveyard))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusGraveyard)
+        )]
         Graveyard = -2,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusWip))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusWip)
+        )]
         WIP = -1,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusPending))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusPending)
+        )]
         Pending = 0,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusRanked))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusRanked)
+        )]
         Ranked = 1,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusApproved))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusApproved)
+        )]
         Approved = 2,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusQualified))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusQualified)
+        )]
         Qualified = 3,
 
-        [LocalisableDescription(typeof(BeatmapsetsStrings), nameof(BeatmapsetsStrings.ShowStatusLoved))]
+        [LocalisableDescription(
+            typeof(BeatmapsetsStrings),
+            nameof(BeatmapsetsStrings.ShowStatusLoved)
+        )]
         Loved = 4,
     }
 
     public static class BeatmapSetOnlineStatusExtensions
     {
-        public static bool GrantsPerformancePoints(this BeatmapOnlineStatus status)
-            => status == BeatmapOnlineStatus.Ranked || status == BeatmapOnlineStatus.Approved;
+        public static bool GrantsPerformancePoints(this BeatmapOnlineStatus status) =>
+            status == BeatmapOnlineStatus.Ranked || status == BeatmapOnlineStatus.Approved;
     }
 }

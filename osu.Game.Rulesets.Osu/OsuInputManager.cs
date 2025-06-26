@@ -18,7 +18,8 @@ namespace osu.Game.Rulesets.Osu
 {
     public partial class OsuInputManager : RulesetInputManager<OsuAction>
     {
-        public SlimReadOnlyListWrapper<OsuAction> PressedActions => KeyBindingContainer.PressedActions;
+        public SlimReadOnlyListWrapper<OsuAction> PressedActions =>
+            KeyBindingContainer.PressedActions;
 
         /// <summary>
         /// Whether gameplay input buttons should be allowed.
@@ -39,20 +40,23 @@ namespace osu.Game.Rulesets.Osu
         /// </summary>
         public bool AllowUserCursorMovement { get; set; } = true;
 
-        protected override KeyBindingContainer<OsuAction> CreateKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-            => new OsuKeyBindingContainer(ruleset, variant, unique);
+        protected override KeyBindingContainer<OsuAction> CreateKeyBindingContainer(
+            RulesetInfo ruleset,
+            int variant,
+            SimultaneousBindingMode unique
+        ) => new OsuKeyBindingContainer(ruleset, variant, unique);
 
         public bool CheckScreenSpaceActionPressJudgeable(Vector2 screenSpacePosition) =>
             // This is a very naive but simple approach.
             //
             // Based on user feedback of more nuanced scenarios (where touch doesn't behave as expected),
             // this can be expanded to a more complex implementation, but I'd still want to keep it as simple as we can.
-            NonPositionalInputQueue.OfType<DrawableHitCircle.HitReceptor>().Any(c => c.CanBeHit() && c.ReceivePositionalInputAt(screenSpacePosition));
+            NonPositionalInputQueue
+                .OfType<DrawableHitCircle.HitReceptor>()
+                .Any(c => c.CanBeHit() && c.ReceivePositionalInputAt(screenSpacePosition));
 
         public OsuInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
-        {
-        }
+            : base(ruleset, 0, SimultaneousBindingMode.Unique) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -62,7 +66,8 @@ namespace osu.Game.Rulesets.Osu
 
         protected override bool Handle(UIEvent e)
         {
-            if ((e is MouseMoveEvent || e is TouchMoveEvent) && !AllowUserCursorMovement) return false;
+            if ((e is MouseMoveEvent || e is TouchMoveEvent) && !AllowUserCursorMovement)
+                return false;
 
             return base.Handle(e);
         }
@@ -88,17 +93,21 @@ namespace osu.Game.Rulesets.Osu
                 }
             }
 
-            public OsuKeyBindingContainer(RulesetInfo ruleset, int variant, SimultaneousBindingMode unique)
-                : base(ruleset, variant, unique)
-            {
-            }
+            public OsuKeyBindingContainer(
+                RulesetInfo ruleset,
+                int variant,
+                SimultaneousBindingMode unique
+            )
+                : base(ruleset, variant, unique) { }
 
             protected override void ReloadMappings(IQueryable<RealmKeyBinding> realmKeyBindings)
             {
                 base.ReloadMappings(realmKeyBindings);
 
                 if (!AllowGameplayInputs)
-                    KeyBindings = KeyBindings.Where(static b => b.GetAction<OsuAction>() == OsuAction.Smoke).ToList();
+                    KeyBindings = KeyBindings
+                        .Where(static b => b.GetAction<OsuAction>() == OsuAction.Smoke)
+                        .ToList();
             }
         }
     }

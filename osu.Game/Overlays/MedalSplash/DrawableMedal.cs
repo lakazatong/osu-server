@@ -6,7 +6,6 @@
 using System;
 using JetBrains.Annotations;
 using osu.Framework;
-using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,6 +15,7 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Users;
+using osuTK;
 
 namespace osu.Game.Overlays.MedalSplash
 {
@@ -30,8 +30,10 @@ namespace osu.Game.Overlays.MedalSplash
 
         private readonly Medal medal;
         private readonly Container medalContainer;
-        private readonly Sprite medalSprite, medalGlow;
-        private readonly OsuSpriteText unlocked, name;
+        private readonly Sprite medalSprite,
+            medalGlow;
+        private readonly OsuSpriteText unlocked,
+            name;
         private readonly TextFlowContainer description;
         private DisplayState state;
 
@@ -57,11 +59,7 @@ namespace osu.Game.Overlays.MedalSplash
                             Origin = Anchor.Centre,
                             Scale = new Vector2(0.41f),
                         },
-                        medalGlow = new Sprite
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        },
+                        medalGlow = new Sprite { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                     },
                 },
                 unlocked = new OsuSpriteText
@@ -136,7 +134,8 @@ namespace osu.Game.Overlays.MedalSplash
             get => state;
             set
             {
-                if (state == value) return;
+                if (state == value)
+                    return;
 
                 state = value;
                 updateState();
@@ -147,7 +146,8 @@ namespace osu.Game.Overlays.MedalSplash
 
         private void updateState()
         {
-            if (!IsLoaded) return;
+            if (!IsLoaded)
+                return;
 
             const double duration = 900;
 
@@ -158,15 +158,11 @@ namespace osu.Game.Overlays.MedalSplash
                     break;
 
                 case DisplayState.Icon:
-                    medalContainer
-                        .FadeIn(duration)
-                        .ScaleTo(1, duration, Easing.OutElastic);
+                    medalContainer.FadeIn(duration).ScaleTo(1, duration, Easing.OutElastic);
                     break;
 
                 case DisplayState.MedalUnlocked:
-                    medalContainer
-                        .FadeTo(1)
-                        .ScaleTo(1);
+                    medalContainer.FadeTo(1).ScaleTo(1);
 
                     this.ScaleTo(scale_when_unlocked, duration, Easing.OutExpo);
                     this.MoveToY(MedalAnimation.DISC_SIZE / 2 - 30, duration, Easing.OutExpo);
@@ -174,9 +170,7 @@ namespace osu.Game.Overlays.MedalSplash
                     break;
 
                 case DisplayState.Full:
-                    medalContainer
-                        .FadeTo(1)
-                        .ScaleTo(1);
+                    medalContainer.FadeTo(1).ScaleTo(1);
 
                     this.ScaleTo(scale_when_full, duration, Easing.OutExpo);
                     this.MoveToY(MedalAnimation.DISC_SIZE / 2 - 60, duration, Easing.OutExpo);

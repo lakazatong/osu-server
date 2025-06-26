@@ -14,6 +14,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
         }
 
         protected override HSVColourPicker CreateHSVColourPicker() => new OsuHSVColourPicker();
+
         protected override HexColourPicker CreateHexColourPicker() => new OsuHexColourPicker();
     }
 }

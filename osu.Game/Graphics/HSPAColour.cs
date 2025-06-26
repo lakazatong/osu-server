@@ -44,7 +44,9 @@ namespace osu.Game.Graphics
         {
             H = 0;
             S = 0;
-            P = MathF.Sqrt(colour.R * colour.R * p_r + colour.G * colour.G * p_g + colour.B + colour.B * p_b);
+            P = MathF.Sqrt(
+                colour.R * colour.R * p_r + colour.G * colour.G * p_g + colour.B + colour.B * p_b
+            );
             A = colour.A;
 
             if (colour.R == colour.G && colour.R == colour.B)
@@ -104,7 +106,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (h - 0f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.B = P / MathF.Sqrt(p_r / minOverMax / minOverMax + p_g * part * part + p_b);
+                    result.B =
+                        P / MathF.Sqrt(p_r / minOverMax / minOverMax + p_g * part * part + p_b);
                     result.R = result.B / minOverMax;
                     result.G = result.B + h * (result.R - result.B);
                 }
@@ -112,7 +115,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (-h + 2f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.B = P / MathF.Sqrt(p_g / minOverMax / minOverMax + p_r * part * part + p_b);
+                    result.B =
+                        P / MathF.Sqrt(p_g / minOverMax / minOverMax + p_r * part * part + p_b);
                     result.G = result.B / minOverMax;
                     result.R = result.B + h * (result.G - result.B);
                 }
@@ -120,7 +124,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (h - 2f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.R = P / MathF.Sqrt(p_g / minOverMax / minOverMax + p_b * part * part + p_r);
+                    result.R =
+                        P / MathF.Sqrt(p_g / minOverMax / minOverMax + p_b * part * part + p_r);
                     result.G = result.R / minOverMax;
                     result.B = result.R + h * (result.G - result.R);
                 }
@@ -128,7 +133,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (-h + 4f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.R = P / MathF.Sqrt(p_b / minOverMax / minOverMax + p_g * part * part + p_r);
+                    result.R =
+                        P / MathF.Sqrt(p_b / minOverMax / minOverMax + p_g * part * part + p_r);
                     result.B = result.R / minOverMax;
                     result.G = result.R + h * (result.B - result.R);
                 }
@@ -136,7 +142,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (h - 4f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.G = P / MathF.Sqrt(p_b / minOverMax / minOverMax + p_r * part * part + p_g);
+                    result.G =
+                        P / MathF.Sqrt(p_b / minOverMax / minOverMax + p_r * part * part + p_g);
                     result.B = result.G / minOverMax;
                     result.R = result.G + h * (result.B - result.G);
                 }
@@ -144,7 +151,8 @@ namespace osu.Game.Graphics
                 {
                     h = 6f * (-h + 6f / 6f);
                     float part = 1f + h * (1f / minOverMax - 1f);
-                    result.G = P / MathF.Sqrt(p_r / minOverMax / minOverMax + p_b * part * part + p_g);
+                    result.G =
+                        P / MathF.Sqrt(p_r / minOverMax / minOverMax + p_b * part * part + p_g);
                     result.R = result.G / minOverMax;
                     result.B = result.G + h * (result.R - result.G);
                 }

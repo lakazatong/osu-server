@@ -16,7 +16,10 @@ namespace osu.Game.Overlays.Mods.Input
     /// </summary>
     public class ClassicModHotkeyHandler : IModHotkeyHandler
     {
-        private static readonly Dictionary<Key, Type[]> mod_type_lookup = new Dictionary<Key, Type[]>
+        private static readonly Dictionary<Key, Type[]> mod_type_lookup = new Dictionary<
+            Key,
+            Type[]
+        >
         {
             [Key.Q] = new[] { typeof(ModEasy) },
             [Key.W] = new[] { typeof(ModNoFail) },
@@ -27,7 +30,7 @@ namespace osu.Game.Overlays.Mods.Input
             [Key.F] = new[] { typeof(ModHidden) },
             [Key.G] = new[] { typeof(ModFlashlight) },
             [Key.Z] = new[] { typeof(ModRelax) },
-            [Key.V] = new[] { typeof(ModAutoplay), typeof(ModCinema) }
+            [Key.V] = new[] { typeof(ModAutoplay), typeof(ModCinema) },
         };
 
         private readonly bool allowIncompatibleSelection;
@@ -42,7 +45,9 @@ namespace osu.Game.Overlays.Mods.Input
             if (!mod_type_lookup.TryGetValue(e.Key, out var typesToMatch))
                 return false;
 
-            var matchingMods = availableMods.Where(modState => matches(modState, typesToMatch) && modState.Visible).ToArray();
+            var matchingMods = availableMods
+                .Where(modState => matches(modState, typesToMatch) && modState.Visible)
+                .ToArray();
 
             if (matchingMods.Length == 0)
                 return false;
@@ -67,7 +72,10 @@ namespace osu.Game.Overlays.Mods.Input
             // we now know there are multiple possible mods to handle, and only one of them can be active at a time.
             // let's make sure of this just in case.
             Debug.Assert(matchingMods.Count(modState => modState.Active.Value) <= 1);
-            int currentSelectedIndex = Array.FindIndex(matchingMods, modState => modState.Active.Value);
+            int currentSelectedIndex = Array.FindIndex(
+                matchingMods,
+                modState => modState.Active.Value
+            );
 
             // `FindIndex` will return -1 if it doesn't find the item.
             // this is convenient in the forward direction, since if we add 1 then we'll end up at the first item,
@@ -77,7 +85,9 @@ namespace osu.Game.Overlays.Mods.Input
             if (currentSelectedIndex < 0 && e.ShiftPressed)
                 currentSelectedIndex = matchingMods.Length;
 
-            int indexToSelect = e.ShiftPressed ? currentSelectedIndex - 1 : currentSelectedIndex + 1;
+            int indexToSelect = e.ShiftPressed
+                ? currentSelectedIndex - 1
+                : currentSelectedIndex + 1;
 
             // `currentSelectedIndex` and `indexToSelect` can both be equal to -1 or `matchingMods.Length`.
             // if the former is beyond array range, it means nothing was previously selected and so there's nothing to deselect.
@@ -92,7 +102,7 @@ namespace osu.Game.Overlays.Mods.Input
             return true;
         }
 
-        private static bool matches(ModState modState, Type[] typesToMatch)
-            => typesToMatch.Any(typeToMatch => typeToMatch.IsInstanceOfType(modState.Mod));
+        private static bool matches(ModState modState, Type[] typesToMatch) =>
+            typesToMatch.Any(typeToMatch => typeToMatch.IsInstanceOfType(modState.Mod));
     }
 }

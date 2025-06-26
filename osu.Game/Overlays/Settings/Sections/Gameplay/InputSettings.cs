@@ -23,28 +23,30 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                 {
                     LabelText = SkinSettingsStrings.GameplayCursorSize,
                     Current = config.GetBindable<float>(OsuSetting.GameplayCursorSize),
-                    KeyboardStep = 0.01f
+                    KeyboardStep = 0.01f,
                 },
                 new SettingsCheckbox
                 {
                     LabelText = SkinSettingsStrings.AutoCursorSize,
-                    Current = config.GetBindable<bool>(OsuSetting.AutoCursorSize)
+                    Current = config.GetBindable<bool>(OsuSetting.AutoCursorSize),
                 },
                 new SettingsCheckbox
                 {
                     LabelText = SkinSettingsStrings.GameplayCursorDuringTouch,
                     Keywords = new[] { @"touchscreen" },
-                    Current = config.GetBindable<bool>(OsuSetting.GameplayCursorDuringTouch)
+                    Current = config.GetBindable<bool>(OsuSetting.GameplayCursorDuringTouch),
                 },
             };
 
             if (RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
-                Add(new SettingsCheckbox
-                {
-                    LabelText = GameplaySettingsStrings.DisableWinKey,
-                    Current = config.GetBindable<bool>(OsuSetting.GameplayDisableWinKey)
-                });
+                Add(
+                    new SettingsCheckbox
+                    {
+                        LabelText = GameplaySettingsStrings.DisableWinKey,
+                        Current = config.GetBindable<bool>(OsuSetting.GameplayDisableWinKey),
+                    }
+                );
             }
         }
     }

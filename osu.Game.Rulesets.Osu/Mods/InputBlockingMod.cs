@@ -19,10 +19,14 @@ using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.Osu.Mods
 {
-    public abstract partial class InputBlockingMod : Mod, IApplicableToDrawableRuleset<OsuHitObject>, IUpdatableByPlayfield
+    public abstract partial class InputBlockingMod
+        : Mod,
+            IApplicableToDrawableRuleset<OsuHitObject>,
+            IUpdatableByPlayfield
     {
         public override double ScoreMultiplier => 1.0;
-        public override Type[] IncompatibleMods => new[] { typeof(ModAutoplay), typeof(ModRelax), typeof(OsuModCinema) };
+        public override Type[] IncompatibleMods =>
+            new[] { typeof(ModAutoplay), typeof(ModRelax), typeof(OsuModCinema) };
         public override ModType Type => ModType.Conversion;
 
         private const double flash_duration = 1000;
@@ -50,12 +54,22 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             if (drawableRuleset.Objects.Any())
             {
-                periods.Add(new Period(int.MinValue, getValidJudgementTime(ruleset.Objects.First()) - 1));
+                periods.Add(
+                    new Period(int.MinValue, getValidJudgementTime(ruleset.Objects.First()) - 1)
+                );
 
                 foreach (BreakPeriod b in drawableRuleset.Beatmap.Breaks)
-                    periods.Add(new Period(b.StartTime, getValidJudgementTime(ruleset.Objects.First(h => h.StartTime >= b.EndTime)) - 1));
+                    periods.Add(
+                        new Period(
+                            b.StartTime,
+                            getValidJudgementTime(
+                                ruleset.Objects.First(h => h.StartTime >= b.EndTime)
+                            ) - 1
+                        )
+                    );
 
-                static double getValidJudgementTime(HitObject hitObject) => hitObject.StartTime - hitObject.HitWindows.WindowFor(HitResult.Meh);
+                static double getValidJudgementTime(HitObject hitObject) =>
+                    hitObject.StartTime - hitObject.HitWindows.WindowFor(HitResult.Meh);
             }
 
             nonGameplayPeriods = new PeriodTracker(periods);
@@ -108,11 +122,10 @@ namespace osu.Game.Rulesets.Osu.Mods
 
             public bool OnPressed(KeyBindingPressEvent<OsuAction> e)
                 // if the pressed action is incorrect, block it from reaching gameplay.
-                => !mod.checkCorrectAction(e.Action);
+                =>
+                !mod.checkCorrectAction(e.Action);
 
-            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<OsuAction> e) { }
         }
     }
 }

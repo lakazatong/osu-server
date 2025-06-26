@@ -46,7 +46,7 @@ namespace osu.Game.Screens.Play.HUD
                     Width = 0.5f,
                     Colour = colours.TeamColourRed,
                     Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopRight
+                    Origin = Anchor.TopRight,
                 },
                 new Box
                 {
@@ -56,7 +56,7 @@ namespace osu.Game.Screens.Play.HUD
                     Width = 0.5f,
                     Colour = colours.TeamColourBlue,
                     Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopLeft
+                    Origin = Anchor.TopLeft,
                 },
                 score1Bar = new Box
                 {
@@ -66,7 +66,7 @@ namespace osu.Game.Screens.Play.HUD
                     Width = 0,
                     Colour = colours.TeamColourRed,
                     Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopRight
+                    Origin = Anchor.TopRight,
                 },
                 score2Bar = new Box
                 {
@@ -76,7 +76,7 @@ namespace osu.Game.Screens.Play.HUD
                     Width = 0,
                     Colour = colours.TeamColourBlue,
                     Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopLeft
+                    Origin = Anchor.TopLeft,
                 },
                 new Container
                 {
@@ -89,25 +89,21 @@ namespace osu.Game.Screens.Play.HUD
                         Score1Text = new MatchScoreCounter
                         {
                             Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre
+                            Origin = Anchor.TopCentre,
                         },
                         Score2Text = new MatchScoreCounter
                         {
                             Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre
+                            Origin = Anchor.TopCentre,
                         },
-                    }
+                    },
                 },
                 scoreDiffText = new MatchScoreDiffCounter
                 {
                     Anchor = Anchor.TopCentre,
-                    Margin = new MarginPadding
-                    {
-                        Top = bar_height / 4,
-                        Horizontal = 8
-                    },
-                    Alpha = 0
-                }
+                    Margin = new MarginPadding { Top = bar_height / 4, Horizontal = 8 },
+                    Alpha = 0,
+                },
             };
         }
 
@@ -145,14 +141,21 @@ namespace osu.Game.Screens.Play.HUD
             var winningBar = Team1Score.Value > Team2Score.Value ? score1Bar : score2Bar;
             var losingBar = Team1Score.Value <= Team2Score.Value ? score1Bar : score2Bar;
 
-            long diff = Math.Max(Team1Score.Value, Team2Score.Value) - Math.Min(Team1Score.Value, Team2Score.Value);
+            long diff =
+                Math.Max(Team1Score.Value, Team2Score.Value)
+                - Math.Min(Team1Score.Value, Team2Score.Value);
 
             losingBar.ResizeWidthTo(0, 400, Easing.OutQuint);
-            winningBar.ResizeWidthTo(Math.Min(0.4f, MathF.Pow(diff / 1500000f, 0.5f) / 2), 400, Easing.OutQuint);
+            winningBar.ResizeWidthTo(
+                Math.Min(0.4f, MathF.Pow(diff / 1500000f, 0.5f) / 2),
+                400,
+                Easing.OutQuint
+            );
 
             scoreDiffText.Alpha = diff != 0 ? 1 : 0;
             scoreDiffText.Current.Value = -diff;
-            scoreDiffText.Origin = Team1Score.Value > Team2Score.Value ? Anchor.TopLeft : Anchor.TopRight;
+            scoreDiffText.Origin =
+                Team1Score.Value > Team2Score.Value ? Anchor.TopLeft : Anchor.TopRight;
         }
 
         protected override void UpdateAfterChildren()
@@ -176,26 +179,38 @@ namespace osu.Game.Screens.Play.HUD
                 set => updateFont(value);
             }
 
-            protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(s =>
-            {
-                displayedSpriteText = s;
-                displayedSpriteText.Spacing = new Vector2(-6);
-                updateFont(false);
-            });
+            protected override OsuSpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(s =>
+                    {
+                        displayedSpriteText = s;
+                        displayedSpriteText.Spacing = new Vector2(-6);
+                        updateFont(false);
+                    });
 
-            private void updateFont(bool winning)
-                => displayedSpriteText.Font = winning
+            private void updateFont(bool winning) =>
+                displayedSpriteText.Font = winning
                     ? OsuFont.Torus.With(weight: FontWeight.Bold, size: font_size, fixedWidth: true)
-                    : OsuFont.Torus.With(weight: FontWeight.Regular, size: font_size * 0.8f, fixedWidth: true);
+                    : OsuFont.Torus.With(
+                        weight: FontWeight.Regular,
+                        size: font_size * 0.8f,
+                        fixedWidth: true
+                    );
         }
 
         private partial class MatchScoreDiffCounter : CommaSeparatedScoreCounter
         {
-            protected override OsuSpriteText CreateSpriteText() => base.CreateSpriteText().With(s =>
-            {
-                s.Spacing = new Vector2(-2);
-                s.Font = OsuFont.Torus.With(weight: FontWeight.Regular, size: bar_height, fixedWidth: true);
-            });
+            protected override OsuSpriteText CreateSpriteText() =>
+                base.CreateSpriteText()
+                    .With(s =>
+                    {
+                        s.Spacing = new Vector2(-2);
+                        s.Font = OsuFont.Torus.With(
+                            weight: FontWeight.Regular,
+                            size: bar_height,
+                            fixedWidth: true
+                        );
+                    });
         }
     }
 }

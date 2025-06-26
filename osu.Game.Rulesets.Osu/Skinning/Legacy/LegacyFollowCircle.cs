@@ -28,33 +28,30 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             // Note that the scale adjust here is 2 instead of DrawableSliderBall.FOLLOW_AREA to match legacy behaviour.
             // This means the actual tracking area for gameplay purposes is larger than the sprite (but skins may be accounting for this).
-            this.ScaleTo(1f).ScaleTo(2f, Math.Min(180f, remainingTime), Easing.Out)
-                .FadeTo(0).FadeTo(1f, Math.Min(60f, remainingTime));
+            this.ScaleTo(1f)
+                .ScaleTo(2f, Math.Min(180f, remainingTime), Easing.Out)
+                .FadeTo(0)
+                .FadeTo(1f, Math.Min(60f, remainingTime));
         }
 
-        protected override void OnSliderRelease()
-        {
-        }
+        protected override void OnSliderRelease() { }
 
         protected override void OnSliderEnd()
         {
-            this.ScaleTo(1.6f, 200, Easing.Out)
-                .FadeOut(200, Easing.In);
+            this.ScaleTo(1.6f, 200, Easing.Out).FadeOut(200, Easing.In);
         }
 
         protected override void OnSliderTick()
         {
             if (Scale.X >= 2f)
             {
-                this.ScaleTo(2.2f)
-                    .ScaleTo(2f, 200);
+                this.ScaleTo(2.2f).ScaleTo(2f, 200);
             }
         }
 
         protected override void OnSliderBreak()
         {
-            this.ScaleTo(4f, 100)
-                .FadeTo(0f, 100);
+            this.ScaleTo(4f, 100).FadeTo(0f, 100);
         }
     }
 }

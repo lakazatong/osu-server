@@ -17,18 +17,22 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             OsuSpriteText text;
             OsuTabControl<GroupMode> filter;
-            Add(filter = new OsuTabControl<GroupMode>
-            {
-                Margin = new MarginPadding(4),
-                Size = new Vector2(229, 24),
-                AutoSort = true
-            });
-            Add(text = new OsuSpriteText
-            {
-                Text = "None",
-                Margin = new MarginPadding(4),
-                Position = new Vector2(275, 5)
-            });
+            Add(
+                filter = new OsuTabControl<GroupMode>
+                {
+                    Margin = new MarginPadding(4),
+                    Size = new Vector2(229, 24),
+                    AutoSort = true,
+                }
+            );
+            Add(
+                text = new OsuSpriteText
+                {
+                    Text = "None",
+                    Margin = new MarginPadding(4),
+                    Position = new Vector2(275, 5),
+                }
+            );
 
             filter.PinItem(GroupMode.None);
             filter.PinItem(GroupMode.LastPlayed);

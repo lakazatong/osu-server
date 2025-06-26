@@ -70,74 +70,82 @@ namespace osu.Game.Screens.Ranking
                     Type = EdgeEffectType.Glow,
                 };
 
-                Content.AddRange(new Drawable[]
-                {
-                    MainBackground = new Box
+                Content.AddRange(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Depth = float.MaxValue,
-                    },
-                    contentFlow = new FillFlowContainer
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Direction = FillDirection.Horizontal,
-                        Children = new[]
+                        MainBackground = new Box
                         {
-                            TagCategoryText = new OsuSpriteText
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                        },
+                        contentFlow = new FillFlowContainer
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Horizontal,
+                            Children = new[]
                             {
-                                Alpha = UserTag.GroupName != null ? 0.6f : 0,
-                                Text = UserTag.GroupName ?? default(LocalisableString),
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                                Margin = new MarginPadding { Horizontal = 6 }
-                            },
-                            new Container
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                                Children = new Drawable[]
+                                TagCategoryText = new OsuSpriteText
                                 {
-                                    new Box
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Alpha = 0.1f,
-                                        Blending = BlendingParameters.Additive,
-                                    },
-                                    TagNameText = new OsuSpriteText
-                                    {
-                                        Text = UserTag.DisplayName,
-                                        Font = OsuFont.Default.With(weight: FontWeight.SemiBold),
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        Margin = new MarginPadding { Horizontal = 6, Vertical = 3, },
-                                    },
-                                }
-                            },
-                            showVoteCount
-                                ? new Container
+                                    Alpha = UserTag.GroupName != null ? 0.6f : 0,
+                                    Text = UserTag.GroupName ?? default(LocalisableString),
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
+                                    Margin = new MarginPadding { Horizontal = 6 },
+                                },
+                                new Container
                                 {
-                                    RelativeSizeAxes = Axes.Y,
-                                    AutoSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Both,
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
                                     Children = new Drawable[]
                                     {
-                                        voteBackground = new Box
+                                        new Box
                                         {
                                             RelativeSizeAxes = Axes.Both,
+                                            Alpha = 0.1f,
+                                            Blending = BlendingParameters.Additive,
                                         },
-                                        voteCountText = new VoteCountText(voteCount)
+                                        TagNameText = new OsuSpriteText
                                         {
-                                            Margin = new MarginPadding { Horizontal = 6 },
+                                            Text = UserTag.DisplayName,
+                                            Font = OsuFont.Default.With(
+                                                weight: FontWeight.SemiBold
+                                            ),
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            Margin = new MarginPadding
+                                            {
+                                                Horizontal = 6,
+                                                Vertical = 3,
+                                            },
+                                        },
+                                    },
+                                },
+                                showVoteCount
+                                    ? new Container
+                                    {
+                                        RelativeSizeAxes = Axes.Y,
+                                        AutoSizeAxes = Axes.X,
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                        Children = new Drawable[]
+                                        {
+                                            voteBackground = new Box
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                            },
+                                            voteCountText = new VoteCountText(voteCount)
+                                            {
+                                                Margin = new MarginPadding { Horizontal = 6 },
+                                            },
                                         },
                                     }
-                                }
-                                : Empty(),
-                        }
-                    },
-                    loadingLayer = new LoadingLayer(dimBackground: true),
-                });
+                                    : Empty(),
+                            },
+                        },
+                        loadingLayer = new LoadingLayer(dimBackground: true),
+                    }
+                );
 
                 TooltipText = UserTag.Description;
             }
@@ -148,45 +156,96 @@ namespace osu.Game.Screens.Ranking
 
                 const double transition_duration = 300;
 
-                updating.BindValueChanged(u => loadingLayer.State.Value = u.NewValue ? Visibility.Visible : Visibility.Hidden);
+                updating.BindValueChanged(u =>
+                    loadingLayer.State.Value = u.NewValue ? Visibility.Visible : Visibility.Hidden
+                );
 
                 if (showVoteCount)
                 {
-                    voteCount.BindValueChanged(_ =>
-                    {
-                        confirmed.Value = voteCount.Value >= 10;
-                    }, true);
-                    voted.BindValueChanged(v =>
-                    {
-                        if (v.NewValue)
+                    voteCount.BindValueChanged(
+                        _ =>
                         {
-                            voteBackground.FadeColour(colours.Lime2, transition_duration, Easing.OutQuint);
-                            voteCountText.FadeColour(Colour4.Black, transition_duration, Easing.OutQuint);
-                        }
-                        else
+                            confirmed.Value = voteCount.Value >= 10;
+                        },
+                        true
+                    );
+                    voted.BindValueChanged(
+                        v =>
                         {
-                            voteBackground.FadeColour(colours.Gray2, transition_duration, Easing.OutQuint);
-                            voteCountText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                        }
-                    }, true);
+                            if (v.NewValue)
+                            {
+                                voteBackground.FadeColour(
+                                    colours.Lime2,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                voteCountText.FadeColour(
+                                    Colour4.Black,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                            }
+                            else
+                            {
+                                voteBackground.FadeColour(
+                                    colours.Gray2,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                voteCountText.FadeColour(
+                                    Colour4.White,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                            }
+                        },
+                        true
+                    );
 
-                    confirmed.BindValueChanged(c =>
-                    {
-                        if (c.NewValue)
+                    confirmed.BindValueChanged(
+                        c =>
                         {
-                            MainBackground.FadeColour(colours.Lime2, transition_duration, Easing.OutQuint);
-                            TagCategoryText.FadeColour(Colour4.Black, transition_duration, Easing.OutQuint);
-                            TagNameText.FadeColour(Colour4.Black, transition_duration, Easing.OutQuint);
-                            FadeEdgeEffectTo(0.3f, transition_duration, Easing.OutQuint);
-                        }
-                        else
-                        {
-                            MainBackground.FadeColour(colours.Gray6, transition_duration, Easing.OutQuint);
-                            TagCategoryText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                            TagNameText.FadeColour(Colour4.White, transition_duration, Easing.OutQuint);
-                            FadeEdgeEffectTo(0f, transition_duration, Easing.OutQuint);
-                        }
-                    }, true);
+                            if (c.NewValue)
+                            {
+                                MainBackground.FadeColour(
+                                    colours.Lime2,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                TagCategoryText.FadeColour(
+                                    Colour4.Black,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                TagNameText.FadeColour(
+                                    Colour4.Black,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                FadeEdgeEffectTo(0.3f, transition_duration, Easing.OutQuint);
+                            }
+                            else
+                            {
+                                MainBackground.FadeColour(
+                                    colours.Gray6,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                TagCategoryText.FadeColour(
+                                    Colour4.White,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                TagNameText.FadeColour(
+                                    Colour4.White,
+                                    transition_duration,
+                                    Easing.OutQuint
+                                );
+                                FadeEdgeEffectTo(0f, transition_duration, Easing.OutQuint);
+                            }
+                        },
+                        true
+                    );
                 }
 
                 FinishTransforms(true);
@@ -221,34 +280,45 @@ namespace osu.Game.Screens.Ranking
                 {
                     base.LoadComplete();
 
-                    voteCount.BindValueChanged(count =>
-                    {
-                        OsuSpriteText? previousText = text;
-
-                        AddInternal(text = new OsuSpriteText
+                    voteCount.BindValueChanged(
+                        count =>
                         {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
-                            Text = voteCount.Value.ToLocalisableString(),
-                        });
+                            OsuSpriteText? previousText = text;
 
-                        if (previousText != null)
-                        {
-                            const double transition_duration = 500;
+                            AddInternal(
+                                text = new OsuSpriteText
+                                {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
+                                    Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
+                                    Text = voteCount.Value.ToLocalisableString(),
+                                }
+                            );
 
-                            bool isIncrease = count.NewValue > count.OldValue;
+                            if (previousText != null)
+                            {
+                                const double transition_duration = 500;
 
-                            text.MoveToY(isIncrease ? 20 : -20)
-                                .MoveToY(0, transition_duration, Easing.OutExpo);
+                                bool isIncrease = count.NewValue > count.OldValue;
 
-                            previousText.BypassAutoSizeAxes = Axes.Both;
-                            previousText.MoveToY(isIncrease ? -20 : 20, transition_duration, Easing.OutExpo).Expire();
+                                text.MoveToY(isIncrease ? 20 : -20)
+                                    .MoveToY(0, transition_duration, Easing.OutExpo);
 
-                            AutoSizeDuration = 300;
-                            AutoSizeEasing = Easing.OutQuint;
-                        }
-                    }, true);
+                                previousText.BypassAutoSizeAxes = Axes.Both;
+                                previousText
+                                    .MoveToY(
+                                        isIncrease ? -20 : 20,
+                                        transition_duration,
+                                        Easing.OutExpo
+                                    )
+                                    .Expire();
+
+                                AutoSizeDuration = 300;
+                                AutoSizeEasing = Easing.OutQuint;
+                            }
+                        },
+                        true
+                    );
                 }
             }
         }

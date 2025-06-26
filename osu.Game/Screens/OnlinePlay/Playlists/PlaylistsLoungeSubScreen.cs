@@ -60,7 +60,12 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             return criteria;
         }
 
-        protected override void JoinInternal(Room room, string? password, Action<Room> onSuccess, Action<string, Exception?> onFailure)
+        protected override void JoinInternal(
+            Room room,
+            string? password,
+            Action<Room> onSuccess,
+            Action<string, Exception?> onFailure
+        )
         {
             var joinRoomRequest = new JoinRoomRequest(room, password);
 
@@ -90,11 +95,12 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             return new Room
             {
                 Name = $"{api.LocalUser}'s awesome playlist",
-                Type = MatchType.Playlists
+                Type = MatchType.Playlists,
             };
         }
 
-        protected override OnlinePlaySubScreen CreateRoomSubScreen(Room room) => new PlaylistsRoomSubScreen(room);
+        protected override OnlinePlaySubScreen CreateRoomSubScreen(Room room) =>
+            new PlaylistsRoomSubScreen(room);
 
         private enum PlaylistsCategory
         {

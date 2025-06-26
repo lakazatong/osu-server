@@ -54,8 +54,9 @@ namespace osu.Game.Rulesets.Mania.Edit.Setup
                 specialStyle = new FormCheckBox
                 {
                     Caption = "Use special (N+1) style",
-                    HintText = "Changes one column to act as a classic \"scratch\" or \"special\" column, which can be moved around by the user's skin (to the left/right/centre). Generally used in 6K (5+1) or 8K (7+1) configurations.",
-                    Current = { Value = Beatmap.SpecialStyle }
+                    HintText =
+                        "Changes one column to act as a classic \"scratch\" or \"special\" column, which can be moved around by the user's skin (to the left/right/centre). Generally used in 6K (5+1) or 8K (7+1) configurations.",
+                    Current = { Value = Beatmap.SpecialStyle },
                 },
                 healthDrainSlider = new FormSliderBar<float>
                 {
@@ -128,30 +129,35 @@ namespace osu.Game.Rulesets.Mania.Edit.Setup
 
         private void updateKeyCount(ValueChangedEvent<float> keyCount)
         {
-            if (updatingKeyCount) return;
+            if (updatingKeyCount)
+                return;
 
             updateValues();
 
-            if (editor == null) return;
+            if (editor == null)
+                return;
 
             updatingKeyCount = true;
 
-            editor.SaveAndReload().ContinueWith(t =>
-            {
-                if (!t.GetResultSafely())
+            editor
+                .SaveAndReload()
+                .ContinueWith(t =>
                 {
-                    Schedule(() =>
+                    if (!t.GetResultSafely())
                     {
-                        changeHandler!.RestoreState(-1);
-                        Beatmap.Difficulty.CircleSize = keyCountSlider.Current.Value = keyCount.OldValue;
+                        Schedule(() =>
+                        {
+                            changeHandler!.RestoreState(-1);
+                            Beatmap.Difficulty.CircleSize = keyCountSlider.Current.Value =
+                                keyCount.OldValue;
+                            updatingKeyCount = false;
+                        });
+                    }
+                    else
+                    {
                         updatingKeyCount = false;
-                    });
-                }
-                else
-                {
-                    updatingKeyCount = false;
-                }
-            });
+                    }
+                });
         }
 
         private void updateValues()

@@ -42,7 +42,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Width = 0.99f,
                         Y = -box.Height,
                         Font = OsuFont.Default.With(size: 20),
-                    }
+                    },
                 };
 
                 box.OnCommit += (_, _) =>
@@ -168,11 +168,15 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void addMessages(int count)
         {
-            AddRepeatStep("Add messages", () =>
-            {
-                box.Text = $"Message {++messageCounter}";
-                InputManager.Key(Key.Enter);
-            }, count);
+            AddRepeatStep(
+                "Add messages",
+                () =>
+                {
+                    box.Text = $"Message {++messageCounter}";
+                    InputManager.Key(Key.Enter);
+                },
+                count
+            );
         }
     }
 }

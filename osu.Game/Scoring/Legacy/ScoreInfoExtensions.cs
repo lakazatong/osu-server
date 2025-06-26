@@ -12,28 +12,56 @@ namespace osu.Game.Scoring.Legacy
 {
     public static class ScoreInfoExtensions
     {
-        public static long GetDisplayScore(this ScoreProcessor scoreProcessor, ScoringMode mode)
-            => getDisplayScore(scoreProcessor.Ruleset.RulesetInfo.OnlineID, scoreProcessor.TotalScore.Value, mode, scoreProcessor.MaximumStatistics);
+        public static long GetDisplayScore(this ScoreProcessor scoreProcessor, ScoringMode mode) =>
+            getDisplayScore(
+                scoreProcessor.Ruleset.RulesetInfo.OnlineID,
+                scoreProcessor.TotalScore.Value,
+                mode,
+                scoreProcessor.MaximumStatistics
+            );
 
-        public static long GetDisplayScore(this ScoreInfo scoreInfo, ScoringMode mode)
-            => getDisplayScore(scoreInfo.Ruleset.OnlineID, scoreInfo.TotalScore, mode, scoreInfo.MaximumStatistics);
+        public static long GetDisplayScore(this ScoreInfo scoreInfo, ScoringMode mode) =>
+            getDisplayScore(
+                scoreInfo.Ruleset.OnlineID,
+                scoreInfo.TotalScore,
+                mode,
+                scoreInfo.MaximumStatistics
+            );
 
-        public static long GetDisplayScore(this SoloScoreInfo soloScoreInfo, ScoringMode mode)
-            => getDisplayScore(soloScoreInfo.RulesetID, soloScoreInfo.TotalScore, mode, soloScoreInfo.MaximumStatistics);
+        public static long GetDisplayScore(this SoloScoreInfo soloScoreInfo, ScoringMode mode) =>
+            getDisplayScore(
+                soloScoreInfo.RulesetID,
+                soloScoreInfo.TotalScore,
+                mode,
+                soloScoreInfo.MaximumStatistics
+            );
 
-        public static long GetDisplayScore(this MultiplayerScore multiplayerScore, ScoringMode mode)
-            => getDisplayScore(multiplayerScore.RulesetId, multiplayerScore.TotalScore, mode, multiplayerScore.MaximumStatistics);
+        public static long GetDisplayScore(
+            this MultiplayerScore multiplayerScore,
+            ScoringMode mode
+        ) =>
+            getDisplayScore(
+                multiplayerScore.RulesetId,
+                multiplayerScore.TotalScore,
+                mode,
+                multiplayerScore.MaximumStatistics
+            );
 
-        private static long getDisplayScore(int rulesetId, long score, ScoringMode mode, IReadOnlyDictionary<HitResult, int> maximumStatistics)
+        private static long getDisplayScore(
+            int rulesetId,
+            long score,
+            ScoringMode mode,
+            IReadOnlyDictionary<HitResult, int> maximumStatistics
+        )
         {
             if (mode == ScoringMode.Standardised)
                 return score;
 
             int maxBasicJudgements = maximumStatistics
-                                     .Where(k => k.Key.IsBasic())
-                                     .Select(k => k.Value)
-                                     .DefaultIfEmpty(0)
-                                     .Sum();
+                .Where(k => k.Key.IsBasic())
+                .Select(k => k.Value)
+                .DefaultIfEmpty(0)
+                .Sum();
 
             return convertStandardisedToClassic(rulesetId, score, maxBasicJudgements);
         }
@@ -49,18 +77,39 @@ namespace osu.Game.Scoring.Legacy
         /// so that every 10 points in standardised mode converts to at least 1 point in classic mode.
         /// This is done to account for bonus judgements in a way that does not reorder scores.
         /// </remarks>
-        private static long convertStandardisedToClassic(int rulesetId, long standardisedTotalScore, int objectCount)
+        private static long convertStandardisedToClassic(
+            int rulesetId,
+            long standardisedTotalScore,
+            int objectCount
+        )
         {
             switch (rulesetId)
             {
                 case 0:
-                    return (long)Math.Round((Math.Pow(objectCount, 2) * 32.57 + 100000) * standardisedTotalScore / ScoreProcessor.MAX_SCORE);
+                    return (long)
+                        Math.Round(
+                            (Math.Pow(objectCount, 2) * 32.57 + 100000)
+                                * standardisedTotalScore
+                                / ScoreProcessor.MAX_SCORE
+                        );
 
                 case 1:
-                    return (long)Math.Round((objectCount * 1109 + 100000) * standardisedTotalScore / ScoreProcessor.MAX_SCORE);
+                    return (long)
+                        Math.Round(
+                            (objectCount * 1109 + 100000)
+                                * standardisedTotalScore
+                                / ScoreProcessor.MAX_SCORE
+                        );
 
                 case 2:
-                    return (long)Math.Round(Math.Pow(standardisedTotalScore / ScoreProcessor.MAX_SCORE * objectCount, 2) * 21.62 + standardisedTotalScore / 10d);
+                    return (long)
+                        Math.Round(
+                            Math.Pow(
+                                standardisedTotalScore / ScoreProcessor.MAX_SCORE * objectCount,
+                                2
+                            ) * 21.62
+                                + standardisedTotalScore / 10d
+                        );
 
                 case 3:
                 default:
@@ -89,7 +138,8 @@ namespace osu.Game.Scoring.Legacy
                 // For legacy scores, Geki indicates hit300 + perfect strong note hit.
                 // Lazer only has one result for a perfect strong note hit (LargeBonus).
                 case 1:
-                    scoreInfo.Statistics[HitResult.LargeBonus] = scoreInfo.Statistics.GetValueOrDefault(HitResult.LargeBonus) + value;
+                    scoreInfo.Statistics[HitResult.LargeBonus] =
+                        scoreInfo.Statistics.GetValueOrDefault(HitResult.LargeBonus) + value;
                     break;
 
                 case 3:
@@ -98,9 +148,11 @@ namespace osu.Game.Scoring.Legacy
             }
         }
 
-        public static int? GetCount300(this ScoreInfo scoreInfo) => getCount(scoreInfo, HitResult.Great);
+        public static int? GetCount300(this ScoreInfo scoreInfo) =>
+            getCount(scoreInfo, HitResult.Great);
 
-        public static void SetCount300(this ScoreInfo scoreInfo, int value) => scoreInfo.Statistics[HitResult.Great] = value;
+        public static void SetCount300(this ScoreInfo scoreInfo, int value) =>
+            scoreInfo.Statistics[HitResult.Great] = value;
 
         public static int? GetCountKatu(this ScoreInfo scoreInfo)
         {
@@ -127,7 +179,8 @@ namespace osu.Game.Scoring.Legacy
                 // For legacy scores, Katu indicates hit100 + perfect strong note hit.
                 // Lazer only has one result for a perfect strong note hit (LargeBonus).
                 case 1:
-                    scoreInfo.Statistics[HitResult.LargeBonus] = scoreInfo.Statistics.GetValueOrDefault(HitResult.LargeBonus) + value;
+                    scoreInfo.Statistics[HitResult.LargeBonus] =
+                        scoreInfo.Statistics.GetValueOrDefault(HitResult.LargeBonus) + value;
                     break;
 
                 case 2:
@@ -212,7 +265,8 @@ namespace osu.Game.Scoring.Legacy
                     return getCount(scoreInfo, HitResult.Miss);
 
                 case 2:
-                    return (getCount(scoreInfo, HitResult.Miss) ?? 0) + (getCount(scoreInfo, HitResult.LargeTickMiss) ?? 0);
+                    return (getCount(scoreInfo, HitResult.Miss) ?? 0)
+                        + (getCount(scoreInfo, HitResult.LargeTickMiss) ?? 0);
             }
 
             return null;

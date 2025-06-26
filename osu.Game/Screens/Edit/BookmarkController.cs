@@ -46,24 +46,44 @@ namespace osu.Game.Screens.Edit
             {
                 Items = new MenuItem[]
                 {
-                    new EditorMenuItem(EditorStrings.AddBookmark, MenuItemType.Standard, addBookmarkAtCurrentTime)
+                    new EditorMenuItem(
+                        EditorStrings.AddBookmark,
+                        MenuItemType.Standard,
+                        addBookmarkAtCurrentTime
+                    )
                     {
                         Hotkey = new Hotkey(GlobalAction.EditorAddBookmark),
                     },
-                    removeBookmarkMenuItem = new EditorMenuItem(EditorStrings.RemoveClosestBookmark, MenuItemType.Destructive, removeClosestBookmark)
+                    removeBookmarkMenuItem = new EditorMenuItem(
+                        EditorStrings.RemoveClosestBookmark,
+                        MenuItemType.Destructive,
+                        removeClosestBookmark
+                    )
                     {
-                        Hotkey = new Hotkey(GlobalAction.EditorRemoveClosestBookmark)
+                        Hotkey = new Hotkey(GlobalAction.EditorRemoveClosestBookmark),
                     },
-                    seekToPreviousBookmarkMenuItem = new EditorMenuItem(EditorStrings.SeekToPreviousBookmark, MenuItemType.Standard, () => seekBookmark(-1))
+                    seekToPreviousBookmarkMenuItem = new EditorMenuItem(
+                        EditorStrings.SeekToPreviousBookmark,
+                        MenuItemType.Standard,
+                        () => seekBookmark(-1)
+                    )
                     {
-                        Hotkey = new Hotkey(GlobalAction.EditorSeekToPreviousBookmark)
+                        Hotkey = new Hotkey(GlobalAction.EditorSeekToPreviousBookmark),
                     },
-                    seekToNextBookmarkMenuItem = new EditorMenuItem(EditorStrings.SeekToNextBookmark, MenuItemType.Standard, () => seekBookmark(1))
+                    seekToNextBookmarkMenuItem = new EditorMenuItem(
+                        EditorStrings.SeekToNextBookmark,
+                        MenuItemType.Standard,
+                        () => seekBookmark(1)
+                    )
                     {
-                        Hotkey = new Hotkey(GlobalAction.EditorSeekToNextBookmark)
+                        Hotkey = new Hotkey(GlobalAction.EditorSeekToNextBookmark),
                     },
-                    resetBookmarkMenuItem = new EditorMenuItem(EditorStrings.ResetBookmarks, MenuItemType.Destructive, () => dialogOverlay?.Push(new BookmarkResetDialog(editorBeatmap)))
-                }
+                    resetBookmarkMenuItem = new EditorMenuItem(
+                        EditorStrings.ResetBookmarks,
+                        MenuItemType.Destructive,
+                        () => dialogOverlay?.Push(new BookmarkResetDialog(editorBeatmap))
+                    ),
+                },
             };
         }
 
@@ -79,7 +99,9 @@ namespace osu.Game.Screens.Edit
             base.Update();
 
             bool hasAnyBookmark = bookmarks.Count > 0;
-            bool hasBookmarkCloseEnoughForDeletion = bookmarks.Any(b => Math.Abs(b - clock.CurrentTimeAccurate) < 2000);
+            bool hasBookmarkCloseEnoughForDeletion = bookmarks.Any(b =>
+                Math.Abs(b - clock.CurrentTimeAccurate) < 2000
+            );
 
             removeBookmarkMenuItem.Action.Disabled = !hasBookmarkCloseEnoughForDeletion;
             seekToPreviousBookmarkMenuItem.Action.Disabled = !hasAnyBookmark;
@@ -106,9 +128,10 @@ namespace osu.Game.Screens.Edit
 
         private void seekBookmark(int direction)
         {
-            int? targetBookmark = direction < 1
-                ? bookmarks.Cast<int?>().LastOrDefault(b => b < clock.CurrentTimeAccurate)
-                : bookmarks.Cast<int?>().FirstOrDefault(b => b > clock.CurrentTimeAccurate);
+            int? targetBookmark =
+                direction < 1
+                    ? bookmarks.Cast<int?>().LastOrDefault(b => b < clock.CurrentTimeAccurate)
+                    : bookmarks.Cast<int?>().FirstOrDefault(b => b > clock.CurrentTimeAccurate);
 
             if (targetBookmark != null)
                 clock.SeekSmoothlyTo(targetBookmark.Value);
@@ -144,8 +167,6 @@ namespace osu.Game.Screens.Edit
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
     }
 }

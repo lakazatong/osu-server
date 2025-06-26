@@ -16,11 +16,10 @@ namespace osu.Game.Rulesets.Mania.Mods
         public override double ScoreMultiplier => 1;
         public override bool ValidForFreestyleAsRequiredMod => false;
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[]
-        {
-            typeof(ManiaModHidden),
-            typeof(ManiaModCover)
-        }).ToArray();
+        public override Type[] IncompatibleMods =>
+            base
+                .IncompatibleMods.Concat(new[] { typeof(ManiaModHidden), typeof(ManiaModCover) })
+                .ToArray();
 
         protected override CoverExpandDirection ExpandDirection => CoverExpandDirection.AlongScroll;
     }

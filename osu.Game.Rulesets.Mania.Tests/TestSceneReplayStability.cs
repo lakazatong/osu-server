@@ -12,7 +12,9 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Mania.Tests
 {
-    [Ignore("These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found.")]
+    [Ignore(
+        "These tests are expected to fail until an acceptable solution for various replay playback issues concerning rounding of replay frame times & hit windows is found."
+    )]
     public partial class TestSceneReplayStability : ReplayStabilityTestScene
     {
         private static readonly object[][] test_cases =
@@ -63,7 +65,6 @@ namespace osu.Game.Rulesets.Mania.Tests
             new object[] { 5f, -136.2d, HitResult.Miss },
             new object[] { 5f, -136.7d, HitResult.Miss },
             new object[] { 5f, -137d, HitResult.Miss },
-
             // OD = 9.3 test cases.
             // PERFECT hit window is [ -14.67ms,  14.67ms]
             // GREAT   hit window is [ -36.10ms,  36.10ms]
@@ -108,7 +109,11 @@ namespace osu.Game.Rulesets.Mania.Tests
         };
 
         [TestCaseSource(nameof(test_cases))]
-        public void TestHitWindowStability(float overallDifficulty, double hitOffset, HitResult expectedResult)
+        public void TestHitWindowStability(
+            float overallDifficulty,
+            double hitOffset,
+            HitResult expectedResult
+        )
         {
             const double note_time = 100;
 
@@ -116,21 +121,14 @@ namespace osu.Game.Rulesets.Mania.Tests
             {
                 HitObjects =
                 {
-                    new Note
-                    {
-                        StartTime = note_time,
-                        Column = 0,
-                    }
+                    new Note { StartTime = note_time, Column = 0 },
                 },
                 Difficulty = new BeatmapDifficulty
                 {
                     OverallDifficulty = overallDifficulty,
                     CircleSize = 1,
                 },
-                BeatmapInfo =
-                {
-                    Ruleset = new ManiaRuleset().RulesetInfo,
-                },
+                BeatmapInfo = { Ruleset = new ManiaRuleset().RulesetInfo },
             };
 
             var replay = new Replay
@@ -140,7 +138,7 @@ namespace osu.Game.Rulesets.Mania.Tests
                     new ManiaReplayFrame(0),
                     new ManiaReplayFrame(note_time + hitOffset, ManiaAction.Key1),
                     new ManiaReplayFrame(note_time + hitOffset + 20),
-                }
+                },
             };
 
             RunTest(beatmap, replay, [expectedResult]);

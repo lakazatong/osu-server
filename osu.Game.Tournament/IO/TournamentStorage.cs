@@ -30,7 +30,9 @@ namespace osu.Game.Tournament.IO
 
             TournamentConfigManager = new TournamentConfigManager(storage);
 
-            CurrentTournament = TournamentConfigManager.GetBindable<string>(StorageConfig.CurrentTournament);
+            CurrentTournament = TournamentConfigManager.GetBindable<string>(
+                StorageConfig.CurrentTournament
+            );
 
             ChangeTargetStorage(AllTournaments.GetStorageForDirectory(CurrentTournament.Value));
 
@@ -45,6 +47,9 @@ namespace osu.Game.Tournament.IO
             Logger.Log("Changing tournament storage: " + GetFullPath(string.Empty));
         }
 
-        public IEnumerable<string> ListTournaments() => AllTournaments.GetDirectories(string.Empty).Order(StringComparer.CurrentCultureIgnoreCase);
+        public IEnumerable<string> ListTournaments() =>
+            AllTournaments
+                .GetDirectories(string.Empty)
+                .Order(StringComparer.CurrentCultureIgnoreCase);
     }
 }

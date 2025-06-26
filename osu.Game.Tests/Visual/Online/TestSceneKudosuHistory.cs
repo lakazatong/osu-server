@@ -1,16 +1,16 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Game.Overlays.Profile.Sections.Kudosu;
-using System.Collections.Generic;
 using System;
-using osu.Framework.Graphics.Containers;
+using System.Collections.Generic;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
+using osu.Game.Overlays.Profile.Sections.Kudosu;
 
 namespace osu.Game.Tests.Visual.Online
 {
@@ -19,27 +19,28 @@ namespace osu.Game.Tests.Visual.Online
         private readonly Box background;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Pink
+        );
 
         public TestSceneKudosuHistory()
         {
             FillFlowContainer<DrawableKudosuHistoryItem> content;
 
-            AddRange(new Drawable[]
-            {
-                background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                },
-                content = new FillFlowContainer<DrawableKudosuHistoryItem>
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Width = 0.7f,
-                    AutoSizeAxes = Axes.Y,
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    content = new FillFlowContainer<DrawableKudosuHistoryItem>
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.X,
+                        Width = 0.7f,
+                        AutoSizeAxes = Axes.Y,
+                    },
                 }
-            });
+            );
 
             items.ForEach(t => content.Add(new DrawableKudosuHistoryItem(t)));
         }
@@ -66,8 +67,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username1",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -83,8 +84,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username2",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -100,8 +101,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username3",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -117,8 +118,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username4",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -134,8 +135,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username5",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -151,8 +152,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username6",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -168,8 +169,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username7",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -185,8 +186,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username8",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -202,8 +203,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username9",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -219,8 +220,8 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username10",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
             },
             new APIKudosuHistory
             {
@@ -236,9 +237,9 @@ namespace osu.Game.Tests.Visual.Online
                 Giver = new APIKudosuHistory.KudosuGiver
                 {
                     Username = @"Username11",
-                    Url = @"https://osu.ppy.sh/u/1234"
-                }
-            }
+                    Url = @"https://osu.ppy.sh/u/1234",
+                },
+            },
         };
     }
 }

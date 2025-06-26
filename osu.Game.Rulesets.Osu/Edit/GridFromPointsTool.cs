@@ -15,15 +15,17 @@ namespace osu.Game.Rulesets.Osu.Edit
             : base("Grid")
         {
             TooltipText = """
-                          Left click to set the origin.
-                          Left click again to set the spacing and rotation.
-                          Right click to reset to default.
-                          Click and drag to set the origin, spacing and rotation.
-                          """;
+                Left click to set the origin.
+                Left click again to set the spacing and rotation.
+                Right click to reset to default.
+                Click and drag to set the origin, spacing and rotation.
+                """;
         }
 
-        public override Drawable CreateIcon() => new SpriteIcon { Icon = FontAwesome.Solid.DraftingCompass };
+        public override Drawable CreateIcon() =>
+            new SpriteIcon { Icon = FontAwesome.Solid.DraftingCompass };
 
-        public override PlacementBlueprint CreatePlacementBlueprint() => new GridPlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() =>
+            new GridPlacementBlueprint();
     }
 }

@@ -18,59 +18,72 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
     public partial class TestSceneOsuModDifficultyAdjust : OsuModTestScene
     {
         [Test]
-        public void TestNoAdjustment() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModDifficultyAdjust(),
-            CreateBeatmap = () => new Beatmap
-            {
-                BeatmapInfo = new BeatmapInfo
+        public void TestNoAdjustment() =>
+            CreateModTest(
+                new ModTestData
                 {
-                    Difficulty = new BeatmapDifficulty
-                    {
-                        CircleSize = 8
-                    }
-                },
-                HitObjects = new List<HitObject>
-                {
-                    new HitCircle { StartTime = 1000 },
-                    new HitCircle { StartTime = 2000 }
+                    Mod = new OsuModDifficultyAdjust(),
+                    CreateBeatmap = () =>
+                        new Beatmap
+                        {
+                            BeatmapInfo = new BeatmapInfo
+                            {
+                                Difficulty = new BeatmapDifficulty { CircleSize = 8 },
+                            },
+                            HitObjects = new List<HitObject>
+                            {
+                                new HitCircle { StartTime = 1000 },
+                                new HitCircle { StartTime = 2000 },
+                            },
+                        },
+                    Autoplay = true,
+                    PassCondition = () => checkSomeHit() && checkObjectsScale(0.29f),
                 }
-            },
-            Autoplay = true,
-            PassCondition = () => checkSomeHit() && checkObjectsScale(0.29f)
-        });
+            );
 
         [Test]
-        public void TestCircleSize1() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModDifficultyAdjust { CircleSize = { Value = 1 } },
-            Autoplay = true,
-            PassCondition = () => checkSomeHit() && checkObjectsScale(0.78f)
-        });
+        public void TestCircleSize1() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModDifficultyAdjust { CircleSize = { Value = 1 } },
+                    Autoplay = true,
+                    PassCondition = () => checkSomeHit() && checkObjectsScale(0.78f),
+                }
+            );
 
         [Test]
-        public void TestCircleSize10() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModDifficultyAdjust { CircleSize = { Value = 10 } },
-            Autoplay = true,
-            PassCondition = () => checkSomeHit() && checkObjectsScale(0.15f)
-        });
+        public void TestCircleSize10() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModDifficultyAdjust { CircleSize = { Value = 10 } },
+                    Autoplay = true,
+                    PassCondition = () => checkSomeHit() && checkObjectsScale(0.15f),
+                }
+            );
 
         [Test]
-        public void TestApproachRate1() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModDifficultyAdjust { ApproachRate = { Value = 1 } },
-            Autoplay = true,
-            PassCondition = () => checkSomeHit() && checkObjectsPreempt(1680)
-        });
+        public void TestApproachRate1() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModDifficultyAdjust { ApproachRate = { Value = 1 } },
+                    Autoplay = true,
+                    PassCondition = () => checkSomeHit() && checkObjectsPreempt(1680),
+                }
+            );
 
         [Test]
-        public void TestApproachRate10() => CreateModTest(new ModTestData
-        {
-            Mod = new OsuModDifficultyAdjust { ApproachRate = { Value = 10 } },
-            Autoplay = true,
-            PassCondition = () => checkSomeHit() && checkObjectsPreempt(450)
-        });
+        public void TestApproachRate10() =>
+            CreateModTest(
+                new ModTestData
+                {
+                    Mod = new OsuModDifficultyAdjust { ApproachRate = { Value = 10 } },
+                    Autoplay = true,
+                    PassCondition = () => checkSomeHit() && checkObjectsPreempt(450),
+                }
+            );
 
         private bool checkObjectsPreempt(double target)
         {
@@ -87,7 +100,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             if (!objects.Any())
                 return false;
 
-            return objects.All(o => Precision.AlmostEquals(o.ChildrenOfType<Container>().First().Scale.X, target));
+            return objects.All(o =>
+                Precision.AlmostEquals(o.ChildrenOfType<Container>().First().Scale.X, target)
+            );
         }
 
         private bool checkSomeHit()

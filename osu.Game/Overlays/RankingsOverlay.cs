@@ -6,16 +6,17 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Overlays.Rankings;
-using osu.Game.Users;
-using osu.Game.Rulesets;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
+using osu.Game.Overlays.Rankings;
 using osu.Game.Overlays.Rankings.Tables;
+using osu.Game.Rulesets;
+using osu.Game.Users;
 
 namespace osu.Game.Overlays
 {
-    public partial class RankingsOverlay : TabbableOnlineOverlay<RankingsOverlayHeader, RankingsScope>
+    public partial class RankingsOverlay
+        : TabbableOnlineOverlay<RankingsOverlayHeader, RankingsScope>
     {
         protected Bindable<CountryCode> Country => Header.Country;
 
@@ -31,9 +32,7 @@ namespace osu.Game.Overlays
         private readonly Bindable<RulesetInfo> ruleset = new Bindable<RulesetInfo>();
 
         public RankingsOverlay()
-            : base(OverlayColourScheme.Green)
-        {
-        }
+            : base(OverlayColourScheme.Green) { }
 
         protected override void LoadComplete()
         {
@@ -101,10 +100,7 @@ namespace osu.Game.Overlays
 
             if (Header.Current.Value == RankingsScope.Spotlights)
             {
-                LoadDisplay(new SpotlightsLayout
-                {
-                    Ruleset = { BindTarget = ruleset }
-                });
+                LoadDisplay(new SpotlightsLayout { Ruleset = { BindTarget = ruleset } });
                 return;
             }
 

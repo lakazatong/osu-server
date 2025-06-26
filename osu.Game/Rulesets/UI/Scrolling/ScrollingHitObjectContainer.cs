@@ -21,13 +21,18 @@ namespace osu.Game.Rulesets.UI.Scrolling
     public partial class ScrollingHitObjectContainer : HitObjectContainer
     {
         private readonly IBindable<double> timeRange = new BindableDouble();
-        private readonly IBindable<ScrollingDirection> direction = new Bindable<ScrollingDirection>();
+        private readonly IBindable<ScrollingDirection> direction =
+            new Bindable<ScrollingDirection>();
         private readonly IBindable<IScrollAlgorithm> algorithm = new Bindable<IScrollAlgorithm>();
 
         /// <summary>
         /// Whether the scrolling direction is horizontal or vertical.
         /// </summary>
-        private Direction scrollingAxis => direction.Value == ScrollingDirection.Left || direction.Value == ScrollingDirection.Right ? Direction.Horizontal : Direction.Vertical;
+        private Direction scrollingAxis =>
+            direction.Value == ScrollingDirection.Left
+            || direction.Value == ScrollingDirection.Right
+                ? Direction.Horizontal
+                : Direction.Vertical;
 
         /// <summary>
         /// The scrolling axis is inverted if objects temporally farther in the future have a smaller position value across the scrolling axis.
@@ -36,18 +41,23 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// <see cref="ScrollingDirection.Down"/> is inverted, because given two objects, one of which is at the current time and one of which is 1000ms in the future,
         /// in the current time instant the future object is spatially above the current object, and therefore has a smaller value of the Y coordinate of its position.
         /// </example>
-        private bool axisInverted => direction.Value == ScrollingDirection.Down || direction.Value == ScrollingDirection.Right;
+        private bool axisInverted =>
+            direction.Value == ScrollingDirection.Down
+            || direction.Value == ScrollingDirection.Right;
 
         /// <summary>
         /// A set of top-level <see cref="DrawableHitObject"/>s which have an up-to-date layout.
         /// </summary>
-        private readonly HashSet<DrawableHitObject> layoutComputed = new HashSet<DrawableHitObject>();
+        private readonly HashSet<DrawableHitObject> layoutComputed =
+            new HashSet<DrawableHitObject>();
 
         [Resolved]
         private IScrollingInfo scrollingInfo { get; set; }
 
         // Responds to changes in the layout. When the layout changes, all hit object states must be recomputed.
-        private readonly LayoutValue layoutCache = new LayoutValue(Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo);
+        private readonly LayoutValue layoutCache = new LayoutValue(
+            Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo
+        );
 
         public ScrollingHitObjectContainer()
         {
@@ -77,7 +87,12 @@ namespace osu.Game.Rulesets.UI.Scrolling
         public double TimeAtPosition(float localPosition, double currentTime)
         {
             float scrollPosition = axisInverted ? -localPosition : localPosition;
-            return algorithm.Value.TimeAt(scrollPosition, currentTime, timeRange.Value, scrollLength);
+            return algorithm.Value.TimeAt(
+                scrollPosition,
+                currentTime,
+                timeRange.Value,
+                scrollLength
+            );
         }
 
         /// <summary>
@@ -99,7 +114,13 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// </summary>
         public float PositionAtTime(double time, double currentTime, double? originTime = null)
         {
-            float scrollPosition = algorithm.Value.PositionAt(time, currentTime, timeRange.Value, scrollLength, originTime);
+            float scrollPosition = algorithm.Value.PositionAt(
+                time,
+                currentTime,
+                timeRange.Value,
+                scrollLength,
+                originTime
+            );
             return axisInverted ? -scrollPosition : scrollPosition;
         }
 
@@ -129,7 +150,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
             return algorithm.Value.GetLength(startTime, endTime, timeRange.Value, scrollLength);
         }
 
-        private float scrollLength => scrollingAxis == Direction.Horizontal ? DrawWidth : DrawHeight;
+        private float scrollLength =>
+            scrollingAxis == Direction.Horizontal ? DrawWidth : DrawHeight;
 
         public override void Add(HitObjectLifetimeEntry entry)
         {
@@ -141,7 +163,10 @@ namespace osu.Game.Rulesets.UI.Scrolling
             base.Add(entry);
         }
 
-        protected override void AddDrawable(HitObjectLifetimeEntry entry, DrawableHitObject drawable)
+        protected override void AddDrawable(
+            HitObjectLifetimeEntry entry,
+            DrawableHitObject drawable
+        )
         {
             base.AddDrawable(entry, drawable);
 
@@ -149,7 +174,10 @@ namespace osu.Game.Rulesets.UI.Scrolling
             drawable.DefaultsApplied += invalidateHitObject;
         }
 
-        protected override void RemoveDrawable(HitObjectLifetimeEntry entry, DrawableHitObject drawable)
+        protected override void RemoveDrawable(
+            HitObjectLifetimeEntry entry,
+            DrawableHitObject drawable
+        )
         {
             base.RemoveDrawable(entry, drawable);
 
@@ -166,7 +194,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
         {
             base.Update();
 
-            if (layoutCache.IsValid) return;
+            if (layoutCache.IsValid)
+                return;
 
             layoutComputed.Clear();
 
@@ -205,7 +234,8 @@ namespace osu.Game.Rulesets.UI.Scrolling
         /// Get a conservative maximum bounding box of a <see cref="DrawableHitObject"/> corresponding to <paramref name="entry"/>.
         /// It is used to calculate when the hit object appears.
         /// </summary>
-        protected virtual RectangleF GetConservativeBoundingBox(HitObjectLifetimeEntry entry) => new RectangleF().Inflate(100);
+        protected virtual RectangleF GetConservativeBoundingBox(HitObjectLifetimeEntry entry) =>
+            new RectangleF().Inflate(100);
 
         private double computeDisplayStartTime(HitObjectLifetimeEntry entry)
         {
@@ -231,7 +261,12 @@ namespace osu.Game.Rulesets.UI.Scrolling
                     break;
             }
 
-            return algorithm.Value.GetDisplayStartTime(entry.HitObject.StartTime, startOffset, timeRange.Value, scrollLength);
+            return algorithm.Value.GetDisplayStartTime(
+                entry.HitObject.StartTime,
+                startOffset,
+                timeRange.Value,
+                scrollLength
+            );
         }
 
         private void setComputedLifetime(HitObjectLifetimeEntry entry)
@@ -239,7 +274,10 @@ namespace osu.Game.Rulesets.UI.Scrolling
             double computedStartTime = computeDisplayStartTime(entry);
 
             // always load the hitobject before its first judgement offset
-            entry.LifetimeStart = Math.Min(entry.HitObject.StartTime - entry.HitObject.MaximumJudgementOffset, computedStartTime);
+            entry.LifetimeStart = Math.Min(
+                entry.HitObject.StartTime - entry.HitObject.MaximumJudgementOffset,
+                computedStartTime
+            );
 
             // This is likely not entirely correct, but sets a sane expectation of the ending lifetime.
             // A more correct lifetime will be overwritten after a DrawableHitObject is assigned via DrawableHitObject.updateState.
@@ -255,7 +293,10 @@ namespace osu.Game.Rulesets.UI.Scrolling
                 entry.LifetimeEnd = entry.HitObject.GetEndTime() + timeRange.Value;
         }
 
-        private void updateLayoutRecursive(DrawableHitObject hitObject, double? parentHitObjectStartTime = null)
+        private void updateLayoutRecursive(
+            DrawableHitObject hitObject,
+            double? parentHitObjectStartTime = null
+        )
         {
             parentHitObjectStartTime ??= hitObject.HitObject.StartTime;
 
@@ -278,9 +319,17 @@ namespace osu.Game.Rulesets.UI.Scrolling
             }
         }
 
-        private void updatePosition(DrawableHitObject hitObject, double currentTime, double? parentHitObjectStartTime = null)
+        private void updatePosition(
+            DrawableHitObject hitObject,
+            double currentTime,
+            double? parentHitObjectStartTime = null
+        )
         {
-            float position = PositionAtTime(hitObject.HitObject.StartTime, currentTime, parentHitObjectStartTime);
+            float position = PositionAtTime(
+                hitObject.HitObject.StartTime,
+                currentTime,
+                parentHitObjectStartTime
+            );
 
             if (scrollingAxis == Direction.Horizontal)
                 hitObject.X = position;

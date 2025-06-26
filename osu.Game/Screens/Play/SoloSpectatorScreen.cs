@@ -46,7 +46,9 @@ namespace osu.Game.Screens.Play
         private BeatmapModelDownloader beatmapDownloader { get; set; } = null!;
 
         [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+        private OverlayColourProvider colourProvider = new OverlayColourProvider(
+            OverlayColourScheme.Purple
+        );
 
         private Container beatmapPanelContainer = null!;
         private RoundedButton watchButton = null!;
@@ -84,11 +86,7 @@ namespace osu.Game.Screens.Play
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = colourProvider.Background5,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = colourProvider.Background5, RelativeSizeAxes = Axes.Both },
                     new FillFlowContainer
                     {
                         Margin = new MarginPadding(20),
@@ -135,12 +133,15 @@ namespace osu.Game.Screens.Play
                                         Anchor = Anchor.CentreLeft,
                                         Origin = Anchor.CentreLeft,
                                     },
-                                }
+                                },
                             },
                             automaticDownload = new SettingsCheckbox
                             {
-                                LabelText = OnlineSettingsStrings.AutomaticallyDownloadMissingBeatmaps,
-                                Current = config.GetBindable<bool>(OsuSetting.AutomaticallyDownloadMissingBeatmaps),
+                                LabelText =
+                                    OnlineSettingsStrings.AutomaticallyDownloadMissingBeatmaps,
+                                Current = config.GetBindable<bool>(
+                                    OsuSetting.AutomaticallyDownloadMissingBeatmaps
+                                ),
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                             },
@@ -151,11 +152,11 @@ namespace osu.Game.Screens.Play
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 Action = () => scheduleStart(immediateSpectatorGameplayState),
-                                Enabled = { Value = false }
-                            }
-                        }
-                    }
-                }
+                                Enabled = { Value = false },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -165,19 +166,24 @@ namespace osu.Game.Screens.Play
             automaticDownload.Current.BindValueChanged(_ => checkForAutomaticDownload());
         }
 
-        protected override void OnNewPlayingUserState(int userId, SpectatorState spectatorState) => Schedule(() =>
-        {
-            clearDisplay();
-            showBeatmapPanel(spectatorState);
-        });
+        protected override void OnNewPlayingUserState(int userId, SpectatorState spectatorState) =>
+            Schedule(() =>
+            {
+                clearDisplay();
+                showBeatmapPanel(spectatorState);
+            });
 
-        protected override void StartGameplay(int userId, SpectatorGameplayState spectatorGameplayState) => Schedule(() =>
-        {
-            immediateSpectatorGameplayState = spectatorGameplayState;
-            watchButton.Enabled.Value = true;
+        protected override void StartGameplay(
+            int userId,
+            SpectatorGameplayState spectatorGameplayState
+        ) =>
+            Schedule(() =>
+            {
+                immediateSpectatorGameplayState = spectatorGameplayState;
+                watchButton.Enabled.Value = true;
 
-            scheduleStart(spectatorGameplayState);
-        });
+                scheduleStart(spectatorGameplayState);
+            });
 
         protected override void FailGameplay(int userId)
         {
@@ -200,12 +206,13 @@ namespace osu.Game.Screens.Play
             resetStartState();
         }
 
-        private void resetStartState() => Schedule(() =>
-        {
-            scheduledStart?.Cancel();
-            immediateSpectatorGameplayState = null;
-            clearDisplay();
-        });
+        private void resetStartState() =>
+            Schedule(() =>
+            {
+                scheduledStart?.Cancel();
+                immediateSpectatorGameplayState = null;
+                clearDisplay();
+            });
 
         private void clearDisplay()
         {
@@ -236,7 +243,12 @@ namespace osu.Game.Screens.Play
                 Beatmap.Value = spectatorGameplayState.Beatmap;
                 Ruleset.Value = spectatorGameplayState.Ruleset.RulesetInfo;
 
-                this.Push(new SpectatorPlayerLoader(spectatorGameplayState.Score, () => new SoloSpectatorPlayer(spectatorGameplayState.Score)));
+                this.Push(
+                    new SpectatorPlayerLoader(
+                        spectatorGameplayState.Score,
+                        () => new SoloSpectatorPlayer(spectatorGameplayState.Score)
+                    )
+                );
             }
         }
 
@@ -244,17 +256,24 @@ namespace osu.Game.Screens.Play
         {
             Debug.Assert(state.BeatmapID != null);
 
-            beatmapLookupCache.GetBeatmapAsync(state.BeatmapID.Value).ContinueWith(t => beatmapFetchCallback = Schedule(() =>
-            {
-                var beatmap = t.GetResultSafely();
+            beatmapLookupCache
+                .GetBeatmapAsync(state.BeatmapID.Value)
+                .ContinueWith(t =>
+                    beatmapFetchCallback = Schedule(() =>
+                    {
+                        var beatmap = t.GetResultSafely();
 
-                if (beatmap?.BeatmapSet == null)
-                    return;
+                        if (beatmap?.BeatmapSet == null)
+                            return;
 
-                beatmapSet = beatmap.BeatmapSet;
-                beatmapPanelContainer.Child = new BeatmapCardNormal(beatmapSet, allowExpansion: false);
-                checkForAutomaticDownload();
-            }));
+                        beatmapSet = beatmap.BeatmapSet;
+                        beatmapPanelContainer.Child = new BeatmapCardNormal(
+                            beatmapSet,
+                            allowExpansion: false
+                        );
+                        checkForAutomaticDownload();
+                    })
+                );
         }
 
         private void checkForAutomaticDownload()

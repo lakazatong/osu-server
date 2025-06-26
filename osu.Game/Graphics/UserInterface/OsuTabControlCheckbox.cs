@@ -3,19 +3,19 @@
 
 #nullable disable
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics.Sprites;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics.Sprites;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.UserInterface
 {
@@ -60,7 +60,7 @@ namespace osu.Game.Graphics.UserInterface
                 new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Both,
-                    Margin = new MarginPadding { Top = 5, Bottom = 5, },
+                    Margin = new MarginPadding { Top = 5, Bottom = 5 },
                     Spacing = new Vector2(5f, 0f),
                     Direction = FillDirection.Horizontal,
                     Children = new Drawable[]
@@ -82,7 +82,7 @@ namespace osu.Game.Graphics.UserInterface
                     Colour = Color4.White,
                     Origin = Anchor.BottomLeft,
                     Anchor = Anchor.BottomLeft,
-                }
+                },
             };
         }
 
@@ -100,13 +100,20 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            Current.BindValueChanged(selected =>
-            {
-                icon.Icon = selected.NewValue ? FontAwesome.Regular.CheckCircle : FontAwesome.Regular.Circle;
-                text.Font = text.Font.With(weight: selected.NewValue ? FontWeight.Bold : FontWeight.Medium);
+            Current.BindValueChanged(
+                selected =>
+                {
+                    icon.Icon = selected.NewValue
+                        ? FontAwesome.Regular.CheckCircle
+                        : FontAwesome.Regular.Circle;
+                    text.Font = text.Font.With(
+                        weight: selected.NewValue ? FontWeight.Bold : FontWeight.Medium
+                    );
 
-                updateFade();
-            }, true);
+                    updateFade();
+                },
+                true
+            );
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -136,7 +143,11 @@ namespace osu.Game.Graphics.UserInterface
         private void updateFade()
         {
             box.FadeTo(Current.Value || IsHovered ? 1 : 0, transition_length, Easing.OutQuint);
-            text.FadeColour(Current.Value || IsHovered ? Color4.White : AccentColour, transition_length, Easing.OutQuint);
+            text.FadeColour(
+                Current.Value || IsHovered ? Color4.White : AccentColour,
+                transition_length,
+                Easing.OutQuint
+            );
         }
     }
 }

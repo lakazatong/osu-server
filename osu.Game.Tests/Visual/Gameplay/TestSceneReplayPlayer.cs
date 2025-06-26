@@ -32,18 +32,24 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddAssert("player not exited", () => Player.IsCurrentScreen());
 
-            AddUntilStep("Time stopped progressing", () =>
-            {
-                double current = Player.GameplayClockContainer.CurrentTime;
-                bool changed = lastTime != current;
-                lastTime = current;
+            AddUntilStep(
+                "Time stopped progressing",
+                () =>
+                {
+                    double current = Player.GameplayClockContainer.CurrentTime;
+                    bool changed = lastTime != current;
+                    lastTime = current;
 
-                return !changed;
-            });
+                    return !changed;
+                }
+            );
 
             AddWaitStep("wait some", 10);
 
-            AddAssert("Time still stopped", () => lastTime == Player.GameplayClockContainer.CurrentTime);
+            AddAssert(
+                "Time still stopped",
+                () => lastTime == Player.GameplayClockContainer.CurrentTime
+            );
         }
 
         [Test]
@@ -52,21 +58,31 @@ namespace osu.Game.Tests.Visual.Gameplay
             loadPlayerWithBeatmap();
 
             AddUntilStep("wait for first hit", () => Player.ScoreProcessor.TotalScore.Value > 0);
-            AddAssert("ensure rank is not fail", () => Player.ScoreProcessor.Rank.Value, () => Is.Not.EqualTo(ScoreRank.F));
+            AddAssert(
+                "ensure rank is not fail",
+                () => Player.ScoreProcessor.Rank.Value,
+                () => Is.Not.EqualTo(ScoreRank.F)
+            );
             AddStep("exit player", () => Player.Exit());
             AddUntilStep("wait for exit", () => Player.Parent == null);
-            AddAssert("ensure rank is not fail", () => Player.ScoreProcessor.Rank.Value, () => Is.Not.EqualTo(ScoreRank.F));
+            AddAssert(
+                "ensure rank is not fail",
+                () => Player.ScoreProcessor.Rank.Value,
+                () => Is.Not.EqualTo(ScoreRank.F)
+            );
         }
 
         [Test]
         public void TestPauseViaSpaceWithSkip()
         {
-            loadPlayerWithBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
-            {
-                AudioLeadIn = 60000
-            });
+            loadPlayerWithBeatmap(
+                new TestBeatmap(new OsuRuleset().RulesetInfo) { AudioLeadIn = 60000 }
+            );
 
-            AddUntilStep("wait for skip overlay", () => Player.ChildrenOfType<SkipOverlay>().First().IsButtonVisible);
+            AddUntilStep(
+                "wait for skip overlay",
+                () => Player.ChildrenOfType<SkipOverlay>().First().IsButtonVisible
+            );
 
             AddStep("Skip with space", () => InputManager.Key(Key.Space));
 
@@ -80,18 +96,24 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddAssert("player not exited", () => Player.IsCurrentScreen());
 
-            AddUntilStep("Time stopped progressing", () =>
-            {
-                double current = Player.GameplayClockContainer.CurrentTime;
-                bool changed = lastTime != current;
-                lastTime = current;
+            AddUntilStep(
+                "Time stopped progressing",
+                () =>
+                {
+                    double current = Player.GameplayClockContainer.CurrentTime;
+                    bool changed = lastTime != current;
+                    lastTime = current;
 
-                return !changed;
-            });
+                    return !changed;
+                }
+            );
 
             AddWaitStep("wait some", 10);
 
-            AddAssert("Time still stopped", () => lastTime == Player.GameplayClockContainer.CurrentTime);
+            AddAssert(
+                "Time still stopped",
+                () => lastTime == Player.GameplayClockContainer.CurrentTime
+            );
         }
 
         [Test]
@@ -103,22 +125,31 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for first hit", () => Player.ScoreProcessor.TotalScore.Value > 0);
 
-            AddStep("Pause playback with middle mouse", () => InputManager.Click(MouseButton.Middle));
+            AddStep(
+                "Pause playback with middle mouse",
+                () => InputManager.Click(MouseButton.Middle)
+            );
 
             AddAssert("player not exited", () => Player.IsCurrentScreen());
 
-            AddUntilStep("Time stopped progressing", () =>
-            {
-                double current = Player.GameplayClockContainer.CurrentTime;
-                bool changed = lastTime != current;
-                lastTime = current;
+            AddUntilStep(
+                "Time stopped progressing",
+                () =>
+                {
+                    double current = Player.GameplayClockContainer.CurrentTime;
+                    bool changed = lastTime != current;
+                    lastTime = current;
 
-                return !changed;
-            });
+                    return !changed;
+                }
+            );
 
             AddWaitStep("wait some", 10);
 
-            AddAssert("Time still stopped", () => lastTime == Player.GameplayClockContainer.CurrentTime);
+            AddAssert(
+                "Time still stopped",
+                () => lastTime == Player.GameplayClockContainer.CurrentTime
+            );
         }
 
         [Test]
@@ -130,13 +161,19 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for first hit", () => Player.ScoreProcessor.TotalScore.Value > 0);
 
-            AddStep("Seek backwards", () =>
-            {
-                lastTime = Player.GameplayClockContainer.CurrentTime;
-                InputManager.Key(Key.Left);
-            });
+            AddStep(
+                "Seek backwards",
+                () =>
+                {
+                    lastTime = Player.GameplayClockContainer.CurrentTime;
+                    InputManager.Key(Key.Left);
+                }
+            );
 
-            AddAssert("Jumped backwards", () => Player.GameplayClockContainer.CurrentTime - lastTime < 0);
+            AddAssert(
+                "Jumped backwards",
+                () => Player.GameplayClockContainer.CurrentTime - lastTime < 0
+            );
         }
 
         [Test]
@@ -148,21 +185,30 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("wait for first hit", () => Player.ScoreProcessor.TotalScore.Value > 0);
 
-            AddStep("Seek forwards", () =>
-            {
-                lastTime = Player.GameplayClockContainer.CurrentTime;
-                InputManager.Key(Key.Right);
-            });
+            AddStep(
+                "Seek forwards",
+                () =>
+                {
+                    lastTime = Player.GameplayClockContainer.CurrentTime;
+                    InputManager.Key(Key.Right);
+                }
+            );
 
-            AddAssert("Jumped forwards", () => Player.GameplayClockContainer.CurrentTime - lastTime > 500);
+            AddAssert(
+                "Jumped forwards",
+                () => Player.GameplayClockContainer.CurrentTime - lastTime > 500
+            );
         }
 
         private void loadPlayerWithBeatmap(IBeatmap? beatmap = null)
         {
-            AddStep("create player", () =>
-            {
-                CreatePlayer(new OsuRuleset(), beatmap);
-            });
+            AddStep(
+                "create player",
+                () =>
+                {
+                    CreatePlayer(new OsuRuleset(), beatmap);
+                }
+            );
 
             AddStep("Load player", () => LoadScreen(Player));
             AddUntilStep("player loaded", () => Player.IsLoaded);
@@ -170,9 +216,10 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         protected void CreatePlayer(Ruleset ruleset, IBeatmap? beatmap = null)
         {
-            Beatmap.Value = beatmap != null
-                ? CreateWorkingBeatmap(beatmap)
-                : CreateWorkingBeatmap(ruleset.RulesetInfo);
+            Beatmap.Value =
+                beatmap != null
+                    ? CreateWorkingBeatmap(beatmap)
+                    : CreateWorkingBeatmap(ruleset.RulesetInfo);
 
             SelectedMods.Value = new[] { ruleset.GetAutoplayMod() };
 

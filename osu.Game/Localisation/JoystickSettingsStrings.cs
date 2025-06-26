@@ -12,12 +12,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Joystick / Gamepad"
         /// </summary>
-        public static LocalisableString JoystickGamepad => new TranslatableString(getKey(@"joystick_gamepad"), @"Joystick / Gamepad");
+        public static LocalisableString JoystickGamepad =>
+            new TranslatableString(getKey(@"joystick_gamepad"), @"Joystick / Gamepad");
 
         /// <summary>
         /// "Deadzone"
         /// </summary>
-        public static LocalisableString DeadzoneThreshold => new TranslatableString(getKey(@"deadzone_threshold"), @"Deadzone");
+        public static LocalisableString DeadzoneThreshold =>
+            new TranslatableString(getKey(@"deadzone_threshold"), @"Deadzone");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

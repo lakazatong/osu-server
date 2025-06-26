@@ -15,7 +15,10 @@ namespace osu.Game.Screens.Play
             : base(createPlayer)
         {
             if (score.Replay == null)
-                throw new ArgumentException($"{nameof(score)} must have a non-null {nameof(score.Replay)}.", nameof(score));
+                throw new ArgumentException(
+                    $"{nameof(score)} must have a non-null {nameof(score.Replay)}.",
+                    nameof(score)
+                );
 
             Score = score.ScoreInfo;
         }

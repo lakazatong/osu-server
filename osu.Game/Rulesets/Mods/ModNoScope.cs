@@ -53,18 +53,26 @@ namespace osu.Game.Rulesets.Mods
 
         public void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
         {
-            if (HiddenComboCount.Value == 0) return;
+            if (HiddenComboCount.Value == 0)
+                return;
 
             CurrentCombo.BindTo(scoreProcessor.Combo);
-            CurrentCombo.BindValueChanged(combo =>
-            {
-                ComboBasedAlpha = Math.Max(MIN_ALPHA, 1 - (float)combo.NewValue / HiddenComboCount.Value);
-            }, true);
+            CurrentCombo.BindValueChanged(
+                combo =>
+                {
+                    ComboBasedAlpha = Math.Max(
+                        MIN_ALPHA,
+                        1 - (float)combo.NewValue / HiddenComboCount.Value
+                    );
+                },
+                true
+            );
         }
     }
 
     public partial class HiddenComboSlider : RoundedSliderBar<int>
     {
-        public override LocalisableString TooltipText => Current.Value == 0 ? "always hidden" : base.TooltipText;
+        public override LocalisableString TooltipText =>
+            Current.Value == 0 ? "always hidden" : base.TooltipText;
     }
 }

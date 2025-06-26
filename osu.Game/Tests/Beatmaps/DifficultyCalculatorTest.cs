@@ -23,7 +23,12 @@ namespace osu.Game.Tests.Beatmaps
 
         protected abstract string ResourceAssembly { get; }
 
-        protected void Test(double expectedStarRating, int expectedMaxCombo, string name, params Mod[] mods)
+        protected void Test(
+            double expectedStarRating,
+            int expectedMaxCombo,
+            string name,
+            params Mod[] mods
+        )
         {
             var attributes = CreateDifficultyCalculator(getBeatmap(name)).Calculate(mods);
 
@@ -43,18 +48,18 @@ namespace osu.Game.Tests.Beatmaps
 
                 return new TestWorkingBeatmap(decoder.Decode(stream))
                 {
-                    BeatmapInfo =
-                    {
-                        Ruleset = CreateRuleset().RulesetInfo
-                    }
+                    BeatmapInfo = { Ruleset = CreateRuleset().RulesetInfo },
                 };
             }
         }
 
         private Stream openResource(string name)
         {
-            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).AsNonNull();
-            return Assembly.LoadFrom(Path.Combine(localPath, $"{ResourceAssembly}.dll")).GetManifestResourceStream($@"{ResourceAssembly}.Resources.{name}");
+            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                .AsNonNull();
+            return Assembly
+                .LoadFrom(Path.Combine(localPath, $"{ResourceAssembly}.dll"))
+                .GetManifestResourceStream($@"{ResourceAssembly}.Resources.{name}");
         }
 
         protected abstract DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap);

@@ -44,8 +44,8 @@ namespace osu.Game.Screens.Play
                         RelativeSizeAxes = Axes.Both,
                         Height = letterbox_height,
                         Colour = Color4.Black,
-                    }
-                }
+                    },
+                },
             };
         }
 

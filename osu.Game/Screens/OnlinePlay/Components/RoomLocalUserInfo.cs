@@ -37,9 +37,9 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 {
                     attemptDisplay = new OsuSpriteText
                     {
-                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 14)
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 14),
                     },
-                }
+                },
             };
         }
 
@@ -70,7 +70,9 @@ namespace osu.Game.Screens.OnlinePlay.Components
 
                 if (room.UserScore != null)
                 {
-                    int remaining = room.MaxAttempts.Value - room.UserScore.PlaylistItemAttempts.Sum(a => a.Attempts);
+                    int remaining =
+                        room.MaxAttempts.Value
+                        - room.UserScore.PlaylistItemAttempts.Sum(a => a.Attempts);
                     attemptDisplay.Text += $" ({remaining} remaining)";
 
                     if (remaining == 0)

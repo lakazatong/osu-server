@@ -16,7 +16,10 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
-    public partial class ManiaModNoRelease : Mod, IApplicableAfterBeatmapConversion, IApplicableToDrawableRuleset<ManiaHitObject>
+    public partial class ManiaModNoRelease
+        : Mod,
+            IApplicableAfterBeatmapConversion,
+            IApplicableToDrawableRuleset<ManiaHitObject>
     {
         public override string Name => "No Release";
 
@@ -33,13 +36,15 @@ namespace osu.Game.Rulesets.Mania.Mods
         public void ApplyToBeatmap(IBeatmap beatmap)
         {
             var maniaBeatmap = (ManiaBeatmap)beatmap;
-            var hitObjects = maniaBeatmap.HitObjects.Select(obj =>
-            {
-                if (obj is HoldNote hold)
-                    return new NoReleaseHoldNote(hold);
+            var hitObjects = maniaBeatmap
+                .HitObjects.Select(obj =>
+                {
+                    if (obj is HoldNote hold)
+                        return new NoReleaseHoldNote(hold);
 
-                return obj;
-            }).ToList();
+                    return obj;
+                })
+                .ToList();
 
             maniaBeatmap.HitObjects = hitObjects;
         }
@@ -69,9 +74,7 @@ namespace osu.Game.Rulesets.Mania.Mods
             }
         }
 
-        private class NoReleaseTailNote : TailNote
-        {
-        }
+        private class NoReleaseTailNote : TailNote { }
 
         private class NoReleaseHoldNote : HoldNote
         {
@@ -85,25 +88,25 @@ namespace osu.Game.Rulesets.Mania.Mods
 
             protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
             {
-                AddNested(Head = new HeadNote
-                {
-                    StartTime = StartTime,
-                    Column = Column,
-                    Samples = GetNodeSamples(0),
-                });
+                AddNested(
+                    Head = new HeadNote
+                    {
+                        StartTime = StartTime,
+                        Column = Column,
+                        Samples = GetNodeSamples(0),
+                    }
+                );
 
-                AddNested(Tail = new NoReleaseTailNote
-                {
-                    StartTime = EndTime,
-                    Column = Column,
-                    Samples = GetNodeSamples((NodeSamples?.Count - 1) ?? 1),
-                });
+                AddNested(
+                    Tail = new NoReleaseTailNote
+                    {
+                        StartTime = EndTime,
+                        Column = Column,
+                        Samples = GetNodeSamples((NodeSamples?.Count - 1) ?? 1),
+                    }
+                );
 
-                AddNested(Body = new HoldNoteBody
-                {
-                    StartTime = StartTime,
-                    Column = Column
-                });
+                AddNested(Body = new HoldNoteBody { StartTime = StartTime, Column = Column });
             }
         }
     }

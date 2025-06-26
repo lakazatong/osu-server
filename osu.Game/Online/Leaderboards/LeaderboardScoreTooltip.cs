@@ -2,22 +2,22 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Localisation;
+using osu.Game.Configuration;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osuTK;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
-using osu.Framework.Allocation;
-using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Framework.Localisation;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.UI;
-using osu.Framework.Bindables;
-using osu.Game.Configuration;
 
 namespace osu.Game.Online.Leaderboards
 {
@@ -90,10 +90,10 @@ namespace osu.Game.Online.Leaderboards
                                     Direction = FillDirection.Horizontal,
                                     Spacing = new Vector2(10, 0),
                                 },
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -137,12 +137,19 @@ namespace osu.Game.Online.Leaderboards
         {
             if (displayedScore != null)
             {
-                timestampLabel.Text = LocalisableString.Format("Played on {0}",
-                    displayedScore.Date.ToLocalTime().ToLocalisableString(prefer24HourTime.Value ? @"d MMMM yyyy HH:mm" : @"d MMMM yyyy h:mm tt"));
+                timestampLabel.Text = LocalisableString.Format(
+                    "Played on {0}",
+                    displayedScore
+                        .Date.ToLocalTime()
+                        .ToLocalisableString(
+                            prefer24HourTime.Value ? @"d MMMM yyyy HH:mm" : @"d MMMM yyyy h:mm tt"
+                        )
+                );
             }
         }
 
         protected override void PopIn() => this.FadeIn(20, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(80, Easing.OutQuint);
 
         public void Move(Vector2 pos) => Position = pos;
@@ -184,7 +191,7 @@ namespace osu.Game.Online.Leaderboards
                             Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
                             Text = count.ToString(),
                         },
-                    }
+                    },
                 };
             }
         }
@@ -211,28 +218,35 @@ namespace osu.Game.Online.Leaderboards
                     Spacing = new Vector2(2f, 0f),
                     Children = new Drawable[]
                     {
-                        new ModIcon(mod, showTooltip: false, showExtendedInformation: false).With(icon =>
-                        {
-                            icon.Origin = Anchor.CentreLeft;
-                            icon.Anchor = Anchor.CentreLeft;
-                            icon.Scale = new Vector2(15f / icon.Height);
-                        }),
-                    }
+                        new ModIcon(mod, showTooltip: false, showExtendedInformation: false).With(
+                            icon =>
+                            {
+                                icon.Origin = Anchor.CentreLeft;
+                                icon.Anchor = Anchor.CentreLeft;
+                                icon.Scale = new Vector2(15f / icon.Height);
+                            }
+                        ),
+                    },
                 };
 
-                string description = string.Join(", ", mod.SettingDescription.Select(svp => $"{svp.setting}: {svp.value}"));
+                string description = string.Join(
+                    ", ",
+                    mod.SettingDescription.Select(svp => $"{svp.setting}: {svp.value}")
+                );
 
                 if (!string.IsNullOrEmpty(description))
                 {
-                    container.Add(new OsuSpriteText
-                    {
-                        RelativeSizeAxes = Axes.Y,
-                        Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                        Text = description,
-                        Origin = Anchor.CentreLeft,
-                        Anchor = Anchor.CentreLeft,
-                        Margin = new MarginPadding { Top = 1 },
-                    });
+                    container.Add(
+                        new OsuSpriteText
+                        {
+                            RelativeSizeAxes = Axes.Y,
+                            Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
+                            Text = description,
+                            Origin = Anchor.CentreLeft,
+                            Anchor = Anchor.CentreLeft,
+                            Margin = new MarginPadding { Top = 1 },
+                        }
+                    );
                 }
             }
         }

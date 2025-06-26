@@ -50,7 +50,8 @@ namespace osu.Game.Overlays.Profile.Header.Components
 
         public partial class DefaultRulesetIcon : SpriteIcon, IHasTooltip
         {
-            public LocalisableString TooltipText => UsersStrings.ShowEditDefaultPlaymodeIsDefaultTooltip;
+            public LocalisableString TooltipText =>
+                UsersStrings.ShowEditDefaultPlaymodeIsDefaultTooltip;
 
             public DefaultRulesetIcon()
             {

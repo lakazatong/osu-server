@@ -11,13 +11,12 @@ namespace osu.Game.Overlays.Dashboard.Home
     public partial class DashboardNewBeatmapPanel : DashboardBeatmapPanel
     {
         public DashboardNewBeatmapPanel(APIBeatmapSet beatmapSet)
-            : base(beatmapSet)
-        {
-        }
+            : base(beatmapSet) { }
 
-        protected override Drawable CreateInfo() => new DrawableDate(BeatmapSet.Ranked ?? DateTimeOffset.Now, 10, false)
-        {
-            Colour = ColourProvider.Foreground1
-        };
+        protected override Drawable CreateInfo() =>
+            new DrawableDate(BeatmapSet.Ranked ?? DateTimeOffset.Now, 10, false)
+            {
+                Colour = ColourProvider.Foreground1,
+            };
     }
 }
